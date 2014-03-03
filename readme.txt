@@ -1,10 +1,11 @@
 === GEO my Wordpress ===
+
 Contributors: Eyal Fitoussi
 Donate link: http://geomywp.com/
 Tags: proximity search, zipcode search, radius search, store locator, Geocode posts, address, search distance, google v3 , Google maps, get directions, search locations, Geolocate, GEO, members locator
-Requires at least: 3.3
-Tested up to: 3.8
-Buddypress: 1.8.2
+Requires at least: 3.7
+Tested up to: 3.8.1
+Buddypress: 1.9.2
 Stable tag: 2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -128,7 +129,13 @@ For screenshots please visit [GEO my WP](http://www.geomywp.com)
 
 == Changelog ==
 
-	
+= 2.4 =
+
+* single location shortcode - hide or show map.
+* single location shortcode - fixed website output.
+* new function/shortcode - [gmw_post_info]/gmw_post_info
+
+
 = 2.3 =
 
 * fix: issue cause Google API load to fail over HTTPS ( fix provided by Chris http://wordpress.org/support/topic/fails-over-https thank you)
@@ -322,5 +329,3 @@ Below are some of the major changes in this version:
 
 
 == Upgrade Notice ==
-
-

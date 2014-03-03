@@ -6,11 +6,11 @@
  */
 ?>
 <!--  Main results wrapper - wraps the paginations, map and results -->
-<div id="gmw-pt-output-wrapper-<?php echo $gmw['form_id']; ?>" class="gmw-pt-output-wrapper-<?php echo $gmw['form_id']; ?> gmw-pt-output-wrapper">
+<div id="gmw-pt-output-wrapper-<?php echo $gmw['ID']; ?>" class="gmw-pt-output-wrapper-<?php echo $gmw['ID']; ?> gmw-pt-output-wrapper">
 	
 	<!-- results count -->
 	<div class="gmw-results-count">
-		<h2><?php gmw_pt_within( $gmw,$sm=__('Showing','GMW'), $om=__('out of','GMW'), $rm=__('results','GMW') ,$wm=__('within','GMW'), $fm=__('from','GMW'), $nm=__('your location','GMW') ); ?></h2>
+		<h2><?php gmw_pt_within( $gmw, $sm=__( 'Showing', 'GMW' ), $om=__( 'out of', 'GMW' ), $rm=__( 'results', 'GMW' ) ,$wm=__( 'within', 'GMW' ), $fm=__( 'from','GMW' ), $nm=__( 'your location', 'GMW' ) ); ?></h2>
 	</div>
 		
 	<div class="gmw-pt-pagination-wrapper gmw-pt-top-pagination-wrapper">
@@ -19,12 +19,12 @@
 	</div> 
 	
 	<!-- Map -->
-	<?php gmw_pt_results_map($gmw); ?>
+	<?php gmw_results_map($gmw); ?>
 	
 	<div class="clear"></div>
 	
 	<!--  Results wrapper -->
-	<div id="gmw-results-wrapper-<?php echo $gmw['form_id']; ?>" class="gmw-results-wrapper">
+	<div id="gmw-results-wrapper-<?php echo $gmw['ID']; ?>" class="gmw-results-wrapper">
 
 		<?php while ( $gmw_query->have_posts() ) : $gmw_query->the_post(); ?>
 			<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
@@ -79,7 +79,7 @@
     				<?php gmw_pt_directions($gmw, $post, $title=__('Get Directions','GMW') ); ?>
 	    			
 					<!--  Driving Distance -->
-	    			<?php gmw_pt_driving_distance($gmw, $post, $class='wppl-driving-distance', $title=__('Driving','GMW') ); ?>
+	    			<?php gmw_pt_driving_distance($gmw, $post, $class='wppl-driving-distance', $title=__('Driving: ','GMW') ); ?>
 	    			
 					<?php twentytwelve_entry_meta(); ?>
 					<?php edit_post_link( __( 'Edit', 'twentytwelve' ), '<span class="edit-link">', '</span>' ); ?>
@@ -101,7 +101,6 @@
 					<?php endif; ?>
 				</footer><!-- .entry-meta -->
 			</article><!-- #post -->
-			<?php $pc++; ?>
 			
 		<?php endwhile;	 ?>
 	</div>

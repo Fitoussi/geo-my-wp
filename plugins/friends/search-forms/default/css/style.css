@@ -4,6 +4,15 @@
  * @author Eyal Fitoussi
  */
  
+ .gmw-form-wrapper {
+ 	margin:10px 0px;
+ }
+ 
+.gmw-form-wrapper input[type="text"] {
+     margin-bottom:5px;
+     padding:8px 10px 7px;
+ } 
+ 
 .gmw-address-field-wrapper {
 	float:left;
 }
@@ -11,6 +20,10 @@
 .gmw-locator-btn-wrapper img {
 	height: 25px;
 	width: 25px;
+}
+
+.gmw-saf-wrapper label {
+    margin-right:5px;
 }
 
 .gmw-fl-form .editfield label {
@@ -26,9 +39,8 @@
 	float: left;
 }
 
-.gmw-fl-form input[type="text"].wppl-address  {
-	width:200px;
-	float:left;
+.gmw-unit-distance-wrapper {
+	margin:10px 0px;
 }
 	
 .gmw-fl-form .date input[type="text"] {

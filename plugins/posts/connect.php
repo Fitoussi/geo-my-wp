@@ -1,79 +1,151 @@
 <?php
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) )
+	exit;
 
-define('GMW_PT_DB_VERSION', '1.1');
-define('GMW_PT_URL', GMW_URL . '/plugins/posts/');
-define('GMW_PT_PATH', GMW_PATH . '/plugins/posts/');
+/**
+ * GMW Post Types Addon class.
+ */
+class GEO_Post_Types_Addon {
 
-if ( is_admin() ) include_once GMW_PT_PATH . 'admin/admin-addons.php';
+	/**
+	 * __construct function.
+	 */
+	public function __construct() {
 
-if (!isset($wppl_on['post_types']) ) return;
-
-if ( is_admin() ) {
-	global $wpdb;
-	
-	// Create or update database table
-	if ( get_option( "gmw_pt_db_version" ) == '' || get_option( "gmw_pt_db_version" ) != GMW_PT_DB_VERSION ) {
-		include_once GMW_PT_PATH . 'admin/db.php';
-		$ptTable = $wpdb->get_results("SHOW TABLES LIKE '{$wpdb->prefix}places_locator'", ARRAY_A);
-		if ( count($ptTable) == 0 ) {
-			gmw_pt_db_installation();
-			update_option( "gmw_pt_db_version", GMW_PT_DB_VERSION );
-		} elseif ( count($ptTable) == 1 ) {
-			gmw_pt_db_update();
+		define( 'GMW_PT_DB_VERSION' , '1.1' );
+		define( 'GMW_PT_PATH' , GMW_PATH . '/plugins/posts/' );
+		define( 'GMW_PT_URL' , GMW_URL . '/plugins/posts/' );
+		
+		// init add-on
+		add_filter( 'gmw_admin_addons_page', array( $this , 'addon_init' ) );
+		
+		$this->addons   = get_option( 'gmw_addons' );
+		$this->settings = get_option( 'gmw_options' );
+		
+		// check if add-on is active
+		if ( !isset( $this->addons['posts'] ) || $this->addons['posts'] != 'active' ) return;
+			
+		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_register_scripts' ) );
+		add_action( 'gmw_posts_shortcode', array( $this, 'search_functions' ), 10, 2 );
+		
+		/*
+		 * include some admin functions/files
+		 */
+		if ( is_admin() && !defined('DOING_AJAX') ) {
+			
+			$this->admin_functions();
+			
+		}
+		
+		/*
+		 * include some frontend functions/files
+		*/
+		if ( !is_admin() ) {
+			
+			$this->frontend_functions();
+			
 		}
 	}
 	
-	include_once GMW_PT_PATH . 'admin/admin-settings.php';
-	function gmw_register_pt_taxonomies_script() {
-		wp_register_script( 'gmw-pt-shortcodes-categories', GMW_PT_URL . 'admin/js/admin-settings.js', array(),false,true );
-	}
-	add_action( 'admin_enqueue_scripts', 'gmw_register_pt_taxonomies_script' );
+	/**
+	 * Include addon function.
+	 *
+	 * @access public
+	 * @return $addons
+	 */
+	public function addon_init( $addons ) {
 	
-	//Include shortcode page
-	function gmw_pt_shortcode_page($shortcode_page, $wppl_on, $options_r, $wppl_options, $posts, $pages_s) {
-		if ( isset($_GET['form_type']) && $_GET['form_type'] == 'posts' ) :
-			$shortcode_page = include_once GMW_PT_PATH . 'admin/edit-shortcode.php';
-			return $shortcode_page;
-		endif;
+		$addons[1] = array(
+				'name' 	  => 'posts',
+				'title'   => __( 'Post Types Locator', 'GMW' ),
+				'desc'    => __( 'Add location to Posts and pages. Create an advance proximity search form to search for locations based on post types, categories, distance and more.', 'GMW'),
+				'license' => false,
+				'image'	  => false,
+				'require' => array(),
+		);
+		return $addons;
 	}
-	add_filter('gmw_edit_shortcode_page', 'gmw_pt_shortcode_page', 10, 6 );
 	
-	//Include javascripts, jquery and styles only in choosen post types admin area 
-	function gmw_register_admin_location_scripts() {
-		global $post_type;
-		$gmw_options = get_option('wppl_fields');		
-		
-		if( isset( $gmw_options['address_fields'] ) && !empty( $gmw_options['address_fields'] ) && ( in_array( $post_type, $gmw_options['address_fields'] ) ) ) {
-			wp_register_style( 'admin-style', GMW_PT_URL . 'admin/css/style-admin.css', array(),false,false);
-			wp_enqueue_style('admin-style');
-			wp_register_script( 'google-api-key', 'http://maps.googleapis.com/maps/api/js?key='.$gmw_options['google_api'].'&sensor=false&region='.$gmw_options['country_code'],array(),false); 
-			wp_enqueue_script('google-api-key');
-			wp_enqueue_script( 'jquery-ui-autocomplete');
-			wp_register_script( 'wppl-address-picker', GMW_PT_URL .'admin/js/jquery.ui.addresspicker.js',array(),false,true);
-			wp_enqueue_script( 'wppl-address-picker');
+	/**
+	 * Admin functions
+	 */
+	protected function admin_functions() {
+	
+		//create or update database
+		if ( get_option( "gmw_pt_db_version" ) == '' || get_option( "gmw_pt_db_version" ) != GMW_PT_DB_VERSION ) {
+			global $wpdb;
+	
+			$ptTable = $wpdb->get_results( "SHOW TABLES LIKE '{$wpdb->prefix}places_locator'", ARRAY_A );
+	
+			if ( count($ptTable) == 0 ) {
+				$this->create_db();
+					
+			} elseif ( count($ptTable) == 1 ) {
+				$this->update_db();
+			}
+	
 		}
-	}
-	add_action( 'admin_print_scripts-post-new.php', 'gmw_register_admin_location_scripts', 11 );
-	add_action( 'admin_print_scripts-post.php', 'gmw_register_admin_location_scripts', 11 );
+			
+		include( GMW_PT_PATH . 'includes/admin/gmw-pt-admin.php' );
 	
-	// UPLOAD METABOXES ONLY ON NECESSARY PAGES 
-	if (in_array( basename($_SERVER['PHP_SELF']), array( 'post-new.php', 'post.php','page.php','page-new' ) ) ) {
-		include_once GMW_PT_PATH . 'admin/metaboxes.php'; 
 	}
-} else {	 
-		
-	function gmw_pt_results_shortcode_start($gmw, $gmw_options) {
-		include_once GMW_PT_PATH. 'includes/search-functions.php';
-	}
-	add_action('gmw_posts_main_shortcode_start', 'gmw_pt_results_shortcode_start', 10 , 2);
-	add_action('gmw_posts_results_shortcode_start', 'gmw_pt_results_shortcode_start', 10 , 2);
-		
-	include_once GMW_PT_PATH . 'includes/functions.php';
 	
-	function wppl_register_pt_scripts() {
-		wp_register_script( 'gmw-pt-map', GMW_PT_URL . 'js/map.js', array(),false,true );
-		wp_register_script( 'wppl-sl-map', GMW_PT_URL . 'js/single-location-map.js' ,array(),false,true );
+	/**
+	 * frontend_scripts function.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function frontend_register_scripts() {
+	
+		wp_register_script( 'gmw-pt-map', GMW_PT_URL . 'assets/js/map.js', array('jquery'), GMW_VERSION, true );
+		wp_enqueue_style( 'gmw-style', GMW_URL . '/css/style.css' );
+			
 	}
-	add_action( 'gmw_register_cssjs_front_end', 'wppl_register_pt_scripts', 10 );
+	
+	/**
+	 *  Front end functions and files
+	 */
+	protected function frontend_functions() {
+	
+		include_once GMW_PT_PATH . 'includes/gmw-pt-functions.php';
+		if ( isset( $this->settings['features']['single_location_shortcode'] ) ) include_once GMW_PT_PATH . 'includes/gmw-pt-shortcodes.php';
+				
+	}
+	
+	/**
+	 * Create database
+	 */
+	protected function create_db() {
+		
+		include_once GMW_PT_PATH . 'includes/admin/gmw-pt-db.php';
+		gmw_pt_db_installation();
+		update_option( "gmw_pt_db_version", GMW_PT_DB_VERSION );
+		
+	}
+	
+	/**
+	 * update database
+	 */
+	protected function update_db() {
+		
+		include_once GMW_PT_PATH . 'includes/admin/gmw-pt-update-db.php';
+		gmw_pt_db_update();
+		
+	}
+		
+	/**
+	 * Search functions
+	 * @param $form
+	 * @param $results
+	 */
+	public function search_functions( $form, $results ) {
+		
+		include_once GMW_PT_PATH. 'includes/gmw-pt-search-functions.php';
+		new GMW_PT_Search_Query( $form, $results );
+		
+	}
 	
 }
+new GEO_Post_Types_Addon();

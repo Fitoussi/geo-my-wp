@@ -4,6 +4,15 @@
  * @author Eyal Fitoussi
  */
  
+ .gmw-form-wrapper {
+ 	margin:10px 0px;
+ }
+ 
+ .gmw-form-wrapper input[type="text"] {
+     margin-bottom:5px;
+     padding:8px 10px 7px;
+ } 
+ 
 .gmw-address-field-wrapper {
 	float:left;
 }
@@ -17,8 +26,16 @@
 	float:left;
 }
 
+.gmw-unit-distance-wrapper {
+	margin:10px 0px;
+}
+
 .gmw-checkbox-taxonomy-wrapper label {
 	display:block;
+}
+
+.gmw-saf-wrapper label {
+    margin-right:5px;
 }
 
 .gmw-checkbox-taxonomy-wrapper span.label {
