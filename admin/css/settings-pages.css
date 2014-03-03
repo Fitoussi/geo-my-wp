@@ -1,0 +1,308 @@
+/* settings page */ 
+
+h2 {
+	border:0 !important;
+}
+
+#icon-wppl {
+    background: transparent url('../images/gmw-logo.png') no-repeat;
+    width:72px;
+	height:40px;
+}
+
+li#toplevel_page_wppl-add-ons a .wp-menu-image img {
+	padding:3px;
+	width:20px;
+}
+
+table.fixed {
+	//margin: 5px 0;
+	}
+	
+.gmw-admin-settings-table tr td {
+	width:50%;
+	height:50px;
+	overflow:initial;
+}
+
+h3.gmw-hndle {
+	color: #21759B !important;
+	padding: 10px !important;
+	font-size: 16px !important;
+}
+
+.gmw-atoggle-btn {
+	float: left;
+	padding: 7px;
+	font-size: 20px;
+	color: #999;
+	cursor: pointer;
+}
+
+.gmw-settings-page-h2 {
+	float:left;
+}
+
+.icon32 {
+	//margin:0;
+	//margin-right:5px;
+}
+.wppl-settings span, .wppl-settings label {	
+	line-height:25px;
+	color: #277699;
+	margin:0px 5px
+	}
+
+.wppl-settings span.wppl-help-message {	
+	padding: 8px;
+	background: #fafafa;
+	display: none;
+	width: 250px;
+	color: #333;
+	text-shadow: 1px 1px 1px white;
+	font-size: 12px;
+	position: absolute;
+	top:-40px;
+	left:25px;
+	border:1px solid #ddd;
+	-moz-box-shadow:    0px 0px 7px 0px #ddd;
+ 	-webkit-box-shadow: 0px 0px 7px 0px #ddd;
+	 box-shadow:         0px 0px 7px 0px #ddd;
+	 font-family: arial;
+	 line-height: 16px;
+	 z-index: 999999999999999999999;
+	 min-height:40px;
+}
+
+span.help-arrow {
+	width: 0; 
+	height: 0; 
+	border-top: 10px solid #bbb;
+	position: absolute;
+	left:-15px;
+	top:30px;
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent; 
+	border-right:10px solid #bbb;
+	z-index: 999999999999999999999;
+}
+	
+.help-btn-tooltip-wrapper {
+	position:relative;
+}
+
+.help-btn-tooltip-wrapper img {
+	width:21px !important;
+	height:21px !important;
+}
+
+table.widefat tr td p.wppl-write-shortcode  {
+	color: #21759B;
+	font-size:14px;
+	}
+	
+ul.wppl-shortcodes-list li {
+	//list-style:none;
+	}
+
+/*form.wppl-shortcode-submit {
+	padding: 5px;
+	background: #f6f6f6;
+	border: 1px solid #ddd;
+	margin-top: -2px;
+} */
+
+ul.gmw-single-setting li {
+	background: #fefefe;
+	-webkit-border-top-left-radius: 3px;
+	-webkit-border-top-right-radius: 3px;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	border: 1px solid #E6E6D6;
+}
+
+.gmw-ssh {
+	background: #eaeaea;
+	border-bottom: 1px solid #ccc !important;
+	padding: 1px 5px;
+	-webkit-border-top-left-radius: 3px;
+	-webkit-border-top-right-radius: 3px;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	//height:25px;
+}
+.gmw-ssh h4 {
+	//float:left;
+	margin:5px;
+	font-weight:normal;
+	color: #277699;
+	display: inline;
+}
+
+.gmw-ssb {
+	padding:10px;
+}
+
+.wppl-settings p {	
+	float:left;
+	width:100%;
+	}
+	
+table.widefat tr td  p.wppl-bold {
+	font-weight:bold;
+	color:#222;
+	}
+	
+.wppl-settings a.wppl-help-btn {	
+	
+	}
+
+table.widefat tr {
+	/* height:50px !important;
+	border-bottom: 1px solid #c9d5dd;
+	border-top: 1px solid #ffffff;
+	background: #E9F0F5
+	padding: 10px 0px 10px 20px; */
+	}
+	
+table.widefat thead tr {
+	//height:40px !important;
+	}
+	
+table.widefat th {
+	/* color: #222;
+	font-weight: bold;
+	font-family:arial, sans-serif; */
+	}
+	
+table.widefat th h3 {
+	font-size: 16px;
+	color: #21759B;
+	font-weight: normal;
+	margin:5px;
+	}
+
+table.widefat th h3.wppl-green {	
+	color: #629466;
+}
+
+table.widefat th h4 {
+	font-size: 12px;
+	margin:5px 0;
+	}
+	
+table.widefat tr td p {
+	font-size: 12px;
+	font-family: arial,sans-serif;
+	color: #222;
+	text-shadow: 1px 1px 1px white;
+	}
+	
+.widefat td, .widefat th {
+	//border-bottom-color: #ccc;
+	//min-width:400px;
+}
+
+input[type="checkbox"], input[type="radio"] {
+	margin-right:3px;
+	}
+	
+.wppl-edit-btn, #create-new-shortcode {
+	border:0 !important;
+	border-top: 1px solid #96d1f8;
+ 	background: #65a9d7;
+   	background: -webkit-gradient(linear, left top, left bottom, from(#729cb8), to(#65a9d7));
+	background: -webkit-linear-gradient(top, #729cb8, #65a9d7);
+	background: -moz-linear-gradient(top, #729cb8, #65a9d7);
+	background: -ms-linear-gradient(top, #729cb8, #65a9d7);
+	background: -o-linear-gradient(top, #729cb8, #65a9d7);
+    padding: 3px 7px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: white !important;
+   font-size: 14px;
+   font-family: Georgia, serif;
+   text-decoration: none;
+   vertical-align: middle;
+   }
+   
+.wppl-edit, .wppl-shortcodes-help-btn {
+	margin-right:5px !important;
+	padding: 0 5px !important;
+}
+
+.wppl-edit-btn:hover, #create-new-shortcode:hover {
+   border-top-color: #5789ab;
+   background: #5789ab;
+   color: #ffffff;
+   }
+.wppl-edit-btn:active, #create-new-shortcode:active {
+   border-top-color: #1b435e;
+   background: #1b435e;
+   }
+   
+.wppl-remove-btn , .wppl-save-btn {
+	border:0 !important;
+   border-top: 1px solid #7bdbd5;
+   background: #5bc7c0;
+   background: -webkit-gradient(linear, left top, left bottom, from(#349482), to(#5bc7c0));
+   background: -webkit-linear-gradient(top, #349482, #5bc7c0);
+   background: -moz-linear-gradient(top, #349482, #5bc7c0);
+   background: -ms-linear-gradient(top, #349482, #5bc7c0);
+   background: -o-linear-gradient(top, #349482, #5bc7c0);
+   padding: 3px 7px;
+   -webkit-border-radius: 8px;
+   -moz-border-radius: 8px;
+   border-radius: 8px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: white !important;
+   font-size: 14px;
+   font-family: Georgia, serif;
+   text-decoration: none;
+   vertical-align: middle;
+   }
+.wppl-remove-btn:hover, .wppl-save-btn:hover {
+   border-top-color: #54aba4;
+   background: #54aba4;
+   color: #ffffff;
+   }
+.wppl-remove-btn:active, .wppl-save-btn:active {
+   border-top-color: #1b435e;
+   background: #1b435e;
+   }
+   
+.wppl-premium-message, .wppl-turnon-message {
+	color:red;
+	margin-left:10px;
+	font-size:13px;
+}
+
+.add-on-image img {
+	width: 20px;
+	height: 20px;
+	margin: 0 9px;
+}
+
+.wppl-icons-list-name {
+	font-size: 14px;
+	padding: 3px;
+	text-shadow: 1px 1px 1px white;
+	color: #21759B;
+}
+	
+table.gmw-cf-holder tr th, table.gmw-saf-table tr th {
+	background: #C2D7EF;
+	padding:5px;
+	text-align:center;
+}
+
+table.gmw-cf-holder tr td, table.gmw-saf-table tr td{
+	border:1px solid #bbb;
+}
+
+	

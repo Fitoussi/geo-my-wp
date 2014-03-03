@@ -1,0 +1,23 @@
+/**
+ * Wordpress loop theme stylesheet
+ * @author Eyal Fitoussi
+ */
+
+.gmw-pt-map-wrapper {	
+	margin-bottom: 10px;
+	width:auto;
+	position:relative;
+	clear: both;
+}
+
+.gmw-pt-per-page-dropdown {
+	margin:7px 10px;
+	float: left;
+	height:25px !important;
+	font-size: 12px;
+	border:1px solid #ccc;
+	color:#444
+}
+
+
+

@@ -1,0 +1,32 @@
+/**
+ * Default search form stylesheet.
+ * @version 1.0
+ * @author Eyal Fitoussi
+ */
+ .gmw-address-field-wrapper {
+	float:left;
+}
+
+.gmw-locator-btn-wrapper img {
+	height: 25px;
+	width: 25px;
+}
+
+.gmw-saf-wrapper {
+	float:left;
+}
+
+.gmw-checkbox-taxonomy-wrapper label {
+	display:block;
+}
+
+.gmw-checkbox-taxonomy-wrapper span.label {
+	font-weight:bold;
+}
+
+.gmw-no-address-error {
+	-moz-box-shadow: 0 1px 0 #FF0303 inset, 0 -1px 0 #FF0303 inset, 1px 0 0 #F32323 inset, -1px 0 0 #F32323 inset, 0 0 4px rgba(243, 35, 35, 0.5);
+	-webkit-box-shadow: 0 1px 0 #FF0303 inset, 0 -1px 0 #FF0303 inset, 1px 0 0 #F32323 inset, -1px 0 0 #F32323 inset, 0 0 4px rgba(243, 35, 35, 0.5);
+	box-shadow: 0 1px 0 #FF0303 inset, 0 -1px 0 #FF0303 inset, 1px 0 0 #F32323 inset, -1px 0 0 #F32323 inset, 0 0 4px rgba(243, 35, 35, 0.5);
+	border:red;
+}

@@ -1,0 +1,24 @@
+/**
+ * Custom theme stylesheet.
+ * @version 1.0
+ * @author Eyal Fitoussi
+ */
+		
+.wppl-single-result .wppl-info {
+	padding: 5px 10px;
+	border: 1px solid #eee;
+	margin-top: 5px;
+	}
+			
+.wppl-single-result .wppl-info div span {	
+	font-weight:bold;
+	}
+
+.gmw-pt-per-page-dropdown {
+	margin:7px 10px;
+	float: left;
+	height:25px !important;
+	font-size: 12px;
+	border:1px solid #ccc;
+	color:#444
+}

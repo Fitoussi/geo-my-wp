@@ -1,0 +1,59 @@
+/**
+ * Clean theme stylesheet
+ * @author Eyal Fitoussi
+ */
+	
+.wppl-map-wrapper {	
+	margin-bottom: 10px;
+	clear:both;
+	width:auto;
+}
+
+.gmw-pt-per-page-dropdown {
+	margin:7px 10px;
+	float: left;
+	height:25px !important;
+	font-size: 12px;
+	border:1px solid #ccc;
+	color:#444
+}
+
+.wppl-single-result .wppl-thumb {
+	border: 1px solid #DDD;
+	padding: 3px;
+	float: left;
+	margin-right: 10px;
+	display: inline;
+	background: #EFEFEF;
+	width: 110px;
+	height: 100px;
+}	
+
+.wppl-single-result .wppl-thumb img {
+	float: left;
+	width: 100% !important;
+	height: 100% !important;
+}
+		
+.wppl-single-result .wppl-info {
+	/*float: left;
+	width: 80%;
+	color: #888;
+	font: 12px Tahoma, Geneva, Kalimati, sans-serif; */
+	line-height: 17px;
+	margin-top:10px;
+}
+	
+.wppl-info .wppl-info-left {
+	float: left;
+	width: 40%;
+	border-right: 1px dashed #ccc;
+	margin-right: 20px;
+	margin-bottom: 10px;
+}
+	
+.wppl-info .wppl-info-right {
+	float: left;
+	width: 55%;
+}
+		

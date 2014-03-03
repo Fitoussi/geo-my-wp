@@ -1,0 +1,344 @@
+/**
+ * GEO my WP main stylesheet
+ * @author Eyal Fitoussi
+ */
+
+.gmw-map img {
+	max-width:initial !important;
+}
+
+.gmw-map-wrapper {
+	position:relative;
+	display:inline-block;
+}
+
+.gmw-map-frame {
+	border: 1px solid #999;
+	padding: 5px;
+	background: #EEE;
+	border-bottom: 1px solid #BBB;
+	border-right: 1px solid #BBB;
+	border-left: 1px solid #DDD;
+	border-top: 1px solid #EEE;
+}
+
+.gmw-map-loader-wrapper {
+	display: block;
+	margin:0 auto;
+	top:45%;
+	position: absolute;
+	width:100%;
+	text-align: center;
+	z-index: 5;
+}
+
+.gmw-map-loader-wrapper img {
+	width:80%;
+	max-width:200px !important;
+	box-shadow: none !important
+}
+
+.gmw-results-count {
+	text-transform: capitalize;
+	width: auto;
+	clear: both;
+}
+
+.gmw-form select {
+	margin:5px 0px;
+	border:1px solid #ccc;
+}
+
+.gmw-locator-btn-wrapper {
+	position:relative;
+	width: 28px;
+	height: 28px;
+	padding:2px;
+	display: inline-block
+}
+
+.gmw-locator-btn-wrapper img {
+	position:absolute;
+	border-radius: 0px !important;
+	box-shadow: none !important;
+}
+
+.gmw-locate-btn {
+	cursor: pointer;
+}
+
+/* paginations */
+.gmw-pt-pagination-wrapper {
+	font-size: 12px;
+	text-shadow: 1px 1px 1px white;
+	border: 1px solid #DDD;
+	text-decoration: none;
+	text-transform: capitalize;
+	background: #F9F9F9;
+	clear:both;
+	margin:5px 0px;
+	min-height:35px;
+	padding:3px;
+}
+
+ul.gmw-prem-pagination {
+	padding:8px;
+	margin:0px !important;
+	min-height:20px;
+	float:right;
+}
+
+ul.gmw-prem-pagination li.details{
+   color:rgb(35, 115, 130);
+}
+ 
+ul.gmw-prem-pagination li a {
+    color:#333333;
+    text-shadow:0px 1px #F6F6F6;
+    padding: 2px 3px 2px 3px;
+    border:solid 1px #B6B6B6;
+    box-shadow:0px 1px #EFEFEF;
+    -moz-box-shadow:0px 1px #EFEFEF;
+    -webkit-box-shadow:0px 1px #EFEFEF;
+    background:#E6E6E6;
+    background:-moz-linear-gradient(top,#FFFFFF 1px,#F3F3F3 1px,#E6E6E6);
+    background:-webkit-gradient(linear,0 0,0 100%,color-stop(0.02,#FFFFFF),color-stop(0.02,#F3F3F3),color-stop(1,#E6E6E6));
+    font-size:12px;
+}
+ 
+ul.gmw-prem-pagination li {
+    padding-bottom:1px;
+   	float: left;
+	margin: 0px;
+	padding: 0px;
+	margin-left: 3px;
+	list-style:none;
+}
+ 
+ul.gmw-prem-pagination li a:hover,
+ul.gmw-prem-pagination li a.current {   
+    color: #FFFFFF;
+	box-shadow: 0px 1px #E7E7E7;
+	-moz-box-shadow: 0px 1px #E7E7E7;
+	-webkit-box-shadow: 0px 1px #E7E7E7;
+	text-shadow: 0px 1px rgb(44, 125, 128);
+	border-color: rgb(35, 122, 130);
+	background: rgb(47, 159, 159);
+	background: -moz-linear-gradient(top,rgb(85, 204, 227) 1px,rgb(74, 163, 191) 1px,rgb(47, 141, 159));
+	background: -webkit-gradient(linear,0 0,0 100%,color-stop(0.02,rgb(85, 204, 227)),color-stop(0.02,rgb(74, 163, 191)),color-stop(1,rgb(47, 141, 159)));
+}
+
+/* Loading scren */
+.gmw-screen-loader-wrapper {
+	display:none;
+	width:100%;
+	height:100%;
+	position: fixed	;
+	background:#f8f8f8;
+	top:0;
+	opacity: 0.93;
+}
+
+.gmw-screen-loader-wrapper .gmw-loading-message-wrapper {
+	margin:0 auto;
+	position: absolute;
+	top:40%;
+	text-align: center;
+	width:100%;
+}
+
+.gmw-screen-loader-wrapper .gmw-loading-message-wrapper p {
+	margin:20px 0px;
+	color:rgb(0, 150, 255);
+	font-size:18px;
+}
+
+/* ////// LOCATE MESSAGE ////// */
+
+.gmw-cl-form {
+	text-align:center;
+	margin-top:15px;
+}
+
+#gmw-locator-success-message {
+	padding-top: 35px;
+	font-size: 14px;
+	color: #40728F;
+	text-align:center;
+}
+
+#gmw-locator-error-message {
+	padding-top: 35px;
+	font-size: 14px;
+	color: red;
+	text-align:center;
+}
+
+.gmw-locator-spinner {
+	text-align:center;
+}
+	
+/* post types info window */
+.wppl-pt-info-window {
+	float:left;
+	width: 400px;
+}
+
+.wppl-pt-info-window .wppl-info-window-thumb {
+	float:left;
+}
+
+.wppl-pt-info-window .wppl-info-window-thumb img {
+	width: 120px;
+	height: 120px;
+	padding: 5px;
+}
+
+.wppl-pt-info-window .wppl-info-window-info {
+	float:left;
+	width:230px;
+	font-size:12px;
+}
+
+.wppl-pt-info-window .wppl-info-window-permalink {
+	float:left;
+	width:230px;
+	font-size:16px;
+	text-transform: capitalize;
+}
+
+.wppl-pt-info-window .wppl-info-window-info td {
+	padding: 2px 5px;
+}
+
+.wppl-pt-info-window .wppl-info-window-info span {
+	color:#5E5858;
+	font-weight:bold;	
+}
+
+/* friends locator info window */
+.wppl-fl-info-window {
+	float:left;
+	width: 400px;
+}
+
+.wppl-fl-info-window .wppl-info-window-thumb {
+	float:left;
+}
+
+.wppl-fl-info-window .wppl-info-window-thumb img {
+	width: 120px;
+	height: 120px;
+	padding: 5px;
+}
+
+.wppl-fl-info-window .wppl-info-window-info {
+	float:left;
+	width:230px;
+	font-size:12px;
+}
+
+.wppl-fl-info-window .wppl-info-window-permalink {
+	float:left;
+	width:230px;
+	font-size:16px;
+	text-transform: capitalize;
+}
+
+.wppl-fl-info-window .wppl-info-window-info td {
+	padding: 2px 5px;
+}
+
+.wppl-fl-info-window .wppl-info-window-info span {
+	color:#5E5858;
+	font-weight:bold;	
+}
+
+/* groups locator info window */
+.wppl-gl-info-window {
+	float:left;
+	width: 400px;
+}
+
+.wppl-gl-info-window .wppl-info-window-thumb {
+	float:left;
+}
+
+.wppl-gl-info-window .wppl-info-window-thumb img {
+	width: 120px;
+	height: 120px;
+	padding: 5px;
+}
+
+.wppl-gl-info-window .wppl-info-window-info {
+	float:left;
+	width:230px;
+	font-size:12px;
+}
+
+.wppl-gl-info-window .wppl-info-window-permalink {
+	float:left;
+	width:230px;
+	font-size:16px;
+	text-transform: capitalize;
+}
+
+.wppl-gl-info-window .wppl-info-window-info td {
+	padding: 2px 5px;
+}
+
+.wppl-gl-info-window .wppl-info-window-info span {
+	color:#5E5858;
+	font-weight:bold;	
+}
+
+/* autocomplete */
+.ui-menu {
+	border-radius: 0px !important;
+	border:1px solid #ccc !important;
+}
+
+.ui-menu .ui-menu-item a {
+	cursor: default;
+	padding: 0 4px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	line-height: 30px;
+	font-family: Roboto,Arial,sans-serif;
+	text-align: left;
+	border-top: 1px solid #e6e6e6;
+	font-size: 13px;
+	border-radius: 0px !important;
+	
+}
+
+.ui-menu .ui-menu-item a:hover {
+	cursor: default;
+	padding: 0 4px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	line-height: 30px;
+	font-family: Arial,sans-serif;
+	text-align: left;
+	border-top: 1px solid #e6e6e6;
+	font-size: 13px;
+}
+
+.ui-menu .ui-menu-item a {
+	color:#777;
+	padding:5px 5px !important;
+}
+
+.ui-menu .ui-menu-item a.ui-state-focus {
+	padding:0px 5px !important;
+	background:none !important;
+	border:0px !important;
+	border-top: 1px solid #e6e6e6 !important;
+	border-radius: 0px !important;
+	line-height: 30px !important;
+	background: #f8f8f8 !important;
+	height:initial !important;
+}
+

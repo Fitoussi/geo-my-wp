@@ -1,0 +1,147 @@
+.gmw-admin-location-table {
+	border: 1px solid #DDD;
+	padding: 0px;
+	//margin: 3px 0px;
+	width:100%;
+}
+
+.gmw-admin-location-table th {
+	width: 50px !important;
+color: #222;
+text-shadow: #fff 0 1px 0;
+font-weight: normal;
+text-align: left;
+padding: 10px;
+}
+
+.gmw-admin-location-head {
+	padding: 5px 0px;
+	background: #f1f1f1;
+	margin-bottom: 0px;
+	border: 1px solid #ddd;
+	border-bottom: 0px;
+}
+
+.gmw-admin-location-head p {
+	margin: 0px !important;
+	//color: #21759b;
+	margin-left: 10px !important;
+}
+.drag-and-drop-head {
+	position: absolute;
+	top: 5px;
+	z-index: 1;
+	background: white;
+	padding: 5px;
+	margin: 0px;
+	opacity: 1;
+	margin-left: 150px;
+}
+
+.wppl-admin-map-holder #map {
+ 	border: 3px solid #CCC;
+	//width: 100%;
+	height: 200px;
+	//margin: 0px 0 0 10px;
+	//float: right;
+	padding: 5px;
+	background: white;
+}
+
+#wppl-lookup-options-holder {
+	float: left;
+	width: 55%;
+	}
+
+#wppl-lookup-options-holder h2{
+	font-size:14px !important;
+	margin:0px !important;
+	border:none;
+	}
+	
+#wppl-lookup-options-holder h1{
+	font-size:16px !important;
+	}
+
+.tab1 #legend {
+  float: left;
+  font-size: 12px;
+  font-style: italic;
+  margin: 10px 0px 0px 430px;
+}
+
+.tab1 .ui-menu .ui-menu-item a {
+  font-size: 12px;
+} 
+
+/**
+ * Metabox Tabs
+ */
+ul.metabox-tabs {
+display: none;
+margin-top: 12px;
+margin-bottom: 3px;
+}
+
+#wppl-meta-box h4 {
+	color:#277699;	
+	font-weight: normal;
+	font-size: 12px;
+	}
+	
+.metabox-tabs-div ul {
+list-style: none;
+}
+.metabox-tabs li {
+display: inline;
+}
+ul.metabox-tabs li.active {
+border-style: solid solid none;
+border-width: 1px 1px 0;
+}
+ul.metabox-tabs li {
+padding: 7px;
+-moz-border-radius: 3px 3px 0 0;
+-webkit-border-top-left-radius: 3px;
+-webkit-border-top-right-radius: 3px;
+-khtml-border-top-left-radius: 3px;
+-khtml-border-top-right-radius: 3px;
+border-top-left-radius: 3px;
+border-top-right-radius: 3px;
+background: #CCC;
+border: 1px solid #AAA;
+}
+.metabox-tabs a {
+text-decoration: none;
+font-size: 12px;
+color: #666;
+text-shadow: 1px 1px 1px white;
+
+}
+.metabox-tabs-div div.tabs-panel {
+overflow: auto;
+padding: 0.5em 0.9em;
+border-style: solid;
+border-width: 1px;
+}
+.heading {
+padding-left:10px;
+}
+.tab-content{
+overflow: auto;
+padding: 0.5em 0.9em;
+border-style: solid;
+border-width: 1px;
+background: #f9f9f9;
+}
+
+ul.metabox-tabs li.active {
+background-color: #F8f8f8;
+}
+ul.metabox-tabs li.active, div.tab-content {
+border-color: #DFDFDF;
+padding: 8px 11px;
+}
+.metabox-tabs .active a {
+color: #277699;
+}
