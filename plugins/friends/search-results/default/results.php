@@ -12,7 +12,7 @@
 ?>
 <?php do_action( 'bp_before_members_loop' ); ?>
 
-<?php if ( bp_has_members( $gmw_members_args ) ) : ?>
+<?php if ( bp_has_members( $gmw['query_args'] ) ) : ?>
 		
 	<div id="pag-top" class="pagination">
 
@@ -37,63 +37,71 @@
 	<div class="clear"></div>
 	
 	<!-- GEO my WP Map -->
-	<?php gmw_fl_results_map($gmw); ?>
+	<?php gmw_results_map( $gmw ); ?>
 	
 	<?php do_action( 'bp_before_directory_members_list' ); ?>
 
 	<ul id="members-list" class="item-list" role="main">
 	
-	<?php while ( bp_members() ) : bp_the_member(); ?>
-
-		<li>
-		
-			<div class="item-avatar">
-				<a href="<?php bp_member_permalink(); ?>"><?php bp_member_avatar(); ?></a>
-			</div>
-
-			<div class="item">
-				<div class="item-title">
-					<div class="gmw-fl-member-count"><?php echo gmw_fl_member_count($gmw); ?>)</div>
-					<a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a><?php gmw_fl_by_radius($gmw); ?>
-
-					<?php if ( bp_get_member_latest_update() ) : ?>
-
-						<span class="update"> <?php bp_member_latest_update(); ?></span>
-
-					<?php endif; ?>
-
-				</div>
-
-				<div class="item-meta"><span class="activity"><?php bp_member_last_active(); ?></span></div>
-
-				<?php do_action( 'bp_directory_members_item' ); ?>
-
-				<?php
-				
-				if ( function_exists('gmw_fl_user_xprofile_fields') ) gmw_fl_user_xprofile_fields($gmw);
-				 /***
-				  * If you want to show specific profile fields here you can,
-				  * but it'll add an extra query for each member in the loop
-				  * (only one regardless of the number of fields you show):
-				  *
-				  * bp_member_profile_data( 'field=the field name' );
-				  */
-				?>
-			</div>
-
-			<div class="action">
-
-				<?php do_action( 'bp_directory_members_actions' ); ?>
-
-			</div>
-
-			<div class="clear"></div>
-			<div><span>Address: </span><?php gmw_fl_user_address($gmw); ?></div><?php gmw_fl_get_directions($gmw); ?><?php gmw_fl_driving_distance($gmw, $class=''); ?>
-				
-		</li>
-	<?php endwhile; ?>
+		<?php while ( bp_members() ) : bp_the_member(); ?>
 	
-	<?php do_action('gmw_fl_after_members_loop', $gmw, $gmw_options); ?>
+			<li>
+				
+				<?php do_action( 'gmw_fl_directory_member_start', $gmw ); ?>
+				
+				<?php if ( isset( $gmw['search_results']['avatar']['use'] ) ) : ?>
+					<div class="item-avatar">
+						<a href="<?php bp_member_permalink(); ?>"><?php bp_member_avatar( array( 'type' => 'full', 'width' => $gmw['search_results']['avatar']['width'], 'height' => $gmw['search_results']['avatar']['height'] ) ); ?></a>
+					</div>
+				<?php endif; ?>
+				
+				<div class="item">
+					<div class="item-title">
+						<div class="gmw-fl-member-count"><?php gmw_fl_member_count($gmw); ?>)</div>
+						<a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a><?php gmw_fl_by_radius($gmw); ?>
+	
+						<?php if ( bp_get_member_latest_update() ) : ?>
+	
+							<span class="update"> <?php bp_member_latest_update(); ?></span>
+	
+						<?php endif; ?>
+	
+					</div>
+	
+					<div class="item-meta"><span class="activity"><?php bp_member_last_active(); ?></span></div>
+	
+					<?php do_action( 'bp_directory_members_item' ); ?>
+	
+					<?php do_action( 'gmw_fl_directory_member_item', $gmw ); ?>
+					
+					<?php
+					 /***
+					  * If you want to show specific profile fields here you can,
+					  * but it'll add an extra query for each member in the loop
+					  * (only one regardless of the number of fields you show):
+					  *
+					  * bp_member_profile_data( 'field=the field name' );
+					  */
+					?>
+				</div>
+	
+				<div class="action">
+	
+					<?php do_action( 'bp_directory_members_actions' ); ?>
+	
+				</div>
+	
+				<div class="clear"></div>
+				
+				<div><span><?php _e( 'Address: ', 'GMW' ); ?></span><?php gmw_fl_member_address( $gmw ); ?></div><?php gmw_fl_directions_link( $gmw, $title=__( 'Get directions', 'GMW' ) ); ?><?php gmw_fl_driving_distance( $gmw, $class='' ); ?>
+				
+				<?php do_action( 'gmw_fl_directory_member_end', $gmw ); ?>
+					
+			</li>
+			
+		<?php endwhile; ?>
+		
+		<?php do_action( 'gmw_fl_after_members_loop', $gmw ); ?>
 
 	</ul>
 
@@ -105,7 +113,7 @@
 
 		<div class="pag-count" id="member-dir-count-bottom">
 
-			<?php gmw_fl_per_page_dropdown($gmw, ''); ?> <?php bp_members_pagination_count(); ?>
+			<?php gmw_fl_per_page_dropdown( $gmw, '' ); ?> <?php bp_members_pagination_count(); ?>
 
 		</div>
 
@@ -120,9 +128,10 @@
 <?php else: ?>
 
 	<div id="message" class="info">
-		<p><?php gmw_fl_no_members($gmw, $gmw_options); ?></p>
+		<p><?php gmw_fl_no_members( $gmw ); ?></p>
 	</div>
-	<?php do_action('gmw_fl_after_no_results', $gmw, $gmw_options); ?>
+	
+	<?php do_action( 'gmw_fl_after_no_members', $gmw ); ?>
 
 <?php endif; ?>
 
