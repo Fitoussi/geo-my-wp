@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GEO my WP\n"
-"POT-Creation-Date: 2014-02-22 12:08-1000\n"
-"PO-Revision-Date: 2014-02-22 12:08-1000\n"
+"POT-Creation-Date: 2014-03-06 11:13-1000\n"
+"PO-Revision-Date: 2014-03-06 11:13-1000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -18,11 +18,21 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: geo-my-wp.php:105 plugins/friends/includes/admin/gmw-fl-admin.php:67
+#: geo-my-wp.php:182
+msgid "Post Types Locator"
+msgstr ""
+
+#: geo-my-wp.php:183
+msgid ""
+"Add location to Posts and pages. Create an advance proximity search form to "
+"search for locations based on post types, categories, distance and more."
+msgstr ""
+
+#: geo-my-wp.php:191 plugins/friends/includes/admin/gmw-fl-admin.php:67
 msgid "Members Locator"
 msgstr ""
 
-#: geo-my-wp.php:106
+#: geo-my-wp.php:192
 msgid ""
 "Let your BuddyPress members add location to thier profile. Create an advance "
 "proximity search form to search for members based on location."
@@ -52,66 +62,60 @@ msgstr ""
 msgid "Activate Add-on"
 msgstr ""
 
-#: includes/admin/geo-my-wp-addons.php:403
-#: includes/admin/geo-my-wp-addons.php:419
+#: includes/admin/geo-my-wp-addons.php:408
+msgid "Deactivate License Key"
+msgstr ""
+
+#: includes/admin/geo-my-wp-addons.php:421
 msgid "Enter your license key"
 msgstr ""
 
-#: includes/admin/geo-my-wp-addons.php:408
-msgid "Deactivate License"
+#: includes/admin/geo-my-wp-addons.php:425
+msgid "Activate License Key"
 msgstr ""
 
-#: includes/admin/geo-my-wp-addons.php:420
-msgid "clear license field"
-msgstr ""
-
-#: includes/admin/geo-my-wp-addons.php:422
-msgid "Activate License"
-msgstr ""
-
-#: includes/admin/geo-my-wp-addons.php:424
-#: includes/admin/geo-my-wp-addons.php:436
-msgid "Deactivate Add-on"
-msgstr ""
-
-#: includes/admin/geo-my-wp-addons.php:434
+#: includes/admin/geo-my-wp-addons.php:439
 msgid "No license key required"
 msgstr ""
 
-#: includes/admin/geo-my-wp-addons.php:522
+#: includes/admin/geo-my-wp-addons.php:441
+msgid "Deactivate Add-on"
+msgstr ""
+
+#: includes/admin/geo-my-wp-addons.php:527
 msgid ""
 "There was an error retrieving the extensions list from the server. Please "
 "try again later."
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:44 includes/admin/geo-my-wp-admin.php:86
-#: includes/admin/geo-my-wp-forms.php:393
+#: includes/admin/geo-my-wp-admin.php:47 includes/admin/geo-my-wp-admin.php:89
+#: includes/admin/geo-my-wp-forms.php:395
 #: includes/admin/geo-my-wp-settings.php:205
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:56
-msgid "Deactivate from add-ons page first"
+#: includes/admin/geo-my-wp-admin.php:59
+msgid "Deactivate license before deactivating the plugin"
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:58
-msgid "GMW Add-ons"
+#: includes/admin/geo-my-wp-admin.php:61
+msgid "Activate license key"
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:85
+#: includes/admin/geo-my-wp-admin.php:88
 msgid "Add-ons"
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:86
+#: includes/admin/geo-my-wp-admin.php:89
 #: includes/admin/geo-my-wp-settings.php:163
 msgid "GEO my WP Settings"
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:87
+#: includes/admin/geo-my-wp-admin.php:90
 msgid "Forms"
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:104
+#: includes/admin/geo-my-wp-admin.php:107
 msgid "GEO my WP developed by Eyal Fitoussi - Version"
 msgstr ""
 
@@ -128,94 +132,94 @@ msgid "You need to activate some add-ons in order to create form"
 msgstr ""
 
 #: includes/admin/geo-my-wp-forms.php:172
-#: includes/admin/geo-my-wp-forms.php:240
+#: includes/admin/geo-my-wp-forms.php:242
 msgid "ID"
 msgstr ""
 
 #: includes/admin/geo-my-wp-forms.php:173
-#: includes/admin/geo-my-wp-forms.php:241
+#: includes/admin/geo-my-wp-forms.php:243
 msgid "Type"
 msgstr ""
 
 #: includes/admin/geo-my-wp-forms.php:174
-#: includes/admin/geo-my-wp-forms.php:242
-msgid "Usage"
-msgstr ""
-
-#: includes/admin/geo-my-wp-forms.php:175
-#: includes/admin/geo-my-wp-forms.php:243
+#: includes/admin/geo-my-wp-forms.php:245
 msgid "Action"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:195
-#: includes/admin/geo-my-wp-forms.php:202
+#: includes/admin/geo-my-wp-forms.php:175
+#: includes/admin/geo-my-wp-forms.php:244
+msgid "Usage"
+msgstr ""
+
+#: includes/admin/geo-my-wp-forms.php:196
+#: includes/admin/geo-my-wp-forms.php:201
 msgid "Edit this form"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:202
+#: includes/admin/geo-my-wp-forms.php:201
 #: plugins/posts/search-results/twenty-thirteen/results.php:46
 #: plugins/posts/search-results/wordpress-twentytwelve/results.php:85
 msgid "Edit"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:205
+#: includes/admin/geo-my-wp-forms.php:204
 msgid "Duplicate this form"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:205
+#: includes/admin/geo-my-wp-forms.php:204
 msgid "Duplicate"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:208
-#: includes/admin/geo-my-wp-forms.php:346
+#: includes/admin/geo-my-wp-forms.php:207
+#: includes/admin/geo-my-wp-forms.php:348
 msgid "Delete this form"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:208
-#: includes/admin/geo-my-wp-forms.php:346
+#: includes/admin/geo-my-wp-forms.php:207
+#: includes/admin/geo-my-wp-forms.php:348
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:226
+#: includes/admin/geo-my-wp-forms.php:228
 msgid "You don't have any forms yet."
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:265
+#: includes/admin/geo-my-wp-forms.php:267
 msgid "hidden"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:270
+#: includes/admin/geo-my-wp-forms.php:272
 msgid "Search Form"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:274
+#: includes/admin/geo-my-wp-forms.php:276
 msgid "Search Results"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:278
+#: includes/admin/geo-my-wp-forms.php:280
 msgid "Map"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:345
+#: includes/admin/geo-my-wp-forms.php:347
 msgid "GEO my WP Form ID "
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:382
+#: includes/admin/geo-my-wp-forms.php:384
 #: includes/admin/geo-my-wp-settings.php:174
 msgid "Settings successfully saved"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:392
+#: includes/admin/geo-my-wp-forms.php:394
 #: includes/admin/geo-my-wp-settings.php:204
 msgid "Feature"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:394
+#: includes/admin/geo-my-wp-forms.php:396
 #: includes/admin/geo-my-wp-settings.php:206
 msgid "Explanation"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:492
+#: includes/admin/geo-my-wp-forms.php:494
 #: includes/admin/geo-my-wp-settings.php:297
 msgid "Save Changes"
 msgstr ""
@@ -311,6 +315,9 @@ msgstr ""
 #: plugins/posts/includes/admin/gmw-pt-admin.php:570
 #: plugins/posts/includes/admin/gmw-pt-admin.php:579
 #: plugins/posts/includes/admin/gmw-pt-admin.php:647
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:99
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:108
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:117
 msgid "Yes"
 msgstr ""
 
@@ -326,31 +333,33 @@ msgstr ""
 msgid "Turn on/off the search form widget."
 msgstr ""
 
-#: includes/geo-my-wp-functions.php:293
+#: includes/geo-my-wp-functions.php:291
 msgid "- Miles -"
 msgstr ""
 
-#: includes/geo-my-wp-functions.php:293
+#: includes/geo-my-wp-functions.php:291
 msgid "- Kilometers -"
 msgstr ""
 
-#: includes/geo-my-wp-functions.php:294
+#: includes/geo-my-wp-functions.php:292
 msgid " -- Within -- "
 msgstr ""
 
-#: includes/geo-my-wp-functions.php:330
+#: includes/geo-my-wp-functions.php:328
 #: plugins/friends/includes/admin/gmw-fl-admin.php:226
 #: plugins/friends/includes/admin/gmw-fl-admin.php:335
 #: plugins/posts/includes/admin/gmw-pt-admin.php:321
 #: plugins/posts/includes/admin/gmw-pt-admin.php:459
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:52
 msgid "Miles"
 msgstr ""
 
-#: includes/geo-my-wp-functions.php:331
+#: includes/geo-my-wp-functions.php:329
 #: plugins/friends/includes/admin/gmw-fl-admin.php:227
 #: plugins/friends/includes/admin/gmw-fl-admin.php:336
 #: plugins/posts/includes/admin/gmw-pt-admin.php:322
 #: plugins/posts/includes/admin/gmw-pt-admin.php:460
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:53
 msgid "Kilometers"
 msgstr ""
 
@@ -512,6 +521,7 @@ msgstr ""
 
 #: plugins/friends/includes/admin/gmw-fl-admin.php:221
 #: plugins/posts/includes/admin/gmw-pt-admin.php:316
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:40
 msgid "Radius"
 msgstr ""
 
@@ -593,6 +603,7 @@ msgstr ""
 
 #: plugins/friends/includes/admin/gmw-fl-admin.php:330
 #: plugins/posts/includes/admin/gmw-pt-admin.php:454
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:47
 msgid "Units"
 msgstr ""
 
@@ -760,6 +771,7 @@ msgstr ""
 
 #: plugins/friends/includes/admin/gmw-fl-admin.php:438
 #: plugins/posts/includes/admin/gmw-pt-admin.php:590
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:69
 msgid "Map Width"
 msgstr ""
 
@@ -776,6 +788,7 @@ msgstr ""
 
 #: plugins/friends/includes/admin/gmw-fl-admin.php:446
 #: plugins/posts/includes/admin/gmw-pt-admin.php:598
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:77
 msgid "Map Height"
 msgstr ""
 
@@ -788,6 +801,7 @@ msgstr ""
 #: plugins/friends/includes/admin/gmw-fl-admin.php:453
 #: plugins/friends/includes/gmw-fl-widgets.php:117
 #: plugins/posts/includes/admin/gmw-pt-admin.php:605
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:84
 msgid "Map Type"
 msgstr ""
 
@@ -798,21 +812,25 @@ msgstr ""
 
 #: plugins/friends/includes/admin/gmw-fl-admin.php:457
 #: plugins/posts/includes/admin/gmw-pt-admin.php:609
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:89
 msgid "ROADMAP"
 msgstr ""
 
 #: plugins/friends/includes/admin/gmw-fl-admin.php:458
 #: plugins/posts/includes/admin/gmw-pt-admin.php:610
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:90
 msgid "SATELLITE"
 msgstr ""
 
 #: plugins/friends/includes/admin/gmw-fl-admin.php:459
 #: plugins/posts/includes/admin/gmw-pt-admin.php:611
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:91
 msgid "HYBRID"
 msgstr ""
 
 #: plugins/friends/includes/admin/gmw-fl-admin.php:460
 #: plugins/posts/includes/admin/gmw-pt-admin.php:612
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:92
 msgid "TERRAIN"
 msgstr ""
 
@@ -837,21 +855,21 @@ msgstr ""
 msgid "show frame around the map?"
 msgstr ""
 
-#: plugins/friends/includes/admin/gmw-fl-update-db.php:53
-#: plugins/posts/includes/admin/gmw-pt-update-db.php:40
+#: plugins/friends/includes/admin/gmw-fl-db.php:115
+#: plugins/posts/includes/admin/gmw-pt-db.php:89
 msgid ""
 "Thank you. GEO my WP database tables and data updated and everything seems "
 "to be ok."
 msgstr ""
 
-#: plugins/friends/includes/admin/gmw-fl-update-db.php:72
+#: plugins/friends/includes/admin/gmw-fl-db.php:134
 msgid ""
 "GEO my WP Friends Locator add-on database tables must be updated. Please "
 "Backup your database before updating it."
 msgstr ""
 
-#: plugins/friends/includes/admin/gmw-fl-update-db.php:73
-#: plugins/posts/includes/admin/gmw-pt-update-db.php:58
+#: plugins/friends/includes/admin/gmw-fl-db.php:135
+#: plugins/posts/includes/admin/gmw-pt-db.php:107
 msgid "Update database"
 msgstr ""
 
@@ -862,29 +880,29 @@ msgid ""
 "com/maps?f=d&hl="
 msgstr ""
 
-#: plugins/friends/includes/gmw-fl-component.php:41
-#: plugins/friends/includes/gmw-fl-component.php:152
-#: plugins/friends/includes/gmw-fl-component.php:187
-#: plugins/friends/includes/gmw-fl-component.php:226
-#: plugins/friends/includes/gmw-fl-component.php:300
+#: plugins/friends/includes/gmw-fl-component.php:35
+#: plugins/friends/includes/gmw-fl-component.php:104
+#: plugins/friends/includes/gmw-fl-component.php:139
+#: plugins/friends/includes/gmw-fl-component.php:178
+#: plugins/friends/includes/gmw-fl-component.php:252
 msgid "Location"
 msgstr ""
 
-#: plugins/friends/includes/gmw-fl-component.php:133
+#: plugins/friends/includes/gmw-fl-component.php:85
 msgid "Search Location..."
 msgstr ""
 
-#: plugins/friends/includes/gmw-fl-component.php:243
-#: plugins/friends/includes/gmw-fl-component.php:249
+#: plugins/friends/includes/gmw-fl-component.php:195
+#: plugins/friends/includes/gmw-fl-component.php:201
 msgid "Members Location"
 msgstr ""
 
-#: plugins/friends/includes/gmw-fl-component.php:244
+#: plugins/friends/includes/gmw-fl-component.php:196
 msgid "Member's Location"
 msgstr ""
 
 #: plugins/friends/includes/gmw-fl-functions.php:148
-#: plugins/friends/includes/gmw-fl-search-functions.php:559
+#: plugins/friends/includes/gmw-fl-search-functions.php:560
 #: plugins/friends/search-results/default/results.php:96
 #: plugins/posts/includes/gmw-pt-search-functions.php:633
 #: plugins/posts/includes/gmw-pt-search-functions.php:634
@@ -903,6 +921,7 @@ msgstr ""
 #: plugins/posts/search-results/default/results.php:86
 #: plugins/posts/search-results/twenty-thirteen/results.php:69
 #: plugins/posts/search-results/wordpress-twentytwelve/results.php:79
+#: third-party/sweetdate/geo-my-wp-sd-class.php:342
 msgid "Get Directions"
 msgstr ""
 
@@ -1019,12 +1038,12 @@ msgstr ""
 msgid "Sorry, No members found"
 msgstr ""
 
-#: plugins/friends/includes/gmw-fl-search-functions.php:558
+#: plugins/friends/includes/gmw-fl-search-functions.php:559
 #: plugins/posts/includes/gmw-pt-search-functions.php:632
 msgid "Distance: "
 msgstr ""
 
-#: plugins/friends/includes/gmw-fl-search-functions.php:560
+#: plugins/friends/includes/gmw-fl-search-functions.php:561
 #: plugins/posts/includes/gmw-pt-search-functions.php:639
 msgid "Get Directions: "
 msgstr ""
@@ -1070,22 +1089,14 @@ msgid "Show \"No  location\" message."
 msgstr ""
 
 #: plugins/friends/search-forms/default/search-form.php:37
+#: plugins/friends/search-forms/sweetdate/search-form.php:37
 #: plugins/posts/search-forms/default/search-form.php:47
 msgid "Submit"
 msgstr ""
 
 #: plugins/friends/search-results/default/results.php:96
+#: plugins/friends/search-results/sweetdate/results.php:72
 msgid "Get directions"
-msgstr ""
-
-#: plugins/posts/connect.php:61
-msgid "Post Types Locator"
-msgstr ""
-
-#: plugins/posts/connect.php:62
-msgid ""
-"Add location to Posts and pages. Create an advance proximity search form to "
-"search for locations based on post types, categories, distance and more."
 msgstr ""
 
 #: plugins/posts/includes/admin/gmw-pt-admin.php:54
@@ -1123,7 +1134,7 @@ msgid "Display location of a single post"
 msgstr ""
 
 #: plugins/posts/includes/admin/gmw-pt-admin.php:99
-msgid "Post types"
+msgid "Posts Locator"
 msgstr ""
 
 #: plugins/posts/includes/admin/gmw-pt-admin.php:100
@@ -1267,6 +1278,12 @@ msgstr ""
 msgid "Display the taxonomies/categories for each of the results."
 msgstr ""
 
+#: plugins/posts/includes/admin/gmw-pt-db.php:106
+msgid ""
+"GEO my WP Posts Locator add-on database tables must be updated. Please "
+"Backup your database before updating it."
+msgstr ""
+
 #: plugins/posts/includes/admin/gmw-pt-metaboxes.php:52
 msgid "GMW Location"
 msgstr ""
@@ -1349,12 +1366,6 @@ msgstr ""
 msgid "Contact Information"
 msgstr ""
 
-#: plugins/posts/includes/admin/gmw-pt-update-db.php:57
-msgid ""
-"GEO my WP Posts Locator add-on database tables must be updated. Please "
-"Backup your database before updating it."
-msgstr ""
-
 #: plugins/posts/includes/gmw-pt-search-functions.php:73
 msgid " - All - "
 msgstr ""
@@ -1426,10 +1437,12 @@ msgid "Website: "
 msgstr ""
 
 #: plugins/posts/includes/gmw-pt-search-functions.php:468
+#: third-party/sweetdate/geo-my-wp-sd-class.php:354
 msgid "mi"
 msgstr ""
 
 #: plugins/posts/includes/gmw-pt-search-functions.php:470
+#: third-party/sweetdate/geo-my-wp-sd-class.php:354
 msgid "km"
 msgstr ""
 
@@ -1548,4 +1561,101 @@ msgstr ""
 #: plugins/posts/search-results/wordpress-twentytwelve/results.php:96
 #, php-format
 msgid "View all posts by %s <span class=\"meta-nav\">&rarr;</span>"
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:33
+msgid "Sweet Date"
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:39
+msgid "Enter radius values"
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:41
+msgid ""
+"Enter the radius values. Single value to be default value or multiple values "
+"comma separated for a drop-down select box."
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:48
+msgid "Choose Between Miles and Kilometers."
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:59
+msgid "Show Map"
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:60
+msgid "Show/hide map above list of members results"
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:68
+msgid "Map width in pixels or percentage"
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:70
+msgid "Maps width in pixels or percentage"
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:76
+msgid "Map height in pixels or percentage"
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:78
+msgid "Maps height in pixels or percentage"
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:85
+msgid "Map type"
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:98
+msgid "Display Distance?"
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:100
+msgid "Show/hide distance in results."
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:107
+msgid "Display Address?"
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:109
+msgid "Show/hide member's address in results."
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:116
+msgid "Display \"Get directions\" Link?"
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-admin.php:118
+msgid ""
+"Show/hide get directions link in each results. The link will open a new page "
+"with Google map showing the directions from the address entered by the user "
+"to the member's location."
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-class.php:87
+msgid "Enter Address..."
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-class.php:95
+msgid " -- Kilometers -- "
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-class.php:95
+msgid " -- Miles -- "
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-class.php:119
+msgid "Order By"
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-class.php:163
+msgid "Sorry, the address was not found. Please try a different address."
+msgstr ""
+
+#: third-party/sweetdate/geo-my-wp-sd-class.php:379
+msgid "Address:"
 msgstr ""

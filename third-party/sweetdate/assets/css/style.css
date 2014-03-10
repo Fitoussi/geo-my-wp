@@ -1,0 +1,92 @@
+/* GEO my WP - Members Directory Stylsheet */
+
+.gmw-md-directions-mode-wrapper {
+	display: block;
+	margin:0 auto;
+	position: absolute;
+	width:100%;
+	text-align: center;
+	z-index: 5;
+	background: white;
+	bottom:0;
+	border: 1px solid #ddd;
+	border-top: 0;
+}
+
+label#gmw-md-address-field-label {
+	margin: 0px 5px;
+}
+
+#gmw-md-radius-wrapper {
+	display:inline-block;
+	margin-right:5px;
+}
+
+#gmw-md-radius-dropdown {
+	height:25px;
+	border:1px solid #ddd;
+}
+
+#gmw-md-wrong-address {
+	font-size: 11px;
+	background: rgb(255, 35, 35);
+	padding:2px 4px;
+	color:white;
+	border:1px solid rgb(150, 52, 52);
+	width:auto;
+	min-width: 150px;
+	text-align: center;
+	margin-left:2px;
+	position: absolute;
+}
+
+div#members-dir-search.dir-search {
+	margin:-10px 0px 20px 0px;
+}
+
+div#gmw-md-screen-loader-wrapper {
+	display:none;
+	width:100%;
+	height:100%;
+	position: fixed	;
+	background:#f8f8f8;
+	top:0;
+	opacity: 0.93;
+	z-index: 99999999;
+}
+
+div#gmw-md-loading-message-wrapper {
+	margin:0 auto;
+	position: absolute;
+	top:40%;
+	text-align: center;
+	width:100%;
+}
+
+div#gmw-md-loading-message-wrapper p {
+	margin:20px 0px;
+	color:rgb(0, 150, 255);
+	font-size:18px;
+}
+
+.gmw-md-marker-clicked {
+	background:rgb(249, 249, 249);
+}
+
+#gmw-md-address-field-wrapper {
+	position:relative;
+	display:inline-block;
+}
+
+.gmw-md-address-mandatory {
+	-moz-box-shadow: 0 1px 0 #FF0303 inset, 0 -1px 0 #FF0303 inset, 1px 0 0 #F32323 inset, -1px 0 0 #F32323 inset, 0 0 4px rgba(243, 35, 35, 0.5);
+	-webkit-box-shadow: 0 1px 0 #FF0303 inset, 0 -1px 0 #FF0303 inset, 1px 0 0 #F32323 inset, -1px 0 0 #F32323 inset, 0 0 4px rgba(243, 35, 35, 0.5);
+	box-shadow: 0 1px 0 #FF0303 inset, 0 -1px 0 #FF0303 inset, 1px 0 0 #F32323 inset, -1px 0 0 #F32323 inset, 0 0 4px rgba(243, 35, 35, 0.5);
+	border:red;
+}
+
+#gmw-md-states-dropdown-wrapper, #gmw-md-countries-dropdown-wrapper {
+	clear: both;
+	margin-bottom: 15px;
+	float: right;
+}

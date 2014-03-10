@@ -9,7 +9,7 @@
  }
  
 .gmw-form-wrapper input[type="text"] {
-     margin-bottom:5px;
+     margin-top:6px;
      padding:8px 10px 7px;
  } 
  
@@ -34,10 +34,18 @@
 	font-weight:bold;
 }
 
+.widget_gmw_search_form_widget .gmw-fl-form .editfield span.label {
+        display:inline-block;
+        width:100%;
+        margin:3px 0px 3px      
+}
+
 .wppl-address-field-wrapper {
 	width: 100%;
 	float: left;
 }
+
+
 
 .gmw-unit-distance-wrapper {
 	margin:10px 0px;
@@ -55,6 +63,14 @@
 	background-color: transparent;
 	box-shadow:none;
 	margin-left:3px;
+}
+
+.gmw-radius-slider-wrapper {
+    margin-bottom:10px;
+}
+
+.gmw-radius-slider-range-wrapper {
+    margin:5px 0px;
 }
 
 .gmw-no-address-error {
