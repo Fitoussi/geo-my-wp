@@ -193,10 +193,7 @@ input.gmw-addon-short-input {
 }
 
 .mandatory {
-	-moz-box-shadow: 0 1px 0 #FF0303 inset, 0 -1px 0 #FF0303 inset, 1px 0 0 #F32323 inset, -1px 0 0 #F32323 inset, 0 0 4px rgba(243, 35, 35, 0.5) !important;
-	-webkit-box-shadow: 0 1px 0 #FF0303 inset, 0 -1px 0 #FF0303 inset, 1px 0 0 #F32323 inset, -1px 0 0 #F32323 inset, 0 0 4px rgba(243, 35, 35, 0.5) !important;
-	box-shadow: 0 1px 0 #FF0303 inset, 0 -1px 0 #FF0303 inset, 1px 0 0 #F32323 inset, -1px 0 0 #F32323 inset, 0 0 4px rgba(243, 35, 35, 0.5) !important;
-	border:red !important;
+	border:1px solid rgb(252, 165, 165) !important;
 }
 
 input.regular-text {

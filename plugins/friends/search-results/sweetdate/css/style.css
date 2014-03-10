@@ -1,0 +1,24 @@
+/* GMW FL default search results stylesheet */
+
+.gmw-fl-radius-wrapper {	
+	padding: 3px 5px;
+	background: #f9f9f9;
+	border: 1px solid #ddd;
+	font-size: 11px;
+	text-align: center;
+	display: inline  !important;
+	margin:5px;
+}
+							
+.gmw-fl-per-page-dropdown {
+	margin:0px 15px 0px 5px;
+	float: left;
+	height:25px !important;
+	font-size: 12px;
+	border:1px solid #ccc;
+	color:#444;
+}
+
+.gmw-fl-member-count {
+	display: inline;
+}
