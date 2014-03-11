@@ -29,6 +29,10 @@ class GMW_SD_Class_Query {
         define( 'GMW_SD_URL', untrailingslashit( get_template_directory_uri() . '/gmw/' ) );
 
         $this->settings             = get_option( 'gmw_options' );
+     
+        //return if disabled
+        if ( !isset( $this->settings['sweet_date']['status'] ) || $this->settings['sweet_date']['status'] != 1 ) return;
+        
         $this->gmwMD                = ( isset( $this->settings['sweet_date'] ) ) ? $this->settings['sweet_date'] : false;
         $this->gmwMD['your_lat']    = false;
         $this->gmwMD['your_lng']    = false;

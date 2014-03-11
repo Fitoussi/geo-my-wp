@@ -33,6 +33,7 @@ class GMW_SD_Admin {
     public function default_options() {
 
         $this->settings['sweet_date'] = array(
+            'status'     => '',
             'radius'     => '10,25,50,100,200',
             'units'      => '3959',
             'map_use'    => 1,
@@ -58,7 +59,15 @@ class GMW_SD_Admin {
         $settings['sweet_date'] = array(
             __( 'Sweet Date', 'GMW-MD' ),
             array(
-                array(
+                'status' => array(
+                    'name'        => 'status',
+                    'std'         => '',
+                    'label' => __( 'Enable GEO my WP integration?', 'GMW-MD' ),
+                    'cb_label'       => __( 'Enable', 'GMW-MD' ),
+                    'desc'        => __( 'Enable/disable GEO my WP integration with Sweet-Date members page.', 'GMW-MD' ),
+                    'type'        => 'checkbox'
+                ),
+                'radius' => array(
                     'name'        => 'radius',
                     'std'         => '10,25,50,100,200',
                     'placeholder' => __( 'Enter radius values', 'GMW-MD' ),
@@ -66,7 +75,7 @@ class GMW_SD_Admin {
                     'desc'        => __( 'Enter the radius values. Single value to be default value or multiple values comma separated for a drop-down select box.', 'GMW-MD' ),
                     'type'        => 'text'
                 ),
-                array(
+                'units' => array(
                     'name'       => 'units',
                     'std'        => '3959',
                     'label'      => __( 'Units', 'GMW-MD' ),
@@ -78,7 +87,7 @@ class GMW_SD_Admin {
                         '6371' => __( 'Kilometers', 'GMW-MD' ),
                     )
                 ),
-                array(
+                'map_use' => array(
                     'name'       => 'map_use',
                     'std'        => '',
                     'label'      => __( 'Show Map', 'GMW-MD' ),
@@ -87,7 +96,7 @@ class GMW_SD_Admin {
                     'cb_label'   => 'Yes',
                     'attributes' => array(),
                 ),
-                array(
+                'map_width' => array(
                     'name'        => 'map_width',
                     'std'         => '100%',
                     'placeholder' => __( 'Map width in pixels or percentage', 'GMW-MD' ),
@@ -95,7 +104,7 @@ class GMW_SD_Admin {
                     'desc'        => __( 'Maps width in pixels or percentage', 'GMW-MD' ),
                     'type'        => 'text'
                 ),
-                array(
+                'map_height' => array(
                     'name'        => 'map_height',
                     'std'         => '300px',
                     'placeholder' => __( 'Map height in pixels or percentage', 'GMW-MD' ),
@@ -103,7 +112,7 @@ class GMW_SD_Admin {
                     'desc'        => __( 'Maps height in pixels or percentage', 'GMW-MD' ),
                     'type'        => 'text'
                 ),
-                array(
+                'map_type' => array(
                     'name'       => 'map_type',
                     'std'        => 'ROADMAP',
                     'label'      => __( 'Map Type', 'GMW-MD' ),
@@ -117,7 +126,7 @@ class GMW_SD_Admin {
                         'TERRAIN'   => __( 'TERRAIN', 'GMW-MD' ),
                     )
                 ),
-                array(
+                'distance' => array(
                     'name'       => 'distance',
                     'std'        => '',
                     'label'      => __( 'Display Distance?', 'GMW-MD' ),
@@ -126,7 +135,7 @@ class GMW_SD_Admin {
                     'type'       => 'checkbox',
                     'attributes' => array()
                 ),
-                array(
+                'address' => array(
                     'name'       => 'address',
                     'std'        => '',
                     'label'      => __( 'Display Address?', 'GMW-MD' ),
@@ -135,7 +144,7 @@ class GMW_SD_Admin {
                     'type'       => 'checkbox',
                     'attributes' => array()
                 ),
-                array(
+                'directions' => array(
                     'name'       => 'directions',
                     'std'        => '',
                     'label'      => __( 'Display "Get directions" Link?', 'GMW-MD' ),
