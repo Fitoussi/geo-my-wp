@@ -208,150 +208,149 @@ function gmw_form_submit_fields( $gmw, $subValue ) {
         <input type="hidden" id="gmw-prefix-<?php echo $gmw['ID']; ?>" class="gmw-prefix" name="gmw_px" value="<?php echo $gmw['prefix']; ?>" />
         <input type="hidden" id="gmw-action-<?php echo $gmw['ID']; ?>" class="gmw-action" name="action" value="gmw_post" />
 
-    <?php $submit_button = '<input type="submit" id="gmw-submit-' . $gmw['ID'] . '" class="gmw-submit" value="' . $subValue . '" />'; ?>
+        <?php $submit_button = '<input type="submit" id="gmw-submit-' . $gmw['ID'] . '" class="gmw-submit" value="' . $subValue . '" />'; ?>
         <?php echo apply_filters( 'gmw_form_submit_button', $submit_button, $gmw, $subValue ); ?>
     </div>
-        <?php
+    <?php
 
-    }
+}
 
-    /**
-     * GMW Search form function - Address Field
-     * @version 1.0
-     * @author Eyal Fitoussi
-     */
-    function gmw_get_search_form_address_field( $gmw, $class ) {
+/**
+ * GMW Search form function - Address Field
+ * @version 1.0
+ * @author Eyal Fitoussi
+ */
+function gmw_get_search_form_address_field( $gmw, $class ) {
 
-        $address_field = '';
+    $address_field = '';
 
-        $am = ( isset( $gmw['search_form']['address_field']['mandatory'] ) ) ? 'mandatory' : '';
+    $am = ( isset( $gmw['search_form']['address_field']['mandatory'] ) ) ? 'mandatory' : '';
 
-        $title = ( isset( $gmw['search_form']['address_field']['title'] ) ) ? $gmw['search_form']['address_field']['title'] : '';
+    $title = ( isset( $gmw['search_form']['address_field']['title'] ) ) ? $gmw['search_form']['address_field']['title'] : '';
 
-        if ( !isset( $gmw['search_form']['address_field']['within'] ) && !empty( $title ) )
-            $address_field .= '<label for="gmw-address-' . $gmw['ID'] . '">' . $gmw['search_form']['address_field']['title'] . '</label>';
+    if ( !isset( $gmw['search_form']['address_field']['within'] ) && !empty( $title ) )
+        $address_field .= '<label for="gmw-address-' . $gmw['ID'] . '">' . $gmw['search_form']['address_field']['title'] . '</label>';
 
-        $address_field .= '<input type="text" name="gmw_address[]" id="gmw-address-' . $gmw['ID'] . '" class="' . $am . ' gmw-address gmw-full-address gmw-address-' . $gmw['ID'] . ' ' . $class . '" value="';
-        if ( isset( $_GET['gmw_address'] ) )
-            $address_field .= str_replace( '+', ' ', implode( ' ', $_GET['gmw_address'] ) ); $address_field .= '" size="35" ';
-        if ( isset( $gmw['search_form']['address_field']['within'] ) )
-            $address_field .= 'placeholder="' . $title . '"'; $address_field .= ' />';
+    $address_field .= '<input type="text" name="gmw_address[]" id="gmw-address-' . $gmw['ID'] . '" class="' . $am . ' gmw-address gmw-full-address gmw-address-' . $gmw['ID'] . ' ' . $class . '" value="';
+    if ( isset( $_GET['gmw_address'] ) )
+        $address_field .= str_replace( '+', ' ', implode( ' ', $_GET['gmw_address'] ) ); $address_field .= '" size="35" ';
+    if ( isset( $gmw['search_form']['address_field']['within'] ) )
+        $address_field .= 'placeholder="' . $title . '"'; $address_field .= ' />';
 
-        return apply_filters( 'gmw_search_form_address_field', $address_field, $gmw );
+    return apply_filters( 'gmw_search_form_address_field', $address_field, $gmw );
 
-    }
+}
 
-    function gmw_search_form_address_field( $gmw, $class ) {
-        echo gmw_get_search_form_address_field( $gmw, $class );
+function gmw_search_form_address_field( $gmw, $class ) {
+    echo gmw_get_search_form_address_field( $gmw, $class );
 
-    }
+}
 
-    /**
-     * GMW Search form function - Locator Icon
-     * @version 1.0
-     * @author Eyal Fitoussi
-     */
-    function gmw_get_search_form_locator_icon( $gmw, $class ) {
+/**
+ * GMW Search form function - Locator Icon
+ * @version 1.0
+ * @author Eyal Fitoussi
+ */
+function gmw_get_search_form_locator_icon( $gmw, $class ) {
 
-        $lSubmit = ( isset( $gmw['search_form']['locator_submit'] ) && $gmw['search_form']['locator_submit'] == 1 ) ? 'gmw-locator-submit' : '';
-        
-        $icon = $gmw['search_form']['locator_icon'];
+    $lSubmit = ( isset( $gmw['search_form']['locator_submit'] ) && $gmw['search_form']['locator_submit'] == 1 ) ? 'gmw-locator-submit' : '';
 
-        if ( $icon == 'gmw_na' )
-            return;
+    $icon = $gmw['search_form']['locator_icon'];
 
-        $button = '<div class="gmw-locator-btn-wrapper gmw-locator-btn-wrapper' . $gmw['ID'] . '">';
+    if ( $icon == 'gmw_na' )
+        return;
 
-        $button .= apply_filters( 'gmw_search_form_locator_button_img', '<img id="gmw-locate-button-' . $gmw['ID'] . '" class="gmw-locate-btn '.$lSubmit.' ' . $class . '" src="' . GMW_IMAGES . '/locator-images/' . $icon . '" />', $gmw, $class );
-        $button .= '<img src="' . GMW_IMAGES . '/gmw-loader.gif" style="display:none;" />';
+    $button = '<div class="gmw-locator-btn-wrapper gmw-locator-btn-wrapper' . $gmw['ID'] . '">';
 
-        $button .= '</div>';
+    $button .= apply_filters( 'gmw_search_form_locator_button_img', '<img id="gmw-locate-button-' . $gmw['ID'] . '" class="gmw-locate-btn ' . $lSubmit . ' ' . $class . '" src="' . GMW_IMAGES . '/locator-images/' . $icon . '" />', $gmw, $class );
+    $button .= '<img src="' . GMW_IMAGES . '/gmw-loader.gif" style="display:none;" />';
 
-        return apply_filters( 'gmw_search_form_locator_button', $button, $gmw );
+    $button .= '</div>';
 
-    }
+    return apply_filters( 'gmw_search_form_locator_button', $button, $gmw );
 
-    function gmw_search_form_locator_icon( $gmw, $class ) {
-        echo gmw_get_search_form_locator_icon( $gmw, $class );
+}
 
-    }
+function gmw_search_form_locator_icon( $gmw, $class ) {
+    echo gmw_get_search_form_locator_icon( $gmw, $class );
 
-    /**
-     * GMW Search form function - Radius Values
-     * @version 1.0
-     * @author Eyal Fitoussi
-     */
-    function gmw_search_form_radius_values( $gmw, $class, $btitle, $stitle ) {
+}
 
-        $miles = explode( ",", $gmw['search_form']['radius'] );
+/**
+ * GMW Search form function - Radius Values
+ * @version 1.0
+ * @author Eyal Fitoussi
+ */
+function gmw_search_form_radius_values( $gmw, $class, $btitle, $stitle ) {
 
-        if ( empty( $stitle ) )
-            $stitle = ( $gmw['search_form']['units'] == 'imperial' ) ? __( '- Miles -', 'GMW' ) : __( '- Kilometers -', 'GMW' );
-        $btitle = ( empty( $btitle ) ) ? __( ' -- Within -- ', 'GMW' ) : $btitle;
+    $miles = explode( ",", $gmw['search_form']['radius'] );
 
-        if ( count( $miles ) > 1 ) :
+    if ( empty( $stitle ) )
+        $stitle = ( $gmw['search_form']['units'] == 'imperial' ) ? __( '- Miles -', 'GMW' ) : __( '- Kilometers -', 'GMW' );
+    $btitle = ( empty( $btitle ) ) ? __( ' -- Within -- ', 'GMW' ) : $btitle;
 
-            $output = '<select id="gmw-distance-select-' . $gmw['ID'] . '" class="gmw-distance-select gmw-distance-select-' . $gmw['ID'] . ' ' . $class . '" name="gmw_distance">';
-            $output .= '<option value="' . end( $miles ) . '">';
-            if ( $gmw['search_form']['units'] == 'both' )
-                $output .= $btitle;
+    if ( count( $miles ) > 1 ) :
+
+        $output = '<select id="gmw-distance-select-' . $gmw['ID'] . '" class="gmw-distance-select gmw-distance-select-' . $gmw['ID'] . ' ' . $class . '" name="gmw_distance">';
+        $output .= '<option value="' . end( $miles ) . '">';
+        if ( $gmw['search_form']['units'] == 'both' )
+            $output .= $btitle;
+        else
+            $output .= $stitle; $output .= '</option>';
+
+        foreach ( $miles as $mile ) :
+
+            if ( isset( $_GET['gmw_distance'] ) && $_GET['gmw_distance'] == $mile )
+                $mile_s = 'selected="selected"';
             else
-                $output .= $stitle; $output .= '</option>';
+                $mile_s = "";
+            $output .= '<option value="' . $mile . '" ' . $mile_s . '>' . $mile . '</option>';
 
-            foreach ( $miles as $mile ) :
+        endforeach;
 
-                if ( isset( $_GET['gmw_distance'] ) && $_GET['gmw_distance'] == $mile )
-                    $mile_s = 'selected="selected"';
-                else
-                    $mile_s = "";
-                $output .= '<option value="' . $mile . '" ' . $mile_s . '>' . $mile . '</option>';
+        $output .= '</select>';
 
-            endforeach;
+    else :
 
-            $output .= '</select>';
+        $output = '<input type="hidden" name="gmw_distance" value="' . end( $miles ) . '" />';
+    endif;
 
-        else :
+    echo apply_filters( 'gmw_search_form_radius_field', $output, $gmw, $class, $btitle, $stitle );
 
-            $output = '<input type="hidden" name="gmw_distance" value="' . end( $miles ) . '" />';
-        endif;
+}
 
-        echo apply_filters( 'gmw_search_form_radius_field', $output, $gmw, $class, $btitle, $stitle );
+/**
+ * GMW Search form function - Distance units
+ * @version 1.0
+ * @author Eyal Fitoussi
+ */
+function gmw_search_form_units( $gmw, $class ) {
 
-    }
+    if ( $gmw['search_form']['units'] == 'both' ) :
 
-    /**
-     * GMW Search form function - Distance units
-     * @version 1.0
-     * @author Eyal Fitoussi
-     */
-    function gmw_search_form_units( $gmw, $class ) {
+        $unit_m = $unit_i = false;
+        if ( isset( $_GET['gmw_units'] ) && $_GET['gmw_units'] == 'metric' )
+            $unit_m = 'selected="selected"';
+        else
+            $unit_i = 'selected="selected"';
 
-        if ( $gmw['search_form']['units'] == 'both' ) :
+        echo '<select name="gmw_units" id="gmw-units-' . $gmw['ID'] . '" class="gmw-units gmw-units-' . $gmw['ID'] . ' ' . $class . '">';
 
-            $unit_m = $unit_i = false;
-            if ( isset( $_GET['gmw_units'] ) && $_GET['gmw_units'] == 'metric' )
-                $unit_m = 'selected="selected"';
-            else
-                $unit_i = 'selected="selected"';
+        echo '<option value="imperial" ' . $unit_i . '>' . __( 'Miles', 'GMW' ) . '</option>';
+        echo '<option value="metric" ' . $unit_m . '>' . __( 'Kilometers', 'GMW' ) . '</option>';
 
-            echo '<select name="gmw_units" id="gmw-units-' . $gmw['ID'] . '" class="gmw-units gmw-units-' . $gmw['ID'] . ' ' . $class . '">';
+        echo '</select>';
 
-            echo '<option value="imperial" ' . $unit_i . '>' . __( 'Miles', 'GMW' ) . '</option>';
-            echo '<option value="metric" ' . $unit_m . '>' . __( 'Kilometers', 'GMW' ) . '</option>';
+    else :
+        echo '<input type="hidden" name="gmw_units" value="' . $gmw['search_form']['units'] . '" />';
+    endif;
 
-            echo '</select>';
+}
 
-        else :
-            echo '<input type="hidden" name="gmw_units" value="' . $gmw['search_form']['units'] . '" />';
-        endif;
+function gmw_multiexplode( $delimiters, $string ) {
 
-    }
+    $ready  = str_replace( $delimiters, $delimiters[0], $string );
+    $launch = explode( $delimiters[0], $ready );
+    return $launch;
 
-    function gmw_multiexplode( $delimiters, $string ) {
-
-        $ready  = str_replace( $delimiters, $delimiters[0], $string );
-        $launch = explode( $delimiters[0], $ready );
-        return $launch;
-
-    }
-    
+}

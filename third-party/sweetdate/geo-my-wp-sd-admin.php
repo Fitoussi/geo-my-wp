@@ -17,8 +17,33 @@ class GMW_SD_Admin {
      */
     public function __construct() {
 
-        $this->settings = get_option( 'gmw_settings' );
+        $this->settings = get_option( 'gmw_options' );
         add_filter( 'gmw_admin_settings', array( $this, 'settings_init' ) );
+
+        if ( !isset( $this->settings['sweet_date'] ) || empty( $this->settings['sweet_date'] ) ) {
+            add_filter( 'admin_init', array( $this, 'default_options' ) );
+        }
+
+    }
+
+    /**
+     * Set deafult values if not exists
+     * 
+     */
+    public function default_options() {
+
+        $this->settings['sweet_date'] = array(
+            'radius'     => '10,25,50,100,200',
+            'units'      => '3959',
+            'map_use'    => 1,
+            'map_width'  => '100%',
+            'map_height' => '300px',
+            'map_typw'   => 'ROADMAP',
+            'distance'   => 1,
+            'address'    => 1,
+            'directions' => 1
+        );
+        update_option( 'gmw_options', $this->settings );
 
     }
 
@@ -30,7 +55,7 @@ class GMW_SD_Admin {
      */
     public function settings_init( $settings ) {
 
-        $settings[ 'sweet_date' ] = array(
+        $settings['sweet_date'] = array(
             __( 'Sweet Date', 'GMW-MD' ),
             array(
                 array(
@@ -127,5 +152,4 @@ class GMW_SD_Admin {
     }
 
 }
-
 new GMW_SD_Admin;
