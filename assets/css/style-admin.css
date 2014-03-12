@@ -89,164 +89,180 @@
 }
 
 .gmw-wrap-top-h2 {
-	//float:left;
-	margin-bottom:20px !important;
+    //float:left;
+    margin-bottom:20px !important;
 }
 /********** Add-ons Page **********/
 
 li.gmw-single-addon-wrapper {
-	float: left;
-	width: 320px;
-	margin-right: 20px;
-	background: #fdfdfd;
-	border: 1px solid #e5e5e5;
-	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,.04);
-	box-shadow: 0 1px 1px rgba(0,0,0,.04);
-	margin-bottom:15px;
+    float: left;
+    width: 320px;
+    margin-right: 20px;
+    background: #fdfdfd;
+    border: 1px solid #e5e5e5;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    margin-bottom:15px;
 }
 
 .gmw-addons-page-top-buttons {
-	padding:10px 7px 10px;
-	margin-top:-1px;
-	float: left;
-	margin-right: 7px;
-	font-size: 14px;
-	color:#666;
-	border: 1px solid #e5e5e5;
-	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,.04);
-	box-shadow: 0 1px 1px rgba(0,0,0,.04);
-	margin-bottom:15px;
+    padding:10px 7px 10px;
+    margin-top:-1px;
+    float: left;
+    margin-right: 7px;
+    font-size: 14px;
+    color:#666;
+    border: 1px solid #e5e5e5;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    margin-bottom:15px;
 }
 
 .gmw-addon-license-wrapper {
-	height:30px;
-	overflow:hidden;
+    height:30px;
+    overflow:hidden;
+    padding:9px 7px;
+    border-top:1px solid #e5e5e5;
+    position: relative;
 }
 
 h2.gmw-addon-title {
-	padding: 10px;
-	font-size: 19px;
+    padding: 10px;
+    font-size: 19px;
 }
 
 div.gmw-addon-image-wrapper {
-	padding: 3px;
+    padding: 3px;
 }
 
 .gmw-addon-image-wrapper img {
-	width:100%;
-	height:auto;
+    width:100%;
+    height:auto;
 }
 .gmw-addon-content-wrapper {
-	position:relative;
-	border-top: 1px solid #e6e6e6;
+    position:relative;
+    border-top: 1px solid #e6e6e6;
 }
 
 div.gmw-addon-desc-wrapper {
-	padding: 0 10px 10px;
-	min-height: 30px;
-	position:absolute;
-	top:10px;
-	display:none;
-	color:#444;
-	font-size:14px;
+    padding: 0 10px 10px;
+    min-height: 30px;
+    position:absolute;
+    top:10px;
+    display:none;
+    color:#444;
+    font-size:14px;
 }
 
 .gmw-addon-activate {
-	padding:10px 7px 15px;
-	margin-top:-1px;
-	background: #E8F2F5;
-	border-top:1px solid #e5e5e5;
-	border-left:4px solid #2ea2cc;
+    background: #E8F2F5;
+    border-left:4px solid #2ea2cc;
+}
+
+.gmw-license-error-wrapper {
+    position: absolute;
+    width:100%;
+    top:0;
+    left: -5px;
+    max-width:299px;
+    padding:5px 5px 5px 15px;
+    background: rgb(255, 228, 228);
+    color:#BC1A1A;
+    opacity:0.98;
+    float:left;
+    height:36px;
+    border-top:1px solid rgb(255, 202, 202);
+    border-bottom:2px solid rgb(255, 202, 202);
+    border-right:1px solid rgb(255, 202, 202);
 }
 
 .gmw-addon-deactivate {
-	padding:10px 7px 15px;
-	margin-top:-1px;
-	background: #FDEFEF;
-	border-top:1px solid #e5e5e5;
-	border-left:4px solid red;
-	position:relative;
+
+    background: #FDEFEF;
+    border-left:4px solid red;
+
 }
 
 .gmw-addon-require-wrapper {
-	position:absolute;
-	width:100%;
-	background:white;
-	display:none;
-	opacity:0.9;
-	left:0;
-	height:100%;
-	top:0px;
-	padding:7px;
+    position:absolute;
+    width:100%;
+    background:white;
+    display:none;
+    opacity:0.9;
+    left:0;
+    height:100%;
+    top:0px;
+    padding:7px;
 }
 
 .gmw-license-valid {
-	border-left:4px solid #37C42A;
-	background: #E9F5E8;
+    border-left:4px solid #37C42A;
+    background: #E9F5E8;
 }
 
 
 input.gmw-addon-short-input {
-	width: 100%;
-	margin-bottom:5px;
-	max-width:270px;
+    width: 100% !important;
+    max-width:270px;
+    height: 28px !important;
+    padding:1px 8px 0px !important;
 }
 
 .mandatory {
-	border:1px solid rgb(252, 165, 165) !important;
+    border:1px solid rgb(252, 165, 165) !important;
 }
 
 input.regular-text {
-	width:initial;
+    width:initial;
 }
 
 .remove-license-button {
-	background: white;
-	border-radius: 20px;
-	padding:2px 7px;
-	color:#888;
-	font-weight: bold;
-	border:1px solid #dcdcdc;
-	cursor: pointer;
+    background: white;
+    border-radius: 20px;
+    padding:2px 7px;
+    color:#888;
+    font-weight: bold;
+    border:1px solid #dcdcdc;
+    cursor: pointer;
 }
 
 .gmw-addon-top-wrapper {
-	position: relative;
+    position: relative;
 }
 
 .gmw-addon-activation-btn {
-	float:right;
+    float:right;
 }
 .gmw-addon-activate-btn, .gmw-addon-deactivate-btn {
-	position: absolute;
-	top:0;
-	right: 0;
-	margin:10px !important;
+    position: absolute;
+    top:0;
+    right: 0;
+    margin:10px !important;
 }
 
 .gmw-addon-top-wrapper title {
-	display:block;
+    display:block;
 }
 
 .gmw-nav-tab {
-	float: left;
-	color: #333;
-	text-transform: capitalize;
-	background-color: #f7f7f7;
-	font-size: 14px;
-	padding: 12px 10px;
-	font-weight: bold;
-	text-shadow: 1px 1px 5px white;
-	text-transform: capitalize;
-	margin:0px 2px
+    float: left;
+    color: #333;
+    text-transform: capitalize;
+    background-color: #f7f7f7;
+    font-size: 14px;
+    padding: 12px 10px;
+    font-weight: bold;
+    text-shadow: 1px 1px 5px white;
+    text-transform: capitalize;
+    margin:0px 2px
 }
 
 .gmw-nav-tab:link, .gmw-nav-tab:hover {
-	color: #333;
+    color: #333;
 }
 
 .gmw-tabs-table {
-	-webkit-box-shadow:none !important;
-	box-shadow: none !important;
-	border: 1px solid #eee !important;
+    -webkit-box-shadow:none !important;
+    box-shadow: none !important;
+    border: 1px solid #eee !important;
 }

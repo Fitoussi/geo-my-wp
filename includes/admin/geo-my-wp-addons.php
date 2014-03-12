@@ -30,7 +30,7 @@ class GMW_Addons {
             self::deactivate_addon();
 
     }
-
+    
     /**
      * Activate add-on.
      *
@@ -80,7 +80,7 @@ class GMW_Addons {
      * @return void
      */
     public function activate_license($licenses) {
-
+                 
         // listen for our activate button to be clicked
         if (!isset($_POST['gmw_license_key_activate']))
             return $licenses;
@@ -118,13 +118,15 @@ class GMW_Addons {
             $license_data = json_decode(wp_remote_retrieve_body($response));
 
             $statuses = get_option('gmw_premium_plugin_status');
-
-            $statuses[$add_on] = $license_data->license;
+            
+            $message = ( $license_data->license == 'valid' ) ? $license_data->license : $license_data->error;
+     
+            $statuses[$add_on] = $message;
             // $license_data->license will be either "active" or "inactive"
             update_option('gmw_premium_plugin_status', $statuses);
-
+            
         endif;
-
+        
         return $licenses;
 
     }
@@ -207,11 +209,10 @@ class GMW_Addons {
      * @return void
      */
     function check_license() {
-
+      
         global $wp_version;
 
         $licenses = get_option('gmw_license_keys');
-
         if (!isset($licenses) || empty($licenses))
             return;
 
@@ -238,7 +239,7 @@ class GMW_Addons {
 
             if (isset($statuses) && !empty($statuses)) :
 
-                if (!isset($license_data)) :
+                if ( !isset( $license_data ) ) :
                     $statuses[$name] = 'inactive';
                 else :
                     $statuses[$name] = $license_data->license;
@@ -246,6 +247,7 @@ class GMW_Addons {
                 // $license_data->license will be either "active" or "inactive"
                 update_option('gmw_premium_plugin_status', $statuses);
             endif;
+            
             /*
               //print_r($license_data);
               if( $license_data->license == 'valid' ) {
@@ -268,7 +270,14 @@ class GMW_Addons {
      * @return void
      */
     public function output() {
-
+        
+        //run licenses check every 6 hours just to make sure that their status is updated
+        if ( false === ( get_transient( 'gmw_licenses_check_trans' ) ) ) {
+            self::check_license();
+            set_transient( 'gmw_licenses_check_trans' , true, 60*60*6 );
+        }
+        
+        
         $addons = array(
                 //
         );
@@ -297,17 +306,7 @@ class GMW_Addons {
             <h2 class="gmw-wrap-top-h2"><?php _e('GEO my WP Add-ons', 'GMW'); ?></h2>
 
             <div class="clear"></div>
-
-            <?php
-            if (isset($_POST['gmw_license_key_activate']) && !empty($_POST['gmw_license_key_activate'])) {
-
-                $addon = $_POST['gmw_license_key_activate'];
-                if ($this->statuses[$addon] == 'invalid') {
-                    echo '<div class="updated fade" style="clear:both"><p>' . __('Your license key ' . $this->licenses[$addon] . ' is invalid.', 'GMW') . '</p></div>';
-                }
-            }
-            ?>
-
+            
             <div style="float:left;margin-bottom:10px;">
                 <div style="border-left:4px solid red;background: #FDEFEF;" class="gmw-addons-page-top-buttons"><?php _e('Add-on Uninstalled / Deactivated', 'GMW'); ?></div>
                 <div style="background: #E8F2F5;border-left:4px solid #2ea2cc;" class="gmw-addons-page-top-buttons"><?php _e('Add-on Activated', 'GMW'); ?></div>
@@ -317,29 +316,31 @@ class GMW_Addons {
 
             <form method="post" action="options.php">
 
-                    <?php settings_fields('gmw_premium_license'); ?>
+                <?php settings_fields('gmw_premium_license'); ?>
 
                 <ul class="widefat fixed">
 
-                    <?php $addOnsArray = array();
-                    ksort($addons); ?>
+                    <?php $addOnsArray = array(); ?>
+                    <?php ksort($addons); ?>
 
-        <?php $count       = 1; ?>
+                    <?php $count = 1; ?>
 
-        <?php foreach ($addons as $addon) : ?>
+                    <?php foreach ($addons as $addon) : ?>
 
-                                    <?php $addOnsArray[] = $addon['name']; ?>
+                        <?php $addOnsArray[] = $addon['name']; ?>
 
-                                        <?php $addon_status  = (!isset($this->addons) || !isset($this->addons[$addon['name']]) || $this->addons[$addon['name']] == 'inactive' ) ? 'inactive' : 'active'; ?>
+                        <?php $addon_status  = (!isset($this->addons) || !isset($this->addons[$addon['name']]) || $this->addons[$addon['name']] == 'inactive' ) ? 'inactive' : 'active'; ?>
 
                         <li class="gmw-single-addon-wrapper <?php echo $addon['name']; ?> first">	
 
                             <div class="gmw-addon-top-wrapper">
 
                                 <h2 class="gmw-addon-title">
-            <?php echo $addon['title']; ?>
+            
+                                    <?php echo $addon['title']; ?>
+                                    
                                     <span style="float:right;">
-                                    <?php if (isset($addon['version'])) echo $addon['version']; ?>
+                                        <?php if (isset($addon['version'])) echo $addon['version']; ?>
                                     </span>
                                 </h2>
 
@@ -358,14 +359,14 @@ class GMW_Addons {
                                 </div>
 
                                 <div class="gmw-addon-desc-wrapper">
-            <?php echo $addon['desc']; ?>
+                                    <?php echo $addon['desc']; ?>
                                 </div>
                             </div>
 
                             <!-- when add-on is deactivated -->
-                                <?php if (!isset($this->addons) || !isset($this->addons[$addon['name']]) || $this->addons[$addon['name']] == 'inactive') { ?>
+                            <?php if (!isset($this->addons) || !isset($this->addons[$addon['name']]) || $this->addons[$addon['name']] == 'inactive') { ?>
 
-                                    <?php wp_nonce_field($addon['name'], $addon['name']); ?>
+                                <?php wp_nonce_field($addon['name'], $addon['name']); ?>
 
                                 <div class="gmw-addon-license-wrapper gmw-license-invalid gmw-addon-deactivate">
 
@@ -395,66 +396,88 @@ class GMW_Addons {
 
                                 </div>
 
-                                <!-- when add-on requier license key and key entered and saved in database -->
-            <?php } elseif (isset($addon['license']) && $addon['license'] == true) { ?>
-
+                                <!-- when add-on requires license key and key entered and saved in database -->
+                            <?php } elseif (isset($addon['license']) && $addon['license'] == true) { ?>
+                                   
                                 <!-- if license is valid -->
-                <?php if (isset($this->statuses[$addon['name']]) && $this->statuses[$addon['name']] !== false && $this->statuses[$addon['name']] == 'valid' && isset($this->licenses[$addon['name']]) && $this->licenses[$addon['name']] != '') { ?>
+                                <?php if (isset($this->statuses[$addon['name']]) && $this->statuses[$addon['name']] !== false && $this->statuses[$addon['name']] == 'valid' && isset($this->licenses[$addon['name']]) && !empty($this->licenses[$addon['name']] ) ) { ?>
 
-                    <?php wp_nonce_field($addon['name'], $addon['name']); ?>
+                                    <?php wp_nonce_field($addon['name'], $addon['name']); ?>
 
                                     <div class="gmw-addon-license-wrapper gmw-license-valid gmw-addon-activate">
 
-                                        <input class="gmw_license_keys" disabled="disabled" type="text" class="regular-text" style="margin-bottom: 5px;width:100%;padding:5px;max-width:270px;" value="<?php if (isset($this->licenses[$addon['name']]) && !empty($this->licenses[$addon['name']])) echo $this->licenses[$addon['name']]; ?>" />
+                                        <input class="gmw_license_keys" disabled="disabled" type="text" class="regular-text" style="width: 100% !important;height: 28px !important;padding:0px 7px 0px !important;max-width: 270px !important;" value="<?php if (isset($this->licenses[$addon['name']]) && !empty($this->licenses[$addon['name']])) echo $this->licenses[$addon['name']]; ?>" />
 
                                         <input type="hidden" name="gmw_license_keys[<?php echo $addon['name']; ?>]" value="<?php if (isset($this->licenses[$addon['name']]) && !empty($this->licenses[$addon['name']])) echo $this->licenses[$addon['name']]; ?>" />
 
                                         <!-- show deactivate license button -->
-                                        <button type="submit" class="button-secondary activate-license-btn gmw-addon-activation-btn" style="float: right;margin-top:1px;line-height: 27px;height: 31px;padding: 0 9px 1px;color:rgb(245, 89, 89) !important;font-size: 14px" name="gmw_license_key_deactivate" title="<?php _e('Deactivate License Key', 'GMW'); ?>" value="<?php echo $addon['name']; ?>" >x</button>
+                                        <button type="submit" class="button-secondary activate-license-btn gmw-addon-activation-btn" style="float: right !important;margin-top: 1px !important;padding: 0 9px !important;color: rgb(182, 42, 42)  !important;height: 27px !important;" name="gmw_license_key_deactivate" title="<?php _e('Deactivate License Key', 'GMW'); ?>" value="<?php echo $addon['name']; ?>" >&#10007;</button>
 
                                     <?php /* <button type="submit" class="button-secondary gmw-addon-activation-btn" style="opacity:0;" name="gmw_license_key_deactivate" value="<?php echo $addon['name']; ?>" ><?php _e('Deactivate License','GMW'); ?></button> */ ?>
 
                                     </div>
 
-                                    <!-- if status invalid -->
-                                    <?php } else { ?>
-
-                    <?php wp_nonce_field($addon['name'], $addon['name']); ?>
-
+                                <!-- if status invalid -->
+                                <?php } else { ?>
+                                    
                                     <div class="gmw-addon-license-wrapper gmw-license-invalid gmw-addon-activate">
+                                              
+                                        <?php
+                                        //make sure GEO my WP is activated
 
-                                        <input class="gmw_license_keys gmw-addon-short-input" name="gmw_license_keys[<?php echo $addon['name']; ?>]" type="text" class="regular-text" placeholder="<?php _e('Enter your license key', 'GMW'); ?>" style="margin-bottom: 5px;width:100%;padding:5px" value="<?php if (isset($this->licenses[$addon['name']]) && !empty($this->licenses[$addon['name']])) echo $this->licenses[$addon['name']]; ?>" />
+                                        if ( isset( $this->licenses[$addon['name']] ) && !empty( $this->licenses[$addon['name']] ) ) {
 
-                    <?php /* <button type="submit" class="button-secondary remove-license-key" style="float: right;margin-top:2px" name="gmw_addon_clear_license_field" title="<?php _e( 'clear license field', 'GMW' ); ?>" value="<?php echo $addon['name']; ?>" >x</button> */ ?>
+                                            if ( isset( $this->statuses[$addon['name']] ) && ( $this->statuses[$addon['name']] == 'expired' || $this->statuses[$addon['name']] == 'no_activations_left' || $this->statuses[$addon['name']] == 'missing' ) ) {
+                                                if ( $this->statuses[$addon['name']] == 'expired' ) {
+                                                    $message = __( 'Your license key has expired. Please renew your key in order to keep getting its updates.', 'GMW' );
+                                                } elseif ( $this->statuses[$addon['name']] == 'no_activations_left' ) {
+                                                    $message = __( 'Your license key has no activations left.', 'GMW' );
+                                                } else {
+                                                    $message = __( 'Something is wrong with the key you entered. Please check your key and try again.', 'GMW' );
+                                                }
+                                                ?>
+                                                <div class="gmw-addon-license-wrapper gmw-license-invalid gmw-license-error-wrapper">
 
-                                        <button type="submit" class="button-secondary activate-license-btn gmw-addon-activation-btn" style="float: right;margin-top:1px;line-height: 30px;height: 31px;padding: 0 9px 1px;color:green !important;" name="gmw_license_key_activate" title="<?php _e('Activate License Key', 'GMW'); ?>" value="<?php echo $addon['name']; ?>" >&#10003;</button>
+                                                    <span style="float:left;width:270px;"><?php echo $message; ?></span>
+                                                    <input type="button" class="button-secondary activate-license-btn gmw-addon-activation-btn gmw-remove-license-warning" style="float: right !important;margin-top: 4px !important;padding: 0 8px !important;color: rgb(182, 42, 42)  !important;height: 27px !important;" value="&#10007;" />
+                                                </div>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
 
-                                    <?php /* <button type="submit" class="button-primary activate-license-btn gmw-addon-activation-btn" style="opacity:0;" name="gmw_license_key_activate" value="<?php echo $addon['name']; ?>"><?php _e('Activate License','GMW'); ?></button> */ ?>
+                                        <input class="gmw_license_keys gmw-addon-short-input" name="gmw_license_keys[<?php echo $addon['name']; ?>]" type="text" class="regular-text" placeholder="<?php _e('Enter your license key', 'GMW'); ?>" value="<?php if (isset($this->licenses[$addon['name']]) && !empty($this->licenses[$addon['name']])) echo $this->licenses[$addon['name']]; ?>" />
 
-                    <?php /* <button type="submit" class="button-secondary gmw-addon-activation-btn" style="opacity:0;margin-right:5px;" name="gmw_addon_deactivated" value="<?php echo $addon['name']; ?>" ><?php _e('Deactivate Add-on','GMW'); ?></button> */ ?>
+                                        <?php /* <button type="submit" class="button-secondary remove-license-key" style="float: right;margin-top:2px" name="gmw_addon_clear_license_field" title="<?php _e( 'clear license field', 'GMW' ); ?>" value="<?php echo $addon['name']; ?>" >x</button> */ ?>
 
+                                        <button type="submit" class="button-secondary activate-license-btn gmw-addon-activation-btn" name="gmw_license_key_activate" title="<?php _e('Activate License Key', 'GMW'); ?>" style="float: right !important;margin-top: 1px !important;padding: 0 8px !important;color: green !important;height:27px !important;" value="<?php echo $addon['name']; ?>" >&#10003;</button>
+
+                                        <?php /* <button type="submit" class="button-primary activate-license-btn gmw-addon-activation-btn" style="opacity:0;" name="gmw_license_key_activate" value="<?php echo $addon['name']; ?>"><?php _e('Activate License','GMW'); ?></button> */ ?>
+
+                                        <?php /* <button type="submit" class="button-secondary gmw-addon-activation-btn" style="opacity:0;margin-right:5px;" name="gmw_addon_deactivated" value="<?php echo $addon['name']; ?>" ><?php _e('Deactivate Add-on','GMW'); ?></button> */ ?>
+                                        
+                                        <?php wp_nonce_field($addon['name'], $addon['name']); ?>
+                                        
                                     </div>
+                                       
+                                <?php } ?>
 
-                <?php } ?>
-
-            <?php } else { ?>
+                            <?php } else { ?>
 
                                 <div class="gmw-addon-license-wrapper gmw-addon-activate">
 
-                                    <input class="gmw_license_keys" name="gmw_license_keys[<?php echo $addon['name']; ?>]" type="text" class="regular-text" disabled="disabled" placeholder="<?php _e('No license key required', 'GMW'); ?>" style="margin-bottom: 5px;width:100%;padding:5px" value="<?php if (isset($this->licenses[$addon['name']]) && !empty($this->licenses[$addon['name']])) echo $this->licenses[$addon['name']]; ?>" />
+                                    <input class="gmw_license_keys" name="gmw_license_keys[<?php echo $addon['name']; ?>]" type="text" class="regular-text" disabled="disabled" placeholder="<?php _e('No license key required', 'GMW'); ?>" style="width: 100% !important;height: 28px !important;padding:3px 8px 0px !important;" value="<?php if (isset($this->licenses[$addon['name']]) && !empty($this->licenses[$addon['name']])) echo $this->licenses[$addon['name']]; ?>" />
 
                                     <button type="submit" class="button-secondary gmw-addon-activation-btn" style="opacity:0;" name="gmw_addon_deactivated" value="<?php echo $addon['name']; ?>" ><?php _e('Deactivate Add-on', 'GMW'); ?></button>									
                                 </div>
 
-                        <?php } ?>
+                            <?php } ?>
 
                         </li>
 
-            <?php //if ( $count % 3 == 0 ) echo '<div class="clear"></div>'; $count++;  ?>
+                    <?php endforeach; ?>
 
-        <?php endforeach; ?>
-
-        <?php self::output_feed_addons(); ?>
+                    <?php self::output_feed_addons(); ?>
                 </ul>
 
             </form>
@@ -472,7 +495,15 @@ class GMW_Addons {
                             $(this).hide();
                     });
                 });
+                
+                setTimeout(function() {
+                      $('.gmw-license-error-wrapper').fadeToggle();
+                }, 10000);
 
+                $('.gmw-remove-license-warning').click(function() {
+                    $(this).closest('.gmw-license-error-wrapper').fadeToggle();
+                });
+                
                 $('.gmw-single-addon-wrapper').mouseenter(function() {
                     $('.gmw-addon-desc-wrapper, .gmw-addon-activate-btn, .gmw-addon-deactivate-btn', this).stop(true, true).fadeToggle();
                     $('.gmw-addon-image-wrapper', this).stop(true, true).animate({opacity: 0.1});
@@ -508,12 +539,12 @@ class GMW_Addons {
 
                 }
 
-                $('.activate-license-btn').click(function(e) {
-                    if (jQuery.trim($(this).closest('.gmw-addon-license-wrapper').find('.gmw_license_keys').val()).length <= 0) {
-                        $(this).closest('.gmw-addon-license-wrapper').find('.gmw_license_keys').addClass('mandatory');
-                        e.preventDefault();
-                    }
-                });
+               // $('.activate-license-btn').click(function(e) {
+                 //   if (jQuery.trim($(this).closest('.gmw-addon-license-wrapper').find('.gmw_license_keys').val()).length <= 0) {
+                  //      $(this).closest('.gmw-addon-license-wrapper').find('.gmw_license_keys').addClass('mandatory');
+                 //       e.preventDefault();
+                 //   }
+               // });
             });
         </script>
         <?php
