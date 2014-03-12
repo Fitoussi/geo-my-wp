@@ -154,7 +154,7 @@ class GMW_Addons {
         $license_key = sanitize_text_field($license_key);
 
         if (isset($license_key) && !empty($license_key)) :
-
+      
             $this_license = trim($license_key);
             $this_name    = ucwords(str_replace('_', ' ', $add_on));
 
@@ -177,7 +177,7 @@ class GMW_Addons {
             // $license_data->license will be either "deactivated" or "failed"
             $statuses = get_option('gmw_premium_plugin_status');
 
-            if ($license_data->license == 'deactivated') :
+            if ($license_data->license ==  ( 'deactivated' || 'failed' )  ) :
                 unset($statuses[$add_on]);
                 update_option('gmw_premium_plugin_status', $statuses);
             endif;
