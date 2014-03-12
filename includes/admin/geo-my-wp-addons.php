@@ -277,7 +277,6 @@ class GMW_Addons {
             set_transient( 'gmw_licenses_check_trans' , true, 60*60*6 );
         }
         
-        
         $addons = array(
                 //
         );
@@ -288,13 +287,13 @@ class GMW_Addons {
          * 
          * example:
          * $add-ons = array ( 
-         * 					  'friends' => array( 
-         * 							'name'    => 'friends', 		    //slug
-         * 							'title'   => 'Friends Locator',     //title
-         * 							'desc'    => 'Add-on description',  // description
-         * 							'license' => false 				    //add on requiers licesnse key ?  
-         * 						),
-         * 					);
+         *                  'friends' => array( 
+         *                  'name'    => 'friends',            //slug
+         *                  'title'   => 'Friends Locator',    //title
+         *                  'desc'    => 'Add-on description', // description
+         *                  'license' => false 		       //add on requiers licesnse key ?  
+         *                  ),
+         *            );
          */
         $addons = apply_filters('gmw_admin_addons_page', $addons);
         ?>
@@ -310,7 +309,7 @@ class GMW_Addons {
             <div style="float:left;margin-bottom:10px;">
                 <div style="border-left:4px solid red;background: #FDEFEF;" class="gmw-addons-page-top-buttons"><?php _e('Add-on Uninstalled / Deactivated', 'GMW'); ?></div>
                 <div style="background: #E8F2F5;border-left:4px solid #2ea2cc;" class="gmw-addons-page-top-buttons"><?php _e('Add-on Activated', 'GMW'); ?></div>
-                <div style="border-left:4px solid #37C42A;background: #E9F5E8;" class="gmw-addons-page-top-buttons"><?php _e('Add-on and License Activated', 'GMW'); ?></div>
+                <div style="border-left:4px solid #37C42A;background: #E9F5E8;" class="gmw-addons-page-top-buttons"><?php _e('License Key Activated', 'GMW' ); ?></div>
             </div>
             <br />	
 

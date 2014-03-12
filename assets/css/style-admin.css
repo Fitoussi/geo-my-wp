@@ -106,12 +106,12 @@ li.gmw-single-addon-wrapper {
 }
 
 .gmw-addons-page-top-buttons {
-    padding:10px 7px 10px;
+    padding:8px 7px;
     margin-top:-1px;
     float: left;
     margin-right: 7px;
     font-size: 14px;
-    color:#666;
+    color:#333;
     border: 1px solid #e5e5e5;
     -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.04);
     box-shadow: 0 1px 1px rgba(0,0,0,.04);
