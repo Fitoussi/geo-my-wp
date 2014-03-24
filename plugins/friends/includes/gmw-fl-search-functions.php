@@ -209,10 +209,13 @@ function gmw_fl_per_page_dropdown($gmw, $class) {
 
                 var totalResults = <?php echo $members_template->total_member_count; ?>;
                 var lastPage = Math.ceil(totalResults / $(this).val());
-                var newPaged = (<?php echo $members_template->pag_num; ?> > lastPage) ? lastPage : false;
-                //var seperator = (window.location.href.indexOf("?")===-1)?"?":"&";
-                window.location.href = jQuery.query.set("gmw_per_page", $(this).val()).set('upage', newPaged);
-
+                var newPaged = (<?php echo $members_template->pag_num; ?> > lastPage) ? lastPage : <?php echo $members_template->pag_num; ?>;
+                
+                $('.gmw-submit-wrapper-<?php echo $gmw['ID']; ?> .gmw-per-page').val($(this).val());
+			   	$(".gmw-submit-wrapper-<?php echo $gmw['ID']; ?> .gmw-paged").val(newPaged);
+			   	
+			   	$('.gmw-submit-wrapper-<?php echo $gmw['ID']; ?>').closest('form').submit();
+			   	           
             });
         });
     </script>

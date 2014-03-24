@@ -68,16 +68,17 @@ jQuery(document).ready(function($) {
                 address.push($(this).val());
             });
             address = address.join(' ');
+           
         }
-
+        
         // check if we are submmiting the same address and if we have lat/long. 
         //if so no need to geocode again and submit the form with the information we already have
         if (sForm.find('.prev-address').val() == address && $.trim(sForm.find('.gmw-lat').val()).length > 0)
             return true;
-        //Check if the address was geocoded and if so with need to submit this form
+        //Check if the address was geocoded and if so we need to submit this form
         if (sForm.find('.gmw-submit').hasClass('submitted'))
             return true;
-
+        
         //stop the form submission. we need to geocode the address
         e.preventDefault();
         //if address field is empty create a red border for the input field and stop the function
@@ -205,14 +206,19 @@ jQuery(document).ready(function($) {
     function getAddressFields(results) {
 
         var street_number = false;
-        var street = false;
+        var street  = '';
+        var city    = '';
+        var state   = '';
+        var zipcode = '';
+        var country = '';
         var address = results[0].address_components;
-        var gotLat = results[0].geometry.location.lat();
-        var gotLng = results[0].geometry.location.lng();
+        var gotLat  = results[0].geometry.location.lat();
+        var gotLng  = results[0].geometry.location.lng();
 
         gmwSetCookie("gmw_lat", gotLat, 7);
         gmwSetCookie("gmw_lng", gotLng, 7);
         gmwSetCookie("gmw_address", results[0].formatted_address, 7);
+        
         /* check for each of the address components and if exist save it in a cookie */
         for (x in address) {
 
@@ -229,18 +235,22 @@ jQuery(document).ready(function($) {
             }
 
             if (address[x].types == 'administrative_area_level_1,political') {
+            	state = address[x].short_name;
                 gmwSetCookie("gmw_state", address[x].short_name, 7);
             }
 
             if (address[x].types == 'locality,political') {
+            	city = address[x].short_name;
                 gmwSetCookie("gmw_city", address[x].short_name, 7);
             }
 
             if (address[x].types == 'postal_code') {
+            	zipcode = address[x].short_name;
                 gmwSetCookie("gmw_zipcode", address[x].short_name, 7);
             }
 
             if (address[x].types == 'country,political') {
+            	country = address[x].short_name;
                 gmwSetCookie("gmw_country", address[x].short_name, 7);
             }
         }

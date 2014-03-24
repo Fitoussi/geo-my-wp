@@ -14,7 +14,7 @@ global $cp_options;
 	
 	<!-- results count -->
 	<div class="gmw-results-count">
-		<h2><?php gmw_pt_within( $gmw, $sm=__( 'Showing', 'GMW' ), $om=__( 'out of', 'GMW' ), $rm=__( 'results', 'GMW' ) ,$wm=__( 'within', 'GMW' ), $fm=__( 'from','GMW' ), $nm=__( 'your location', 'GMW' ) ); ?></h2>
+		<h3><?php gmw_pt_within( $gmw, $sm=__( 'Showing', 'GMW' ), $om=__( 'out of', 'GMW' ), $rm=__( 'results', 'GMW' ) ,$wm=__( 'within', 'GMW' ), $fm=__( 'from','GMW' ), $nm=__( 'your location', 'GMW' ) ); ?></h3>
 	</div>
 	
 	<div class="gmw-pt-pagination-wrapper gmw-pt-top-pagination-wrapper">

@@ -28,6 +28,8 @@ class GMW_PT_Admin {
         add_filter( 'gmw_admin_new_form_button', array( $this, 'new_form_button' ), 1, 1 );
         add_filter( 'gmw_posts_form_settings', array( $this, 'form_settings_init' ), 1, 1 );
 
+        add_filter( 'gmw_admin_shortcodes_page', array( $this, 'shortcodes_page' ) );
+        		
         //main settings
         add_action( 'gmw_main_settings_post_types', array( $this, 'main_settings_post_types' ), 1, 4 );
 
@@ -175,7 +177,10 @@ class GMW_PT_Admin {
 
                     <?php $checked = ( isset( $saved_data ) && !empty( $saved_data ) && in_array( $post, $saved_data ) ) ? ' checked="checked"' : ''; ?>
 
-                    <p><input type="checkbox" name="<?php echo 'gmw_forms[' . $_GET['formID'] . '][' . $section . '][post_types][]'; ?>" value="<?php echo $post; ?>" id="<?php echo $post; ?>" class="post-types-tax" <?php echo $checked; ?>>&nbsp;&nbsp;<?php echo get_post_type_object( $post )->labels->name; ?></p>
+                    <p>
+                    	<input type="checkbox" name="<?php echo 'gmw_forms[' . $_GET['formID'] . '][' . $section . '][post_types][]'; ?>" value="<?php echo $post; ?>" id="<?php echo $post; ?>" class="post-types-tax" <?php echo $checked; ?> />
+                    	<label><?php echo get_post_type_object( $post )->labels->name; ?></label>
+                    </p>
 
                 <?php } ?>
             </div>
@@ -319,7 +324,7 @@ class GMW_PT_Admin {
         <div>
             <p>
                 <input name="<?php echo 'gmw_forms[' . $_GET['formID'] . '][' . $section . '][auto_search][on]'; ?>" type="checkbox" value="1" <?php if ( isset( $gmw_forms[$formID][$section]['auto_search']['on'] ) ) echo "checked='checked'"; ?>/>
-                <?php _e( 'Yes', 'GMW' ); ?>
+                <label><?php _e( 'Yes', 'GMW' ); ?></label>
             </p>	
             <p>
 
@@ -376,7 +381,7 @@ class GMW_PT_Admin {
         <div>
             <p>
                 <input type="checkbox" name="<?php echo 'gmw_forms[' . $_GET['formID'] . '][' . $section . '][featured_image][use]'; ?>" value="1" <?php echo ( isset( $gmw_forms[$formID][$section]['featured_image']['use'] ) ) ? "checked=checked" : ""; ?> />
-                <?php _e( 'Yes', 'GMW' ); ?>
+                <label><?php _e( 'Yes', 'GMW' ); ?></label>
             </p>
             <p>
                 <?php _e( 'Height', 'GMW' ); ?>:
@@ -399,7 +404,7 @@ class GMW_PT_Admin {
         <div class="gmw-ssb">
             <p>
                 <input type="checkbox"  value="1" name="<?php echo 'gmw_forms[' . $_GET['formID'] . '][' . $section . '][excerpt][use]'; ?>" <?php echo ( isset( $gmw_forms[$formID][$section]['excerpt']['use'] ) ) ? "checked=checked" : ""; ?> />
-                <?php _e( 'Yes', 'GMW' ); ?>&nbsp;
+                <label><?php _e( 'Yes', 'GMW' ); ?></label>
             </p>
             <p>
                 <?php _e( 'Words count', 'GMW' ); ?>:
@@ -476,7 +481,7 @@ class GMW_PT_Admin {
                 'label'   => __( 'Locator Icon', 'GMW' ),
                 'desc'    => __( 'Choose if to display the locator button in the search form. The locator will get the user&#39;s current location and submit the search form based of the location found. you can choose one of the default icons or you can add icon of your own. ', 'GMW' ),
                 'type'    => 'radio',
-                'options' => $this->get_locator_icons()
+                'options' => self::get_locator_icons()
             ),
             'locator_submit'  => array(
                 'name'     => 'locator_submit',
@@ -496,7 +501,7 @@ class GMW_PT_Admin {
                 'desc'    => __( 'The results page will display the search results in the selected page when using the "GMW Search Form" widget or when you want to have the search form in one page and the results showing in a different page. 
 											Choose the results page from the dropdown menu and paste the shortcode [gmw form="results"] into that page. To display the search result in the same page as the search form choose "Same Page" from the select box.', 'GMW' ),
                 'type'    => 'select',
-                'options' => $this->get_pages()
+                'options' => self::get_pages()
             ),
             'results_template' => array(
                 'name'  => 'results_template',
@@ -669,6 +674,86 @@ class GMW_PT_Admin {
         );
         return $settings;
 
+    }
+
+    public function shortcodes_page( $shortcodes ) {
+
+    	$shortcodes['post_info'] = array(
+    			'name'		  => __( 'Post Information', 'GMW' ),
+    			'basic_usage' => '[gmw_post_info]',
+    			'desc'        => __( 'Easy way to display any of the location/contact information of a post.', 'GMW' ),
+    			'attributes'  => array(
+    					array(
+    							'attr'	 => __( 'post_id', 'GMW' ),
+    							'values' => array(
+    									__( 'Post ID','GMW' ),
+    							),
+    							'desc'	 => __( 'Use the post ID only if you want to display information of a specific post. When using the shortcode on a single post page or within
+    									a posts loop you don\'t need to use the post_id attribute. The shortcode will use the post ID of the post being displayed or the post ID of
+    									each post within the loop. ', 'GMW')
+    					),
+    					array(
+    							'attr'	 => __( 'info', 'GMW' ),
+    							'values' => array(
+    									__( 'street','GMW' ),
+    									__( 'apt','GMW' ),
+    									__( 'city','GMW' ),
+    									__( 'state - state\'s short name (ex FL )','GMW' ),
+    									__( 'state_long - state\'s long name (ex Florida )','GMW' ),
+    									__( 'zipcode','GMW' ),
+    									__( 'country - country short name (ex IL )','GMW' ),
+    									__( 'country_long - country long name (ex Israel )','GMW' ),
+    									__( 'address','GMW' ),
+    									__( 'formatted_address','GMW' ),
+    									__( 'phone','GMW' ),
+    									__( 'fax','GMW' ),
+    									__( 'email','GMW' ),
+    									__( 'website','GMW' ),
+    							),
+    							'desc'	 => __( 'Use a single value or multiple values comma separated of the information you would like to display. For example use
+    									info="city,state,country_long" to display "Hollywood FL United States"', 'GMW')
+    					),
+    						
+    					array(
+    							'attr'	 => __( 'divider', 'GMW' ),
+    							'values' => array(
+    									__( 'any character','GMW' ),
+    							),
+    							'desc'	 => __( 'Use any character that you would like to display between the fields you choose above"', 'GMW')
+    					),
+    			),
+    			'examples'  => array(
+    					array(
+    							'example' => __( '[gmw_post_info post_id="3" info="city,state_long,zipcode" divider=","]', 'GMW' ),
+    							'desc'	  => __( 'This shortcode will display the information of the post with ID 3 which is ( for example ) "Hollywood,Florida,33021"', 'GMW' )
+
+    					),
+    					array(
+    							'example' => __( '[gmw_post_info info="city,state" divider="-"]', 'GMW' ),
+    							'desc'	  => __( 'Use the shortcode without post_id when within a posts loop to display "Hollywood-FL"', 'GMW' )
+    					
+    					),
+    					array(
+    							'example' => __( 'Address: [gmw_post_info info="formatted_address"]<br />
+    									Phone: [gmw_post_info info="phone"]<br />
+    									Email: [gmw_post_info info="email"]<br />
+    									Website: [gmw_post_info info="website"]', 'GMW' ),
+    							'desc'	  => __( 'Use this example in the content of a post to display: <br />
+    									Address: blah street, Hollywodo Fl 33021, USA <br />
+    									Phone: 123-456-7890 <br />
+    									Email: blah@geomywp.com <br />
+    									Website: www.geomywp.com <br />
+    									', 'GMW' )
+    					
+    					),
+    			),
+
+    	);
+    	//array_push($shortcodes, $pt_shortcodes);
+    	 
+    	//print_r($shortcodes);
+    	return $shortcodes;
+    	 
     }
 
 }

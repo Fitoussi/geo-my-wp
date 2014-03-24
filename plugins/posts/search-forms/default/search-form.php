@@ -20,15 +20,13 @@
 		
 		<div class="gmw-taxonomies-wrapper">
 			<!-- Display taxonomies/categories --> 
-			<?php gmw_pt_form_taxonomies( $gmw ); ?>
+			<?php gmw_pt_form_taxonomies( $gmw, $tag='', $class='kaka' ); ?>
 		</div>
 		
 		<?php do_action( 'gmw_search_form_before_address', $gmw ); ?>
 		            
-		<div class="gmw-address-field-wrapper">
-			<!-- Address Field -->
-			<?php gmw_search_form_address_field( $gmw, $class='' ); ?>
-		</div>	
+		<!-- Address Field -->
+		<?php gmw_search_form_address_field( $gmw, $id='', $class='' ); ?>
 		
 		<!--  locator icon -->
 		<?php gmw_search_form_locator_icon( $gmw, $class='' ); ?>

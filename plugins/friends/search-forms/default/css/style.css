@@ -41,11 +41,8 @@
 }
 
 .wppl-address-field-wrapper {
-	width: 100%;
-	float: left;
+	display: inline-block;
 }
-
-
 
 .gmw-unit-distance-wrapper {
 	margin:10px 0px;
@@ -65,6 +62,11 @@
 	margin-left:3px;
 }
 
+.gmw-radius-dropdown-wrapper, .gmw-units-dropdown-wrapper {
+	display:inline;
+	margin-right:5px;
+}
+
 .gmw-radius-slider-wrapper {
     margin-bottom:10px;
 }
@@ -74,8 +76,5 @@
 }
 
 .gmw-no-address-error {
-	-moz-box-shadow: 0 1px 0 #FF0303 inset, 0 -1px 0 #FF0303 inset, 1px 0 0 #F32323 inset, -1px 0 0 #F32323 inset, 0 0 4px rgba(243, 35, 35, 0.5);
-	-webkit-box-shadow: 0 1px 0 #FF0303 inset, 0 -1px 0 #FF0303 inset, 1px 0 0 #F32323 inset, -1px 0 0 #F32323 inset, 0 0 4px rgba(243, 35, 35, 0.5);
-	box-shadow: 0 1px 0 #FF0303 inset, 0 -1px 0 #FF0303 inset, 1px 0 0 #F32323 inset, -1px 0 0 #F32323 inset, 0 0 4px rgba(243, 35, 35, 0.5);
-	border:red;
+	border: 1px solid rgb(252, 165, 165) !important;
 }

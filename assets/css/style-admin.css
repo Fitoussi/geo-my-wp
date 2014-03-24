@@ -18,9 +18,8 @@
 .gmw-credits a:link {
 	vertical-align: top;
 	float: left;
-	font-size: 14px;
-	text-decoration: none; //
-	margin-left: 10px;
+	font-size: 12px;
+	text-decoration: none;
 }
 
 .gmw-credits-facebook-button {
@@ -91,8 +90,7 @@
 	color: white !important;
 }
 
-.gmw-wrap-top-h2 { //
-	float: left;
+.gmw-wrap-top-h2 {
 	margin-bottom: 20px !important;
 }
 /********** Add-ons Page **********/

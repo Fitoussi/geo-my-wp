@@ -225,7 +225,7 @@ class GMW_FL_Admin {
         <div>
             <p>
                 <input name="<?php echo 'gmw_forms[' . $_GET['formID'] . '][' . $section . '][auto_search][on]'; ?>" type="checkbox" value="1" <?php if ( isset( $gmw_forms[$formID][$section]['auto_search']['on'] ) ) echo "checked='checked'"; ?>/>
-                <?php _e( 'Yes', 'GMW' ); ?>
+                <label><?php _e( 'Yes', 'GMW' ); ?></label>
             </p>	
             <p>
 
@@ -282,7 +282,7 @@ class GMW_FL_Admin {
         <div>
             <p>
                 <input type="checkbox" name="<?php echo 'gmw_forms[' . $_GET['formID'] . '][' . $section . '][avatar][use]'; ?>" value="1" <?php echo ( isset( $gmw_forms[$formID][$section]['avatar']['use'] ) ) ? "checked=checked" : ""; ?> />
-                <?php _e( 'Yes', 'GMW' ); ?>
+                <label><?php _e( 'Yes', 'GMW' ); ?></label>
             </p>
             <p>
                 <?php _e( 'Height', 'GMW' ); ?>:

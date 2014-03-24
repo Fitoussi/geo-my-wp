@@ -40,7 +40,7 @@ class GMW_Current_location {
 
         extract(shortcode_atts(array(
             'title'      => '',
-            'display_by' => 'city',
+            'display_by' => 'city,country',
             'show_name'  => 0
                         ), $args));
 

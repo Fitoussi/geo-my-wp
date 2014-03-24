@@ -43,17 +43,30 @@ function gmw_pt_form_post_types_dropdown( $gmw, $title, $class, $all ) {
  * @version 1.0
  * @author Eyal Fitoussi
  */
-function gmw_pt_form_taxonomies( $gmw ) {
-
-    $taxonomies = apply_filters( 'gmw_search_form_taxonomies', false, $gmw );
+function gmw_pt_form_taxonomies( $gmw, $tag, $class ) {
+	
+	$tag	= ( isset( $tag ) && !empty( $tag ) ) ? $tag : 'div';
+	$class  = ( isset( $class ) && !empty( $class ) ) ? $class : '';
+	
+    $taxonomies = apply_filters( 'gmw_search_form_taxonomies', false, $gmw, $tag, $class );
 
     if ( $taxonomies !== false )
         return;
 
     if ( count( $gmw['search_form']['post_types'] ) < 2 && ( isset( $gmw['search_form']['taxonomies'] ) ) ) :
 
+    	
         $output = '';
 
+		$orgTag = $tag;
+		if ( $orgTag == 'ul' ) {
+			echo '<ul>';
+			$tag = 'li';
+		} elseif ( $orgTag == 'ol') {
+			echo '<ol>';
+			$tag = 'li';
+		}
+        
         //output dropdown for each taxonomy 
         foreach ( $gmw['search_form']['taxonomies'] as $tax => $values ) :
 
@@ -61,7 +74,7 @@ function gmw_pt_form_taxonomies( $gmw ) {
 
                 $get_tax = false;
 
-                $output = '<div id="' . $tax . '-tax-wrapper" class="gmw-single-taxonomy-wrapper gmw-dropdown-taxonomy-wrapper gmw-dropdown-' . $tax . '-wrapper">';
+                $output = '<'.$tag.' class="gmw-single-taxonomy-wrapper gmw-dropdown-taxonomy-wrapper gmw-dropdown-' . $tax . '-wrapper '.$class.'">';
 
                 $output .= '<label for="' . get_taxonomy( $tax )->rewrite['slug'] . '">' . apply_filters( 'gmw_pt_' . $gmw['ID'] . '_' . $tax . '_label', get_taxonomy( $tax )->labels->singular_name, $tax, $gmw ) . ': </label>';
 
@@ -85,14 +98,20 @@ function gmw_pt_form_taxonomies( $gmw ) {
                 $args = apply_filters( 'gmw_pt_dropdown_taxonomy_args', $args );
                 $output .= wp_dropdown_categories( $args );
 
-                $output .= '</div>';
+                $output .= '</'.$tag.'>';
 
-                echo apply_filters( 'gmw_search_form_taxonomy', $output, $gmw, $args );
+                echo apply_filters( 'gmw_search_form_taxonomy', $output, $gmw, $args, $tag, $class );
 
             endif;
 
         endforeach;
-
+		
+		if ( $orgTag == 'ul' ) {
+			echo '</ul>';
+		} elseif ( $orgTag == 'ol') {
+			echo '</ol>';
+		}
+        
     endif;
 
 }
@@ -107,7 +126,7 @@ function gmw_pt_get_per_page_dropdown( $gmw, $class ) {
     $perPage  = explode( ",", $gmw['search_results']['per_page'] );
     $lastpage = ceil( $gmw['total_results'] / $gmw['get_per_page'] );
     $per_page = '';
-
+	
     if ( count( $perPage ) > 1 ) :
 
         $per_page = '<select name="gmw_per_page" id="gmw-pt-per-page-dropdown-' . $gmw['ID'] . '" class="gmw-pt-per-page-dropdown ' . $class . '">';
@@ -121,19 +140,24 @@ function gmw_pt_get_per_page_dropdown( $gmw, $class ) {
             $per_page .= '<option value="' . $pp . '" ' . $pp_s . '>' . $pp . ' ' . __( 'per page', 'GMW' ) . '</option>';
 
         endforeach;
-
+		
         $per_page .= '</select>';
 
         $per_page .= '<script>
 			jQuery(document).ready(function($) {
 			   	$(".gmw-pt-per-page-dropdown").change(function() {
-		
+					
+			   		var formID = '. $gmw['ID'].' 
 				   	var totalResults = ' . $gmw["total_results"] . '
 			
 				   	var lastPage = Math.ceil(totalResults/$(this).val());
-				   	var newPaged = (' . $gmw['paged'] . ' > lastPage ) ? lastPage : false;
-                                        
-				   	window.location.href = $.query.set( "gmw_per_page", $(this).val() ).set( "paged", newPaged ); 	
+				   	var newPaged = (' . $gmw['paged'] . ' > lastPage ) ? lastPage : '.$gmw['paged'].';
+					
+				   	$(".gmw-submit-wrapper-'.$gmw['ID'] .' .gmw-per-page").val($(this).val());
+				   	$(".gmw-submit-wrapper-'.$gmw['ID'] .' .gmw-paged").val(newPaged);
+				   	
+				   	$(".gmw-submit-wrapper-'.$gmw['ID'] .'").closest("form").submit();
+				   	 		
 			    });
 			});
 	    </script>';

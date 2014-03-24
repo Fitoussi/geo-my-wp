@@ -1,23 +1,21 @@
 /* SINGLE MEMBER WIDGET */
-		
-.gmw-single-member-sc-wrapper {	
+.gmw-single-member-sc-wrapper {
 	
-	}
-	
+}
+
 .gmw-single-member-sc-map-wrapper {
 	border: 1px solid #CCC;
 	padding: 5px;
 	background: #F1F1F1;
 }
-	
+
 .gmw-single-member-sc-address-wrapper {
 	margin: 5px 0;
-	clear:both;
-	
+	clear: both;
 }
-		
+
 .gmw-single-member-sc-direction-wrapper {
-	clear:both;
+	clear: both;
 }
 
 .gmw-single-member-sc-form-wrapper {
@@ -25,23 +23,22 @@
 }
 
 /* Location page */
-
 #gmw-location-page {
 	
 }
 
 #gmw-fl-location-form-wrapper {
-	margin-bottom:20px;
+	margin-bottom: 20px;
 }
 
 #gmw-fl-location-form-wrapper label {
-	font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue",sans-serif;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light",
+		"Helvetica Neue", sans-serif;
 	font-size: 12px;
-	//margin: 0px !important;
 	padding: 0px !important;
 	text-shadow: 1px 1px 1px white;
-	margin:5px;
-	}
+	margin: 5px;
+}
 
 #gmw-fl-location-form {
 	border-top: 4px double #eee;
@@ -49,14 +46,15 @@
 
 #gmw-fl-location-form-wrapper label#name {
 	float: left;
-	width:250px;
-	}
-	
+	width: 250px;
+}
+
 #gmw-fl-location-form-wrapper input[type="text"] {
 	width: 100%;
 	line-height: 23px;
 	color: #777;
-	font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue",sans-serif;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light",
+		"Helvetica Neue", sans-serif;
 	font-size: 12px;
 	padding: 6px 0px 6px 6px;
 }
@@ -64,58 +62,57 @@
 .gmw-fl-location-tab-wrapper {
 	float: left;
 	margin-top: 0px;
-	width:100%;
+	width: 100%;
 	background: #fbfbfb;
-	border:1px solid #ddd;
-	padding:5px;
+	border: 1px solid #ddd;
+	padding: 5px;
 	margin-bottom: 15px;
 }
 
 .gmw-fl-location-tab-wrapper table {
-	margin-bottom:0px !important;
-	border:0px !important;
+	margin-bottom: 0px !important;
+	border: 0px !important;
 }
 
 .gmw-fl-location-tab-wrapper table td {
-	border:0px;
+	border: 0px;
 }
 
 .gmw-fl-location-tab-wrapper table tr th {
-	width:30%;	
+	width: 30%;
 }
 
-
 .gmw-fl-location-tab-wrapper table tr td {
-	width:70%;	
+	width: 70%;
 }
 
 span.gmw-fl-location-fields-title {
 	font-weight: bold;
-	margin:15px 0px 5px;
+	margin: 15px 0px 5px;
 	display: block;
 	font-size: 14px;
 }
 
 div#gmw-fl-your-locaiton-wrapper {
-	margin-bottom:20px;
+	margin-bottom: 20px;
 }
 
 #gmw-fl-your-location {
-	color:#444 !important;
-	margin-bottom:5px;
+	color: #444 !important;
+	margin-bottom: 5px;
 }
 
 #gmw-fl-location-fields-tabs {
 	list-style: none;
-	margin:5px 0px;
+	margin: 5px 0px;
 }
 
 #gmw-fl-location-fields-tabs li {
-	float:left;	
-	padding:5px 10px;
-	border:1px solid #ddd;
-	margin:0px;
-	margin-right:5px;
+	float: left;
+	padding: 5px 10px;
+	border: 1px solid #ddd;
+	margin: 0px;
+	margin-right: 5px;
 	border-bottom: 0px;
 	cursor: pointer;
 }
@@ -125,43 +122,42 @@ div#gmw-fl-your-locaiton-wrapper {
 }
 
 #gmw-fl-location-fields-tabs li input {
-	padding:8px 10px;	
+	padding: 8px 10px;
 }
 
 #gmw-fl-location-map-wrapper {
 	margin-top: 5px;
 	border: 1px solid #CCC;
 	padding: 3px;
-	}
-	
+}
+
 #gmw-location-tab-autocomplete-wrapper {
 	margin: 10px 0px;
-	}
-	
+}
+
 #gmw-location-tab-edit-user-location {
 	background: #FCFCFC;
 	padding: 10px;
-	//width: 90%;
 	border: 1px solid #F4F4F4;
 	margin-top: 10px;
-	margin-bottom:20px;
+	margin-bottom: 20px;
 }
-	
+
 /* autocomplete */
 .ui-autocomplete-loading {
-	background:transparent url('images/loading.gif') no-repeat right center;
-	visibility:visible
-	}
-	
+	background: transparent url('images/loading.gif') no-repeat right center;
+	visibility: visible
+}
+
 ul#add-to-blog-users {
-	margin:0 0 0 14px
-	}
-	
-.ui-autocomplete-input.open{
-	border-bottom-right-radius:0;
-	border-bottom-left-radius:0
-	}
-	
+	margin: 0 0 0 14px
+}
+
+.ui-autocomplete-input.open {
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0
+}
+
 .ui-autocomplete {
 	padding: 0;
 	margin: 0;
@@ -176,22 +172,22 @@ ul#add-to-blog-users {
 	font-size: 12px;
 	font-family: arial, sans-serif;
 	border: 1px solid #DDD;
-	}
-	
+}
+
 .ui-autocomplete li {
-	margin-bottom:0;
-	white-space:nowrap;
-	text-align:left
-	}
-	
+	margin-bottom: 0;
+	white-space: nowrap;
+	text-align: left
+}
+
 .ui-autocomplete li a {
-	display:block;
-	height:100%;
-	padding:4px 10px;
-	}
-	
+	display: block;
+	height: 100%;
+	padding: 4px 10px;
+}
+
 .ui-autocomplete li a.ui-state-hover {
-	cursor:pointer;
-	background:#bbb;
-	color:white;
-	}
+	cursor: pointer;
+	background: #bbb;
+	color: white;
+}
