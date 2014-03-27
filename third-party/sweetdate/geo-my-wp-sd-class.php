@@ -25,8 +25,8 @@ class GMW_SD_Class_Query {
     public function __construct() {
 
         // Define constants
-        define( 'GMW_SD_PATH', untrailingslashit( get_template_directory() . '/gmw/' ) );
-        define( 'GMW_SD_URL', untrailingslashit( get_template_directory_uri() . '/gmw/' ) );
+        define( 'GMW_SD_PATH', GMW_PATH. '/third-party/sweetdate' );
+        define( 'GMW_SD_URL', GMW_URL. '/third-party/sweetdate' );
 
         $this->settings = get_option( 'gmw_options' );
 
@@ -34,14 +34,14 @@ class GMW_SD_Class_Query {
         if ( !isset( $this->settings['sweet_date']['status'] ) || $this->settings['sweet_date']['status'] != 1 )
             return;
 
-        $this->gmwMD                = ( isset( $this->settings['sweet_date'] ) ) ? $this->settings['sweet_date'] : false;
-        $this->gmwMD['your_lat']    = false;
-        $this->gmwMD['your_lng']    = false;
-        $this->gmwMD['org_address'] = false;
+        $this->gmwSD                = ( isset( $this->settings['sweet_date'] ) ) ? $this->settings['sweet_date'] : false;
+        $this->gmwSD['your_lat']    = false;
+        $this->gmwSD['your_lng']    = false;
+        $this->gmwSD['org_address'] = false;
         $this->formData['query']    = false;
         $this->formData['address']  = ( isset( $_GET['field_address'] ) && !empty( $_GET['field_address'] ) ) ? $_GET['field_address'] : false;
         $this->formData['orderby']  = ( isset( $_GET['orderby'] ) && !empty( $_GET['orderby'] ) ) ? $_GET['orderby'] : '';
-        $radius                     = str_replace( ' ', '', explode( ',', $this->gmwMD['radius'] ) );
+        $radius                     = str_replace( ' ', '', explode( ',', $this->gmwSD['radius'] ) );
         $this->formData['radius']   = ( isset( $_GET['field_radius'] ) && !empty( $_GET['field_radius'] ) ) ? $_GET['field_radius'] : false;
 
         $this->clauses = array(
@@ -65,18 +65,18 @@ class GMW_SD_Class_Query {
 
         add_action( 'bp_directory_members_item', array( $this, 'add_elements_to_results' ) );
 
-        if ( isset( $this->gmwMD['map_use'] ) )
+        if ( isset( $this->gmwSD['map_use'] ) )
             add_action( 'bp_before_directory_members_list', array( $this, 'main_map' ) );
 
     }
 
     public function frontend_register_styles() {
 
-        $screenLoader = ( isset( $this->gmwMD['screen_loader'] ) ) ? $this->gmwMD['screen_loader'] : false;
+        $screenLoader = ( isset( $this->gmwSD['screen_loader'] ) ) ? $this->gmwSD['screen_loader'] : false;
 
         wp_enqueue_style( 'gmw-sd-style', GMW_SD_URL . '/assets/css/style.css' );
 
-        if ( isset( $this->gmwMD['map_use'] ) ) {
+        if ( isset( $this->gmwSD['map_use'] ) ) {
             wp_register_script( 'gmw-sd-map', GMW_SD_URL . '/assets/js/map.js', array( 'jquery' ), GMW_VERSION, true );
             wp_register_script( 'gmw-marker-clusterer', GMW_SD_URL . '/assets/js/marker-clusterer.js', array( 'jquery' ), GMW_VERSION, true );
         }
@@ -85,16 +85,16 @@ class GMW_SD_Class_Query {
 
     public function members_directory_form( $search_form_html ) {
 
-        $radius = str_replace( ' ', '', explode( ',', $this->gmwMD['radius'] ) );
+        $radius = str_replace( ' ', '', explode( ',', $this->gmwSD['radius'] ) );
 
         $search_form_html .= '<label class="two columns">';
-        $search_form_html .= '<input type="text" name="field_address" id="gmw-md-address-field" value="' . $this->formData['address'] . '" placeholder="' . __( 'Enter Address...', 'GMW-MD' ) . '" />';
+        $search_form_html .= '<input type="text" name="field_address" id="gmw-md-address-field" value="' . $this->formData['address'] . '" placeholder="' . __( 'Enter Address...', 'GMW' ) . '" />';
         $search_form_html .= '</label>';
 
         //Display radius dropdown
         if ( count( $radius ) > 1 ) :
 
-            $radiusText = ( $this->gmwMD['units'] == '6371' ) ? __( ' -- Kilometers -- ', 'GMW-MD' ) : __( ' -- Miles -- ', 'GMW-MD' );
+            $radiusText = ( $this->gmwSD['units'] == '6371' ) ? __( ' -- Kilometers -- ', 'GMW' ) : __( ' -- Miles -- ', 'GMW' );
 
             $search_form_html .= '<div class="two columns">';
             $search_form_html .= '<select class="expand" name="field_radius">';
@@ -164,15 +164,15 @@ class GMW_SD_Class_Query {
             if ( !isset( $this->returned_address ) || empty( $this->returned_address ) ) {
 
                 $this->formData['query']    = false;
-                $this->gmwMD['your_lat']    = false;
-                $this->gmwMD['your_lng']    = false;
-                $this->gmwMD['org_address'] = 'bad';
+                $this->gmwSD['your_lat']    = false;
+                $this->gmwSD['your_lng']    = false;
+                $this->gmwSD['org_address'] = 'bad';
 
                 //modify the query to no results
                 $this->clauses['bp_user_query']['where']   = ' AND 0 = 1 ';
                 $this->clauses['bp_user_query']['orderby'] = ' ORDER BY u.display_name';
 
-                $message = apply_filters( 'gmw_md_no_addrss_found_message', __( 'Sorry, the address was not found. Please try a different address.', 'GMW-MD' ) );
+                $message = apply_filters( 'gmw_md_no_addrss_found_message', __( 'Sorry, the address was not found. Please try a different address.', 'GMW' ) );
                 ?>
                 <script>
                     jQuery('#message').html('<p>' + '<?php echo $message; ?>' + '</p>');
@@ -181,9 +181,9 @@ class GMW_SD_Class_Query {
             } else {
 
                 $this->formData['query']    = 'address';
-                $this->gmwMD['your_lat']    = $this->returned_address['lat'];
-                $this->gmwMD['your_lng']    = $this->returned_address['lng'];
-                $this->gmwMD['org_address'] = (!empty( $_POST ) ) ? $_POST['search_terms'] : $this->formData['address'];
+                $this->gmwSD['your_lat']    = $this->returned_address['lat'];
+                $this->gmwSD['your_lng']    = $this->returned_address['lng'];
+                $this->gmwSD['org_address'] = (!empty( $_POST ) ) ? $_POST['search_terms'] : $this->formData['address'];
             }
         } elseif ( $this->formData['orderby'] == 'distance' ) {
             $this->formData['orderby'] = 'active';
@@ -233,14 +233,14 @@ class GMW_SD_Class_Query {
             $this->clauses['bp_user_query']['from']   = " FROM wppl_friends_locator gmwlocations INNER JOIN {$wpdb->usermeta} u ON gmwlocations.member_id = u.user_id";
             $this->clauses['bp_user_query']['where']  = "WHERE u.meta_key = 'last_activity'";
 
-            if ( $this->gmwMD['your_lat'] != false ) {
+            if ( $this->gmwSD['your_lat'] != false ) {
 
                 $this->clauses['bp_user_query']['orderby'] = "ORDER BY distance";
             } else {
 
                 $this->formData['query'] = false;
-                $this->gmwMD['your_lat'] = false;
-                $this->gmwMD['your_lng'] = false;
+                $this->gmwSD['your_lat'] = false;
+                $this->gmwSD['your_lng'] = false;
 
                 $this->clauses['bp_user_query']['where']   = 'AND 0 = 1';
                 $this->clauses['bp_user_query']['orderby'] = 'ORDER BY u.user_id';
@@ -262,11 +262,11 @@ class GMW_SD_Class_Query {
          * wppl_friends_locator table, will calculate the distance and will get only the members that
          * within the radius was chosen
          */
-        if ( $this->gmwMD['your_lat'] !== false ) {
+        if ( $this->gmwSD['your_lat'] !== false ) {
 
-            $this->clauses['bp_user_query']['select'] .= $wpdb->prepare( " , ROUND( %d * acos( cos( radians( %s ) ) * cos( radians( gmwlocations.lat ) ) * cos( radians( gmwlocations.long ) - radians( %s ) ) + sin( radians( %s ) ) * sin( radians( gmwlocations.lat) ) ),1 ) AS distance ", $this->gmwMD['units'], $this->gmwMD['your_lat'], $this->gmwMD['your_lng'], $this->gmwMD['your_lat'] );
+            $this->clauses['bp_user_query']['select'] .= $wpdb->prepare( " , ROUND( %d * acos( cos( radians( %s ) ) * cos( radians( gmwlocations.lat ) ) * cos( radians( gmwlocations.long ) - radians( %s ) ) + sin( radians( %s ) ) * sin( radians( gmwlocations.lat) ) ),1 ) AS distance ", $this->gmwSD['units'], $this->gmwSD['your_lat'], $this->gmwSD['your_lng'], $this->gmwSD['your_lat'] );
             $this->clauses['bp_user_query']['having']       = $wpdb->prepare( " HAVING distance <= %d OR distance IS NULL", $this->formData['radius'] );
-            $this->clauses['wp_user_query']['query_fields'] = $wpdb->prepare( " ,ROUND( %d * acos( cos( radians( %s ) ) * cos( radians( gmwlocations.lat ) ) * cos( radians( gmwlocations.long ) - radians( %s ) ) + sin( radians( %s ) ) * sin( radians( gmwlocations.lat) ) ),1 ) AS distance", $this->gmwMD['units'], $this->gmwMD['your_lat'], $this->gmwMD['your_lng'], $this->gmwMD['your_lat'] );
+            $this->clauses['wp_user_query']['query_fields'] = $wpdb->prepare( " ,ROUND( %d * acos( cos( radians( %s ) ) * cos( radians( gmwlocations.lat ) ) * cos( radians( gmwlocations.long ) - radians( %s ) ) + sin( radians( %s ) ) * sin( radians( gmwlocations.lat) ) ),1 ) AS distance", $this->gmwSD['units'], $this->gmwSD['your_lat'], $this->gmwSD['your_lng'], $this->gmwSD['your_lat'] );
         }
 
         //select all fields from location table
@@ -309,14 +309,14 @@ class GMW_SD_Class_Query {
     public function trigger_js_and_maps() {
         global $members_template;
 
-        $this->gmwMD['map_icon_usage'] = '';
-        $this->gmwMD['page']           = $members_template->pag_page;
-        $this->gmwMD['per_page']       = $members_template->pag_num;
+        $this->gmwSD['map_icon_usage'] = '';
+        $this->gmwSD['page']           = $members_template->pag_page;
+        $this->gmwSD['per_page']       = $members_template->pag_num;
 
         wp_enqueue_script( 'gmw-sd-map' );
         wp_enqueue_script( 'gmw-marker-clusterer' );
-        wp_localize_script( 'gmw-sd-map', 'mdMapArgs', $this->gmwMD );
-
+        wp_localize_script( 'gmw-sd-map', 'sdMapArgs', $this->gmwSD );
+        
     }
 
     /**
@@ -325,7 +325,7 @@ class GMW_SD_Class_Query {
     public function main_map() {
 
         $mainMap = '';
-        $mainMap .= '<div class="gmw-map-wrapper gmw-md-main-map-wrapper" id="gmw-md-main-map-wrapper" style="width:' . $this->gmwMD['map_width'] . ';height:' . $this->gmwMD['map_height'] . '">';
+        $mainMap .= '<div class="gmw-map-wrapper gmw-md-main-map-wrapper" id="gmw-md-main-map-wrapper" style="width:' . $this->gmwSD['map_width'] . ';height:' . $this->gmwSD['map_height'] . '">';
         $mainMap .= '<div class="gmw-map-loader-wrapper gmw-md-loader-wrapper">';
         $mainMap .= '<img class="gmw-map-loader gmw-md-map-loader" src="' . GMW_URL . '/assets/images/map-loader.gif"/>';
         $mainMap .= '</div>';
@@ -347,15 +347,15 @@ class GMW_SD_Class_Query {
         if ( !isset( $members_template->member->distance ) )
             return;
 
-        $units = ( $this->gmwMD['units'] == '6371' ) ? 'ptk' : 'ptm';
-        return '<a href="http://maps.google.com/maps?f=d&hl=en&doflg=' . $units . '&geocode=&saddr=' . $this->gmwMD['org_address'] . '&daddr=' . str_replace( " ", "+", $members_template->member->address ) . '&ie=UTF8&z=12" target="_blank">' . __( 'Get Directions', 'GMW-MD' ) . '</a>';
+        $units = ( $this->gmwSD['units'] == '6371' ) ? 'ptk' : 'ptm';
+        return '<a href="http://maps.google.com/maps?f=d&hl=en&doflg=' . $units . '&geocode=&saddr=' . $this->gmwSD['org_address'] . '&daddr=' . str_replace( " ", "+", $members_template->member->address ) . '&ie=UTF8&z=12" target="_blank">' . __( 'Get Directions', 'GMW' ) . '</a>';
 
     }
 
     public function get_distance() {
 
         //distance
-        if ( !isset( $this->gmwMD['distance'] ) || $this->formData['query'] != 'address' )
+        if ( !isset( $this->gmwSD['distance'] ) || $this->formData['query'] != 'address' )
             return;
 
         global $members_template;
@@ -363,7 +363,7 @@ class GMW_SD_Class_Query {
         if ( !isset( $members_template->member->distance ) )
             return;
 
-        $units = ( $this->gmwMD['units'] == '6371' ) ? __( 'km', 'GMW-MD' ) : __( 'mi', 'GMW-MD' );
+        $units = ( $this->gmwSD['units'] == '6371' ) ? __( 'km', 'GMW' ) : __( 'mi', 'GMW' );
         echo '<span "distance">' . $members_template->member->distance . $units . '</span>';
 
     }
@@ -380,7 +380,8 @@ class GMW_SD_Class_Query {
      */
     public function add_elements_to_results() {
         global $members_template;
-
+		$distance = false;
+		
         //add element with member id to be able to scroll to it when marker is clicked
         echo '<div id="gmw-md-member-' . $members_template->member->ID . '"></div>';
 
@@ -389,13 +390,27 @@ class GMW_SD_Class_Query {
             return;
 
         //address
-        if ( isset( $this->gmwMD['address'] ) )
-            echo '<div class="gmw-md-address-wrapper"><span class="gmw-md-address">' . __( 'Address:', 'GMW-MD' ) . '</span> <span class="gmw-md-address-value">' . $this->get_address() . '</span></div>';
+        if ( isset( $this->gmwSD['address'] ) )
+            echo '<div class="gmw-md-address-wrapper"><span class="gmw-md-address">' . __( 'Address:', 'GMW' ) . '</span> <span class="gmw-md-address-value">' . $this->get_address() . '</span></div>';
         //directions
-        if ( isset( $this->gmwMD['directions'] ) )
+        if ( isset( $this->gmwSD['directions'] ) )
             echo $this->get_directions();
+        
+        if ( isset( $members_template->member->distance ) && !empty( $members_template->member->distance ) ) {
+        	$units 	  = ( $this->gmwSD['units'] == '6371' ) ? __( 'km', 'GMW' ) : __( 'mi', 'GMW' );
+      		$distance = $members_template->member->distance . ' ' . $units;
+        }
+
         //add lat/long locations array to pass to map
-        $this->gmwMD['locations'][] = array( 'ID' => $members_template->member->ID, 'lat' => $members_template->member->lat, 'long' => $members_template->member->long );
+        $this->gmwSD['members'][] = array(
+        		'ID' 		=> $members_template->member->ID,
+        		'user_link' => bp_core_get_user_domain( $members_template->member->ID ),
+        		'avatar'	=> ( bp_get_user_has_avatar( $members_template->member->ID ) ) ? bp_core_fetch_avatar( array( 'item_id' => $members_template->member->ID, 'type' => 'thumb', 'width' => 10, 'height' => 10, 'html' => false, 'no_grav' => true ) ) : GMW_SD_URL . '/assets/images/_no_avatar.png',
+        		'lat' 		=> $members_template->member->lat,
+        		'long' 		=> $members_template->member->long,
+        		'user_name' => $members_template->member->user_nicename,
+        		'distance' 	=> $distance
+        );
 
     }
 

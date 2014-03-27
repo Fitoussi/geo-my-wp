@@ -2,11 +2,12 @@
 if ( !defined( 'ABSPATH' ) )
     exit;
 
-//create or update database
-if ( get_option( "gmw_pt_db_version" ) == '' || get_option( "gmw_pt_db_version" ) != GMW_PT_DB_VERSION ) {
-    global $wpdb;
+//check if table exists
+global $wpdb;
+$ptTable = $wpdb->get_results( "SHOW TABLES LIKE '{$wpdb->prefix}places_locator'", ARRAY_A );
 
-    $ptTable = $wpdb->get_results( "SHOW TABLES LIKE '{$wpdb->prefix}places_locator'", ARRAY_A );
+//create or update database
+if ( get_option( "gmw_pt_db_version" ) == '' || get_option( "gmw_pt_db_version" ) != GMW_PT_DB_VERSION || count( $ptTable ) == 0 ) {
 
     if ( count( $ptTable ) == 0 ) {
         gmw_pt_db_installation();

@@ -2,17 +2,16 @@
 if (!defined('ABSPATH'))
     exit;
 
+global $wpdb;
+$flTable = $wpdb->get_results("SHOW TABLES LIKE 'wppl_friends_locator'", ARRAY_A);
+
 //create or update database
-if (get_option("gmw_fl_db_version") == '' || get_option("gmw_fl_db_version") != GMW_FL_DB_VERSION) {
+if (get_option("gmw_fl_db_version") == '' || get_option("gmw_fl_db_version") != GMW_FL_DB_VERSION || count( $flTable ) == 0 ) {
 
-    global $wpdb;
-
-    $flTable = $wpdb->get_results("SHOW TABLES LIKE 'wppl_friends_locator'", ARRAY_A);
-
-    if (count($flTable) == 0) {
+    if ( count( $flTable ) == 0) {
         gmw_fl_db_installation();
-        update_option('gmw_fl_db_version', GMW_FL_DB_VERSION);
-    } elseif (count($flTable) == 1) {
+        update_option( 'gmw_fl_db_version', GMW_FL_DB_VERSION );
+    } elseif ( count( $flTable ) == 1 ) {
         gmw_fl_db_update();
     }
 }
@@ -23,20 +22,20 @@ function gmw_fl_db_installation() {
     $gmw_sql = array();
 
     $gmw_sql[] = "CREATE TABLE wppl_friends_locator (
-		`member_id` 		bigint(30) NOT NULL,
-		`lat` 			FLOAT(10,6) NOT NULL ,
-		`long` 			FLOAT(10,6) NOT NULL ,
-		`street` 		VARCHAR(255) NOT NULL ,
-		`apt` 			VARCHAR(255) NOT NULL ,
-		`city` 			VARCHAR(255) NOT NULL ,
-		`state` 		VARCHAR(255) NOT NULL ,
-		`state_long` 		VARCHAR(255) NOT NULL ,
-		`zipcode` 		VARCHAR(255) NOT NULL ,
-		`country` 		VARCHAR(255) NOT NULL ,
-		`country_long` 		VARCHAR(255) NOT NULL ,
-		`address` 		VARCHAR(255) NOT NULL ,
+		`member_id` 			bigint(30) NOT NULL,
+		`lat` 					FLOAT(10,6) NOT NULL ,
+		`long` 					FLOAT(10,6) NOT NULL ,
+		`street` 				VARCHAR(255) NOT NULL ,
+		`apt` 					VARCHAR(255) NOT NULL ,
+		`city` 					VARCHAR(255) NOT NULL ,
+		`state` 				VARCHAR(255) NOT NULL ,
+		`state_long` 			VARCHAR(255) NOT NULL ,
+		`zipcode` 				VARCHAR(255) NOT NULL ,
+		`country` 				VARCHAR(255) NOT NULL ,
+		`country_long` 			VARCHAR(255) NOT NULL ,
+		`address` 				VARCHAR(255) NOT NULL ,
 		`formatted_address`     VARCHAR(255) NOT NULL ,
-		`map_icon` 		VARCHAR(255) NOT NULL ,
+		`map_icon` 				VARCHAR(255) NOT NULL ,
 		UNIQUE KEY id (member_id)
 
 	)	DEFAULT CHARSET=utf8;";
@@ -144,7 +143,6 @@ function gmw_fl_db_update() {
             </form>
         </div>
         <?php
-
     }
 
     add_action('admin_notices', 'gmw_fl_update_notice');

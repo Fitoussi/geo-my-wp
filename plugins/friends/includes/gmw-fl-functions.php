@@ -4,40 +4,40 @@
  * GMW FL function - get members location from database or cache
  * @param unknown_type $user_id
  */
-function gmw_get_member_location_from_db($user_id) {
+function gmw_get_member_info_from_db($user_id) {
 
-    $location = wp_cache_get('gmw_member_location', $group    = $user_id);
+    $info = wp_cache_get('gmw_member_info', $group    = $user_id);
 
-    if (false === $location) {
+    if (false === $info) {
 
         global $wpdb;
 
-        $location = $wpdb->get_row(
+        $info = $wpdb->get_row(
                 $wpdb->prepare(
                         "SELECT * FROM `wppl_friends_locator`
 						WHERE member_id = %d", $user_id
         ));
-        wp_cache_set('gmw_member_location', $location, $user_id);
+        wp_cache_set('gmw_member_info', $info, $user_id);
     }
 
-    return ( isset($location) ) ? $location : false;
+    return ( isset($info) ) ? $info : false;
 
 }
 
 /**
- * GMW FL function - display members's location
+ * GMW FL function - display members's info
  */
 function gmw_get_member_info($args) {
-    global $bp;
+    global $bp, $members_template;
 
-    $args = apply_filters('gmw_fl_get_member_location_args', $args);
+    $args = apply_filters('gmw_fl_get_member_info_args', $args);
 
     //default shortcode attributes
     extract(
             shortcode_atts(
                     array(
         'user_id'  => false,
-        'location' => 'formatted_address',
+        'info' 	   => 'formatted_address',
         'message'  => '',
         'divider'  => ' '
                     ), $args)
@@ -46,32 +46,35 @@ function gmw_get_member_info($args) {
     if ($user_id != false)
         $user_id = $user_id;
 
-    else if (isset($bp->displayed_user->id))
-        $bp->displayed_user->id;
-    else
-        return;
+    elseif ( isset( $bp->displayed_user->id ) )
+        $user_id = $bp->displayed_user->id;
+    
+    elseif ( isset( $members_template->member->id ) )
+    	$user_id = $members_template->member->id;
+    
+    else return;
 
-    $member_info = gmw_get_member_location_from_db($user_id);
+    $member_info = gmw_get_member_info_from_db( $user_id );
 
     if (!isset($member_info) || $member_info === false)
         return $message;
 
     $mem_loc = array();
 
-    $location = explode(',', str_replace(' ', '', $location));
+    $info = explode(',', str_replace(' ', '', $info));
     $count    = 1;
 
-    foreach ($location as $lc) :
+    foreach ($info as $lc) :
 
         $loc       = $member_info->$lc;
-        if ($count < count($location))
+        if ($count < count($info))
             $loc .= $divider;
         $mem_loc[] = $loc;
         $count++;
 
     endforeach;
 
-    return apply_filters('gmw_fl_get_member_location', implode(' ', $mem_loc), $member_info);
+    return apply_filters('gmw_fl_get_member_info', implode(' ', $mem_loc), $member_info);
 
 }
 
@@ -92,7 +95,7 @@ function gmw_member_location($member) {
     /*
      * extract the attributes
      */
-    extract(shortcode_atts(
+    extract( shortcode_atts(
                     array(
         'user_id'        => false,
         'directions'     => '1',

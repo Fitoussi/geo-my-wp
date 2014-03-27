@@ -69,69 +69,6 @@
 	cursor: pointer;
 }
 
-/* paginations */
-.gmw-pt-pagination-wrapper {
-	font-size: 12px;
-	text-shadow: 1px 1px 1px white;
-	border: 1px solid #DDD;
-	text-decoration: none;
-	text-transform: capitalize;
-	background: #F9F9F9;
-	clear: both;
-	margin: 5px 0px;
-	min-height: 35px;
-	padding: 3px;
-}
-
-ul.gmw-pagination {
-	padding: 8px;
-	margin: 0px !important;
-	min-height: 20px;
-	float: right;
-}
-
-ul.gmw-pagination li.details {
-	color: rgb(35, 115, 130);
-}
-
-ul.gmw-pagination li a {
-	color: #333333;
-	text-shadow: 0px 1px #F6F6F6;
-	padding: 2px 3px 2px 3px;
-	border: solid 1px #B6B6B6;
-	box-shadow: 0px 1px #EFEFEF;
-	-moz-box-shadow: 0px 1px #EFEFEF;
-	-webkit-box-shadow: 0px 1px #EFEFEF;
-	background: #E6E6E6;
-	background: -moz-linear-gradient(top, #FFFFFF 1px, #F3F3F3 1px, #E6E6E6);
-	background: -webkit-gradient(linear, 0 0, 0 100%, color-stop(0.02, #FFFFFF),
-		color-stop(0.02, #F3F3F3), color-stop(1, #E6E6E6));
-	font-size: 12px;
-}
-
-ul.gmw-pagination li {
-	padding-bottom: 1px;
-	float: left;
-	margin: 0px;
-	padding: 0px;
-	margin-left: 3px;
-	list-style: none;
-}
-
-ul.gmw-pagination li a:hover,ul.gmw-pagination li a.current {
-	color: #FFFFFF;
-	box-shadow: 0px 1px #E7E7E7;
-	-moz-box-shadow: 0px 1px #E7E7E7;
-	-webkit-box-shadow: 0px 1px #E7E7E7;
-	text-shadow: 0px 1px rgb(44, 125, 128);
-	border-color: rgb(35, 122, 130);
-	background: rgb(47, 159, 159);
-	background: -moz-linear-gradient(top, rgb(85, 204, 227) 1px,
-		rgb(74, 163, 191) 1px, rgb(47, 141, 159));
-	background: -webkit-gradient(linear, 0 0, 0 100%, color-stop(0.02, rgb(85, 204, 227)),
-		color-stop(0.02, rgb(74, 163, 191)), color-stop(1, rgb(47, 141, 159)));
-}
-
 /* Loading scren */
 .gmw-screen-loader-wrapper {
 	display: none;

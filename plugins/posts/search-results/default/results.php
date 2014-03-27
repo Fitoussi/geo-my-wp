@@ -5,35 +5,38 @@
  * @author Eyal Fitoussi
  */
 ?>
-
 <!--  Main results wrapper - wraps the paginations, map and results -->
-<div id="wppl-output-wrapper" class="wppl-output-wrapper wppl-output-wrapper">
-
-    <!-- results count -->
-    <div class="gmw-results-count">
-        <h3><?php gmw_pt_within( $gmw, $sm = __( 'Showing', 'GMW' ), $om = __( 'out of', 'GMW' ), $rm = __( 'results', 'GMW' ), $wm = __( 'within', 'GMW' ), $fm = __( 'from', 'GMW' ), $nm = __( 'your location', 'GMW' ) ); ?></h3>
-    </div>
-
-    <div class="gmw-pt-pagination-wrapper gmw-pt-top-pagination-wrapper">
-        <!--  paginations -->
-        <?php gmw_pt_per_page_dropdown( $gmw, '' ); ?><?php gmw_pt_paginations( $gmw ); ?>
-    </div> 
-
-    <!-- Map -->
-    <div class="wppl-map-wrapper" style="position:relative">
-        <?php gmw_results_map( $gmw ); ?>
-    </div>
-
-    <div class="clear"></div>
-
-    <!--  Results wrapper -->
-    <div id="wppl-results-wrapper-<?php echo $gmw[ 'ID' ]; ?>" class="wppl-results-wrapper">
-
-        <!--  this is where wp_query loop begins -->
-        <?php while ( $gmw_query->have_posts() ) : $gmw_query->the_post(); ?>
-
-            <!--  single results wrapper  -->
-            <div class="wppl-single-result">
+<div class="gmw-results-wrapper gmw-results-wrapper-<?php echo $gmw['ID']; ?> gmw-pt-results-wrapper">
+	
+	<?php do_action( 'gmw_search_results_start' , $gmw, $post ); ?>
+	
+	<!-- results count -->
+	<div class="gmw-results-count">
+		<span><?php gmw_pt_within( $gmw, $sm=__( 'Showing', 'GMW' ), $om=__( 'out of', 'GMW' ), $rm=__( 'results', 'GMW' ) ,$wm=__( 'within', 'GMW' ), $fm=__( 'from','GMW' ), $nm=__( 'your location', 'GMW' ) ); ?></span>
+	</div>
+	
+	<?php do_action( 'gmw_before_top_pagination' , $gmw, $post ); ?>
+	
+	<div class="gmw-pt-pagination-wrapper gmw-pt-top-pagination-wrapper">
+		<!--  paginations -->
+		<?php gmw_pt_per_page_dropdown( $gmw, '' ); ?><?php gmw_pt_paginations( $gmw ); ?>
+	</div> 
+		
+	<!-- Map -->
+	<?php gmw_results_map( $gmw ); ?>
+	
+	<div class="clear"></div>
+	
+	<?php do_action( 'gmw_search_results_before_loop' , $gmw, $post ); ?>
+	
+	<!--  Results wrapper -->
+	<div class="gmw-posts-wrapper">
+		
+		<!--  this is where wp_query loop begins -->
+		<?php while ( $gmw_query->have_posts() ) : $gmw_query->the_post(); ?>
+			
+			<!--  single results wrapper  -->
+			<div id="post-<?php the_ID(); ?>" <?php post_class('wppl-single-result'); ?>>
 
                 <!-- Title -->
                 <div class="wppl-title-holder">

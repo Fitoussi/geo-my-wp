@@ -2,14 +2,13 @@
  * Default theme stylesheet
  * @author Eyal Fitoussi
  */
-
-.wppl-map-wrapper {	
+.wppl-map-wrapper {
 	margin-bottom: 10px;
-	width:auto;
-	position:relative;
+	width: auto;
+	position: relative;
 	clear: both;
 }
-		
+
 .wppl-single-result {
 	font-family: arial;
 	padding: 5px;
@@ -23,15 +22,13 @@
 	border-top: 1px solid #EEE;
 	float: left;
 	width: 100%;
-	}
-	
+}
+
 .gmw-pt-per-page-dropdown {
-	margin:7px 10px;
-	float: left;
 	height:25px !important;
 	font-size: 12px;
 	border:1px solid #ccc;
-	color:#444
+	margin-left: 15px
 }
 
 .wppl-single-result .wppl-title-holder {
@@ -47,18 +44,18 @@
 	-webkit-border-radius: 4px !important;
 	-moz-border-radius: 4px !important;
 	border-radius: 4px !important;
-	}
-	
+}
+
 .wppl-single-result h2.wppl-h2 {
 	line-height: 25px;
-	margin:0px !important;
-	}
-		
+	margin: 0px !important;
+}
+
 .wppl-single-result .wppl-h2 span {
-	font-size:12px;
-	color:#666;
-	}
-			
+	font-size: 12px;
+	color: #666;
+}
+
 .wppl-single-result .wppl-thumb {
 	border: 1px solid #DDD;
 	padding: 4px 4px 4px 4px;
@@ -66,12 +63,12 @@
 	margin-right: 10px;
 	display: inline;
 	background: #EFEFEF;
-}	
+}
 
-.wppl-single-result .wppl-thumb img {
-	//float: left;
-	}
-		
+.wppl-single-result .wppl-thumb img { //
+	float: left;
+}
+
 .wppl-single-result .wppl-info {
 	font-family: arial, sans-serif;
 	color: #666;
@@ -89,22 +86,21 @@
 	-webkit-box-shadow: inset 0px 0px 4px white;
 	-moz-box-shadow: inset 0px 0px 4px white;
 	border-radius: 3px;
-	}
-	
+}
+
 .wppl-info .wppl-info-left {
 	float: left;
 	width: 36%;
 	border-right: 1px dashed #AAA;
 	margin-right: 20px;
-	
-	}
-	
+}
+
 .wppl-info .wppl-info-right {
 	float: left;
 	width: 58%;
-	}
-		
-.wppl-single-result .wppl-info div span {	
+}
+
+.wppl-single-result .wppl-info div span {
 	color: #444;
 	font-size: 14px;
 	text-transform: capitalize;
@@ -114,42 +110,82 @@
 	text-shadow: 1px 1px 1px white;
 	font-weight: normal;
 	margin-right: 3px;
-	}
+}
 
-.wppl-single-result.wppl-drive-dis {	
+.wppl-single-result.wppl-drive-dis {
 	margin-right: 10px;
-	float:left;
-	}	
-	
-.wppl-single-result .wppl-get-directions {	
-	float:left;
-	}	
-
-
-.wppl-get-directions a:link, .wppl-get-directions a:visited, 
-.wppl-website a:link, .wppl-website a:visited  {
-	color: #2E738F;
-	}	
-	
-.wppl-get-directions a:hover, .wppl-get-directions a:active, 
-.wppl-website a:hover, .wppl-website a:active {
-	color: #4B90AB;
-	}	
-
-#wppl-go-top {
-	width: 20px;
-	background: #FDFDFD;
-	text-align: center;
-	margin-top: 1px;
-	cursor: pointer;
-	color: #333;
-	font-family: arial, sans-serif;
-	font-size: 11px;
 	float: left;
-	border: 1px solid #EEE;
-	padding: 3px;
-	-webkit-box-shadow: 0 0px 2px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset;
-	-moz-box-shadow: 0 0px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset;
-	box-shadow: 0 0px 2px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset;
-	margin-right:5px;
-	}
+}
+
+.wppl-single-result .wppl-get-directions {
+	float: left;
+}
+
+.wppl-get-directions a:link,.wppl-get-directions a:visited,.wppl-website a:link,.wppl-website a:visited
+	{
+	color: #2E738F;
+}
+
+.wppl-get-directions a:hover,.wppl-get-directions a:active,.wppl-website a:hover,.wppl-website a:active
+	{
+	color: #4B90AB;
+}
+
+.gmw-results-count {
+	background: #fdfdfd;
+	padding:8px 15px;
+	border-bottom:1px solid #ddd;
+	border-top:1px solid #ddd;
+}
+
+.gmw-results-count span {
+	font-size:13px;	
+}
+
+/* paginations */
+.gmw-pt-pagination-wrapper {
+	font-size: 12px;
+	background: #F9F9F9;
+	padding: 8px 0px;
+	display: inline-block;
+	width:100%;
+	min-height: 25px;
+	margin: 3px 0px
+}
+
+ul.gmw-pagination {
+	margin: 0px 15px 0px 0!important;
+	float: right;
+	padding:4px 0px;
+}
+
+ul.gmw-pagination li.details {
+	display:none;
+}
+
+ul.gmw-pagination li {
+	padding-bottom: 1px;
+	float: left;
+	margin: 0px;
+	padding: 0px;
+	margin-left: 1px;
+	list-style: none;
+}
+
+.gmw-pt-bottom-pagination-wrapper {
+	border-bottom:1px solid #ddd;
+	border-top:1px solid #ddd;
+}
+
+ul.gmw-pagination li a {
+	padding: 3px 4px;
+	border: solid 1px #ddd;
+	background: white;
+	font-size: 12px;
+	text-decoration: none
+}
+
+ul.gmw-pagination li a:hover,ul.gmw-pagination li a.current {
+	background: #eee;
+	
+}

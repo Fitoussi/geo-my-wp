@@ -1,25 +1,7 @@
 /**
- * Custom theme stylesheet.
- * @version 1.0
+ * Wordpress loop theme stylesheet
  * @author Eyal Fitoussi
  */
-		
-.wppl-single-result .wppl-info {
-	padding: 5px 10px;
-	border: 1px solid #eee;
-	margin-top: 5px;
-	}
-			
-.wppl-single-result .wppl-info div span {	
-	font-weight:bold;
-	}
-
-.gmw-pt-per-page-dropdown {
-	height:25px !important;
-	font-size: 12px;
-	border:1px solid #ccc;
-	margin-left: 15px
-}
 
 .gmw-results-count {
 	background: #fdfdfd;
@@ -32,15 +14,59 @@
 	font-size:13px;	
 }
 
+.gmw-pt-map-wrapper {	
+	margin-top:5px;
+}
+
+.gmw-pt-per-page-dropdown {
+	height:25px !important;
+	font-size: 12px;
+	border:1px solid #ccc;
+	margin-left: 15px
+}
+
+ul.gmw-posts-wrapper {
+	list-style:none;
+	margin:0px;
+	background: #f8f8f8;
+	border-top: 1px solid #ddd;
+	margin-bottom: 5px;
+}
+
+ul.gmw-posts-wrapper h2.post-title a:link {
+	font-size: 16px;
+	text-decoration: none;
+}
+
+ul.gmw-posts-wrapper li {
+	padding:15px;
+}
+
+span.radius-distance {
+	padding:5px;
+	background: #f1f1f1;
+	margin-left: 10px;
+	font-size: 12px;
+}
+
+ul.gmw-posts-wrapper li:nth-child(odd) {
+	background:#fdfdfd;
+}
+
+ul.gmw-additional-info-wrapper li {
+	padding:0px;
+	
+}
+
 /* paginations */
 .gmw-pt-pagination-wrapper {
+	clear: both;
 	font-size: 12px;
 	background: #F9F9F9;
 	padding: 8px 0px;
 	display: inline-block;
 	width:100%;
 	min-height: 25px;
-	margin: 3px 0px
 }
 
 ul.gmw-pagination {
@@ -75,7 +101,12 @@ ul.gmw-pagination li a {
 	text-decoration: none
 }
 
+
+
 ul.gmw-pagination li a:hover,ul.gmw-pagination li a.current {
 	background: #eee;
 	
 }
+
+
+

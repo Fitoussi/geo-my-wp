@@ -447,24 +447,70 @@ function gmw_pt_days_hours( $post, $nr_message ) {
  * @version 1.0
  * @author Eyal Fitoussi
  */
-function gmw_pt_additional_info( $gmw, $post ) {
+function gmw_pt_additional_info( $gmw, $post, $tag ) {
 
     if ( !isset( $gmw['search_results']['additional_info'] ) )
         return;
-    ?>
-
-    <?php if ( isset( $gmw['search_results']['additional_info']['phone'] ) ) { ?><div class="gmw-phone"><span><?php _e( 'Phone: ', 'GMW' ); ?></span><?php echo ( $post->phone ) ? $post->phone : _e( 'N/A', 'GMW' ); ?></div><?php } ?>
-    <?php if ( isset( $gmw['search_results']['additional_info']['fax'] ) ) { ?><div class="gmw-fax"><span><?php _e( 'Fax: ', 'GMW' ); ?></span><?php echo ( $post->fax ) ? $post->fax : _e( 'N/A', 'GMW' ); ?></div><?php } ?>
-    <?php if ( isset( $gmw['search_results']['additional_info']['email'] ) ) { ?><div class="gmw-email"><span><?php _e( 'Email: ', 'GMW' ); ?></span><?php echo ( isset( $post->email ) && !empty( $post->email ) ) ? '<a href="mailto:' . $post->email . '">' . $post->email . '</a>' : _e( 'N/A', 'GMW' ); ?></div><?php } ?>
-    <?php if ( isset( $gmw['search_results']['additional_info']['website'] ) ) { ?><div class="gmw-website"><span><?php _e( 'Website: ', 'GMW' ); ?> </span><?php if ( $post->website ) { ?><a href="http://<?php echo $post->website; ?>" target="_blank"><?php
-            echo $post->website;
-        } else {
-            _e( 'N/A', 'GMW' );
-        }
-        ?></a></div><?php } ?>
-
-    <?php
-
+	
+    $tag = ( isset( $tag ) && !empty( $tag ) ) ? $tag : 'div';
+    
+    $orgTag = $tag;
+    if ( $orgTag == 'ul' ) {
+    	echo '<ul class="gmw-additional-info-wrapper">';
+    	$tag = 'li';
+    } elseif ( $orgTag == 'ol') {
+    	echo '<ol class="gmw-additional-info-wrapper">';
+    	$tag = 'li';
+    } else {
+    	echo '<div class="gmw-additional-info-wrapper">';
+    	$tag = 'div';
+    }
+    
+    if ( isset( $gmw['search_results']['additional_info']['phone'] ) ) { 
+    	
+    	echo '<'.$tag.' class="gmw-phone gmw-additional-info">';
+    	echo 	'<span>'. __( 'Phone: ', 'GMW' ) .'</span>';
+    	echo 	( $post->phone ) ? $post->phone : _e( 'N/A', 'GMW' ); 
+    	echo '</'.$tag.'>';
+    	
+   	} 
+   	
+    if ( isset( $gmw['search_results']['additional_info']['fax'] ) ) { 
+    	
+    	echo '<'.$tag .' class="gmw-fax gmw-additional-info">';
+    		echo '<span>'. __( 'Fax: ', 'GMW' ).'</span>';
+    		echo ( $post->fax ) ? $post->fax : _e( 'N/A', 'GMW' );
+    	echo '</'.$tag.'>';
+    	
+    }
+    
+    if ( isset( $gmw['search_results']['additional_info']['email'] ) ) { 
+    	
+    	echo '<'.$tag.' class="gmw-email gmw-additional-info">';
+    		echo '<span>'.__( 'Email: ', 'GMW' ).'</span>';
+    		echo ( isset( $post->email ) && !empty( $post->email ) ) ? '<a href="mailto:' . $post->email . '">' . $post->email . '</a>' : _e( 'N/A', 'GMW' );
+    	echo '</'.$tag.'>';
+    	
+    }
+    
+    if ( isset( $gmw['search_results']['additional_info']['website'] ) ) {
+    	echo '<'.$tag.' class="gmw-website gmw-additional-info">';
+    		echo '<span>'. __( 'Website: ', 'GMW' ).'</span>';
+    		if ( $post->website ) {
+    			echo '<a href="http://'.$post->website.'" target="_blank">'.$post->website.'</a>';
+    		} else { 
+    			_e( 'N/A', 'GMW' ); 
+    		} 	
+    	echo '</'.$tag.'>';
+	} 
+	
+	if ( $orgTag == 'ul' ) {
+		echo '</ul>';
+	} elseif ( $orgTag == 'ol') {
+		echo '</ol>';
+	} else {
+		echo '</div>';
+	}
 }
 
 /**

@@ -90,3 +90,25 @@ div#gmw-md-loading-message-wrapper p {
 	margin-bottom: 15px;
 	float: right;
 }
+
+/* info window */
+.gmw-sd-info-window span.avatar img {
+	height:25px;
+	width:25px;
+}
+
+.gmw-sd-info-window span.user-name {
+	font-size:12px;
+	text-transform: capitalize;
+	vertical-align: top;
+	margin-top:5px;
+	display: inline;
+	margin-left:3px
+}
+
+.gmw-sd-info-window span.distance {
+	font-size:12px;
+	vertical-align: top;
+	margin-top:5px;
+	display: inline;
+}

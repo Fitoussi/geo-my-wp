@@ -6,28 +6,40 @@
  */
 ?>
 <!--  Main results wrapper - wraps the paginations, map and results -->
-<div id="gmw-pt-output-wrapper-<?php echo $gmw['ID']; ?>" class="gmw-pt-output-wrapper-<?php echo $gmw['ID']; ?> gmw-pt-output-wrapper">
+<div class="gmw-results-wrapper gmw-results-wrapper-<?php echo $gmw['ID']; ?> gmw-pt-results-wrapper">
+	
+	<?php do_action( 'gmw_search_results_start' , $gmw, $post ); ?>
 	
 	<!-- results count -->
 	<div class="gmw-results-count">
-		<h3><?php gmw_pt_within( $gmw, $sm=__( 'Showing', 'GMW' ), $om=__( 'out of', 'GMW' ), $rm=__( 'results', 'GMW' ) ,$wm=__( 'within', 'GMW' ), $fm=__( 'from','GMW' ), $nm=__( 'your location', 'GMW' ) ); ?></h3>
+		<span><?php gmw_pt_within( $gmw, $sm=__( 'Showing', 'GMW' ), $om=__( 'out of', 'GMW' ), $rm=__( 'results', 'GMW' ) ,$wm=__( 'within', 'GMW' ), $fm=__( 'from','GMW' ), $nm=__( 'your location', 'GMW' ) ); ?></span>
 	</div>
-		
+	
+	<?php do_action( 'gmw_before_top_pagination' , $gmw, $post ); ?>
+	
 	<div class="gmw-pt-pagination-wrapper gmw-pt-top-pagination-wrapper">
 		<!--  paginations -->
-		<?php gmw_pt_per_page_dropdown($gmw, ''); ?><?php gmw_pt_paginations($gmw); ?>
+		<?php gmw_pt_per_page_dropdown( $gmw, '' ); ?><?php gmw_pt_paginations( $gmw ); ?>
 	</div> 
-	
+		
 	<!-- Map -->
-	<?php gmw_results_map($gmw); ?>
+	<?php gmw_results_map( $gmw ); ?>
 	
 	<div class="clear"></div>
 	
+	<?php do_action( 'gmw_search_results_before_loop' , $gmw, $post ); ?>
+	
 	<!--  Results wrapper -->
-	<div id="gmw-results-wrapper-<?php echo $gmw['ID']; ?>" class="gmw-results-wrapper">
-
+	<div class="gmw-posts-wrapper">
+		
+		<!--  this is where wp_query loop begins -->
 		<?php while ( $gmw_query->have_posts() ) : $gmw_query->the_post(); ?>
-			<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+			
+			<!--  single results wrapper  -->
+			<article id="post-<?php the_ID(); ?>" <?php post_class('wppl-single-result'); ?>>
+				
+				<?php do_action( 'gmw_posts_loop_post_start' , $gmw, $post ); ?>
+				
 				<?php if ( is_sticky() && is_home() && ! is_paged() ) : ?>
 					<div class="featured-post">
 						<?php _e( 'Featured post', 'twentytwelve' ); ?>
@@ -40,7 +52,7 @@
 					<h1 class="entry-title"><?php the_title(); ?></h1>
 					<?php else : ?>
 					<h1 class="entry-title">
-						<a href="<?php the_permalink(); ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'twentytwelve' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?><span><?php echo '('; gmw_pt_by_radius($gmw, $post); echo ')'; ?></span></a>
+						<a href="<?php the_permalink(); ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'twentytwelve' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?><span><?php echo gmw_pt_by_radius($gmw, $post); ?></span></a>
 					</h1>
 					<?php endif; // is_single() ?>
 					<?php if ( comments_open() ) : ?>
@@ -64,10 +76,11 @@
 								<?php wp_link_pages( array( 'before' => '<div class="page-links">' . __( 'Pages:', 'twentytwelve' ), 'after' => '</div>' ) ); ?>
 						</div>
 						<div style="width:25%;float:left;">
-							<?php gmw_pt_taxonomies($gmw, $post); ?>
-							<div id="gmw-additional-info" class="gmw-additional-info">	
-		    					<?php gmw_pt_additional_info($gmw, $post); ?>
-		    				</div>
+							
+							<?php gmw_pt_taxonomies($gmw, $post); ?>	
+		    					
+		    				<?php gmw_pt_additional_info($gmw, $post, $tag='div'); ?>
+	
 		    			</div>
 	    			</div><!-- .entry-content -->
     
@@ -100,10 +113,15 @@
 						</div><!-- .author-info -->
 					<?php endif; ?>
 				</footer><!-- .entry-meta -->
-			</article><!-- #post -->
 			
+				<?php do_action( 'gmw_posts_loop_post_end' , $gmw, $post ); ?>
+			
+			</article><!-- #post -->
+		
 		<?php endwhile;	 ?>
 	</div>
+	
+	<?php do_action( 'gmw_search_results_after_loop' , $gmw, $post ); ?>
 	
 	<div class="gmw-pt-pagination-wrapper gmw-pt-bottom-pagination-wrapper">
 		<!--  paginations -->

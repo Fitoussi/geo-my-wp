@@ -27,8 +27,7 @@ class GMW_PT_Admin {
         add_filter( 'gmw_admin_settings', array( $this, 'settings_init' ), 1 );
         add_filter( 'gmw_admin_new_form_button', array( $this, 'new_form_button' ), 1, 1 );
         add_filter( 'gmw_posts_form_settings', array( $this, 'form_settings_init' ), 1, 1 );
-
-        add_filter( 'gmw_admin_shortcodes_page', array( $this, 'shortcodes_page' ) );
+        add_filter( 'gmw_admin_shortcodes_page', array( $this, 'shortcodes_page' ),1 , 10 );
         		
         //main settings
         add_action( 'gmw_main_settings_post_types', array( $this, 'main_settings_post_types' ), 1, 4 );
@@ -734,24 +733,21 @@ class GMW_PT_Admin {
     					
     					),
     					array(
-    							'example' => __( 'Address: [gmw_post_info info="formatted_address"]<br />
-    									Phone: [gmw_post_info info="phone"]<br />
-    									Email: [gmw_post_info info="email"]<br />
-    									Website: [gmw_post_info info="website"]', 'GMW' ),
-    							'desc'	  => __( 'Use this example in the content of a post to display: <br />
-    									Address: blah street, Hollywodo Fl 33021, USA <br />
-    									Phone: 123-456-7890 <br />
-    									Email: blah@geomywp.com <br />
-    									Website: www.geomywp.com <br />
-    									', 'GMW' )
+    							'example' => __( 'Address:', 'GMW' ) . ' [gmw_post_info info="formatted_address"] <br />'
+    									. __( 'Phone:' , 'GMW' ) . '[gmw_post_info info="phone"]<br />'
+    									. __( 'Email:' , 'GMW' ) . '[gmw_post_info info="email"]<br />'
+    									. __( 'Website:' , 'GMW' ) . 'Website: [gmw_post_info info="website"]',
+    							'desc'	  => __( 'Use this example in the content of a post to display:', 'GMW' ) . '<br />'
+    									.__ ( 'Address: blah street, Hollywodo Fl 33021, USA', 'GMW' ) . '<br />'
+    									. __( 'Phone: 123-456-7890', 'GMW' ) . '<br />'
+    									. __( 'Email: blah@geomywp.com', 'GMW' ) . '<br />'
+    									. __( 'Website: www.geomywp.com', 'GMW' ) .  '<br />'
     					
     					),
     			),
 
     	);
-    	//array_push($shortcodes, $pt_shortcodes);
-    	 
-    	//print_r($shortcodes);
+
     	return $shortcodes;
     	 
     }

@@ -22,6 +22,7 @@ class GMW_FL_Admin {
         add_filter( 'gmw_admin_settings', array( $this, 'settings_init' ) );
         add_filter( 'gmw_admin_new_form_button', array( $this, 'new_form_button' ), 1, 1 );
         add_filter( 'gmw_friends_form_settings', array( $this, 'form_settings_init' ), 1, 1 );
+        add_filter( 'gmw_admin_shortcodes_page', array( $this, 'shortcodes_page' ) ,1, 10 );
 
         //form settings
         add_action( 'gmw_friends_form_settings_friends_search_form_template', array( $this, 'friends_search_form_template' ), 2, 4 );
@@ -519,6 +520,79 @@ class GMW_FL_Admin {
         );
         return $settings;
 
+    }
+    
+    public function shortcodes_page( $shortcodes ) {
+    
+    	$shortcodes['member_info'] = array(
+    			'name'		  => __( 'Member Information', 'GMW' ),
+    			'basic_usage' => '[gmw_member_info]',
+    			'desc'        => __( 'Easy way to display any of the location information of a member.', 'GMW' ),
+    			'attributes'  => array(
+    					array(
+    							'attr'	 => __( 'user_id', 'GMW' ),
+    							'values' => array(
+    									__( 'User ID','GMW' ),
+    							),
+    							'desc'	 => __( 'Use the user_id only if you want to display information of a specific member. 
+    									When using the shortcode on a profile page or within
+    									a members loop you don\'t need to use the user_id attribute. 
+    									The shortcode will use the user ID of the member that is being displayed or the user ID of
+    									each member within the members loop.', 'GMW')
+    					),
+    					array(
+    							'attr'	 => __( 'info', 'GMW' ),
+    							'values' => array(
+    									__( 'street','GMW' ),
+    									__( 'apt','GMW' ),
+    									__( 'city','GMW' ),
+    									__( 'state - state\'s short name (ex FL )','GMW' ),
+    									__( 'state_long - state\'s long name (ex Florida )','GMW' ),
+    									__( 'zipcode','GMW' ),
+    									__( 'country - country short name (ex IL )','GMW' ),
+    									__( 'country_long - country long name (ex Israel )','GMW' ),
+    									__( 'address','GMW' ),
+    									__( 'formatted_address','GMW' ),   								
+    							),
+    							'desc'	 => __( 'Use a single value or multiple values comma separated of the information you would like to display. 
+    									For example you can use info="city,state,country_long" to display "Hollywood FL United States"', 'GMW')
+    					),
+    
+    					array(
+    							'attr'	 => __( 'divider', 'GMW' ),
+    							'values' => array(
+    									__( 'any character','GMW' ),
+    							),
+    							'desc'	 => __( 'Use any character that you would like to display between the fields you choose above"', 'GMW')
+    					),
+    			),
+    			'examples'  => array(
+    					array(
+    							'example' => __( '[gmw_member_info user_id="3" info="city,state_long,zipcode" divider=","]', 'GMW' ),
+    							'desc'	  => __( 'This shortcode will display the information of the memebr with ID 3 which is ( for example ) "Hollywood,Florida,33021"', 'GMW' )
+
+    					),
+    					array(
+    							'example' => __( '[gmw_member_info info="city,state" divider="-"]', 'GMW' ),
+    							'desc'	  => __( 'Use the shortcode without user_id when within a members loop to display the city and state of each member a memebrs loop."', 'GMW' )
+
+    					),
+    					array(
+    							'example' => __( 'City:', 'GMW' ) . ' [gmw_member_info info="city"] <br />'
+    							. __( 'State:' , 'GMW' ) . '[gmw_member_info info="state"]<br />'
+    							. __( 'Country:' , 'GMW' ) . '[gmw_member_info info="country_long"]<br />',
+    							'desc'	  => __( 'Use this example in a profile page to display the information of a member:', 'GMW' ) . '<br />'
+    							.__ ( 'City: Hollywood', 'GMW' ) . '<br />'
+    							. __( 'State: FL', 'GMW' ) . '<br />'
+    							. __( 'Country: United States', 'GMW' ) . '<br />',
+
+    					),
+    			),
+    
+    	);
+    
+    	return $shortcodes;
+    
     }
 
 }

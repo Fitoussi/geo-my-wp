@@ -6,34 +6,40 @@
  */
 ?>
 <!--  Main results wrapper - wraps the paginations, map and results -->
-<div id="wppl-output-wrapper" class="wppl-output-wrapper wppl-output-wrapper">
+<div class="gmw-results-wrapper gmw-results-wrapper-<?php echo $gmw['ID']; ?> gmw-pt-results-wrapper">
+	
+	<?php do_action( 'gmw_search_results_start' , $gmw, $post ); ?>
 	
 	<!-- results count -->
 	<div class="gmw-results-count">
-		<h3><?php gmw_pt_within( $gmw, $sm=__( 'Showing', 'GMW' ), $om=__( 'out of', 'GMW' ), $rm=__( 'results', 'GMW' ) ,$wm=__( 'within', 'GMW' ), $fm=__( 'from','GMW' ), $nm=__( 'your location', 'GMW' ) ); ?></h3>
+		<span><?php gmw_pt_within( $gmw, $sm=__( 'Showing', 'GMW' ), $om=__( 'out of', 'GMW' ), $rm=__( 'results', 'GMW' ) ,$wm=__( 'within', 'GMW' ), $fm=__( 'from','GMW' ), $nm=__( 'your location', 'GMW' ) ); ?></span>
 	</div>
-		
+	
+	<?php do_action( 'gmw_before_top_pagination' , $gmw, $post ); ?>
+	
 	<div class="gmw-pt-pagination-wrapper gmw-pt-top-pagination-wrapper">
 		<!--  paginations -->
 		<?php gmw_pt_per_page_dropdown( $gmw, '' ); ?><?php gmw_pt_paginations( $gmw ); ?>
 	</div> 
-	
+		
 	<!-- Map -->
-	<div class="wppl-map-wrapper" style="position:relative">
-		<?php gmw_results_map( $gmw ); ?>
-	</div>
+	<?php gmw_results_map( $gmw ); ?>
 	
 	<div class="clear"></div>
 	
+	<?php do_action( 'gmw_search_results_before_loop' , $gmw, $post ); ?>
+	
 	<!--  Results wrapper -->
-	<div id="wppl-results-wrapper-<?php echo $gmw['ID']; ?>" class="wppl-single-result-wrapper">
+	<div class="gmw-posts-wrapper">
 		
 		<!--  this is where wp_query loop begins -->
 		<?php while ( $gmw_query->have_posts() ) : $gmw_query->the_post(); ?>
 			
 			<!--  single results wrapper  -->
-			<div class="wppl-single-result">
-		
+			<div id="post-<?php the_ID(); ?>" <?php post_class('wppl-single-result'); ?>>
+				
+				<?php do_action( 'gmw_posts_loop_post_start' , $gmw, $post ); ?>
+				
 				<!-- Title -->
 				<h2>
 					<a href="<?php echo the_permalink(); ?>"><?php echo $post->post_count; ?>) <?php the_title(); ?></a>
@@ -60,7 +66,7 @@
 	    			
 	    			<!--  Addiotional info -->
 					<div>	
-	    				<?php gmw_pt_additional_info( $gmw, $post ); ?>
+	    				<?php gmw_pt_additional_info( $gmw, $post, $tag='div' ); ?>
 	    			</div>
 	    		
 	    			<!--  Address -->
@@ -76,7 +82,9 @@
 		    			<?php gmw_pt_directions( $gmw, $post, $title=__( 'Get Directions', 'GMW' ) ); ?>
 	    			</div>
 		    	</div> <!-- info -->
-		    
+		    	
+		    	<?php do_action( 'gmw_posts_loop_post_end' , $gmw, $post ); ?>
+		    	
 		    </div> <!--  single- wrapper ends -->
 		    
 		    <div class="clear"></div>     
@@ -85,6 +93,8 @@
 		<!--  end of the loop -->
 	
 	</div> <!--  results wrapper -->    
+	
+	<?php do_action( 'gmw_search_results_after_loop' , $gmw, $post ); ?>
 	
 	<!--  Pagination -->
 	<div class="gmw-pt-pagination-wrapper gmw-pt-bottom-pagination-wrapper">

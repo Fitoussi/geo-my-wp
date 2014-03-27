@@ -465,9 +465,11 @@ class GMW_Addons {
 
                                 <div class="gmw-addon-license-wrapper gmw-addon-activate">
 
-                                    <input class="gmw_license_keys" name="gmw_license_keys[<?php echo $addon['name']; ?>]" type="text" class="regular-text" disabled="disabled" placeholder="<?php _e('No license key required', 'GMW'); ?>" style="width: 100% !important;height: 28px !important;padding:3px 8px 0px !important;" value="<?php if (isset($this->licenses[$addon['name']]) && !empty($this->licenses[$addon['name']])) echo $this->licenses[$addon['name']]; ?>" />
-
-                                    <button type="submit" class="button-secondary gmw-addon-activation-btn" style="opacity:0;" name="gmw_addon_deactivated" value="<?php echo $addon['name']; ?>" ><?php _e('Deactivate Add-on', 'GMW'); ?></button>									
+                                    <input class="gmw_license_keys gmw-addon-short-input" name="gmw_license_keys[<?php echo $addon['name']; ?>]" type="text" class="regular-text" disabled="disabled" placeholder="<?php _e('No license key required', 'GMW'); ?>" style="width: 100% !important;height: 28px !important;padding:3px 8px 0px !important;" value="<?php if (isset($this->licenses[$addon['name']]) && !empty($this->licenses[$addon['name']])) echo $this->licenses[$addon['name']]; ?>" />
+									
+									
+									
+                                    <button type="submit" class="button-secondary gmw-addon-activation-btn" style="float: right !important;margin-top: 1px !important;padding: 0 9px !important;color: rgb(182, 42, 42)  !important;height: 27px !important;" name="gmw_addon_deactivated" value="<?php echo $addon['name']; ?>" >&#10007;</button>									
                                 </div>
 
                             <?php } ?>
