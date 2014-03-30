@@ -7,7 +7,7 @@
 .gmw-credits {
 	float: right;
 	margin-top: 6px;
-	min-width: 450px;
+	min-width: 520px;
 }
 
 .gmw-credits img {
@@ -80,7 +80,7 @@
 	padding: 1px 6px;
 	background: #7FA97F;
 	float: left;
-	margin-right: 10px;
+	margin-right: 5px;
 	color: white;
 	font-size: 12px !important;
 	margin-top: 2px

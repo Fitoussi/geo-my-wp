@@ -112,6 +112,7 @@ class GMW_Admin {
 		$output .=          '<div style="display: inline-block;"><a href="http://www.geomywp.com" target="_blank">'.__( 'Developed by Eyal Fitoussi - please take a moment to support my work' ,'GJM').'</a></div>';
 		$output .=          '<div>';
 		$output .=          	'<a href="http://wordpress.org/plugins/geo-my-wp/" title="Rate GEO my WP" target="_blank"><img src="'.GMW_URL .'/assets/images/star-icon.png" style="max-height:23px;" /></a>';
+		$output .= 				'<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WTF4HGEYNFF8W" class="gmw-credits-addons-button" target="_blank" Title="Thank you">Donate</a>';
 		$output .=              '<a class="gmw-credits-facebook-button" title="GEO my WP Facebook page" href="https://www.facebook.com/geomywp" target="_blank">Facebook</a>';
 		$output .=              '<a class="gmw-credits-twitter-button" title="GEO my WP Twitter page" href="https://twitter.com/GEOmyWP" target="_blank">Twitter</a>';
 		$output .=              '<a class="gmw-credits-email-button" title="Contact Us" href="mailto:info@geomywp.com" title="Email" target="_blank">Email</a>';

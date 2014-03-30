@@ -49,7 +49,7 @@ class GMW_Member_Location_Widget extends WP_Widget {
 
                 $member_id = $bp->displayed_user->id;
 
-                $member_info = gmw_get_member_location_from_db($member_id);
+                $member_info = gmw_get_member_info_from_db($member_id);
 
                 if (!isset($member_info) || empty($member_info))
                     return;

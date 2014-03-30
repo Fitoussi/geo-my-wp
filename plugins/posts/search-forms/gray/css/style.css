@@ -1,11 +1,13 @@
 /**
- * Default search form stylesheet.
+ * Grey search form stylesheet.
  * @version 1.0
  * @author Eyal Fitoussi
  */
  
 div.gmw-form-wrapper {
- 	margin:10px 0px;
+ 	background: #f8f8f8;
+	padding:15px;
+	border-top:1px solid #ddd;
  }
  
 div.gmw-form-wrapper input[type="text"] {
@@ -26,7 +28,7 @@ div.gmw-form-wrapper .gmw-single-address-field {
 }
 
 div.gmw-form-wrapper .gmw-unit-distance-wrapper {
-	margin:10px 0px;
+	margin-bottom:10px;
 }
 
 div.gmw-form-wrapper .gmw-checkbox-taxonomy-wrapper label {
@@ -45,7 +47,7 @@ div.gmw-form-wrapper .gmw-checkbox-taxonomy-wrapper label {
     text-transform: capitalize;	
 }
 
-div.gmw-form-wrapper .gmw-checkbox-taxonomy-wrapper span.label {
+.div.gmw-form-wrapper gmw-checkbox-taxonomy-wrapper span.label {
 	font-weight:bold;
 }
 
@@ -58,7 +60,6 @@ div.gmw-form-wrapper .gmw-radius-slider-wrapper {
     margin-bottom:10px;
 }
 
-
 div.gmw-form-wrapper .gmw-radius-slider-range-wrapper {
     margin:5px 0px;
 }
@@ -68,18 +69,48 @@ div.gmw-form-wrapper .gmw-no-address-error {
 }
 
 div.gmw-form-wrapper .gmw-locator-btn-wrapper {
-	width: 28px;
-	height: 28px;
-	padding: 3px 0px;
+	padding: 6px 10px;
+	background: #ABF1D4;
+	text-align:center;
+	margin:10px 0px;
+	cursor: pointer;
 	display: inline-block;
 }
 
-div.gmw-form-wrapper .gmw-locator-btn-wrapper img {
-	position: absolute;
-	border-radius: 0px !important;
-	box-shadow: none !important;
+div.gmw-form-wrapper div.gmw-locator-btn-wrapper div.gmw-gray-locator-button  {
+	
 }
 
-div.gmw-form-wrapper .gmw-locate-btn {
+div.gmw-form-wrapper select {
+	border: 1px solid #ccc;
+	min-height:28px;
+	font-size: 14px;
+	color:#555;
+}
+
+div.gmw-form-wrapper .gmw-gray-submit-button {
+	background: #ABF1D4;
+	padding:5px 15px;
+	display: inline-block;
 	cursor: pointer;
+}
+
+@media (max-width:800px) {
+
+	div.gmw-form-wrapper input[type="text"], div.gmw-form-wrapper select, div.gmw-form-wrapper .gmw-locator-btn-wrapper {
+	     width:100%;
+	}
+	
+	div.gmw-form-wrapper .gmw-gray-submit-button {	
+		display: block;
+		text-align:center;
+	}
+	
+	div.gmw-form-wrapper .gmw-locator-btn-wrapper {
+		padding: 6px 0px;
+		background: #ABF1D4;
+		text-align:center;
+		margin:10px 0px;
+		cursor: pointer;
+	}
 }

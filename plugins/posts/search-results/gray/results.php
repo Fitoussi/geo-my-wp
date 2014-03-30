@@ -1,6 +1,6 @@
 <?php 
 /**
- * GMW Results Theme
+ * GMW Results Theme - Gray
  * @version 1.0
  * @author Eyal Fitoussi
  */
@@ -32,7 +32,7 @@
 
 		<?php while ( $gmw_query->have_posts() ) : $gmw_query->the_post(); ?>
 		
-			<li id="post-<?php the_ID(); ?>" <?php post_class('gmw-single-post'); ?>>
+			<li id="post-<?php the_ID(); ?>" class="gmw-single-post">
 				
 				<?php do_action( 'gmw_posts_loop_post_start' , $gmw, $post ); ?>
 					
@@ -45,16 +45,23 @@
 					</span>
 				</h2>
 				
-				<?php if ( has_post_thumbnail() ) : ?>
-					<div class="entry-thumbnail">
-						<?php the_post_thumbnail(); ?>
-					</div>
-				<?php endif; ?>
-			
-				<?php gmw_pt_taxonomies( $gmw, $post ); ?>
+				<div class="post-content">
+					<div class="left-col">
+						<?php if ( has_post_thumbnail() ) : ?>
+							<div class="post-thumbnail">
+								<?php the_post_thumbnail(); ?>
+							</div>
+						<?php endif; ?>
 				
-    			<?php gmw_pt_additional_info( $gmw, $post, $tag='ul' ); ?>
-   
+						<?php gmw_pt_taxonomies( $gmw, $post ); ?>
+					</div>
+					
+					<div class="right-col">
+						<h4><?php _e( 'Additional Information', 'GMW' ); ?></h4>
+		    			<?php gmw_pt_additional_info( $gmw, $post, $tag='ul' ); ?>
+		   			</div>
+	   			</div>
+	   			
 				<!-- Get directions -->	 	
     			<?php gmw_pt_directions( $gmw, $post, $title=__('Get Directions','GMW') ) ?>
     			

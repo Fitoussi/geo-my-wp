@@ -52,23 +52,6 @@
 	font-size:16px;
 }
 
-.gmw-locator-btn-wrapper {
-	width: 28px;
-	height: 28px;
-	padding: 3px 0px;
-	display: inline-block;
-}
-
-.gmw-locator-btn-wrapper img {
-	position: absolute;
-	border-radius: 0px !important;
-	box-shadow: none !important;
-}
-
-.gmw-locate-btn {
-	cursor: pointer;
-}
-
 /* Loading scren */
 .gmw-screen-loader-wrapper {
 	display: none;

@@ -88,7 +88,7 @@ class GMW_SD_Class_Query {
         $radius = str_replace( ' ', '', explode( ',', $this->gmwSD['radius'] ) );
 
         $search_form_html .= '<label class="two columns">';
-        $search_form_html .= '<input type="text" name="field_address" id="gmw-md-address-field" value="' . $this->formData['address'] . '" placeholder="' . __( 'Enter Address...', 'GMW' ) . '" />';
+        $search_form_html .= '<input type="text" name="field_address" id="gmw-sd-address-field" value="' . $this->formData['address'] . '" placeholder="' . __( 'Enter Address...', 'GMW' ) . '" />';
         $search_form_html .= '</label>';
 
         //Display radius dropdown
@@ -110,7 +110,7 @@ class GMW_SD_Class_Query {
 
         //display hidden default value
         else :
-            $search_form_html .= '<input type="hidden" id="gmw-md-radius-dropdown" name="gmw_md_radius" value="' . end( $radius ) . '" />';
+            $search_form_html .= '<input type="hidden" id="gmw-sd-radius-dropdown" name="gmw_md_radius" value="' . end( $radius ) . '" />';
         endif;
 
         $orderby = array( 'active', 'newest', 'alphabetical' );
@@ -325,11 +325,11 @@ class GMW_SD_Class_Query {
     public function main_map() {
 
         $mainMap = '';
-        $mainMap .= '<div class="gmw-map-wrapper gmw-md-main-map-wrapper" id="gmw-md-main-map-wrapper" style="width:' . $this->gmwSD['map_width'] . ';height:' . $this->gmwSD['map_height'] . '">';
-        $mainMap .= '<div class="gmw-map-loader-wrapper gmw-md-loader-wrapper">';
-        $mainMap .= '<img class="gmw-map-loader gmw-md-map-loader" src="' . GMW_URL . '/assets/images/map-loader.gif"/>';
+        $mainMap .= '<div class="gmw-map-wrapper gmw-sd-main-map-wrapper" id="gmw-sd-main-map-wrapper" style="width:' . $this->gmwSD['map_width'] . ';height:' . $this->gmwSD['map_height'] . '">';
+        $mainMap .= '<div class="gmw-map-loader-wrapper gmw-sd-loader-wrapper">';
+        $mainMap .= '<img class="gmw-map-loader gmw-sd-map-loader" src="' . GMW_URL . '/assets/images/map-loader.gif"/>';
         $mainMap .= '</div>';
-        $mainMap .= '<div class="gmw-map gmw-md-main-map" id="gmw-md-main-map" style="width:100%; height:100%"></div>';
+        $mainMap .= '<div class="gmw-map gmw-sd-main-map" id="gmw-sd-main-map" style="width:100%; height:100%"></div>';
         $mainMap .= '</div>';
 
         echo $mainMap;
@@ -364,7 +364,7 @@ class GMW_SD_Class_Query {
             return;
 
         $units = ( $this->gmwSD['units'] == '6371' ) ? __( 'km', 'GMW' ) : __( 'mi', 'GMW' );
-        echo '<span "distance">' . $members_template->member->distance . $units . '</span>';
+        echo '<span class="gmw-sd-distance">' . $members_template->member->distance . $units . '</span>';
 
     }
 
@@ -382,16 +382,13 @@ class GMW_SD_Class_Query {
         global $members_template;
 		$distance = false;
 		
-        //add element with member id to be able to scroll to it when marker is clicked
-        echo '<div id="gmw-md-member-' . $members_template->member->ID . '"></div>';
-
         //if member does not have location get out!!
         if ( !isset( $members_template->member->lat ) )
             return;
 
         //address
         if ( isset( $this->gmwSD['address'] ) )
-            echo '<div class="gmw-md-address-wrapper"><span class="gmw-md-address">' . __( 'Address:', 'GMW' ) . '</span> <span class="gmw-md-address-value">' . $this->get_address() . '</span></div>';
+            echo '<div class="gmw-sd-address-wrapper"><span class="gmw-sd-address">' . __( 'Address:', 'GMW' ) . '</span> <span class="gmw-sd-address-value">' . $this->get_address() . '</span></div>';
         //directions
         if ( isset( $this->gmwSD['directions'] ) )
             echo $this->get_directions();

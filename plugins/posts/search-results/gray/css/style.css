@@ -1,0 +1,204 @@
+/**
+ * GMW results theme stylesheet - Gray
+ * @author Eyal Fitoussi
+ */
+
+div.gmw-results-wrapper .gmw-results-count {
+	background: #fdfdfd;
+	padding:8px 15px;
+	border-bottom:1px solid #ddd;
+	border-top:1px solid #ddd;
+}
+
+div.gmw-results-wrapper .gmw-results-count span {
+	font-size:13px;	
+}
+
+div.gmw-results-wrapper .gmw-pt-map-wrapper {	
+	margin-top:5px;
+}
+
+div.gmw-results-wrapper .gmw-pt-per-page-dropdown {
+	width:initial;
+}
+
+ul.gmw-posts-wrapper select {
+	border: 1px solid #ccc;
+	min-height:28px;
+	font-size: 14px;
+	color:#555;
+	height:28px;
+}
+
+div.gmw-results-wrapper ul.gmw-posts-wrapper {
+	list-style:none;
+	margin:0px;
+	background: #f8f8f8;
+	border-top: 1px solid #ddd;
+	margin-bottom: 5px;
+	padding:0px;
+}
+
+div.gmw-results-wrapper ul.gmw-posts-wrapper li.gmw-single-post {
+	padding:15px;
+	margin:0px;
+	border-bottom: 1px solid #d5d5d5;
+}
+
+div.gmw-results-wrapper ul.gmw-posts-wrapper li.gmw-single-post h2.post-title {
+	border-bottom: 1px solid #eee;
+	padding-bottom: 15px;
+	margin:0 0 10px !important;
+}
+
+div.gmw-results-wrapper ul.gmw-posts-wrapper h2.post-title a:link {
+	font-size: 16px;
+	text-decoration: none;
+}
+
+div.gmw-results-wrapper ul.gmw-posts-wrapper h2.post-title span.post-address {
+	font-size: 12px;
+	float: right;
+}
+
+div.gmw-results-wrapper ul.gmw-posts-wrapper li.gmw-single-post .post-thumbnail img {
+	max-width:120px;
+}
+
+div.gmw-results-wrapper ul.gmw-posts-wrapper span.radius-distance {
+	padding:5px;
+	background: #f1f1f1;
+	margin-left: 10px;
+	font-size: 12px;
+}
+
+div.gmw-results-wrapper ul.gmw-posts-wrapper li.gmw-single-post:nth-child(odd) {
+	background:#fdfdfd;
+}
+
+div.gmw-results-wrapper ul.gmw-posts-wrapper .post-content {
+	display: inline-block;
+	clear:both;
+	width:100%
+}
+
+div.gmw-results-wrapper ul.gmw-posts-wrapper .post-content .left-col {
+	width:48%;
+	float:left;
+}
+
+div.gmw-results-wrapper ul.gmw-posts-wrapper .post-content .right-col {
+	width:48%;
+	float:right;
+}
+
+div.gmw-results-wrapper ul.gmw-posts-wrapper .post-content .right-col h4 {
+	font-size:16px;
+	font-weight:bold;
+	margin:0px 0 5px 0px;
+}
+
+div.gmw-results-wrapper ul.gmw-additional-info-wrapper li {
+	padding:0px;	
+}
+
+div.gmw-results-wrapper ul.gmw-posts-wrapper li.gmw-single-post span.get-directions {
+	font-size:14px;
+}
+
+/* paginations */
+div.gmw-results-wrapper .gmw-pt-pagination-wrapper {
+	clear: both;
+	font-size: 12px;
+	background: #F9F9F9;
+	padding: 10px 15px;
+	min-height: 25px;
+	border-bottom: 1px solid #ddd
+}
+
+div.gmw-results-wrapper ul.gmw-pagination {
+	margin: 0px !important;
+	float: right;
+	text-align: center;
+}
+
+div.gmw-results-wrapper ul.gmw-pagination li.details {
+	display:none;
+}
+
+div.gmw-results-wrapper ul.gmw-pagination li {
+	padding-bottom: 1px;
+	float: left;
+	margin: 0px;
+	padding: 4px 0px;
+	margin-left: 1px;
+	list-style: none;
+}
+
+div.gmw-results-wrapper .gmw-pt-bottom-pagination-wrapper {
+	border-bottom:1px solid #ddd;
+	border-top:1px solid #ddd;
+}
+
+div.gmw-results-wrapper ul.gmw-pagination li a {
+	padding: 4px 4px;
+	border: solid 1px #ddd;
+	background: white;
+	font-size: 12px;
+	text-decoration: none
+}
+
+div.gmw-results-wrapper ul.gmw-pagination li a:hover, div.gmw-results-wrapper ul.gmw-pagination li a.current {
+	background: #eee;
+	
+}
+
+@media (max-width:800px) {
+
+	div.gmw-results-wrapper select {
+	     width:100%;
+	     margin-bottom: 10px;
+	}
+	
+	div.gmw-results-wrapper .gmw-pt-per-page-dropdown {
+		width:100%;
+	}
+	
+	div.gmw-results-wrapper ul.gmw-pagination {
+		display: inline-block;
+		float:none;
+	}
+	
+	ul.gmw-posts-wrapper .post-content .right-col, ul.gmw-posts-wrapper .post-content .left-col { 
+		width:100%;
+		float:none;
+		padding-top:10px
+	}
+	
+	div.gmw-results-wrapper ul.gmw-posts-wrapper h2.post-title {
+		border-bottom: 1px solid #eee;
+		padding-bottom: 15px;
+		display: inline-block;
+		width:100%;
+	}
+	
+	div.gmw-results-wrapper ul.gmw-posts-wrapper h2.post-title span.post-address {
+		font-size: 12px;
+		line-height: 35px;
+		width:100%;
+		clear:both;
+		text-align: center;
+	}
+	
+	div.gmw-results-wrapper ul.gmw-posts-wrapper h2.post-title a:link {
+		display:inline-block;
+		line-height: 25px;
+		width:100%;
+		clear:both;
+		text-align: center;
+	
+	}
+}
+
+
+

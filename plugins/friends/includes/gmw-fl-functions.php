@@ -82,7 +82,6 @@ add_shortcode('gmw_member_info', 'gmw_get_member_info');
 
 function gmw_fl_member_info($args = false) {
     echo gmw_get_member_info($args);
-
 }
 
 /**
@@ -117,7 +116,7 @@ function gmw_member_location($member) {
 
     $member_id = ( $user_id != false ) ? $user_id : $bp->displayed_user->id;
 
-    $member_info = gmw_get_member_location_from_db($member_id);
+    $member_info = gmw_get_member_info_from_db($member_id);
 
     if (isset($member_info) && $member_info != false) {
 

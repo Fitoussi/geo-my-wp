@@ -3,10 +3,10 @@
 Contributors: Eyal Fitoussi
 Donate link: http://geomywp.com/
 Tags: proximity search, zipcode search, radius search, store locator, Geocode posts, address, search distance, google v3 , Google maps, get directions, search locations, Geolocate, GEO, members locator
-Requires at least: 3.7
+Requires at least: 3.8
 Tested up to: 3.8.1
 Buddypress: 1.9.2
-Stable tag: 2.3
+Stable tag: 2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -131,9 +131,7 @@ For screenshots please visit [GEO my WP](http://www.geomywp.com)
 
 = 2.4 =
 
-* single location shortcode - hide or show map.
-* single location shortcode - fixed website output.
-* new function/shortcode - [gmw_post_info]/gmw_post_info
+* This is a major update. It is very important that you read the update details before updating. Please refer to <a href="https://geomywp.com/blog/geo-my-wp-2-4/" target="_blank">this post</a> to read about this udpate and about the updating progress.
 
 
 = 2.3 =
@@ -179,7 +177,7 @@ For screenshots please visit [GEO my WP](http://www.geomywp.com)
 This is a major update with many bug fixs, core modification and improvements, new features and more. Please make sure to backup your current version before updating to the new one. 
 After updating you will need to go over the settings page and re-save your settings as well as the search forms as many things have changed.
 
-**Please vistin <a href="http://geomywp.com">www.geomywp.com</a> for more information before updating your plugin**
+**Please vist <a href="http://geomywp.com">www.geomywp.com</a> for more information before updating your plugin**
 Below are some of the major changes in this version:
 
 * Core modification - The code reduced drastically, It is much cleaner, performs better, many function are documented, the number of files and folders had been reduced and more organized.

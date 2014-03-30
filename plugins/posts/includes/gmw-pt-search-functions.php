@@ -470,7 +470,7 @@ function gmw_pt_additional_info( $gmw, $post, $tag ) {
     	
     	echo '<'.$tag.' class="gmw-phone gmw-additional-info">';
     	echo 	'<span>'. __( 'Phone: ', 'GMW' ) .'</span>';
-    	echo 	( $post->phone ) ? $post->phone : _e( 'N/A', 'GMW' ); 
+    	echo 	( $post->phone ) ? '<span>' .$post->phone.'</span>' : '<span>' . __( 'N/A', 'GMW' ). '</span>';
     	echo '</'.$tag.'>';
     	
    	} 
@@ -479,7 +479,7 @@ function gmw_pt_additional_info( $gmw, $post, $tag ) {
     	
     	echo '<'.$tag .' class="gmw-fax gmw-additional-info">';
     		echo '<span>'. __( 'Fax: ', 'GMW' ).'</span>';
-    		echo ( $post->fax ) ? $post->fax : _e( 'N/A', 'GMW' );
+    		echo ( $post->fax ) ? '<span>' .$post->fax .'</span>' : '<span>' . __( 'N/A', 'GMW' ). '</span>';
     	echo '</'.$tag.'>';
     	
     }
@@ -488,22 +488,20 @@ function gmw_pt_additional_info( $gmw, $post, $tag ) {
     	
     	echo '<'.$tag.' class="gmw-email gmw-additional-info">';
     		echo '<span>'.__( 'Email: ', 'GMW' ).'</span>';
-    		echo ( isset( $post->email ) && !empty( $post->email ) ) ? '<a href="mailto:' . $post->email . '">' . $post->email . '</a>' : _e( 'N/A', 'GMW' );
+    		echo ( isset( $post->email ) && !empty( $post->email ) ) ? '<span><a href="mailto:' . $post->email . '">' . $post->email . '</a></span>' : '<span>' . __( 'N/A', 'GMW' ). '</span>';
     	echo '</'.$tag.'>';
     	
     }
     
     if ( isset( $gmw['search_results']['additional_info']['website'] ) ) {
-    	echo '<'.$tag.' class="gmw-website gmw-additional-info">';
-    		echo '<span>'. __( 'Website: ', 'GMW' ).'</span>';
-    		if ( $post->website ) {
-    			echo '<a href="http://'.$post->website.'" target="_blank">'.$post->website.'</a>';
-    		} else { 
-    			_e( 'N/A', 'GMW' ); 
-    		} 	
+    	 
+    	echo '<'.$tag.' class="gmw-additional-info gmw-websit">';
+    	echo '<span>'.__( 'Website: ', 'GMW' ).'</span>';
+    	echo ( isset( $post->email ) && !empty( $post->email ) ) ? '<span><a href="http://'.$post->website.'" target="_blank"></span>' . $post->email . '</a>' : '<span>' . __( 'N/A', 'GMW' ). '</span>';
     	echo '</'.$tag.'>';
-	} 
-	
+    	 
+    }
+    
 	if ( $orgTag == 'ul' ) {
 		echo '</ul>';
 	} elseif ( $orgTag == 'ol') {
@@ -539,7 +537,7 @@ function gmw_pt_get_directions( $gmw, $post, $title ) {
         return;
 
     $region = ( WPLANG ) ? explode( '_', WPLANG ) : array( 'en', 'US' );
-    return apply_filters( 'gmw_pt_get_directions_link', '<span><a href="http://maps.google.com/maps?f=d&hl=' . $region[0] . '&region=' . $region[1] . '&doflg=' . $gmw['units_array']['map_units'] . '&geocode=&saddr=' . $gmw['org_address'] . '&daddr=' . str_replace( " ", "+", $post->address ) . '&ie=UTF8&z=12" target="_blank">' . $title . '</a></span>', $gmw, $post );
+    return apply_filters( 'gmw_pt_get_directions_link', '<span class="get-directions"><a href="http://maps.google.com/maps?f=d&hl=' . $region[0] . '&region=' . $region[1] . '&doflg=' . $gmw['units_array']['map_units'] . '&geocode=&saddr=' . $gmw['org_address'] . '&daddr=' . str_replace( " ", "+", $post->address ) . '&ie=UTF8&z=12" target="_blank">' . $title . '</a></span>', $gmw, $post );
 
 }
 

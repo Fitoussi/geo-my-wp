@@ -2,7 +2,7 @@ jQuery(document).ready(function() {
 	
 	var members = sdMapArgs.members;
 	
-	var sdMap = new google.maps.Map( document.getElementById('gmw-md-main-map'), {
+	var sdMap = new google.maps.Map( document.getElementById('gmw-sd-main-map'), {
 		zoom: 13,
 		center: new google.maps.LatLng( sdMapArgs.your_lat,sdMapArgs.your_lng ),
 		mapTypeId: google.maps.MapTypeId[sdMapArgs.map_type],
@@ -96,6 +96,6 @@ jQuery(document).ready(function() {
 	}
 	
 	google.maps.event.addListenerOnce(sdMap, 'idle', function(){
-		jQuery('.gmw-md-map-loader').fadeOut(1500);
+		jQuery('.gmw-sd-map-loader').fadeOut(1500);
 	});	
 });
