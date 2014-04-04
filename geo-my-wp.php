@@ -3,13 +3,13 @@
   Plugin Name: GEO my WP
   Plugin URI: http://www.geomywp.com
   Description: Add location to any post types, pages or members (using Buddypress) and create an advance proximity search forms.
-  Version: 2.4
+  Version: 2.4.1
   Author: Eyal Fitoussi
   Author URI: http://www.geomywp.com
   License: GPLv2
   Text Domain: GMW
   Domain Path: /languages/
- */
+*/
 
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) )

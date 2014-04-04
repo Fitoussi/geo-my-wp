@@ -47,11 +47,11 @@ jQuery(document).ready(function($) {
     });
 
     $('.gmw-submit').click(function(e) {
-        if ($(this).attr('type', 'submit')) {
-            e.preventDefault();
-        }
+        //if ($(this).attr('type', 'submit')) {
+        e.preventDefault();
+        //}
         $(this).closest('form').submit();
-    });
+    }); 
 
     // when submitting a form	
     $('.gmw-form').submit(function(e) {

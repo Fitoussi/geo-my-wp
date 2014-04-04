@@ -378,8 +378,7 @@ function gmw_pt_get_taxonomies( $gmw, $post ) {
 
     if ( !isset( $gmw['search_results']['custom_taxes'] ) )
         return;
-
-
+    
     if ( isset( $gmw['search_form']['taxonomies'] ) ) :
 
         $output = '';
@@ -390,16 +389,22 @@ function gmw_pt_get_taxonomies( $gmw, $post ) {
 
             if ( $terms && !is_wp_error( $terms ) ) :
 
-                $terms_o = array();
-
+                $termsArray = array();
+            	$the_tax = get_taxonomy( $tax );
+            	
                 foreach ( $terms as $term ) {
-                    $terms_o[] = $term->name;
+                    $termsArray[] = $term->name;
                 }
 
-                $terms_o = join( ", ", $terms_o );
-                $the_tax = get_taxonomy( $tax );
-
-                $output .= apply_filters( 'gmw_pt_results_taxonomies', '<div class="gmw-taxes ' . $the_tax->rewrite['slug'] . '"><span>' . $the_tax->labels->singular_name . ':</span> ' . $terms_o . '</div>', $gmw, $post, $the_tax );
+                //$taxTerms = '<span class="gmw-terms-wrapper gmw-'.$the_tax->rewrite['slug'].'-terms">' .join( ", ", $termsArray ).'</div>';
+                //$taxTerms = apply_filters( 'gmw_pt_results_taxonomies_terms', $taxTerms , $gmw, $post, $the_tax, $termsArray, $terms );
+                
+                $taxonomy  = '<div class="gmw-taxes gmw-taxonomy-' . $the_tax->rewrite['slug'] . '">';
+                $taxonomy .= 	'<span>' . $the_tax->labels->singular_name . ':</span>';
+                $taxonomy .= 	'<span class="gmw-terms-wrapper gmw-'.$the_tax->rewrite['slug'].'-terms">'.join( ", ", $termsArray ).'</span>';
+                $taxonomy .= '</div>';
+                
+                $output .= apply_filters( 'gmw_pt_results_taxonomy', $taxonomy, $gmw, $post, $the_tax, $terms, $termsArray );
 
             endif;
 
@@ -495,9 +500,9 @@ function gmw_pt_additional_info( $gmw, $post, $tag ) {
     
     if ( isset( $gmw['search_results']['additional_info']['website'] ) ) {
     	 
-    	echo '<'.$tag.' class="gmw-additional-info gmw-websit">';
+    	echo '<'.$tag.' class="gmw-additional-info gmw-website">';
     	echo '<span>'.__( 'Website: ', 'GMW' ).'</span>';
-    	echo ( isset( $post->email ) && !empty( $post->email ) ) ? '<span><a href="http://'.$post->website.'" target="_blank"></span>' . $post->email . '</a>' : '<span>' . __( 'N/A', 'GMW' ). '</span>';
+    	echo ( isset( $post->website ) && !empty( $post->website ) ) ? '<span><a href="http://'.$post->website.'" target="_blank"></span>' . $post->website . '</a>' : '<span>' . __( 'N/A', 'GMW' ). '</span>';
     	echo '</'.$tag.'>';
     	 
     }

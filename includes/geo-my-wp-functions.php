@@ -290,17 +290,18 @@ function gmw_search_form_radius_values( $gmw, $class, $btitle, $stitle ) {
     $miles  = explode( ",", $gmw['search_form']['radius'] );
 	$output ='';
     
-	$output .= '<div class="gmw-radius-dropdown-wrapper ' . $class . '">';
+	if ( count( $miles ) > 1 ) :
+	
+		$output .= '<div class="gmw-radius-dropdown-wrapper ' . $class . '">';
     
-    if ( empty( $stitle ) )
-        $stitle = ( $gmw['search_form']['units'] == 'imperial' ) ? __( '- Miles -', 'GMW' ) : __( '- Kilometers -', 'GMW' );
+    	if ( empty( $stitle ) )
+        	$stitle = ( $gmw['search_form']['units'] == 'imperial' ) ? __( '- Miles -', 'GMW' ) : __( '- Kilometers -', 'GMW' );
     
-    $btitle = ( empty( $btitle ) ) ? __( ' -- Within -- ', 'GMW' ) : $btitle;
-
-    if ( count( $miles ) > 1 ) :
+   		$btitle = ( empty( $btitle ) ) ? __( ' -- Within -- ', 'GMW' ) : $btitle;
 
         $output .= '<select class="gmw-distance-select gmw-distance-select-' . $gmw['ID'] . '" name="gmw_distance">';
         $output .= '<option value="' . end( $miles ) . '">';
+
         if ( $gmw['search_form']['units'] == 'both' )
             $output .= $btitle;
         else
@@ -317,14 +318,14 @@ function gmw_search_form_radius_values( $gmw, $class, $btitle, $stitle ) {
         endforeach;
 
         $output .= '</select>';
+        
+        $output .= '</div>';
 
     else :
 
         $output = '<input type="hidden" name="gmw_distance" value="' . end( $miles ) . '" />';
     endif;
 
-    $output .= '</div>';
-    
     echo apply_filters( 'gmw_search_form_radius_field', $output, $gmw, $class, $btitle, $stitle );
 
 }
@@ -336,29 +337,26 @@ function gmw_search_form_radius_values( $gmw, $class, $btitle, $stitle ) {
  */
 function gmw_search_form_units( $gmw, $class ) {
 	
-	echo '<div class="gmw-units-dropdown-wrapper ' . $class . '">';
+	if ( $gmw['search_form']['units'] == 'both' ) :
 	
-    if ( $gmw['search_form']['units'] == 'both' ) :
-
+		echo '<div class="gmw-units-dropdown-wrapper ' . $class . '">';
+	
         $unit_m = $unit_i = false;
         if ( isset( $_GET['gmw_units'] ) && $_GET['gmw_units'] == 'metric' )
             $unit_m = 'selected="selected"';
         else
             $unit_i = 'selected="selected"';
 
-        echo '<select name="gmw_units" id="gmw-units-' . $gmw['ID'] . '" class="gmw-units gmw-units-' . $gmw['ID'] . ' ' . $class . '">';
-
-        echo '<option value="imperial" ' . $unit_i . '>' . __( 'Miles', 'GMW' ) . '</option>';
-        echo '<option value="metric" ' . $unit_m . '>' . __( 'Kilometers', 'GMW' ) . '</option>';
-
-        echo '</select>';
+        echo 	'<select name="gmw_units" id="gmw-units-' . $gmw['ID'] . '" class="gmw-units gmw-units-' . $gmw['ID'] . ' ' . $class . '">';
+        echo 		'<option value="imperial" ' . $unit_i . '>' . __( 'Miles', 'GMW' ) . '</option>';
+        echo 		'<option value="metric" ' . $unit_m . '>' . __( 'Kilometers', 'GMW' ) . '</option>';
+        echo 	'</select>';
+        echo '</div>';
 
     else :
         echo '<input type="hidden" name="gmw_units" value="' . $gmw['search_form']['units'] . '" />';
     endif;
     
-    echo '</div>';
-
 }
 
 function gmw_multiexplode( $delimiters, $string ) {

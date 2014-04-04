@@ -202,9 +202,9 @@ div.gmw-addon-desc-wrapper {
 
 input.gmw-addon-short-input {
 	width: 100% !important;
-	max-width: 270px;
+	max-width: 268px;
 	height: 28px !important;
-	padding: 1px 8px 0px !important;
+	padding: 1px 5px 0px !important;
 }
 
 .mandatory {

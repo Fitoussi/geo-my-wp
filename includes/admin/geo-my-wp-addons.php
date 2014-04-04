@@ -405,7 +405,7 @@ class GMW_Addons {
 
                                     <div class="gmw-addon-license-wrapper gmw-license-valid gmw-addon-activate">
 
-                                        <input class="gmw_license_keys" disabled="disabled" type="text" class="regular-text" style="width: 100% !important;height: 28px !important;padding:0px 7px 0px !important;max-width: 270px !important;" value="<?php if (isset($this->licenses[$addon['name']]) && !empty($this->licenses[$addon['name']])) echo $this->licenses[$addon['name']]; ?>" />
+                                        <input class="gmw_license_keys" disabled="disabled" type="text" class="regular-text" style="width: 100% !important;height: 28px !important;padding:0px 5px 0px !important;max-width: 268px !important;" value="<?php if (isset($this->licenses[$addon['name']]) && !empty($this->licenses[$addon['name']])) echo $this->licenses[$addon['name']]; ?>" />
 
                                         <input type="hidden" name="gmw_license_keys[<?php echo $addon['name']; ?>]" value="<?php if (isset($this->licenses[$addon['name']]) && !empty($this->licenses[$addon['name']])) echo $this->licenses[$addon['name']]; ?>" />
 
@@ -437,7 +437,7 @@ class GMW_Addons {
                                                 ?>
                                                 <div class="gmw-addon-license-wrapper gmw-license-invalid gmw-license-error-wrapper">
 
-                                                    <span style="float:left;width:270px;"><?php echo $message; ?></span>
+                                                    <span style="float:left;width:268px;"><?php echo $message; ?></span>
                                                     <input type="button" class="button-secondary activate-license-btn gmw-addon-activation-btn gmw-remove-license-warning" style="float: right !important;margin-top: 4px !important;padding: 0 8px !important;color: rgb(182, 42, 42)  !important;height: 27px !important;" value="&#10007;" />
                                                 </div>
                                                 <?php

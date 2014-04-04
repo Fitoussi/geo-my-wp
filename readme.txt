@@ -1,12 +1,11 @@
 === GEO my Wordpress ===
-
 Contributors: Eyal Fitoussi
 Donate link: http://geomywp.com/
 Tags: proximity search, zipcode search, radius search, store locator, Geocode posts, address, search distance, google v3 , Google maps, get directions, search locations, Geolocate, GEO, members locator
 Requires at least: 3.8
 Tested up to: 3.8.1
 Buddypress: 1.9.2
-Stable tag: 2.4
+Stable tag: 2.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -128,6 +127,16 @@ For questions, bugs report and suggestions please visit [GEO my WP Furom](http:/
 For screenshots please visit [GEO my WP](http://www.geomywp.com)
 
 == Changelog ==
+
+= 2.4.1 = 
+
+* if this is the first time you are updating to GEO my WP 2.4 it is very important that you read the update details before updating. Please refer to <a href="https://geomywp.com/blog/geo-my-wp-2-4/" target="_blank">this post</a> to read about this udpate and about the updating progress.
+
+* version 2.4.1 changes:
+* Fix: Add-ons page styling: fix activation button is out of the box
+* Fix: Jacascript Error when submitting search form
+* Fix: Radius and units "broken" elements
+* New: Filter 'gmw_pt_results_taxonomy' ( gmw-pt-search-function.php line 407 ) allows you to manipulate the way the taxonomies will be displayed in results.
 
 = 2.4 =
 
