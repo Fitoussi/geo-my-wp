@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GEO my WP\n"
-"POT-Creation-Date: 2014-03-26 17:58-1000\n"
-"PO-Revision-Date: 2014-03-26 17:58-1000\n"
+"POT-Creation-Date: 2014-04-13 19:53-1000\n"
+"PO-Revision-Date: 2014-04-13 19:53-1000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -18,24 +18,40 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: geo-my-wp.php:190
+#: geo-my-wp.php:191
 msgid "Post Types Locator"
 msgstr ""
 
-#: geo-my-wp.php:191
+#: geo-my-wp.php:192
 msgid ""
 "Add location to Posts and pages. Create an advance proximity search form to "
 "search for locations based on post types, categories, distance and more."
 msgstr ""
 
-#: geo-my-wp.php:199 plugins/friends/includes/admin/gmw-fl-admin.php:69
+#: geo-my-wp.php:200 plugins/friends/includes/admin/gmw-fl-admin.php:69
 msgid "Members Locator"
 msgstr ""
 
-#: geo-my-wp.php:200
+#: geo-my-wp.php:201
 msgid ""
 "Let your BuddyPress members add location to thier profile. Create an advance "
 "proximity search form to search for members based on location."
+msgstr ""
+
+#: geo-my-wp.php:454 includes/geo-my-wp-geocode.php:99
+msgid "No location found for the entered address."
+msgstr ""
+
+#: geo-my-wp.php:456 includes/geo-my-wp-geocode.php:101
+msgid "Invalid request. Did you enter an address?"
+msgstr ""
+
+#: geo-my-wp.php:458
+msgid "Something went wrong while retrieving your location."
+msgstr ""
+
+#: geo-my-wp.php:462 includes/geo-my-wp-geocode.php:107
+msgid "Unable to contact Google API service."
 msgstr ""
 
 #: includes/admin/geo-my-wp-addons.php:305
@@ -96,144 +112,157 @@ msgid ""
 "try again later."
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:51 includes/admin/geo-my-wp-admin.php:93
-#: includes/admin/geo-my-wp-forms.php:399
+#: includes/admin/geo-my-wp-admin.php:54 includes/admin/geo-my-wp-admin.php:96
+#: includes/admin/geo-my-wp-forms.php:414
 #: includes/admin/geo-my-wp-settings.php:207
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:62
+#: includes/admin/geo-my-wp-admin.php:65
 msgid "Deactivate license before deactivating the plugin"
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:64
+#: includes/admin/geo-my-wp-admin.php:67
 msgid "Activate license key"
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:92
+#: includes/admin/geo-my-wp-admin.php:95
 msgid "Add-ons"
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:93
+#: includes/admin/geo-my-wp-admin.php:96
 #: includes/admin/geo-my-wp-settings.php:166
 msgid "GEO my WP Settings"
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:94
+#: includes/admin/geo-my-wp-admin.php:97
 msgid "Forms"
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:95
+#: includes/admin/geo-my-wp-admin.php:98
 msgid "Shortcodes"
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:112
+#: includes/admin/geo-my-wp-admin.php:115
 msgid "Developed by Eyal Fitoussi - please take a moment to support my work"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:132
+#: includes/admin/geo-my-wp-admin.php:155
+msgid "and Geo-Locating with"
+msgstr ""
+
+#: includes/admin/geo-my-wp-admin.php:155
+msgid "GEO my WP"
+msgstr ""
+
+#: includes/admin/geo-my-wp-forms.php:66
+#: third-party/sweetdate/geo-my-wp-sd-class.php:91
+msgid "Enter Address..."
+msgstr ""
+
+#: includes/admin/geo-my-wp-forms.php:147
 msgid "GEO my WP Forms"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:140
+#: includes/admin/geo-my-wp-forms.php:155
 msgid "Create new form"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:159
+#: includes/admin/geo-my-wp-forms.php:174
 msgid "You need to activate some add-ons in order to create form"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:177
-#: includes/admin/geo-my-wp-forms.php:247
+#: includes/admin/geo-my-wp-forms.php:192
+#: includes/admin/geo-my-wp-forms.php:262
 msgid "ID"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:178
-#: includes/admin/geo-my-wp-forms.php:248
+#: includes/admin/geo-my-wp-forms.php:193
+#: includes/admin/geo-my-wp-forms.php:263
 msgid "Type"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:179
-#: includes/admin/geo-my-wp-forms.php:250
+#: includes/admin/geo-my-wp-forms.php:194
+#: includes/admin/geo-my-wp-forms.php:265
 msgid "Action"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:180
-#: includes/admin/geo-my-wp-forms.php:249
+#: includes/admin/geo-my-wp-forms.php:195
+#: includes/admin/geo-my-wp-forms.php:264
 #: includes/admin/geo-my-wp-shortcodes.php:229
 msgid "Usage"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:201
-#: includes/admin/geo-my-wp-forms.php:206
+#: includes/admin/geo-my-wp-forms.php:216
+#: includes/admin/geo-my-wp-forms.php:221
 msgid "Edit this form"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:206
+#: includes/admin/geo-my-wp-forms.php:221
 #: plugins/posts/search-results/twenty-fourteen/results.php:67
 #: plugins/posts/search-results/twenty-thirteen/results.php:57
 #: plugins/posts/search-results/wordpress-twentytwelve/results.php:98
 msgid "Edit"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:209
+#: includes/admin/geo-my-wp-forms.php:224
 msgid "Duplicate this form"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:209
+#: includes/admin/geo-my-wp-forms.php:224
 msgid "Duplicate"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:212
-#: includes/admin/geo-my-wp-forms.php:352
+#: includes/admin/geo-my-wp-forms.php:227
+#: includes/admin/geo-my-wp-forms.php:367
 msgid "Delete this form"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:212
-#: includes/admin/geo-my-wp-forms.php:352
+#: includes/admin/geo-my-wp-forms.php:227
+#: includes/admin/geo-my-wp-forms.php:367
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:233
+#: includes/admin/geo-my-wp-forms.php:248
 msgid "You don't have any forms yet."
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:270
+#: includes/admin/geo-my-wp-forms.php:285
 msgid "hidden"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:274
+#: includes/admin/geo-my-wp-forms.php:289
 msgid "Search Form"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:278
+#: includes/admin/geo-my-wp-forms.php:293
 msgid "Search Results"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:282
+#: includes/admin/geo-my-wp-forms.php:297
 msgid "Map"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:351
+#: includes/admin/geo-my-wp-forms.php:366
 msgid "GEO my WP Form ID "
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:388
+#: includes/admin/geo-my-wp-forms.php:403
 #: includes/admin/geo-my-wp-settings.php:177
 msgid "Settings successfully saved"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:398
+#: includes/admin/geo-my-wp-forms.php:413
 #: includes/admin/geo-my-wp-settings.php:206
 msgid "Feature"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:400
+#: includes/admin/geo-my-wp-forms.php:415
 #: includes/admin/geo-my-wp-settings.php:208
 msgid "Explanation"
 msgstr ""
 
-#: includes/admin/geo-my-wp-forms.php:493
+#: includes/admin/geo-my-wp-forms.php:508
 #: includes/admin/geo-my-wp-settings.php:293
 msgid "Save Changes"
 msgstr ""
@@ -516,6 +545,8 @@ msgstr ""
 #: plugins/posts/includes/admin/gmw-pt-admin.php:553
 #: plugins/posts/includes/admin/gmw-pt-metaboxes.php:412
 #: plugins/posts/includes/admin/gmw-pt-metaboxes.php:423
+#: plugins/posts/search-results/gray/results.php:67
+#: plugins/posts/search-results/purple/results.php:67
 msgid "Additional Information"
 msgstr ""
 
@@ -523,19 +554,19 @@ msgstr ""
 msgid "Shortcode Examples"
 msgstr ""
 
-#: includes/geo-my-wp-functions.php:296
-msgid "- Miles -"
-msgstr ""
-
-#: includes/geo-my-wp-functions.php:296
-msgid "- Kilometers -"
-msgstr ""
-
-#: includes/geo-my-wp-functions.php:298
+#: includes/geo-my-wp-functions.php:332
 msgid " -- Within -- "
 msgstr ""
 
-#: includes/geo-my-wp-functions.php:351
+#: includes/geo-my-wp-functions.php:334
+msgid "- Miles -"
+msgstr ""
+
+#: includes/geo-my-wp-functions.php:334
+msgid "- Kilometers -"
+msgstr ""
+
+#: includes/geo-my-wp-functions.php:379
 #: plugins/friends/includes/admin/gmw-fl-admin.php:238
 #: plugins/friends/includes/admin/gmw-fl-admin.php:348
 #: plugins/posts/includes/admin/gmw-pt-admin.php:335
@@ -544,13 +575,19 @@ msgstr ""
 msgid "Miles"
 msgstr ""
 
-#: includes/geo-my-wp-functions.php:352
+#: includes/geo-my-wp-functions.php:380
 #: plugins/friends/includes/admin/gmw-fl-admin.php:239
 #: plugins/friends/includes/admin/gmw-fl-admin.php:349
 #: plugins/posts/includes/admin/gmw-pt-admin.php:336
 #: plugins/posts/includes/admin/gmw-pt-admin.php:474
 #: third-party/sweetdate/geo-my-wp-sd-admin.php:93
 msgid "Kilometers"
+msgstr ""
+
+#: includes/geo-my-wp-geocode.php:103
+msgid ""
+"Something went wrong while retrieving your map, please ensure you have "
+"entered the short code correctly."
 msgstr ""
 
 #: includes/geo-my-wp-shortcodes.php:59
@@ -1270,32 +1307,34 @@ msgstr ""
 msgid "Member's Location"
 msgstr ""
 
-#: plugins/friends/includes/gmw-fl-functions.php:154
-#: plugins/friends/includes/gmw-fl-search-functions.php:590
-#: plugins/friends/search-results/default/results.php:94
-#: plugins/posts/includes/gmw-pt-search-functions.php:746
-#: plugins/posts/includes/gmw-pt-search-functions.php:747
+#: plugins/friends/includes/gmw-fl-functions.php:153
+#: plugins/friends/includes/gmw-fl-search-functions.php:596
+#: plugins/friends/search-results/default/results.php:95
+#: plugins/friends/search-results/yellow/results.php:71
+#: plugins/posts/includes/gmw-pt-search-functions.php:749
+#: plugins/posts/includes/gmw-pt-search-functions.php:750
 #: plugins/posts/includes/gmw-pt-shortcodes.php:89
 msgid "Address: "
 msgstr ""
 
-#: plugins/friends/includes/gmw-fl-functions.php:167
+#: plugins/friends/includes/gmw-fl-functions.php:166
 msgid "Go"
 msgstr ""
 
-#: plugins/friends/includes/gmw-fl-functions.php:170
+#: plugins/friends/includes/gmw-fl-functions.php:169
 #: plugins/posts/includes/gmw-pt-shortcodes.php:76
 #: plugins/posts/search-results/clean/results.php:89
 #: plugins/posts/search-results/custom/results.php:82
 #: plugins/posts/search-results/default/results.php:89
-#: plugins/posts/search-results/elegant/results.php:59
+#: plugins/posts/search-results/gray/results.php:73
+#: plugins/posts/search-results/purple/results.php:73
 #: plugins/posts/search-results/twenty-thirteen/results.php:80
 #: plugins/posts/search-results/wordpress-twentytwelve/results.php:92
 #: third-party/sweetdate/geo-my-wp-sd-class.php:351
 msgid "Get Directions"
 msgstr ""
 
-#: plugins/friends/includes/gmw-fl-functions.php:207
+#: plugins/friends/includes/gmw-fl-functions.php:206
 msgid " has not added a location yet"
 msgstr ""
 
@@ -1395,17 +1434,17 @@ msgstr ""
 msgid "Max"
 msgstr ""
 
-#: plugins/friends/includes/gmw-fl-search-functions.php:230
+#: plugins/friends/includes/gmw-fl-search-functions.php:235
 msgid "Sorry, No members found"
 msgstr ""
 
-#: plugins/friends/includes/gmw-fl-search-functions.php:589
-#: plugins/posts/includes/gmw-pt-search-functions.php:745
+#: plugins/friends/includes/gmw-fl-search-functions.php:595
+#: plugins/posts/includes/gmw-pt-search-functions.php:748
 msgid "Distance: "
 msgstr ""
 
-#: plugins/friends/includes/gmw-fl-search-functions.php:591
-#: plugins/posts/includes/gmw-pt-search-functions.php:752
+#: plugins/friends/includes/gmw-fl-search-functions.php:597
+#: plugins/posts/includes/gmw-pt-search-functions.php:755
 msgid "Get Directions: "
 msgstr ""
 
@@ -1449,15 +1488,32 @@ msgstr ""
 msgid "Show \"No  location\" message."
 msgstr ""
 
-#: plugins/friends/search-forms/default/search-form.php:35
-#: plugins/friends/search-forms/sweetdate/search-form.php:37
-#: plugins/posts/search-forms/default/search-form.php:45
-#: plugins/posts/search-forms/elegant/search-form.php:45
+#: plugins/friends/search-forms/default/search-form.php:43
+#: plugins/friends/search-forms/yellow/search-form.php:59
+#: plugins/posts/search-forms/default/search-form.php:54
+#: plugins/posts/search-forms/gray/search-form.php:63
+#: plugins/posts/search-forms/purple/search-form.php:63
 msgid "Submit"
 msgstr ""
 
-#: plugins/friends/search-results/default/results.php:94
-#: plugins/friends/search-results/sweetdate/results.php:72
+#: plugins/friends/search-forms/yellow/search-form.php:15
+#: plugins/posts/search-forms/gray/search-form.php:15
+#: plugins/posts/search-forms/purple/search-form.php:15
+msgid "Get my current location"
+msgstr ""
+
+#: plugins/friends/search-forms/yellow/search-form.php:23
+#: plugins/posts/search-forms/gray/search-form.php:23
+#: plugins/posts/search-forms/purple/search-form.php:23
+msgid "Search"
+msgstr ""
+
+#: plugins/friends/search-forms/yellow/search-form.php:37
+msgid "Show Options"
+msgstr ""
+
+#: plugins/friends/search-results/default/results.php:99
+#: plugins/friends/search-results/yellow/results.php:75
 msgid "Get directions"
 msgstr ""
 
@@ -1717,7 +1773,7 @@ msgid ""
 msgstr ""
 
 #: plugins/posts/includes/admin/gmw-pt-admin.php:736
-#: third-party/sweetdate/geo-my-wp-sd-class.php:394
+#: third-party/sweetdate/geo-my-wp-sd-class.php:391
 msgid "Address:"
 msgstr ""
 
@@ -1877,16 +1933,16 @@ msgstr ""
 msgid "Last"
 msgstr ""
 
-#: plugins/posts/includes/gmw-pt-search-functions.php:472
-#: plugins/posts/includes/gmw-pt-search-functions.php:748
+#: plugins/posts/includes/gmw-pt-search-functions.php:477
+#: plugins/posts/includes/gmw-pt-search-functions.php:751
 #: plugins/posts/includes/gmw-pt-shortcodes.php:95
 msgid "Phone: "
 msgstr ""
 
-#: plugins/posts/includes/gmw-pt-search-functions.php:473
-#: plugins/posts/includes/gmw-pt-search-functions.php:482
-#: plugins/posts/includes/gmw-pt-search-functions.php:491
-#: plugins/posts/includes/gmw-pt-search-functions.php:502
+#: plugins/posts/includes/gmw-pt-search-functions.php:478
+#: plugins/posts/includes/gmw-pt-search-functions.php:487
+#: plugins/posts/includes/gmw-pt-search-functions.php:496
+#: plugins/posts/includes/gmw-pt-search-functions.php:505
 #: plugins/posts/includes/gmw-pt-shortcodes.php:91
 #: plugins/posts/includes/gmw-pt-shortcodes.php:97
 #: plugins/posts/includes/gmw-pt-shortcodes.php:103
@@ -1894,40 +1950,40 @@ msgstr ""
 msgid "N/A"
 msgstr ""
 
-#: plugins/posts/includes/gmw-pt-search-functions.php:481
-#: plugins/posts/includes/gmw-pt-search-functions.php:749
+#: plugins/posts/includes/gmw-pt-search-functions.php:486
+#: plugins/posts/includes/gmw-pt-search-functions.php:752
 #: plugins/posts/includes/gmw-pt-shortcodes.php:101
 msgid "Fax: "
 msgstr ""
 
-#: plugins/posts/includes/gmw-pt-search-functions.php:490
-#: plugins/posts/includes/gmw-pt-search-functions.php:750
+#: plugins/posts/includes/gmw-pt-search-functions.php:495
+#: plugins/posts/includes/gmw-pt-search-functions.php:753
 #: plugins/posts/includes/gmw-pt-shortcodes.php:107
 msgid "Email: "
 msgstr ""
 
-#: plugins/posts/includes/gmw-pt-search-functions.php:498
+#: plugins/posts/includes/gmw-pt-search-functions.php:504
 #: plugins/posts/includes/gmw-pt-shortcodes.php:113
 msgid "Website: "
 msgstr ""
 
-#: plugins/posts/includes/gmw-pt-search-functions.php:579
+#: plugins/posts/includes/gmw-pt-search-functions.php:582
 #: third-party/sweetdate/geo-my-wp-sd-class.php:366
-#: third-party/sweetdate/geo-my-wp-sd-class.php:400
+#: third-party/sweetdate/geo-my-wp-sd-class.php:397
 msgid "mi"
 msgstr ""
 
-#: plugins/posts/includes/gmw-pt-search-functions.php:581
+#: plugins/posts/includes/gmw-pt-search-functions.php:584
 #: third-party/sweetdate/geo-my-wp-sd-class.php:366
-#: third-party/sweetdate/geo-my-wp-sd-class.php:400
+#: third-party/sweetdate/geo-my-wp-sd-class.php:397
 msgid "km"
 msgstr ""
 
-#: plugins/posts/includes/gmw-pt-search-functions.php:751
+#: plugins/posts/includes/gmw-pt-search-functions.php:754
 msgid "website: "
 msgstr ""
 
-#: plugins/posts/includes/gmw-pt-search-functions.php:804
+#: plugins/posts/includes/gmw-pt-search-functions.php:775
 msgid "No results found"
 msgstr ""
 
@@ -1936,14 +1992,16 @@ msgid "GO"
 msgstr ""
 
 #: plugins/posts/search-forms/default/search-form.php:16
-#: plugins/posts/search-forms/elegant/search-form.php:16
+#: plugins/posts/search-forms/gray/search-form.php:36
+#: plugins/posts/search-forms/purple/search-form.php:36
 msgid " -- Search Site -- "
 msgstr ""
 
 #: plugins/posts/search-results/clean/results.php:15
 #: plugins/posts/search-results/custom/results.php:15
 #: plugins/posts/search-results/default/results.php:15
-#: plugins/posts/search-results/elegant/results.php:15
+#: plugins/posts/search-results/gray/results.php:15
+#: plugins/posts/search-results/purple/results.php:15
 #: plugins/posts/search-results/twenty-fourteen/results.php:15
 #: plugins/posts/search-results/twenty-thirteen/results.php:15
 #: plugins/posts/search-results/wordpress-twentytwelve/results.php:15
@@ -1953,7 +2011,8 @@ msgstr ""
 #: plugins/posts/search-results/clean/results.php:15
 #: plugins/posts/search-results/custom/results.php:15
 #: plugins/posts/search-results/default/results.php:15
-#: plugins/posts/search-results/elegant/results.php:15
+#: plugins/posts/search-results/gray/results.php:15
+#: plugins/posts/search-results/purple/results.php:15
 #: plugins/posts/search-results/twenty-fourteen/results.php:15
 #: plugins/posts/search-results/twenty-thirteen/results.php:15
 #: plugins/posts/search-results/wordpress-twentytwelve/results.php:15
@@ -1963,7 +2022,8 @@ msgstr ""
 #: plugins/posts/search-results/clean/results.php:15
 #: plugins/posts/search-results/custom/results.php:15
 #: plugins/posts/search-results/default/results.php:15
-#: plugins/posts/search-results/elegant/results.php:15
+#: plugins/posts/search-results/gray/results.php:15
+#: plugins/posts/search-results/purple/results.php:15
 #: plugins/posts/search-results/twenty-fourteen/results.php:15
 #: plugins/posts/search-results/twenty-thirteen/results.php:15
 #: plugins/posts/search-results/wordpress-twentytwelve/results.php:15
@@ -1973,7 +2033,8 @@ msgstr ""
 #: plugins/posts/search-results/clean/results.php:15
 #: plugins/posts/search-results/custom/results.php:15
 #: plugins/posts/search-results/default/results.php:15
-#: plugins/posts/search-results/elegant/results.php:15
+#: plugins/posts/search-results/gray/results.php:15
+#: plugins/posts/search-results/purple/results.php:15
 #: plugins/posts/search-results/twenty-fourteen/results.php:15
 #: plugins/posts/search-results/twenty-thirteen/results.php:15
 #: plugins/posts/search-results/wordpress-twentytwelve/results.php:15
@@ -1983,7 +2044,8 @@ msgstr ""
 #: plugins/posts/search-results/clean/results.php:15
 #: plugins/posts/search-results/custom/results.php:15
 #: plugins/posts/search-results/default/results.php:15
-#: plugins/posts/search-results/elegant/results.php:15
+#: plugins/posts/search-results/gray/results.php:15
+#: plugins/posts/search-results/purple/results.php:15
 #: plugins/posts/search-results/twenty-fourteen/results.php:15
 #: plugins/posts/search-results/twenty-thirteen/results.php:15
 #: plugins/posts/search-results/wordpress-twentytwelve/results.php:15
@@ -1993,7 +2055,8 @@ msgstr ""
 #: plugins/posts/search-results/clean/results.php:15
 #: plugins/posts/search-results/custom/results.php:15
 #: plugins/posts/search-results/default/results.php:15
-#: plugins/posts/search-results/elegant/results.php:15
+#: plugins/posts/search-results/gray/results.php:15
+#: plugins/posts/search-results/purple/results.php:15
 #: plugins/posts/search-results/twenty-fourteen/results.php:15
 #: plugins/posts/search-results/twenty-thirteen/results.php:15
 #: plugins/posts/search-results/wordpress-twentytwelve/results.php:15
@@ -2003,7 +2066,8 @@ msgstr ""
 #: plugins/posts/search-results/clean/results.php:85
 #: plugins/posts/search-results/custom/results.php:78
 #: plugins/posts/search-results/default/results.php:85
-#: plugins/posts/search-results/elegant/results.php:62
+#: plugins/posts/search-results/gray/results.php:76
+#: plugins/posts/search-results/purple/results.php:76
 #: plugins/posts/search-results/twenty-thirteen/results.php:83
 #: plugins/posts/search-results/wordpress-twentytwelve/results.php:95
 msgid "Driving: "
@@ -2150,10 +2214,6 @@ msgid ""
 "Show/hide get directions link in each results. The link will open a new page "
 "with Google map showing the directions from the address entered by the user "
 "to the member's location."
-msgstr ""
-
-#: third-party/sweetdate/geo-my-wp-sd-class.php:91
-msgid "Enter Address..."
 msgstr ""
 
 #: third-party/sweetdate/geo-my-wp-sd-class.php:97

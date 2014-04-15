@@ -53,15 +53,30 @@ class GMW_Forms {
      */
     private function new_form() {
 
-        $this->forms[$_GET['gmw_form_id']] = array(
-            'ID'         => $_GET['gmw_form_id'],
-            'addon'      => $_GET['gmw_form_addon'],
-            'form_title' => $_GET['gmw_form_title'],
-            'form_type'  => $_GET['gmw_form_type'],
-            'prefix'     => $_GET['gmw_form_prefix'],
-            'ajaxurl'    => GMW_AJAX
-        );
-
+    	$this->forms[$_GET['gmw_form_id']] = array(
+    			'ID'          => $_GET['gmw_form_id'],
+    			'addon'       => $_GET['gmw_form_addon'],
+    			'form_title'  => $_GET['gmw_form_title'],
+    			'form_type'   => $_GET['gmw_form_type'],
+    			'prefix'      => $_GET['gmw_form_prefix'],
+    			'ajaxurl'     => GMW_AJAX,
+    			'search_form' => array (
+    					'post_types' 	 => array( 'post' ),
+    					'address_field'  => array(
+    							'title'	 => __( 'Enter Address...', 'GMW' ),
+    							'within' => 1
+    					)
+    			),
+    			'search_results' => array (
+    					'display_posts'   => 1,
+    					'display_members' => 1,
+    					'display_groups'  => 1,
+    					'display_users'	  => 1,
+    					'display_map'	  => 'results',
+    					'get_directions'  => 1	 
+    			)
+    	);
+        
         foreach ($this->forms as $key => $option) :
 
             if (!isset($option['ID']) || empty($option['ID']) || !is_numeric($option['ID']) || !isset($option['form_type']) || empty($option['form_type'])) :

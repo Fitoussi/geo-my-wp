@@ -8,7 +8,7 @@
 
 .gmw-map-wrapper {
 	position: relative;
-	display: inline-block;
+	display: block;
 }
 
 .gmw-map-frame {
@@ -19,6 +19,7 @@
 	border-right: 1px solid #BBB;
 	border-left: 1px solid #DDD;
 	border-top: 1px solid #EEE;
+	box-sizing: border-box;
 }
 
 .gmw-map-loader-wrapper {
@@ -37,19 +38,24 @@
 	box-shadow: none !important
 }
 
-.gmw-results-count {
-	text-transform: capitalize;
-	width: auto;
-	clear: both;
+.gmw-no-results-wrapper {
+	margin-top:15px;
 }
 
-.gmw-form select {
-	margin: 5px 0px;
-	border: 1px solid #ccc;
+.gmw-no-results-wrapper p {
+	font-weight: normal;
+	margin-top: 3px;
+	text-decoration: none;
+	background: #f8f8f8;
+	border: 1px solid #e1e1e1;
+	color: #440;
+	padding: 10px 15px;
+	display: block;
 }
 
-.gmw-results-count h3, .gmw-pt-no-results-wrapper h3 {
-	font-size:16px;
+.gmw-geocode-error p {
+	background-color: #FFDDDD;
+	border: 1px solid #CC4222;
 }
 
 /* Loading scren */

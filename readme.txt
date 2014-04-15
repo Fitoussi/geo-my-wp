@@ -1,11 +1,11 @@
 === GEO my Wordpress ===
 Contributors: Eyal Fitoussi
 Donate link: http://geomywp.com/
-Tags: proximity search, zipcode search, radius search, store locator, Geocode posts, address, search distance, google v3 , Google maps, get directions, search locations, Geolocate, GEO, members locator
+Tags: Geo-location, Geolocation, proximity search, zipcode search, radius search, store locator, Geolocate posts, address search, search distance, google v3 , Google maps, get directions, search locations, Geolocate, GEO, members locator, Geolocate memebrs, mapping, mapping software, latitude, longitude, locations finder, map creator.
 Requires at least: 3.8
-Tested up to: 3.8.1
+Tested up to: 3.8.3
 Buddypress: 1.9.2
-Stable tag: 2.4.1
+Stable tag: 2.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,7 +17,7 @@ GEO my WP is the complete GEO solution for your wordpress project.
 Using google API tool GEO my WP let you add location to any of your post types, pages or Buddypress members. After adding your locations you can create an advance search form including radius values, units (miles and kilometers) and custom taxonomies for post types or profile fields for Buddypress. Results will be displayed based on the address entered and the chosen radius ordered by the distance.
 Together with other great features like auto locating user's current location, displaying driving distance, "get directions" link, google map with markers of the location and much more, GEO my WP just might be the coolest GEO tool for WordPress.
 
-= The great features of GEO my WP =
+= Key features of GEO my WP =
 
 * Works with posts, post types and pages - Add location to any of your post, post types or pages.
 * Works with Buddypress - Buddypress members can add their location.
@@ -127,6 +127,26 @@ For questions, bugs report and suggestions please visit [GEO my WP Furom](http:/
 For screenshots please visit [GEO my WP](http://www.geomywp.com)
 
 == Changelog ==
+
+= 2.4.2 =
+
+* if this is the first time you are updating to GEO my WP 2.4 it is very important that you read the update details before updating. Please refer to <a href="https://geomywp.com/blog/geo-my-wp-2-4/" target="_blank">this post</a> to read about this update and about the updating progress.
+
+- Compatible with WordPress version 3.8.3
+- Modify the way GEO my WP geocodes an address when form is being submitted - Switched back from using JavaScript to XML. The geocode function had been improved to cache results. Means that when the same address is entered it will not be geocoded again but will be used from cached when available. Geocoded results are being cached for 3 months. This will results in faster page load and less API usage. The new geocode function can be found in the file geo-my-wp.php and can be used and called as GEO_my_WP::geocoder( $address ). The old geocode function can be still found in the file geo-my-wp-geocode.php but will be removed in one of the next updates of the plugin. So please update any custom code you might have which uses the old geocode function.
+- Fix: Sweet-date integration should now work with child themes as well.
+- Added default settings to new created forms.
+- Improved "No results" function.
+- New filter added - apply_filters( 'gmw_radius_dropdown_title', $title, $gmw ) - which allows you to modify the default title that will be displayed in the radius dropdown bax.
+- Modified radius dropdown output filter from apply_filters( 'gmw_search_form_radius_field', $output, $gmw, $class, $btitle, $stitle ) to apply_filters( 'gmw_radius_dropdown_output', $output, $gmw, $class );
+- Modified Activity message when BuddyPress Member updates his location.
+- Modified Members Locator "No Results" function
+- Remove hardcoded width from Data input field (Members Locator search form)
+- Improved structure of search forms and search results Stylesheet
+- Added missing space when displaying taxonomies in search results
+- Improve "Gray" search forms and results template files.
+- New, responsive search form and results templates: Purple for "Posts Locator" and "Yellow" for "Members locator”.
+
 
 = 2.4.1 = 
 

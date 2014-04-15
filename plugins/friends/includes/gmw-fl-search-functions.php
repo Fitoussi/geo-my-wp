@@ -32,9 +32,9 @@ function gmw_fl_xprofile_fields($gmw, $class) {
 
                 echo '<div class="editfield field_' . $field_id . ' datebox">';
                 echo '<span class="label">' . __('Age Range (min - max)', 'GMW') . '</span>';
-                echo '<input size="3" type="text" name="' . $fieldName . '_' . $field_id . '" value="' . $get_field . '" placeholder="' . __('Min', 'GMW') . '" style="width:10%" />';
+                echo '<input size="3" type="text" name="' . $fieldName . '_' . $field_id . '" value="' . $get_field . '" placeholder="' . __('Min', 'GMW') . '" />';
                 echo '&nbsp;-&nbsp;';
-                echo '<input size="3" type="text" name="' . $fieldName . '_' . $field_id . '_to" value="' . $get_field_to . '" placeholder="' . __('Max', 'GMW') . '" style="width:10%" />';
+                echo '<input size="3" type="text" name="' . $fieldName . '_' . $field_id . '_to" value="' . $get_field_to . '" placeholder="' . __('Max', 'GMW') . '" />';
                 echo '</div>';
                 break;
 
@@ -71,10 +71,10 @@ function gmw_fl_xprofile_fields($gmw, $class) {
  * @version 1.0
  * @author Eyal Fitoussi
  */
-function gmw_fl_member_address($gmw) {
+function gmw_fl_member_address( $gmw ) {
 
     global $members_template;
-    echo apply_filters('gmw_fl_members_loop_address', $members_template->member->formatted_address, $gmw, $members_template);
+    echo apply_filters( 'gmw_fl_members_loop_address', $members_template->member->formatted_address, $gmw, $members_template );
 
 }
 
@@ -203,6 +203,7 @@ function gmw_fl_per_page_dropdown($gmw, $class) {
     endif;
     ?>
     <script>
+	
         jQuery(document).ready(function($) {
 
             $(".gmw-fl-per-page-dropdown").change(function() {
@@ -210,12 +211,13 @@ function gmw_fl_per_page_dropdown($gmw, $class) {
                 var totalResults = <?php echo $members_template->total_member_count; ?>;
                 var lastPage = Math.ceil(totalResults / $(this).val());
                 var newPaged = (<?php echo $members_template->pag_num; ?> > lastPage) ? lastPage : <?php echo $members_template->pag_num; ?>;
-                
-                $('.gmw-submit-wrapper-<?php echo $gmw['ID']; ?> .gmw-per-page').val($(this).val());
-			   	$(".gmw-submit-wrapper-<?php echo $gmw['ID']; ?> .gmw-paged").val(newPaged);
-			   	
-			   	$('.gmw-submit-wrapper-<?php echo $gmw['ID']; ?>').closest('form').submit();
-			   	           
+
+                if ( window.location.search.length ) {
+			   		window.location.href = window.location.href.replace(/(gmw_per_page=).*?(&)/,'$1' + $(this).val() + '$2').replace(/(upage=).*?(&)/,'$1' + newPaged + '$2');
+			   	} else {
+			   		window.location.href = window.location.href + '?gmw=auto&gmw_per_page='+$(this).val() + '&gmw_form=<?php echo $gmw['ID']; ?>&upage='+newPaged;
+			   	}
+
             });
         });
     </script>
@@ -226,10 +228,14 @@ function gmw_fl_per_page_dropdown($gmw, $class) {
 /**
  * GMW FL results function - no members found
  */
-function gmw_fl_no_members($gmw) {
-    $no_members = __('Sorry, No members found', 'GMW');
-    echo apply_filters('gmw_fl_no_members_message', $no_members, $gmw);
-
+function gmw_fl_no_members( $gmw ) {
+	
+	do_action( 'gmw_'.$gmw['form_type'].'_before_no_results', $gmw  );
+	
+	echo apply_filters( 'gmw_'.$gmw['form_type'].'_no_results_message', __( 'Sorry, No members found', 'GMW' ), $gmw );
+	
+	do_action( 'gmw_'.$gmw['form_type'].'_after_no_results', $gmw );
+	
 }
 
 /**
@@ -540,7 +546,7 @@ class GMW_FL_Search_Query extends GMW {
         do_action('gmw_fl_before_memebrs_query', $this->form, $this->settings);
 
         //load results template file to display list of members
-        if (isset($this->form['search_results']['display_members'])) :
+        if ( isset($this->form['search_results']['display_members'] ) ) :
 
             $gmw = $this->form;
 
@@ -568,7 +574,7 @@ class GMW_FL_Search_Query extends GMW {
          */
         else :
 
-            if (bp_has_members($this->form['query_args'])) :
+            if ( bp_has_members( $this->form['query_args'] ) ) :
 
                 while (bp_members()) : bp_the_member();
 

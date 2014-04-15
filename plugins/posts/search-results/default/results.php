@@ -67,7 +67,7 @@
 
                         <!--  Addiotional info -->
                         <div id="wppl-additional-info" class="wppl-additional-info">	
-                            <?php gmw_pt_additional_info( $gmw, $post ); ?>
+                            <?php gmw_pt_additional_info( $gmw, $post, $tag='div' ); ?>
                         </div>
 
                     </div>

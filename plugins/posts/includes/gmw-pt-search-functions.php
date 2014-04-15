@@ -95,7 +95,7 @@ function gmw_pt_form_taxonomies( $gmw, $tag, $class ) {
                     'show_option_all' => __( ' - All - ', 'GMW' ),
                 );
 
-                $args = apply_filters( 'gmw_pt_dropdown_taxonomy_args', $args );
+                $args = apply_filters( 'gmw_pt_dropdown_taxonomy_args', $args, $gmw );
                 $output .= wp_dropdown_categories( $args );
 
                 $output .= '</'.$tag.'>';
@@ -142,25 +142,25 @@ function gmw_pt_get_per_page_dropdown( $gmw, $class ) {
         endforeach;
 		
         $per_page .= '</select>';
-
+		
         $per_page .= '<script>
 			jQuery(document).ready(function($) {
 			   	$(".gmw-pt-per-page-dropdown").change(function() {
-					
-			   		var formID = '. $gmw['ID'].' 
-				   	var totalResults = ' . $gmw["total_results"] . '
+				   	var totalResults = '.$gmw["total_results"].'
 			
 				   	var lastPage = Math.ceil(totalResults/$(this).val());
-				   	var newPaged = (' . $gmw['paged'] . ' > lastPage ) ? lastPage : '.$gmw['paged'].';
+				   	var newPaged = ('.$gmw["paged"].' > lastPage ) ? lastPage : '.$gmw["paged"].';
 					
-				   	$(".gmw-submit-wrapper-'.$gmw['ID'] .' .gmw-per-page").val($(this).val());
-				   	$(".gmw-submit-wrapper-'.$gmw['ID'] .' .gmw-paged").val(newPaged);
-				   	
-				   	$(".gmw-submit-wrapper-'.$gmw['ID'] .'").closest("form").submit();
-				   	 		
+				   	if ( window.location.search.length ) {
+				   		window.location.href = window.location.href.replace(/(gmw_per_page=).*?(&)/,"$1" + $(this).val() + "$2") + "&paged="+newPaged;
+				   	} else {
+				   		window.location.href = window.location.href + "?gmw=auto&gmw_per_page="+$(this).val() + "&gmw_form='.$gmw['ID'].'&paged="+newPaged;
+				   	}
 			    });
 			});
 	    </script>';
+        
+        
 
     endif;
 
@@ -400,7 +400,7 @@ function gmw_pt_get_taxonomies( $gmw, $post ) {
                 //$taxTerms = apply_filters( 'gmw_pt_results_taxonomies_terms', $taxTerms , $gmw, $post, $the_tax, $termsArray, $terms );
                 
                 $taxonomy  = '<div class="gmw-taxes gmw-taxonomy-' . $the_tax->rewrite['slug'] . '">';
-                $taxonomy .= 	'<span>' . $the_tax->labels->singular_name . ':</span>';
+                $taxonomy .= 	'<span>' . $the_tax->labels->singular_name . ': </span>';
                 $taxonomy .= 	'<span class="gmw-terms-wrapper gmw-'.$the_tax->rewrite['slug'].'-terms">'.join( ", ", $termsArray ).'</span>';
                 $taxonomy .= '</div>';
                 
@@ -772,7 +772,7 @@ class GMW_PT_Search_Query extends GMW {
             wp_reset_query();
         else :
 
-            $this->no_results();
+            $this->no_results( __( 'No results found', 'GMW' ) );
         endif;
 
     }
@@ -792,22 +792,6 @@ class GMW_PT_Search_Query extends GMW {
         $this->form['post_count'] ++;
 
         do_action( 'gmw_pt_loop_the_post', $post, $this->form, $this->settings );
-
-    }
-
-    /**
-     * GMW PT function - no results
-     * @param $gmw
-     * @param $gmw_options
-     */
-    function no_results() {
-
-        do_action( 'gmw_pt_before_no_results', $this->form, $this->settings );
-
-        $no_results = '<div class="gmw-pt-no-results-wrapper"><h3>' . __( 'No results found', 'GMW' ) . '</h3></div>';
-        echo apply_filters( 'gmw_pt_no_results_message', $no_results, $this->form );
-
-        do_action( 'gmw_pt_after_no_results', $this->form, $this->settings );
 
     }
 

@@ -22,11 +22,11 @@
 
         <div class="clear"></div>
 
-    <?php gmw_fl_per_page_dropdown( $gmw, '' ); ?>
+    	<?php gmw_fl_per_page_dropdown( $gmw, '' ); ?>
 
         <div class="pagination-links" id="member-dir-pag-top">
 
-    <?php bp_members_pagination_links(); ?>
+    	<?php bp_members_pagination_links(); ?>
 
         </div>
 
@@ -41,34 +41,34 @@
 
     <ul id="members-list" class="item-list" role="main">
 
-    <?php while ( bp_members() ) : bp_the_member(); ?>
+    	<?php while ( bp_members() ) : bp_the_member(); ?>
 
             <li>
 
-        <?php do_action( 'gmw_fl_directory_member_start', $gmw ); ?>
+        		<?php do_action( 'gmw_fl_directory_member_start', $gmw ); ?>
 
                 <?php if ( isset( $gmw[ 'search_results' ][ 'avatar' ][ 'use' ] ) ) : ?>
                     <div class="item-avatar">
                         <a href="<?php bp_member_permalink(); ?>"><?php bp_member_avatar( array( 'type' => 'full', 'width' => $gmw[ 'search_results' ][ 'avatar' ][ 'width' ], 'height' => $gmw[ 'search_results' ][ 'avatar' ][ 'height' ] ) ); ?></a>
                     </div>
-        <?php endif; ?>
+        		<?php endif; ?>
 
                 <div class="item">
                     <div class="item-title">
                         <div class="gmw-fl-member-count"><?php gmw_fl_member_count( $gmw ); ?>)</div>
                         <a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a><?php gmw_fl_by_radius( $gmw ); ?>
 
-        <?php if ( bp_get_member_latest_update() ) : ?>
+       					 <?php if ( bp_get_member_latest_update() ) : ?>
 
                             <span class="update"> <?php bp_member_latest_update(); ?></span>
 
-        <?php endif; ?>
+        				<?php endif; ?>
 
                     </div>
 
                     <div class="item-meta"><span class="activity"><?php bp_member_last_active(); ?></span></div>
 
-        <?php do_action( 'bp_directory_members_item' ); ?>
+        			<?php do_action( 'bp_directory_members_item' ); ?>
 
                     <?php do_action( 'gmw_fl_directory_member_item', $gmw ); ?>
 
@@ -85,19 +85,26 @@
 
                 <div class="action">
 
-        <?php do_action( 'bp_directory_members_actions' ); ?>
+        		<?php do_action( 'bp_directory_members_actions' ); ?>
 
                 </div>
 
                 <div class="clear"></div>
 
-                <div><span><?php _e( 'Address: ', 'GMW' ); ?></span><?php gmw_fl_member_address( $gmw ); ?></div><?php gmw_fl_directions_link( $gmw, $title = __( 'Get directions', 'GMW' ) ); ?><?php gmw_fl_driving_distance( $gmw, $class = '' ); ?>
+                <div>
+                	<span><?php _e( 'Address: ', 'GMW' ); ?></span>
+                	<?php gmw_fl_member_address( $gmw ); ?>
+                </div>
+                
+                <?php gmw_fl_directions_link( $gmw, $title = __( 'Get directions', 'GMW' ) ); ?>
+                
+                <?php gmw_fl_driving_distance( $gmw, $class = '' ); ?>
 
-        <?php do_action( 'gmw_fl_directory_member_end', $gmw ); ?>
+        		<?php do_action( 'gmw_fl_directory_member_end', $gmw ); ?>
 
             </li>
 
-    <?php endwhile; ?>
+    	<?php endwhile; ?>
 
         <?php do_action( 'gmw_fl_after_members_loop', $gmw ); ?>
 
@@ -111,13 +118,13 @@
 
         <div class="pag-count" id="member-dir-count-bottom">
 
-    <?php gmw_fl_per_page_dropdown( $gmw, '' ); ?> <?php bp_members_pagination_count(); ?>
+    		<?php gmw_fl_per_page_dropdown( $gmw, '' ); ?> <?php bp_members_pagination_count(); ?>
 
         </div>
 
         <div class="pagination-links" id="member-dir-pag-bottom">
 
-    <?php bp_members_pagination_links(); ?>
+    		<?php bp_members_pagination_links(); ?>
 
         </div>
 

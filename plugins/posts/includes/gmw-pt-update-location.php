@@ -45,8 +45,7 @@ function gmw_pt_update_location( $args ) {
 
         $address = implode( ' ', $address );
 
-        include_once GMW_PATH . '/includes/geo-my-wp-geocode.php';
-        $returned_address = GmwConvertToCoords( $address );
+        $returned_address = GEO_my_WP::geocoder( $address );
 
         if ( !in_array( 'street', $args[ 'address' ] ) )
             $street  = $returned_address[ 'street' ];
@@ -64,8 +63,7 @@ function gmw_pt_update_location( $args ) {
         $address     = $address;
         $address_apt = $address;
 
-        include_once GMW_PATH . '/includes/geo-my-wp-geocode.php';
-        $returned_address = GmwConvertToCoords( $address );
+        $returned_address = GEO_my_WP::geocoder( $address );
 
         $street  = $returned_address[ 'street' ];
         $apt     = $returned_address[ 'apt' ];

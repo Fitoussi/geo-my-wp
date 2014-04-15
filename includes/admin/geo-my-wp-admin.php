@@ -28,10 +28,14 @@ class GMW_Admin {
 		$this->forms_page      = new GMW_Forms();
 		$this->shortcodes_page = new GMW_Shortcodes_page();
 
-		add_action('admin_menu', array($this, 'admin_menu'), 12);
-		add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts'));
-
-		add_filter('plugin_action_links', array($this, 'addons_action_links'), 10, 2);
+		add_action( 'admin_menu', array( $this, 'admin_menu' ), 12);
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+		
+		//display footer credits only on GEO my WP pages
+		if ( isset( $_GET['page'] ) && ( $_GET['page'] == 'gmw-add-ons' || $_GET['page'] == 'gmw-settings' || $_GET['page'] == 'gmw-forms' || $_GET['page'] == 'gmw-shortcodes' ) ) {
+			add_filter( 'admin_footer_text', array( $this, 'gmw_credit_footer'), 10 );
+		}
+		add_filter( 'plugin_action_links', array( $this, 'addons_action_links' ), 10, 2 );
 
 	}
 
@@ -47,7 +51,6 @@ class GMW_Admin {
 		$statuses = get_option('gmw_premium_plugin_status');
 
 		if ($file == 'geo-my-wp/geo-my-wp.php') {
-
 			$settings_link = '<a href="' . get_bloginfo('wpurl') . '/wp-admin/admin.php?page=gmw-settings">' . __('Settings', 'GMW') . '</a>';
 		}
 
@@ -104,7 +107,7 @@ class GMW_Admin {
 		}
 
 	}
-
+	
 	static public function gmw_credits() {
 
 		$output  =	'<div class="gmw-credits">';
@@ -146,6 +149,10 @@ class GMW_Admin {
 		<?php
 		return $output;
 
+	}
+	
+	static public function gmw_credit_footer( $content ) {
+		return preg_replace('/[.,]/', '', $content) . ' ' . __( 'and Geo-Locating with', 'GMW' ). ' <a href="http://geomywp.com" target="_blank" title="GEO my WP">'.__( 'GEO my WP', 'GMW' ) . '</a>.';	
 	}
 
 }

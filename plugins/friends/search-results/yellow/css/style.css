@@ -1,0 +1,156 @@
+/* GMW FL yellow search results stylesheet */
+				
+.gmw-fl-yellow-results-wrapper select {
+	border: 1px solid #ccc;
+	height:30px;
+	font-size: 14px;
+	color:#555;
+	max-width:150px;
+}
+
+.gmw-fl-yellow-results-wrapper .results-count-wrapper {
+	background: #fdfdfd;
+	padding:8px 15px;
+	border-bottom:1px solid #ddd;
+	border-top:1px solid #ddd;
+}
+
+.gmw-fl-yellow-results-wrapper .results-count-wrapper p {
+	margin:0px;
+	font-size: 13px;
+	color:#444;
+}
+
+.gmw-fl-yellow-results-wrapper .pagination-per-page-wrapper {
+	clear: both;
+	font-size: 12px;
+	background: #F9F9F9;
+	padding: 5px 15px;
+	min-height: 25px;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 1px;
+	margin-bottom:3px;
+}
+
+.gmw-fl-yellow-results-wrapper .pagination-wrapper {
+	float: right;
+	text-align: center;	
+}
+
+.gmw-fl-yellow-results-wrapper .pagination-wrapper a, 
+.gmw-fl-yellow-results-wrapper .pagination-wrapper span {
+	padding: 4px 3px;
+	font-size: 12px;
+	text-decoration: none;
+	background: #FBFCBA;
+	text-align:center;
+	border:1px solid #D1D296;
+	display: inline-block;
+	color:#626332;
+
+}
+
+.gmw-fl-yellow-results-wrapper .pagination-wrapper a:hover, 
+.gmw-fl-yellow-results-wrapper .pagination-wrapper span {
+	background:#E8E979;
+}
+
+.gmw-fl-yellow-results-wrapper ul.members-list-wrapper {
+	background:lightyellow;
+	list-style: none;
+	padding:0px;
+	border-top: 10px solid #e1e1e1;
+	margin:3px 0 0 0;
+}
+
+.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li {
+	margin:0px;
+	padding: 15px;
+	border-bottom: 10px solid #e1e1e1
+	
+}
+
+.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li:nth-child(even) {
+	background:white;
+}
+
+.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .top-wrapper {
+	border-bottom: 1px solid #D1D296;
+	margin-bottom: 15px;
+	padding-bottom: 15px;
+	color:#666;
+	font-size: 16px;
+}
+
+.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .top-wrapper a:link,
+.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .top-wrapper a:visited {
+	text-decoration:none;
+	color:#555;
+	text-transform: capitalize;
+}
+
+.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .top-wrapper a:hover,
+.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .top-wrapper a:active {
+	color:#111;
+}
+
+.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .radius {
+	float:right;
+}
+
+.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .info-left-wrapper, .gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .info-right-wrapper {
+	width:48%;
+	display: inline-block;
+	vertical-align: top
+}
+
+.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .user-avatar img {
+	border: 1px solid #ccc;
+	box-shadow: none;
+	border-radius: 0px;
+	padding:3px;
+	background: #eee;
+}
+
+#no-results-message p {
+	background-color: #FBFCBA;
+	text-align:center;
+	border:1px solid #D1D296;
+	width:100%;
+	margin-top: 15px;
+	color:#626332;
+	padding:10px 0px;
+}
+
+/* smaller screens */
+
+@media (max-width:800px) {
+	.gmw-fl-yellow-results-wrapper select {
+		width:100%;
+		max-width:100%;
+	}
+	
+	.gmw-fl-yellow-results-wrapper .pagination-wrapper {
+		float:none;
+		width:100%;
+		margin-top:10px;
+		display: inline-block;
+	}
+	
+	.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .info-left-wrapper, .gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .info-right-wrapper {
+		width:100%;
+		margin-bottom:10px;
+	}
+	
+	.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .top-wrapper {
+		width:100%;
+		display: inline-block;
+		text-align:center;
+	}
+	
+	.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .top-wrapper span.radius {
+		width:100%;
+		text-align: center;
+		margin-top:10px;
+	}
+}

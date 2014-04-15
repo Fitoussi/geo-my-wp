@@ -156,9 +156,8 @@ class GMW_SD_Class_Query {
             //do INNER JOIN. we will show only members with location
             $tJoin  = $tJoin2 = "INNER";
 
-            include_once GMW_PATH . '/includes/geo-my-wp-geocode.php';
             //geocode the address entered
-            $this->returned_address = GmwConvertToCoords( $this->formData['address'] );
+            $this->returned_address = GEO_my_WP::geocoder( $this->formData['address'] );
 
             //If form submitted and address was not found stop search and display no results
             if ( !isset( $this->returned_address ) || empty( $this->returned_address ) ) {

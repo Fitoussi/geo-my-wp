@@ -39,7 +39,7 @@ function gmw_location_record_activity($args) {
     $activity_id = bp_activity_add(array(
         //'id' => $id, 
         'user_id'           => $bp->loggedin_user->id,
-        'action'            => sprintf(__('%s Updated his location at <a target="_blank" href="http://maps.google.com/maps?f=d&hl=' . $region[0] . '&region=' . $region[1] . '&geocode=&saddr=' . $location . '&daddr=' . $cCity . ' ' . $cState . ' ' . $cCountry . '&ie=UTF8&z=12" >' . $location . '</a>', 'GMW'), $from_user_link),
+        'action'            => sprintf(__('%s Updated new location at <a target="_blank" href="http://maps.google.com/maps?f=d&hl=' . $region[0] . '&region=' . $region[1] . '&geocode=&saddr=' . $location . '&daddr=' . $cCity . ' ' . $cState . ' ' . $cCountry . '&ie=UTF8&z=12" >' . $location . '</a>', 'GMW'), $from_user_link),
         'content'           => $content,
         'primary_link'      => $primary_link,
         'component'         => $component,

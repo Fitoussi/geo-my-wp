@@ -6,7 +6,7 @@
  */
 ?>
 <!--  Main results wrapper - wraps the paginations, map and results -->
-<div class="gmw-results-wrapper gmw-results-wrapper-<?php echo $gmw['ID']; ?> gmw-pt-gray-results-wrapper">
+<div class="gmw-results-wrapper gmw-results-wrapper-<?php echo $gmw['ID']; ?> gmw-pt-purple-results-wrapper">
 	
 	<?php do_action( 'gmw_search_results_start' , $gmw, $post ); ?>
 	

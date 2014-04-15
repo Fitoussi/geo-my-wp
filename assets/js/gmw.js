@@ -48,11 +48,14 @@ jQuery(document).ready(function($) {
 
     $('.gmw-submit').click(function(e) {
         //if ($(this).attr('type', 'submit')) {
-        e.preventDefault();
+       // e.preventDefault();
         //}
-        $(this).closest('form').submit();
+    	
+    	$(this).closest('form').find('.gmw-paged').val('1');
+    	$(this).closest('form').submit();
     }); 
 
+    /*
     // when submitting a form	
     $('.gmw-form').submit(function(e) {
 
@@ -116,6 +119,8 @@ jQuery(document).ready(function($) {
             }
         });
     });
+    
+    */
 
     var autoLocator = false;
 
