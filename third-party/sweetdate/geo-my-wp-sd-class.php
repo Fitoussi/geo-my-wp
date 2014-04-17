@@ -1,21 +1,11 @@
 <?php
-/*
-  Plugin Name: GMW Add-on - Members Directory
-  Plugin URI: http://www.geomywp.com
-  Description: Add Geo features to buddypress's members directory
-  Author: Eyal Fitoussi
-  Version: 1.1.3
-  Author URI: http://www.geomywp.com
-  Text Domain: GMW-MD
-  Domain Path: /languages/
- */
 
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) )
     exit;
 
 /**
- * GMW_Members_Directory_Query class.
+ * GMW_SD_Query class.
  */
 class GMW_SD_Class_Query {
 
@@ -97,20 +87,20 @@ class GMW_SD_Class_Query {
             $radiusText = ( $this->gmwSD['units'] == '6371' ) ? __( ' -- Kilometers -- ', 'GMW' ) : __( ' -- Miles -- ', 'GMW' );
 
             $search_form_html .= '<div class="two columns">';
-            $search_form_html .= '<select class="expand" name="field_radius">';
-            $search_form_html .= '<option value="" selected="selected">' . $radiusText . '</option>';
+            $search_form_html .= 	'<select class="expand" name="field_radius">';
+            $search_form_html .= 		'<option value="9999999999999" selected="selected">' . $radiusText . '</option>';
+            
             foreach ( $radius as $value ) :
-                $search_form_html .= '<option value="' . $value . '"';
-                if ( $value == $this->formData['radius'] ) {
-                    $search_form_html .= 'selected="selected"';
-                } $search_form_html .= '>' . $value . '</option>';
+            	$selected = ( $value == $this->formData['radius'] ) ? 'selected="selected"': '';
+            	$search_form_html .= 	'<option value="' . $value . '" '.$selected.'>' . $value . '</option>';
             endforeach;
-            $search_form_html .= '</select>';
+            
+            $search_form_html .= 	'</select>';
             $search_form_html .= '</div>';
 
         //display hidden default value
         else :
-            $search_form_html .= '<input type="hidden" id="gmw-sd-radius-dropdown" name="gmw_md_radius" value="' . end( $radius ) . '" />';
+            $search_form_html .= '<input type="hidden" id="gmw-sd-radius-dropdown" name="field_radius" value="' . end( $radius ) . '" />';
         endif;
 
         $orderby = array( 'active', 'newest', 'alphabetical' );
@@ -120,19 +110,17 @@ class GMW_SD_Class_Query {
         }
 
         $search_form_html .= '<div class="two columns">';
-        $search_form_html .= '<select class="expand" name="orderby">';
-        $search_form_html .= '<option value="">' . __( 'Order By', 'GMW' ) . '</option>';
+        $search_form_html .= 	'<select class="expand" name="orderby">';
+        $search_form_html .= 		'<option value="">' . __( 'Order By', 'GMW' ) . '</option>';
 
         foreach ( $orderby as $value ) :
-
-            $search_form_html .= '<option value="' . $value . '"';
-            if ( $value == $this->formData['orderby'] ) {
-                $search_form_html .= 'selected="selected"';
-            } $search_form_html .= '>' . ucfirst( $value ) . '</option>';
+			
+        	$selected = ( $value == $this->formData['orderby'] ) ? 'selected="selected"' : '';
+            $search_form_html .= 	'<option value="' . $value . '" '.$selected.'>' . ucfirst( $value ) . '</option>';
 
         endforeach;
 
-        $search_form_html .= '</select>';
+        $search_form_html .= 	'</select>';
         $search_form_html .= '</div>';
 
         echo $search_form_html;
@@ -171,7 +159,7 @@ class GMW_SD_Class_Query {
                 $this->clauses['bp_user_query']['where']   = ' AND 0 = 1 ';
                 $this->clauses['bp_user_query']['orderby'] = ' ORDER BY u.display_name';
 
-                $message = apply_filters( 'gmw_md_no_addrss_found_message', __( 'Sorry, the address was not found. Please try a different address.', 'GMW' ) );
+                $message = apply_filters( 'gmw_sd_no_addrss_found_message', __( 'Sorry, the address was not found. Please try a different address.', 'GMW' ) );
                 ?>
                 <script>
                     jQuery('#message').html('<p>' + '<?php echo $message; ?>' + '</p>');
@@ -212,7 +200,7 @@ class GMW_SD_Class_Query {
                 $this->clauses['bp_user_query']['order']   = "ASC";
             }
         } elseif ( $this->formData['orderby'] == 'newest' || $this->formData['orderby'] == 'active' || $this->formData['orderby'] == '' ) {
-
+	
             $this->clauses['bp_user_query']['select'] = "SELECT DISTINCT u.user_id , gmwlocations.member_id";
             $this->clauses['bp_user_query']['from']   = " FROM wppl_friends_locator gmwlocations {$tJoin} JOIN {$wpdb->usermeta} u ON gmwlocations.member_id = u.user_id";
             $this->clauses['bp_user_query']['where']  = "WHERE u.meta_key = 'last_activity'";
@@ -246,7 +234,7 @@ class GMW_SD_Class_Query {
                 ?>
                 <script>
                     jQuery(window).ready(function() {
-                        jQuery('#message').html('<p>Sorry, we couldn\'t find the address you enter .</p>');
+                        jQuery('#message').html("<p>We couldn't find the address you enter. Please try a different address.</p>");
                     });
                 </script>
                 <?php
@@ -314,7 +302,21 @@ class GMW_SD_Class_Query {
 
         wp_enqueue_script( 'gmw-sd-map' );
         wp_enqueue_script( 'gmw-marker-clusterer' );
-        wp_localize_script( 'gmw-sd-map', 'sdMapArgs', $this->gmwSD );
+        
+        ?>
+        <script>
+        	//pass some values to javascript
+        	var sdMapArgs = JSON.parse('<?php echo json_encode( $this->gmwSD ); ?>');
+        	jQuery(window).ready(function($) {
+            	setTimeout(function() {
+                	jQuery('#gmw-sd-main-map-wrapper').slideToggle(function() {
+                		sdMapInit(sdMapArgs);
+                		jQuery('.gmw-sd-map-loader').fadeOut(1500);
+                	});
+            	}, 500);
+        	});
+       	</script>
+       	<?php  
         
     }
 
@@ -324,11 +326,11 @@ class GMW_SD_Class_Query {
     public function main_map() {
 
         $mainMap = '';
-        $mainMap .= '<div class="gmw-map-wrapper gmw-sd-main-map-wrapper" id="gmw-sd-main-map-wrapper" style="width:' . $this->gmwSD['map_width'] . ';height:' . $this->gmwSD['map_height'] . '">';
-        $mainMap .= '<div class="gmw-map-loader-wrapper gmw-sd-loader-wrapper">';
-        $mainMap .= '<img class="gmw-map-loader gmw-sd-map-loader" src="' . GMW_URL . '/assets/images/map-loader.gif"/>';
-        $mainMap .= '</div>';
-        $mainMap .= '<div class="gmw-map gmw-sd-main-map" id="gmw-sd-main-map" style="width:100%; height:100%"></div>';
+        $mainMap .= '<div class="gmw-map-wrapper gmw-sd-main-map-wrapper" id="gmw-sd-main-map-wrapper" style="display:none;width:' . $this->gmwSD['map_width'] . ';height:' . $this->gmwSD['map_height'] . '">';
+        $mainMap .= 	'<div class="gmw-map-loader-wrapper gmw-sd-loader-wrapper">';
+        $mainMap .= 		'<img class="gmw-map-loader gmw-sd-map-loader" src="' . GMW_URL . '/assets/images/map-loader.gif"/>';
+        $mainMap .= 	'</div>';
+        $mainMap .= 	'<div class="gmw-map gmw-sd-main-map" id="gmw-sd-main-map" style="width:100%; height:100%"></div>';
         $mainMap .= '</div>';
 
         echo $mainMap;
@@ -370,7 +372,7 @@ class GMW_SD_Class_Query {
     public function get_address() {
         global $members_template;
 
-        return apply_filters( 'gmw_md_member_address', $members_template->member->address, $members_template->member );
+        return apply_filters( 'gmw_sd_member_address', $members_template->member->address, $members_template->member );
 
     }
 

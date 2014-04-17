@@ -1,5 +1,6 @@
-jQuery(document).ready(function() {
-	
+//jQuery(document).ready(function() {
+
+function sdMapInit(sdMapArgs) {
 	var members = sdMapArgs.members;
 	
 	var sdMap = new google.maps.Map( document.getElementById('gmw-sd-main-map'), {
@@ -75,8 +76,7 @@ jQuery(document).ready(function() {
 			content +=  	'<span class="user-name">' + sdMapArgs.members[i]['user_name'] + '</span> ';
 			if ( members[i]['distance'] != false ) {
 				content +=  	'<span class="distance">(' + sdMapArgs.members[i]['distance'] + ')</span> ';
-			}
-			
+			}			
 			content +=  '</div>';
 			
 			return content;
@@ -94,8 +94,5 @@ jQuery(document).ready(function() {
 			google.maps.event.removeListener(blistener);
 		});
 	}
-	
-	google.maps.event.addListenerOnce(sdMap, 'idle', function(){
-		jQuery('.gmw-sd-map-loader').fadeOut(1500);
-	});	
-});
+
+};

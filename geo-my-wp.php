@@ -3,7 +3,7 @@
   Plugin Name: GEO my WP
   Plugin URI: http://www.geomywp.com
   Description: Add location to any post types, pages or members (using Buddypress) and create an advance proximity search forms.
-  Version: 2.4.2
+  Version: 2.4.2.1
   Author: Eyal Fitoussi
   Author URI: http://www.geomywp.com
   License: GPLv2
@@ -172,7 +172,7 @@ class GEO_my_WP {
         
         //include sweetdate theme functions when needed
         $active_theme = wp_get_theme();
-        if ( $active_theme->get('Name') == 'Sweetdate' || $active_theme->get('Template') == 'Sweetdate' )
+        if ( $active_theme->get('Name') == 'Sweetdate' || $active_theme->get('Template') ==  ( 'Sweetdate' || 'sweetdate' ) )
             add_action( 'bp_init', array( $this, 'sweetdate_init' ), 20 );
 
     }

@@ -8,7 +8,7 @@
 
 .gmw-map-wrapper {
 	position: relative;
-	display: block;
+	display: inline-block;
 }
 
 .gmw-map-frame {

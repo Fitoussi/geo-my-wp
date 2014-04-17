@@ -1,11 +1,11 @@
 === GEO my Wordpress ===
-Contributors: Eyal Fitoussi
+Contributors: ninjew
 Donate link: http://geomywp.com/
 Tags: Geo-location, Geolocation, proximity search, zipcode search, radius search, store locator, Geolocate posts, address search, search distance, google v3 , Google maps, get directions, search locations, Geolocate, GEO, members locator, Geolocate memebrs, mapping, mapping software, latitude, longitude, locations finder, map creator.
 Requires at least: 3.8
-Tested up to: 3.8.3
-Buddypress: 1.9.2
-Stable tag: 2.4.2
+Tested up to: 3.9
+Buddypress: 2.0
+Stable tag: 2.4.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
