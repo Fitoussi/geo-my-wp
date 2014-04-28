@@ -91,11 +91,11 @@ div.gmw-pt-purple-form-wrapper .gmw-locator-btn-wrapper:hover, div.gmw-pt-purple
 	background-color:#BCC0FA;
 }
 
-.gmw-locator-btn-wrapper .gmw-locator-submit {
+div.gmw-pt-purple-form-wrapper .gmw-locator-btn-wrapper .gmw-locator-submit {
 	display: inline;
 }
 
-.gmw-locator-btn-wrapper img {
+div.gmw-pt-purple-form-wrapper .gmw-locator-btn-wrapper img {
 	box-shadow: none;
 	max-height: 15px;
 	margin-left: 5px;

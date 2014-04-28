@@ -1,16 +1,96 @@
-.gmw-admin-location-table {
-	border: 1px solid #DDD;
-	padding: 0px;
-	//margin: 3px 0px;
-	width:100%;
-}
-
 .gmw-admin-location-table th {
 	width: 50px !important;
 	color: #222;
 	text-shadow: #fff 0 1px 0;
 	font-weight: normal;
 	text-align: left;
+	padding: 10px;
+}
+
+.gmw-admin-location-table td input {
+
+}
+
+.gmw-location-wrapper {
+	display: inline-block;
+	padding:5px;
+}
+
+.gmw-location-section {
+	display: inline-block;
+	width:100%;
+	margin-top:5px;
+	border:1px solid #ddd;
+	background: #fafafa;
+}
+
+.gmw-location-section h3 {
+	padding: 10px;
+	background: #EAF2FA;
+	border-bottom: #c7d7e2 solid 1px;
+}
+
+div.gmw-location-section-description {
+	padding:0px 10px;
+	background: #f7f7f7;
+	border-bottom: 1px solid #fff
+}
+
+div.gmw-location-section-inner {
+	padding:10px 7px;
+}
+
+.gmw-location-section-inner .address {
+	width:49%;
+	display:inline-block;
+	border: #DFDFDF solid 1px;
+}
+
+.gmw-location-section-inner .right-side {
+	float: right;
+	width:49%;
+	display:inline-block;
+}
+
+.gmw-location-section-inner .right-side .coords,
+.gmw-location-section-inner .right-side .location-status-wrapper,
+.gmw-location-section-inner .right-side .delete-location-wrapper {
+	border: #DFDFDF solid 1px;
+	margin-bottom:5px;
+}
+
+.delete-locaiton-inner, 
+.location-status-inner,
+.current-location-inner,
+.autocomplete-location-inner {
+	background:white;
+	padding:6px;
+	text-align:center;
+}
+
+.gmw-location-section.current-location {
+	width:24%;
+	float:left;
+}
+
+.gmw-location-section.autocomplete {
+	width:74%;
+	float:right;
+}
+
+.gmw-location-section input[type="text"] {
+	width:100%;
+}
+
+.location-status-inner p {
+	margin:6px
+}
+
+.gmw-location-section-inner .address table,
+.gmw-location-section-inner .coords table {
+	border-top: 1px solid #dfdfdf;
+	width:100%;
+	background: white;
 	padding: 10px;
 }
 
@@ -38,12 +118,8 @@
 	margin-left: 150px;
 }
 
-.wppl-admin-map-holder #map {
- 	border: 3px solid #CCC;
-	//width: 100%;
+.gmw-location-section #map {
 	height: 200px;
-	//margin: 0px 0 0 10px;
-	//float: right;
 	padding: 5px;
 	background: white;
 }
@@ -103,7 +179,7 @@ ul.metabox-tabs li.active {
 }
 
 ul.metabox-tabs li {
-	padding: 7px;
+	padding: 7px 7px 4px;
 	-moz-border-radius: 3px 3px 0 0;
 	-webkit-border-top-left-radius: 3px;
 	-webkit-border-top-right-radius: 3px;
@@ -111,8 +187,10 @@ ul.metabox-tabs li {
 	-khtml-border-top-right-radius: 3px;
 	border-top-left-radius: 3px;
 	border-top-right-radius: 3px;
-	background: #CCC;
-	border: 1px solid #AAA;
+	background: #f5f5f5;
+	border: 1px solid #ddd;
+	border-bottom: 0px;
+	margin-right: 2px;
 }
 
 .metabox-tabs a {
@@ -138,18 +216,26 @@ ul.metabox-tabs li {
 	padding: 0.5em 0.9em;
 	border-style: solid;
 	border-width: 1px;
-	background: #f9f9f9;
+	background: white;
 }
 
 ul.metabox-tabs li.active {
-	background-color: #F8f8f8;
+	background-color: white;
 }
 
 ul.metabox-tabs li.active, div.tab-content {
 	border-color: #DFDFDF;
-	padding: 8px 11px;
+	padding: 8px 11px 5px;
 }
 
 .metabox-tabs .active a {
 	color: #277699;
+}
+
+@media (max-width:800px) {
+	.gmw-location-section,
+	.gmw-location-section-inner .address,
+	.gmw-location-section-inner .right-side {
+		width:100% !important;
+	}
 }

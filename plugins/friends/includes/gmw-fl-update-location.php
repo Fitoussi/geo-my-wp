@@ -13,7 +13,7 @@ function gmw_fl_update_location() {
 
     $location = apply_filters('gmw_fl_location_before_updated', $location, $bp->displayed_user->id);
 
-    if ($wpdb->replace('wppl_friends_locator', array(
+    if ( $wpdb->replace('wppl_friends_locator', array(
                 'member_id'         => $bp->displayed_user->id,
                 'street'            => $location['gmw_street'],
                 'apt'               => $location['gmw_apt'],
@@ -28,17 +28,17 @@ function gmw_fl_update_location() {
                 'lat'               => $location['gmw_lat'],
                 'long'              => $location['gmw_long'],
                 'map_icon'          => $location['gmw_map_icon']
-            )) === FALSE) :
+            ) ) === FALSE ) :
 
-        echo __('There was a problem saving your location', 'GMW');
+        echo __( 'There was a problem saving your location.', 'GMW' );
 
     else :
 
-        echo __('Data successfully saved!', 'GMW');
+        echo __( 'Location successfully saved!', 'GMW' );
 
-        $activity_id = gmw_location_record_activity($args        = array('location' => apply_filters('gmw_fl_activity_address_fields', $location['gmw_formatted_address'], $location)));
+        $activity_id = gmw_location_record_activity( $args = array('location' => apply_filters('gmw_fl_activity_address_fields', $location['gmw_formatted_address'], $location ) ) );
 
-        do_action('gmw_fl_after_location_saved', $bp->displayed_user->id, $location);
+        do_action( 'gmw_fl_after_location_saved', $bp->displayed_user->id, $location );
 
     endif;
 
@@ -59,7 +59,7 @@ function gmw_fl_delete_location() {
 
     do_action('gmw_fl_after_location_deleted', $bp->displayed_user->id);
 
-    die(__('Data successfully deleted!', 'GMW'));
+    die( __( 'Location successfully deleted!', 'GMW' ) );
 
 }
 

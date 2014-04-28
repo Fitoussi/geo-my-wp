@@ -5,7 +5,7 @@
  * @author Eyal Fitoussi
  */
 ?>
-<div class="gmw-form-wrapper gmw-form-wrapper-<? echo $gmw['ID']; ?> gmw-pt-form-wrapper">
+<div class="gmw-form-wrapper gmw-form-wrapper-<? echo $gmw['ID']; ?> gmw-pt-form-wrapper gmw-pt-default-form-wrapper">
 	
 	<form class="gmw-form gmw-form-<? echo $gmw['ID']; ?>" name="gmw_form" action="<?php echo $gmw['search_results']['results_page']; ?>" method="get">
 			

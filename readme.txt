@@ -5,7 +5,7 @@ Tags: Geo-location, Geolocation, proximity search, zipcode search, radius search
 Requires at least: 3.8
 Tested up to: 3.9
 Buddypress: 2.0
-Stable tag: 2.4.2.1
+Stable tag: 2.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -109,7 +109,7 @@ Automatic Plugin Installation. To add a WordPress Plugin using the built-in plug
 * Click Proceed to continue with the installation. The resulting installation screen will list the installation as successful or note any problems during the install.
 * If successful, click Activate Plugin to activate it.
 
-Manual Plugin Installation. To install a WordPress Plugin manually:
+Manual plugin Installation. To install a WordPress plugin manually:
 * Download GEO my WP Plugin to your desktop.
 * The plugin will downloaded as a zip. extract the Plugin folder to your desktop.
 * With your FTP program, upload the Plugin folder to the wp-content/plugins folder in your WordPress directory online.
@@ -127,6 +127,24 @@ For questions, bugs report and suggestions please visit [GEO my WP Furom](http:/
 For screenshots please visit [GEO my WP](http://www.geomywp.com)
 
 == Changelog ==
+
+== 2.4.3 ==
+
+* Fix: Country code was not working with Google API
+* Fix: Issues with Sweet-Date integration - Order by "alphabetical" and friends only tab was not working.
+* Improvement: Location form in Member Locator "Location" Tab.
+* Improvement: GEO my WP section in New Post page ( admin dashboard )
+* New feature: Support for Google Places.
+* New feature: language support for Google Maps and Google Places-
+* Clean main Stylesheets
+* Other minor bugs fix
+
+= 2.4.2.1 =
+
+* Compatible with WordPress 3.9 
+* Compatible with BuddyPress 2.0 
+* Fix: issue with Sweet-date Child theme. 
+* Fix issue where map will not show when displaying only "Friends" in the Members page of Sweet-date Theme.
 
 = 2.4.2 =
 

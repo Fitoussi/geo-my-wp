@@ -78,7 +78,12 @@ class GMW_Admin {
 	 * @return void
 	 */
 	public function admin_enqueue_scripts() {
-		wp_register_script('google-maps', 'http://maps.googleapis.com/maps/api/js?key=' . $this->settings['general_settings']['google_api'] . '&sensor=false&region=' . $this->settings['general_settings']['country_code'], array(), false);
+		$googleApi = ( isset( $this->settings['general_settings']['google_api'] ) && !empty( $this->settings['general_settings']['google_api'] ) ) ? '&key=' . $this->settings['general_settings']['google_api'] : '';
+        $region	   = ( isset( $this->settings['general_settings']['country_code'] ) && !empty( $this->settings['general_settings']['country_code'] ) ) ? '&region=' .$this->settings['general_settings']['country_code'] : '';
+        $language  = ( isset( $this->settings['general_settings']['language_code'] ) && !empty( $this->settings['general_settings']['language_code'] ) ) ? '&language=' .$this->settings['general_settings']['language_code'] : '';
+    	
+        //register google maps api
+        wp_register_script( 'google-maps', ( is_ssl() ? 'https' : 'http' ) . '://maps.googleapis.com/maps/api/js?libraries=places'.$googleApi.'&sensor=false'.$region.$language, array( 'jquery' ), false );
 		wp_enqueue_style('gmw-style-admin', GMW_URL . '/assets/css/style-admin.css');
 
 	}

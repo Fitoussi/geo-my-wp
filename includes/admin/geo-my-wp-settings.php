@@ -29,86 +29,94 @@ class GMW_Settings {
      */
     protected function init_settings() {
 
-        $this->settings = apply_filters( 'gmw_admin_settings', array(
-            'general_settings' => array(
-                __( 'General Settings', 'GMW' ),
-                array(
-                    array(
-                        'name'        => 'google_api',
-                        'std'         => '',
-                        'placeholder' => __( 'Enter your google api key here', 'GMW' ),
-                        'label'       => __( 'Google Maps API V3 Key', 'GMW' ),
-                        'desc'        => __( 'This is optional but will let you track your API requests. you can obtain your free Goole API key <a href="https://code.google.com/apis/console/" target="_blank">here</a>.', 'GMW' ),
-                        'attributes'  => array( 'size' => '40' )
-                    ),
-                    /*
-                      array(
-                      'name'        => 'bing_api',
-                      'std'         => '',
-                      'placeholder' => __('Enter your Bing api key here', 'GMW'),
-                      'label'       => __( 'Bing Maps API Key', 'GMW' ),
-                      'desc'        => __( 'Use this feature if you often get "OVER_QUERY_LIMIT" response from google when using the search form.
-                      OVER_QUERY_LIMIT happens when there are too many calls to Google API from the same IP at a very short time or when the per day limit had been used.
-                      This will prevent the address entered in the search form from being geocoded and so no results will return.
-                      You can read about Bing services and obtain your key <a href="http://www.bingmapsportal.com/application/" target="_blank">Here</a>', 'GMW' ),
-                      'attributes'  => array( 'size' => '40' )
-                      ), */
-                    array(
-                        'name'        => 'country_code',
-                        'std'         => '',
-                        'placeholder' => '',
-                        'label'       => __( 'Country Code', 'GMW' ),
-                        'desc'        => __( 'Enter you country code. For example for United States enter US. you can find your country code <a href="http://geomywp.com/country-code/" target="blank">here</a>', 'GMW' ),
-                        'attributes'  => array( 'size' => '5' )
-                    ),
-                    array(
-                        'name'       => 'auto_locate',
-                        'std'        => '',
-                        'label'      => __( 'Auto Locator', 'GMW' ),
-                        'cb_label'   => __( 'Use auto locator', 'GMW' ),
-                        'desc'       => __( 'This feature will automatically try to get the user\'s current location when first visiting the website. If location found it will be saved via cookies and later will be used to auto display results.', 'GMW' ),
-                        'type'       => 'checkbox',
-                        'attributes' => array()
-                    ),
-                    array(
-                        'name'     => 'results_page',
-                        'std'      => '0',
-                        'label'    => __( 'Results Page', 'GMW' ),
-                        'cb_label' => '',
-                        'desc'     => __( 'This page will display the search results ( for any of your forms ) when using the "GMW Search Form" widget.
-												The plugin will first check if a results page was set in the form settings and if so the results will be displayed in that page. Otherwise, if no results page
-												was set in the form settings the results will be displayed in the page you choose from the select box.
-												Choose the page from the dropdown menu and paste the shortcode [gmw form="results"] into it.', 'GMW' ),
-                        'type'     => 'select',
-                        'options'  => $this->get_pages()
-                    ),
-                ),
-            ),
-            'features'         => array(
-                __( 'Features', 'GMW' ),
-                array(
-                    array(
-                        'name'       => 'current_location_shortcode',
-                        'std'        => '',
-                        'label'      => __( 'Current Location Shortcode/widget', 'GMW' ),
-                        'cb_label'   => __( 'Yes', 'GMW' ),
-                        'desc'       => __( 'Turn on/off the current location shortcode and widget.', 'GMW' ),
-                        'type'       => 'checkbox',
-                        'attributes' => array()
-                    ),
-                    array(
-                        'name'       => 'search_form_widget',
-                        'std'        => '',
-                        'label'      => __( 'Search Form Widget', 'GMW' ),
-                        'cb_label'   => __( 'Yes', 'GMW' ),
-                        'desc'       => __( 'Turn on/off the search form widget.', 'GMW' ),
-                        'type'       => 'checkbox',
-                        'attributes' => array()
-                    ),
-                ),
-            ),
-                )
-        );
+    	$this->settings = apply_filters( 'gmw_admin_settings', array(
+    			'general_settings' => array(
+    					__( 'General Settings', 'GMW' ),
+    					array(
+    							array(
+    									'name'        => 'google_api',
+    									'std'         => '',
+    									'placeholder' => __( 'Enter your google api key here', 'GMW' ),
+    									'label'       => __( 'Google Maps API V3 Key', 'GMW' ),
+    									'desc'        => __( 'This is optional but will let you track your API requests. you can obtain your free Goole API key <a href="https://code.google.com/apis/console/" target="_blank">here</a>.', 'GMW' ),
+    									'attributes'  => array( 'size' => '40' )
+    							),
+    							/*
+    							 array(
+    							 		'name'        => 'bing_api',
+    							 		'std'         => '',
+    							 		'placeholder' => __('Enter your Bing api key here', 'GMW'),
+    							 		'label'       => __( 'Bing Maps API Key', 'GMW' ),
+    							 		'desc'        => __( 'Use this feature if you often get "OVER_QUERY_LIMIT" response from google when using the search form.
+    							 				OVER_QUERY_LIMIT happens when there are too many calls to Google API from the same IP at a very short time or when the per day limit had been used.
+    							 				This will prevent the address entered in the search form from being geocoded and so no results will return.
+    							 				You can read about Bing services and obtain your key <a href="http://www.bingmapsportal.com/application/" target="_blank">Here</a>', 'GMW' ),
+    							 		'attributes'  => array( 'size' => '40' )
+    							 ), */
+    							array(
+    									'name'        => 'language_code',
+    									'std'         => '',
+    									'placeholder' => '',
+    									'label'       => __( 'Google API Language', 'GMW' ),
+    									'desc'        => __( 'Set the language to be used with Google Places address auto-complete and with Google Maps API. The language codes can be found','GMW'). '<a href="https://spreadsheets.google.com/spreadsheet/pub?key=0Ah0xU81penP1cDlwZHdzYWkyaERNc0xrWHNvTTA1S1E&gid=1" target="_blank"> '.__('here', 'GJM' ) .'</a>',
+    									'attributes'  => array( 'size' => '5' )
+    							),
+    							array(
+    									'name'        => 'country_code',
+    									'std'         => '',
+    									'placeholder' => '',
+    									'label'       => __( 'Country Code', 'GMW' ),
+    									'desc'        => __( 'Enter you country code. For example for United States enter US. you can find your country code <a href="http://geomywp.com/country-code/" target="blank">here</a>', 'GMW' ),
+    									'attributes'  => array( 'size' => '5' )
+    							),
+    							array(
+    									'name'       => 'auto_locate',
+    									'std'        => '',
+    									'label'      => __( 'Auto Locator', 'GMW' ),
+    									'cb_label'   => __( 'Use auto locator', 'GMW' ),
+    									'desc'       => __( 'This feature will automatically try to get the user\'s current location when first visiting the website. If location found it will be saved via cookies and later will be used to auto display results.', 'GMW' ),
+    									'type'       => 'checkbox',
+    									'attributes' => array()
+    							),
+    							array(
+    									'name'     => 'results_page',
+    									'std'      => '0',
+    									'label'    => __( 'Results Page', 'GMW' ),
+    									'cb_label' => '',
+    									'desc'     => __( 'This page will display the search results ( for any of your forms ) when using the "GMW Search Form" widget.
+    											The plugin will first check if a results page was set in the form settings and if so the results will be displayed in that page. Otherwise, if no results page
+    											was set in the form settings the results will be displayed in the page you choose from the select box.
+    											Choose the page from the dropdown menu and paste the shortcode [gmw form="results"] into it.', 'GMW' ),
+    									'type'     => 'select',
+    									'options'  => $this->get_pages()
+    							),
+    					),
+    			),
+    			'features'         => array(
+    					__( 'Features', 'GMW' ),
+    					array(
+    							array(
+    									'name'       => 'current_location_shortcode',
+    									'std'        => '',
+    									'label'      => __( 'Current Location Shortcode/widget', 'GMW' ),
+    									'cb_label'   => __( 'Yes', 'GMW' ),
+    									'desc'       => __( 'Turn on/off the current location shortcode and widget.', 'GMW' ),
+    									'type'       => 'checkbox',
+    									'attributes' => array()
+    							),
+    							array(
+    									'name'       => 'search_form_widget',
+    									'std'        => '',
+    									'label'      => __( 'Search Form Widget', 'GMW' ),
+    									'cb_label'   => __( 'Yes', 'GMW' ),
+    									'desc'       => __( 'Turn on/off the search form widget.', 'GMW' ),
+    									'type'       => 'checkbox',
+    									'attributes' => array()
+    							),
+    					),
+    			),
+    	)
+    	);
 
     }
 

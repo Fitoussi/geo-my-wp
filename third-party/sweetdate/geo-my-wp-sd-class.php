@@ -47,8 +47,8 @@ class GMW_SD_Class_Query {
         add_action( 'bp_members_directory_order_options', array( $this, 'orderby_distance' ), 5 );
         add_action( 'bp_before_members_loop', array( $this, 'members_query' ) );
 
-        add_action( 'bp_pre_user_query', array( $this, 'gmwBpDirectoryQuery' ) );
-        add_action( 'pre_user_query', array( $this, 'gmwWpDirectoryQuery' ) );
+        add_action( 'bp_pre_user_query', array( $this, 'gmwBpDirectoryQuery' ), 99 );
+        add_action( 'pre_user_query', array( $this, 'gmwWpDirectoryQuery' ), 99 );
 
         add_action( 'bp_after_directory_members_list', array( $this, 'trigger_js_and_maps' ) );
         add_action( 'bp_members_inside_avatar', array( $this, 'get_distance' ) );
@@ -131,7 +131,7 @@ class GMW_SD_Class_Query {
      *  Members Query
      */
     function members_query() {
-        global $wpdb;
+        global $wpdb, $bp;
 
         //set join type based on the query. if no address entered will join all members even if they have no location
         $tJoin  = "RIGHT";
@@ -175,40 +175,43 @@ class GMW_SD_Class_Query {
         } elseif ( $this->formData['orderby'] == 'distance' ) {
             $this->formData['orderby'] = 'active';
         }
-
+		
+     
+        $users_table   = ( $bp->version < '2.0' ) ? $wpdb->usermeta : $bp->members->table_name_last_activity;
+        
         if ( $this->formData['orderby'] == 'alphabetical' ) {
 
-            if ( !bp_disable_profile_sync() || !bp_is_active( 'xprofile' ) ) {
+           // if ( !bp_disable_profile_sync() || !bp_is_active( 'xprofile' ) ) {
 
                 $this->clauses['bp_user_query']['select']  = "SELECT DISTINCT u.ID as id , gmwlocations.member_id";
                 $this->clauses['bp_user_query']['from']    = " FROM wppl_friends_locator gmwlocations {$tJoin} JOIN {$wpdb->users} u ON gmwlocations.member_id = u.ID";
-                $this->clauses['bp_user_query']['where']   = "WHERE u.meta_key = 'last_activity'";
                 $this->clauses['bp_user_query']['orderby'] = "ORDER BY u.display_name";
                 $this->clauses['bp_user_query']['order']   = "ASC";
 
                 // When profile sync is disabled, alphabetical sorts must happen against
                 // the xprofile table
-            } else {
-                global $bp;
+           /* } else {
 
                 $fullname_field_id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE name = %s", bp_xprofile_fullname_field_name() ) );
 
                 $this->clauses['bp_user_query']['select']  = "SELECT DISTINCT u.user_id as id , gmwlocations.member_id";
                 $this->clauses['bp_user_query']['from']    = " FROM wppl_friends_locator gmwlocations {$tJoin} JOIN {$bp->profile->table_name_data} u ON gmwlocations.member_id = id";
-                $this->clauses['bp_user_query']['where']   = "WHERE u.field_id = {$fullname_field_id} ";
+                //$this->clauses['bp_user_query']['where']   = "WHERE u.field_id = {$fullname_field_id} ";
                 $this->clauses['bp_user_query']['orderby'] = "ORDER BY u.value";
                 $this->clauses['bp_user_query']['order']   = "ASC";
-            }
+            } */
         } elseif ( $this->formData['orderby'] == 'newest' || $this->formData['orderby'] == 'active' || $this->formData['orderby'] == '' ) {
-	
+        	
+        	$orderby = ( $bp->version < '2.0' ) ? 'u.meta_value' : 'u.date_recorded';
+        	
             $this->clauses['bp_user_query']['select'] = "SELECT DISTINCT u.user_id , gmwlocations.member_id";
-            $this->clauses['bp_user_query']['from']   = " FROM wppl_friends_locator gmwlocations {$tJoin} JOIN {$wpdb->usermeta} u ON gmwlocations.member_id = u.user_id";
-            $this->clauses['bp_user_query']['where']  = "WHERE u.meta_key = 'last_activity'";
+            $this->clauses['bp_user_query']['from']   = " FROM wppl_friends_locator gmwlocations {$tJoin} JOIN {$users_table} u ON gmwlocations.member_id = u.user_id";
+            //$this->clauses['bp_user_query']['where']  = "u.component = 'members' AND u.type = 'last_activity''";
 
             if ( $this->formData['orderby'] == 'newest' ) {
                 $this->clauses['bp_user_query']['orderby'] = "ORDER BY u.user_id";
             } else {
-                $this->clauses['bp_user_query']['orderby'] = "ORDER BY u.meta_value";
+                $this->clauses['bp_user_query']['orderby'] = "ORDER BY {$orderby}";
             }
 
             $this->clauses['bp_user_query']['order'] = "DESC";
@@ -217,8 +220,8 @@ class GMW_SD_Class_Query {
         } elseif ( $this->formData['orderby'] == 'distance' ) {
 
             $this->clauses['bp_user_query']['select'] = "SELECT gmwlocations.member_id, u.user_id as id";
-            $this->clauses['bp_user_query']['from']   = " FROM wppl_friends_locator gmwlocations INNER JOIN {$wpdb->usermeta} u ON gmwlocations.member_id = u.user_id";
-            $this->clauses['bp_user_query']['where']  = "WHERE u.meta_key = 'last_activity'";
+            $this->clauses['bp_user_query']['from']   = " FROM wppl_friends_locator gmwlocations INNER JOIN {$users_table} u ON gmwlocations.member_id = u.user_id";
+            //$this->clauses['bp_user_query']['where']  = "WHERE u.meta_key = 'last_activity'";
 
             if ( $this->gmwSD['your_lat'] != false ) {
 
@@ -263,20 +266,27 @@ class GMW_SD_Class_Query {
     }
 
     public function gmwBpDirectoryQuery( $gmwBpQuery ) {
-
+ 
         $gmwBpQuery->query_vars['count_total'] = 'sql_calc_found_rows';
 
-        $gmwBpQuery->uid_clauses['select'] = $this->clauses['bp_user_query']['select'];
+        $gmwBpQuery->uid_clauses['select']  = $this->clauses['bp_user_query']['select'];
         $gmwBpQuery->uid_clauses['select'] .= $this->clauses['bp_user_query']['from'];
-        $gmwBpQuery->uid_clauses['where']  = $this->clauses['bp_user_query']['where'];
-
+        
+        if ( $this->formData['orderby'] != 'alphabetical' ) {
+       		$gmwBpQuery->uid_clauses['where']   .= $this->clauses['bp_user_query']['where'];
+        } else {
+        	
+        	$gmwBpQuery->uid_clauses['where'] = ( isset( $gmwBpQuery->query_vars['include'] ) && !empty( $gmwBpQuery->query_vars['include'] ) ) ? "WHERE u.ID IN ( ".implode(',',$gmwBpQuery->query_vars['include']).")" : '';
+        }
+        
+        
         if ( isset( $this->clauses['bp_user_query']['having'] ) ) {
             $gmwBpQuery->uid_clauses['where'] .= $this->clauses['bp_user_query']['having'];
-        }
-
+        } 
+        
         $gmwBpQuery->uid_clauses['orderby'] = $this->clauses['bp_user_query']['orderby'];
         $gmwBpQuery->uid_clauses['order']   = $this->clauses['bp_user_query']['order'];
-
+        
         return $gmwBpQuery;
 
     }

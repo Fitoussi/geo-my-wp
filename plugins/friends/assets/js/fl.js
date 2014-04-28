@@ -1,32 +1,32 @@
 jQuery(document).ready(function($) {
 	
 	if ( $.trim($('#gmw-formatted-address').val()).length == 0 || $.trim($('#gmw-lat').val()).length == 0 || $.trim($('#gmw-lng').val()).length == 0 ) {
-		$('#gmw-fl-location-form input[type=text]').val('');
-		$('#gmw-fl-get-address').addClass('changed');
-		$('#gmw-fl-get-latlng').addClass('changed');
+		$('#gmw-yl-form input[type=text]').val('');
+		$('#gmw-yl-get-address').addClass('changed');
+		$('#gmw-yl-get-latlng').addClass('changed');
 	}
 	//remove lat/lng fields when address changes
 	$('#gmw-street, #gmw-city, #gmw-state, #gmw-zipcode, #gmw-country').on("input", function() {
-		$("#gmw-lat, #gmw-lng, #gmw-fl-address-autocomplete, #gmw-fl-your-location").val('');
-		$('#gmw-fl-get-latlng').addClass('changed');
+		$("#gmw-lat, #gmw-lng, #gmw-yl-autocomplete, #gmw-yl-field").val('');
+		$('#gmw-yl-get-latlng').addClass('changed');
 	});
 	
 	//remove address fields when lat/lng fields change
 	$('#gmw-lat, #gmw-lng').on("input", function() {
-		$('#gmw-street, #gmw-city, #gmw-state, #gmw-state-long, #gmw-zipcode, #gmw-country, #gmw-country-long, #gmw-apt, #gmw-address, #gmw-formatted-address, #gmw-fl-address-autocomplete, #gmw-fl-your-location').val('');
-		$('#gmw-fl-get-address').addClass('changed');
+		$('#gmw-street, #gmw-city, #gmw-state, #gmw-state-long, #gmw-zipcode, #gmw-country, #gmw-country-long, #gmw-apt, #gmw-address, #gmw-formatted-address, #gmw-yl-autocomplete, #gmw-yl-field').val('');
+		$('#gmw-yl-get-address').addClass('changed');
 	});
     
-	$('#gmw-fl-location-edit').click(function() {
-		$('#gmw-fl-location-form').slideToggle(function() {
+	$('#gmw-yl-edit').click(function() {
+		$('#gmw-yl-form').slideToggle(function() {
 			
-			if ( $('#gmw-fl-location-edit').hasClass('first') ) {
+			if ( $('#gmw-yl-edit').hasClass('first') ) {
 				
-				$('#gmw-fl-location-edit').removeClass('first');
+				$('#gmw-yl-edit').removeClass('first');
 				//set initial map
 				var latLng = ( $.trim($('#gmw-lat').val()).length > 0 ) ? new google.maps.LatLng( $('#gmw-lat').val(), $('#gmw-lng').val() ) : new google.maps.LatLng( '40.7827096', '-73.9653099' );
 				
-				gmwFlLocationMap = new google.maps.Map(document.getElementById('gmw-fl-location-map'), {
+				gmwFlLocationMap = new google.maps.Map(document.getElementById('gmw-yl-map'), {
 					zoom: 10,
 					center:latLng,
 				});	
@@ -40,7 +40,7 @@ jQuery(document).ready(function($) {
 				
 				//when dragging the marker on the map
 				google.maps.event.addListener( gmwFlMarker, 'dragend', function(evt){
-					$('#gmw-fl-get-latlng, #gmw-fl-get-address').removeClass('changed');
+					$('#gmw-yl-get-latlng, #gmw-yl-get-address').removeClass('changed');
 					$("#gmw-lat").val( evt.latLng.lat() );
 					$("#gmw-lng").val( evt.latLng.lng() );
 					returnAddress( evt.latLng.lat(), evt.latLng.lng(), false );  
@@ -49,27 +49,29 @@ jQuery(document).ready(function($) {
 		});
 	});
 	
-        $('.gmw-fl-location-tab').click(function() {
-            $('.gmw-fl-location-tab').removeClass('active');
-            $(this).addClass('active');
-            $('.gmw-fl-location-tab-wrapper').hide();
-            var tabId = $(this).attr('id');
-            $('#'+tabId +'-wrapper').show();
-        });
+    $('.gmw-yl-tab').click(function() {
+        $('.gmw-yl-tab').removeClass('active');
+        $(this).addClass('active');
+        $('.gmw-yl-tab-wrapper').hide();
+        $('.update-btn-wrapper').hide();
+        var tabId = $(this).attr('id');
+        $('#'+tabId +'-wrapper').show();
+        $('#'+tabId +'-btn-wrapper').show();
+    });
        
-	$('#gmw-fl-location-delete').click(function() {
+	$('#gmw-yl-delete').click(function() {
 		delete_location();
 	});
 	
 	//add class when click on update location button
-	$('#gmw-fl-get-latlng, #gmw-fl-get-address').click(function() {
-		$('#gmw-fl-update-location').addClass('update');
+	$('#gmw-yl-get-latlng, #gmw-yl-get-address').click(function() {
+		$('#gmw-yl-update-location').addClass('update');
 	});
 	
     //locator button clicked 
-    $('#gmw-fl-location-locate-me-btn').click(function(){
-    	$('#gmw-fl-get-latlng, #gmw-fl-get-address').removeClass('changed');
-    	$("#gmw-fl-locator-spinner").show();
+    $('#gmw-yl-locator-btn').click(function(){
+    	$('#gmw-yl-get-latlng, #gmw-yl-get-address').removeClass('changed');
+    	$("#gmw-yl-spinner").show();
   		getLocationBP();
   	}); 
   	
@@ -80,7 +82,7 @@ jQuery(document).ready(function($) {
     		navigator.geolocation.getCurrentPosition( showPosition, showError, {timeout:10000} );
 		} else {
    	 		alert("Geolocation is not supported by this browser.");
-   	 		$("#gmw-fl-locator-spinner").hide();
+   	 		$("#gmw-yl-spinner").hide();
    		}
 		
 	}
@@ -93,7 +95,7 @@ jQuery(document).ready(function($) {
 		$("#gmw-lng").val( position.coords.longitude );
 		
   		returnAddress( position.coords.latitude, position.coords.longitude, true );
-  		$("#gmw-fl-locator-spinner").hide();
+  		$("#gmw-yl-spinner").hide();
   		
 	}
 
@@ -114,11 +116,9 @@ jQuery(document).ready(function($) {
       			alert("An unknown error occurred.");
       		break;
 		}
-		$("#gmw-fl-locator-spinner").hide();
+		$("#gmw-yl-spinner").hide();
 	}
 	
-	
-
 	//update map
 	function update_map() {
 		
@@ -135,7 +135,7 @@ jQuery(document).ready(function($) {
 		
 		//when dragging the marker on the map
 		google.maps.event.addListener( gmwFlMarker, 'dragend', function(evt){
-			$('#gmw-fl-get-latlng, #gmw-fl-get-address').removeClass('changed');
+			$('#gmw-yl-get-latlng, #gmw-yl-get-address').removeClass('changed');
 			$("#gmw-lat").val( evt.latLng.lat() );
 			$("#gmw-lng").val( evt.latLng.lng() );
 			returnAddress( evt.latLng.lat(), evt.latLng.lng(), false );  
@@ -144,64 +144,46 @@ jQuery(document).ready(function($) {
 	
 	//autocomplete
 	function gmwAutocompleteInit() {
-		
-		jQuery('#gmw-fl-address-autocomplete').autocomplete({
-	
-			source: function(request,response) {
-	
-				geocoder = new google.maps.Geocoder();
-				// the geocode method takes an address or LatLng to search for
-				// and a callback function which should process the results into
-				// a format accepted by jqueryUI autocomplete
-				geocoder.geocode( {'address': request.term }, function(results, status) {
-					response(jQuery.map(results, function(item) {
-						return {
-							label: item.formatted_address, // appears in dropdown box
-							value: item.formatted_address, // inserted into input element when selected
-							geocode: item                  // all geocode data: used in select callback event
-						};
-					}));
-				});
-			},
-	
-			// event triggered when drop-down option selected
-			select: function(event,ui){
 				
-				if (jQuery('#gmw-fl-address-autocomplete').length == 1 ) {
-					//update_ui(  ui.item.value, ui.item.geocode.geometry.location );
-					//update_map( ui.item.geocode.geometry );
-					$('#gmw-fl-get-latlng, #gmw-fl-get-address').removeClass('changed');
-					$('#gmw-street, #gmw-city, #gmw-state, #gmw-state-long, #gmw-zipcode, #gmw-country, #gmw-country-long, #gmw-apt, #gmw-address, #gmw-formatted-address').val('');
-					
-					$("#gmw-lat").val(ui.item.geocode.geometry.location.lat());
-	    			$("#gmw-lng").val(ui.item.geocode.geometry.location.lng());
+		var input 	= document.getElementById('gmw-yl-autocomplete');
 
-					breakAddress(ui.item.geocode);
-					update_map();
-	
-				}
+		var options = {
+	        types: ['geocode'],
+	    };
+	    
+	    var autocomplete = new google.maps.places.Autocomplete(input, options);
+	    
+	    google.maps.event.addListener(autocomplete, 'place_changed', function(e) {
+	    	
+	    	var place = autocomplete.getPlace();
+
+			if (!place.geometry) {
+				return;
+			}
+			
+			if ( jQuery('#gmw-yl-autocomplete').length == 1 ) {
+				//update_ui(  ui.item.value, ui.item.geocode.geometry.location );
+				//update_map( ui.item.geocode.geometry );
+				$('#gmw-yl-get-latlng, #gmw-yl-get-address').removeClass('changed');
+				$('#gmw-street, #gmw-city, #gmw-state, #gmw-state-long, #gmw-zipcode, #gmw-country, #gmw-country-long, #gmw-apt, #gmw-address, #gmw-formatted-address').val('');
 				
+				$("#gmw-lat").val(place.geometry.location.lat());
+    			$("#gmw-lng").val(place.geometry.location.lng());
+
+				breakAddress(place);
+				update_map();
+
 			}
-		});
-		
-		// triggered when user presses a key in the address box
-		jQuery('#gmw-fl-address-autocomplete').bind('keydown', function(event) {
-			if(event.keyCode == 13) {
-				// ensures dropdown disappears when enter is pressed
-				jQuery('#gmw-fl-address-autocomplete').autocomplete("disable");
-			} else {
-				// re-enable if previously disabled above
-				jQuery('#gmw-fl-address-autocomplete').autocomplete("enable");
-			}
-		});
-		
+					
+	    });
+	   
 	}
 	gmwAutocompleteInit();
 	
 	 // convert lat/long to an address button 
-	$('#gmw-fl-get-address').click( function() {
+	$('#gmw-yl-get-address').click( function() {
 		
-		if( !$('#gmw-fl-get-address').hasClass('changed') ) return saveLocation();
+		if( !$('#gmw-yl-get-address').hasClass('changed') ) return saveLocation();
 		
  		var gotLat  = $("#gmw-lat").val();
    	 	var gotLng  = $("#gmw-lng").val();
@@ -242,7 +224,7 @@ jQuery(document).ready(function($) {
 		
 		$("#address-tab-wrapper :text").val('');
 		
-		$("#gmw-fl-address-autocomplete, #gmw-formatted-address, #gmw-address, #gmw-fl-your-location").val(location.formatted_address);
+		$("#gmw-yl-autocomplete, #gmw-formatted-address, #gmw-address, #gmw-yl-field").val(location.formatted_address);
 			
 		address = location.address_components;
 		
@@ -289,13 +271,13 @@ jQuery(document).ready(function($) {
 	         } 
         }
 		
-		if ( $('#gmw-fl-update-location').hasClass('update') ) saveLocation();
+		if ( $('#gmw-yl-update-location').hasClass('update') ) saveLocation();
 	}
 
 	//convert address to lat/lng
-	$('#gmw-fl-get-latlng').click(function() {
+	$('#gmw-yl-get-latlng').click(function() {
 		
-		if( !$('#gmw-fl-get-latlng').hasClass('changed') ) return saveLocation();
+		if( !$('#gmw-yl-get-latlng').hasClass('changed') ) return saveLocation();
 						
 		$("#gmw-lat").val('');
 		$("#gmw-lng").val('');
@@ -349,12 +331,12 @@ jQuery(document).ready(function($) {
           		
        			$("#gmw-lat").val(gotLat);
        			$("#gmw-lng").val(gotLng);
-       			$("#gmw-address, #gmw-fl-your-location").val(fullAddress);
-       			$("#gmw-formatted-address, #gmw-fl-address-autocomplete").val(results[0].formatted_address);
+       			$("#gmw-address, #gmw-yl-field").val(fullAddress);
+       			$("#gmw-formatted-address, #gmw-yl-autocomplete").val(results[0].formatted_address);
        			
        			update_map();
        			
-       			if ( $('#gmw-fl-update-location').hasClass('update') ) saveLocation();
+       			if ( $('#gmw-yl-update-location').hasClass('update') ) saveLocation();
        			
     		} else {
     			
@@ -367,29 +349,36 @@ jQuery(document).ready(function($) {
     /* save location */   	
     function saveLocation() {
   	 	
-        $('.gmw-fl-location-tab').removeClass('active');
-        $('#gmw-fl-address-fields-tab').addClass('active');
-        $('.gmw-fl-location-tab-wrapper').hide();
-        $('#gmw-fl-address-fields-tab-wrapper').show();
+        $('.gmw-yl-tab').removeClass('active');
+        $('#gmw-yl-address-tab').addClass('active');
+        $('.gmw-yl-tab-wrapper').hide();
+        $('#gmw-yl-address-tab-wrapper').show();
         
-    	$(".gmw-fl-updater-spinner").show();
-    	$('#gmw-fl-get-latlng, #gmw-fl-get-address').removeClass('changed');
-    	$('#gmw-fl-update-location').removeClass('update');
+    	$("#gmw-yl-spinner").show();
+    	$('#gmw-yl-get-latlng, #gmw-yl-get-address').removeClass('changed');
     	
+    	if ( $('#gmw-yl-update-location').hasClass('update') ) {
+    		$('#gmw-yl-form').slideToggle();
+    	}
+    	$('#gmw-yl-update-location').removeClass('update');
+    	    	
 		$.ajax({
 			type       	: "post",
-			data  		: {action:'gmw_fl_update_location', 'formValues': $('#gmw-fl-location-form').serialize() },		
+			data  		: {action:'gmw_fl_update_location', 'formValues': $('#gmw-yl-form').serialize() },		
 			url        	: ajaxurl,
 			success:function(data){
 				
-				setTimeout(function() {
-					$("#gmw-fl-location-message").html(data);
-					$(".gmw-fl-updater-spinner").hide();
+				setTimeout(function() {				
+					$("#gmw-yl-spinner").hide();
+					
+					$("#gmw-yl-message p").html(data);
+					$("#gmw-yl-message").fadeToggle(function(){
+						setTimeout(function() {
+							$("#gmw-yl-message").fadeToggle();
+						},2500);
+					});
+									
    				},500);
-				
-   				setTimeout(function() {
-					$("#gmw-fl-location-message").animate({opacity:0});
-   				},2500);
 			}
 		});
 		return false;
@@ -397,24 +386,29 @@ jQuery(document).ready(function($) {
  	
     function delete_location() {
     	
-    	$('#gmw-fl-location-form input[type=text]').val('');
+    	$('#gmw-your-location-wrapper input[type=text]').val('');
     	
-    	$("#gmw-fl-delete-spinner").show();
+    	$("#gmw-yl-spinner").show();
      	
+    	if ( $('#gmw-yl-form').is( ':visible' ) ) {
+    		$('#gmw-yl-form').slideToggle();
+    	}
+    	
 		$.ajax({
 			type       	: "post",
 			data  		: {action:'gmw_fl_delete_location' },		
 			url        	: ajaxurl,
 			success:function(data){
 				
-				setTimeout(function() {
-					$("#gmw-fl-location-delete-message").html(data);
-					$("#gmw-fl-delete-spinner").hide();
-   				},500);
+				$("#gmw-yl-spinner").hide();
 				
-   				setTimeout(function() {
-					$("#gmw-fl-location-delete-message").animate({opacity:0});
-   				},2500);
+				$("#gmw-yl-message p").html(data);
+				$("#gmw-yl-message").fadeToggle(function(){
+					setTimeout(function() {
+						$("#gmw-yl-message").fadeToggle();
+					},2500);
+				});
+				
 			}
 		});
     };

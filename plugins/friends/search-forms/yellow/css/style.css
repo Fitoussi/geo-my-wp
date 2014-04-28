@@ -125,11 +125,11 @@ div.gmw-fl-yellow-form-wrapper .gmw-submit-button:hover {
 	background:#E8E979;
 }
 
-.gmw-locator-btn-wrapper .gmw-locator-submit {
+div.gmw-fl-yellow-form-wrapper .gmw-locator-btn-wrapper .gmw-locator-submit {
 	display: inline;
 }
 
-.gmw-locator-btn-wrapper img {
+div.gmw-fl-yellow-form-wrapper .gmw-locator-btn-wrapper img {
 	box-shadow: none;
 	max-height: 15px;
 	margin-left: 5px;

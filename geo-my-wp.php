@@ -3,7 +3,7 @@
   Plugin Name: GEO my WP
   Plugin URI: http://www.geomywp.com
   Description: Add location to any post types, pages or members (using Buddypress) and create an advance proximity search forms.
-  Version: 2.4.2.1
+  Version: 2.4.3
   Author: Eyal Fitoussi
   Author URI: http://www.geomywp.com
   License: GPLv2
@@ -100,7 +100,7 @@ class GEO_my_WP {
         if ( !defined( 'GMW_REMOTE_SITE_URL' ) )
             define( 'GMW_REMOTE_SITE_URL', 'https://geomywp.com' );
 
-        define( 'GMW_VERSION', '2.3.0' );
+        define( 'GMW_VERSION', '2.4.3' );
         define( 'GMW_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
         define( 'GMW_URL', untrailingslashit( plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) ) );
         define( 'GMW_IMAGES', GMW_URL . '/assets/images' );
@@ -146,7 +146,7 @@ class GEO_my_WP {
     public function actions() {
 
         //include scripts in the front end
-        add_action( 'wp_enqueue_scripts', array( $this, 'frontend_register_scripts' ) );
+        add_action( 'wp_enqueue_scripts', array( $this, 'frontend_register_scripts' ), 10 );
         add_filter( 'clean_url', array( $this, 'clean_google_url' ), 99, 3 );
 
         //main gmw shortcode
@@ -240,9 +240,13 @@ class GEO_my_WP {
      */
     public function frontend_register_scripts() {
 
+    	$googleApi = ( isset( $this->settings['general_settings']['google_api'] ) && !empty( $this->settings['general_settings']['google_api'] ) ) ? '&key=' . $this->settings['general_settings']['google_api'] : '';
+        $region	   = ( isset( $this->settings['general_settings']['country_code'] ) && !empty( $this->settings['general_settings']['country_code'] ) ) ? '&region=' .$this->settings['general_settings']['country_code'] : '';
+        $language  = ( isset( $this->settings['general_settings']['language_code'] ) && !empty( $this->settings['general_settings']['language_code'] ) ) ? '&language=' .$this->settings['general_settings']['language_code'] : '';
+    	
         //register google maps api
         if ( !wp_script_is( 'google-maps', 'enqueue' ) )
-            wp_enqueue_script( 'google-maps', '//maps.googleapis.com/maps/api/js?key=' . $this->settings['general_settings']['google_api'] . '&' . $this->settings['general_settings']['country_code'] . '&sensor=false', array(), false );
+            wp_enqueue_script( 'google-maps', ( is_ssl() ? 'https' : 'http' ) . '://maps.googleapis.com/maps/api/js?libraries=places'.$googleApi.'&sensor=false'.$region.$language, array( 'jquery' ), false );
 
         //enqueue gmw style and script
         wp_enqueue_script( 'gmw-js', GMW_URL . '/assets/js/gmw.js', array( 'jquery' ), GMW_VERSION, true );
