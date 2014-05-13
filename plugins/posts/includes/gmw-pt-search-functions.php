@@ -55,10 +55,9 @@ function gmw_pt_form_taxonomies( $gmw, $tag, $class ) {
 
     if ( count( $gmw['search_form']['post_types'] ) < 2 && ( isset( $gmw['search_form']['taxonomies'] ) ) ) :
 
-    	
         $output = '';
-
 		$orgTag = $tag;
+		
 		if ( $orgTag == 'ul' ) {
 			echo '<ul>';
 			$tag = 'li';
@@ -67,21 +66,24 @@ function gmw_pt_form_taxonomies( $gmw, $tag, $class ) {
 			$tag = 'li';
 		}
         
+		$postType = $gmw['search_form']['post_types'][0];
+		
         //output dropdown for each taxonomy 
-        foreach ( $gmw['search_form']['taxonomies'] as $tax => $values ) :
-
+        foreach ( $gmw['search_form']['taxonomies'][$postType] as $tax => $values ) :
+      
             if ( isset( $values['style'] ) && $values['style'] == 'drop' ) :
 
-                $get_tax = false;
+            	$taxonomy   = get_taxonomy( $tax );
+                $tax_value = false;
 
                 $output = '<'.$tag.' class="gmw-single-taxonomy-wrapper gmw-dropdown-taxonomy-wrapper gmw-dropdown-' . $tax . '-wrapper '.$class.'">';
 
-                $output .= '<label for="' . get_taxonomy( $tax )->rewrite['slug'] . '">' . apply_filters( 'gmw_pt_' . $gmw['ID'] . '_' . $tax . '_label', get_taxonomy( $tax )->labels->singular_name, $tax, $gmw ) . ': </label>';
+                $output .= '<label for="' . $taxonomy->rewrite['slug'] . '">' . apply_filters( 'gmw_pt_' . $gmw['ID'] . '_' . $tax . '_label', $taxonomy->labels->singular_name, $tax, $gmw ) . ': </label>';
 
                 if ( isset( $_GET['tax_' . $tax] ) )
-                    $get_tax = $_GET['tax_' . $tax];
+                    $tax_value = $_GET['tax_' . $tax];
 
-                $args = array(
+                $args = apply_filters( 'gmw_pt_dropdown_taxonomy_args', array(
                     'taxonomy'        => $tax,
                     'echo'            => false,
                     'hide_empty'      => 1,
@@ -91,16 +93,15 @@ function gmw_pt_form_taxonomies( $gmw, $tag, $class ) {
                     'class'           => 'gmw-dropdown-' . $tax . ' gmw-dropdown-taxonomy',
                     'id'              => $tax . '-tax',
                     'name'            => 'tax_' . $tax,
-                    'selected'        => $get_tax,
+                    'selected'        => $tax_value,
                     'show_option_all' => __( ' - All - ', 'GMW' ),
-                );
+                ), $gmw, $taxonomy );
 
-                $args = apply_filters( 'gmw_pt_dropdown_taxonomy_args', $args, $gmw );
                 $output .= wp_dropdown_categories( $args );
 
                 $output .= '</'.$tag.'>';
 
-                echo apply_filters( 'gmw_search_form_taxonomy', $output, $gmw, $args, $tag, $class );
+                echo apply_filters( 'gmw_search_form_taxonomy', $output, $gmw, $args, $tag, $class, $tax, $taxonomy );
 
             endif;
 
@@ -292,14 +293,16 @@ function gmw_pt_query_taxonomies( $tax_args, $gmw ) {
         return $tax_args;
 
     $ptc = ( isset( $_GET['gmw_post'] ) ) ? count( explode( " ", $_GET['gmw_post'] ) ) : count( $gmw['search_form']['post_types'] );
+
     if ( isset( $ptc ) && $ptc > 1 )
         return $tax_args;
 
-    $rr      = 0;
-    $get_tax = false;
-    $args    = array( 'relation' => 'AND' );
-
-    foreach ( $gmw['search_form']['taxonomies'] as $tax => $values ) :
+    $rr       = 0;
+    $get_tax  = false;
+    $args     = array( 'relation' => 'AND' );
+    $postType = $gmw['search_form']['post_types'][0];
+    
+    foreach ( $gmw['search_form']['taxonomies'][$postType] as $tax => $values ) :
 
         if ( $values['style'] == 'drop' ) :
             $get_tax = false;
@@ -379,40 +382,42 @@ function gmw_pt_get_taxonomies( $gmw, $post ) {
     if ( !isset( $gmw['search_results']['custom_taxes'] ) )
         return;
     
-    if ( isset( $gmw['search_form']['taxonomies'] ) ) :
+    if ( !isset( $gmw['search_form']['taxonomies'] ) ) 
+        return;
+	
+    $output ='';
+    
+    foreach ( $gmw['search_form']['taxonomies'] as $post_type => $taxes ) {
 
-        $output = '';
+    	foreach ( $taxes as $tax => $value ) {
+	    	
+	    	$terms = get_the_terms( $post->ID, $tax );
+	
+	    	if ( $terms && !is_wp_error( $terms ) ) {
+	
+	    		$termsArray = array();
+	    		$the_tax = get_taxonomy( $tax );
+	       
+	    		foreach ( $terms as $term ) {
+	    			$termsArray[] = $term->name;
+	    		}
+	
+	    		//$taxTerms = '<span class="gmw-terms-wrapper gmw-'.$the_tax->rewrite['slug'].'-terms">' .join( ", ", $termsArray ).'</div>';
+	    		//$taxTerms = apply_filters( 'gmw_pt_results_taxonomies_terms', $taxTerms , $gmw, $post, $the_tax, $termsArray, $terms );
+	
+	    		$tax_output  = '<div class="gmw-taxes gmw-taxonomy-' . $the_tax->rewrite['slug'] . '">';
+	    		$tax_output .= 	'<span>' . $the_tax->labels->singular_name . ': </span>';
+	    		$tax_output .= 	'<span class="gmw-terms-wrapper gmw-'.$the_tax->rewrite['slug'].'-terms">'.join( ", ", $termsArray ).'</span>';
+	    		$tax_output .= '</div>';
+	
+	    		$output .= apply_filters( 'gmw_pt_results_taxonomy', $tax_output, $gmw, $post, $the_tax, $terms, $termsArray );
+	
+	    	}
+    	}
 
-        foreach ( $gmw['search_form']['taxonomies'] as $tax => $style ) :
+    }
 
-            $terms = get_the_terms( $post->ID, $tax );
-
-            if ( $terms && !is_wp_error( $terms ) ) :
-
-                $termsArray = array();
-            	$the_tax = get_taxonomy( $tax );
-            	
-                foreach ( $terms as $term ) {
-                    $termsArray[] = $term->name;
-                }
-
-                //$taxTerms = '<span class="gmw-terms-wrapper gmw-'.$the_tax->rewrite['slug'].'-terms">' .join( ", ", $termsArray ).'</div>';
-                //$taxTerms = apply_filters( 'gmw_pt_results_taxonomies_terms', $taxTerms , $gmw, $post, $the_tax, $termsArray, $terms );
-                
-                $taxonomy  = '<div class="gmw-taxes gmw-taxonomy-' . $the_tax->rewrite['slug'] . '">';
-                $taxonomy .= 	'<span>' . $the_tax->labels->singular_name . ': </span>';
-                $taxonomy .= 	'<span class="gmw-terms-wrapper gmw-'.$the_tax->rewrite['slug'].'-terms">'.join( ", ", $termsArray ).'</span>';
-                $taxonomy .= '</div>';
-                
-                $output .= apply_filters( 'gmw_pt_results_taxonomy', $taxonomy, $gmw, $post, $the_tax, $terms, $termsArray );
-
-            endif;
-
-        endforeach;
-
-        return $output;
-
-    endif;
+   	return $output;
 
 }
 
@@ -541,8 +546,12 @@ function gmw_pt_get_directions( $gmw, $post, $title ) {
     if ( !isset( $gmw['search_results']['get_directions'] ) )
         return;
 
-    $region = ( WPLANG ) ? explode( '_', WPLANG ) : array( 'en', 'US' );
-    return apply_filters( 'gmw_pt_get_directions_link', '<span class="get-directions"><a href="http://maps.google.com/maps?f=d&hl=' . $region[0] . '&region=' . $region[1] . '&doflg=' . $gmw['units_array']['map_units'] . '&geocode=&saddr=' . $gmw['org_address'] . '&daddr=' . str_replace( " ", "+", $post->address ) . '&ie=UTF8&z=12" target="_blank">' . $title . '</a></span>', $gmw, $post );
+    $settings = get_option( 'gmw_options' );
+    
+    $region	   = ( isset( $settings['general_settings']['country_code'] ) && !empty( $settings['general_settings']['country_code'] ) ) ? '&region=' .$settings['general_settings']['country_code'] : '';
+    $language  = ( isset( $settings['general_settings']['language_code'] ) && !empty( $settings['general_settings']['language_code'] ) ) ? '&hl=' .$settings['general_settings']['language_code'] : '';
+    
+    return apply_filters( 'gmw_pt_get_directions_link', '<a class="get-directions" title="Get Directions" href="http://maps.google.com/maps?f=d'. $language . '' . $region . '&doflg=' . $gmw['units_array']['map_units'] . '&geocode=&saddr=' . $gmw['org_address'] . '&daddr=' . str_replace( " ", "+", $post->formatted_address ) . '&ie=UTF8&z=12" target="_blank">' . $title . '</a>', $gmw, $post );
 
 }
 
@@ -752,7 +761,8 @@ class GMW_PT_Search_Query extends GMW {
                     'fax'               => __( 'Fax: ', 'GMW' ),
                     'email'             => __( 'Email: ', 'GMW' ),
                     'website'           => __( 'website: ', 'GMW' ),
-                    'directions'        => __( 'Get Directions: ', 'GMW' )
+                    'directions'        => __( 'Get Directions: ', 'GMW' ),
+                	'your_location'     => __( 'Your Location ', 'GMW' )
                 );
 
                 $this->form = apply_filters( 'gmw_pt_form_before_map', $this->form, $gmw_query, $this->settings );

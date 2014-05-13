@@ -7,7 +7,9 @@
  */
 function gmw_location_record_activity($args) {
     global $bp;
-
+	
+    $settings = get_option( 'gmw_options' );
+    
     if (!function_exists('bp_activity_add'))
         return false;
 
@@ -34,12 +36,13 @@ function gmw_location_record_activity($args) {
     $cState   = ( isset($_COOKIE['gmw_state']) ) ? urldecode($_COOKIE['gmw_state']) : false;
     $cCountry = ( isset($_COOKIE['gmw_country']) ) ? urldecode($_COOKIE['gmw_country']) : false;
 
-    $region = ( WPLANG ) ? explode('_', WPLANG) : array('en', 'US');
-
+    $region	   = ( isset( $settings['general_settings']['country_code'] ) && !empty( $settings['general_settings']['country_code'] ) ) ? '&region=' .$settings['general_settings']['country_code'] : '';
+    $language  = ( isset( $settings['general_settings']['language_code'] ) && !empty( $settings['general_settings']['language_code'] ) ) ? '&hl=' .$settings['general_settings']['language_code'] : '';
+    	
     $activity_id = bp_activity_add(array(
         //'id' => $id, 
         'user_id'           => $bp->loggedin_user->id,
-        'action'            => sprintf(__('%s Updated new location at <a target="_blank" href="http://maps.google.com/maps?f=d&hl=' . $region[0] . '&region=' . $region[1] . '&geocode=&saddr=' . $location . '&daddr=' . $cCity . ' ' . $cState . ' ' . $cCountry . '&ie=UTF8&z=12" >' . $location . '</a>', 'GMW'), $from_user_link),
+        'action'            => sprintf(__('%s Updated new location at <a target="_blank" href="http://maps.google.com/maps?f=d' . $language . '' .$region . '&geocode=&saddr=' . $location . '&daddr=' . $cCity . ' ' . $cState . ' ' . $cCountry . '&ie=UTF8&z=12" >' . $location . '</a>', 'GMW'), $from_user_link),
         'content'           => $content,
         'primary_link'      => $primary_link,
         'component'         => $component,

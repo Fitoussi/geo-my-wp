@@ -45,6 +45,8 @@
                         <span class="radius-dis">(<?php echo gmw_pt_by_radius( $gmw, $post ); ?>)</span>
                     </h2>
                 </div>
+                
+                <?php do_action( 'gmw_posts_loop_after_title' , $gmw, $post ); ?>
 
                 <!--  Thumbnail -->
                 <div id="wppl-thumb" class="wppl-thumb">
@@ -56,6 +58,8 @@
                     <?php gmw_pt_excerpt( $gmw, $post ); ?> 
                 </div>
 
+                <?php do_action( 'gmw_posts_loop_after_content' , $gmw, $post ); ?>
+                
                 <!--  taxonomies -->
                 <div id="wppl-taxes-wrapper" class="wppl-taxes-wrapper">
                     <?php gmw_pt_taxonomies( $gmw, $post ); ?>
@@ -92,6 +96,8 @@
                     </div><!-- info right -->
 
                 </div> <!-- info -->
+                
+                <?php do_action( 'gmw_posts_loop_post_end' , $gmw, $post ); ?>
 
             </div> <!--  single- wrapper ends -->
 

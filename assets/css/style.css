@@ -19,6 +19,8 @@
 	border-right: 1px solid #BBB;
 	border-left: 1px solid #DDD;
 	border-top: 1px solid #EEE;
+	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;    
 	box-sizing: border-box;
 }
 
@@ -56,6 +58,37 @@
 .gmw-geocode-error p {
 	background-color: #FFDDDD;
 	border: 1px solid #CC4222;
+}
+
+.gmw-form-wrapper input[type="text"] {
+	-ms-word-break: normal !important;
+	word-break: normal !important;
+	word-break :normal !important;
+	-webkit-hyphens: none !important;
+	-moz-hyphens: none !important;
+	hyphens: none !important;
+}
+
+/* single location shortcode */
+
+.gmw-single-post-sc-wrapper {
+	
+}
+
+.gmw-single-post-sc-wrapper .map-wrapper {
+	border: 1px solid #CCC;
+	padding: 5px;
+	background: #F1F1F1;
+	display: inline-block;
+	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;    
+	box-sizing: border-box;
+	position: relative;
+}
+
+.gmw-single-post-sc-wrapper .distance-wrapper p {
+	margin:0px;
+	padding:0px;
 }
 
 /* Loading scren */

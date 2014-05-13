@@ -70,6 +70,8 @@
 					
 				</header><!-- .entry-header -->
 			
+				<?php do_action( 'gmw_posts_loop_after_title' , $gmw, $post ); ?>
+			
 				<div class="entry-content">
 					<?php
 						the_content( __( 'Continue reading <span class="meta-nav">&rarr;</span>', 'twentyfourteen' ) );
@@ -81,7 +83,9 @@
 						) );
 					?>
 				</div><!-- .entry-content -->
-			
+				
+				<?php do_action( 'gmw_posts_loop_after_content' , $gmw, $post ); ?>
+				
 				<?php the_tags( '<footer class="entry-meta"><span class="tag-links">', '', '</span></footer>' ); ?>
 			
 				<?php do_action( 'gmw_posts_loop_post_end' , $gmw, $post ); ?>

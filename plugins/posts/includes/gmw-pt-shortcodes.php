@@ -16,22 +16,25 @@ class GMW_Single_Location {
 
     }
 
-    public function get_single_location( $single ) {
+    public function get_single_location( $args) {
 
-        //default shortcode attributes
-        extract(
-                shortcode_atts(
-                        array(
-            'map'             => 1,
-            'map_height'      => '250px',
-            'map_width'       => '250px',
-            'map_type'        => 'ROADMAP',
-            'zoom_level'      => 13,
-            'additional_info' => 'address,phone,fax,email,website',
-            'post_id'         => 0,
-            'directions'      => 1
-                        ), $single )
-        );
+    	//default shortcode attributes
+    	extract(
+    			shortcode_atts(
+    					array(
+    							'post_id'         => 0,
+    							'post_title'	  => 1,
+    							'distance'		  => 1,
+    							'distance_unit'	  => 'm',
+    							'map'             => 1,
+    							'map_height'      => '250px',
+    							'map_width'       => '250px',
+    							'map_type'        => 'ROADMAP',
+    							'zoom_level'      => 13,
+    							'additional_info' => 'address,phone,fax,email,website',
+    							'directions'      => 1
+    					), $args )
+    	);
 
         $scID = rand( 5, 15 );
 
@@ -52,37 +55,77 @@ class GMW_Single_Location {
         if ( $post_info == false )
             return;
 
-        $location_info = '';
-        $location_info .= '<div id="gmw-single-post-sc-' . $scID . '-wrapper" class="gmw-single-post-sc-wrapper">';
+        $location_wrap_start = '<div id="gmw-single-post-sc-' . $scID . '-wrapper" class="gmw-single-post-sc-wrapper">';
+       
+        $location_title = '';
+        if ( $post_title == 1 ) {
+        	$location_title = '<h3>'. get_the_title($post_id) .'</h3>';
+        } 
+        
+        $location_distance = '';
+        $distanceOK = 0;
+        $yLat		= 0;
+        $yLng		= 0;
+        
+        if ( $distance == 1 && isset( $_COOKIE['gmw_lat'] ) && !empty( $_COOKIE['gmw_lat'] ) ) {
+	        
+        	$distanceOK 	= 1;
+        	$yLat			= urldecode( $_COOKIE['gmw_lat'] );
+        	$yLng			= urldecode( $_COOKIE['gmw_lng'] );
+        	$unit  			= $distance_unit;
+	        $theta 			= $yLng - $post_info->long;
+	        $distance_value = sin( deg2rad( $yLat  ) ) * sin( deg2rad($post_info->lat ) ) +  cos( deg2rad( $yLat ) ) * cos( deg2rad($post_info->lat) ) * cos( deg2rad( $theta ) );
+	        $distance_value = acos($distance_value);
+	        $distance_value = rad2deg($distance_value);
+	        $miles 			= $distance_value * 60 * 1.1515;
+	        
+	        if ($unit == "k") {
+	        	$distance_value = ( $miles * 1.609344 );
+	        	$units_name		= 'km';
+	        } else {
+	        	$distance_value = ($miles * 0.8684);
+	        	$units_name		= 'mi';
+	        } 
 
-        if ( $map == 1 ) :
+	        $location_distance = '<div class="distance-wrapper"><p>'.__( 'Distance:','GMW' ). ' '. round( $distance_value, 2 ) .' '.$units_name.'</p></div>';
+        }
+        
+        $location_map = '';
+        if ( $map == 1 ) {
+			
+        	$location_map  = '';
+            $location_map .= '<div class="map-wrapper" style="width:' . $map_width . '; height:' . $map_height . '">';
+            $location_map .= 	'<div id="gmw-single-post-map-' . $scID . '" class="gmw-map" style="width:100%; height:100%;"></div>';
+            $location_map .= '</div>';
 
-            $location_info .= '<div class="gmw-single-post-sc-map-wrapper">';
-            $location_info .= '<div id="gmw-single-post-map-' . $scID . '" class="gmw-map" style="width:' . $map_width . '; height:' . $map_height . ';"></div>';
-            $location_info .= '</div>';
+        }
+		
+        $location_directions = '';
+        if ( $directions == 1 ) {
+			
+        	$your_address = ( isset( $_COOKIE['gmw_address'] ) ) ? urldecode(  $_COOKIE['gmw_address'] ) : '';
+        		
+        	$location_directions  = '';
+            $location_directions .= '<div class="directions-wrapper">';
+            $location_directions .= 	'<div id="gmw-single-post-sc-form-' . $scID . '" class="gmw-single-post-sc-form" style="display:none;">';
+            $location_directions .= 		'<form action="http://maps.google.com/maps" method="get" target="_blank">';
+            $location_directions .= 			'<input type="text" size="35" name="saddr" value="'.$your_address.'" placeholder="Your location" />';
+            $location_directions .= 			'<input type="hidden" name="daddr" value="' . $post_info->address . '" />';
+            $location_directions .= 			'<input type="submit" class="button" value="' . __( 'GO', 'GMW' ) . '" />';
+            $location_directions .= 		'</form>';
+            $location_directions .= 	'</div>';
+            $location_directions .= 	'<a href="#" id="single-post-trigger-' . $scID . '"  class="single-post-trigger">' . __( 'Get Directions', 'GMW' ) . '</a>';
+            $location_directions .= '</div>';
 
-        endif;
-
-        if ( $directions == 1 ) :
-
-            $location_info .= '<div class="gmw-single-post-sc-directions-wrapper">';
-            $location_info .= '<div id="gmw-single-post-sc-form-' . $scID . '" class="gmw-single-post-sc-form" style="display:none;">';
-            $location_info .= '<form action="http://maps.google.com/maps" method="get" target="_blank">';
-            $location_info .= '<input type="text" size="35" name="saddr" value="" placeholder="Your location" />';
-            $location_info .= '<input type="hidden" name="daddr" value="' . $post_info->address . '" />';
-            $location_info .= '<input type="submit" class="button" value="' . __( 'GO', 'GMW' ) . '" />';
-            $location_info .= '</form>';
-            $location_info .= '</div>';
-            $location_info .= '<a href="#" id="gmw-single-post-sc-directions-trigger-' . $scID . '"  class="gmw-single-post-sc-directions-trigger">' . __( 'Get Directions', 'GMW' ) . '</a>';
-            $location_info .= '</div>';
-
-        endif;
-
+    	}
+		
+    	$location_info = '';
         //if we are showing additional information
-        if ( isset( $additional_info ) || $additional_info != 0 ) :
+        if ( isset( $additional_info ) || $additional_info != 0 ) {
 
             $additional_info = explode( ',', $additional_info );
-
+			
+            $location_info  = '';
             $location_info .= '<div class="gmw-single-post-sc-additional-info">';
 
             if ( in_array( 'address', $additional_info ) ) {
@@ -118,15 +161,16 @@ class GMW_Single_Location {
 
             $location_info .= '</div>';
 
-        endif;
+        }
 
-        $location_info .= '</div>';
+        $location_wrap_end = '</div>';
+       	
         ?>
         <script>
 
             jQuery(document).ready(function($) {
 
-                $('#gmw-single-post-sc-directions-trigger-<?php echo $scID; ?>').click(function(event) {
+                $('#single-post-trigger-<?php echo $scID; ?>').click(function(event) {
                     event.preventDefault();
                     $('#gmw-single-post-sc-form-<?php echo $scID; ?>').slideToggle();
                 });
@@ -170,25 +214,52 @@ class GMW_Single_Location {
                             '<br /> <span style="font-weight: bold;color: #333;">Email: </span>' + gmwEmail +
                             '<br /> <span style="font-weight: bold;color: #333;">Website: </span>' + gmwWebsite;
 
+                    var latlngbounds = new google.maps.LatLngBounds( );
+
+                    var desLoc = new google.maps.LatLng(<?php echo $post_info->lat; ?>, <?php echo $post_info->long; ?>);
+                    latlngbounds.extend(desLoc);
+                    
                     gmwSinglePostMarker = new google.maps.Marker({
-                        position: new google.maps.LatLng(<?php echo $post_info->lat; ?>, <?php echo $post_info->long; ?>),
+                        position: desLoc,
                         map: gmwSinglePostMap,
-                        shadow: 'https://chart.googleapis.com/chart?chst=d_map_pin_shadow'
+                        icon:'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
                     });
 
                     google.maps.event.addListener(gmwSinglePostMarker, 'click', function() {
                         infowindow.setContent(gmwSinglePostInfoWindow);
                         infowindow.open(gmwSinglePostMap, gmwSinglePostMarker);
                     });
+                    
+                    if ( <?php echo $distanceOK; ?> == 1 ) {
 
-                }
-                ;
+                    	var yourInfoWindow = new google.maps.InfoWindow();
+                    	
+                        var yourLoc = new google.maps.LatLng(<?php echo $yLat; ?>, <?php echo $yLng; ?>);
+                    	latlngbounds.extend(yourLoc);
+                    	
+	                    ylMarker = new google.maps.Marker({
+	                        position: yourLoc,
+	                        map: gmwSinglePostMap,
+	                        icon:'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+	                    });
+
+	                    gmwSinglePostMap.fitBounds(latlngbounds);
+
+	                    yourInfoWindow.setContent('Your location');
+	                    yourInfoWindow.open(gmwSinglePostMap, ylMarker);
+	                    
+                    }
+                    
+                };
 
             });
 
         </script>
         <?php
-        return $location_info;
+        
+        $output = $location_wrap_start.$location_title.$location_distance.$location_map.$location_directions.$location_info;
+        
+        return apply_filters( 'gmw_pt_single_location_output', $output, $args, $location_wrap_start, $location_title, $location_distance, $location_map, $location_directions, $location_info );
 
     }
 

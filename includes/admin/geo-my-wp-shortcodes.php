@@ -26,10 +26,11 @@ class GMW_Shortcodes_page {
 
     	$shortcodes = apply_filters( 'gmw_admin_shortcodes_page', array(
     			'gmw_form' => array(
-    					'name'		  => __( 'GMW Form', 'GMW' ),
-    					'basic_usage' => '[GMW]',
-    					'desc'        => __( 'Use this shortcode to display any of the forms you created in the "Forms" Page of GEO my WP.', 'GMW' ),
-    					'attributes'  => array(
+    					'name'		  	=> __( 'GMW Form', 'GMW' ),
+    					'basic_usage' 	=> '[GMW]',
+    					'template_usage'=> '&#60;&#63;php echo do_shortcode(\'[gmw]\'); &#63;&#62;',
+    					'desc'        	=> __( 'Use this shortcode to display any of the forms you created in the "Forms" Page of GEO my WP.', 'GMW' ),
+    					'attributes'  	=> array(
     							array(
     									'attr'	 => __( 'form', 'GMW' ),
     									'values' => array(
@@ -66,9 +67,10 @@ class GMW_Shortcodes_page {
     					),
     			),
     			'current_location' => array(
-    					'name'		  => __( 'Curren Location', 'GMW' ),
-    					'basic_usage' => '[gmw_current_location]',
-    					'desc'        => __( 'The shortcode will display a link which once clicked will open a popup window that will allow the user to get his current location. The location, if found, will then be saved via cookies. The location in the cookies later will be
+    					'name'		  	=> __( 'Curren Location', 'GMW' ),
+    					'basic_usage' 	=> '[gmw_current_location]',
+    					'template_usage'=> '&#60;&#63;php echo do_shortcode(\'[gmw_current_location]\'); &#63;&#62;',
+    					'desc'        	=> __( 'The shortcode will display a link which once clicked will open a popup window that will allow the user to get his current location. The location, if found, will then be saved via cookies. The location in the cookies later will be
     							used with GEO my WP and other add-ons for different functionlities. ', 'GMW' ),
     					'attributes'  => array(
     							array(
@@ -155,10 +157,13 @@ class GMW_Shortcodes_page {
                     <table class="widefat fixed" style="margin-bottom:5px;">
                         <thead>
                             <tr class="alternate">
-                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px;">
-                                	<label><?php _e( 'Basic Usage', 'GMW' ); ?></label>
+                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:20%;padding:11px 10px;">
+                                	<label><?php _e( 'Post/Page Content Usage', 'GMW' ); ?></label>
                                	</th>
-                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px;">
+                               	<th scope="col" id="cb" class="manage-column column-cb check-column" style="width:40%;padding:11px 10px;">
+                                	<label><?php _e( 'Template File Usage', 'GMW' ); ?></label>
+                               	</th>
+                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:40%;padding:11px 10px;">
                                 	<label><?php _e( 'Description', 'GMW' ); ?></label>
                                 </th>
                             </tr>
@@ -167,6 +172,9 @@ class GMW_Shortcodes_page {
                         	<tr>
                         		<td style="color: #555;border-bottom:1px solid #eee;min-width:400px;vertical-align: top">
                         			<lablel><code><?php echo $options['basic_usage']; ?></code></lablel>
+                        		</td>
+                        		<td style="color: #555;border-bottom:1px solid #eee;min-width:400px;vertical-align: top">
+                        			<lablel><code><?php echo $options['template_usage']; ?></code></lablel>
                         		</td>
                         		<td style="color: #555;border-bottom:1px solid #eee;min-width:400px;vertical-align: top">
                         			<p class="description"><?php echo $options['desc']; ?></p>

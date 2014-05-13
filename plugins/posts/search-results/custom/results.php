@@ -46,6 +46,8 @@
 					<?php if ( isset( $gmw['your_lat'] ) && !empty( $gmw['your_lat'] ) ) { ?><span class="radius-dis">(<?php echo gmw_pt_by_radius( $gmw, $post ); ?>)</span><?php } ?>
 				</h2>
 				
+				<?php do_action( 'gmw_posts_loop_after_title' , $gmw, $post ); ?>
+				
 				<div>
 					<?php gmw_pt_thumbnail( $gmw, $post ); ?>
 				</div>
@@ -53,7 +55,9 @@
 				<!--  Excerpt -->
     			<div>
 				 	<?php gmw_pt_excerpt( $gmw, $post ); ?> 
-				 </div>
+				</div>
+				
+				<?php do_action( 'gmw_posts_loop_after_content' , $gmw, $post ); ?>
 				
 				<!--  taxonomies -->
 				<div>

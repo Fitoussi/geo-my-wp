@@ -1,24 +1,30 @@
 /* SINGLE MEMBER WIDGET */
+
 .gmw-single-member-sc-wrapper {
 	
 }
 
-.gmw-single-member-sc-map-wrapper {
+.gmw-single-member-sc-wrapper .map-wrapper {
 	border: 1px solid #CCC;
 	padding: 5px;
 	background: #F1F1F1;
+	display: inline-block;
+	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;    
+	box-sizing: border-box;
+	position: relative;
 }
 
-.gmw-single-member-sc-address-wrapper {
+.gmw-single-member-sc-wrapper .address-wrapper {
 	margin: 5px 0;
 	clear: both;
 }
 
-.gmw-single-member-sc-direction-wrapper {
+.gmw-single-member-sc-wrapper .direction-wrapper {
 	clear: both;
 }
 
-.gmw-single-member-sc-form-wrapper {
+.gmw-single-member-sc-wrapper .single-member-form-wrapper {
 	
 }
 
@@ -40,6 +46,8 @@
 		"Helvetica Neue", sans-serif;
 	font-size: 12px;
 	padding: 5px 10px;
+	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;    
 	box-sizing: border-box;
 }
 

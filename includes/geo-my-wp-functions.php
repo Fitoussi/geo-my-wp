@@ -35,7 +35,7 @@ abstract class GMW {
     public function __construct( $form, $results ) {
 
         $this->settings = get_option( 'gmw_options' );
-        $this->form     = $form;
+        $this->form     = apply_filters( 'gmw_main_shortcode_form_args', $form, $this->settings );
 
         self::gmw( $results );
 
@@ -48,24 +48,35 @@ abstract class GMW {
      * @author Eyal Fitoussi
      */
     public function gmw( $results ) {
-
+	
+    	$this->form['get_per_page'] = false;
+    	$this->form['units_array']  = false;
+    	$this->form['your_lat']     = false;
+    	$this->form['your_lng']     = false;
+    	$this->form['radius']		= false;
+    	$this->form['org_address']  = false;
+    	
         do_action( 'gmw_' . $this->form['form_type'] . '_main_shortcode_start', $this->form, $this->settings );
-
+        
         //load search form template
-        if ( $results == false && isset( $this->form['search_form'] ) )
+        if ( $results == false && isset( $this->form['search_form'] ) ) {
             $this->custom_search_form();
-
+        }
+        
         // when form submitted
-        if ( isset( $_GET['action'] ) && $_GET['action'] == "gmw_post" && ( ( $results == true ) || ( $results == false && $this->form['ID'] == $_GET['gmw_form'] && !isset( $params['widget'] ) && $this->form['search_results']['results_page'] == false ) ) ) :
+        if ( apply_filters( 'gmw_form_submitted_trigger', false, $this ) == true || ( isset( $_GET['action'] ) && $_GET['action'] == "gmw_post" && ( ( $results == true ) || ( $results == false && $this->form['ID'] == $_GET['gmw_form'] && $this->form['search_results']['results_page'] == false ) ) ) ) {
 
             self::form_submitted();
 
         // if auto results 
-        elseif ( empty( $this->form['search_results']['results_page'] ) && isset( $_COOKIE['gmw_lat'] ) && isset( $_COOKIE['gmw_lng'] ) && isset( $this->form['search_results']['auto_search']['on'] ) && !isset( $params['widget'] ) ) :
+        } elseif ( empty( $this->form['search_results']['results_page'] ) && isset( $_COOKIE['gmw_lat'] ) && isset( $_COOKIE['gmw_lng'] ) && isset( $this->form['search_results']['auto_search']['on'] ) ) {
 
             self::auto_results();
-
-        endif;
+		
+        //do some custom functions if nothing above worked
+        } else { 
+        	do_action( 'gmw_main_shortcode_custom_function', $this );
+        }
 
         do_action( 'gmw_' . $this->form['form_type'] . '_main_shortcode_end', $this->form );
 
@@ -105,15 +116,17 @@ abstract class GMW {
      */
     public function form_submitted() {
     	
-        $this->form['get_per_page'] = $this->form['get_per_page'] = ( isset( $_GET['gmw_per_page'] ) ) ? $_GET['gmw_per_page'] : current( explode( ",", $this->form['search_results']['per_page'] ) );
-        $this->form['units_array']  = false;
-        $this->form['your_lat']     = false;
-        $this->form['your_lng']     = false;
-        $this->form['radius']       = $_GET['gmw_distance'];
-
+        if ( $this->form['radius'] == false ) {
+        	$this->form['radius'] =  ( isset( $_GET['gmw_distance'] ) && !empty( $_GET['gmw_distance'] ) ) ? $_GET['gmw_distance'] : 500;
+        }
+        
         // get the address
-        if ( array_filter( $_GET['gmw_address'] ) ) {
+        if ( $this->form['org_address'] == false && array_filter( $_GET['gmw_address'] ) ) {
             $this->form['org_address'] = str_replace( '+', ' ', implode( ' ', $_GET['gmw_address'] ) );
+        }
+        
+        if ( $this->form['get_per_page'] == false ) {
+        	$this->form['get_per_page'] = ( isset( $_GET['gmw_per_page'] ) ) ? $_GET['gmw_per_page'] : current( explode( ",", $this->form['search_results']['per_page'] ) );
         }
                  
         // distance units 
@@ -123,25 +136,41 @@ abstract class GMW {
             $this->form['units_array'] = array( 'radius' => 6371, 'name' => "Km", 'map_units' => 'ptk', 'units' => "metric" );
         }
         
-        if ( isset( $this->form['org_address'] ) && !empty( $this->form['org_address'] ) ) :
-        
-        	$this->form['location'] = GEO_my_WP::geocoder( $this->form['org_address'] );
+        //if lat/lng exist then use them
+        if ( $this->form['your_lat'] != false && $this->form['your_lng'] != false ) {
         	
-        	//if geocode was unsuccessful return error message
-        	if ( isset( $this->form['location']['error'] ) ) {
+        	return $this->results();
+        	
+        //otherwise if lat/lng exist in URL then use that
+        } elseif ( isset( $_GET['gmw_lat'] ) && !empty( $_GET['gmw_lat'] ) && isset( $_GET['gmw_lng'] ) && !empty( $_GET['gmw_lng'] ) ) {
 
-        		return $this->no_results( $this->form['location']['error'] );
-        	} else {
+        	$this->form['your_lat'] = $_GET['gmw_lat'];
+        	$this->form['your_lng'] = $_GET['gmw_lng'];
         	
-            	$this->form['your_lat'] = $this->form['location']['lat'];
-            	$this->form['your_lng'] = $this->form['location']['lng'];
-        	}
+        	return $this->results();
         	
+        }
+        
+        //if not lat/lng we will check for address and geocode it if exist
+        if ( isset( $this->form['org_address'] ) && !empty( $this->form['org_address'] ) ) :
+   
+        	$this->form['location'] = GEO_my_WP::geocoder( $this->form['org_address'] );
+	        	
+        	//if geocode was unsuccessful return error message
+	        if ( isset( $this->form['location']['error'] ) ) {
+	
+	        	return $this->no_results( $this->form['location']['error'] );
+	        	
+	        } else {
+	        	
+	            $this->form['your_lat'] = $this->form['location']['lat'];
+	            $this->form['your_lng'] = $this->form['location']['lng'];
+	        } 	
         else :
             $this->form['org_address'] = '';
         endif;
-
-        $this->results();
+        
+        return $this->results();
 
     }
 
@@ -149,17 +178,25 @@ abstract class GMW {
      * When displaying auto results
      */
     public function auto_results() {
-
-        $this->form['get_per_page'] = $this->form['get_per_page'] = ( isset( $_GET['gmw_per_page'] ) ) ? $_GET['gmw_per_page'] : current( explode( ",", $this->form['search_results']['per_page'] ) );
+        
         // get address from cookies
-        $this->form['org_address']  = urldecode( $_COOKIE['gmw_address'] );
-
+        if ( $this->form['org_address']  == false ) {
+        	$this->form['org_address']  = urldecode( $_COOKIE['gmw_address'] );
+        }
+        
+        if ( $this->form['get_per_page'] == false ) {
+        	$this->form['get_per_page'] = ( isset( $_GET['gmw_per_page'] ) ) ? $_GET['gmw_per_page'] : current( explode( ",", $this->form['search_results']['per_page'] ) );
+        }
+        
         if ( $this->form['search_results']['auto_search']['units'] == 'imperial' )
             $this->form['units_array'] = array( 'radius' => 3959, 'name' => "mi", 'map_units' => "ptm", 'units' => 'imperial' );
         else
             $this->form['units_array'] = array( 'radius' => 6371, 'name' => "km", 'map_units' => 'ptk', 'units' => "metric" );
-
-        $this->form['radius']   = $this->form['search_results']['auto_search']['radius'];
+		
+        if ( $this->form['radius'] == false ) {
+        	$this->form['radius'] = $this->form['search_results']['auto_search']['radius'];
+        }
+        
         $this->form['your_lat'] = urldecode( $_COOKIE['gmw_lat'] );
         $this->form['your_lng'] = urldecode( $_COOKIE['gmw_lng'] );
 
@@ -196,11 +233,11 @@ function gmw_get_results_map( $gmw ) {
 
     $frame = ( isset( $gmw['results_map']['map_frame'] ) ) ? 'gmw-map-frame' : '';
 
-    $output = '<div id="gmw-map-wrapper-' . $gmw['ID'] . '" class="gmw-map-wrapper gmw-map-wrapper-' . $gmw['ID'] . ' gmw-' . $gmw['prefix'] . '-map-wrapper ' . $frame . '"  style="display:none;width:' . $gmw['results_map']['map_width'] . ';height:' . $gmw['results_map']['map_height'] . ';">';
-    $output .= '<div class="gmw-map-loader-wrapper gmw-' . $gmw['prefix'] . '-loader-wrapper">';
-    $output .= '<img class="gmw-map-loader gmw-' . $gmw['prefix'] . '-map-loader" src="' . GMW_IMAGES . '/map-loader.gif"/>';
-    $output .= '</div>';
-    $output .= '<div id="gmw-map-' . $gmw['ID'] . '" gmw-map-' . $gmw['ID'] . ' class="gmw-map gmw-' . $gmw['prefix'] . '-map" style="width:100%; height:100%"></div>';
+    $output  = '<div id="gmw-map-wrapper-' . $gmw['ID'] . '" class="gmw-map-wrapper gmw-map-wrapper-' . $gmw['ID'] . ' gmw-' . $gmw['prefix'] . '-map-wrapper ' . $frame . '"  style="display:none;width:' . $gmw['results_map']['map_width'] . ';height:' . $gmw['results_map']['map_height'] . ';">';
+    $output .= 		'<div class="gmw-map-loader-wrapper gmw-' . $gmw['prefix'] . '-loader-wrapper">';
+    $output .= 			'<img class="gmw-map-loader gmw-' . $gmw['prefix'] . '-map-loader" src="' . GMW_IMAGES . '/map-loader.gif"/>';
+    $output .= 		'</div>';
+    $output .= 		'<div id="gmw-map-' . $gmw['ID'] . '" gmw-map-' . $gmw['ID'] . ' class="gmw-map gmw-' . $gmw['prefix'] . '-map" style="width:100%; height:100%"></div>';
     $output .= '</div>';
 
     return $output;
@@ -239,10 +276,10 @@ function gmw_form_submit_fields( $gmw, $subValue ) {
         
         <input type="hidden" id="gmw-per-page-<?php echo $gmw['ID']; ?>" class="gmw-per-page gmw-per-page-<?php echo $gmw['ID']; ?>" name="gmw_per_page" value="<?php echo current( explode( ",", $gmw['search_results']['per_page'] ) ); ?>" />
         <input type="hidden" id="prev-address-<?php echo $gmw['ID']; ?>" class="prev-address prev-address-<?php echo $gmw['ID']; ?>" value="<?php if ( isset( $_GET['gmw_address'] ) ) echo implode( ' ', $_GET['gmw_address'] ); ?>">
-       <?php /* 
+    
         <input type="hidden" id="gmw-lat-<?php echo $gmw['ID']; ?>" class="gmw-lat gmw-lat-<?php echo $gmw['ID']; ?>" name="gmw_lat" value="<?php if ( isset( $_GET['gmw_lat'] ) ) echo $_GET['gmw_lat']; ?>">
         <input type="hidden" id="gmw-long-<?php echo $gmw['ID']; ?>" class="gmw-lng gmw-long-<?php echo $gmw['ID']; ?>" name="gmw_lng" value="<?php if ( isset( $_GET['gmw_lng'] ) ) echo $_GET['gmw_lng']; ?>">
-       */ ?>
+
         <input type="hidden" id="gmw-prefix-<?php echo $gmw['ID']; ?>" class="gmw-prefix gmw-prefix-<?php echo $gmw['ID']; ?>" name="gmw_px" value="<?php echo $gmw['prefix']; ?>" />
         <input type="hidden" id="gmw-action-<?php echo $gmw['ID']; ?>" class="gmw-action gmw-action-<?php echo $gmw['ID']; ?>" name="action" value="gmw_post" />
 
@@ -303,7 +340,7 @@ function gmw_get_search_form_locator_icon( $gmw, $class ) {
     $button = '<div class="gmw-locator-btn-wrapper gmw-locator-btn-wrapper-' . $gmw['ID'] . '">';
 
     $button .= apply_filters( 'gmw_search_form_locator_button_img', '<img id="gmw-locate-button-' . $gmw['ID'] . '" class="gmw-locate-btn ' . $lSubmit . ' ' . $class . '" src="' . GMW_IMAGES . '/locator-images/' . $icon . '" />', $gmw, $class );
-    $button .= '<img src="' . GMW_IMAGES . '/gmw-loader.gif" style="display:none;" />';
+    $button .= '<img class="gmw-locator-btn-loader" src="' . GMW_IMAGES . '/gmw-loader.gif" style="display:none;" />';
 
     $button .= '</div>';
 

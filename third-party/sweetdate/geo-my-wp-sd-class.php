@@ -357,9 +357,14 @@ class GMW_SD_Class_Query {
 
         if ( !isset( $members_template->member->distance ) )
             return;
-
+		
+        $settings = get_option( 'gmw_options' );
+        
+        $region	   = ( isset( $settings['general_settings']['country_code'] ) && !empty( $settings['general_settings']['country_code'] ) ) ? '&region=' .$settings['general_settings']['country_code'] : '';
+        $language  = ( isset( $settings['general_settings']['language_code'] ) && !empty( $settings['general_settings']['language_code'] ) ) ? '&hl=' .$settings['general_settings']['language_code'] : '';
+        
         $units = ( $this->gmwSD['units'] == '6371' ) ? 'ptk' : 'ptm';
-        return '<a href="http://maps.google.com/maps?f=d&hl=en&doflg=' . $units . '&geocode=&saddr=' . $this->gmwSD['org_address'] . '&daddr=' . str_replace( " ", "+", $members_template->member->address ) . '&ie=UTF8&z=12" target="_blank">' . __( 'Get Directions', 'GMW' ) . '</a>';
+        return '<a href="http://maps.google.com/maps?f=d'.$language.''.$region.'&doflg=' . $units . '&geocode=&saddr=' . $this->gmwSD['org_address'] . '&daddr=' . str_replace( " ", "+", $members_template->member->formatted_address ) . '&ie=UTF8&z=12" target="_blank">' . __( 'Get Directions', 'GMW' ) . '</a>';
 
     }
 

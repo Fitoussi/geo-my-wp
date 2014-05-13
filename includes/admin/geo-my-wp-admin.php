@@ -23,6 +23,7 @@ class GMW_Admin {
 
 		$this->addons          = get_option('gmw_addons');
 		$this->settings        = get_option('gmw_options');
+		$this->forms		   = get_option('gmw_forms');
 		$this->addons_page     = new GMW_Addons();
 		$this->settings_page   = new GMW_Settings();
 		$this->forms_page      = new GMW_Forms();
@@ -36,6 +37,9 @@ class GMW_Admin {
 			add_filter( 'admin_footer_text', array( $this, 'gmw_credit_footer'), 10 );
 		}
 		add_filter( 'plugin_action_links', array( $this, 'addons_action_links' ), 10, 2 );
+		
+		add_action('media_buttons',  array( $this, 'add_form_button'), 25 );
+		add_action('admin_footer',  array( $this, 'add_mce_popup'));
 
 	}
 
@@ -71,6 +75,99 @@ class GMW_Admin {
 
 	}
 
+	//Action target that adds the "Insert Form" button to the post/page edit screen
+    public static function add_form_button(){
+
+    	// do a version check for the new 3.5 UI
+        $version = get_bloginfo('version');
+
+        if ($version < 3.5) {
+            // show button for v 3.4 and below
+            $image_btn = GFCommon::get_base_url() . "/images/form-button.png";
+            echo '<a href="#TB_inline?width=480&inlineId=select_gmw_form" class="thickbox" id="add_gmw_form" title="' . __("Add GEO my WP Form", 'GMW') . '"><img src="'.$image_btn.'" alt="' . __("GMW Form", 'GMW') . '" /></a>';
+        } else {
+            // display button matching new UI
+            echo '<style>
+            		.gmw_media_icon:before {
+            			content: "\f230" !important;
+						color: rgb(103, 199, 134) !important;
+					}
+            		.gmw_media_icon {
+                    	vertical-align: text-top;
+                    	width: 18px;
+                    }
+                    .wp-core-ui a.gmw_media_link{
+                     	padding-left: 0.4em;
+                    }
+                 </style>
+                 <a href="#TB_inline?width=480&inlineId=select_gmw_form" class="thickbox button gmw_media_link" id="add_gmw_form" title="' . __("Add GEO my WP Form", 'GMW') . '"><span class="gmw_media_icon dashicons"></span> ' . __("GMW Form", 'GMW') . '</a>';
+        }
+    }
+    
+    //Action target that displays the popup to insert a form to a post/page
+    public static function add_mce_popup(){
+    	?>
+            <script>
+                function gmwInsertForm(){
+                                    	
+                    if ( jQuery('.gmw_form_type:checked').val() != 'results' ) { 
+                        
+                    	var form_id = jQuery("#gmw_form_id").val();
+                        if(form_id == ""){
+                            alert("<?php _e("Please select a form", "GMW") ?>");
+                            return;
+                        }
+                        
+                    	var form_name = jQuery("#gmw_form_id option[value='" + form_id + "']").text().replace(/[\[\]]/g, '');
+                    	window.send_to_editor("[gmw "+ jQuery('.gmw_form_type:checked').val() + "=\"" + form_id + "\" name=\"" + form_name + "\"]");
+                    	
+                    } else {
+                        
+                    	window.send_to_editor('[gmw form="results"]');
+                    }
+                }
+            </script>
+    
+            <div id="select_gmw_form" style="display:none;">
+            <div class="wrap">
+                <div>
+                    <div style="padding:15px 15px 0 15px;">
+                        <h3 style="color:#5A5A5A!important; font-family:Georgia,Times New Roman,Times,serif!important; font-size:1.8em!important; font-weight:normal!important;"><?php _e("Insert A Form Shortcode", "GMW"); ?></h3>
+                        <span>
+                            <?php _e("Select the type of shortcode you wish to add", "GMW"); ?>
+                        </span>
+                    </div>
+                    <div style="padding:15px 15px 0 15px;">
+                        <input type="radio" class="gmw_form_type" checked="checked" name="gmw_form_type" value="form" onclick="if ( jQuery('#gmw-forms-dropdown-wrapper').is(':hidden') ) jQuery('#gmw-forms-dropdown-wrapper').slideToggle();" /> <label for="gmw-form"><?php _e("Form shortcode", "GMW"); ?></label> &nbsp;&nbsp;&nbsp;
+                        <input type="radio" class="gmw_form_type" name="gmw_form_type"  value="map" onclick="if ( jQuery('#gmw-forms-dropdown-wrapper').is(':hidden') ) jQuery('#gmw-forms-dropdown-wrapper').slideToggle();" /> <label for="gmw-map"><?php _e("Map Shortcode", "GMW"); ?></label>&nbsp;&nbsp;&nbsp;
+                        <input type="radio" class="gmw_form_type" name="gmw_form_type" value="results" onclick="if ( jQuery('#gmw-forms-dropdown-wrapper').is(':visible') ) jQuery('#gmw-forms-dropdown-wrapper').slideToggle();" /> <label for="gmw-form"><?php _e("Results shortcode", "GMW"); ?></label> &nbsp;&nbsp;&nbsp;
+                    </div>
+                    <div id="gmw-forms-dropdown-wrapper" style="padding:15px 15px 0 15px;">
+                        <select id="gmw_form_id">
+                            <option value="">  <?php _e("Select a Form", "GMW"); ?>  </option>
+                            <?php
+                                $forms = get_option('gmw_forms');
+                                foreach( $forms as $form ) {
+                                	$form['name'] = ( isset( $form['name'] ) && !empty( $form['name'] ) ) ? $form['name'] : 'form_id_'.$form['ID'];
+                                    ?>
+                                    <option value="<?php echo absint($form['ID']); ?>"><?php echo esc_html($form['name']); ?></option>
+                                    <?php
+                                }
+                            ?>
+                        </select>
+                    </div>
+                   
+                    <div style="padding:15px;">
+                        <input type="button" class="button-primary" value="<?php _e("Insert Shortcode", "GMW"); ?>" onclick="gmwInsertForm();"/>&nbsp;&nbsp;&nbsp;
+                    	<a class="button" style="color:#bbb;" href="#" onclick="tb_remove(); return false;"><?php _e("Cancel", "GMW"); ?></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    <?php
+    }
+	
 	/**
 	 * admin_enqueue_scripts function.
 	 *

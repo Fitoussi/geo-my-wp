@@ -170,6 +170,7 @@ class GMW_Search_Form_Widget extends WP_Widget {
      * @param array $instance Previously saved values from database.
      */
     function form($instance) {
+    	
         $defaults   = array('title' => __('Search Site', 'GMW'));
         $instance   = wp_parse_args((array) $instance, $defaults);
         $shortcodes = get_option('gmw_forms');
@@ -184,9 +185,11 @@ class GMW_Search_Form_Widget extends WP_Widget {
             <select name="<?php echo $this->get_field_name('short_code'); ?>">
         <?php
         foreach ($shortcodes as $shortcode) :
+        	$form_name = ( isset( $shortcode['name'] ) && !empty( $shortcode['name'] ) ) ? $shortcode['name'] : 'form_id_'.$shortcode['ID'];
+        
             echo '<option value="' . $shortcode['ID'] . '"';
             if (isset($instance['short_code']) && $instance['short_code'] == $shortcode['ID'])
-                echo 'selected="selected"'; echo '>GMW form ID ' . $shortcode['ID'] . '</options>';
+                echo 'selected="selected"'; echo '>'.$form_name .' - Form ID '. $shortcode['ID'] . '</options>';
         endforeach;
         ?>
             </select>

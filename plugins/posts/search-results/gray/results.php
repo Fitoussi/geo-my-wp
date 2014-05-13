@@ -52,6 +52,8 @@
 					
 				</div>
 				
+				<?php do_action( 'gmw_posts_loop_after_title' , $gmw, $post ); ?>
+				
 				<div class="post-content">
 					<div class="left-col">
 						<?php if ( has_post_thumbnail() ) : ?>
@@ -68,6 +70,8 @@
 		    			<?php gmw_pt_additional_info( $gmw, $post, $tag='ul' ); ?>
 		   			</div>
 	   			</div>
+	   			
+	   			<?php do_action( 'gmw_posts_loop_after_content' , $gmw, $post ); ?>
 	   			
 				<!-- Get directions -->	 	
     			<?php gmw_pt_directions( $gmw, $post, $title=__('Get Directions','GMW') ) ?>

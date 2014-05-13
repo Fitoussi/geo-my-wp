@@ -50,20 +50,21 @@ class GMW_Location_Component extends BP_Component {
      */
     function includes($includes = array()) {
 
-        // Files to include
-        $includes = array(
-            'includes/gmw-fl-functions.php',
-            'includes/gmw-fl-activity.php',
-            'includes/gmw-fl-update-location.php',
-            'includes/gmw-fl-widgets.php',
-        );
+    	// Files to include
+    	$includes = array(
+    			'includes/gmw-fl-actions.php',
+    			'includes/gmw-fl-functions.php',
+    			'includes/gmw-fl-activity.php',
+    			'includes/gmw-fl-update-location.php',
+    			'includes/gmw-fl-widgets.php',
+    	);
 
-        if (is_admin() && !defined('DOING_AJAX')) {
-            $includes[] = 'includes/admin/gmw-fl-admin.php';
-            $includes[] = 'includes/admin/gmw-fl-db.php';
-        }
+    	if (is_admin() && !defined('DOING_AJAX')) {
+    		$includes[] = 'includes/admin/gmw-fl-admin.php';
+    		$includes[] = 'includes/admin/gmw-fl-db.php';
+    	}
 
-        parent::includes($includes);
+    	parent::includes($includes);
 
     }
 
@@ -137,7 +138,7 @@ class GMW_Location_Component extends BP_Component {
      * GMW FL function - title for the "location" tab
      */
     function screen_page_title() {
-        _e('Location', 'GMW');
+        //_e('Location', 'GMW');
 
     }
 
@@ -154,7 +155,7 @@ class GMW_Location_Component extends BP_Component {
      */
     function screen_page_user_content() {
 
-        $content = '[gmw_member_location map_height="400px" map_width="400px" no_location="1"]';
+        $content = '[gmw_member_location map_height="400px" map_width="400px" no_location="1" display_name="0"]';
         echo do_shortcode(apply_filters('gmw_fl_user_location_tab_content', $content));
 
     }

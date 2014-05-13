@@ -244,8 +244,13 @@ input.regular-text {
 	display: block;
 }
 
+.gmw-nav-tab-wrapper {
+	padding:0px !important;
+	border-left: 4px solid #7ad03a;
+	padding-left:0px;	
+}
+
 .gmw-nav-tab {
-	float: left;
 	color: #333;
 	text-transform: capitalize;
 	background-color: #f7f7f7;
@@ -254,7 +259,8 @@ input.regular-text {
 	font-weight: bold;
 	text-shadow: 1px 1px 5px white;
 	text-transform: capitalize;
-	margin: 0px 2px
+	margin: 0px 2px;
+	display: inline-block;
 }
 
 .gmw-nav-tab:link,.gmw-nav-tab:hover {
@@ -265,4 +271,80 @@ input.regular-text {
 	-webkit-box-shadow: none !important;
 	box-shadow: none !important;
 	border: 1px solid #eee !important;
+}
+
+table.gmw-saf-table {
+	width:100%;
+}
+
+table.gmw-cf-holder tr th, table.gmw-saf-table tr th {
+	background: #C2D7EF;
+	padding:5px;
+	text-align:center;
+	font-size:12px;
+}
+
+table.gmw-cf-holder tr td, table.gmw-saf-table tr td{
+	border:1px solid #bbb;
+	font-size:12px;
+	padding:10px;
+}
+
+#taxonomies-wrapper .taxonomy-wrapper {
+	margin-bottom:10px
+}
+
+table.gmw-saf-table .table-within {
+	background: #ddd;
+}
+
+
+table.gmw-cf-holder tr td, table.gmw-saf-table tr td p {
+	font-size:12px;
+}
+
+#gmw-form-page-usage-wrpper span.usage-title {
+	width:100%;
+	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;    
+	box-sizing: border-box;
+	background: white;
+	border: 1px solid #e5e5e5;
+	padding:10px 0px;
+	text-align: center;
+	display: inline-block;
+}
+
+#usage-table-wrapper {
+	display:none;
+	margin-top:5px;
+}
+
+#form-usage-trigger {
+	background-color: #D8F7D2;
+	float:right;
+	cursor: pointer;
+}
+
+#form-name-wrapper {
+	padding:0px;
+	border-left: 4px solid #7ad03a;
+	padding-left:0px;
+}
+
+#form-name-wrapper input[type="text"] {
+	padding:6px;
+	margin:0px;
+	vertical-align: initial;
+	font-size: 14px;
+	color:#555;
+}
+
+#form-name-wrapper .button-primary {
+	vertical-align: initial;
+	margin-left:10px
+}
+
+#gmw-form-page-usage-wrpper span.usage-title a {
+	font-size:10px;
 }

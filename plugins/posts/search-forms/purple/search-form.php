@@ -25,9 +25,9 @@ if ( !function_exists('gmw_submit_button') ) {
 	add_filter( 'gmw_form_submit_button','gmw_submit_button', 10, 3 );
 }
 ?>
-<div class="gmw-form-wrapper gmw-form-wrapper-<? echo $gmw['ID']; ?> gmw-pt-form-wrapper gmw-pt-purple-form-wrapper">
+<div class="gmw-form-wrapper gmw-form-wrapper-<?php echo $gmw['ID']; ?> gmw-pt-form-wrapper gmw-pt-purple-form-wrapper">
 	
-	<form class="gmw-form gmw-form-<? echo $gmw['ID']; ?>" name="gmw_form" action="<?php echo $gmw['search_results']['results_page']; ?>" method="get">
+	<form class="gmw-form gmw-form-<?php echo $gmw['ID']; ?>" name="gmw_form" action="<?php echo $gmw['search_results']['results_page']; ?>" method="get">
 			
 		<?php do_action( 'gmw_search_form_start', $gmw ); ?>
 		

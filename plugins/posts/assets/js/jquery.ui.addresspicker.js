@@ -530,8 +530,7 @@ jQuery(document).ready(function($) {
 	
 	/* delete fields */
 	function removefields() {
-		$('#gmw-location-wrapper input:text').val('');
-		$('#wppl-addresspicker').val('');
+		$('.gmw-location-manually-wrapper input:text, .gmw-location-section.autocomplete input:text').val('');
 	}
 	
 	/* Locate me button */

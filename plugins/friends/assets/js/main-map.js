@@ -16,14 +16,27 @@ jQuery(document).ready(function($){
 		var latlngbounds = new google.maps.LatLngBounds();
 		
 		if ( flMapArgs.your_lat && flMapArgs.your_lng ) {
+			
 			var yourLocation  = new google.maps.LatLng( flMapArgs.your_lat, flMapArgs.your_lng );
 			latlngbounds.extend(yourLocation);
 			
-			marker = new google.maps.Marker({
+			var yliw = new google.maps.InfoWindow({
+        		content: gmwForm.iw_labels.your_location
+        	});
+			
+			ylMarker = new google.maps.Marker({
 				position: new google.maps.LatLng( flMapArgs.your_lat, flMapArgs.your_lng ),
 				map: membersMap,
 				icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
 			});
+			
+			if ( gmwForm.results_map.yl_icon != undefined && gmwForm.results_map.yl_icon == 1 ) {
+    			yliw.open( membersMap, ylMarker);
+    		}
+    		
+            google.maps.event.addListener( ylMarker, 'click', function() {
+            	yliw.open(membersMap, ylMarker);
+            });
 		}
 	
 		var i;

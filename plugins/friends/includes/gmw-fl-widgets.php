@@ -29,43 +29,57 @@ class GMW_Member_Location_Widget extends WP_Widget {
      * @param array $instance Saved values from database.
      */
     function widget($args, $instance) {
+    	
+    	extract($args);
+    		
+    	$single_post    = $instance['single_post'];
+    	$display_name   = $instance['display_name'];
+    	$map_height     = $instance['map_height'];
+    	$map_width      = $instance['map_width'];
+    	$directions     = $instance['directions'];
+    	$map_type       = $instance['map_type'];
+    	$address        = $instance['address'];
+    	$no_location    = $instance['no_location'];
+    	$zoom_level     = $instance['zoom_level'];
+    	$address_fields = $instance['address_fields'];
 
-        if (bp_is_user()) {
+    	if ( bp_is_user() || ( is_single() && isset( $single_post ) && $single_post == 1 ) ) {
+       
+    		if ( !isset( $no_location ) ) :
 
-            global $bp;
+	    		if ( is_single() ) {
+	    			global $post;
+	    			$member_id = $post->post_author;
+	    		} else {
+	    			$member_id = $bp->displayed_user->id;
+	    		}
+	
+	    		$member_info = gmw_get_member_info_from_db($member_id);
+	
+	    		if ( !isset( $member_info ) || empty( $member_info ) )
+	    			return;
 
-            extract($args);
+    		endif;
 
-            $map_height     = $instance['map_height'];
-            $map_width      = $instance['map_width'];
-            $directions     = $instance['directions'];
-            $map_type       = $instance['map_type'];
-            $address        = $instance['address'];
-            $no_location    = $instance['no_location'];
-            $zoom_level     = $instance['zoom_level'];
-            $address_fields = $instance['address_fields'];
+    		echo $before_widget;
 
-            if (!isset($no_location)) :
+    		if ( isset( $display_name ) && $display_name == 1 ) {
+    			if ( is_single() && !bp_is_user() ) {
+	    			global $post;
+	    			$member_id = $post->post_author;
+	    		} elseif ( bp_is_user() ) {
+	    			global $bp;
+	    			$member_id = $bp->displayed_user->id;
+	    		}
+    			echo $before_title . '<a href="'.bp_core_get_user_domain( $member_id ).'">'. bp_core_get_user_displayname($member_id) . '&#39;s Location</a>' . $after_title;
+    		}
 
-                $member_id = $bp->displayed_user->id;
+    		$mAddress = ( isset( $address_fields ) && !empty( $address_fields ) ) ? implode( ',', $address_fields ) : 'street,city,state,zipcode,country';
 
-                $member_info = gmw_get_member_info_from_db($member_id);
+    		echo do_shortcode('[gmw_member_location widget="1" display_name="0" show_on_single_post="'.$single_post.'" address_fields="' . $mAddress . '" map_width="' . $map_width . '" map_height="' . $map_height . '" address="' . $address . '" map_type="' . $map_type . '" directions="' . $directions . '" no_location="' . $no_location . '" zoom_level="' . $zoom_level . '"]');
 
-                if (!isset($member_info) || empty($member_info))
-                    return;
-
-            endif;
-
-            echo $before_widget;
-
-            echo $before_title . $bp->displayed_user->fullname . '&#39;s Location' . $after_title;
-
-            $mAddress = ( isset($address_fields) && !empty($address_fields) ) ? implode(',', $address_fields) : 'street,city,state,zipcode,country';
-
-            echo do_shortcode('[gmw_member_location widget="1" address_fields="' . $mAddress . '" map_width="' . $map_width . '" map_height="' . $map_height . '" address="' . $address . '" map_type="' . $map_type . '" directions="' . $directions . '" no_location="' . $no_location . '" zoom_level="' . $zoom_level . '"]');
-
-            echo $after_widget;
-        }
+    		echo $after_widget;
+    	}
 
     }
 
@@ -82,6 +96,10 @@ class GMW_Member_Location_Widget extends WP_Widget {
         $instance = wp_parse_args((array) $instance, $defaults);
         ?>
         <p>
+            <input type="checkbox" value="1" name="<?php echo $this->get_field_name('display_name'); ?>" <?php if ( isset( $instance["display_name"] ) ) echo 'checked="checked"'; ?> class="widefat" />
+            <label><?php echo _e('Display member name', 'GMW'); ?></label>
+        </p>
+        <p>
             <label><?php echo _e('Map Width: ( ex. 200px or 100% )', 'GMW'); ?></label>
             <span>
                 <input type="text" name="<?php if (isset($this)) echo $this->get_field_name('map_width'); ?>" value="<?php if (isset($instance['map_width']) && !empty($instance['map_width'])) echo $instance['map_width']; ?>" class="widefat" />
@@ -93,18 +111,24 @@ class GMW_Member_Location_Widget extends WP_Widget {
                 <input type="text" name="<?php if (isset($this)) echo $this->get_field_name('map_height'); ?>" value="<?php if (isset($instance['map_height']) && !empty($instance['map_height'])) echo $instance['map_height']; ?>" class="widefat" />
             </span>
         </p>
-
-        <p>
-            <input type="checkbox" value="1" name="<?php echo $this->get_field_name('directions'); ?>" <?php if (isset($instance["directions"])) echo 'checked="checked"'; ?> class="widefat" />
-            <label><?php echo _e('Show Directions Link.', 'GMW'); ?></label>
+		
+		<p>
+            <input type="checkbox" value="1" name="<?php echo $this->get_field_name('single_post'); ?>" <?php if (isset($instance["single_post"])) echo 'checked="checked"'; ?> class="widefat" />
+            <label><?php echo _e('Display on single post page', 'GMW'); ?></label>
         </p>
+		
         <p>
             <input type="checkbox" value="1" name="<?php echo $this->get_field_name('address'); ?>" <?php if (isset($instance["address"])) echo 'checked="checked"'; ?> class="widefat" />
             <label><?php echo _e('Show Address.', 'GMW'); ?></label>
         </p>
-
+        
         <p>
-            <input type="checkbox" value="1" name="<?php echo $this->get_field_name('no_location'); ?> <?php if (isset($instance["no_location"])) echo 'checked="checked"'; ?> class="widefat" />
+            <input type="checkbox" value="1" name="<?php echo $this->get_field_name('directions'); ?>" <?php if (isset($instance["directions"])) echo 'checked="checked"'; ?> class="widefat" />
+            <label><?php echo _e('Show Directions Link.', 'GMW'); ?></label>
+        </p>
+        
+        <p>
+            <input type="checkbox" value="1" name="<?php echo $this->get_field_name('no_location'); ?>" <?php if (isset($instance["no_location"])) echo 'checked="checked"'; ?> class="widefat" />
                    <label><?php echo _e('Show "No  location" message.', 'GMW'); ?></label>
         </p>
 
@@ -148,6 +172,8 @@ class GMW_Member_Location_Widget extends WP_Widget {
      */
     function update($new_instance, $old_instance) {
         //$instance['title'] 		= strip_tags($new_instance['title']);
+    	$instance['single_post']    = $new_instance['single_post'];
+    	$instance['display_name']   = $new_instance['display_name'];
         $instance['map_height']     = $new_instance['map_height'];
         $instance['map_width']      = $new_instance['map_width'];
         $instance['directions']     = $new_instance['directions'];

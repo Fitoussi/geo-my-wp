@@ -68,6 +68,11 @@ div.gmw-location-section-inner {
 	text-align:center;
 }
 
+#gmw-good-location-message, #gmw-bad-location-message {
+	display:inline;
+	font-size:12px;
+}
+
 .gmw-location-section.current-location {
 	width:24%;
 	float:left;
@@ -232,7 +237,7 @@ ul.metabox-tabs li.active, div.tab-content {
 	color: #277699;
 }
 
-@media (max-width:800px) {
+@media (max-width:900px) {
 	.gmw-location-section,
 	.gmw-location-section-inner .address,
 	.gmw-location-section-inner .right-side {

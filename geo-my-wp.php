@@ -3,7 +3,7 @@
   Plugin Name: GEO my WP
   Plugin URI: http://www.geomywp.com
   Description: Add location to any post types, pages or members (using Buddypress) and create an advance proximity search forms.
-  Version: 2.4.3
+  Version: 2.4.4
   Author: Eyal Fitoussi
   Author URI: http://www.geomywp.com
   License: GPLv2
@@ -148,7 +148,9 @@ class GEO_my_WP {
         //include scripts in the front end
         add_action( 'wp_enqueue_scripts', array( $this, 'frontend_register_scripts' ), 10 );
         add_filter( 'clean_url', array( $this, 'clean_google_url' ), 99, 3 );
-
+		
+        add_action( 'wp_enqueue_scripts', array( $this, 'load_dashicons' ) );
+        
         //main gmw shortcode
         add_shortcode( 'gmw', array( $this, 'gmw' ) );
         add_shortcode( 'gmw_results_map', array( $this, 'results_map' ) );
@@ -172,7 +174,7 @@ class GEO_my_WP {
         
         //include sweetdate theme functions when needed
         $active_theme = wp_get_theme();
-        if ( $active_theme->get('Name') == 'Sweetdate' || $active_theme->get('Template') ==  ( 'Sweetdate' || 'sweetdate' ) )
+         if ( $active_theme->get('Name') == 'Sweetdate' || $active_theme->get('Template') ==  'Sweetdate' || $active_theme->get('Template') == 'sweetdate' )
             add_action( 'bp_init', array( $this, 'sweetdate_init' ), 20 );
 
     }
@@ -246,19 +248,20 @@ class GEO_my_WP {
     	
         //register google maps api
         if ( !wp_script_is( 'google-maps', 'enqueue' ) )
-            wp_enqueue_script( 'google-maps', ( is_ssl() ? 'https' : 'http' ) . '://maps.googleapis.com/maps/api/js?libraries=places'.$googleApi.'&sensor=false'.$region.$language, array( 'jquery' ), false );
+            wp_enqueue_script( 'google-maps', ( is_ssl() ? 'https' : 'http' ) . '://maps.googleapis.com/maps/api/js?libraries=places'.$googleApi.'&sensor=false&ver=3.13'.$region.$language, array( 'jquery' ), false );
 
         //enqueue gmw style and script
         wp_enqueue_script( 'gmw-js', GMW_URL . '/assets/js/gmw.js', array( 'jquery' ), GMW_VERSION, true );
         wp_enqueue_style( 'gmw-style', GMW_URL . '/assets/css/style.css' );
+        wp_localize_script( 'gmw-js', 'gmwSettings', $this->settings );
 
-        if ( isset( $this->settings['general_settings']['auto_locate'] ) )
-            wp_localize_script( 'gmw-js', 'autoLocate', $this->settings['general_settings']['auto_locate'] );
-        else
-            wp_localize_script( 'gmw-js', 'autoLocate', 'false' );
 
     }
-
+	
+    function load_dashicons() {
+    	wp_enqueue_style( 'dashicons' );
+    }
+    
     /**
      * Load members locator add-on component
      *
@@ -285,7 +288,9 @@ class GEO_my_WP {
         if ( isset( $params['map'] ) ) {
 
             $this->form = $this->forms[$params['map']];
-
+            
+            if ( isset( $params['widget'] ) ) $this->form['in_widget'] = true;
+            		
             if ( isset( $this->form['search_results']['display_map'] ) && $this->form['search_results']['display_map'] == "shortcode" )
                 do_action( 'gmw_' . $this->form['prefix'] . '_before_map', $this->form );
 
@@ -299,7 +304,8 @@ class GEO_my_WP {
             if ( isset( $_GET['action'] ) && $_GET['action'] == "gmw_post" ) {
 
                 $this->form = $this->forms[$_GET['gmw_form']];
-
+                if ( isset( $params['widget'] ) ) $this->form['in_widget'] = true;
+                
                 do_action( 'gmw_' . $this->form['form_type'] . '_shortcode', $this->form, $results = ( $params['form'] == 'results' ) ? true : false );
             }
 
@@ -307,12 +313,15 @@ class GEO_my_WP {
         } else {
 
             $this->form = $this->forms[$params['form']];
-
+            
+            if ( isset( $params['widget'] ) ) $this->form['in_widget'] = true;
             $this->form['search_results']['results_page'] = ( isset( $this->form['search_results']['results_page'] ) && !empty( $this->form['search_results']['results_page'] ) ) ? get_permalink( $this->form['search_results']['results_page'] ) : false;
 
             //if this is a widget and results page is not set in the shorcode settings we will get the results page from the main settings
-            if ( isset( $params['widget'] ) && (!isset( $this->form['search_results']['results_page'] ) || empty( $this->form['search_results']['results_page'] ) ) )
+            if ( isset( $params['widget'] ) && (!isset( $this->form['search_results']['results_page'] ) || empty( $this->form['search_results']['results_page'] ) ) ) {
                 $this->form['search_results']['results_page'] = get_permalink( $this->settings['general_settings']['results_page'] );
+                
+            }
 
             do_action( 'gmw_' . $this->form['form_type'] . '_shortcode', $this->form, $results = ( $params['form'] == 'results' ) ? true : false );
         }
@@ -455,8 +464,10 @@ class GEO_my_WP {
     
     			} elseif ( $data->status === 'ZERO_RESULTS' ) {
     				return array( 'error' => __( 'No location found for the entered address.', 'GMW' ) );
-    			} elseif( $data->status === 'INVALID_REQUEST' ) {
+    			} elseif ( $data->status === 'INVALID_REQUEST' ) {
     				return array( 'error' => __( 'Invalid request. Did you enter an address?', 'GMW' ) );
+    			} elseif ( $data->status === 'OVER_QUERY_LIMIT' ) { 
+    				return array( 'error' => __( 'Something went wrong while retrieving your location.', 'GMW' ) . '<span style="display:none">OVER_QUERY_LIMIT</span>' );
     			} else {
     				return array( 'error' => __( 'Something went wrong while retrieving your location.', 'GMW' ) );
     			}

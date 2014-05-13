@@ -41,6 +41,15 @@ class GMW_Settings {
     									'desc'        => __( 'This is optional but will let you track your API requests. you can obtain your free Goole API key <a href="https://code.google.com/apis/console/" target="_blank">here</a>.', 'GMW' ),
     									'attributes'  => array( 'size' => '40' )
     							),
+    							array(
+    									'name'       => 'js_geocode',
+    									'std'        => '',
+    									'label'      => __( 'JavaScript Geocoding', 'GMW' ),
+    									'cb_label'   => __( 'Use Javascript call for geocoding', 'GMW' ),
+    									'desc'       => __( 'Check this checkbox to geocode the address on form submission via JavaScript call instaed of HTTP. You can try that if you are keep getting the message "Something went wrong trying to retrieve your location" when sumitting a search form which can be cause by OVER_QUERY_LIMIT', 'GMW' ),
+    									'type'       => 'checkbox',
+    									'attributes' => array()
+    							),
     							/*
     							 array(
     							 		'name'        => 'bing_api',
@@ -211,9 +220,9 @@ class GMW_Settings {
                     <table class="widefat fixed">
                         <thead>
                             <tr>
-                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Feature', 'GMW' ); ?></th>
-                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Settings', 'GMW' ); ?></th>
-                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Explanation', 'GMW' ); ?></th>
+                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:20%;padding:11px 10px"><?php _e( 'Feature', 'GMW' ); ?></th>
+                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:30%;padding:11px 10px"><?php _e( 'Settings', 'GMW' ); ?></th>
+                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50%;padding:11px 10px"><?php _e( 'Explanation', 'GMW' ); ?></th>
                             </tr>
                         </thead>
                         <?php

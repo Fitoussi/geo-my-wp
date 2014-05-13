@@ -2,6 +2,7 @@ jQuery(document).ready(function($) {
 
     $('.gmw-map-loader').fadeOut(1500);
 
+    console.log(gmwSettings.general_settings);
     /**
      * gmw JavaScript - Set Cookie
      * @version 1.0
@@ -36,6 +37,13 @@ jQuery(document).ready(function($) {
     }
     window.gmwDeleteCookie = gmwDeleteCookie;
 
+    //trigger form when click on enter within input field
+    $('.gmw-form input[type="text"]').keypress(function(event){
+    	if(event.keyCode == 13){
+    		$(this).closest('form').submit();
+    	}
+	});
+    
     //hide locator icon if browser does not support
     if (!navigator.geolocation)
         $('.gmw-locator-btn-wrapper').hide();
@@ -53,78 +61,94 @@ jQuery(document).ready(function($) {
     	
     	$(this).closest('form').find('.gmw-paged').val('1');
     	$(this).closest('form').submit();
-    }); 
-
-    /*
-    // when submitting a form	
-    $('.gmw-form').submit(function(e) {
-
-        var sForm = $(this);
-        var formId = sForm.find('.gmw-form-id').val();
-
-        //get the entered address
-        if (sForm.find('.gmw-address').hasClass('gmw-full-address')) {
-            var address = sForm.find('.gmw-full-address').val();
-        } else {
-            var address = [];
-            sForm.find(".gmw-address").each(function() {
-                address.push($(this).val());
-            });
-            address = address.join(' ');
-           
-        }
-        
-        // check if we are submmiting the same address and if we have lat/long. 
-        //if so no need to geocode again and submit the form with the information we already have
-        if (sForm.find('.prev-address').val() == address && $.trim(sForm.find('.gmw-lat').val()).length > 0)
-            return true;
-        //Check if the address was geocoded and if so we need to submit this form
-        if (sForm.find('.gmw-submit').hasClass('submitted'))
-            return true;
-        
-        //stop the form submission. we need to geocode the address
-        e.preventDefault();
-        //if address field is empty create a red border for the input field and stop the function
-        if (!$.trim(address).length) {
-            if (sForm.find('.gmw-address').hasClass('mandatory')) {
-                if (!sForm.find('.gmw-address').hasClass('gmw-no-address-error'))
-                    sForm.find('.gmw-address').toggleClass('gmw-no-address-error');
-            } else {
-                sForm.find('.gmw-submit').toggleClass('submitted');
-                setTimeout(function() {
-                    sForm.find('.gmw-submit').click();
-                }, 500);
-            }
-            return false;
-        }
-
-        //run google geocoder
-        geocoder = new google.maps.Geocoder();
-        geocoder.geocode({'address': address}, function(results, status) {
-
-            if (status == google.maps.GeocoderStatus.OK) {
-
-                //add class to submit button so the form will be submitted after geocoding
-                sForm.find('.gmw-submit').toggleClass('submitted');
-                // Modify the lat and long hidden fields 
-                sForm.find('.gmw-lat').val(results[0].geometry.location.lat());
-                sForm.find('.gmw-lng').val(results[0].geometry.location.lng());
-                // submit the form with the location
-                setTimeout(function() {
-                    sForm.find('.gmw-submit').click();
-                }, 500);
-            } else {
-                //if address was not geocoded stop the function and display error message
-                alert("We could not find the address you entered for the following reason: " + status);
-            }
-        });
     });
-    
-    */
-
+   
+    //geocode address via javascript
+    if ( gmwSettings.general_settings.js_geocode != undefined && gmwSettings.general_settings.js_geocode == 1 ) {
+	    // when submitting a form	
+	    $('.gmw-form').submit(function(e) {
+	
+	        var sForm = $(this);
+	        var formId = sForm.find('.gmw-form-id').val();
+	
+	        //get the entered address
+	        if (sForm.find('.gmw-address').hasClass('gmw-full-address')) {
+	            var address = sForm.find('.gmw-full-address').val();
+	        } else {
+	            var address = [];
+	            sForm.find(".gmw-address").each(function() {
+	                address.push($(this).val());
+	            });
+	            address = address.join(' ');
+	           
+	        }
+	        
+	        // check if we are submmiting the same address and if we have lat/long. 
+	        //if so no need to geocode again and submit the form with the information we already have
+	        if (sForm.find('.prev-address').val() == address && $.trim(sForm.find('.gmw-lat').val()).length > 0)
+	            return true;
+	        //Check if the address was geocoded and if so we need to submit this form
+	        if (sForm.find('.gmw-submit').hasClass('submitted'))
+	            return true;
+	        
+	        //stop the form submission. we need to geocode the address
+	        e.preventDefault();
+	        //if address field is empty create a red border for the input field and stop the function
+	        if (!$.trim(address).length) {
+	            if (sForm.find('.gmw-address').hasClass('mandatory')) {
+	                if (!sForm.find('.gmw-address').hasClass('gmw-no-address-error'))
+	                    sForm.find('.gmw-address').toggleClass('gmw-no-address-error');
+	            } else {
+	                sForm.find('.gmw-submit').toggleClass('submitted');
+	                setTimeout(function() {
+	                    sForm.find('.gmw-submit').click();
+	                }, 500);
+	            }
+	            return false;
+	        }
+	
+	        //run google geocoder
+	        geocoder = new google.maps.Geocoder();
+	        geocoder.geocode({'address': address}, function(results, status) {
+	
+	            if (status == google.maps.GeocoderStatus.OK) {
+	
+	                //add class to submit button so the form will be submitted after geocoding
+	                sForm.find('.gmw-submit').toggleClass('submitted');
+	                // Modify the lat and long hidden fields 
+	                sForm.find('.gmw-lat').val(results[0].geometry.location.lat());
+	                sForm.find('.gmw-lng').val(results[0].geometry.location.lng());
+	                // submit the form with the location
+	                setTimeout(function() {
+	                    sForm.find('.gmw-submit').click();
+	                }, 500);
+	            } else {
+	                //if address was not geocoded stop the function and display error message
+	                alert("We could not find the address you entered for the following reason: " + status);
+	            }
+	        });
+	    });
+    } else {
+    	
+    	//no geocoding! only form submission
+    	$('.gmw-form').submit(function(e) {
+        	
+        	//e.preventDefault();
+        	
+        	if ( $(this).find('.gmw-address').hasClass('mandatory') && $(this).find('.gmw-address').val() == '' ) {
+        		$(this).find('.gmw-address').addClass('gmw-no-address-error');
+        		
+        		return false;
+        	} else {
+        		return true;
+        	};
+        	
+        });
+    }
+  
     var autoLocator = false;
 
-    if (autoLocate == true && gmwGetCookie('gmw_autolocate') != 1) {
+    if ( gmwSettings.general_settings.auto_locate != undefined && gmwSettings.general_settings.auto_locate == 1 && gmwGetCookie('gmw_autolocate') != 1) {
 
         gmwSetCookie("gmw_autolocate", 1, 1);
         autoLocator = true;
@@ -164,25 +188,37 @@ jQuery(document).ready(function($) {
             switch (error.code) {
                 case error.PERMISSION_DENIED:
                     alert('User denied the request for Geolocation.');
-                    $('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('img').fadeToggle('fast').removeClass('locator-submitted');
+                    $('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('.gmw-locator-btn-loader').fadeToggle('fast',function() {
+                    	$('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('.gmw-locator-button').fadeToggle('fast').removeClass('locator-submitted');
+                    });
+                    
                     $('.gmw-address').removeAttr('disabled');
                     $('.gmw-submit').removeAttr('disabled');
                     break;
                 case error.POSITION_UNAVAILABLE:
                     alert('Location information is unavailable.');
-                    $('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('img').fadeToggle('fast').removeClass('locator-submitted');
+                    $('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('.gmw-locator-btn-loader').fadeToggle('fast',function() {
+                    	$('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('.gmw-locator-button').fadeToggle('fast').removeClass('locator-submitted');
+                    });
+                    
                     $('.gmw-address').removeAttr('disabled');
                     $('.gmw-submit').removeAttr('disabled');
                     break;
                 case 3:
                     alert('The request to get user location timed out.');
-                    $('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('img').fadeToggle('fast').removeClass('locator-submitted');
+                    $('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('.gmw-locator-btn-loader').fadeToggle('fast',function() {
+                    	$('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('.gmw-locator-button').fadeToggle('fast').removeClass('locator-submitted');
+                    });
+                    
                     $('.gmw-address').removeAttr('disabled');
                     $('.gmw-submit').removeAttr('disabled');
                     break;
                 case error.UNKNOWN_ERROR:
                     alert('An unknown error occurred');
-                    $('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('img').fadeToggle('fast').removeClass('locator-submitted');
+                    $('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('.gmw-locator-btn-loader').fadeToggle('fast',function() {
+                    	$('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('.gmw-locator-button').fadeToggle('fast').removeClass('locator-submitted');
+                    });
+                    
                     $('.gmw-address').removeAttr('disabled');
                     $('.gmw-submit').removeAttr('disabled');
                     break;
@@ -197,7 +233,11 @@ jQuery(document).ready(function($) {
 
         locatorClicked = $(this).attr('id');
         $(this).toggleClass('locator-submitted');
-        $(this).closest('.gmw-locator-btn-wrapper').find('img').fadeToggle('fast');
+        
+        $(this).fadeToggle('fast',function() {
+        	$(this).closest('.gmw-locator-btn-wrapper').find('.gmw-locator-btn-loader').fadeToggle('fast');
+        });
+        
         $('.gmw-address').attr('disabled', 'disabled');
         $('.gmw-submit').attr('disabled', 'disabled');
 
@@ -290,7 +330,9 @@ jQuery(document).ready(function($) {
                     gForm.find('.gmw-submit').click();
                 }, 1500);
             } else {
-                $('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('img').fadeToggle('fast').removeClass('locator-submitted');
+            	$('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('.gmw-locator-btn-loader').fadeToggle('fast',function() {
+                	$('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('.gmw-locator-button').fadeToggle('fast').removeClass('locator-submitted');
+                });
             }
         }
         ;

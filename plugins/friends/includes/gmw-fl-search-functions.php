@@ -103,12 +103,16 @@ function gmw_fl_by_radius($gmw) {
  */
 function gmw_fl_get_directions_link($gmw, $title) {
     global $members_template;
-
+	
+    $settings = get_option( 'gmw_options' );
+    
     if (!isset($gmw['search_results']['get_directions']))
         return;
 
-    $region = ( WPLANG ) ? explode('_', WPLANG) : array('en', 'US');
-    return apply_filters('gmw_fl_get_directions_link', '<a href="http://maps.google.com/maps?f=d&hl=' . $region[0] . '&region=' . $region[1] . '&doflg=' . $gmw['units_array']['map_units'] . '&geocode=&saddr=' . $gmw['org_address'] . '&daddr=' . str_replace(" ", "+", $members_template->member->address) . '&ie=UTF8&z=12" target="_blank">' . $title . '</a>', $gmw, $members_template, $title);
+    $region	   = ( isset( $settings['general_settings']['country_code'] ) && !empty( $settings['general_settings']['country_code'] ) ) ? '&region=' .$settings['general_settings']['country_code'] : '';
+    $language  = ( isset( $settings['general_settings']['language_code'] ) && !empty( $settings['general_settings']['language_code'] ) ) ? '&hl=' .$settings['general_settings']['language_code'] : '';
+    
+    return apply_filters('gmw_fl_get_directions_link', '<a href="http://maps.google.com/maps?f=d'.$language . '' .$region . '&doflg=' . $gmw['units_array']['map_units'] . '&geocode=&saddr=' . $gmw['org_address'] . '&daddr=' . str_replace(" ", "+", $members_template->member->formatted_address) . '&ie=UTF8&z=12" target="_blank">' . $title . '</a>', $gmw, $members_template, $title);
 
 }
 
@@ -589,26 +593,27 @@ class GMW_FL_Search_Query extends GMW {
         global $members_template;
 
         // if we need to display map
-        if ($this->form['search_results']['display_map'] != 'na') :
+        if ($this->form['search_results']['display_map'] != 'na') {
 
-            $this->form['iw_labels'] = array(
-                'distance'   => __('Distance: ', 'GMW'),
-                'address'    => __('Address: ', 'GMW'),
-                'directions' => __('Get Directions: ', 'GMW')
-            );
+        	$this->form['iw_labels'] = array(
+        			'distance'   	=> __('Distance: ', 'GMW'),
+        			'address'    	=> __('Address: ', 'GMW'),
+        			'directions' 	=> __('Get Directions: ', 'GMW'),
+        			'your_location' => __('Your Location', 'GMW')
+        	);
 
-            $this->form       = apply_filters('gmw_fl_form_before_map', $this->form, $members_template, $this->settings);
-            $members_template = apply_filters('gmw_fl_members_before_map', $members_template, $this->form, $this->settings);
+        	$this->form       = apply_filters('gmw_fl_form_before_map', $this->form, $members_template, $this->settings);
+        	$members_template = apply_filters('gmw_fl_members_before_map', $members_template, $this->form, $this->settings);
 
-            do_action('gmw_fl_has_memebrs_before_map', $this->form, $this->settings, $members_template);
+        	do_action('gmw_fl_has_memebrs_before_map', $this->form, $this->settings, $members_template);
 
-            $form            = $this->form;
-            $form['results'] = $members_template->members;
+        	$form            = $this->form;
+        	$form['results'] = $members_template->members;
 
-            wp_enqueue_script('gmw-fl-map', true);
-            wp_localize_script('gmw-fl-map', 'gmwForm', $form);
+        	wp_enqueue_script('gmw-fl-map', true);
+        	wp_localize_script('gmw-fl-map', 'gmwForm', $form);
 
-        endif;
+        }
 
         echo '</div>';
 

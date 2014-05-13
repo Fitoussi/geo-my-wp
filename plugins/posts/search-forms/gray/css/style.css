@@ -25,7 +25,9 @@ div.gmw-pt-gray-form-wrapper input[type="text"],
 div.gmw-pt-gray-form-wrapper select {
      width:100%;
      margin-bottom:10px;
-     box-sizing: border-box;
+     -webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;    
+	box-sizing: border-box;
 }
 
 div.gmw-pt-gray-form-wrapper select {
