@@ -12,7 +12,7 @@
  *                  'map_icon'          => false
  *  		);
  */
-function gmw_user_update_location( $args ) {
+function gmw_update_user_location( $args ) {
 
 	$defaults = array(
 			'user_id'         => false,
