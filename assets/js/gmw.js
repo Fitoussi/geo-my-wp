@@ -2,7 +2,6 @@ jQuery(document).ready(function($) {
 
     $('.gmw-map-loader').fadeOut(1500);
 
-    console.log(gmwSettings.general_settings);
     /**
      * gmw JavaScript - Set Cookie
      * @version 1.0
@@ -173,13 +172,16 @@ jQuery(document).ready(function($) {
 
         // GPS locator function //
         function showPosition(position) {
+   
             var geocoder = new google.maps.Geocoder();
             geocoder.geocode({'latLng': new google.maps.LatLng(position.coords.latitude, position.coords.longitude)}, function(results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
                     getAddressFields(results);
+                    
                 } else {
                     alert('Geocoder failed due to: ' + status);
                 }
+                
             });
         }
 
@@ -188,41 +190,23 @@ jQuery(document).ready(function($) {
             switch (error.code) {
                 case error.PERMISSION_DENIED:
                     alert('User denied the request for Geolocation.');
-                    $('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('.gmw-locator-btn-loader').fadeToggle('fast',function() {
-                    	$('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('.gmw-locator-button').fadeToggle('fast').removeClass('locator-submitted');
-                    });
-                    
-                    $('.gmw-address').removeAttr('disabled');
-                    $('.gmw-submit').removeAttr('disabled');
-                    break;
+                break;
                 case error.POSITION_UNAVAILABLE:
                     alert('Location information is unavailable.');
-                    $('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('.gmw-locator-btn-loader').fadeToggle('fast',function() {
-                    	$('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('.gmw-locator-button').fadeToggle('fast').removeClass('locator-submitted');
-                    });
-                    
-                    $('.gmw-address').removeAttr('disabled');
-                    $('.gmw-submit').removeAttr('disabled');
-                    break;
+                break;
                 case 3:
                     alert('The request to get user location timed out.');
-                    $('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('.gmw-locator-btn-loader').fadeToggle('fast',function() {
-                    	$('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('.gmw-locator-button').fadeToggle('fast').removeClass('locator-submitted');
-                    });
-                    
-                    $('.gmw-address').removeAttr('disabled');
-                    $('.gmw-submit').removeAttr('disabled');
-                    break;
+                break;
                 case error.UNKNOWN_ERROR:
-                    alert('An unknown error occurred');
-                    $('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('.gmw-locator-btn-loader').fadeToggle('fast',function() {
-                    	$('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('.gmw-locator-button').fadeToggle('fast').removeClass('locator-submitted');
-                    });
-                    
-                    $('.gmw-address').removeAttr('disabled');
-                    $('.gmw-submit').removeAttr('disabled');
-                    break;
+                    alert('An unknown error occurred');  
+                break;
             }
+            
+            $('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('.gmw-locator-btn-loader').fadeToggle('fast',function() {
+            	$('.locator-submitted').fadeToggle('fast').removeClass('locator-submitted');
+            	 $('.gmw-address').removeAttr('disabled');
+                 $('.gmw-submit').removeAttr('disabled');
+            }); 
         }
     }
 
@@ -230,7 +214,7 @@ jQuery(document).ready(function($) {
 
     // When click on locator button in a form
     $('.gmw-locate-btn').click(function() {
-
+    
         locatorClicked = $(this).attr('id');
         $(this).toggleClass('locator-submitted');
         
@@ -331,7 +315,7 @@ jQuery(document).ready(function($) {
                 }, 1500);
             } else {
             	$('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('.gmw-locator-btn-loader').fadeToggle('fast',function() {
-                	$('.locator-submitted').closest('.gmw-locator-btn-wrapper').find('.gmw-locator-button').fadeToggle('fast').removeClass('locator-submitted');
+                	$('.locator-submitted').fadeToggle('fast').removeClass('locator-submitted');
                 });
             }
         }

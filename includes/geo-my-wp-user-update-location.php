@@ -84,19 +84,19 @@ function gmw_update_user_location( $args ) {
 	//Save information to database
 	global $wpdb;
 	$wpdb->replace( 'wppl_friends_locator', array(
-			'member_id'         => $locationArgs[ 'args' ][ 'user_id' ],
+			'member_id'         => $locationArgs['args']['user_id'],
 			'street'            => $street,
 			'apt'               => $apt,
 			'city'              => $city,
 			'state'             => $state,
-			'state_long'        => $locationArgs[ 'geocoded' ][ 'state_long' ],
+			'state_long'        => $locationArgs['geocoded']['state_long'],
 			'zipcode'           => $zipcode,
 			'country'           => $country,
-			'country_long'      => $locationArgs[ 'geocoded' ][ 'country_long' ],
+			'country_long'      => $locationArgs['geocoded']['country_long'],
 			'address'           => $address_apt,
-			'formatted_address' => $locationArgs[ 'geocoded' ][ 'formatted_address' ],
-			'lat'               => $locationArgs[ 'geocoded' ][ 'lat' ],
-			'long'              => $locationArgs[ 'geocoded' ][ 'lng' ],
+			'formatted_address' => $locationArgs['geocoded']['formatted_address'],
+			'lat'               => $locationArgs['geocoded']['lat'],
+			'long'              => $locationArgs['geocoded']['lng'],
 			'map_icon'          => $map_icon,
 	)
 	);

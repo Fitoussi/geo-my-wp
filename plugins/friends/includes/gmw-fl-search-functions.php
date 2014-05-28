@@ -282,7 +282,7 @@ class GMW_FL_Search_Query extends GMW {
      * 
      */
     public function search_form() {
-
+    	
         $gmw = $this->form;
 
         do_action('gmw_fl_before_search_form', $this->form, $this->settings);

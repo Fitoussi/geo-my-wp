@@ -87,7 +87,7 @@ function gmw_pt_form_taxonomies( $gmw, $tag, $class ) {
                     'taxonomy'        => $tax,
                     'echo'            => false,
                     'hide_empty'      => 1,
-                    'depth'           => 10,
+                    'depth'           => 10,	
                     'hierarchical'    => 1,
                     'show_count'      => 0,
                     'class'           => 'gmw-dropdown-' . $tax . ' gmw-dropdown-taxonomy',
@@ -160,9 +160,7 @@ function gmw_pt_get_per_page_dropdown( $gmw, $class ) {
 			    });
 			});
 	    </script>';
-        
-        
-
+       
     endif;
 
     return apply_filters( 'gmw_pt_get_per_page', $per_page, $gmw );
@@ -416,7 +414,7 @@ function gmw_pt_get_taxonomies( $gmw, $post ) {
     	}
 
     }
-
+    
    	return $output;
 
 }
@@ -642,10 +640,10 @@ class GMW_PT_Search_Query extends GMW {
     public function query_clauses( $clauses ) {
 
         global $wpdb;
-
+		
         // join the location table into the query
-        $clauses['join'] .= "INNER JOIN " . $wpdb->prefix . "places_locator gmwlocations ON $wpdb->posts.ID = gmwlocations.post_id ";
-
+        $clauses['join']  .= "INNER JOIN {$wpdb->prefix}places_locator gmwlocations ON $wpdb->posts.ID = gmwlocations.post_id ";
+        
         // add the radius calculation and add the locations fields into the results
         if ( !empty( $this->form['org_address'] ) ) :
 

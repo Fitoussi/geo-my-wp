@@ -101,20 +101,23 @@ jQuery(document).ready(function($){
 			content +=			'<table>';
 			content +=				'<tr><td><div class="wppl-info-window-permalink"><a href="' + gmwForm.results[i]['post_permalink'] + '">' + gmwForm.results[i]['post_title'] + '</a></div></td></tr>';
 			content +=				'<tr><td><span>'+ gmwForm['iw_labels']['address'] + '</span>' + gmwForm.results[i]['formatted_address'] + '</td></tr>';
-			if ( gmwForm.org_address != false ) 
+			if ( gmwForm.org_address != false ) {
 				content +=				'<tr><td><span>'+ gmwForm['iw_labels']['distance'] + '</span>' + gmwForm.results[i]['distance'] + ' ' + gmwForm.units_array['name'] + '</td></tr>';
+			}
 			
-			if ( gmwForm.search_results.additional_info['phone'] != undefined ) {
-				content +=				'<tr><td><span>'+ gmwForm['iw_labels']['phone'] + '</span>' + gmwForm.results[i]['phone'] + '</td></tr>';
-			}
-			if ( gmwForm.search_results.additional_info['fax'] != undefined ) {
-				content +=				'<tr><td><span>'+ gmwForm['iw_labels']['fax'] + '</span>' + gmwForm.results[i]['fax'] + '</td></tr>';
-			}
-			if ( gmwForm.search_results.additional_info['email'] != undefined ) {
-			content +=				'<tr><td><span>'+ gmwForm['iw_labels']['email'] + '</span><a href="mailto:' + gmwForm.results[i]['email'] + '">'+gmwForm.results[i]['email']+'</a></td></tr>';
-			}
-			if ( gmwForm.search_results.additional_info['website'] != undefined ) {
-				content +=				'<tr><td><span>'+ gmwForm['iw_labels']['website'] + '</span><a href="http://' + gmwForm.results[i]['website'] + '" target="_blank">' + gmwForm.results[i]['website'] + '</a>' + '</td></tr>';
+			if ( gmwForm.search_results.additional_info != undefined ) {
+				if ( gmwForm.search_results.additional_info['phone'] != undefined ) {
+					content +=				'<tr><td><span>'+ gmwForm['iw_labels']['phone'] + '</span>' + gmwForm.results[i]['phone'] + '</td></tr>';
+				}
+				if ( gmwForm.search_results.additional_info['fax'] != undefined ) {
+					content +=				'<tr><td><span>'+ gmwForm['iw_labels']['fax'] + '</span>' + gmwForm.results[i]['fax'] + '</td></tr>';
+				}
+				if ( gmwForm.search_results.additional_info['email'] != undefined ) {
+				content +=				'<tr><td><span>'+ gmwForm['iw_labels']['email'] + '</span><a href="mailto:' + gmwForm.results[i]['email'] + '">'+gmwForm.results[i]['email']+'</a></td></tr>';
+				}
+				if ( gmwForm.search_results.additional_info['website'] != undefined ) {
+					content +=				'<tr><td><span>'+ gmwForm['iw_labels']['website'] + '</span><a href="http://' + gmwForm.results[i]['website'] + '" target="_blank">' + gmwForm.results[i]['website'] + '</a>' + '</td></tr>';
+				}
 			}
 			content +=			'</table>';
 			content +=		'</div>';

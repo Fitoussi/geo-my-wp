@@ -62,7 +62,6 @@ if ( !function_exists('gmw_modify_tax_all_value') ) {
 		<!-- post types dropdown -->
 		<?php gmw_pt_form_post_types_dropdown( $gmw, $title='', $class='', $all= __(' -- Search Site -- ','GMW') ); ?>
 
-		
 		<?php do_action( 'gmw_search_form_before_taxonomies', $gmw ); ?>
 		
 		<!-- Display taxonomies/categories --> 

@@ -5,7 +5,7 @@ Tags: Geo-location, Geolocation, proximity search, zipcode search, radius search
 Requires at least: 3.8
 Tested up to: 3.9.1
 Buddypress: 2.0.1
-Stable tag: 2.4.4
+Stable tag: 2.4.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -127,6 +127,13 @@ For questions, bugs report and suggestions please visit [GEO my WP Furom](http:/
 For screenshots please visit [GEO my WP](http://www.geomywp.com)
 
 == Changelog ==
+
+== 2.4.5 ==
+
+* Fix: Locator button disappeared when clicked.
+* Fix: Info-window wont open if additional information is disabled
+* Fix: [gmw_single_location] shortcode breaks theme due to missing closing tag 
+* Fix: Horizontal search form hidden checkboxes 
 
 == 2.4.4 == 
 

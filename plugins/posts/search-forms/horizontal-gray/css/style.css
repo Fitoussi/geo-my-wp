@@ -45,6 +45,7 @@ div.gmw-pt-horizontal-gray-form-wrapper input[type="text"] {
 	font-size:12px;
 	color:#666;
 	width:180px;
+	margin:0px;
 } 
  
 div.gmw-pt-horizontal-gray-form-wrapper select {
@@ -72,6 +73,10 @@ div.gmw-pt-horizontal-gray-form-wrapper .gmw-address-field-wrapper label {
 
 div.gmw-pt-horizontal-gray-form-wrapper .gmw-single-taxonomy-wrapper label {
 	display:none;
+}
+
+div.gmw-pt-horizontal-gray-form-wrapper  .gmw-checkbox-taxonomy-wrapper label {
+	display:inline-block;
 }
 
 div.gmw-pt-horizontal-gray-form-wrapper .address-locator-wrapper {
@@ -165,14 +170,16 @@ div.gmw-pt-horizontal-gray-form-wrapper .gmw-radius-slider-wrapper .gmw-slider-r
 
 div.gmw-pt-horizontal-gray-form-wrapper .gmw-checkbox-taxonomy-wrapper {
 	margin-bottom:10px;
+	vertical-align:top;
 }
 
 div.gmw-pt-horizontal-gray-form-wrapper .gmw-checkbox-taxonomy-wrapper span {
-	display:block;
+	display:block
 }
 
 div.gmw-pt-horizontal-gray-form-wrapper input.gmw-single-checkbox {
 	margin-right: 5px;
+	
 	
 }
 

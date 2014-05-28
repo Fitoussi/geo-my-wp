@@ -71,7 +71,7 @@ class GMW_Location_Component extends BP_Component {
     /**
      * GMW Location globals
      */
-    function setup_globals($args = array()) {
+    function setup_globals( $args = array() ) {
         global $bp;
 
         // Defining the slug in this way makes it possible for site admins to override it
@@ -98,17 +98,17 @@ class GMW_Location_Component extends BP_Component {
     /**
      * GMW Location menu tab
      */
-    function setup_nav($main_nav = array(), $sub_nav = array()) {
+    function setup_nav( $main_nav = array(), $sub_nav = array() ) {
         global $bp;
 
         // Add 'location' to the main navigation
         $main_nav = apply_filters('gmw_fl_setup_nav', array(
-            'name'                => __('Location', 'GMW'),
-            'slug'                => GMW_FL_SLUG,
-            'position'            => 60,
-            'screen_function'     => array($this, 'screen_functions'),
-            'default_subnav_slug' => GMW_FL_SLUG
-                ), $bp->displayed_user);
+        		'name'                => __('Location', 'GMW'),
+        		'slug'                => GMW_FL_SLUG,
+        		'position'            => 60,
+        		'screen_function'     => array($this, 'screen_functions'),
+        		'default_subnav_slug' => GMW_FL_SLUG
+        ), $bp->displayed_user);
 
         $user_domain = (!empty($bp->displayed_user->id) ) ? $bp->displayed_user->domain : $bp->loggedin_user->domain;
 
@@ -164,7 +164,7 @@ class GMW_Location_Component extends BP_Component {
      * GMW location admin bar
      * @see BP_Component::setup_admin_bar()
      */
-    function setup_admin_bar($wp_admin_nav = array()) {
+    function setup_admin_bar( $wp_admin_nav = array() ) {
         global $bp;
 
         // Prevent debug notices

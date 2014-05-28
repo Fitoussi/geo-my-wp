@@ -133,6 +133,7 @@ h2.gmw-addon-title {
 
 div.gmw-addon-image-wrapper {
 	padding: 3px;
+	max-height: 180px;
 }
 
 .gmw-addon-image-wrapper img {

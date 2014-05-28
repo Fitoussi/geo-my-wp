@@ -126,7 +126,8 @@ abstract class GMW {
         }
         
         if ( $this->form['get_per_page'] == false ) {
-        	$this->form['get_per_page'] = ( isset( $_GET['gmw_per_page'] ) ) ? $_GET['gmw_per_page'] : current( explode( ",", $this->form['search_results']['per_page'] ) );
+        	$per_page = ( isset( $this->form['search_results']['per_page'] ) ) ? current( explode( ",", $this->form['search_results']['per_page'] ) ) : -1;
+        	$this->form['get_per_page'] = ( isset( $_GET['gmw_per_page'] ) ) ? $_GET['gmw_per_page'] : $per_page;
         }
                  
         // distance units 
@@ -135,6 +136,8 @@ abstract class GMW {
         } else {
             $this->form['units_array'] = array( 'radius' => 6371, 'name' => "Km", 'map_units' => 'ptk', 'units' => "metric" );
         }
+        
+        $_GET = apply_filters( 'gmw_modify_get_args', $_GET, $this->form );
         
         //if lat/lng exist then use them
         if ( $this->form['your_lat'] != false && $this->form['your_lng'] != false ) {
@@ -283,6 +286,8 @@ function gmw_form_submit_fields( $gmw, $subValue ) {
         <input type="hidden" id="gmw-prefix-<?php echo $gmw['ID']; ?>" class="gmw-prefix gmw-prefix-<?php echo $gmw['ID']; ?>" name="gmw_px" value="<?php echo $gmw['prefix']; ?>" />
         <input type="hidden" id="gmw-action-<?php echo $gmw['ID']; ?>" class="gmw-action gmw-action-<?php echo $gmw['ID']; ?>" name="action" value="gmw_post" />
 
+        <?php do_action( 'gmw_from_submit_fields', $gmw ); ?>
+        
         <?php $submit_button = '<input type="submit" id="gmw-submit-' . $gmw['ID'] . '" class="gmw-submit" value="' . $subValue . '" />'; ?>
         <?php echo apply_filters( 'gmw_form_submit_button', $submit_button, $gmw, $subValue ); ?>
     </div>

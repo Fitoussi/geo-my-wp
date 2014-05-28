@@ -23,7 +23,7 @@ class GMW_Single_Location {
     			shortcode_atts(
     					array(
     							'post_id'         => 0,
-    							'post_title'	  => 1,
+    							'post_title'	  => 0,
     							'distance'		  => 1,
     							'distance_unit'	  => 'm',
     							'map'             => 1,
@@ -257,9 +257,9 @@ class GMW_Single_Location {
         </script>
         <?php
         
-        $output = $location_wrap_start.$location_title.$location_distance.$location_map.$location_directions.$location_info;
+        $output = $location_wrap_start.$location_title.$location_distance.$location_map.$location_directions.$location_info.$location_wrap_end;
         
-        return apply_filters( 'gmw_pt_single_location_output', $output, $args, $location_wrap_start, $location_title, $location_distance, $location_map, $location_directions, $location_info );
+        return apply_filters( 'gmw_pt_single_location_output', $output, $args, $location_wrap_start, $location_title, $location_distance, $location_map, $location_directions, $location_info, $location_wrap_end );
 
     }
 
