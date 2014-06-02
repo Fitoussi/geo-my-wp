@@ -121,7 +121,7 @@ abstract class GMW {
         }
         
         // get the address
-        if ( $this->form['org_address'] == false && array_filter( $_GET['gmw_address'] ) ) {
+        if ( $this->form['org_address'] == false &&  isset( $_GET['gmw_address'] ) && array_filter( $_GET['gmw_address'] ) ) {
             $this->form['org_address'] = str_replace( '+', ' ', implode( ' ', $_GET['gmw_address'] ) );
         }
         

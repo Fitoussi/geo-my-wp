@@ -2,7 +2,7 @@ jQuery(document).ready(function($) {
 	
 	//trigger cl form
 	$('.gmw-cl-form-trigger, #gmw-cl-close-btn').click(function() {
-		$('#gmw-cl-form-wrapper').fadeToggle();
+		$('.gmw-cl-form-wrapper').fadeToggle();
 	});
 	
 	/**
@@ -63,22 +63,30 @@ jQuery(document).ready(function($) {
 		}
 	}
 	
+	$('#gmw-cl-address').bind('keypress', function (e){
+        if ( e.keyCode == 13 ) {
+        	$('#gmw-cl-submit-address').click();
+        }
+    });
+	
 	/* when autolocating user */
 	$('#gmw-cl-trigger').click(function() {
 		
 		$('#gmw-cl-address').prop( 'disabled', true );
-		$("#gmw-cl-spinner").fadeToggle();
+		$("#gmw-cl-respond-wrapper").fadeToggle();
 		GmwGetLocation();
 		
 	});
 	
 	/* get location in user's location widget when manually typing address */	
-	$('#gmw-cl-form').submit(function() {
-
-		$('#gmw-cl-address').prop( 'disabled', true );
-		$("#gmw-cl-spinner").fadeToggle();
+	$('#gmw-cl-submit-address').click(function(e) {
 		
-		var retAddress = $(this).find("#gmw-cl-address").val();
+		e.preventDefault();
+		
+		$('#gmw-cl-address').prop( 'disabled', true );
+		$("#gmw-cl-respond-wrapper").slideToggle();
+		
+		var retAddress = $(this).closest('form').find("#gmw-cl-address").val();
 		
 		geocoder = new google.maps.Geocoder();
 	
@@ -92,14 +100,13 @@ jQuery(document).ready(function($) {
 	        		}
 	      		});
 	    	} else {
-	    		$(".gmw-locator-spinner").fadeToggle();
 	   
-	    		$('#gmw-cl-message').html('Geocode was not successful for the following reason: ' + status);
+	    		$('#gmw-cl-message').addClass('error').html('Geocode was not successful for the following reason: ' + status);
 	      		setTimeout(function() {
-	      			$("#gmw-cl-spinner").fadeToggle();
-	      			$('#gmw-cl-message').html('');
+	      			$("#gmw-cl-respond-wrapper").slideToggle();
+	      			$('#gmw-cl-message').removeClass('error').html('');
 	      			$('#gmw-cl-address').prop('disabled',false);
-	      		},2500);
+	      		},3000);
 	    	}
 	   	}); 
 	});
@@ -170,7 +177,7 @@ jQuery(document).ready(function($) {
 	         } 
 		}
 			
-		$('#gmw-cl-message').html('<div id="gmw-locator-success-message">We found you at ' + results[0].formatted_address + '</div>');
+		$('#gmw-cl-message').addClass('success').html('We found you at ' + results[0].formatted_address);
 		
 		$('#gmw-cl-map').fadeToggle(function() {
 			
@@ -187,7 +194,7 @@ jQuery(document).ready(function($) {
 			
 			setTimeout(function() {
 				$('#gmw-cl-hidden-form').submit();
-			},2500);
+			},3500);
 			
 		});
 		

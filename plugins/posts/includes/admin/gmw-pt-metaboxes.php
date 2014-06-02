@@ -47,11 +47,12 @@ class GMW_PT_Meta_Boxes {
      */
     public function create_meta_boxes() {
 
-        $prefix     = '_wppl_';
-        $meta_boxes = array(
+    	$post_types 	= ( isset( $this->settings[ 'post_types_settings' ][ 'post_types' ] ) ) ? $this->settings[ 'post_types_settings' ][ 'post_types' ] : array();
+        $prefix     	= '_wppl_';
+        $meta_boxes 	= array(
             'id'       => 'wppl-meta-box',
             'title'    => __( 'GMW Location', 'GMW' ),
-            'pages'    => $this->settings[ 'post_types_settings' ][ 'post_types' ],
+            'pages'    => $post_types,
             'context'  => 'normal',
             'priority' => 'high',
             'fields'   => array(

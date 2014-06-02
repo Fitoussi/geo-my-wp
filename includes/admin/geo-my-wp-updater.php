@@ -6,11 +6,11 @@
  * @version 1.0
  */
 class GMW_Premium_Plugin_Updater {
-
     private $api_url  = '';
     private $api_data = array();
     private $name     = '';
     private $slug     = '';
+    private $do_check = false;
 
     /**
      * Class constructor.
@@ -24,6 +24,12 @@ class GMW_Premium_Plugin_Updater {
      * @return void
      */
     function __construct( $_api_url, $_plugin_file, $_api_data = null ) {
+    	
+    	$settings = get_option('gmw_options');
+    	
+    	if ( isset( $settings['admin_settings']['updater_disabled'] ) )
+    		return;
+    	
         $this->api_url  = trailingslashit( $_api_url );
         $this->api_data = urlencode_deep( $_api_data );
         $this->name     = plugin_basename( $_plugin_file );
@@ -64,19 +70,25 @@ class GMW_Premium_Plugin_Updater {
      */
     function pre_set_site_transient_update_plugins_filter( $_transient_data ) {
 
-
-        if ( empty( $_transient_data ) )
-            return $_transient_data;
-
-        $to_send = array( 'slug' => $this->slug );
-
-        $api_response = $this->api_request( 'plugin_latest_version', $to_send );
-
-        if ( false !== $api_response && is_object( $api_response ) && isset( $api_response->new_version ) ) {
-            if ( version_compare( $this->version, $api_response->new_version, '<' ) )
-                $_transient_data->response[$this->name] = $api_response;
-        }
-        return $_transient_data;
+    	if( empty( $_transient_data ) || ! $this->do_check ) {
+    	
+    		// This ensures that the custom API request only runs on the second time that WP fires the update check
+    		$this->do_check = true;
+    	
+    		return $_transient_data;
+    	}
+    	
+    	$to_send = array( 'slug' => $this->slug );
+    	
+    	$api_response = $this->api_request( 'plugin_latest_version', $to_send );
+    	
+    	if( false !== $api_response && is_object( $api_response ) && isset( $api_response->new_version ) ) {
+    	
+    		if( version_compare( $this->version, $api_response->new_version, '<' ) ) {
+    			$_transient_data->response[$this->name] = $api_response;
+    		}
+    	}
+    	return $_transient_data;
 
     }
 
@@ -91,16 +103,14 @@ class GMW_Premium_Plugin_Updater {
      * @return object $_data
      */
     function plugins_api_filter( $_data, $_action = '', $_args = null ) {
-        if ( ( $_action != 'plugin_information' ) || !isset( $_args->slug ) || ( $_args->slug != $this->slug ) )
-            return $_data;
+        if ( ( $_action != 'plugin_information' ) || !isset( $_args->slug ) || ( $_args->slug != $this->slug ) ) return $_data;
 
-        $to_send = array( 'slug' => $this->slug );
+		$to_send = array( 'slug' => $this->slug );
 
-        $api_response = $this->api_request( 'plugin_information', $to_send );
-        if ( false !== $api_response )
-            $_data        = $api_response;
+		$api_response = $this->api_request( 'plugin_information', $to_send );
+		if ( false !== $api_response ) $_data = $api_response;
 
-        return $_data;
+		return $_data;
 
     }
 
@@ -144,12 +154,12 @@ class GMW_Premium_Plugin_Updater {
             return;
 
         $api_params = array(
-            'edd_action' => 'get_version',
-            'license'    => $data['license'],
-            'name'       => $data['item_name'],
-            'slug'       => $this->slug,
-            'author'     => $data['author'],
-            'url'        => home_url()
+        		'edd_action' => 'get_version',
+        		'license'    => $data['license'],
+        		'name'       => $data['item_name'],
+        		'slug'       => $this->slug,
+        		'author'     => $data['author'],
+        		'url'        => home_url()
         );
         $request    = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
 

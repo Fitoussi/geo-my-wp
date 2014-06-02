@@ -116,7 +116,8 @@
 	font-size: 18px;
 }
 
-/* ////// LOCATE MESSAGE ////// */
+/* current location shortcode  */
+
 #gmw-cl-form-wrapper {
 	display: none;
 	width: 300px;

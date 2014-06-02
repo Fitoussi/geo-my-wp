@@ -1,5 +1,4 @@
 <?php
-
 /**
  * PT Search form function - Posts, Pages post types dropdown.
  * @version 1.0
@@ -701,7 +700,7 @@ class GMW_PT_Search_Query extends GMW {
         $this->form = apply_filters( 'gmw_pt_form_before_posts_loop', $this->form, $gmw_query, $this->settings );
         $gmw_query  = apply_filters( 'gmw_pt_posts_before_posts_loop', $gmw_query, $this->form, $this->settings );
 
-        do_action( 'gmw_pt_before_posts_loop', $this->form, $this->settings, $gmw_query );
+        do_action( 'gmw_pt_before_posts_loop', $this->form, $gmw_query, $this->settings );
 
         //check if we got results and if so run the loop
         if ( $gmw_query->have_posts() ):

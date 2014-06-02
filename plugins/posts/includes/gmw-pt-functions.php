@@ -92,7 +92,6 @@ add_action( 'transition_post_status', 'gmw_pt_filter_transition_post_status', 10
  */
 function gmw_pt_delete_location() {
     global $wpdb, $post;
-    echo '111';
     $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}places_locator WHERE `post_id` = %d", array( $post->ID ) ) );
 }
 add_action( 'before_delete_post', 'gmw_pt_delete_location' );

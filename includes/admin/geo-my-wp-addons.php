@@ -2,6 +2,9 @@
 if (!defined('ABSPATH'))
     exit; // Exit if accessed directly
 
+//check that not included already
+if ( !class_exists( 'GMW_Addons') ) :
+
 /**
  * GMW_Addon class
  */
@@ -23,11 +26,8 @@ class GMW_Addons {
         add_action('admin_init', array($this, 'register_settings'));
         add_action('admin_init', array($this, 'deactivate_license'));
 
-        if (isset($_POST['gmw_addon_activated']) && !empty($_POST['gmw_addon_activated']))
-            self::activate_addon();
-
-        if (isset($_POST['gmw_addon_deactivated']) && !empty($_POST['gmw_addon_deactivated']))
-            self::deactivate_addon();
+        self::activate_addon();
+        self::deactivate_addon();
 
     }
     
@@ -38,12 +38,16 @@ class GMW_Addons {
      * @return void
      */
     private function activate_addon() {
+    	
+    	if ( !isset($_POST['gmw_addon_activated'] ) || empty( $_POST['gmw_addon_activated'] ) )
+    		return;
+    	
         $active_addon = $_POST['gmw_addon_activated'];
 
-        unset($this->addons[$active_addon]);
+        unset( $this->addons[$active_addon] );
         $this->addons[$active_addon] = 'active';
 
-        update_option('gmw_addons', $this->addons);
+        update_option( 'gmw_addons', $this->addons );
 
     }
 
@@ -54,11 +58,15 @@ class GMW_Addons {
      * @return void
      */
     private function deactivate_addon() {
+    	
+    	if ( !isset($_POST['gmw_addon_deactivated']) || empty( $_POST['gmw_addon_deactivated']) )
+    		return;
+    		
         $inactive_addon = $_POST['gmw_addon_deactivated'];
 
-        unset($this->addons[$inactive_addon]);
+        unset( $this->addons[$inactive_addon] );
 
-        update_option('gmw_addons', $this->addons);
+        update_option( 'gmw_addons', $this->addons );
 
     }
 
@@ -82,42 +90,49 @@ class GMW_Addons {
     public function activate_license($licenses) {
                  
         // listen for our activate button to be clicked
-        if (!isset($_POST['gmw_license_key_activate']))
+        if ( !isset( $_POST['gmw_license_key_activate'] ) )
             return $licenses;
 
         $add_on = $_POST['gmw_license_key_activate'];
 
         // run a quick security check 
-        if (!check_admin_referer($add_on, $add_on))
+        if ( !check_admin_referer( $add_on, $add_on ) )
             return; // get out if we didn't click the Activate button
 
-        $license_key = ( isset($licenses[$add_on]) ) ? $licenses[$add_on] : '';
+        $license_key = ( isset( $licenses[$add_on] ) ) ? $licenses[$add_on] : '';
 
         $license_key = sanitize_text_field($license_key);
 
-        if (isset($license_key) && !empty($license_key)) :
+        if ( isset( $license_key ) && !empty( $license_key ) ) :
 
-            $this_license = trim($license_key);
-            $this_name    = ucwords(str_replace('_', ' ', $add_on));
+            $this_license = trim( $license_key );
+            $this_name    = ucwords( str_replace( '_', ' ', $add_on ) );
 
             // data to send in our API request
             $api_params = array(
                 'edd_action' => 'activate_license',
                 'license'    => $this_license,
-                'item_name'  => urlencode($this_name) // the name of our product in EDD
+                'item_name'  => urlencode($this_name), // the name of our product in EDD
+                'url'        => home_url(),
             );
 
             // Call the custom API.
-            $response = wp_remote_get(add_query_arg($api_params, GMW_REMOTE_SITE_URL), array('timeout' => 15, 'sslverify' => false));
+            $response = wp_remote_get( add_query_arg( $api_params, GMW_REMOTE_SITE_URL ),
+            		array(
+            				'timeout' => 15,
+            				'body'      => $api_params,
+            				'sslverify' => false
+            		)
+            );
 
             // make sure the response came back okay
-            if (is_wp_error($response))
+            if ( is_wp_error( $response ) )
                 return false;
 
             // decode the license data
-            $license_data = json_decode(wp_remote_retrieve_body($response));
+            $license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
-            $statuses = get_option('gmw_premium_plugin_status');
+            $statuses = get_option( 'gmw_premium_plugin_status' );
             
             $message = ( $license_data->license == 'valid' ) ? $license_data->license : $license_data->error;
      
@@ -161,24 +176,31 @@ class GMW_Addons {
             $api_params = array(
                 'edd_action' => 'deactivate_license',
                 'license'    => $this_license,
-                'item_name'  => urlencode($this_name) // the name of our product in EDD
+                'item_name'  => urlencode($this_name), // the name of our product in EDD
+            	'url'        => home_url()
             );
 
             // Call the custom API.
-            $response = wp_remote_get(add_query_arg($api_params, GMW_REMOTE_SITE_URL), array('timeout' => 15, 'sslverify' => false));
+            $response = wp_remote_get(
+            		add_query_arg( $api_params, GMW_REMOTE_SITE_URL ),
+            		array(
+            				'timeout' => 15,
+            				'sslverify' => false
+            		)
+            );
 
             // make sure the response came back okay
             if (is_wp_error($response))
                 return false;
 
             // decode the license data
-            $license_data = json_decode(wp_remote_retrieve_body($response));
+            $license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
             // $license_data->license will be either "deactivated" or "failed"
             $statuses = get_option('gmw_premium_plugin_status');
 
             if ($license_data->license ==  ( 'deactivated' || 'failed' )  ) :
-                unset($statuses[$add_on]);
+            	unset($statuses[$add_on]);
                 update_option('gmw_premium_plugin_status', $statuses);
             endif;
 
@@ -209,7 +231,7 @@ class GMW_Addons {
      * @return void
      */
     function check_license() {
-      
+    
         global $wp_version;
 
         $licenses = get_option('gmw_license_keys');
@@ -271,10 +293,10 @@ class GMW_Addons {
      */
     public function output() {
         
-        //run licenses check every 6 hours just to make sure that their status is updated
+        //run licenses check every 24 hours just to make sure that their status is correct
         if ( false === ( get_transient( 'gmw_licenses_check_trans' ) ) ) {
             self::check_license();
-            set_transient( 'gmw_licenses_check_trans' , true, 60*60*6 );
+            set_transient( 'gmw_licenses_check_trans' , true, 60*60*24 );
         }
         
         $addons = array(
@@ -496,10 +518,20 @@ class GMW_Addons {
                             $(this).hide();
                     });
                 });
+
+                $('.gmw_license_keys').keypress(function(e){
+                    if ( e.which == 13 ) return false;
+                    //or...
+                    if ( e.which == 13 ) e.preventDefault();
+                });
                 
                 setTimeout(function() {
-                      $('.gmw-license-error-wrapper').fadeToggle();
-                }, 10000);
+                    $('.gmw-license-error-wrapper').each(function() {
+                        if ( $(this).is(':visible') ) {
+                            $(this).fadeToggle();
+                        }
+                    });
+              }, 10000);
 
                 $('.gmw-remove-license-warning').click(function() {
                     $(this).closest('.gmw-license-error-wrapper').fadeToggle();
@@ -573,3 +605,5 @@ class GMW_Addons {
     }
 
 }
+
+endif;

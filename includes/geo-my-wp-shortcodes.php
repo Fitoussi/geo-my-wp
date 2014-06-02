@@ -64,7 +64,7 @@ class GMW_Current_location {
             $location .= '<div class="gmw-cl-welcome-message">' . $hMessage . '</div>';
         }
 
-        if (isset($_COOKIE['gmw_lat']) && isset($_COOKIE['gmw_lng'])) {
+        if ( isset( $_COOKIE['gmw_lat'] ) && isset( $_COOKIE['gmw_lng'] ) ) {
 
             $userAddress   = array();
             foreach (explode(',', $display_by) as $field)
@@ -116,24 +116,28 @@ class GMW_Current_location {
      */
     public function cl_template() {
 
-        $template = '';
-        $template .= '<div id="gmw-cl-form-wrapper">';
-        $template .= '<span id="gmw-cl-close-btn">X</span>';
-        $template .= '<form id="gmw-cl-form" name="gmw_cl_form" onsubmit="return false">';
-        $template .= '<div id="gmw-cl-info-wrapper">';
-        $template .= '<div id="gmw-cl-location-message">' . __('- Enter Your Location -', 'GMW') . '</div>';
-        $template .= '<div id="gmw-cl-input-fields"><input type="text" name="gmw-cl_address" id="gmw-cl-address" value="" placeholder="zipcode or full address..." /><input type="submit" value="go" /></div>';
-        $template .= '<div> - or - </div>';
-        $template .= '<div id="gmw-cl-get-location"><a href="#" id="gmw-cl-trigger" >';
-        $template .= __('Get your current location', 'GMW');
-        $template .= '</a></div>';
+        $template  = '';
+        $template .= '<div id="gmw-cl-form-wrapper" class="gmw-cl-form-wrapper">';
+        $template .= 	'<span id="gmw-cl-close-btn">X</span>';
+        $template .= 	'<form id="gmw-cl-form" name="gmw_cl_form" onsubmit="return false">';
+        $template .= 		'<div id="gmw-cl-info-wrapper">';
+        $template .= 			'<div id="gmw-cl-location-message">' . __('- Enter Your Location -', 'GMW') . '</div>';
+        $template .= 			'<div id="gmw-cl-input-fields"><input type="text" name="gmw-cl_address" id="gmw-cl-address" value="" placeholder="zipcode or full address..." /><input id="gmw-cl-submit-address" type="submit" value="go" /></div>';
+        $template .= 			'<div> - or - </div>';
+        $template .= 			'<div id="gmw-cl-get-location"><a href="#" id="gmw-cl-trigger" >';
+        $template .= 				__('Get your current location', 'GMW');
+        $template .= 			'</a></div>';
+        $template .= 		'</div>';
+        $template .=		'<div id="gmw-cl-respond-wrapper" style="display:none;">';
+        $template .= 			'<div id="gmw-cl-spinner"><img src="' . GMW_IMAGES . '/gmw-loader.gif" /></div>';
+        $template .= 			'<div id="gmw-cl-message"></div>';
+        $template .= 			'<div id="gmw-cl-map" style="width:100%;height:100px;display:none;"></div>';
+        $template .=		'</div>';
+        $template .= 	'</form>';
         $template .= '</div>';
-        $template .= '<div id="gmw-cl-spinner" style="display:none;"><img src="' . GMW_IMAGES . '/gmw-loader.gif" /></div>';
-        $template .= '<div id="gmw-cl-message"></div>';
-        $template .= '<div id="gmw-cl-map" style="width:100%;height:100px;display:none;"></div>';
-        $template .= '</form>';
-        $template .= '</div>';
-
+    	
+        $template = apply_filters( 'gmw_current_location_form', $template );
+        
         $template .= $this->hidden_form();
 
         echo $template;

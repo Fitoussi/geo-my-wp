@@ -30,6 +30,20 @@ class GMW_Settings {
     protected function init_settings() {
 
     	$this->settings = apply_filters( 'gmw_admin_settings', array(
+    			'admin_settings' => array(
+    					__( 'Admin Settings', 'GMW' ),
+    					array(
+    							'updater_use' =>array(
+    									'name'       => 'updater_disabled',
+    									'std'        => '',
+    									'label'      => __( 'Disable Add-ons Updater', 'GMW' ),
+    									'cb_label'   => __( 'Disable', 'GMW' ),
+    									'desc'       => __( 'Disable the premium add-ons auto-updating system. The system can cause a slow load in the plugins.php/update.php pages of your site when checking for new version of the premium add-ons. You can temporary disable the system when working in the admin area and enable it again when you are ready to check for add-ons update. This can be useful when working on a development site and there is no need to check for updates.', 'GMW' ),
+    									'type'       => 'checkbox',
+    									'attributes' => array()
+    							),
+    					),
+    			),
     			'general_settings' => array(
     					__( 'General Settings', 'GMW' ),
     					array(
