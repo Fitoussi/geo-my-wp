@@ -37,9 +37,10 @@ jQuery(document).ready(function($) {
     window.gmwDeleteCookie = gmwDeleteCookie;
 
     //trigger form when click on enter within input field
-    $('.gmw-form input[type="text"]').keypress(function(event){
+    $('.gmw-form input[type="text"]').keypress(function(e){
     	if(event.keyCode == 13){
-    		$(this).closest('form').submit();
+    		e.preventDefault();
+    		$(this).closest('form').find('.gmw-submit-button').click();
     	}
 	});
     
@@ -86,6 +87,7 @@ jQuery(document).ready(function($) {
 	        //if so no need to geocode again and submit the form with the information we already have
 	        if (sForm.find('.prev-address').val() == address && $.trim(sForm.find('.gmw-lat').val()).length > 0)
 	            return true;
+	        
 	        //Check if the address was geocoded and if so we need to submit this form
 	        if (sForm.find('.gmw-submit').hasClass('submitted'))
 	            return true;
@@ -105,7 +107,7 @@ jQuery(document).ready(function($) {
 	            }
 	            return false;
 	        }
-	
+
 	        //run google geocoder
 	        geocoder = new google.maps.Geocoder();
 	        geocoder.geocode({'address': address}, function(results, status) {

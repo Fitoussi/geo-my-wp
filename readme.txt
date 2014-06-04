@@ -5,7 +5,7 @@ Tags: Geo-location, Geolocation, proximity search, zipcode search, radius search
 Requires at least: 3.8
 Tested up to: 3.9.1
 Buddypress: 2.0.1
-Stable tag: 2.4.5
+Stable tag: 2.4.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -127,6 +127,13 @@ For questions, bugs report and suggestions please visit [GEO my WP Furom](http:/
 For screenshots please visit [GEO my WP](http://www.geomywp.com)
 
 == Changelog ==
+
+== 2.4.6 ==
+
+* Improved: Premium Auto-updating system. Better check on when to run the system. 
+* New: Ability to disable the Premium auto-updating system. Can be used when working on a development site or when working often in the admin dashboard. Temporary disabling the system will prevent the slow load of the plugins/update pages (admin) caused by the system. The check-box responsible for the feature can be found under GEO my WP -> Settings -> Admin Settings tab. 
+* Fix: warning shows in "Edit Post" page when no post types selected in the General Settings of GEO my WP. 
+* Update: language files
 
 == 2.4.5 ==
 

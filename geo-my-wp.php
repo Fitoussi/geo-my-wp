@@ -116,7 +116,7 @@ class GEO_my_WP {
      */
     private function includes() {
 		   	
-        //admin functions and files
+        //admin files
         if ( is_admin() && !defined( 'DOING_AJAX' ) ) {
             include_once( GMW_PATH . '/includes/admin/geo-my-wp-admin.php' );
             include_once( GMW_PATH . '/includes/admin/geo-my-wp-updater.php' );
@@ -125,6 +125,7 @@ class GEO_my_WP {
 
         if ( !is_admin() ) {
             include( GMW_PATH . '/includes/geo-my-wp-functions.php' );
+            
             if ( isset( $this->settings['features']['current_location_shortcode'] ) ) {
                 include( GMW_PATH . '/includes/geo-my-wp-shortcodes.php' );
             }
@@ -166,7 +167,7 @@ class GEO_my_WP {
             add_action( 'widgets_init', create_function( '', 'return register_widget( "GMW_Search_Form_Widget" );' ) );
         }
 
-        //initiate posts and friends add-ons
+        //initiate add-ons
         add_filter( 'gmw_admin_addons_page', array( $this, 'addons_init' ) );
 
         //load friends locator add-on
@@ -216,7 +217,7 @@ class GEO_my_WP {
 
         $addons = get_option( 'gmw_addons' );
 
-        if ( ( isset( $addons[$addon] ) && $addons[$addon] == 'active' ) && (!isset( $_POST['gmw_premium_license'] ) ) ) {
+        if ( ( isset( $addons[$addon] ) && $addons[$addon] == 'active' ) && ( !isset( $_POST['gmw_premium_license'] ) ) ) {
             return true;
         } else {
             return false;
@@ -256,7 +257,6 @@ class GEO_my_WP {
         wp_enqueue_style( 'gmw-style', GMW_URL . '/assets/css/style.css' );
         wp_localize_script( 'gmw-js', 'gmwSettings', $this->settings );
 
-
     }
 	
     function load_dashicons() {
@@ -290,22 +290,28 @@ class GEO_my_WP {
 
             $this->form = $this->forms[$params['map']];
             
-            if ( isset( $params['widget'] ) ) $this->form['in_widget'] = true;
+            
+            if ( isset( $params['widget'] ) ) 
+            	$this->form['in_widget'] = true;
             		
-            if ( isset( $this->form['search_results']['display_map'] ) && $this->form['search_results']['display_map'] == "shortcode" )
-                do_action( 'gmw_' . $this->form['prefix'] . '_before_map', $this->form );
+            if ( !isset( $this->form['search_results']['display_map'] ) || $this->form['search_results']['display_map'] != "shortcode" )
+            	return;
+            
+            //do_action( 'gmw_' . $this->form['prefix'] . '_before_map', $this->form );
 
-            echo gmw_get_results_map( $this->form );
+            echo gmw_results_map( $this->form );
 
-            do_action( 'gmw_' . $this->form['prefix'] . '_after_map', $this->form );
+            //do_action( 'gmw_' . $this->form['prefix'] . '_after_map', $this->form );
 
             //display results when in results page				
         } elseif ( $params['form'] == 'results' ) {
-
-            if ( isset( $_GET['action'] ) && $_GET['action'] == "gmw_post" ) {
+        	
+        	if ( isset( $_GET['action'] ) && $_GET['action'] == "gmw_post" ) {
 
                 $this->form = $this->forms[$_GET['gmw_form']];
-                if ( isset( $params['widget'] ) ) $this->form['in_widget'] = true;
+                
+                if ( isset( $params['widget'] ) ) 
+                	$this->form['in_widget'] = true;
                 
                 do_action( 'gmw_' . $this->form['form_type'] . '_shortcode', $this->form, $results = ( $params['form'] == 'results' ) ? true : false );
             }
@@ -315,13 +321,14 @@ class GEO_my_WP {
 
             $this->form = $this->forms[$params['form']];
             
-            if ( isset( $params['widget'] ) ) $this->form['in_widget'] = true;
+            if ( isset( $params['widget'] ) ) 
+            	$this->form['in_widget'] = true;
+            
             $this->form['search_results']['results_page'] = ( isset( $this->form['search_results']['results_page'] ) && !empty( $this->form['search_results']['results_page'] ) ) ? get_permalink( $this->form['search_results']['results_page'] ) : false;
 
             //if this is a widget and results page is not set in the shorcode settings we will get the results page from the main settings
             if ( isset( $params['widget'] ) && (!isset( $this->form['search_results']['results_page'] ) || empty( $this->form['search_results']['results_page'] ) ) ) {
-                $this->form['search_results']['results_page'] = get_permalink( $this->settings['general_settings']['results_page'] );
-                
+                $this->form['search_results']['results_page'] = get_permalink( $this->settings['general_settings']['results_page'] );       
             }
 
             do_action( 'gmw_' . $this->form['form_type'] . '_shortcode', $this->form, $results = ( $params['form'] == 'results' ) ? true : false );

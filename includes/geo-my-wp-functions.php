@@ -34,9 +34,16 @@ abstract class GMW {
      */
     public function __construct( $form, $results ) {
 
-        $this->settings = get_option( 'gmw_options' );
-        $this->form     = apply_filters( 'gmw_main_shortcode_form_args', $form, $this->settings );
-
+        $this->settings 			= get_option( 'gmw_options' );
+        
+        $form['get_per_page'] 	= false;
+        $form['units_array']  	= false;
+        $form['your_lat']     	= false;
+        $form['your_lng']     	= false;
+        $form['radius']			= false;
+        $form['org_address']	= false;
+        $this->form     	    = apply_filters( 'gmw_main_shortcode_form_args', $form, $this->settings );
+        
         self::gmw( $results );
 
     }
@@ -49,18 +56,17 @@ abstract class GMW {
      */
     public function gmw( $results ) {
 	
-    	$this->form['get_per_page'] = false;
-    	$this->form['units_array']  = false;
-    	$this->form['your_lat']     = false;
-    	$this->form['your_lng']     = false;
-    	$this->form['radius']		= false;
-    	$this->form['org_address']  = false;
-    	
         do_action( 'gmw_' . $this->form['form_type'] . '_main_shortcode_start', $this->form, $this->settings );
         
         //load search form template
         if ( $results == false && isset( $this->form['search_form'] ) ) {
-            $this->custom_search_form();
+            
+        	do_action( 'gmw_'.$this->form['prefix'].'_before_search_form', $this->form, $this->settings );
+        	
+        	$this->search_form();
+        	
+        	do_action( 'gmw_'.$this->form['prefix'].'_after_search_form', $this->form, $this->settings );
+        	
         }
         
         // when form submitted
@@ -82,33 +88,6 @@ abstract class GMW {
 
     }
 
-    public function custom_search_form() {
-
-        $gmw = $this->form;
-
-        //Load custom search form and css from child/theme folder
-        if ( strpos( $this->form['search_form']['form_template'], 'custom_' ) !== false ) :
-
-            do_action( 'gmw_' . $this->form['form_type'] . '_before_custom_search_form', $this->form, $this->settings );
-
-            $sForm = str_replace( 'custom_', '', $this->form['search_form']['form_template'] );
-
-            wp_enqueue_style( 'gmw-' . $this->form['ID'] . '-' . $sForm . '-form-style', get_stylesheet_directory_uri() . '/geo-my-wp/' . $this->form['form_type'] . '/search-forms/' . $sForm . '/css/style.css' );
-
-            include( STYLESHEETPATH . '/geo-my-wp/' . $this->form['form_type'] . '/search-forms/' . $sForm . '/search-form.php' );
-
-            do_action( 'gmw_' . $this->form['form_type'] . '_after_custom_search_form', $this->form, $this->settings );
-
-            return;
-
-        else :
-
-            $this->search_form();
-
-        endif;
-
-    }
-
     /**
      * When form submitted
      * @version 1.0
@@ -116,20 +95,16 @@ abstract class GMW {
      */
     public function form_submitted() {
     	
-        if ( $this->form['radius'] == false ) {
-        	$this->form['radius'] =  ( isset( $_GET['gmw_distance'] ) && !empty( $_GET['gmw_distance'] ) ) ? $_GET['gmw_distance'] : 500;
-        }
+        $this->form['radius'] = ( isset( $_GET['gmw_distance'] ) && !empty( $_GET['gmw_distance'] ) ) ? $_GET['gmw_distance'] : 500;
         
         // get the address
-        if ( $this->form['org_address'] == false &&  isset( $_GET['gmw_address'] ) && array_filter( $_GET['gmw_address'] ) ) {
-            $this->form['org_address'] = str_replace( '+', ' ', implode( ' ', $_GET['gmw_address'] ) );
-        }
+        $this->form['org_address'] = ( isset( $_GET['gmw_address'] ) && array_filter( $_GET['gmw_address'] ) ) ? str_replace( '+', ' ', implode( ' ', $_GET['gmw_address'] ) ) : '';
         
-        if ( $this->form['get_per_page'] == false ) {
-        	$per_page = ( isset( $this->form['search_results']['per_page'] ) ) ? current( explode( ",", $this->form['search_results']['per_page'] ) ) : -1;
-        	$this->form['get_per_page'] = ( isset( $_GET['gmw_per_page'] ) ) ? $_GET['gmw_per_page'] : $per_page;
-        }
-                 
+        //per page
+        $per_page = ( isset( $this->form['search_results']['per_page'] ) ) ? current( explode( ",", $this->form['search_results']['per_page'] ) ) : -1;
+        $this->form['get_per_page'] = ( isset( $_GET['gmw_per_page'] ) ) ? $_GET['gmw_per_page'] : $per_page;
+
+        	
         // distance units 
         if ( isset( $_GET['gmw_units'] ) && $_GET['gmw_units'] == "imperial" ) {
             $this->form['units_array'] = array( 'radius' => 3959, 'name' => "Mi", 'map_units' => "ptm", 'units' => 'imperial' );
@@ -138,6 +113,8 @@ abstract class GMW {
         }
         
         $_GET = apply_filters( 'gmw_modify_get_args', $_GET, $this->form );
+        
+        $this->form = apply_filters( 'gmw_'.$this->form['prefix'].'_form_submitted_before_results' , $this->form );
         
         //if lat/lng exist then use them
         if ( $this->form['your_lat'] != false && $this->form['your_lng'] != false ) {
@@ -183,26 +160,25 @@ abstract class GMW {
     public function auto_results() {
         
         // get address from cookies
-        if ( $this->form['org_address']  == false ) {
-        	$this->form['org_address']  = urldecode( $_COOKIE['gmw_address'] );
-        }
+        $this->form['org_address']  = urldecode( $_COOKIE['gmw_address'] );
         
-        if ( $this->form['get_per_page'] == false ) {
-        	$this->form['get_per_page'] = ( isset( $_GET['gmw_per_page'] ) ) ? $_GET['gmw_per_page'] : current( explode( ",", $this->form['search_results']['per_page'] ) );
-        }
-        
+        //per page from settings
+        $this->form['get_per_page'] = ( isset( $_GET['gmw_per_page'] ) ) ? $_GET['gmw_per_page'] : current( explode( ",", $this->form['search_results']['per_page'] ) );
+       
+
         if ( $this->form['search_results']['auto_search']['units'] == 'imperial' )
             $this->form['units_array'] = array( 'radius' => 3959, 'name' => "mi", 'map_units' => "ptm", 'units' => 'imperial' );
         else
             $this->form['units_array'] = array( 'radius' => 6371, 'name' => "km", 'map_units' => 'ptk', 'units' => "metric" );
 		
-        if ( $this->form['radius'] == false ) {
-        	$this->form['radius'] = $this->form['search_results']['auto_search']['radius'];
-        }
-        
+        //distance
+        $this->form['radius'] = $this->form['search_results']['auto_search']['radius'];
+
         $this->form['your_lat'] = urldecode( $_COOKIE['gmw_lat'] );
         $this->form['your_lng'] = urldecode( $_COOKIE['gmw_lng'] );
 
+        $this->form = apply_filters( 'gmw_'.$this->form['prefix'].'_auto_results_before_results' , $this->form );
+        
         $this->results();
 
     }
@@ -236,21 +212,26 @@ function gmw_get_results_map( $gmw ) {
 
     $frame = ( isset( $gmw['results_map']['map_frame'] ) ) ? 'gmw-map-frame' : '';
 
-    $output  = '<div id="gmw-map-wrapper-' . $gmw['ID'] . '" class="gmw-map-wrapper gmw-map-wrapper-' . $gmw['ID'] . ' gmw-' . $gmw['prefix'] . '-map-wrapper ' . $frame . '"  style="display:none;width:' . $gmw['results_map']['map_width'] . ';height:' . $gmw['results_map']['map_height'] . ';">';
-    $output .= 		'<div class="gmw-map-loader-wrapper gmw-' . $gmw['prefix'] . '-loader-wrapper">';
-    $output .= 			'<img class="gmw-map-loader gmw-' . $gmw['prefix'] . '-map-loader" src="' . GMW_IMAGES . '/map-loader.gif"/>';
-    $output .= 		'</div>';
-    $output .= 		'<div id="gmw-map-' . $gmw['ID'] . '" gmw-map-' . $gmw['ID'] . ' class="gmw-map gmw-' . $gmw['prefix'] . '-map" style="width:100%; height:100%"></div>';
-    $output .= '</div>';
+    $output['open']    = '<div id="gmw-map-wrapper-' . $gmw['ID'] . '" class="gmw-map-wrapper gmw-map-wrapper-' . $gmw['ID'] . ' gmw-' . $gmw['prefix'] . '-map-wrapper ' . $frame . '"  style="display:none;width:' . $gmw['results_map']['map_width'] . ';height:' . $gmw['results_map']['map_height'] . ';">';
+    $output['loader']  = 	'<div class="gmw-map-loader-wrapper gmw-' . $gmw['prefix'] . '-loader-wrapper">';
+    $output['loader'] .= 		'<img class="gmw-map-loader gmw-' . $gmw['prefix'] . '-map-loader" src="' . GMW_IMAGES . '/map-loader.gif"/>';
+    $output['loader'] .= 	'</div>';
+    $output['map']     = 	'<div id="gmw-map-'.$gmw['ID'].'" class="gmw-map gmw-' . $gmw['prefix'] . '-map" style="width:100%; height:100%"></div>';
+    $output['close']   = '</div>';
 
-    return $output;
-
+    $output = apply_filters( 'gmw_'.$gmw['prefix'].'_map_output', $output, $gmw );
+    
+    return implode( ' ', $output );
 }
 
 function gmw_results_map( $gmw ) {
 
-    if ( $gmw['search_results']['display_map'] != "results" )
-        return;
+	//check that we have only one map for each form
+	if ( apply_filters('map_exists', false ) == true && $gmw['addon'] != 'global_maps' ) 
+		return;
+	
+	if ( $gmw['addon'] != 'global_maps' ) 
+		add_filter( 'map_exists', create_function( '' , 'return true;' ) );
 
     do_action( 'gmw_' . $gmw['prefix'] . '_before_map', $gmw );
 

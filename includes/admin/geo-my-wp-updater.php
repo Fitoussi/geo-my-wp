@@ -5,6 +5,9 @@
  * @author Pippin Williamson
  * @version 1.0
  */
+
+if ( !class_exists( 'GMW_Premium_Plugin_Updater') ) :
+
 class GMW_Premium_Plugin_Updater {
     private $api_url  = '';
     private $api_data = array();
@@ -175,3 +178,4 @@ class GMW_Premium_Plugin_Updater {
     }
 
 }
+endif;

@@ -25,10 +25,8 @@ class GMW_FL_Admin {
         add_filter( 'gmw_admin_shortcodes_page', array( $this, 'shortcodes_page' ) ,1, 10 );
 
         //form settings
-        add_action( 'gmw_friends_form_settings_friends_search_form_template', array( $this, 'friends_search_form_template' ), 2, 4 );
         add_action( 'gmw_friends_form_settings_xprofile_fields', array( $this, 'form_settings_xprofile_fields' ), 1, 4 );
         add_action( 'gmw_friends_form_settings_address_field', array( $this, 'form_settings_address_field' ), 1, 4 );
-        add_action( 'gmw_friends_form_settings_results_template', array( $this, 'form_settings_results_template' ), 1, 4 );
         add_action( 'gmw_friends_form_settings_auto_results', array( $this, 'form_settings_auto_results' ), 1, 4 );
         add_action( 'gmw_friends_form_settings_show_avatar', array( $this, 'show_avatar' ), 1, 4 );
 
@@ -75,28 +73,35 @@ class GMW_FL_Admin {
 
     }
 
-    /**
-     * friends locator search form template
-     *
-     */
-    public function friends_search_form_template( $gmw_forms, $formID, $section, $option ) {
-        ?>
-        <div>
-            <select name="<?php echo 'gmw_forms[' . $_GET['formID'] . '][' . $section . '][form_template]'; ?>">
-                <?php foreach ( glob( GMW_FL_PATH . 'search-forms/*', GLOB_ONLYDIR ) as $dir ) { ?>
-                    <option value="<?php echo basename( $dir ); ?>" <?php if ( isset( $gmw_forms[$formID][$section]['form_template'] ) && $gmw_forms[$formID][$section]['form_template'] == basename( $dir ) ) echo 'selected="selected"'; ?>><?php echo basename( $dir ); ?></option>
-                <?php } ?>
-
-                <?php foreach ( glob( STYLESHEETPATH . '/geo-my-wp/friends/search-forms/*', GLOB_ONLYDIR ) as $dir ) { ?>
-                    <?php $cThems = 'custom_' . basename( $dir ) ?>
-                    <option value="<?php echo $cThems; ?>" <?php if ( isset( $gmw_forms[$formID][$section]['form_template'] ) && $gmw_forms[$formID][$section]['form_template'] == $cThems ) echo 'selected="selected"'; ?>><?php _e( 'Custom Form: ', 'GMW' ); ?><?php echo basename( $dir ); ?></option>
-                <?php } ?>
-
-            </select>
-        </div>
-        <?php
-
-    }
+    public function search_form_theme() {
+	
+		$themes = array();
+		foreach ( glob( GMW_FL_PATH .'/search-forms/*', GLOB_ONLYDIR ) as $dir ) {
+			$themes[basename($dir)] = basename($dir);
+		}
+	
+		foreach ( glob( STYLESHEETPATH . '/geo-my-wp/friends/search-forms/*', GLOB_ONLYDIR ) as $dir ) {
+			$themes['custom_'.basename($dir)] = 'Custom: '.basename($dir);
+		}
+	
+		return $themes;
+			
+	}
+	
+	public function results_theme() {
+	
+		$themes = array();
+		foreach ( glob( GMW_FL_PATH .'/search-results/*', GLOB_ONLYDIR ) as $dir ) {
+			$themes[basename($dir)] = basename($dir);
+		}
+	
+		foreach ( glob( STYLESHEETPATH . '/geo-my-wp/friends/search-results/*', GLOB_ONLYDIR ) as $dir ) {
+			$themes['custom_'.basename($dir)] = 'Custom: '.basename($dir);
+		}
+	
+		return $themes;
+			
+	}
 
     function form_settings_xprofile_fields( $gmw_forms, $formID, $section, $option ) {
         global $bp;
@@ -185,34 +190,6 @@ class GMW_FL_Admin {
             </p>
         </div>
 
-        <?php
-
-    }
-
-    /**
-     * results template form settings
-     *
-     */
-    public function form_settings_results_template( $gmw_forms, $formID, $section, $option ) {
-        ?>
-        <div>
-            <select name="<?php echo 'gmw_forms[' . $_GET['formID'] . '][' . $section . '][results_template]'; ?>">
-
-                <?php foreach ( glob( GMW_FL_PATH . 'search-results/*', GLOB_ONLYDIR ) as $dir ) { ?>
-
-                    <option value="<?php echo basename( $dir ); ?>" <?php if ( isset( $gmw_forms[$formID][$section]['results_template'] ) && $gmw_forms[$formID][$section]['results_template'] == basename( $dir ) ) echo 'selected="selected"'; ?>><?php echo basename( $dir ); ?></option>
-
-                <?php } ?>
-
-                <?php foreach ( glob( STYLESHEETPATH . '/geo-my-wp/friends/search-results/*', GLOB_ONLYDIR ) as $dir ) { ?>
-
-                    <?php $cThems = 'custom_' . basename( $dir ) ?>
-                    <option value="<?php echo $cThems; ?>" <?php if ( isset( $gmw_forms[$formID][$section]['results_template'] ) && $gmw_forms[$formID][$section]['results_template'] == $cThems ) echo 'selected="selected"'; ?>><?php _e( 'Custom Template:' ); ?> <?php echo basename( $dir ); ?></option>
-
-                <?php } ?>
-
-            </select>
-        </div>
         <?php
 
     }
@@ -307,13 +284,14 @@ class GMW_FL_Admin {
     function form_settings_init( $settings ) {
 
     	$settings['search_form'][1] = array(
-    			'form_template'   => array(
-    					'name'     => 'form_template',
-    					'std'      => '',
-    					'label'    => __( 'Search Form Template', 'GMW' ),
-    					'desc'     => __( 'Choose the search form template that you want to use.', 'GMW' ),
-    					'type'     => 'function',
-    					'function' => 'friends_search_form_template'
+    			'form_template'   		=> array(
+    					'name'     		=> 'form_template',
+    					'std'      		=> '',
+    					'label'    		=> __( 'Search Form Template', 'GMW' ),
+    					'desc'     		=> __( 'Choose the search form template that you want to use.', 'GMW' ),
+    					'type'     		=> 'select',
+    					'options'  		=> self::search_form_theme(),
+    					'attributes'	=> array()
     			),
     			'address_field'   => array(
     					'name'  => 'address_field',
@@ -368,25 +346,27 @@ class GMW_FL_Admin {
     	);
 
     	$settings['search_results'][1] = array(
-    			'results_page'     => array(
-    					'name'    => 'results_page',
-    					'std'     => '',
-    					'label'   => __( 'Results Page', 'GMW' ),
-    					'desc'    => __( 'The results page will display the search results in the selected page when using the "GMW Search Form" widget or when you want to have the search form in one page and the results showing in a different page.
+    			'results_page'     		=> array(
+    					'name'     		=> 'results_page',
+    					'std'     		=> '',
+    					'label'   		=> __( 'Results Page', 'GMW' ),
+    					'desc'    		=> __( 'The results page will display the search results in the selected page when using the "GMW Search Form" widget or when you want to have the search form in one page and the results showing in a different page.
     							Choose the results page from the dropdown menu and paste the shortcode [gmw form="results"] into that page. To display the search result in the same page as the search form choose "Same Page" from the select box.', 'GMW' ),
-    					'type'    => 'select',
-    					'options' => $this->get_pages()
+    					'type'    		=> 'select',
+    					'options' 		=> $this->get_pages()
     			),
-    			'results_template' => array(
-    					'name'     => 'results_template',
-    					'std'      => '',
-    					'label'    => __( 'Results Template', 'GMW' ),
-    					'cb_label' => '',
-    					'desc'     => __( 'Choose The resuls template file (results.php). You can find the search results template files in the <code>plugins folder/geo-my-wp/plugin/friends/search-results</code>. You can modify any of the templates files or create your own.
+    			'results_template' 		=> array(
+    					'name'     		=> 'results_template',
+    					'std'      		=> '',
+    					'label'    		=> __( 'Results Template', 'GMW' ),
+    					'cb_label' 		=> '',
+    					'desc'     		=> __( 'Choose The resuls template file (results.php). You can find the search results template files in the <code>plugins folder/geo-my-wp/plugin/friends/search-results</code>. You can modify any of the templates files or create your own.
     							If you do modify or create you own template files you should create/save them in your theme or child theme folder and the plugin will pull them from there. This way your changes will not be removed once the plugin is updated.
     							You will need to create the folders and save your results template there <code><strong>themes/your-theme-or-child-theme-folder/geo-my-wp/friends/search-results/your-results-theme-folder</strong></code>.
     							Your theme folder will contain the results.php file and another folder named "css" and the style.css within it.', 'GMW' ),
-    					'type'     => 'function',
+    					'type'     		=> 'select',
+    					'options'  		=> self::results_theme(),
+    					'attributes'	=> array()
     			),
     			'auto_results'     => array(
     					'name'     => 'auto_results',

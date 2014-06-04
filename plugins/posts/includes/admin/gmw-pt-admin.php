@@ -34,10 +34,8 @@ class GMW_PT_Admin {
 
         //form settings
         //posts locator form settings
-        add_action( 'gmw_posts_form_settings_search_form_template', array( $this, 'form_settings_search_form_template' ), 1, 4 );
         add_action( 'gmw_posts_form_settings_post_types', array( $this, 'form_settings_post_types' ), 1, 4 );
         add_action( 'gmw_posts_form_settings_address_field', array( $this, 'form_settings_address_field' ), 1, 4 );
-        add_action( 'gmw_posts_form_settings_results_template', array( $this, 'form_settings_results_template' ), 1, 4 );
         add_action( 'gmw_posts_form_settings_auto_results', array( $this, 'form_settings_auto_results' ), 1, 4 );
         add_action( 'gmw_posts_form_settings_featured_image', array( $this, 'featured_image' ), 1, 4 );
         add_action( 'gmw_posts_form_settings_show_excerpt', array( $this, 'show_excerpt' ), 1, 4 );
@@ -128,32 +126,6 @@ class GMW_PT_Admin {
 
                 <?php } ?>
             </div>
-        </div>
-        <?php
-
-    }
-
-    /**
-     * search form template
-     * @param unknown_type $gmw_forms
-     * @param unknown_type $formID
-     * @param unknown_type $section
-     * @param unknown_type $option
-     */
-    public function form_settings_search_form_template( $gmw_forms, $formID, $section, $option ) {
-        ?>
-        <div>
-            <select name="<?php echo 'gmw_forms[' . $_GET['formID'] . '][' . $section . '][form_template]'; ?>">
-                <?php foreach ( glob( GMW_PT_PATH . 'search-forms/*', GLOB_ONLYDIR ) as $dir ) { ?>
-                    <option value="<?php echo basename( $dir ); ?>" <?php if ( isset( $gmw_forms[$formID][$section]['form_template'] ) && $gmw_forms[$formID][$section]['form_template'] == basename( $dir ) ) echo 'selected="selected"'; ?>><?php echo basename( $dir ); ?></option>
-                <?php } ?>
-
-                <?php foreach ( glob( STYLESHEETPATH . '/geo-my-wp/posts/search-forms/*', GLOB_ONLYDIR ) as $dir ) { ?>
-                    <?php $cThems = 'custom_' . basename( $dir ) ?>
-                    <option value="<?php echo $cThems; ?>" <?php if ( isset( $gmw_forms[$formID][$section]['form_template'] ) && $gmw_forms[$formID][$section]['form_template'] == $cThems ) echo 'selected="selected"'; ?>><?php _e( 'Custom Form: ', 'GMW' ); ?><?php echo basename( $dir ); ?></option>
-                <?php } ?>
-
-            </select>
         </div>
         <?php
 
@@ -287,34 +259,6 @@ class GMW_PT_Admin {
     }
 
     /**
-     * results template form settings
-     *
-     */
-    public function form_settings_results_template( $gmw_forms, $formID, $section, $option ) {
-        ?>
-        <div>
-            <select name="<?php echo 'gmw_forms[' . $_GET['formID'] . '][' . $section . '][results_template]'; ?>">
-
-                <?php foreach ( glob( GMW_PT_PATH . 'search-results/*', GLOB_ONLYDIR ) as $dir ) { ?>
-
-                    <option value="<?php echo basename( $dir ); ?>" <?php if ( isset( $gmw_forms[$formID][$section]['results_template'] ) && $gmw_forms[$formID][$section]['results_template'] == basename( $dir ) ) echo 'selected="selected"'; ?>><?php echo basename( $dir ); ?></option>
-
-                <?php } ?>
-
-                <?php foreach ( glob( STYLESHEETPATH . '/geo-my-wp/posts/search-results/*', GLOB_ONLYDIR ) as $dir ) { ?>
-
-                    <?php $cThems = 'custom_' . basename( $dir ) ?>
-                    <option value="<?php echo $cThems; ?>" <?php if ( isset( $gmw_forms[$formID][$section]['results_template'] ) && $gmw_forms[$formID][$section]['results_template'] == $cThems ) echo 'selected="selected"'; ?>><?php _e( 'Custom Template:' ); ?> <?php echo basename( $dir ); ?></option>
-
-                <?php } ?>
-
-            </select>
-        </div>
-        <?php
-
-    }
-
-    /**
      * auto results settings
      *
      */
@@ -354,6 +298,36 @@ class GMW_PT_Admin {
 
         return $pages;
 
+    }
+    
+    public function search_form_theme() {
+    
+    	$themes = array();
+    	foreach ( glob( GMW_PT_PATH .'/search-forms/*', GLOB_ONLYDIR ) as $dir ) {
+    		$themes[basename($dir)] = basename($dir);
+    	}
+    
+    	foreach ( glob( STYLESHEETPATH . '/geo-my-wp/posts/search-forms/*', GLOB_ONLYDIR ) as $dir ) {
+    		$themes['custom_'.basename($dir)] = 'Custom: '.basename($dir);
+    	}
+    
+    	return $themes;
+    		
+    }
+    
+    public function results_theme() {
+    
+    	$themes = array();
+    	foreach ( glob( GMW_PT_PATH .'/search-results/*', GLOB_ONLYDIR ) as $dir ) {
+    		$themes[basename($dir)] = basename($dir);
+    	}
+    
+    	foreach ( glob( STYLESHEETPATH . '/geo-my-wp/posts/search-results/*', GLOB_ONLYDIR ) as $dir ) {
+    		$themes['custom_'.basename($dir)] = 'Custom: '.basename($dir);
+    	}
+    
+    	return $themes;
+    		
     }
 
     /**
@@ -424,20 +398,21 @@ class GMW_PT_Admin {
 
     	$settings['search_form'][1] = array(
     			'form_template'   => array(
-    					'name'     => 'form_template',
-    					'std'      => '',
-    					'label'    => __( 'Search Form Template', 'GMW' ),
-    					'desc'     => __( 'Choose the search form template that you want to use.', 'GMW' ),
-    					'type'     => 'function',
-    					'function' => 'search_form_template'
+    					'name'     		=> 'form_template',
+    					'std'      		=> '',
+    					'label'    		=> __( 'Search Form Template', 'GMW' ),
+    					'desc'     		=> __( 'Choose the search form template that you want to use.', 'GMW' ),
+    					'type'     		=> 'select',
+    					'options'		=> self::search_form_theme(),
+    					'attributes' 	=> array(),
     			),
     			'post_types'      => array(
-    					'name'     => 'post_types',
-    					'std'      => '',
-    					'label'    => __( 'Post Types', 'GMW' ),
-    					'cb_label' => '',
-    					'desc'     => __( 'Choose the post types to use in the search form.', 'GMW' ),
-    					'type'     => 'function',
+    					'name'     		=> 'post_types',
+    					'std'      		=> '',
+    					'label'    		=> __( 'Post Types', 'GMW' ),
+    					'cb_label' 		=> '',
+    					'desc'     		=> __( 'Choose the post types to use in the search form.', 'GMW' ),
+    					'type'     		=> 'function',
     			),
     			'form_taxonomies' => array(
     					'name'  => 'form_taxonomies',
@@ -503,14 +478,16 @@ class GMW_PT_Admin {
     					'options' => self::get_pages()
     			),
     			'results_template' => array(
-    					'name'  => 'results_template',
-    					'std'   => '',
-    					'label' => __( 'Results Template', 'GMW' ),
-    					'desc'  => __( 'Choose The resuls template file (results.php). You can find the search results template files in the <code>plugins folder/geo-my-wp/plugin/posts/search-results</code>. You can modify any of the templates or create your own.
+    					'name'  		=> 'results_template',
+    					'std'   		=> '',
+    					'label' 		=> __( 'Results Template', 'GMW' ),
+    					'desc'  		=> __( 'Choose The resuls template file (results.php). You can find the search results template files in the <code>plugins folder/geo-my-wp/plugin/posts/search-results</code>. You can modify any of the templates or create your own.
     							If you do modify or create you own template files you should create/save them in your theme or child theme folder and the plugin will read them from there. This way your changes will not be removed once the plugin is updated.
     							You will need to create the folders and save your results template there <code><strong>themes/your-theme-or-child-theme-folder/geo-my-wp/posts/search-results/your-results-theme-folder</strong></code>.
     							Your theme folder will contain the results.php file and another folder named "css" and the style.css within it.', 'GMW' ),
-    					'type'  => 'function',
+    					'type'     		=> 'select',
+    					'options'		=> self::results_theme(),
+    					'attributes' 	=> array(),
     			),
     			'auto_results'     => array(
     					'name'  => 'auto_results',

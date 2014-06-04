@@ -52,68 +52,70 @@ function gmw_pt_form_taxonomies( $gmw, $tag, $class ) {
     if ( $taxonomies !== false )
         return;
 
-    if ( count( $gmw['search_form']['post_types'] ) < 2 && ( isset( $gmw['search_form']['taxonomies'] ) ) ) :
+    if ( count( $gmw['search_form']['post_types'] ) != 1  || ( !isset( $gmw['search_form']['taxonomies'] ) ) ) 
+    	return;
 
-        $output = '';
-		$orgTag = $tag;
+    $postType = $gmw['search_form']['post_types'][0];
+    
+    if ( !isset($gmw['search_form']['taxonomies'][$postType] ) || empty( $gmw['search_form']['taxonomies'][$postType] ) )
+    	return;
+    
+	$output = '';
+	$orgTag = $tag;
 		
-		if ( $orgTag == 'ul' ) {
-			echo '<ul>';
-			$tag = 'li';
-		} elseif ( $orgTag == 'ol') {
-			echo '<ol>';
-			$tag = 'li';
-		}
-        
-		$postType = $gmw['search_form']['post_types'][0];
-		
-        //output dropdown for each taxonomy 
-        foreach ( $gmw['search_form']['taxonomies'][$postType] as $tax => $values ) :
+	if ( $orgTag == 'ul' ) {
+		echo '<ul>';
+		$tag = 'li';
+	} elseif ( $orgTag == 'ol') {
+		echo '<ol>';
+		$tag = 'li';
+	}
+        	
+    //output dropdown for each taxonomy 
+	foreach ( $gmw['search_form']['taxonomies'][$postType] as $tax => $values ) :
       
-            if ( isset( $values['style'] ) && $values['style'] == 'drop' ) :
+		if ( isset( $values['style'] ) && $values['style'] == 'drop' ) :
 
-            	$taxonomy   = get_taxonomy( $tax );
-                $tax_value = false;
+        	$taxonomy   = get_taxonomy( $tax );
+        	$tax_value = false;
 
-                $output = '<'.$tag.' class="gmw-single-taxonomy-wrapper gmw-dropdown-taxonomy-wrapper gmw-dropdown-' . $tax . '-wrapper '.$class.'">';
+       		$output = '<'.$tag.' class="gmw-single-taxonomy-wrapper gmw-dropdown-taxonomy-wrapper gmw-dropdown-' . $tax . '-wrapper '.$class.'">';
 
-                $output .= '<label for="' . $taxonomy->rewrite['slug'] . '">' . apply_filters( 'gmw_pt_' . $gmw['ID'] . '_' . $tax . '_label', $taxonomy->labels->singular_name, $tax, $gmw ) . ': </label>';
+       		$output .= '<label for="' . $taxonomy->rewrite['slug'] . '">' . apply_filters( 'gmw_pt_' . $gmw['ID'] . '_' . $tax . '_label', $taxonomy->labels->singular_name, $tax, $gmw ) . ': </label>';
 
-                if ( isset( $_GET['tax_' . $tax] ) )
-                    $tax_value = $_GET['tax_' . $tax];
+        	if ( isset( $_GET['tax_' . $tax] ) )
+            	$tax_value = $_GET['tax_' . $tax];
 
-                $args = apply_filters( 'gmw_pt_dropdown_taxonomy_args', array(
-                    'taxonomy'        => $tax,
-                    'echo'            => false,
-                    'hide_empty'      => 1,
-                    'depth'           => 10,	
-                    'hierarchical'    => 1,
-                    'show_count'      => 0,
-                    'class'           => 'gmw-dropdown-' . $tax . ' gmw-dropdown-taxonomy',
-                    'id'              => $tax . '-tax',
-                    'name'            => 'tax_' . $tax,
-                    'selected'        => $tax_value,
-                    'show_option_all' => __( ' - All - ', 'GMW' ),
-                ), $gmw, $taxonomy );
+        	$args = apply_filters( 'gmw_pt_dropdown_taxonomy_args', array(
+        			'taxonomy'        => $tax,
+        			'echo'            => false,
+        			'hide_empty'      => 1,
+        			'depth'           => 10,
+        			'hierarchical'    => 1,
+        			'show_count'      => 0,
+        			'class'           => 'gmw-dropdown-' . $tax . ' gmw-dropdown-taxonomy',
+        			'id'              => $tax . '-tax',
+        			'name'            => 'tax_' . $tax,
+        			'selected'        => $tax_value,
+        			'show_option_all' => __( ' - All - ', 'GMW' ),
+        	), $gmw, $taxonomy );
 
-                $output .= wp_dropdown_categories( $args );
+       		$output .= wp_dropdown_categories( $args );
 
-                $output .= '</'.$tag.'>';
+       		$output .= '</'.$tag.'>';
 
-                echo apply_filters( 'gmw_search_form_taxonomy', $output, $gmw, $args, $tag, $class, $tax, $taxonomy );
+         	echo apply_filters( 'gmw_search_form_taxonomy', $output, $gmw, $args, $tag, $class, $tax, $taxonomy );
 
-            endif;
+        endif;
 
-        endforeach;
+    endforeach;
 		
-		if ( $orgTag == 'ul' ) {
-			echo '</ul>';
-		} elseif ( $orgTag == 'ol') {
-			echo '</ol>';
-		}
-        
-    endif;
-
+	if ( $orgTag == 'ul' ) {
+		echo '</ul>';
+	} elseif ( $orgTag == 'ol') {
+		echo '</ol>';
+	}
+      
 }
 
 /**
@@ -298,6 +300,9 @@ function gmw_pt_query_taxonomies( $tax_args, $gmw ) {
     $get_tax  = false;
     $args     = array( 'relation' => 'AND' );
     $postType = $gmw['search_form']['post_types'][0];
+    
+    if ( !isset( $gmw['search_form']['taxonomies'][$postType] ) || empty( $gmw['search_form']['taxonomies'][$postType] ) )
+    	return;
     
     foreach ( $gmw['search_form']['taxonomies'][$postType] as $tax => $values ) :
 
@@ -622,13 +627,27 @@ class GMW_PT_Search_Query extends GMW {
 
         $gmw = $this->form;
 
-        do_action( 'gmw_pt_before_search_form', $this->form, $this->settings );
-
-        wp_enqueue_style( 'gmw-' . $this->form['ID'] . '-' . $this->form['search_form']['form_template'] . '-form-style', GMW_PT_URL . 'search-forms/' . $this->form['search_form']['form_template'] . '/css/style.css' );
-        include GMW_PT_PATH . 'search-forms/' . $this->form['search_form']['form_template'] . '/search-form.php';
-
-        do_action( 'gmw_pt_after_search_form', $this->form, $this->settings );
-
+        $sForm = $this->form['search_form']['form_template'];
+        
+        //Load custom search form and css from child/theme folder
+        if ( strpos( $sForm, 'custom_' ) !== false ) {
+        
+        	$sForm = str_replace( 'custom_', '', $this->form['search_form']['form_template'] );
+        	 
+        	if ( !wp_style_is( 'gmw-custom-' . $sForm . '-form-style' ) )
+        		wp_enqueue_style( 'gmw-custom-' . $sForm . '-form-style', get_stylesheet_directory_uri() . '/geo-my-wp/posts/search-forms/' . $sForm . '/css/style.css' );
+        
+        	include( STYLESHEETPATH . '/geo-my-wp/posts/search-forms/' . $sForm . '/search-form.php' );
+        
+        } else {
+        
+        	if ( !wp_style_is( 'gmw-'. $sForm .'-form-style', 'enquequed' ) )
+        		wp_enqueue_style( 'gmw-'. $sForm .'-form-style', GMW_PT_URL. '/search-forms/'.$sForm.'/css/style.css' );
+        	
+        	include GMW_PT_PATH .'/search-forms/'. $sForm.'/search-form.php';
+        
+        }
+        
     }
 
     /**
