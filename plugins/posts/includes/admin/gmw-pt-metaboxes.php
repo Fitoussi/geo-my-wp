@@ -317,7 +317,7 @@ class GMW_PT_Meta_Boxes {
 	            				<th><label for="<?php echo $this->meta_boxes['fields'][3]['id']; ?>"><?php echo $this->meta_boxes['fields'][3]['name']; ?></label></th>
 	            			</tr>
 	            			<tr>
-	            				<td><input type="text" name="<?php echo $this->meta_boxes['fields'][3]['id']; ?>" class="<?php echo $this->meta_boxes['fields'][3]['id']; ?>" value="<?php echo $post_info->city; ?>"   /><br /></td>
+	            				<td><input type="text" name="<?php echo $this->meta_boxes['fields'][3]['id']; ?>" class="<?php echo $this->meta_boxes['fields'][3]['id']; ?>" value="<?php echo $post_info->state; ?>"   /><br /></td>
 	            			</tr>
 	            			<tr>
 	            				<th><label for="<?php echo $this->meta_boxes['fields'][16]['id']; ?>"><?php echo $this->meta_boxes['fields'][16]['name']; ?></label></th>
@@ -329,7 +329,7 @@ class GMW_PT_Meta_Boxes {
 	            				<th><label for="<?php echo $this->meta_boxes['fields'][5]['id']; ?>"><?php echo $this->meta_boxes['fields'][5]['name']; ?></label></th>
 	            			</tr>
 	            			<tr>
-	            				<td><input type="text" name="<?php echo $this->meta_boxes['fields'][5]['id']; ?>"  class="<?php echo $this->meta_boxes['fields'][5]['id']; ?>" value="<?php echo $post_info->zipcode; ?>"   /><br /></td>
+	            				<td><input type="text" name="<?php echo $this->meta_boxes['fields'][5]['id']; ?>"  class="<?php echo $this->meta_boxes['fields'][5]['id']; ?>" value="<?php echo $post_info->country; ?>"   /><br /></td>
 	            			</tr>
 	            			<tr>
 	            				<th><label for="<?php echo $this->meta_boxes['fields'][17]['id']; ?>"><?php echo $this->meta_boxes['fields'][17]['name']; ?></label></th>
