@@ -141,6 +141,11 @@
 	padding: 8px 10px;
 }
 
+#gmw-your-location-wrapper form #gmw-yl-map-icons-tab-wrapper img {
+	box-shadow:none;
+	border:0px;
+}
+
 #gmw-your-location-wrapper form .map-wrapper {
 	margin-top: 5px;
 	border: 1px solid #CCC;

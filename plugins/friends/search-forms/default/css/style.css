@@ -1,9 +1,6 @@
 /**
- * Default BP search form stylesheet.
- * @version 1.0
- * @author Eyal Fitoussi
+ * Members Locator search form stylesheet "default"
  */
- 
 div.gmw-fl-default-form-wrapper {
  	margin:10px 0px;
  }
@@ -30,8 +27,19 @@ div.gmw-fl-default-form-wrapper form .editfield label {
 	display:block;
 }
 
-div.gmw-fl-default-form-wrapper form .editfield span.label {
-	font-weight:bold;
+div.gmw-fl-default-form-wrapper form .editfield span.label,
+div.gmw-fl-default-form-wrapper form .editfield label {
+	display: block;
+	font-weight: bold;
+	margin: 15px 0 0px 0;
+}
+
+div.gmw-fl-default-form-wrapper form .editfield div.checkbox label,
+div.gmw-fl-default-form-wrapper form .editfield div.radio label {
+	color: #888;
+	font-size: 100%;
+	font-weight: normal;
+	margin: 0;
 }
 
 .widget_gmw_search_form_widget div.gmw-fl-default-form-wrapper .editfield span.label {

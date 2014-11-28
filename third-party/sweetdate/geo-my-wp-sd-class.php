@@ -21,7 +21,7 @@ class GMW_SD_Class_Query {
         $this->settings = get_option( 'gmw_options' );
 
         //return if disabled
-        if ( !isset( $this->settings['sweet_date']['status'] ) || $this->settings['sweet_date']['status'] != 1 )
+        if ( !$this->settings['sweet_date']['status'] )
             return;
 
         $this->gmwSD                = ( isset( $this->settings['sweet_date'] ) ) ? $this->settings['sweet_date'] : false;
@@ -29,10 +29,10 @@ class GMW_SD_Class_Query {
         $this->gmwSD['your_lng']    = false;
         $this->gmwSD['org_address'] = false;
         $this->formData['query']    = false;
-        $this->formData['address']  = ( isset( $_GET['field_address'] ) && !empty( $_GET['field_address'] ) ) ? $_GET['field_address'] : false;
-        $this->formData['orderby']  = ( isset( $_GET['orderby'] ) && !empty( $_GET['orderby'] ) ) ? $_GET['orderby'] : '';
+        $this->formData['address']  = ( !empty( $_GET['field_address'] ) ) ? $_GET['field_address'] : false;
+        $this->formData['orderby']  = ( !empty( $_GET['orderby'] ) ) ? $_GET['orderby'] : '';
         $radius                     = str_replace( ' ', '', explode( ',', $this->gmwSD['radius'] ) );
-        $this->formData['radius']   = ( isset( $_GET['field_radius'] ) && !empty( $_GET['field_radius'] ) ) ? $_GET['field_radius'] : false;
+        $this->formData['radius']   = ( !empty( $_GET['field_radius'] ) ) ? $_GET['field_radius'] : false;
 
         $this->clauses = array(
             'bp_user_query' => array( 'where' => false ),
@@ -40,24 +40,23 @@ class GMW_SD_Class_Query {
         );
 
         //action hooks/ filters
-        add_action( 'wp_enqueue_scripts', array( $this, 'frontend_register_styles' ) );
+        add_action( 'wp_enqueue_scripts', 				  array( $this, 'frontend_register_styles' ) );
+        add_filter( 'kleo_bp_search_add_data', 			  array( $this, 'members_directory_form'   ) );
+        add_action( 'bp_members_directory_order_options', array( $this, 'orderby_distance' 		), 5 );
+        add_action( 'bp_before_members_loop', 			  array( $this, 'members_query' 		   ) );
+        add_action( 'bp_pre_user_query', 				  array( $this, 'gmwBpDirectoryQuery'  ), 99 );
+        add_action( 'pre_user_query', 					  array( $this, 'gmwWpDirectoryQuery'  ), 99 );
+        add_action( 'bp_after_directory_members_list', 	  array( $this, 'trigger_js_and_maps'      ) );
+        add_action( 'bp_members_inside_avatar', 		  array( $this, 'get_distance' 			   ) );
+        add_action( 'bp_directory_members_item', 		  array( $this, 'add_elements_to_results'  ) );
 
-        add_filter( 'kleo_bp_search_add_data', array( $this, 'members_directory_form' ) );
-
-        add_action( 'bp_members_directory_order_options', array( $this, 'orderby_distance' ), 5 );
-        add_action( 'bp_before_members_loop', array( $this, 'members_query' ) );
-
-        add_action( 'bp_pre_user_query', array( $this, 'gmwBpDirectoryQuery' ), 99 );
-        add_action( 'pre_user_query', array( $this, 'gmwWpDirectoryQuery' ), 99 );
-
-        add_action( 'bp_after_directory_members_list', array( $this, 'trigger_js_and_maps' ) );
-        add_action( 'bp_members_inside_avatar', array( $this, 'get_distance' ) );
-
-        add_action( 'bp_directory_members_item', array( $this, 'add_elements_to_results' ) );
-
-        if ( isset( $this->gmwSD['map_use'] ) )
+        if ( $this->gmwSD['address_autocomplete_use'] ) {
+        	add_filter( 'gmw_google_places_address_autocomplete_fields', array( $this, 'address_autocomplete' ) );
+        }
+        
+        if ( isset( $this->gmwSD['map_use'] ) ) {
             add_action( 'bp_before_directory_members_list', array( $this, 'main_map' ) );
-
+        }
     }
 
     public function frontend_register_styles() {
@@ -68,7 +67,6 @@ class GMW_SD_Class_Query {
 
         if ( isset( $this->gmwSD['map_use'] ) ) {
             wp_register_script( 'gmw-sd-map', GMW_SD_URL . '/assets/js/map.js', array( 'jquery' ), GMW_VERSION, true );
-            wp_register_script( 'gmw-marker-clusterer', GMW_SD_URL . '/assets/js/marker-clusterer.js', array( 'jquery' ), GMW_VERSION, true );
         }
 
     }
@@ -82,7 +80,7 @@ class GMW_SD_Class_Query {
         $search_form_html .= '</label>';
 
         //Display radius dropdown
-        if ( count( $radius ) > 1 ) :
+        if ( count( $radius ) > 1 ) {
 
             $radiusText = ( $this->gmwSD['units'] == '6371' ) ? __( ' -- Kilometers -- ', 'GMW' ) : __( ' -- Miles -- ', 'GMW' );
 
@@ -90,39 +88,49 @@ class GMW_SD_Class_Query {
             $search_form_html .= 	'<select class="expand" name="field_radius">';
             $search_form_html .= 		'<option value="9999999999999" selected="selected">' . $radiusText . '</option>';
             
-            foreach ( $radius as $value ) :
+            foreach ( $radius as $value ) {
             	$selected = ( $value == $this->formData['radius'] ) ? 'selected="selected"': '';
             	$search_form_html .= 	'<option value="' . $value . '" '.$selected.'>' . $value . '</option>';
-            endforeach;
+            }
             
             $search_form_html .= 	'</select>';
             $search_form_html .= '</div>';
 
         //display hidden default value
-        else :
+        } else {
             $search_form_html .= '<input type="hidden" id="gmw-sd-radius-dropdown" name="field_radius" value="' . end( $radius ) . '" />';
-        endif;
-
-        $orderby = array( 'active', 'newest', 'alphabetical' );
-
-        if ( $this->formData['address'] == true ) {
-            array_unshift( $orderby, 'distance' );
         }
 
-        $search_form_html .= '<div class="two columns">';
-        $search_form_html .= 	'<select class="expand" name="orderby">';
-        $search_form_html .= 		'<option value="">' . __( 'Order By', 'GMW' ) . '</option>';
+        //orderby dropdown
+        $orderby = array( 
+        		'active' 	   => __( 'Active', 'GMW' ), 
+        		'newest' 	   => __( 'Newest', 'GMW' ),
+        		'alphabetical' => __( 'Alphabetical', 'GMW' )
+        );
 
-        foreach ( $orderby as $value ) :
+        if ( $this->formData['address'] == true ) {
+            $orderby = array_merge( array( 'distance' => __( 'Distance', 'GMW' ) ), $orderby );
+        }
+
+        $orderby = apply_filters( 'gmw_sd_orderby_values', $orderby );
+
+        if ( !empty( $orderby ) && !empty( $this->gmwSD['orderby_use'] ) ) {
+        
+	        $search_form_html .= '<div class="two columns">';
+	        $search_form_html .= 	'<select class="expand" name="orderby">';
+	        $search_form_html .= 		'<option value="">' . __( 'Order By', 'GMW' ) . '</option>';
+	
+	        foreach ( $orderby as $key => $value ) {
 			
-        	$selected = ( $value == $this->formData['orderby'] ) ? 'selected="selected"' : '';
-            $search_form_html .= 	'<option value="' . $value . '" '.$selected.'>' . ucfirst( $value ) . '</option>';
-
-        endforeach;
-
-        $search_form_html .= 	'</select>';
-        $search_form_html .= '</div>';
-
+	        	$selected = ( $value == $this->formData['orderby'] ) ? 'selected="selected"' : '';
+	            $search_form_html .= 	'<option value="' . $key . '" '.$selected.'>' . $value . '</option>';
+	
+	        }
+	
+	        $search_form_html .= 	'</select>';
+	        $search_form_html .= '</div>';
+        }
+        
         echo $search_form_html;
 
     }
@@ -254,13 +262,15 @@ class GMW_SD_Class_Query {
          */
         if ( $this->gmwSD['your_lat'] !== false ) {
 
-            $this->clauses['bp_user_query']['select'] .= $wpdb->prepare( " , ROUND( %d * acos( cos( radians( %s ) ) * cos( radians( gmwlocations.lat ) ) * cos( radians( gmwlocations.long ) - radians( %s ) ) + sin( radians( %s ) ) * sin( radians( gmwlocations.lat) ) ),1 ) AS distance ", $this->gmwSD['units'], $this->gmwSD['your_lat'], $this->gmwSD['your_lng'], $this->gmwSD['your_lat'] );
-            $this->clauses['bp_user_query']['having']       = $wpdb->prepare( " HAVING distance <= %d OR distance IS NULL", $this->formData['radius'] );
-            $this->clauses['wp_user_query']['query_fields'] = $wpdb->prepare( " ,ROUND( %d * acos( cos( radians( %s ) ) * cos( radians( gmwlocations.lat ) ) * cos( radians( gmwlocations.long ) - radians( %s ) ) + sin( radians( %s ) ) * sin( radians( gmwlocations.lat) ) ),1 ) AS distance", $this->gmwSD['units'], $this->gmwSD['your_lat'], $this->gmwSD['your_lng'], $this->gmwSD['your_lat'] );
+        	$this->clauses['bp_user_query']['select'] 	   .= $wpdb->prepare( " , ROUND( %d * acos( cos( radians( %s ) ) * cos( radians( gmwlocations.lat ) ) * cos( radians( gmwlocations.long ) - radians( %s ) ) + sin( radians( %s ) ) * sin( radians( gmwlocations.lat) ) ),1 ) AS distance ",
+        			$this->gmwSD['units'], $this->gmwSD['your_lat'], $this->gmwSD['your_lng'], $this->gmwSD['your_lat'] );
+        	$this->clauses['bp_user_query']['having']       = $wpdb->prepare( " HAVING distance <= %d OR distance IS NULL", $this->formData['radius'] );
+        	$this->clauses['wp_user_query']['query_fields'] = $wpdb->prepare( " ,ROUND( %d * acos( cos( radians( %s ) ) * cos( radians( gmwlocations.lat ) ) * cos( radians( gmwlocations.long ) - radians( %s ) ) + sin( radians( %s ) ) * sin( radians( gmwlocations.lat) ) ),1 ) AS distance",
+        			$this->gmwSD['units'], $this->gmwSD['your_lat'], $this->gmwSD['your_lng'], $this->gmwSD['your_lat'] );
         }
 
         //select all fields from location table
-        $this->clauses['wp_user_query']['query_fields'] .= " , gmwlocations.*";
+        $this->clauses['wp_user_query']['query_fields'] .= " , gmwlocations.lat, gmwlocations.long, gmwlocations.address, gmwlocations.formatted_address";
         $this->clauses['wp_user_query']['query_from'] = " {$tJoin2} JOIN wppl_friends_locator gmwlocations ON ID = gmwlocations.member_id ";
 
     }
@@ -331,6 +341,19 @@ class GMW_SD_Class_Query {
     }
 
     /**
+	 * Address Autocomplete 
+	 * 
+	 * @since 2.5
+	 * 
+     */
+    public function address_autocomplete( $fields ) {
+    		
+    	$fields[] = 'gmw-sd-address-field';  	
+    	return $fields;
+    	
+    }
+    
+    /**
      * Create Main map
      */
     public function main_map() {
@@ -355,17 +378,18 @@ class GMW_SD_Class_Query {
     public function get_directions() {
         global $members_template;
 
-        if ( !isset( $members_template->member->distance ) )
-            return;
+        if ( !isset( $this->gmwSD['directions'] ) || !$members_template->member->lat || !$members_template->member->long )
+        	return;
 		
         $settings = get_option( 'gmw_options' );
         
-        $region	   = ( isset( $settings['general_settings']['country_code'] ) && !empty( $settings['general_settings']['country_code'] ) ) ? '&region=' .$settings['general_settings']['country_code'] : '';
-        $language  = ( isset( $settings['general_settings']['language_code'] ) && !empty( $settings['general_settings']['language_code'] ) ) ? '&hl=' .$settings['general_settings']['language_code'] : '';
-        
-        $units = ( $this->gmwSD['units'] == '6371' ) ? 'ptk' : 'ptm';
-        return '<a href="http://maps.google.com/maps?f=d'.$language.''.$region.'&doflg=' . $units . '&geocode=&saddr=' . $this->gmwSD['org_address'] . '&daddr=' . str_replace( " ", "+", $members_template->member->formatted_address ) . '&ie=UTF8&z=12" target="_blank">' . __( 'Get Directions', 'GMW' ) . '</a>';
-
+        $region	   = ( !empty( $settings['general_settings']['country_code'] ) )  ? '&region=' .$settings['general_settings']['country_code'] : '';
+        $language  = ( !empty( $settings['general_settings']['language_code'] ) ) ? '&hl=' .$settings['general_settings']['language_code'] : ''; 
+        $units 	   = ( $this->gmwSD['units'] == '6371' ) ? 'ptk' : 'ptm';
+        $ulLatLng  = ( $this->gmwSD['your_lat'] && $this->gmwSD['your_lng'] ) ? "{$this->gmwSD['your_lat']},{$this->gmwSD['your_lng']}" : "";
+        $title 	   = __( 'Get Directions', 'GMW' );
+         
+        return "<a title=\"{$title}\" href=\"https://maps.google.com/maps?f=d{$language}{$region}&doflg={$units}&saddr={$ulLatLng}&daddr={$members_template->member->lat},{$members_template->member->long}&ie=UTF8&z=12\" target=\"_blank\">{$title}</a>";
     }
 
     public function get_distance() {
@@ -406,8 +430,8 @@ class GMW_SD_Class_Query {
         if ( isset( $this->gmwSD['address'] ) )
             echo '<div class="gmw-sd-address-wrapper"><span class="gmw-sd-address">' . __( 'Address:', 'GMW' ) . '</span> <span class="gmw-sd-address-value">' . $this->get_address() . '</span></div>';
         //directions
-        if ( isset( $this->gmwSD['directions'] ) )
-            echo $this->get_directions();
+     
+        echo self::get_directions();
         
         if ( isset( $members_template->member->distance ) && !empty( $members_template->member->distance ) ) {
         	$units 	  = ( $this->gmwSD['units'] == '6371' ) ? __( 'km', 'GMW' ) : __( 'mi', 'GMW' );

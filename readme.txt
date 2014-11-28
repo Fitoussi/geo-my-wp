@@ -3,9 +3,9 @@ Contributors: ninjew
 Donate link: http://geomywp.com/
 Tags: Geo-location, Geolocation, proximity search, zipcode search, radius search, store locator, Geolocate posts, address search, search distance, google v3 , Google maps, get directions, search locations, Geolocate, GEO, members locator, Geolocate memebrs, mapping, mapping software, latitude, longitude, locations finder, map creator.
 Requires at least: 3.8
-Tested up to: 3.9.1
-Buddypress: 2.0.1
-Stable tag: 2.4.6
+Tested up to: 4.0.1
+Buddypress: 2.1.1
+Stable tag: 2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -127,6 +127,10 @@ For questions, bugs report and suggestions please visit [GEO my WP Furom](http:/
 For screenshots please visit [GEO my WP](http://www.geomywp.com)
 
 == Changelog ==
+
+== 2.5 == 
+
+* This is a major update. Please click <a href="https://geomywp.com/blog/geo-my-wp-2-5/" target="_blank">here</a> to see full version change-log before updating.
 
 == 2.4.6 ==
 

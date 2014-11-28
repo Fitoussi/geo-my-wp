@@ -1,8 +1,6 @@
 /**
- * GMW results theme stylesheet - Gray
- * @author Eyal Fitoussi
+ * Posts Locator search results stylesheet "gray"
  */
-
 .gmw-pt-gray-results-wrapper select {
 	border: 1px solid #ccc;
 	height:30px;
@@ -49,10 +47,10 @@
 	text-align:center;
 	display: inline-block;
 	margin:0 0 0 2px;
-
 }
 
-.gmw-pt-gray-results-wrapper ul.gmw-pagination li a {
+.gmw-pt-gray-results-wrapper ul.gmw-pagination li a,
+.gmw-pt-gray-results-wrapper ul.gmw-pagination li span {
 	padding: 4px 3px;
 	font-size: 12px;
 	text-decoration: none;
@@ -63,13 +61,9 @@
 }
 
 .gmw-pt-gray-results-wrapper ul.gmw-pagination li a:hover, 
-.gmw-pt-gray-results-wrapper ul.gmw-pagination li a.current {
+.gmw-pt-gray-results-wrapper ul.gmw-pagination li span {
 	background:#f5f5f5;
 	border:1px solid #D9D9D9;
-}
-
-.gmw-pt-gray-results-wrapper ul.gmw-pagination li.details {
-	display:none;
 }
 
 /* list of results */
@@ -98,7 +92,7 @@ div.gmw-pt-gray-results-wrapper ul.posts-list-wrapper li.single-post:nth-child(e
 .gmw-pt-gray-results-wrapper ul.posts-list-wrapper li .top-wrapper {
 	border-bottom: 1px solid #ddd;
 	margin-bottom: 10px;
-	padding-bottom: 10px;
+	padding: 5px 0px 20px;
 	color:#666;
 	font-size: 14px;
 }
@@ -116,9 +110,13 @@ div.gmw-pt-gray-results-wrapper ul.posts-list-wrapper li .top-wrapper h2.post-ti
 	font-size: 16px;
 }
 
+div.gmw-pt-gray-results-wrapper ul.posts-list-wrapper .top-wrapper div.address-wrapper {
+	float: right;
+}
+
 div.gmw-pt-gray-results-wrapper ul.posts-list-wrapper .top-wrapper span.address {
 	font-size: 12px;
-	float: right;
+	vertical-align: top;
 }
 
 div.gmw-pt-gray-results-wrapper ul.posts-list-wrapper .post-content {
@@ -133,7 +131,7 @@ div.gmw-pt-gray-results-wrapper ul.posts-list-wrapper .post-content .left-col {
 }
 
 div.gmw-pt-gray-results-wrapper ul.posts-list-wrapper li.single-post .post-thumbnail img {
-	max-width:120px;
+	//max-width:120px;
 }
 
 div.gmw-pt-gray-results-wrapper ul.posts-list-wrapper .post-content .right-col {
@@ -185,5 +183,8 @@ div.gmw-pt-gray-results-wrapper ul.gmw-additional-info-wrapper li {
 		padding-top:10px
 	}
 	
-	
+	div.gmw-pt-gray-results-wrapper ul.posts-list-wrapper .top-wrapper div.address-wrapper {
+		float: none;
+		text-align:center;
+	}	
 }

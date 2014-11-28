@@ -12,14 +12,14 @@
 	
 	<!-- results count -->
 	<div class="gmw-results-count">
-		<span><?php gmw_pt_within( $gmw, $sm=__( 'Showing', 'GMW' ), $om=__( 'out of', 'GMW' ), $rm=__( 'results', 'GMW' ) ,$wm=__( 'within', 'GMW' ), $fm=__( 'from','GMW' ), $nm=__( 'your location', 'GMW' ) ); ?></span>
+		<span><?php gmw_results_message( $gmw, false ); ?></span>
 	</div>
 	
 	<?php do_action( 'gmw_before_top_pagination' , $gmw, $post ); ?>
 	
 	<div class="gmw-pt-pagination-wrapper gmw-pt-top-pagination-wrapper">
 		<!--  paginations -->
-		<?php gmw_pt_per_page_dropdown( $gmw, '' ); ?><?php gmw_pt_paginations( $gmw ); ?>
+		<?php gmw_per_page( $gmw, $gmw['total_results'], 'paged' ); ?><?php gmw_pagination( $gmw, 'paged', $gmw['max_pages'] ); ?>
 	</div> 
 		
 	<!-- Map -->
@@ -40,15 +40,17 @@
 				
 				<?php do_action( 'gmw_posts_loop_post_start' , $gmw, $post ); ?>
 				
-				<?php twentyfourteen_post_thumbnail(); ?>
-
+				<?php if ( isset( $gmw['search_results']['featured_image']['use'] ) ) { ?>
+					<?php twentyfourteen_post_thumbnail(); ?>
+				<?php } ?>
+				
 				<header class="entry-header">
 					<?php if ( in_array( 'category', get_object_taxonomies( get_post_type() ) ) && twentyfourteen_categorized_blog() ) : ?>
 						<div class="entry-meta">
 							<span class="cat-links"><?php echo get_the_category_list( _x( ', ', 'Used between list items, there is a space after the comma.', 'twentyfourteen' ) ); ?></span>
 						</div>
 					<?php endif; ?>
-					<span><?php echo gmw_pt_by_radius($gmw, $post); ?></span>
+					<span><?php gmw_distance_to_location( $post, $gmw ); ?></span>
 					<span style="float:right"><?php echo $post->formatted_address; ?></span>
 					
 					<?php the_title( '<h1 class="entry-title"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h1>' ); ?>
@@ -99,7 +101,7 @@
 	
 	<div class="gmw-pt-pagination-wrapper gmw-pt-bottom-pagination-wrapper">
 		<!--  paginations -->
-		<?php gmw_pt_per_page_dropdown($gmw, ''); ?><?php gmw_pt_paginations($gmw); ?>
+		<?php gmw_per_page( $gmw, $gmw['total_results'], 'paged' ); ?><?php gmw_pagination( $gmw, 'paged', $gmw['max_pages'] ); ?>
 	</div> 
 	
 </div> <!-- output wrapper -->

@@ -11,6 +11,10 @@
 	display: inline-block;
 }
 
+div.pac-container {
+	z-index:99999999;
+}
+
 .gmw-map-frame {
 	border: 1px solid #999;
 	padding: 5px;
@@ -67,6 +71,50 @@
 	-webkit-hyphens: none !important;
 	-moz-hyphens: none !important;
 	hyphens: none !important;
+}
+
+.gmw-expanded-map {
+	position:fixed;
+	z-index:9999999;
+	width:100% !important;
+	height:100% !important;
+	left:0px;
+	top:0px;
+}
+
+.gmw-map-wrapper .gmw-expand-map-trigger.dashicons-editor-expand {
+	background: white;
+	cursor:pointer;
+	content: "\f211";
+	color:rgba(27, 52, 70, 0.66);
+	font-size: 19px;
+	height:19px;
+	width:20px;
+	padding: 0px;
+	border: 1px solid rgba(0, 0, 0, 0.14902);
+	-webkit-box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
+	box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
+	-webkit-background-clip: padding-box;
+	background-clip: padding-box;
+	margin-top:5px;
+	margin-right: 5px;
+}
+
+.gmw-map-wrapper .gmw-expand-map-trigger.dashicons-editor-contract {
+	top: 5px !important; 
+	background: white;
+	cursor:pointer;
+	content: "\f211";
+	color:rgba(27, 52, 70, 0.66);
+	font-size: 20px;
+	height:20px;
+	width:22px;	
+	border: 1px solid rgba(0, 0, 0, 0.14902);
+	-webkit-box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
+	box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
+	-webkit-background-clip: padding-box;
+	background-clip: padding-box;
+	margin-right: 5px;
 }
 
 /* single location shortcode */
@@ -249,9 +297,10 @@
 }
 
 .wppl-gl-info-window .wppl-info-window-thumb img {
-	width: 120px;
-	height: 120px;
+	width: 80px;
+	height: auto;
 	padding: 5px;
+	margin-right: 5px;
 }
 
 .wppl-gl-info-window .wppl-info-window-info {
@@ -274,4 +323,34 @@
 .wppl-gl-info-window .wppl-info-window-info span {
 	color: #5E5858;
 	font-weight: bold;
+}
+
+/* groups locator */
+#gmw-gl-group-address-wrapper {
+	margin-top:20px;
+	display:block;
+	width:
+}
+
+.gmw-gl-mt-address-wrapper {
+	display:inline-block;
+}
+
+.gmw-gl-gm-iw-wrapper {
+	min-width:200px;
+}
+
+.gmw-gl-gm-iw-wrapper .gmw-gl-gm-iw-thumb {
+	display: inline-block;
+	vertical-align: top;
+	margin:5px 5px 0px 0;
+}
+
+.gmw-gl-gm-iw-wrapper .gmw-gl-gm-iw-info {
+	display: inline-block;
+}
+
+.gmw-gl-gm-iw-wrapper .gmw-gl-gm-iw-thumb img.avatar {
+	width: 65px;
+	height: auto;
 }

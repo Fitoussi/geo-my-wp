@@ -36,7 +36,12 @@ function gmw_fl_update_location() {
 
         echo __( 'Location successfully saved!', 'GMW' );
 
-        $activity_id = gmw_location_record_activity( $args = array('location' => apply_filters('gmw_fl_activity_address_fields', $location['gmw_formatted_address'], $location ) ) );
+    	$args = array( 
+    			'location' 	=> apply_filters('gmw_fl_activity_address_fields', $location['gmw_formatted_address'], $location ),
+    			'user_id'	=> $bp->displayed_user->id
+    	);
+    
+        $activity_id = gmw_location_record_activity( $args );
 
         do_action( 'gmw_fl_after_location_saved', $bp->displayed_user->id, $location );
 

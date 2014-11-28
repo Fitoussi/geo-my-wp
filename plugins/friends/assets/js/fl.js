@@ -28,7 +28,7 @@ jQuery(document).ready(function($) {
 				
 				gmwFlLocationMap = new google.maps.Map(document.getElementById('gmw-yl-map'), {
 					zoom: 10,
-					center:latLng,
+					center:latLng
 				});	
 				
 				//set marker
@@ -148,7 +148,7 @@ jQuery(document).ready(function($) {
 		var input 	= document.getElementById('gmw-yl-autocomplete');
 
 		var options = {
-	        types: ['geocode'],
+	        types: ['geocode']
 	    };
 	    
 	    var autocomplete = new google.maps.places.Autocomplete(input, options);
@@ -201,20 +201,14 @@ jQuery(document).ready(function($) {
 		var latlng = new google.maps.LatLng(gotLat ,gotLng);
 	
 		//geocode lat/lng to address
-		geocoder.geocode( {'latLng': latlng }, function(results, status) {
-      		
+		geocoder.geocode( {'latLng': latlng }, function(results, status) {		
 			if (status == google.maps.GeocoderStatus.OK) {
-				
        	 		if ( results[0] ) {
-         
 					breakAddress(results[0]);
 					if ( updateMap == true ) update_map();
         		}
-       	 		
       		} else {
-      			
         		alert("Geocoder failed due to: " + status);
-        		
       		}
    		});
 	} 

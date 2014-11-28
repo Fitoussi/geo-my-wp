@@ -22,3 +22,36 @@
 .gmw-fl-member-count {
 	display: inline;
 }
+
+/* pagination */
+
+.gmw-fl-default-results-wrapper ul.gmw-pagination {
+	float: right;
+	text-align: center;
+	margin:0px;
+	list-style:none;
+	padding:0px;
+}
+
+.gmw-fl-default-results-wrapper ul.gmw-pagination li  {
+	text-align:center;
+	display: inline-block;
+	margin:0 0 0 2px;
+}
+
+.gmw-fl-default-results-wrapper ul.gmw-pagination li a, 
+.gmw-fl-default-results-wrapper ul.gmw-pagination li span {
+	padding: 4px 3px;
+	font-size: 12px;
+	text-decoration: none;
+	background-color: #f7f7f7;
+	border:1px solid #d7d7d7;
+	display: inline-block;
+	color:#1B5A64;
+}
+
+.gmw-fl-default-results-wrapper ul.gmw-pagination li a:hover, 
+.gmw-fl-default-results-wrapper	 ul.gmw-pagination li span {
+	background-color: #e5e5e5;
+	border:1px solid #ddd;
+}

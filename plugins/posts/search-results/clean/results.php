@@ -1,8 +1,22 @@
 <?php
 /**
- * Clean - Results Page.
- * @version 1.0
- * @author Eyal Fitoussi
+ * Posts locator "clean" search results template file. 
+ * 
+ * The information on this file will be displayed as the search results.
+ * 
+ * The function pass 2 args for you to use:
+ * $gmw    - the form being used ( array )
+ * $post - each post in the loop
+ * 
+ * You could but It is not recomemnded to edit this file directly as your changes will be overridden on the next update of the plugin.
+ * Instead you can copy-paste this template ( the "clean" folder contains this file and the "css" folder ) 
+ * into the theme's or child theme's folder of your site and apply your changes from there. 
+ * 
+ * The template folder will need to be placed under:
+ * your-theme's-or-child-theme's-folder/geo-my-wp/posts/search-results/
+ * 
+ * Once the template folder is in the theme's folder you will be able to choose it when editing the posts locator form.
+ * It will show in the "Search results" dropdown menu as "Custom: clean".
  */
 ?>
 <!--  Main results wrapper - wraps the paginations, map and results -->
@@ -12,14 +26,14 @@
 	
 	<!-- results count -->
 	<div class="gmw-results-count">
-		<span><?php gmw_pt_within( $gmw, $sm=__( 'Showing', 'GMW' ), $om=__( 'out of', 'GMW' ), $rm=__( 'results', 'GMW' ) ,$wm=__( 'within', 'GMW' ), $fm=__( 'from','GMW' ), $nm=__( 'your location', 'GMW' ) ); ?></span>
+		<span><?php gmw_results_message( $gmw, false ); ?></span>
 	</div>
 	
-	<?php do_action( 'gmw_before_top_pagination' , $gmw, $post ); ?>
+	<?php do_action( 'gmw_search_results_before_top_pagination' , $gmw, $post ); ?>
 	
 	<div class="gmw-pt-pagination-wrapper gmw-pt-top-pagination-wrapper">
 		<!--  paginations -->
-		<?php gmw_pt_per_page_dropdown( $gmw, '' ); ?><?php gmw_pt_paginations( $gmw ); ?>
+		<?php gmw_per_page( $gmw, $gmw['total_results'], 'paged' ); ?><?php gmw_pagination( $gmw, 'paged', $gmw['max_pages'] ); ?>
 	</div> 
 		
 	<!-- Map -->
@@ -38,29 +52,37 @@
 			<!--  single results wrapper  -->
 			<div id="post-<?php the_ID(); ?>" <?php post_class('wppl-single-result'); ?>>
 		
-				<?php do_action( 'gmw_posts_loop_post_start' , $gmw, $post ); ?>
+				<?php do_action( 'gmw_search_results_loop_item_start' , $gmw, $post ); ?>
 				
 				<!-- Title -->
 				<div class="wppl-title-holder">
 					<h2 class="wppl-h2">
 						<a href="<?php echo the_permalink(); ?>"><?php echo $post->post_count; ?>) <?php the_title(); ?></a>
-						<span class="radius-dis">(<?php echo gmw_pt_by_radius( $gmw, $post ); ?>)</span>
+						<span class="radius-dis">(<?php gmw_distance_to_location( $post, $gmw ); ?>)</span>
 					</h2>
 				</div>
-				
-				<?php do_action( 'gmw_posts_loop_after_title' , $gmw, $post ); ?>
+								
+				<!--  Thumbnail -->			
+				<?php if ( isset( $gmw['search_results']['featured_image']['use'] ) && has_post_thumbnail() ) { ?>
 					
-				<!--  Thumbnail -->
-				<div id="wppl-thumb" class="wppl-thumb">
-					<?php gmw_pt_thumbnail( $gmw, $post ); ?>
-				</div>
+					<?php do_action( 'gmw_search_results_before_image' , $gmw, $post ); ?>
+				
+					<div id="wppl-thumb" class="wppl-thumb">
+						<?php the_post_thumbnail( array( $gmw['search_results']['featured_image']['width'], $gmw['search_results']['featured_image']['height'] ) ); ?>
+					</div>
+				<?php } ?>
 				
 				<!--  Excerpt -->
-    			<div class="wppl-excerpt">
-				 	<?php gmw_pt_excerpt( $gmw, $post ); ?> 
-			 	</div>
+				<?php if ( isset( $gmw['search_results']['excerpt']['use'] ) ) { ?>
+					
+					<?php do_action( 'gmw_search_results_before_excerpt' , $gmw, $post ); ?>
+					
+					<div class="wppl-excerpt">
+						<?php gmw_excerpt( $post, $gmw, $post->post_content, $gmw['search_results']['excerpt']['count'] ); ?>
+					</div>
+				<?php } ?>
 				
-				<?php do_action( 'gmw_posts_loop_after_content' , $gmw, $post ); ?>
+				<?php do_action( 'gmw_search_results_before_taxonomies' , $gmw, $post ); ?>
 				
 				<!--  taxonomies -->
 				<div id="wppl-taxes-wrapper" class="wppl-taxes-wrapper">
@@ -72,31 +94,44 @@
 		    	<div class="wppl-info">
 		    		
 		    		<div class="wppl-info-left">
-			    		<!--  Addiotional info -->
-		    			<?php gmw_pt_additional_info( $gmw, $post, $tag='div' ); ?>
-		    
+			    		<?php if ( !empty( $gmw['info_window']['additional_info'] ) ) { ?>
+    
+					    	<?php do_action( 'gmw_search_results_before_contact_info', $post, $gmw ); ?>
+						   	
+						   	<div class="contact-info">
+								<h3><?php echo $gmw['labels']['info_window']['contact_info']; ?></h3>
+					    		<?php gmw_additional_info( $post, $gmw, $gmw['search_results']['additional_info'], $gmw['labels']['search_results']['contact_info'], 'ul' ); ?> 
+					    	</div>
+					    <?php } ?>	    
 		    		</div>
 		    		
 		    		<div class="wppl-info-right">
 		    			
 		    			<!--  Address -->
 		    			<div class="wppl-address">
-		    				<?php echo $post->formatted_address; ?>
+		    				<div class="address-wrapper">
+						    	<span class="dashicons-before dashicons-location address-icon"></span>
+						    	<span class="wppl-address"><?php gmw_location_address( $post, $gmw ); ?></span>
+						    </div>
 		    			</div>
 		    		
 		    			<!--  Driving Distance -->
-		    			<?php gmw_pt_driving_distance( $gmw, $post, $class='wppl-driving-distance', $title=__('Driving: ','GMW') ); ?>
+						<?php if ( isset( $gmw['search_results']['by_driving'] ) ) { ?>
+		    				<?php gmw_driving_distance( $post, $gmw, false ); ?>
+		    			<?php } ?>
 		    			
 		    			<!-- Get directions -->	 	
-    					<div class="wppl-get-directions">
-		    				<?php gmw_pt_directions( $gmw, $post, $title=__('Get Directions','GMW') ); ?>
-	    				</div>
+						<?php if ( isset( $gmw['search_results']['get_directions'] ) ) { ?>
+							<div class="wppl-get-directions">
+		    					<?php gmw_directions_link( $post, $gmw, $gmw['labels']['search_results']['directions'] ); ?>
+		    				</div>
+		    			<?php } ?>
 			    		
 		    		</div><!-- info right end -->
 		    	
 		    	</div> <!-- info end -->
 		    
-		    	<?php do_action( 'gmw_posts_loop_post_end' , $gmw, $post ); ?>
+		    	<?php do_action( 'gmw_search_results_loop_item_end' , $gmw, $post ); ?>
 		    	
 		    </div> <!--  single- wrapper ends -->
 		    
@@ -110,10 +145,12 @@
 	
 	<?php do_action( 'gmw_search_results_after_loop' , $gmw, $post ); ?>
 		
+	<?php do_action( 'gmw_search_results_before_bottom_pagination' , $gmw, $post ); ?>
+	
 	<!--  Pagination -->
 	<div class="gmw-pt-pagination-wrapper gmw-pt-bottom-pagination-wrapper">
 		<!--  paginations -->
-		<?php gmw_pt_per_page_dropdown( $gmw, '' ); ?><?php gmw_pt_paginations( $gmw ); ?>
+		<?php gmw_per_page( $gmw, $gmw['total_results'], 'paged' ); ?><?php gmw_pagination( $gmw, 'paged', $gmw['max_pages'] ); ?>
 	</div> 
 	
 	<?php do_action( 'gmw_search_results_end' , $gmw, $post ); ?>

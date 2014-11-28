@@ -17,12 +17,10 @@ class GMW_PT_Meta_Boxes {
         $this->settings   = get_option( 'gmw_options' );
         $this->meta_boxes = $this->create_meta_boxes();
 
-        add_action( 'admin_init', array( $this, 'add_meta_box' ) );
-        add_action( 'save_post', array( $this, 'save_data' ) );
-
+        add_action( 'admin_init', 						array( $this, 'add_meta_box' 						) );
+        add_action( 'save_post',  				 		array( $this, 'save_data' 							) );
         add_action( 'admin_print_scripts-post-new.php', array( $this, 'register_admin_location_scripts' ), 11 );
-        add_action( 'admin_print_scripts-post.php', array( $this, 'register_admin_location_scripts' ), 11 );
-
+        add_action( 'admin_print_scripts-post.php', 	array( $this, 'register_admin_location_scripts' ), 11 );
     }
 
     /**
@@ -35,11 +33,17 @@ class GMW_PT_Meta_Boxes {
         global $post_type;
 
         if ( isset( $this->settings[ 'post_types_settings' ][ 'post_types' ] ) && !empty( $this->settings[ 'post_types_settings' ][ 'post_types' ] ) && ( in_array( $post_type, $this->settings[ 'post_types_settings' ][ 'post_types' ] ) ) ) {
-
-            wp_register_style( 'gmw-pt-admin-style', GMW_PT_URL . 'assets/css/style-admin.css' );
-            wp_register_script( 'gmw-admin-address-picker', GMW_PT_URL . 'assets/js/jquery.ui.addresspicker.js', array( 'jquery' ), GMW_VERSION, true );
+			       	
+            wp_register_style( 'gmw-pt-admin-style', 		GMW_PT_URL . 'assets/css/style-admin.css' );
+            wp_register_script( 'gmw-admin-address-picker', GMW_PT_URL . 'assets/js/addresspicker.min.js', array( 'jquery' ), GMW_VERSION, true );
+            
+            //add default values if not exist to prevent JavaScript error
+            if ( !isset( $this->settings['admin_settings']['edit_post_zoom_level'] ) ) $this->settings['admin_settings']['edit_post_zoom_level'] = 7;
+            if ( !isset( $this->settings['admin_settings']['edit_post_latitude'] ) )   $this->settings['admin_settings']['edit_post_latitude']   = '40.7115441';
+            if ( !isset( $this->settings['admin_settings']['edit_post_longitude'] ) )  $this->settings['admin_settings']['edit_post_longitude']  = '-74.01348689999998';
+            
+        	wp_localize_script( 'gmw-admin-address-picker', 'gmwSettings', $this->settings );
         }
-
     }
 
     /**
@@ -48,152 +52,151 @@ class GMW_PT_Meta_Boxes {
     public function create_meta_boxes() {
 
     	$post_types 	= ( isset( $this->settings[ 'post_types_settings' ][ 'post_types' ] ) ) ? $this->settings[ 'post_types_settings' ][ 'post_types' ] : array();
-        $prefix     	= '_wppl_';
-        $meta_boxes 	= array(
-            'id'       => 'wppl-meta-box',
-            'title'    => __( 'GMW Location', 'GMW' ),
-            'pages'    => $post_types,
-            'context'  => 'normal',
-            'priority' => 'high',
-            'fields'   => array(
-                array(
-                    'name' => __( 'Street', 'GMW' ),
-                    'desc' => '',
-                    'id'   => $prefix . 'street',
-                    'type' => 'text',
-                    'std'  => ''
-                ),
-                array(
-                    'name' => __( 'Apt/Suit', 'GMW' ),
-                    'desc' => '',
-                    'id'   => $prefix . 'apt',
-                    'type' => 'text',
-                    'std'  => ''
-                ),
-                array(
-                    'name' => __( 'City', 'GMW' ),
-                    'desc' => '',
-                    'id'   => $prefix . 'city',
-                    'type' => 'text',
-                    'std'  => ''
-                ),
-                array(
-                    'name' => __( 'State', 'GMW' ),
-                    'desc' => '',
-                    'id'   => $prefix . 'state',
-                    'type' => 'text',
-                    'std'  => ''
-                ),
-                array(
-                    'name' => __( 'Zipcode', 'GMW' ),
-                    'desc' => '',
-                    'id'   => $prefix . 'zipcode',
-                    'type' => 'text',
-                    'std'  => ''
-                ),
-                array(
-                    'name' => __( 'Country', 'GMW' ),
-                    'desc' => '',
-                    'id'   => $prefix . 'country',
-                    'type' => 'text',
-                    'std'  => ''
-                ),
-                array(
-                    'name' => __( 'Phone Number', 'GMW' ),
-                    'desc' => '',
-                    'id'   => $prefix . 'phone',
-                    'type' => 'text',
-                    'std'  => ''
-                ),
-                array(
-                    'name' => __( 'fax Number', 'GMW' ),
-                    'desc' => '',
-                    'id'   => $prefix . 'fax',
-                    'type' => 'text',
-                    'std'  => ''
-                ),
-                array(
-                    'name' => __( 'Email Address', 'GMW' ),
-                    'desc' => '',
-                    'id'   => $prefix . 'email',
-                    'type' => 'text',
-                    'std'  => ''
-                ),
-                array(
-                    'name' => __( 'Website', 'GMW' ),
-                    'desc' => 'Ex: www.website.com',
-                    'id'   => $prefix . 'website',
-                    'type' => 'text',
-                    'std'  => ''
-                ),
-                array(
-                    'name' => __( 'Latitude', 'GMW' ),
-                    'desc' => '',
-                    'id'   => $prefix . 'enter_lat',
-                    'type' => 'text-right',
-                    'std'  => ''
-                ),
-                array(
-                    'name' => __( 'Longitude', 'GMW' ),
-                    'desc' => '',
-                    'id'   => $prefix . 'enter_long',
-                    'type' => 'text-right',
-                    'std'  => ''
-                ),
-                array(
-                    'name' => __( 'Latitude', 'GMW' ),
-                    'desc' => '',
-                    'id'   => $prefix . 'lat',
-                    'type' => 'text-disable',
-                    'std'  => ''
-                ),
-                array(
-                    'name' => __( 'Longitude', 'GMW' ),
-                    'desc' => '',
-                    'id'   => $prefix . 'long',
-                    'type' => 'text-disable',
-                    'std'  => ''
-                ),
-                array(
-                    'name' => __( 'Full Address', 'GMW' ),
-                    'desc' => '',
-                    'id'   => $prefix . 'address',
-                    'type' => 'text-disable',
-                    'std'  => ''
-                ),
-                array(
-                    'name' => __( 'Days & Hours', 'GMW' ),
-                    'desc' => '',
-                    'id'   => $prefix . 'days_hours',
-                    'type' => 'text',
-                    'std'  => ''
-                ),
-                array(
-                    'name' => __( 'State Long', 'GMW' ),
-                    'desc' => '',
-                    'id'   => $prefix . 'state_long',
-                    'type' => 'text',
-                    'std'  => ''
-                ),
-                array(
-                    'name' => __( 'Country Long', 'GMW' ),
-                    'desc' => '',
-                    'id'   => $prefix . 'country_long',
-                    'type' => 'text',
-                    'std'  => ''
-                ),
-                array(
-                    'name' => __( 'Formatted address', 'GMW' ),
-                    'desc' => '',
-                    'id'   => $prefix . 'formatted_address',
-                    'type' => 'text',
-                    'std'  => ''
-                )
-            )
-        );
+    	$prefix     	= '_wppl_';
+    	$meta_boxes 	= array(
+    			'id'       => 'wppl-meta-box',
+    			'title'    => apply_filters( 'gmw_pt_mb_title', __( 'GMW Location', 'GMW' ) ),
+    			'pages'    => $post_types,
+    			'context'  => 'normal',
+    			'priority' => 'high',
+    			'fields'   => array(
+    					array(
+    							'name' => __( 'Street', 'GMW' ),
+    							'desc' => '',
+    							'id'   => $prefix . 'street',
+    							'type' => 'text',
+    							'std'  => ''
+    					),
+    					array(
+    							'name' => __( 'Apt/Suit', 'GMW' ),
+    							'desc' => '',
+    							'id'   => $prefix . 'apt',
+    							'type' => 'text',
+    							'std'  => ''
+    					),
+    					array(
+    							'name' => __( 'City', 'GMW' ),
+    							'desc' => '',
+    							'id'   => $prefix . 'city',
+    							'type' => 'text',
+    							'std'  => ''
+    					),
+    					array(
+    							'name' => __( 'State', 'GMW' ),
+    							'desc' => '',
+    							'id'   => $prefix . 'state',
+    							'type' => 'text',
+    							'std'  => ''
+    					),
+    					array(
+    							'name' => __( 'Zipcode', 'GMW' ),
+    							'desc' => '',
+    							'id'   => $prefix . 'zipcode',
+    							'type' => 'text',
+    							'std'  => ''
+    					),
+    					array(
+    							'name' => __( 'Country', 'GMW' ),
+    							'desc' => '',
+    							'id'   => $prefix . 'country',
+    							'type' => 'text',
+    							'std'  => ''
+    					),
+    					array(
+    							'name' => __( 'Phone Number', 'GMW' ),
+    							'desc' => '',
+    							'id'   => $prefix . 'phone',
+    							'type' => 'text',
+    							'std'  => ''
+    					),
+    					array(
+    							'name' => __( 'fax Number', 'GMW' ),
+    							'desc' => '',
+    							'id'   => $prefix . 'fax',
+    							'type' => 'text',
+    							'std'  => ''
+    					),
+    					array(
+    							'name' => __( 'Email Address', 'GMW' ),
+    							'desc' => '',
+    							'id'   => $prefix . 'email',
+    							'type' => 'text',
+    							'std'  => ''
+    					),
+    					array(
+    							'name' => __( 'Website', 'GMW' ),
+    							'desc' => 'Ex: www.website.com',
+    							'id'   => $prefix . 'website',
+    							'type' => 'text',
+    							'std'  => ''
+    					),
+    					array(
+    							'name' => __( 'Latitude', 'GMW' ),
+    							'desc' => '',
+    							'id'   => $prefix . 'enter_lat',
+    							'type' => 'text-right',
+    							'std'  => ''
+    					),
+    					array(
+    							'name' => __( 'Longitude', 'GMW' ),
+    							'desc' => '',
+    							'id'   => $prefix . 'enter_long',
+    							'type' => 'text-right',
+    							'std'  => ''
+    					),
+    					array(
+    							'name' => __( 'Latitude', 'GMW' ),
+    							'desc' => '',
+    							'id'   => $prefix . 'lat',
+    							'type' => 'text-disable',
+    							'std'  => ''
+    					),
+    					array(
+    							'name' => __( 'Longitude', 'GMW' ),
+    							'desc' => '',
+    							'id'   => $prefix . 'long',
+    							'type' => 'text-disable',
+    							'std'  => ''
+    					),
+    					array(
+    							'name' => __( 'Full Address', 'GMW' ),
+    							'desc' => '',
+    							'id'   => $prefix . 'address',
+    							'type' => 'text-disable',
+    							'std'  => ''
+    					),
+    					array(
+    							'name' => __( 'Days & Hours', 'GMW' ),
+    							'desc' => '',
+    							'id'   => $prefix . 'days_hours',
+    							'type' => 'text',
+    							'std'  => ''
+    					),
+    					array(
+    							'name' => __( 'State Long', 'GMW' ),
+    							'desc' => '',
+    							'id'   => $prefix . 'state_long',
+    							'type' => 'text',
+    							'std'  => ''
+    					),
+    					array(
+    							'name' => __( 'Country Long', 'GMW' ),
+    							'desc' => '',
+    							'id'   => $prefix . 'country_long',
+    							'type' => 'text',
+    							'std'  => ''
+    					),
+    					array(
+    							'name' => __( 'Formatted address', 'GMW' ),
+    							'desc' => '',
+    							'id'   => $prefix . 'formatted_address',
+    							'type' => 'text',
+    							'std'  => ''
+    					)
+    			)
+    	);
 
-        return $meta_boxes;
-
+    	return $meta_boxes;
     }
 
     /**
@@ -206,7 +209,6 @@ class GMW_PT_Meta_Boxes {
                 add_meta_box( $this->meta_boxes[ 'id' ], $this->meta_boxes[ 'title' ], array( $this, 'display_meta_box' ), $page, $this->meta_boxes[ 'context' ], $this->meta_boxes[ 'priority' ] );
             }
         }
-
     }
 
     /**
@@ -217,57 +219,71 @@ class GMW_PT_Meta_Boxes {
 
         $post_info = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . $wpdb->prefix . "places_locator WHERE post_id = %d", array( $post->ID ) ) );
 
-        if ( !isset( $post_info ) || empty( $post_info ) )
-            $post_info = ( object ) array(
-                        'post_id'           => '',
-                        'feature'           => '',
-                        'post_status'       => '',
-                        'post_type'         => '',
-                        'post_title'        => '',
-                        'lat'               => '',
-                        'long'              => '',
-                        'street'            => '',
-                        'apt'               => '',
-                        'city'              => '',
-                        'state'             => '',
-                        'state_long'        => '',
-                        'zipcode'           => '',
-                        'country'           => '',
-                        'country_long'      => '',
-                        'address'           => '',
-                        'formatted_address' => '',
-                        'phone'             => '',
-                        'fax'               => '',
-                        'email'             => '',
-                        'website'           => '',
-                        'map_icon'          => ''
-            );
-
+        if ( !isset( $post_info ) || empty( $post_info ) ) {
+        	$post_info = ( object ) array(
+        			'post_id'           => '',
+        			'feature'           => '',
+        			'post_status'       => '',
+        			'post_type'         => '',
+        			'post_title'        => '',
+        			'lat'               => '',
+        			'long'              => '',
+        			'street'            => '',
+        			'apt'               => '',
+        			'city'              => '',
+        			'state'             => '',
+        			'state_long'        => '',
+        			'zipcode'           => '',
+        			'country'           => '',
+        			'country_long'      => '',
+        			'address'           => '',
+        			'formatted_address' => '',
+        			'phone'             => '',
+        			'fax'               => '',
+        			'email'             => '',
+        			'website'           => '',
+        			'map_icon'          => ''
+        	);
+        }
+        
         if ( isset( $this->settings[ 'general_settings' ][ 'mandatory_address' ] ) )
             wp_localize_script( 'wppl-address-picker', 'addressMandatory', $this->settings[ 'general_settings' ][ 'mandatory_address' ] );
 		?>
-        <input type="hidden" name="this->meta_boxes_nonce" value="<?php echo wp_create_nonce(basename(__FILE__)); ?>" />
-	
-            <div class="gmw-location-section map">
-            	<h3><?php _e( 'Use the map to drag and drop the marker to the desired location.','GMW' );?></h3>
-            	<div id="map"></div>
-            </div>
+		
+		<?php do_action( 'gmw_admin_location_section_start', $post ); ?>
+		
+		<!--  <input type="text" name="gmw_post_level" id="gmw-post-level"> -->
 
-            <div class="gmw-location-section current-location">
-            	<h3><?php _e('Get your current location','GMW'); ?></h3>
-            	<div class="current-location-inner">
-            		<input type="button" id="gmw-admin-locator-btn" class="button-primary" value="<?php _e('Locate Me','GMW'); ?>" />
-            	</div>
-            </div>
-
-            <div class="gmw-location-section autocomplete">
-            	<h3><?php _e('Type an address to autocomplete','GMW'); ?></h3>
-            	<div class="autocomplete-location-inner">
-            		<input type="text" id="wppl-addresspicker" value="<?php echo $post_info->address; ?>" />
-            	</div>
-            </div>
-
-            <div class="clear"></div>
+		<input type="hidden" name="this->meta_boxes_nonce" value="<?php echo wp_create_nonce(basename(__FILE__)); ?>" />
+		
+		<div class="gmw-location-section map">
+			<h3>
+				<?php _e( 'Use the map to drag and drop the marker to the desired location.','GMW' );?>
+			</h3>
+			<div id="map"></div>
+		</div>
+		
+		<div class="gmw-location-section current-location">
+			<h3>
+				<?php _e('Get your current location','GMW'); ?>
+			</h3>
+			<div class="current-location-inner">
+				<input type="button" id="gmw-admin-locator-btn" class="button-primary"
+					value="<?php _e('Locate Me','GMW'); ?>" />
+			</div>
+		</div>
+		
+		<div class="gmw-location-section autocomplete">
+			<h3>
+				<?php _e('Type an address to autocomplete','GMW'); ?>
+			</h3>
+			<div class="autocomplete-location-inner">
+				<input type="text" id="wppl-addresspicker"
+					value="<?php echo $post_info->address; ?>" />
+			</div>
+		</div>
+		
+		<div class="clear"></div>
 
             <div class="gmw-location-section gmw-location-manually-wrapper">
             	<h3><?php _e('Enter Location Manually','GMW'); ?></h3>
@@ -488,15 +504,16 @@ class GMW_PT_Meta_Boxes {
             	</div>
             </div>
 	 	
-            <div class="clear"></div>
-			<?php 
-			
-            wp_enqueue_style( 'gmw-pt-admin-style' );
-            wp_enqueue_script( 'google-maps' );
-            wp_enqueue_script( 'jquery-ui-autocomplete' );
-            wp_enqueue_script( 'gmw-admin-address-picker' );
-            wp_localize_script( 'gmw-admin-address-picker','gmwOptions', $this->settings );
+	 	<?php do_action( 'gmw_admin_location_section_end', $post ); ?>
 	 	
+     	<div class="clear"></div>
+		<?php 
+			
+    	wp_enqueue_style( 'gmw-pt-admin-style' );
+    	wp_enqueue_script( 'google-maps' );
+    	wp_enqueue_script( 'jquery-ui-autocomplete' );
+     	wp_enqueue_script( 'gmw-admin-address-picker' );
+     	wp_localize_script( 'gmw-admin-address-picker','gmwOptions', $this->settings );
 	}
 	
 	/* EVERY NEW POST OR WHEN POST IS BEING UPDATED 
@@ -569,44 +586,41 @@ class GMW_PT_Meta_Boxes {
             );
         } else {
         	
-            //Save information to database
-            global $wpdb;
+            $_POST['gmw_map_icon']  = ( isset( $_POST['gmw_map_icon'] ) && !empty( $_POST['gmw_map_icon'] ) ) ? $_POST['gmw_map_icon'] : '_default.png';
+            $_POST 					= apply_filters( 'gmw_pt_before_location_updated', $_POST, $post->ID );
 
-            $_POST[ 'gmw_map_icon' ] = ( isset( $_POST[ 'gmw_map_icon' ] ) && !empty( $_POST[ 'gmw_map_icon' ] ) ) ? $_POST[ 'gmw_map_icon' ] : '_default.png';
-
-            $_POST = apply_filters( 'gmw_pt_before_location_updated', $_POST, $post->ID );
-
-            $wpdb->replace( $wpdb->prefix . 'places_locator', array(
-                'post_id'           => $post->ID,
-                'feature'           => 0,
-                'post_type'         => $_POST[ 'post_type' ],
-                'post_title'        => $_POST[ 'post_title' ],
-                'post_status'       => $_POST[ 'post_status' ],
-                'street'            => $_POST[ '_wppl_street' ],
-                'apt'               => $_POST[ '_wppl_apt' ],
-                'city'              => $_POST[ '_wppl_city' ],
-                'state'             => $_POST[ '_wppl_state' ],
-                'state_long'        => $_POST[ '_wppl_state_long' ],
-                'zipcode'           => $_POST[ '_wppl_zipcode' ],
-                'country'           => $_POST[ '_wppl_country' ],
-                'country_long'      => $_POST[ '_wppl_country_long' ],
-                'address'           => $_POST[ '_wppl_address' ],
-                'formatted_address' => $_POST[ '_wppl_formatted_address' ],
-                'phone'             => $_POST[ '_wppl_phone' ],
-                'fax'               => $_POST[ '_wppl_fax' ],
-                'email'             => $_POST[ '_wppl_email' ],
-                'website'           => $_POST[ '_wppl_website' ],
-                'lat'               => $_POST[ '_wppl_lat' ],
-                'long'              => $_POST[ '_wppl_long' ],
-                'map_icon'          => $_POST[ 'gmw_map_icon' ],
-                    )
-            );
+            //location array
+            $location = array(
+            		'post_id'           => $post->ID,
+            		'feature'           => 0,
+            		'post_type'         => $_POST['post_type'],
+            		'post_title'        => $_POST['post_title'],
+            		'post_status'       => $_POST['post_status'],
+            		'street'            => $_POST['_wppl_street'],
+            		'apt'               => $_POST['_wppl_apt'],
+            		'city'              => $_POST['_wppl_city'],
+            		'state'             => $_POST['_wppl_state'],
+            		'state_long'        => $_POST['_wppl_state_long'],
+            		'zipcode'           => $_POST['_wppl_zipcode'],
+            		'country'           => $_POST['_wppl_country'],
+            		'country_long'      => $_POST['_wppl_country_long'],
+            		'address'           => $_POST['_wppl_address'],
+            		'formatted_address' => $_POST['_wppl_formatted_address'],
+            		'phone'             => $_POST['_wppl_phone'],
+            		'fax'               => $_POST['_wppl_fax'],
+            		'email'             => $_POST['_wppl_email'],
+            		'website'           => $_POST['_wppl_website'],
+            		'lat'               => $_POST['_wppl_lat'],
+            		'long'              => $_POST['_wppl_long'],
+            		'map_icon'          => $_POST['gmw_map_icon'],
+           	);
+            
+            //update locaiton in database
+            gmw_replace_pt_location_in_db( $location );
+            
         }
         do_action( 'gmw_pt_after_location_updated', $post->ID, $_POST );
-
     }
-
 }
-
 new GMW_PT_Meta_Boxes;
 ?>

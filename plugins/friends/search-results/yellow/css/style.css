@@ -35,26 +35,43 @@
 .gmw-fl-yellow-results-wrapper .pagination-wrapper {
 	float: right;
 	text-align: center;	
+	line-height:30px;
 }
 
-.gmw-fl-yellow-results-wrapper .pagination-wrapper a, 
-.gmw-fl-yellow-results-wrapper .pagination-wrapper span {
-	padding: 4px 3px;
+/* pagination */
+
+.gmw-fl-yellow-results-wrapper ul.gmw-pagination {
+	float: right;
+	text-align: center;
+	margin:0px;
+	list-style:none;
+	padding:0px;
+}
+
+.gmw-fl-yellow-results-wrapper ul.gmw-pagination li  {
+	text-align:center;
+	display: inline-block;
+	margin:0 0 0 2px;
+}
+
+.gmw-fl-yellow-results-wrapper ul.gmw-pagination li a, 
+.gmw-fl-yellow-results-wrapper ul.gmw-pagination li span {
+	padding: 4px 8px;
 	font-size: 12px;
 	text-decoration: none;
-	background: #FBFCBA;
-	text-align:center;
-	border:1px solid #D1D296;
+	border: 1px solid #ccc;
+	background-color: lightyellow;
 	display: inline-block;
-	color:#626332;
-
+	color:#1B5A64;
 }
 
-.gmw-fl-yellow-results-wrapper .pagination-wrapper a:hover, 
-.gmw-fl-yellow-results-wrapper .pagination-wrapper span {
+.gmw-fl-yellow-results-wrapper ul.gmw-pagination li a:hover, 
+.gmw-fl-yellow-results-wrapper	 ul.gmw-pagination li span {
 	background:#E8E979;
+	border:1px solid #ddd;
 }
 
+/* members list */
 .gmw-fl-yellow-results-wrapper ul.members-list-wrapper {
 	background:lightyellow;
 	list-style: none;
@@ -74,14 +91,6 @@
 	background:white;
 }
 
-.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .top-wrapper {
-	border-bottom: 1px solid #D1D296;
-	margin-bottom: 15px;
-	padding-bottom: 15px;
-	color:#666;
-	font-size: 16px;
-}
-
 .gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .top-wrapper a:link,
 .gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .top-wrapper a:visited {
 	text-decoration:none;
@@ -91,17 +100,40 @@
 
 .gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .top-wrapper a:hover,
 .gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .top-wrapper a:active {
-	color:#111;
+	color:#555;
 }
 
 .gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .radius {
-	float:right;
+	display: inline-block;
+	margin-left:5px;
+	font-size: 12px
 }
 
-.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .info-left-wrapper, .gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .info-right-wrapper {
-	width:48%;
+.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .info-left-wrapper, 
+.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .info-right-wrapper {
 	display: inline-block;
 	vertical-align: top
+}
+
+.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .info-left-wrapper {
+	width:55%;
+}
+
+.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .info-left-wrapper .user-name-wrapper {
+	font-size:16px;
+}
+
+.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .info-left-wrapper .update {
+	font-size:11px;
+}
+
+.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .info-right-wrapper {
+	width:40%;
+}
+
+.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .info-right-wrapper .gmw-xprofile-fields-wrapper {
+	font-size: 13px;
+	color:#555
 }
 
 .gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .user-avatar img {
@@ -110,9 +142,11 @@
 	border-radius: 0px;
 	padding:3px;
 	background: #eee;
+	float: left;
+	margin: 0 10px 0 0;
 }
 
-#no-results-message p {
+.gmw-fl-no-results-wrapper {
 	background-color: #FBFCBA;
 	text-align:center;
 	border:1px solid #D1D296;
@@ -120,6 +154,21 @@
 	margin-top: 15px;
 	color:#626332;
 	padding:10px 0px;
+}
+
+.gmw-fl-no-results-wrapper p {
+	background: none;
+	border: 0;
+	padding: 0;
+	display: block;
+	margin:0px !important;
+	line-height:30px !important;
+}
+
+.gmw-fl-yellow-results-wrapper ul.members-list-wrapper li .location-wrapper {
+	display: block;
+	clear: both;
+	font-size: 13px;
 }
 
 /* smaller screens */

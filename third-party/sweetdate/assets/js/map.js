@@ -16,7 +16,7 @@ function sdMapInit(sdMapArgs) {
 		latlngbounds.extend(yourLocation);
 		
 		var yLMemberIcon;
-		yLMemberIcon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+		yLMemberIcon = 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png';
 		
 		marker = new google.maps.Marker({
 			position: new google.maps.LatLng( sdMapArgs.your_lat,sdMapArgs.your_lng ),

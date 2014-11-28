@@ -7,20 +7,17 @@
 ?>
 
 <?php
-
 class GMW_FL_Location_Page {
 
     function __construct() {
 
         global $bp, $wpdb;
 
-        $this->settings       = get_option('gmw_options');
         $this->displayed_user = $bp->displayed_user->id;
         //get the information of the user from database
-        $this->location       = $wpdb->get_row($wpdb->prepare("SELECT * FROM wppl_friends_locator WHERE member_id = %s", $this->displayed_user));
+        $this->location       = $wpdb->get_row($wpdb->prepare( "SELECT * FROM wppl_friends_locator WHERE member_id = %s", $this->displayed_user ) );
 
         $this->display_location_form( $this->location, $this->displayed_user );
-
     }
 
     public function address_fields_init() {
@@ -264,13 +261,20 @@ class GMW_FL_Location_Page {
 	        
 	        echo '<' . $element[0] . '  class="gmw-yl-fields-wrapper ' . $tag_class . '">';
 	               
-		        foreach ( $location_fields[$section][1] as $option ) {
-		
-		        	$title 		 = ( !empty($option['title'] ) ) ? $option['title'] : '';
-		        	$placeholder = ( !empty($option['placeholder'] ) ) ? 'placeholder="' . $option['placeholder'] . '"' : '';
-		            $class       = !empty( $option['class'] ) ? $option['class'] : '';
-		            $id          = !empty( $option['id'] ) ? $option['id'] : '';
-		            $value       = ( isset($location->$option['name'] ) ) ? $location->$option['name'] : '';
+		        foreach ( $location_fields[$section][1] as $key => $option ) {
+	
+		        	$title 		 = ( !empty( $option['title'] ) ) 		   ? $option['title'] : '';
+		        	$placeholder = ( !empty( $option['placeholder'] ) )    ? 'placeholder="' . $option['placeholder'] . '"' : '';
+		            $class       = !empty( $option['class'] ) 			   ? $option['class'] : '';
+		            $id          = !empty( $option['id'] ) 				   ? $option['id'] : '';
+		            
+		            if ( ( $section == 'address_fields' || $section == 'latlng_fields' || $section == 'address_autocomplete' ) && empty( $location ) ) {
+		            	$optionName = ( $option['name'] == 'long' ) ? 'lng' : $option['name'];
+		            	$value = ( isset( $_COOKIE['gmw_'.$optionName] ) ) ? urldecode( $_COOKIE['gmw_'.$optionName] ) : '';
+		            } else {
+		            	$value = ( isset( $location->$option['name'] ) ) ? $location->$option['name'] : '';
+		            }      
+		            
 		            $attributes  = array();
 		            $hidden      = ( $option['type'] == 'hidden' ) ? 'style="display:none"' : '';
 		
@@ -374,14 +378,15 @@ class GMW_FL_Location_Page {
 
     public function display_location_form( $location, $user_id ) {
     	
-    	$fieldsTitle = apply_filters( 'gmw_fl_your_location_page_titles', array(
-    			__( 'Your Location', 'GMW' ),
-    			__( 'Edit Location', 'GMW' ),
-    			__( 'Delete Location', 'GMW' ),
-    			__( 'Enter your location manually', 'GMW' ),
-    			__( 'Address', 'GMW' ),
-    			__( 'Latitude / Longitude', 'GMW' ),
-    			__( 'Update Location', 'GMW' ),
+    	$fieldsLabel = apply_filters( 'gmw_fl_your_location_page_titles', array(
+    			'your_location' 	=> __( 'Your Location', 'GMW' ),
+    			'no_location' 		=> __( "You haven't set a location yet", 'GMW' ),
+    			'edit_location' 	=> __( 'Edit Location', 'GMW' ),
+    			'delete_location' 	=> __( 'Delete Location', 'GMW' ),
+    			'manualy_enter' 	=> __( 'Enter your location manually', 'GMW' ),
+    			'address' 			=> __( 'Address', 'GMW' ),
+    			'coords' 			=> __( 'Latitude / Longitude', 'GMW' ),
+    			'save_location' 	=> __( 'Save Location', 'GMW' ),
     	) );
     	
         ?>
@@ -391,12 +396,12 @@ class GMW_FL_Location_Page {
 
             <div id="your-location-section">
             	
-            	<p class="field-title"><?php echo $fieldsTitle[0]; ?></p>
+            	<p class="field-title"><?php echo $fieldsLabel['your_location']; ?></p>
             	
             	<div id="your-location-section-inner">
-            		<input type="text" id="gmw-yl-field" value="<?php echo ( isset($location->formatted_address) ) ? $location->formatted_address : ''; ?>" disabled="disabled" />
-            		<input type="button" id="gmw-yl-edit" class="first" value="<?php echo $fieldsTitle[1]; ?>" />
-            		<input type="button" id="gmw-yl-delete" value="<?php echo $fieldsTitle[2]; ?>" />
+            		<input type="text" id="gmw-yl-field" value="<?php echo ( isset($location->formatted_address) ) ? $location->formatted_address : $fieldsLabel['no_location']; ?>" disabled="disabled" />
+            		<input type="button" id="gmw-yl-edit" class="first" value="<?php echo $fieldsLabel['edit_location']; ?>" />
+            		<input type="button" id="gmw-yl-delete" value="<?php echo $fieldsLabel['delete_location']; ?>" />
            			<img src="<?php echo GMW_FL_URL . 'assets/images/ajax-loader.gif'; ?>" id="gmw-yl-spinner" alt="" />
            		</div>
 
@@ -426,7 +431,7 @@ class GMW_FL_Location_Page {
                     <!-- menually section -->
                     <div id="gmw-yl-manuall-section">
                     
-                    	<p class="field-title"><?php echo $fieldsTitle[3]; ?></p>
+                    	<p class="field-title"><?php echo $fieldsLabel['manualy_enter']; ?></p>
 						
 						<div id="gmw-yl-tabs-section">
 						
@@ -435,8 +440,8 @@ class GMW_FL_Location_Page {
 								
 								<?php echo do_action( 'gmw_yl_tabs_start', $location, $user_id ); ?>
 								
-	                            <li id="gmw-yl-address-tab" class="gmw-yl-tab active"><?php echo $fieldsTitle[4]; ?></li>
-	                            <li id="gmw-yl-latlng-tab" class="gmw-yl-tab" ><?php echo $fieldsTitle[5]; ?></li>
+	                            <li id="gmw-yl-address-tab" class="gmw-yl-tab active"><?php echo $fieldsLabel['address']; ?></li>
+	                            <li id="gmw-yl-latlng-tab" class="gmw-yl-tab" ><?php echo $fieldsLabel['coords']; ?></li>
 	
 	                            <?php echo do_action( 'gmw_yl_tabs_end', $location, $user_id ); ?>
 	                        </ul>
@@ -468,11 +473,11 @@ class GMW_FL_Location_Page {
 	                        <?php echo do_action( 'gmw_yl_after_tabs_wrapper', $location, $user_id ); ?>
 	
 	                        <div id="gmw-yl-address-tab-btn-wrapper" class="update-btn-wrapper">
-	                            <input type="button" id="gmw-yl-get-latlng" value="<?php echo $fieldsTitle[6]; ?>" />
+	                            <input type="button" id="gmw-yl-get-latlng" value="<?php echo $fieldsLabel['save_location']; ?>" />
 	                        </div>
 	
 	                        <div id="gmw-yl-latlng-tab-btn-wrapper" class="update-btn-wrapper" style="display:none;">
-	                            <input type="button" id="gmw-yl-get-address" value="<?php echo $fieldsTitle[6]; ?>" />
+	                            <input type="button" id="gmw-yl-get-address" value="<?php echo $fieldsLabel['save_location']; ?>" />
 	                        </div>
 	                
 	                	</div>
@@ -491,11 +496,8 @@ class GMW_FL_Location_Page {
 
         </div>
         <?php
-        wp_enqueue_script('gmw-fl', GMW_FL_URL . 'assets/js/fl.js', array('jquery'), GMW_VERSION, true);
-
+        wp_enqueue_script( 'gmw-fl' );
     }
-
 }
-
 new GMW_FL_Location_Page;
 ?>

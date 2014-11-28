@@ -11,14 +11,14 @@ class GMW_Current_Location_Widget extends WP_Widget {
      * __constructor
      * Register widget with WordPress.
      */
-    function __construct() {
-        parent::__construct(
-                'gmw_current_location_widget', // Base ID
-                __('GMW Current Location', 'GMW'), // Name
-                array('description' => __('Get/display the user\'s current location', 'GMW'),) // Args
-        );
+	function __construct() {
+		parent::__construct(
+				'gmw_current_location_widget', // Base ID
+				__('GMW Current Location', 'GMW'), // Name
+				array('description' => __('Get/display the user\'s current location', 'GMW'),) // Args
+		);
 
-    }
+	}
 
     /**
      * Front-end display of widget.
@@ -130,7 +130,6 @@ class GMW_Search_Form_Widget extends WP_Widget {
                 __('GMW Search Form', 'GMW'), // Name
                 array('description' => __('Displays Search forms in your sidebar.', 'GMW'),) // Args
         );
-
     }
 
     /**
@@ -183,15 +182,15 @@ class GMW_Search_Form_Widget extends WP_Widget {
             <label><?php echo esc_attr(__('Choose form to use:', 'GMW')); ?></label>
             <br />
             <select name="<?php echo $this->get_field_name('short_code'); ?>">
-        <?php
-        foreach ($shortcodes as $shortcode) :
-        	$form_name = ( isset( $shortcode['name'] ) && !empty( $shortcode['name'] ) ) ? $shortcode['name'] : 'form_id_'.$shortcode['ID'];
-        
-            echo '<option value="' . $shortcode['ID'] . '"';
-            if (isset($instance['short_code']) && $instance['short_code'] == $shortcode['ID'])
-                echo 'selected="selected"'; echo '>'.$form_name .' - Form ID '. $shortcode['ID'] . '</options>';
-        endforeach;
-        ?>
+	        <?php
+	        foreach ($shortcodes as $shortcode) :
+	        	$form_name = ( isset( $shortcode['name'] ) && !empty( $shortcode['name'] ) ) ? $shortcode['name'] : 'form_id_'.$shortcode['ID'];
+	        
+	            echo '<option value="' . $shortcode['ID'] . '"';
+	            if (isset($instance['short_code']) && $instance['short_code'] == $shortcode['ID'])
+	                echo 'selected="selected"'; echo '>'.$form_name .' - Form ID '. $shortcode['ID'] . '</options>';
+	        endforeach;
+	        ?>
             </select>
         </p>
         <?php
@@ -208,13 +207,11 @@ class GMW_Search_Form_Widget extends WP_Widget {
      *
      * @return array Updated safe values to be saved.
      */
-    function update($new_instance, $old_instance) {
+    function update( $new_instance, $old_instance ) {
         $instance['title']      = strip_tags($new_instance['title']);
         $instance['short_code'] = $new_instance['short_code'];
 
         return $instance;
-
     }
-
 }
 ?>

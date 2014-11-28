@@ -1,12 +1,29 @@
 <?php
 /**
- * Default search form for Buddypress members.
- * @version 1.0
- * @author Eyal Fitoussi
+ * Members Locator "default" search form template file. 
+ * 
+ * The information on this file will be displayed as the search forms.
+ * 
+ * The function pass 1 args for you to use:
+ * $gmw  - the form being used ( array )
+ * 
+ * You could but It is not recomemnded to edit this file directly as your changes will be overridden on the next update of the plugin.
+ * Instead you can copy-paste this template ( the "default" folder contains this file and the "css" folder ) 
+ * into the theme's or child theme's folder of your site and apply your changes from there. 
+ * 
+ * The template folder will need to be placed under:
+ * your-theme's-or-child-theme's-folder/geo-my-wp/friends/search-forms/
+ * 
+ * Once the template folder is in the theme's folder you will be able to choose it when editing the Members locator form.
+ * It will show in the "Search results" dropdown menu as "Custom: default".
  */
 ?>
+<?php do_action( 'gmw_before_search_form_template', $gmw ); ?>
+
 <div class="gmw-form-wrapper gmw-form-wrapper-<?php echo $gmw['ID']; ?> gmw-fl-form-wrapper gmw-fl-default-form-wrapper">
 
+	<?php do_action( 'gmw_before_search_form', $gmw ); ?>
+	
     <form class="standard-form gmw-form gmw-form-<?php echo $gmw['ID']; ?>" name="gmw_form" action="<?php echo $gmw[ 'search_results' ][ 'results_page' ]; ?>" method="get">
 
         <?php do_action( 'gmw_search_form_start', $gmw ); ?>
@@ -40,10 +57,14 @@
             </div>	
         </div>
 
-        <?php gmw_form_submit_fields( $gmw, __( 'Submit', 'GMW' ) ); ?>
+        <?php gmw_form_submit_fields( $gmw, false ); ?>
 
         <?php do_action( 'gmw_search_form_end', $gmw ); ?>
 
-    </form>
-
+   </form>
+	
+	<?php do_action( 'gmw_after_search_form', $gmw ); ?>
+	
 </div><!--form wrapper -->	
+
+<?php do_action( 'gmw_after_search_form_template', $gmw ); ?>

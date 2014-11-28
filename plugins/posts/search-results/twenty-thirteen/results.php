@@ -12,14 +12,14 @@
 	
 	<!-- results count -->
 	<div class="gmw-results-count">
-		<span><?php gmw_pt_within( $gmw, $sm=__( 'Showing', 'GMW' ), $om=__( 'out of', 'GMW' ), $rm=__( 'results', 'GMW' ) ,$wm=__( 'within', 'GMW' ), $fm=__( 'from','GMW' ), $nm=__( 'your location', 'GMW' ) ); ?></span>
+		<span><?php gmw_results_message( $gmw, false ); ?></span>
 	</div>
 	
 	<?php do_action( 'gmw_before_top_pagination' , $gmw, $post ); ?>
 	
 	<div class="gmw-pt-pagination-wrapper gmw-pt-top-pagination-wrapper">
 		<!--  paginations -->
-		<?php gmw_pt_per_page_dropdown( $gmw, '' ); ?><?php gmw_pt_paginations( $gmw ); ?>
+		<?php gmw_per_page( $gmw, $gmw['total_results'], 'paged' ); ?><?php gmw_pagination( $gmw, 'paged', $gmw['max_pages'] ); ?>
 	</div> 
 		
 	<!-- Map -->
@@ -41,14 +41,15 @@
 				<?php do_action( 'gmw_posts_loop_post_start' , $gmw, $post ); ?>
 				
 				<header class="entry-header">
-					<?php if ( has_post_thumbnail() && ! post_password_required() ) : ?>
+				
+					<?php if ( isset( $gmw['search_results']['featured_image']['use'] ) && has_post_thumbnail() && ! post_password_required() ) : ?>
 					<div class="entry-thumbnail">
 						<?php the_post_thumbnail(); ?>
 					</div>
 					<?php endif; ?>
 			
 					<h1 class="entry-title">
-						<a href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?><span><?php echo gmw_pt_by_radius( $gmw, $post ); ?></span></a>
+						<a href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?><span><?php gmw_distance_to_location( $post, $gmw ); ?></span></a>
 					</h1>
 			
 					<div class="entry-meta">
@@ -64,23 +65,35 @@
 				
 				<div class="entry-summary">
 				
-					<?php gmw_pt_excerpt( $gmw, $post ); ?>
+					<!--  Excerpt -->
+					<?php if ( isset( $gmw['search_results']['excerpt']['use'] ) ) { ?>
+						<div class="wppl-excerpt">
+							<?php gmw_excerpt( $post, $gmw, $post->post_content, $gmw['search_results']['excerpt']['count'] ); ?>
+						</div>
+					<?php } ?>
 					
 					<div class="clear"></div>
 					
 					<?php gmw_pt_taxonomies( $gmw, $post ); ?>
     					
-    				<?php gmw_pt_additional_info( $gmw, $post, $tag='div' ); ?>
+    				<?php gmw_additional_info( $post, $gmw, $gmw['search_results']['additional_info'], $gmw['labels']['search_results']['contact_info'], 'div' ); ?> 
 
 				</div><!-- .entry-summary -->
 				
 				<footer class="entry-meta">
 					
 					<!-- Get directions -->	 	
-    				<?php gmw_pt_directions( $gmw, $post, $title=__('Get Directions','GMW') ) ?>
+					<?php if ( isset( $gmw['search_results']['get_directions'] ) ) { ?>
+						<div class="get-directions-link">
+	    					<?php gmw_directions_link( $post, $gmw, $gmw['labels']['search_results']['directions'] ); ?>
+	    				</div>
+	    			<?php } ?>
     			
 					<!--  Driving Distance -->
-    				<?php gmw_pt_driving_distance( $gmw, $post, $class='wppl-driving-distance', $title=__( 'Driving: ', 'GMW' ) ); ?>
+					<?php if ( isset( $gmw['search_results']['by_driving'] ) ) { ?>
+	    				<?php gmw_driving_distance( $post, $gmw, false ); ?>
+	    			<?php } ?>
+	    			
 				</footer><!-- .entry-meta -->
 				
 				<?php do_action( 'gmw_posts_loop_post_end' , $gmw, $post ); ?>
@@ -94,7 +107,7 @@
 	
 	<div class="gmw-pt-pagination-wrapper gmw-pt-bottom-pagination-wrapper">
 		<!--  paginations -->
-		<?php gmw_pt_per_page_dropdown( $gmw, '' ); ?><?php gmw_pt_paginations( $gmw ); ?>
+		<?php gmw_per_page( $gmw, $gmw['total_results'], 'paged' ); ?><?php gmw_pagination( $gmw, 'paged', $gmw['max_pages'] ); ?>
 	</div> 
 	
 </div> <!-- output wrapper -->

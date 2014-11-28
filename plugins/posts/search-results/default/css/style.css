@@ -1,6 +1,5 @@
 /**
- * Default theme stylesheet
- * @author Eyal Fitoussi
+ * Posts Locator search results stylesheet "default"
  */
 .wppl-map-wrapper {
 	margin-bottom: 10px;
@@ -142,7 +141,7 @@
 	font-size:13px;	
 }
 
-/* paginations */
+/* pagination */
 .gmw-pt-pagination-wrapper {
 	font-size: 12px;
 	background: #F9F9F9;
@@ -153,31 +152,27 @@
 	margin: 3px 0px
 }
 
-ul.gmw-pagination {
-	margin: 0px 15px 0px 0!important;
-	float: right;
-	padding:4px 0px;
-}
-
-ul.gmw-pagination li.details {
-	display:none;
-}
-
-ul.gmw-pagination li {
-	padding-bottom: 1px;
-	float: left;
-	margin: 0px;
-	padding: 0px;
-	margin-left: 1px;
-	list-style: none;
-}
-
 .gmw-pt-bottom-pagination-wrapper {
 	border-bottom:1px solid #ddd;
 	border-top:1px solid #ddd;
 }
 
-ul.gmw-pagination li a {
+ul.gmw-pagination {
+	float: right;
+	text-align: center;
+	margin:0px;
+	list-style:none;
+	padding:0px;
+}
+
+ul.gmw-pagination li  {
+	text-align:center;
+	display: inline-block;
+	margin:0 0 0 2px;
+}
+
+ul.gmw-pagination li a,
+ul.gmw-pagination li span {
 	padding: 3px 4px;
 	border: solid 1px #ddd;
 	background: white;
@@ -185,7 +180,7 @@ ul.gmw-pagination li a {
 	text-decoration: none
 }
 
-ul.gmw-pagination li a:hover,ul.gmw-pagination li a.current {
+ul.gmw-pagination li a:hover, 
+ul.gmw-pagination li span {
 	background: #eee;
-	
 }

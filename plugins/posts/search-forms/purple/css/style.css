@@ -1,9 +1,6 @@
 /**
- * search form stylesheet Purple
- * @version 1.0
- * @author Eyal Fitoussi
+ * Posts Locator search form stylesheet "purple"
  */
- 
 div.gmw-pt-purple-form-wrapper {
  	background: #f8f8f8;
 	padding:15px;
@@ -39,7 +36,7 @@ div.gmw-pt-purple-form-wrapper select {
 }
 
 div.gmw-pt-purple-form-wrapper .gmw-dropdown-taxonomy-wrapper label, 
-div.gmw-pt-purple-form-wrapper .gmw-checkbox-taxonomy-wrapper span,
+div.gmw-pt-purple-form-wrapper .gmw-checkbox-taxonomy-wrapper span:first-child,
 div.gmw-pt-purple-form-wrapper .gmw-custom-field-wrapper label,
 div.gmw-pt-purple-form-wrapper .gmw-saf-wrapper label,
 div.gmw-pt-purple-form-wrapper .gmw-address-field-wrapper label {
@@ -102,6 +99,11 @@ div.gmw-pt-purple-form-wrapper .gmw-locator-btn-wrapper img {
 	max-height: 15px;
 	margin-left: 5px;
 }
+
+div.gmw-pt-purple-form-wrapper .gmw-submit {
+	width:100%;
+}
+
 
 /* widget */
 .widget_gmw_search_form_widget div.gmw-pt-purple-form-wrapper {

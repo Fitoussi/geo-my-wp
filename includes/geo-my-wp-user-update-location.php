@@ -102,5 +102,4 @@ function gmw_update_user_location( $args ) {
 	);
 
 	do_action( 'gmw_user_after_location_updated', $locationArgs );
-
 }

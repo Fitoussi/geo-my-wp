@@ -1,9 +1,6 @@
 /**
- * search form stylesheet Gray
- * @version 1.0
- * @author Eyal Fitoussi
+ * Posts Locator search form stylesheet "Horizontal-gray"
  */
- 
 div.gmw-pt-horizontal-gray-form-wrapper {
  	background: #f8f8f8;
 	padding:10px 10px 0;
@@ -57,7 +54,7 @@ div.gmw-pt-horizontal-gray-form-wrapper select {
 }
 
 div.gmw-pt-horizontal-gray-form-wrapper .gmw-dropdown-taxonomy-wrapper label, 
-div.gmw-pt-horizontal-gray-form-wrapper .gmw-checkbox-taxonomy-wrapper span,
+div.gmw-pt-horizontal-gray-form-wrapper .gmw-checkbox-taxonomy-wrapper span:first-child,
 div.gmw-pt-horizontal-gray-form-wrapper .gmw-custom-field-wrapper label,
 div.gmw-pt-horizontal-gray-form-wrapper .gmw-saf-wrapper label,
 div.gmw-pt-horizontal-gray-form-wrapper .gmw-address-field-wrapper label {
@@ -99,9 +96,20 @@ div.gmw-pt-horizontal-gray-form-wrapper .locator-holder {
 div.gmw-pt-horizontal-gray-form-wrapper .gmw-locator-btn-wrapper {
 	cursor: pointer;
 	color:#375348;
+	padding:2px
 }
 
-div.gmw-pt-horizontal-gray-form-wrapper .gmw-locator-btn-wrapper .gmw-locator-button::before {
+div.gmw-pt-horizontal-gray-form-wrapper .gmw-locator-btn-within-wrapper {
+	cursor: pointer;
+	padding:3px 2px;
+	position: absolute;
+	right:0px;
+	height: 25px;
+	width:25px;
+	top:0px
+}
+
+div.gmw-pt-horizontal-gray-form-wrapper .gmw-locator-btn-wrapper .gmw-locator-btn-within::before {
 	content: "\f230" !important;
 	color: rgb(179, 223, 193) !important;
 	font-size:26px !important;
@@ -111,7 +119,7 @@ div.gmw-pt-horizontal-gray-form-wrapper .gmw-locator-btn-wrapper img {
 	-moz-box-shadow:    none;
   	-webkit-box-shadow: none;
 	box-shadow: none;
-	max-height: 15px;
+	max-height: 20px;
 	margin-left: 5px;
 }
 
@@ -119,6 +127,8 @@ div.gmw-pt-horizontal-gray-form-wrapper .gmw-locator-btn-wrapper img.gmw-locator
 	max-height: 17px;
 	margin-left: 3px;
 	padding-top: 5px;
+	position: absolute;
+	top:0;
 }
 
 div.gmw-pt-horizontal-gray-form-wrapper .gmw-submit-button {
@@ -171,6 +181,8 @@ div.gmw-pt-horizontal-gray-form-wrapper .gmw-radius-slider-wrapper .gmw-slider-r
 div.gmw-pt-horizontal-gray-form-wrapper .gmw-checkbox-taxonomy-wrapper {
 	margin-bottom:10px;
 	vertical-align:top;
+	clear:both;
+	display: block
 }
 
 div.gmw-pt-horizontal-gray-form-wrapper .gmw-checkbox-taxonomy-wrapper span {
@@ -179,12 +191,35 @@ div.gmw-pt-horizontal-gray-form-wrapper .gmw-checkbox-taxonomy-wrapper span {
 
 div.gmw-pt-horizontal-gray-form-wrapper input.gmw-single-checkbox {
 	margin-right: 5px;
-	
-	
 }
 
-div.gmw-pt-horizontal-gray-form-wrapper gmw-checkbox-taxonomy-wrapper span.label {
+div.gmw-pt-horizontal-gray-form-wrapper .gmw-checkbox-taxonomy-wrapper label {
+	margin:5px;
+}
+
+div.gmw-pt-horizontal-gray-form-wrapper .gmw-checkbox-taxonomy-wrapper span.label {
 	font-weight:bold;
+}
+
+div.gmw-pt-horizontal-gray-form-wrapper .gmw-checkbox-taxonomy-wrapper img.gmw-checkbox-cat-icons {
+	width:22px;
+	height: auto;
+	border-radius: 5px;
+	box-shadow:none;
+	margin-right:4px;
+	border:1px solid #bbb;
+	padding:1px;
+	background: #f9f9f9;
+}
+
+div.gmw-pt-horizontal-gray-form-wrapper .gmw-checkbox-taxonomy-wrapper span.cb-title {
+	display:inline-block;
+	//vertical-align: top;
+}
+
+div.gmw-pt-horizontal-gray-form-wrapper .gmw-checkbox-taxonomy-wrapper .category-icon-checked {
+	border:1px solid #86c1a9 !important;
+	background: #fff !important;
 }
 
 /* widget */
@@ -195,7 +230,7 @@ div.gmw-pt-horizontal-gray-form-wrapper gmw-checkbox-taxonomy-wrapper span.label
 .widget_gmw_search_form_widget div.gmw-pt-horizontal-gray-form-wrapper .gmw-submit-wrapper,
 .widget_gmw_search_form_widget div.gmw-pt-horizontal-gray-form-wrapper .gmw-custom-field-wrapper,
 .widget_gmw_search_form_widget div.gmw-pt-horizontal-gray-form-wrapper .gmw-keywords-field,
-.widget_gmw_search_form_widget div.gmw-pt-horizontal-gray-form-wrapper .gmw-distance-select {
+.widget_gmw_search_form_widget div.gmw-pt-horizontal-gray-form-wrapper select {
 	display:block;
 	margin:0 0px 10px 0px;
 }
@@ -207,7 +242,8 @@ div.gmw-pt-horizontal-gray-form-wrapper gmw-checkbox-taxonomy-wrapper span.label
 }
 
 .widget_gmw_search_form_widget div.gmw-pt-horizontal-gray-form-wrapper input[type="text"], 
-.widget_gmw_search_form_widget div.gmw-pt-horizontal-gray-form-wrapper select {
+.widget_gmw_search_form_widget div.gmw-pt-horizontal-gray-form-wrapper select,
+.widget_gmw_search_form_widget div.gmw-pt-horizontal-gray-form-wrapper [type="submit"] {
 	width:100%;
 }
 
