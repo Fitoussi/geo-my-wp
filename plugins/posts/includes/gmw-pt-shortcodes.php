@@ -14,42 +14,42 @@ class GMW_Single_Location {
         add_shortcode( 'gmw_single_location', array( $this, 'get_single_location' ) );
     }
 
-    public function get_single_location( $args) {
-
+    public function get_single_location( $org_args ) {
+	
     	//default shortcode attributes
-    	extract(
-    			shortcode_atts(
-    					array(
-    							'element_id'	  => 0,
-    							'post_id'         => 0,
-    							'post_title'	  => 0,
-    							'distance'		  => 1,
-    							'distance_unit'	  => 'm',
-    							'map'             => 1,
-    							'map_height'      => '250px',
-    							'map_width'       => '250px',
-    							'map_type'        => 'ROADMAP',
-    							'zoom_level'      => 13,
-    							'additional_info' => 'address,phone,fax,email,website',
-    							'directions'      => 1,
-    							'info_window'	  => 1,
-    							'show_info'		  => 1,
-    							'ul_marker'   	  => 1,
-    							'ul_message'	  => __( 'Your Location', 'GMW' ),
-    					), $args )
-    	);
+    	$args = shortcode_atts(
+    			array(
+    					'element_id'	  	=> rand( 5, 100 ),
+    					'post_id'         	=> 0,
+    					'post_title'	  	=> 0,
+    					'distance'		  	=> 1,
+    					'distance_unit'	  	=> 'm',
+    					'map'             	=> 1,
+    					'map_height'      	=> '250px',
+    					'map_width'       	=> '250px',
+    					'map_type'        	=> 'ROADMAP',
+    					'zoom_level'      	=> 13,
+    					'additional_info' 	=> 'address,phone,fax,email,website',
+    					'directions'      	=> 1,
+    					'info_window'	  	=> 1,
+    					'hide_info'		  	=> 0,
+    					'ul_marker'   	  	=> 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
+    					'ul_message'	  	=> __( 'Your Location', 'GMW' ),
+    					'location_marker'	=> 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',  					
+    			), $org_args );
 
-    	 
-    	$element_id = ( $element_id != 0 ) ? $element_id : rand( 5, 100 );
+    	extract($args);
 
     	/*
     	 * check if user entered post id
     	*/
     	if ( $post_id == 0 ) {
-
     		global $post;
+    		
+    		if ( empty( $post ) )
+    			return;
+    		
     		$post_id = $post->ID;
-
         }
 
         //get the post's info
@@ -98,8 +98,8 @@ class GMW_Single_Location {
         $location_map = '';
         if ( $map == 1 ) {			
         	$location_map  = '';
-            $location_map .= '<div class="map-wrapper" style="width:' . $map_width . '; height:' . $map_height . '">';
-            $location_map .= 	'<div id="gmw-single-post-map-' . $element_id . '" class="gmw-map" style="width:100%; height:100%;"></div>';
+            $location_map .= '<div class="map-wrapper" style="width:'.$map_width.'; height:'.$map_height.'">';
+            $location_map .= 	'<div id="gmw-single-post-map-'.$element_id.'" class="gmw-map" style="width:100%; height:100%;"></div>';
             $location_map .= '</div>';
         }
 		
@@ -164,14 +164,27 @@ class GMW_Single_Location {
                 $location_info .= '</div>';
             }
             if ( in_array( 'website', $additional_info ) && !empty( $post_info->website ) ) {
+            	
+            	$url = parse_url( $post_info->website );
+            	
+            	if ( empty( $url['scheme'] ) ) {
+            		$url['scheme'] = 'http';
+            	}
+            		
+            	$scheme = $url['scheme'].'://';
+            	$path   = str_replace( $scheme,'',$post_info->website );
+            		            	
                 $location_info .= '<div class="gmw-website"><span>' . __( 'Website: ', 'GMW' );
                 $location_info .= '</span>';
-                $location_info .= ( !empty( $post_info->website ) ) ? '<a href="http://' . $post_info->website . '" target="_blank">' . $post_info->website . '</a>' : "N/A";
+                $location_info .= ( !empty( $post_info->website ) ) ? '<a href="'.$scheme.$path.'" title="'.$path.'" target="_blank">'.$path.'</a>' : "N/A";
                 $location_info .= '</div>';
             }
             $location_info .= '</div>';
         }
         $location_wrap_end = '</div>';     	
+       
+        $post_title    = esc_attr( $post_info->post_title );
+        $ul_marker  = ( empty( $ul_marker ) ) ? false : $ul_marker;
         ?>
         <script>
 
@@ -200,7 +213,7 @@ class GMW_Single_Location {
                     gmwSinglePostMarker = new google.maps.Marker({
                         position: desLoc,
                         map: gmwSinglePostMap,
-                        icon:'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
+                        icon:'<?php echo $location_marker; ?>'
                     });
 			           
                     if ( '<?php echo $info_window; ?>' == 1 ) {
@@ -210,7 +223,7 @@ class GMW_Single_Location {
 						var infoWindoContent = '';
 						infoWindoContent += '<div class="gmw-info-window wppl-info-window" style="font-size: 13px;color: #555;line-height: 18px;font-family: arial;">';
 						if ( '<?php echo $post_title ;?>' ==  1 ) {
-							infoWindoContent += '<div class="map-info-title" style="color: #457085;text-transform: capitalize;font-size: 16px;margin-bottom: -10px;"><?php echo $post_info->post_title; ?></div><br />'
+							infoWindoContent += '<div class="map-info-title" style="color: #457085;text-transform: capitalize;font-size: 16px;margin-bottom: -10px;"><?php echo $post_title; ?></div><br />'
 						}
 						if ( '<?php echo $distance; ?>' == 1 ) {
 							infoWindoContent += '<?php echo $location_distance; ?>';
@@ -226,7 +239,7 @@ class GMW_Single_Location {
 	                    });
 					}
                     
-                    if ( '<?php echo $userLocationOk; ?>' == true && '<?php echo $ul_marker; ?>' == 1  ) {
+                    if ( '<?php echo $userLocationOk; ?>' == true && '<?php echo $ul_marker; ?>' != false  ) {
 
                         var yourLoc = new google.maps.LatLng(<?php echo $yLat; ?>, <?php echo $yLng; ?>);
                     	latlngbounds.extend(yourLoc);
@@ -234,7 +247,7 @@ class GMW_Single_Location {
 	                    ylMarker = new google.maps.Marker({
 	                        position: yourLoc,
 	                        map: gmwSinglePostMap,
-	                        icon:'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+	                        icon:'<?php echo $ul_marker; ?>'
 	                    });
 
 	                    gmwSinglePostMap.fitBounds(latlngbounds);
@@ -250,12 +263,11 @@ class GMW_Single_Location {
         </script>
         <?php
         
-        if ( $show_info == 1 ) {
-       		$output = $location_wrap_start.$location_title.$location_map.$location_distance.$location_info.$location_directions.$location_wrap_end;
-        }else {
+        if ( $hide_info == 1 ) {
         	$output = $location_wrap_start.$location_map.$location_wrap_end;
-        }
-        
+        }else {
+        	$output = $location_wrap_start.$location_title.$location_map.$location_distance.$location_info.$location_directions.$location_wrap_end;
+        }        
         return apply_filters( 'gmw_pt_single_location_output', $output, $args, $location_wrap_start, $location_title, $location_map, $location_distance, $location_info, $location_directions, $location_wrap_end );
     }
 }

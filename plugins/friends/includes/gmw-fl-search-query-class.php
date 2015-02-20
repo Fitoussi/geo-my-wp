@@ -28,7 +28,7 @@ class GMW_FL_Search_Query extends GMW {
 
         $clauses['bp_user_query'] 	  = false;
         $clauses['wp_user_query'] 	  = false;
-		$this->advanced_query 	  	  = apply_filters( 'gmw_fl_advanced_query', 	  true,  $this->form );
+		$this->advanced_query 	  	  = apply_filters( 'gmw_fl_advanced_query', false, $this->form );
 		$this->show_non_located_users = apply_filters( 'show_users_without_location', false, $this->form );
 		
         /*
@@ -132,6 +132,29 @@ class GMW_FL_Search_Query extends GMW {
 	        } 
         }
         
+        if ( $this->form['page_load_results_trigger'] ) {
+        	 
+        	//if filtering by city
+        	if ( !empty( $this->form['page_load_results']['city_filter'] ) ) {
+        		$clauses['where'] .= " AND gmwlocations.city = '{$this->form['page_load_results']['city_filter']}' ";
+        	}
+        	 
+        	//if filtering by state
+        	if ( !empty( $this->form['page_load_results']['state_filter'] ) ) {
+        		$clauses['where'] .= " AND ( gmwlocations.state = '{$this->form['page_load_results']['state_filter']}' OR gmwlocations.state_long = '{$this->form['page_load_results']['state_filter']}' ) ";
+        	}
+        	 
+        	//if filtering by zipcode
+        	if ( !empty( $this->form['page_load_results']['zipcode_filter'] ) ) {
+        		$clauses['where'] .= " AND gmwlocations.zipcode = '{$this->form['page_load_results']['zipcode_filter']}' ";
+        	}
+        	 
+        	//if filtering by country
+        	if ( !empty( $this->form['page_load_results']['country_filter'] ) ) {
+        		$clauses['where'] .= " AND ( gmwlocations.country = '{$this->form['page_load_results']['country_filter']}' OR gmwlocations.country_long = '{$this->form['page_load_results']['country_filter']}' ) ";
+        	}
+        }
+                
         return apply_filters( 'gmw_fl_after_query_clauses', $clauses, $this->form );
     }
 
@@ -142,16 +165,16 @@ class GMW_FL_Search_Query extends GMW {
      */
     public function gmwBpQuery( $gmwBpQuery ) {    	
     	 	
-    	if ( $this->advanced_query ) {
+    	//if ( $this->advanced_query ) {
 	    	
 	    	if ( empty( $gmwBpQuery->uid_clauses['where'] ) ) {
 	    		$gmwBpQuery->uid_clauses['where'] = " WHERE 1 = 1 ";
 	    	}
 	    	$gmwBpQuery->uid_clauses['where'] .= $this->clauses['bp_user_query']['where'];
     	
-    	} else {	
-	        $gmwBpQuery->uid_clauses['where'] = $this->clauses['bp_user_query']['where'];	        
-    	}
+    	//} else {	
+	  	//     $gmwBpQuery->uid_clauses['where'] = $this->clauses['bp_user_query']['where'];	        
+    	//}
     	    	
     	// modify the function to to calculate the total rows(members).
     	$gmwBpQuery->query_vars['count_total'] = 'sql_calc_found_rows';
@@ -165,7 +188,7 @@ class GMW_FL_Search_Query extends GMW {
         if ( isset( $this->clauses['bp_user_query']['order'] ) ) {
             $gmwBpQuery->uid_clauses['order']      = $this->clauses['bp_user_query']['order'];
         }
-
+        
         return $gmwBpQuery;
     }
 
@@ -255,6 +278,9 @@ class GMW_FL_Search_Query extends GMW {
         $results_template = $this->search_results();
         
         if ( bp_has_members( $this->form['query_args'] ) ) {
+        	
+        	remove_action( 'bp_pre_user_query', array( $this, 'gmwBpQuery' ) );
+        	remove_action( 'pre_user_query', 	 array( $this, 'gmwWpQuery' ) );
         	
         	global $members_template;	
         	$members_template = apply_filters( 'gmw_fl_members_before_members_loop', $members_template, $this->form, $this->settings );

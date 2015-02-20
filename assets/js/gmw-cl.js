@@ -87,7 +87,7 @@ jQuery(document).ready(function($) {
 		$('#gmw-cl-address').prop( 'disabled', true );
 		$("#gmw-cl-respond-wrapper").slideToggle();
 		
-		var retAddress = $(this).closest('form').find("#gmw-cl-address").val();
+		retAddress = $(this).closest('form').find("#gmw-cl-address").val();
 		
 		geocoder = new google.maps.Geocoder();
 	
@@ -96,9 +96,7 @@ jQuery(document).ready(function($) {
 		if ( gmwSettings.general_settings.country_code != undefined ) {
 			countryCode = gmwSettings.general_settings.country_code;
 		}
-		
-		$('#gmw-cl-address').val(retAddress);
-		
+			
 	   	geocoder.geocode( { 'address': retAddress, 'region': countryCode }, function(results, status) {
 	      	if (status == google.maps.GeocoderStatus.OK) {	
 	      		geocoder.geocode({'latLng': new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng())}, function (results, status) {
@@ -140,9 +138,11 @@ jQuery(document).ready(function($) {
 	    
 	    $('#gmw-cl-lat').val(gotLat);
 	    $('#gmw-cl-lng').val(gotLng);
+		$('#gmw-cl-org-address').val(retAddress);
 	    $('#gmw-cl-formatted-address').val(results[0].formatted_address);
 	    
 	    gmwSetCookie( "gmw_address", results[0].formatted_address, 7 );
+	    gmwSetCookie( "gmw_formatted_address", results[0].formatted_address, 7 );
 	    gmwSetCookie( "gmw_lat", gotLat, 7 );
 	    gmwSetCookie( "gmw_lng", gotLng, 7 );
 		

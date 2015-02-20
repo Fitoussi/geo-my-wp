@@ -266,8 +266,12 @@ class GMW_PT_Admin {
                 <label><?php _e( 'Yes', 'GMW' ); ?></label>
             </p>
             <p>
-                <?php _e( 'Words count', 'GMW' ); ?>:
+                <?php _e( 'Words count ( leave blank to show the eintire content )', 'GMW' ); ?>:
                 <input type="text" name="<?php echo 'gmw_forms[' . $_GET['formID'] . '][' . $section . '][excerpt][count]'; ?>" value="<?php if ( isset( $gmw_forms[$formID][$section]['excerpt']['count'] ) ) echo $gmw_forms[$formID][$section]['excerpt']['count']; ?>" size="5" />
+            </p>
+            <p>
+                <?php _e( 'Read more link ( leave blank for no link )', 'GMW' ); ?>:
+                <input type="text" name="<?php echo 'gmw_forms[' . $_GET['formID'] . '][' . $section . '][excerpt][more]'; ?>" value="<?php if ( isset( $gmw_forms[$formID][$section]['excerpt']['more'] ) ) echo $gmw_forms[$formID][$section]['excerpt']['more']; ?>" size="15" />
             </p>
         </div>
         <?php
@@ -291,8 +295,7 @@ class GMW_PT_Admin {
     					'desc'    => __( 'Choose the post types you would like to display.', 'GMW' ),
     					'type'    => 'multicheckboxvalues',
     					'options' => get_post_types()
-    			),
-    			 
+    			),			 
     	);
     	 
     	$afterIndex = 0;
@@ -389,89 +392,150 @@ class GMW_PT_Admin {
     			'desc'        	=> __( 'Display map and/or location information of specific post.', 'GMW' ),
     			'attributes'  	=> array(
     					array(
-    							'attr'	 => 'post_id',
-    							'values' => array(
-    									__( 'Post ID','GMW' ),
+    							'attr'	 	=> 'post_id',
+    							'values' 	=> array(
+    									'Post ID',
     							),
-    							'desc'	 => __( 'Use the post ID only if you want to display information of a specific post. When using the shortcode on a single post page or within a posts loop you don\'t need to use the post_id attribute. The shortcode will use the post ID of the post being displayed or the post ID of each post within the loop. ', 'GMW')
+    							'default'	=> __( 'By default the shortcode displays the posts being displayed in a sinle post page or within the posts loop', 'GMW' ),
+    							'desc'	 	=> __( 'Use the post ID only if you want to display information of a specific post. When using the shortcode on a single post page or within a posts loop you don\'t need to use the post_id attribute. The shortcode will use the post ID of the post being displayed or the post ID of each post within the loop. ', 'GMW')
     					),
     					array(
-    							'attr'	 => 'map',
-    							'values' => array(
-    									'1 || 0',
+    							'attr'	 	=> 'post_title',
+    							'values' 	=> array(
+    									'1',
+    									'0',
     							),
-    							'desc'	 => __( 'Use the value 1 if you want to display map of the locaiton. ( default - 1 )', 'GMW' )
+    							'default'	=> '0',
+    							'desc'	 	=> __( 'Use the value 1 to display the post title above the map.', 'GMW' )
     					),
     					array(
-    							'attr'	 => 'distance',
-    							'values' => array(
-    									'1 or 0',
+    							'attr'	 	=> 'distance',
+    							'values' 	=> array(
+    									'1',
+    									'0',
     							),
-    							'desc'	 => __( 'Use the value 1 to display distance of the post\'s location from the user\'s current location when exists.', 'GMW' )
+    							'default'	=> '1',
+    							'desc'	 	=> __( 'Use the value 1 to display distance of the post\'s location from the user\'s current location when exists.', 'GMW' )
     					),
     					array(
-    							'attr'	 => 'distance_unit',
-    							'values' => array(
-    									'm for miles k for kilometers',
+    							'attr'	 	=> 'distance_units',
+    							'values' 	=> array(
+    									'm',
+    									'k',
     							),
-    							'desc'	 => __( 'Which units do you want to be used when calculating the distance. default will be miles', 'GMW' )
+    							'default'	=> 'm',
+    							'desc'	 	=> __( "Distance units - \"m\" for Miles \"k\" for Kilometers", 'GMW' )
     					),
     					array(
-    							'attr'	 => 'map_width',
-    							'values' => array(
-    									__( 'Map width in pixels or percentage.', 'GMW' ),
+    							'attr'	 	=> 'map',
+    							'values' 	=> array(
+    									'1',
+    									'0',
     							),
-    							'desc'	 => __( 'For example 250px or 100%. ( default - 250px )', 'GMW' )
+    							'default'	=> '1',
+    							'desc'	 	=> __( 'Use the value 1 if you want to display map of the locaiton.', 'GMW' )
     					),
     					array(
-    							'attr'	 => 'map_height',
-    							'values' => array(
-    									__( 'Map height in pixels or percentage', 'GMW' ),
+    							'attr'	 	=> 'map_height',
+    							'values' 	=> array(
+    									__( 'Value in pixels or percentage', 'GMW' ),
     							),
-    							'desc'	 => __( 'For example 250px or 100%. ( default - 250px )', 'GMW' )
+								'default'	=> '250px',
+    							'desc'	 	=> __( 'Map height in px or % ( ex. 250px or 100% ).', 'GMW' )
     					),
     					array(
-    							'attr'	 => 'map_type',
-    							'values' => array(
-    									'ROADMAP || SATELLITE || HYBRID || TERRAIN',
+    							'attr'	 	=> 'map_width',
+    							'values' 	=> array(
+    									__( 'Value in pixels or percentage', 'GMW' ),
     							),
-    							'desc'	 => __( 'Choose the map type. ( default -  ROADMAP )', 'GMW')
+								'default'	=> '250px',
+    							'desc'	 	=> __( 'Map width in px or % ( ex. 250px or 100% ).', 'GMW' )
+    					),  					
+    					array(
+    							'attr'	 	=> 'map_type',
+    							'values' 	=> array(
+    									'ROADMAP',
+    									'SATELLITE',
+    									'HYBRID',
+    									'TERRAIN'
+    							),
+    							'default'	=> 'ROADMAP', 
+    							'desc'	 	=> __( 'Choose the map type.', 'GMW' )
     					),
     					array(
-    							'attr'	 => 'zoom_level',
-    							'values' => array(
+    							'attr'	 	=> 'zoom_level',
+    							'values' 	=> array(
     									__( 'Numeric value between 1 to 18.', 'GMW' ),
     							),
-    							'desc'	 => __( 'Choose the map zoom level. ( default -  13 )', 'GMW')
+    							'default'	=> '13',
+    							'desc'	 	=> __( 'Choose the map zoom level.', 'GMW')
     					),
     					array(
-    							'attr'	 => 'additional_info',
-    							'values' => array(
+    							'attr'	 	=> 'additional_info',
+    							'values' 	=> array(
     									'address',
     									'phone',
     									'fax',
     									'email',
     									'website',
     							),
-    							'desc'	 => __( 'Use a single or multiple values comma separated of the contact information you would like to display. For example use additional_info="address,phone,fax" to display the full address of the location and its phone and fax numbers. ( default - address,phone,fax,email,website )', 'GMW')
+    							'default' 	=> 'address,phone,fax,email,website',
+    							'desc'	 	=> __( 'Use a single or multiple values comma separated of the contact information which you would like to display. For example use additional_info="address,phone,fax" to display the full address of the location and its phone and fax numbers.', 'GMW')
     					),
     					array(
-    							'attr'	 => 'directions',
-    							'values' => array(
-    									'1 || 0',
+    							'attr'		=> 'directions',
+    							'values' 	=> array(
+    									'1',
+    									'0',
     							),
-    							'desc'	 => __( 'Use the value 1 if you want to display "Get Directions" link. ( default - 1 )', 'GMW' )
+    							'default'	=> '1',
+    							'desc'	 	=> __( 'Use the value 1 if you want to display "Get Directions" link. ( default - 1 )', 'GMW' )
+    					),
+    					array(
+    							'attr'		=> 'hide_info',
+    							'values' 	=> array(
+    									'1',
+    									'0',
+    							),
+    							'default'	=> '0',
+    							'desc'	 	=> __( "Use the value 1 to Hide all other information except for the map", "GMW" )
+    					),
+    					array(
+    							'attr'		=> 'location_marker',
+    							'values' 	=> array(
+    									'link to an image',
+    							),
+    							'default'	=> 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+    							'desc'	 	=> __( "Provide a link to an image that will be used as a marker which represents the location of the post being displayed.", 'GMW' )
+    					),
+    					array(
+    							'attr'		=> 'ul_marker',
+    							'values' 	=> array(
+    									'link to an image',
+    									'0',
+    							),
+    							'default'	=> 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
+    							'desc'	 	=> __( "Provide a link to an image that will be used as a marker which represents the user's location on the map. Use 0 if you do not want to show the user's location.", 'GMW' )
+    					),
+    					array(
+    							'attr'		=> 'ul_message',
+    							'values' 	=> array(
+    									'Any text',
+    									'0',
+    							),
+    							'default'	=> 'Your location',
+    							'desc'	 	=> __( "Any text that will be display within the info-window of the marker represents the user's current location. Use 0 if you want the info-window to be disabled.", 'GMW' )
     					),
     						
     			),
     			'examples'  => array(
     					array(
-    							'example' => __( '[gmw_single_location]', 'GMW' ),
+    							'example' => "[gmw_single_location]",
     							'desc'	  => __( 'Place this shortcode in the content of a page or post to display the map, contact information and "get directions" link of the post.', 'GMW' )
     							 
     					),
     					array(
-    							'example' => __( '[gmw_single_location map="1" map_width="100%" map_height="450px" additional_info="0" directions="0"]', 'GMW' ),
+    							'example' => "[gmw_single_location map=\"1\" map_width=\"100%\" map_height=\"450px\" additional_info=\"0\" directions=\"0\"]",
     							'desc'	  => __( 'Display map of the location. Map width set to 100% and map height 450px. No additional information and no "Get directions" link will be displayed.', 'GMW' )
 
     					),
@@ -486,66 +550,67 @@ class GMW_PT_Admin {
     			'desc'        	=> __( 'Easy way to display any of the location/contact information of a post.', 'GMW' ),
     			'attributes'  	=> array(
     					array(
-    							'attr'	 => __( 'post_id', 'GMW' ),
+    							'attr'	 => 'post_id',
     							'values' => array(
-    									__( 'Post ID','GMW' ),
+    									'Post ID',
     							),
     							'desc'	 => __( "Use the post ID only if you want to display information of a specific post. When using the shortcode on a single post page or within a posts loop you don't need to use the post_id attribute.", 'GMW' ).
     										__( " The shortcode will use the post ID of the post being displayed or the post ID of each post within the loop. ", 'GMW')
     					),
     					array(
-    							'attr'	 => __( 'info', 'GMW' ),
+    							'attr'	 => 'info',
     							'values' => array(
     									'street',
     									'apt',
     									'city',
-    									'state -' . __( 'state\'s short name (ex FL )','GMW' ),
-    									'state_long' . __( 'state\'s long name (ex Florida )','GMW' ),
+    									'state -' . __( "state short name (ex FL )", 'GMW' ),
+    									'state_long' . __( "state long name (ex Florida )",'GMW' ),
     									'zipcode',
-    									'country - ' . __( 'country short name (ex IL )','GMW' ),
-    									'country_long - ' . __( 'country long name (ex Israel )','GMW' ),
+    									'country - ' . __( "country short name (ex IL )",'GMW' ),
+    									'country_long - ' . __( "country long name (ex Israel )",'GMW' ),
     									'address',
     									'formatted_address',
-    									'lat - ' . __( 'Latitude','GMW'),
-    									'long - ' . __( 'Longitude','GMW'),
+    									'lat - ' . 'Latitude',
+    									'long - ' . 'Longitude',
     									'phone',
     									'fax',
     									'email',
     									'website',
     							),
+    							'default'	=> 'formatted_address',
     							'desc'	 => __( 'Use a single value or multiple values comma separated of the information you would like to display. For example use info="city,state,country_long" to display "Hollywood FL United States"', 'GMW')
     					),
 
     					array(
-    							'attr'	 => __( 'divider', 'GMW' ),
-    							'values' => array(
+    							'attr'	 	=> 'divider',
+    							'values' 	=> array(
     									__( 'any character','GMW' ),
     							),
-    							'desc'	 => __( 'Use any character that you would like to display between the fields you choose above"', 'GMW')
+    							'default'	=> 'space',
+    							'desc'	 	=> __( 'Use any character that you would like to display between the fields you choose above"', 'GMW')
     					),
     			),
     			'examples'  => array(
     					array(
-    							'example' => __( '[gmw_post_info post_id="3" info="city,state_long,zipcode" divider=","]', 'GMW' ),
+    							'example' => "[gmw_post_info post_id=\"3\" info=\"city,state_long,zipcode\" divider=\",\"]",
     							'desc'	  => __( 'This shortcode will display the information of the post with ID 3 which is ( for example ) "Hollywood,Florida,33021"', 'GMW' )
 
     					),
     					array(
-    							'example' => __( '[gmw_post_info info="city,state" divider="-"]', 'GMW' ),
+    							'example' => "[gmw_post_info info=\"city,state\" divider=\"-\"]",
     							'desc'	  => __( 'Use the shortcode without post_id when within a posts loop to display "Hollywood-FL"', 'GMW' )
     								
     					),
     					array(
-    							'example' => __( 'Address:', 'GMW' ) . ' [gmw_post_info info="formatted_address"] <br />'
-    							. __( 'Phone:' , 'GMW' ) . '[gmw_post_info info="phone"]<br />'
-    							. __( 'Email:' , 'GMW' ) . '[gmw_post_info info="email"]<br />'
-    							. __( 'Website:' , 'GMW' ) . 'Website: [gmw_post_info info="website"]',
-    							'desc'	  => __( 'Use this example in the content of a post to display:', 'GMW' ) . '<br />'
-    							.__ ( 'Address: blah street, Hollywodo Fl 33021, USA', 'GMW' ) . '<br />'
-    							. __( 'Phone: 123-456-7890', 'GMW' ) . '<br />'
-    							. __( 'Email: blah@geomywp.com', 'GMW' ) . '<br />'
-    							. __( 'Website: www.geomywp.com', 'GMW' ) .  '<br />'
-    								
+    							'example' => "Address [gmw_post_info info=\"formatted_address\"]<br />
+    								 Phone: [gmw_post_info info=\"phone\"]<br />
+    								 Email: [gmw_post_info info=\"email\"]<br />
+    								 Website: [gmw_post_info info=\"website\"]",
+    							'desc'	  => __( 'Use this example in the content of a post to display:', 'GMW' ) . "<br />
+    								 Address: blah street, Hollywodo Fl 33021, USA <br />
+    								 Phone: 123-456-7890 <br />
+    								 Email: blah@geomywp.com <br />
+    								 Website: www.geomywp.com <br />"								
     					),
     			),
     	);

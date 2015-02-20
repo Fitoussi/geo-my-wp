@@ -85,6 +85,10 @@ div.gmw-location-section-inner {
 
 .gmw-location-section input[type="text"] {
 	width:100%;
+	color: #888;
+	padding:5px;
+	font-size: 14px;
+	line-height: 18px;
 }
 
 .location-status-inner p {

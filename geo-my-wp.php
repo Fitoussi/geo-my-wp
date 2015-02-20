@@ -3,7 +3,7 @@
   Plugin Name: GEO my WP
   Plugin URI: http://www.geomywp.com
   Description: Add location to any post types, pages or members (using Buddypress) and create an advance proximity search forms.
-  Version: 2.5
+  Version: 2.6
   Author: Eyal Fitoussi
   Author URI: http://www.geomywp.com
   License: GPLv2
@@ -89,7 +89,7 @@ class GEO_my_WP {
         if ( !defined( 'GMW_REMOTE_SITE_URL' ) )
             define( 'GMW_REMOTE_SITE_URL', 'https://geomywp.com' );
 
-        define( 'GMW_VERSION', 	'2.5' );
+        define( 'GMW_VERSION', 	'2.6' );
         define( 'GMW_PATH', 	untrailingslashit( plugin_dir_path( __FILE__ ) ) );
         define( 'GMW_URL', 		untrailingslashit( plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) ) );
         define( 'GMW_IMAGES', 	GMW_URL . '/assets/images' );
@@ -144,7 +144,7 @@ class GEO_my_WP {
     	
         //include scripts in the front end
         add_action( 'wp_enqueue_scripts', array( $this, 'frontend_register_scripts' ), 10 );
-        add_filter( 'clean_url', 		  array( $this, 'clean_google_url' ), 		99, 3 );
+        add_filter( 'clean_url', 		  array( $this, 'clean_google_url' ), 99, 3 );
         
         //main gmw shortcode
         add_shortcode( 'gmw', array( $this, 'gmw' ) );
@@ -157,7 +157,7 @@ class GEO_my_WP {
         
         //init widgets
         add_action( 'widgets_init', create_function( '', 'return register_widget( "GMW_Current_Location_Widget" );' ) );
-        add_action( 'widgets_init', create_function( '', 'return register_widget( "GMW_Search_Form_Widget" );' 		) );
+        add_action( 'widgets_init', create_function( '', 'return register_widget( "GMW_Search_Form_Widget" );' ) );
 
         //load friends locator add-on
         if ( GEO_my_WP::gmw_check_addon( 'friends' ) && class_exists( 'BuddyPress' ) ) {
@@ -270,12 +270,12 @@ class GEO_my_WP {
     public function frontend_register_scripts() {
 		
     	$protocol  = is_ssl() ? 'https' : 'http';
-    	$googleApi = ( isset( $this->settings['general_settings']['google_api'] ) )    ? '&key=' . $this->settings['general_settings']['google_api'] :        '';
-        $region	   = ( isset( $this->settings['general_settings']['country_code'] ) )  ? '&region=' .$this->settings['general_settings']['country_code'] :    '';
-        $language  = ( isset( $this->settings['general_settings']['language_code'] ) ) ? '&language=' .$this->settings['general_settings']['language_code'] : '';
+    	$googleApi = ( !empty( $this->settings['general_settings']['google_api'] ) ) ? '&key=' . $this->settings['general_settings']['google_api'] : '';
+        $region	   = ( !empty( $this->settings['general_settings']['country_code'] ) ) ? '&region=' .$this->settings['general_settings']['country_code'] : '';
+        $language  = ( !empty( $this->settings['general_settings']['language_code'] ) ) ? '&language=' .$this->settings['general_settings']['language_code'] : '';
     	
         //register google maps api
-        if ( !wp_script_is( 'google-maps', 'registered' ) ) {
+        if ( !wp_script_is( 'google-maps', 'registered' ) && apply_filters( 'gmw_google_maps_api', true ) ) {
             wp_register_script( 'google-maps', $protocol.'://maps.googleapis.com/maps/api/js?libraries=places'.$googleApi.$region.$language.'&sensor=false', array( 'jquery' ), false );
     	}
     	
@@ -290,7 +290,11 @@ class GEO_my_WP {
     	 
         //enqueue gmw style and script
     	wp_register_script( 'gmw-js', GMW_URL.'/assets/js/gmw.min.js', array( 'jquery' ), GMW_VERSION, true );
-        wp_enqueue_script( 'gmw-js' );      
+        wp_enqueue_script( 'gmw-js' );     
+
+        if ( empty( $this->settings['general_settings']['js_geocode'] ) )  $this->settings['general_settings']['js_geocode']  = false;
+        if ( empty( $this->settings['general_settings']['auto_locate'] ) ) $this->settings['general_settings']['auto_locate'] = false;
+        
         wp_localize_script( 'gmw-js', 'gmwSettings', $this->settings );
           
         wp_register_script( 'gmw-map', GMW_URL.'/assets/js/map.min.js', array( 'jquery' ), GMW_VERSION, true );
@@ -311,7 +315,7 @@ class GEO_my_WP {
         	wp_register_script( 'gmw-marker-clusterer', GMW_URL . '/assets/js/marker-clusterer.min.js', array( 'jquery' ), GMW_VERSION, true );
         }
         
-        $cluster_image = $protocol.'://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclustererplus/images/m';
+        $cluster_image = apply_filters( 'gmw_clusters_folder' , $protocol.'://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclustererplus/images/m', $this->settings );
         wp_localize_script( 'gmw-marker-clusterer', 'clusterImage', $cluster_image );
         
         if ( !wp_script_is( 'gmw-marker-spiderfier', 'registered' ) ) {
@@ -351,7 +355,7 @@ class GEO_my_WP {
 
     	//get the form ID
     	$formId = $params[$element];
-    	
+
     	if ( $formId != 'results' ) {
 
     		if ( !is_numeric( $formId ) || empty( $this->forms[$formId] ) )
@@ -360,7 +364,7 @@ class GEO_my_WP {
     		$this->form = $this->forms[$formId];
     		$this->form['element_triggered'] = $element;
 
-    	} elseif ( $formId == 'results' && !empty( $_GET['action'] ) && $_GET['action'] == "gmw_post" ) {
+    	} elseif ( $formId == 'results' && !empty( $_GET['action'] ) && $_GET['action'] == "gmw_post" && !empty( $this->forms[$_GET['gmw_form']]['search_results']['results_page'] ) ) {
     		 
     		$this->form = $this->forms[$_GET['gmw_form']];
     		$this->form['element_triggered'] = 'results_page';
@@ -447,7 +451,7 @@ class GEO_my_WP {
             do_action( 'gmw_' . $this->form['prefix'] . '_after_map', $this->form );
         }
         
-        //display results anywere on the page using the map shortcode
+        //display results anywere on the page using the shortcode
         if ( !$this->form['in_widget'] && in_array( $this->form['element_triggered'], array( 'form', 'search_results', 'results_page' ) ) ) {
         	    
         	do_action( 'gmw_'.$this->form['prefix'].'_results_shortcode', $this->form );
@@ -522,10 +526,10 @@ class GEO_my_WP {
     			return;
     
     		if ( $response['response']['code'] == 200 ) {
-    		
+    
     			$data = json_decode( $data );
     
-    			if ( $data->status === 'OK' ) {
+    			if ( !empty( $data ) && $data->status === 'OK' ) {
     
     				$location['street']        = false;
     				$location['apt']           = false;

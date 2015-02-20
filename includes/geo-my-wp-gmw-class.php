@@ -129,11 +129,18 @@ class GMW {
 		$this->form['get_per_page'] 				 	= ( !empty( $_GET['gmw_per_page'] ) ) ? $_GET['gmw_per_page'] : current( explode( ",", $this->form['page_load_results']['per_page'] ) );
 		$this->form['radius'] 						 	= ( !empty( $this->form['page_load_results']['radius'] ) ) ? $this->form['page_load_results']['radius'] : 200;
 		$this->form['search_results']['display_map'] 	= $this->form['page_load_results']['display_map'];
-		 
+
+		//temporary solution this part needs improvment. 
+		//need to change all kind of display_? options to the one global name such as results_list.
+		//to easier control the outcome
 		if ( isset( $this->form['page_load_results']['display_posts'] ) ) {
-			$this->form['search_results']['display_posts'] = true;
+			$this->form['search_results']['display_posts']    = true;
+			$this->form['search_results']['display_members']  = true;
+			$this->form['search_results']['display_groups']   = true;
+			$this->form['search_results']['display_posts']    = true;
+			$this->form['search_results']['display_users']    = true;
 		} else {
-			unset( $this->form['search_results']['display_posts'] );
+			unset( $this->form['search_results']['display_posts'], $this->form['search_results']['display_groups'], $this->form['search_results']['display_members'], $this->form['search_results']['display_users'] );
 		}
 		 
 		if ( $this->form['page_load_results']['units'] == 'imperial' ) {

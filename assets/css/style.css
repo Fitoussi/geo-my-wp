@@ -166,6 +166,14 @@ div.pac-container {
 
 /* current location shortcode  */
 
+.gmw-cl-wrapper .gmw-cl-location-title-wrapper {
+	padding:5px 0px;
+}
+
+.gmw-cl-wrapper .gmw-cl-title {
+	margin-right:3px;	
+}
+
 #gmw-cl-form-wrapper {
 	display: none;
 	width: 300px;

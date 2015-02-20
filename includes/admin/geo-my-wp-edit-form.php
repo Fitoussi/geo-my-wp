@@ -120,6 +120,15 @@ class GMW_Edit_Form {
 										'desc'        => __( 'Filter locations by country name. Note that by using this filter GEO my WP will not do a proximity search but will pull locations with the matching country name ( Leave blank for no filter ).', 'GMW' ),
 										'attributes'  => array( 'size' => '15' )
 								),
+								'display_posts'    => array(
+										'name'     => 'display_posts',
+										'std'      => '',
+										'label'    => __( 'Display list of results', 'GMW' ),
+										'desc'     => __( 'Display list of results', 'GMW' ),
+										'type'     => 'checkbox',
+										'cb_label' => __( 'Yes', 'GMW' ),
+										'attributes' => array()
+								),
 								'display_map'      => array(
 										'name'    => 'display_map',
 										'std'     => 'na',
@@ -128,17 +137,9 @@ class GMW_Edit_Form {
 										'type'    => 'radio',
 										'options' => array(
 												'na'        => __( 'No map', 'GMW' ),
-												'results'   => __( 'In results', 'GMW' ),
+												'results'   => __( 'Within results', 'GMW' ),
 												'shortcode' => __( 'Using shortcode', 'GMW' ),
 										),
-								),
-								'display_posts'    => array(
-										'name'     => 'display_posts',
-										'std'      => '',
-										'label'    => __( 'Display Posts', 'GMW' ),
-										'desc'     => __( 'Display results as list of posts', 'GMW' ),
-										'type'     => 'checkbox',
-										'cb_label' => __( 'Yes', 'GMW' ),
 								),
 								'per_page'         => array(
 										'name'        => 'per_page',
@@ -456,10 +457,14 @@ class GMW_Edit_Form {
 			$themes[basename($dir)] = basename($dir);
 		}
 	
-		foreach ( glob( STYLESHEETPATH . '/geo-my-wp/'.$folder[$prefix][1].'*', GLOB_ONLYDIR ) as $dir ) {
-			$themes['custom_'.basename($dir)] = 'Custom: '.basename($dir);
+		$custom_templates = glob( STYLESHEETPATH . '/geo-my-wp/'.$folder[$prefix][1].'*', GLOB_ONLYDIR );
+		
+		if ( !empty( $custom_templates ) ) {
+			foreach ( $custom_templates as $dir ) {
+				$themes['custom_'.basename($dir)] = 'Custom: '.basename($dir);
+			}
 		}
-	
+		
 		return $themes;
 	}
 	
@@ -492,10 +497,14 @@ class GMW_Edit_Form {
 			$themes[basename($dir)] = basename($dir);
 		}
 	
-		foreach ( glob( STYLESHEETPATH . '/geo-my-wp/'.$folder[$prefix][1].'*', GLOB_ONLYDIR ) as $dir ) {
-			$themes['custom_'.basename($dir)] = 'Custom: '.basename($dir);
+		$custom_templates = glob( STYLESHEETPATH . '/geo-my-wp/'.$folder[$prefix][1].'*', GLOB_ONLYDIR );
+		
+		if ( !empty( $custom_templates ) ) {
+			foreach ( $custom_templates as $dir ) {
+				$themes['custom_'.basename($dir)] = 'Custom: '.basename($dir);
+			}
 		}
-	
+		
 		return $themes;	
 	}
 	
@@ -785,7 +794,7 @@ class GMW_Edit_Form {
 			                            $rc = 1;
 			                            foreach ($option['options'] as $keyVal => $name) {
 			                                $checked = ( $rc == 1 ) ? 'checked="checked"' : checked($value, $keyVal, false);
-			                                echo '<input type="radio" id="setting-'.$key.'-'.$option['name'] .'-'.$keyVal.'" class="setting-' . $option['name'] . '" name="gmw_forms[' . $formID . '][' . $key . '][' . $option['name'] . ']" value="' . esc_attr($keyVal) . '" ' . $checked . ' />' . $name . ' ';
+			                                echo '<span id="setting-'.$key.'-'.$option['name'] .'-'.$keyVal.'-wrapper"><input type="radio" id="setting-'.$key.'-'.$option['name'] .'-'.$keyVal.'" class="setting-' . $option['name'] . '" name="gmw_forms[' . $formID . '][' . $key . '][' . $option['name'] . ']" value="' . esc_attr($keyVal) . '" ' . $checked . ' />' . $name . ' </span>';
 			                                $rc++;
 			                            }
 		                            break;
@@ -876,6 +885,26 @@ class GMW_Edit_Form {
 		      //    });
 		      //  });
 	        
+	        	if ( jQuery('#setting-page_load_results-display_posts').is(':checked') ) {
+					jQuery("#setting-page_load_results-display_map-results-wrapper").show();
+				} else {
+					jQuery("#setting-page_load_results-display_map-results-wrapper").hide();
+					if ( jQuery("#setting-page_load_results-display_map-results").is(":checked") ) {
+						jQuery("#setting-page_load_results-display_map-shortcode").attr("checked","checked");
+					}
+				}
+				
+	        	jQuery('#setting-page_load_results-display_posts').change(function() {
+					if ( jQuery(this).is(':checked') ) {
+						jQuery("#setting-page_load_results-display_map-results-wrapper").show();
+					} else {
+						jQuery("#setting-page_load_results-display_map-results-wrapper").hide();
+						if ( jQuery("#setting-page_load_results-display_map-results").is(":checked") ) {
+							jQuery("#setting-page_load_results-display_map-shortcode").attr("checked","checked");
+						}
+					}
+	        	});
+	        	
 	            jQuery('.gmw-form-hidden-field').each(function() {
 	                jQuery(this).closest('tr').hide();
 	            });

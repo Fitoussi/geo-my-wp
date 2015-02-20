@@ -34,8 +34,8 @@ class GMW_Shortcodes_page {
     							array(
     									'attr'	 => 'form',
     									'values' => array(
-    											__( 'Form ID','GMW' ),
-    											__( 'Results','GMW' ),
+    											'Form ID',
+    											'Results',
     									),
     									'desc'	 => __( "1) Use the attribute \"form\" with one of your forms ID to display the search form and results on that same page.", 'GMW' ).
     												__( "2) Use the value \"results\" when you want to display only the search results. This is usefull when you want to display the search form in on page.", 'GMW' ).
@@ -47,18 +47,18 @@ class GMW_Shortcodes_page {
     									'values' => array(
     											__( 'Form ID','GMW' ),
     									),
-    									'desc'	 => __( "Use anywhere of a page where you want to display the results map.", "GMW" )
+    									'desc'	 => __( "Use anywhere on a page where you want to display the results map.", "GMW" )
     							),
     					),
     					'examples'  => array(
     							array(
     									'example' => '[gmw form="1"]',
-    									'desc'	  => __( "Use this shortcode on a page to display the search form and search results of the form with ID 1.", "GMW" )
+    									'desc'	  => __( "Display the search form and search results of the form with ID 1.", "GMW" )
 
     							),
     							array(
     									'example' => '[gmw form="results"]',
-    									'desc'	  => __( "Use this on a page where you want to display the seasrch results.", "GMW" )
+    									'desc'	  => __( "Display only the seasrch results.", "GMW" )
     							),
     							array(
     									'example' => '[gmw map="1"]',
@@ -75,33 +75,125 @@ class GMW_Shortcodes_page {
     									   __( "used with GEO my WP and other add-ons for different functionlities. ", "GMW" ),
     					'attributes'  => array(
     							array(
-    									'attr'	 => 'title',
-    									'values' => array(
+    									'attr'	 	=> 'title',
+    									'values' 	=> array(
     											__( 'any text','GMW' ),
     									),
-    									'desc'	 => __( "You can use this to display a title above the \"Get Current Location\" link. Ex \"Your Location\".", "GMW" )
+    									'default'	=> 'Your location',
+    									'desc'	 	=> __( "Display a title above the \"Get Current Location\" link. Ex \"Your Location\".", "GMW" )
     							),
     							array(
-    									'attr'	 => 'display_by',
-    									'values' => array(
+    									'attr'	 	=> 'display_by',
+    									'values' 	=> array(
     											'street, city, state, zipcode, country',
     									),
-    									'desc'	 => __( "Use any of the address components, ( street,city,state,zipcode,county ) comma separated, that you want to display on the screen once the user's location found.", "GMW" )
+    									'default'	=> 'city,country',
+    									'desc'	 	=> __( "Use any of the address components, ( street,city,state,zipcode,county ) comma separated, that you want to display on the screen once the user's location found.", "GMW" )
     							),
     							array(
-    									'attr'	 => 'show_name',
-    									'values' => array(
-    											'0 || 1',
+    									'attr'	 	=> 'text_only',
+    									'values' 	=> array(
+    											'1',
+    											'0',
     									),
-    									'desc'	 => __( "Use the value 1 to display the word \"Hello\" and the name of the logged-in user or \"Guest\" for visitors next to the \"current Location\" link. When using this feature the shorcode will display \"Hello ( username ), Get your current location\".", "GMW" )
+    									'default'	=> '0',
+    									'desc'	 	=> __( "Use the value 1 to display the current locaiton of the user as text only instead of an hyperlink which popups the current location form.", "GMW" )
     							),
+    							array(
+    									'attr'	 	=> 'show_name',
+    									'values' 	=> array(
+    											'1',
+    											'0',
+    									),
+    									'default'	=> '1',
+    									'desc'	 	=> __( "Use the value 1 to display a greeting message with the username when logged in or \"guest\" when looged out.", "GMW" )
+    							),
+    							array(
+    									'attr'	 	=> 'user_message',
+    									'values' 	=> array(
+    											__( 'any text','GMW' ),
+    									),
+    									'default'	=> 'Hello',
+    									'desc'		=> __( "Greeting message that will be displayed before the user name when logged in ( ex Hello admin ).", "GMW" )
+    							),
+    							array(
+    									'attr'	 	=> 'guest_message',
+    									'values' 	=> array(
+    											__( 'any text','GMW' ),
+    									),
+    									'default'	=> 'Hello guest!',
+    									'desc'		=> __( "Greeting message that will be displayed when the users is logged out.", "GMW" )
+    							),
+    							array(
+    									'attr'	 	=> 'map',
+    									'values' 	=> array(
+    											'1',
+    											'0',
+    									),
+    									'default'	=> '1',
+    									'desc'	 	=> __( "Display map showing the user's current location.", "GMW" )
+    							),
+    							array(
+    									'attr'	 	=> 'map_height',
+    									'values' 	=> array(
+    											'value in px or %',
+    									),
+    									'default'	=> '200px',
+    									'desc'	 	=> __( "Map height in pixels or percentage ( ex 200px or 100% ).", "GMW" )
+    							),
+    							array(
+    									'attr'	 	=> 'map_width',
+    									'values' 	=> array(
+    											'value in px or %',
+    									),
+    									'default'	=> '200px',
+    									'desc'	 	=> __( "Map width in pixels or percentage ( ex 200px or 100% ).", "GMW" )
+    							),
+    							array(
+    									'attr'	 	=> 'map_type',
+    									'values' 	=> array(
+    											'ROADMAP',
+    											'SATELLITE',
+    											'HYBRID',
+    											'TERRAIN'
+    									),
+    									'default'	=> 'ROADMAP',
+    									'desc'	 	=> __( "Set the map type", "GMW" )
+    							),
+    							array(
+    									'attr'	 	=> 'zoom_level',
+    									'values' 	=> array(
+    											__( 'Numeric value between 1 to 18', 'GMW' ),
+    									),
+    									'default'	=> '12',
+    									'desc'	 	=> __( "Set the map zoom level", "GMW" )
+    							),
+    							array(
+    									'attr'	 	=> 'scrollwheel',
+    									'values' 	=> array(
+    											'1',
+    											'0',
+    									),
+    									'default'	=> '1',
+    									'desc'	 	=> __( "Use the value 1 to enable the map zoom in/out using the mouse scrollwheel.", "GMW" )
+    							),
+    							array(
+    									'attr'	 	=> 'map_marker',
+    									'values' 	=> array(
+    											'Link to an image.',
+    									),
+    									'default'	=> 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+    									'desc'	 	=> __( "Use a link to an image that will be used as the map marker.", "GMW" )
+    							),
+    							
+    							
     					),
     					'examples'  => array(
     							array(
     									'example' => "[gmw_current_location title=\"Your Location\" display_by=\"city,state,country\" show_name=\"1\"]",
     									'desc'	  => __( "This example will display:", 'gmw' ).
-    												 __( "Your Location", 'GMW' ). '<br />'.
-    												 __( "Hello ( username ), Get your current location. ", "GMW" )
+    												 "Your Location<br />
+    												  Hello ( username ), Get your current location. "
 
     							),
     					),
@@ -154,7 +246,7 @@ class GMW_Shortcodes_page {
                             </tr>
                         </thead>
                         <tbody>
-                        	<tr class="alternate">
+                        	<tr>
                         		<td style="color: #555;border-bottom:1px solid #eee;min-width:400px;vertical-align: top">
                         			<lablel><code><?php echo $options['basic_usage']; ?></code></lablel>
                         		</td>
@@ -177,10 +269,11 @@ class GMW_Shortcodes_page {
                     </table>
                     
                     <table class="widefat fixed" style="margin-top:-2px">
-                        <thead>
-                            <tr valign="top" class="alternate">
+                        <thead  style="background-color:#f9f9f9;">
+                            <tr valign="top" >
                                 <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Attribute', 'GMW' ); ?></th>
-                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Values', 'GMW' ); ?></th>
+                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Values Accepted', 'GMW' ); ?></th>
+                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Default Value', 'GMW' ); ?></th>
                                 <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Additional Information', 'GMW' ); ?></th> 
                             </tr>
                         </thead>
@@ -189,7 +282,7 @@ class GMW_Shortcodes_page {
                         	$rowNumber = 1;
                         	foreach ( $options['attributes'] as $attr ) { 
 	                        	$alternate = ( $rowNumber % 2 == 0 ) ? 'alternate' : ''; ?>
-	                        	<tr valign="top" class="<?php echo $alternate; ?>">
+	                        	<tr valign="top">
 	                        		<th scope="row" style="color: #555;border-bottom:1px solid #eee;"><label for="setting-google_api"><?php echo $attr['attr']; ?></label></th>
 	                        		<td style="color: #555;border-bottom:1px solid #eee;min-width:400px;vertical-align: top">
 	                        		
@@ -198,6 +291,8 @@ class GMW_Shortcodes_page {
 	                        			<p class="description"><?php echo $rowCount++.')'.' '.$value; ?></p>
 	                        		<?php } ?>
 	                        		</td>
+	                        		<?php $default = ( isset( $attr['default'] ) ) ? $attr['default'] : __( 'N/A', 'GMW' ); ?>
+	                        		<td style="color: #555;border-bottom:1px solid #eee;min-width:400px;vertical-align: top"><p class="description"><?php echo $default; ?></p></td>
 	                        		<td style="color: #555;border-bottom:1px solid #eee;min-width:400px;vertical-align: top"><p class="description"><?php echo $attr['desc']; ?></p></td>
 	                        	</tr>
                         		<?php  
@@ -217,8 +312,8 @@ class GMW_Shortcodes_page {
                     
                     <?php if ( isset( $options['examples'] ) && !empty( $options['examples'] ) ) { ?>
 	                    <table class="widefat fixed" style="margin-top:-2px">
-	                        <thead>
-	                            <tr valign="top" class="alternate">
+	                        <thead  style="background-color:#f9f9f9;">
+	                            <tr valign="top">
 	                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Usage', 'GMW' ); ?></th>
 	                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Description', 'GMW' ); ?></th>
 	                            </tr>
@@ -228,7 +323,7 @@ class GMW_Shortcodes_page {
 	                        	$rowNumber = 1;
 	                        	foreach ( $options['examples'] as $example ) { 
 		                        	$alternate = ( $rowNumber % 2 == 0 ) ? 'alternate' : ''; ?>
-		                        	<tr valign="top" class="<?php echo $alternate; ?>">
+		                        	<tr valign="top">
 		                        		<th scope="row" style="color: #555;border-bottom:1px solid #eee;"><label for="setting-google_api"><code><?php echo $example['example']; ?></code></label></th>
 		                        		<td style="color: #555;border-bottom:1px solid #eee;min-width:400px;vertical-align: top"><p class="description"><?php echo $example['desc']; ?></p></td>
 		                        	</tr>

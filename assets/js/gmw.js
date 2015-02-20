@@ -97,7 +97,7 @@ jQuery(document).ready(function($) {
         }
         
 	    //geocode address via javascript
-	    if ( gmwSettings.general_settings.js_geocode != undefined && gmwSettings.general_settings.js_geocode == 1 ) {
+	    if ( gmwSettings.general_settings.js_geocode == 1 ) {
 		       
 	        // check if we are submmiting the same address and if we have lat/long. 
 	        //if so no need to geocode again and submit the form with the information we already have
@@ -141,7 +141,7 @@ jQuery(document).ready(function($) {
 
     var autoLocator = false;
     
-    if ( gmwSettings.general_settings.auto_locate != undefined && gmwSettings.general_settings.auto_locate == 1 && gmwGetCookie('gmw_autolocate') != 1) {
+    if ( gmwSettings.general_settings.auto_locate == 1 && gmwGetCookie('gmw_autolocate') != 1) {
         gmwSetCookie("gmw_autolocate", 1, 1);
         autoLocator = true;
         GmwGetLocation();
@@ -168,8 +168,7 @@ jQuery(document).ready(function($) {
             var geocoder = new google.maps.Geocoder();
             geocoder.geocode({'latLng': new google.maps.LatLng(position.coords.latitude, position.coords.longitude)}, function(results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
-                    getAddressFields(results);
-                    
+                    getAddressFields(results);                
                 } else {
                     alert('Geocoder failed due to: ' + status);
                 }

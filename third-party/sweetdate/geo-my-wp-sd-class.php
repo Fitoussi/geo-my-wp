@@ -30,15 +30,21 @@ class GMW_SD_Class_Query {
         $this->gmwSD['org_address'] = false;
         $this->formData['query']    = false;
         $this->formData['address']  = ( !empty( $_GET['field_address'] ) ) ? $_GET['field_address'] : false;
-        $this->formData['orderby']  = ( !empty( $_GET['orderby'] ) ) ? $_GET['orderby'] : '';
         $radius                     = str_replace( ' ', '', explode( ',', $this->gmwSD['radius'] ) );
         $this->formData['radius']   = ( !empty( $_GET['field_radius'] ) ) ? $_GET['field_radius'] : false;
-
+        $this->formData['orderby']  = '';
+        
+        if ( !empty( $_COOKIE['gmw_sd_orderby'] ) ) {
+        	$this->formData['orderby'] = urldecode( $_COOKIE['gmw_sd_orderby'] );
+        } elseif ( !empty( $_GET['orderby'] ) ) {
+        	$this->formData['orderby'] =  $_GET['orderby'];
+        }
+        
         $this->clauses = array(
             'bp_user_query' => array( 'where' => false ),
             'wp_user_query' => array( 'query_fields' => false ),
         );
-
+        
         //action hooks/ filters
         add_action( 'wp_enqueue_scripts', 				  array( $this, 'frontend_register_styles' ) );
         add_filter( 'kleo_bp_search_add_data', 			  array( $this, 'members_directory_form'   ) );
@@ -85,7 +91,7 @@ class GMW_SD_Class_Query {
             $radiusText = ( $this->gmwSD['units'] == '6371' ) ? __( ' -- Kilometers -- ', 'GMW' ) : __( ' -- Miles -- ', 'GMW' );
 
             $search_form_html .= '<div class="two columns">';
-            $search_form_html .= 	'<select class="expand" name="field_radius">';
+            $search_form_html .= 	'<select id="gmw-sd-radius-dropdown" class="expand gmw-sd-dropdown" name="field_radius">';
             $search_form_html .= 		'<option value="9999999999999" selected="selected">' . $radiusText . '</option>';
             
             foreach ( $radius as $value ) {
@@ -117,14 +123,13 @@ class GMW_SD_Class_Query {
         if ( !empty( $orderby ) && !empty( $this->gmwSD['orderby_use'] ) ) {
         
 	        $search_form_html .= '<div class="two columns">';
-	        $search_form_html .= 	'<select class="expand" name="orderby">';
+	        $search_form_html .= 	'<select id="gmw-sd-orderby-dropdown" class="expand gmw-sd-dropdown" name="orderby">';
 	        $search_form_html .= 		'<option value="">' . __( 'Order By', 'GMW' ) . '</option>';
-	
+
 	        foreach ( $orderby as $key => $value ) {
-			
-	        	$selected = ( $value == $this->formData['orderby'] ) ? 'selected="selected"' : '';
-	            $search_form_html .= 	'<option value="' . $key . '" '.$selected.'>' . $value . '</option>';
 	
+	        	$selected = ( $key == $this->formData['orderby'] ) ? 'selected="selected"' : '';
+	            $search_form_html .= 	'<option value="' . $key . '" '.$selected.'>' . $value . '</option>';
 	        }
 	
 	        $search_form_html .= 	'</select>';
@@ -132,7 +137,6 @@ class GMW_SD_Class_Query {
         }
         
         echo $search_form_html;
-
     }
 
     /**
@@ -328,6 +332,11 @@ class GMW_SD_Class_Query {
         	//pass some values to javascript
         	var sdMapArgs = JSON.parse('<?php echo json_encode( $this->gmwSD ); ?>');
         	jQuery(window).ready(function($) {
+
+        		jQuery("#gmw-sd-orderby-dropdown").change(function() {
+        			gmwSetCookie('gmw_sd_orderby',jQuery(this).val(),1);	
+        		});
+        		
             	setTimeout(function() {
                 	jQuery('#gmw-sd-main-map-wrapper').slideToggle(function() {
                 		sdMapInit(sdMapArgs);

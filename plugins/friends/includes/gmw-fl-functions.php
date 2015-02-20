@@ -106,7 +106,9 @@ function gmw_member_location($member) {
 					'show_on_single_post'	=> 1,
 			), $member));
     
-    if ( $user_id == false && !bp_is_user() && ( !is_single() || $show_on_single_post != 1 ) )
+	global $members_template;
+
+    if ( $user_id == false && empty( $members_template->member->ID ) && !bp_is_user() && ( !is_single() || $show_on_single_post != 1 ) )
         return;
 
     $scID = rand(1, 9999);
@@ -119,6 +121,8 @@ function gmw_member_location($member) {
     } elseif ( is_single() ) {
     	global $post;
     	$member_id = $post->post_author;
+    } elseif ( !empty( $members_template->member->ID ) ) {
+    	$member_id = $members_template->member->ID;
     }
 
     $member_info = gmw_get_member_info_from_db($member_id);

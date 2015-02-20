@@ -302,7 +302,7 @@ function gmw_search_form_address_field( $gmw, $id, $class ) {
 	    $address_field .= '<div id="'.$id.'" class="gmw-address-field-wrapper gmw-address-field-wrapper-'.$gmw['ID'].' '.$class.'">';
 	    
 	    if ( !isset( $gmw['search_form']['address_field']['within'] ) && !empty( $title ) ) {
-	        $address_field .= '<label for="gmw-address-'.$gmw['ID'].'">' . $title . '</label>';
+	        $address_field .= '<label class="gmw-field-label" for="gmw-address-'.$gmw['ID'].'">' . $title . '</label>';
 	    }
 	    $address_field .= '<input type="text" name="gmw_address[]" id="gmw-address-'.$gmw['ID'].'" autocomplete="off" class="'.$am.' gmw-address gmw-full-address gmw-address-'.$gmw['ID'].' '.$class.'" value="'.$value.'" '.$place_holder.'/>';
 	    
@@ -539,13 +539,26 @@ function gmw_additional_info( $info, $gmw, $array, $labels, $tag ) {
 					$count++;
 					$output .= '<'.$subTag.' class="'.$key.'"><span class="label">'.$labels[$key].'</span><span class="information"><a href="mailto:'.$info->$key.'" >' . $info->$key . '</a></span></'.$subTag.'>';
 				} elseif ( $key == 'website') {
+					
 					$count++;
-					$output .= '<'.$subTag.' class="'.$key.'"><span class="label">'.$labels[$key].'</span><span class="information"><a href="'.$info->$key.'" >' . $info->$key . '</a></span></'.$subTag.'>';
+					$url = parse_url($info->$key);
+	
+					if ( empty( $url['scheme'] ) ) {
+						$url['scheme'] = 'http';
+					}
+					
+					$scheme = $url['scheme'].'://';
+					$path   = str_replace( $scheme,'',$info->$key );
+					
+					$output .= '<'.$subTag.' class="'.$key.'"><span class="label">'.$labels[$key].'</span><span class="information"><a href="'.$scheme.$path.'" title="'.$path.'" target="_blank">'.$path.'</a></span></'.$subTag.'>';
+					
 				} elseif ( $key != 'formatted_address') {
 					$count++;
 					$output .= '<'.$subTag.' class="'.$key.'"><span class="label">'.$labels[$key].'</span><span class="information">'.$info->$key . '</span></a></'.$subTag.'>';
 				}
 			}
+			do_action( 'gmw_additional_info_end', $info, $gmw, $array, $labels );
+			
 		}
 		$output .= '</'.$tag.'>';
 			
@@ -581,20 +594,42 @@ function gmw_directions_link( $info, $gmw, $title ) {
  * @param unknown_type $gmw
  * @param unknown_type $count
  */
-function gmw_excerpt( $info, $gmw, $content, $count ) {
-	echo gmw_get_excerpt( $info, $gmw, $content, $count );
+function gmw_excerpt( $info, $gmw, $content, $count, $more=false ) {
+	echo gmw_get_excerpt( $info, $gmw, $content, $count, $more );
 }
-	function gmw_get_excerpt( $info,$gmw, $content, $count ) {
-	
+	function gmw_get_excerpt( $info, $gmw, $content, $count, $more=false ) {
+
+		$content = apply_filters( 'gmw_except_content', $content, $info, $gmw );
+		
 		if ( empty( $content ) )
 			return;
 	
 		if ( empty( $count ) ) {
 			$count = 99999999;
 		}
+				
+		//trim number of words
+		$content = wp_trim_words( $content, $count, '' );
+		$content = str_replace( ']]>', ']]&gt;', $content );
 		
-		return wp_trim_words( $content, $count, '' );
-		//return wp_trim_words( $content, $count, '' ) .'... [<a class="read-more" href="'.get_permalink( $post->ID ).'">'.$gmw['labels']['info_window']['read_more'].'</a>]';
+		//build read more link
+		if ( !empty( $more ) || !empty( $gmw['search_results']['excerpt']['more'] ) ) {	
+			
+			if ( empty( $more ) ) {
+				$more = $gmw['search_results']['excerpt']['more'];
+			}
+
+			$more_link = apply_filters( 'gmw_excerpt_more_link', '<a href="'.get_the_permalink( $info->ID ).'" class="gmw-more-link" title="'.$more.'">'.$more.'</a>', $info, $gmw, $content, $count, $more );
+			$content   = $content.' '.$more_link;
+		}
+		
+		if ( !apply_filters( 'gmw_except_shortcodes_enabled', true, $info, $gmw ) ) {
+			$content = strip_shortcodes( $content );
+		}
+		
+		$content = apply_filters( 'the_content', $content );		
+		
+		return $content;
 	}
 	
 /**
@@ -612,7 +647,7 @@ function gmw_excerpt( $info, $gmw, $content, $count ) {
  */
 function gmw_window_toggle( $gmw, $info, $id, $toggled, $showIcon, $hideIcon, $animation, $minHeight, $maxHeight ) {
 
-	$id 	     = ( !empty( $id ) ) 		  ? $id 	   : 'gmw-window-toggle-'.rand(10, 999);
+	$id 	     = ( !empty( $id ) ) 		? $id   	 : 'gmw-window-toggle-'.rand(10, 999);
 	$showIcon    = ( !empty( $showIcon ) )  ? $showIcon  : 'dashicons-arrow-down-alt2';
 	$hideIcon    = ( !empty( $hideIcon ) )  ? $hideIcon  : 'dashicons-arrow-up-alt2';
 	$toggled     = ( !empty( $toggled ) )   ? '#'.$toggled  : '#'.$id;
@@ -909,6 +944,8 @@ function gmw_driving_distance( $info, $gmw, $title ) {
 	if ( empty( $title ) )
 		 $title = $gmw['labels']['search_results']['driving_distance'];
 	
+	$unitsSystem = strtoupper($gmw['units_array']['units']);
+	
 	echo '<div id="gmw-driving-distance-'.$info->ID.'" class="gmw-driving-distance gmw-'.$gmw['prefix'].'-driving-distance"><span class="label">'.$title.' </span><span class="distance"></span></div>';
 	
     echo "<script>
@@ -921,17 +958,14 @@ function gmw_driving_distance( $info, $gmw, $title ) {
         var request = {
             origin: start,
             destination: end,
-            travelMode: google.maps.TravelMode.DRIVING
+            travelMode: google.maps.TravelMode.DRIVING,
+            unitSystem: google.maps.UnitSystem.{$unitsSystem}
         };
+        
         directionsService.route(request, function(result, status) {
             if (status == google.maps.DirectionsStatus.OK) {
-                directionsDisplay.setDirections(result);
-                if ('{$gmw['units_array']['name']}' == 'Mi') {
-                    totalDistance = (Math.round(result.routes[0].legs[0].distance.value * 0.000621371192 * 10) / 10) + 'mi';
-                } else {
-                    totalDistance = (Math.round(result.routes[0].legs[0].distance.value * 0.01) / 10) + 'km';
-                }
-                jQuery('#gmw-driving-distance-{$info->ID} span.distance').text(totalDistance);
+                directionsDisplay.setDirections(result);              
+                jQuery('#gmw-driving-distance-{$info->ID} span.distance').text(result.routes[0].legs[0].distance.text);
             }
         });
     </script>";

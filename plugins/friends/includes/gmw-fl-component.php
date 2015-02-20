@@ -225,7 +225,7 @@ class GMW_Location_Component extends BP_Component {
     public function frontend_register_scripts() {
         wp_register_style( 'gmw-fl-style', GMW_FL_URL.'assets/css/style.css' );
         wp_enqueue_style( 'gmw-fl-style' );
-        wp_register_script( 'gmw-fl', GMW_FL_URL . 'assets/js/fl.min.js', array('jquery'), GMW_VERSION, true );
+        wp_register_script( 'gmw-fl', GMW_FL_URL.'assets/js/fl.min.js', array('jquery'), GMW_VERSION, true );
     }
 
     /**

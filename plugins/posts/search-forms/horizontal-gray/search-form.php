@@ -55,6 +55,7 @@ if ( !function_exists('gmw_modify_tax_all_value') ) {
 			</div>
 		</div>
 
+		<input type="text" name="keywords" placeholder="words" />
 		<?php do_action( 'gmw_search_form_before_post_types', $gmw ); ?>
 				
 		<!-- post types dropdown -->

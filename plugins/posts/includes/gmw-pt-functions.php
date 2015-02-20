@@ -26,52 +26,52 @@ function gmw_get_post_location_from_db( $post_id ) {
 /**
  * GMW Function - get single location information
  */
-function gmw_post_info( $args ) {
-	echo gmw_get_post_info( $args );
+function gmw_get_post_info( $args ) {
+
+	//default shortcode attributes
+	extract(
+			shortcode_atts(
+					array(
+							'info'    => 'formatted_address',
+							'post_id' => 0,
+							'divider' => ' '
+					), $args )
+	);
+
+    /*
+     * check if user entered post id
+     */
+    if ( $post_id == 0 ) :
+
+        global $post;
+        $post_id = $post->ID;
+
+    endif;
+
+    $post_info = gmw_get_post_location_from_db( $post_id );
+
+    $info = explode( ',', str_replace( ' ', '', $info ) );
+
+    $output = '';
+    $count  = 1;
+
+    foreach ( $info as $rr ) {
+        if ( isset( $post_info->$rr ) ) {
+            $output .= $post_info->$rr;
+
+            if ( $count < count( $info ) )
+                $output .= $divider;
+            $count++;
+        }
+    }
+    return $output;
 
 }
-	function gmw_get_post_info( $args ) {
-	
-		//default shortcode attributes
-		extract(
-				shortcode_atts(
-						array(
-								'info'    => 'formatted_address',
-								'post_id' => 0,
-								'divider' => ' '
-						), $args )
-		);
-	
-	    /*
-	     * check if user entered post id
-	     */
-	    if ( $post_id == 0 ) :
-	
-	        global $post;
-	        $post_id = $post->ID;
-	
-	    endif;
-	
-	    $post_info = gmw_get_post_location_from_db( $post_id );
-	
-	    $info = explode( ',', str_replace( ' ', '', $info ) );
-	
-	    $output = '';
-	    $count  = 1;
-	
-	    foreach ( $info as $rr ) {
-	        if ( isset( $post_info->$rr ) ) {
-	            $output .= $post_info->$rr;
-	
-	            if ( $count < count( $info ) )
-	                $output .= $divider;
-	            $count++;
-	        }
-	    }
-	    return $output;
-	
+add_shortcode( 'gmw_post_info', 'gmw_get_post_info' );
+
+	function gmw_post_info( $args ) {
+		echo gmw_get_post_info( $args );
 	}
-	add_shortcode( 'gmw_post_info', 'gmw_get_post_info' );
 
 /**
  * when post status changes - change it in our table as well 

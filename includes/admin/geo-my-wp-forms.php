@@ -86,13 +86,17 @@ class GMW_Forms {
     					'locator_submit' => 1
     			),
     			'search_results' => array (
-    					'display_posts'   => 1,
+    					'results_list'    => 1,
     					'display_members' => 1,
     					'display_members' => 1,
     					'display_groups'  => 1,
     					'display_users'	  => 1,
     					'display_map'	  => 'results',
-    					'get_directions'  => 1	 
+    					'get_directions'  => 1,
+    					'excerpt'		  => array(
+    							'use'	=> 1,
+    							'more'  => 'read more...'
+    					)
     			),
     			'results_map' => array(
     					'map_width'	 => '100%',

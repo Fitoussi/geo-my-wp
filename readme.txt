@@ -13,8 +13,8 @@ Using Google's API tools GEO my WP provides an advance proximity search for any 
 
 == Description ==
 
-GEO my WP is the complete GEO solution for your wordpress project. 
-Using google API tool GEO my WP let you add location to any of your post types, pages or Buddypress members. After adding your locations you can create an advance search form including radius values, units (miles and kilometers) and custom taxonomies for post types or profile fields for Buddypress. Results will be displayed based on the address entered and the chosen radius ordered by the distance.
+GEO my WP is the complete GEO solution for your Wordpress project. 
+Using google API tool GEO my WP let you add location to any of your post types, pages or BuddyPress members. After adding your locations you can create an advance search form including radius values, units (miles and kilometers) and custom taxonomies for post types or profile fields for Buddypress. Results will be displayed based on the address entered and the chosen radius ordered by the distance.
 Together with other great features like auto locating user's current location, displaying driving distance, "get directions" link, google map with markers of the location and much more, GEO my WP just might be the coolest GEO tool for WordPress.
 
 = Key features of GEO my WP =
@@ -67,7 +67,7 @@ Together with other great features like auto locating user's current location, d
 * Shortcode for single location - displays map of a single location.
 * Shortcode for user's location- display the user's location everywhere on the template. Can choose between zipcode or city. and can choose if to display user's name when logged in.
 
-Shortcode builder in the admin settings make it easier to build you own search form. And you can build as many as you wish.
+Forms builder in the admin settings make it easier to build you own forms; And you can build as many as you wish.
 
 * Choose between post type or buddypress shortcose. 
 * Post type Forms accept single or multiple post types that will appear in a dropdown menu.
@@ -100,7 +100,7 @@ GEO my WP is currently available in the following languages:
 
 == Installation ==
 
-Automatic Plugin Installation. To add a WordPress Plugin using the built-in plugin installer:
+= Automatic Plugin Installation. To add a WordPress Plugin using the built-in plugin installer: =
 * Go to Plugins > Add New.
 * Under Search, type "GEO my WP".
 * GEO my WP should show up on top of the results.
@@ -109,7 +109,7 @@ Automatic Plugin Installation. To add a WordPress Plugin using the built-in plug
 * Click Proceed to continue with the installation. The resulting installation screen will list the installation as successful or note any problems during the install.
 * If successful, click Activate Plugin to activate it.
 
-Manual plugin Installation. To install a WordPress plugin manually:
+= Manual plugin Installation. To install a WordPress plugin manually: =
 * Download GEO my WP Plugin to your desktop.
 * The plugin will downloaded as a zip. extract the Plugin folder to your desktop.
 * With your FTP program, upload the Plugin folder to the wp-content/plugins folder in your WordPress directory online.
@@ -120,37 +120,39 @@ for detailed installation and setup guied click <a href="http://geomywp.com" >he
 
 == Frequently Asked Questions ==
 
-For questions, bugs report and suggestions please visit [GEO my WP Furom](http://geomywp.com/support/forums/)
+= For questions, bugs report and suggestions please visit [GEO my WP Furom](http://geomywp.com/support/forums/) =
 
 == Screenshots ==
 
 For screenshots please visit [GEO my WP](http://www.geomywp.com)
 
+== Other Notes ==
+
 == Changelog ==
 
-== 2.5 == 
+= 2.5 = 
 
 * This is a major update. Please click <a href="https://geomywp.com/blog/geo-my-wp-2-5/" target="_blank">here</a> to see full version change-log before updating.
 
-== 2.4.6 ==
+= 2.4.6 =
 
 * Improved: Premium Auto-updating system. Better check on when to run the system. 
 * New: Ability to disable the Premium auto-updating system. Can be used when working on a development site or when working often in the admin dashboard. Temporary disabling the system will prevent the slow load of the plugins/update pages (admin) caused by the system. The check-box responsible for the feature can be found under GEO my WP -> Settings -> Admin Settings tab. 
 * Fix: warning shows in "Edit Post" page when no post types selected in the General Settings of GEO my WP. 
 * Update: language files
 
-== 2.4.5 ==
+= 2.4.5 =
 
 * Fix: Locator button disappeared when clicked.
 * Fix: Info-window wont open if additional information is disabled
 * Fix: [gmw_single_location] shortcode breaks theme due to missing closing tag 
 * Fix: Horizontal search form hidden checkboxes 
 
-== 2.4.4 == 
+= 2.4.4 =
 
 * Full version changelog can be found <a href="https://geomywp.com/blog/geo-wp-2-4-4/" target="_blank">here</a>
 
-== 2.4.3 ==
+= 2.4.3 =
 
 * Fix: Country code was not working with Google API
 * Fix: Issues with Sweet-Date integration - Order by "alphabetical" and friends only tab was not working.
@@ -186,7 +188,6 @@ For screenshots please visit [GEO my WP](http://www.geomywp.com)
 - Added missing space when displaying taxonomies in search results
 - Improve "Gray" search forms and results template files.
 - New, responsive search form and results templates: Purple for "Posts Locator" and "Yellow" for "Members locator”.
-
 
 = 2.4.1 = 
 

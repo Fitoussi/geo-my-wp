@@ -17,6 +17,8 @@ function gmw_fl_xprofile_fields( $gmw, $class ) {
 	 
 	echo '<div class="gmw-fl-form-xprofile-fields gmw-fl-form-xprofile-fields-'.$gmw['ID'].' '.$class.'">';
 
+	$total_fields = apply_filters( 'gmw_fl_form_xprofile_field_before_displayed', $total_fields, $gmw );
+	
 	foreach ( $total_fields as $field_id ) {
 
 		$fdata  	= new BP_XProfile_Field( $field_id );
@@ -31,13 +33,14 @@ function gmw_fl_xprofile_fields( $gmw, $class ) {
 		switch ( $fdata->type ) {
 
 			case 'datebox':
+			case 'birthdate':
 				$value = ( isset( $_REQUEST[$fname] ) ) ? esc_attr (stripslashes ( $_REQUEST[$fname] ) ) : '';
 				$max   = ( isset( $_REQUEST[$fname . '_max'] ) ) ? esc_attr (stripslashes ( $_REQUEST[$fname.'_max'] ) ) : '';
-
+				
 				echo 	'<label for="'.$fid.'">' . __('Age Range (min - max)', 'GMW') . '</label>';
 				echo 	'<input size="3" type="text" name="'.$fname.'" id="'.$fid.'" class="'.$fclass.'" value="'.$value.'" placeholder="'.__( 'Min', 'GMW' ).'" />';
 				echo 	'&nbsp;-&nbsp;';
-				echo 	'<input size="3" type="text" name="'.$fname.'-max" id="'.$fid.'_max" class="'.$fclass.'-max" value="'.$max.'" placeholder="'.__( 'Max', 'GMW' ).'" />';
+				echo 	'<input size="3" type="text" name="'.$fname.'_max" id="'.$fid.'_max" class="'.$fclass.'_max" value="'.$max.'" placeholder="'.__( 'Max', 'GMW' ).'" />';
 				break;				 
 			case 'textbox':
 				$value = ( isset( $_REQUEST[$fname] ) ) ? esc_attr (stripslashes ( $_REQUEST[$fname] ) ) : '';
@@ -161,15 +164,15 @@ function gmw_fl_query_xprofile_fields( $gmw, $formValues ) {
 		$max   	= ( isset( $formValues[$fname.'_max'] ) ) ? $formValues[$fname.'_max'] : '';
 		$sql 	= $wpdb->prepare ( "SELECT `user_id` FROM {$bp->profile->table_name_data} WHERE `field_id` = %d ", $field_id );
 		 
-		if ( !$value ) 
+		if ( !$value && !$max ) 
 			continue;
-		
+	
 		$fields_empty = false;
 		
 		if ( $value || $max ) {
 
 			switch ( $fdata->type ) {
-					
+			
 				case 'textbox':
 				case 'textarea':
 					$value 	 = str_replace ( '&', '&amp;', $value );
@@ -224,10 +227,11 @@ function gmw_fl_query_xprofile_fields( $gmw, $formValues ) {
 					 
 				break;
 				case 'datebox':
+				case 'birthdate':
 
 					$value = ( !$value ) ? '1' : $value;
 					$max    = ( !$max ) ? '200' : $max;
-
+										
 					if ( $max < $value ) {
 						$max = $value;
 					}
@@ -239,8 +243,9 @@ function gmw_fl_query_xprofile_fields( $gmw, $formValues ) {
 					$ymin  = $year - $max - 1;
 					$ymax  = $year - $value;
 
-					if ($max !== '')   $sql .= $wpdb->prepare ("AND DATE(value) > %s", "$ymin-$month-$day");
-					if ($value !== '') $sql .= $wpdb->prepare ("AND DATE(value) <= %s", "$ymax-$month-$day");
+					if ( $max !== '')   $sql .= $wpdb->prepare("AND DATE(value) > %s", "$ymin-$month-$day");
+					if ( $value !== '') $sql .= $wpdb->prepare(" AND DATE(value) <= %s", "$ymax-$month-$day");
+					
 					// $sql = "SELECT user_id from {$bp->profile->table_name_data}";
 					//$sql .= " WHERE field_id = $field_id AND value > '$ymin-$month-$day' AND value <= '$ymax-$month-$day'";
 

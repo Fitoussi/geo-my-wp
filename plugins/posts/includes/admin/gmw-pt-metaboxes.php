@@ -36,11 +36,11 @@ class GMW_PT_Meta_Boxes {
 			       	
             wp_register_style( 'gmw-pt-admin-style', 		GMW_PT_URL . 'assets/css/style-admin.css' );
             wp_register_script( 'gmw-admin-address-picker', GMW_PT_URL . 'assets/js/addresspicker.min.js', array( 'jquery' ), GMW_VERSION, true );
-            
+
             //add default values if not exist to prevent JavaScript error
-            if ( !isset( $this->settings['admin_settings']['edit_post_zoom_level'] ) ) $this->settings['admin_settings']['edit_post_zoom_level'] = 7;
-            if ( !isset( $this->settings['admin_settings']['edit_post_latitude'] ) )   $this->settings['admin_settings']['edit_post_latitude']   = '40.7115441';
-            if ( !isset( $this->settings['admin_settings']['edit_post_longitude'] ) )  $this->settings['admin_settings']['edit_post_longitude']  = '-74.01348689999998';
+            if ( !isset( $this->settings['post_types_settings']['edit_post_zoom_level'] ) ) $this->settings['post_types_settings']['edit_post_zoom_level'] = 7;
+            if ( !isset( $this->settings['post_types_settings']['edit_post_latitude'] ) )   $this->settings['post_types_settings']['edit_post_latitude']   = '40.7115441';
+            if ( !isset( $this->settings['post_types_settings']['edit_post_longitude'] ) )  $this->settings['post_types_settings']['edit_post_longitude']  = '-74.01348689999998';
             
         	wp_localize_script( 'gmw-admin-address-picker', 'gmwSettings', $this->settings );
         }
@@ -65,133 +65,152 @@ class GMW_PT_Meta_Boxes {
     							'desc' => '',
     							'id'   => $prefix . 'street',
     							'type' => 'text',
-    							'std'  => ''
+    							'std'  => '',
+    							'placeholder' => '',
     					),
     					array(
     							'name' => __( 'Apt/Suit', 'GMW' ),
     							'desc' => '',
     							'id'   => $prefix . 'apt',
     							'type' => 'text',
-    							'std'  => ''
+    							'std'  => '',
+    							'placeholder' => '',
     					),
     					array(
     							'name' => __( 'City', 'GMW' ),
     							'desc' => '',
     							'id'   => $prefix . 'city',
     							'type' => 'text',
-    							'std'  => ''
+    							'std'  => '',
+    							'placeholder' => '',
     					),
     					array(
     							'name' => __( 'State', 'GMW' ),
     							'desc' => '',
     							'id'   => $prefix . 'state',
     							'type' => 'text',
-    							'std'  => ''
+    							'std'  => '',
+    							'placeholder' => '',
     					),
     					array(
     							'name' => __( 'Zipcode', 'GMW' ),
     							'desc' => '',
     							'id'   => $prefix . 'zipcode',
     							'type' => 'text',
-    							'std'  => ''
+    							'std'  => '',
+    							'placeholder' => '',
     					),
     					array(
     							'name' => __( 'Country', 'GMW' ),
     							'desc' => '',
     							'id'   => $prefix . 'country',
     							'type' => 'text',
-    							'std'  => ''
+    							'std'  => '',
+    							'placeholder' => '',
     					),
     					array(
     							'name' => __( 'Phone Number', 'GMW' ),
     							'desc' => '',
     							'id'   => $prefix . 'phone',
     							'type' => 'text',
-    							'std'  => ''
+    							'std'  => '',
+    							'placeholder' => '',
     					),
     					array(
-    							'name' => __( 'fax Number', 'GMW' ),
+    							'name' => __( 'Fax Number', 'GMW' ),
     							'desc' => '',
     							'id'   => $prefix . 'fax',
     							'type' => 'text',
-    							'std'  => ''
+    							'std'  => '',
+    							'placeholder' => '',
     					),
     					array(
     							'name' => __( 'Email Address', 'GMW' ),
     							'desc' => '',
     							'id'   => $prefix . 'email',
     							'type' => 'text',
-    							'std'  => ''
+    							'std'  => '',
+    							'placeholder' => '',
     					),
     					array(
     							'name' => __( 'Website', 'GMW' ),
     							'desc' => 'Ex: www.website.com',
     							'id'   => $prefix . 'website',
     							'type' => 'text',
-    							'std'  => ''
+    							'std'  => '',
+    							'placeholder' => 'ex: http://www.mywebsite.com',
     					),
     					array(
     							'name' => __( 'Latitude', 'GMW' ),
     							'desc' => '',
     							'id'   => $prefix . 'enter_lat',
     							'type' => 'text-right',
-    							'std'  => ''
+    							'std'  		=> '',
+    							'placeholder' => '',
     					),
     					array(
     							'name' => __( 'Longitude', 'GMW' ),
     							'desc' => '',
     							'id'   => $prefix . 'enter_long',
     							'type' => 'text-right',
-    							'std'  => ''
+    							'std'  => '',
+    							'placeholder' => '',
     					),
     					array(
     							'name' => __( 'Latitude', 'GMW' ),
     							'desc' => '',
     							'id'   => $prefix . 'lat',
     							'type' => 'text-disable',
-    							'std'  => ''
+    							'std'  => '',
+    							'placeholder' => '',
     					),
     					array(
     							'name' => __( 'Longitude', 'GMW' ),
     							'desc' => '',
     							'id'   => $prefix . 'long',
     							'type' => 'text-disable',
-    							'std'  => ''
+    							'std'  => '',
+    							'placeholder' => '',
     					),
     					array(
     							'name' => __( 'Full Address', 'GMW' ),
     							'desc' => '',
     							'id'   => $prefix . 'address',
     							'type' => 'text-disable',
-    							'std'  => ''
+    							'std'  => '',
+    							'placeholder' => '',
     					),
     					array(
     							'name' => __( 'Days & Hours', 'GMW' ),
     							'desc' => '',
     							'id'   => $prefix . 'days_hours',
     							'type' => 'text',
-    							'std'  => ''
+    							'std'  => '',
+    							'placeholder' => '',
     					),
     					array(
     							'name' => __( 'State Long', 'GMW' ),
     							'desc' => '',
     							'id'   => $prefix . 'state_long',
     							'type' => 'text',
-    							'std'  => ''
+    							'std'  => '',
+    							'placeholder' => '',
     					),
     					array(
     							'name' => __( 'Country Long', 'GMW' ),
     							'desc' => '',
     							'id'   => $prefix . 'country_long',
     							'type' => 'text',
-    							'std'  => ''
+    							'std'  => '',
+    							'placeholder' => '',
     					),
     					array(
     							'name' => __( 'Formatted address', 'GMW' ),
     							'desc' => '',
     							'id'   => $prefix . 'formatted_address',
     							'type' => 'text',
-    							'std'  => ''
+    							'std'  => '',
+    							'placeholder' => '',
     					)
     			)
     	);
@@ -441,11 +460,16 @@ class GMW_PT_Meta_Boxes {
             					</tr>
             					<tr>
             						<th><label for="<?php echo $this->meta_boxes['fields'][8]['id']; ?>"><?php echo $this->meta_boxes['fields'][8]['name']; ?></label></th>
-	    							<td><input type="text" name="<?php echo $this->meta_boxes['fields'][8]['id']; ?>" id="<?php echo $this->meta_boxes['fields'][8]['id']; ?>" value="<?php echo $post_info->email; ?>"/></td>
+	    							<td><input type="text" name="<?php echo $this->meta_boxes['fields'][8]['id']; ?>" id="<?php echo $this->meta_boxes['fields'][8]['id']; ?>" value="<?php echo $post_info->email; ?>" placeholder="<?php echo $this->meta_boxes['fields'][8]['placeholder']; ?>" /></td>
            						</tr>
             					<tr>
             						<th><label for="<?php echo $this->meta_boxes['fields'][9]['id']; ?>"><?php echo $this->meta_boxes['fields'][9]['name']; ?></label></th>
-	    							<td><input type="text" name="<?php echo $this->meta_boxes['fields'][9]['id']; ?>" id="<?php echo $this->meta_boxes['fields'][9]['id']; ?>" value="<?php echo $post_info->website; ?>"/></td>
+	    							<td>
+	    								<div style="position: relative;">
+	    									<!-- <span style="position: absolute; padding:8px 3px 8px 8px; font-size: 13px; color:#888 ">http://</span> -->
+	    									<input type="text" name="<?php echo $this->meta_boxes['fields'][9]['id']; ?>" id="<?php echo $this->meta_boxes['fields'][9]['id']; ?>" value="<?php echo $post_info->website; ?>" placeholder="<?php echo $this->meta_boxes['fields'][9]['placeholder']; ?>" />
+	    								</div>		
+	    							</td>
            						</tr>
             				</table>
             			</div>

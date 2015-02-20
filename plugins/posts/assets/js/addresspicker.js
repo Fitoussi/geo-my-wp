@@ -14,7 +14,7 @@
  */
 jQuery(document).ready(function($) {
 		
-    var zoomLevel = gmwSettings.admin_settings.edit_post_zoom_level;
+    var zoomLevel = gmwSettings.post_types_settings.edit_post_zoom_level;
 	/*
 	 * Get the initial lat/long if exists in post to initiate the map
 	 * otherwise set it to new-york as default
@@ -23,8 +23,8 @@ jQuery(document).ready(function($) {
 		  initLat = $('#_wppl_lat').val();
 		  initLng = $('#_wppl_long').val();
 	} else {
-  		  initLat = gmwSettings.admin_settings.edit_post_latitude;
-		  initLng = gmwSettings.admin_settings.edit_post_longitude;
+  		  initLat = gmwSettings.post_types_settings.edit_post_latitude;
+		  initLng = gmwSettings.post_types_settings.edit_post_longitude;
 	}
 	var addLatLong = false;
 	var runGeo = false;

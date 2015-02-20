@@ -42,7 +42,7 @@ function gmw_location_record_activity( $args ) {
     $activity_id = bp_activity_add(array(
     		//'id' => $id,
     		'user_id'           => $user_id,
-    		'action'            => sprintf(__('%s Updated new location at <a target="_blank" href="https://maps.google.com/maps?f=d' . $language . '' .$region . '&geocode=&saddr=' . $location . '&daddr=' . $cCity . ' ' . $cState . ' ' . $cCountry . '&ie=UTF8&z=12" >' . $location . '</a>', 'GMW'), $from_user_link),
+    		'action'            => sprintf( __( '%s Updated new location at <span class="dashicons dashicons-location"></span><a target="_blank" href="https://maps.google.com/maps?f=d'.$language.''.$region.'&geocode=&saddr='.$location.'&daddr='.$cCity.' '.$cState.' '.$cCountry.'&ie=UTF8&z=12" >' . $location . '</a>', 'GMW' ), $from_user_link ),
     		'content'           => $content,
     		'primary_link'      => $primary_link,
     		'component'         => $component,

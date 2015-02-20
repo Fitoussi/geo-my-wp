@@ -22,20 +22,19 @@ class GMW_PT_Search_Query extends GMW {
      */
     public function query_clauses( $clauses ) {
         global $wpdb;
-		
+		        
         $this->show_non_located_posts = apply_filters( 'show_posts_without_location', false, $this->form );
-        
-        // join the location table into the query
-        $clauses['join']  .= " INNER JOIN {$wpdb->prefix}places_locator gmwlocations ON $wpdb->posts.ID = gmwlocations.post_id ";
-        $clauses['where'] .= " AND ( gmwlocations.lat != 0.000000 && gmwlocations.long != 0.000000 ) ";
-        
+           
         // add the radius calculation and add the locations fields into the results
         if ( !empty( $this->form['org_address'] ) ) {
 
+        	$clauses['join']   .= " INNER JOIN {$wpdb->prefix}places_locator gmwlocations ON $wpdb->posts.ID = gmwlocations.post_id ";
         	$clauses['fields'] .= $wpdb->prepare( " , gmwlocations.lat, gmwlocations.long, gmwlocations.address, gmwlocations.formatted_address,
         			gmwlocations.phone, gmwlocations.fax, gmwlocations.email, gmwlocations.website, gmwlocations.map_icon,
         			ROUND( %d * acos( cos( radians( %s ) ) * cos( radians( gmwlocations.lat ) ) * cos( radians( gmwlocations.long ) - radians( %s ) ) + sin( radians( %s ) ) * sin( radians( gmwlocations.lat) ) ),1 ) AS distance", 
         			array( $this->form['units_array']['radius'], $this->form['your_lat'], $this->form['your_lng'], $this->form['your_lat'] ) );
+        	
+        	$clauses['where'] .= " AND ( gmwlocations.lat != 0.000000 && gmwlocations.long != 0.000000 ) ";
         	
         	if ( !$this->form['advanced_query'] ) {
         		$px[0] = 'having';
@@ -51,8 +50,11 @@ class GMW_PT_Search_Query extends GMW {
         	
         	if ( $this->show_non_located_posts ) {
         		// left join the location table into the query to display posts with no location as well
-        		$clauses['join']  .= " LEFT JOIN {$wpdb->prefix}places_locator gmwlocations ON $wpdb->posts.ID = gmwlocations.post_id ";
-        		$clauses['where'] .= " ";      		
+        		$clauses['join']  .= " LEFT JOIN {$wpdb->prefix}places_locator gmwlocations ON $wpdb->posts.ID = gmwlocations.post_id ";     		
+        		$clauses['where'] .= " ";
+        	} else {
+        		$clauses['join']  .= " INNER JOIN {$wpdb->prefix}places_locator gmwlocations ON $wpdb->posts.ID = gmwlocations.post_id ";
+        		$clauses['where'] .= " AND ( gmwlocations.lat != 0.000000 && gmwlocations.long != 0.000000 ) ";
         	}
         	
         	$clauses['fields'] .= ", gmwlocations.lat, gmwlocations.long, gmwlocations.address, gmwlocations.formatted_address,
@@ -161,15 +163,15 @@ class GMW_PT_Search_Query extends GMW {
 	        $meta_args = false;
 	        
 	        //query args
-	        $this->form['query_args'] = array(
+	        $this->form['query_args'] = apply_filters( 'gmw_pt_search_query_args', array(
 	        		'post_type'           => $post_types,
 	        		'post_status'         => array( 'publish' ),
 	        		'tax_query'           => apply_filters( 'gmw_pt_tax_query', $tax_args, $this->form ),
 	        		'posts_per_page'      => $this->form['get_per_page'],
 	        		'paged'               => $this->form['paged'],
 	        		'meta_query'          => apply_filters( 'gmw_pt_meta_query', $meta_args, $this->form ),
-	        		'ignore_sticky_posts' => 1
-	        );
+	        		'ignore_sticky_posts' => 1,
+	        ), $this->form );
 	
 	        //Hooks before query 
 	        $this->form = apply_filters( 'gmw_pt_form_before_posts_query', $this->form, $this->settings );
@@ -202,7 +204,7 @@ class GMW_PT_Search_Query extends GMW {
         	$clauses['groupby']	= "GROUP BY $wpdb->posts.ID";
         	$clauses['having']	= "";
         	$clauses['orderby'] = "ORDER BY $wpdb->posts.post_date DESC";
-        	$clauses['limits']  = "";
+        	$clauses['limit']   = "";
         	
         	if ( !empty( $this->form['get_per_page'] ) ) {
         		$stating_page = ( $this->form['paged'] == 1 ) ? 0 : ( $this->form['get_per_page'] * ( $this->form['paged'] - 1 ) );
@@ -227,7 +229,7 @@ class GMW_PT_Search_Query extends GMW {
         }
                 
         /* hooks before posts loop */
-        $this->form = apply_filters( 'gmw_pt_form_before_posts_loop',  $this->form, $this->settings );
+        $this->form = apply_filters( 'gmw_pt_form_before_posts_loop', $this->form, $this->settings );
 
         //enqueue stylesheet and get results template file
         $results_template = $this->search_results();

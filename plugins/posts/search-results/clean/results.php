@@ -94,12 +94,12 @@
 		    	<div class="wppl-info">
 		    		
 		    		<div class="wppl-info-left">
-			    		<?php if ( !empty( $gmw['info_window']['additional_info'] ) ) { ?>
+			    		<?php if ( !empty( $gmw['search_results']['additional_info'] ) ) { ?>
     
 					    	<?php do_action( 'gmw_search_results_before_contact_info', $post, $gmw ); ?>
 						   	
 						   	<div class="contact-info">
-								<h3><?php echo $gmw['labels']['info_window']['contact_info']; ?></h3>
+								<h3><?php echo $gmw['labels']['search_results']['contact_info']['contact_info']; ?></h3>
 					    		<?php gmw_additional_info( $post, $gmw, $gmw['search_results']['additional_info'], $gmw['labels']['search_results']['contact_info'], 'ul' ); ?> 
 					    	</div>
 					    <?php } ?>	    
