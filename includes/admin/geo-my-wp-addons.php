@@ -29,8 +29,7 @@ class GMW_Addons {
        	add_action( 'gmw_activate_addon',   	  array( $this, 'activate_addon' ) );
         add_action( 'gmw_deactivate_addon', 	  array( $this, 'deactivate_addon' ) );       
         add_action( 'gmw_updater_action', 		  array( $this, 'addons_updater' ) );            
-        add_filter( 'gmw_admin_notices_messages', array( $this, 'notices_messages' ) );
-              
+        add_filter( 'gmw_admin_notices_messages', array( $this, 'notices_messages' ) );           
     }
     
     public function all_gmw_addons() {
@@ -121,7 +120,7 @@ class GMW_Addons {
     	$plugins = get_plugins();
 
         //activate the addon
-        if (  array_key_exists( $plugin_basename, $plugins ) && is_plugin_active( $plugin_basename ) ) {
+        if ( array_key_exists( $plugin_basename, $plugins ) && is_plugin_active( $plugin_basename ) ) {
         	deactivate_plugins( $plugin_basename );
         }
         
@@ -280,9 +279,14 @@ class GMW_Addons {
     	}
     	array_multisort( $mid, SORT_ASC, $this->addons_data );
     	 
-    	//move the two free add-ons Posts Locator and Members Locator
-    	//to the beggining of the array
-    	$this->addons_data = array('posts' => $this->addons_data['posts'], 'friends' => $this->addons_data['friends']) + $this->addons_data;
+    	//move the core add-ons to the beggining of the array
+    	$this->addons_data = array(
+    			'posts' 				=> $this->addons_data['posts'],
+    			'friends' 				=> $this->addons_data['friends'],
+    			'single_location' 		=> $this->addons_data['single_location'],
+    			'current_location' 		=> $this->addons_data['current_location'],
+    			'sweetdate_geolocation' => $this->addons_data['sweetdate_geolocation']
+    	) + $this->addons_data;
       		
     	return $this->addons_data;
     }
@@ -297,14 +301,14 @@ class GMW_Addons {
     
         <div class="wrap">
         
-            <a href="http://www.geomywp.com" target="_blank"></a>
-
-            <?php echo GMW_Admin::gmw_credits(); ?>
-
-            <h2 class="gmw-wrap-top-h2"><?php _e( 'GEO my WP Add-ons', 'GMW' ); ?></h2>
+            <h2 class="gmw-wrap-top-h2">
+                <i class="fa fa-puzzle-piece"></i>
+                <?php _e( 'GEO my WP Add-ons', 'GMW' ); ?>
+                <?php gmw_admin_support_button(); ?>
+            </h2>
 
             <div class="clear"></div>
-            
+
             <div class="gmw-addons-page-top-area">
             	<div></span><h3 style="display:inline-block;margin:2px 0px"><?php _e( "Add-ons usage", "GMW" ); ?></h3> - <a href="#" id="addons-info-toggle"><?php _e( "Show info", "GMW" ); ?></a></div>
             	<ol id="addons-info-wrapper" style="display:none">
@@ -374,12 +378,12 @@ class GMW_Addons {
                                         //echo '<img src="' . $addon['image'] . '" />';
                                     //get no-image image
                                     //} else
-                                    if ( !empty( $addon['image'] ) ) {
-                                        echo '<img src="https://geomywp.com/wp-content/uploads/2014/01/no-featured-image.png" />';
+                                    //if ( empty( $addon['image'] ) ) {
+                                    //    echo '<img src="https://geomywp.com/wp-content/uploads/2014/01/no-featured-image.png" />';
                                     //get image from GEO my WP server
-                                    } else {
+                                   // } else {
                                     	echo '<img src="https://geomywp.com/wp-content/uploads/addons-images/'.$addon['name'].'.png" />';
-                                    }
+                                    //}
                                     ?>
                                 </div>
 								
@@ -394,7 +398,7 @@ class GMW_Addons {
 								<?php if ( $addon['license'] ) { ?>
 								
 									<table>
-										<tr class="gmw-licence-key-wrapper">
+										<tr class="gmw-license-key-wrapper">
 			
 											<td class="plugin-update" colspan="3">
 												
@@ -434,7 +438,7 @@ class GMW_Addons {
 								<?php } else { ?>
 									
 									<table>
-										<tr class="active gmw-licence-key-wrapper">
+										<tr class="active gmw-license-key-wrapper">
 			
 											<td class="plugin-update" colspan="3">
 												
@@ -491,7 +495,7 @@ class GMW_Addons {
 								<?php } else { ?>
 									
 									<table>
-										<tr class="active gmw-licence-key-wrapper">
+										<tr class="active gmw-license-key-wrapper">
 			
 											<td class="plugin-update" colspan="3">
 												
@@ -581,7 +585,7 @@ class GMW_Addons {
     private function output_feed_addons() {
   	    
     	if ( false === ( $cache = get_transient( 'gmw_add_ons_feed' ) ) ) {
-    		    		
+    		 
     		$feed = wp_remote_get( 'http://geomywp.com/add-ons/?feed=gmw_addons', array( 'sslverify' => false ) );
 
     		if ( !is_wp_error( $feed ) && $feed['response']['code'] == '200' ) {
@@ -614,6 +618,5 @@ class GMW_Addons {
     
     	return $messages;
     }
-   
 }
 endif;
