@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GEO my WP v2.4.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-19 21:01-1000\n"
-"PO-Revision-Date: 2015-02-19 21:01-1000\n"
+"POT-Creation-Date: 2015-05-07 21:04-1000\n"
+"PO-Revision-Date: 2015-05-07 21:05-1000\n"
 "Last-Translator: Eyal Fitoussi <info@geomywp.com>\n"
 "Language-Team: Eyal Fitoussi <info@geomywp.com>\n"
 "Language: fr_FR\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n>1;\n"
-"X-Generator: Poedit 1.7.4\n"
+"X-Generator: Poedit 1.7.6\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
 "_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
@@ -20,76 +20,21 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 
 # @ GMW
-#: geo-my-wp.php:206
-msgid "Post Types Locator"
-msgstr "Localisateur de posts"
-
-#: geo-my-wp.php:212
-msgid ""
-"Add geo-location to Posts and pages. Create an advance proximity search "
-"forms to search for locations based on post types, categories, distance and "
-"more."
-msgstr ""
-"Ajoutez des donn&eacute;es de g&eacute;olocalisation aux Posts, Pages et "
-"autres Post Types. Cr&eacute;ez des formulaires avanc&eacute;s de recherche "
-"de proximit&eacute; g&eacute;ographique avec de nombreux crit&egrave;res "
-"comme les Post Types, Taxonomies, Distances et autres."
-
-# @ GMW
-#: geo-my-wp.php:220 plugins/friends/includes/admin/gmw-fl-admin.php:41
-msgid "Members Locator"
-msgstr "Localisateur de membres"
-
-#: geo-my-wp.php:226
-msgid ""
-"Let the BuddyPress members of your site to add location to thier profile. "
-"Create an advance proximity search forms to search for members based on "
-"location, Xprofile Fields and more."
-msgstr ""
-"Permettez aux membres de votre site Buddypress d&#8217;ajouter leur "
-"localisation &agrave; leur profile. Cr&eacute;ez des formulaires de "
-"recherche avanc&eacute;e pour filtrer les membres selon leur localisation, "
-"des champs Xprofile ou autres."
-
-#: geo-my-wp.php:600
-msgid "The address entered could not be geocoded."
-msgstr ""
-"L&#8217;adresse indiqu&eacute;e n&#8217;a pas pu &ecirc;tre g&eacute;"
-"ocod&eacute;e."
-
-# @ GMW
-#: geo-my-wp.php:602 includes/geo-my-wp-geocode.php:101
-msgid "Invalid request. Did you enter an address?"
-msgstr "Requ&ecirc;te invalide. Avez-vous bien entr&eacute; une adresse ?"
-
-# @ GMW
-#: geo-my-wp.php:604 geo-my-wp.php:606 includes/geo-my-wp-geocode.php:103
-msgid "Something went wrong while retrieving your location."
-msgstr ""
-"Une erreur est survenue lors de la r&eacute;cup&eacute;ration de votre "
-"localisation. "
-
-# @ GMW
-#: geo-my-wp.php:610 includes/geo-my-wp-geocode.php:107
-msgid "Unable to contact Google API service."
-msgstr "Impossible de se connecter au service Google API. "
-
-# @ GMW
-#: includes/admin/geo-my-wp-addons.php:304
+#: includes/admin/geo-my-wp-addons.php:306
 msgid "GEO my WP Add-ons"
 msgstr "Modules GEOmyWP"
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:309
+#: includes/admin/geo-my-wp-addons.php:313
 msgid "Add-ons usage"
 msgstr "Description des Modules"
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:309
+#: includes/admin/geo-my-wp-addons.php:313
 msgid "Show info"
 msgstr "Montrer les infos"
 
-#: includes/admin/geo-my-wp-addons.php:311
+#: includes/admin/geo-my-wp-addons.php:315
 msgid ""
 "<strong>Add-ons installation</strong> - GEO my WP add-ons ( Except the free "
 "add-ons \"Posts Locator\" and \"Members Locator\" ) are WordPress plug-ins "
@@ -105,7 +50,7 @@ msgstr ""
 "vous <a href=\"http://codex.wordpress.org/Managing_Plugins\" target=\"_blank"
 "\">&agrave; cet article</a> pour plus d&#8217;informations."
 
-#: includes/admin/geo-my-wp-addons.php:312
+#: includes/admin/geo-my-wp-addons.php:316
 msgid ""
 "<strong>Add-ons activation</strong> - after installation please activate "
 "your add-ons. Activation can be done via the WordPress's Plug-ins page or "
@@ -115,7 +60,7 @@ msgstr ""
 "d&#8217;activer vos Add-ons. L&#8217;activation peut se faire via la page "
 "des extensions ou depuis cette page des Modules de GMW."
 
-#: includes/admin/geo-my-wp-addons.php:313
+#: includes/admin/geo-my-wp-addons.php:317
 msgid ""
 "<strong>License activation</strong> - If any of your add-ons require a "
 "license key please enter it in the license key input box and click \"Activate"
@@ -125,7 +70,7 @@ msgstr ""
 "requiert une cl&eacute; de licence, merci de la copier/coller dans le champ "
 "pr&eacute;vu &agrave; cet effet et de cliquer sur \"Activer\"."
 
-#: includes/admin/geo-my-wp-addons.php:314
+#: includes/admin/geo-my-wp-addons.php:318
 msgid ""
 " The license key provided to you after a purchase of an add-on via the "
 "purchase receipt which should be sent to your email address. You can also "
@@ -139,7 +84,7 @@ msgstr ""
 "com/purchase-history\" target=\"_blank\">votre historique d&#8217;achats sur "
 "GeomyWP</a>."
 
-#: includes/admin/geo-my-wp-addons.php:315
+#: includes/admin/geo-my-wp-addons.php:319
 msgid ""
 " Note that the license key must be valid and activated in order to receive "
 "automatic updates and support for its add-on."
@@ -148,7 +93,7 @@ msgstr ""
 "pour recevoir les mises mises &agrave; jour et le support pour les add-ons "
 "payants."
 
-#: includes/admin/geo-my-wp-addons.php:316
+#: includes/admin/geo-my-wp-addons.php:320
 msgid ""
 "<strong>License deactivation</strong> - To deactivate a license simply click "
 "on \"Deactivate License\"."
@@ -156,7 +101,7 @@ msgstr ""
 "<strong>D&eacute;sactivation de Licence</strong> - Pour d&eacute;sactiver "
 "une licence, cliquez simplement sur \"D&eacute;sactiver la Licence\"."
 
-#: includes/admin/geo-my-wp-addons.php:317
+#: includes/admin/geo-my-wp-addons.php:321
 msgid ""
 "<strong>Add-ons deactivation</strong> - deactivation can be done from this "
 "Add-ons page of GEO my WP or via the plugins."
@@ -164,7 +109,7 @@ msgstr ""
 "<strong>D&eacute;sactivation de modules</strong> - la d&eacute;sactivation "
 "des modules peut se faire via cette page ou celle des plugins WP."
 
-#: includes/admin/geo-my-wp-addons.php:318
+#: includes/admin/geo-my-wp-addons.php:322
 msgid ""
 " Please note, the license of an add-on must be deactivated before you could "
 "deactivate its add-on. This is done to prevent conflicts with any license "
@@ -175,7 +120,7 @@ msgstr ""
 "Ceci permet de pr&eacute;venir des probl&egrave;mes avec vos cl&eacute;s de "
 "licences."
 
-#: includes/admin/geo-my-wp-addons.php:327
+#: includes/admin/geo-my-wp-addons.php:331
 msgid ""
 "Disable/enable the premium add-ons auto-updating system. The system can "
 "cause a slow load of the plugins.php/update.php pages of your site when "
@@ -184,7 +129,7 @@ msgstr ""
 "Activer / D&eacute;sactiver la mise &agrave; jour auto. Ce syst&egrave;me "
 "peut causer des ralentissements des pages plugins.php et update.php."
 
-#: includes/admin/geo-my-wp-addons.php:328
+#: includes/admin/geo-my-wp-addons.php:332
 msgid ""
 "You can temporary disable the system when working in the admin area and "
 "enable it again when you are ready to check for add-ons update. This can be "
@@ -195,15 +140,15 @@ msgstr ""
 "travaillez sur un site de test ou si vous n&#8217;avez pas besoin de mises "
 "&agrave; jour."
 
-#: includes/admin/geo-my-wp-addons.php:333
+#: includes/admin/geo-my-wp-addons.php:337
 msgid "The add-ons updater is disabled and will not check for new updates."
 msgstr "La mise &agrave; jour auto. est d&eacute;sactiv&eacute;e."
 
-#: includes/admin/geo-my-wp-addons.php:334
+#: includes/admin/geo-my-wp-addons.php:338
 msgid "Enable Updater"
 msgstr "Activer la mise &agrave; jour auto."
 
-#: includes/admin/geo-my-wp-addons.php:339
+#: includes/admin/geo-my-wp-addons.php:343
 msgid ""
 "The add-ons updater is enabled and will check for updates when needed. You "
 "will be notified when new updates are avalible."
@@ -211,37 +156,37 @@ msgstr ""
 "La mise &agrave; jour auto. est activ&eacute;e. Vous serez inform&eacute;(e) "
 "si de nouvelles mise &agrave; jour sont disponibles."
 
-#: includes/admin/geo-my-wp-addons.php:340
+#: includes/admin/geo-my-wp-addons.php:344
 msgid "Disable Updater"
 msgstr "D&eacute;sactiver la mise &agrave; jour auto."
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:407
-#: includes/admin/geo-my-wp-license-handler.php:177
-#: includes/admin/geo-my-wp-license-handler.php:219
+#: includes/admin/geo-my-wp-addons.php:411
+#: includes/admin/geo-my-wp-license-handler.php:169
+#: includes/admin/geo-my-wp-license-handler.php:213
 msgid "License Key:"
 msgstr "Cl&eacute; de licence :"
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:421
-#: includes/admin/geo-my-wp-license-handler.php:233
+#: includes/admin/geo-my-wp-addons.php:425
+#: includes/admin/geo-my-wp-license-handler.php:228
 msgid "Activate License Key"
 msgstr "Activer la cl&eacute; de licence"
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:423
-#: includes/admin/geo-my-wp-license-handler.php:235
+#: includes/admin/geo-my-wp-addons.php:427
+#: includes/admin/geo-my-wp-license-handler.php:230
 msgid "Activate License"
 msgstr "Activer la licence"
 
-#: includes/admin/geo-my-wp-addons.php:425
+#: includes/admin/geo-my-wp-addons.php:429
 msgid ""
 "Please activate the add-on to be able to enter and activate the license key."
 msgstr ""
 "Merci d&#8217;activer le module avant d&#8217;indiquer et de valider votre "
 "cl&eacute; de licence."
 
-#: includes/admin/geo-my-wp-addons.php:456
+#: includes/admin/geo-my-wp-addons.php:460
 msgid ""
 "This is a free add-on and does not require a license key. Please activate "
 "the add-on to start using it."
@@ -250,31 +195,30 @@ msgstr ""
 "pour pouvoir l&#8217;utiliser."
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:469
+#: includes/admin/geo-my-wp-addons.php:473
 msgid "Activate Add-on"
 msgstr "Activer le module"
 
-#: includes/admin/geo-my-wp-addons.php:513
+#: includes/admin/geo-my-wp-addons.php:517
 msgid ""
 "This is a free add-on and does not require a license key. Thank you for "
 "using GEO my WP."
 msgstr "Ce module est gratuit. Merci d&#8217;utiliser Geo my WP."
 
-#: includes/admin/geo-my-wp-addons.php:523
-#: includes/admin/geo-my-wp-admin.php:173
-#: includes/admin/geo-my-wp-license-handler.php:84
-#: includes/admin/geo-my-wp-license-handler.php:86
+#: includes/admin/geo-my-wp-addons.php:527
+#: includes/admin/geo-my-wp-admin.php:258
+#: includes/admin/geo-my-wp-license-handler.php:78
 msgid "Please deactivate the license key before deactivating the plugin"
 msgstr ""
 "Merci de d&eacute;sactiver la cl&eacute; de licence avant de d&eacute;"
 "sactiver le plugin"
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:535
+#: includes/admin/geo-my-wp-addons.php:539
 msgid "Deactivate Add-on"
 msgstr "D&eacute;sactiver le module"
 
-#: includes/admin/geo-my-wp-addons.php:593
+#: includes/admin/geo-my-wp-addons.php:597
 msgid ""
 "There was an error retrieving the add-ons list from the server. Please try "
 "again later. Error Message: "
@@ -282,45 +226,53 @@ msgstr ""
 "Une erreur est survenue en r&eacute;cup&eacute;rant la liste des modules sur "
 "le serveur. Merci de r&eacute;essayer plus tard. Erreur :"
 
-#: includes/admin/geo-my-wp-addons.php:593
+#: includes/admin/geo-my-wp-addons.php:597
 msgid "Error code: "
 msgstr "Code d&#8217;Erreur : "
 
-#: includes/admin/geo-my-wp-addons.php:610
+#: includes/admin/geo-my-wp-addons.php:614
 msgid "Add-on updater enabled."
 msgstr "Mise &agrave; jour auto. activ&eacute;e"
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:611
+#: includes/admin/geo-my-wp-addons.php:615
 msgid "Add-on updater disabled."
 msgstr "Mise &agrave; jour auto. d&eacute;sactiv&eacute;e"
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:612
+#: includes/admin/geo-my-wp-addons.php:616
 msgid "Add-on deactivated."
 msgstr "Module d&eacute;sactiv&eacute;"
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:613
+#: includes/admin/geo-my-wp-addons.php:617
 msgid "Add-on activated."
 msgstr "Module activ&eacute;"
 
+#: includes/admin/geo-my-wp-admin-functions.php:59
+msgid "GEO my WP posts locations db table successfully updated."
+msgstr ""
+
+#: includes/admin/geo-my-wp-admin-functions.php:60
+msgid "GEO my WP members locations db table successfully updated."
+msgstr ""
+
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:96
+#: includes/admin/geo-my-wp-admin.php:100
 msgid "Add-ons"
 msgstr "Modules"
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:97
-#: includes/admin/geo-my-wp-settings.php:142
+#: includes/admin/geo-my-wp-admin.php:101
+#: includes/admin/geo-my-wp-settings.php:147
 msgid "GEO my WP Settings"
 msgstr "R&eacute;glages GMW"
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:97
-#: includes/admin/geo-my-wp-admin.php:151
-#: includes/admin/geo-my-wp-edit-form.php:724
-#: includes/admin/geo-my-wp-settings.php:170
+#: includes/admin/geo-my-wp-admin.php:101
+#: includes/admin/geo-my-wp-admin.php:236
+#: includes/admin/geo-my-wp-edit-form.php:722
+#: includes/admin/geo-my-wp-settings.php:179
 #: includes/admin/tools/gmw-tools-import-export-tab.php:88
 #: includes/admin/tools/gmw-tools-import-export-tab.php:128
 #: includes/admin/tools/gmw-tools-reset-tab.php:48
@@ -328,96 +280,156 @@ msgid "Settings"
 msgstr "Options"
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:98
+#: includes/admin/geo-my-wp-admin.php:102
 #: includes/admin/tools/gmw-tools-import-export-tab.php:91
 #: includes/admin/tools/gmw-tools-import-export-tab.php:129
 #: includes/admin/tools/gmw-tools-reset-tab.php:49
 msgid "Forms"
 msgstr "Formulaires"
 
-#: includes/admin/geo-my-wp-admin.php:99
+#: includes/admin/geo-my-wp-admin.php:103
 msgid "Tools"
 msgstr "Outils"
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:100
+#: includes/admin/geo-my-wp-admin.php:104
 msgid "Shortcodes"
 msgstr "Shortcodes"
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:175
+#: includes/admin/geo-my-wp-admin.php:127
+msgid "Post Types Locator"
+msgstr "Localisateur de posts"
+
+#: includes/admin/geo-my-wp-admin.php:133
+msgid ""
+"Add geo-location to Posts and pages. Create an advance proximity search "
+"forms to search for locations based on post types, categories, distance and "
+"more."
+msgstr ""
+"Ajoutez des donn&eacute;es de g&eacute;olocalisation aux Posts, Pages et "
+"autres Post Types. Cr&eacute;ez des formulaires avanc&eacute;s de recherche "
+"de proximit&eacute; g&eacute;ographique avec de nombreux crit&egrave;res "
+"comme les Post Types, Taxonomies, Distances et autres."
+
+# @ GMW
+#: includes/admin/geo-my-wp-admin.php:140
+#: plugins/friends/includes/admin/gmw-fl-admin.php:41
+msgid "Members Locator"
+msgstr "Localisateur de membres"
+
+#: includes/admin/geo-my-wp-admin.php:146
+msgid ""
+"Let the BuddyPress members of your site to add location to thier profile. "
+"Create an advance proximity search forms to search for members based on "
+"location, Xprofile Fields and more."
+msgstr ""
+"Permettez aux membres de votre site Buddypress d&#8217;ajouter leur "
+"localisation &agrave; leur profile. Cr&eacute;ez des formulaires de "
+"recherche avanc&eacute;e pour filtrer les membres selon leur localisation, "
+"des champs Xprofile ou autres."
+
+# @ GMW
+#: includes/admin/geo-my-wp-admin.php:155
+#: includes/geo-my-wp-deprecated-functions.php:833
+msgid "Current Location"
+msgstr "Position actuelle"
+
+#: includes/admin/geo-my-wp-admin.php:161
+msgid "Get and Display the visitor's current position."
+msgstr ""
+
+#: includes/admin/geo-my-wp-admin.php:168
+msgid "Single Location"
+msgstr ""
+
+#: includes/admin/geo-my-wp-admin.php:174
+msgid ""
+"Display location of certain component ( post, member... ) via shortcode and "
+"widget."
+msgstr ""
+
+#: includes/admin/geo-my-wp-admin.php:181
+msgid "Sweet Date Geolocation"
+msgstr ""
+
+#: includes/admin/geo-my-wp-admin.php:187
+msgid "Enhance Sweet-date theme with geolocation features. "
+msgstr ""
+
+# @ GMW
+#: includes/admin/geo-my-wp-admin.php:260
 msgid "Activate license key"
 msgstr "Activer la cl&eacute; de licence"
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:192
-#: includes/admin/geo-my-wp-admin.php:208
+#: includes/admin/geo-my-wp-admin.php:291
+#: includes/admin/geo-my-wp-admin.php:307
 msgid "Add GEO my WP Form"
 msgstr "Ajouter un formulaire GMW"
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:192
-#: includes/admin/geo-my-wp-admin.php:208
+#: includes/admin/geo-my-wp-admin.php:291
+#: includes/admin/geo-my-wp-admin.php:307
 #: includes/admin/geo-my-wp-shortcodes.php:29
+#: includes/geo-my-wp-widgets.php:20
 msgid "GMW Form"
 msgstr "Formulaire GMW"
 
-#: includes/admin/geo-my-wp-admin.php:225
+#: includes/admin/geo-my-wp-admin.php:325
 msgid "Please select a form"
 msgstr "Choisissez un formulaire"
 
-#: includes/admin/geo-my-wp-admin.php:243
+#: includes/admin/geo-my-wp-admin.php:343
 msgid "Insert A Form Shortcode"
 msgstr "Ins&eacute;rez un shortcode"
 
-#: includes/admin/geo-my-wp-admin.php:245
+#: includes/admin/geo-my-wp-admin.php:345
 msgid "Select the type of shortcode you wish to add"
 msgstr "Choisissez le type de shortcode que vous voulez"
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:249
+#: includes/admin/geo-my-wp-admin.php:349
 msgid "Form shortcode"
 msgstr "Shortcode formulaire"
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:250
+#: includes/admin/geo-my-wp-admin.php:350
 msgid "Map Shortcode"
 msgstr "Shortcode carte"
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:251
+#: includes/admin/geo-my-wp-admin.php:351
 msgid "Results shortcode"
 msgstr "Shortcode r&eacute;sultats"
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:255
+#: includes/admin/geo-my-wp-admin.php:355
 msgid "Select a Form"
 msgstr "Choisissez un formulaire"
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:269
+#: includes/admin/geo-my-wp-admin.php:369
 msgid "Insert Shortcode"
 msgstr "Ins&eacute;rer shortcode"
 
-#: includes/admin/geo-my-wp-admin.php:270
+#: includes/admin/geo-my-wp-admin.php:370
 msgid "Cancel"
 msgstr "Annuler"
 
 # @ GJM
-#: includes/admin/geo-my-wp-admin.php:287
+#: includes/admin/geo-my-wp-admin.php:387
 msgid "Developed by Eyal Fitoussi - please take a moment to support my work"
 msgstr ""
 "Developp&eacute; par Eyal Fitoussi - merci de prendre une minute pour "
 "m&#8217;encourager"
 
-#: includes/admin/geo-my-wp-admin.php:332
-msgid "and Geo-locating with"
-msgstr "et g&eacute;olocaliser avec"
-
-# @ GMW
-#: includes/admin/geo-my-wp-admin.php:332
-msgid "GEO my WP"
-msgstr "GEO my WP"
+#: includes/admin/geo-my-wp-admin.php:435
+#, php-format
+msgid ""
+"and Geolocating with <a %s>GEO my WP</a>. Please take a moment to show your "
+"support. "
+msgstr ""
 
 # @ default
 #: includes/admin/geo-my-wp-edit-form.php:42
@@ -458,14 +470,14 @@ msgstr ""
 #: includes/admin/geo-my-wp-edit-form.php:538
 #: plugins/friends/includes/admin/gmw-fl-admin.php:111
 #: plugins/friends/includes/admin/gmw-fl-admin.php:157
-#: plugins/posts/includes/admin/gmw-pt-admin.php:104
-#: plugins/posts/includes/admin/gmw-pt-admin.php:244
-#: plugins/posts/includes/admin/gmw-pt-admin.php:266
-#: plugins/posts/includes/admin/gmw-pt-admin.php:337
-#: plugins/posts/includes/admin/gmw-pt-admin.php:372
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:158
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:167
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:176
+#: plugins/posts/includes/admin/gmw-pt-admin.php:183
+#: plugins/posts/includes/admin/gmw-pt-admin.php:323
+#: plugins/posts/includes/admin/gmw-pt-admin.php:345
+#: plugins/posts/includes/admin/gmw-pt-admin.php:416
+#: plugins/posts/includes/admin/gmw-pt-admin.php:451
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:142
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:151
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:160
 msgid "Yes"
 msgstr "Oui"
 
@@ -529,7 +541,7 @@ msgstr ""
 
 # @ GMW
 #: includes/admin/geo-my-wp-edit-form.php:83
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:97
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:81
 msgid "Units"
 msgstr "Unit&eacute;s"
 
@@ -543,7 +555,10 @@ msgstr "Choisissez les unit&eacute;s &agrave; utiliser."
 #: includes/admin/geo-my-wp-edit-form.php:547
 #: includes/geo-my-wp-template-functions.php:23
 #: includes/geo-my-wp-template-functions.php:106
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:102
+#: plugins/single-location/includes/gmw-sl-class.php:148
+#: plugins/single-location/includes/gmw-sl-widgets.php:200
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:86
+#: plugins/sweetdate-geolocation/includes/geo-my-wp-sd-class.php:107
 msgid "Miles"
 msgstr "Miles"
 
@@ -553,16 +568,21 @@ msgstr "Miles"
 #: includes/admin/geo-my-wp-edit-form.php:548
 #: includes/geo-my-wp-template-functions.php:22
 #: includes/geo-my-wp-template-functions.php:107
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:103
+#: plugins/single-location/includes/gmw-sl-class.php:149
+#: plugins/single-location/includes/gmw-sl-widgets.php:201
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:87
+#: plugins/sweetdate-geolocation/includes/geo-my-wp-sd-class.php:108
 msgid "Kilometers"
 msgstr "Kilom&egrave;tres"
 
 # @ GMW
 #: includes/admin/geo-my-wp-edit-form.php:94
 #: includes/admin/tools/gmw-tools-import-export-tab.php:284
-#: includes/geo-my-wp-widgets.php:159
+#: includes/geo-my-wp-deprecated-functions.php:874
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:191
 #: plugins/friends/includes/gmw-fl-location-tab.php:106
 #: plugins/posts/includes/admin/gmw-pt-metaboxes.php:80
+#: plugins/single-location/includes/gmw-sl-widgets.php:181
 msgid "City"
 msgstr "Ville"
 
@@ -583,9 +603,11 @@ msgstr ""
 
 # @ GMW
 #: includes/admin/geo-my-wp-edit-form.php:102
-#: includes/geo-my-wp-widgets.php:160
+#: includes/geo-my-wp-deprecated-functions.php:875
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:192
 #: plugins/friends/includes/gmw-fl-location-tab.php:116
 #: plugins/posts/includes/admin/gmw-pt-metaboxes.php:88
+#: plugins/single-location/includes/gmw-sl-widgets.php:182
 msgid "State"
 msgstr "Etat / R&eacute;gion"
 
@@ -607,9 +629,11 @@ msgstr ""
 
 # @ GMW
 #: includes/admin/geo-my-wp-edit-form.php:110
-#: includes/geo-my-wp-widgets.php:161
+#: includes/geo-my-wp-deprecated-functions.php:876
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:193
 #: plugins/friends/includes/gmw-fl-location-tab.php:138
 #: plugins/posts/includes/admin/gmw-pt-metaboxes.php:96
+#: plugins/single-location/includes/gmw-sl-widgets.php:183
 msgid "Zipcode"
 msgstr "Code postal"
 
@@ -630,9 +654,11 @@ msgstr ""
 
 # @ GMW
 #: includes/admin/geo-my-wp-edit-form.php:118
-#: includes/geo-my-wp-widgets.php:162
+#: includes/geo-my-wp-deprecated-functions.php:877
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:194
 #: plugins/friends/includes/gmw-fl-location-tab.php:149
 #: plugins/posts/includes/admin/gmw-pt-metaboxes.php:104
+#: plugins/single-location/includes/gmw-sl-widgets.php:184
 msgid "Country"
 msgstr "Pays"
 
@@ -813,6 +839,7 @@ msgstr ""
 # @ GMW
 #: includes/admin/geo-my-wp-edit-form.php:191
 #: includes/geo-my-wp-template-functions.php:105
+#: plugins/single-location/includes/gmw-sl-class.php:147
 msgid "Distance Units"
 msgstr "Unit&eacute;s de distance : "
 
@@ -889,7 +916,7 @@ msgstr "R&eacute;sultats"
 
 # @ GMW
 #: includes/admin/geo-my-wp-edit-form.php:227
-#: includes/admin/geo-my-wp-settings.php:80
+#: includes/admin/geo-my-wp-settings.php:83
 msgid "Results Page"
 msgstr "Page de r&eacute;sultats"
 
@@ -1041,8 +1068,10 @@ msgstr "Largeur de carte en px ou %"
 
 # @ GMW
 #: includes/admin/geo-my-wp-edit-form.php:308
-#: includes/geo-my-wp-widgets.php:200
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:128
+#: includes/geo-my-wp-deprecated-functions.php:915
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:230
+#: plugins/single-location/includes/gmw-sl-widgets.php:215
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:112
 msgid "Map Width"
 msgstr "Largeur"
 
@@ -1059,8 +1088,10 @@ msgstr "Hauteur de carte en px ou %"
 
 # @ GMW
 #: includes/admin/geo-my-wp-edit-form.php:316
-#: includes/geo-my-wp-widgets.php:193
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:136
+#: includes/geo-my-wp-deprecated-functions.php:908
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:223
+#: plugins/single-location/includes/gmw-sl-widgets.php:206
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:120
 msgid "Map Height"
 msgstr "Hauteur"
 
@@ -1073,9 +1104,10 @@ msgstr ""
 
 # @ GMW
 #: includes/admin/geo-my-wp-edit-form.php:323
-#: includes/geo-my-wp-widgets.php:214
-#: plugins/friends/includes/gmw-fl-widgets.php:145
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:143
+#: includes/geo-my-wp-deprecated-functions.php:929
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:244
+#: plugins/single-location/includes/gmw-sl-widgets.php:224
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:127
 msgid "Map Type"
 msgstr "Type de carte"
 
@@ -1086,32 +1118,33 @@ msgstr "Choisir le type de carte"
 
 # @ GMW
 #: includes/admin/geo-my-wp-edit-form.php:327
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:148
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:132
 msgid "ROADMAP"
 msgstr "PLAN"
 
 # @ GMW
 #: includes/admin/geo-my-wp-edit-form.php:328
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:149
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:133
 msgid "SATELLITE"
 msgstr "SATELLITE"
 
 # @ GMW
 #: includes/admin/geo-my-wp-edit-form.php:329
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:150
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:134
 msgid "HYBRID"
 msgstr "HYBRIDE"
 
 # @ GMW
 #: includes/admin/geo-my-wp-edit-form.php:330
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:151
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:135
 msgid "TERRAIN"
 msgstr "TERRAIN"
 
 # @ GMW
 #: includes/admin/geo-my-wp-edit-form.php:336
-#: includes/geo-my-wp-widgets.php:223
-#: plugins/friends/includes/gmw-fl-widgets.php:136
+#: includes/geo-my-wp-deprecated-functions.php:938
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:253
+#: plugins/single-location/includes/gmw-sl-widgets.php:235
 msgid "Zoom Level"
 msgstr "Niveau de zoom"
 
@@ -1188,118 +1221,132 @@ msgstr "Dans le champ d&#8217;adresse"
 
 # @ GMW
 #: includes/admin/geo-my-wp-edit-form.php:542
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:90
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:74
 msgid "Radius"
 msgstr "Rayon"
 
 # @ GMW
-#: includes/admin/geo-my-wp-edit-form.php:606
+#: includes/admin/geo-my-wp-edit-form.php:609
 msgid "GEO my WP Edit Form Page"
 msgstr "Page d&#8217;&eacute;dition de formulaire GMW"
 
 # @ GMW
-#: includes/admin/geo-my-wp-edit-form.php:611
+#: includes/admin/geo-my-wp-edit-form.php:617
 msgid "Form successfully updated"
 msgstr "Formulaire mis &agrave; jour !"
 
-#: includes/admin/geo-my-wp-edit-form.php:631
-msgid "Form ID "
-msgstr "ID de formulaire"
+#: includes/admin/geo-my-wp-edit-form.php:637
+msgid "Form Details"
+msgstr ""
 
-#: includes/admin/geo-my-wp-edit-form.php:632
-msgid "Form Type -  "
-msgstr "Type de formulaire -"
+# @ GMW
+#: includes/admin/geo-my-wp-edit-form.php:644
+#: includes/admin/geo-my-wp-shortcodes.php:48
+msgid "Form ID"
+msgstr "ID formulaire"
 
-#: includes/admin/geo-my-wp-edit-form.php:633
+#: includes/admin/geo-my-wp-edit-form.php:652
+msgid "Form Type"
+msgstr ""
+
+#: includes/admin/geo-my-wp-edit-form.php:660
 msgid "Form Name"
 msgstr "Nom du formulaire"
 
 # @ GMW
-#: includes/admin/geo-my-wp-edit-form.php:636
-#: includes/admin/geo-my-wp-edit-form.php:851
-#: includes/admin/geo-my-wp-settings.php:266
+#: includes/admin/geo-my-wp-edit-form.php:665
+#: includes/admin/geo-my-wp-edit-form.php:723
+#: includes/admin/geo-my-wp-edit-form.php:854
+#: includes/admin/geo-my-wp-settings.php:275
 msgid "Save Changes"
 msgstr "Sauvegarder"
 
+#: includes/admin/geo-my-wp-edit-form.php:671
+msgid "Actions"
+msgstr ""
+
 # @ GMW
-#: includes/admin/geo-my-wp-edit-form.php:638
-#: includes/admin/geo-my-wp-forms.php:289
+#: includes/admin/geo-my-wp-edit-form.php:675
+#: includes/admin/geo-my-wp-forms.php:314
 msgid "Delete this form"
 msgstr "Supprimer Formulaire"
 
 # @ GMW
-#: includes/admin/geo-my-wp-edit-form.php:638
+#: includes/admin/geo-my-wp-edit-form.php:675
 msgid "Delete This Form"
 msgstr "Supprimer Formulaire"
 
-#: includes/admin/geo-my-wp-edit-form.php:641
+#: includes/admin/geo-my-wp-edit-form.php:678
 msgid "Go back to list of forms"
 msgstr "Retour &agrave; la liste des formulaires"
 
-#: includes/admin/geo-my-wp-edit-form.php:641
+#: includes/admin/geo-my-wp-edit-form.php:678
 msgid "Go Back To List of Forms"
 msgstr "Retour &agrave; la liste des formulaires"
 
-#: includes/admin/geo-my-wp-edit-form.php:644
-msgid "Form usage"
-msgstr "Utiliser le formulaire"
+#: includes/admin/geo-my-wp-edit-form.php:691
+msgid "Form Editor"
+msgstr ""
 
-#: includes/admin/geo-my-wp-edit-form.php:655
+#: includes/admin/geo-my-wp-edit-form.php:706
+msgid "Form Usage"
+msgstr ""
+
+# @ GMW
+#: includes/admin/geo-my-wp-edit-form.php:720
+#: includes/admin/geo-my-wp-settings.php:178
+msgid "Feature"
+msgstr "Fonction"
+
+#: includes/admin/geo-my-wp-edit-form.php:868
 msgid "Post/Page Content"
 msgstr "Dans du contenu de post / page"
 
-#: includes/admin/geo-my-wp-edit-form.php:656
+#: includes/admin/geo-my-wp-edit-form.php:869
 msgid "Tempalte file"
 msgstr "Template"
 
 # @ GMW
-#: includes/admin/geo-my-wp-edit-form.php:657
-#: includes/admin/geo-my-wp-edit-form.php:725
-#: includes/admin/geo-my-wp-settings.php:171
-msgid "Explanation"
-msgstr "Explication"
+#: includes/admin/geo-my-wp-edit-form.php:870
+#: includes/admin/geo-my-wp-shortcodes.php:250
+#: includes/admin/geo-my-wp-shortcodes.php:324
+msgid "Description"
+msgstr "Description"
 
-#: includes/admin/geo-my-wp-edit-form.php:670
-msgid ""
-"Use this shortcode anywhere on a page where you want to display this form. "
-"By default, the shortcode will display the search form and results on that "
-"same page unless you set it up to display the results on a different page."
+#: includes/admin/geo-my-wp-edit-form.php:884
+msgid "Use this shortcode to display the global map anywhere on the page."
 msgstr ""
-"Utilisez ce shortcode l&agrave; o&ugrave; vous voulez afficher le formulaire "
-"sur la page. Par d&eacute;faut, le shortcode affichera le formulaire de "
-"recherche et les r&eacute;sultats sur cette page, sauf si vous param&eacute;"
-"trez l&#8217;affichage des r&eacute;sultats sur une autre page."
 
-#: includes/admin/geo-my-wp-edit-form.php:681
+#: includes/admin/geo-my-wp-edit-form.php:897
 msgid ""
-"Use this shortcode in the page that you want to display the search results. "
-"That is in case that you are choose to display the search results in a "
-"different page than the search form or when using the GMW Search Form widget."
+"Use this shortcode to display the search form and search results of this "
+"form."
 msgstr ""
-"Utilisez ce shortcode dans la page o&ugrave; vous voulez afficher les "
-"r&eacute;sultats, en cas d&#8217;option pour afficher les r&eacute;sultats "
-"sur une page diff&eacute;rente de celle du formulaire de recherche, ou en "
-"cas d&#8217;usage du widget de formulaire de recherche GWM."
 
-#: includes/admin/geo-my-wp-edit-form.php:692
+#: includes/admin/geo-my-wp-edit-form.php:908
+msgid "Use this shortcode to display only the search form of this form."
+msgstr ""
+
+#: includes/admin/geo-my-wp-edit-form.php:919
+msgid "Use this shortcode to display only the search results of this form."
+msgstr ""
+
+#: includes/admin/geo-my-wp-edit-form.php:930
 msgid ""
-"Use this shortcode anywhere on a page where you want to display the map. By "
+"Use this shortcode to display the results map anywhere on a page. By "
 "default, the form you create will display the map above the list of results. "
 "Using this shortcode you can display the map anywhere else on the page. Note "
-"that this shortcode must go together with one of the other shortocdes "
-"mentioned above on the same page ."
+"that this shortcode must go together with one of the results shortocdes "
+"mentioned above. You also need to set the \"Display Map\" feature ( \"Search "
+"Results\" tab ) to \"using shortcode\"."
 msgstr ""
-"Utilisez ce shortcode sur une page o&ugrave; vous voulez afficher la carte. "
-"Par d&eacute;faut, votre formualire affichera la carte au-dessus de la liste "
-"des r&eacute;sultats, mais vous pouvez utiliser ce shortcode pour la placer "
-"ailleurs. Notez que ce shortcode doit &ecirc;tre utilis&eacute;s avec les "
-"autres shortcodes &eacute;voqu&eacute;s ci-dessus sur la m&ecirc;me page."
 
-# @ GMW
-#: includes/admin/geo-my-wp-edit-form.php:723
-#: includes/admin/geo-my-wp-settings.php:169
-msgid "Feature"
-msgstr "Fonction"
+#: includes/admin/geo-my-wp-edit-form.php:941
+msgid ""
+"Use this shortcode in the page where you would like to display the search "
+"results. That is in case that you choose to display the search results in a "
+"different page than the search form or when using \"GMW Form\" widget."
+msgstr ""
 
 # @ GMW
 #: includes/admin/geo-my-wp-forms.php:37
@@ -1368,59 +1415,54 @@ msgstr ""
 "existe pas dans la base de donn&eacute;es."
 
 # @ GMW
-#: includes/admin/geo-my-wp-forms.php:82
-#: third-party/sweetdate/geo-my-wp-sd-class.php:85
+#: includes/admin/geo-my-wp-forms.php:89
+#: plugins/sweetdate-geolocation/includes/geo-my-wp-sd-class.php:106
 msgid "Enter Address..."
 msgstr "Entrez une adresse..."
 
 # @ GMW
-#: includes/admin/geo-my-wp-forms.php:207
-msgid "GEO my WP Forms"
-msgstr "Formulaires GMW"
-
-# @ GMW
-#: includes/admin/geo-my-wp-forms.php:214
+#: includes/admin/geo-my-wp-forms.php:230
 msgid "Create new form"
 msgstr "Cr&eacute;er un nouveau formulaire"
 
 # @ GMW
-#: includes/admin/geo-my-wp-forms.php:232
-msgid "You need to activate some add-ons in order to create form"
-msgstr "Il vous faut activer quelques modules pour cr&eacute;er un formulaire"
+#: includes/admin/geo-my-wp-forms.php:263
+msgid "GEO my WP Forms"
+msgstr "Formulaires GMW"
 
 # @ GMW
-#: includes/admin/geo-my-wp-forms.php:248
-#: includes/admin/geo-my-wp-forms.php:325
+#: includes/admin/geo-my-wp-forms.php:273
+#: includes/admin/geo-my-wp-forms.php:350
 msgid "ID"
 msgstr "ID"
 
 # @ GMW
-#: includes/admin/geo-my-wp-forms.php:249
-#: includes/admin/geo-my-wp-forms.php:326
+#: includes/admin/geo-my-wp-forms.php:274
+#: includes/admin/geo-my-wp-forms.php:351
 msgid "Type"
 msgstr "Type"
 
-#: includes/admin/geo-my-wp-forms.php:250
-#: includes/admin/geo-my-wp-forms.php:327
+#: includes/admin/geo-my-wp-forms.php:275
+#: includes/admin/geo-my-wp-forms.php:352
 msgid "Name"
 msgstr "Nom"
 
 # @ GMW
-#: includes/admin/geo-my-wp-forms.php:251
-#: includes/admin/geo-my-wp-forms.php:329
+#: includes/admin/geo-my-wp-forms.php:276
+#: includes/admin/geo-my-wp-forms.php:354
 msgid "Action"
 msgstr "Action"
 
 # @ GMW
-#: includes/admin/geo-my-wp-forms.php:252
-#: includes/admin/geo-my-wp-forms.php:328
-#: includes/admin/geo-my-wp-shortcodes.php:317
+#: includes/admin/geo-my-wp-forms.php:277
+#: includes/admin/geo-my-wp-forms.php:353
+#: includes/admin/geo-my-wp-shortcodes.php:323
 msgid "Usage"
 msgstr "Usage"
 
 # @ GMW
-#: includes/admin/geo-my-wp-forms.php:275
-#: includes/admin/geo-my-wp-forms.php:283
+#: includes/admin/geo-my-wp-forms.php:300
+#: includes/admin/geo-my-wp-forms.php:308
 msgid "Edit this form"
 msgstr "Editer ce formualire"
 
@@ -1428,57 +1470,51 @@ msgstr "Editer ce formualire"
 # @ twentyfourteen
 # @ twentythirteen
 # @ twentytwelve
-#: includes/admin/geo-my-wp-forms.php:283
-#: plugins/posts/search-results/twenty-fourteen/results.php:69
-#: plugins/posts/search-results/twenty-thirteen/results.php:58
-#: plugins/posts/search-results/wordpress-twentytwelve/results.php:109
+#: includes/admin/geo-my-wp-forms.php:308
+#: plugins/posts/search-results/twenty-fourteen/results.php:73
+#: plugins/posts/search-results/twenty-thirteen/results.php:62
+#: plugins/posts/search-results/wordpress-twentytwelve/results.php:113
 msgid "Edit"
 msgstr "Editer"
 
 # @ GMW
-#: includes/admin/geo-my-wp-forms.php:286
+#: includes/admin/geo-my-wp-forms.php:311
 msgid "Duplicate this form"
 msgstr "Dupliquer ce formulaire"
 
 # @ GMW
-#: includes/admin/geo-my-wp-forms.php:286
+#: includes/admin/geo-my-wp-forms.php:311
 msgid "Duplicate"
 msgstr "Dupliquer"
 
 # @ GMW
-#: includes/admin/geo-my-wp-forms.php:289
+#: includes/admin/geo-my-wp-forms.php:314
 msgid "Delete"
 msgstr "Supprimer"
 
 # @ GMW
-#: includes/admin/geo-my-wp-forms.php:310
+#: includes/admin/geo-my-wp-forms.php:335
 msgid "You don't have any forms yet."
 msgstr "Vous n&#8217;avez pas de formulaires pour le moment."
 
-#: includes/admin/geo-my-wp-license-handler.php:77
-msgid "Activate the license key in order to receive updates"
-msgstr "Activez la cl&eacute; de licence pour recevoir les mise &agrave; jour."
-
 # @ GMW
-#: includes/admin/geo-my-wp-license-handler.php:195
-#: includes/admin/geo-my-wp-license-handler.php:196
+#: includes/admin/geo-my-wp-license-handler.php:188
+#: includes/admin/geo-my-wp-license-handler.php:189
 msgid "Deactivate License Key"
 msgstr "D&eacute;sactiver la cl&eacute;"
 
 # @ GMW
-#: includes/admin/geo-my-wp-license-handler.php:227
+#: includes/admin/geo-my-wp-license-handler.php:221
 msgid "Enter license key"
 msgstr "Entrez votre cl&eacute;"
 
-#: includes/admin/geo-my-wp-license-handler.php:276
+#: includes/admin/geo-my-wp-license-handler.php:272
 msgid ""
-"Please enter your license key and click the \"Activate\" button. The license "
-"key is required for automatic updated."
+"Please enter your license key and click \"Activate License\". The license "
+"key is required in order to receive automatic updated for the plugin."
 msgstr ""
-"Merci d&#8217;entrer votre cl&eacute; de licence et de cliquer sur \"Activer"
-"\". Cette cl&eacute; est requise pour les mises &agrave; jour automatiques."
 
-#: includes/admin/geo-my-wp-license-handler.php:277
+#: includes/admin/geo-my-wp-license-handler.php:273
 #, php-format
 msgid ""
 "Your license for %s plugin successfully activated. Thank you for your "
@@ -1487,24 +1523,24 @@ msgstr ""
 "Votre licence a bien &eacute;t&eacute; activ&eacute;e pour le module %s. "
 "Merci pour votre soutien !"
 
-#: includes/admin/geo-my-wp-license-handler.php:278
+#: includes/admin/geo-my-wp-license-handler.php:274
 #, php-format
 msgid "Your license for %s plugin successfully deactivated."
 msgstr ""
 "Votre licence a bien &eacute;t&eacute; d&eacute;sactiv&eacute;e pour le "
 "module %s."
 
-#: includes/admin/geo-my-wp-license-handler.php:279
+#: includes/admin/geo-my-wp-license-handler.php:275
 msgid "License is activated. Thank you for your support!"
 msgstr "Licence activ&eacute;e. Merci pour votr soutien !"
 
-#: includes/admin/geo-my-wp-license-handler.php:280
+#: includes/admin/geo-my-wp-license-handler.php:276
 msgid "No license key entered. Please enter the license key and try again."
 msgstr ""
 "Pas de cl&eacute;e de licence. Merci d&#8217;entrer votre cl&eacute; et de "
 "r&eacute;&eacute;ssayer."
 
-#: includes/admin/geo-my-wp-license-handler.php:281
+#: includes/admin/geo-my-wp-license-handler.php:277
 msgid ""
 "Your license has expired. Please renew your license in order to keep getting "
 "its updates and support."
@@ -1512,17 +1548,14 @@ msgstr ""
 "Votre licence a expir&eacute;. Merci de la renouveler pour continuer de "
 "recevoir mises &agrave; jour et support."
 
-#: includes/admin/geo-my-wp-license-handler.php:282
+#: includes/admin/geo-my-wp-license-handler.php:278
+#, php-format
 msgid ""
-"Your license has no activations left. Click <a href=\"http://geomywp.com/"
-"purchase-history/\" target=\"_blank\" >here</a> to manager your license "
-"activations."
+"Your license has no activations left. Click <a %s>here</a> to manager your "
+"license activations."
 msgstr ""
-"Votre licence n&#8217;a plus d&#8217;activations disponibles. Cliquez <a "
-"href=\"http://geomywp.com/purchase-history/\" target=\"_blank\" >ici</a> "
-"pour g&eacute;rer vos activations de licences."
 
-#: includes/admin/geo-my-wp-license-handler.php:283
+#: includes/admin/geo-my-wp-license-handler.php:279
 msgid ""
 "Something is wrong with the key you entered. Please verify the key and try "
 "again."
@@ -1530,15 +1563,12 @@ msgstr ""
 "Quelque chose ne va pas avec cette cl&eacute;e de licence. Merci de la "
 "v&eacute;rifier et de r&eacute;&eacute;ssayer."
 
-#: includes/admin/geo-my-wp-license-handler.php:284
-msgid ""
-"Lost or forgot your license key? <a href=\"http://geomywp.com/purchase-"
-"history/\" target=\"_blank\" >Retrieve it here.</a>"
+#: includes/admin/geo-my-wp-license-handler.php:280
+#, php-format
+msgid "Lost or forgot your license key? <a %s >Retrieve it here.</a>"
 msgstr ""
-"Avez-vous perdu votre cl&eacute;e de licence ? <a href=\"http://geomywp.com/"
-"purchase-history/\" target=\"_blank\" >Retrouvez-la ici.</a>"
 
-#: includes/admin/geo-my-wp-license-handler.php:285
+#: includes/admin/geo-my-wp-license-handler.php:281
 #, php-format
 msgid ""
 "Your license for %s plugin could not be activated. See error message below!"
@@ -1546,7 +1576,7 @@ msgstr ""
 "Votre licence n&#8217;a pas pu &ecirc;tre activ&eacute;e pour le module %s. "
 "Cf. le message d&#8217;erreur qui suit."
 
-#: includes/admin/geo-my-wp-license-handler.php:286
+#: includes/admin/geo-my-wp-license-handler.php:282
 #, php-format
 msgid ""
 "An error occurred while trying to activate your %s license. ERROR "
@@ -1556,22 +1586,22 @@ msgstr ""
 "ERROR item_name_mismatch"
 
 # @ GMW
-#: includes/admin/geo-my-wp-settings.php:33
+#: includes/admin/geo-my-wp-settings.php:35
 msgid "General Settings"
 msgstr "Options g&eacute;n&eacute;rales"
 
 # @ GMW
-#: includes/admin/geo-my-wp-settings.php:38
+#: includes/admin/geo-my-wp-settings.php:41
 msgid "Enter your google api key"
 msgstr "Entrez votre cl&eacute; API Google Maps"
 
 # @ GMW
-#: includes/admin/geo-my-wp-settings.php:39
+#: includes/admin/geo-my-wp-settings.php:42
 msgid "Google Maps API V3 Key"
 msgstr "Cl&eacute; Google Maps API V3"
 
 # @ GMW
-#: includes/admin/geo-my-wp-settings.php:40
+#: includes/admin/geo-my-wp-settings.php:43
 msgid ""
 "This is optional but will let you track your API requests. you can obtain "
 "your free Goole API key <a href=\"https://code.google.com/apis/console/\" "
@@ -1581,15 +1611,15 @@ msgstr ""
 "Vous pouvez obtenir votre cl&eacute; gratuite pour Google API <a href="
 "\"https://code.google.com/apis/console/\" target=\"_blank\">ici</a>."
 
-#: includes/admin/geo-my-wp-settings.php:46
+#: includes/admin/geo-my-wp-settings.php:49
 msgid "Client-side Geocoder"
 msgstr "Geocodage c&ocirc;t&eacute; client"
 
-#: includes/admin/geo-my-wp-settings.php:47
-msgid "Use client-side ( Javascript ) geocoding"
-msgstr "Utiliser le g&eacute;ocodage c&ocirc;t&eacute; client (Javascript)"
+#: includes/admin/geo-my-wp-settings.php:50
+msgid "Enable client-side ( Javascript ) geocoding"
+msgstr ""
 
-#: includes/admin/geo-my-wp-settings.php:48
+#: includes/admin/geo-my-wp-settings.php:51
 msgid ""
 "Check this checkbox if you want to use client-side to geocode the address "
 "entered in GEO my WP's search form. clients-de geocoding might prevent "
@@ -1600,11 +1630,11 @@ msgstr ""
 "thode peut permettre de contourner les probl&egrave;mes OVER_QUERY_LIMIT "
 "dans l&#8217;API Google Maps."
 
-#: includes/admin/geo-my-wp-settings.php:56
+#: includes/admin/geo-my-wp-settings.php:59
 msgid "Google API Language"
 msgstr "Langue Google API"
 
-#: includes/admin/geo-my-wp-settings.php:57
+#: includes/admin/geo-my-wp-settings.php:60
 msgid ""
 "Set the language to be used with Google Places address auto-complete and "
 "with Google Maps API. The language codes can be found"
@@ -1612,17 +1642,17 @@ msgstr ""
 "D&eacute;finissez la langue &agrave; utiliser avec les adresses Google "
 "Places et avec l&#8217;API Google Maps."
 
-#: includes/admin/geo-my-wp-settings.php:57
+#: includes/admin/geo-my-wp-settings.php:60
 msgid "here"
 msgstr "ici"
 
 # @ GMW
-#: includes/admin/geo-my-wp-settings.php:64
+#: includes/admin/geo-my-wp-settings.php:67
 msgid "Country Code"
 msgstr "Code Pays"
 
 # @ GMW
-#: includes/admin/geo-my-wp-settings.php:65
+#: includes/admin/geo-my-wp-settings.php:68
 msgid ""
 "Enter the default country code to be used with GEO my WP. For example for "
 "United States enter US. List of country code can be found <a href=\"http://"
@@ -1633,17 +1663,16 @@ msgstr ""
 "href=\"http://geomywp.com/country-code/\" target=\"blank\">ici</a>."
 
 # @ GMW
-#: includes/admin/geo-my-wp-settings.php:71
+#: includes/admin/geo-my-wp-settings.php:74
 msgid "Auto Locator"
 msgstr "Localisation Auto."
 
-# @ GMW
-#: includes/admin/geo-my-wp-settings.php:72
-msgid "Use auto-locator"
-msgstr "Utiliser la Localisation Auto."
+#: includes/admin/geo-my-wp-settings.php:75
+msgid "Enable auto-locator"
+msgstr ""
 
 # @ GMW
-#: includes/admin/geo-my-wp-settings.php:73
+#: includes/admin/geo-my-wp-settings.php:76
 msgid ""
 "GEO my WP will try to retrive the user's current location when first visits "
 "the website. If a location found it will be saved via cookies and later will "
@@ -1655,7 +1684,7 @@ msgstr ""
 "et pourra &ecirc;tre utilis&eacute;e plus tard pour afficher automatiquement "
 "des r&eacute;sultats."
 
-#: includes/admin/geo-my-wp-settings.php:82
+#: includes/admin/geo-my-wp-settings.php:85
 msgid ""
 "This page displays the search results ( of any of your forms ) when using "
 "the \"GMW Search Form\" widget."
@@ -1663,7 +1692,7 @@ msgstr ""
 "Cette page affiche les r&eacute;sultats (quel que soit le formulaire de "
 "recherche) quand vous utilisez le widget \"Formulaire de recherche GMW\""
 
-#: includes/admin/geo-my-wp-settings.php:83
+#: includes/admin/geo-my-wp-settings.php:86
 msgid ""
 "The plugin will first check if a results page was set in the form settings "
 "and if so the results will be displayed in that page. Otherwise, if no "
@@ -1674,7 +1703,7 @@ msgstr ""
 "est le cas les r&eacute;sultats seront affich&eacute;s sur cette page. "
 "Sinon, si aucune page de r&eacute;sultats"
 
-#: includes/admin/geo-my-wp-settings.php:84
+#: includes/admin/geo-my-wp-settings.php:87
 msgid ""
 "was set in the form settings the results will be displayed in the page you "
 "choose from the select box."
@@ -1682,7 +1711,7 @@ msgstr ""
 "n&#8217;a &eacute;t&eacute; d&eacute;finie, ceux-ci seront affich&eacute;s "
 "sur la page de votre choix."
 
-#: includes/admin/geo-my-wp-settings.php:85
+#: includes/admin/geo-my-wp-settings.php:88
 msgid ""
 "Choose the page from the dropdown menu and paste the shortcode [gmw form="
 "\"results\"] in there."
@@ -1691,7 +1720,7 @@ msgstr ""
 "[gmw form=\"results\"]."
 
 # @ GMW
-#: includes/admin/geo-my-wp-settings.php:150
+#: includes/admin/geo-my-wp-settings.php:159
 msgid "Settings successfully saved"
 msgstr "Options sauvegard&eacute;es !"
 
@@ -1729,11 +1758,6 @@ msgid ""
 msgstr ""
 "et les r&eacute;sultats sur une autre, ou quand vous voulez afficher les "
 "r&eacute;sultats d&#8217;un formulaire affich&eacute; par un widget."
-
-# @ GMW
-#: includes/admin/geo-my-wp-shortcodes.php:48
-msgid "Form ID"
-msgstr "ID formulaire"
 
 #: includes/admin/geo-my-wp-shortcodes.php:50
 msgid "Use anywhere on a page where you want to display the results map."
@@ -1783,53 +1807,58 @@ msgstr ""
 "utilis&eacute;s avec GMW et d&#8217;autres add-ons pour diverses "
 "fonctionnalit&eacute;s. "
 
+#: includes/admin/geo-my-wp-shortcodes.php:83
+msgid ""
+"You can assign a unique element ID to the shortcode. The unique ID can be "
+"useful for styling purposes as well when using the hooks provided by the "
+"shortcoded when custom modifications required."
+msgstr ""
+
+#: includes/admin/geo-my-wp-shortcodes.php:93
+msgid ""
+"Enter the elements that you want to display, in the order that you want them "
+"to be displayed comma saperated. The avaliable elements are:<ol><li>username "
+"- display the username or guest ( for logged out users ) with a greeting</"
+"li><li>address - the address of the user's current position</li><li>map - "
+"google map showing the user's osition</li></ol>"
+msgstr ""
+
+#: includes/admin/geo-my-wp-shortcodes.php:101
+msgid ""
+"Use any of the address components, comma separated ( ex. street,city,state,"
+"zipcode,county ) or use address for the full address, to display the address "
+"on the screen once the user's location was found."
+msgstr ""
+
 # @ GMW
-#: includes/admin/geo-my-wp-shortcodes.php:80
-#: includes/admin/geo-my-wp-shortcodes.php:114
-#: includes/admin/geo-my-wp-shortcodes.php:122
+#: includes/admin/geo-my-wp-shortcodes.php:106
+#: includes/admin/geo-my-wp-shortcodes.php:123
+#: includes/admin/geo-my-wp-shortcodes.php:131
 msgid "any text"
 msgstr "n&#8217;importe quel texte"
 
-#: includes/admin/geo-my-wp-shortcodes.php:83
-msgid ""
-"Display a title above the \"Get Current Location\" link. Ex \"Your Location"
-"\"."
-msgstr ""
-
-#: includes/admin/geo-my-wp-shortcodes.php:91
-msgid ""
-"Use any of the address components, ( street,city,state,zipcode,county ) "
-"comma separated, that you want to display on the screen once the user's "
-"location found."
-msgstr ""
-"Utilisez les composants d&#8217;adresse que vous voulez afficher &agrave; "
-"l&#8217;&eacute;cran une fois la position de l&#8217;utilisateur connue, "
-"s&eacute;par&eacute,s par des virgules (street,city,state,zipcode,county)."
-
-#: includes/admin/geo-my-wp-shortcodes.php:100
-msgid ""
-"Use the value 1 to display the current locaiton of the user as text only "
-"instead of an hyperlink which popups the current location form."
-msgstr ""
-
 #: includes/admin/geo-my-wp-shortcodes.php:109
 msgid ""
-"Use the value 1 to display a greeting message with the username when logged "
-"in or \"guest\" when looged out."
+"The title that will be display before the address. For example if you use "
+"the title \"Your location\" it will be displayes as Your Location Hollywood "
+"Florida ( assuming that the user's location is Hollywood Florida )."
 msgstr ""
 
-#: includes/admin/geo-my-wp-shortcodes.php:117
+#: includes/admin/geo-my-wp-shortcodes.php:118
+msgid ""
+"Use the value 1 to display the current location of the user as text only "
+"instead of an hyperlink which once clicked it popups the current location "
+"form."
+msgstr ""
+
+#: includes/admin/geo-my-wp-shortcodes.php:126
 msgid ""
 "Greeting message that will be displayed before the user name when logged in "
 "( ex Hello admin )."
 msgstr ""
 
-#: includes/admin/geo-my-wp-shortcodes.php:125
-msgid "Greeting message that will be displayed when the users is logged out."
-msgstr ""
-
 #: includes/admin/geo-my-wp-shortcodes.php:134
-msgid "Display map showing the user's current location."
+msgid "Greeting message that will be displayed when the users is logged out."
 msgstr ""
 
 #: includes/admin/geo-my-wp-shortcodes.php:142
@@ -1866,69 +1895,64 @@ msgid "This example will display:"
 msgstr "Cet exemple va afficher :"
 
 # @ GMW
-#: includes/admin/geo-my-wp-shortcodes.php:218
+#: includes/admin/geo-my-wp-shortcodes.php:220
 msgid "GEO my WP Shortcodes"
 msgstr "Shortcodes GEO my WP"
 
-#: includes/admin/geo-my-wp-shortcodes.php:238
+#: includes/admin/geo-my-wp-shortcodes.php:244
 msgid "Post/Page Content Usage"
 msgstr "Usage dans le contenu d&#8217;un Post / Page"
 
-#: includes/admin/geo-my-wp-shortcodes.php:241
+#: includes/admin/geo-my-wp-shortcodes.php:247
 msgid "Template File Usage"
 msgstr "Utilisation du template"
 
 # @ GMW
-#: includes/admin/geo-my-wp-shortcodes.php:244
-#: includes/admin/geo-my-wp-shortcodes.php:318
-msgid "Description"
-msgstr "Description"
-
-# @ GMW
-#: includes/admin/geo-my-wp-shortcodes.php:266
+#: includes/admin/geo-my-wp-shortcodes.php:272
 msgid "Shortcode Attributes"
 msgstr "Attributs du shortcode"
 
 # @ GMW
-#: includes/admin/geo-my-wp-shortcodes.php:274
+#: includes/admin/geo-my-wp-shortcodes.php:280
 msgid "Attribute"
 msgstr "Attribut"
 
-#: includes/admin/geo-my-wp-shortcodes.php:275
+#: includes/admin/geo-my-wp-shortcodes.php:281
 msgid "Values Accepted"
 msgstr ""
 
-#: includes/admin/geo-my-wp-shortcodes.php:276
+#: includes/admin/geo-my-wp-shortcodes.php:282
 msgid "Default Value"
 msgstr ""
 
 # @ GMW
-#: includes/admin/geo-my-wp-shortcodes.php:277
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:440
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:451
+#: includes/admin/geo-my-wp-shortcodes.php:283
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:475
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:486
 msgid "Additional Information"
 msgstr "Infos compl&eacute;mentaires"
 
 # @ GMW
-#: includes/admin/geo-my-wp-shortcodes.php:294
+#: includes/admin/geo-my-wp-shortcodes.php:300
 #: includes/admin/tools/gmw-tools-import-export-tab.php:305
 #: includes/geo-my-wp-template-functions.php:63
 #: includes/geo-my-wp-template-functions.php:70
 #: includes/geo-my-wp-template-functions.php:89
-#: includes/geo-my-wp-template-functions.php:919
-#: plugins/posts/includes/gmw-pt-shortcodes.php:145
-#: plugins/posts/includes/gmw-pt-shortcodes.php:151
-#: plugins/posts/includes/gmw-pt-shortcodes.php:157
-#: plugins/posts/includes/gmw-pt-shortcodes.php:163
+#: includes/geo-my-wp-template-functions.php:1038
+#: plugins/posts/includes/gmw-pt-shortcodes.php:146
+#: plugins/posts/includes/gmw-pt-shortcodes.php:152
+#: plugins/posts/includes/gmw-pt-shortcodes.php:158
+#: plugins/posts/includes/gmw-pt-shortcodes.php:164
+#: plugins/posts/includes/gmw-pt-single-post-location-class.php:73
 msgid "N/A"
 msgstr "N/A"
 
 # @ GMW
-#: includes/admin/geo-my-wp-shortcodes.php:308
+#: includes/admin/geo-my-wp-shortcodes.php:314
 msgid "Shortcode Examples"
 msgstr "Exemples de shortcode"
 
-#: includes/admin/geo-my-wp-updater.php:160
+#: includes/admin/geo-my-wp-updater.php:180
 #, php-format
 msgid ""
 "There is a new version of %1$s available. <a target=\"_blank\" class="
@@ -1937,7 +1961,7 @@ msgstr ""
 "Une nouvelle version de %1$s est disponible. <a target=\"_blank\" class="
 "\"thickbox\" href=\"%2$s\">Voir %3$s les d&eacute;tails</a>."
 
-#: includes/admin/geo-my-wp-updater.php:167
+#: includes/admin/geo-my-wp-updater.php:187
 #, php-format
 msgid ""
 "There is a new version of %1$s available. <a target=\"_blank\" class="
@@ -1948,18 +1972,27 @@ msgstr ""
 "\"thickbox\" href=\"%2$s\">Voir %3$s les d&eacute;tails</a> ou <a href=\"%4$s"
 "\">mettre &agrave; jour</a>."
 
-#: includes/admin/geo-my-wp-updater.php:307
+#: includes/admin/geo-my-wp-updater.php:327
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 "Vous n&#8217;avez pas l&#8217;autorisation d&#8217;installer des mises "
 "&agrave; jour de plugins."
 
-#: includes/admin/tools/geo-my-wp-tools.php:60
+#: includes/admin/geo-my-wp-updater.php:327
+#: includes/admin/tools/gmw-tools-class-export.php:172
+msgid "Error"
+msgstr "Erreur"
+
+#: includes/admin/tools/geo-my-wp-tools.php:33
+msgid "GEO my WP Tools"
+msgstr ""
+
+#: includes/admin/tools/geo-my-wp-tools.php:68
 msgid "Import/Export"
 msgstr "Importer / Exporter"
 
 # @ GMW
-#: includes/admin/tools/geo-my-wp-tools.php:61
+#: includes/admin/tools/geo-my-wp-tools.php:69
 msgid "Reset GEO my WP"
 msgstr "Reset GEO my WP"
 
@@ -1972,10 +2005,6 @@ msgstr "ID de Post"
 msgid "You do not have permission to export data."
 msgstr ""
 "Vous n&#8217;avez pas la permission d&#8217;exporter des donn&eacute;es."
-
-#: includes/admin/tools/gmw-tools-class-export.php:172
-msgid "Error"
-msgstr "Erreur"
 
 # @ GMW
 #: includes/admin/tools/gmw-tools-class-pt-locations-csv-export.php:56
@@ -2378,9 +2407,11 @@ msgstr "Longitude (obligatoire)"
 
 # @ GMW
 #: includes/admin/tools/gmw-tools-import-export-tab.php:282
-#: includes/geo-my-wp-widgets.php:158
+#: includes/geo-my-wp-deprecated-functions.php:873
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:190
 #: plugins/friends/includes/gmw-fl-location-tab.php:84
 #: plugins/posts/includes/admin/gmw-pt-metaboxes.php:64
+#: plugins/single-location/includes/gmw-sl-widgets.php:180
 msgid "Street"
 msgstr "Rue"
 
@@ -2421,26 +2452,30 @@ msgstr ""
 
 # @ GMW
 #: includes/admin/tools/gmw-tools-import-export-tab.php:292
-#: plugins/posts/includes/admin/gmw-pt-admin.php:354
+#: plugins/posts/includes/admin/gmw-pt-admin.php:433
+#: plugins/posts/includes/gmw-pt-single-post-location-class.php:69
 msgid "Phone"
 msgstr "T&eacute;l&eacute;phone"
 
 # @ GMW
 #: includes/admin/tools/gmw-tools-import-export-tab.php:293
-#: plugins/posts/includes/admin/gmw-pt-admin.php:355
+#: plugins/posts/includes/admin/gmw-pt-admin.php:434
+#: plugins/posts/includes/gmw-pt-single-post-location-class.php:70
 msgid "Fax"
 msgstr "Fax"
 
 # @ GMW
 #: includes/admin/tools/gmw-tools-import-export-tab.php:294
-#: plugins/posts/includes/admin/gmw-pt-admin.php:356
+#: plugins/posts/includes/admin/gmw-pt-admin.php:435
+#: plugins/posts/includes/gmw-pt-single-post-location-class.php:71
 msgid "Email"
 msgstr "Email"
 
 # @ GMW
 #: includes/admin/tools/gmw-tools-import-export-tab.php:295
-#: plugins/posts/includes/admin/gmw-pt-admin.php:357
+#: plugins/posts/includes/admin/gmw-pt-admin.php:436
 #: plugins/posts/includes/admin/gmw-pt-metaboxes.php:136
+#: plugins/posts/includes/gmw-pt-single-post-location-class.php:72
 msgid "Website"
 msgstr "Site Web"
 
@@ -2749,29 +2784,150 @@ msgstr ""
 "effacer."
 
 # @ GMW
-#: includes/geo-my-wp-geocode.php:99
-msgid "No location found for the entered address."
-msgstr "Aucune position trouv&eacute;e pour l&#8217;adresse indiqu&eacute;e."
-
-# @ GMW
-#: includes/geo-my-wp-shortcodes.php:95
+#: includes/geo-my-wp-deprecated-functions.php:578
 msgid "Your Current Location"
 msgstr "Votre position actuelle"
 
 # @ GMW
-#: includes/geo-my-wp-shortcodes.php:192
+#: includes/geo-my-wp-deprecated-functions.php:675
 msgid "- Enter Your Location -"
 msgstr "- Entrez votre position -"
 
 # @ GMW
-#: includes/geo-my-wp-shortcodes.php:196
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:287
+#: includes/geo-my-wp-deprecated-functions.php:679
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:305
 msgid "Get your current location"
 msgstr "Obtenez votre position actuelle"
 
 # @ GMW
+#: includes/geo-my-wp-deprecated-functions.php:732
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:16
+msgid "GMW Current Location"
+msgstr "Position GMW actuelle"
+
+# @ GMW
+#: includes/geo-my-wp-deprecated-functions.php:733
+msgid "Get/display the user's current location"
+msgstr "Obtenir / Afficher la position actuelle de l&#8217;utilisateur"
+
+# @ GMW
+#: includes/geo-my-wp-deprecated-functions.php:834
+#: plugins/friends/includes/gmw-fl-location-tab.php:404
+#: plugins/posts/includes/gmw-pt-shortcodes.php:40
+msgid "Your Location"
+msgstr "Votre position"
+
+#: includes/geo-my-wp-deprecated-functions.php:858
+msgid "Widget's Title"
+msgstr ""
+
+#: includes/geo-my-wp-deprecated-functions.php:862
+msgid "Location Title"
+msgstr ""
+
+#: includes/geo-my-wp-deprecated-functions.php:865
+msgid ""
+"The title that will be displayed before the location. For example Your "
+"location..."
+msgstr ""
+
+#: includes/geo-my-wp-deprecated-functions.php:869
+msgid "Display Location:"
+msgstr ""
+
+#: includes/geo-my-wp-deprecated-functions.php:871
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:188
+msgid "The address fields to be displayed."
+msgstr ""
+
+#: includes/geo-my-wp-deprecated-functions.php:881
+msgid "Display guest/User Name"
+msgstr ""
+
+#: includes/geo-my-wp-deprecated-functions.php:883
+msgid "Display greeting with \"guest\" or user name before the location."
+msgstr ""
+
+#: includes/geo-my-wp-deprecated-functions.php:887
+msgid "Greeting message ( logged in users )"
+msgstr ""
+
+#: includes/geo-my-wp-deprecated-functions.php:890
+msgid ""
+"Text that will be displayed before the user name. For example \"Hello "
+"username\" ( requires the Display guest/User Name chekbox to be checked )."
+msgstr ""
+
+#: includes/geo-my-wp-deprecated-functions.php:894
+msgid "Greeting message ( guests )"
+msgstr ""
+
+#: includes/geo-my-wp-deprecated-functions.php:897
+msgid ""
+"Text that will be displayed when user is not looged in. for example \"Hello "
+"Guest\" ( requires the Display guest/User Name chekbox to be checked )."
+msgstr ""
+
+#: includes/geo-my-wp-deprecated-functions.php:902
+msgid "Display Google Map"
+msgstr ""
+
+#: includes/geo-my-wp-deprecated-functions.php:904
+msgid "Display Google map showing the user's location."
+msgstr ""
+
+#: includes/geo-my-wp-deprecated-functions.php:911
+msgid "Set the map height in pixels or percentage ( ex. 250px )."
+msgstr ""
+
+#: includes/geo-my-wp-deprecated-functions.php:918
+msgid "Set the map width in pixels or percentage ( ex. 100% )."
+msgstr ""
+
+#: includes/geo-my-wp-deprecated-functions.php:922
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:237
+msgid "Map Marker"
+msgstr ""
+
+#: includes/geo-my-wp-deprecated-functions.php:925
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:240
+msgid "Link to the image that will be used as the map marker."
+msgstr ""
+
+#: includes/geo-my-wp-deprecated-functions.php:947
+msgid "ScrollWheel Enabled"
+msgstr ""
+
+#: includes/geo-my-wp-deprecated-functions.php:949
+#: plugins/single-location/includes/gmw-sl-widgets.php:247
+msgid "When enabled the map will zoom in/out using the mouse scrollwheel."
+msgstr ""
+
+#: includes/geo-my-wp-geocoder.php:119
+msgid "The address entered could not be geocoded."
+msgstr ""
+"L&#8217;adresse indiqu&eacute;e n&#8217;a pas pu &ecirc;tre g&eacute;"
+"ocod&eacute;e."
+
+# @ GMW
+#: includes/geo-my-wp-geocoder.php:121
+msgid "Invalid request. Did you enter an address?"
+msgstr "Requ&ecirc;te invalide. Avez-vous bien entr&eacute; une adresse ?"
+
+# @ GMW
+#: includes/geo-my-wp-geocoder.php:123 includes/geo-my-wp-geocoder.php:125
+msgid "Something went wrong while retrieving your location."
+msgstr ""
+"Une erreur est survenue lors de la r&eacute;cup&eacute;ration de votre "
+"localisation. "
+
+# @ GMW
+#: includes/geo-my-wp-geocoder.php:129
+msgid "Unable to contact Google API service."
+msgstr "Impossible de se connecter au service Google API. "
+
+# @ GMW
 #: includes/geo-my-wp-template-functions.php:20
-#: includes/geo-my-wp-widgets.php:293
 msgid "Search Site"
 msgstr "Chercher sur le Site"
 
@@ -2851,6 +3007,8 @@ msgstr "%s de %s utilisateurs"
 # @ GMW
 #: includes/geo-my-wp-template-functions.php:52
 #: includes/geo-my-wp-template-functions.php:84
+#: plugins/friends/includes/gmw-fl-single-member-location-class.php:74
+#: plugins/posts/includes/gmw-pt-single-post-location-class.php:64
 msgid "Distance: "
 msgstr "Distance : "
 
@@ -2863,17 +3021,19 @@ msgstr "Longueur de l&#8217;itin&eacute;raire"
 #: includes/geo-my-wp-template-functions.php:54
 #: includes/geo-my-wp-template-functions.php:55
 #: includes/geo-my-wp-template-functions.php:81
-#: plugins/friends/includes/gmw-fl-functions.php:165
-#: plugins/posts/includes/gmw-pt-shortcodes.php:143
+#: plugins/friends/includes/gmw-fl-member-location-shortcode.php:79
+#: plugins/friends/includes/gmw-fl-single-member-location-class.php:77
+#: plugins/posts/includes/gmw-pt-shortcodes.php:144
 msgid "Address: "
 msgstr "Adresse : "
 
 # @ GMW
 #: includes/geo-my-wp-template-functions.php:56
 #: includes/geo-my-wp-template-functions.php:82
-#: plugins/friends/includes/gmw-fl-functions.php:177
-#: plugins/posts/includes/gmw-pt-shortcodes.php:125
-#: third-party/sweetdate/geo-my-wp-sd-class.php:399
+#: plugins/friends/includes/gmw-fl-member-location-shortcode.php:91
+#: plugins/friends/includes/gmw-fl-single-member-location-class.php:76
+#: plugins/posts/includes/gmw-pt-shortcodes.php:126
+#: plugins/posts/includes/gmw-pt-single-post-location-class.php:66
 msgid "Get Directions"
 msgstr "Obtenir l&#8217;itin&eacute;raire"
 
@@ -2916,21 +3076,21 @@ msgstr "En savoir plus"
 # @ GMW
 #: includes/geo-my-wp-template-functions.php:66
 #: includes/geo-my-wp-template-functions.php:85
-#: plugins/posts/includes/gmw-pt-shortcodes.php:149
+#: plugins/posts/includes/gmw-pt-shortcodes.php:150
 msgid "Phone: "
 msgstr "T&eacute;l&eacute;phone : "
 
 # @ GMW
 #: includes/geo-my-wp-template-functions.php:67
 #: includes/geo-my-wp-template-functions.php:86
-#: plugins/posts/includes/gmw-pt-shortcodes.php:155
+#: plugins/posts/includes/gmw-pt-shortcodes.php:156
 msgid "Fax: "
 msgstr "Fax : "
 
 # @ GMW
 #: includes/geo-my-wp-template-functions.php:68
 #: includes/geo-my-wp-template-functions.php:87
-#: plugins/posts/includes/gmw-pt-shortcodes.php:161
+#: plugins/posts/includes/gmw-pt-shortcodes.php:162
 msgid "Email: "
 msgstr "Email : "
 
@@ -2943,8 +3103,8 @@ msgstr "site web : "
 # @ GMW
 #: includes/geo-my-wp-template-functions.php:71
 #: includes/geo-my-wp-template-functions.php:91
-#: plugins/posts/includes/admin/gmw-pt-admin.php:350
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:446
+#: plugins/posts/includes/admin/gmw-pt-admin.php:429
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:481
 msgid "Contact Information"
 msgstr "Infos de contact"
 
@@ -2971,204 +3131,216 @@ msgid "Formatted Address: "
 msgstr "Adresse : "
 
 #: includes/geo-my-wp-template-functions.php:96
+#: plugins/single-location/includes/gmw-sl-class.php:138
 msgid "Start point"
 msgstr "Point de d&eacute;part"
 
 #: includes/geo-my-wp-template-functions.php:97
+#: plugins/single-location/includes/gmw-sl-class.php:139
 msgid "Destination point"
 msgstr "Destination"
 
 # @ GMW
 #: includes/geo-my-wp-template-functions.php:98
+#: plugins/single-location/includes/gmw-sl-class.php:140
 msgid "Directions"
 msgstr "Itin&eacute;raire"
 
 #: includes/geo-my-wp-template-functions.php:99
+#: plugins/single-location/includes/gmw-sl-class.php:141
 msgid "From:"
 msgstr "De :"
 
 #: includes/geo-my-wp-template-functions.php:100
+#: plugins/single-location/includes/gmw-sl-class.php:142
 msgid "To:"
 msgstr "&Agrave; : "
 
 # @ GMW
 #: includes/geo-my-wp-template-functions.php:101
+#: plugins/single-location/includes/gmw-sl-class.php:143
 msgid "Driving"
 msgstr "Au volant "
 
 #: includes/geo-my-wp-template-functions.php:102
+#: plugins/single-location/includes/gmw-sl-class.php:144
 msgid "Walking"
 msgstr "&Agrave; pieds"
 
 #: includes/geo-my-wp-template-functions.php:103
+#: plugins/single-location/includes/gmw-sl-class.php:145
 msgid "Bicycling"
 msgstr "&Agrave; v&eacute;lo"
 
 #: includes/geo-my-wp-template-functions.php:104
+#: plugins/single-location/includes/gmw-sl-class.php:146
 msgid "Transit"
 msgstr "Transports"
 
 #: includes/geo-my-wp-template-functions.php:108
+#: plugins/single-location/includes/gmw-sl-class.php:150
 msgid "Avoid"
 msgstr "&Eacute;viter"
 
 #: includes/geo-my-wp-template-functions.php:109
+#: plugins/single-location/includes/gmw-sl-class.php:151
 msgid "highways"
 msgstr "Autoroutes"
 
 #: includes/geo-my-wp-template-functions.php:110
+#: plugins/single-location/includes/gmw-sl-class.php:152
 msgid "Tolls"
 msgstr "P&eacute;ages"
 
-#: includes/geo-my-wp-template-functions.php:137
+#: includes/geo-my-wp-template-functions.php:150
+#: plugins/friends/includes/gmw-fl-single-member-location-class.php:78
+#: plugins/posts/includes/gmw-pt-single-post-location-class.php:67
 msgid "Resize map"
 msgstr "Redimensionner la carte"
 
-# @ GMW
-#: includes/geo-my-wp-template-functions.php:139
-msgid "Map loader"
-msgstr "Chargeur de carte"
+#: includes/geo-my-wp-template-functions.php:392
+msgid "locator button"
+msgstr ""
 
-# @ GMW
-#: includes/geo-my-wp-template-functions.php:347
-msgid "Locator image"
-msgstr "Ic&ocirc;ne de position"
-
-#: includes/geo-my-wp-template-functions.php:348
-msgid "Locator image loader"
-msgstr "Chargeur d&#8217;ic&ocirc;ne de position"
-
-#: includes/geo-my-wp-template-functions.php:908
+#: includes/geo-my-wp-template-functions.php:1027
 msgid " Years old"
 msgstr "ans"
 
-#: includes/geo-my-wp-template-functions.php:909
+#: includes/geo-my-wp-template-functions.php:1028
 msgid "Age"
 msgstr "&Acirc;ge"
 
-# @ GMW
-#: includes/geo-my-wp-widgets.php:17
-msgid "GMW Current Location"
-msgstr "Position GMW actuelle"
-
-# @ GMW
-#: includes/geo-my-wp-widgets.php:18
-msgid "Get/display the user's current location"
-msgstr "Obtenir / Afficher la position actuelle de l&#8217;utilisateur"
-
-# @ GMW
-#: includes/geo-my-wp-widgets.php:118
-msgid "Current Location"
-msgstr "Position actuelle"
-
-# @ GMW
-#: includes/geo-my-wp-widgets.php:119
-#: plugins/friends/includes/gmw-fl-location-tab.php:382
-#: plugins/posts/includes/gmw-pt-shortcodes.php:37
-msgid "Your Location"
-msgstr "Votre position"
-
-#: includes/geo-my-wp-widgets.php:143
-msgid "Widget's Title"
+#: includes/geo-my-wp-widgets.php:21
+msgid "Displays GEO my WP forms."
 msgstr ""
 
-#: includes/geo-my-wp-widgets.php:147
-msgid "Location Title"
+#: includes/geo-my-wp-widgets.php:65
+msgid "Search Locations"
 msgstr ""
 
-#: includes/geo-my-wp-widgets.php:150
-msgid ""
-"The title that will be displayed before the location. For example Your "
-"location..."
-msgstr ""
-
-#: includes/geo-my-wp-widgets.php:154
-msgid "Display Location:"
-msgstr ""
-
-#: includes/geo-my-wp-widgets.php:156
-msgid "The address fields to be displayed."
-msgstr ""
-
-#: includes/geo-my-wp-widgets.php:166
-msgid "Display guest/User Name"
-msgstr ""
-
-#: includes/geo-my-wp-widgets.php:168
-msgid "Display greeting with \"guest\" or user name before the location."
-msgstr ""
-
-#: includes/geo-my-wp-widgets.php:172
-msgid "Greeting message ( logged in users )"
-msgstr ""
-
-#: includes/geo-my-wp-widgets.php:175
-msgid ""
-"Text that will be displayed before the user name. For example \"Hello "
-"username\" ( requires the Display guest/User Name chekbox to be checked )."
-msgstr ""
-
-#: includes/geo-my-wp-widgets.php:179
-msgid "Greeting message ( guests )"
-msgstr ""
-
-#: includes/geo-my-wp-widgets.php:182
-msgid ""
-"Text that will be displayed when user is not looged in. for example \"Hello "
-"Guest\" ( requires the Display guest/User Name chekbox to be checked )."
-msgstr ""
-
-#: includes/geo-my-wp-widgets.php:187
-msgid "Display Google Map"
-msgstr ""
-
-#: includes/geo-my-wp-widgets.php:189
-msgid "Display Google map showing the user's location."
-msgstr ""
-
-#: includes/geo-my-wp-widgets.php:196
-msgid "Set the map height in pixels or percentage ( ex. 250px )."
-msgstr ""
-
-#: includes/geo-my-wp-widgets.php:203
-msgid "Set the map width in pixels or percentage ( ex. 100% )."
-msgstr ""
-
-#: includes/geo-my-wp-widgets.php:207
-msgid "Map Marker"
-msgstr ""
-
-#: includes/geo-my-wp-widgets.php:210
-msgid "Link to the image that will be used as the map marker."
-msgstr ""
-
-#: includes/geo-my-wp-widgets.php:232
-msgid "ScrollWheel Enabled"
-msgstr ""
-
-#: includes/geo-my-wp-widgets.php:234
-msgid "When enabled the map will zoom in/out using the mouse scrollwheel."
+#: includes/geo-my-wp-widgets.php:70
+msgid "Widget Title:"
 msgstr ""
 
 # @ GMW
-#: includes/geo-my-wp-widgets.php:250
-msgid "GMW Search Form"
-msgstr "Formulaire de recherche GMW"
-
-# @ GMW
-#: includes/geo-my-wp-widgets.php:251
-msgid "Displays Search forms in your sidebar."
-msgstr "Affiche des formulaires de recherche dans votre sidebar."
-
-# @ GMW
-#: includes/geo-my-wp-widgets.php:298
-msgid "Title:"
-msgstr "Titre"
-
-# @ GMW
-#: includes/geo-my-wp-widgets.php:302
+#: includes/geo-my-wp-widgets.php:74
 msgid "Choose form to use:"
 msgstr "Choisissez le formulaire : "
+
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:17
+msgid "Get and display the user's current position."
+msgstr ""
+
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:147
+#: plugins/single-location/includes/gmw-sl-widgets.php:116
+msgid "Widget title"
+msgstr ""
+
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:153
+#: plugins/single-location/includes/gmw-sl-widgets.php:141
+msgid "Element id"
+msgstr ""
+
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:157
+msgid ""
+"Use the element ID to assign a unique ID to this widget. The unique ID can "
+"be useful for styling purposes as well when using the hooks provided by the "
+"widget when custom modifications are required."
+msgstr ""
+
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:162
+#: plugins/single-location/includes/gmw-sl-widgets.php:167
+msgid "Elements to display"
+msgstr ""
+
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:165
+msgid ""
+"Enter the elements that you would like to display, in the order that you "
+"would like to display them, comma separated. The available elements are "
+"username,address,location_form and map."
+msgstr ""
+
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:170
+msgid "Location form trigger"
+msgstr ""
+
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:173
+msgid ""
+"Enter in the input box the text that you would like to use as the form "
+"trigger. Otherwise, leave it blank if you wish to hide it."
+msgstr ""
+
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:178
+msgid "Address field placeholder"
+msgstr ""
+
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:181
+msgid ""
+"Enter in the input box the text that you would like to use as the address "
+"placeholder."
+msgstr ""
+
+# @ GMW
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:186
+#: plugins/friends/includes/gmw-fl-location-tab.php:76
+msgid "Address Fields"
+msgstr "Champs d&#8217;Adresse"
+
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:195
+#: plugins/single-location/includes/gmw-sl-widgets.php:179
+msgid "Full address"
+msgstr ""
+
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:199
+msgid "Address label"
+msgstr ""
+
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:202
+msgid ""
+"Enter in the input box the text that you would like to show before the "
+"address. Otherwise, leave the input box blank to disable the label."
+msgstr ""
+
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:207
+msgid "User greeting message ( logged in users )"
+msgstr ""
+
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:210
+msgid ""
+"Type in the input box any text that you would like to use as a greeting that "
+"will show before the username. For example, type \"Hello \" in order to show "
+"\"Hello {username}\"."
+msgstr ""
+
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:215
+msgid "Guest greeting message ( logged out users )"
+msgstr ""
+
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:218
+msgid ""
+"Enter in the input box any text that you would like to use as a greeting "
+"when a logged-out user is visiting your site. For example, \"Hello Guest!\"."
+msgstr ""
+
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:226
+#: plugins/single-location/includes/gmw-sl-widgets.php:210
+msgid "Set the map height in pixels or percentage ( ex. 250px or 100% )."
+msgstr ""
+
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:233
+#: plugins/single-location/includes/gmw-sl-widgets.php:219
+msgid "Set the map width in pixels or percentage ( ex. 250px or 100% )."
+msgstr ""
+
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:262
+#: plugins/single-location/includes/gmw-sl-widgets.php:245
+msgid "Scroll-Wheel map zoom enabled"
+msgstr ""
+
+#: plugins/current-location/includes/geo-my-wp-current-location-widget.php:264
+msgid ""
+"Check this checkbox to enable the map zoon in/out using the mouse-wheel."
+msgstr ""
 
 # @ GMW
 #: plugins/friends/includes/admin/gmw-fl-admin.php:42
@@ -3190,13 +3362,13 @@ msgstr "Choisissez le champ de \"Tranche d&#8217;&acirc;ge\""
 
 # @ GMW
 #: plugins/friends/includes/admin/gmw-fl-admin.php:114
-#: plugins/posts/includes/admin/gmw-pt-admin.php:247
+#: plugins/posts/includes/admin/gmw-pt-admin.php:326
 msgid "Width"
 msgstr "Largeur"
 
 # @ GMW
 #: plugins/friends/includes/admin/gmw-fl-admin.php:118
-#: plugins/posts/includes/admin/gmw-pt-admin.php:251
+#: plugins/posts/includes/admin/gmw-pt-admin.php:330
 msgid "Height"
 msgstr "Hauteur"
 
@@ -3281,13 +3453,13 @@ msgstr ""
 
 # @ GMW
 #: plugins/friends/includes/admin/gmw-fl-admin.php:210
-#: plugins/posts/includes/admin/gmw-pt-admin.php:587
+#: plugins/posts/includes/admin/gmw-pt-admin.php:675
 msgid "any character"
 msgstr "n&#8217;importe quel caract&egrave;re"
 
 # @ GMW
 #: plugins/friends/includes/admin/gmw-fl-admin.php:212
-#: plugins/posts/includes/admin/gmw-pt-admin.php:590
+#: plugins/posts/includes/admin/gmw-pt-admin.php:678
 msgid ""
 "Use any character that you would like to display between the fields you "
 "choose above\""
@@ -3315,9 +3487,28 @@ msgstr ""
 "Utilisez cet exemple dans une page de profil pour afficher les informations "
 "d&#8217;un membre : "
 
+#: plugins/friends/includes/admin/gmw-fl-db.php:73
+msgid ""
+"GEO my WP needs to update its members location database table "
+"( wppl_friends_locator ). Please consider making a backup of the table "
+"before proceeding with the update."
+msgstr ""
+
+#: plugins/friends/includes/admin/gmw-fl-db.php:76
+#: plugins/posts/includes/admin/gmw-pt-db.php:68
+msgid "Update"
+msgstr ""
+
+#: plugins/friends/includes/admin/gmw-fl-db.php:93
+#: plugins/friends/includes/admin/gmw-fl-db.php:97
+#: plugins/posts/includes/admin/gmw-pt-db.php:85
+#: plugins/posts/includes/admin/gmw-pt-db.php:89
+msgid "Cheatin' eh?!"
+msgstr ""
+
 # @ GMW
-#: plugins/friends/includes/admin/gmw-fl-db.php:117
-#: plugins/posts/includes/admin/gmw-pt-db.php:92
+#: plugins/friends/includes/admin/gmw-fl-db.php:168
+#: plugins/posts/includes/admin/gmw-pt-db.php:148
 msgid ""
 "Thank you. GEO my WP database tables and data updated and everything seems "
 "to be ok."
@@ -3326,7 +3517,7 @@ msgstr ""
 "&eacute;t&eacute; mises &agrave; jour et tout semble ok."
 
 # @ GMW
-#: plugins/friends/includes/admin/gmw-fl-db.php:139
+#: plugins/friends/includes/admin/gmw-fl-db.php:190
 msgid ""
 "GEO my WP Friends Locator add-on database tables must be updated. Please "
 "Backup your database before updating it."
@@ -3336,8 +3527,8 @@ msgstr ""
 "de proc&eacute;der &agrave; la mise &agrave; jour."
 
 # @ GMW
-#: plugins/friends/includes/admin/gmw-fl-db.php:140
-#: plugins/posts/includes/admin/gmw-pt-db.php:112
+#: plugins/friends/includes/admin/gmw-fl-db.php:191
+#: plugins/posts/includes/admin/gmw-pt-db.php:169
 msgid "Update database"
 msgstr "Mettre &agrave; jour la base de donn&eacute;es"
 
@@ -3348,50 +3539,41 @@ msgstr "Position de l&#8217;utilisateur mise &agrave; jour"
 
 #: plugins/friends/includes/gmw-fl-activity.php:45
 #, php-format
-msgid ""
-"%s Updated new location at <span class=\"dashicons dashicons-location\"></"
-"span><a target=\"_blank\" href=\"https://maps.google.com/maps?f=d"
-msgstr ""
+msgid "%s Updated new location at %s"
+msgstr "%s Mise à jour vers le nouvel emplacement %s"
 
 # @ GMW
 # @ gmw-location
-#: plugins/friends/includes/gmw-fl-component.php:31
-#: plugins/friends/includes/gmw-fl-component.php:99
-#: plugins/friends/includes/gmw-fl-component.php:170
+#: plugins/friends/includes/gmw-fl-component.php:28
+#: plugins/friends/includes/gmw-fl-component.php:103
+#: plugins/friends/includes/gmw-fl-component.php:180
 #: plugins/friends/includes/gmw-fl-component.php:246
+#: plugins/posts/includes/admin/gmw-pt-admin.php:61
+#: plugins/posts/includes/admin/gmw-pt-admin.php:64
+#: plugins/posts/includes/admin/gmw-pt-admin.php:71
 msgid "Location"
 msgstr "Position"
 
 # @ GMW
-#: plugins/friends/includes/gmw-fl-component.php:81
+#: plugins/friends/includes/gmw-fl-component.php:85
 msgid "Search Location..."
 msgstr "Recherche de la position ..."
 
 # @ GMW
-#: plugins/friends/includes/gmw-fl-component.php:178
+#: plugins/friends/includes/gmw-fl-component.php:188
 msgid "Update Location"
 msgstr "Mettre &agrave; jour la position"
 
 # @ GMW
-#: plugins/friends/includes/gmw-fl-component.php:194
-#: plugins/friends/includes/gmw-fl-component.php:200
+#: plugins/friends/includes/gmw-fl-component.php:204
+#: plugins/friends/includes/gmw-fl-component.php:210
 msgid "Members Location"
 msgstr "Position des membres"
 
 # @ GMW
-#: plugins/friends/includes/gmw-fl-component.php:195
+#: plugins/friends/includes/gmw-fl-component.php:205
 msgid "Member's Location"
 msgstr "Position de l&#8217;utilisateur"
-
-# @ GMW
-#: plugins/friends/includes/gmw-fl-functions.php:174
-msgid "Go"
-msgstr "Go"
-
-# @ GMW
-#: plugins/friends/includes/gmw-fl-functions.php:214
-msgid " has not added a location yet"
-msgstr "n&#8217;a pas encore indiqu&eacute; de position"
 
 # @ GMW
 #: plugins/friends/includes/gmw-fl-location-tab.php:27
@@ -3419,11 +3601,6 @@ msgid "Get Your Current Location"
 msgstr "Obtenez votre position actuelle"
 
 # @ GMW
-#: plugins/friends/includes/gmw-fl-location-tab.php:76
-msgid "Address Fields"
-msgstr "Champs d&#8217;Adresse"
-
-# @ GMW
 #: plugins/friends/includes/gmw-fl-location-tab.php:95
 #: plugins/posts/includes/admin/gmw-pt-metaboxes.php:72
 msgid "Apt/Suit"
@@ -3444,62 +3621,84 @@ msgstr "Nom normal du pays"
 msgid "Formatted Address"
 msgstr "Adresse format&eacute;e"
 
+#: plugins/friends/includes/gmw-fl-location-tab.php:193
+msgid "Street number"
+msgstr ""
+
+#: plugins/friends/includes/gmw-fl-location-tab.php:204
+msgid "Street name"
+msgstr ""
+
 # @ GMW
-#: plugins/friends/includes/gmw-fl-location-tab.php:190
+#: plugins/friends/includes/gmw-fl-location-tab.php:212
 msgid "Latitude Longitude"
 msgstr "Latitude / Longitude"
 
 # @ GMW
-#: plugins/friends/includes/gmw-fl-location-tab.php:198
+#: plugins/friends/includes/gmw-fl-location-tab.php:220
 #: plugins/posts/includes/admin/gmw-pt-metaboxes.php:144
 #: plugins/posts/includes/admin/gmw-pt-metaboxes.php:160
 msgid "Latitude"
 msgstr "Latitude "
 
 # @ GMW
-#: plugins/friends/includes/gmw-fl-location-tab.php:209
+#: plugins/friends/includes/gmw-fl-location-tab.php:231
 #: plugins/posts/includes/admin/gmw-pt-metaboxes.php:152
 #: plugins/posts/includes/admin/gmw-pt-metaboxes.php:168
 msgid "Longitude"
 msgstr "Longitude"
 
 # @ GMW
-#: plugins/friends/includes/gmw-fl-location-tab.php:383
+#: plugins/friends/includes/gmw-fl-location-tab.php:405
 msgid "You haven't set a location yet"
 msgstr "Vous n&#8217;avez pas encore indiqu&eacute; de position"
 
 # @ GMW
-#: plugins/friends/includes/gmw-fl-location-tab.php:384
+#: plugins/friends/includes/gmw-fl-location-tab.php:406
 msgid "Edit Location"
 msgstr "&Eacute;diter la position"
 
 # @ GMW
-#: plugins/friends/includes/gmw-fl-location-tab.php:385
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:418
+#: plugins/friends/includes/gmw-fl-location-tab.php:407
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:453
 msgid "Delete Location"
 msgstr "Supprimer position"
 
 # @ GMW
-#: plugins/friends/includes/gmw-fl-location-tab.php:386
+#: plugins/friends/includes/gmw-fl-location-tab.php:408
 msgid "Enter your location manually"
 msgstr "Entrer votre position manuellement"
 
 # @ GMW
-#: plugins/friends/includes/gmw-fl-location-tab.php:387
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:314
+#: plugins/friends/includes/gmw-fl-location-tab.php:409
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:332
+#: plugins/posts/includes/gmw-pt-single-post-location-class.php:68
+#: plugins/sweetdate-geolocation/includes/geo-my-wp-sd-class.php:118
 msgid "Address"
 msgstr "Adresse"
 
 # @ GMW
-#: plugins/friends/includes/gmw-fl-location-tab.php:388
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:391
+#: plugins/friends/includes/gmw-fl-location-tab.php:410
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:426
 msgid "Latitude / Longitude"
 msgstr "Latitude / Longitude"
 
 # @ GMW
-#: plugins/friends/includes/gmw-fl-location-tab.php:389
+#: plugins/friends/includes/gmw-fl-location-tab.php:411
 msgid "Save Location"
 msgstr "Sauver la position"
+
+# @ GMW
+#: plugins/friends/includes/gmw-fl-member-location-shortcode.php:88
+#: plugins/friends/includes/gmw-fl-single-member-location-class.php:75
+#: plugins/posts/includes/gmw-pt-single-post-location-class.php:65
+msgid "Go"
+msgstr "Go"
+
+# @ GMW
+#: plugins/friends/includes/gmw-fl-member-location-shortcode.php:128
+msgid " has not added a location yet"
+msgstr "n&#8217;a pas encore indiqu&eacute; de position"
 
 # @ GMW
 #: plugins/friends/includes/gmw-fl-template-functions.php:40
@@ -3525,78 +3724,41 @@ msgstr "-- Tout --"
 msgid "Clear"
 msgstr "Vider"
 
-#: plugins/friends/includes/gmw-fl-update-location.php:33
+#: plugins/friends/includes/gmw-fl-update-location.php:35
 msgid "There was a problem saving your location."
 msgstr "Un probl&egrave; est survenu en sauvegardant votre position."
 
 # @ GMW
-#: plugins/friends/includes/gmw-fl-update-location.php:37
+#: plugins/friends/includes/gmw-fl-update-location.php:39
 msgid "Location successfully saved!"
 msgstr "La position a bien &eacute;t&eacute; sauvegard&eacute;e !"
 
 # @ GMW
-#: plugins/friends/includes/gmw-fl-update-location.php:67
+#: plugins/friends/includes/gmw-fl-update-location.php:69
 msgid "Location successfully deleted!"
 msgstr "La position a bien &eacute;t&eacute; effac&eacute;e !"
 
-# @ GMW
-#: plugins/friends/includes/gmw-fl-widgets.php:17
-msgid "GMW BP member's Location"
-msgstr "Position GMW de l&#8217;utilisateur BP"
+#: plugins/posts/includes/admin/gmw-pt-admin.php:99
+msgid "No location found"
+msgstr ""
+
+#: plugins/posts/includes/admin/gmw-pt-admin.php:110
+msgid "Location found but the address is missing"
+msgstr ""
 
 # @ GMW
-#: plugins/friends/includes/gmw-fl-widgets.php:18
-msgid "Displays BP Member's Location"
-msgstr "Affiche la position du membre BP"
-
-# @ GMW
-#: plugins/friends/includes/gmw-fl-widgets.php:100
-msgid "Display member name"
-msgstr "Afficher le nom de l&#8217;utilisateur"
-
-# @ GMW
-#: plugins/friends/includes/gmw-fl-widgets.php:103
-msgid "Map Width: ( ex. 200px or 100% )"
-msgstr "Largeur de carte : ( ex. 200px or 100% )"
-
-# @ GMW
-#: plugins/friends/includes/gmw-fl-widgets.php:109
-msgid "Map Height: ( ex. 200px or 100% )"
-msgstr "Hauteur de carte : ( ex. 200px or 100% )"
-
-# @ GMW
-#: plugins/friends/includes/gmw-fl-widgets.php:117
-msgid "Display on single post page"
-msgstr "Afficher sur un post ou une page."
-
-# @ GMW
-#: plugins/friends/includes/gmw-fl-widgets.php:122
-msgid "Show Address."
-msgstr "Montrer l&#8217;Adresse"
-
-# @ GMW
-#: plugins/friends/includes/gmw-fl-widgets.php:127
-msgid "Show Directions Link."
-msgstr "Montrer le lien Itin&eacute;raire"
-
-# @ GMW
-#: plugins/friends/includes/gmw-fl-widgets.php:132
-msgid "Show \"No  location\" message."
-msgstr "Montrer le message \"Pas de position\" "
-
-# @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:48
-#: plugins/posts/includes/admin/gmw-pt-admin.php:96
-#: plugins/posts/includes/admin/gmw-pt-admin.php:294
-#: plugins/posts/includes/admin/gmw-pt-admin.php:309
+#: plugins/posts/includes/admin/gmw-pt-admin.php:127
+#: plugins/posts/includes/admin/gmw-pt-admin.php:175
+#: plugins/posts/includes/admin/gmw-pt-admin.php:373
+#: plugins/posts/includes/admin/gmw-pt-admin.php:388
 msgid "Post Types"
 msgstr "Types de publications"
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:53
+#: plugins/posts/includes/admin/gmw-pt-admin.php:132
 msgid "\"Edit Post\" page - map's zoom level"
 msgstr "Page d&#8217;&Eacute;dition de post - niveau de zoom"
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:54
+#: plugins/posts/includes/admin/gmw-pt-admin.php:133
 msgid ""
 "Set the default zoom level of the map being displayed in \"GMW section\" of "
 "the \"Edit Post\" page."
@@ -3605,11 +3767,11 @@ msgstr ""
 "affich&eacute;e dans \"la section GMW\" de la page \"d&#8217;&eacute;dition "
 "de Post\"."
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:80
+#: plugins/posts/includes/admin/gmw-pt-admin.php:159
 msgid "\"Edit Post\" page - default latitude"
 msgstr "Page d&#8217;&Eacute;dition de post - latitude par d&eacute;faut"
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:81
+#: plugins/posts/includes/admin/gmw-pt-admin.php:160
 msgid ""
 "Set the latitude of the default location being displayed in \"GMW section\" "
 "of the \"Edit Post\" page."
@@ -3617,11 +3779,11 @@ msgstr ""
 "D&eacute;finissez la latitude de la position affich&eacute;e par d&eacute;"
 "faut dans \"la section GMW\" de la page \"d&#8217;&eacute;dition de Post\"."
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:88
+#: plugins/posts/includes/admin/gmw-pt-admin.php:167
 msgid "\"Edit Post\" page - default longitude"
 msgstr "Page d&#8217;&Eacute;dition de post - longitude par d&eacute;faut"
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:89
+#: plugins/posts/includes/admin/gmw-pt-admin.php:168
 msgid ""
 "Set the longitude of the default location being displayed in \"GMW section\" "
 "of the \"Edit Post\" page."
@@ -3629,7 +3791,7 @@ msgstr ""
 "D&eacute;finissez la longitude de la position affich&eacute;e par d&eacute;"
 "faut dans \"la section GMW\" de la page \"d&#8217;&eacute;dition de Post\"."
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:97
+#: plugins/posts/includes/admin/gmw-pt-admin.php:176
 msgid ""
 "Check the checkboxes of the post types which you'd like to add locations to. "
 "GEO my WP's location section will be displayed in the new/edit post screen "
@@ -3640,12 +3802,12 @@ msgstr ""
 "de ces posts."
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:103
+#: plugins/posts/includes/admin/gmw-pt-admin.php:182
 msgid "Mandatory Address fields"
 msgstr "Champs d&#8217;adresse obligatoires"
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:105
+#: plugins/posts/includes/admin/gmw-pt-admin.php:184
 msgid ""
 "Check this box if you want to make sure that users will add location toa "
 "post they create or update; It will prevent them from saving a post that do "
@@ -3659,39 +3821,39 @@ msgstr ""
 "pas dans les recherches de proximit&eacute;."
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:126
+#: plugins/posts/includes/admin/gmw-pt-admin.php:205
 msgid "Posts Locator"
 msgstr "Localisateur de Posts"
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:127
+#: plugins/posts/includes/admin/gmw-pt-admin.php:206
 msgid "Create new post types form"
 msgstr "Nouveau formulaire pour Posts"
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:190
+#: plugins/posts/includes/admin/gmw-pt-admin.php:269
 msgid "Exclude"
 msgstr "Exclure"
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:193
+#: plugins/posts/includes/admin/gmw-pt-admin.php:272
 msgid "Dropdown"
 msgstr "Menu d&eacute;roulant"
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:269
+#: plugins/posts/includes/admin/gmw-pt-admin.php:348
 msgid "Words count ( leave blank to show the eintire content )"
 msgstr ""
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:273
+#: plugins/posts/includes/admin/gmw-pt-admin.php:352
 msgid "Read more link ( leave blank for no link )"
 msgstr ""
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:295
+#: plugins/posts/includes/admin/gmw-pt-admin.php:374
 msgid "Choose the post types you would like to display."
 msgstr "Choisissez les types de publications que vous voulez afficher."
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:311
+#: plugins/posts/includes/admin/gmw-pt-admin.php:390
 msgid ""
 "Check the checkboxes of the post types you'd like to display in the search "
 "form. When selecting multiple post types they will be displayed as a "
@@ -3702,12 +3864,12 @@ msgstr ""
 "affich&eacute;s dans un menu d&eacute;roulant. "
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:318
-#: plugins/posts/includes/admin/gmw-pt-admin.php:371
+#: plugins/posts/includes/admin/gmw-pt-admin.php:397
+#: plugins/posts/includes/admin/gmw-pt-admin.php:450
 msgid "Taxonomies"
 msgstr "Taxonomies"
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:319
+#: plugins/posts/includes/admin/gmw-pt-admin.php:398
 msgid ""
 "Choose the taxonomies that you'd like to display in the search form. The "
 "taxonomies will be displayed as a dropdown menues."
@@ -3716,29 +3878,29 @@ msgstr ""
 "d&eacute;roulant dans le formulaire de recherche."
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:334
+#: plugins/posts/includes/admin/gmw-pt-admin.php:413
 msgid "Display Posts?"
 msgstr "Afficher les posts ?"
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:335
+#: plugins/posts/includes/admin/gmw-pt-admin.php:414
 msgid "Display results as list of posts"
 msgstr "Afficher les r&eacute;sultats comme une liste de posts"
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:342
+#: plugins/posts/includes/admin/gmw-pt-admin.php:421
 msgid "Featured Image"
 msgstr "Image &agrave; la une"
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:344
+#: plugins/posts/includes/admin/gmw-pt-admin.php:423
 msgid "Display featured image and define its width and height in pixels."
 msgstr ""
 "Afficher l&#8217;image &agrave; la une et d&eacute;finir ses dimensions en "
 "px."
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:351
+#: plugins/posts/includes/admin/gmw-pt-admin.php:430
 msgid ""
 "Check the checkboxes of the contact information which you'd like to display "
 "per location in the search results."
@@ -3747,12 +3909,12 @@ msgstr ""
 "r&eacute;sultats de recherche."
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:363
+#: plugins/posts/includes/admin/gmw-pt-admin.php:442
 msgid "Excerpt"
 msgstr "Extrait"
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:365
+#: plugins/posts/includes/admin/gmw-pt-admin.php:444
 msgid ""
 "Display the number of words that you choose from the post content and "
 "display it per location in the list of results."
@@ -3761,7 +3923,7 @@ msgstr ""
 "les r&eacute;sultats de recherche."
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:373
+#: plugins/posts/includes/admin/gmw-pt-admin.php:452
 msgid ""
 "Display a list of taxonomies attached to each post in the list of results."
 msgstr ""
@@ -3769,24 +3931,24 @@ msgstr ""
 "liste des r&eacute;sultats."
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:389
+#: plugins/posts/includes/admin/gmw-pt-admin.php:468
 msgid "Single Post Location"
 msgstr "Position d&#8217;un Post unique"
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:392
+#: plugins/posts/includes/admin/gmw-pt-admin.php:471
 msgid "Display map and/or location information of specific post."
 msgstr ""
 "Afficher la carte et/ou les infos de g&eacute;olocalisation d&#8217;un post "
 "sp&eacute;cifique."
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:399
+#: plugins/posts/includes/admin/gmw-pt-admin.php:478
 msgid ""
 "By default the shortcode displays the posts being displayed in a sinle post "
 "page or within the posts loop"
 msgstr ""
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:400
+#: plugins/posts/includes/admin/gmw-pt-admin.php:479
 msgid ""
 "Use the post ID only if you want to display information of a specific post. "
 "When using the shortcode on a single post page or within a posts loop you "
@@ -3798,11 +3960,11 @@ msgstr ""
 "dans une boucle de posts vous n&#8217;avez pas besoin de cet attribut car "
 "GWM pourra recueillir les ID automatiquement."
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:409
+#: plugins/posts/includes/admin/gmw-pt-admin.php:488
 msgid "Use the value 1 to display the post title above the map."
 msgstr ""
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:418
+#: plugins/posts/includes/admin/gmw-pt-admin.php:497
 msgid ""
 "Use the value 1 to display distance of the post's location from the user's "
 "current location when exists."
@@ -3810,40 +3972,40 @@ msgstr ""
 "Utilisez la valeur 1 pour afficher la distance entre la position actuelle de "
 "l&#8217;utilisateur et la position du post."
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:427
+#: plugins/posts/includes/admin/gmw-pt-admin.php:506
 msgid "Distance units - \"m\" for Miles \"k\" for Kilometers"
 msgstr ""
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:436
+#: plugins/posts/includes/admin/gmw-pt-admin.php:515
 msgid "Use the value 1 if you want to display map of the locaiton."
 msgstr ""
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:441
-#: plugins/posts/includes/admin/gmw-pt-admin.php:449
+#: plugins/posts/includes/admin/gmw-pt-admin.php:520
+#: plugins/posts/includes/admin/gmw-pt-admin.php:528
 msgid "Value in pixels or percentage"
 msgstr ""
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:444
+#: plugins/posts/includes/admin/gmw-pt-admin.php:523
 msgid "Map height in px or % ( ex. 250px or 100% )."
 msgstr ""
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:452
+#: plugins/posts/includes/admin/gmw-pt-admin.php:531
 msgid "Map width in px or % ( ex. 250px or 100% )."
 msgstr ""
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:463
+#: plugins/posts/includes/admin/gmw-pt-admin.php:542
 msgid "Choose the map type."
 msgstr ""
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:468
+#: plugins/posts/includes/admin/gmw-pt-admin.php:547
 msgid "Numeric value between 1 to 18."
 msgstr "Valeur num&eacute;rique entre 1 et 18."
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:471
+#: plugins/posts/includes/admin/gmw-pt-admin.php:550
 msgid "Choose the map zoom level."
 msgstr ""
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:483
+#: plugins/posts/includes/admin/gmw-pt-admin.php:562
 msgid ""
 "Use a single or multiple values comma separated of the contact information "
 "which you would like to display. For example use additional_info=\"address,"
@@ -3851,39 +4013,41 @@ msgid ""
 "fax numbers."
 msgstr ""
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:492
-msgid ""
-"Use the value 1 if you want to display \"Get Directions\" link. ( default - "
-"1 )"
+#: plugins/posts/includes/admin/gmw-pt-admin.php:571
+msgid "Use the value 1 if you want to display \"Get Directions\" link."
 msgstr ""
-"Utilisez la valeur 1 si vous voulez afficher le \"lien d&#8217;Itin&eacute;"
-"raire\". (actif par d&eacute;faut)"
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:501
+#: plugins/posts/includes/admin/gmw-pt-admin.php:580
+msgid ""
+"Use the 0 to disable or the value 1 to enable the info-window of the marker "
+"represents the post being dispplayed."
+msgstr ""
+
+#: plugins/posts/includes/admin/gmw-pt-admin.php:589
 msgid "Use the value 1 to Hide all other information except for the map"
 msgstr ""
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:509
+#: plugins/posts/includes/admin/gmw-pt-admin.php:597
 msgid ""
 "Provide a link to an image that will be used as a marker which represents "
 "the location of the post being displayed."
 msgstr ""
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:518
+#: plugins/posts/includes/admin/gmw-pt-admin.php:606
 msgid ""
 "Provide a link to an image that will be used as a marker which represents "
 "the user's location on the map. Use 0 if you do not want to show the user's "
 "location."
 msgstr ""
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:527
+#: plugins/posts/includes/admin/gmw-pt-admin.php:615
 msgid ""
 "Any text that will be display within the info-window of the marker "
 "represents the user's current location. Use 0 if you want the info-window to "
 "be disabled."
 msgstr ""
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:534
+#: plugins/posts/includes/admin/gmw-pt-admin.php:622
 msgid ""
 "Place this shortcode in the content of a page or post to display the map, "
 "contact information and \"get directions\" link of the post."
@@ -3891,7 +4055,7 @@ msgstr ""
 "Placez ce shortcode dans le contenu d&#8217;un post pour afficher sa carte, "
 "ses infos de contact et son lien d&#8217;itin&eacute;raire. "
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:539
+#: plugins/posts/includes/admin/gmw-pt-admin.php:627
 msgid ""
 "Display map of the location. Map width set to 100% and map height 450px. No "
 "additional information and no \"Get directions\" link will be displayed."
@@ -3900,18 +4064,18 @@ msgstr ""
 "Aucun &eacute;l&eacute;ment suppl&eacute;mentaire ne sera affich&eacute;."
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:547
+#: plugins/posts/includes/admin/gmw-pt-admin.php:635
 msgid "Post Information"
 msgstr "Infos de l&#8217;article"
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:550
+#: plugins/posts/includes/admin/gmw-pt-admin.php:638
 msgid "Easy way to display any of the location/contact information of a post."
 msgstr ""
 "Un moyen facile d&#8217;afficher n&#8217;importe quelle info de contact ou "
 "de position d&#8217;un post."
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:557
+#: plugins/posts/includes/admin/gmw-pt-admin.php:645
 msgid ""
 "Use the post ID only if you want to display information of a specific post. "
 "When using the shortcode on a single post page or within a posts loop you "
@@ -3921,7 +4085,7 @@ msgstr ""
 "d&#8217;un post sp&eacute;cifique. Dans un post lui-m&ecirc;me ou dans une "
 "boucle de posts, vous n&#8217;avez pas besoin de l&#8217;attribut post_id."
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:558
+#: plugins/posts/includes/admin/gmw-pt-admin.php:646
 msgid ""
 " The shortcode will use the post ID of the post being displayed or the post "
 "ID of each post within the loop. "
@@ -3929,23 +4093,23 @@ msgstr ""
 "Le shortcode utilisera l&#8217;ID du post affich&eacute; ou les ID de tous "
 "les posts dans la boucle."
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:566
+#: plugins/posts/includes/admin/gmw-pt-admin.php:654
 msgid "state short name (ex FL )"
 msgstr ""
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:567
+#: plugins/posts/includes/admin/gmw-pt-admin.php:655
 msgid "state long name (ex Florida )"
 msgstr ""
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:569
+#: plugins/posts/includes/admin/gmw-pt-admin.php:657
 msgid "country short name (ex IL )"
 msgstr "Code pays (ex: FR)"
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:570
+#: plugins/posts/includes/admin/gmw-pt-admin.php:658
 msgid "country long name (ex Israel )"
 msgstr "Nom normal du pays (ex: France)"
 
-#: plugins/posts/includes/admin/gmw-pt-admin.php:581
+#: plugins/posts/includes/admin/gmw-pt-admin.php:669
 msgid ""
 "Use a single value or multiple values comma separated of the information you "
 "would like to display. For example use info=\"city,state,country_long\" to "
@@ -3956,7 +4120,7 @@ msgstr ""
 "state,country_long\" pour afficher \"Lyon RA France\""
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:596
+#: plugins/posts/includes/admin/gmw-pt-admin.php:684
 msgid ""
 "This shortcode will display the information of the post with ID 3 which is "
 "( for example ) \"Hollywood,Florida,33021\""
@@ -3965,7 +4129,7 @@ msgstr ""
 "\"Lyon,Rh&ocirc;ne-Alpes,69000\""
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:601
+#: plugins/posts/includes/admin/gmw-pt-admin.php:689
 msgid ""
 "Use the shortcode without post_id when within a posts loop to display "
 "\"Hollywood-FL\""
@@ -3974,12 +4138,12 @@ msgstr ""
 "\"Lyon-RA\""
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-admin.php:609
+#: plugins/posts/includes/admin/gmw-pt-admin.php:697
 msgid "Use this example in the content of a post to display:"
 msgstr "Utilisez cet exemple dans le contenu d&#8217;un post pour afficher :"
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-db.php:111
+#: plugins/posts/includes/admin/gmw-pt-db.php:168
 msgid ""
 "GEO my WP Posts Locator add-on database tables must be updated. Please "
 "Backup your database before updating it."
@@ -4014,8 +4178,8 @@ msgstr "Adresse compl&egrave;te"
 
 # @ GMW
 #: plugins/posts/includes/admin/gmw-pt-metaboxes.php:184
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:447
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:481
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:482
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:516
 msgid "Days & Hours"
 msgstr "Jours et heures"
 
@@ -4034,30 +4198,38 @@ msgstr "Longitude du pays"
 msgid "Formatted address"
 msgstr "Adresse format&eacute;e"
 
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:216
+msgid "street_number"
+msgstr ""
+
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:224
+msgid "street_name"
+msgstr ""
+
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:280
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:298
 msgid "Use the map to drag and drop the marker to the desired location."
 msgstr ""
 "Utilisez la carte pour glisser et d&eacute;poser le marqueur &agrave; "
 "l&#8217;endroit voulu."
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:291
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:309
 msgid "Locate Me"
 msgstr "Me localiser"
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:297
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:315
 msgid "Type an address to autocomplete"
 msgstr "Tapez une adresse pour compl&eacute;ter automatiquement"
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:308
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:326
 msgid "Enter Location Manually"
 msgstr "Entrer la position manuellement"
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:317
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:335
 msgid ""
 "Fill out the address fields and click \"Get Lat/Long\" to retrive the "
 "latitude and longitude of the location."
@@ -4066,7 +4238,7 @@ msgstr ""
 "avoir la latitude et la longitude de la position."
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:393
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:428
 msgid ""
 "Fill out the Latitude and Longitude fields and click on \"Get Address\" to "
 "retrive the address of the location."
@@ -4075,64 +4247,64 @@ msgstr ""
 "pour avoir l&#8217;adresse de la position."
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:420
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:455
 msgid "Delete address"
 msgstr "Supprimer Adresse"
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:425
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:460
 msgid "Location status"
 msgstr "Statut de position"
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:427
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:462
 msgid "Loading..."
 msgstr "Chargement ... "
 
 # @ GMW
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:428
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:463
 msgid "Location is ready"
 msgstr "Position OK"
 
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:429
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:464
 msgid ""
 "A valid address, latitude and longitude are required to save the Location"
 msgstr ""
 "Pour enregistrer la position il faut une adresse valide et/ou la latitude et "
 "la longitude."
 
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:484
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:490
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:496
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:502
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:508
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:514
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:520
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:519
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:525
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:531
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:537
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:543
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:549
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:555
 msgid "Days"
 msgstr "Jours"
 
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:486
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:492
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:498
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:504
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:510
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:516
-#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:522
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:521
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:527
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:533
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:539
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:545
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:551
+#: plugins/posts/includes/admin/gmw-pt-metaboxes.php:557
 msgid "Hours"
 msgstr "Heures"
 
 # @ GMW
-#: plugins/posts/includes/gmw-pt-shortcodes.php:95
+#: plugins/posts/includes/gmw-pt-shortcodes.php:96
 msgid "Distance:"
 msgstr "Distance : "
 
 # @ GMW
-#: plugins/posts/includes/gmw-pt-shortcodes.php:122
+#: plugins/posts/includes/gmw-pt-shortcodes.php:123
 msgid "GO"
 msgstr "GO"
 
 # @ GMW
-#: plugins/posts/includes/gmw-pt-shortcodes.php:177
+#: plugins/posts/includes/gmw-pt-shortcodes.php:168
 msgid "Website: "
 msgstr "Site Web : "
 
@@ -4142,107 +4314,238 @@ msgid " - All - "
 msgstr "- Tout -"
 
 # @ twentyfourteen
-#: plugins/posts/search-results/twenty-fourteen/results.php:50
+#: plugins/posts/search-results/twenty-fourteen/results.php:54
 msgctxt "Used between list items, there is a space after the comma."
 msgid ", "
 msgstr ", "
 
 # @ twentyfourteen
-#: plugins/posts/search-results/twenty-fourteen/results.php:65
+#: plugins/posts/search-results/twenty-fourteen/results.php:69
 msgid "Leave a comment"
 msgstr "Commenter"
 
 # @ twentyfourteen
-#: plugins/posts/search-results/twenty-fourteen/results.php:65
+#: plugins/posts/search-results/twenty-fourteen/results.php:69
 msgid "1 Comment"
 msgstr "1 commentaire"
 
 # @ twentyfourteen
-#: plugins/posts/search-results/twenty-fourteen/results.php:65
+#: plugins/posts/search-results/twenty-fourteen/results.php:69
 msgid "% Comments"
 msgstr "% commentaires"
 
 # @ twentyfourteen
 # @ twentytwelve
-#: plugins/posts/search-results/twenty-fourteen/results.php:79
-#: plugins/posts/search-results/wordpress-twentytwelve/results.php:80
+#: plugins/posts/search-results/twenty-fourteen/results.php:83
+#: plugins/posts/search-results/wordpress-twentytwelve/results.php:84
 msgid "Continue reading <span class=\"meta-nav\">&rarr;</span>"
 msgstr "Continuer &agrave; lire <span class=\"meta-nav\">&rarr;</span>"
 
 # @ twentyfourteen
 # @ twentytwelve
-#: plugins/posts/search-results/twenty-fourteen/results.php:81
-#: plugins/posts/search-results/wordpress-twentytwelve/results.php:81
+#: plugins/posts/search-results/twenty-fourteen/results.php:85
+#: plugins/posts/search-results/wordpress-twentytwelve/results.php:85
 msgid "Pages:"
 msgstr "Pages :"
 
 # @ twentytwelve
-#: plugins/posts/search-results/wordpress-twentytwelve/results.php:45
+#: plugins/posts/search-results/wordpress-twentytwelve/results.php:49
 msgid "Featured post"
 msgstr "Publication associ&eacute;e"
 
 # @ twentytwelve
-#: plugins/posts/search-results/wordpress-twentytwelve/results.php:55
+#: plugins/posts/search-results/wordpress-twentytwelve/results.php:59
 #, php-format
 msgid "Permalink to %s"
 msgstr "Permalink vers %s"
 
 # @ twentytwelve
-#: plugins/posts/search-results/wordpress-twentytwelve/results.php:60
+#: plugins/posts/search-results/wordpress-twentytwelve/results.php:64
 msgid "Leave a reply"
 msgstr "R&eacute;pondre"
 
 # @ twentytwelve
-#: plugins/posts/search-results/wordpress-twentytwelve/results.php:60
+#: plugins/posts/search-results/wordpress-twentytwelve/results.php:64
 msgid "1 Reply"
 msgstr "1 r&eacute;ponse"
 
 # @ twentytwelve
-#: plugins/posts/search-results/wordpress-twentytwelve/results.php:60
+#: plugins/posts/search-results/wordpress-twentytwelve/results.php:64
 msgid "% Replies"
 msgstr "% r&eacute;ponses"
 
 # @ twentytwelve
-#: plugins/posts/search-results/wordpress-twentytwelve/results.php:116
+#: plugins/posts/search-results/wordpress-twentytwelve/results.php:120
 #, php-format
 msgid "About %s"
 msgstr "&Agrave; propos %s"
 
 # @ twentytwelve
-#: plugins/posts/search-results/wordpress-twentytwelve/results.php:120
+#: plugins/posts/search-results/wordpress-twentytwelve/results.php:124
 #, php-format
 msgid "View all posts by %s <span class=\"meta-nav\">&rarr;</span>"
 msgstr ""
 "Voir toutes les publications de %s <span class=\"meta-nav\">&rarr;</span>"
 
+#: plugins/single-location/includes/gmw-sl-class.php:153
+msgid "Show directions"
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:22
+msgid "GMW Single Location"
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:23
+msgid "Display the location of a single item ( Post, BP member...)"
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:120
+msgid "Enter the title for this widget otherwise leave empty for no title."
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:125
+msgid "Item type"
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:129
+msgid "Post"
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:132
+msgid "BuddyPress Member"
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:136
+msgid "Chose the item that you would like to display."
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:145
+msgid ""
+"Use the element ID to assign a unique ID to this shortcode. The unique ID "
+"can be useful for styling purposes as well when using the hooks provided by "
+"the shortcode when custom modifications required."
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:150
+msgid "Item id"
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:154
+msgid ""
+"Item ID is the ID of the item that you want to display. For example, if you "
+"want to show the location of a particular post the item ID will be the post "
+"ID of the post that you want to display. Same goes for member ID. Leave it 0 "
+"if you want the item to be displayed based on the single item page or based "
+"on the item being displayed within a loop."
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:160
+msgid "Show on single post page"
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:163
+msgid ""
+"Show the post author location when viewing a single post page. The author "
+"must have his location added via Members Locator add-on and the item ID "
+"above needs to be set to 0."
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:171
+msgid ""
+"Enter the elements that you would like to display, in the order that you "
+"want to display them, comma separated. The available elements are title, "
+"distance, map, address, directions_link, live_directions, directions_panel "
+"and additional_info ( additional_info is only available for post )."
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:175
+msgid "Address fields"
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:177
+msgid "Choose the address fields that you would like to display."
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:189
+msgid "Additional info fields"
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:193
+msgid ""
+"Enter the additional information that you would like to display, comma "
+"separated. The additional fields available are Phone, fax, email, website."
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:198
+msgid "Distance units"
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:252
+msgid "Item's map icon"
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:256
+msgid ""
+"Link to the image that you want to use as the map icon that represents the "
+"item's location on the map."
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:261
+msgid "Item's Info-window elements"
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:265
+msgid ""
+"Enter the elements that you would like to display in the item's info-window "
+"in the order that you want to display them, comma saperated. Otherwise, "
+"leave the input box blank to disable the info-window. The elements available "
+"are distance, title, address, additional_info ( additional info is only "
+"available for post )."
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:270
+msgid "User's location map icon"
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:274
+msgid ""
+"Link to the image that you would like to use as the map marker that "
+"represents the user's location on the map. Leave the input box blank if you "
+"do not wish to display the marker of the user's location."
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:279
+msgid "User's info-window content"
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:283
+msgid ""
+"Enter the content that you would like to display in the info-window of the "
+"user's map icon. Otherwise, leave the input box blank to disable the info-"
+"window."
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:288
+msgid "No location message"
+msgstr ""
+
+#: plugins/single-location/includes/gmw-sl-widgets.php:292
+msgid ""
+"The message that you would like to display if no location exists for the "
+"item being displayed. Leave blank for no message."
+msgstr ""
+
 # @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:67
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:59
 msgid "Sweet Date"
 msgstr "Sweet Date"
 
 # @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:72
-msgid "Enable Sweet-Date integration?"
-msgstr "Activer l&#8217;int&eacute;gration Sweet-Date ?"
-
-# @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:73
-msgid "Enable"
-msgstr "Activer"
-
-# @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:74
-msgid "Enable/disable GEO my WP integration with Sweet-Date members page."
-msgstr ""
-"Activer / D&eacute;sactiver l&#8217;int&eacute;gration de GMW avec les pages "
-"des membres Sweet-Date."
-
-# @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:80
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:64
 msgid "Google Places address autocomplete"
 msgstr "compl&eacute;ter l&#8217;adresse automatiquement via Google Places"
 
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:81
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:65
 msgid ""
 "Display suggested results via Google address autcompelte while typing an "
 "address."
@@ -4251,12 +4554,12 @@ msgstr ""
 "adresse est entr&eacute;e."
 
 # @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:89
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:73
 msgid "Enter radius values"
 msgstr "Valeurs de rayon"
 
 # @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:91
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:75
 msgid ""
 "Enter the radius values. Single value to be default value or multiple values "
 "comma separated for a drop-down select box."
@@ -4266,82 +4569,82 @@ msgstr ""
 "afficher un menu d&eacute;roulant."
 
 # @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:98
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:82
 msgid "Choose Between Miles and Kilometers."
 msgstr "Choisissez Kilom&egrave;tres ou Miles"
 
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:109
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:93
 msgid "Display \"Order by\" filter"
 msgstr "Afficher le filtre \"Trier par\""
 
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:110
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:94
 msgid "Display \"Order by\" filter."
 msgstr "Afficher le filtre \"Trier par\"."
 
 # @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:118
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:102
 msgid "Show Map"
 msgstr "Afficher la carte"
 
 # @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:119
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:103
 msgid "Show/hide map above list of members results"
 msgstr "Afficher / Masquer une carte avant la liste des membres."
 
 # @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:127
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:111
 msgid "Map width in pixels or percentage"
 msgstr "Largeur de carte : (ex. 200px ou 100%)"
 
 # @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:129
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:113
 msgid "Maps width in pixels or percentage"
 msgstr "Largeur des cartes : (ex. 200px ou 100%)"
 
 # @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:135
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:119
 msgid "Map height in pixels or percentage"
 msgstr "Hauteur de carte : (ex. 200px or 100%)"
 
 # @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:137
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:121
 msgid "Maps height in pixels or percentage"
 msgstr "Hauteur de carte : (ex. 200px ou 100%)"
 
 # @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:144
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:128
 msgid "Map type"
 msgstr "Type de carte"
 
 # @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:157
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:141
 msgid "Display Distance?"
 msgstr "Afficher la distance ?"
 
 # @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:159
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:143
 msgid "Show/hide distance in results."
 msgstr "Afficher / Masquer la distance dans les r&eacute;sultats."
 
 # @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:166
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:150
 msgid "Display Address?"
 msgstr "Afficher la position ?"
 
 # @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:168
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:152
 msgid "Show/hide member's address in results."
 msgstr ""
 "Afficher / Masquer l&#8217;adresse de l&#8217;utilisateur dans les r&eacute;"
 "sultats."
 
 # @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:175
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:159
 msgid "Display \"Get directions\" Link?"
 msgstr "Afficher le lien \"Itin&eacute;raire\" ?"
 
 # @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-admin.php:177
+#: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:161
 msgid ""
 "Show/hide get directions link in each results. The link will open a new page "
 "with Google map showing the directions from the address entered by the user "
@@ -4351,61 +4654,278 @@ msgstr ""
 "Maps avec l&#8217;itin&eacute;raire pr&eacute;cis."
 
 # @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-class.php:91
-msgid " -- Kilometers -- "
-msgstr "-- Kilom&egrave;tres --"
-
-# @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-class.php:91
-msgid " -- Miles -- "
-msgstr "-- Miles --"
-
-# @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-class.php:112
-msgid "Active"
-msgstr "Actif"
-
-#: third-party/sweetdate/geo-my-wp-sd-class.php:113
-msgid "Newest"
-msgstr "Le plus r&eacute;cent"
-
-#: third-party/sweetdate/geo-my-wp-sd-class.php:114
-msgid "Alphabetical"
-msgstr "Ordre alphab&eacute;tique"
-
-# @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-class.php:118
-msgid "Distance"
-msgstr "Distance : "
-
-# @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-class.php:127
-msgid "Order By"
-msgstr "Trier par"
-
-# @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-class.php:174
-msgid "Sorry, the address was not found. Please try a different address."
-msgstr ""
-"D&eacute;sol&eacute;, l&#8217;adresse est introuvable. Merci d&#8217;essayer "
-"une autre adresse."
-
-# @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-class.php:415
-#: third-party/sweetdate/geo-my-wp-sd-class.php:446
+#: plugins/sweetdate-geolocation/includes/geo-my-wp-sd-class.php:109
 msgid "km"
 msgstr "km"
 
 # @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-class.php:415
-#: third-party/sweetdate/geo-my-wp-sd-class.php:446
+#: plugins/sweetdate-geolocation/includes/geo-my-wp-sd-class.php:110
 msgid "mi"
 msgstr "mi"
 
+#: plugins/sweetdate-geolocation/includes/geo-my-wp-sd-class.php:111
+msgid "Order by"
+msgstr ""
+
 # @ GMW
-#: third-party/sweetdate/geo-my-wp-sd-class.php:440
-msgid "Address:"
-msgstr "Adresse : "
+#: plugins/sweetdate-geolocation/includes/geo-my-wp-sd-class.php:113
+msgid "Active"
+msgstr "Actif"
+
+#: plugins/sweetdate-geolocation/includes/geo-my-wp-sd-class.php:114
+msgid "Newest"
+msgstr "Le plus r&eacute;cent"
+
+#: plugins/sweetdate-geolocation/includes/geo-my-wp-sd-class.php:115
+msgid "Alphabetical"
+msgstr "Ordre alphab&eacute;tique"
+
+# @ GMW
+#: plugins/sweetdate-geolocation/includes/geo-my-wp-sd-class.php:116
+msgid "Distance"
+msgstr "Distance : "
+
+# @ GMW
+#: plugins/sweetdate-geolocation/includes/geo-my-wp-sd-class.php:119
+#, fuzzy
+msgid "Get directions"
+msgstr "Obtenir l'itinéraire"
+
+#: plugins/sweetdate-geolocation/includes/geo-my-wp-sd-class.php:120
+msgid ""
+"Sorry, we could not find the address you entered. Please try a different "
+"address."
+msgstr ""
+
+#: plugins/sweetdate-geolocation/includes/geo-my-wp-sd-class.php:121
+msgid "resize map"
+msgstr ""
+
+#: plugins/sweetdate-geolocation/loader.php:9
+msgid ""
+"Sweet-date Geolocation add-on requires Sweet-date theme to be installed and "
+"activated."
+msgstr ""
+
+#: plugins/sweetdate-geolocation/loader.php:22
+msgid ""
+"Sweet-date Geolocation add-on requires BuddyPress plugin version 2.0 or "
+"higher in order to work."
+msgstr ""
+
+#~ msgid "Form ID "
+#~ msgstr "ID de formulaire"
+
+#~ msgid "Form Type -  "
+#~ msgstr "Type de formulaire -"
+
+#~ msgid "Form usage"
+#~ msgstr "Utiliser le formulaire"
+
+# @ GMW
+#~ msgid "Explanation"
+#~ msgstr "Explication"
+
+#~ msgid ""
+#~ "Use this shortcode anywhere on a page where you want to display this "
+#~ "form. By default, the shortcode will display the search form and results "
+#~ "on that same page unless you set it up to display the results on a "
+#~ "different page."
+#~ msgstr ""
+#~ "Utilisez ce shortcode l&agrave; o&ugrave; vous voulez afficher le "
+#~ "formulaire sur la page. Par d&eacute;faut, le shortcode affichera le "
+#~ "formulaire de recherche et les r&eacute;sultats sur cette page, sauf si "
+#~ "vous param&eacute;trez l&#8217;affichage des r&eacute;sultats sur une "
+#~ "autre page."
+
+#~ msgid ""
+#~ "Use this shortcode in the page that you want to display the search "
+#~ "results. That is in case that you are choose to display the search "
+#~ "results in a different page than the search form or when using the GMW "
+#~ "Search Form widget."
+#~ msgstr ""
+#~ "Utilisez ce shortcode dans la page o&ugrave; vous voulez afficher les "
+#~ "r&eacute;sultats, en cas d&#8217;option pour afficher les r&eacute;"
+#~ "sultats sur une page diff&eacute;rente de celle du formulaire de "
+#~ "recherche, ou en cas d&#8217;usage du widget de formulaire de recherche "
+#~ "GWM."
+
+#~ msgid ""
+#~ "Use this shortcode anywhere on a page where you want to display the map. "
+#~ "By default, the form you create will display the map above the list of "
+#~ "results. Using this shortcode you can display the map anywhere else on "
+#~ "the page. Note that this shortcode must go together with one of the other "
+#~ "shortocdes mentioned above on the same page ."
+#~ msgstr ""
+#~ "Utilisez ce shortcode sur une page o&ugrave; vous voulez afficher la "
+#~ "carte. Par d&eacute;faut, votre formualire affichera la carte au-dessus "
+#~ "de la liste des r&eacute;sultats, mais vous pouvez utiliser ce shortcode "
+#~ "pour la placer ailleurs. Notez que ce shortcode doit &ecirc;tre "
+#~ "utilis&eacute;s avec les autres shortcodes &eacute;voqu&eacute;s ci-"
+#~ "dessus sur la m&ecirc;me page."
+
+# @ GMW
+#~ msgid "You need to activate some add-ons in order to create form"
+#~ msgstr ""
+#~ "Il vous faut activer quelques modules pour cr&eacute;er un formulaire"
+
+#~ msgid "Use client-side ( Javascript ) geocoding"
+#~ msgstr "Utiliser le g&eacute;ocodage c&ocirc;t&eacute; client (Javascript)"
+
+# @ GMW
+#~ msgid "Use auto-locator"
+#~ msgstr "Utiliser la Localisation Auto."
+
+# @ GMW
+#~ msgid "GMW Search Form"
+#~ msgstr "Formulaire de recherche GMW"
+
+# @ GMW
+#~ msgid "Displays Search forms in your sidebar."
+#~ msgstr "Affiche des formulaires de recherche dans votre sidebar."
+
+# @ GMW
+#~ msgid "Title:"
+#~ msgstr "Titre"
+
+#~ msgid "and Geo-locating with"
+#~ msgstr "et g&eacute;olocaliser avec"
+
+# @ GMW
+#~ msgid "GEO my WP"
+#~ msgstr "GEO my WP"
+
+#~ msgid ""
+#~ "Use any of the address components, ( street,city,state,zipcode,county ) "
+#~ "comma separated, that you want to display on the screen once the user's "
+#~ "location found."
+#~ msgstr ""
+#~ "Utilisez les composants d&#8217;adresse que vous voulez afficher &agrave; "
+#~ "l&#8217;&eacute;cran une fois la position de l&#8217;utilisateur connue, "
+#~ "s&eacute;par&eacute,s par des virgules (street,city,state,zipcode,county)."
+
+# @ GMW
+#~ msgid "No location found for the entered address."
+#~ msgstr ""
+#~ "Aucune position trouv&eacute;e pour l&#8217;adresse indiqu&eacute;e."
+
+# @ GMW
+#~ msgid "Map loader"
+#~ msgstr "Chargeur de carte"
+
+# @ GMW
+#~ msgid "Locator image"
+#~ msgstr "Ic&ocirc;ne de position"
+
+#~ msgid "Locator image loader"
+#~ msgstr "Chargeur d&#8217;ic&ocirc;ne de position"
+
+# @ GMW
+#~ msgid "GMW BP member's Location"
+#~ msgstr "Position GMW de l&#8217;utilisateur BP"
+
+# @ GMW
+#~ msgid "Displays BP Member's Location"
+#~ msgstr "Affiche la position du membre BP"
+
+# @ GMW
+#~ msgid "Display member name"
+#~ msgstr "Afficher le nom de l&#8217;utilisateur"
+
+# @ GMW
+#~ msgid "Map Width: ( ex. 200px or 100% )"
+#~ msgstr "Largeur de carte : ( ex. 200px or 100% )"
+
+# @ GMW
+#~ msgid "Map Height: ( ex. 200px or 100% )"
+#~ msgstr "Hauteur de carte : ( ex. 200px or 100% )"
+
+# @ GMW
+#~ msgid "Display on single post page"
+#~ msgstr "Afficher sur un post ou une page."
+
+# @ GMW
+#~ msgid "Show Address."
+#~ msgstr "Montrer l&#8217;Adresse"
+
+# @ GMW
+#~ msgid "Show Directions Link."
+#~ msgstr "Montrer le lien Itin&eacute;raire"
+
+# @ GMW
+#~ msgid "Show \"No  location\" message."
+#~ msgstr "Montrer le message \"Pas de position\" "
+
+# @ GMW
+#~ msgid "Enable Sweet-Date integration?"
+#~ msgstr "Activer l&#8217;int&eacute;gration Sweet-Date ?"
+
+# @ GMW
+#~ msgid "Enable"
+#~ msgstr "Activer"
+
+# @ GMW
+#~ msgid "Enable/disable GEO my WP integration with Sweet-Date members page."
+#~ msgstr ""
+#~ "Activer / D&eacute;sactiver l&#8217;int&eacute;gration de GMW avec les "
+#~ "pages des membres Sweet-Date."
+
+# @ GMW
+#~ msgid " -- Kilometers -- "
+#~ msgstr "-- Kilom&egrave;tres --"
+
+# @ GMW
+#~ msgid " -- Miles -- "
+#~ msgstr "-- Miles --"
+
+# @ GMW
+#~ msgid "Order By"
+#~ msgstr "Trier par"
+
+# @ GMW
+#~ msgid "Sorry, the address was not found. Please try a different address."
+#~ msgstr ""
+#~ "D&eacute;sol&eacute;, l&#8217;adresse est introuvable. Merci d&#8217;"
+#~ "essayer une autre adresse."
+
+# @ GMW
+#~ msgid "Address:"
+#~ msgstr "Adresse : "
+
+#~ msgid "Activate the license key in order to receive updates"
+#~ msgstr ""
+#~ "Activez la cl&eacute; de licence pour recevoir les mise &agrave; jour."
+
+#~ msgid ""
+#~ "Please enter your license key and click the \"Activate\" button. The "
+#~ "license key is required for automatic updated."
+#~ msgstr ""
+#~ "Merci d&#8217;entrer votre cl&eacute; de licence et de cliquer sur "
+#~ "\"Activer\". Cette cl&eacute; est requise pour les mises &agrave; jour "
+#~ "automatiques."
+
+#~ msgid ""
+#~ "Your license has no activations left. Click <a href=\"http://geomywp.com/"
+#~ "purchase-history/\" target=\"_blank\" >here</a> to manager your license "
+#~ "activations."
+#~ msgstr ""
+#~ "Votre licence n&#8217;a plus d&#8217;activations disponibles. Cliquez <a "
+#~ "href=\"http://geomywp.com/purchase-history/\" target=\"_blank\" >ici</a> "
+#~ "pour g&eacute;rer vos activations de licences."
+
+#~ msgid ""
+#~ "Lost or forgot your license key? <a href=\"http://geomywp.com/purchase-"
+#~ "history/\" target=\"_blank\" >Retrieve it here.</a>"
+#~ msgstr ""
+#~ "Avez-vous perdu votre cl&eacute;e de licence ? <a href=\"http://geomywp."
+#~ "com/purchase-history/\" target=\"_blank\" >Retrouvez-la ici.</a>"
+
+#~ msgid ""
+#~ "Use the value 1 if you want to display \"Get Directions\" link. ( default "
+#~ "- 1 )"
+#~ msgstr ""
+#~ "Utilisez la valeur 1 si vous voulez afficher le \"lien d&#8217;"
+#~ "Itin&eacute;raire\". (actif par d&eacute;faut)"
 
 # @ GMW
 #~ msgid "Display Posts"
@@ -4918,11 +5438,6 @@ msgstr "Adresse : "
 #, fuzzy
 #~ msgid "Search"
 #~ msgstr "Formulaire de recherche"
-
-# @ GMW
-#, fuzzy
-#~ msgid "Get directions"
-#~ msgstr "Obtenir l'itinéraire"
 
 # @ GMW
 #, fuzzy
