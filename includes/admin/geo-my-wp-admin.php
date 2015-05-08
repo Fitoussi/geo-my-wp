@@ -21,11 +21,15 @@ class GMW_Admin {
 			
 		//do some actions	
 		add_action( 'admin_init', 			 array( $this, 'init_addons' ) );
-		add_action( 'admin_menu', 			 array( $this, 'admin_menu' ), 12);
+		add_action( 'admin_menu', 			 array( $this, 'admin_menu' ), 12 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
-		add_action( 'media_buttons',  		 array( $this, 'add_form_button'), 25 );
-		add_action( 'admin_footer',  		 array( $this, 'form_insert_popup') );
-		
+
+		//"GMW Form" button
+		if ( self::add_form_button_pages() ) {
+			add_action( 'media_buttons', array( $this, 'add_form_button' ), 25 );
+			add_action( 'admin_footer',  array( $this, 'form_insert_popup' ) );
+		}
+
 		//include admin pages
 		include_once( 'geo-my-wp-admin-functions.php' );
 		include_once( 'tools/geo-my-wp-tools.php' );
@@ -44,7 +48,7 @@ class GMW_Admin {
 	
 		add_filter( 'plugin_action_links_geo-my-wp/geo-my-wp.php', array( $this, 'gmw_action_links' ), 10, 2 );
 		
-		//for loer version of plugin
+		//for lower version of plugin
 		add_filter( 'plugin_action_links', array( $this, 'addons_action_links' ), 10, 2 );
 		
 		//display footer credits only on GEO my WP pages
@@ -54,9 +58,10 @@ class GMW_Admin {
 			add_filter( 'admin_footer_text', array( $this, 'gmw_credit_footer'), 10 );
 		}
 		
-		add_action( 'form_editor_tab_end', array( $this, 'rickey_messick_credit' ), 10, 4 );
+		add_action( 'form_editor_tab_start', array( $this, 'rickey_messick_credit' ), 10, 4 );
+		add_action( 'form_editor_tab_end',   array( $this, 'rickey_messick_credit' ), 10, 4 );
 	}
-	
+
 	/**
 	 * admin_enqueue_scripts function.
 	 *
@@ -69,16 +74,15 @@ class GMW_Admin {
 		$region	   = ( !empty( $this->settings['general_settings']['country_code'] ) )  ? '&region=' .$this->settings['general_settings']['country_code'] : '';
 		$language  = ( !empty( $this->settings['general_settings']['language_code'] ) ) ? '&language=' .$this->settings['general_settings']['language_code'] : '';
 	
-		//wp_enqueue_script( 'jquery-ui-sortable' );
-		
-		//register google maps api
-		wp_register_script( 'google-maps', ( is_ssl() ? 'https' : 'http' ) . '://maps.googleapis.com/maps/api/js?libraries=places'.$googleApi.'&sensor=false'.$region.$language, array( 'jquery' ), false );
-		
+		//wp_enqueue_script( 'jquery-ui-sortable' );		
 		wp_register_style( 'gmw-style-admin', GMW_URL . '/includes/admin/assets/css/style-admin.css' );
 		wp_enqueue_style( 'gmw-style-admin' );
 		
 		wp_register_script( 'gmw-admin', GMW_URL.'/includes/admin/assets/js/gmw-admin.js', array( 'jquery' ), GMW_VERSION, true );
         wp_enqueue_script( 'gmw-admin' ); 
+
+        //include font-awesome
+		wp_enqueue_style( 'font-awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' );
 
         //wp_register_script( 'chosen', GMW_URL . '/assets/js/chosen.jquery.min.js', array( 'jquery' ), GMW_VERSION, true );
         //wp_register_style( 'chosen',  GMW_URL . '/assets/css/chosen.min.css' );
@@ -110,24 +114,105 @@ class GMW_Admin {
 	}
 	
 	/**
+	 * GEO my WP core add-ons
+	 *
+	 * @access public
+	 * @return $addons
+	 */
+	private function core_addons() {
+	
+		$core_addons = array(
+				'posts' => array(
+						'name'    	=> 'posts',
+						'title'   	=> __( 'Post Types Locator', 'GMW' ),
+						'version' 	=> GMW_VERSION,
+						'item'	  	=> 'Post Types Locator',
+						'file' 	  	=> GMW_PATH . '/plugins/posts/connect.php',
+						'folder'	=> 'posts',
+						'author'  	=> 'Eyal Fitoussi',
+						'desc'    	=> __( 'Add geo-location to Posts and pages. Create an advance proximity search forms to search for locations based on post types, categories, distance and more.', 'GMW' ),
+						'license' 	=> false,
+						'image'   	=> false,
+						'require' 	=> array(),
+				),
+				'friends' => array(
+						'name'    	=> 'friends',
+						'title'   	=> __( 'Members Locator', 'GMW' ),
+						'version' 	=> GMW_VERSION,
+						'item'	  	=> 'Members Locator',
+						'file' 	  	=> GMW_PATH . '/plugins/friends/includes/gmw-fl-component.php',
+						'folder'	=> 'friends',
+						'author'  	=> 'Eyal Fitoussi',
+						'desc'    	=> __( 'Let the BuddyPress members of your site to add location to thier profile. Create an advance proximity search forms to search for members based on location, Xprofile Fields and more.', 'GMW' ),
+						'image'   	=> false,
+						'license' 	=> false,
+						'require' 	=> array(
+								'Buddypress Plugin' => array( 'plugin_file' => 'buddypress/bp-loader.php', 'link' => 'http://buddypress.org' )
+						)
+				),
+				'current_location' => array(
+						'name'    	=> 'current_location',
+						'title'   	=> __( 'Current Location', 'GMW' ),
+						'version' 	=> '1.0',
+						'item'	  	=> 'Single Location',
+						'file' 	  	=> GMW_PATH.'/plugins/current-location/loader.php',
+						'folder'	=> 'current-location',
+						'author'  	=> 'Eyal Fitoussi',
+						'desc'    	=> __( "Get and Display the visitor's current position." , 'GMW' ),
+						'image'   	=> false,
+						'license' 	=> false,
+						'require' 	=> array()
+				),
+				'single_location' => array(
+						'name'    	=> 'single_location',
+						'title'   	=> __( 'Single Location', 'GMW' ),
+						'version' 	=> '1.0',
+						'item'	  	=> 'Single Location',
+						'file' 	  	=> GMW_PATH . '/plugins/single-location/loader.php',
+						'folder'	=> 'single-location',
+						'author'  	=> 'Eyal Fitoussi',
+						'desc'    	=> __( 'Display location of certain component ( post, member... ) via shortcode and widget.', 'GMW' ),
+						'image'   	=> false,
+						'license' 	=> false,
+						'require' 	=> array()
+				),
+				'sweetdate_geolocation' => array(
+						'name'    	=> 'sweetdate_geolocation',
+						'title'   	=> __( 'Sweet Date Geolocation', 'GMW' ),
+						'version' 	=> '1.0',
+						'item'	  	=> 'Sweet Date Geolocation',
+						'file' 	  	=> GMW_PATH . '/plugins/sweetdate-geolocation/loader.php',
+						'folder'	=> 'sweetdate-geolocation',
+						'author'  	=> 'Eyal Fitoussi',
+						'desc'    	=> __( 'Enhance Sweet-date theme with geolocation features. ', 'GMW' ),
+						'image'   	=> false,
+						'license' 	=> false,
+						'require' 	=> array()
+				)
+		);
+		return $core_addons;
+	}
+	
+	/**
 	 * Initiate all GMW's add-ons
 	 *
 	 */
 	public function init_addons() {
-				
-		$addons_data   	   = array();
+
+		$addons_data   	   = self::core_addons();
 		$new_addons_status = array();
-						
+
 		//hook your add-on here
 		$addons_data = apply_filters( 'gmw_admin_addons_page', $addons_data );
 
+		//core add-ons arrived with GEO my WP
+		$core_addons = array( 'posts', 'friends', 'single_location', 'current_location', 'sweetdate_geolocation' );
+		
 		foreach ( $addons_data as $addon ) {	
 
-			if ( $addon['name'] == 'posts' && isset( $this->addons['posts'] ) && $this->addons['posts'] == 'active' ) {
-				$new_addons_status['posts'] = 'active';
-			} elseif ( $addon['name'] == 'friends' && isset( $this->addons['friends'] ) && $this->addons['friends'] == 'active' ) {
-				$new_addons_status['friends'] = 'active';
-			} elseif ( $addon['name'] != 'posts' && $addon['name'] != 'friends' ) { 
+			if ( in_array( $addon['name'], $core_addons ) && isset( $this->addons[$addon['name']] ) && $this->addons[$addon['name']] == 'active' ) {
+				$new_addons_status[$addon['name']] = 'active';
+			} elseif ( !in_array( $addon['name'], $core_addons ) ) { 
 				$new_addons_status[$addon['name']] = 'active';
 			}		
 		}
@@ -177,11 +262,25 @@ class GMW_Admin {
 		}
 		return $links;
 	}
+
+	/**
+	 * pages allow to add the "GMW Form" button
+	 */
+	public static function add_form_button_pages() {
+		
+		$page = in_array( basename( $_SERVER['PHP_SELF'] ), array( 'post.php', 'page.php', 'page-new.php', 'post-new.php' ) );
+
+		$page = apply_filters( 'gmw_add_form_button_pages', $page );
+
+		return $page;
+	}
 	
 	/**
 	 * Action target that adds the "Insert Form" button to the post/page edit screen
+	 *
+	 * This script insired by the the work of the developers of Gravity Forms plugin
 	 */
-    public static function add_form_button(){
+    public static function add_form_button(){	
 
     	// do a version check for the new 3.5 UI
         $version = get_bloginfo('version');
@@ -214,6 +313,7 @@ class GMW_Admin {
     *
     */
     public static function form_insert_popup(){
+
     	?>
             <script>
                 function gmwInsertForm(){
@@ -276,60 +376,13 @@ class GMW_Admin {
     <?php
     }
 		
-    /**
-     * GEO my WP credits - header
-     * @return string
-     */
-	static public function gmw_credits() {
-
-		$output  =	'<div class="gmw-credits">';
-		$output .=	'<img src="'.GMW_URL .'/assets/images/gmw-logo.png" />';
-		$output .=          '<div style="display: inline-block;"><a href="http://www.geomywp.com" target="_blank">'.__( 'Developed by Eyal Fitoussi - please take a moment to support my work' ,'GJM').'</a></div>';
-		$output .=          '<div>';
-		$output .=          	'<a href="http://wordpress.org/plugins/geo-my-wp/" title="Rate GEO my WP" target="_blank"><img src="'.GMW_URL .'/assets/images/star-icon.png" style="max-height:23px;" /></a>';
-		$output .= 				'<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WTF4HGEYNFF8W" class="gmw-credits-addons-button" target="_blank" Title="Thank you">Donate</a>';
-		$output .=              '<a class="gmw-credits-facebook-button" title="GEO my WP Facebook page" href="https://www.facebook.com/geomywp" target="_blank">Facebook</a>';
-		$output .=              '<a class="gmw-credits-twitter-button" title="GEO my WP Twitter page" href="https://twitter.com/GEOmyWP" target="_blank">Twitter</a>';
-		$output .=              '<a class="gmw-credits-email-button" title="Contact Us" href="mailto:info@geomywp.com" title="Email" target="_blank">Email</a>';
-		$output .=              '<div style="float:left;margin-top: 2px;" class="fb-like" data-href="https://www.facebook.com/geomywp" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>';
-		$output .=              '<span style="margin: 2px 4px 5px 4px;float:left;"><a href="https://twitter.com/GEOmyWP" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false" style="margin-top:2px">Follow @GEOmyWP</a></span>';
-		$output .=              '<a class="gmw-credits-addons-button" title="GEO my WP Add-ons" href="http://geomywp.com/add-ons" target="_blank">Add-ons</a>';
-		$output .=          '</div>';
-		$output .=	'</div>';
-		?>
-		<div id="fb-root"></div>
-		<script>
-            !function(d, s, id) {
-                var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
-                if (!d.getElementById(id)) {
-                    js = d.createElement(s);
-                    js.id = id;
-                    js.src = p + '://platform.twitter.com/widgets.js';
-                    fjs.parentNode.insertBefore(js, fjs);
-                }
-            }(document, 'script', 'twitter-wjs');
-            (function(d, s, id) {
-                var js, fjs = d.getElementsByTagName(s)[0];
-                if (d.getElementById(id))
-                    return;
-                js = d.createElement(s);
-                js.id = id;
-                js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=150962325088686";
-                fjs.parentNode.insertBefore(js, fjs);
-            }(document, 'script', 'facebook-jssdk'));
-        </script>
-		<?php
-		return $output;
-
-	}
-	
 	/**
 	 * GMW credit footer
 	 * @param unknown_type $content
 	 * @return string
 	 */
 	static public function gmw_credit_footer( $content ) {
-		return preg_replace('/[.,]/', '', $content) . ' ' . __( 'and Geo-locating with', 'GMW' ). ' <a href="http://geomywp.com" target="_blank" title="GEO my WP">'.__( 'GEO my WP', 'GMW' ) . '</a>.';	
+		return preg_replace('/[.,]/', '', $content) . ' ' . sprintf( __( 'and Geolocating with <a %s>GEO my WP</a>. Please take a moment to show your support. ', 'GMW' ), "href=\"http://geomywp.com\" target=\"_blank\" title=\"GEO my WP\"" ).'<a href="https://wordpress.org/support/view/plugin-reviews/geo-my-wp?filter=5" target="_blank" title="Rate GEO my WP"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></a>';	
 	}
 	
 	public function rickey_messick_credit( $key, $section, $formID, $gmw ) {
@@ -343,7 +396,6 @@ class GMW_Admin {
 			<td>
 				<span>This tab and features were sponsored by <a href="http://www.rickeymessick.com" target="_blank" title="Rickey Messick Credit">Rickey Messick</a>. Thank you!</span>
 			</td>
-			<td></td>
 		</tr>
 		<?php 		
 	}
