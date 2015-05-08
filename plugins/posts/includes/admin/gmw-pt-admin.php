@@ -21,6 +21,16 @@ class GMW_PT_Admin {
             include_once GMW_PT_PATH . 'includes/admin/gmw-pt-metaboxes.php';
         }
 
+        //add "address" column to manage posts page
+        foreach ( gmw_get_option( 'post_types_settings', 'post_types', array() ) as $post_type ) {
+
+            if ( $post_type == 'job_listing' || $post_type == 'resume')
+                continue;
+
+            add_filter( "manage_{$post_type}_posts_columns" , array( $this, 'add_address_column' ) );
+            add_action( "manage_{$post_type}_posts_custom_column" , array( $this, 'address_column_content' ), 10, 2 );
+        }
+
         add_filter( 'gmw_admin_settings', 		 array( $this, 'settings_init' 		), 1 );
         add_filter( 'gmw_admin_new_form_button', array( $this, 'new_form_button' 	), 1, 1 );
         add_filter( 'gmw_posts_form_settings', 	 array( $this, 'form_settings_init' ), 1, 1 );
@@ -30,10 +40,79 @@ class GMW_PT_Admin {
         add_action( 'gmw_main_settings_post_types', array( $this, 'main_settings_post_types' ), 1, 4 );
 
         //form settings
-        add_action( 'gmw_posts_form_settings_post_types', 	   	   array( $this, 'form_settings_post_types' 	), 1, 4 );
-        add_action( 'gmw_posts_form_settings_featured_image',      array( $this, 'featured_image' 				), 1, 4 );
-        add_action( 'gmw_posts_form_settings_show_excerpt',    	   array( $this, 'show_excerpt' 				), 1, 4 );
-        add_action( 'gmw_posts_form_settings_form_taxonomies', 	   array( $this, 'form_taxonomies' 				), 1, 4 );
+        add_action( 'gmw_posts_form_settings_post_types', 	   	   array( $this, 'form_settings_post_types' ), 1, 4 );
+        add_action( 'gmw_posts_form_settings_featured_image',      array( $this, 'featured_image' 			), 1, 4 );
+        add_action( 'gmw_posts_form_settings_show_excerpt',    	   array( $this, 'show_excerpt' 			), 1, 4 );
+        add_action( 'gmw_posts_form_settings_form_taxonomies', 	   array( $this, 'form_taxonomies' 			), 1, 4 );
+    }
+
+    /**
+     * Add "address" column to manager posts page
+     * @param  array $columns columns
+     * @return columns
+     */
+    public function add_address_column( $columns ) {
+
+        $new_columns = array();
+        $no_col      = true;
+
+        foreach ( $columns as $key => $column ) {
+            if ( array_key_exists( 'comments', $columns ) && $key == 'comments' ) {
+                $new_columns['gmw_address'] = __( 'Location', 'GMW' );
+                $no_col = false;
+            } elseif ( !array_key_exists( 'comments', $columns ) && array_key_exists( 'date', $columns ) && $key == 'date' ) {
+                $new_columns['gmw_address'] = __( 'Location', 'GMW' );
+                $no_col = false;
+            } 
+            $new_columns[$key] = $column;
+        }
+
+        if ( $no_col ) {
+            $new_columns['gmw_address'] = __( 'Location', 'GMW' );
+        }
+
+        return $new_columns;
+    }
+
+    /**
+     * Add content to custom column
+     * @param  [type] $column  [description]
+     * @param  [type] $post_id [description]
+     * @return [type]          [description]
+     */
+    public function address_column_content( $column, $post_id ) {
+
+        if ( $column != 'gmw_address' ) 
+            return;
+
+        global $wpdb;
+
+        $address_ok = false;
+
+        $location = $wpdb->get_row(
+                $wpdb->prepare("
+                        SELECT formatted_address, address FROM {$wpdb->prefix}places_locator
+                        WHERE `post_id` = %d", array( $post_id )
+                ) );
+
+        if ( empty( $location ) ) {
+            echo '<i class="fa fa-times-circle" style="color:red;margin-right:5px;"></i>'.__( 'No location found', "GMW" );
+            return;
+        }
+        
+        if ( !empty( $location->formatted_address ) ) {
+            $address_ok = true;
+            $address = $location->formatted_address;
+        } elseif ( !empty( $location->address ) ) {
+            $address_ok = true;
+            $address = $location->address;
+        } else {
+            $address =  __( 'Location found but the address is missing', "GMW" );
+        }
+        
+        $address = ( $address_ok == true ) ? '<a href="http://maps.google.com/?q='.$address.'" target="_blank" title="location">'.$address.'</a>' : '<span style="color:red">'.$address.'</span>';
+        echo '<i class="fa fa-check-circle" style="color:green;margin-right:5px;" style="color:green"></i>'. $address;
+
     }
 
     /**
@@ -489,7 +568,16 @@ class GMW_PT_Admin {
     									'0',
     							),
     							'default'	=> '1',
-    							'desc'	 	=> __( 'Use the value 1 if you want to display "Get Directions" link. ( default - 1 )', 'GMW' )
+    							'desc'	 	=> __( 'Use the value 1 if you want to display "Get Directions" link.', 'GMW' )
+    					),
+    					array(
+    							'attr'		=> 'info_window',
+    							'values' 	=> array(
+    									'1',
+    									'0',
+    							),
+    							'default'	=> '1',
+    							'desc'	 	=> __( 'Use the 0 to disable or the value 1 to enable the info-window of the marker represents the post being dispplayed.', 'GMW' )
     					),
     					array(
     							'attr'		=> 'hide_info',
