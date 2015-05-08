@@ -10,9 +10,7 @@ function gmwGoogleAddressAutocomplete( gacFields ) {
             //basic options of Google places API. 
             //see this page https://developers.google.com/maps/documentation/javascript/places-autocomplete
             //for other avaliable options
-            var options = {
-                types: ['geocode'],
-            };
+            var options = {};
              
             var autocomplete = new google.maps.places.Autocomplete(input, options);
              
@@ -22,9 +20,11 @@ function gmwGoogleAddressAutocomplete( gacFields ) {
         
                 if (!place.geometry) {
                     return;
-                }
-                        
+                }                        
             });
         }
     });
 };
+jQuery(document).ready(function($) {
+    gmwGoogleAddressAutocomplete( gacFields );
+});
