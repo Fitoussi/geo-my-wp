@@ -66,43 +66,58 @@ class GMW_Forms {
         	exit;
     	}
     	
+        $formID = $_GET['gmw_form_id'];
+
     	//default form settings
-    	$this->forms[$_GET['gmw_form_id']] = array(
+    	$this->forms[$formID] = array(
     			'ID'          => $_GET['gmw_form_id'],
     			'addon'       => $_GET['gmw_form_addon'],
-    			'form_title'  => $_GET['gmw_form_title'],
+    			'form_title'  => str_replace( '+', ' ', $_GET['gmw_form_title'] ),
     			'name'  	  => $_GET['gmw_form_name'],
     			'form_type'   => $_GET['gmw_form_type'],
     			'prefix'      => $_GET['gmw_form_prefix'],
     			'ajaxurl'     => GMW_AJAX,
+                'page_load_results' => array (
+                        'post_types'     => array( 'post' ),
+                        'display_posts'  => 1,
+                        'display_map'    => 'results'
+                ),
     			'search_form' => array (
     					'post_types' 	 => array( 'post' ),
-    					'form_template'  => 'no_form',
+    					'form_template'  => 'default',
     					'address_field'  => array(
-    							'title'	 => __( 'Enter Address...', 'GMW' ),
-    							'within' => 1
+    							'title'	               => __( 'Enter Address...', 'GMW' ),
+    							'within'               => 1,
+                                'address_autocomplete' => 1
     					),
     					'locator_icon'	 => 'within_address_field',
-    					'locator_submit' => 1
+    					'locator_submit' => 1,
+                        'units'          => 'both',
+                        'radius'         => '5,10,25,50,100,150,200'
     			),
     			'search_results' => array (
-    					'results_list'    => 1,
-    					'display_members' => 1,
-    					'display_members' => 1,
-    					'display_groups'  => 1,
-    					'display_users'	  => 1,
-    					'display_map'	  => 'results',
-    					'get_directions'  => 1,
-    					'excerpt'		  => array(
+                        'results_template' => 'default',
+    					'results_list'     => 1,
+                        'display_posts'    => 1,
+    					'display_members'  => 1,
+    					'display_members'  => 1,
+    					'display_groups'   => 1,
+    					'display_users'	   => 1,
+    					'display_map'	   => 'results',
+    					'get_directions'   => 1,
+    					'excerpt'		   => array(
     							'use'	=> 1,
     							'more'  => 'read more...'
-    					)
+    					),
+                        'per_page'      => '5,10,15,25',
     			),
     			'results_map' => array(
-    					'map_width'	 => '100%',
-    					'map_height' => '300px',
-    					'map_type'	 => 'ROADMAP',
-    					'zoom_level' => 'auto'   					
+    					'map_width'	       => '100%',
+    					'map_height'       => '300px',
+    					'map_type'	       => 'ROADMAP',
+    					'zoom_level'       => 'auto',
+                        'map_icon_usage'   => 'same',
+                        'markers_display'  => 'normal'   					
     			),
     			'info_window' => array(
     					'iw_type'	 	  => 'popup',
@@ -121,10 +136,12 @@ class GMW_Forms {
             }
         }
 
+        //ksort($this->forms);
+
         update_option( 'gmw_forms', $this->forms );
         
         //reload the page to prevent resubmission
-        wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_created&gmw_notice_status=updated' ) );
+        wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_action=edit_form&gmw_form_title='.str_replace( ' ', '+', $_GET['gmw_form_title'] ).'&gmw_form_prefix='.$this->forms[$formID]['prefix'].'&form_type='.$this->forms[$formID]['form_type'].'&formID='.$formID ) );
         exit;
     }
 
@@ -186,6 +203,42 @@ class GMW_Forms {
         exit;       
     }
     
+     /*
+     *  you can add your own button with the filter below. 
+     *  example of array to pass:
+     *  $buttons = array(
+     *              'name'       => 'posts',
+     *              'title'      => __('Post Types','GMW'),
+     *              'link_title' => 'Create new post types form",
+     *          );
+     */
+    public static function new_form_list() {
+                      
+        $nextFormID = 1;
+        $gmw_forms  = get_option('gmw_forms');
+
+        if ( !empty( $gmw_forms ) ) {
+            $nextFormID = max( array_keys( $gmw_forms ) ) + 1;
+        }
+
+        $buttons = array();
+        $buttons = apply_filters( 'gmw_admin_new_form_button', $buttons );
+        
+        ksort( $buttons );
+
+        $output = '<select onchange="if ( jQuery(this).val() != \'\' )  { window.location.href = jQuery(this).val(); }">';
+        $output .= '<option value="">'.__( 'Create new form', 'GMW' ).'</option>';
+
+        //display buttons
+        foreach ($buttons as $button) {
+            $form_url = esc_url( 'admin.php?page=gmw-forms&gmw_action=create_new_form&gmw_form_title='.str_replace( ' ', '+', $button['title'] ).'&gmw_form_addon='.$button['addon'].'&gmw_form_prefix='.$button['prefix'].'&gmw_form_type='.$button['name'].'&gmw_form_id='.$nextFormID.'&gmw_form_name=form_id_'.$nextFormID );
+            $output  .= '<option value="'.$form_url.'">'.esc_attr( $button['title'] ).'</option>';
+        }
+        $output .= '</select>';
+
+        return $output;
+    }
+
     /**
      * output list of forms
      *
@@ -197,50 +250,22 @@ class GMW_Forms {
         $this->addons = get_option('gmw_addons');
         $nextFormID   = 1;
 
-        if ( !empty( $this->forms ) )
-            $nextFormID = key(array_slice($this->forms, -1, 1, TRUE)) + 1;
+        if ( !empty( $this->forms ) ) {
+            $nextFormID = max( array_keys( $this->forms ) ) + 1;
+        }
 
         //$gmw_forms = get_option( 'gmw_forms' );
         ?>
         <div class="wrap">
 
-            <h2><?php echo _e('GEO my WP Forms', 'GMW'); ?></h2>
-            <div class="clear"></div>
+            <h2 class="gmw-wrap-top-h2">
+                <i class="fa fa-map-marker"></i>
+                <?php echo _e('GEO my WP Forms', 'GMW'); ?>
+                <?php echo self::new_form_list(); ?>
+                <?php gmw_admin_support_button(); ?>
+            </h2>
 
-            <table class="widefat fixed gmw-tabs-table">
-                <thead>
-                    <tr>
-                        <th style="padding:0px;">
-                			<h3 style="display: inline-table;color: #555;margin: 0px;background: #F7F7F7;padding: 12px 10px;float: left;margin:2px;border:1px solid #e5e5e5;font-size:14px;"><?php _e('Create new form', 'GMW'); ?></h3>
-			                <?php
-				                //create and display new form buttons
-				
-				                /*
-				                 *  you can add your own button with the filter below. 
-				                 *  example of array to pass:
-				                 *  $buttons = array(
-				                 *  			'name'		 => 'posts',
-				                 *  			'title' 	 => __('Post Types','GMW'),
-				                 *  			'link_title' => 'Create new post types form",
-				                 *  		);
-				                 */
-				                $buttons = array();
-				                $buttons = apply_filters('gmw_admin_new_form_button', $buttons);
-				                ksort($buttons);
-				
-				                if (empty($buttons)) {
-				                    echo '<span><a style="background:#FFE2E2;" class="gmw-nav-tab" href="' . admin_url('admin.php?page=gmw-add-ons') . '" >' . __('You need to activate some add-ons in order to create form', 'GMW') . '</a></span>';
-				                } else {
-				                    //display buttons
-				                    foreach ($buttons as $button) {
-				                        echo '<span><a style="background: #' . $button['color'] . ';" title="' . $button['link_title'] . '" href="admin.php?page=gmw-forms&gmw_action=create_new_form&gmw_form_title=' . $button['title'] . '&gmw_form_addon=' . $button['addon'] . '&gmw_form_prefix='.$button['prefix'].'&gmw_form_type=' . $button['name'] . '&gmw_form_id=' . $nextFormID . '&gmw_form_name=form_id_' . $nextFormID . '" class="gmw-nav-tab">' . $button['title'] . '</a></span>';
-				                    }
-				                }
-			                ?>
-		                </th>
-	                </tr>
-                </thead>  	
-            </table>
+            <div class="clear"></div>
 
             <table class="widefat" style="margin-top: 10px">
                 <thead>
@@ -259,7 +284,7 @@ class GMW_Forms {
 
                         <?php $rowNumber = 0; ?>
 
-			            <?php foreach ($this->forms as $key => $option) : ?>
+			            <?php foreach ( $this->forms as $key => $option ) : ?>
 
 			                <?php if ( !empty( $option['addon'] ) && !empty( $this->addons[$option['addon']] ) && $this->addons[$option['addon']] == 'active' ) : ?>
 			
