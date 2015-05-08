@@ -9,8 +9,6 @@
  * 
  * $args = array (
  *                  'post_id'          => false, 	//must pass post id in order to work
- *                  'post_type'         => 'post',  //post type
- *                  'post_title'        => false,	//post title
  *                  'address'           => false,	//can be eiter single line of full address field or an array of the adress components ex ( array( 'street' => '5060 lincoln st', 'city' => 'hollywood', 'state' => 'florida' )
  *                  'additional_info'   => array( 'phone' => false, 'fax' => false, 'email' => false, 'website' => false ),
  *                  'map_icon'          => false
@@ -20,8 +18,6 @@ function gmw_pt_update_location( $args ) {
 
     $defaults = array(
         'post_id'         => false,
-        'post_type'       => 'post',
-        'post_title'      => false,
         'address'         => false,
         'additional_info' => array( 'phone' => false, 'fax' => false, 'email' => false, 'website' => false ),
         'map_icon'        => '_default.png',
@@ -31,12 +27,14 @@ function gmw_pt_update_location( $args ) {
 
     extract( $r );
 
-    if ( !isset( $post_id ) || $post_id == false || !isset( $address ) && $address == false )
+    if ( empty( $post_id ) || empty( $address ) )
         return;
 
-    if ( !isset( $map_icon ) || $map_icon == false )
+    if ( empty( $map_icon ) ) {
         $map_icon = '_default.png';
-
+    }
+    
+    //if multiple address fields
     if ( is_array( $address ) ) {
 
         $address_apt = implode( ' ', $address );
@@ -47,19 +45,23 @@ function gmw_pt_update_location( $args ) {
 
         $returned_address = GEO_my_WP::geocoder( $address );
 
-        if ( !in_array( 'street', $args['address'] ) ) {
+        if ( !in_array( 'street', $args['address'] ) || empty( $args['address']['street'] ) ) {
         	$street  = $returned_address['street'];
         }
-        if ( !in_array( 'apt', $args['address'] ) ) {
-        	$apt     = $returned_address['apt'];
+        
+        if ( !in_array( 'apt', $args['address'] ) || empty( $args['address']['apt'] ) ) {
+        	$apt = $returned_address['apt'];
         }
-        if ( !in_array( 'city', $args['address'] ) ) {
-        	$city    = $returned_address['city'];
+        
+        if ( !in_array( 'city', $args['address'] ) || empty( $args['address']['city'] ) ) {
+        	$city = $returned_address['city'];
         }
-        $state   = $returned_address['state_short'];
-        if ( !in_array( 'zipcode', $args['address'] ) ) {
+               
+        if ( !in_array( 'zipcode', $args['address'] ) || empty( $args['address']['zipcode'] ) ) {
         	$zipcode = $returned_address['zipcode'];
         }
+        
+        $state   = $returned_address['state_short'];
         $country = $returned_address['country_short'];
 
     } else {
@@ -91,29 +93,31 @@ function gmw_pt_update_location( $args ) {
     //Save information to database
     global $wpdb;
     $wpdb->replace( $wpdb->prefix . 'places_locator', array(
-        'post_id'           => $locationArgs['args']['post_id'],
-        'feature'           => 0,
-        'post_type'         => $locationArgs['args']['post_type'],
-        'post_title'        => stripslashes( $locationArgs['args']['post_title'] ),
-        'post_status'       => 'publish',
-        'street'            => stripslashes( $street ),
-        'apt'               => stripslashes( $apt ),
-        'city'              => stripslashes( $city ),
-        'state'             => stripslashes( $state ),
-        'state_long'        => stripslashes( $locationArgs['geocoded']['state_long'] ),
-        'zipcode'           => stripslashes( $zipcode ),
-        'country'           => stripslashes( $country ),
-        'country_long'      => stripslashes( $locationArgs['geocoded']['country_long'] ),
-        'address'           => stripslashes( $address_apt ),
-        'formatted_address' => stripslashes( $locationArgs['geocoded']['formatted_address'] ),
-        'phone'             => $locationArgs[ 'args' ][ 'additional_info' ][ 'phone' ],
-        'fax'               => $locationArgs[ 'args' ][ 'additional_info' ][ 'fax' ],
-        'email'             => $locationArgs[ 'args' ][ 'additional_info' ][ 'email' ],
-        'website'           => $locationArgs[ 'args' ][ 'additional_info' ][ 'website' ],
-        'lat'               => $locationArgs[ 'geocoded' ][ 'lat' ],
-        'long'              => $locationArgs[ 'geocoded' ][ 'lng' ],
-        'map_icon'          => $map_icon,
-            )
+    		'post_id'           => $locationArgs['args']['post_id'],
+    		'feature'           => 0,
+    		'post_type'         => get_post_type( $locationArgs['args']['post_id'] ),
+    		'post_title'        => stripslashes( get_the_title( $locationArgs['args']['post_id'] ) ),
+    		'post_status'       => 'publish',
+    		'street_number'    	=> $locationArgs['geocoded']['street_number'],
+    		'street_name'       => $locationArgs['geocoded']['street_name'],
+    		'street'            => $street,
+    		'apt'               => $apt,
+    		'city'              => $city,
+    		'state'             => $state,
+    		'state_long'        => $locationArgs['geocoded']['state_long'],
+    		'zipcode'           => $zipcode,
+    		'country'           => $country,
+    		'country_long'      => $locationArgs['geocoded']['country_long'],
+    		'address'           => $address_apt,
+    		'formatted_address' => $locationArgs['geocoded']['formatted_address'],
+    		'phone'             => $locationArgs[ 'args' ][ 'additional_info' ][ 'phone' ],
+    		'fax'               => $locationArgs[ 'args' ][ 'additional_info' ][ 'fax' ],
+    		'email'             => $locationArgs[ 'args' ][ 'additional_info' ][ 'email' ],
+    		'website'           => $locationArgs[ 'args' ][ 'additional_info' ][ 'website' ],
+    		'lat'               => $locationArgs[ 'geocoded' ][ 'lat' ],
+    		'long'              => $locationArgs[ 'geocoded' ][ 'lng' ],
+    		'map_icon'          => $map_icon,
+    )
     );
 
     do_action( 'gmw_pt_after_location_updated', $locationArgs );
