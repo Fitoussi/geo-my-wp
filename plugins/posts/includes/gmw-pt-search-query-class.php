@@ -1,19 +1,12 @@
 <?php 
+if ( !class_exists( 'GMW' ) )
+	return;
+
 /**
  * GMW_PT_Search_Query class
  * 
  */
 class GMW_PT_Search_Query extends GMW {
-
-    /**
-     * __construct function.
-     */
-    function __construct( $form ) {
-
-        do_action( 'gmw_pt_search_query_start', $form );   
-  
-        parent::__construct( $form );       
-    }
   
     /**
      * Modify wp_query clauses to search by distance
@@ -21,15 +14,16 @@ class GMW_PT_Search_Query extends GMW {
      * @return $clauses
      */
     public function query_clauses( $clauses ) {
-        global $wpdb;
+        
+    	global $wpdb;
 		        
-        $this->show_non_located_posts = apply_filters( 'show_posts_without_location', false, $this->form );
+        $this->enable_non_located_posts = apply_filters( 'enable_non_located_posts', false, $this->form );
            
         // add the radius calculation and add the locations fields into the results
         if ( !empty( $this->form['org_address'] ) ) {
 
         	$clauses['join']   .= " INNER JOIN {$wpdb->prefix}places_locator gmwlocations ON $wpdb->posts.ID = gmwlocations.post_id ";
-        	$clauses['fields'] .= $wpdb->prepare( " , gmwlocations.lat, gmwlocations.long, gmwlocations.address, gmwlocations.formatted_address,
+        	$clauses['fields'] .= $wpdb->prepare( " , gmwlocations.lat, gmwlocations.long, gmwlocations.street, gmwlocations.city, gmwlocations.state, gmwlocations.zipcode, gmwlocations.country, gmwlocations.address, gmwlocations.formatted_address,
         			gmwlocations.phone, gmwlocations.fax, gmwlocations.email, gmwlocations.website, gmwlocations.map_icon,
         			ROUND( %d * acos( cos( radians( %s ) ) * cos( radians( gmwlocations.lat ) ) * cos( radians( gmwlocations.long ) - radians( %s ) ) + sin( radians( %s ) ) * sin( radians( gmwlocations.lat) ) ),1 ) AS distance", 
         			array( $this->form['units_array']['radius'], $this->form['your_lat'], $this->form['your_lng'], $this->form['your_lat'] ) );
@@ -44,11 +38,18 @@ class GMW_PT_Search_Query extends GMW {
         		$px[1] = $wpdb->posts.'.ID';
         	}
         	$clauses[$px[0]]    = $wpdb->prepare( " {$px[1]} HAVING distance <= %d OR distance IS NULL", $this->form['radius'] );
-        	$clauses['orderby'] = ( !$this->form['advanced_query'] ) ? "ORDER BY distance" : 'distance';
+        	
+        	if ( !$this->form['advanced_query'] ) {	
+        		$clauses['orderby'] = "ORDER BY distance";
+        	} elseif ( $this->form['query_args']['orderby'] == 'distance' ) {
+        		$clauses['orderby'] = 'distance';
+        	}
 
         } else {
         	
-        	if ( $this->show_non_located_posts ) {
+        	//if showing posts without location
+        	if ( $this->enable_non_located_posts ) {
+        		
         		// left join the location table into the query to display posts with no location as well
         		$clauses['join']  .= " LEFT JOIN {$wpdb->prefix}places_locator gmwlocations ON $wpdb->posts.ID = gmwlocations.post_id ";     		
         		$clauses['where'] .= " ";
@@ -57,7 +58,7 @@ class GMW_PT_Search_Query extends GMW {
         		$clauses['where'] .= " AND ( gmwlocations.lat != 0.000000 && gmwlocations.long != 0.000000 ) ";
         	}
         	
-        	$clauses['fields'] .= ", gmwlocations.lat, gmwlocations.long, gmwlocations.address, gmwlocations.formatted_address,
+        	$clauses['fields'] .= ", gmwlocations.lat, gmwlocations.long, gmwlocations.street, gmwlocations.city, gmwlocations.state, gmwlocations.zipcode, gmwlocations.country, gmwlocations.address, gmwlocations.formatted_address,
         	gmwlocations.phone, gmwlocations.fax, gmwlocations.email, gmwlocations.website, gmwlocations.map_icon";       
         }
         
@@ -84,7 +85,10 @@ class GMW_PT_Search_Query extends GMW {
 	        }	        
         }
                 
-        return apply_filters( 'gmw_pt_location_query_clauses', $clauses, $this->form );
+        $clauses = apply_filters( 'gmw_pt_location_query_clauses', $clauses, $this->form );
+        $clauses = apply_filters( "gmw_pt_location_query_clauses_{$this->form['ID']}", $clauses, $this->form );
+        
+        return $clauses; 
     }
 
 	/**
@@ -111,7 +115,7 @@ class GMW_PT_Search_Query extends GMW {
 		foreach ( $this->form['search_form']['taxonomies'][$postType] as $tax => $values ) {
 				
 			if ( !empty( $_GET['tax_'.$tax] ) )  {
-				$get_tax = $_GET['tax_'.$tax];
+				$get_tax = sanitize_text_field( $_GET['tax_'.$tax] );
 
 				if ( $get_tax != 0 ) {
 					$children    = get_term_children( $get_tax, $tax );
@@ -147,6 +151,7 @@ class GMW_PT_Search_Query extends GMW {
      */
     public function results() {
 	     
+    	//get the post types
         if ( $this->form['page_load_results_trigger'] ) {    	
         	$post_types = ( !empty( $this->form['page_load_results']['post_types'] ) ) ? $this->form['page_load_results']['post_types'] : array( 'post' );	
         } elseif ( !empty( $_GET['gmw_post'] ) ) {    	
@@ -155,7 +160,9 @@ class GMW_PT_Search_Query extends GMW {
         	$post_types = ( !empty( $this->form['search_form']['post_types'] ) ) ? $this->form['search_form']['post_types'] : array( 'post' );
         }
              
-        $this->form['advanced_query'] = apply_filters( 'gmw_pt_advanced_query', true, $this->form );
+        $this->form['advanced_query'] = true;
+        $this->form['advanced_query'] = apply_filters( 'gmw_pt_advanced_query', $this->form['advanced_query'], $this->form );
+        $this->form['advanced_query'] = apply_filters( "gmw_pt_advanced_query_{$this->form['ID']}", $this->form['advanced_query'], $this->form );
                 
         if ( $this->form['advanced_query'] ) {
         
@@ -171,14 +178,41 @@ class GMW_PT_Search_Query extends GMW {
 	        		'paged'               => $this->form['paged'],
 	        		'meta_query'          => apply_filters( 'gmw_pt_meta_query', $meta_args, $this->form ),
 	        		'ignore_sticky_posts' => 1,
+	        		'orderby'			  => 'distance',
 	        ), $this->form );
 	
-	        //Hooks before query 
+	        //Modify the form before the search query
 	        $this->form = apply_filters( 'gmw_pt_form_before_posts_query', $this->form, $this->settings );
+	        $this->form = apply_filters( "gmw_pt_form_before_posts_query_{$this->form['ID']}", $this->form, $this->settings );
 	
-	        /* add filters to wp_query to do radius calculation and get locations detail into results */
+	        //add filters to wp_query to do radius calculation and get locations detail into results
 	        add_filter( 'posts_clauses', array( $this, 'query_clauses' ) );
 	
+	        /* caching system for the future 
+	          	         
+	        $query_args_hash_array = array(
+	        		'query_args'    => $this->form['query_args'],
+	        		'units'			=> $this->form['units_array']['units'],
+	        		'prefix'		=> $this->form['prefix'],
+	        		'keywods'		=> $_GET['gmw_keywords'],
+	        		'distance'		=> $_GET['gmw_distance'],
+	        		'lat'		 	=> $this->form['your_lat'],    
+	        		'lng'		 	=> $this->form['your_lng'],
+	        		'address'		=> $this->form['org_address']
+	        );
+	        	        
+	        $query_args_hash = 'gmw-' . md5( json_encode( $query_args_hash_array ) . GEO_my_WP_Cache_Helper::get_transient_version( 'get_gmw_results' ) );
+	        	        
+	      	if ( false === ( $gmw_query = get_transient( $query_args_hash ) ) ) {
+	        	
+	        	echo 'do_query';
+	        	
+	        	$gmw_query = new WP_Query(  $query_args_hash_array );
+	        
+	        	set_transient( $query_args_hash, $gmw_query, DAY_IN_SECONDS * 30 );
+	        }
+	        */
+	        
 	        /* posts query */
 	        $gmw_query = new WP_Query( $this->form['query_args'] );
 	
@@ -190,7 +224,7 @@ class GMW_PT_Search_Query extends GMW {
 	        $this->form['total_results'] = $gmw_query->found_posts;
 	        $this->form['max_pages']     = $gmw_query->max_num_pages;
 	        
-        	//do "simpler" query for improved performance
+        //do "simpler" query for improved performance
         } else {
         		
         	global $wpdb;
@@ -207,7 +241,8 @@ class GMW_PT_Search_Query extends GMW {
         	$clauses['limit']   = "";
         	
         	if ( !empty( $this->form['get_per_page'] ) ) {
-        		$stating_page = ( $this->form['paged'] == 1 ) ? 0 : ( $this->form['get_per_page'] * ( $this->form['paged'] - 1 ) );
+        		
+        		$stating_page     = ( $this->form['paged'] == 1 ) ? 0 : ( $this->form['get_per_page'] * ( $this->form['paged'] - 1 ) );
         		$clauses['limit'] = "LIMIT {$stating_page},{$this->form['get_per_page']}";
         	}
         		
@@ -228,16 +263,16 @@ class GMW_PT_Search_Query extends GMW {
         	$this->form['max_pages']     = ( empty( $this->form['get_per_page'] ) || $this->form['get_per_page'] == 1 ) ? 1 : $this->form['total_results']/$this->form['get_per_page'];
         }
                 
-        /* hooks before posts loop */
+        //Modify the form values before the loop
         $this->form = apply_filters( 'gmw_pt_form_before_posts_loop', $this->form, $this->settings );
+        $this->form = apply_filters( "gmw_pt_form_before_posts_loop_{$this->form['ID']}", $this->form, $this->settings );
 
         //enqueue stylesheet and get results template file
-        $results_template = $this->search_results();
+        $results_template = $this->results_template();
         
         //check if we got results and if so run the loop
-        if ( !empty( $this->form['results'] ) ) {            
-        	global $post;
-                                  
+        if ( !empty( $this->form['results'] ) ) {  
+        	                                           
             $this->form['post_count'] = ( $this->form['paged'] == 1 ) ? 1 : ( $this->form['get_per_page'] * ( $this->form['paged'] - 1 ) ) + 1;
  
             if ( $this->form['advanced_query'] ) {
@@ -247,9 +282,13 @@ class GMW_PT_Search_Query extends GMW {
         	}
         	
             do_action( 'gmw_pt_have_posts_start', $this->form, $this->settings );
+            do_action( "gmw_pt_have_posts_start_{$this->form['ID']}", $this->form, $this->settings );
 
             //call results template file
-            if ( isset( $this->form['search_results']['display_posts'] ) && !$this->form['in_widget'] ) {			
+            if ( isset( $this->form['search_results']['display_posts'] ) ) {	
+            	
+                global $post;
+
             	$gmw = $this->form;
                 include( $results_template );             
             /*
@@ -257,16 +296,23 @@ class GMW_PT_Search_Query extends GMW {
              * to add element to the info windows of the map
              */
             } elseif ( $this->form['search_results']['display_map'] != 'na' ) {
+            	
             	if ( $this->form['advanced_query'] ) {
+            		
+                    global $post;
+
                 	while ( $gmw_query->have_posts() ) : $gmw_query->the_post(); endwhile;
             	} else {
+            		
             		foreach ( $this->form['results'] as $key => $post ) {
+            			
             			$this->form['results'][$key] = self::the_post( $post );
             		}
             	}
             }
 
             do_action( 'gmw_pt_have_posts_end', $this->form, $this->settings );
+            do_action( "gmw_pt_have_posts_end_{$this->form['ID']}", $this->form, $this->settings );
 
             if ( $this->form['advanced_query'] ) {
             	remove_action( 'the_post', array( $this, 'the_post' ), 1 );
@@ -279,16 +325,26 @@ class GMW_PT_Search_Query extends GMW {
     }
     
     /**
-     * GMW Function - append address to permalink
+     * GMW Function - append location details to permalink
      * @param $url
      * @since 2.5
      */
-    function append_address_to_permalink( $url ) {
+    public function append_address_to_permalink( $url ) {
     	
-    	if ( !isset( $this->form['org_address'] ) || empty( $this->form['org_address'] ) )
+    	if ( empty( $this->form['org_address'] ) )
     		return $url;
     	
-    	return $url. '?address='.str_replace( ' ', '+', $this->form['org_address']);
+    	global $post;
+    	
+    	$url_args = array(
+    			'address' 	=> str_replace( ' ', '+', $this->form['org_address'] ),
+    			'lat'	  	=> $this->form['your_lat'],
+    			'lng'	  	=> $this->form['your_lng'],
+    			'distance'	=> $post->distance,
+    			'units'	    => $this->form['units_array']['name']
+    	);
+
+    	return apply_filters( 'gmw_pt_post_permalink', $url. '?'.http_build_query( $url_args ), $url, $url_args );
     }
    
     /**
@@ -300,7 +356,7 @@ class GMW_PT_Search_Query extends GMW {
     		global $post;
     	}
 
-    	add_filter('the_permalink', array( $this, 'append_address_to_permalink') );
+    	add_filter( 'the_permalink', array( $this, 'append_address_to_permalink') );
     	
         // add permalink and thumbnail into each post in the loop
         // we are doing it here to be able to display it in the info window of the map
@@ -312,6 +368,9 @@ class GMW_PT_Search_Query extends GMW {
             
         do_action( 'gmw_pt_loop_the_post', $post, $this->form, $this->settings );
         
+        $post = apply_filters( "gmw_pt_loop_modify_the_post", $post, $this->form, $this->settings );
+        $post = apply_filters( "gmw_pt_loop_modify_the_post_{$this->form['ID']}", $post, $this->form, $this->settings );
+                
         if ( !$this->form['advanced_query'] ) {
         	return $post;
         }
@@ -324,32 +383,35 @@ class GMW_PT_Search_Query extends GMW {
      */
     public function info_window_content( $post ) {
 
-    	$address = ( !empty( $post->formatted_address ) ) ? $post->formatted_address : $post->address;
+    	$address   = ( !empty( $post->formatted_address ) ) ? $post->formatted_address : $post->address;
+    	$permalink = get_permalink( $post->ID );
+    	$thumb	   = get_the_post_thumbnail( $post->ID );
     	
     	$output  			     = array();
-    	$output['start']		 = '<div class="gmw-pt-info-window-wrapper wppl-pt-info-window">';
-    	$output['thumb'] 		 = '<div class="thumb wppl-info-window-thumb">'.get_the_post_thumbnail( $post->ID ).'</div>';
-    	$output['content_start'] = '<div class="content wppl-info-window-info"><table>';
-    	$output['title'] 		 = '<tr><td><div class="title wppl-info-window-permalink"><a href="'.get_permalink( $post->ID ).'">'.$post->post_title.'</a></div></td></tr>';
-    	$output['address'] 		 = '<tr><td><span class="address">'.$this->form['labels']['info_window']['address'].'</span>'.$address.'</td></tr>';
+    	$output['start']		 = "<div class=\"gmw-pt-info-window-wrapper wppl-pt-info-window\">";
+    	$output['thumb'] 		 = "<div class=\"thumb wppl-info-window-thumb\">{$thumb}</div>";
+    	$output['content_start'] = "<div class=\"content wppl-info-window-info\"><table>";
+    	$output['title'] 		 = "<tr><td><div class=\"title wppl-info-window-permalink\"><a href=\"{$permalink}\">{$post->post_title}</a></div></td></tr>";
+    	$output['address'] 		 = "<tr><td><span class=\"address\">{$this->form['labels']['info_window']['address']}</span>{$address}</td></tr>";
     	
     	if ( isset( $post->distance ) ) {
-    		$output['distance'] = '<tr><td><span class="distance">'.$this->form['labels']['info_window']['distance'].'</span>'.$post->distance.' '.$this->form['units_array']['name'].'</td></tr>';
+    		$output['distance'] = "<tr><td><span class=\"distance\">{$this->form['labels']['info_window']['distance']}</span>{$post->distance} {$this->form['units_array']['name']}</td></tr>";
     	}
     	
     	if ( !empty( $this->form['search_results']['additional_info'] ) ) {
     	
     		foreach ( $this->form['search_results']['additional_info'] as $field ) {
 	    		if ( isset( $post->$field ) ) {
-	    			$output[$this->form['labels']['info_window'][$field]] = '<tr><td><span class="'.$this->form['labels']['info_window'][$field].'">'.$this->form['labels']['info_window'][$field].'</span>'.$post->$field.'</td></tr>';
+	    			$output[$this->form['labels']['info_window'][$field]] = "<tr><td><span class=\"{$this->form['labels']['info_window'][$field]}\">{$this->form['labels']['info_window'][$field]}</span>{$post->$field}</td></tr>";
 	    		}
     		}
     	}
     	
-    	$output['content_end'] = '</table></div>';
-    	$output['end'] 		   = '</div>';
-    	
+    	$output['content_end'] = "</table></div>";
+    	$output['end'] 		   = "</div>";
+
     	$output = apply_filters( 'gmw_pt_info_window_content', $output, $post, $this->form );
+    	$output = apply_filters( "gmw_pt_info_window_content_{$this->form['ID']}", $output, $post, $this->form );
     	
     	return implode( ' ', $output );
     }
