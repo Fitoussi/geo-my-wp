@@ -75,38 +75,47 @@ class GMW_Shortcodes_page {
     									   __( "used with GEO my WP and other add-ons for different functionlities. ", "GMW" ),
     					'attributes'  => array(
     							array(
+    									'attr'	 	=> 'element_id',
+    									'values' 	=> array(
+    											'numeric value'
+    									),
+    									'default'	=> 'random numeric value',
+    									'desc'	 	=> __( "You can assign a unique element ID to the shortcode. The unique ID can be useful for styling purposes as well when using the hooks provided by the shortcoded when custom modifications required.", "GMW" )
+    							),
+    							array(
+    									'attr'	 	=> 'elements',
+    									'values' 	=> array(
+    											'username',
+    											'address',
+    											'map',
+    									),
+    									'default'	=> 'username,address,map',
+    									'desc'	 	=> __( "Enter the elements that you want to display, in the order that you want them to be displayed comma saperated. The avaliable elements are:<ol><li>username - display the username or guest ( for logged out users ) with a greeting</li><li>address - the address of the user's current position</li><li>map - google map showing the user's osition</li></ol>", "GMW" )
+    							),
+    							array(
+    									'attr'	 	=> 'address_fields ( previously used as display_by )',
+    									'values' 	=> array(
+    											'street, city, state, zipcode, country, address',
+    									),
+    									'default'	=> 'city,country',
+    									'desc'	 	=> __( "Use any of the address components, comma separated ( ex. street,city,state,zipcode,county ) or use address for the full address, to display the address on the screen once the user's location was found.", "GMW" )
+    							),
+    							array(
     									'attr'	 	=> 'title',
     									'values' 	=> array(
     											__( 'any text','GMW' ),
     									),
     									'default'	=> 'Your location',
-    									'desc'	 	=> __( "Display a title above the \"Get Current Location\" link. Ex \"Your Location\".", "GMW" )
+    									'desc'	 	=> __( "The title that will be display before the address. For example if you use the title \"Your location\" it will be displayes as Your Location Hollywood Florida ( assuming that the user's location is Hollywood Florida ).", "GMW" )
     							),
     							array(
-    									'attr'	 	=> 'display_by',
-    									'values' 	=> array(
-    											'street, city, state, zipcode, country',
-    									),
-    									'default'	=> 'city,country',
-    									'desc'	 	=> __( "Use any of the address components, ( street,city,state,zipcode,county ) comma separated, that you want to display on the screen once the user's location found.", "GMW" )
-    							),
-    							array(
-    									'attr'	 	=> 'text_only',
+    									'attr'	 	=> 'address_as_text ( previously used as text_only )',
     									'values' 	=> array(
     											'1',
     											'0',
     									),
     									'default'	=> '0',
-    									'desc'	 	=> __( "Use the value 1 to display the current locaiton of the user as text only instead of an hyperlink which popups the current location form.", "GMW" )
-    							),
-    							array(
-    									'attr'	 	=> 'show_name',
-    									'values' 	=> array(
-    											'1',
-    											'0',
-    									),
-    									'default'	=> '1',
-    									'desc'	 	=> __( "Use the value 1 to display a greeting message with the username when logged in or \"guest\" when looged out.", "GMW" )
+    									'desc'	 	=> __( "Use the value 1 to display the current location of the user as text only instead of an hyperlink which once clicked it popups the current location form.", "GMW" )
     							),
     							array(
     									'attr'	 	=> 'user_message',
@@ -123,15 +132,6 @@ class GMW_Shortcodes_page {
     									),
     									'default'	=> 'Hello guest!',
     									'desc'		=> __( "Greeting message that will be displayed when the users is logged out.", "GMW" )
-    							),
-    							array(
-    									'attr'	 	=> 'map',
-    									'values' 	=> array(
-    											'1',
-    											'0',
-    									),
-    									'default'	=> '1',
-    									'desc'	 	=> __( "Display map showing the user's current location.", "GMW" )
     							),
     							array(
     									'attr'	 	=> 'map_height',
@@ -190,10 +190,11 @@ class GMW_Shortcodes_page {
     					),
     					'examples'  => array(
     							array(
-    									'example' => "[gmw_current_location title=\"Your Location\" display_by=\"city,state,country\" show_name=\"1\"]",
+    									'example' => "[gmw_current_location elements=\"username,address,map\" title=\"Your Location\" address_fields=\"city,state,country\"]",
     									'desc'	  => __( "This example will display:", 'gmw' ).
-    												 "Your Location<br />
-    												  Hello ( username ), Get your current location. "
+    												 "<br />Hello ( username )<br />
+    												  Your Location Hollywood Florida US.<br />
+    									              [ Map will be displayed here ]"
 
     							),
     					),
@@ -215,8 +216,13 @@ class GMW_Shortcodes_page {
         ?>
         <div class="wrap">
 
-            <h2 class="gmw-wrap-top-h2"><?php echo _e( 'GEO my WP Shortcodes', 'GMW' ); ?></h2>
+            <h2 class="gmw-wrap-top-h2">
+                <?php echo _e( 'GEO my WP Shortcodes', 'GMW' ); ?>
+                <?php gmw_admin_support_button(); ?>
+            </h2>
 
+            <div class="clear"></div>
+            
             <form method="post" action="options.php">
 
                 <div class="gmw-tabs-table gmw-shortcodes-page-nav-tabs gmw-nav-tab-wrapper">
