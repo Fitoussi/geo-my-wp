@@ -15,6 +15,8 @@ function gmw_fl_update_location() {
 
     if ( $wpdb->replace('wppl_friends_locator', array(
                 'member_id'         => $bp->displayed_user->id,
+                'street_number'     => $location['gmw_street_number'],
+                'street_name'       => $location['gmw_street_name'],
                 'street'            => $location['gmw_street'],
                 'apt'               => $location['gmw_apt'],
                 'city'              => $location['gmw_city'],
