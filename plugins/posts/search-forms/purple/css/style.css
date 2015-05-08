@@ -35,6 +35,10 @@ div.gmw-pt-purple-form-wrapper select {
 	margin-top:5px
 }
 
+div.gmw-pt-purple-form-wrapper .gmw-address-field-wrapper {
+	position:relative;
+}
+
 div.gmw-pt-purple-form-wrapper .gmw-dropdown-taxonomy-wrapper label, 
 div.gmw-pt-purple-form-wrapper .gmw-checkbox-taxonomy-wrapper span:first-child,
 div.gmw-pt-purple-form-wrapper .gmw-custom-field-wrapper label,
@@ -100,6 +104,28 @@ div.gmw-pt-purple-form-wrapper .gmw-locator-btn-wrapper img {
 	margin-left: 5px;
 }
 
+div.gmw-pt-purple-form-wrapper.gmw-form-wrapper .gmw-locator-btn-within-wrapper {
+	cursor: pointer;
+	padding:5px 5px;
+	position: absolute;
+	right:0px;
+	height: 25px;
+	width:25px;
+	top:0px;
+	background: none;
+	border: 0px;
+}
+
+div.gmw-pt-purple-form-wrapper .gmw-locator-btn-within-wrapper:hover {
+	background: none;
+	border: 0px;
+}
+
+div.gmw-pt-purple-form-wrapper .gmw-locator-btn-wrapper .gmw-locator-btn-within {
+	color: #CFD2FF; !important;
+	font-size:24px;
+}
+
 div.gmw-pt-purple-form-wrapper .gmw-submit {
 	width:100%;
 }
@@ -114,7 +140,7 @@ div.gmw-pt-purple-form-wrapper .gmw-submit {
 
 .widget_gmw_search_form_widget div.gmw-pt-purple-form-wrapper .gmw-locator-btn-wrapper, 
 .widget_gmw_search_form_widget div.gmw-pt-purple-form-wrapper .gmw-submit-button {
-	padding: 9px 0px;
+	//padding: 9px 0px;
 }
 
 /* premium features */

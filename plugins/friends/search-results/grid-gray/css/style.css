@@ -280,11 +280,10 @@ div.gmw-fl-grid-gray-results-wrapper .bottom-wrapper {
 	position:relative;
 }
 
-div.gmw-fl-grid-gray-results-wrapper ul.members-list-wrapper li.single-member .get-directions-wrapper::before {
-	content: "\f230";
+div.gmw-fl-grid-gray-results-wrapper ul.members-list-wrapper li.single-member .get-directions-icon {
 	color: white !important;
-	font-size:23px !important;
-	padding:4px 0px 0px 3px;
+	font-size:18px !important;
+	padding:5px;
 }
 
 div.gmw-fl-grid-gray-results-wrapper ul.members-list-wrapper li.single-member .get-directions-wrapper a {
@@ -293,13 +292,12 @@ div.gmw-fl-grid-gray-results-wrapper ul.members-list-wrapper li.single-member .g
 
 div.gmw-fl-grid-gray-results-wrapper ul.members-list-wrapper li.single-member .get-directions,
 div.gmw-fl-grid-gray-results-wrapper ul.members-list-wrapper li.single-member .address-wrapper {
-	padding:5px 10px 0px 0;
-	display: inline-block;
 	color:#1A694A;
 	overflow: hidden;
-	max-height: 20px;
-	position:absolute;
-	left: 27px
+}
+
+div.gmw-fl-grid-gray-results-wrapper ul.members-list-wrapper li.single-member .address-wrapper {
+	padding:5px 10px 0px 5px;
 }
 
  #no-results-message p {

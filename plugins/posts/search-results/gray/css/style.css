@@ -112,6 +112,11 @@ div.gmw-pt-gray-results-wrapper ul.posts-list-wrapper li .top-wrapper h2.post-ti
 
 div.gmw-pt-gray-results-wrapper ul.posts-list-wrapper .top-wrapper div.address-wrapper {
 	float: right;
+	line-height:20px;
+}
+
+div.gmw-pt-gray-results-wrapper ul.posts-list-wrapper .top-wrapper div.address-wrapper .address-icon {
+	font-size:15px;
 }
 
 div.gmw-pt-gray-results-wrapper ul.posts-list-wrapper .top-wrapper span.address {

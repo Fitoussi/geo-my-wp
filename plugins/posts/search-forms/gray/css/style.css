@@ -97,7 +97,7 @@ div.gmw-pt-gray-form-wrapper .gmw-locator-btn-wrapper img {
 	margin-left: 5px;
 }
 
-div.gmw-pt-gray-form-wrapper .gmw-locator-btn-within-wrapper {
+div.gmw-form-wrapper.gmw-pt-gray-form-wrapper .gmw-locator-btn-within-wrapper {
 	cursor: pointer;
 	padding:5px 5px;
 	position: absolute;
@@ -114,10 +114,9 @@ div.gmw-pt-gray-form-wrapper .gmw-locator-btn-within-wrapper:hover {
 	border: 0px;
 }
 
-div.gmw-pt-gray-form-wrapper .gmw-locator-btn-wrapper .gmw-locator-btn-within::before {
-	content: "\f230" !important;
+div.gmw-pt-gray-form-wrapper .gmw-locator-btn-wrapper .gmw-locator-btn-within {
 	color: rgb(179, 223, 193) !important;
-	font-size:26px !important;
+	font-size:24px;
 }
 
 div.gmw-pt-gray-form-wrapper .gmw-submit {
@@ -201,6 +200,19 @@ div.gmw-pt-gray-form-wrapper .gmw-checkbox-taxonomy-wrapper span {
 
 div.gmw-pt-gray-form-wrapper input.gmw-single-checkbox {
 	margin-right: 5px;	
+}
+
+div.gmw-pt-gray-form-wrapper .gmw-checkbox-taxonomy-wrapper ul li.gmw-checkbox-wrapper img.category-icon {
+	vertical-align: top;
+	max-height: 18px;
+	box-shadow: none;
+	border: 1px solid #dedede;
+	margin-right: 4px;
+	cursor: pointer;
+}
+
+div.gmw-pt-gray-form-wrapper .gmw-checkbox-taxonomy-wrapper ul li.gmw-checkbox-wrapper img.category-icon.checked {
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
 div.gmw-pt-gray-form-wrapper ul.chosen-choices {

@@ -46,16 +46,14 @@ if ( !function_exists('gmw_modify_tax_all_value') ) {
 		<?php do_action( 'gmw_search_form_before_address', $gmw ); ?>
 		
 		<div class="address-locator-wrapper">
+			
 			<!-- Address Field -->
 			<?php gmw_search_form_address_field( $gmw, $id='', $class='' ); ?>
-				
-			<div class="locator-holder">
-				<!--  locator icon -->
-				<?php gmw_search_form_locator_icon( $gmw, $class='' ); ?>
-			</div>
+		
+			<!--  locator icon -->
+			<?php gmw_search_form_locator_icon( $gmw ); ?>
 		</div>
 
-		<input type="text" name="keywords" placeholder="words" />
 		<?php do_action( 'gmw_search_form_before_post_types', $gmw ); ?>
 				
 		<!-- post types dropdown -->

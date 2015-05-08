@@ -36,8 +36,12 @@
 		<?php gmw_per_page( $gmw, $gmw['total_results'], 'paged' ); ?><?php gmw_pagination( $gmw, 'paged', $gmw['max_pages'] ); ?>
 	</div> 
 	
-	<!-- Map -->
-	<?php gmw_results_map( $gmw ); ?>
+	 <!-- GEO my WP Map -->
+    <?php 
+    if ( $gmw['search_results']['display_map'] == 'results' ) {
+        gmw_results_map( $gmw );
+    }
+    ?>
 		
 	<?php do_action( 'gmw_search_results_before_loop' , $gmw, $post ); ?>
 	
@@ -74,7 +78,7 @@
 									<?php the_post_thumbnail( array( $gmw['search_results']['featured_image']['width'], $gmw['search_results']['featured_image']['height'] ) ); ?>
 								</div>
 							<?php } else { ?>
-								<div class="dashicons-before dashicons-admin-generic no-post-thumbnail"></div>
+								<i class="fa fa-picture-o no-post-thumbnail"></i>
 							<?php } ?>
 							
 						<?php } ?>
@@ -85,7 +89,7 @@
 							<?php do_action( 'gmw_posts_loop_before_excerpt', $gmw, $post ); ?>
 							
 							<div class="excerpt">
-								<?php gmw_excerpt( $post, $gmw, $post->post_content, $gmw['search_results']['excerpt']['count'] ); ?>
+								<?php gmw_excerpt( $post, $gmw, $post->post_content, $gmw['search_results']['excerpt']['count'], $gmw['search_results']['excerpt']['more'] ); ?>
 							</div>
 						<?php } ?>
 				
@@ -113,13 +117,13 @@
 		   					<?php do_action( 'gmw_search_results_before_get_directions', $post, $gmw ); ?>
 		   					<!--  Address -->
 	                        <div class="get-directions-wrapper">
-			    				<span class="dashicons-before dashicons-location address-icon"></span>
+			    				<span class="fa fa-map-marker address-icon"></span>
     							<?php gmw_directions_link( $post, $gmw, $post->address ); ?>
 		    				</div>
 			    		<?php } else { ?>
 			    			 <!--  Address -->
 	                        <div class="address-wrapper">
-						    	<span class="dashicons-before dashicons-location address-icon"></span>
+						    	<span class="fa fa-map-marker address-icon"></span>
 						    	<span class="wppl-address"><?php gmw_location_address( $post, $gmw ); ?></span>
 						    </div>
 		    		  	<?php  } ?>

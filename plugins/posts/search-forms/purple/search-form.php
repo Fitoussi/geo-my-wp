@@ -61,7 +61,7 @@ if  ( !function_exists('gmw_locator_button') ) {
 		<?php gmw_search_form_address_field( $gmw, $id='', $class='' ); ?>
 				
 		<!--  locator icon -->
-		<?php gmw_search_form_locator_icon( $gmw, $class='' ); ?>
+		<?php gmw_search_form_locator_icon( $gmw ); ?>
 				
 		<?php do_action( 'gmw_search_form_before_distance', $gmw ); ?>
 		

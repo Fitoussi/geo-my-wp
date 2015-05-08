@@ -34,10 +34,8 @@
 			<!-- Address Field -->
 			<?php gmw_search_form_address_field( $gmw, $id='', $class='' ); ?>
 				
-			<div class="locator-holder">
-				<!--  locator icon -->
-				<?php gmw_search_form_locator_icon( $gmw, $class='' ); ?>
-			</div>
+			<!--  locator icon -->
+			<?php gmw_search_form_locator_icon( $gmw ); ?>
 		</div>
 				
 		<?php do_action( 'gmw_search_form_before_xprofile', $gmw ); ?>

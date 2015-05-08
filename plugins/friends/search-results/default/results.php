@@ -45,8 +45,12 @@
     <div class="clear"></div>
 
     <!-- GEO my WP Map -->
-    <?php gmw_results_map( $gmw ); ?>
-
+    <?php 
+    if ( $gmw['search_results']['display_map'] == 'results' ) {
+        gmw_results_map( $gmw );
+    }
+    ?>
+    
     <?php do_action( 'bp_before_directory_members_list' ); ?>
 	    
     <ul id="members-list" class="item-list" role="main">

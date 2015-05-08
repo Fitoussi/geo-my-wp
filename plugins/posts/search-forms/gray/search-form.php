@@ -40,7 +40,7 @@ if  ( !function_exists('gmw_locator_button') && $gmw['search_form']['locator_ico
 	<?php do_action( 'gmw_before_search_form', $gmw ); ?>
 	
 	<form class="gmw-form gmw-form-<?php echo $gmw['ID']; ?>" name="gmw_form" action="<?php echo $gmw['search_results']['results_page']; ?>" method="get">
-			
+		
 		<?php do_action( 'gmw_search_form_start', $gmw ); ?>
 		
 		<div class="post-types-wrapper">
@@ -56,13 +56,13 @@ if  ( !function_exists('gmw_locator_button') && $gmw['search_form']['locator_ico
 		</div>
 		
 		<?php do_action( 'gmw_search_form_before_address', $gmw ); ?>
-		            
+		
 		<!-- Address Field -->
 		<?php gmw_search_form_address_field( $gmw, $id='', $class='' ); ?>
-				
+		
 		<!--  locator icon -->
-		<?php gmw_search_form_locator_icon( $gmw, $class='' ); ?>
-				
+		<?php gmw_search_form_locator_icon( $gmw ); ?>
+		
 		<?php do_action( 'gmw_search_form_before_distance', $gmw ); ?>
 		
 		<div class="gmw-unit-distance-wrapper">

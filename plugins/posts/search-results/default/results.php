@@ -36,8 +36,12 @@
 		<?php gmw_per_page( $gmw, $gmw['total_results'], 'paged' ); ?><?php gmw_pagination( $gmw, 'paged', $gmw['max_pages'] ); ?>
 	</div> 
 		
-	<!-- Map -->
-	<?php gmw_results_map( $gmw ); ?>
+	 <!-- GEO my WP Map -->
+    <?php 
+    if ( $gmw['search_results']['display_map'] == 'results' ) {
+        gmw_results_map( $gmw );
+    }
+    ?>
 	
 	<div class="clear"></div>
 	
@@ -78,7 +82,7 @@
 					<?php do_action( 'gmw_posts_loop_before_excerpt' , $gmw, $post ); ?>
 					                
 					<div class="excerpt wppl-excerpt">
-						<?php gmw_excerpt( $post, $gmw, $post->post_content, $gmw['search_results']['excerpt']['count'] ); ?>
+						<?php gmw_excerpt( $post, $gmw, $post->post_content, $gmw['search_results']['excerpt']['count'], $gmw['search_results']['excerpt']['more'] ); ?>
 					</div>
 				<?php } ?>
 
@@ -114,7 +118,7 @@
                     	
                         <!--  Address -->
                         <div class="address-wrapper">
-					    	<span class="dashicons-before dashicons-location address-icon"></span>
+					    	<span class="fa fa-map-marker address-icon"></span>
 					    	<span class="wppl-address"><?php gmw_location_address( $post, $gmw ); ?></span>
 					    </div>
                         <!--  Driving Distance -->

@@ -37,15 +37,19 @@
 		</div>
 	</div>
 	
-	<!-- GEO my WP Map -->
-    <?php gmw_results_map( $gmw ); ?>
+	 <!-- GEO my WP Map -->
+    <?php 
+    if ( $gmw['search_results']['display_map'] == 'results' ) {
+        gmw_results_map( $gmw );
+    }
+    ?>
 
     <?php do_action( 'bp_before_directory_members_list' ); ?>
     	
     <ul class="members-list-wrapper">
 
     	<!-- members loop -->
-    	<?php while ( bp_members() ) : bp_the_member(); ?>
+    	<?php while ( bp_members() ) : bp_the_member() ; ?>
 
     		<!-- do not remove this line -->
     		<?php $member = $members_template->member; ?>

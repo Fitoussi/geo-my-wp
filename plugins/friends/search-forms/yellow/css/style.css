@@ -134,8 +134,8 @@ div.gmw-fl-yellow-form-wrapper .gmw-address-field-wrapper .gmw-locator-btn-withi
 }
 
 div.gmw-fl-yellow-form-wrapper .gmw-address-field-wrapper .gmw-locator-btn-within-wrapper .gmw-locator-button::before {
-	color: rgba(231, 222, 84, 0.93) !important;
-	font-size:28px !important;
+	color: rgba(231, 222, 84, 0.93);
+	font-size:24px;
 }
 
 div.gmw-fl-yellow-form-wrapper .gmw-locator-btn-wrapper, 

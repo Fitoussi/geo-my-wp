@@ -22,8 +22,12 @@
 		<?php gmw_per_page( $gmw, $gmw['total_results'], 'paged' ); ?><?php gmw_pagination( $gmw, 'paged', $gmw['max_pages'] ); ?>
 	</div> 
 		
-	<!-- Map -->
-	<?php gmw_results_map( $gmw ); ?>
+	 <!-- GEO my WP Map -->
+    <?php 
+    if ( $gmw['search_results']['display_map'] == 'results' ) {
+        gmw_results_map( $gmw );
+    }
+    ?>
 	
 	<div class="clear"></div>
 	
@@ -57,7 +61,7 @@
 				<!--  Excerpt -->
 				<?php if ( isset( $gmw['search_results']['excerpt']['use'] ) ) { ?>
 					<div class="excerpt">
-						<?php gmw_excerpt( $post, $gmw, $post->post_content, $gmw['search_results']['excerpt']['count'] ); ?>
+						<?php gmw_excerpt( $post, $gmw, $post->post_content, $gmw['search_results']['excerpt']['count'], $gmw['search_results']['excerpt']['more'] ); ?>
 					</div>
 				<?php } ?>
 				

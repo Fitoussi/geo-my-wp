@@ -38,8 +38,12 @@
 		</div>
 	</div>
 	
-	<!-- GEO my WP Map -->
-    <?php gmw_results_map( $gmw ); ?>
+	 <!-- GEO my WP Map -->
+    <?php 
+    if ( $gmw['search_results']['display_map'] == 'results' ) {
+        gmw_results_map( $gmw );
+    }
+    ?>
 
     <?php do_action( 'gmw_search_results_before_loop' , $gmw ); ?>
 
@@ -102,9 +106,9 @@
 						
 						<!-- Get directions -->	
 		   				<?php if ( isset( $gmw['search_results']['get_directions'] ) ) { ?>
-			    			<div class="get-directions-wrapper dashicons-before dashicons-admin-generic">
-		    					<?php gmw_directions_link( $members_template->member, $gmw, $members_template->member->address ); ?>
-			    			</div>
+			    			<i class="get-directions-icon fa fa-map-marker"></i>
+		    				<?php gmw_directions_link( $members_template->member, $gmw, $members_template->member->address ); ?>
+			    			
 			    		<?php } else { ?>
 			    			<div class="address-wrapper">
 			                    <?php gmw_location_address( $members_template->member, $gmw ); ?>

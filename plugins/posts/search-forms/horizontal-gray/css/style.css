@@ -84,35 +84,30 @@ div.gmw-pt-horizontal-gray-form-wrapper .gmw-no-address-error {
 	border: 1px solid rgb(252, 165, 165) !important;
 }
 
-div.gmw-pt-horizontal-gray-form-wrapper .locator-holder {
-	padding:2px 0;
+div.gmw-pt-horizontal-gray-form-wrapper .gmw-locator-btn-wrapper {
+	padding:5px 0;
 	position: absolute;
 	right:2px;
 	height: 25px;
 	width:25px;
-	top:0px
-}
-
-div.gmw-pt-horizontal-gray-form-wrapper .gmw-locator-btn-wrapper {
+	top:0px;
 	cursor: pointer;
 	color:#375348;
-	padding:2px
 }
 
-div.gmw-pt-horizontal-gray-form-wrapper .gmw-locator-btn-within-wrapper {
+div.gmw-pt-horizontal-gray-form-wrapper.gmw-form-wrapper .gmw-locator-btn-within-wrapper {
 	cursor: pointer;
-	padding:3px 2px;
 	position: absolute;
 	right:0px;
-	height: 25px;
-	width:25px;
-	top:0px
+	top:0px;
+	padding: 2px 5px ;
+	width:initial;
+	height: initial;
 }
 
-div.gmw-pt-horizontal-gray-form-wrapper .gmw-locator-btn-wrapper .gmw-locator-btn-within::before {
-	content: "\f230" !important;
-	color: rgb(179, 223, 193) !important;
-	font-size:26px !important;
+div.gmw-pt-horizontal-gray-form-wrapper .gmw-locator-btn-wrapper .gmw-locator-btn-within {
+	color: rgb(179, 223, 193);
+	font-size:24px;
 }
 
 div.gmw-pt-horizontal-gray-form-wrapper .gmw-locator-btn-wrapper img {

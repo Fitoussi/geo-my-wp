@@ -220,11 +220,12 @@ div.gmw-pt-grid-gray-results-wrapper ul.posts-list-wrapper li.single-post .post-
 	width:100%;
 }
 
-div.gmw-pt-grid-gray-results-wrapper ul.posts-list-wrapper li.single-post .no-post-thumbnail::before {
-	content: "\f128";
+div.gmw-pt-grid-gray-results-wrapper ul.posts-list-wrapper li.single-post .no-post-thumbnail {
 	color: rgb(179, 223, 193) !important;
 	font-size:40px !important;
-	margin: 30px 0 0 -15px;
+	margin: 0;
+	padding-top: 28px;
+	box-sizing: border-box;
 }
 
 div.gmw-pt-grid-gray-results-wrapper ul.posts-list-wrapper .post-content .right-col {
@@ -280,8 +281,9 @@ div.gmw-pt-grid-gray-results-wrapper .bottom-wrapper {
 	position:relative;
 }
 
-div.gmw-pt-grid-gray-results-wrapper ul.posts-list-wrapper li.single-post .dashicons-location::before {
-	color: white !important;
+div.gmw-pt-grid-gray-results-wrapper ul.posts-list-wrapper li.single-post .address-icon {
+	color: white;
+	font-size:14px;
 }
 
 div.gmw-pt-grid-gray-results-wrapper ul.posts-list-wrapper li.single-post .get-directions-wrapper a {
@@ -383,7 +385,7 @@ div.gmw-pt-grid-gray-results-wrapper div.gmw-no-results-wrapper p {
 		height:200px;
 	}
 	
-	div.gmw-pt-grid-gray-results-wrapper ul.posts-list-wrapper li.single-post .no-post-thumbnail::before {
+	div.gmw-pt-grid-gray-results-wrapper ul.posts-list-wrapper li.single-post .no-post-thumbnail {
 		margin: 60px 0 0 -55px;
 		font-size:80px !important;
 	}
