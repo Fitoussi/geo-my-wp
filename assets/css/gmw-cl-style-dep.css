@@ -1,0 +1,33 @@
+/* current location shortcode  */
+
+#gmw-cl-form-wrapper {
+	display: none;
+	width: 300px;
+	min-height: 140px;
+	position: fixed;
+	top: 35%;
+	left: 50%;
+	background: white;
+	border: 1px solid #ddd;
+	padding: 5px;
+	-moz-box-shadow: 0px 0px 5px #ddd;
+	-webkit-box-shadow: 0px 0px 5px #ddd;
+	box-shadow: 0px 0px 5px #ddd;
+	z-index: 99999999999;
+}
+
+#gmw-cl-close-btn {
+	float: right;
+	margin-top: -3px;
+	font-size: 16px;
+	color: #777;
+	cursor: pointer;
+}
+
+#gmw-cl-form {
+	text-align: center;
+}
+
+#gmw-cl-info-wrapper div {
+	margin: 5px 0px;
+}
