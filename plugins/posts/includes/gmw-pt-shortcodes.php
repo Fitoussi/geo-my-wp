@@ -1,11 +1,13 @@
 <?php
+if ( class_exists( 'GMW_Single_Location' ) )
+	return;
 
 /**
  * GMW PT Shortcode - Shortcode display location of a single post, post type or a page.
  * @version 1.0
  * @author Eyal Fitoussi
  */
-class GMW_Single_Location {
+class GMW_Single_Post_Location {
 
     /**
      * __Constructor
@@ -14,42 +16,41 @@ class GMW_Single_Location {
         add_shortcode( 'gmw_single_location', array( $this, 'get_single_location' ) );
     }
 
-    public function get_single_location( $org_args ) {
-	
-    	//default shortcode attributes
-    	$args = shortcode_atts(
-    			array(
-    					'element_id'	  	=> rand( 5, 100 ),
-    					'post_id'         	=> 0,
-    					'post_title'	  	=> 0,
-    					'distance'		  	=> 1,
-    					'distance_unit'	  	=> 'm',
-    					'map'             	=> 1,
-    					'map_height'      	=> '250px',
-    					'map_width'       	=> '250px',
-    					'map_type'        	=> 'ROADMAP',
-    					'zoom_level'      	=> 13,
-    					'additional_info' 	=> 'address,phone,fax,email,website',
-    					'directions'      	=> 1,
-    					'info_window'	  	=> 1,
-    					'hide_info'		  	=> 0,
-    					'ul_marker'   	  	=> 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
-    					'ul_message'	  	=> __( 'Your Location', 'GMW' ),
-    					'location_marker'	=> 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',  					
-    			), $org_args );
+    public function get_single_location( $args) {
 
-    	extract($args);
+    	//default shortcode attributes
+    	extract(
+    			shortcode_atts(
+    					array(
+    							'element_id'	  => 0,
+    							'post_id'         => 0,
+    							'post_title'	  => 0,
+    							'distance'		  => 1,
+    							'distance_unit'	  => 'm',
+    							'map'             => 1,
+    							'map_height'      => '250px',
+    							'map_width'       => '250px',
+    							'map_type'        => 'ROADMAP',
+    							'zoom_level'      => 13,
+    							'additional_info' => 'address,phone,fax,email,website',
+    							'directions'      => 1,
+    							'info_window'	  => 1,
+    							'show_info'		  => 1,
+    							'ul_marker'   	  => 1,
+    							'ul_message'	  => __( 'Your Location', 'GMW' ),
+    					), $args )
+    	);
+
+    	$element_id = ( $element_id != 0 ) ? $element_id : rand( 5, 100 );
 
     	/*
     	 * check if user entered post id
     	*/
     	if ( $post_id == 0 ) {
+
     		global $post;
-    		
-    		if ( empty( $post ) )
-    			return;
-    		
     		$post_id = $post->ID;
+
         }
 
         //get the post's info
@@ -98,8 +99,8 @@ class GMW_Single_Location {
         $location_map = '';
         if ( $map == 1 ) {			
         	$location_map  = '';
-            $location_map .= '<div class="map-wrapper" style="width:'.$map_width.'; height:'.$map_height.'">';
-            $location_map .= 	'<div id="gmw-single-post-map-'.$element_id.'" class="gmw-map" style="width:100%; height:100%;"></div>';
+            $location_map .= '<div class="map-wrapper" style="width:' . $map_width . '; height:' . $map_height . '">';
+            $location_map .= 	'<div id="gmw-single-post-map-' . $element_id . '" class="gmw-map" style="width:100%; height:100%;"></div>';
             $location_map .= '</div>';
         }
 		
@@ -108,17 +109,17 @@ class GMW_Single_Location {
 			
         	$your_address = '';
         	if ( !empty( $_GET['address'] ) ) {
-        		$your_address = $_GET['address'];
+        		$your_address = sanitize_text_field( $_GET['address'] );
         	} elseif ( !empty( $_COOKIE['gmw_address'] ) ) {
-        		$your_address = urldecode(  $_COOKIE['gmw_address'] );
+        		$your_address = urldecode( $_COOKIE['gmw_address'] );
         	}
         		
         	$location_directions  = '';
             $location_directions .= '<div class="directions-wrapper">';
             $location_directions .= 	'<div id="gmw-single-post-sc-form-' . $element_id . '" class="gmw-single-post-sc-form" style="display:none;">';
             $location_directions .= 		'<form action="https://maps.google.com/maps" method="get" target="_blank">';
-            $location_directions .= 			'<input type="text" size="35" name="saddr" value="'.$your_address.'" placeholder="Your location" />';
-            $location_directions .= 			'<input type="hidden" name="daddr" value="' . $post_info->address . '" />';
+            $location_directions .= 			'<input type="text" size="35" name="saddr" value="'. esc_attr( $your_address ).'" placeholder="Your location" />';
+            $location_directions .= 			'<input type="hidden" name="daddr" value="' . esc_attr( $post_info->address ) . '" />';
             $location_directions .= 			'<input type="submit" class="button" value="' . __( 'GO', 'GMW' ) . '" />';
             $location_directions .= 		'</form>';
             $location_directions .= 	'</div>';
@@ -137,54 +138,41 @@ class GMW_Single_Location {
             $location_info  = '';
             $location_info .= '<div class="gmw-single-post-sc-additional-info">';
 
-            $post_address = ( !empty( $post_info->formatted_address ) ) ? $post_info->formatted_address : $post->address;
+            $post_address = ( !empty( $post_info->formatted_address ) ) ? esc_attr( $post_info->formatted_address ) : esc_attr( $post->address );
             
             if ( in_array( 'address', $additional_info ) && !empty( $post_address ) ) {
                 $location_info .= '<div class="gmw-address"><span>' . __( 'Address: ', 'GMW' );
                 $location_info .= '</span>';
-                $location_info .= ( !empty( $post_info->formatted_address ) ) ? $post_info->formatted_address : __( 'N/A', 'GMW' );
+                $location_info .= ( !empty( $post_info->formatted_address ) ) ? esc_attr( $post_info->formatted_address ) : __( 'N/A', 'GMW' );
                 $location_info .= '</div>';
             }
             if ( in_array( 'phone', $additional_info ) && !empty( $post_info->phone ) ) {
                 $location_info .= '<div class="gmw-phone"><span>' . __( 'Phone: ', 'GMW' );
                 $location_info .= '</span>';
-                $location_info .= ( !empty( $post_info->phone ) ) ? $post_info->phone : __( 'N/A', 'GMW' );
+                $location_info .= ( !empty( $post_info->phone ) ) ? esc_attr( $post_info->phone ) : __( 'N/A', 'GMW' );
                 $location_info .= '</div>';
             }
             if ( in_array( 'fax', $additional_info ) && !empty( $post_info->fax ) ) {
                 $location_info .= '<div class="gmw-fax"><span>' . __( 'Fax: ', 'GMW' );
                 $location_info .= '</span>';
-                $location_info .= ( !empty( $post_info->fax ) ) ? $post_info->fax : __( 'N/A', 'GMW' );
+                $location_info .= ( !empty( $post_info->fax ) ) ? esc_attr( $post_info->fax ) : __( 'N/A', 'GMW' );
                 $location_info .= '</div>';
             }
             if ( in_array( 'email', $additional_info ) && !empty( $post_info->email ) ) {
                 $location_info .= '<div class="gmw-email"><span>' . __( 'Email: ', 'GMW' );
                 $location_info .= '</span>';
-                $location_info .= ( !empty( $post_info->email ) ) ? '<a href="mailto:' . $post_info->email . ' ">' . $post_info->email . '</a>' : __( 'N/A', 'GMW' );
+                $location_info .= ( !empty( $post_info->email ) ) ? '<a href="mailto:' . esc_attr( $post_info->email ) . ' ">' . esc_attr( $post_info->email ) . '</a>' : __( 'N/A', 'GMW' );
                 $location_info .= '</div>';
             }
             if ( in_array( 'website', $additional_info ) && !empty( $post_info->website ) ) {
-            	
-            	$url = parse_url( $post_info->website );
-            	
-            	if ( empty( $url['scheme'] ) ) {
-            		$url['scheme'] = 'http';
-            	}
-            		
-            	$scheme = $url['scheme'].'://';
-            	$path   = str_replace( $scheme,'',$post_info->website );
-            		            	
                 $location_info .= '<div class="gmw-website"><span>' . __( 'Website: ', 'GMW' );
                 $location_info .= '</span>';
-                $location_info .= ( !empty( $post_info->website ) ) ? '<a href="'.$scheme.$path.'" title="'.$path.'" target="_blank">'.$path.'</a>' : "N/A";
+                $location_info .= ( !empty( $post_info->website ) ) ? '<a href="http://' . esc_attr( $post_info->website ) . '" target="_blank">' . esc_attr( $post_info->website ) . '</a>' : "N/A";
                 $location_info .= '</div>';
             }
             $location_info .= '</div>';
         }
         $location_wrap_end = '</div>';     	
-       
-        $post_title    = esc_attr( $post_info->post_title );
-        $ul_marker  = ( empty( $ul_marker ) ) ? false : $ul_marker;
         ?>
         <script>
 
@@ -213,7 +201,7 @@ class GMW_Single_Location {
                     gmwSinglePostMarker = new google.maps.Marker({
                         position: desLoc,
                         map: gmwSinglePostMap,
-                        icon:'<?php echo $location_marker; ?>'
+                        icon:'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
                     });
 			           
                     if ( '<?php echo $info_window; ?>' == 1 ) {
@@ -223,7 +211,7 @@ class GMW_Single_Location {
 						var infoWindoContent = '';
 						infoWindoContent += '<div class="gmw-info-window wppl-info-window" style="font-size: 13px;color: #555;line-height: 18px;font-family: arial;">';
 						if ( '<?php echo $post_title ;?>' ==  1 ) {
-							infoWindoContent += '<div class="map-info-title" style="color: #457085;text-transform: capitalize;font-size: 16px;margin-bottom: -10px;"><?php echo $post_title; ?></div><br />'
+							infoWindoContent += '<div class="map-info-title" style="color: #457085;text-transform: capitalize;font-size: 16px;margin-bottom: -10px;"><?php echo $post_info->post_title; ?></div><br />'
 						}
 						if ( '<?php echo $distance; ?>' == 1 ) {
 							infoWindoContent += '<?php echo $location_distance; ?>';
@@ -239,7 +227,7 @@ class GMW_Single_Location {
 	                    });
 					}
                     
-                    if ( '<?php echo $userLocationOk; ?>' == true && '<?php echo $ul_marker; ?>' != false  ) {
+                    if ( '<?php echo $userLocationOk; ?>' == true && '<?php echo $ul_marker; ?>' == 1  ) {
 
                         var yourLoc = new google.maps.LatLng(<?php echo $yLat; ?>, <?php echo $yLng; ?>);
                     	latlngbounds.extend(yourLoc);
@@ -247,7 +235,7 @@ class GMW_Single_Location {
 	                    ylMarker = new google.maps.Marker({
 	                        position: yourLoc,
 	                        map: gmwSinglePostMap,
-	                        icon:'<?php echo $ul_marker; ?>'
+	                        icon:'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'
 	                    });
 
 	                    gmwSinglePostMap.fitBounds(latlngbounds);
@@ -263,12 +251,13 @@ class GMW_Single_Location {
         </script>
         <?php
         
-        if ( $hide_info == 1 ) {
-        	$output = $location_wrap_start.$location_map.$location_wrap_end;
+        if ( $show_info == 1 ) {
+       		$output = $location_wrap_start.$location_title.$location_map.$location_distance.$location_info.$location_directions.$location_wrap_end;
         }else {
-        	$output = $location_wrap_start.$location_title.$location_map.$location_distance.$location_info.$location_directions.$location_wrap_end;
-        }        
+        	$output = $location_wrap_start.$location_map.$location_wrap_end;
+        }
+        
         return apply_filters( 'gmw_pt_single_location_output', $output, $args, $location_wrap_start, $location_title, $location_map, $location_distance, $location_info, $location_directions, $location_wrap_end );
     }
 }
-new GMW_Single_Location();
+new GMW_Single_Post_Location();
