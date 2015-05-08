@@ -40,7 +40,7 @@ class GMW_Premium_Plugin_Updater {
         $this->version  = $_api_data['version'];
 
         // Set up hooks.
-        add_action( 'admin_init', array( $this, 'init' ) );
+        $this->init();
         add_action( 'admin_init', array( $this, 'show_changelog' ) );
     }
 
@@ -74,8 +74,14 @@ class GMW_Premium_Plugin_Updater {
      */
     function check_update( $_transient_data ) {
 
+    	global $pagenow;
+    	
         if( ! is_object( $_transient_data ) ) {
             $_transient_data = new stdClass;
+        }
+        
+        if( 'plugins.php' == $pagenow && is_multisite() ) {
+        	return $_transient_data;
         }
 
         if ( empty( $_transient_data->response ) || empty( $_transient_data->response[ $this->name ] ) ) {
@@ -94,11 +100,8 @@ class GMW_Premium_Plugin_Updater {
 
                 $_transient_data->last_checked = time();
                 $_transient_data->checked[ $this->name ] = $this->version;
-
             }
-
         }
-
         return $_transient_data;
     }
 
@@ -127,14 +130,27 @@ class GMW_Premium_Plugin_Updater {
 
         $update_cache = get_site_transient( 'update_plugins' );
 
-        if ( empty( $update_cache->response ) || empty( $update_cache->response[ $this->name ] ) ) {
+        if ( ! is_object( $update_cache ) || empty( $update_cache->response ) || empty( $update_cache->response[ $this->name ] ) ) {
 
-            $version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
+            $cache_key    = md5( 'edd_plugin_' .sanitize_key( $this->name ) . '_version_info' );
+            $version_info = get_transient( $cache_key );
+
+            if( false === $version_info ) {
+
+                $version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
+
+                set_transient( $cache_key, $version_info, 3600 );
+            }
+
+
+            if( ! is_object( $version_info ) ) {
+                return;
+            }
 
             if( version_compare( $this->version, $version_info->new_version, '<' ) ) {
-            
+
                 $update_cache->response[ $this->name ] = $version_info;
-            
+
             }
 
             $update_cache->last_checked = time();
@@ -142,12 +158,16 @@ class GMW_Premium_Plugin_Updater {
 
             set_site_transient( 'update_plugins', $update_cache );
 
+        } else {
+
+            $version_info = $update_cache->response[ $this->name ];
+
         }
 
         // Restore our filter
         add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ) );
 
-        if ( ! empty( $update_cache->response[ $this->name ] ) && version_compare( $this->version, $version_info->new_version, '<' ) ) {
+    if ( ! empty( $update_cache->response[ $this->name ] ) && version_compare( $this->version, $version_info->new_version, '<' ) ) {
 
             // build a plugin list row, with update notification
             $wp_list_table = _get_list_table( 'WP_Plugins_List_Table' );
@@ -157,14 +177,14 @@ class GMW_Premium_Plugin_Updater {
 
             if ( empty( $version_info->download_link ) ) {
                 printf(
-                    __( 'There is a new version of %1$s available. <a target="_blank" class="thickbox" href="%2$s">View version %3$s details</a>.' ),
+                    __( 'There is a new version of %1$s available. <a target="_blank" class="thickbox" href="%2$s">View version %3$s details</a>.', 'GGF' ),
                     esc_html( $version_info->name ),
                     esc_url( $changelog_link ),
                     esc_html( $version_info->new_version )
                 );
             } else {
                 printf(
-                    __( 'There is a new version of %1$s available. <a target="_blank" class="thickbox" href="%2$s">View version %3$s details</a> or <a href="%4$s">update now</a>.' ),
+                    __( 'There is a new version of %1$s available. <a target="_blank" class="thickbox" href="%2$s">View version %3$s details</a> or <a href="%4$s">update now</a>.', 'GGF' ),
                     esc_html( $version_info->name ),
                     esc_url( $changelog_link ),
                     esc_html( $version_info->new_version ),
@@ -268,7 +288,7 @@ class GMW_Premium_Plugin_Updater {
             'license'    => $data['license'],
             'item_name'  => isset( $data['item_name'] ) ? $data['item_name'] : false,
             'item_id'    => isset( $data['item_id'] ) ? $data['item_id'] : false,
-            'slug'       => $this->slug,
+            'slug'       => $data['slug'],
             'author'     => $data['author'],
             'url'        => home_url()
         );
@@ -288,7 +308,7 @@ class GMW_Premium_Plugin_Updater {
         return $request;
     }
 
-    public function show_changelog() {
+public function show_changelog() {
 
 
         if( empty( $_REQUEST['edd_sl_action'] ) || 'view_plugin_changelog' != $_REQUEST['edd_sl_action'] ) {
@@ -304,7 +324,7 @@ class GMW_Premium_Plugin_Updater {
         }
 
         if( ! current_user_can( 'update_plugins' ) ) {
-            wp_die( __( 'You do not have permission to install plugin updates' ) );
+            wp_die( __( 'You do not have permission to install plugin updates', 'GGF' ), __( 'Error', 'GGF' ), array( 'response' => 403 ) );
         }
 
         $response = $this->api_request( 'plugin_latest_version', array( 'slug' => $_REQUEST['slug'] ) );
@@ -313,9 +333,7 @@ class GMW_Premium_Plugin_Updater {
             echo '<div style="background:#fff;padding:10px;">' . $response->sections['changelog'] . '</div>';
         }
 
-
         exit;
     }
-
 }
 endif;
