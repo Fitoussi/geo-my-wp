@@ -2,23 +2,25 @@
  * GEO my WP main stylesheet
  * @author Eyal Fitoussi
  */
-.gmw-map img {
+ 
+ div.pac-container {
+	z-index:99999999;
+}
+
+/** map **/
+div.gmw-map img {
 	max-width: initial !important;
 }
 
-.gmw-map-wrapper {
+div.gmw-map-wrapper {
 	position: relative;
 	display: inline-block;
 }
 
-div.pac-container {
-	z-index:99999999;
-}
-
-.gmw-map-frame {
+div.gmw-map-wrapper.gmw-map-frame {
 	border: 1px solid #999;
-	padding: 5px;
-	background: #EEE;
+	padding: 2px;
+	background: #f7f7f7;
 	border-bottom: 1px solid #BBB;
 	border-right: 1px solid #BBB;
 	border-left: 1px solid #DDD;
@@ -28,21 +30,38 @@ div.pac-container {
 	box-sizing: border-box;
 }
 
-.gmw-map-loader-wrapper {
-	display: block;
-	margin: 0 auto;
-	top: 45%;
-	position: absolute;
-	width: 100%;
-	text-align: center;
-	z-index: 5;
+div.gmw-map-wrapper .gmw-map-loader {
+	position:absolute;
+	left:45%;
+	top:45%;
 }
 
-.gmw-map-loader-wrapper img {
-	width: 80%;
-	max-width: 200px !important;
-	box-shadow: none !important
+div.gmw-map-wrapper.gmw-expanded-map {
+	position:fixed !important;
+	z-index:99999999999 !important;
+	width:100% !important;
+	height:100% !important;
+	left:0px;
+	top:0px;
 }
+
+span.gmw-resize-map-trigger.fa-expand,
+span.gmw-resize-map-trigger.fa-compress {
+	background: white;
+	color:#555;
+	cursor:pointer;
+	padding: 2px 4px;
+	font-size: 13px;
+	border: 1px solid rgba(0, 0, 0, 0.14902);
+	-webkit-box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
+	box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
+	-webkit-background-clip: padding-box;
+	background-clip: padding-box;
+	margin-top:5px;
+	margin-right: 5px;
+}
+
+/** end map **/
 
 .gmw-no-results-wrapper {
 	margin-top:15px;
@@ -73,70 +92,11 @@ div.pac-container {
 	hyphens: none !important;
 }
 
-.gmw-expanded-map {
-	position:fixed;
-	z-index:9999999;
-	width:100% !important;
-	height:100% !important;
-	left:0px;
-	top:0px;
-}
-
-.gmw-map-wrapper .gmw-expand-map-trigger.dashicons-editor-expand {
-	background: white;
-	cursor:pointer;
-	content: "\f211";
-	color:rgba(27, 52, 70, 0.66);
-	font-size: 19px;
-	height:19px;
-	width:20px;
-	padding: 0px;
-	border: 1px solid rgba(0, 0, 0, 0.14902);
-	-webkit-box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
-	box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
-	-webkit-background-clip: padding-box;
-	background-clip: padding-box;
-	margin-top:5px;
-	margin-right: 5px;
-}
-
-.gmw-map-wrapper .gmw-expand-map-trigger.dashicons-editor-contract {
-	top: 5px !important; 
-	background: white;
-	cursor:pointer;
-	content: "\f211";
-	color:rgba(27, 52, 70, 0.66);
-	font-size: 20px;
-	height:20px;
-	width:22px;	
-	border: 1px solid rgba(0, 0, 0, 0.14902);
-	-webkit-box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
-	box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
-	-webkit-background-clip: padding-box;
-	background-clip: padding-box;
-	margin-right: 5px;
-}
 
 /* single location shortcode */
 
 .gmw-single-post-sc-wrapper {
 	
-}
-
-.gmw-single-post-sc-wrapper .map-wrapper {
-	border: 1px solid #CCC;
-	padding: 5px;
-	background: #F1F1F1;
-	display: inline-block;
-	-webkit-box-sizing: border-box; 
-	-moz-box-sizing: border-box;    
-	box-sizing: border-box;
-	position: relative;
-}
-
-.gmw-single-post-sc-wrapper .distance-wrapper p {
-	margin:0px;
-	padding:0px;
 }
 
 /* Loading scren */
@@ -162,48 +122,6 @@ div.pac-container {
 	margin: 20px 0px;
 	color: rgb(0, 150, 255);
 	font-size: 18px;
-}
-
-/* current location shortcode  */
-
-.gmw-cl-wrapper .gmw-cl-location-title-wrapper {
-	padding:5px 0px;
-}
-
-.gmw-cl-wrapper .gmw-cl-title {
-	margin-right:3px;	
-}
-
-#gmw-cl-form-wrapper {
-	display: none;
-	width: 300px;
-	min-height: 140px;
-	position: fixed;
-	top: 35%;
-	left: 50%;
-	background: white;
-	border: 1px solid #ddd;
-	padding: 5px;
-	-moz-box-shadow: 0px 0px 5px #ddd;
-	-webkit-box-shadow: 0px 0px 5px #ddd;
-	box-shadow: 0px 0px 5px #ddd;
-	z-index: 99999999999;
-}
-
-#gmw-cl-close-btn {
-	float: right;
-	margin-top: -3px;
-	font-size: 16px;
-	color: #777;
-	cursor: pointer;
-}
-
-#gmw-cl-form {
-	text-align: center;
-}
-
-#gmw-cl-info-wrapper div {
-	margin: 5px 0px;
 }
 
 #gmw-locator-success-message {
@@ -257,6 +175,12 @@ div.pac-container {
 }
 
 /* friends locator info window */
+
+.gmw-fl-activity-map-marker {
+	font-size: 14px;
+	margin-right:3px
+}
+
 .wppl-fl-info-window {
 	float: left;
 	width: 400px;
@@ -361,4 +285,35 @@ div.pac-container {
 .gmw-gl-gm-iw-wrapper .gmw-gl-gm-iw-thumb img.avatar {
 	width: 65px;
 	height: auto;
+}
+
+div.gmw-form-wrapper .gmw-address-field-wrapper {
+	position:relative;
+}
+
+div.gmw-form-wrapper div.gmw-locator-btn-within-wrapper {
+	cursor: pointer;
+	position: absolute;
+	right:0px;
+	top:0px;
+	padding: 5px 5px ;
+	width:initial;
+	height: initial;
+	z-index: 1;
+	background: none;
+	border: 0px;
+	font-size:16px;
+}
+
+div.gmw-form-wrapper div.gmw-locator-btn-wrapper i.gmw-locator-btn-within {
+	font-size:24px;
+}
+
+div.gmw-form-wrapper div.gmw-locator-btn-within-wrapper:hover {
+	background: none;
+	border: 0px;
+}
+
+i.fa.fa-map-marker.gmw-locator-btn-within.gmw-locator-button::before {
+	content:"\f041" !important;
 }
