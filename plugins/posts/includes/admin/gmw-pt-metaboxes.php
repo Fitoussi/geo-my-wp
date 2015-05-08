@@ -211,6 +211,22 @@ class GMW_PT_Meta_Boxes {
     							'type' => 'text',
     							'std'  => '',
     							'placeholder' => '',
+    					),
+    					array(
+    							'name' => __( 'street_number', 'GMW' ),
+    							'desc' => '',
+    							'id'   => $prefix . 'street_number',
+    							'type' => 'text',
+    							'std'  => '',
+    							'placeholder' => '',
+    					),
+    					array(
+    							'name' => __( 'street_name', 'GMW' ),
+    							'desc' => '',
+    							'id'   => $prefix . 'street_name',
+    							'type' => 'text',
+    							'std'  => '',
+    							'placeholder' => '',
     					)
     			)
     	);
@@ -238,7 +254,7 @@ class GMW_PT_Meta_Boxes {
 
         $post_info = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . $wpdb->prefix . "places_locator WHERE post_id = %d", array( $post->ID ) ) );
 
-        if ( !isset( $post_info ) || empty( $post_info ) ) {
+        if ( empty( $post_info ) ) {
         	$post_info = ( object ) array(
         			'post_id'           => '',
         			'feature'           => '',
@@ -247,6 +263,8 @@ class GMW_PT_Meta_Boxes {
         			'post_title'        => '',
         			'lat'               => '',
         			'long'              => '',
+        			'street_number'     => '',
+        			'street_name'       => '',
         			'street'            => '',
         			'apt'               => '',
         			'city'              => '',
@@ -348,18 +366,35 @@ class GMW_PT_Meta_Boxes {
 	            			</tr>
 	            		</table>
 	            		<table style="display:none;">
+	    
+	    					<tr>
+	            				<th><label for="<?php echo $this->meta_boxes['fields'][19]['id']; ?>"><?php echo $this->meta_boxes['fields'][19]['name']; ?></label></th>
+	            			</tr>
+	            			<tr>
+	            				<td><input type="text" id="<?php echo $this->meta_boxes['fields'][19]['id']; ?>" name="<?php echo $this->meta_boxes['fields'][19]['id']; ?>" class="<?php echo $this->meta_boxes['fields'][19]['id']; ?>" value="<?php echo $post_info->street_number; ?>"   /><br /></td>
+	            			</tr>
+	            			
+	            			<tr>
+	            				<th><label for="<?php echo $this->meta_boxes['fields'][20]['id']; ?>"><?php echo $this->meta_boxes['fields'][20]['name']; ?></label></th>
+	            			</tr>
+	            			<tr>
+	            				<td><input type="text" id="<?php echo $this->meta_boxes['fields'][20]['id']; ?>" name="<?php echo $this->meta_boxes['fields'][20]['id']; ?>" class="<?php echo $this->meta_boxes['fields'][20]['id']; ?>" value="<?php echo $post_info->street_name; ?>"   /><br /></td>
+	            			</tr>
+	            			
 	            			<tr>
 	            				<th><label for="<?php echo $this->meta_boxes['fields'][3]['id']; ?>"><?php echo $this->meta_boxes['fields'][3]['name']; ?></label></th>
 	            			</tr>
 	            			<tr>
 	            				<td><input type="text" name="<?php echo $this->meta_boxes['fields'][3]['id']; ?>" class="<?php echo $this->meta_boxes['fields'][3]['id']; ?>" value="<?php echo $post_info->state; ?>"   /><br /></td>
 	            			</tr>
+	            			
 	            			<tr>
 	            				<th><label for="<?php echo $this->meta_boxes['fields'][16]['id']; ?>"><?php echo $this->meta_boxes['fields'][16]['name']; ?></label></th>
 	            			</tr>
 	            			<tr>
 	            				<td><input type="text" name="<?php echo $this->meta_boxes['fields'][16]['id']; ?>" id="<?php echo $this->meta_boxes['fields'][16]['id']; ?>" class="<?php echo $this->meta_boxes['fields'][16]['id']; ?>" value="<?php echo $post_info->state_long; ?>" style="width: 100%;"/><br /></td>
 	            			</tr>
+	            			
 	            			<tr>
 	            				<th><label for="<?php echo $this->meta_boxes['fields'][5]['id']; ?>"><?php echo $this->meta_boxes['fields'][5]['name']; ?></label></th>
 	            			</tr>
@@ -537,6 +572,10 @@ class GMW_PT_Meta_Boxes {
     	wp_enqueue_script( 'google-maps' );
     	wp_enqueue_script( 'jquery-ui-autocomplete' );
      	wp_enqueue_script( 'gmw-admin-address-picker' );
+
+        //make sure address_mandatory is not undefined
+        $this->settings['post_types_settings']['mandatory_address'] = gmw_get_option( 'post_types_settings', 'mandatory_address', false );
+
      	wp_localize_script( 'gmw-admin-address-picker','gmwOptions', $this->settings );
 	}
 	
@@ -620,6 +659,8 @@ class GMW_PT_Meta_Boxes {
             		'post_type'         => $_POST['post_type'],
             		'post_title'        => $_POST['post_title'],
             		'post_status'       => $_POST['post_status'],
+            		'street_number'     => $_POST['_wppl_street_name'],
+            		'street_name'       => $_POST['_wppl_street_number'],
             		'street'            => $_POST['_wppl_street'],
             		'apt'               => $_POST['_wppl_apt'],
             		'city'              => $_POST['_wppl_city'],
