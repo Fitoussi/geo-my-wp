@@ -3,7 +3,7 @@
 if (!defined('ABSPATH'))
     exit;
 
-class GMW_Location_Component extends BP_Component {
+class GMW_Members_Locator_Component extends BP_Component {
 
     /**
      * Constructor method
@@ -16,17 +16,14 @@ class GMW_Location_Component extends BP_Component {
         /*
          * Define Globals
          */
-        define('GMW_FL_DB_VERSION', '1.1'						 );
+        define('GMW_FL_DB_VERSION', '1.2'						 );
         define('GMW_FL_URL',  		GMW_URL.'/plugins/friends/'  );
         define('GMW_FL_PATH', 	 	GMW_PATH.'/plugins/friends/' );
         define('GMW_FL_SLUG', 		'location'					 );
 
         add_action( 'wp_enqueue_scripts', 				 array($this, 'frontend_register_scripts'        ) );
-        add_action( 'gmw_fl_results_shortcode', 		 array($this, 'search_functions'          ), 10, 2 );
         add_action( 'bp_activity_filter_options', 		 array($this, 'location_filter_options'   ), 10    );
         add_action( 'bp_member_activity_filter_options', array($this, 'location_filter_options'   ), 10    );
-
-        add_action('widgets_init', create_function('', 'return register_widget( "GMW_Member_Location_Widget" );'));
 
         parent::start( GMW_FL_SLUG, __('Location', 'GMW'), GMW_FL_PATH );
 
@@ -44,16 +41,23 @@ class GMW_Location_Component extends BP_Component {
     function includes( $includes = array() ) {
 
     	// Files to include
-    	$includes = array(
+    	$includes = array(   			
+    			'includes/gmw-fl-shortcodes.php',
     			'includes/gmw-fl-actions.php',
     			'includes/gmw-fl-functions.php',
     			'includes/gmw-fl-activity.php',
     			'includes/gmw-fl-update-location.php',
-    			'includes/gmw-fl-widgets.php',
-    			'includes/gmw-fl-template-functions.php'
+    			'includes/gmw-fl-template-functions.php',
+    			'includes/gmw-fl-search-query-class.php'
     	);
-
-    	if (is_admin() && !defined('DOING_AJAX')) {
+    	
+    	if ( class_exists( 'GMW_Single_Location' ) ) {
+    		$includes[] = 'includes/gmw-fl-single-member-location-class.php';
+    	} else {
+    		$includes[] = 'includes/gmw-fl-member-location-shortcode.php';
+    	}
+    	    	
+    	if ( is_admin() && !defined( 'DOING_AJAX' ) ) {
     		$includes[] = 'includes/admin/gmw-fl-admin.php';
     		$includes[] = 'includes/admin/gmw-fl-db.php';
     	}
@@ -143,7 +147,13 @@ class GMW_Location_Component extends BP_Component {
      * GMW FL function - content for the user's "location" tab
      */
     function screen_page_user_content() {
-        $content = '[gmw_member_location map_height="400px" map_width="400px" no_location="1" address_fields="address" display_name="0"]';
+    	
+    	if ( class_exists( 'GMW_Single_Member_Location' ) ) {
+    		$content = '[gmw_single_location item_type="member" elements="address,map" address_fields="address" map_height="400px" map_width="100%" ul_marker="0"]';
+    	} else {
+    		$content = '[gmw_member_location map_height="400px" map_width="400px" no_location="1" address_fields="address" directions="0" display_name="0"]';
+    	}
+    	
         echo do_shortcode( apply_filters( 'gmw_fl_user_location_tab_content', $content ) );
     }
 
@@ -226,16 +236,6 @@ class GMW_Location_Component extends BP_Component {
         wp_register_style( 'gmw-fl-style', GMW_FL_URL.'assets/css/style.css' );
         wp_enqueue_style( 'gmw-fl-style' );
         wp_register_script( 'gmw-fl', GMW_FL_URL.'assets/js/fl.min.js', array('jquery'), GMW_VERSION, true );
-    }
-
-    /**
-     * Search functions
-     * @param $form
-     * 
-     */
-    public function search_functions( $form ) {
-        include_once GMW_FL_PATH . 'includes/gmw-fl-search-query-class.php';
-        new GMW_FL_Search_Query( $form );
     }
 
     /**
