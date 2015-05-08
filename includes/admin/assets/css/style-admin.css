@@ -4,90 +4,26 @@
 	color: rgb(179, 223, 193) !important;
 }
 
-.gmw-credits {
-	float: right;
-	margin-top: 6px;
-	min-width: 520px;
+.gmw-helpful-links-wrapper {
+	display: block;
+	margin-top: 10px;
 }
 
-.gmw-credits img {
-	float: left;
-	margin-right: 5px;
+.gmw-helpful-links-wrapper a {
+	font-size:12px !important;
 }
 
-.gmw-credits a:link {
-	vertical-align: top;
-	float: left;
-	font-size: 12px;
-	text-decoration: none;
+.gmw-helpful-links-wrapper a i {
+	margin-right:4px;
 }
 
-.gmw-credits-facebook-button {
-	width: 24px;
-	height: 24px;
-	display: block-inline;
-	text-indent: -9999px;
-	margin-right: 5px;
-	margin-bottom: 5px;
-	float: left;
-	position: relative;
-	filter: alpha(opacity = 60);
-	-moz-opacity: 0.6;
-	-khtml-opacity: 0.6;
-	opacity: 0.6;
-	background:
-		url('https://geomywp.com/wp-content/themes/geo-my-wp/images/UI-Elements.png');
-	background-position: -30px -106px;
-}
-
-.gmw-credits-twitter-button {
-	width: 24px;
-	height: 24px;
-	display: block-inline;
-	text-indent: -9999px;
-	margin-right: 5px;
-	margin-bottom: 5px;
-	float: left;
-	position: relative;
-	filter: alpha(opacity = 60);
-	-moz-opacity: 0.6;
-	-khtml-opacity: 0.6;
-	opacity: 0.6;
-	background:
-		url('https://geomywp.com/wp-content/themes/geo-my-wp/images/UI-Elements.png');
-	background-position: -59px -105px;
-}
-
-.gmw-credits-email-button {
-	width: 24px;
-	height: 24px;
-	display: block-inline;
-	text-indent: -9999px;
-	margin-right: 5px;
-	margin-bottom: 5px;
-	float: left;
-	position: relative;
-	filter: alpha(opacity = 60);
-	-moz-opacity: 0.6;
-	-khtml-opacity: 0.6;
-	opacity: 0.6;
-	background:
-		url('https://geomywp.com/wp-content/themes/geo-my-wp/images/UI-Elements.png');
-	background-position: -439px -106px;
-}
-
-.gmw-credits-addons-button {
-	padding: 1px 6px;
-	background: #7FA97F;
-	float: left;
-	margin-right: 5px;
-	color: white;
-	font-size: 12px !important;
-	margin-top: 2px
-}
-
-.gmw-credits-addons-button :hover {
-	color: white !important;
+a.gmw-donate {
+	font-size: 11px !important;
+	padding: 5px 7px !important;
+	height: 25px !important;
+	line-height: 13px !important;
+	vertical-align: middle !important;
+	margin-left:5px;
 }
 
 .gmw-wrap-top-h2 {
@@ -116,9 +52,69 @@ div.gmw-tabs-table {
 	border:1px solid #e5e5e5;
 	padding:10px;
 	background: #f7f7f7;
-	margin:0px 1px
+	margin:0px 1px;
 }
 
+/********** form editor Page **********/
+
+.gmw-form-details-panel table tbody tr td.gmw-form-feature-desc {
+	background: #f9f9f9;
+	border-right: 1px solid #E1E1E1;
+	width: 15%;
+	border-bottom: 1px solid #eee;
+	padding: 13px 15px 5px 15px;
+}
+
+.gmw-form-details-panel table tbody tr td.gmw-form-feature-desc label {
+	display: block;
+	line-height: 1.4em;
+	font-weight: bold;
+	padding: 0;
+	margin: 0 0 3px;
+	color: #333;
+	margin-bottom:8px
+}
+
+.gmw-form-details-panel table tbody tr td.gmw-form-feature-settings {
+	border-bottom: 1px solid #eee;
+	padding: 13px 15px;
+	width:85%;
+}
+
+
+.gmw-settings-panel table tbody tr td.gmw-form-feature-settings {
+	border-bottom: 1px solid #eee;
+	padding: 13px 15px;
+	width:76%;
+}
+
+.gmw-settings-panel table tbody tr td.gmw-form-feature-desc {
+	background: #f9f9f9;
+	border-right: 1px solid #E1E1E1;
+	width: 24%;
+	padding: 13px 15px;
+	border-bottom: 1px solid #eee;
+}
+
+.gmw-settings-panel table tbody tr td.gmw-form-feature-desc label {
+	display: block;
+	font-size: 13px;
+	line-height: 1.4em;
+	font-weight: bold;
+	padding: 0;
+	margin: 0 0 3px;
+	color: #333;
+	margin-bottom:8px
+}
+
+.gmw-settings-panel table tbody tr td.gmw-form-feature-settings input[type="radio"] {
+	//display:block;
+	//margin-bottom:5px;
+}
+
+.gmw-settings-panel table tbody tr td.gmw-form-feature-settings input[type="text"] {
+	//min-width:250px;
+}
 /********** Add-ons Page **********/
 
 div.gmw-addons-page-top-area {
@@ -181,7 +177,7 @@ li.gmw-single-addon-wrapper {
 
 h2.gmw-addon-title {
 	padding: 10px;
-	font-size: 16px;
+	font-size: 14px;
 	text-align: center;
 	line-height: 20px;
 }
@@ -220,6 +216,10 @@ div.gmw-addon-desc-wrapper {
 .gmw-addon-activate {
 	background: #c3f5c3;
 	border:1px solid  #93f58d;
+}
+
+.gmw-single-addon-wrapper .gmw-license-wrapper .dashicons-admin-network {
+	display:none !important;
 }
 
 .gmw-license-error-wrapper {
@@ -435,21 +435,28 @@ table.gmw-cf-holder tr td, table.gmw-saf-table tr td p {
 	font-size:10px;
 }
 
-.gmw-license-key-wrapper td,
-.gmw-license-key-wrapper th {
+/** license handlare **/
+
+.gmw-license-key-addon-wrapper td,
+.gmw-license-key-addon-wrapper th {
 	-webkit-box-shadow: none !important;
 	box-shadow: none !important;
 }
 
-.gmw-licence-key-wrapper td {
+tr.gmw-license-key-wrapper td {
 	border-left:4px solid #2ea2cc !important;
 }
 
-.gmw-licence-key-wrapper.update td {
+tr.gmw-license-key-wrapper td.plugin-title,
+tr.gmw-license-key-wrapper td.column-description {
+	border:0px !important;
+}
+
+.gmw-license-key-wrapper.update td {
 	border-left:4px solid #d54e21 !important;
 }
 
-.gmw-single-addon-wrapper .gmw-licence-key-wrapper td {
+.gmw-single-addon-wrapper .gmw-license-key-wrapper td {
 	border-left:0px !important;
 	padding:0px;
 } 
@@ -618,13 +625,14 @@ div.gmw-license-wrapper.gmw-license-invalid-wrapper.addon-deactivated {
 
 tr.gmw-sponsored-credit {
 	background-color: #D8F7D2;
-	text-align: center;
 }
 
 tr.gmw-sponsored-credit td {
 	font-size: 12px;
 	font-style: italic;
-	color: #666
+	color: #666;
+	border-bottom: 1px solid #c6e3c1;
+	border-top: 1px solid #c6e3c1;
 }
 
 .taxonomies-picker-wrapper {
@@ -635,4 +643,13 @@ tr.gmw-sponsored-credit td {
 
 .taxonomies-picker-wrapper .chosen-container .chosen-results {
 	max-height:150px;
+}
+
+
+.gmw-message-box {
+	padding:8px 8px;
+	background: rgba(173, 216, 230, 0.33);
+	box-sizing: border-box;
+	border:1px solid rgba(173, 216, 230, 0.63);
+	border-radius: 5px;
 }
