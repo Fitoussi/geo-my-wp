@@ -38,7 +38,7 @@
 		<?php do_action( 'gmw_search_form_before_locator', $gmw ); ?>
 		
         <!--  locator icon -->
-        <?php gmw_search_form_locator_icon( $gmw, $class='' ); ?>
+        <?php gmw_search_form_locator_icon( $gmw ); ?>
 
         <div class="clear"></div>	
 
