@@ -599,12 +599,18 @@ class GMW_Edit_Form {
 
 	$gmw_forms = get_option('gmw_forms');
 	$formID    = $_GET['formID'];
+	$gmw_form  = $gmw_forms[$formID];
 	$form_type = $_GET['form_type'];
 	?>
         <div class="wrap">
         
-            <h2><?php echo _e('GEO my WP Edit Form Page', 'GMW'); ?></h2>
-			<div class="clear"></div>
+            <h2 class="gmw-wrap-top-h2">
+            	<i class="fa fa-pencil"></i>
+                <?php echo _e('GEO my WP Edit Form Page', 'GMW'); ?>
+                <?php gmw_admin_support_button(); ?>
+            </h2>
+
+            <div class="clear"></div>
             
             <?php
             if ( !empty( $_GET['settings-updated'] ) ) {
@@ -614,115 +620,108 @@ class GMW_Edit_Form {
             
             <form method="post" action="options.php">
 
-	            <?php echo '<input type="hidden" name="gmw_forms['.$formID.'][ID]" 			value="' . $gmw_forms[$formID]['ID'].'" 		/>'; ?>
-	            <?php echo '<input type="hidden" name="gmw_forms['.$formID.'][addon]" 		value="' . $gmw_forms[$formID]['addon'].'" 		/>'; ?>
-	            <?php echo '<input type="hidden" name="gmw_forms['.$formID.'][form_title]" 	value="' . $gmw_forms[$formID]['form_title'].'" />'; ?>
-	            <?php echo '<input type="hidden" name="gmw_forms['.$formID.'][form_type]" 	value="' . $gmw_forms[$formID]['form_type'].'" 	/>'; ?>
-	            <?php echo '<input type="hidden" name="gmw_forms['.$formID.'][prefix]" 		value="' . $gmw_forms[$formID]['prefix'].'" 	/>'; ?>
-	            <?php echo '<input type="hidden" name="gmw_forms['.$formID.'][ajaxurl]" 	value="' . GMW_AJAX.'" 							/>'; ?>
+	            <?php echo '<input type="hidden" name="gmw_forms['.$formID.'][ID]" 			value="' . $gmw_form['ID'].'" 		  />'; ?>
+	            <?php echo '<input type="hidden" name="gmw_forms['.$formID.'][addon]" 		value="' . $gmw_form['addon'].'" 	  />'; ?>
+	            <?php echo '<input type="hidden" name="gmw_forms['.$formID.'][form_title]" 	value="' . $gmw_form['form_title'].'" />'; ?>
+	            <?php echo '<input type="hidden" name="gmw_forms['.$formID.'][form_type]" 	value="' . $gmw_form['form_type'].'"  />'; ?>
+	            <?php echo '<input type="hidden" name="gmw_forms['.$formID.'][prefix]" 		value="' . $gmw_form['prefix'].'" 	  />'; ?>
+	            <?php echo '<input type="hidden" name="gmw_forms['.$formID.'][ajaxurl]" 	value="' . GMW_AJAX.'" 				  />'; ?>
 				
 	            <?php settings_fields($this->forms_group); ?>
 				
-				<!-- Form name -->
-				<table class="widefat fixed gmw-edit-form-page-top-tabs">
-                    <thead>
-                        <tr>
-                            <th id="form-name-wrapper">
-                            	<span class="gmw-nav-tab"><?php _e( 'Form ID '.$formID ,'GMW' ); ?></span>
-                            	<span class="gmw-nav-tab"><?php _e( 'Form Type -  '.$form_type ,'GMW' ); ?></span>
-                               	<span class="gmw-nav-tab" style="padding: 5px 10px 4px;"><?php _e( 'Form Name','GMW' ); ?>                          
-                               		<input type="text" name="gmw_forms[<?php echo $formID; ?>][name]" value="<?php echo ( isset( $gmw_forms[$formID]['name'] ) && !empty( $gmw_forms[$formID]['name']) ) ? $gmw_forms[$formID]['name'] : 'form_id_'.$gmw_forms[$formID]['ID']; ?>" />                             
-                            	</span>  
-                            	<input type="submit" class="button-primary" value="<?php _e('Save Changes', 'GMW'); ?>" />
-                            	<span style="display: inline-block;margin:0px;line-height: 28px;margin-left: 5px">
-                            		<a class="button action" title="<?php __('Delete this form', 'GMW'); ?>" href="admin.php?page=gmw-forms&gmw_action=delete_form&formID=<?php echo $formID; ?>" onclick="return confirm('sure?');"><?php _e('Delete This Form', 'GMW'); ?></a>                                                               
-                            	</span>
-                            	<span style="display: inline-block;margin:0px;line-height: 28px;margin-left: 5px">
-                            		<a class="button action" title="<?php __('Go back to list of forms', 'GMW'); ?>" href="<?php echo admin_url( 'admin.php?page=gmw-forms' ); ?>" ><?php _e('Go Back To List of Forms', 'GMW'); ?></a>                                                               
-                            	</span>
-                            	
-                            	<a id="form-usage-trigger" class="gmw-nav-tab" style="background-color: #D8F7D2;float:right"><?php _e( 'Form usage', 'GMW' ); ?></a>
-                            </th>
-                        </tr>
-                    </thead>
-                </table>
-				
-				<!-- form usage -->
-                <div id="usage-table-wrapper">
-	                <table class="widefat">
-	                	<thead>
-	                    	<tr>
-	                        	<th scope="col" id="cb" class="manage-column column-cb check-column" style="width:20% !important;padding:11px 10px"><?php _e('Post/Page Content', 'GMW'); ?></th>
-	                        	<th scope="col" id="cb" class="manage-column column-cb check-column" style="width:40% !important;padding:11px 10px"><?php _e('Tempalte file', 'GMW'); ?></th>
-	                        	<th scope="col" id="cb" class="manage-column column-cb check-column" style="width:40%;padding:11px 10px"><?php _e('Explanation', 'GMW'); ?></th>
-	                    	</tr>
-	                	</thead>
-	             
-	                	<tbody>
-	                		<tr>
-	                			<td>
-	                				<code>[gmw form="<?php echo $formID; ?>"]</code>
-	                			</td>
-	                			<td>
-	                				<code><?php echo '&#60;&#63;php echo do_shortcode(\'[gmw form="'.$formID.'"]\'); &#63;&#62;'; ?></code>
-	                			</td>
-	                			<td>
-	                				<?php _e( 'Use this shortcode anywhere on a page where you want to display this form. By default, the shortcode will display the search form and results on that same page unless you set it up to display the results on a different page.', 'GMW' ); ?>
-	                			</td>
-	                		</tr>
-	                		<tr>
-	                			<td>
-	                				<code>[gmw form="results"]</code>
-	                			</td>
-	                			<td>
-	                				<code><?php echo '&#60;&#63;php echo do_shortcode(\'[gmw form="results"]\'); &#63;&#62;'; ?></code>
-	                			</td>
-	                			<td>
-	                				<?php _e( 'Use this shortcode in the page that you want to display the search results. That is in case that you are choose to display the search results in a different page than the search form or when using the GMW Search Form widget.', 'GMW' ); ?>
-	                			</td>
-	                		</tr>
-	                		<tr>
-	                			<td>
-	                				<code>[gmw map="<?php echo $formID; ?>"]</code>
-	                			</td>
-	                			<td>
-	                				<code><?php echo '&#60;&#63;php echo do_shortcode(\'[gmw map="'.$formID.'"]\'); &#63;&#62;'; ?></code>
-	                			</td>
-	                			<td>
-	                				<?php _e( 'Use this shortcode anywhere on a page where you want to display the map. By default, the form you create will display the map above the list of results. Using this shortcode you can display the map anywhere else on the page. Note that this shortcode must go together with one of the other shortocdes mentioned above on the same page .', 'GMW' ); ?>
-	                			</td>
-	                		</tr>
-	                		
-	                	</tbody>
-	              	</table>
-	        	</div>
-				<br />
+                <div class="gmw-form-details-panel" style="display:block !important">
+
+                    <table class="widefat">
+                    	<thead>
+                        	<tr>
+                            	<th scope="col" id="cb" class="manage-column column-cb check-column" style="width:18% !important;padding:11px 10px"><?php _e('Form Details', 'GMW'); ?></th>
+                            	<th></th>
+                            </tr>
+                       	</thead>
+						<tbody>
+							<tr valign="top">
+	                        	<td class="gmw-form-feature-desc">
+	                        		<label><?php _e( 'Form ID', 'GMW' ); ?></label>	              	                         		
+                            	</td>
+	                        	<td class="gmw-form-feature-settings">
+	                        		<?php echo $formID; ?>
+	                        	</td>
+	                        </tr>
+	                        <tr valign="top">
+	                        	<td class="gmw-form-feature-desc">
+	                        		<label><?php _e( 'Form Type', 'GMW' ); ?></label>	              	                         		
+                            	</td>
+	                        	<td class="gmw-form-feature-settings">
+	                        		<?php echo $gmw_forms[$formID]['form_title']; ?>
+	                        	</td>
+	                        </tr>
+	                        <tr valign="top">
+	                        	<td class="gmw-form-feature-desc">
+	                        		<label><?php _e( 'Form Name', 'GMW' ); ?></label>	              	                         		
+                            	</td>
+	                        	<td class="gmw-form-feature-settings">
+	                        		<input type="text" name="gmw_forms[<?php echo $formID; ?>][name]" value="<?php echo ( isset( $gmw_forms[$formID]['name'] ) && !empty( $gmw_forms[$formID]['name']) ) ? $gmw_forms[$formID]['name'] : 'form_id_'.$gmw_forms[$formID]['ID']; ?>" />                                                        	
+	                        		<span style="margin-left: 5px">
+	                        			<input type="submit" class="button-primary" value="<?php _e('Save Changes', 'GMW'); ?>" />
+	                        		</span>
+	                        	</td>
+	                        </tr>
+	                        <tr valign="top">
+	                        	<td class="gmw-form-feature-desc">
+	                        		<label><?php _e( 'Actions', 'GMW') ;?></label>	              	                         		
+                            	</td>
+	                        	<td class="gmw-form-feature-settings">
+	                            	<span style="margin-left: 5px">
+	                            		<a class="button action" title="<?php __('Delete this form', 'GMW'); ?>" href="admin.php?page=gmw-forms&gmw_action=delete_form&formID=<?php echo $formID; ?>" onclick="return confirm('sure?');"><?php _e('Delete This Form', 'GMW'); ?></a>                                                               
+	                            	</span>
+	                            	<span style="margin-left: 5px">
+	                            		<a class="button action" title="<?php __('Go back to list of forms', 'GMW'); ?>" href="<?php echo admin_url( 'admin.php?page=gmw-forms' ); ?>" ><?php _e('Go Back To List of Forms', 'GMW'); ?></a>                                                               
+	                            	</span>
+	                            	<span>
+	                            		<?php echo GMW_Forms::new_form_list(); ?>
+	                            	</span>
+	                        	</td>
+	                        </tr>
+						</tbody>
+					</table>
+
+				</div>
+               
+				                
+				<h2 style="margin:20px 0px 10px"><?php _e( 'Form Editor', 'GMW' ); ?></h2>
 
 				<!-- Form tabs -->
                 <div class="gmw-tabs-table gmw-edit-form-page-nav-tabs gmw-nav-tab-wrapper">
                 	<?php
                     foreach ($this->form_settings as $key => $section) {
+                    	
                     	if ( ( empty( $section[1] ) ) )
                     		continue;
                     	
-                    	if ($key != 'hidden') 
+                    	if ($key != 'hidden') {
                         	echo '<a  href="#settings-' . sanitize_title($key) . '" id="'.sanitize_title($key).'" class="gmw-nav-tab gmw-nav-trigger">' . esc_html($section[0]) . '</a>';
-                        }
-                     ?>   	   
+                    	}
+                    }
+
+                    echo '<a href="#settings-form-usage" id="form-usage" class="gmw-nav-tab gmw-nav-trigger" style="float:right;margin-bottom: -2px">'.__( 'Form Usage', 'GMW' ).'</a>';
+                    ?>   	   
                 </div>
                
-                <?php foreach ( $this->form_settings as $key => $section ) {                	
-                		if ( empty( $section[1] ) )
-                			continue;		              	
-                ?>
-                    <div id="settings-<?php echo sanitize_title($key); ?>" class="gmw-settings-panel">
+                <?php 
+            	foreach ( $this->form_settings as $key => $section ) {                	
+            		
+            		if ( empty( $section[1] ) )
+            			continue; ?>
 
+                    <div id="settings-<?php echo sanitize_title($key); ?>" class="gmw-settings-panel">
 	                    <table class="widefat">
 	                    	<thead>
 	                        	<tr>
 	                            	<th scope="col" id="cb" class="manage-column column-cb check-column" style="width:18% !important;padding:11px 10px"><?php _e('Feature', 'GMW'); ?></th>
-	                            	<th scope="col" id="cb" class="manage-column column-cb check-column" style="width:57%;padding:11px 10px"><?php _e('Settings', 'GMW'); ?></th>
-	                            	<th scope="col" id="cb" class="manage-column column-cb check-column" style="width:25%;padding:11px 10px"><?php _e('Explanation', 'GMW'); ?></th>
+	                            	<th scope="col" id="cb" class="manage-column column-cb check-column" style="width:57%;padding:11px 10px">
+	                            		<?php _e('Settings', 'GMW'); ?>
+	                            		<input type="submit" class="button-primary" style="float:right" value="<?php _e('Save Changes', 'GMW'); ?>" />
+	                            	</th>
 	                            </tr>
 	                       	</thead>
 							<tbody>
@@ -754,91 +753,95 @@ class GMW_Edit_Form {
 		                        	}
 		                        }
 		                        		                     	                        
-		                        $alternate = ( $rowNumber % 2 == 0 ) ? 'alternate' : '';
-		
-		                        echo '<tr valign="top" id="sort-search-form-'.$option['name'].'-tr" class="gmw-item-sort ' . $class . ' ' . $alternate . '" ><th scope="row" style="width:70px !important;color: #555;border-bottom:1px solid #eee;"><label for="setting-' . $option['name'] . '" >' . $option['label'] . '</label></th><td style="width:70px !important;color: #555;border-bottom:1px solid #eee;">';
-		
-		                        switch ($option['type']) {
-		
-		                            case "function" :
-		
-		                                $function = ( isset($option['function']) && !empty($option['function']) ) ? $option['function'] : $option['name'];
+		                        //$alternate = ( $rowNumber % 2 == 0 ) ? 'alternate' : '';
+								$alternate = '';
 
-		                                do_action( 'gmw_' . $_GET['form_type'].'_form_settings_' . $function, $gmw_forms, $formID, $key, $option );
-		                                do_action( 'gmw_form_settings_' . $function, $gmw_forms, $formID, $key, $option );
+		                        echo '<tr valign="top" id="sort-search-form-'.$option['name'].'-tr" class="gmw-item-sort ' . $class . ' ' . $alternate . '" >';
+		                        	echo '<td class="gmw-form-feature-desc">';
+		                        		echo '<label for="setting-' . $option['name'] . '" >' . $option['label'] . '</label>';	              	
+	                            		
+	                            		if ( !empty($option['desc'] ) ) {
+	                                		echo ' <p class="description">' . $option['desc'] . '</p>';
+	                            		}
+	                            		
+	                            		echo '</td>';
+
+		                        	echo '<td class="gmw-form-feature-settings '.$option['type'].'">';
+		                        			
+			                        switch ( $option['type'] ) {
+			
+			                            case "function" :
+			
+			                                $function = ( isset( $option['function'] ) && !empty($option['function']) ) ? $option['function'] : $option['name'];
+
+			                                do_action( 'gmw_' . $_GET['form_type'].'_form_settings_' . $function, $gmw_forms, $formID, $key, $option );
+			                                do_action( 'gmw_form_settings_' . $function, $gmw_forms, $formID, $key, $option );
+			
+			                            break;
+			                                
+			                            case "multicheckbox" :
+			                                foreach ($option['options'] as $keyVal => $name) {
+			                                    ?><p><label><input id="setting-<?php echo $key.'-'.$option['name'] .'-'.$keyVal; ?>" class="setting-<?php echo $option['name']; ?>" name="<?php echo 'gmw_forms['.$formID.']['.$key.']['.$option['name'].']['.$keyVal.']'; ?>" type="checkbox" value="<?php echo $checkboxDefault; ?>" <?php if ( isset($gmw_forms[$formID][$key][$option['name']][$keyVal]) && $gmw_forms[$formID][$key][$option['name']][$keyVal] == $checkboxDefault) echo 'checked="checked"'; ?> /> <?php echo $name; ?></label></p> <?php
+			                                }
+			                            break;
+			                            
+			                            case "multicheckboxvalues" :
+			                            	foreach ($option['options'] as $keyVal => $name) {
+			                            		?><p><label><input id="setting-<?php echo $key.'-'.$option['name'] .'-'.$keyVal; ?>" class="setting-<?php echo $option['name']; ?> setting-<?php echo $key.'-'.$option['name']; ?>" name="<?php echo 'gmw_forms['.$formID.']['.$key.']['.$option['name'].'][]'; ?>" type="checkbox" value="<?php echo $keyVal; ?>" <?php if ( !empty( $gmw_forms[$formID][$key][$option['name']] ) && in_array( $keyVal, $gmw_forms[$formID][$key][$option['name']] ) ) echo 'checked="checked"'; ?> /> <?php echo $name; ?></label></p> <?php
+	                            			}
+	                            		break;
+			                            
+			                            case "checkbox" :
+			                                ?><p><label><input id="setting-<?php echo $key.'-'.$option['name']; ?>" class="setting-<?php echo $option['name']; ?>" name="<?php echo 'gmw_forms[' . $formID . '][' . $key . '][' . $option['name'] . ']'; ?>" type="checkbox" value="<?php echo $checkboxDefault; ?>" <?php echo implode(' ', $attributes); ?> <?php checked($checkboxDefault, $value); ?> /> <?php echo $option['cb_label']; ?></label></p><?php
+			                            break;
+			                            
+			                            case "textarea" :
+			                                ?><textarea id="setting-<?php echo $key.'-'.$option['name']; ?>" class="large-text" cols="50" rows="3" name="<?php echo 'gmw_forms[' . $formID . '][' . $key . '][' . $option['name'] . ']'; ?>" <?php echo implode(' ', $attributes); ?> <?php echo $placeholder; ?>><?php echo esc_textarea($value); ?></textarea><?php
+			                            break;
+			                            
+			                            case "radio" :
+			
+				                            $rc = 1;
+				                            foreach ($option['options'] as $keyVal => $name) {
+				                                $checked = ( $rc == 1 ) ? 'checked="checked"' : checked($value, $keyVal, false);
+				                                echo '<span id="setting-'.$key.'-'.$option['name'] .'-'.$keyVal.'-wrapper"><input type="radio" id="setting-'.$key.'-'.$option['name'] .'-'.$keyVal.'" class="setting-' . $option['name'] . '" name="gmw_forms[' . $formID . '][' . $key . '][' . $option['name'] . ']" value="' . esc_attr($keyVal) . '" ' . $checked . ' />' . $name . ' </span>';
+				                                $rc++;
+				                            }
+			                            break;
+			                            
+			                            case "select" :
+			                                ?><select id="setting-<?php echo $key.'-'.$option['name']; ?>" class="regular-text" name="<?php echo 'gmw_forms[' . $formID . '][' . $key . '][' . $option['name'] . ']'; ?>" <?php echo implode(' ', $attributes); ?>><?php
+			                                foreach ($option['options'] as $keyVal => $name)
+			                                    echo '<option value="' . esc_attr($keyVal) . '" ' . selected($value, $keyVal, false) . '>' . esc_html($name) . '</option>';
+			                                ?></select><?php
+			                            break;
+			                            
+			                            case "multiselect" :
+			                            	?><select multiselect id="setting-<?php echo $key.'-'.$option['name']; ?>" class="regular-text" name="<?php echo 'gmw_forms['.$formID.']['.$key.']['.$option['name'].'][]'; ?>" <?php echo implode(' ', $attributes); ?>><?php
+	                            			 foreach ( $option['options'] as $keyVal => $name ) {                            			
+	                            			 	$selected = ( in_array( $keyVal, $value ) ) ? 'selected="selected"' : '';
+	                            		     	echo '<option value="' . esc_attr($keyVal) . '" ' .$selected. '>' . esc_html($name) . '</option>';
+	                            			 }
+	                            		     ?></select><?php
+	                            		break;
+			                            
+			                            case "password" :
+			                                ?><input id="setting-<?php echo $key.'-'.$option['name']; ?>" class="regular-text" type="password" name="<?php echo 'gmw_forms[' . $formID . '][' . $key . '][' . $option['name'] . ']'; ?>" value="<?php esc_attr_e($value); ?>" <?php echo implode(' ', $attributes); ?> <?php echo $placeholder; ?> /><?php
+			                            break;
+			                            
+			                            case "hidden" :
+			                                ?><input id="setting-<?php echo $key.'-'.$option['name']; ?>" class="gmw-form-hidden-field" id="setting-<?php echo $option['name']; ?>" class="regular-text" type="hidden" name="<?php echo 'gmw_forms[' . $formID . '][' . $key . '][' . $option['name'] . ']'; ?>" value="<?php echo $value; ?>" /><?php
+			                            break;
+			                                
+			                            default :
+			                                ?><input id="setting-<?php echo $key.'-'.$option['name']; ?>" class="regular-text" type="text" name="<?php echo 'gmw_forms[' . $formID . '][' . $key . '][' . $option['name'] . ']'; ?>" value="<?php esc_attr_e($value); ?>" <?php echo implode(' ', $attributes); ?> <?php echo $placeholder; ?> /><?php
+			                            break;
+		                            }
 		
-		                            break;
-		                                
-		                            case "multicheckbox" :
-		                                foreach ($option['options'] as $keyVal => $name) {
-		                                    ?><p><label><input id="setting-<?php echo $key.'-'.$option['name'] .'-'.$keyVal; ?>" class="setting-<?php echo $option['name']; ?>" name="<?php echo 'gmw_forms['.$formID.']['.$key.']['.$option['name'].']['.$keyVal.']'; ?>" type="checkbox" value="<?php echo $checkboxDefault; ?>" <?php if ( isset($gmw_forms[$formID][$key][$option['name']][$keyVal]) && $gmw_forms[$formID][$key][$option['name']][$keyVal] == $checkboxDefault) echo 'checked="checked"'; ?> /> <?php echo $name; ?></label></p> <?php
-		                                }
-		                            break;
-		                            
-		                            case "multicheckboxvalues" :
-		                            	foreach ($option['options'] as $keyVal => $name) {
-		                            		?><p><label><input id="setting-<?php echo $key.'-'.$option['name'] .'-'.$keyVal; ?>" class="setting-<?php echo $option['name']; ?> setting-<?php echo $key.'-'.$option['name']; ?>" name="<?php echo 'gmw_forms['.$formID.']['.$key.']['.$option['name'].'][]'; ?>" type="checkbox" value="<?php echo $keyVal; ?>" <?php if ( !empty( $gmw_forms[$formID][$key][$option['name']] ) && in_array( $keyVal, $gmw_forms[$formID][$key][$option['name']] ) ) echo 'checked="checked"'; ?> /> <?php echo $name; ?></label></p> <?php
-                            			}
-                            		break;
-		                            
-		                            case "checkbox" :
-		                                ?><p><label><input id="setting-<?php echo $key.'-'.$option['name']; ?>" class="setting-<?php echo $option['name']; ?>" name="<?php echo 'gmw_forms[' . $formID . '][' . $key . '][' . $option['name'] . ']'; ?>" type="checkbox" value="<?php echo $checkboxDefault; ?>" <?php echo implode(' ', $attributes); ?> <?php checked($checkboxDefault, $value); ?> /> <?php echo $option['cb_label']; ?></label></p><?php
-		                            break;
-		                            
-		                            case "textarea" :
-		                                ?><textarea id="setting-<?php echo $key.'-'.$option['name']; ?>" class="large-text" cols="50" rows="3" name="<?php echo 'gmw_forms[' . $formID . '][' . $key . '][' . $option['name'] . ']'; ?>" <?php echo implode(' ', $attributes); ?> <?php echo $placeholder; ?>><?php echo esc_textarea($value); ?></textarea><?php
-		                            break;
-		                            
-		                            case "radio" :
+	                           		echo '</td>';
+	                        	echo '</tr>';
 		
-			                            $rc = 1;
-			                            foreach ($option['options'] as $keyVal => $name) {
-			                                $checked = ( $rc == 1 ) ? 'checked="checked"' : checked($value, $keyVal, false);
-			                                echo '<span id="setting-'.$key.'-'.$option['name'] .'-'.$keyVal.'-wrapper"><input type="radio" id="setting-'.$key.'-'.$option['name'] .'-'.$keyVal.'" class="setting-' . $option['name'] . '" name="gmw_forms[' . $formID . '][' . $key . '][' . $option['name'] . ']" value="' . esc_attr($keyVal) . '" ' . $checked . ' />' . $name . ' </span>';
-			                                $rc++;
-			                            }
-		                            break;
-		                            
-		                            case "select" :
-		                                ?><select id="setting-<?php echo $key.'-'.$option['name']; ?>" class="regular-text" name="<?php echo 'gmw_forms[' . $formID . '][' . $key . '][' . $option['name'] . ']'; ?>" <?php echo implode(' ', $attributes); ?>><?php
-		                                foreach ($option['options'] as $keyVal => $name)
-		                                    echo '<option value="' . esc_attr($keyVal) . '" ' . selected($value, $keyVal, false) . '>' . esc_html($name) . '</option>';
-		                                ?></select><?php
-		                            break;
-		                            
-		                            case "multiselect" :
-		                            	?><select multiselect id="setting-<?php echo $key.'-'.$option['name']; ?>" class="regular-text" name="<?php echo 'gmw_forms['.$formID.']['.$key.']['.$option['name'].'][]'; ?>" <?php echo implode(' ', $attributes); ?>><?php
-                            			 foreach ( $option['options'] as $keyVal => $name ) {                            			
-                            			 	$selected = ( in_array( $keyVal, $value ) ) ? 'selected="selected"' : '';
-                            		     	echo '<option value="' . esc_attr($keyVal) . '" ' .$selected. '>' . esc_html($name) . '</option>';
-                            			 }
-                            		     ?></select><?php
-                            		break;
-		                            
-		                            case "password" :
-		                                ?><input id="setting-<?php echo $key.'-'.$option['name']; ?>" class="regular-text" type="password" name="<?php echo 'gmw_forms[' . $formID . '][' . $key . '][' . $option['name'] . ']'; ?>" value="<?php esc_attr_e($value); ?>" <?php echo implode(' ', $attributes); ?> <?php echo $placeholder; ?> /><?php
-		                            break;
-		                            
-		                            case "hidden" :
-		                                ?><input id="setting-<?php echo $key.'-'.$option['name']; ?>" class="gmw-form-hidden-field" id="setting-<?php echo $option['name']; ?>" class="regular-text" type="hidden" name="<?php echo 'gmw_forms[' . $formID . '][' . $key . '][' . $option['name'] . ']'; ?>" value="<?php echo $value; ?>" /><?php
-		                            break;
-		                                
-		                            default :
-		                                ?><input id="setting-<?php echo $key.'-'.$option['name']; ?>" class="regular-text" type="text" name="<?php echo 'gmw_forms[' . $formID . '][' . $key . '][' . $option['name'] . ']'; ?>" value="<?php esc_attr_e($value); ?>" <?php echo implode(' ', $attributes); ?> <?php echo $placeholder; ?> /><?php
-		                            break;
-	                            }
-		
-	                            echo '</td>';
-	                            echo '<td style="color: #555;border-bottom:1px solid #eee;">';
-	
-	                            if (isset($option['desc']) && !empty($option['desc']))
-	                                echo ' <p class="description">' . $option['desc'] . '</p>';
-	
-	                            echo '</td>';
-	                        echo '</tr>';
-		
-	                        
-	                        $rowNumber++;
+	                        	$rowNumber++;
 	                        }
 	                        
 	                        do_action( 'form_editor_tab_end', $key, $section, $formID, $gmw_forms[$formID] );
@@ -850,13 +853,99 @@ class GMW_Edit_Form {
                             		<th scope="col" id="cb" class="manage-column  column-cb check-column" style="width:50px;padding:11px 10px">
                                 		<input type="submit" class="button-primary" value="<?php _e('Save Changes', 'GMW'); ?>" />
                             		</th>
-                              		<th scope="col" id="id" class="manage-column"></th>
-                                	<th scope="col" id="active" class="manage-column"></th> 	
+                              		<th scope="col" id="id" class="manage-column"></th>	
                             	</tr>
                         	</tfoot>
                     	</table>
                     </div>
                 <?php } ?>
+
+                <!-- form usage -->
+            	<div id="settings-form-usage" class="gmw-settings-panel">
+	                <table class="widefat">
+	                	<thead>
+	                    	<tr>
+	                        	<th scope="col" id="cb" class="manage-column column-cb check-column" style="width:20% !important;padding:11px 10px"><?php _e('Post/Page Content', 'GMW'); ?></th>
+	                        	<th scope="col" id="cb" class="manage-column column-cb check-column" style="width:40% !important;padding:11px 10px"><?php _e('Tempalte file', 'GMW'); ?></th>
+	                        	<th scope="col" id="cb" class="manage-column column-cb check-column" style="width:40%;padding:11px 10px"><?php _e('Description', 'GMW'); ?></th>
+	                    	</tr>
+	                	</thead>
+	             
+	                	<tbody>
+	                		<?php if ( $gmw_form['addon'] == 'global_maps' ) { ?>
+	                			<tr>
+		                			<td>
+		                				<code>[gmw form="<?php echo $formID; ?>"]</code>
+		                			</td>
+		                			<td>
+		                				<code><?php echo '&#60;&#63;php echo do_shortcode(\'[gmw form="'.$formID.'"]\'); &#63;&#62;'; ?></code>
+		                			</td>
+		                			<td>
+		                				<?php _e( 'Use this shortcode to display the global map anywhere on the page.', 'GMW' ); ?>
+		                			</td>
+		                		</tr>
+	             			<?php } else { ?>
+
+	                		<tr>
+	                			<td>
+	                				<code>[gmw form="<?php echo $formID; ?>"]</code>
+	                			</td>
+	                			<td>
+	                				<code><?php echo '&#60;&#63;php echo do_shortcode(\'[gmw form="'.$formID.'"]\'); &#63;&#62;'; ?></code>
+	                			</td>
+	                			<td>
+	                				<?php _e( 'Use this shortcode to display the search form and search results of this form.', 'GMW' ); ?>
+	                			</td>
+	                		</tr>
+	                		<tr>
+	                			<td>
+	                				<code>[gmw search_form="<?php echo $formID; ?>"]</code>
+	                			</td>
+	                			<td>
+	                				<code><?php echo '&#60;&#63;php echo do_shortcode(\'[gmw search_form="'.$formID.'"]\'); &#63;&#62;'; ?></code>
+	                			</td>
+	                			<td>
+	                				<?php _e( 'Use this shortcode to display only the search form of this form.', 'GMW' ); ?>
+	                			</td>
+	                		</tr>
+	                		<tr>
+	                			<td>
+	                				<code>[gmw search_results="<?php echo $formID; ?>"]</code>
+	                			</td>
+	                			<td>
+	                				<code><?php echo '&#60;&#63;php echo do_shortcode(\'[gmw search_results="'.$formID.'"]\'); &#63;&#62;'; ?></code>
+	                			</td>
+	                			<td>
+	                				<?php _e( 'Use this shortcode to display only the search results of this form.', 'GMW' ); ?>
+	                			</td>
+	                		</tr>
+	                		<tr>
+	                			<td>
+	                				<code>[gmw map="<?php echo $formID; ?>"]</code>
+	                			</td>
+	                			<td>
+	                				<code><?php echo '&#60;&#63;php echo do_shortcode(\'[gmw map="'.$formID.'"]\'); &#63;&#62;'; ?></code>
+	                			</td>
+	                			<td>
+	                				<?php _e( 'Use this shortcode to display the results map anywhere on a page. By default, the form you create will display the map above the list of results. Using this shortcode you can display the map anywhere else on the page. Note that this shortcode must go together with one of the results shortocdes mentioned above. You also need to set the "Display Map" feature ( "Search Results" tab ) to "using shortcode".', 'GMW' ); ?>
+	                			</td>
+	                		</tr>
+	                		<tr>
+	                			<td>
+	                				<code>[gmw form="results"]</code>
+	                			</td>
+	                			<td>
+	                				<code><?php echo '&#60;&#63;php echo do_shortcode(\'[gmw form="results"]\'); &#63;&#62;'; ?></code>
+	                			</td>
+	                			<td>
+	                				<?php _e( 'Use this shortcode in the page where you would like to display the search results. That is in case that you choose to display the search results in a different page than the search form or when using "GMW Form" widget.', 'GMW' ); ?>
+	                			</td>
+	                		</tr>
+	                		<?php } ?>
+	                	</tbody>
+	              	</table>
+	        	</div>
+				<br />
             </form>
             
             <?php $current_tab = ( isset( $_COOKIE['gmw_admin_tab'] ) ) ? $_COOKIE['gmw_admin_tab'] : false; ?>
