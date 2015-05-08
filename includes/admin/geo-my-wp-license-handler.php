@@ -59,33 +59,24 @@ class GMW_License {
 		
 		// Setup hooks
 		$this->includes();
-		$this->auto_updater();
-	
+		$this->auto_updater();	
 	}
-	
+		
 	/**
 	 * add gmw add-ons action links in plugins page
 	 * @param  $links
 	 * @return $links
 	 */
 	public function addon_action_links( $links ) {
-	
+			
 		//if license is not activated display the "Activate License" message
 		if ( empty( $this->licenses[$this->license_name] ) || !isset( $this->statuses[$this->license_name] ) || $this->statuses[$this->license_name] != 'valid' ) {
-			
-			if ( class_exists( 'GEO_my_WP' ) ) {
-				$links = array( 'activate' => '<a href="'.admin_url( 'admin.php?page=gmw-add-ons' ).'">' . __('Activate the license key in order to receive updates', 'GMW') . '</a>') + $links;
-			}
 			return $links;
-		}
+		} 
 		
 		//if license activate display "Diactivate license before...." message
-		if ( class_exists( 'GEO_my_WP' ) ) {
-			$links['deactivate'] = '<a href="' . admin_url( 'admin.php?page=gmw-add-ons' ).'">'.__( 'Please deactivate the license key before deactivating the plugin', 'GMW' ).'</a>';
-		} else {
-			$links['deactivate'] = '<em style="color:red">'.__( 'Please deactivate the license key before deactivating the plugin', 'GMW' ).'</em>';
-		}
-			
+		$links['deactivate'] = '<a href="' . admin_url( 'admin.php?page=gmw-add-ons' ).'">'.__( 'Please deactivate the license key before deactivating the plugin', 'GMW' ).'</a>';
+						
 		return $links;
 	}
 	
@@ -143,16 +134,16 @@ class GMW_License_Key {
 	 * Class constructor
 	 *
 	 */
-	function __construct( $file ,$item_name, $license_name ) {
+	function __construct( $file ,$item_name, $license_name, $item_id=false ) {
 
 		$this->licenses	 	= get_option( 'gmw_license_keys' );
 		$this->statuses  	= get_option( 'gmw_premium_plugin_status' );
 		$this->basename		= plugin_basename( $file );
 		$this->file      	= basename( dirname( $file ) );
 		$this->item_name	= $item_name;
+		$this->item_id		= $item_id;
 		$this->license_name = $license_name;
 		$this->messages		= gmw_update_key_api_notices();
-		
 	}
 
 	/**
@@ -162,7 +153,7 @@ class GMW_License_Key {
 	public function license_key_output() {
 
 		?>
-		<tr id="<?php echo esc_attr( $this->file ); ?>-licence-key-row" class="active gmw-licence-key-wrapper">
+		<tr id="<?php echo esc_attr( $this->file ); ?>-license-key-row" class="active gmw-license-key-wrapper">
 			
 			<td class="plugin-update" colspan="3">
 				
@@ -174,7 +165,8 @@ class GMW_License_Key {
 								
 							<div class="gmw-license-wrapper gmw-license-valid-wrapper">
 								
-								<span><?php _e( 'License Key:', 'GMW' ); ?></span>
+								<span class="dashicons dashicons-admin-network" style="font-size: 16px;line-height: 28px;"></span>
+								<span style="font-size: 14px;"><?php _e( 'License Key:', 'GMW' ); ?></span>
 								<input 
 									class="gmw-license-key-input-field" 
 									disabled="disabled" 
@@ -190,10 +182,11 @@ class GMW_License_Key {
 								<!-- show deactivate license button -->
 								<input 
 									type="submit"
+									name="gmw_update_key_submit"
 									class="button-secondary activate-license-btn"
 									style="padding: 0 9px !important;"
-									title="<?php _e('Deactivate License Key', 'GMW'); ?>"
-									value="<?php _e('Deactivate License Key', 'GMW'); ?>" />
+									title="<?php _e( 'Deactivate License Key', 'GMW' ); ?>"
+									value="<?php _e( 'Deactivate License Key', 'GMW' ); ?>" />
 								
 								<p class="description"><?php echo $this->messages['valid']; ?></p>
 								
@@ -216,7 +209,8 @@ class GMW_License_Key {
 							
 							<div class="gmw-license-wrapper gmw-license-invalid-wrapper <?php echo $class; ?>">
 								
-								<span><?php _e( 'License Key:', 'GMW' ); ?></span>									
+								<span class="dashicons dashicons-admin-network" style="font-size: 16px;line-height: 28px;"></span>
+								<span style="font-size: 14px;"><?php _e( 'License Key:', 'GMW' ); ?></span>									
 								<input 
 									onkeydown="if (event.keyCode == 13) { jQuery(this).closest('form').find('.activate-license-btn').click(); return false; }"
 									class="gmw_license_keys gmw-addon-short-input"
@@ -224,13 +218,14 @@ class GMW_License_Key {
 									type="text"
 									class="regular-text"
 									size="30"
-									placeholder="<?php _e('Enter license key', 'GMW'); ?>"
+									placeholder="<?php _e( 'Enter license key', 'GMW' ); ?>"
 									value="<?php if ( !empty($this->licenses[$this->license_name] ) ) echo $this->licenses[$this->license_name]; ?>" />
 						
 								<input 
 									type="submit"
+									name="gmw_update_key_submit"
 									class="gmw-license-key-button button-secondary activate-license-btn button-primary"
-									title="<?php _e('Activate License Key', 'GMW'); ?>"
+									title="<?php _e( 'Activate License Key', 'GMW'); ?>"
 									style="padding: 0 8px !important;"
 									value="<?php _e( 'Activate License', 'GMW' ); ?>" />
 								
@@ -243,6 +238,7 @@ class GMW_License_Key {
 						<?php } ?> 
 							
 						<input type="hidden" name="gmw_item_name" value ="<?php echo $this->item_name; ?>" />
+						<input type="hidden" name="gmw_item_id" value ="<?php echo $this->item_id; ?>" />
 						<input type="hidden" name="gmw_update_key_api" value ="<?php echo $this->license_name; ?>" />
 						
 						<?php wp_nonce_field( $this->license_name, $this->license_name ); ?>
@@ -253,9 +249,9 @@ class GMW_License_Key {
 			</td>
 			<script>
 				jQuery(function($){
-					$('tr#<?php echo esc_attr( $this->file ); ?>-licence-key-row').prev().addClass('gmw-license-key-wrapper');
-					if ( $('tr#<?php echo esc_attr( $this->file ); ?>-licence-key-row').prev().hasClass('update') ) {
-						$('tr#<?php echo esc_attr( $this->file ); ?>-licence-key-row').addClass( 'update');
+					$('tr#<?php echo esc_attr( $this->file ); ?>-license-key-row').prev().addClass('gmw-license-key-addon-wrapper');
+					if ( $('tr#<?php echo esc_attr( $this->file ); ?>-license-key-row').prev().hasClass('update') ) {
+						$('tr#<?php echo esc_attr( $this->file ); ?>-license-key-row').addClass( 'update');
 					}				 
 				});
 			</script>
@@ -273,15 +269,15 @@ class GMW_License_Key {
 function gmw_update_key_api_notices() {
 	
 	return $messages = apply_filters( 'gmw_update_key_api_notices', array(
-			'activate'				=> __( 'Please enter your license key and click the "Activate" button. The license key is required for automatic updated.', 'GMW' ),
+			'activate'				=> __( 'Please enter your license key and click "Activate License". The license key is required in order to receive automatic updated for the plugin.', 'GMW' ),
 			'activated'				=> __( 'Your license for %s plugin successfully activated. Thank you for your support!', 'GMW' ),
 			'deactivated'			=> __( 'Your license for %s plugin successfully deactivated.', 'GMW' ),
 			'valid'					=> __( 'License is activated. Thank you for your support!', 'GMW' ),
 			'no_key_entered'		=> __( 'No license key entered. Please enter the license key and try again.', 'GMW' ),
 			'expired' 				=> __( 'Your license has expired. Please renew your license in order to keep getting its updates and support.', 'GMW' ),
-			'no_activations_left' 	=> __( 'Your license has no activations left. Click <a href="http://geomywp.com/purchase-history/" target="_blank" >here</a> to manager your license activations.', 'GMW' ),
+			'no_activations_left' 	=> sprintf( __( 'Your license has no activations left. Click <a %s>here</a> to manager your license activations.', 'GMW' ), 'href="http://geomywp.com/purchase-history/" target="_blank"' ),
 			'missing'				=> __( 'Something is wrong with the key you entered. Please verify the key and try again.', 'GMW' ),
-			'retrieve_key'			=> __( 'Lost or forgot your license key? <a href="http://geomywp.com/purchase-history/" target="_blank" >Retrieve it here.</a>'),
+			'retrieve_key'			=> sprintf( __( 'Lost or forgot your license key? <a %s >Retrieve it here.</a>', 'GMW' ), 'href="http://geomywp.com/purchase-history/" target="_blank"' ),
 			'activation_error'		=> __( 'Your license for %s plugin could not be activated. See error message below!', 'GMW' ),
 			'item_name_mismatch'	=> __( 'An error occurred while trying to activate your %s license. ERROR item_name_mismatch', 'GMW' )
 	) );
@@ -298,7 +294,7 @@ function gmw_is_license_valid( $addon ) {
 	$licenses	= get_option( 'gmw_license_keys' );
 	$statuses 	= get_option('gmw_premium_plugin_status');
 
-	if ( !empty( $statuses[$addon] ) && $statuses[$addon] == 'valid' && !empty($licenses[$addon] ) ) {
+	if ( !empty( $statuses[$addon] ) && $statuses[$addon] == 'valid' && !empty( $licenses[$addon] ) ) {
 		return true;
 	} else {
 		return false;
@@ -376,7 +372,7 @@ add_action( 'admin_init', 'gmw_check_license');
 function gmw_update_key_api() {
 	
 	//check if updating license key
-	if ( empty( $_POST['gmw_update_key_api'] ) )
+	if ( empty( $_POST['gmw_update_key_submit'] ) || empty( $_POST['gmw_update_key_api'] ) )
 		return;
 	
 	//get the license being updated
@@ -392,16 +388,16 @@ function gmw_update_key_api() {
 	$action		 = $_POST['gmw_update_key_api_action'];
 	$page 		 = ( isset( $_GET['page'] ) && $_GET['page'] == 'gmw-add-ons' ) ? 'admin.php?page=gmw-add-ons' : 'plugins.php?';
 	$item_name	 = $_POST['gmw_item_name'];
+	$item_id	 = ( !empty( $_POST['gmw_item_id'] ) ) ? $_POST['gmw_item_id'] : false;
 	
 	//if license key field is empty
 	if ( empty( $license_key ) && $action == 'activate' ) {
-	
+		
 		unset( $licenses[$license_name] );
 		update_option( 'gmw_license_keys', $licenses );
 		
 		wp_safe_redirect( admin_url( $page.'&gmw_license_status_notice=no_key_entered&license_name='.$license_name.'&item_name='.str_replace( ' ', '-', $item_name ).'&gmw_notice_status=error' ) );
-		exit;
-		
+		exit;	
 	}
 	
 	if ( empty( $_POST['gmw_license_key'] ) )
@@ -411,7 +407,8 @@ function gmw_update_key_api() {
 	$api_params = array(
 			'edd_action' => $action .'_license',
 			'license'    => $license_key,
-			'item_name'  => urlencode( $item_name ) // the name of our product in EDD
+			'item_name'  => urlencode( $item_name ), // the name of our product in EDD
+			'item_id'	 => $item_id
 	);
 		
 	// Call the custom API.
@@ -469,8 +466,9 @@ add_action( 'admin_init', 'gmw_update_key_api');
  */
 function gmw_update_api_notices() {
 
-	if ( empty( $_GET['gmw_license_status_notice'] ) )
-		return;	
+	//check if updating license key
+	if (  empty( $_GET['gmw_license_status_notice'] ) )
+		return;
 	
 	$statuses  	 	= get_option( 'gmw_premium_plugin_status' );
 	$messages  		= gmw_update_key_api_notices();
