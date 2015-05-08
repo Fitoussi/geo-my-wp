@@ -1,0 +1,70 @@
+/* GEO my WP - Members Directory Stylsheet */
+
+#members-list span.gmw-sd-distance {
+	padding:2px 8px;
+	font-size: 11px;
+	background: #f8f8f8;
+	border:1px solid #eee;
+	margin-top:5px;
+	display: inline-block;
+	clear:both;
+	color:#444;
+	border-radius:10px;
+}
+
+#members-list div.gmw-sd-address-wrapper {
+	line-height: 20px;
+}
+
+#members-list div.gmw-sd-address-wrapper i.fa-map-marker,
+#members-list div.gmw-sd-directions-wrapper i.fa-location-arrow {
+	margin-right:3px;
+	font-size:13px;
+	color:lightcoral;
+}
+
+/* info window */
+
+.gmw-sd-info-window-wrapper {
+	min-width: 150px;
+	width: 100%;
+	text-align: left;
+	color:#333;
+	line-height:16px;
+}
+
+.gmw-sd-info-window-wrapper div.avatar {
+	display:inline-block;
+	vertical-align:top;
+	margin-right:5px;
+}
+
+.gmw-sd-info-window-wrapper div.avatar img {
+	height:50px;
+	width:50px;
+}
+
+.gmw-sd-info-window-wrapper div.content-wrapper {
+	display:inline-block;
+	vertical-align:top;
+}
+
+.gmw-sd-info-window-wrapper div.content-wrapper div.user-name {
+	margin-bottom:5px;
+}
+
+.gmw-sd-info-window-wrapper div.content-wrapper div.user-name a {
+	font-size: 16px;
+	display:block;	
+	text-transform: capitalize;
+}
+
+.gmw-sd-info-window-wrapper div.content-wrapper i.fa-map-marker {
+	margin-right:3px;
+	font-size:13px;
+	color:lightcoral;
+}
+
+.gmw-sd-info-window-wrapper div.content-wrapper div.distance {
+	font-size:12px;
+}
