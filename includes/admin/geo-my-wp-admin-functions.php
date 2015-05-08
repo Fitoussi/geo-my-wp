@@ -55,7 +55,11 @@ function gmw_output_admin_notices() {
 	if ( empty( $_GET['gmw_notice'] ) && empty( $_POST['gmw_notice'] ) )
 		return;
 	
-	$gmw_messages = array();
+	$gmw_messages = array( 
+		'posts_db_table_updated'   => __( 'GEO my WP posts locations db table successfully updated.', 'GMW' ),
+		'members_db_table_updated' => __( 'GEO my WP members locations db table successfully updated.', 'GMW' ),
+	);
+
 	$gmw_messages = apply_filters( 'gmw_admin_notices_messages', $gmw_messages );
 	
 	$notice_type   = ( isset( $_GET['gmw_notice'] ) ) ? $_GET['gmw_notice'] : $_POST['gmw_notice'];
@@ -136,28 +140,56 @@ function gmw_replace_pt_location_in_db( $location ) {
 
 	global $wpdb;
 
-	$wpdb->replace( $wpdb->prefix . 'places_locator', array(
+	$wpdb->replace( $wpdb->prefix . 'places_locator', 
+		array(
 			'post_id'           => $location['post_id'],
 			'feature'           => $location['feature'],
 			'post_status'       => $location['post_status'],
 			'post_type'         => $location['post_type'],
-			'post_title'        => stripslashes( $location['post_title'] ),
+			'post_title'        => $location['post_title'],
 			'lat'               => $location['lat'],
 			'long'              => $location['long'],
-			'street'            => stripslashes( $location['street'] ),
+			'street_number'     => $location['street_number'],
+			'street_name'       => $location['street_name'],
+			'street'            => $location['street'],
 			'apt'               => $location['apt'],
-			'city'              => stripslashes( $location['city'] ),
-			'state'             => stripslashes( $location['state'] ),
-			'state_long'        => stripslashes( $location['state_long'] ),
-			'zipcode'           => stripslashes( $location['zipcode'] ),
-			'country'           => stripslashes( $location['country'] ),
-			'country_long'      => stripslashes( $location['country_long'] ),
-			'address'           => stripslashes( $location['address'] ),
-			'formatted_address' => stripslashes( $location['formatted_address'] ),
+			'city'              => $location['city'],
+			'state'             => $location['state'],
+			'state_long'        => $location['state_long'],
+			'zipcode'           => $location['zipcode'],
+			'country'           => $location['country'],
+			'country_long'      => $location['country_long'],
+			'address'           => $location['address'],
+			'formatted_address' => $location['formatted_address'],
 			'phone'             => $location['phone'],
 			'fax'               => $location['fax'],
 			'email'             => $location['email'],
 			'website'           => $location['website'],			
 			'map_icon'          => $location['map_icon'],
-	));
+		)
+	);
+}
+
+/**
+ * GEO my WP top credits
+ * @return [type] [description]
+ */
+function gmw_admin_support_button() {
+	
+	if ( !empty( $_GET['page'] ) && $_GET['page'] != 'gmw-forms' ) { ?>
+		<span style="font-size:14px;margin-right:5px;"> - Developed by Eyal Fitoussi</span>
+		<a class="button action gmw-donate" title="Donate to GEO my WP" href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_flow&SESSION=rAW1w0xrqGW-TH-SKcCjMEkmf2AWHeGbFw8UdYBCFoJe7mX3HsGIY8Ys_Te&dispatch=5885d80a13c0db1f8e263663d3faee8d99e4111b56ef0eae45e68b8988f5b2dd" target="_blank"><i style="color:red;margin-right:4px;" class="fa fa-heart"></i>Donate</a>
+	<?php } ?>	
+	<span class="gmw-helpful-links-wrapper">
+		<a class="button action" title="GEO my WP Official Website" href="http://geomywp.com" target="_blank"><i class="fa fa-map-marker"></i>Geomywp.com</a>
+		<a class="button action" title="GEO my WP documentation" href="http://docs.geomywp.com" target="_blank"><i class="fa fa-book"></i>Docs</a>
+		<a class="button action" title="GEO my WP Demo" href="http://demo.geomywp.com" target="_blank"><i class="fa fa-desktop"></i>Demo</a>
+		<a class="button action" title="GEO my WP support" href="http://geomywp.com/support" target="_blank"><i class="fa fa-life-ring"></i>Support</a>
+		<a class="button action" title="GEO my WP on GitHub" href="https://github.com/Fitoussi/GEO-my-WP" target="_blank"><i class="fa fa-github"></i>GitHub</a>
+		<a class="button action" title="GEO my WP Extensions" href="http://geomywp.com/add-ons" target="_blank" style="color:green"><i class="fa fa-puzzle-piece"></i>Extensions</a>
+		<a class="button action" title="Show your support" href="https://wordpress.org/support/view/plugin-reviews/geo-my-wp?filter=5" target="_blank"><i style="color:orange" class="fa fa-star"></i>Love</a>
+		<a class="button action" title="GEO my WP on Facebook" href="https://www.facebook.com/geomywp" target="_blank"><i style="color:blue;font-size: 16px" class="fa fa-facebook-official"></i>Like</a>
+		<a class="button action" title="GEO my WP on Twitter" href="https://twitter.com/GEOmyWP" target="_blank"><i style="color:lightblue;font-size: 16px;" class="fa fa-twitter-square"></i>Follow</a>
+	</span>
+	<?php
 }
