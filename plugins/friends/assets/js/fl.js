@@ -13,7 +13,7 @@ jQuery(document).ready(function($) {
 	
 	//remove address fields when lat/lng fields change
 	$('#gmw-lat, #gmw-lng').on("input", function() {
-		$('#gmw-street, #gmw-city, #gmw-state, #gmw-state-long, #gmw-zipcode, #gmw-country, #gmw-country-long, #gmw-apt, #gmw-address, #gmw-formatted-address, #gmw-yl-autocomplete, #gmw-yl-field').val('');
+		$('#gmw-street-number, #gmw-street-name, #gmw-street, #gmw-city, #gmw-state, #gmw-state-long, #gmw-zipcode, #gmw-country, #gmw-country-long, #gmw-apt, #gmw-address, #gmw-formatted-address, #gmw-yl-autocomplete, #gmw-yl-field').val('');
 		$('#gmw-yl-get-address').addClass('changed');
 	});
     
@@ -165,7 +165,7 @@ jQuery(document).ready(function($) {
 				//update_ui(  ui.item.value, ui.item.geocode.geometry.location );
 				//update_map( ui.item.geocode.geometry );
 				$('#gmw-yl-get-latlng, #gmw-yl-get-address').removeClass('changed');
-				$('#gmw-street, #gmw-city, #gmw-state, #gmw-state-long, #gmw-zipcode, #gmw-country, #gmw-country-long, #gmw-apt, #gmw-address, #gmw-formatted-address').val('');
+				$('#gmw-street-number, #gmw-street-name, #gmw-street, #gmw-city, #gmw-state, #gmw-state-long, #gmw-zipcode, #gmw-country, #gmw-country-long, #gmw-apt, #gmw-address, #gmw-formatted-address').val('');
 				
 				$("#gmw-lat").val(place.geometry.location.lat());
     			$("#gmw-lng").val(place.geometry.location.lng());
@@ -195,7 +195,7 @@ jQuery(document).ready(function($) {
 	function returnAddress( gotLat, gotLng, updateMap ) {
 		
 		//remove all address fields
-		$('#gmw-street, #gmw-city, #gmw-state, #gmw-state-long, #gmw-zipcode, #gmw-country, #gmw-country-long, #gmw-apt, #gmw-address, #gmw-formatted-address').val('');
+		$('#gmw-street-number, #gmw-street-name, #gmw-street, #gmw-city, #gmw-state, #gmw-state-long, #gmw-zipcode, #gmw-country, #gmw-country-long, #gmw-apt, #gmw-address, #gmw-formatted-address').val('');
 		
 		geocoder = new google.maps.Geocoder();
 		var latlng = new google.maps.LatLng(gotLat ,gotLng);
@@ -228,10 +228,14 @@ jQuery(document).ready(function($) {
 
 			if ( address[x].types == 'street_number' ) {
 				street_number = address[x].long_name;
+				$("#gmw-street-number").val(street_number);
 			}
 			
 			if ( address[x].types == 'route' ) {
-				street = address[x].long_name;  
+				street = address[x].long_name; 
+
+				$("#gmw-street-name").val(street);
+
 				if ( street_number != false ) {
 					street = street_number + ' ' + street;
 					$("#gmw-street").val(street);
