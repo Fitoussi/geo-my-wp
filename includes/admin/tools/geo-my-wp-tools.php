@@ -28,6 +28,14 @@ function gmw_tools_page_output() {
 	?>
     	<div class="wrap">
     		
+            <h2 class="gmw-wrap-top-h2">
+                <i class="fa fa-wrench"></i>
+                <?php echo _e('GEO my WP Tools', 'GMW'); ?>
+                <?php gmw_admin_support_button(); ?>
+            </h2>
+
+            <div class="clear"></div>
+
     		<h2 class="nav-tab-wrapper" style=margin-bottom:20px;">
     			<?php
     			foreach( gmw_get_tools_tabs() as $tab_id => $tab_name ) {
