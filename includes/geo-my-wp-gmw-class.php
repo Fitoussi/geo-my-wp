@@ -275,7 +275,7 @@ class GMW {
 		do_action( "gmw_{$this->form['prefix']}_before_no_results", $this->form  );
 		
 		//use custom template file for no results
-		if ( apply_filters( 'gmw_no_results_template_file_enabled', true ) ) {
+		if ( apply_filters( 'gmw_no_results_template_file_enabled', false ) ) {
 			
 			if ( $this->form['prefix'] == 'pt' ) {
 				$folder = 'posts';
