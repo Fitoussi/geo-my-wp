@@ -29,8 +29,11 @@ class GMW_Settings {
     protected function init_settings() {
 
     	$this->settings = apply_filters( 'gmw_admin_settings', array(
+
     			'general_settings' => array(
+
     					__( 'General Settings', 'GMW' ),
+                        
     					array(
     							array(
     									'name'        => 'google_api',
@@ -38,13 +41,13 @@ class GMW_Settings {
     									'placeholder' => __( 'Enter your google api key', 'GMW' ),
     									'label'       => __( 'Google Maps API V3 Key', 'GMW' ),
     									'desc'        => __( 'This is optional but will let you track your API requests. you can obtain your free Goole API key <a href="https://code.google.com/apis/console/" target="_blank">here</a>.', 'GMW' ),
-    									'attributes'  => array( 'size' => '40' )
+    									'attributes'  => array( 'size' => '50' )
     							),
     							array(
     									'name'       => 'js_geocode',
     									'std'        => '',
     									'label'      => __( 'Client-side Geocoder', 'GMW' ),
-    									'cb_label'   => __( 'Use client-side ( Javascript ) geocoding', 'GMW' ),
+    									'cb_label'   => __( 'Enable client-side ( Javascript ) geocoding', 'GMW' ),
     									'desc'       => __( "Check this checkbox if you want to use client-side to geocode the address entered in GEO my WP's search form. clients-de geocoding might prevent Google API's OVER_QUERY_LIMIT issue.", 'GMW' ),
     									'type'       => 'checkbox',
     									'attributes' => array()
@@ -69,7 +72,7 @@ class GMW_Settings {
     									'name'       => 'auto_locate',
     									'std'        => '',
     									'label'      => __( 'Auto Locator', 'GMW' ),
-    									'cb_label'   => __( 'Use auto-locator', 'GMW' ),
+    									'cb_label'   => __( 'Enable auto-locator', 'GMW' ),
     									'desc'       => __( "GEO my WP will try to retrive the user's current location when first visits the website. If a location found it will be saved via cookies and later will be used to automatically display results based on that.", 'GMW' ),
     									'type'       => 'checkbox',
     									'attributes' => array()
@@ -139,8 +142,14 @@ class GMW_Settings {
         ?>
         <div class="wrap">
 
-            <h2 class="gmw-wrap-top-h2"><?php echo _e( 'GEO my WP Settings', 'GMW' ); ?></h2>
+            <h2 class="gmw-wrap-top-h2">
+                <i class="fa fa-cog"></i>
+                <?php echo _e( 'GEO my WP Settings', 'GMW' ); ?>
+                <?php gmw_admin_support_button(); ?>
+            </h2>
 
+            <div class="clear"></div>
+            
             <form method="post" action="options.php">
 
                 <?php settings_fields( $this->settings_group ); ?>
@@ -163,110 +172,109 @@ class GMW_Settings {
 
                     <div id="settings-<?php echo sanitize_title( $key ); ?>" class="gmw-settings-panel">
                     
-	                    <table class="widefat fixed">
+	                    <table class="widefat">
 	                        <thead>
 	                            <tr>
 	                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:20%;padding:11px 10px"><?php _e( 'Feature', 'GMW' ); ?></th>
 	                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:35%;padding:11px 10px"><?php _e( 'Settings', 'GMW' ); ?></th>
-	                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:45%;padding:11px 10px"><?php _e( 'Explanation', 'GMW' ); ?></th>
 	                            </tr>
 	                        </thead>
-	                        <?php
-	                        $rowNumber = 0;
-	
-	                        foreach ( $section[ 1 ] as $option ) {
-	
-	                            $placeholder    = ( !empty( $option['placeholder'] ) ) ? 'placeholder="'.$option[ 'placeholder' ].'"' : '';
-	                            $class          =   !empty( $option[ 'class' ] ) ? $option[ 'class' ] : '';
-	                            $value          = ( !empty( $gmw_options[$key][$option['name']] ) ) ? $gmw_options[$key][$option['name']] : $option['std'];
-	                            $option['type'] =   !empty( $option['type'] ) ? $option[ 'type' ] : '';
-	                            $attributes     = array();
-	
-	                            if ( !empty( $option[ 'attributes' ] ) && is_array( $option[ 'attributes' ] ) ) {
-	                                foreach ( $option[ 'attributes' ] as $attribute_name => $attribute_value ) {
-	                                    $attributes[] = esc_attr( $attribute_name ) . '="' . esc_attr( $attribute_value ) . '"';
-	                                }
-	                            }
-	
-	                            $alternate = ( $rowNumber % 2 == 0 ) ? 'alternate' : '';
-	
-	                            echo '<tr valign="top" class="' . $class . ' ' . $alternate . '"><th scope="row" style="color: #555;border-bottom:1px solid #eee;"><label for="setting-' . $option['name'] . '">' . $option[ 'label' ] . '</label></th><td style="color: #555;border-bottom:1px solid #eee;min-width:400px;vertical-align: top">';
-	
-	                            switch ( $option[ 'type' ] ) {
-	
-	                                case "function" :
-	
-	                                    $function = ( !empty( $option['function'] ) ) ? $option['function'] : $option['name'];
-	
-	                                    do_action( 'gmw_main_settings_' . $function, $gmw_options, $key, $option );
-	
-	                                break;
-	
-	                                case "checkbox" :
-	                                    ?><label><input class="setting-<?php echo $option[ 'name' ]; ?>" name="<?php echo 'gmw_options[' . $key . '][' . $option[ 'name' ] . ']'; ?>" type="checkbox" value="1" <?php echo implode( ' ', $attributes ); ?> <?php checked( '1', $value ); ?> /> <?php echo $option[ 'cb_label' ]; ?></label><?php
-	                                break;
-	
-	                                case "multicheckbox" :
-	                                    foreach ( $option[ 'options' ] as $keyVal => $name ) {
-	                                        ?><label><input class="setting-<?php echo $option[ 'name' ]; ?>" name="<?php echo 'gmw_options[' . $key . '][' . $option[ 'name' ] . '][' . $keyVal . ']'; ?>" type="checkbox" value="1" <?php if ( isset( $gmw_options[ $key ][ $option[ 'name' ] ][ $keyVal ] ) && $gmw_options[ $key ][ $option[ 'name' ] ][ $keyVal ] == 1 ) echo 'checked="checked"'; ?> /> <?php echo $name; ?></label><br /> <?php
-	                                    }
-	                                break;
-	
-	                                case "textarea" :
-	                                	?><textarea id="setting-<?php echo $option[ 'name' ]; ?>" class="large-text" cols="50" rows="3" name="<?php echo 'gmw_options[' . $key . '][' . $option[ 'name' ] . ']'; ?>" <?php echo implode( ' ', $attributes ); ?> <?php echo $placeholder; ?>><?php echo esc_textarea( $value ); ?></textarea><?php
-	                                break;
-	
-	                                case "radio" :
-	                                	$rc = 1;
-	                                	foreach ( $option[ 'options' ] as $keyVal => $name ) {
-	                                    	$checked = ( $rc == 1 ) ? 'checked="checked"' : checked( $value, $keyVal, false );
-	                                     	echo '<input type="radio" class="setting-' . $option[ 'name' ] . '" name="gmw_options[' . $key . '][' . $option[ 'name' ] . ']" value="' . esc_attr( $keyVal ) . '" ' . $checked . ' />' . $name . ' ';
-	                                    	$rc++;
-	                                    }
-	                                break;
-	
-	                                case "select" :
-	                                	?>
-	                                	<select id="setting-<?php echo $option['name']; ?>" class="regular-text" name="<?php echo 'gmw_options['.$key.']['.$option['name'].']'; ?>" <?php echo implode( ' ', $attributes ); ?>>
-	                             			<?php foreach ( $option[ 'options' ] as $keyVal => $name ) { ?>
-	                                			<?php echo '<option value="' . esc_attr( $keyVal ) . '" ' . selected( $value, $keyVal, false ) . '>' . esc_html( $name ) . '</option>'; ?>
-											<?php } ?>
-	                                	</select>
-	                                	<?php 
-	                                break;
-	
-	                                case "password" :
-	                                    ?>
-	                                    <input id="setting-<?php echo $option['name']; ?>" class="regular-text" type="password" name="<?php echo 'gmw_options['.$key.']['.$option['name'].']'; ?>" value="<?php esc_attr_e( $value ); ?>" <?php echo implode( ' ', $attributes ); ?> <?php echo $placeholder; ?> />
-	                                    <?php
-	                                break;
-	                                    
-	                                default :
-	                                	?>
-	                                	<input id="setting-<?php echo $option['name']; ?>" class="regular-text" type="text" name="<?php echo 'gmw_options['.$key.']['.$option['name'].']'; ?>" value="<?php esc_attr_e( $value ); ?>" <?php echo implode( ' ', $attributes ); ?> <?php echo $placeholder; ?> />
-	                                	<?php
-	                                break;
-	                            }
-	
-	                            echo '</td>';
-	                            echo '<td style="color: #555;border-bottom:1px solid #eee;vertical-align: top">';
-	
-	                            if ( $option[ 'desc' ] ) {
-	                                echo ' <p class="description">' . $option[ 'desc' ] . '</p>';
-	                            }
-	                            echo '</td>';
-	                            echo '</tr>';
-	
-	                            $rowNumber++;
-	                        }
-	                        ?>
+                            <tbody>
+    	                        <?php
+    	                        $rowNumber = 0;
+    	
+    	                        foreach ( $section[ 1 ] as $option ) {
+    	
+    	                            $placeholder    = ( !empty( $option['placeholder'] ) ) ? 'placeholder="'.$option[ 'placeholder' ].'"' : '';
+    	                            $class          =   !empty( $option[ 'class' ] ) ? $option[ 'class' ] : '';
+    	                            $value          = ( !empty( $gmw_options[$key][$option['name']] ) ) ? $gmw_options[$key][$option['name']] : $option['std'];
+    	                            $option['type'] =   !empty( $option['type'] ) ? $option[ 'type' ] : '';
+    	                            $attributes     = array();
+    	
+    	                            if ( !empty( $option[ 'attributes' ] ) && is_array( $option[ 'attributes' ] ) ) {
+    	                                foreach ( $option[ 'attributes' ] as $attribute_name => $attribute_value ) {
+    	                                    $attributes[] = esc_attr( $attribute_name ) . '="' . esc_attr( $attribute_value ) . '"';
+    	                                }
+    	                            }
+
+    	                            echo '<tr valign="top" class="' . $class .'">';
+                                        echo '<td class="gmw-form-feature-desc">';
+                                            echo '<label for="setting-' . $option['name'] . '">' . $option[ 'label' ] . '</label>';
+                                            if ( $option[ 'desc' ] ) {
+                                                echo ' <p class="description">' . $option[ 'desc' ] . '</p>';
+                                            }
+                                        echo '</td>';
+                                        echo '<td class="gmw-form-feature-settings">';
+    	
+        	                            switch ( $option[ 'type' ] ) {
+        	
+        	                                case "function" :
+        	
+        	                                    $function = ( !empty( $option['function'] ) ) ? $option['function'] : $option['name'];
+        	
+        	                                    do_action( 'gmw_main_settings_' . $function, $gmw_options, $key, $option );
+        	
+        	                                break;
+        	
+        	                                case "checkbox" :
+        	                                    ?><label><input class="setting-<?php echo $option[ 'name' ]; ?>" name="<?php echo 'gmw_options[' . $key . '][' . $option[ 'name' ] . ']'; ?>" type="checkbox" value="1" <?php echo implode( ' ', $attributes ); ?> <?php checked( '1', $value ); ?> /> <?php echo $option[ 'cb_label' ]; ?></label><?php
+        	                                break;
+        	
+        	                                case "multicheckbox" :
+        	                                    foreach ( $option[ 'options' ] as $keyVal => $name ) {
+        	                                        ?><label><input class="setting-<?php echo $option[ 'name' ]; ?>" name="<?php echo 'gmw_options[' . $key . '][' . $option[ 'name' ] . '][' . $keyVal . ']'; ?>" type="checkbox" value="1" <?php if ( isset( $gmw_options[ $key ][ $option[ 'name' ] ][ $keyVal ] ) && $gmw_options[ $key ][ $option[ 'name' ] ][ $keyVal ] == 1 ) echo 'checked="checked"'; ?> /> <?php echo $name; ?></label><br /> <?php
+        	                                    }
+        	                                break;
+        	
+        	                                case "textarea" :
+        	                                	?><textarea id="setting-<?php echo $option[ 'name' ]; ?>" class="large-text" cols="50" rows="3" name="<?php echo 'gmw_options[' . $key . '][' . $option[ 'name' ] . ']'; ?>" <?php echo implode( ' ', $attributes ); ?> <?php echo $placeholder; ?>><?php echo esc_textarea( $value ); ?></textarea><?php
+        	                                break;
+        	
+        	                                case "radio" :
+        	                                	$rc = 1;
+        	                                	foreach ( $option[ 'options' ] as $keyVal => $name ) {
+        	                                    	$checked = ( $rc == 1 ) ? 'checked="checked"' : checked( $value, $keyVal, false );
+        	                                     	echo '<input type="radio" class="setting-' . $option[ 'name' ] . '" name="gmw_options[' . $key . '][' . $option[ 'name' ] . ']" value="' . esc_attr( $keyVal ) . '" ' . $checked . ' />' . $name . ' ';
+        	                                    	$rc++;
+        	                                    }
+        	                                break;
+        	
+        	                                case "select" :
+        	                                	?>
+        	                                	<select id="setting-<?php echo $option['name']; ?>" class="regular-text" name="<?php echo 'gmw_options['.$key.']['.$option['name'].']'; ?>" <?php echo implode( ' ', $attributes ); ?>>
+        	                             			<?php foreach ( $option[ 'options' ] as $keyVal => $name ) { ?>
+        	                                			<?php echo '<option value="' . esc_attr( $keyVal ) . '" ' . selected( $value, $keyVal, false ) . '>' . esc_html( $name ) . '</option>'; ?>
+        											<?php } ?>
+        	                                	</select>
+        	                                	<?php 
+        	                                break;
+        	
+        	                                case "password" :
+        	                                    ?>
+        	                                    <input id="setting-<?php echo $option['name']; ?>" class="regular-text" type="password" name="<?php echo 'gmw_options['.$key.']['.$option['name'].']'; ?>" value="<?php esc_attr_e( $value ); ?>" <?php echo implode( ' ', $attributes ); ?> <?php echo $placeholder; ?> />
+        	                                    <?php
+        	                                break;
+        	                                    
+        	                                default :
+        	                                	?>
+        	                                	<input id="setting-<?php echo $option['name']; ?>" class="regular-text" type="text" name="<?php echo 'gmw_options['.$key.']['.$option['name'].']'; ?>" value="<?php esc_attr_e( $value ); ?>" <?php echo implode( ' ', $attributes ); ?> <?php echo $placeholder; ?> />
+        	                                	<?php
+        	                                break;
+        	                            }
+    	
+    	                               echo '</td>';
+    	                            echo '</tr>';
+    	
+    	                            $rowNumber++;
+    	                        }
+    	                        ?>
+                            </tbody>
 	                        <tfoot>
 	                            <tr style="height:40px;">
 	                                <th scope="col" id="cb" class="manage-column  column-cb check-column" style="width:50px;padding:11px 10px">
 	                                    <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'GMW'); ?>" />
 	                                </th>
 	                                <th scope="col" id="id" class="manage-column">--</th>
-	                                <th scope="col" id="active" class="manage-column">--</th> 	
 	                            </tr>
 	                        </tfoot>
 	                    </table>
