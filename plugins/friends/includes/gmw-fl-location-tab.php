@@ -75,7 +75,7 @@ class GMW_FL_Location_Page {
     			'address_fields'       => array(
     					__('Address Fields', 'GMW'),
     					array(
-    							'street' 		=> array(
+                                'street' 		=> array(
     									'name'        => 'street',
     									'std'         => '',
     									'id'          => 'gmw-street',
@@ -184,6 +184,28 @@ class GMW_FL_Location_Page {
     									'type'        => 'hidden',
     									'attributes'  => array('size' => '40')
     							),
+                                'street_number'   => array(
+                                        'name'        => 'street_number',
+                                        'std'         => '',
+                                        'id'          => 'gmw-street-number',
+                                        'class'       => '',
+                                        'placeholder' => '',
+                                        'label'       => __('Street number', 'GMW'),
+                                        'desc'        => '',
+                                        'type'        => 'hidden',
+                                        'attributes'  => array('size' => '40')
+                                ),
+                                'street_name'  => array(
+                                        'name'        => 'street_name',
+                                        'std'         => '',
+                                        'id'          => 'gmw-street-name',
+                                        'class'       => '',
+                                        'placeholder' => '',
+                                        'label'       => __('Street name', 'GMW'),
+                                        'desc'        => '',
+                                        'type'        => 'hidden',
+                                        'attributes'  => array('size' => '40')
+                                ),
     					),
     			),
     			'latlng_fields'        => array(
