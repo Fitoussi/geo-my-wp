@@ -133,9 +133,13 @@ function gmw_fl_xprofile_fields( $gmw, $class ) {
 
 /**
  * Query xprofile fields
+ *
+ * Note $formValues might come from URL. IT needs to be sanitized before being used
+ * 
  * @version 1.0
  * @author Eyal Fitoussi
  * @author Some of the code in this function was inspired by the code written by Andrea Taranti the creator of BP Profile Search - Thank you
+ * 
  */
 function gmw_fl_query_xprofile_fields( $gmw, $formValues ) {
 
@@ -160,8 +164,18 @@ function gmw_fl_query_xprofile_fields( $gmw, $formValues ) {
 
 		$fdata  = new BP_XProfile_Field( $field_id );
 		$fname  = 'field_'.$field_id;
-		$value  = ( isset( $formValues[$fname] ) ) ? $formValues[$fname] : '';
-		$max   	= ( isset( $formValues[$fname.'_max'] ) ) ? $formValues[$fname.'_max'] : '';
+		$value  = '';
+
+		if ( isset( $formValues[$fname] ) ) {
+
+			if ( is_array( $formValues[$fname] ) ) {
+				$value  = array_map( 'esc_attr', $formValues[$fname] );
+			} else {
+				$value = esc_attr( $formValues[$fname] );
+			}
+		}
+
+		$max   	= ( isset( $formValues[$fname.'_max'] ) ) ? absint( $formValues[$fname.'_max'] ) : '';
 		$sql 	= $wpdb->prepare ( "SELECT `user_id` FROM {$bp->profile->table_name_data} WHERE `field_id` = %d ", $field_id );
 		 
 		if ( !$value && !$max ) 
