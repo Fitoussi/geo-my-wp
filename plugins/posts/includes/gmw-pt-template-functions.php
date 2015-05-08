@@ -110,7 +110,7 @@ function gmw_pt_get_form_taxonomies( $gmw, $tag, $class ) {
        		$single_tax .= '<label for="' . $taxonomy->rewrite['slug'] . '">' . apply_filters( 'gmw_pt_' . $gmw['ID'] . '_' . $tax . '_label', $taxonomy->labels->singular_name .':', $tax, $gmw ) . '</label>';
 
         	if ( isset( $_GET['tax_' . $tax] ) )
-            	$tax_value = $_GET['tax_' . $tax];
+            	$tax_value = sanitize_text_field( $_GET['tax_' . $tax] );
 
         	$args = apply_filters( 'gmw_pt_dropdown_taxonomy_args', array(
         			'taxonomy'        => $tax,
@@ -167,7 +167,7 @@ function gmw_pt_query_taxonomies( $tax_args, $gmw ) {
     $args     = array( 'relation' => 'AND' );
     $postType = $gmw['search_form']['post_types'][0];
     
-    if ( !isset( $gmw['search_form']['taxonomies'][$postType] ) || empty( $gmw['search_form']['taxonomies'][$postType] ) )
+    if ( empty( $gmw['search_form']['taxonomies'][$postType] ) )
     	return;
     
     foreach ( $gmw['search_form']['taxonomies'][$postType] as $tax => $values ) {
@@ -176,7 +176,7 @@ function gmw_pt_query_taxonomies( $tax_args, $gmw ) {
     		 
     		$get_tax = false;
     		if ( isset( $_GET['tax_' . $tax] ) )
-    			$get_tax = $_GET['tax_' . $tax];
+    			$get_tax = sanitize_text_field( $_GET['tax_' . $tax] );
 
     		if ( $get_tax != 0 ) {
     			$rr++;
@@ -225,7 +225,7 @@ function gmw_pt_get_taxonomies( $gmw, $post ) {
     		}
 
     		$tax_output  = '<div class="gmw-taxes gmw-taxonomy-' . $the_tax->rewrite['slug'] . '">';
-    		$tax_output .= 	'<span>' . $the_tax->labels->singular_name . ': </span>';
+    		$tax_output .= 	'<span class="tax-label">' . $the_tax->labels->singular_name . ': </span>';
     		$tax_output .= 	'<span class="gmw-terms-wrapper gmw-'.$the_tax->rewrite['slug'].'-terms">'.join( ", ", $termsArray ).'</span>';
     		$tax_output .= '</div>';
     		
