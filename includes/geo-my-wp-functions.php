@@ -130,7 +130,7 @@ function gmw_new_map_element( $args, $return = false ) {
 	);
 
 	//merge default args with incoming args
-	$gmwMapElements[$mapID] = wp_parse_args( $args, $defaultArgs );
+	$gmwMapElements[$mapID] = array_replace_recursive( $defaultArgs, $args );
 
 	//allow plugins modify the map
 	$gmwMapElements[$mapID] = apply_filters( 'gmw_map_element', $gmwMapElements[$mapID], $gmwMapElements[$mapID]['form'] );
