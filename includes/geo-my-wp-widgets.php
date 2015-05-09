@@ -101,8 +101,7 @@ class GMW_Search_Form_Widget extends WP_Widget {
 	* @return array Updated safe values to be saved.
 	*/
 	function update( $new_instance, $old_instance ) {
-		
-		print_r($new_instance);
+
 		//get forms
 		$forms = get_option( 'gmw_forms' );
 
