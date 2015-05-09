@@ -6,16 +6,16 @@ if ( !defined( 'ABSPATH' ) )
 /**
  * Set labels
  * most of the labels of the forms ares set below.
- * it makes it easier to manager and it is now possible to modify a single or multiple 
+ * it makes it easier to manager and it is now possible to modify a single or multiple
  * labels using the filter provided instead of using the translation files.
- * 
+ *
  * You can create a custom function in the functions.php file of your theme and hook it using the filter gmw_shortcode_set_labels.
  * You should check for the $form['ID'] in your custom function to make sure the function apply only for the wanted forms.
  * @since 2.5
  */
 function gmw_form_set_labels( $form ) {
 
-	return  apply_filters( 'gmw_'.$form['prefix'].'_set_labels', array(
+	$labels = array(
 			'search_form'		=> array(
 					'search_site'		=> __( 'Search Site', 'GMW' ),
 					'radius_within'		=> __( 'Within',   'GMW' ),
@@ -107,64 +107,82 @@ function gmw_form_set_labels( $form ) {
 					'units_km'			=> __( 'Kilometers' , 'GMW' ),
 					'avoid_label'		=> __( 'Avoid' , 'GMW' ),
 					'avoid_hw'			=> __( 'highways' , 'GMW' ),
-					'avoid_tolls'		=> __( 'Tolls' , 'GMW' ),					
+					'avoid_tolls'		=> __( 'Tolls' , 'GMW' ),
 			)
-	), $form );
+	);
+	
+	//modify the labels
+	$labels = apply_filters( "gmw_set_labels", $labels, $form );
+	$labels = apply_filters( "gmw_set_labels_{$form['ID']}", $labels, $form );
+	$labels = apply_filters( "gmw_{$form['prefix']}_set_labels", $labels, $form );
+	
+	return $labels;
 }
 
 /**
- * GMW FL Search results function - display map
+ * GMW get the map element
  * @version 1.0
  * @author Eyal Fitoussi
  */
 function gmw_get_results_map( $gmw ) {
-	
-	//abort shortcode map if not set to do so in the form settings
-	//if ( isset( $gmw['params']['map'] ) && $gmw['search_results']['display_map'] != 'shortcode'  )
-		//return;
-	
-    $frame    = ( isset( $gmw['results_map']['map_frame'] ) ) ? 'gmw-map-frame' : '';
-    $display  = 'display:none;';
-    $expanded = '';
-    
-	if ( $gmw['addon'] == 'global_maps' ) {
-		$display = '';
-		$expanded = ( isset( $gmw['general_settings']['pl_expand_map'] ) ) ? 'gmw-expanded-map' : '';
-	}
 		
-	//if ( ( $gmw['prefix'] == 'gmpt' || $gmw['prefix'] == 'gmfl' ) )
-    $output['open']    		  = '<div id="gmw-map-wrapper-'.$gmw['ID'].'" class="gmw-map-wrapper gmw-map-wrapper-'.$gmw['ID'].' gmw-'.$gmw['addon'].'-map-wrapper gmw-'.$gmw['prefix'].'-map-wrapper ' . $frame . ' '.$expanded.'"  style="'.$display.'width:'.$gmw['results_map']['map_width'].';height:' . $gmw['results_map']['map_height'] . ';">';
-    $output['expend_toggle']  = '<div id="gmw-expand-map-trigger-'.$gmw['ID'].'" class="gmw-expand-map-trigger dashicons dashicons-editor-expand" style="display:none;" title="'.__( 'Resize map','GMW' ) .'"></div>';
-    $output['loader']  		  = 	'<div id="gmw-map-loader-wrapper-'.$gmw['ID'].'" class="gmw-map-loader-wrapper gmw-'.$gmw['prefix'].'-loader-wrapper">';
-    $output['loader'] 		 .= 		'<img id="gmw-map-loader-'.$gmw['ID'].'" class="gmw-map-loader gmw-'.$gmw['prefix'].'-map-loader" src="'.$gmw['map_loader'].'" alt="'.__( 'Map loader', 'GMW' ) .'" />';
-    $output['loader'] 		 .= 	'</div>';
-    $output['map']     		  = 	'<div id="gmw-map-'.$gmw['ID'].'" class="gmw-map gmw-' . $gmw['prefix'] . '-map" style="width:100%; height:100%"></div>';
+	$gmw = apply_filters( "gmw_map_output_args", $gmw );
+    $gmw = apply_filters( "gmw_map_output_args_{$gmw['ID']}", $gmw );
+    $gmw = apply_filters( "gmw_{$gmw['prefix']}_map_output_args", $gmw );
+
+    $frame = ( isset( $gmw['results_map']['map_frame'] ) ) ? 'gmw-map-frame' : '';
+
+    if ( !empty( $gmw['expand_map_on_load'] ) || !empty( $gmw['general_settings']['pl_expand_map'] ) ) {
+    	$expanded = 'gmw-expanded-map';
+    	$display  = '';
+    	$trigger  = 'fa fa-compress';
+    } else {
+    	$display  = 'display:none;';
+    	$expanded = '';
+    	$trigger  = 'fa fa-expand';
+   	}
+		
+	if ( $gmw['addon'] == 'global_maps' ) {
+		$display  = '';
+	}
+
+    $output['open']    		  = "<div id=\"gmw-map-wrapper-{$gmw['ID']}\" class=\"gmw-map-wrapper gmw-map-wrapper-{$gmw['ID']} gmw-{$gmw['addon']}-map-wrapper gmw-{$gmw['prefix']}-map-wrapper {$frame} {$expanded}\"  style=\"{$display}width:{$gmw['results_map']['map_width']};height:{$gmw['results_map']['map_height']};\">";
+    $output['resize_toggle']  = '<span id="gmw-resize-map-trigger-'.$gmw['ID'].'" class="gmw-resize-map-trigger gmw-'.$gmw['prefix'].'-resize-map-trigger '.$trigger.'" style="display:none;" title="'.__( 'Resize map','GMW' ) .'"></span>';
+    $output['map']     		  = "<div id=\"gmw-map-{$gmw['ID']}\" class=\"gmw-map gmw-{$gmw['prefix']}-map\" style=\"width:100%; height:100%\"></div>";
+    $output['loader'] 	  	  = "<i id=\"gmw-map-loader-{$gmw['ID']}\" class=\"gmw-map-loader gmw-{$gmw['prefix']}-map-loader fa fa-spinner fa-spin fa-3x fa-fw\"></i>";
     $output['close']   		  = '</div>';
 
-    $output = apply_filters( 'gmw_'.$gmw['prefix'].'_map_output', $output, $gmw );
+    //modify the map element
+    $output = apply_filters( "gmw_map_output", $output, $gmw );
+    $output = apply_filters( "gmw_map_output_{$gmw['ID']}", $output, $gmw );
+    $output = apply_filters( "gmw_{$gmw['prefix']}_map_output", $output, $gmw );
     
     return implode( ' ', $output );
 }
 
-function gmw_results_map( $gmw ) {
-	
-	if ( $gmw['search_results']['display_map'] != 'results' )
-		return;
-	
-	//check that we have only one map for each form
-	if ( apply_filters( 'gmw_disable_maps', false ) ) 
-		return;
-	
-	//disable th creation of a map after first map is displayed
-	add_filter( 'gmw_disable_maps', '__return_true', 10 );
+	function gmw_results_map( $gmw ) {
+		
+		//temporary. needs to be removed.
+		if ( $gmw['search_results']['display_map'] != 'results' && empty( $gmw['map_shortcode'] ) )
+			return;
+			
+	    do_action( "gmw_before_map", 				  $gmw );
+		do_action( "gmw_before_map_{$gmw['ID']}", 	  $gmw );
+		do_action( "gmw_{$gmw['prefix']}_before_map", $gmw );
+	    
+	    echo gmw_get_results_map( $gmw );
+	  
+	    do_action( "gmw_after_map", 				 $gmw );
+		do_action( "gmw_after_map_{$gmw['ID']}", 	 $gmw );
+		do_action( "gmw_{$gmw['prefix']}_after_map", $gmw );
+	}
 
-    do_action( 'gmw_'.$gmw['prefix'].'_before_map', $gmw );
-    
-    echo gmw_get_results_map( $gmw );
-  
-    do_action( 'gmw_'.$gmw['prefix'].'_after_map', $gmw );
-}
-
+/**
+ * GMW Search Form
+ * 
+ * @param unknown_type $gmw
+ * @param unknown_type $folder
+ */
 function gmw_get_search_form( $gmw, $folder ) {
 	
 	$sForm   = $gmw['search_form']['form_template'];	
@@ -181,324 +199,390 @@ function gmw_get_search_form( $gmw, $folder ) {
 			),
 	), $gmw );
 	
-	if ( !empty( $folder ) )
+	if ( !empty( $folder ) ) {
 		$folders = array_merge( $folders, $folder );
+	}
 	
-	if ( empty( $folders[$gmw['prefix']] ) )
+	if ( empty( $folders[$gmw['prefix']] ) ) {
 		return;
+	}
 	
 	//Load custom search form and css from child/theme folder
 	if ( strpos( $sForm, 'custom_' ) !== false ) {
-	
 		$sForm  						  = str_replace( 'custom_', '', $sForm );
 		$search_form['stylesheet_handle'] = "gmw-{$gmw['ID']}-{$gmw['prefix']}-search-form-{$sForm}";
 		$search_form['stylesheet_url']	  = get_stylesheet_directory_uri()."/geo-my-wp/{$folders[$gmw['prefix']]['custom']}{$sForm}/css/style.css";
 		$search_form['content_path'] 	  = STYLESHEETPATH . "/geo-my-wp/{$folders[$gmw['prefix']]['custom']}{$sForm}/search-form.php";
-	
 	} else {
 		$search_form['stylesheet_handle'] = "gmw-{$gmw['ID']}-{$gmw['prefix']}-search-form-{$sForm}";
 		$search_form['stylesheet_url'] 	  = $folders[$gmw['prefix']]['url'].$sForm.'/css/style.css';
 		$search_form['content_path']      = $folders[$gmw['prefix']]['path'].$sForm.'/search-form.php';
 	}
 	
-	 return $search_form;
+	return $search_form;
 }
 
 	function gmw_search_form( $gmw, $folder=false ) {
-		
+
 		$search_form = gmw_get_search_form( $gmw, $folder );
-		
+
 		if ( !wp_style_is( $search_form['stylesheet_handle'], 'enqueued' ) ) {
 			wp_enqueue_style( $search_form['stylesheet_handle'], $search_form['stylesheet_url'] );
 		}
-		
-		do_action( 'gmw_'.$gmw['prefix'].'_before_search_form', $gmw );
-		
+
+		do_action( "gmw_before_search_form", $gmw );
+		do_action( "gmw_before_search_form_{$gmw['ID']}", $gmw );
+		do_action( "gmw_{$gmw['prefix']}_before_search_form", $gmw );
+
 		include( $search_form['content_path'] );
-		
-		do_action( 'gmw_'.$gmw['prefix'].'_after_search_form', $gmw );
+
+		do_action( "gmw_after_search_form", $gmw );
+		do_action( "gmw_after_search_form_{$gmw['ID']}", $gmw );
+		do_action( "gmw_{$gmw['prefix']}_after_search_form", $gmw );
 	}
 
 /**
- * GMW search form function - form submit hidden fields
- *
+ * Form submission fields
+ * @param  array $gmw       the form being used
+ * @param  string $subValue the default value of the submit button
+ * @return mix              HTML elements of the submission fields
  */
-function gmw_form_submit_fields( $gmw, $subValue ) {
-	$subValue = ( !empty( $subValue ) ) ? $subValue : $gmw['labels']['search_form']['submit'];
+function gmw_get_form_submit_fields( $gmw, $subValue ) {
 	
-    ?>
-    <div id="gmw-submit-wrapper-<?php echo $gmw['ID']; ?>" class="gmw-submit-wrapper gmw-submit-wrapper-<?php echo $gmw['ID']; ?>">
-        <input type="hidden" id="gmw-form-id-<?php echo $gmw['ID']; ?>" class="gmw-form-id gmw-form-id-<?php echo $gmw['ID']; ?>" name="gmw_form" value="<?php echo $gmw['ID']; ?>" />
+	$subValue 	   = ( !empty( $subValue ) ) ? $subValue : $gmw['labels']['search_form']['submit'];
+	$submit_button = '<input type="submit" id="gmw-submit-'.$gmw['ID'].'" class="gmw-submit gmw-submit-'.$gmw['ID'].'" value="'.esc_attr( $subValue ).'" />';
+	$submit_button = apply_filters( 'gmw_form_submit_button', $submit_button, $gmw, $subValue ); 
+
+	$per_page = current( explode( ",", absint( $gmw['search_results']['per_page'] ) ) );
+	$address  = ( !empty( $_GET['gmw_address'] ) ) ? esc_attr( sanitize_text_field( stripslashes( implode( ' ', $_GET['gmw_address'] ) ) ) ) : '';
+	$lat	  = ( !empty( $_GET['gmw_lat'] ) ) 	   ? esc_attr( sanitize_text_field( $_GET['gmw_lat'] ) ) : '';
+	$lng	  = ( !empty( $_GET['gmw_lng'] ) ) 	   ? esc_attr( sanitize_text_field( $_GET['gmw_lng'] ) ) : '';
+
+	$output = array();
+
+    $output['wrap_start'] = "<div id=\"gmw-submit-wrapper-{$gmw['ID']}\" class=\"gmw-submit-wrapper gmw-submit-wrapper-{$gmw['ID']}\">";    
+    $output['field_id']   = "<input type=\"hidden\" id=\"gmw-form-id-{$gmw['ID']}\" class=\"gmw-form-id gmw-form-id-{$gmw['ID']}\" name=\"gmw_form\" value=\"{$gmw['ID']}\" />";
         
-        <input 
-        	type="hidden" 
-        	id="gmw-per-page-<?php echo $gmw['ID']; ?>" 
-        	class="gmw-per-page gmw-per-page-<?php echo $gmw['ID']; ?>" 
-        	name="gmw_per_page" value="<?php echo current( explode( ",", $gmw['search_results']['per_page'] ) ); ?>" 
-        	/>
+    //set the page number to 1. We do this to reset the page number when form submitted again
+    $output['field_page'] = "<input 
+        	type=\"hidden\" 
+        	id=\"gmw-page-{$gmw['ID']}\" 
+        	class=\"gmw-page gmw-page-{$gmw['ID']}\" 
+        	name=\"paged\" value=\"1\" 
+        	/>";
+
+    $output['field_pre_page'] = "<input 
+        	type=\"hidden\" 
+        	id=\"gmw-per-page-{$gmw['ID']}\" 
+        	class=\"gmw-per-page gmw-per-page-{$gmw['ID']}\" 
+        	name=\"gmw_per_page\" value=\"{$per_page}\" 
+        	/>";
         	
-        <input 
-        	type="hidden" 
-        	id="prev-address-<?php echo $gmw['ID']; ?>" 
-        	class="prev-address prev-address-<?php echo $gmw['ID']; ?>" 
-        	value="<?php if ( !empty( $_GET['gmw_address'] ) ) echo implode( ' ', $_GET['gmw_address'] ); ?>"
-        	/>
+    $output['field_address'] = "<input 
+        	type=\"hidden\" 
+        	id=\"prev-address-{$gmw['ID']}\" 
+        	class=\"prev-address prev-address-{$gmw['ID']}\" 
+        	value=\"{$address}\"
+        	/>";
     
-        <input 
-        	type="hidden" 
-        	id="gmw-lat-<?php echo $gmw['ID']; ?>" 
-        	class="gmw-lat gmw-lat-<?php echo $gmw['ID']; ?>" 
-        	name="gmw_lat" value="<?php if ( !empty( $_GET['gmw_lat'] ) ) echo $_GET['gmw_lat']; ?>"
-        	/>
+    $output['field_lat'] = "<input 
+        	type=\"hidden\" 
+        	id=\"gmw-lat-{$gmw['ID']}\" 
+        	class=\"gmw-lat gmw-lat-{$gmw['ID']}\" 
+        	name=\"gmw_lat\" value=\"{$lat}\"
+        	/>";
         	
-        <input 
-        	type="hidden" 
-        	id="gmw-long-<?php echo $gmw['ID']; ?>" 
-        	class="gmw-lng gmw-long-<?php echo $gmw['ID']; ?>" 
-        	name="gmw_lng" value="<?php if ( !empty( $_GET['gmw_lng'] ) ) echo $_GET['gmw_lng']; ?>"
-        	/>
+    $output['field_lng'] = "<input 
+        	type=\"hidden\" 
+        	id=\"gmw-long-{$gmw['ID']}\" 
+        	class=\"gmw-lng gmw-long-{$gmw['ID']}\" 
+        	name=\"gmw_lng\" value=\"{$lng}\"
+        	/>";
 
-        <input 
-        	type="hidden" 
-        	id="gmw-prefix-<?php echo $gmw['ID']; ?>" 
-        	class="gmw-prefix gmw-prefix-<?php echo $gmw['ID']; ?>" 
-        	name="gmw_px" value="<?php echo $gmw['prefix']; ?>" 
-        	/>
+    $output['field_prefix'] = "<input 
+        	type=\"hidden\" 
+        	id=\"gmw-prefix-{$gmw['ID']}\" 
+        	class=\"gmw-prefix gmw-prefix-{$gmw['ID']}\" 
+        	name=\"gmw_px\" value=\"{$gmw['prefix']}\" 
+        	/>";
         	
-        <input 
-        	type="hidden" 
-        	id="gmw-action-<?php echo $gmw['ID']; ?>" 
-        	class="gmw-action gmw-action-<?php echo $gmw['ID']; ?>" 
-        	name="action" 
-        	value="gmw_post" 
-        	/>
+    $output['field_action'] = "<input 
+        	type=\"hidden\" 
+        	id=\"gmw-action-{$gmw['ID']}\" 
+        	class=\"gmw-action gmw-action-{$gmw['ID']}\" 
+        	name=\"action\" 
+        	value=\"gmw_post\" 
+        	/>";
 
-        <?php do_action( 'gmw_from_submit_fields', $gmw ); ?>
-        
-        <?php $submit_button = '<input type="submit" id="gmw-submit-' . $gmw['ID'] . '" class="gmw-submit gmw-submit-' . $gmw['ID'] . '" value="' . $subValue . '" />'; ?>
-        <?php echo apply_filters( 'gmw_form_submit_button', $submit_button, $gmw, $subValue ); ?>
-    </div>
-    <?php
+    $output['field_submit'] = $submit_button;
+    
+    $output['wrap_end'] = '</div>';
+
+    $output  = apply_filters( 'gmw_from_submit_fields', $output, $gmw, $_GET );
+
+    return implode( ' ', $output );
 }
 
-/**
- * GMW Search form function - Address Field
- * @version 1.0
- * @author Eyal Fitoussi
- */
-function gmw_search_form_address_field( $gmw, $id, $class ) {
-	echo gmw_get_search_form_address_field( $gmw, $id, $class );
-}
-	function gmw_get_search_form_address_field( $gmw, $id, $class ) {
-	
-	    $address_field 	= '';
-	    $am 		   	= ( !empty( $gmw['search_form']['address_field']['mandatory'] ) ) ? 'mandatory' : '';
-	    $title 		   	= ( !empty( $gmw['search_form']['address_field']['title'] ) ) ? $gmw['search_form']['address_field']['title'] : '';
-		$class		   	= ( !empty( $class ) ) ? $class : '';
-		$id		   	   	= ( !empty( $id ) )    ? $id : 'gmw-address-field-wrapper-'.$gmw['ID'];
-		$value			= ( !empty( $_GET['gmw_address'] ) ) ? str_replace( '+', ' ', implode( ' ', $_GET['gmw_address'] ) ) : ''; 
-		$place_holder	= ( !empty( $gmw['search_form']['address_field']['within'] ) ) ? 'placeholder="'.$title.'"' : '';
-		
-	    $address_field .= '<div id="'.$id.'" class="gmw-address-field-wrapper gmw-address-field-wrapper-'.$gmw['ID'].' '.$class.'">';
-	    
-	    if ( !isset( $gmw['search_form']['address_field']['within'] ) && !empty( $title ) ) {
-	        $address_field .= '<label class="gmw-field-label" for="gmw-address-'.$gmw['ID'].'">' . $title . '</label>';
-	    }
-	    $address_field .= '<input type="text" name="gmw_address[]" id="gmw-address-'.$gmw['ID'].'" autocomplete="off" class="'.$am.' gmw-address gmw-full-address gmw-address-'.$gmw['ID'].' '.$class.'" value="'.$value.'" '.$place_holder.'/>';
-	    
-	    if ( $gmw['search_form']['locator_icon'] == 'within_address_field' ) {
-	    	
-	    	$lSubmit = ( isset( $gmw['search_form']['locator_submit'] ) ) ? 'gmw-locator-submit' : '';
-	    	
-	    	$address_field .= '<div class="gmw-locator-btn-wrapper gmw-locator-btn-within-wrapper">';
-	    	$address_field .= 	'<span id="'.$gmw['ID'].'" class="dashicons-before dashicons-location gmw-locator-btn-within gmw-locator-button gmw-locate-btn '.$lSubmit.'"></span>';
-	    	$address_field .= 	'<img class="gmw-locator-btn-loader" src="'.GMW_IMAGES.'/gmw-loader.gif" alt="Locator image loader" style="display:none;">';
-	    	$address_field .= '</div>';
-	    }
-	    
-	    $address_field .= '</div>';
-	
-	    if ( !empty( $gmw['search_form']['address_field']['address_autocomplete'] ) ) {
-	    	GEO_my_WP::google_places_address_autocomplete( array( 'gmw-address-'.$gmw['ID'] ) );
-	    }
-	    
-	    return apply_filters( 'gmw_search_form_address_field', $address_field, $gmw, $id, $class );
+	function gmw_form_submit_fields( $gmw, $subValue ) {
+		echo gmw_get_form_submit_fields( $gmw, $subValue );
 	}
 
 /**
- * GMW Search form function - Locator Icon
- * @version 1.0
- * @author Eyal Fitoussi
+ * GMW get address field
+ * @param  array  $gmw    the form being used
+ * @param  false $id      deprecated
+ * @param  string  $class additional classes for the input field
+ * @return mix            HTML element
+ * @since 1.0
  */
-function gmw_search_form_locator_icon( $gmw, $class ) {
-	echo gmw_get_search_form_locator_icon( $gmw, $class );
+function gmw_get_search_form_address_field( $gmw, $id=false, $class='') {
 
+    $am 		 = (  isset( $gmw['search_form']['address_field']['mandatory'] ) ) ? 'mandatory' : '';
+    $title 		 = ( !empty( $gmw['search_form']['address_field']['title'] ) ) ? $gmw['search_form']['address_field']['title'] : '';
+	$value		 = ( !empty( $_GET['gmw_address'] ) ) ? esc_attr( sanitize_text_field( stripslashes( implode( ' ', $_GET['gmw_address'] ) ) ) ) : ''; 
+	$placeholder = ( isset( $gmw['search_form']['address_field']['within'] ) ) ? $title : '';
+
+    $output = '<div id="gmw-address-field-wrapper-'.$gmw['ID'].'" class="gmw-address-field-wrapper gmw-address-field-wrapper-'.$gmw['ID'].' '.esc_attr( $class ) .'">';
+    
+    if ( !isset( $gmw['search_form']['address_field']['within'] ) && !empty( $title ) ) {
+        $output .= '<label class="gmw-field-label" for="gmw-address-'.$gmw['ID'].'">'.esc_attr( $title ).'</label>';
+    }
+
+    $output .= '<input type="text" name="gmw_address[]" id="gmw-address-'.$gmw['ID'].'" autocomplete="off" 
+    		class="gmw-address gmw-full-address gmw-address-'.$gmw['ID'].' '.$class.' '.$am.'" 
+    		value="'.$value.'" placeholder="'.esc_attr( $placeholder ).'" />';
+    
+    if ( $gmw['search_form']['locator_icon'] == 'within_address_field' ) {
+    	
+    	$lSubmit = ( isset( $gmw['search_form']['locator_submit'] ) ) ? 'gmw-locator-submit' : '';
+    	
+    	$output .= '<div class="gmw-locator-btn-wrapper gmw-locator-btn-within-wrapper">';
+    	$output .= 	"<i id=\"{$gmw['ID']}\" class=\"fa fa-map-marker gmw-locator-btn-within gmw-locator-button gmw-locate-btn {$lSubmit}\"></i>";
+    	$output .= 	"<i id=\"gmw-locator-btn-loader-{$gmw['ID']}\" class=\"gmw-locator-btn-loader fa fa-refresh fa-spin\" alt=\"Locator image loader\" style=\"display:none;\"></i>";
+    	$output .= '</div>';
+    }
+    
+    $output .= '</div>';
+
+    if ( isset( $gmw['search_form']['address_field']['address_autocomplete'] ) ) {
+    	GEO_my_WP::google_places_address_autocomplete( array( 'gmw-address-'.$gmw['ID'] ) );
+    }
+    
+    return apply_filters( 'gmw_search_form_address_field', $output, $gmw, $id, $class );
 }
-	function gmw_get_search_form_locator_icon( $gmw, $class ) {
-	
-		$icon = $gmw['search_form']['locator_icon'];
-		
-		if ( $icon == 'gmw_na' || $icon == 'within_address_field' )
-			return;
-		
-	    $lSubmit = ( isset( $gmw['search_form']['locator_submit'] ) ) ? 'gmw-locator-submit' : '';
-	    
-	    $button  = '<div class="gmw-locator-btn-wrapper gmw-locator-btn-wrapper-'.$gmw['ID'].'">';
-	    $button .= apply_filters( 'gmw_search_form_locator_button_img', '<img id="gmw-locate-button-'.$gmw['ID'].'" class="gmw-locate-btn '.$lSubmit.' ' .$class.'" src="'.GMW_IMAGES.'/locator-images/'.$icon.'" alt="'.__( 'Locator image', 'GMW' ) .'" />', $gmw, $class );
-	    $button .= '<img class="gmw-locator-btn-loader" src="'.GMW_IMAGES.'/gmw-loader.gif" alt="'.__( 'Locator image loader', 'GMW' ) .'" style="display:none;" />';	
-	    $button .= '</div>';
-	
-	    return apply_filters( 'gmw_search_form_locator_button', $button, $gmw );
+
+	function gmw_search_form_address_field( $gmw, $id=false, $class='' ) {
+		echo gmw_get_search_form_address_field( $gmw, $id, $class );
 	}
 
 /**
- * GMW Search form function - Radius Values
- * @version 1.0
- * @author Eyal Fitoussi
+ * GMW auto-locator button
+ * @param  arrat  $gmw  the form being used
+ * @param  false $class deprecated
+ * @return mix          HTML element of the locator button
  */
-function gmw_search_form_radius_values( $gmw, $class ) {
-	echo gmw_get_search_form_radius_values( $gmw, $class );
+function gmw_get_search_form_locator_icon( $gmw, $class=false ) {
+	
+	//abort if no icon or if icon is within the input field
+	if ( $gmw['search_form']['locator_icon'] == 'gmw_na' || $gmw['search_form']['locator_icon'] == 'within_address_field' )
+		return;
+	
+	$icon 	 = GMW_IMAGES.'/locator-images/'.$gmw['search_form']['locator_icon'];
+    $lSubmit = ( isset( $gmw['search_form']['locator_submit'] ) ) ? 'gmw-locator-submit' : '';
+    $button  = '<img id="gmw-locate-button-'.$gmw['ID'].'" class="gmw-locate-btn '.$lSubmit.'" src="'.$icon.'" alt="'.__( 'locator button', 'GMW' ).'" />';
+
+    $output  = "<div class=\"gmw-locator-btn-wrapper gmw-locator-btn-wrapper-{$gmw['ID']}\">";   
+    $output .= apply_filters( "gmw_search_form_locator_button_img", $button, $gmw, false );
+    $output .= "<i id=\"gmw-locator-btn-loader-{$gmw['ID']}\" class=\"gmw-locator-btn-loader fa fa-refresh fa-spin\" style=\"display:none;\"></i>";	
+    $output .= '</div>';
+
+    return apply_filters( 'gmw_search_form_locator_button', $output, $gmw );
 }
+	function gmw_search_form_locator_icon( $gmw, $class=false ) {
+		echo gmw_get_search_form_locator_icon( $gmw, $class );
+	}
+
+/**
+ * GMW search form radius
+ * @param  array $gmw   the form being used
+ * @param  false $class deprecated
+ * @return mix          html element
+ * @since 1.0
+ */
+function gmw_get_search_form_radius_values( $gmw, $class=false ) {
+
+    $miles  	   = explode( ",", $gmw['search_form']['radius'] );
+	$output 	   = '';
+	$default_value = absint( end( $miles ) );
 	
-	function gmw_get_search_form_radius_values( $gmw, $class ) {
-	
-	    $miles  = explode( ",", $gmw['search_form']['radius'] );
-		$output ='';
+	if ( count( $miles ) > 1 ) {
 	    
-		if ( count( $miles ) > 1 ) {
-		    
-	    	if ( $gmw['search_form']['units'] == 'both' ) {
-				$title =  $gmw['labels']['search_form']['radius_within'];
-			} else {
-	        	$title = ( $gmw['search_form']['units'] == 'imperial' ) ? $gmw['labels']['search_form']['miles'] : $gmw['labels']['search_form']['kilometers'];
-			}
-	   		
-			$title = apply_filters( 'gmw_radius_dropdown_title', $title, $gmw );
-			
-	        $output .= '<select class="gmw-distance-select gmw-distance-select-' . $gmw['ID'] . ' '.$class.'" name="gmw_distance">';
-	        $output .= 	'<option value="'.end($miles).'">'.$title.'</option>';
-	
-	        foreach ( $miles as $mile ) {
-	
-	            if ( isset( $_GET['gmw_distance'] ) && $_GET['gmw_distance'] == $mile ) {
-	                $mile_s = 'selected="selected"';
-	            } else {
-	                $mile_s = "";
-	            }
-	            $output .= '<option value="'.$mile.'" '.$mile_s.'>'.$mile.'</option>';
-	            
-	        }
-	        $output .= '</select>';
-	        
+    	if ( $gmw['search_form']['units'] == 'both' ) {
+			$title =  $gmw['labels']['search_form']['radius_within'];
 		} else {
-	        $output = '<input type="hidden" name="gmw_distance" value="'.end( $miles ).'" />';
+        	$title = ( $gmw['search_form']['units'] == 'imperial' ) ? $gmw['labels']['search_form']['miles'] : $gmw['labels']['search_form']['kilometers'];
 		}
-	    return apply_filters( 'gmw_radius_dropdown_output', $output, $gmw, $class );
+   		
+		$title = apply_filters( 'gmw_radius_dropdown_title', $title, $gmw );
+		
+        $output .= "<select class=\"gmw-distance-select gmw-distance-select-{$gmw['ID']}\" name=\"gmw_distance\">";
+        $output .= 	'<option value="'.$default_value.'">'.esc_attr( $title ).'</option>';
+
+        foreach ( $miles as $mile ) {
+        	
+        	$mile = absint($mile);
+
+            if ( isset( $_GET['gmw_distance'] ) && $_GET['gmw_distance'] == $mile ) {
+                $mile_s = 'selected="selected"';
+            } else {
+                $mile_s = "";
+            }
+            $output .= "<option value=\"{$mile}\" {$mile_s}>{$mile}</option>";
+            
+        }
+        $output .= "</select>";
+        
+	} else {
+        $output = "<input type=\"hidden\" name=\"gmw_distance\" value=\"{$default_value}\" />";
+	}
+	
+	$output = apply_filters( "gmw_radius_dropdown_output", $output, $gmw, false );
+	$output = apply_filters( "gmw_radius_dropdown_output_{$gmw['ID']}", $output, $gmw, false );
+	
+    return $output;
+}
+
+	function gmw_search_form_radius_values( $gmw, $class=false ) {
+		echo gmw_get_search_form_radius_values( $gmw, $class );
 	}
 
 /**
- * GMW Search form function - Distance units
- * @version 1.0
- * @author Eyal Fitoussi
+ * GMW Search form units 
+ * @param  array $gmw   the form being used
+ * @param  false $class deprecated
+ * @return HTML element 
  */
-function gmw_search_form_units( $gmw, $class ) {
+function gmw_get_search_form_units( $gmw, $class=false ) {
 	
 	if ( $gmw['search_form']['units'] == 'both' ) {
 	        
         $selected = ( isset( $_GET['gmw_units'] ) && $_GET['gmw_units'] == 'metric' ) ? 'selected="selected"' : '';
   
-        echo '<select name="gmw_units" id="gmw-units-' . $gmw['ID'] . '" class="gmw-units gmw-units-' . $gmw['ID'] . ' ' . $class . '">';
-        echo 	'<option value="imperial" selected="selected">'.$gmw['labels']['search_form']['miles'].'</option>';
-        echo 	'<option value="metric" '.$selected.'>'.$gmw['labels']['search_form']['kilometers'].'</option>';
-        echo '</select>';
+        $output  = "<select name=\"gmw_units\" id=\"gmw-units-{$gmw['ID']}\" class=\"gmw-units gmw-units-{$gmw['ID']} \">";
+        $output .= '<option value="imperial" selected="selected">'.esc_attr( $gmw['labels']['search_form']['miles'] ).'</option>';
+        $output .= '<option value="metric" '.$selected.'>'.esc_attr( $gmw['labels']['search_form']['kilometers'] ).'</option>';
+        $output .= "</select>";
 
 	} else {
-        echo '<input type="hidden" name="gmw_units" value="' . $gmw['search_form']['units'] . '" />';
+        $output = '<input type="hidden" name="gmw_units" value="'.esc_attr( $gmw['search_form']['units'] ).'" />';
 	} 
+	
+	$output = apply_filters( "gmw_search_form_units", $output, $gmw );
+	$output = apply_filters( "gmw_search_form_unit_{$gmw['ID']}", $output, $gmw );
+	
+	return $output;
 }
+	function gmw_search_form_units( $gmw, $class=false ) {
+		echo gmw_get_search_form_units( $gmw, $class );
+	}
 
 /**
- * GMW function - search results message
- * @param $gmw
- * @param $args ( array )
+ * GMW Pagination
+ * @param  array  $gmw the form being used
+ * @param  array $args the results message elements
+ * @return string      results message
  */
-function gmw_results_message( $gmw, $args ) {
-	echo gmw_get_results_message( $gmw, $args );
-}
+function gmw_get_results_message( $gmw, $args=false )  {
 
-	function gmw_get_results_message( $gmw, $args )  {
+	//if not arg pass vi function used the default
+	if ( $args == false ) {
 	
-		$args = apply_filters( 'gmw_results_message_args' , false, $gmw );
-		
-		if (  $args == false ) {
-			if ( $gmw['prefix'] == 'pt' ) {
-				$args = array(
-						'message' 		=> $gmw['labels']['search_results']['pt_results_message'],
-						'count'	  		=> $gmw['results_count'],
-						'total_count'	=> $gmw['total_results'],
-						'distance'		=> $gmw['radius'],
-						'units'			=> $gmw['units_array']['name'],
-						'address'		=> $gmw['org_address'],
-						'showing'		=> true,
-						'within'		=> true
-				);			
-			} elseif ( $gmw['prefix'] == 'fl' ) {
-				global $members_template;
-				$args = array(
-						'message' 		=> $gmw['labels']['search_results']['fl_results_message'],
-						'count'	  		=> $members_template->member_count,
-						'total_count'	=> $members_template->total_member_count,
-						'distance'		=> $gmw['radius'],
-						'units'			=> $gmw['units_array']['name'],
-						'address'		=> $gmw['org_address'],
-						'showing'		=> false,
-						'within'		=> true
-				);
-			}
-		} 
-
-		$output = '';
-			
-		if ( $args['showing'] )
-			$output .= sprintf( $args['message']['showing'], $args['count'], $args['total_count'] );
-		
-		if ( $args['within'] && !empty( $_GET['action'] ) && $_GET['action'] == 'gmw_post' && !empty( $args['address'] ) ) {
-			$output .= ' '.sprintf( $args['message']['within'], $args['distance'].' '.$args['units'], $args['address'] );
+		if ( $gmw['prefix'] == 'pt' ) {
+			$args = array(
+					'message' 		=> $gmw['labels']['search_results']['pt_results_message'],
+					'count'	  		=> $gmw['results_count'],
+					'total_count'	=> $gmw['total_results'],
+					'distance'		=> $gmw['radius'],
+					'units'			=> $gmw['units_array']['name'],
+					'address'		=> $gmw['org_address'],
+					'showing'		=> true,
+					'within'		=> true
+			);			
+		} elseif ( $gmw['prefix'] == 'fl' ) {
+			global $members_template;
+			$args = array(
+					'message' 		=> $gmw['labels']['search_results']['fl_results_message'],
+					'count'	  		=> $members_template->member_count,
+					'total_count'	=> $members_template->total_member_count,
+					'distance'		=> $gmw['radius'],
+					'units'			=> $gmw['units_array']['name'],
+					'address'		=> $gmw['org_address'],
+					'showing'		=> false,
+					'within'		=> true
+			);
 		}
 
-		return $output;
+		//allow plugins to modify or create thier own
+		$args = apply_filters( 'gmw_results_message_args', $args, $gmw );
+	}
+
+	$output = '';
+		
+	if ( $args['showing'] ) {
+		$output .= sprintf( $args['message']['showing'], $args['count'], $args['total_count'] );
 	}
 	
-/**
- * GMW function - get the address of location
- * @param unknown_type $post
- * @param unknown_type $gmw
- */
-function gmw_location_address( $info, $gmw ) {
-	echo gmw_get_location_address( $info, $gmw );
+	if ( $args['within'] && !empty( $_GET['action'] ) && $_GET['action'] == 'gmw_post' && !empty( $args['address'] ) ) {
+		$output .= ' '.sprintf( $args['message']['within'], $args['distance'].' '.$args['units'], $args['address'] );
+	}
+
+	return esc_attr( $output );
 }
 
-	function gmw_get_location_address( $info, $gmw ) {
-	
-		if ( empty( $info->formatted_address ) && empty( $info->address ) )
-			return;
-	
-		$address = ( !empty( $info->formatted_address ) ) ? $info->formatted_address : $info->address;
-	
-		return apply_filters( 'gmw_'.$gmw['prefix'].'_location_address', $address, $info, $gmw );
+	function gmw_results_message( $gmw, $args ) {
+		echo gmw_get_results_message( $gmw, $args );
 	}
-	
+
 /**
- * GMW function - display distance to location
- * @param unknown_type $info ( $post, $member... )
- * @param unknown_type $gmw
+ * get the address of an item ( post, member... )
+ * @param  object $info the item info
+ * @param  array $gmw  	the form being used
+ * @return string       address
+ */
+function gmw_get_location_address( $info, $gmw ) {
+
+	if ( empty( $info->formatted_address ) && empty( $info->address ) )
+		return esc_attr( $gmw['labels']['search_results']['not_avaliable'] );
+	
+	$address = ( !empty( $info->formatted_address ) ) ? $info->formatted_address : $info->address;
+
+	$address = apply_filters( "gmw_location_address", $address, $info, $gmw );
+	$address = apply_filters( "gmw_location_address_{$gmw['ID']}", $address, $info, $gmw );
+	
+	return esc_attr( $address ); 
+}
+
+	function gmw_location_address( $info, $gmw ) {
+		echo gmw_get_location_address( $info, $gmw );
+	}
+
+/**
+ * Get the distance to a location
+ * @param  object $info the item info
+ * @param  array $gmw   the form being used
+ * @return string       distance + units
  */
 function gmw_get_distance_to_location( $info, $gmw ) {
 
 	if ( empty( $info->distance ) )
 		return;
 	
-	return apply_filters( 'gmw_'.$gmw['prefix'].'_distance_to_location', $info->distance . ' ' .$gmw['units_array']['name'], $info, $gmw );
+	$distance = $info->distance . ' ' .$gmw['units_array']['name'];
+	
+	$distance = apply_filters( "gmw_distance_to_location", $distance, $info, $gmw );
+	$distance = apply_filters( "gmw_distance_to_location_{$gmw['ID']}", $distance, $info, $gmw );
+	
+	return esc_attr( $distance );
 }
 
 	function gmw_distance_to_location( $info, $gmw ) {
@@ -506,86 +590,120 @@ function gmw_get_distance_to_location( $info, $gmw ) {
 	}
 
 /**
- * GMW Function - display additional information
- * @param unknown_type $post
- * @param unknown_type $gmw
+ * GMW Addition information
+ * @param  object $info   the item's info
+ * @param  array $gmw  	  the form being used
+ * @param  array $fields  array of the fields that needs to be displayed
+ * @param  array $labels  array of labels
+ * @param  string $tag    opening and closing tag
+ * @return HTML           HTML element of the additional info
  */
-function gmw_additional_info( $info, $gmw, $array, $labels, $tag ) {
-	echo gmw_get_additional_info( $info, $gmw, $array, $labels, $tag );
-}
-	function gmw_get_additional_info( $info, $gmw, $array, $labels, $tag ) {
+function gmw_get_additional_info( $info, $gmw, $fields, $labels, $tag='div' ) {
+
+	if ( empty( $fields ) ) 
+		return;
 	
-		if ( empty( $array ) ) 
-			return;
-		
-		$tag = ( !empty( $tag ) ) ? $tag : 'div';
-		
-		if ( $tag == 'ul' || $tag == 'ol' ) {
-			$subTag = 'li';
-		} else {
-			$tag = 'div';
-			$subTag = 'div';
-		}
-		
-		$count 	 = 0;
-		$output  = '';
-		$output .= '<'.$tag.' class="gmw-additional-info-wrapper">';
+	$tag = ( !empty( $tag ) ) ? $tag : 'div';
 	
-		foreach ( $array as $key => $value ) {
-	
-			if ( !empty( $info->$key ) ) {
-	
-				if ( $key == 'email' ) {
-					$count++;
-					$output .= '<'.$subTag.' class="'.$key.'"><span class="label">'.$labels[$key].'</span><span class="information"><a href="mailto:'.$info->$key.'" >' . $info->$key . '</a></span></'.$subTag.'>';
-				} elseif ( $key == 'website') {
-					
-					$count++;
-					$url = parse_url($info->$key);
-	
-					if ( empty( $url['scheme'] ) ) {
-						$url['scheme'] = 'http';
-					}
-					
-					$scheme = $url['scheme'].'://';
-					$path   = str_replace( $scheme,'',$info->$key );
-					
-					$output .= '<'.$subTag.' class="'.$key.'"><span class="label">'.$labels[$key].'</span><span class="information"><a href="'.$scheme.$path.'" title="'.$path.'" target="_blank">'.$path.'</a></span></'.$subTag.'>';
-					
-				} elseif ( $key != 'formatted_address') {
-					$count++;
-					$output .= '<'.$subTag.' class="'.$key.'"><span class="label">'.$labels[$key].'</span><span class="information">'.$info->$key . '</span></a></'.$subTag.'>';
-				}
-			}
-			do_action( 'gmw_additional_info_end', $info, $gmw, $array, $labels );
-			
-		}
-		$output .= '</'.$tag.'>';
-			
-		return ( $count > 0 ) ? $output : '';
+	if ( $tag == 'ul' || $tag == 'ol' ) {
+		$subTag = 'li';
+	} elseif ( $tag == 'div' ) {
+		$tag = 'div';
+		$subTag = 'div';
+	}  else {
+		return;
 	}
 	
-/**
- * GMW function - Get directions link.
- * @version 1.0
- * @author Eyal Fitoussi
- */
-function gmw_directions_link( $info, $gmw, $title ) {
-	echo gmw_get_directions_link( $info, $gmw, $title );
+	$count 	= 0;
+	$output['wrap_start'] = '<'.$tag.' class="gmw-additional-info-wrapper gmw-'.$gmw['prefix'].'-additiona-info-wrapper">';
+
+	foreach ( $fields as $key => $value ) {
+
+		$key = esc_attr( $key );
+
+		if ( !empty( $info->$key ) ) {
+
+			$info_key = esc_attr( $info->$key );
+
+			if ( $key == 'email' ) {
+				
+				$count++;
+				$output['email']  = "<{$subTag} class=\"{$key}\">";
+				$output['email'] .= '<span class="label">'.esc_attr( $labels[$key] ).'</span>';
+				$output['email'] .= "<span class=\"information\"><a href=\"mailto:{$info_key}\">{$info_key}</a></span></{$subTag}>";			
+
+			} elseif ( $key == 'website') {
+				
+				$count++;
+				$url = parse_url($info->$key);
+
+				if ( empty( $url['scheme'] ) ) {
+					$url['scheme'] = 'http';
+				}
+				
+				$scheme = $url['scheme'].'://';
+				$path   = str_replace( $scheme,'',$info_key );
+				
+				$output['website']  = "<{$subTag} class=\"{$key}\">";
+				$output['website'] .= '<span class="label">'. esc_attr( $labels[$key] ).'</span>';
+				$output['website'] .= "<span class=\"information\"><a href=\"{$scheme}{$path}\" title=\"{$path}\" target=\"_blank\">{$path}</a></span></{$subTag}>";
+				
+			} elseif ( $key != 'formatted_address') {
+				$count++;
+				
+				$output[$key]  = "<{$subTag} class=\"{$key}\">";
+				$output[$key] .= '<span class="label">'.esc_attr( $labels[$key] ).'</span>';
+				$output[$key] .= "<span class=\"information\">{$info_key}</span></a></{$subTag}>";
+			}
+		}
+		$output = apply_filters( 'gmw_additional_info_end', $output, $info, $gmw, $fields, $labels );
+	}
+	$output['wrap_end'] = "</{$tag}>";
+		
+	$output = apply_filters( 'gmw_additional_info_otuput', 				$output, $info, $gmw, $fields, $labels );
+	$output = apply_filters( "gmw_additional_info_output_{$gmw['ID']}", $output, $info, $gmw, $fields, $labels );
+
+	return ( $count > 0 ) ? implode( '', $output ) : false;
 }
 	
-	function gmw_get_directions_link( $info, $gmw, $title ) {
+	function gmw_additional_info( $info, $gmw, $fields, $labels, $tag='div' ) {
+		echo gmw_get_additional_info( $info, $gmw, $fields, $labels, $tag );
+	}
+
+/**
+ * Get directions link - open new page with google map
+ * @param  object $info  the item's info ( post, member... )
+ * @param  array  $gmw   the form being used
+ * @param  string $title the title of the directions link
+ * @return string        directions link
+ */
+function gmw_get_directions_link( $info, $gmw, $title ) {
+
+	//check for coordinates
+	if ( empty( $info->lat ) || empty( $info->long ) )
+		return;
+
+	//make sure coordinates are legit
+	if ( $info->lat == 0.000000 || $info->lat == 0.000000 )
+		return;
+
+	//
+	$title 	  = ( !empty( $title ) ) ? $title : $gmw['labels']['search_results']['directions'];
+	$ulLatLng = ( !empty( $gmw['your_lat'] ) && !empty( $gmw['your_lng'] ) ) ? "{$gmw['your_lat']},{$gmw['your_lng']}" : "";
 	
-		if ( !$info->lat || !$info->long )
-			return;
+	$output = '<a class="gmw-get-directions gmw-'.$gmw['prefix'].'-get-directions" 
+			title="'.$title.'" 
+			href="http://maps.google.com/maps?f=d&hl='.esc_attr( $gmw['language'] ).'&region='.esc_attr( $gmw['region'] ).'&doflg='.esc_attr( $gmw['units_array']['map_units'] ).'&saddr='.esc_attr( $ulLatLng ).'&daddr='.esc_attr( $info->lat ).','.esc_attr( $info->long ).'&ie=UTF8&z=12" target="_blank">'.esc_attr( $title ).'</a>';
 	
-		if ( $info->lat == 0.000000 || $info->lat == 0.000000 )
-			return;
+	$output = apply_filters( "gmw_get_directions_link", 				 $output, $gmw, $info, $title );
+	$output = apply_filters( "gmw_{$gmw['prefix']}_get_directions_link", $output, $gmw, $info, $title );
+	$output = apply_filters( "gmw_get_directions_link_{$gmw['ID']}", 	 $output, $gmw, $info, $title );
 	
-		$title 	  = ( !empty( $title ) ) ? $title : $gmw['labels']['search_results']['directions'];
-		$ulLatLng = ( !empty( $gmw['your_lat'] ) && $gmw['your_lat'] != 'false' && !empty( $gmw['your_lng'] ) ) ? "{$gmw['your_lat']},{$gmw['your_lng']}" : "";
-	
-		return apply_filters( 'gmw_'.$gmw['prefix'].'_get_directions_link', "<a class=\"gmw-get-directions get-directions {$gmw['prefix']}\" title=\"{$title}\" href=\"http://maps.google.com/maps?f=d&hl={$gmw['language']}&region={$gmw['region']}&doflg={$gmw['units_array']['map_units']}&saddr={$ulLatLng}&daddr={$info->lat},{$info->long}&ie=UTF8&z=12\" target=\"_blank\">{$title}</a>", $gmw, $info, $title );
+	return $output; 
+}
+
+	function gmw_directions_link( $info, $gmw, $title ) {
+		echo gmw_get_directions_link( $info, $gmw, $title );
 	}
 	
 /**
@@ -594,42 +712,36 @@ function gmw_directions_link( $info, $gmw, $title ) {
  * @param unknown_type $gmw
  * @param unknown_type $count
  */
-function gmw_excerpt( $info, $gmw, $content, $count, $more=false ) {
-	echo gmw_get_excerpt( $info, $gmw, $content, $count, $more );
-}
-	function gmw_get_excerpt( $info, $gmw, $content, $count, $more=false ) {
+function gmw_get_excerpt( $info, $gmw, $content, $count, $read_more=false ) {
 
-		$content = apply_filters( 'gmw_except_content', $content, $info, $gmw );
-		
-		if ( empty( $content ) )
-			return;
-	
-		if ( empty( $count ) ) {
-			$count = 99999999;
-		}
-				
-		//trim number of words
-		$content = wp_trim_words( $content, $count, '' );
-		$content = str_replace( ']]>', ']]&gt;', $content );
-		
+	$content = apply_filters( 'gmw_except_content', $content, $info, $gmw );
+
+	if ( empty( $content ) )
+		return;
+
+	//trim number of words
+	if ( !empty( $count ) ) {
+
 		//build read more link
-		if ( !empty( $more ) || !empty( $gmw['search_results']['excerpt']['more'] ) ) {	
-			
-			if ( empty( $more ) ) {
-				$more = $gmw['search_results']['excerpt']['more'];
-			}
-
-			$more_link = apply_filters( 'gmw_excerpt_more_link', '<a href="'.get_the_permalink( $info->ID ).'" class="gmw-more-link" title="'.$more.'">'.$more.'</a>', $info, $gmw, $content, $count, $more );
-			$content   = $content.' '.$more_link;
+		if ( !empty( $read_more ) ) {		
+			$more_link = apply_filters( 'gmw_excerpt_more_link', ' <a href="'.get_the_permalink( $info->ID ).'" class="gmw-more-link" title="read more">'.esc_attr( $read_more ).'</a>', $info, $gmw, $content, $count, $read_more );
+		} else {
+			$more_link = '';
 		}
-		
-		if ( !apply_filters( 'gmw_except_shortcodes_enabled', true, $info, $gmw ) ) {
-			$content = strip_shortcodes( $content );
-		}
-		
-		$content = apply_filters( 'the_content', $content );		
-		
-		return $content;
+		$content = wp_trim_words( $content, $count, $more_link );
+	}	
+	
+	if ( !apply_filters( 'gmw_except_shortcodes_enabled', true, $info, $gmw ) ) {
+		$content = strip_shortcodes( $content );
+	}
+	
+	$content = apply_filters( 'the_content', $content );	
+	$content = str_replace( ']]>', ']]&gt;', $content );
+	
+	return $content;
+}
+	function gmw_excerpt( $info, $gmw, $content, $count, $read_more=false ) {
+		echo gmw_get_excerpt( $info, $gmw, $content, $count, $read_more );
 	}
 	
 /**
@@ -638,8 +750,8 @@ function gmw_excerpt( $info, $gmw, $content, $count, $more=false ) {
  * @param $info    - $post, $member or so on
  * @param $id      - ID tag for the button
  * @param $toggled - id of the element to be toggled. Dont use # just the tag name
- * $param $showIcon - dashicon to be used for the show info button
- * $param $hideIcon - dashicon to be used for the hide info button
+ * $param $showIcon - fontawesome to be used for the show info button
+ * $param $hideIcon - fontawesome to be used for the hide info button
  * @param $animation - true | false - animation will use animated height to show/hide. Otherwise will use jQuery slideToggle
  * @param minHeight  - value to be used with animation. The height when the element is hidden.
  * @param maxHeight  - value to be used with animation. The height when the element is visible.
@@ -661,7 +773,7 @@ function gmw_window_toggle( $gmw, $info, $id, $toggled, $showIcon, $hideIcon, $a
 		$animation   = 'height';
 	}	
 	
-	echo apply_filters( 'gmw_'.$gmw['prefix'].'_window_toggle', '<a href="#" id="'.$id.'" class="gmw-window-toggle gmw-'.$gmw['prefix'].'-window-toggle dashicons '.$hideIcon.'" title="Hide information"></a>', $info, $gmw, $hideIcon, $showIcon );
+	echo apply_filters( "gmw_{$gmw['prefix']}_window_toggle", "<a href=\"#\" id=\"{$id}\" class=\"gmw-window-toggle gmw-{$gmw['prefix']}-window-toggle dashicons {$hideIcon}\" title=\"Hide information\"></a>", $info, $gmw, $hideIcon, $showIcon );
 	
 	echo "<script>
 	jQuery(document).ready(function($) {
@@ -706,7 +818,7 @@ function gmw_window_toggle( $gmw, $info, $id, $toggled, $showIcon, $hideIcon, $a
  * @param unknown_type $info ( $post, $member...)
  * @param unknown_type $draggable - the element to be draggble
  * @param unknown_type $handle - the element to be used as dragging handle. False for no hangle.
- * @param unknown_type $handleIcon - dashicon to be used as the handle icon\
+ * @param unknown_type $handleIcon - fontawesome to be used as the handle icon\
  * @param unknown_type $containment - the element of the draggable area.
  */
 function gmw_get_draggable_handle( $gmw, $info, $draggable, $handle, $handleIcon, $containment ) {
@@ -727,7 +839,7 @@ function gmw_get_draggable_handle( $gmw, $info, $draggable, $handle, $handleIcon
 	</script>";
 	
 	if ( $handle == true ) {
-		return apply_filters( 'gmw_'.$gmw['prefix'].'_get_draggable_handle', '<a href="#" id="gmw-drag-area-handle-'.$gmw['ID'].'" class="gmw-drag-area-handle gmw-'.$gmw['prefix'].'-drag-area-handle dashicons '.$handleIcon.'" onclick="event.preventDefault()"></a>', $info, $gmw, $handleIcon );
+		return apply_filters( "gmw_{$gmw['prefix']}_get_draggable_handle", "<a href=\"#\" id=\"gmw-drag-area-handle-{$gmw['ID']}\" class=\"gmw-drag-area-handle gmw-{$gmw['prefix']}-drag-area-handle dashicons {$handleIcon}\" onclick=\"event.preventDefault()\"></a>", $info, $gmw, $handleIcon );
 	} else {
 		return false;
 	}
@@ -741,7 +853,7 @@ function gmw_get_draggable_handle( $gmw, $info, $draggable, $handle, $handleIcon
 function gmw_get_close_button( $info, $gmw, $icon, $prefix ) {
 
 	$icon   = ( !empty( $icon ) ) ? $icon : 'dashicons-no';
-	return	apply_filters( 'gmw_'.$gmw['prefix'].'_'.$prefix.'_get_close_button', '<a id="gmw-close-button-'.$gmw['ID'].'" class="gmw-close-button gmw-'.$prefix.'-close-button gmw-'.$gmw['prefix'].'-'.$prefix.'-close-button dashicons '.$icon.'"></a>', $info, $gmw, $icon, $prefix );
+	return	apply_filters( "gmw_{$gmw['prefix']}_{$prefix}_get_close_button", "<a id=\"gmw-close-button-{$gmw['ID']}\" class=\"gmw-close-button gmw-{$prefix}-close-button gmw-{$gmw['prefix']}-{$prefix}-close-button dashicons {$icon}\"></a>", $info, $gmw, $icon, $prefix );
 }
 
 function gmw_multiexplode( $delimiters, $string ) {
@@ -749,7 +861,6 @@ function gmw_multiexplode( $delimiters, $string ) {
     $ready  = str_replace( $delimiters, $delimiters[0], $string );
     $launch = explode( $delimiters[0], $ready );
     return $launch;
-
 }
 
 /**
@@ -758,7 +869,7 @@ function gmw_multiexplode( $delimiters, $string ) {
  * @param unknown_type $info - $post, $member...
  * @param unknown_type $gmw
  */
-function gmw_live_directions( $info, $gmw ) {
+function gmw_get_live_directions( $info, $gmw ) {
 
 	$id 		   	= $info->ID;
 	$start_address 	= '';
@@ -768,95 +879,103 @@ function gmw_live_directions( $info, $gmw ) {
 	
 	if ( !empty( $gmw['org_address'] ) ) {
 		$start_address = $gmw['org_address'];
-	} elseif ( !empty( $gmw['ul_address'] ) && $gmw['ul_address'] != 'false'  ) {
-		$start_address = $gmw['ul_address'];
+	} elseif ( !empty( $gmw['user_position']['address'] ) && $gmw['user_position']['address'] != 'false'  ) {
+		$start_address = $gmw['user_position']['address'];
 	}
-		
-	?>
-	<div id="gmw-get-directions-wrapper-<?php echo $id; ?>" class="gmw-get-directions-wrapper">
+			
+	$output = "<div id=\"gmw-get-directions-wrapper-{$id}\" class=\"gmw-get-directions-wrapper\">";
 				
-		<h3><?php echo $labels['directions_label']; ?></h3>
-		<form id="gmw-get-directions-form-<?php echo $id; ?>" class="get-directions-form">
+	$output .= "<h3>{$labels['directions_label']}</h3>";
+	$output .= "<form id=\"gmw-get-directions-form-{$id}\" class=\"get-directions-form\">";
 					
-			<div class="get-directions-address-field-wrapper">
+	$output .= 	"<div class=\"get-directions-address-field-wrapper\">";
 			
-				<div class="address-wrapper start-address-wrapper"> 
-					<label for="gmw-directions-start-point"><?php echo $labels['from']; ?></label>
-					<input type="text" id="gmw-directions-start-point-<?php echo $id; ?>" class="gmw-directions-start-point" value="<?php echo $start_address; ?>" placeholder="<?php echo $labels['start_point']; ?>" />
-					<a href="#" type="submit" id="get-directions-submit-<?php echo $id; ?>" class="get-directions-submit dashicons dashicons-search get-directions-submit-icon"></a>
-				</div>
+	$output .= 	"<div class=\"address-wrapper start-address-wrapper\">";
+	$output .= 		"<label for=\"gmw-directions-start-point\">{$labels['from']}</label>";
+	$output .= 		"<input type=\"text\" id=\"gmw-directions-start-point-{$id}\" class=\"gmw-directions-start-point\" value=\"{$start_address}\" placeholder=\"{$labels['start_point']}\" />";
+	$output .= 		"<a href=\"#\" type=\"submit\" id=\"get-directions-submit-{$id}\" class=\"get-directions-submit fa fa-search get-directions-submit-icon\"></a>";
+	$output .= 	"</div>";
 				
-				<div class="address-wrapper end-address-wrapper"> 
-					<label for="gmw-directions-end-point"><?php echo $labels['to']; ?></label>
-					<input type="text"   id="gmw-directions-end-point-<?php echo $id; ?>"  class="gmw-directions-end-point"  value="<?php echo $end_address; ?>" readonly placeholder="<?php echo $labels['end_point']; ?>" />
-					<input type="hidden" id="gmw-directions-end-coords-<?php echo $id; ?>" class="gmw-directions-end-coords" value="<?php echo $end_coords; ?>" />		
-				</div>
+	$output .= 	"<div class=\"address-wrapper end-address-wrapper\">"; 
+	$output .= 		"<label for=\"gmw-directions-end-point\">{$labels['to']}</label>";
+	$output .= 		"<input type=\"text\" id=\"gmw-directions-end-point-{$id}\"  class=\"gmw-directions-end-point\" value=\"{$end_address}\" readonly placeholder=\"{$labels['end_point']}\" />";
+	$output .= 		"<input type=\"hidden\" id=\"gmw-directions-end-coords-{$id}\" class=\"gmw-directions-end-coords\" value=\"{$end_coords}\" />";		
+	$output .= 	"</div>";
 				
-			</div>
+	$output .= 	"</div>";
 			
-			<ul id="travel-mode-options-<?php echo $id; ?>" class="gmw-get-directions-options travel-mode-options">
-				<li>
-					<a href="#" id="DRIVING" class="travel-mode-trigger active""><?php echo $labels['driving']; ?></a>
-				</li>
+	$output .=  "<ul id=\"travel-mode-options-{$id}\" class=\"gmw-get-directions-options gmw-get-directions-options-holder travel-mode-options\">";
+	$output .= 	 "<li>";
+	$output .= 	 	"<a href=\"#\" id=\"DRIVING\" class=\"travel-mode-trigger active\">{$labels['driving']}</a>";
+	$output .= 	 "</li>";
 				
-				<li>
-					<a href="#" id="WALKING" class="travel-mode-trigger"><?php echo $labels['walking']; ?></a>
-				</li>
+	$output .= 	 "<li>";
+	$output .= 	 	"<a href=\"#\" id=\"WALKING\" class=\"travel-mode-trigger\">{$labels['walking']}</a>";
+	$output .= 	 "</li>";
 				
-				<li>
-					<a href="#" id="BICYCLING" class="travel-mode-trigger"><?php echo $labels['bicycling']; ?></a>
-				</li>
+	$output .= 	 "<li>";
+	$output .= 	 	"<a href=\"#\" id=\"BICYCLING\" class=\"travel-mode-trigger\">{$labels['bicycling']}</a>";
+	$output .= 	 "</li>";
 				
-				<li>
-					<a href="#" id="TRANSIT" class="travel-mode-trigger"><?php echo $labels['transit']; ?></a>
-				</li>
-			</ul>	
+	$output .= 	 "<li>";
+	$output .= 	 	"<a href=\"#\" id=\"TRANSIT\" class=\"travel-mode-trigger\">{$labels['transit']}</a>";
+	$output .= 	 "</li>";
+	$output .= 	 "</ui>";
 			
-			<div id="unit-system-options-wrapper-<?php echo $id; ?>" class="gmw-get-directions-options-wrapper unit-system-options-wrapper">
-				<span><?php echo $labels['units_label']; ?></span>
-				<ul id="unit-system-options-<?php echo $id; ?>" class="gmw-get-directions-options unit-system-options">				
-					<li>
-						<input type="radio" id="unit-system-imperial-trigger-<?php echo $id; ?>" name="unit_system_trigger" class="unit-system-trigger"  value="IMPERIAL" checked="checked" />
-						<label for="unit-system-imperial-trigger"><?php echo $labels['units_mi']; ?></label>
-					</li>
-					<li>
-						<input type="radio" id="unit-system-metric-trigger-<?php echo $id; ?>"   name="unit_system_trigger" class="unit-system-trigger"  value="METRIC" />
-						<label for="unit-system-metric-trigger"><?php echo $labels['units_km']; ?></label>
-					</li>
-				</ul>
-			</div>
+	$output .= 	 "<div id=\"unit-system-options-wrapper-{$id}\" class=\"gmw-get-directions-options-wrapper unit-system-options-wrapper\">";
+	$output .= 	 "<span>{$labels['units_label']}</span>";
+	$output .= 	 "<ul id=\"unit-system-options-{$id}\" class=\"gmw-get-directions-options unit-system-options\">";				
+	$output .= 	 	"<li>";
+	$output .= 	 		"<input type=\"radio\" id=\"unit-system-imperial-trigger-{$id}\" name=\"unit_system_trigger\" class=\"unit-system-trigger\"  value=\"IMPERIAL\" checked=\"checked\" />";
+	$output .= 	 		"<label for=\"unit-system-imperial-trigger\">{$labels['units_mi']}</label>";
+	$output .= 	 	"</li>";
+	$output .= 	 	"<li>";
+	$output .= 	 		"<input type=\"radio\" id=\"unit-system-metric-trigger-{$id}\"   name=\"unit_system_trigger\" class=\"unit-system-trigger\"  value=\"METRIC\" />";
+	$output .= 	 		"<label for=\"unit-system-metric-trigger\">{$labels['units_km']}</label>";
+	$output .= 	 	"</li>";
+	$output .= 	 "</ul>";
+	$output .= 	"</div>";
 			
-			<div id="route-avoid-options-wrapper-<?php echo $id; ?>" class="gmw-get-directions-options-wrapper route-avoid-options-wrapper">
-				<span><?php echo $labels['avoid_label']; ?></span>
-				<ul id="route-avoid-options-<?php echo $id; ?>" class="gmw-get-directions-options route-avoid-options">
-					<li>
-						<input type="checkbox" id="route-avoid-highways-trigger-<?php echo $id; ?>" class="route-avoid-trigger" value="1" />
-						<label for="route-avoid-highways-trigger-<?php echo $id; ?>"><?php echo $labels['avoid_hw']; ?></label>
-					</li>
+	$output .= 	 "<div id=\"route-avoid-options-wrapper-{$id}\" class=\"gmw-get-directions-options-wrapper route-avoid-options-wrapper\">";
+	$output .= 	 "<span>{$labels['avoid_label']}</span>";
+	$output .= 	 "<ul id=\"route-avoid-options-{$id}\" class=\"gmw-get-directions-options route-avoid-options\">";
+	$output .= 	 	"<li>";
+	$output .= 	 		"<input type=\"checkbox\" id=\"route-avoid-highways-trigger-{$id}\" class=\"route-avoid-trigger\" value=\"1\" />";
+	$output .= 	 		"<label for=\"route-avoid-highways-trigger-{$id}\">{$labels['avoid_hw']}</label>";
+	$output .= 	 "</li>";
 					
-					<li>
-						<input type="checkbox" id="route-avoid-tolls-trigger-<?php echo $id; ?>"    class="route-avoid-trigger" value="1" />
-						<label for="route-avoid-tolls-trigger-<?php echo $id; ?>"><?php echo $labels['avoid_tolls']; ?></label>
-					</li>
+	$output .= 	 "<li>";
+	$output .= 	 	"<input type=\"checkbox\" id=\"route-avoid-tolls-trigger-{$id}\" class=\"route-avoid-trigger\" value=\"1\" />";
+	$output .= 		"<label for=\"route-avoid-tolls-trigger-{$id}\">{$labels['avoid_tolls']}</label>";
+	$output .= 	 "</li>";
 	
-				</ul>
-        	</div>
-        	<input type="hidden" class="gmw-directions-form-id" value="<?php echo $id; ?>" />	
-        	<input type="hidden" class="gmw-form-id" value="<?php echo $gmw['ID']; ?>" />		
-		</form>
+	$output .= 	 "</ul>";
+   	$output .= 	 "</div>";
+    $output .= 	 	"<input type=\"hidden\" class=\"gmw-directions-form-id\" value=\"{$id}\" />";	
+    $output .= 	 	"<input type=\"hidden\" class=\"gmw-form-id\" value=\"{$gmw['ID']}\" />";		
+	$output .= 	 "</form>";
 		
-	</div>
-	<?php 	
+	$output .= 	 "</div>";
+
+	return $output;
 }
+
+	function gmw_live_directions( $info, $gmw ) {
+		echo gmw_get_live_directions( $info, $gmw );
+	}
 /**
  * GMW function - live directions results panel. To be used with live directions function only.
  * @param unknown_type $info
  * @param unknown_type $gmw
  */
-function gmw_live_directions_panel( $info, $gmw ) {
+function gmw_get_live_directions_panel( $info, $gmw ) {
+	
 	$id = $info->ID;
-	?><div id="directions-panel-wrapper-<?php echo $id; ?>" class="directions-panel-wrapper"></div><?php 	
+	return "<div id=\"directions-panel-wrapper-{$id}\" class=\"directions-panel-wrapper\"></div>"; 	
 }
+	function gmw_live_directions_panel( $info, $gmw ) {
+		echo gmw_get_live_directions_panel( $info, $gmw );
+}	
 
 /**
  * GMW ML function - display xprofile fields in info window
@@ -978,7 +1097,7 @@ function gmw_driving_distance( $info, $gmw, $title ) {
  */
 function gmw_get_pagination( $gmw, $pageName, $maxPages ) {
 
-	$maxPages = ceil( $maxPages );
+	$maxPages = ceil( (int) $maxPages );
 	
 	$args = apply_filters( 'gmw_get_pagination_args', array(
 			'base'         		 => add_query_arg( $pageName, '%#%' ),
