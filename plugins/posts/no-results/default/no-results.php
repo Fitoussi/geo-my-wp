@@ -6,3 +6,4 @@
 	
 	<?php do_action( 'gmw_no_results_template_end', $gmw, $message ); ?> 
 </div>
+
