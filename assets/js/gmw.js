@@ -116,6 +116,22 @@ function gmwDeleteCookie(c_name) {
     }
 }
     
+function gmwAddressGeocoder( options, success, failed ) {
+
+    //init google geocoder
+    geocoder = new google.maps.Geocoder();
+    
+    geocoder.geocode({'address': options.address, 'region': options.region }, function(results, status) {
+
+        if (status == google.maps.GeocoderStatus.OK) {
+
+            return success(results);
+        } else {
+            return failed(status);
+        }
+    });
+}
+
 jQuery(document).ready(function($) {
     
     $('.gmw-map-loader').fadeOut(1500);  
@@ -180,34 +196,34 @@ jQuery(document).ready(function($) {
                 }
                 return false;
             } else {
-                addressField.addClass('submitted');
+                sForm.find('.gmw-submit').addClass('submitted');
             }
         }
        
         //geocode address via javascript
         if ( gmwSettings.general_settings.js_geocode == 1 ) {
-               
+       
             // check if we are submmiting the same address and if we have lat/long. 
             //if so no need to geocode again and submit the form with the information we already have
             if ( sForm.find('.prev-address').val() == address && $.trim(sForm.find('.gmw-lat').val()).length > 0 ) {            
                 return true;
             }
-            
+                  
             //Check if the address was geocoded and if so we need to submit this form
             if (sForm.find('.gmw-submit').hasClass('submitted')) {
                 return true;
             }
-            
+
             //Otherwise, abort   the form submission. we need to geocode the address
             e.preventDefault();
             
             //init google geocoder
             geocoder = new google.maps.Geocoder();
         
-            countryCode = gmwSettings.general_settings.country_code
-            
+            countryCode = gmwSettings.general_settings.country_code;
+      
             geocoder.geocode({'address': address, 'region': countryCode }, function(results, status) {
-    
+ 
                 if (status == google.maps.GeocoderStatus.OK) {
     
                     //add class to submit button so the form will be submitted after geocoding
@@ -238,6 +254,8 @@ jQuery(document).ready(function($) {
         getAddressFields( returnedLocator.results )
     }
 
+    var locatorClicked = false;
+
     function gmwLocatorFailed( returnedLocator ) {
 
         if ( returnedLocator.type == 2 ) {
@@ -246,11 +264,13 @@ jQuery(document).ready(function($) {
             alert( returnedLocator.message )
         }
 
-        $('#gmw-locator-btn-loader-'+locatorClicked ).fadeToggle('fast',function() {
-            $('.locator-submitted').fadeToggle('fast').removeClass('locator-submitted');
-            $('.gmw-address').removeAttr('disabled');
-            $('.gmw-submit').removeAttr('disabled');
-        }); 
+        if ( locatorClicked != false ) {
+            $('#gmw-locator-btn-loader-'+locatorClicked ).fadeToggle('fast',function() {
+                $('.locator-submitted').fadeToggle('fast').removeClass('locator-submitted');
+                $('.gmw-address').removeAttr('disabled');
+                $('.gmw-submit').removeAttr('disabled');
+            }); 
+        }
     }
 
     //check if we need to autolocate the user on page load
