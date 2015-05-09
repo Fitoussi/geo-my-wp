@@ -2,60 +2,50 @@
  * GMW main map function
  * @param gmwForm
  */
-function gmwMapInit( values ) {
+function gmwMapInit( mapObject ) {
 	
 	//make sure the map element exists to prevent JS error
-	if ( !jQuery( '#'+values['mapElement'] ).length ) {
+	if ( !jQuery( '#'+mapObject['mapElement'] ).length ) {
 		return;
 	}
 
 	//map id
-	var mapID = values.mapId;
+	var mapID = mapObject.mapId;
 	var markersClustereOk = false;
 
 	//initiate map options
-	var mapOptions = {
-			zoom: ( values['zoomLevel'] == 'auto' ) ? 13 : parseInt(values['zoomLevel']),
-			center: new google.maps.LatLng( values['userPosition']['lat'], values['userPosition']['lng'] ),
-			mapTypeId: google.maps.MapTypeId[values.mapTypeId]
-	};
-	
+	mapObject['mapOptions']['zoom'] 	 = ( mapObject['zoomLevel'] == 'auto' ) ? 13 : parseInt( mapObject['zoomLevel'] );
+	mapObject['mapOptions']['center'] 	 = new google.maps.LatLng( mapObject['userPosition']['lat'], mapObject['userPosition']['lng'] );
+	mapObject['mapOptions']['mapTypeId'] = google.maps.MapTypeId[mapObject.mapTypeId];
+	mapObject['bounds'] 				 = new google.maps.LatLngBounds();
+		
 	//merge custom map options if exsits
 	if ( "undefined" != typeof gmwMapOptions[mapID] ) {
-		jQuery.extend(mapOptions, gmwMapOptions[mapID] );
+		jQuery.extend(mapObject['mapOptions'], gmwMapOptions[mapID] );
 	}
-			
-	//merge map options with global map object
-	gmwMapObjects[mapID] = jQuery.extend( true, values, {
-			mapOptions: mapOptions,	
-			bounds: new google.maps.LatLngBounds(),
-			markers:[],
-			infoWindow:false,
-			resizeMapControl:false
-	} );
 	
 	//create the map
-	gmwMapObjects[mapID]['map'] = new google.maps.Map(document.getElementById( gmwMapObjects[mapID]['mapElement'] ), gmwMapObjects[mapID]['mapOptions'] );
+	mapObject['map'] = new google.maps.Map(document.getElementById( mapObject['mapElement'] ), mapObject['mapOptions'] );
 
 	//initiate markers clusterer if needed ( for premium features )
-	if ( typeof MarkerClusterer === 'function' && gmwMapObjects[mapID]['markersDisplay'] == 'markers_clusterer' ) { 
-		psMc = new MarkerClusterer( gmwMapObjects[mapID]['map'], gmwMapObjects[mapID]['markers'] );	
+	if ( typeof MarkerClusterer === 'function' && mapObject['markersDisplay'] == 'markers_clusterer' ) { 
+		psMc = new MarkerClusterer( mapObject['map'], mapObject['markers'] );	
 		markersClustereOk = true;
     }
 
 	//create markers for locations
-	for ( i = 0; i < gmwMapObjects[mapID]['locations'].length; i++ ) {  
+	for ( i = 0; i < mapObject['locations'].length; i++ ) {  
 		
 		//make sure location has coordinates to prevent JS error
-		if ( gmwMapObjects[mapID]['locations'][i]['lat'] == undefined || gmwMapObjects[mapID]['locations'][i]['long'] == undefined  )
+		if ( mapObject['locations'][i]['lat'] == undefined || mapObject['locations'][i]['long'] == undefined  )
 			continue;
 		
-		var gmwLocation = new google.maps.LatLng( gmwMapObjects[mapID]['locations'][i]['lat'], gmwMapObjects[mapID]['locations'][i]['long'] );
+		var gmwLocation = new google.maps.LatLng( mapObject['locations'][i]['lat'], mapObject['locations'][i]['long'] );
 	
 		//offset markers with same location
-		if ( markersClustereOk == false && gmwMapObjects[mapID]['bounds'].contains(gmwLocation) ) {
+		if ( markersClustereOk == false && mapObject['bounds'].contains(gmwLocation) ) {
 
-			var a = 360.0 / gmwMapObjects[mapID]['locations'].length;
+			var a = 360.0 / mapObject['locations'].length;
 			var orgPosition = gmwLocation;
 	        var newLat = orgPosition.lat() + -.0005 * Math.cos((+a*i) / 180 * Math.PI);  // x
 	        var newLng = orgPosition.lng() + -.0005 * Math.sin((+a*i) / 180 * Math.PI);  // Y
@@ -68,125 +58,125 @@ function gmwMapInit( values ) {
 	            strokeWeight: 2
 	          });
 	        
-	        markerPath.setMap(gmwMapObjects[mapID]['map']);
+	        markerPath.setMap(mapObject['map']);
 		}
 		
-		gmwMapObjects[mapID]['bounds'].extend(gmwLocation);
+		mapObject['bounds'].extend(gmwLocation);
         	
-		gmwMapObjects[mapID]['markers'][i] = new google.maps.Marker({
+		mapObject['markers'][i] = new google.maps.Marker({
 			position: gmwLocation,
-			icon:gmwMapObjects[mapID]['locations'][i]['mapIcon'],
-			map:gmwMapObjects[mapID]['map'],
+			icon:mapObject['locations'][i]['mapIcon'],
+			map:mapObject['map'],
 			id:i 
 		});
 				
 		 //add marker to clusterer if needed
-		if ( gmwMapObjects[mapID]['markersDisplay'] == 'markers_clusterer' ) {						
-			psMc.addMarker( gmwMapObjects[mapID]['markers'][i] );							
+		if ( markersClustereOk == true && mapObject['markersDisplay'] == 'markers_clusterer' ) {						
+			psMc.addMarker( mapObject['markers'][i] );							
 		} else {		
-			gmwMapObjects[mapID]['markers'][i].setMap(gmwMapObjects[mapID]['map'] );			
+			mapObject['markers'][i].setMap(mapObject['map'] );			
 		}
 		
-		if ( gmwMapObjects[mapID]['locations'][i]['info_window_content'] != false ) {
+		if ( mapObject['locations'][i]['info_window_content'] != false ) {
 			
 			//create the info-window object
-			google.maps.event.addListener(gmwMapObjects[mapID]['markers'][i], 'click', function() {
+			google.maps.event.addListener(mapObject['markers'][i], 'click', function() {
 				
-				if ( gmwMapObjects[mapID]['infoWindow'] ) {
-					gmwMapObjects[mapID]['infoWindow'].close();
-					gmwMapObjects[mapID]['infoWindow'] = null;
+				if ( mapObject['infoWindow'] != null ) {
+					mapObject['infoWindow'].close();
+					mapObject['infoWindow'] = null;
 				}
 				
-				gmwMapObjects[mapID]['infoWindow'] = new google.maps.InfoWindow({
-					content: gmwMapObjects[mapID]['locations'][this.id]['info_window_content']
+				mapObject['infoWindow'] = new google.maps.InfoWindow({
+					content: mapObject['locations'][this.id]['info_window_content']
 				});
 				
-				gmwMapObjects[mapID]['infoWindow'].open(gmwMapObjects[mapID]['map'], this);
+				mapObject['infoWindow'].open(mapObject['map'], this);
 			});
 		}
 	}
-				
+	
 	//create user's location marker
-	if ( gmwMapObjects[mapID]['userPosition']['lat'] != false && gmwMapObjects[mapID]['userPosition']['lng'] != false && gmwMapObjects[mapID]['userPosition']['mapIcon'] != false ) {
+	if ( mapObject['userPosition']['lat'] != false && mapObject['userPosition']['lng'] != false && mapObject['userPosition']['mapIcon'] != false ) {
 	
 		//user's location
-		gmwMapObjects[mapID]['userPosition']['location'] = new google.maps.LatLng( gmwMapObjects[mapID]['userPosition']['lat'], gmwMapObjects[mapID]['userPosition']['lng'] );
+		mapObject['userPosition']['location'] = new google.maps.LatLng( mapObject['userPosition']['lat'], mapObject['userPosition']['lng'] );
 		
 		//append user's location to bounds
-		gmwMapObjects[mapID]['bounds'].extend(gmwMapObjects[mapID]['userPosition']['location']);
+		mapObject['bounds'].extend(mapObject['userPosition']['location']);
 		
 		//create user's marker
-		gmwMapObjects[mapID]['userPosition']['marker'] = new google.maps.Marker({
-			position: gmwMapObjects[mapID]['userPosition']['location'],
-			map: gmwMapObjects[mapID]['map'],
-			icon:gmwMapObjects[mapID]['userPosition']['mapIcon']
+		mapObject['userPosition']['marker'] = new google.maps.Marker({
+			position: mapObject['userPosition']['location'],
+			map: mapObject['map'],
+			icon:mapObject['userPosition']['mapIcon']
 		});
 		
 		//create user's marker info-window
-		if ( gmwMapObjects[mapID]['userPosition']['iwContent'] != null ) {
+		if ( mapObject['userPosition']['iwContent'] != null ) {
 		
 			var iw = new google.maps.InfoWindow({
-				content: gmwMapObjects[mapID]['userPosition']['iwContent']
+				content: mapObject['userPosition']['iwContent']
 			});
 		      					
-			if ( gmwMapObjects[mapID]['userPosition']['iwOpen'] == true ) {
-				iw.open( gmwMapObjects[mapID]['map'], gmwMapObjects[mapID]['userPosition']['marker']);
+			if ( mapObject['userPosition']['iwOpen'] == true ) {
+				iw.open( mapObject['map'], mapObject['userPosition']['marker']);
 			}
 			
-		    google.maps.event.addListener( gmwMapObjects[mapID]['userPosition']['marker'], 'click', function() {
-		    	iw.open( gmwMapObjects[mapID]['map'], gmwMapObjects[mapID]['userPosition']['marker']);
+		    google.maps.event.addListener( mapObject['userPosition']['marker'], 'click', function() {
+		    	iw.open( mapObject['map'], mapObject['userPosition']['marker']);
 		    });     
 		}
 	}
 					
 	//after map loaded
-	google.maps.event.addListenerOnce(gmwMapObjects[mapID]['map'], 'idle', function(){	
+	google.maps.event.addListenerOnce(mapObject['map'], 'idle', function(){	
 
 		//custom zoom point
-		if ( gmwMapObjects[mapID]['zoomPosition'] != false && gmwMapObjects[mapID]['zoomLevel'] != 'auto' ) {
+		if ( mapObject['zoomPosition'] != false && mapObject['zoomLevel'] != 'auto' ) {
 
-			gmwMapObjects[mapID]['zoomPosition']['position'] = new google.maps.LatLng( gmwMapObjects[mapID]['zoomPosition']['lat'], gmwMapObjects[mapID]['zoomPosition']['lng'] );
-			gmwMapObjects[mapID]['map'].setZoom( parseInt( gmwMapObjects[mapID]['zoomLevel'] ) );
-			gmwMapObjects[mapID]['map'].panTo( gmwMapObjects[mapID]['zoomPosition']['position'] );
+			mapObject['zoomPosition']['position'] = new google.maps.LatLng( mapObject['zoomPosition']['lat'], mapObject['zoomPosition']['lng'] );
+			mapObject['map'].setZoom( parseInt( mapObject['zoomLevel'] ) );
+			mapObject['map'].panTo( mapObject['zoomPosition']['position'] );
 
-		} else if ( gmwMapObjects[mapID]['locations'].length == 1 && gmwMapObjects[mapID]['userPosition']['location'] == false ) {
+		} else if ( mapObject['locations'].length == 1 && mapObject['userPosition']['location'] == false ) {
 
-			gmwMapObjects[mapID]['map'].setZoom(13);
-			gmwMapObjects[mapID]['map'].panTo(gmwMapObjects[mapID]['markers'][0].getPosition());	
+			mapObject['map'].setZoom(13);
+			mapObject['map'].panTo(mapObject['markers'][0].getPosition());	
 
-		} else if ( gmwMapObjects[mapID]['zoomLevel'] != 'auto' && gmwMapObjects[mapID]['userPosition']['location'] !== false ) {
+		} else if ( mapObject['zoomLevel'] != 'auto' && mapObject['userPosition']['location'] != false ) {
 
-			gmwMapObjects[mapID]['map'].setZoom( parseInt( gmwMapObjects[mapID]['zoomLevel'] ) );
-			gmwMapObjects[mapID]['map'].panTo(gmwMapObjects[mapID]['userPosition']['location']);
+			mapObject['map'].setZoom( parseInt( mapObject['zoomLevel'] ) );
+			mapObject['map'].panTo(mapObject['userPosition']['location']);
 
-		} else if ( gmwMapObjects[mapID]['zoomLevel'] == 'auto' || gmwMapObjects[mapID]['userPosition']['location'] == false  ) { 
+		} else if ( mapObject['zoomLevel'] == 'auto' || mapObject['userPosition']['location'] == false  ) { 
 
-			gmwMapObjects[mapID]['map'].fitBounds(gmwMapObjects[mapID]['bounds']);
+			mapObject['map'].fitBounds(mapObject['bounds']);
 		}
 		
 		//fadeout the map loader if needed
-		if ( gmwMapObjects[mapID]['mapLoaderElement'] != false ) {
-			jQuery(gmwMapObjects[mapID]['mapLoaderElement']).fadeOut(1000);
+		if ( mapObject['mapLoaderElement'] != false ) {
+			jQuery(mapObject['mapLoaderElement']).fadeOut(1000);
 		}
 		
 		//create map expand toggle if needed
-		if ( gmwMapObjects[mapID]['resizeMapElement'] != false ) {
+		if ( mapObject['resizeMapElement'] != false ) {
 			
-			gmwMapObjects[mapID]['resizeMapControl'] = document.getElementById(gmwMapObjects[mapID]['resizeMapElement']);
-			gmwMapObjects[mapID]['resizeMapControl'].style.position = 'absolute';	
-			gmwMapObjects[mapID]['map'].controls[google.maps.ControlPosition.TOP_RIGHT].push(gmwMapObjects[mapID]['resizeMapControl']);			
-			gmwMapObjects[mapID]['resizeMapControl'].style.display = 'block';
+			mapObject['resizeMapControl'] = document.getElementById(mapObject['resizeMapElement']);
+			mapObject['resizeMapControl'].style.position = 'absolute';	
+			mapObject['map'].controls[google.maps.ControlPosition.TOP_RIGHT].push(mapObject['resizeMapControl']);			
+			mapObject['resizeMapControl'].style.display = 'block';
 		
 			//expand map function		    	
-	    	jQuery('#'+gmwMapObjects[mapID]['resizeMapElement']).click(function() {
+	    	jQuery('#'+mapObject['resizeMapElement']).click(function() {
 	    		
-	    		var mapCenter = gmwMapObjects[mapID]['map'].getCenter();
+	    		var mapCenter = mapObject['map'].getCenter();
 	    		jQuery(this).closest('.gmw-map-wrapper').toggleClass('gmw-expanded-map');          		
 	    		jQuery(this).toggleClass('fa-expand').toggleClass('fa-compress');
 	    		
 	    		setTimeout(function() { 			    		
-	    			google.maps.event.trigger(gmwMapObjects[mapID]['map'], 'resize');
-	    			gmwMapObjects[mapID]['map'].setCenter(mapCenter);							
+	    			google.maps.event.trigger(mapObject['map'], 'resize');
+	    			mapObject['map'].setCenter(mapCenter);							
 				}, 100);            		
 	    	});
 		}
@@ -195,26 +185,21 @@ function gmwMapInit( values ) {
 
 jQuery(document).ready(function($){ 	
 	
-	if ( typeof gmwMapsHolder != 'undefined' ) {
+	if ( typeof gmwMapObjects == 'undefined' ) 
+		return false;
+						
+	$.each(gmwMapObjects, function( index, mapObject ) {
 		
-		//create global maps object if was not created already
-		if ( typeof gmwMapObjects == 'undefined' ) {
-			gmwMapObjects = {};
+		if ( mapObject['triggerMap'] == true ) {
+		
+			//if map element is hidden show it first
+			if ( mapObject['hiddenElement'] != false && jQuery(mapObject['hiddenElement']).is(':hidden') ) {
+				jQuery(mapObject['hiddenElement']).slideToggle( 'fast', function() {
+					gmwMapInit( mapObject );
+				});
+			} else {
+				gmwMapInit( mapObject );
+			} 	
 		}
-				
-		$.each(gmwMapsHolder, function( index, values ) {
-			
-			if ( values['triggerMap'] == true ) {
-			
-				//if map element is hidden show it first
-				if ( gmwMapsHolder[index]['hiddenElement'] != false && jQuery(gmwMapsHolder[index]['hiddenElement']).is(':hidden') ) {
-					jQuery(gmwMapsHolder[index]['hiddenElement']).slideToggle( 'fast', function() {
-						gmwMapInit( values );
-					});
-				} else {
-					gmwMapInit( values );
-				} 	
-			}
-		});		
-	}
+	});		
 });
