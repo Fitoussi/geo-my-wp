@@ -155,14 +155,15 @@ class GMW_Single_Location {
 		
 		$this->labels = apply_filters( "gmw_sl_labels", $this->labels, $this->args );
 		
-		//check for the user's current position
+		//check for the user's current position in URL. 
 		if ( !empty( $_GET['lat'] ) && !empty( $_GET['lng'] ) ) {
 		
 			$this->user_position['exists']  = true;
 			$this->user_position['lat'] 	= sanitize_text_field( $_GET['lat'] );
 			$this->user_position['lng'] 	= sanitize_text_field( $_GET['lng'] );
 			$this->user_position['address'] = sanitize_text_field( $_GET['address'] );
-			
+		
+		//otherwise check for user location in cookies
 		} elseif ( !empty( $_COOKIE['gmw_lat'] ) && !empty( $_COOKIE['gmw_lng'] ) ) {
 
 			$this->user_position['exists']  = true;
@@ -317,6 +318,7 @@ class GMW_Single_Location {
 						'address' 	=> $this->user_position['address'],
 						'mapIcon'	=> $this->args['user_map_icon'],
 						'iwContent' => $this->args['user_info_window'],
+						
 				)
 		);
 
