@@ -178,7 +178,7 @@ class GMW_PT_Search_Query extends GMW {
 	        		'paged'               => $this->form['paged'],
 	        		'meta_query'          => apply_filters( 'gmw_pt_meta_query', $meta_args, $this->form ),
 	        		'ignore_sticky_posts' => 1,
-	        		'orderby'			  => 'distance',
+	        		'orderby'			  => 'distance'
 	        ), $this->form );
 	
 	        //Modify the form before the search query
