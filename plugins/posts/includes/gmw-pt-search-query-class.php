@@ -7,41 +7,55 @@ if ( !class_exists( 'GMW' ) )
  * 
  */
 class GMW_PT_Search_Query extends GMW {
-  
+    
+    /**
+     * Places_locator database fields used in the query
+     * @var array
+     */
+    public $db_fields = array( 
+        '',
+        'lat', 
+        'long', 
+        'feature', 
+        'street', 
+        'city', 
+        'state', 
+        'zipcode', 
+        'country', 
+        'address', 
+        'formatted_address',
+        'phone', 
+        'fax', 
+        'email', 
+        'website', 
+        'map_icon' 
+    );
+
     /**
      * Modify wp_query clauses to search by distance
      * @param $clauses
      * @return $clauses
      */
     public function query_clauses( $clauses ) {
-        
+
     	global $wpdb;
 		        
         $this->enable_non_located_posts = apply_filters( 'enable_non_located_posts', false, $this->form );
-           
+        
+        $this->db_fields = implode( ', gmwlocations.', apply_filters( 'gmw_pt_database_fields', $this->db_fields, $this->form ) );
+ 
         // add the radius calculation and add the locations fields into the results
         if ( !empty( $this->form['org_address'] ) ) {
 
         	$clauses['join']   .= " INNER JOIN {$wpdb->prefix}places_locator gmwlocations ON $wpdb->posts.ID = gmwlocations.post_id ";
-        	$clauses['fields'] .= $wpdb->prepare( " , gmwlocations.lat, gmwlocations.long, gmwlocations.street, gmwlocations.city, gmwlocations.state, gmwlocations.zipcode, gmwlocations.country, gmwlocations.address, gmwlocations.formatted_address,
-        			gmwlocations.phone, gmwlocations.fax, gmwlocations.email, gmwlocations.website, gmwlocations.map_icon,
+        	$clauses['fields'] .= $wpdb->prepare( "{$this->db_fields},
         			ROUND( %d * acos( cos( radians( %s ) ) * cos( radians( gmwlocations.lat ) ) * cos( radians( gmwlocations.long ) - radians( %s ) ) + sin( radians( %s ) ) * sin( radians( gmwlocations.lat) ) ),1 ) AS distance", 
         			array( $this->form['units_array']['radius'], $this->form['your_lat'], $this->form['your_lng'], $this->form['your_lat'] ) );
         	
         	$clauses['where'] .= " AND ( gmwlocations.lat != 0.000000 && gmwlocations.long != 0.000000 ) ";
+        	$clauses['having'] = $wpdb->prepare( "HAVING distance <= %d OR distance IS NULL", $this->form['radius'] );
         	
-        	if ( !$this->form['advanced_query'] ) {
-        		$px[0] = 'having';
-        		$px[1] = '';
-        	} else {
-        		$px[0] = 'groupby';
-        		$px[1] = $wpdb->posts.'.ID';
-        	}
-        	$clauses[$px[0]]    = $wpdb->prepare( " {$px[1]} HAVING distance <= %d OR distance IS NULL", $this->form['radius'] );
-        	
-        	if ( !$this->form['advanced_query'] ) {	
-        		$clauses['orderby'] = "ORDER BY distance";
-        	} elseif ( $this->form['query_args']['orderby'] == 'distance' ) {
+        	if ( !$this->form['advanced_query'] || ( $this->form['advanced_query'] && $this->form['query_args']['orderby'] == 'distance' ) ) {
         		$clauses['orderby'] = 'distance';
         	}
 
@@ -58,8 +72,7 @@ class GMW_PT_Search_Query extends GMW {
         		$clauses['where'] .= " AND ( gmwlocations.lat != 0.000000 && gmwlocations.long != 0.000000 ) ";
         	}
         	
-        	$clauses['fields'] .= ", gmwlocations.lat, gmwlocations.long, gmwlocations.street, gmwlocations.city, gmwlocations.state, gmwlocations.zipcode, gmwlocations.country, gmwlocations.address, gmwlocations.formatted_address,
-        	gmwlocations.phone, gmwlocations.fax, gmwlocations.email, gmwlocations.website, gmwlocations.map_icon";       
+        	$clauses['fields'] .= $this->db_fields;       
         }
         
         if ( $this->form['page_load_results_trigger'] ) {
@@ -84,10 +97,19 @@ class GMW_PT_Search_Query extends GMW {
 	        	$clauses['where'] .= " AND ( gmwlocations.country = '{$this->form['page_load_results']['country_filter']}' OR gmwlocations.country_long = '{$this->form['page_load_results']['country_filter']}' ) ";
 	        }	        
         }
-                
+             
         $clauses = apply_filters( 'gmw_pt_location_query_clauses', $clauses, $this->form );
         $clauses = apply_filters( "gmw_pt_location_query_clauses_{$this->form['ID']}", $clauses, $this->form );
-        
+
+        if ( !empty( $clauses['having'] ) ) {
+
+            if ( empty( $clauses['groupby'] ) ) {
+                $clauses['groupby'] = $wpdb->prefix.'posts.ID';
+            }
+            $clauses['groupby'] .= ' '.$clauses['having'];
+            unset( $clauses['having'] );
+        } 
+
         return $clauses; 
     }
 
@@ -229,21 +251,21 @@ class GMW_PT_Search_Query extends GMW {
         		
         	global $wpdb;
         
-        	$clauses['select'] 	= "SELECT SQL_CALC_FOUND_ROWS";
-        	$clauses['fields'] 	= "$wpdb->posts.*";
-        	$clauses['from']	= "FROM $wpdb->posts";
-        	$clauses['join']	= "";
-        	$clauses['where']   = $wpdb->prepare( "WHERE $wpdb->posts.post_type IN (".str_repeat( "%s,", count( $post_types ) - 1 ) . "%s ) AND $wpdb->posts.post_status = 'publish'", $post_types );
-        	$clauses['distinct']= "";
-        	$clauses['groupby']	= "GROUP BY $wpdb->posts.ID";
-        	$clauses['having']	= "";
-        	$clauses['orderby'] = "ORDER BY $wpdb->posts.post_date DESC";
-        	$clauses['limit']   = "";
+        	$clauses['select'] 	 = "SELECT SQL_CALC_FOUND_ROWS";
+            $clauses['distinct'] = "";
+        	$clauses['fields'] 	 = "$wpdb->posts.*";
+        	$clauses['from']	 = $wpdb->posts;
+        	$clauses['join']	 = "";
+        	$clauses['where']    = $wpdb->prepare( "AND $wpdb->posts.post_type IN (".str_repeat( "%s,", count( $post_types ) - 1 ) . "%s ) AND $wpdb->posts.post_status = 'publish'", $post_types );
+        	$clauses['groupby']	 = "";
+            $clauses['having']   = "";
+        	$clauses['orderby']  = "$wpdb->posts.post_date DESC";
+        	$clauses['limits']   = "";
         	
         	if ( !empty( $this->form['get_per_page'] ) ) {
         		
         		$stating_page     = ( $this->form['paged'] == 1 ) ? 0 : ( $this->form['get_per_page'] * ( $this->form['paged'] - 1 ) );
-        		$clauses['limit'] = "LIMIT {$stating_page},{$this->form['get_per_page']}";
+        		$clauses['limits'] = "LIMIT {$stating_page},{$this->form['get_per_page']}";
         	}
         		
         	add_filter( 'gmw_pt_filter_custom_query_clauses', array( $this, 'query_clauses' 				   ) );
@@ -256,7 +278,16 @@ class GMW_PT_Search_Query extends GMW {
         	remove_filter( 'gmw_pt_filter_custom_query_clauses', array( $this, 'query_clauses' 				   ) );
         	remove_filter( 'gmw_pt_filter_custom_query_clauses', array( $this, 'include_exclude_tax_custom_query' ) );
         	
-        	$this->form['results'] 		 = $wpdb->get_results( implode( ' ', $clauses ) );
+            if ( !empty( $clauses['groupby'] ) ) {
+                $clauses['groupby'] = 'GROUP BY ' . $clauses['groupby'];
+            }
+            if ( !empty( $clauses['orderby'] ) ) {
+                $clauses['orderby'] = 'ORDER BY ' . $clauses['orderby'];
+            }
+  
+            $request = "{$clauses['select']} DISTINCT {$clauses['fields']} FROM {$clauses['from']} {$clauses['join']} WHERE 1=1 {$clauses['where']} {$clauses['groupby']} {$clauses['orderby']} {$clauses['limits']}";
+
+        	$this->form['results']       = $wpdb->get_results( $request );
         	$foundRows 					 = $wpdb->get_row( "SELECT FOUND_ROWS()", ARRAY_A );
         	$this->form['results_count'] = count( $this->form['results'] );
         	$this->form['total_results'] = $foundRows['FOUND_ROWS()'];
