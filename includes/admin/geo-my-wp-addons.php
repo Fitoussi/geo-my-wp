@@ -150,23 +150,16 @@ class GMW_Addons {
     		return;
     	
     	if ( $_POST['gmw_updater_action'] == 'enabled' ) {
-    		
-    		unset( $this->settings['admin_settings']['updater_disabled'] );	
-    		
-    		update_option( 'gmw_options', $this->settings );
+    		    	
+    		update_option( 'gmw_updater_disabled', false );
     		
     		//reload the page to prevent resubmission
     		wp_safe_redirect( admin_url( 'admin.php?page=gmw-add-ons&gmw_notice=updater_enabled&gmw_notice_status=updated' ) );
     		exit;
     			
     	} elseif ( $_POST['gmw_updater_action'] == 'disabled' ) {
-    		
-    		if ( !isset( $this->settings['admin_settings'] ) ) {
-    			$this->settings['admin_settings'] = array();
-    		}
-    		$this->settings['admin_settings']['updater_disabled'] = true;
-    		
-    		update_option( 'gmw_options', $this->settings );
+    		    		
+    		update_option( 'gmw_updater_disabled', true );
     		
     		//reload the page to prevent resubmission
     		wp_safe_redirect( admin_url( 'admin.php?page=gmw-add-ons&gmw_notice=updater_disabled&gmw_notice_status=updated' ) );
@@ -297,7 +290,9 @@ class GMW_Addons {
      * @access public
      * @return void
      */
-    public function output() { ?>
+    public function output() { 
+         $updater = get_option( 'gmw_updater_disabled' );
+        ?>
     
         <div class="wrap">
         
@@ -325,14 +320,14 @@ class GMW_Addons {
             
             <form method="post" action="" style="text-align:center">
             	
-            	<div class="gmw-addons-page-top-area <?php echo ( isset( $this->settings['admin_settings']['updater_disabled'] ) ) ? 'updater-disabled' : 'updater-enabled'; ?>">
+            	<div class="gmw-addons-page-top-area <?php echo ( !empty( $updater ) ) ? 'updater-disabled' : 'updater-enabled'; ?>">
             	
 	            	<p class="description" style="margin-bottom: 10px;border-bottom: 1px solid #e5e5e5;padding-bottom: 10px;">
 	            		<?php _e( 'Disable/enable the premium add-ons auto-updating system. The system can cause a slow load of the plugins.php/update.php pages of your site when checking for new version of the premium add-ons.', 'GMW' ); ?>
 	            		<?php _e( 'You can temporary disable the system when working in the admin area and enable it again when you are ready to check for add-ons update. This can be useful when working on a development site and there is no need to check for updates.', 'GMW' ); ?>
 	            	</p>
             			
-	            	<?php if ( isset( $this->settings['admin_settings']['updater_disabled'] ) ) { ?>
+	            	<?php if ( !empty( $updater ) ) { ?>
             			<div>
             				<p class="description" style="color:red"><?php _e( 'The add-ons updater is disabled and will not check for new updates.', 'GMW'); ?></p>    
             				<input type="submit" name="gmw_enable_updater" class="button-primary" value="<?php _e( 'Enable Updater', 'GMW' ); ?>" />
