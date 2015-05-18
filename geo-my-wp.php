@@ -275,7 +275,9 @@ class GEO_my_WP {
 		}
 
 		//include font-awesome
-		wp_enqueue_style( 'font-awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css', array(), GMW_VERSION );
+		if ( !wp_style_is( 'font-awesome', 'enqueued' ) ) {
+			wp_enqueue_style( 'font-awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css', array(), GMW_VERSION );
+		}
 
 		if ( !is_admin() ) {
 
