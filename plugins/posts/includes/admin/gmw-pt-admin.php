@@ -436,6 +436,14 @@ class GMW_PT_Admin {
     							'website' => __( 'Website', 'GMW' ),
     					),
     			),
+                'opening_hours'  => array(
+                        'name'     => 'opening_hours',
+                        'std'      => '',
+                        'label'    => __( 'Show opening hours', 'GMW' ),
+                        'cb_label' => __( 'Yes', 'GMW' ),
+                        'desc'     => __( 'Display opening days & hours.', 'GMW' ),
+                        'type'     => 'checkbox'
+                ),
     			'show_excerpt'     => array(
     					'name'     => 'show_excerpt',
     					'std'      => '',
