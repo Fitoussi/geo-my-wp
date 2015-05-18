@@ -3,10 +3,10 @@
 /** GMW Single Location style **/
 div.gmw-sl-wrapper,
 .widget div.gmw-sl-wrapper {
-	box-shadow: 0 0 0px #cac2c5;
+	box-shadow: 0 0 2px #cac2c5;
 	-webkit-box-shadow: 0 0 3px #cac2c5;
-	-moz-box-shadow: 0 0 6px #cac2c5;
-	-o-box-shadow: 0 0 6px #cac2c5;
+	-moz-box-shadow: 0 0 2px #cac2c5;
+	-o-box-shadow: 0 0 2px #cac2c5;
 	padding: 15px 15px;
 	background: white;
 	margin-bottom:15px;
