@@ -98,7 +98,7 @@ class GMW_Single_Post_Location extends GMW_Single_Location {
 
 		$output = '<div id="gmw-sl-additional-info-wrapper-'.$this->args['element_id'].'" class="gmw-sl-additional-info-wrapper gmw-sl-'.$this->args['item_type'].'-additional-info-wrapper">';
 
-		$this->item_info->address = ( !empty( $this->item_info->formatted_address ) ) ? $this->item_info->formatted_address : $this->post->address;
+		$this->item_info->address = ( !empty( $this->item_info->formatted_address ) ) ? $this->item_info->formatted_address : $this->item_info->address;
 
 		$output .= '<ul>';
 		
