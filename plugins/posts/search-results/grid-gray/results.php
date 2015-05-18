@@ -50,7 +50,7 @@
 
 		<?php while ( $gmw_query->have_posts() ) : $gmw_query->the_post(); ?>
 		
-			<li id="post-<?php the_ID(); ?>" class="single-post">
+			<li id="post-<?php the_ID(); ?>" <?php post_class( 'single-post featured-post-'.$post->feature ); ?>>
 				
 				<div class="wrapper-inner">
 				
@@ -104,6 +104,15 @@
 					    	</div>
 					    <?php } ?>
 			    			
+			    		<?php if ( !empty( $gmw['search_results']['opening_hours'] ) ) { ?>
+    
+					    	<?php do_action( 'gmw_search_results_before_opening_hours', $post, $gmw ); ?>
+						   	
+					    	<div class="opening-hours">
+					    		<?php gmw_pt_days_hours( $post, $gmw ); ?>
+					    	</div>
+					    <?php } ?>
+					    
 			    		<?php gmw_pt_taxonomies( $gmw, $post ); ?>
 
 		   			</div>

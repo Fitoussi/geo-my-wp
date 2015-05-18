@@ -50,7 +50,7 @@
 
 		<?php while ( $gmw_query->have_posts() ) : $gmw_query->the_post(); ?>
 		
-			<li id="post-<?php the_ID(); ?>" class="single-post">
+			<li id="post-<?php the_ID(); ?>" <?php post_class( 'single-post featured-post-'.$post->feature ); ?>>
 				
 				<?php do_action( 'gmw_search_results_loop_item_start' , $gmw, $post ); ?>
 			
@@ -107,6 +107,16 @@
 					    		<?php gmw_additional_info( $post, $gmw, $gmw['search_results']['additional_info'], $gmw['labels']['search_results']['contact_info'], 'div' ); ?> 
 					    	</div>
 					    <?php } ?>
+
+					    <?php if ( !empty( $gmw['search_results']['opening_hours'] ) ) { ?>
+    
+					    	<?php do_action( 'gmw_search_results_before_opening_hours', $post, $gmw ); ?>
+						   	
+					    	<div class="opening-hours">
+					    		<?php gmw_pt_days_hours( $post, $gmw ); ?>
+					    	</div>
+					    <?php } ?>
+				    
 		   			</div>
 		   			
 	   			</div>

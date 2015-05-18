@@ -54,7 +54,7 @@
 		<?php while ( $gmw_query->have_posts() ) : $gmw_query->the_post(); ?>
 			
 			<!--  single results wrapper  -->
-			<div id="post-<?php the_ID(); ?>" <?php post_class('wppl-single-result'); ?>>
+			<div id="post-<?php the_ID(); ?>" <?php post_class( 'wppl-single-results featured-post-'.$post->feature ); ?>>
 		
 				<?php do_action( 'gmw_search_results_loop_item_start' , $gmw, $post ); ?>
 				
@@ -109,6 +109,15 @@
 					    <?php } ?>	    
 		    		</div>
 		    		
+		    		<?php if ( !empty( $gmw['search_results']['opening_hours'] ) ) { ?>
+    
+				    	<?php do_action( 'gmw_search_results_before_opening_hours', $post, $gmw ); ?>
+					   	
+				    	<div class="opening-hours">
+				    		<?php gmw_pt_days_hours( $post, $gmw ); ?>
+				    	</div>
+				    <?php } ?>
+					    
 		    		<div class="wppl-info-right">
 		    			
 		    			<!--  Address -->

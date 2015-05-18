@@ -272,6 +272,19 @@ div.gmw-pt-grid-gray-results-wrapper ul.gmw-additional-info-wrapper li {
 	color:#777;
 }
 
+div.gmw-pt-grid-gray-results-wrapper ul.opening-hours-wrapper {
+	list-style:none;
+	margin:0;
+	padding:0;
+	padding-bottom:15px;
+}
+
+div.gmw-pt-grid-gray-results-wrapper ul.opening-hours-wrapper li {
+	list-style:none;
+	margin:0;
+	padding:0;
+}
+
 div.gmw-pt-grid-gray-results-wrapper .bottom-wrapper {
 	background-color: #9BDFC3;
 	color:white;

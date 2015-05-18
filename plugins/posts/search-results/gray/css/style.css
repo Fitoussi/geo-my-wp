@@ -151,8 +151,25 @@ div.gmw-pt-gray-results-wrapper ul.posts-list-wrapper .post-content .right-col h
 	color:#555;
 }
 
+div.gmw-pt-gray-results-wrapper ul.posts-list-wrapper .post-content .right-col .contact-info {
+	padding-bottom:15px;
+}
+
 div.gmw-pt-gray-results-wrapper ul.gmw-additional-info-wrapper li {
 	padding:0px;	
+}
+
+div.gmw-pt-gray-results-wrapper ul.posts-list-wrapper .post-content .right-col ul.opening-hours-wrapper {
+	list-style:none;
+	margin:0;
+	padding:0;
+	padding-bottom:15px;
+}
+
+div.gmw-pt-gray-results-wrapper ul.posts-list-wrapper .post-content .right-col ul.opening-hours-wrapper li {
+	list-style:none;
+	margin:0;
+	padding:0;
 }
 
 @media (max-width:800px) {
