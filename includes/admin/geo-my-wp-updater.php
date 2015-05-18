@@ -27,12 +27,13 @@ class GMW_Premium_Plugin_Updater {
     function __construct( $_api_url, $_plugin_file, $_api_data = null ) {
     	
     	if ( class_exists( 'GEO_my_WP') ) {
-    		$settings = get_option('gmw_options');
+    		
+            $updater = get_option( 'gmw_updater_disabled' );
     	
-    		if ( isset( $settings['admin_settings']['updater_disabled'] ) )
+    		if ( !empty( $updater ) )
     			return;
     	}
-    	
+
         $this->api_url  = trailingslashit( $_api_url );
         $this->api_data = $_api_data;
         $this->name     = plugin_basename( $_plugin_file );
