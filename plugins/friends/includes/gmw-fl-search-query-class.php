@@ -148,7 +148,7 @@ class GMW_FL_Search_Query extends GMW {
     public function results() {
     
     	//Show/hide members with no location in the results. Default set to false
-    	$this->show_non_located_users = apply_filters( 'show_users_without_location', false, $this->form );
+    	$this->show_non_located_users = apply_filters( 'show_users_without_location', true, $this->form );
     	 
     	//prevent BuddyPress from using its own "paged" value for the current page
     	if ( !empty( $_REQUEST['upage'] ) )
