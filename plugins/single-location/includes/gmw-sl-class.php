@@ -294,6 +294,8 @@ class GMW_Single_Location {
 		//get the map element
 		$output = gmw_get_results_map( $gmw );
 		
+		$post_map_icon = ( !empty( $this->args['item_map_icon'] ) ) ? $this->args['item_map_icon'] : false;
+		
 		$mapArgs = array(
 				'mapId' 	 		=> $this->args['element_id'],
 				'mapType'			=> 'single_location',
@@ -303,14 +305,15 @@ class GMW_Single_Location {
 						'lat'				  	=> $this->item_info->lat,
 						'long'				  	=> $this->item_info->long,
 						'info_window_content' 	=> $this->info_window_content(),
-						'mapIcon'				=> ( !empty( $this->args['item_map_icon'] ) ) ? $this->args['item_map_icon'] : false,
+						'mapIcon'				=> apply_filters( 'gmw_sl_post_map_icon', $post_map_icon, $this->args, $this->item_info, $this->user_position ),
 				)),
 				'mapTypeId'			=> $this->args['map_type'],
 				'zoomLevel'			=> ( !empty( $this->user_position['exists'] ) ) ? 'auto' : $this->args['zoom_level'],
 				'mapOptions'		=> array(
 						'mapTypeControl' 	=> false,
 						'streetViewControl' => false,
-						'scrollwheel'		=> ( !empty( $this->args['scrollwheel_map_zoom'] ) ) ? true : false
+						'scrollwheel'		=> ( !empty( $this->args['scrollwheel_map_zoom'] ) ) ? true : false,
+						'panControl'		=> false
 				),
 				'userPosition'		=> array(
 						'lat'		=> $this->user_position['lat'],
