@@ -49,7 +49,7 @@ class GMW_Single_Location_Widget extends WP_Widget {
 				elements="'.$instance['elements'].'"
 				address_fields="'.$instance['address_fields'].'"
 				item_id="'.$instance['item_id'].'"
-				distance_units="'.$instance['distance_units'].'"
+				units="'.$instance['units'].'"
 				map_height="'.$instance['map_height'].'"
 				map_width="'.$instance['map_width'].'"
 				map_type="'.$instance['map_type'].'"
@@ -86,7 +86,7 @@ class GMW_Single_Location_Widget extends WP_Widget {
 				'elements'				=> 'title,distance,map,address,live_directions,directions_panel,additional_info',
 				'address_fields'		=> 'address',
 				'additional_info' 		=> 'phone,fax,email,website',
-				'distance_units'		=> 'm',
+				'units'		            => 'm',
 				'map_height'      		=> '250px',
 				'map_width'       		=> '250px',
 				'map_type'        		=> 'ROADMAP',
@@ -197,10 +197,10 @@ class GMW_Single_Location_Widget extends WP_Widget {
             </p>
     		
     		 <p>
-                <label for="<?php echo $this->get_field_name('distance_units'); ?>"><?php echo _e('Distance units', 'GMW'); ?>:</label>
-                <select id="<?php echo $this->get_field_name('distance_units'); ?>" name="<?php echo $this->get_field_name('distance_units'); ?>">
+                <label for="<?php echo $this->get_field_name('units'); ?>"><?php echo _e('Distance units', 'GMW'); ?>:</label>
+                <select id="<?php echo $this->get_field_name('units'); ?>" name="<?php echo $this->get_field_name('units'); ?>">
                 	<option value="m" selected="selected"><?php echo _e('Miles', 'GMW'); ?></option>
-                	<option value="k" <?php if ( isset( $instance['distance_units']) && $instance['distance_units'] == "k" ) echo 'selected="selected"' ; ?>><?php echo _e('Kilometers', 'GMW'); ?></option>
+                	<option value="k" <?php if ( isset( $instance['units']) && $instance['units'] == "k" ) echo 'selected="selected"' ; ?>><?php echo _e('Kilometers', 'GMW'); ?></option>
                 </select>
             </p>
             <p>
@@ -316,7 +316,7 @@ class GMW_Single_Location_Widget extends WP_Widget {
     	$instance['item_type']    		 = $new_instance['item_type'];
         $instance['address_fields']      = $new_instance['address_fields'];
         $instance['item_id']      		 = $new_instance['item_id'];
-        $instance['distance_units']      = $new_instance['distance_units'];
+        $instance['units']               = $new_instance['units'];
         $instance['map_height']       	 = $new_instance['map_height'];
         $instance['map_width']        	 = $new_instance['map_width'];
         $instance['map_type']    		 = $new_instance['map_type'];

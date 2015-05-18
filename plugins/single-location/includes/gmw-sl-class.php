@@ -26,7 +26,7 @@ class GMW_Single_Location {
 			'elements'				=> 0,
 			'item_type'				=> 'post',
 			'address_fields'		=> 'address',
-			'distance_units'		=> 'm',
+			'units'					=> 'm',
 			'map_height'      		=> '250px',
 			'map_width'       		=> '250px',
 			'map_type'        		=> 'ROADMAP',
@@ -249,7 +249,7 @@ class GMW_Single_Location {
 		$distance = rad2deg( $distance );
 		$miles 	  = $distance * 60 * 1.1515;
 
-		if ( $this->args['distance_units'] == "k" ) {
+		if ( $this->args['units'] == "k" ) {
 			$distance = ( $miles * 1.609344 );
 			$units	  = 'km';
 		} else {
