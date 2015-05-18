@@ -246,20 +246,37 @@ function gmw_pt_taxonomies( $gmw, $post ) {
  * @version 1.0
  * @author Eyal Fitoussi
  */
-function gmw_pt_days_hours( $post, $nr_message ) {
+function gmw_pt_get_days_hours( $post, $gmw ) {
 
     $days_hours = get_post_meta( $post->ID, '_wppl_days_hours', true );
+    $output     ='';
+    $dh_output  = '';
     $dc         = 0;
 
-    if ( $days_hours ) {
+    if ( !empty( $days_hours ) && is_array( $days_hours ) ) {
+
         foreach ( $days_hours as $day ) {
-            if ( !in_array( '', $day ) ) {
+            if ( array_filter( $day ) ) {
                 $dc++;
-                echo '<div class="single-days-hours"><span class="single-day">' . $day['days'] . ':</span><span class="single-hour">' . $day['hours'] . '</span></div>';
+                $dh_output .= '<li class="single-days-hours"><span class="single-day">'.esc_attr( $day['days'] ).': </span><span class="single-hour">'.esc_attr( $day['hours'] ).'</span></li>';
             }
         }
     }
-    if ( (!$days_hours) || ($dc == 0) ) {
-        echo '<span class="single-day">' . $nr_message . '</span>';
+
+    if ( $dc > 0 ) {
+
+        $output .= '<ul class="opening-hours-wrapper">';
+        $output .= '<h4>'. esc_attr( $gmw['labels']['search_results']['opening_hours'] ).'</h4>';
+        $output .= $dh_output;
+        $output .= '</ul>';
+
+    } elseif ( !empty( $nr_message ) && ( empty( $days_hours ) ) ) {
+        $output .='<p class="days-na">' . esc_attr( $nr_message ) . '</p>';
     }
+
+    return $output;
 }
+
+    function gmw_pt_days_hours( $post, $gmw ) {
+        echo gmw_pt_get_days_hours( $post, $gmw );
+    }
