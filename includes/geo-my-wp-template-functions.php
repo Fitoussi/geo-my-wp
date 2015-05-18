@@ -70,6 +70,7 @@ function gmw_form_set_labels( $form ) {
 							'na'	  		=> __( 'N/A', 'GMW' ),
 							'contact_info'	=> __( 'Contact Information','GMW' ),
 					),
+					'opening_hours'			=> __( 'Opening Hours' ),
 					'member_info'			=> __( 'Member Information', 'GMW' ),
 					'google_map_directions' => __( 'Show directions on Google Map', 'GMW' ),
 					'active_since'			=> __( 'active %s', 'GMW' )
@@ -1097,13 +1098,14 @@ function gmw_driving_distance( $info, $gmw, $title ) {
  */
 function gmw_get_pagination( $gmw, $pageName, $maxPages ) {
 
-	$maxPages = ceil( (int) $maxPages );
+	$maxPages    = ceil( (int) $maxPages );
+	$paged_check = ( is_front_page() ) ? 'page' : $pageName;
 	
 	$args = apply_filters( 'gmw_get_pagination_args', array(
 			'base'         		 => add_query_arg( $pageName, '%#%' ),
 			'format'       		 => '',
 			'total'        		 => $maxPages,
-			'current'      		 => max( 1, get_query_var( $pageName ) ),
+			'current'      		 => max( 1, get_query_var( $paged_check ) ),
 			'show_all'     		 => False,
 			'end_size'     		 => 1,
 			'mid_size'     		 => 2,
