@@ -199,7 +199,8 @@ class GMW_Current_location {
 				'mapOptions'		=> array(
 						'scrollwheel'	 	=> ( !empty( $this->args['scrollwheel_map_zoom'] ) ) ? true : false,
 						'mapTypeControl' 	=> false,
-						'streetViewControl' => false
+						'streetViewControl' => false,
+						'panControl'		=> false
 				),
 				'userPosition'		=> array(
 						'lat'		=> $this->user_position['lat'],
