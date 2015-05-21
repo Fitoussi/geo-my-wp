@@ -16,14 +16,14 @@ class GMW_Members_Locator_Component extends BP_Component {
         /*
          * Define Globals
          */
-        define('GMW_FL_DB_VERSION', '1.2'						 );
+        define('GMW_FL_DB_VERSION', '1.2.1'						 );
         define('GMW_FL_URL',  		GMW_URL.'/plugins/friends/'  );
         define('GMW_FL_PATH', 	 	GMW_PATH.'/plugins/friends/' );
         define('GMW_FL_SLUG', 		'location'					 );
 
-        add_action( 'wp_enqueue_scripts', 				 array($this, 'frontend_register_scripts'        ) );
-        add_action( 'bp_activity_filter_options', 		 array($this, 'location_filter_options'   ), 10    );
-        add_action( 'bp_member_activity_filter_options', array($this, 'location_filter_options'   ), 10    );
+        add_action( 'wp_enqueue_scripts', 				 array($this, 'frontend_register_scripts'     ) );
+        add_action( 'bp_activity_filter_options', 		 array($this, 'location_filter_options'   ), 10 );
+        add_action( 'bp_member_activity_filter_options', array($this, 'location_filter_options'   ), 10 );
 
         parent::start( GMW_FL_SLUG, __('Location', 'GMW'), GMW_FL_PATH );
 
@@ -149,9 +149,9 @@ class GMW_Members_Locator_Component extends BP_Component {
     function screen_page_user_content() {
     	
     	if ( class_exists( 'GMW_Single_Member_Location' ) ) {
-    		$content = '[gmw_single_location item_type="member" elements="address,map" address_fields="address" map_height="400px" map_width="100%" ul_marker="0"]';
+    		$content = '[gmw_single_location item_type="member" elements="address,map" address_fields="address" map_height="300px" map_width="100%" user_map_icon="0"]';
     	} else {
-    		$content = '[gmw_member_location map_height="400px" map_width="400px" no_location="1" address_fields="address" directions="0" display_name="0"]';
+    		$content = '[gmw_member_location map_height="300px" map_width="100%" no_location="1" address_fields="address" directions="0" display_name="0"]';
     	}
     	
         echo do_shortcode( apply_filters( 'gmw_fl_user_location_tab_content', $content ) );
