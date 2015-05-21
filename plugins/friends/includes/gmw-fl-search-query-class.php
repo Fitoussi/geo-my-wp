@@ -10,17 +10,39 @@ if ( !class_exists( 'GMW' ) )
 class GMW_FL_Search_Query extends GMW {
 
     /**
+     * Places_locator database fields used in the query
+     * @var array
+     */
+    public $db_fields = array( 
+        '',
+        'lat', 
+        'long', 
+        'feature', 
+        'street', 
+        'city', 
+        'state', 
+        'zipcode', 
+        'country', 
+        'address', 
+        'formatted_address',
+        'map_icon' 
+    );
+
+    /**
      * Add filter to BP_user_query
      * @version 1.0
      * @author Eyal Fitoussi
      */
     public function gmwBpQuery( $gmwBpQuery ) {    	
-    	 	  	    	
+
     	global $wpdb;
     	
-    	//break the select clause into 2: SELECT and FROM so we can modify it based on out needs
+    	//break the select clause into 2: SELECT and FROM so we can modify it based on our needs
     	$select_clause = explode( 'FROM', $gmwBpQuery->uid_clauses['select']);
     	
+        //modify the database columns if needed
+        $this->db_fields = implode( ', gmwlocations.', apply_filters( 'gmw_fl_database_fields', $this->db_fields, $this->form ) );
+
     	//find the user_id column based on the query type
     	$uid_col = ( in_array( $gmwBpQuery->query_vars['type'], array( "alphabetical", 'distance' ) ) ) ? 'u.ID' : 'u.user_id';
     	
@@ -61,10 +83,13 @@ class GMW_FL_Search_Query extends GMW {
     	
     		//if fields entered but no users returned abort the query
     		if ( $xprofile_users['status'] == 'no_ids_found' ) {
+
     			$where = " AND 1 = 0 ";
+
     			//if users returned. add them to query
     		} elseif ( $xprofile_users['status'] == 'ids_found' ) {
-    			$where = $wpdb->prepare(" AND gmwlocations.member_id IN (" . str_repeat( "%d,", count( $xprofile_users['ids'] ) - 1 ) . "%d )", $xprofile_users['ids'] );
+
+    			$where = $wpdb->prepare(" AND {$uid_col} IN (" . str_repeat( "%d,", count( $xprofile_users['ids'] ) - 1 ) . "%d )", $xprofile_users['ids'] );
     		}
     	}
     	
@@ -99,14 +124,14 @@ class GMW_FL_Search_Query extends GMW {
     	$gmwBpQuery->uid_clauses['where'] 	  .= $having;
     	
     	//if order by distance
-    	if ( !empty($this->form['org_address'] ) && $gmwBpQuery->query_vars['type'] == 'distance' ) {
+    	if ( !empty( $this->form['org_address'] ) && $gmwBpQuery->query_vars['type'] == 'distance' ) {
     		$gmwBpQuery->uid_clauses['orderby'] = 'ORDER BY distance';
     	}
     	
     	//modify the clauses
     	$gmwBpQuery = apply_filters( 'gmw_fl_after_query_clauses', $gmwBpQuery, $this->form );
     	$gmwBpQuery = apply_filters( "gmw_fl_after_query_clauses_{$this->form['ID']}", $gmwBpQuery, $this->form );
-    	
+
         return $gmwBpQuery;
     }
 
@@ -124,13 +149,14 @@ class GMW_FL_Search_Query extends GMW {
     	    	 
     	if ( !empty($this->form['org_address'] ) ) {
     	
-    		$fields = $wpdb->prepare(", gmwlocations.lat, gmwlocations.long, gmwlocations.address, gmwlocations.formatted_address, gmwlocations.map_icon, ROUND( %d * acos( cos( radians( %s ) ) * cos( radians( gmwlocations.lat ) ) * cos( radians( gmwlocations.long ) - radians( %s ) ) + sin( radians( %s ) ) * sin( radians( gmwlocations.lat) ) ),1 ) AS distance", 
+    		$fields = $wpdb->prepare("{$this->db_fields}, 
+                    ROUND( %d * acos( cos( radians( %s ) ) * cos( radians( gmwlocations.lat ) ) * cos( radians( gmwlocations.long ) - radians( %s ) ) + sin( radians( %s ) ) * sin( radians( gmwlocations.lat) ) ),1 ) AS distance", 
         			$this->form['units_array']['radius'], $this->form['your_lat'], $this->form['your_lng'], $this->form['your_lat'] );
     	
     		$from = " INNER JOIN wppl_friends_locator gmwlocations ON ID = gmwlocations.member_id";
     	
     	} else {
-    		$fields = ", gmwlocations.lat, gmwlocations.long, gmwlocations.address, gmwlocations.formatted_address, gmwlocations.map_icon";
+    		$fields = $this->db_fields;
     		
     		$join = ( $this->show_non_located_users ) ? 'LEFT' : 'INNER';
     		$from = " {$join} JOIN wppl_friends_locator gmwlocations ON ID = gmwlocations.member_id";
