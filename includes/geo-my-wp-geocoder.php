@@ -9,12 +9,19 @@ if ( !defined( 'ABSPATH' ) )
  * @author Eyal Fitoussi
  * @author This function inspired by a script written by Pippin Williamson - Thank you
  */
-function gmw_geocoder( $address, $force_refresh = false ) {
+function gmw_geocoder( $raw_address, $force_refresh = false ) {
 
-    $address_hash = md5( $address );
+    $invalid_chars = array( " " => "+", "," => "", "?" => "", "&" => "", "=" => "" , "#" => "" );
+    $raw_address   = trim( strtolower( str_replace( array_keys( $invalid_chars ), array_values( $invalid_chars ), $raw_address ) ) );
+
+    if ( empty( $raw_address ) ) {
+        return false;
+    }
+
+    $address_hash = md5( $raw_address );
     $location     = get_transient( 'gmw_geocoded_'.$address_hash );
     
-    if ( $force_refresh || $location === false ) {
+    if ( $force_refresh == true || $location === false ) {
 
         global $gmw_options;
 
@@ -23,7 +30,7 @@ function gmw_geocoder( $address, $force_refresh = false ) {
             'protocol'  => is_ssl() ? 'https' : 'http',
             'url_base'  => '://maps.googleapis.com/maps/api/geocode/json?',
             'url_data'  => http_build_query( apply_filters( 'gmw_google_maps_api_geocoder_args', array(
-                    'address'   => urlencode( $address ),
+                    'address'   => $raw_address,
                     'key'       => gmw_get_option( 'general_settings', 'google_api', '' ),
                     'region'    => $gmw_options['general_settings']['country_code'],
                     'language'  => $gmw_options['general_settings']['language_code'],
