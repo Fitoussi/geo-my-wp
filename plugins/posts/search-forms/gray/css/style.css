@@ -141,13 +141,20 @@ div.gmw-pt-gray-form-wrapper .gmw-radius-slider-wrapper {
     text-align:center;
 }
 
+div.gmw-pt-gray-form-wrapper .gmw-radius-slider-wrapper label {
+    max-width: 52px;
+	text-align: left;
+	background: none;
+	border: 0px;
+}
+
 div.gmw-pt-gray-form-wrapper .gmw-radius-slider-wrapper input {
     max-width:60px;
     font-size:14px;
 }
 
 div.gmw-pt-gray-form-wrapper .gmw-radius-slider-wrapper .gmw-slider-range {
-	height: 1.0em;
+	height: 0.8em;
 	-moz-border-radius: 0px/*{cornerRadius}*/;
 	-webkit-border-radius: 0px/*{cornerRadius}*/;
 	border-radius: 0px/*{cornerRadius}*/;
