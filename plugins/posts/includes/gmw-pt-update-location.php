@@ -13,7 +13,7 @@
  *       'map_icon'          => false
  *  );
  */
-function gmw_pt_update_location( $args ) {
+function gmw_pt_update_location( $args, $force_refresh = false ) {
 
     $args = array_replace_recursive( array(
         'post_id'         => false,
@@ -43,7 +43,7 @@ function gmw_pt_update_location( $args ) {
     }
 
     //geocode the address
-    $geocoded_address = GEO_my_WP::geocoder( $address );
+    $geocoded_address = GEO_my_WP::geocoder( $address, $force_refresh );
 
     //if geocode failed delete the user's location
     if ( isset( $geocoded_address['error'] ) ) {
