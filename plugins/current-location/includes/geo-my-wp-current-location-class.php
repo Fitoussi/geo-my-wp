@@ -251,7 +251,7 @@ class GMW_Current_location {
 	 */
 	public function form_template() {
 
-		$display = ( empty( !$this->user_position['exists'] ) ) ? 'style="display:none"' : '';
+		$display = ( !empty( $this->user_position['exists'] ) ) ? 'style="display:none"' : '';
 
 		$output  = '';
 		$output .= "<div id=\"gmw-cl-form-wrapper-{$this->args['element_id']}\" class=\"gmw-cl-element gmw-cl-form-wrapper\">";
