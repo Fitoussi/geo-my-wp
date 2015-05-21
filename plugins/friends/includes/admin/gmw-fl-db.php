@@ -3,7 +3,7 @@ if ( !defined( 'ABSPATH' ) )
     exit;
 
 global $wpdb;
-$flTable = $wpdb->get_results("SHOW TABLES LIKE 'wppl_friends_locator'", ARRAY_A);
+$flTable = $wpdb->get_results( "SHOW TABLES LIKE 'wppl_friends_locator'", ARRAY_A );
 
 //create or update database
 if ( get_option("gmw_fl_db_version") == '' || get_option("gmw_fl_db_version") != GMW_FL_DB_VERSION || count( $flTable ) == 0 ) {
@@ -65,7 +65,7 @@ function gmw_fl_db_installation() {
 
 function gmw_fl_update_members_database_table_notice() {
     
-    if ( get_option( "gmw_fl_db_version" ) != '' && version_compare(  get_option( "gmw_fl_db_version" ) , '1.1', '==' ) ) {
+    if ( get_option( "gmw_fl_db_version" ) != '' && version_compare(  get_option( "gmw_fl_db_version" ) , '1.2.1', '<' ) ) {
     ?>
         <div class="error">
             <form method="post" action="">
@@ -101,14 +101,17 @@ function gmw_fl_update_members_database_table() {
     $dbTable = $wpdb->get_row( "SELECT * FROM wppl_friends_locator" );
     
     //Add column if not present.
-    if ( !isset( $dbTable->street_number ) ) {
+    if ( !isset( $dbTable->street_name ) ) {
         $wpdb->query( "ALTER TABLE wppl_friends_locator ADD COLUMN `street_name` varchar(128) NOT NULL AFTER `long`" );
-        $wpdb->query( "ALTER TABLE wppl_friends_locator ADD COLUMN `street_number` varchar(60) NOT NULL AFTER `long`" );
-        //update database version
-        update_option( "gmw_fl_db_version", GMW_FL_DB_VERSION );
-    } else {
-        update_option( "gmw_fl_db_version", GMW_FL_DB_VERSION );
     }
+    if ( !isset( $dbTable->street_number ) ) {
+        $wpdb->query( "ALTER TABLE wppl_friends_locator ADD COLUMN `street_number` varchar(60) NOT NULL AFTER `long`" );
+    }
+    if ( !isset( $dbTable->feature ) ) {
+        $wpdb->query( "ALTER TABLE wppl_friends_locator ADD COLUMN `feature` tinyint NOT NULL default '0' AFTER `member_id`" );
+    }
+
+    update_option( "gmw_fl_db_version", GMW_FL_DB_VERSION );
 
     wp_safe_redirect( admin_url( 'admin.php?page=gmw-add-ons&gmw_notice=members_db_table_updated&gmw_notice_status=updated' ) );
     exit;
@@ -123,7 +126,7 @@ function gmw_fl_db_update() {
     global $wpdb;
 
 
-    if ( get_option("gmw_fl_db_version") != '' && version_compare( get_option( "gmw_fl_db_version" ), '1.0', '==' ) ) {
+    if ( get_option("gmw_fl_db_version") == '' || version_compare( get_option( "gmw_fl_db_version" ), '1.0', '<' ) ) {
         
         /*
          * run update
@@ -169,11 +172,10 @@ function gmw_fl_db_update() {
                     </p>
                 </div>
                 <?php
-
             }
 
             add_action('admin_notices', 'gmw_fl_update_notice_completed');
-            update_option("gmw_fl_db_version", GMW_FL_DB_VERSION);
+            update_option("gmw_fl_db_version", '1.0' );
 
             return;
         }
