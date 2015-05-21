@@ -228,7 +228,7 @@ function gmw_get_search_form( $gmw, $folder ) {
 		$search_form = gmw_get_search_form( $gmw, $folder );
 
 		if ( !wp_style_is( $search_form['stylesheet_handle'], 'enqueued' ) ) {
-			wp_enqueue_style( $search_form['stylesheet_handle'], $search_form['stylesheet_url'] );
+			wp_enqueue_style( $search_form['stylesheet_handle'], $search_form['stylesheet_url'], array(), GMW_VERSION );
 		}
 
 		do_action( "gmw_before_search_form", $gmw );
@@ -338,7 +338,7 @@ function gmw_get_form_submit_fields( $gmw, $subValue ) {
  */
 function gmw_get_search_form_address_field( $gmw, $id=false, $class='') {
 
-    $am 		 = (  isset( $gmw['search_form']['address_field']['mandatory'] ) ) ? 'mandatory' : '';
+    $am 		 = ( isset( $gmw['search_form']['address_field']['mandatory'] ) ) ? 'mandatory' : '';
     $title 		 = ( !empty( $gmw['search_form']['address_field']['title'] ) ) ? $gmw['search_form']['address_field']['title'] : '';
 	$value		 = ( !empty( $_GET['gmw_address'] ) ) ? esc_attr( sanitize_text_field( stripslashes( implode( ' ', $_GET['gmw_address'] ) ) ) ) : ''; 
 	$placeholder = ( isset( $gmw['search_form']['address_field']['within'] ) ) ? $title : '';
@@ -369,7 +369,7 @@ function gmw_get_search_form_address_field( $gmw, $id=false, $class='') {
     	GEO_my_WP::google_places_address_autocomplete( array( 'gmw-address-'.$gmw['ID'] ) );
     }
     
-    return apply_filters( 'gmw_search_form_address_field', $output, $gmw, $id, $class );
+    return apply_filters( 'gmw_search_form_address_field', $output, $gmw, false, $class );
 }
 
 	function gmw_search_form_address_field( $gmw, $id=false, $class='' ) {

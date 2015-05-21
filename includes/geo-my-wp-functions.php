@@ -169,16 +169,16 @@ function gmw_enqueue_form_styles( $args ) {
 
 			//Load custom search form and css from child/theme folder
 			if ( strpos( $sForm, 'custom_' ) !== false ) {
-				$sForm  						  = str_replace( 'custom_', '', $sForm );
-				$search_form['stylesheet_handle'] = "gmw-{$form['ID']}-{$form['prefix']}-search-form-{$sForm}";
-				$search_form['stylesheet_url']	  = get_stylesheet_directory_uri()."/geo-my-wp/{$folders[$form['prefix']]['custom']}{$sForm}/css/style.css";
+				$sForm  		   = str_replace( 'custom_', '', $sForm );
+				$stylesheet_handle = "gmw-{$form['ID']}-{$form['prefix']}-search-form-{$sForm}";
+				$stylesheet_url	   = get_stylesheet_directory_uri()."/geo-my-wp/{$folders[$form['prefix']]['custom']}{$sForm}/css/style.css";
 			} else {
-				$search_form['stylesheet_handle'] = "gmw-{$form['ID']}-{$form['prefix']}-search-form-{$sForm}";
-				$search_form['stylesheet_url'] 	  = $folders[$form['prefix']]['url'].$sForm.'/css/style.css';
+				$stylesheet_handle = "gmw-{$form['ID']}-{$form['prefix']}-search-form-{$sForm}";
+				$stylesheet_url    = $folders[$form['prefix']]['url'].$sForm.'/css/style.css';
 			}
 
-			if ( !wp_style_is( $search_form['stylesheet_handle'], 'enqueued' ) ) {
-				wp_enqueue_style( $search_form['stylesheet_handle'], $search_form['stylesheet_url'], array(), GMW_VERSION );
+			if ( !wp_style_is( $stylesheet_handle, 'enqueued' ) ) {
+				wp_enqueue_style( $stylesheet_handle, $stylesheet_url, array(), GMW_VERSION );
 			}
 
 			$sResults = $form['search_results']['results_template'];	
@@ -198,13 +198,13 @@ function gmw_enqueue_form_styles( $args ) {
 			//Load custom search form and css from child/theme folder
 			if ( strpos( $sResults, 'custom_' ) !== false ) {
 			
-				$sResults  		= str_replace( 'custom_', '', $sResults );
-				$style_title 	= "gmw-{$form['ID']}-{$form['prefix']}-search-results-{$sResults}";
-				$style_url 	 	= get_stylesheet_directory_uri()."/geo-my-wp/{$rFolders[$form['prefix']]['custom']}{$sResults}/css/style.css";
+				$sResults  	 = str_replace( 'custom_', '', $sResults );
+				$style_title = "gmw-{$form['ID']}-{$form['prefix']}-search-results-{$sResults}";
+				$style_url 	 = get_stylesheet_directory_uri()."/geo-my-wp/{$rFolders[$form['prefix']]['custom']}{$sResults}/css/style.css";
 			
 			} else {
 				$style_title = "gmw-{$form['ID']}-{$form['prefix']}-search-results-{$sResults}";
-				$style_url 	  = $rFolders[$form['prefix']]['url'].$sResults.'/css/style.css';
+				$style_url 	 = $rFolders[$form['prefix']]['url'].$sResults.'/css/style.css';
 			}
 			
 			if ( !wp_style_is( $style_title, 'enqueued' ) ) {
