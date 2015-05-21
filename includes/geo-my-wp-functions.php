@@ -44,7 +44,7 @@ function gmw_get_options_group( $group = 'gmw_options' ) {
  * @return array  specific form if form ID pass otherwise all forms
  */
 function gmw_get_form( $formID = false ) {
-	$gmw_forms = get_options( 'gmw_forms' );
+	global $gmw_forms;
 	return ( !empty( $formID ) ) ? $gmw_forms[$formID] : $gmw_forms;
 }
 
@@ -141,4 +141,76 @@ function gmw_new_map_element( $args, $return = false ) {
 		return $gmwMapElements[$mapID];
 }
 
+function gmw_enqueue_form_styles( $args ) {
+
+	global $gmw_forms;
+
+	$page_id = get_the_ID();
+
+	foreach ( $args as $key => $value ) {
+		
+		if ( empty( $value ) || ( is_array( $value ) && in_array( $page_id, $value ) ) ) {
+			
+			$form  = $gmw_forms[$key];	
+			$sForm = $form['search_form']['form_template'];
+
+			$folders = apply_filters( 'gmw_search_forms_folder', array(
+				'pt'  => array(
+						'url'	 => GMW_URL.'/plugins/posts/search-forms/',
+						'path'	 => GMW_PATH.'/plugins/posts/search-forms/',
+						'custom' => 'posts/search-forms/'
+				),		
+				'fl'  => array(
+						'url'	 => GMW_URL.'/plugins/friends/search-forms/',
+						'path'	 => GMW_PATH.'/plugins/friends/search-forms/',
+						'custom' => 'friends/search-forms/'
+				),
+			), $form );
+
+			//Load custom search form and css from child/theme folder
+			if ( strpos( $sForm, 'custom_' ) !== false ) {
+				$sForm  						  = str_replace( 'custom_', '', $sForm );
+				$search_form['stylesheet_handle'] = "gmw-{$form['ID']}-{$form['prefix']}-search-form-{$sForm}";
+				$search_form['stylesheet_url']	  = get_stylesheet_directory_uri()."/geo-my-wp/{$folders[$form['prefix']]['custom']}{$sForm}/css/style.css";
+			} else {
+				$search_form['stylesheet_handle'] = "gmw-{$form['ID']}-{$form['prefix']}-search-form-{$sForm}";
+				$search_form['stylesheet_url'] 	  = $folders[$form['prefix']]['url'].$sForm.'/css/style.css';
+			}
+
+			if ( !wp_style_is( $search_form['stylesheet_handle'], 'enqueued' ) ) {
+				wp_enqueue_style( $search_form['stylesheet_handle'], $search_form['stylesheet_url'], array(), GMW_VERSION );
+			}
+
+			$sResults = $form['search_results']['results_template'];	
+			$rFolders  = apply_filters( 'gmw_search_results_folder', array(
+				'pt'  => array(
+						'url'	 => GMW_URL.'/plugins/posts/search-results/',
+						'path'	 => GMW_PATH.'/plugins/posts/search-results/',
+						'custom' => 'posts/search-results/'
+				),		
+				'fl'  => array(
+						'url'	 => GMW_URL.'/plugins/friends/search-results/',
+						'path'	 => GMW_PATH.'/plugins/friends/search-results/',
+						'custom' => 'friends/search-results/'
+				),
+			), $form );
+			
+			//Load custom search form and css from child/theme folder
+			if ( strpos( $sResults, 'custom_' ) !== false ) {
+			
+				$sResults  		= str_replace( 'custom_', '', $sResults );
+				$style_title 	= "gmw-{$form['ID']}-{$form['prefix']}-search-results-{$sResults}";
+				$style_url 	 	= get_stylesheet_directory_uri()."/geo-my-wp/{$rFolders[$form['prefix']]['custom']}{$sResults}/css/style.css";
+			
+			} else {
+				$style_title = "gmw-{$form['ID']}-{$form['prefix']}-search-results-{$sResults}";
+				$style_url 	  = $rFolders[$form['prefix']]['url'].$sResults.'/css/style.css';
+			}
+			
+			if ( !wp_style_is( $style_title, 'enqueued' ) ) {
+				wp_enqueue_style( $style_title, $style_url, array(), GMW_VERSION );
+			}
+		}
+	}
+}
 ?>
