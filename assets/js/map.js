@@ -16,7 +16,7 @@ function gmwMapInit( mapObject ) {
 	//initiate map options
 	mapObject['mapOptions']['zoom'] 	 = ( mapObject['zoomLevel'] == 'auto' ) ? 13 : parseInt( mapObject['zoomLevel'] );
 	mapObject['mapOptions']['center'] 	 = new google.maps.LatLng( mapObject['userPosition']['lat'], mapObject['userPosition']['lng'] );
-	mapObject['mapOptions']['mapTypeId'] = google.maps.MapTypeId[mapObject.mapTypeId];
+	mapObject['mapOptions']['mapTypeId'] = google.maps.MapTypeId[mapObject['mapOptions']['mapTypeId']];
 	mapObject['bounds'] 				 = new google.maps.LatLngBounds();
 		
 	//merge custom map options if exsits
@@ -37,9 +37,13 @@ function gmwMapInit( mapObject ) {
 	for ( i = 0; i < mapObject['locations'].length; i++ ) {  
 		
 		//make sure location has coordinates to prevent JS error
-		if ( mapObject['locations'][i]['lat'] == undefined || mapObject['locations'][i]['long'] == undefined  )
+		if ( mapObject['locations'][i]['lat'] == undefined || ( mapObject['locations'][i]['long'] == undefined && mapObject['locations'][i]['lng'] == undefined ) )
 			continue;
 		
+		if ( mapObject['locations'][i]['long'] == undefined ) {
+			mapObject['locations'][i]['long'] = mapObject['locations'][i]['lng'];
+		}
+
 		var gmwLocation = new google.maps.LatLng( mapObject['locations'][i]['lat'], mapObject['locations'][i]['long'] );
 	
 		//offset markers with same location
@@ -77,8 +81,9 @@ function gmwMapInit( mapObject ) {
 			mapObject['markers'][i].setMap(mapObject['map'] );			
 		}
 		
-		if ( mapObject['locations'][i]['info_window_content'] != false ) {
+		if ( mapObject['locations'][i]['info_window_content'] != false && mapObject['locations'][i]['info_window_content'] != undefined ) {
 			
+			alert( mapObject['locations'][i]['info_window_content'])
 			//create the info-window object
 			google.maps.event.addListener(mapObject['markers'][i], 'click', function() {
 				
