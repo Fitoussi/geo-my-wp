@@ -3,7 +3,7 @@
 Plugin Name: GEO my WP
 Plugin URI: http://www.geomywp.com
 Description: Assign geolocation to post types and BuddyPress members. Create an advance proximity search forms to search for locations based on address, radius, units and more.
-Version: 2.6.1-beta1
+Version: 2.6.1-beta3
 Author: Eyal Fitoussi
 Author URI: http://www.geomywp.com
 Requires at least: 4.0
@@ -57,8 +57,9 @@ class GEO_my_WP {
 			self::$instance->includes();
 			self::$instance->actions();
 			self::$instance->load_textdomain();
-			self::$instance->core_addons();
+			self::$instance->core_addons();	
 		}
+
 		return self::$instance;
 	}
 
@@ -99,28 +100,30 @@ class GEO_my_WP {
 	 * 
 	 */
 	public function includes() {
-		global $gmw_options;
+		global $gmw_options, $gmw_forms, $gmw_addons;
 
 		$gmw_options = get_option( 'gmw_options' );
+		$gmw_forms   = get_option( 'gmw_forms' );
+		$gmw_addons  = get_option( 'gmw_addons' );
 
 		//include deprecated functions. Should be removed in the future
 		include( 'includes/geo-my-wp-functions.php' );
 		include( 'includes/geo-my-wp-user-update-location.php' );
+		//include( 'includes/geo-my-wp-cache-helper.php' );
 
-		//some default options if not exists
-		$gmw_options['general_settings']['js_geocode']    	  = gmw_get_option( 'general_settings', 'js_geocode', false );
-		$gmw_options['general_settings']['auto_locate']   	  = gmw_get_option( 'general_settings', 'auto_locate', false );
-		$gmw_options['general_settings']['country_code']  	  = gmw_get_option( 'general_settings', 'country_code', 'US' );
-		$gmw_options['general_settings']['language_code'] 	  = gmw_get_option( 'general_settings', 'language_code', 'EN' );
-
-		include( 'includes/geo-my-wp-deprecated-functions.php' );
+		//some default options if not exist
+		$gmw_options['general_settings']['js_geocode']    = gmw_get_option( 'general_settings', 'js_geocode', false   );
+		$gmw_options['general_settings']['auto_locate']   = gmw_get_option( 'general_settings', 'auto_locate', false  );
+		$gmw_options['general_settings']['country_code']  = gmw_get_option( 'general_settings', 'country_code', 'US'  );
+		$gmw_options['general_settings']['language_code'] = gmw_get_option( 'general_settings', 'language_code', 'EN' );
 
 		//include admin files
 		if ( is_admin() && !defined( 'DOING_AJAX' ) ) {
-			include( GMW_PATH . '/includes/admin/geo-my-wp-admin.php' );
-			include( GMW_PATH . '/includes/admin/geo-my-wp-updater.php' );
-			include( GMW_PATH . '/includes/admin/geo-my-wp-license-handler.php' );   	
+			include( GMW_PATH . '/includes/admin/geo-my-wp-admin.php' ); 	
 		}
+
+		//should be removed at some point.
+		include( 'includes/geo-my-wp-deprecated-functions.php' );
 
 		//include files in front-end
 		if ( !is_admin() || defined( 'DOING_AJAX' ) ) {
@@ -132,6 +135,22 @@ class GEO_my_WP {
 
 		//include widgets
 		include( 'includes/geo-my-wp-widgets.php' );
+	}
+
+	/**
+	 * Verify if add-on is active
+	 * @param  [array] $addon
+	 * @return [boolean]      
+	 */
+	public static function gmw_check_addon( $addon ) {
+		
+		global $gmw_addons;
+
+		if ( ( isset( $gmw_addons[$addon] ) && $gmw_addons[$addon] == 'active' ) && ( !isset( $_POST['gmw_premium_license'] ) ) ) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -217,22 +236,6 @@ class GEO_my_WP {
 	} */
 
 	/**
-	 * Verify if add-on is active
-	 * @param  [array] $addon
-	 * @return [boolean]      
-	 */
-	public static function gmw_check_addon( $addon ) {
-
-		$addons = get_option( 'gmw_addons' );
-
-		if ( ( isset( $addons[$addon] ) && $addons[$addon] == 'active' ) && ( !isset( $_POST['gmw_premium_license'] ) ) ) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
 	 * Localization
 	 *
 	 * @access public
@@ -279,6 +282,14 @@ class GEO_my_WP {
 			wp_enqueue_style( 'font-awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css', array(), GMW_VERSION );
 		}
 
+		if ( !wp_script_is( 'chosen', 'registered' ) ) {
+			wp_register_script( 'chosen', GMW_URL . '/assets/js/chosen.jquery.min.js', array( 'jquery' ), GMW_VERSION, true );
+		}
+
+		if ( !wp_style_is( 'chosen', 'registered' ) ) {
+			wp_register_style( 'chosen',  GMW_URL . '/assets/css/chosen.min.css', array(), GMW_VERSION );
+		}
+
 		if ( !is_admin() ) {
 
 			//enqueue google maps api
@@ -314,15 +325,9 @@ class GEO_my_WP {
 			if ( !class_exists( 'GMW_Current_Location' ) ) {
 				wp_register_script( 'gmw-cl-map', GMW_URL . '/assets/js/gmw-cl.min.js', array('jquery', 'google-maps' ), GMW_VERSION, true );
 			}
-			
-			if ( !wp_script_is( 'chosen', 'registered' ) ) {
-				wp_register_script( 'chosen', GMW_URL . '/assets/js/chosen.jquery.min.js', array( 'jquery' ), GMW_VERSION, true );
-			}
+					
+			wp_register_style( 'ui-comp', GMW_URL .'/assets/css/ui-comp.min.css' );
 
-			if ( !wp_style_is( 'chosen', 'registered' ) ) {
-				wp_register_style( 'chosen',  GMW_URL . '/assets/css/chosen.min.css', array(), GMW_VERSION );
-			}
-			
 			//Google Maps Infobox - only register, to be used with premium features
 			if ( !wp_script_is( 'gmw-infobox', 'registered' ) ) {
 				
@@ -344,6 +349,13 @@ class GEO_my_WP {
 			//Marker spiderfire library - only register, to be used with premium features
 			if ( !wp_script_is( 'gmw-marker-spiderfier', 'registered' ) ) {
 				wp_register_script( 'gmw-marker-spiderfier', GMW_URL . '/assets/js/marker-spiderfier.min.js', array( 'jquery' ), GMW_VERSION, true );
+			}
+
+			$form_styles = apply_filters( 'gmw_load_form_styles_early', array() );
+
+			//run enqueue forms loader function if array is not empty
+			if ( !empty( $form_styles ) ) {
+				gmw_enqueue_form_styles( $form_styles  );
 			}
 		}  
 	}
@@ -392,11 +404,42 @@ class GEO_my_WP {
 		//include gmw map script and pass gloabl map elements to it using localize
 		global $gmwMapElements, $gmwAutocompleteElements;
 		
+		//check if any map exist in global
 		if ( !empty( $gmwMapElements ) ) {
 		
-			//modify the maps global before dipsplaying
+			//modify the maps global before displaying
 			$gmwMapElements = apply_filters( 'gmw_map_elements', $gmwMapElements );
 			
+			do_action( "gmw_before_map_triggered", $gmwMapElements );
+
+			foreach ( $gmwMapElements as $mapElement ) {
+
+				//Load marker clusterer library - to be used with premium features
+				if ( $mapElement['markersDisplay'] == 'markers_clusterer' && !wp_script_is( 'gmw-marker-clusterer', 'enqueued' )  ) {	
+					wp_enqueue_script( 'gmw-marker-clusterer' );
+				}
+
+				//load marker clusterer library - to be used with premium features
+				if ( $mapElement['markersDisplay'] == 'markers_spiderfier' && !wp_script_is( 'gmw-marker-spiderfier', 'enqueued' )  ) {	
+					wp_enqueue_script( 'gmw-marker-spiderfier' );
+				}
+
+				//load infobox js file if needed
+				if ( $mapElement['infoWindowType'] == 'infobox' && !wp_script_is( 'gmw-infobox', 'enqueued' ) ) {
+					wp_enqueue_script( 'gmw-infobox' );
+				}
+
+				//load live directions js file
+				if ( $mapElement['infoWindowType'] == 'popup' && !wp_script_is( 'gmw-get-directions', 'enqueued' ) ) {
+					wp_enqueue_script( 'gmw-get-directions' );
+				}
+
+				//load jQuery ui draggable for popup info-windows
+				if ( $mapElement['draggableWindow'] == true && !wp_script_is( 'jquery-ui-draggable', 'enqueued' ) ) {
+					wp_enqueue_script( 'jquery-ui-draggable' );
+				}
+			}
+
 			//pass the mapObjects to JS
 			wp_localize_script( 'gmw-map', 'gmwMapObjects', $gmwMapElements );
 			
