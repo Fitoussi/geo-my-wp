@@ -16,13 +16,11 @@
 function gmw_update_user_location( $args ) {
 
 	//default args
-	$defaults = array(
+	$args = array_replace_recursive( array(
 			'user_id'         => false,
 			'address'         => false,
 			'map_icon'        => '_default.png',
-	);
-
-	$args = wp_parse_args( $args, $defaults );
+	), $args );
 
 	if ( empty( $args['user_id'] ) || empty( $args['address'] ) )
 		return;
