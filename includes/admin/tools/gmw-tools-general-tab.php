@@ -18,7 +18,7 @@ if ( !defined( 'ABSPATH' ) )
  */
 function gmw_output_general_tab() {
 	?>
-	<div id=gmw-general-tab-content" class="gmw-tools-tab-content">
+	<div id="gmw-general-tab-content" class="gmw-tools-tab-content">
 	
 		<?php do_action( 'gmw_general_tab_top' ); ?>
 					
