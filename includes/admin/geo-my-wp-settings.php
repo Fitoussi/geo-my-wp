@@ -57,7 +57,7 @@ class GMW_Settings {
     									'std'         => '',
     									'placeholder' => '',
     									'label'       => __( 'Google API Language', 'GMW' ),
-    									'desc'        => __( 'Set the language to be used with Google Places address auto-complete and with Google Maps API. The language codes can be found','GMW'). '<a href="https://spreadsheets.google.com/spreadsheet/pub?key=0Ah0xU81penP1cDlwZHdzYWkyaERNc0xrWHNvTTA1S1E&gid=1" target="_blank"> '.__('here', 'GJM' ) .'</a>',
+    									'desc'        => __( 'Set the language to be used with Google Places address auto-complete and with Google Maps API. The language codes can be found','GMW'). '<a href="https://spreadsheets.google.com/spreadsheet/pub?key=0Ah0xU81penP1cDlwZHdzYWkyaERNc0xrWHNvTTA1S1E&gid=1" target="_blank"> '.__('here', 'GMW' ) .'</a>',
     									'attributes'  => array( 'size' => '5' )
     							),
     							array(
