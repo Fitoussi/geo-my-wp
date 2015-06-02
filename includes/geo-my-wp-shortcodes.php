@@ -30,14 +30,18 @@ function gmw_shortcode( $atts ) {
 	if ( empty( $formId ) || !in_array( $element, array( 'search_form', 'map', 'search_results', 'form' ) ) )
 		return;
 
-	//abort if its results page shortcode and form is not submittted
-	if ( $formId == 'results' && ( empty( $_GET['action'] ) || $_GET['action'] != "gmw_post" || empty( $_GET['gmw_form'] ) ) ) 
-		return;
+	$gmw_prefix = 'gmw_';
+	$gmw_prefix = apply_filters( 'gmw_form_url_prefix', $gmw_prefix, $atts, $element );
 
 	//if this is results page we get the formId from URL
 	if ( $formId == 'results' ) {
-		$formId  = absint( $_GET['gmw_form'] );
+
+		if ( empty( $_GET['action'] ) || $_GET['action'] != $gmw_prefix.'post' || empty( $_GET[$gmw_prefix.'form'] ) )
+			return;
+
+		$formId  = absint( $_GET[$gmw_prefix.'form'] );
 		$element = 'results_page';
+
 	} else {
 	 	$formId = absint( $atts[$element] );
 	}
@@ -58,6 +62,7 @@ function gmw_shortcode( $atts ) {
 		
 	$form['element_triggered'] = $element;
 	$form['params'] 		   = $atts;
+	$form['url_px']			   = $gmw_prefix;
 	$form_output  			   = new GMW_Form_Init( $form );
 	
 	ob_start();
