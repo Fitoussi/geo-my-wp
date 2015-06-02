@@ -176,8 +176,8 @@ class GMW_PT_Search_Query extends GMW {
     	//get the post types
         if ( $this->form['page_load_results_trigger'] ) {    	
         	$post_types = ( !empty( $this->form['page_load_results']['post_types'] ) ) ? $this->form['page_load_results']['post_types'] : array( 'post' );	
-        } elseif ( !empty( $_GET['gmw_post'] ) ) {    	
-        	$post_types = gmw_multiexplode( array( ' ', '+' ), $_GET['gmw_post'] );       	
+        } elseif ( !empty( $_GET[$this->form['url_px'].'post'] ) ) {    	
+        	$post_types = gmw_multiexplode( array( ' ', '+' ), $_GET[$this->form['url_px'].'post'] );       	
         } else {     	
         	$post_types = ( !empty( $this->form['search_form']['post_types'] ) ) ? $this->form['search_form']['post_types'] : array( 'post' );
         }
@@ -187,60 +187,57 @@ class GMW_PT_Search_Query extends GMW {
         $this->form['advanced_query'] = apply_filters( "gmw_pt_advanced_query_{$this->form['ID']}", $this->form['advanced_query'], $this->form );
                 
         if ( $this->form['advanced_query'] ) {
-        
-        	$tax_args  = false;
-	        $meta_args = false;
-	        
-	        //query args
-	        $this->form['query_args'] = apply_filters( 'gmw_pt_search_query_args', array(
-	        		'post_type'           => $post_types,
-	        		'post_status'         => array( 'publish' ),
-	        		'tax_query'           => apply_filters( 'gmw_pt_tax_query', $tax_args, $this->form ),
-	        		'posts_per_page'      => $this->form['get_per_page'],
-	        		'paged'               => $this->form['paged'],
-	        		'meta_query'          => apply_filters( 'gmw_pt_meta_query', $meta_args, $this->form ),
-	        		'ignore_sticky_posts' => 1,
-	        		'orderby'			  => 'distance'
-	        ), $this->form );
-	
-	        //Modify the form before the search query
-	        $this->form = apply_filters( 'gmw_pt_form_before_posts_query', $this->form, $this->settings );
-	        $this->form = apply_filters( "gmw_pt_form_before_posts_query_{$this->form['ID']}", $this->form, $this->settings );
-	
-	        //add filters to wp_query to do radius calculation and get locations detail into results
-	        add_filter( 'posts_clauses', array( $this, 'query_clauses' ) );
-	
-	        /* caching system for the future 
-	          	         
-	        $query_args_hash_array = array(
-	        		'query_args'    => $this->form['query_args'],
-	        		'units'			=> $this->form['units_array']['units'],
-	        		'prefix'		=> $this->form['prefix'],
-	        		'keywods'		=> $_GET['gmw_keywords'],
-	        		'distance'		=> $_GET['gmw_distance'],
-	        		'lat'		 	=> $this->form['your_lat'],    
-	        		'lng'		 	=> $this->form['your_lng'],
-	        		'address'		=> $this->form['org_address']
-	        );
-	        	        
-	        $query_args_hash = 'gmw-' . md5( json_encode( $query_args_hash_array ) . GEO_my_WP_Cache_Helper::get_transient_version( 'get_gmw_results' ) );
-	        	        
-	      	if ( false === ( $gmw_query = get_transient( $query_args_hash ) ) ) {
-	        	
-	        	echo 'do_query';
-	        	
-	        	$gmw_query = new WP_Query(  $query_args_hash_array );
-	        
-	        	set_transient( $query_args_hash, $gmw_query, DAY_IN_SECONDS * 30 );
-	        }
-	        */
-	        
-	        /* posts query */
-	        $gmw_query = new WP_Query( $this->form['query_args'] );
-	
-	        /* remove filter */
-	        remove_filter( 'posts_clauses', array( $this, 'query_clauses' ) );
-        
+            
+            /*
+            
+            //some results caching for the future
+            
+            $url_string = $_GET;
+            $url_string['paged'] = $this->form['paged'];
+
+            $query_args_hash = 'gmw-' . md5( json_encode( $url_string ) . GEO_my_WP_Cache_Helper::get_transient_version( 'gmw-pt-search-results' ) );
+                    
+            echo $query_args_hash;
+            */
+            //if ( false === ( $gmw_query = get_transient( $query_args_hash ) ) ) {
+            
+            if ( 1 == 1 ) {
+
+                //echo 'do_query';
+                
+            	$tax_args  = false;
+    	        $meta_args = false;
+    	        
+    	        //query args
+    	        $this->form['query_args'] = apply_filters( 'gmw_pt_search_query_args', array(
+    	        		'post_type'           => $post_types,
+    	        		'post_status'         => array( 'publish' ),
+    	        		'tax_query'           => apply_filters( 'gmw_pt_tax_query', $tax_args, $this->form ),
+    	        		'posts_per_page'      => $this->form['get_per_page'],
+    	        		'paged'               => $this->form['paged'],
+    	        		'meta_query'          => apply_filters( 'gmw_pt_meta_query', $meta_args, $this->form ),
+    	        		'ignore_sticky_posts' => 1,
+    	        		'orderby'			  => 'distance'
+    	        ), $this->form );
+    	
+    	        //Modify the form before the search query
+    	        $this->form = apply_filters( 'gmw_pt_form_before_posts_query', $this->form, $this->settings );
+    	        $this->form = apply_filters( "gmw_pt_form_before_posts_query_{$this->form['ID']}", $this->form, $this->settings );
+    	
+    	        //add filters to wp_query to do radius calculation and get locations detail into results
+    	        add_filter( 'posts_clauses', array( $this, 'query_clauses' ) );
+    	
+    	        /* posts query */
+    	        $gmw_query = new WP_Query( $this->form['query_args'] );
+    
+                //set new query in transient - for future caching        
+                //set_transient( $query_args_hash, $gmw_query, DAY_IN_SECONDS * 30 );
+    	
+    	        /* remove filter */
+    	        remove_filter( 'posts_clauses', array( $this, 'query_clauses' ) );
+            
+            }
+
 	        $this->form['results'] 	     = $gmw_query->posts;
 	        $this->form['results_count'] = count( $gmw_query->posts );
 	        $this->form['total_results'] = $gmw_query->found_posts;
