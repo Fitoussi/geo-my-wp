@@ -10,7 +10,7 @@ function gmw_pt_form_get_post_types_dropdown( $gmw, $title, $class, $all_label )
 		$gmw['search_form']['post_types'] = array( 'post' );
 	
     if ( count( $gmw['search_form']['post_types'] ) == 1 ) { 	
-    	$output = '<input type="hidden" id="gmw-single-post-type-' . $gmw['ID'] . '" class="gmw-single-post-type gmw-single-post-type-' . $gmw['ID'] . ' ' . $class . '" name="gmw_post" value="'.implode( ' ', $gmw['search_form']['post_types'] ).'" />';
+    	$output = '<input type="hidden" id="gmw-single-post-type-' . $gmw['ID'] . '" class="gmw-single-post-type gmw-single-post-type-' . $gmw['ID'] . ' ' . $class . '" name="'.$gmw['url_px'].'post" value="'.implode( ' ', $gmw['search_form']['post_types'] ).'" />';
         return apply_filters( 'gmw_form_single_post_types', $output, $gmw, $title, $class, $all_label );
     }
     
@@ -25,12 +25,12 @@ function gmw_pt_form_get_post_types_dropdown( $gmw, $title, $class, $all_label )
     	$output .= '<ul class="post-types-checkboxes">';
 		foreach ( $gmw['search_form']['post_types'] as $post_type ) {
 		
-			if ( isset( $_GET['gmw_post'] ) && $_GET['gmw_post'] == $post_type )
+			if ( isset( $_GET[$gmw['url_px'].'post'] ) && $_GET[$gmw['url_px'].'post'] == $post_type )
 				$pti_post = 'checked="checked"';
 			else
 				$pti_post = "";
 			$output .= '<li id="gmw-'.$gmw['ID'].'-'.$post_type.'-post-type-cb-wrapper" class="post-type-checkbox-wrapper pt-'.$post_type.'">';
-			$output .= '<input type="checkbox" name="gmw_post[]" id="gmw-'.$gmw['ID'].'-'.$post_type.'-post-type-cb" class="post-type-checkbox pt-'.$post_type.'" value="'.$post_type.'" '.$pti_post.' checked="checked">';
+			$output .= '<input type="checkbox" name="'.$gmw['url_px'].'post[]" id="gmw-'.$gmw['ID'].'-'.$post_type.'-post-type-cb" class="post-type-checkbox pt-'.$post_type.'" value="'.$post_type.'" '.$pti_post.' checked="checked">';
 			$output .= '<label for="gmw-'.$gmw['ID'].'-'.$post_type.'-post-type-cb">'.get_post_type_object( $post_type )->labels->name.'</label></li>';
 		
 		}
@@ -41,12 +41,12 @@ function gmw_pt_form_get_post_types_dropdown( $gmw, $title, $class, $all_label )
 			$output .= '<label for="gmw-posts-dropdown-'.$gmw['ID'].'">'.$title.'</label>';
 		}
 		
-    	$output .= '<select name="gmw_post" id="gmw-posts-dropdown-' . $gmw['ID'] . '" class="gmw-posts-dropdown gmw-posts-dropdown-'.$gmw['ID'].' '.$class.'">';
+    	$output .= '<select name="'.$gmw['url_px'].'post" id="gmw-posts-dropdown-' . $gmw['ID'] . '" class="gmw-posts-dropdown gmw-posts-dropdown-'.$gmw['ID'].' '.$class.'">';
     	$output .= '<option value="'.implode( ' ', $gmw['search_form']['post_types'] ).'">'.$all_label.'</option>';
 
 	    foreach ( $gmw['search_form']['post_types'] as $post_type ) {
 	
-	        $pti_post = ( isset( $_GET['gmw_post'] ) && $_GET['gmw_post'] == $post_type ) ? 'selected="selected"' : '';
+	        $pti_post = ( isset( $_GET[$gmw['url_px'].'post'] ) && $_GET[$gmw['url_px'].'post'] == $post_type ) ? 'selected="selected"' : '';
 
 	        $output .= '<option value="'.$post_type.'" '.$pti_post.'>'.get_post_type_object( $post_type )->labels->name.'</option>';
 	
@@ -157,7 +157,7 @@ function gmw_pt_query_taxonomies( $tax_args, $gmw ) {
     if ( !isset( $gmw['search_form']['taxonomies'] ) || empty( $gmw['search_form']['taxonomies'] ) )
         return $tax_args;
 
-    $ptc = ( isset( $_GET['gmw_post'] ) ) ? count( explode( " ", $_GET['gmw_post'] ) ) : count( $gmw['search_form']['post_types'] );
+    $ptc = ( isset( $_GET[$gmw['url_px'].'post'] ) ) ? count( explode( " ", $_GET[$gmw['url_px'].'post'] ) ) : count( $gmw['search_form']['post_types'] );
 
     if ( isset( $ptc ) && $ptc > 1 )
         return $tax_args;
