@@ -484,6 +484,14 @@ function gmfl_get_directions( $member, $gmw, $title ) {
 }
 
 /**
+ * Deprecated - for older versions
+ */
+function gmw_ps_pt_read_more_link( $post, $label, $class ) {
+	_deprecated_function( 'gmfl_get_directions', '2.5', 'gmw_get_excerpt' );
+	return;
+}
+
+/**
  * Deprecated - User's current location class
  *
  * @version 1.0
