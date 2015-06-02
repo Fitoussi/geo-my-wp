@@ -7,6 +7,10 @@ if (!defined('ABSPATH'))
  */
 class GMW_Admin {
 
+	public $required_versions = array(
+		'premium_settings' => '1.6'
+	);
+
 	/**
 	 * __construct function.
 	 *
@@ -38,6 +42,8 @@ class GMW_Admin {
 		include_once( 'geo-my-wp-forms.php' );
 		include_once( 'geo-my-wp-edit-form.php' );
 		include_once( 'geo-my-wp-shortcodes.php' );
+		include_once( 'geo-my-wp-updater.php' );
+		include_once( 'geo-my-wp-license-handler.php' );  
 		
 		//set pages
 		$this->addons_page     	= new GMW_Addons();
@@ -47,20 +53,41 @@ class GMW_Admin {
 		$this->shortcodes_page 	= new GMW_Shortcodes_page();
 	
 		add_filter( 'plugin_action_links_geo-my-wp/geo-my-wp.php', array( $this, 'gmw_action_links' ), 10, 2 );
-		
-		//for lower version of plugin
-		add_filter( 'plugin_action_links', array( $this, 'addons_action_links' ), 10, 2 );
-		
+				
 		//display footer credits only on GEO my WP pages
 		$gmw_pages = array( 'gmw-add-ons', 'gmw-settings', 'gmw-forms', 'gmw-shortcodes', 'gmw-tools' );
 		
+		//credit in footer
 		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], $gmw_pages ) ) {
 			add_filter( 'admin_footer_text', array( $this, 'gmw_credit_footer'), 10 );
 		}
 		
+		//Rickey's credit
 		add_action( 'form_editor_tab_start', array( $this, 'rickey_messick_credit' ), 10, 4 );
 		add_action( 'form_editor_tab_end',   array( $this, 'rickey_messick_credit' ), 10, 4 );
 	}
+
+    /**
+     * deactivate add-on.
+     *
+     * @access public
+     * @return void
+     */
+    public function verify_addons_version() {
+    	
+    	foreach ( self::all_gmw_addons() as $addon => $values ) {
+	    	
+	    	if ( is_plugin_active( $values['basename'] ) ) {
+
+	    		$plugin_data = get_plugin_data( ABSPATH . 'wp-content/plugins/'.$values['basename'], false, false );
+
+	    		if ( version_compare( $plugin_data['Version'], $values['min_version'], '<' ) ) {
+
+
+		        }
+		    }
+       }
+    }
 
 	/**
 	 * admin_enqueue_scripts function.
@@ -96,7 +123,7 @@ class GMW_Admin {
 	 */
 	public function admin_menu() {
 	
-		add_menu_page( 'GEO my WP', 'GEO my WP', 'manage_options', 'gmw-add-ons', array($this->addons_page, 'output' ), '', 66 );
+		add_menu_page( 'GEO my WP', 'GEO my WP', 'manage_options', 'gmw-add-ons', array( $this->addons_page, 'output' ), '', 66 );
 		add_submenu_page( 'gmw-add-ons', __( 'Add-ons', 'GMW' ), __( 'Add-ons', 'GMW' ), 'manage_options', 'gmw-add-ons', array( $this->addons_page, 'output' ) );
 		add_submenu_page( 'gmw-add-ons', __( 'GEO my WP Settings', 'GMW' ), __( 'Settings', 'GMW'), 'manage_options', 'gmw-settings', array( $this->settings_page, 'output' ) );
 		add_submenu_page( 'gmw-add-ons', __( 'Forms', 'GMW' ), __( 'Forms', 'GMW' ), 'manage_options', 'gmw-forms', ( !empty( $_GET['gmw_action']) && $_GET['gmw_action'] == 'edit_form' ) ? array( $this->edit_form_page, 'output' ) : array( $this->forms_page, 'output' ) );
@@ -106,7 +133,7 @@ class GMW_Admin {
 		$menu_items = array();
 	
 		//hook your add-on's menu item
-		$menu_items = apply_filters('gmw_admin_menu_items', $menu_items);
+		$menu_items = apply_filters('gmw_admin_menu_items', $menu_items );
 	
 		foreach ( $menu_items as $item ) {
 			add_submenu_page('gmw-add-ons', $item['page_title'], $item['menu_title'], $item['capability'], $item['menu_slug'], $item['callback_function']);
@@ -134,6 +161,11 @@ class GMW_Admin {
 						'license' 	=> false,
 						'image'   	=> false,
 						'require' 	=> array(),
+						'min_version'=> false,
+						'stand_alone'=> false,
+						'core'		=> true,
+						'installed' => true,
+						'basename'	=> false
 				),
 				'friends' => array(
 						'name'    	=> 'friends',
@@ -148,7 +180,12 @@ class GMW_Admin {
 						'license' 	=> false,
 						'require' 	=> array(
 								'Buddypress Plugin' => array( 'plugin_file' => 'buddypress/bp-loader.php', 'link' => 'http://buddypress.org' )
-						)
+						),
+						'min_version'=> false,
+						'stand_alone'=> false,
+						'core'		=> true,
+						'installed' => true,
+						'basename'	=> false
 				),
 				'current_location' => array(
 						'name'    	=> 'current_location',
@@ -161,7 +198,12 @@ class GMW_Admin {
 						'desc'    	=> __( "Get and Display the visitor's current position." , 'GMW' ),
 						'image'   	=> false,
 						'license' 	=> false,
-						'require' 	=> array()
+						'require' 	=> array(),
+						'min_version'=> false,
+						'stand_alone'=> false,
+						'core'		=> true,
+						'installed' => true,
+						'basename'	=> false
 				),
 				'single_location' => array(
 						'name'    	=> 'single_location',
@@ -174,7 +216,11 @@ class GMW_Admin {
 						'desc'    	=> __( 'Display location of certain component ( post, member... ) via shortcode and widget.', 'GMW' ),
 						'image'   	=> false,
 						'license' 	=> false,
-						'require' 	=> array()
+						'require' 	=> array(), 'min_version'=> false,
+						'stand_alone'=> false,
+						'core'		=> true,
+						'installed' => true,
+						'basename'	=> false
 				),
 				'sweetdate_geolocation' => array(
 						'name'    	=> 'sweetdate_geolocation',
@@ -187,33 +233,110 @@ class GMW_Admin {
 						'desc'    	=> __( 'Enhance Sweet-date theme with geolocation features. ', 'GMW' ),
 						'image'   	=> false,
 						'license' 	=> false,
-						'require' 	=> array()
+						'require' 	=> array(), 'min_version'=> false,
+						'stand_alone'=> false,
+						'core'		=> true,
+						'installed' => true,
+						'basename'	=> false
 				)
 		);
 		return $core_addons;
 	}
 	
+	public static function update_addon_link( $basename ) {
+        return '<a href="'.admin_url( 'plugins.php' ).'#'.esc_attr( strtolower( preg_replace('/[-]+/i', '-', str_replace( ' ', '-', $basename ) ) ) ).'" title="Plugins Page" style="color:white;text-decoration: underline"><i class="fa fa-refresh"></i>  Update now</a>';
+    }
+
 	/**
 	 * Initiate all GMW's add-ons
 	 *
 	 */
 	public function init_addons() {
 
-		$addons_data   	   = self::core_addons();
-		$new_addons_status = array();
+		$addons_data   	   	= self::core_addons();
+		$new_addons_status 	= array();
 
+		/*
+		$clean_addon = array(
+				'name'    		=> false,
+				'item'	  		=> false,
+				'item_id'		=> false,
+				'title'   		=> false,
+				'version' 		=> '1.0',
+				'file' 	  		=> false,
+				'folder'		=> false,
+				'author'  		=> 'Eyal Fitoussi',
+				'desc'    		=> false,
+				'image'   		=> false,
+				'license' 		=> false,
+				'require' 		=> array(),
+				'min_version'	=> false,
+				'stand_alone'	=> false,
+				'core'			=> false,
+				'installed' 	=> true
+			
+		);
+		*/
+	
 		//hook your add-on here
 		$addons_data = apply_filters( 'gmw_admin_addons_page', $addons_data );
-
-		//core add-ons arrived with GEO my WP
-		$core_addons = array( 'posts', 'friends', 'single_location', 'current_location', 'sweetdate_geolocation' );
 		
-		foreach ( $addons_data as $addon ) {	
+		foreach ( $addons_data as $key => $addon ) {	
+			
+			//update core add-on status
+			if ( !empty( $addon['core'] ) && isset( $this->addons[$addon['name']] ) && $this->addons[$addon['name']] == 'active' ) {
 
-			if ( in_array( $addon['name'], $core_addons ) && isset( $this->addons[$addon['name']] ) && $this->addons[$addon['name']] == 'active' ) {
+				//new status
 				$new_addons_status[$addon['name']] = 'active';
-			} elseif ( !in_array( $addon['name'], $core_addons ) ) { 
-				$new_addons_status[$addon['name']] = 'active';
+
+				//mark addon as activated
+				$addons_data[$key]['activated']    = true;
+			
+			//check for premium add-ons
+			} elseif ( empty( $addon['core'] )  ) { 
+
+				//check for min requirements of add-ons with current version of GEO my WP
+				if ( !empty( $addon['gmw_version'] ) && version_compare( GMW_VERSION, $addon['gmw_version'], '<' ) ) {
+
+					$addons_data[$key]['gmw_required'] 		   = $addon['gmw_version'];
+					$addons_data[$key]['gmw_required_message'] = $addon['title'].' add-on version '.$addon['gmw_version'].' requires GEO my WP plugin version '.$addon['gmw_version'].' or higher.';
+
+					//disabled add-on if doesnt meet requiremenst and display a message to update it
+					add_action(
+			            'admin_notices',
+			            create_function(
+			                '', 
+			                'echo \'<div class="error"><p>'.$addons_data[$key]['gmw_required_message'].'</p></div>\';'
+			            )
+			        );
+					
+				//otehrwise mark add-on as activated
+				} elseif ( !empty( $this->required_versions[$addon['name']] ) && version_compare( $addon['version'], $this->required_versions[$addon['name']], '<' ) ) {
+
+					$addons_data[$key]['required_version'] = $this->required_versions[$addon['name']];
+					$addons_data[$key]['required_message'] = $addon['title'].' version '.$addon['version'].' is not compatible with GEO my WP '.GMW_VERSION.'. Please update your add-on to version '.$this->required_versions[$addon['name']].' or higher.';
+					
+					//disabled add-on if doesnt meet requiremenst and display a message to update it
+					add_action(
+			            'admin_notices',
+			            create_function(
+			                '', 
+			                'echo \'<div class="error"><p>'.$addons_data[$key]['required_message'].'</p></div>\';'
+			            )
+			        );
+					
+				//otehrwise mark add-on as activated
+				} else {
+					$new_addons_status[$addon['name']] = 'active';
+				}				
+
+				//trigger license updater
+				if ( class_exists( 'GMW_License' ) && !empty( $addon['auto_trigger'] ) && !empty( $addon['file'] ) ) {
+					$author  = ( !empty( $addon['author'] ) ) ? $addon['author'] : 'Eyal Fitoussi';
+					$api_url = ( !empty( $addon['api_url'] ) ) ? $addon['api_url'] : null;
+					$item_id = ( !empty( $addon['item_id'] ) ) ? $addon['item_id'] : null;
+					new GMW_License( $addon['file'], $addon['item'], $addon['name'], $addon['version'], $author, $api_url, $item_id );
+				}
 			}		
 		}
 		
@@ -235,31 +358,6 @@ class GMW_Admin {
 		
 		$links[] = '<a href="' . admin_url('admin.php?page=gmw-settings').'">' . __( 'Settings' , 'GMW') . '</a>';
 		
-		return $links;
-	}
-
-	public function addons_action_links( $links, $file ) {
-		static $this_plugin;
-	
-		$licenses = get_option('gmw_license_keys');
-		$statuses = get_option('gmw_premium_plugin_status');
-	
-		$deactivate_links = array();
-		$deactivate_links = apply_filters( 'gmw_plugin_action_links', $deactivate_links );
-	
-		if ( empty( $deactivate_links ) ) 
-			return $links;
-		
-		foreach ( $deactivate_links as $addon => $link ) {
-	
-			if ( $file == $link ) {
-	
-				if ( isset($this->addons[$addon]) && $this->addons[$addon] == 'active' && !empty( $licenses[$addon] ) && isset($statuses[$addon]) && $statuses[$addon] == 'valid' )
-					$links['deactivate'] = '<a href="' . admin_url( 'admin.php?page=gmw-add-ons' ).'">'.__( 'Please deactivate the license key before deactivating the plugin', 'GMW' ).'</a>';
-				else
-					$links = array( 'activate' => '<a href="'.admin_url( 'admin.php?page=gmw-add-ons' ).'">' . __('Activate license key', 'GMW') . '</a>') + $links;
-			}
-		}
 		return $links;
 	}
 
@@ -346,9 +444,12 @@ class GMW_Admin {
                         </span>
                     </div>
                     <div style="padding:15px 15px 0 15px;">
-                        <input type="radio" class="gmw_form_type" checked="checked" name="gmw_form_type" value="form" onclick="if ( jQuery('#gmw-forms-dropdown-wrapper').is(':hidden') ) jQuery('#gmw-forms-dropdown-wrapper').slideToggle();" /> <label for="gmw-form"><?php _e("Form shortcode", "GMW"); ?></label> &nbsp;&nbsp;&nbsp;
-                        <input type="radio" class="gmw_form_type" name="gmw_form_type"  value="map" onclick="if ( jQuery('#gmw-forms-dropdown-wrapper').is(':hidden') ) jQuery('#gmw-forms-dropdown-wrapper').slideToggle();" /> <label for="gmw-map"><?php _e("Map Shortcode", "GMW"); ?></label>&nbsp;&nbsp;&nbsp;
-                        <input type="radio" class="gmw_form_type" name="gmw_form_type" value="results" onclick="if ( jQuery('#gmw-forms-dropdown-wrapper').is(':visible') ) jQuery('#gmw-forms-dropdown-wrapper').slideToggle();" /> <label for="gmw-form"><?php _e("Results shortcode", "GMW"); ?></label> &nbsp;&nbsp;&nbsp;
+                        <input type="radio" class="gmw_form_type" checked="checked" name="gmw_form_type" value="form" onclick="if ( jQuery('#gmw-forms-dropdown-wrapper').is(':hidden') ) jQuery('#gmw-forms-dropdown-wrapper').slideToggle();" /> 
+                        <label for="gmw-form"><?php _e("Form shortcode", "GMW"); ?></label> &nbsp;&nbsp;&nbsp;
+                        <input type="radio" class="gmw_form_type" name="gmw_form_type"  value="map" onclick="if ( jQuery('#gmw-forms-dropdown-wrapper').is(':hidden') ) jQuery('#gmw-forms-dropdown-wrapper').slideToggle();" /> 
+                        <label for="gmw-map"><?php _e("Map Shortcode", "GMW"); ?></label>&nbsp;&nbsp;&nbsp;
+                        <input type="radio" class="gmw_form_type" name="gmw_form_type" value="results" onclick="if ( jQuery('#gmw-forms-dropdown-wrapper').is(':visible') ) jQuery('#gmw-forms-dropdown-wrapper').slideToggle();" /> 
+                        <label for="gmw-form"><?php _e("Results shortcode", "GMW"); ?></label> &nbsp;&nbsp;&nbsp;
                     </div>
                     <div id="gmw-forms-dropdown-wrapper" style="padding:15px 15px 0 15px;">
                         <select id="gmw_form_id">
@@ -388,8 +489,7 @@ class GMW_Admin {
 	public function rickey_messick_credit( $key, $section, $formID, $gmw ) {
 	
 		if ( $key != 'page_load_results' || $gmw['prefix'] != 'pt' ) 
-			return;
-		
+			return;	
 		?>
 		<tr class="gmw-sponsored-credit">
 			<td></td>
