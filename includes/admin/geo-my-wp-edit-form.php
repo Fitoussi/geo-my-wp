@@ -305,7 +305,7 @@ class GMW_Edit_Form {
 										'name'        => 'map_width',
 										'std'         => '100%',
 										'placeholder' => __( 'Map width in px or %', 'GMW' ),
-										'label'       => __( 'Map Width', 'GMW' ),
+										'label'       => __( 'Map width', 'GMW' ),
 										'desc'        => __( 'Enter the map\'s width in pixels or percentage. ex. 100% or 200px', 'GMW' ),
 										'attributes'  => array( 'size' => '7' )
 								),
@@ -313,14 +313,14 @@ class GMW_Edit_Form {
 										'name'        => 'map_height',
 										'std'         => '300px',
 										'placeholder' => __( 'Map height in px or %', 'GMW' ),
-										'label'       => __( 'Map Height', 'GMW' ),
+										'label'       => __( 'Map height', 'GMW' ),
 										'desc'        => __( 'Enter the map\'s height in pixels or percentage. ex. 100% or 200px', 'GMW' ),
 										'attributes'  => array( 'size' => '7' )
 								),
 								'map_type'   => array(
 										'name'    => 'map_type',
 										'std'     => 'ROADMAP',
-										'label'   => __( 'Map Type', 'GMW' ),
+										'label'   => __( 'Map type', 'GMW' ),
 										'desc'    => __( 'Choose the map type', 'GMW' ),
 										'type'    => 'select',
 										'options' => array(
@@ -333,7 +333,7 @@ class GMW_Edit_Form {
 								'zoom_level' => array(
 										'name'    => 'zoom_level',
 										'std'     => 'auto',
-										'label'   => __( 'Zoom Level', 'GMW' ),
+										'label'   => __( 'Zoom level', 'GMW' ),
 										'desc'    => __( 'Map zoom level', 'GMW' ),
 										'type'    => 'select',
 										'options' => array(
@@ -361,16 +361,16 @@ class GMW_Edit_Form {
 								'yl_icons'     => array(
 										'name'        => 'yl_icon',
 										'std'         => '',
-										'label' 	  => __( 'Auto-open "Your Location" Info Window', 'GMW'),
+										'label' 	  => __( 'Open "User Location" info window', 'GMW'),
 										'cb_label'    => __( 'Yes', 'GMW'),
-										'desc'        => __( 'Automatically open the info window of the marker which represents the location that the user entered.', 'GMW' ),
+										'desc'        => __( "Dynamically open on page load the info window of the marker which represents the user's location.", 'GMW' ),
 										'type'  	  => 'checkbox',
 										'attributes'  => array()
 								),
 								'map_frame'  => array(
 										'name'       => 'map_frame',
 										'std'        => '',
-										'label'      => __( 'Map Frame', 'GMW' ),
+										'label'      => __( 'Map frame', 'GMW' ),
 										'cb_label'   => __( 'Yes', 'GMW' ),
 										'desc'       => __( 'show frame around the map?', 'GMW' ),
 										'type'       => 'checkbox',
