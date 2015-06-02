@@ -61,6 +61,37 @@ function gmw_get_units_array( $units = 'imperial' ) {
 	}
 }
 
+if ( !function_exists( 'array_replace_recursive' ) ) {
+	
+	function array_replace_recursive($base, $replacements) {
+	    
+	    foreach (array_slice(func_get_args(), 1) as $replacements) {
+			$bref_stack = array(&$base);
+			$head_stack = array($replacements);
+
+			do {
+				end($bref_stack);
+
+				$bref = &$bref_stack[key($bref_stack)];
+				$head = array_pop($head_stack);
+
+				unset($bref_stack[key($bref_stack)]);
+
+				foreach (array_keys($head) as $key) {
+					if (isset($bref[$key]) && is_array($bref[$key]) && is_array($head[$key])) {
+						$bref_stack[] = &$bref[$key];
+						$head_stack[] = $head[$key];
+					} else {
+						$bref[$key] = $head[$key];
+					}
+				}
+			} while(count($head_stack));
+		}
+
+		return $base;
+	}
+}
+
 /**
  * Create new map element
  *
@@ -94,10 +125,10 @@ function gmw_new_map_element( $args, $return = false ) {
 		'locations'			=> array(),
 		'infoWindowType'	=> 'normal',
 		'zoomLevel'			=> 13,
-		'mapTypeId'			=> 'ROADMAP',
 		'resizeMapElement'	=> 'gmw-resize-map-trigger-'.$mapID,
 		'zoomPosition'		=> false,
 		'mapOptions'		=> array(
+				'mapTypeId'				 => 'ROADMAP',
 				'backgroundColor' 		 => '#f7f7f7',
 				'disableDefaultUI' 		 => false,
 				'disableDoubleClickZoom' => false,
@@ -126,8 +157,10 @@ function gmw_new_map_element( $args, $return = false ) {
 		'markersDisplay'	=> 'normal',
 		'markers'			=> array(),
 		'infoWindow'		=> null,
-		'resizeMapControl'	=> false
+		'resizeMapControl'	=> false,
+		'draggableWindow'	=> false
 	);
+	
 
 	//merge default args with incoming args
 	$gmwMapElements[$mapID] = array_replace_recursive( $defaultArgs, $args );
@@ -136,11 +169,16 @@ function gmw_new_map_element( $args, $return = false ) {
 	$gmwMapElements[$mapID] = apply_filters( 'gmw_map_element', $gmwMapElements[$mapID], $gmwMapElements[$mapID]['form'] );
 	$gmwMapElements[$mapID] = apply_filters( "gmw_map_element_{$mapID}", $gmwMapElements[$mapID], $gmwMapElements[$mapID]['form'] );
 	$gmwMapElements[$mapID] = apply_filters( "gmw_{$args['prefix']}_map_element", $gmwMapElements[$mapID], $gmwMapElements[$mapID]['form'] );
-
+			
 	if ( $return ) 
 		return $gmwMapElements[$mapID];
 }
 
+/**
+ * Enqueue search form/results stylesheet earlier in the <HEAD> tag
+ * @param  array $args array key is the form id and value is array of pages ID where the styles need to load early
+ * @return void 
+ */
 function gmw_enqueue_form_styles( $args ) {
 
 	global $gmw_forms;
