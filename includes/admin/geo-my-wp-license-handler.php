@@ -41,8 +41,8 @@ class GMW_License {
 	 * @param string  $_author
 	 * @param string  $_optname
 	 * @param string  $_api_url
-	 */
-	function __construct( $_file, $_item_name, $_license, $_version, $_author, $_api_url = null ) {
+	 */					
+	function __construct( $_file, $_item_name, $_license, $_version, $_author = 'Eyal Fitoussi' , $_api_url = null, $_item_id = null ) {
 
 		$this->licenses 	= get_option( 'gmw_license_keys' );
 		$this->statuses 	= get_option( 'gmw_premium_plugin_status' );
@@ -56,6 +56,7 @@ class GMW_License {
 
 		//action links
 		add_filter( 'plugin_action_links_' . plugin_basename( $this->file ) , array( $this, 'addon_action_links' ), 10 );
+		add_action( 'after_plugin_row_' . plugin_basename( $this->file ), array( $this, 'license_key_input' ), 10 );
 		
 		// Setup hooks
 		$this->includes();
@@ -75,11 +76,20 @@ class GMW_License {
 		} 
 		
 		//if license activate display "Diactivate license before...." message
-		$links['deactivate'] = '<a href="' . admin_url( 'admin.php?page=gmw-add-ons' ).'">'.__( 'Please deactivate the license key before deactivating the plugin', 'GMW' ).'</a>';
+		$links['deactivate'] = __( 'Please deactivate the license key before deactivating the plugin', 'GMW' );
 						
 		return $links;
 	}
 	
+	/**
+	 * Append license key input box in plugins page
+	 * @return [type] [description]
+	 */
+	public function license_key_input() {
+		$license_key = new GMW_License_Key( $this->file, $this->item_name, $this->license_name );
+		$license_key->license_key_output();	 
+	}
+
 	/**
 	 * Include the updater class
 	 *
@@ -165,19 +175,19 @@ class GMW_License_Key {
 								
 							<div class="gmw-license-wrapper gmw-license-valid-wrapper">
 								
-								<span class="dashicons dashicons-admin-network" style="font-size: 16px;line-height: 28px;"></span>
+								<i class="fa fa-key"></i>
 								<span style="font-size: 14px;"><?php _e( 'License Key:', 'GMW' ); ?></span>
 								<input 
 									class="gmw-license-key-input-field" 
 									disabled="disabled" 
 									type="text" 
 									size="30"
-									value="<?php if ( !empty( $this->licenses[$this->license_name] ) ) echo $this->licenses[$this->license_name]; ?>" />
+									value="<?php if ( !empty( $this->licenses[$this->license_name] ) ) echo esc_attr( sanitize_text_field( $this->licenses[$this->license_name] ) ); ?>" />
 					
 								<input 
 									type="hidden"
 									name="gmw_license_key"
-									value="<?php if ( !empty( $this->licenses[$this->license_name] ) ) echo $this->licenses[$this->license_name]; ?>" />
+									value="<?php if ( !empty( $this->licenses[$this->license_name] ) ) echo esc_attr( sanitize_text_field( $this->licenses[$this->license_name] ) ); ?>" />
 					
 								<!-- show deactivate license button -->
 								<input 
@@ -188,7 +198,7 @@ class GMW_License_Key {
 									title="<?php _e( 'Deactivate License Key', 'GMW' ); ?>"
 									value="<?php _e( 'Deactivate License Key', 'GMW' ); ?>" />
 								
-								<p class="description"><?php echo $this->messages['valid']; ?></p>
+								<p class="description"><?php echo esc_html( $this->messages['valid'] ); ?></p>
 								
 								<input type="hidden" name="gmw_update_key_api_action" value="deactivate" /> 
 							</div> 
@@ -209,7 +219,7 @@ class GMW_License_Key {
 							
 							<div class="gmw-license-wrapper gmw-license-invalid-wrapper <?php echo $class; ?>">
 								
-								<span class="dashicons dashicons-admin-network" style="font-size: 16px;line-height: 28px;"></span>
+								<i class="fa fa-key"></i>
 								<span style="font-size: 14px;"><?php _e( 'License Key:', 'GMW' ); ?></span>									
 								<input 
 									onkeydown="if (event.keyCode == 13) { jQuery(this).closest('form').find('.activate-license-btn').click(); return false; }"
@@ -219,7 +229,7 @@ class GMW_License_Key {
 									class="regular-text"
 									size="30"
 									placeholder="<?php _e( 'Enter license key', 'GMW' ); ?>"
-									value="<?php if ( !empty($this->licenses[$this->license_name] ) ) echo $this->licenses[$this->license_name]; ?>" />
+									value="<?php if ( !empty($this->licenses[$this->license_name] ) ) echo esc_attr( sanitize_text_field( $this->licenses[$this->license_name] ) ); ?>" />
 						
 								<input 
 									type="submit"
@@ -231,15 +241,23 @@ class GMW_License_Key {
 								
 								<input type="hidden" name="gmw_update_key_api_action" value="activate" /> 
 								<br />
-								<p class="description"><?php echo $message; ?></p>
+								<?php $allow = array( 
+									'a' => array( 
+										'href' => array(), 
+										'title' => array() 
+									),
+									'br' => array()
+								);
+								?>
+								<p class="description"><?php echo wp_kses( $message, $allow ); ?></p>				
 									
 							</div> 
 							
 						<?php } ?> 
 							
-						<input type="hidden" name="gmw_item_name" value ="<?php echo $this->item_name; ?>" />
-						<input type="hidden" name="gmw_item_id" value ="<?php echo $this->item_id; ?>" />
-						<input type="hidden" name="gmw_update_key_api" value ="<?php echo $this->license_name; ?>" />
+						<input type="hidden" name="gmw_item_name" value ="<?php echo esc_attr( $this->item_name ); ?>" />
+						<input type="hidden" name="gmw_item_id" value ="<?php echo esc_attr( $this->item_id ); ?>" />
+						<input type="hidden" name="gmw_update_key_api" value ="<?php echo esc_attr( $this->license_name ); ?>" />
 						
 						<?php wp_nonce_field( $this->license_name, $this->license_name ); ?>
 					
@@ -478,7 +496,7 @@ function gmw_update_api_notices() {
 	?>
 	<div class="<?php echo $_GET['gmw_notice_status']; ?>">
 		<p>
-		<?php printf( $messages[$_GET['gmw_license_status_notice']], $item_name ); ?>
+		<?php esc_html( printf( $messages[$_GET['gmw_license_status_notice']], $item_name ) ); ?>
 		</p>
 	</div>
 	<?php
