@@ -147,6 +147,14 @@ div.gmw-tabs-table {
 .gmw-settings-panel table tbody tr td.gmw-form-feature-settings input[type="text"] {
 	//min-width:250px;
 }
+
+.gmw-settings-panel label {
+	text-transform: lowercase;
+}
+
+.gmw-settings-panel label:first-letter {
+	text-transform: capitalize;
+}
 /********** Add-ons Page **********/
 
 div.gmw-addons-page-top-area {
@@ -184,6 +192,134 @@ li.gmw-single-addon-wrapper {
 	display: inline-block;
 	vertical-align: top;
 	overflow:hidden;
+	position:relative;
+}
+
+.gmw-ribbon-wrapper {
+  	width: 120px;
+	height: 140px;
+	overflow: hidden;
+	position: absolute;
+	top: -3px;
+	right: -3px;
+	z-index:1;
+}
+
+.gmw-ribbon {
+  	font: bold 15px Sans-Serif;
+	color: #333;
+	text-align: center;
+	text-shadow: rgba(255,255,255,0.5) 0px 1px 0px;
+	-webkit-transform: rotate(45deg);
+	-moz-transform:    rotate(45deg);
+	-ms-transform:     rotate(45deg);
+	-o-transform:      rotate(45deg);
+	position: relative;
+	padding: 7px 0;
+	left: -25px;
+	top: 35px;
+	width: 190px;
+	-webkit-box-shadow: 0px 0px 3px rgba(0,0,0,0.3);
+	-moz-box-shadow:    0px 0px 3px rgba(0,0,0,0.3);
+	box-shadow:         0px 0px 3px rgba(0,0,0,0.3);
+	font-size: 14px;
+}
+
+.gmw-ribbon.red  {
+
+    background: #e73827;
+    background-image: -ms-linear-gradient(top, #f85032 0%, #F16F5C 50%, #F6290C 51%, #F02F17 71%, #e73827 100%);
+
+	/* Mozilla Firefox */ 
+	background-image: -moz-linear-gradient(top, #f85032 0%, #F16F5C 50%, #F6290C 51%, #F02F17 71%, #e73827 100%);
+
+	/* Opera */ 
+	background-image: -o-linear-gradient(top, #f85032 0%, #F16F5C 50%, #F6290C 51%, #F02F17 71%, #e73827 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #f85032), color-stop(50, #F16F5C), color-stop(51, #F6290C), color-stop(71, #F02F17), color-stop(100, #e73827));
+
+	/* Webkit (Chrome 11+) */ 
+	background-image: -webkit-linear-gradient(top, #f85032 0%, #F16F5C 50%, #F6290C 51%, #F02F17 71%, #e73827 100%);
+
+	/* W3C Markup */ 
+	background-image: linear-gradient(to bottom, #f85032 0%, #F16F5C 50%, #F6290C 51%, #F02F17 71%, #e73827 100%);
+    color:white;
+    font-weight: 500;
+}
+
+.gmw-ribbon.green  {
+
+    background: rgba(171,189,115,1);
+    background-image: -ms-linear-gradient(top, rgba(200,209,168,1) 0%, rgba(171,189,115,1) 100%);
+
+    /* Mozilla Firefox */ 
+    background-image: -moz-linear-gradient(top, rgba(200,209,168,1) 0%, rgba(171,189,115,1) 100%);
+
+    /* Opera */ 
+    background-image: -o-linear-gradient(top, rgba(200,209,168,1) 0%, rgba(171,189,115,1) 100%);
+
+    /* Webkit (Safari/Chrome 10) */ 
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(200,209,168,1)), color-stop(100, rgba(171,189,115,1)));
+
+    /* Webkit (Chrome 11+) */ 
+    background-image: -webkit-linear-gradient(top, rgba(200,209,168,1) 0%, rgba(171,189,115,1) 100%);
+
+    /* W3C Markup */ 
+    background-image: linear-gradient(to bottom, rgba(200,209,168,1) 0%, rgba(171,189,115,1) 100%);
+    color:white;
+    font-weight: 500;
+}
+
+.gmw-ribbon.free  {
+
+    background: rgba(171,189,115,1);
+    background-image: -ms-linear-gradient(top, rgba(200,209,168,1) 0%, rgba(171,189,115,1) 100%);
+
+    /* Mozilla Firefox */ 
+    background-image: -moz-linear-gradient(top, rgba(200,209,168,1) 0%, rgba(171,189,115,1) 100%);
+
+    /* Opera */ 
+    background-image: -o-linear-gradient(top, rgba(200,209,168,1) 0%, rgba(171,189,115,1) 100%);
+
+    /* Webkit (Safari/Chrome 10) */ 
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(200,209,168,1)), color-stop(100, rgba(171,189,115,1)));
+
+    /* Webkit (Chrome 11+) */ 
+    background-image: -webkit-linear-gradient(top, rgba(200,209,168,1) 0%, rgba(171,189,115,1) 100%);
+
+    /* W3C Markup */ 
+    background-image: linear-gradient(to bottom, rgba(200,209,168,1) 0%, rgba(171,189,115,1) 100%);
+    color:white;
+    font-weight: 500;
+    left: -15px;
+	top: 27px;
+}
+
+.gmw-ribbon.blue  {
+    /* IE10+ */ 
+    background: rgba(99,147,193,1);
+    /* IE10+ */ 
+    background-image: -ms-linear-gradient(top, rgba(117,175,230,1) 0%, rgba(99,147,193,1) 100%);
+
+    /* Mozilla Firefox */ 
+    background-image: -moz-linear-gradient(top, rgba(117,175,230,1) 0%, rgba(99,147,193,1) 100%);
+
+    /* Opera */ 
+    background-image: -o-linear-gradient(top, rgba(117,175,230,1) 0%, rgba(99,147,193,1) 100%);
+
+    /* Webkit (Safari/Chrome 10) */ 
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, rgba(117,175,230,1)), color-stop(100, rgba(99,147,193,1)));
+
+    /* Webkit (Chrome 11+) */ 
+    background-image: -webkit-linear-gradient(top, rgba(117,175,230,1) 0%, rgba(99,147,193,1) 100%);
+
+    /* W3C Markup */ 
+    background-image: linear-gradient(to top, rgba(117,175,230,1) 0%, rgba(99,147,193,1) 100%);
+    color:white;
+    font-weight: 500;
+    left: -15px;
+	top: 27px;
 }
 
 .gmw-addons-page-top-buttons {
@@ -234,7 +370,6 @@ div.gmw-addon-image-wrapper {
 }
 
 div.gmw-addon-desc-wrapper {
-	padding: 10px 10px 10px;
 	min-height: 30px;
 	top: 10px;
 	color: #555;
@@ -243,8 +378,37 @@ div.gmw-addon-desc-wrapper {
 }
 
 .gmw-single-addon-wrapper  div.gmw-addon-desc-wrapper {
-	height:75px;
-	overflow:hidden
+	height:85px;
+	overflow:hidden;
+}
+
+div.gmw-addon-desc-inner {
+	padding: 10px 10px 0px;
+	height: 85px;
+	box-sizing: border-box;
+	display: block;
+	position: relative;
+}
+
+.gmw-single-addon-wrapper  div.gmw-addon-update-required-wrapper,
+.gmw-single-addon-wrapper  div.gmw-addon-update-available-wrapper{
+	padding: 1px 10px;
+	color: #555;
+	font-size: 12px;
+	border-top: 1px solid #e1e1e1;
+	background: red;
+	color:white;
+	font-size: 11px;
+	margin:0px 1px;
+	box-sizing: border-box;
+	position: absolute;
+	bottom: 0px;
+	max-height: 100px;
+	left: 0;
+}
+
+.gmw-single-addon-wrapper  div.gmw-addon-update-available-wrapper {
+	background: rgba(171,189,115,1);
 }
 
 .gmw-addon-activate {
@@ -275,6 +439,11 @@ div.gmw-addon-desc-wrapper {
 }
 
 div.gmw-addon-license-wrapper.gmw-license-invalid.gmw-addon-deactivate {
+	border: 1px solid rgba(80, 119, 157, 1);;
+	background: rgba(99,147,193,1);
+}
+
+div.gmw-addon-license-wrapper.gmw-license-invalid.not-installed {
 	background: #ffa8ab;
 	border: 1px solid #ff9191
 }
@@ -306,7 +475,7 @@ input.gmw-addon-short-input {
 	max-width: 268px;
 	height: 28px !important;
 	padding: 1px 5px 0px !important;
-	margin:3px 0px 3px -2px;
+	//margin:3px 0px 3px -2px;
 }
 
 .mandatory {
@@ -527,7 +696,7 @@ tr.gmw-license-key-wrapper td.column-description {
 }
 
 .gmw-single-addon-wrapper .gmw-license-wrapper span {
-	display: block;
+	//display: block;
 	margin:0px 2px;
 }
 
