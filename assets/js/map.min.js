@@ -83,7 +83,6 @@ function gmwMapInit( mapObject ) {
 		
 		if ( mapObject['locations'][i]['info_window_content'] != false && mapObject['locations'][i]['info_window_content'] != undefined ) {
 			
-			alert( mapObject['locations'][i]['info_window_content'])
 			//create the info-window object
 			google.maps.event.addListener(mapObject['markers'][i], 'click', function() {
 				
