@@ -9,6 +9,18 @@ if ( !defined( 'ABSPATH' ) )
 class GMW {
 
 	/**
+	 * gmw options
+	 * @var array
+	 */
+	public $settings;
+
+	/**
+	 * gmw forms
+	 * @var array
+	 */
+	protected $forms;
+
+	/**
 	 * __construct function.
 	 *
 	 * @access public
@@ -28,17 +40,17 @@ class GMW {
 		
 		//$this->form['org_address']  	   = ( isset(  $_GET['gmw_address'] ) && array_filter( $_GET['gmw_address'] ) ) ? str_replace( '+', ' ', implode( ' ', $_GET['gmw_address'] ) ) : '';
 		
-		$this->form['radius'] 		= ( isset( $_GET['gmw_distance'] ) ) ? $_GET['gmw_distance'] : 500;	
-		$this->form['org_address']  = ( isset( $_GET['gmw_address'] ) && array_filter( $_GET['gmw_address'] ) ) ? implode( ' ', $_GET['gmw_address'] ) : '';
+		$this->form['radius'] 		= ( isset( $_GET[$this->form['url_px'].'distance'] ) ) ? $_GET[$this->form['url_px'].'distance'] : 500;	
+		$this->form['org_address']  = ( isset( $_GET[$this->form['url_px'].'address'] ) && array_filter( $_GET[$this->form['url_px'].'address'] ) ) ? implode( ' ', $_GET[$this->form['url_px'].'address'] ) : '';
 		$per_page 					= ( isset( $this->form['search_results']['per_page'] ) ) ? current( explode( ",", $this->form['search_results']['per_page'] ) ) : -1;
-		$this->form['get_per_page'] = ( isset( $_GET['gmw_per_page'] ) ) ? $_GET['gmw_per_page'] : $per_page;
-		$this->form['units_array']  = gmw_get_units_array( isset( $_GET['gmw_units'] ) ? $_GET['gmw_units'] : 'imperial' );
+		$this->form['get_per_page'] = ( isset( $_GET[ $this->form['url_px'].'per_page' ] ) ) ? $_GET[ $this->form['url_px'].'per_page' ] : $per_page;
+		$this->form['units_array']  = gmw_get_units_array( isset( $_GET[ $this->form['url_px'].'units' ] ) ? $_GET[ $this->form['url_px'].'units' ] : 'imperial' );
 						 
 		//otherwise if lat/lng exist in URL then use that
-		if ( !empty( $_GET['gmw_lat'] ) && !empty( $_GET['gmw_lng'] ) ) {
+		if ( !empty( $_GET[$this->form['url_px'].'lat'] ) && !empty( $_GET[$this->form['url_px'].'lng'] ) ) {
 
-			$this->form['your_lat'] = $_GET['gmw_lat'];
-			$this->form['your_lng'] = $_GET['gmw_lng'];
+			$this->form['your_lat'] = $_GET[$this->form['url_px'].'lat'];
+			$this->form['your_lng'] = $_GET[$this->form['url_px'].'lng'];
 			 
 		//return $this->results();
 		} elseif ( !empty( $this->form['org_address'] ) ) {
@@ -73,7 +85,7 @@ class GMW {
 	public function auto_results() {
 
 		//per page from settings
-		$this->form['get_per_page'] = ( !empty( $_GET['gmw_per_page'] ) ) ? $_GET['gmw_per_page'] : current( explode( ",", $this->form['search_results']['per_page'] ) );
+		$this->form['get_per_page'] = ( !empty( $_GET[$this->form['url_px'].'per_page'] ) ) ? $_GET[$this->form['url_px'].'per_page'] : current( explode( ",", $this->form['search_results']['per_page'] ) );
 
 		//show auto-results based on user's location
 		if ( !empty( $this->form['user_position'] ) && isset( $this->form['search_results']['auto_search']['on'] ) ) {
@@ -111,7 +123,7 @@ class GMW {
 
 		$page_load_options							 = $this->form['page_load_results'];
 		$this->form['org_address']  				 = '';
-		$this->form['get_per_page'] 				 = ( !empty( $_GET['gmw_per_page'] ) ) ? $_GET['gmw_per_page'] : current( explode( ",", $page_load_options['per_page'] ) );
+		$this->form['get_per_page'] 				 = ( !empty( $_GET[$this->form['url_px'].'per_page'] ) ) ? $_GET[$this->form['url_px'].'per_page'] : current( explode( ",", $page_load_options['per_page'] ) );
 		$this->form['radius'] 						 = ( !empty( $page_load_options['radius'] ) ) ? $page_load_options['radius'] : 200;
 		$this->form['search_results']['display_map'] = $page_load_options['display_map'];
 		$this->form['units_array']  				 = gmw_get_units_array( $this->form['page_load_results']['units'] );
@@ -220,17 +232,11 @@ class GMW {
 	/**
 	 * trigger the map scripts
 	 */
-	public function trigger_map() {
+	public function map_element() {
 
 		if ( !apply_filters( 'gmw_trigger_map', true ) )
 			return;
-		
-		$this->form = apply_filters( "gmw_form_before_map_triggered", 						  $this->form, $this->settings );
-		$this->form = apply_filters( "gmw_form_before_map_triggered_{$this->form['ID']}", 	  $this->form, $this->settings );
-		$this->form = apply_filters( "gmw_{$this->form['prefix']}_form_before_map_triggered", $this->form, $this->settings );
 				
-		do_action( "gmw_{$this->form['prefix']}_before_map_triggered", $this->form, $this->settings );
-		
 		$mapArgs = array(
 				'mapId' 	 		=> $this->form['ID'],
 				'mapType'			=> $this->form['addon'],
@@ -239,7 +245,9 @@ class GMW {
 				'locations'			=> $this->form['results'],
 				'infoWindowType'	=> ( !empty( $this->form['info_window']['iw_type'] ) ) ? $this->form['info_window']['iw_type'] : 'normal',
 				'zoomLevel'			=> $this->form['results_map']['zoom_level'],
-				'mapTypeId'			=> $this->form['results_map']['map_type'],
+				'mapOptions'		=> array(
+						'mapTypeId'		=> $this->form['results_map']['map_type']
+				),
 				'userPosition'		=> array(
 						'lat'		=> $this->form['your_lat'],
 						'lng'		=> $this->form['your_lng'],
@@ -248,9 +256,16 @@ class GMW {
 						'iwContent' => $this->form['labels']['info_window']['your_location'],
 						'iwOpen'	=> ( !empty( $this->form['results_map']['yl_icon'] ) ) ? true : false
 				),
-				'markersDisplay'	=> ( !empty( $this->form['results_map']['markers_display'] ) ) ? $this->form['results_map']['markers_display'] : false
+				'markersDisplay'	=> ( !empty( $this->form['results_map']['markers_display'] ) ) ? $this->form['results_map']['markers_display'] : false,
+				'draggableWindow'	=> ( isset( $this->form['info_window']['draggable_use'] ) ) ? true : false
 		);
 		
+		$mapArgs = apply_filters( "gmw_form_map_element_args", 					   $mapArgs, $this->form );
+		$mapArgs = apply_filters( "gmw_form_map_element_args_{$this->form['ID']}", $mapArgs, $this->form );
+		$mapArgs = apply_filters( "gmw_{$this->form['prefix']}_form_map_element_args",  $mapArgs, $this->form );
+
+		do_action( "gmw_form_map_element", $this->form, $mapArgs );
+
 		gmw_new_map_element( $mapArgs );
 	}
 	
@@ -331,7 +346,7 @@ class GMW {
 		//form submission function
 		if ( $this->form['query_type'] == 'form_submitted' )  {
 
-			if ( $this->form['ID'] == absint( $_GET['gmw_form'] ) ) {
+			if ( $this->form['ID'] == absint( $_GET[$this->form['url_px'].'form'] ) ) {
 					
 				self::form_submitted();
 					
@@ -343,7 +358,7 @@ class GMW {
 				//trigger map
 				} elseif ( $this->form['search_results']['display_map'] != 'na' ) {
 
-					$this->trigger_map();
+					$this->map_element();
 				}
 			}
 
@@ -362,7 +377,7 @@ class GMW {
 			
 			//trigger map
 			if ( !empty( $this->form['results'] ) && $this->form['search_results']['display_map'] != 'na' ) {
-				$this->trigger_map();
+				$this->map_element();
 			}
 		
 		//do some custom functions if nothing above worked
