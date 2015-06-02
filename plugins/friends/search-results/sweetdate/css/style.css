@@ -1,0 +1,207 @@
+/* GMW FL yellow search results stylesheet */
+
+.gmw-fl-sweetdate-results-wrapper select {
+	border: 1px solid #ccc;
+	height:30px;
+	font-size: 14px;
+	color:#555;
+	margin:5px 0;
+}
+
+.gmw-fl-sweetdate-results-wrapper .results-count-wrapper {
+	background: #fdfdfd;
+	padding:8px 15px;
+	border-bottom:1px solid #ddd;
+	border-top:1px solid #ddd;
+}
+
+.gmw-fl-sweetdate-results-wrapper .results-count-wrapper p {
+	margin:0px;
+	font-size: 13px;
+	color:#444;
+}
+
+.gmw-fl-sweetdate-results-wrapper .pagination-per-page-wrapper {
+	clear: both;
+	display: inline-block;
+	text-align: center;
+	width: 100%;
+}
+
+.gmw-fl-sweetdate-results-wrapper .pagination-wrapper {
+	text-align: center;	
+	line-height:30px;
+	display: inline-block;
+	padding: 10px;
+}
+
+/* pagination */
+
+.gmw-fl-sweetdate-results-wrapper ul.gmw-pagination {
+	float: right;
+	text-align: center;
+	margin:0px;
+	list-style:none;
+	padding:0px;
+}
+
+.gmw-fl-sweetdate-results-wrapper ul.gmw-pagination li  {
+	text-align:center;
+	display: inline-block;
+	margin:0 0 0 2px;
+}
+
+.gmw-fl-sweetdate-results-wrapper ul.gmw-pagination li a, 
+.gmw-fl-sweetdate-results-wrapper ul.gmw-pagination li span {
+	border-radius: 48px 48px 48px 48px;
+    color: #555555;
+    padding: 1px 0;
+    text-align: center;
+    display: inline-block;
+    float: none;
+    font-size: 14px;
+    height: 24px;
+    margin-left: 5px;
+    width: 24px;
+}
+
+.gmw-fl-sweetdate-results-wrapper ul.gmw-pagination li a:hover, 
+.gmw-fl-sweetdate-results-wrapper	 ul.gmw-pagination li span {
+	background: none repeat scroll 0 0 #2BA6CB;
+    color: white;
+    cursor: default;
+    font-weight: bold;
+    line-height: 22px;
+}
+
+/* members list */
+.gmw-fl-sweetdate-results-wrapper ul.members-list-wrapper {
+	background:lightyellow;
+	list-style: none;
+	padding:0px;
+	border-top: 10px solid #e1e1e1;
+	margin:3px 0 0 0;
+}
+
+.gmw-fl-sweetdate-results-wrapper ul.members-list-wrapper li {
+	margin:0px;
+	padding: 15px;
+	border-bottom: 10px solid #e1e1e1
+	
+}
+
+.gmw-fl-sweetdate-results-wrapper ul.members-list-wrapper li:nth-child(even) {
+	background:white;
+}
+
+.gmw-fl-sweetdate-results-wrapper ul.members-list-wrapper li .top-wrapper a:link,
+.gmw-fl-sweetdate-results-wrapper ul.members-list-wrapper li .top-wrapper a:visited {
+	text-decoration:none;
+	color:#555;
+	text-transform: capitalize;
+}
+
+.gmw-fl-sweetdate-results-wrapper ul.members-list-wrapper li .top-wrapper a:hover,
+.gmw-fl-sweetdate-results-wrapper ul.members-list-wrapper li .top-wrapper a:active {
+	color:#555;
+}
+
+.gmw-fl-sweetdate-results-wrapper ul.members-list-wrapper li .radius {
+	display: inline-block;
+	margin-left:5px;
+	font-size: 12px
+}
+
+.gmw-fl-sweetdate-results-wrapper ul.members-list-wrapper li .info-left-wrapper, 
+.gmw-fl-sweetdate-results-wrapper ul.members-list-wrapper li .info-right-wrapper {
+	display: inline-block;
+	vertical-align: top
+}
+
+.gmw-fl-sweetdate-results-wrapper ul.members-list-wrapper li .info-left-wrapper {
+	width:55%;
+}
+
+.gmw-fl-sweetdate-results-wrapper ul.members-list-wrapper li .info-left-wrapper .user-name-wrapper {
+	font-size:16px;
+}
+
+.gmw-fl-sweetdate-results-wrapper ul.members-list-wrapper li .info-left-wrapper .update {
+	font-size:11px;
+}
+
+.gmw-fl-sweetdate-results-wrapper ul.members-list-wrapper li .info-right-wrapper {
+	width:40%;
+}
+
+.gmw-fl-sweetdate-results-wrapper ul.members-list-wrapper li .info-right-wrapper .gmw-xprofile-fields-wrapper {
+	font-size: 13px;
+	color:#555
+}
+
+.gmw-fl-sweetdate-results-wrapper ul.members-list-wrapper li .avatar img {
+	border: 1px solid #ccc;
+	box-shadow: none;
+	border-radius: 0px;
+	padding:3px;
+	background: #eee;
+	float: left;
+	margin: 0 10px 0 0;
+}
+
+.gmw-fl-no-results-wrapper {
+	background-color: #FBFCBA;
+	text-align:center;
+	border:1px solid #D1D296;
+	width:100%;
+	margin-top: 15px;
+	color:#626332;
+	padding:10px 0px;
+}
+
+.gmw-fl-no-results-wrapper p {
+	background: none;
+	border: 0;
+	padding: 0;
+	display: block;
+	margin:0px !important;
+	line-height:30px !important;
+}
+
+.gmw-fl-sweetdate-results-wrapper ul.members-list-wrapper li .location-wrapper {
+	display: block;
+	clear: both;
+	font-size: 13px;
+}
+
+/* smaller screens */
+@media (max-width:800px) {
+	.gmw-fl-sweetdate-results-wrapper select {
+		width:100%;
+		max-width:100%;
+	}
+	
+	.gmw-fl-sweetdate-results-wrapper .pagination-wrapper {
+		float:none;
+		width:100%;
+		margin-top:10px;
+		display: inline-block;
+	}
+	
+	.gmw-fl-sweetdate-results-wrapper ul.members-list-wrapper li .info-left-wrapper, .gmw-fl-sweetdate-results-wrapper ul.members-list-wrapper li .info-right-wrapper {
+		width:100%;
+		margin-bottom:10px;
+	}
+	
+	.gmw-fl-sweetdate-results-wrapper ul.members-list-wrapper li .top-wrapper {
+		width:100%;
+		display: inline-block;
+		text-align:center;
+	}
+	
+	.gmw-fl-sweetdate-results-wrapper ul.members-list-wrapper li .top-wrapper span.radius {
+		width:100%;
+		text-align: center;
+		margin-top:10px;
+	}
+}

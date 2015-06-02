@@ -1,0 +1,333 @@
+/**
+ * Members Locator search form stylesheet "sweetdate"
+ */
+div.gmw-fl-sweetdate-form-wrapper {
+ 	background: #f8f8f8;
+	padding:10px 10px 0;
+	border-top:1px solid #ddd;
+	border-bottom:1px solid #ddd;
+	margin-bottom: 1px
+}
+
+div.gmw-fl-sweetdate-form-wrapper label {
+	text-transform:capitalize;
+	color:#555;
+}
+
+div.gmw-fl-sweetdate-form-wrapper .gmw-single-taxonomy-wrapper,
+div.gmw-fl-sweetdate-form-wrapper .address-locator-wrapper,
+div.gmw-fl-sweetdate-form-wrapper .post-types-wrapper,
+div.gmw-fl-sweetdate-form-wrapper .gmw-submit-wrapper,
+div.gmw-fl-sweetdate-form-wrapper .gmw-custom-field-wrapper,
+div.gmw-fl-sweetdate-form-wrapper .gmw-keywords-field,
+div.gmw-fl-sweetdate-form-wrapper .gmw-distance-select,
+div.gmw-fl-sweetdate-form-wrapper .gmw-posts-dropdown {
+	display:inline-block;
+	margin:0 5px 10px 0px;
+}
+
+div.gmw-fl-sweetdate-form-wrapper div.xfield-trigger-wrapper {
+	display: inline-block;
+	padding: 3px 5px 3px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	margin: 0 5px 10px 0;
+	color:#555;
+	font-size: 12px;
+	background: #fafafa;
+	cursor: pointer;
+	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;    
+	box-sizing: border-box;
+	text-align:center;
+}
+
+div.gmw-fl-sweetdate-form-wrapper input[type="text"] {
+     margin-top:6px;
+     padding:8px 10px 7px;
+} 
+ 
+div.gmw-fl-sweetdate-form-wrapper form label {
+    margin-right:5px;
+}
+
+div.gmw-fl-sweetdate-form-wrapper form .editfield label {
+	display:block;
+}
+
+div.gmw-fl-sweetdate-form-wrapper form .editfield span.label,
+div.gmw-fl-sweetdate-form-wrapper form .editfield label {
+	display: block;
+	font-weight: bold;
+	margin: 15px 0 0px 0;
+}
+
+div.gmw-fl-sweetdate-form-wrapper form .editfield div.checkbox label,
+div.gmw-fl-sweetdate-form-wrapper form .editfield div.radio label {
+	color: #888;
+	font-size: 100%;
+	font-weight: normal;
+	margin: 0;
+}
+
+div.gmw-fl-sweetdate-form-wrapper form .editfield span.label {
+        display:inline-block;
+        width:100%;
+        margin:3px 0px 3px      
+}
+	
+div.gmw-fl-sweetdate-form-wrapper form .date input[type="text"] {
+	width:30px;
+}	
+
+div.gmw-fl-sweetdate-form-wrapper .gmw-fl-form-xprofile-fields {
+	display:none;
+	background-color: rgb(254, 254, 254);
+	border: 1px solid rgb(238, 238, 238);
+	padding: 15px;
+	background-position: initial initial;
+	background-repeat: initial initial;
+	margin-bottom: 10px;
+}
+
+div.gmw-fl-sweetdate-form-wrapper input[type="text"], 
+div.gmw-fl-sweetdate-form-wrapper select {
+    -webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;    
+	box-sizing: border-box;
+}
+
+div.gmw-fl-sweetdate-form-wrapper input[type="text"] {
+    padding:6px 25px 7px 10px;	
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	font-family: inherit;
+	height: 30px;
+	font-size:12px;
+	color:#666;
+	width:180px;
+	margin:0px;
+} 
+ 
+div.gmw-fl-sweetdate-form-wrapper select {
+	border: 1px solid #ccc;
+	height:28px;
+	font-size: 12px;
+	color:#555;
+	padding: 4px;
+	max-width: 80px;
+}
+
+div.gmw-fl-sweetdate-form-wrapper .gmw-dropdown-taxonomy-wrapper label, 
+div.gmw-fl-sweetdate-form-wrapper .gmw-checkbox-taxonomy-wrapper span,
+div.gmw-fl-sweetdate-form-wrapper .gmw-custom-field-wrapper label,
+div.gmw-fl-sweetdate-form-wrapper .gmw-saf-wrapper label,
+div.gmw-fl-sweetdate-form-wrapper .gmw-address-field-wrapper label {
+	padding: 5px;
+	background-color: #ABF1D4;
+	font-size: 12px;
+	text-align:center;
+	border:1px solid #9BDFC3;
+	width:100%;
+	color:#626332;
+	margin-right:3px;
+}
+
+div.gmw-fl-sweetdate-form-wrapper .gmw-single-taxonomy-wrapper label {
+	display:none;
+}
+
+div.gmw-fl-sweetdate-form-wrapper  .gmw-checkbox-taxonomy-wrapper label {
+	display:inline-block;
+}
+
+div.gmw-fl-sweetdate-form-wrapper .address-locator-wrapper {
+	position:relative;
+}
+
+div.gmw-fl-sweetdate-form-wrapper .gmw-no-address-error {
+	border: 1px solid rgb(252, 165, 165) !important;
+}
+
+div.gmw-fl-sweetdate-form-wrapper .gmw-locator-btn-wrapper {
+	padding:5px 0;
+	position: absolute;
+	right:2px;
+	height: 25px;
+	width:25px;
+	top:0px
+}
+
+div.gmw-fl-sweetdate-form-wrapper .gmw-locator-btn-wrapper {
+	cursor: pointer;
+	color:#375348;
+}
+
+div.gmw-fl-sweetdate-form-wrapper .gmw-locator-btn-wrapper .gmw-locator-button {
+	color: rgb(179, 223, 193);
+	font-size:24px;
+}
+
+div.gmw-fl-sweetdate-form-wrapper .gmw-locator-btn-wrapper img {
+	-moz-box-shadow:    none;
+  	-webkit-box-shadow: none;
+	box-shadow: none;
+	max-height: 20px;
+	margin-left: 5px;
+}
+
+div.gmw-fl-sweetdate-form-wrapper div.gmw-locator-btn-within-wrapper {
+	cursor: pointer;
+	padding:2px 5px;
+	position: absolute;
+	right:0px;
+	height: initial;
+	width:initial;
+	top:0px;
+}
+
+div.gmw-fl-sweetdate-form-wrapper .gmw-locator-btn-wrapper .gmw-locator-btn-within {
+	color: #2BA6CB;
+	font-size:24px;
+}
+
+div.gmw-fl-sweetdate-form-wrapper .gmw-locator-btn-wrapper img.gmw-locator-btn-loader {
+	max-height: 17px;
+	margin-left: 3px;
+	padding-top: 5px;
+}
+
+
+div.gmw-fl-sweetdate-form-wrapper .gmw-submit-button {
+	padding: 3px 5px;
+	background-color: #ABF1D4;
+	border:1px solid #9BDFC3;
+	text-align:center;
+	cursor: pointer;
+	display: inline-block;
+	color:#375348;
+	-webkit-transition: background-color 200ms linear;
+    -moz-transition: background-color 200ms linear;
+    -o-transition: background-color 200ms linear;
+    -ms-transition: background-color 200ms linear;
+    transition: background-color 200ms linear;
+    font-size:12px;
+}
+
+div.gmw-fl-sweetdate-form-wrapper .gmw-submit-button:hover {
+	background-color:#72D9AE;
+}
+
+div.gmw-fl-sweetdate-form-wrapper .gmw-locator-btn-wrapper .gmw-locator-submit {
+	display: inline;
+}
+
+/* premium features */
+
+div.gmw-fl-sweetdate-form-wrapper .gmw-radius-slider-wrapper {
+    text-align:center;
+    display:inline-block;
+}
+
+div.gmw-fl-sweetdate-form-wrapper .gmw-radius-slider-wrapper label {
+	margin-right:1px;
+	font-size: 12px;
+	vertical-align: top;
+}
+
+div.gmw-fl-sweetdate-form-wrapper .gmw-radius-slider-wrapper input {
+     max-width:60px;
+	font-size:12px;
+	vertical-align: top;
+	height:18px;
+}
+
+div.gmw-fl-sweetdate-form-wrapper .gmw-radius-slider-wrapper .gmw-slider-range {
+	height: 1.0em;
+	-moz-border-radius: 0px/*{cornerRadius}*/;
+	-webkit-border-radius: 0px/*{cornerRadius}*/;
+	border-radius: 0px/*{cornerRadius}*/;
+	margin-top: -7px;
+	height: 8px;
+}
+
+div.gmw-fl-sweetdate-form-wrapper .gmw-radius-slider-wrapper .gmw-slider-range a {
+	height:0.9em;
+	width:15px
+}
+
+div.gmw-fl-sweetdate-form-wrapper .gmw-checkbox-taxonomy-wrapper {
+	margin-bottom:10px;
+	vertical-align:top;
+}
+
+div.gmw-fl-sweetdate-form-wrapper .gmw-checkbox-taxonomy-wrapper span {
+	display:block
+}
+
+div.gmw-fl-sweetdate-form-wrapper input.gmw-single-checkbox {
+	margin-right: 5px;
+	
+	
+}
+
+div.gmw-fl-sweetdate-form-wrapper gmw-checkbox-taxonomy-wrapper span.label {
+	font-weight:bold;
+}
+
+/* widget */
+
+.widget_gmw_search_form_widget div.gmw-fl-sweetdate-form-wrapper .gmw-single-taxonomy-wrapper,
+.widget_gmw_search_form_widget div.gmw-fl-sweetdate-form-wrapper .address-locator-wrapper,
+.widget_gmw_search_form_widget div.gmw-fl-sweetdate-form-wrapper .post-types-wrapper,
+.widget_gmw_search_form_widget div.gmw-fl-sweetdate-form-wrapper .gmw-submit-wrapper,
+.widget_gmw_search_form_widget div.gmw-fl-sweetdate-form-wrapper .gmw-custom-field-wrapper,
+.widget_gmw_search_form_widget div.gmw-fl-sweetdate-form-wrapper .gmw-keywords-field,
+.widget_gmw_search_form_widget div.gmw-fl-sweetdate-form-wrapper .gmw-distance-select {
+	display:block;
+	margin:0 0px 10px 0px;
+}
+
+.widget_gmw_search_form_widget div.gmw-fl-sweetdate-form-wrapper {
+ 	background: none;
+	padding:0px;
+	border:0;
+}
+
+.widget_gmw_search_form_widget div.gmw-fl-sweetdate-form-wrapper input[type="text"], 
+.widget_gmw_search_form_widget div.gmw-fl-sweetdate-form-wrapper select {
+	width:100%;
+}
+
+.widget_gmw_search_form_widget div.gmw-fl-sweetdate-form-wrapper .gmw-submit-button {
+	width:100%;
+	padding:10px 0px;
+}
+
+@media (max-width:600px) {
+	
+	div.gmw-fl-sweetdate-form-wrapper .address-locator-wrapper,
+	div.gmw-fl-sweetdate-form-wrapper .gmw-single-taxonomy-wrapper,
+	div.gmw-fl-sweetdate-form-wrapper .gmw-address-field-wrapper,
+	div.gmw-fl-sweetdate-form-wrapper select,
+	div.gmw-fl-sweetdate-form-wrapper input[type="text"],
+	div.gmw-fl-sweetdate-form-wrapper .gmw-submit-wrapper,
+	div.gmw-fl-sweetdate-form-wrapper .gmw-submit-button {
+		width:100% !important;
+		-webkit-box-sizing: border-box; 
+		-moz-box-sizing: border-box;    
+		box-sizing: border-box;
+		margin:0 0px 10px 0px !important;
+		display:block;
+	}
+	
+	div.gmw-fl-sweetdate-form-wrapper div.xfield-trigger-wrapper {
+		width:100%;
+	}
+	
+	div.gmw-fl-sweetdate-form-wrapper .gmw-locator-btn-wrapper {
+		bottom:5px;
+		right: 8px;
+	}
+	
+}
