@@ -194,9 +194,9 @@ class GMW_Current_location {
 				'mapId' 	 		=> $this->args['element_id'],
 				'mapType'			=> 'current_location',
 				'prefix'			=> 'cl',
-				'mapTypeId'			=> $this->args['map_type'],
 				'zoomLevel'			=> $this->args['zoom_level'],
 				'mapOptions'		=> array(
+						'mapTypeId'			=> $this->args['map_type'],
 						'scrollwheel'	 	=> ( !empty( $this->args['scrollwheel_map_zoom'] ) ) ? true : false,
 						'mapTypeControl' 	=> false,
 						'streetViewControl' => false,
