@@ -36,11 +36,13 @@ class GMW_Form_Init {
 		 * in the next time we load the same form. This can happen if we load 
 		 * The serch form and search results or map of the same form but in separate elements.
 		 */
-		$this->form = wp_cache_get( 'gmw_forms', $form['ID'] );
+		//wp_cache_add_non_persistent_groups( array( 'gmw_forms' ) );
+		//$this->form = wp_cache_get( $form['ID'], 'gmw_forms' );
+		$this->form = false;
 
 		//get default form values
 		if ( false === $this->form ) {
-			
+		
 			$this->form 			  = $form;
 			$this->form['query_type'] = $this->form['submitted']  = $this->form['page_load_results_trigger'] = $this->form['auto_results_trigger'] = false;	
 			$user_position  		  = false;
@@ -89,7 +91,7 @@ class GMW_Form_Init {
 			$paged 				  = ( is_front_page() ) ? 'page' : 'paged';
 			$this->form['paged']  = ( get_query_var( $paged ) ) ? get_query_var( $paged ) : 1;
 
-			wp_cache_set( 'gmw_forms', $this->form, $this->form['ID'] );
+			//wp_cache_set( 'gmw_form_id_'.$this->form['ID'], $this->form, 'gmw_forms' );
 		}
 
 		//get the element_trigger tand in_widget from the original form pass into the class
@@ -109,7 +111,7 @@ class GMW_Form_Init {
 		}
 
 		//check if form submitted
-		if ( !empty( $_GET['action'] ) && $_GET['action'] == "gmw_post" ) {
+		if ( !empty( $_GET['action'] ) && $_GET['action'] == $this->form['url_px'].'post' ) {
 
 			$this->form['query_type'] = 'form_submitted';
 			$this->form['submitted']  = true;
