@@ -255,14 +255,15 @@ function gmw_get_form_submit_fields( $gmw, $subValue ) {
 	$submit_button = apply_filters( 'gmw_form_submit_button', $submit_button, $gmw, $subValue ); 
 
 	$per_page = current( explode( ",", absint( $gmw['search_results']['per_page'] ) ) );
-	$address  = ( !empty( $_GET['gmw_address'] ) ) ? esc_attr( sanitize_text_field( stripslashes( implode( ' ', $_GET['gmw_address'] ) ) ) ) : '';
-	$lat	  = ( !empty( $_GET['gmw_lat'] ) ) 	   ? esc_attr( sanitize_text_field( $_GET['gmw_lat'] ) ) : '';
-	$lng	  = ( !empty( $_GET['gmw_lng'] ) ) 	   ? esc_attr( sanitize_text_field( $_GET['gmw_lng'] ) ) : '';
-
+	$address  = ( !empty( $_GET[$gmw['url_px'].'address'] ) ) ? esc_attr( sanitize_text_field( stripslashes( implode( ' ', $_GET[$gmw['url_px'].'address'] ) ) ) ) : '';
+	$lat	  = ( !empty( $_GET[$gmw['url_px'].'lat'] ) ) 	  ? esc_attr( sanitize_text_field( $_GET[$gmw['url_px'].'lat'] ) ) : '';
+	$lng	  = ( !empty( $_GET[$gmw['url_px'].'lng'] ) ) 	  ? esc_attr( sanitize_text_field( $_GET[$gmw['url_px'].'lng'] ) ) : '';
+	$url_px   = esc_attr( $gmw['url_px'] );
+	
 	$output = array();
 
     $output['wrap_start'] = "<div id=\"gmw-submit-wrapper-{$gmw['ID']}\" class=\"gmw-submit-wrapper gmw-submit-wrapper-{$gmw['ID']}\">";    
-    $output['field_id']   = "<input type=\"hidden\" id=\"gmw-form-id-{$gmw['ID']}\" class=\"gmw-form-id gmw-form-id-{$gmw['ID']}\" name=\"gmw_form\" value=\"{$gmw['ID']}\" />";
+    $output['field_id']   = "<input type=\"hidden\" id=\"gmw-form-id-{$gmw['ID']}\" class=\"gmw-form-id gmw-form-id-{$gmw['ID']}\" name=\"{$url_px}form\" value=\"{$gmw['ID']}\" />";
         
     //set the page number to 1. We do this to reset the page number when form submitted again
     $output['field_page'] = "<input 
@@ -276,7 +277,7 @@ function gmw_get_form_submit_fields( $gmw, $subValue ) {
         	type=\"hidden\" 
         	id=\"gmw-per-page-{$gmw['ID']}\" 
         	class=\"gmw-per-page gmw-per-page-{$gmw['ID']}\" 
-        	name=\"gmw_per_page\" value=\"{$per_page}\" 
+        	name=\"{$url_px}per_page\" value=\"{$per_page}\" 
         	/>";
         	
     $output['field_address'] = "<input 
@@ -290,21 +291,21 @@ function gmw_get_form_submit_fields( $gmw, $subValue ) {
         	type=\"hidden\" 
         	id=\"gmw-lat-{$gmw['ID']}\" 
         	class=\"gmw-lat gmw-lat-{$gmw['ID']}\" 
-        	name=\"gmw_lat\" value=\"{$lat}\"
+        	name=\"{$url_px}lat\" value=\"{$lat}\"
         	/>";
         	
     $output['field_lng'] = "<input 
         	type=\"hidden\" 
         	id=\"gmw-long-{$gmw['ID']}\" 
         	class=\"gmw-lng gmw-long-{$gmw['ID']}\" 
-        	name=\"gmw_lng\" value=\"{$lng}\"
+        	name=\"{$url_px}lng\" value=\"{$lng}\"
         	/>";
 
     $output['field_prefix'] = "<input 
         	type=\"hidden\" 
         	id=\"gmw-prefix-{$gmw['ID']}\" 
         	class=\"gmw-prefix gmw-prefix-{$gmw['ID']}\" 
-        	name=\"gmw_px\" value=\"{$gmw['prefix']}\" 
+        	name=\"{$url_px}px\" value=\"{$gmw['prefix']}\" 
         	/>";
         	
     $output['field_action'] = "<input 
@@ -312,7 +313,7 @@ function gmw_get_form_submit_fields( $gmw, $subValue ) {
         	id=\"gmw-action-{$gmw['ID']}\" 
         	class=\"gmw-action gmw-action-{$gmw['ID']}\" 
         	name=\"action\" 
-        	value=\"gmw_post\" 
+        	value=\"{$url_px}post\" 
         	/>";
 
     $output['field_submit'] = $submit_button;
@@ -338,10 +339,10 @@ function gmw_get_form_submit_fields( $gmw, $subValue ) {
  */
 function gmw_get_search_form_address_field( $gmw, $id=false, $class='') {
 
-    $am 		 = ( isset( $gmw['search_form']['address_field']['mandatory'] ) ) ? 'mandatory' : '';
+    $am 		 = ( isset(  $gmw['search_form']['address_field']['mandatory'] ) ) ? 'mandatory' : '';
     $title 		 = ( !empty( $gmw['search_form']['address_field']['title'] ) ) ? $gmw['search_form']['address_field']['title'] : '';
-	$value		 = ( !empty( $_GET['gmw_address'] ) ) ? esc_attr( sanitize_text_field( stripslashes( implode( ' ', $_GET['gmw_address'] ) ) ) ) : ''; 
-	$placeholder = ( isset( $gmw['search_form']['address_field']['within'] ) ) ? $title : '';
+	$value		 = ( !empty( $_GET[$gmw['url_px'].'address'] ) ) ? esc_attr( sanitize_text_field( stripslashes( implode( ' ', $_GET[$gmw['url_px'].'address'] ) ) ) ) : ''; 
+	$placeholder = ( isset(  $gmw['search_form']['address_field']['within'] ) ) ? $title : '';
 
     $output = '<div id="gmw-address-field-wrapper-'.$gmw['ID'].'" class="gmw-address-field-wrapper gmw-address-field-wrapper-'.$gmw['ID'].' '.esc_attr( $class ) .'">';
     
@@ -349,7 +350,7 @@ function gmw_get_search_form_address_field( $gmw, $id=false, $class='') {
         $output .= '<label class="gmw-field-label" for="gmw-address-'.$gmw['ID'].'">'.esc_attr( $title ).'</label>';
     }
 
-    $output .= '<input type="text" name="gmw_address[]" id="gmw-address-'.$gmw['ID'].'" autocomplete="off" 
+    $output .= '<input type="text" name="'.esc_attr( $gmw['url_px'] ).'address[]" id="gmw-address-'.$gmw['ID'].'" autocomplete="off" 
     		class="gmw-address gmw-full-address gmw-address-'.$gmw['ID'].' '.$class.' '.$am.'" 
     		value="'.$value.'" placeholder="'.esc_attr( $placeholder ).'" />';
     
@@ -426,14 +427,14 @@ function gmw_get_search_form_radius_values( $gmw, $class=false ) {
    		
 		$title = apply_filters( 'gmw_radius_dropdown_title', $title, $gmw );
 		
-        $output .= "<select class=\"gmw-distance-select gmw-distance-select-{$gmw['ID']}\" name=\"gmw_distance\">";
+        $output .= "<select class=\"gmw-distance-select gmw-distance-select-{$gmw['ID']}\" name=\"{$gmw['url_px']}distance\">";
         $output .= 	'<option value="'.$default_value.'">'.esc_attr( $title ).'</option>';
 
         foreach ( $miles as $mile ) {
         	
         	$mile = absint($mile);
 
-            if ( isset( $_GET['gmw_distance'] ) && $_GET['gmw_distance'] == $mile ) {
+            if ( isset( $_GET[$gmw['url_px'].'distance'] ) && $_GET[$gmw['url_px'].'distance'] == $mile ) {
                 $mile_s = 'selected="selected"';
             } else {
                 $mile_s = "";
@@ -444,7 +445,7 @@ function gmw_get_search_form_radius_values( $gmw, $class=false ) {
         $output .= "</select>";
         
 	} else {
-        $output = "<input type=\"hidden\" name=\"gmw_distance\" value=\"{$default_value}\" />";
+        $output = "<input type=\"hidden\" name=\"{$gmw['url_px']}distance\" value=\"{$default_value}\" />";
 	}
 	
 	$output = apply_filters( "gmw_radius_dropdown_output", $output, $gmw, false );
@@ -467,15 +468,15 @@ function gmw_get_search_form_units( $gmw, $class=false ) {
 	
 	if ( $gmw['search_form']['units'] == 'both' ) {
 	        
-        $selected = ( isset( $_GET['gmw_units'] ) && $_GET['gmw_units'] == 'metric' ) ? 'selected="selected"' : '';
+        $selected = ( isset( $_GET[$gmw['url_px'].'units'] ) && $_GET[$gmw['url_px'].'units'] == 'metric' ) ? 'selected="selected"' : '';
   
-        $output  = "<select name=\"gmw_units\" id=\"gmw-units-{$gmw['ID']}\" class=\"gmw-units gmw-units-{$gmw['ID']} \">";
+        $output  = '<select name="'.esc_attr( $gmw['url_px'] ).'units" id="gmw-units-'.$gmw['ID'].'" class=\"gmw-units gmw-units-'.$gmw['ID'].' \">';
         $output .= '<option value="imperial" selected="selected">'.esc_attr( $gmw['labels']['search_form']['miles'] ).'</option>';
         $output .= '<option value="metric" '.$selected.'>'.esc_attr( $gmw['labels']['search_form']['kilometers'] ).'</option>';
         $output .= "</select>";
 
 	} else {
-        $output = '<input type="hidden" name="gmw_units" value="'.esc_attr( $gmw['search_form']['units'] ).'" />';
+        $output = '<input type="hidden" name="'.esc_attr( $gmw['url_px'] ).'units" value="'.esc_attr( $gmw['search_form']['units'] ).'" />';
 	} 
 	
 	$output = apply_filters( "gmw_search_form_units", $output, $gmw );
@@ -533,7 +534,7 @@ function gmw_get_results_message( $gmw, $args=false )  {
 		$output .= sprintf( $args['message']['showing'], $args['count'], $args['total_count'] );
 	}
 	
-	if ( $args['within'] && !empty( $_GET['action'] ) && $_GET['action'] == 'gmw_post' && !empty( $args['address'] ) ) {
+	if ( $args['within'] && !empty( $_GET['action'] ) && $_GET['action'] == $gmw['url_px'].'post' && !empty( $args['address'] ) ) {
 		$output .= ' '.sprintf( $args['message']['within'], $args['distance'].' '.$args['units'], $args['address'] );
 	}
 
@@ -1150,11 +1151,11 @@ function gmw_per_page( $gmw, $totalCount, $pagName ) {
     	
     if ( count( $perPage ) > 1) {
 
-        echo '<select name="gmw_per_page" class="gmw-per-page gmw-'.$gmw['ID'].'-per-page gmw-'.$gmw['prefix'].'-per-page gmw-'.$gmw['prefix'].'-per-page-dropdown">';
+        echo '<select name="'.esc_attr( $gmw['url_px'] ).'per_page" class="gmw-per-page gmw-'.$gmw['ID'].'-per-page gmw-'.$gmw['prefix'].'-per-page gmw-'.$gmw['prefix'].'-per-page-dropdown">';
 
         foreach ( $perPage as $pp ) {
         	$pp_s = "";
-            if ( isset( $_GET['gmw_per_page'] ) && $_GET['gmw_per_page'] == $pp ) {
+            if ( isset( $_GET[$gmw['url_px'].'per_page'] ) && $_GET[$gmw['url_px'].'per_page'] == $pp ) {
                 $pp_s = 'selected="selected"';
         	}                
             echo '<option value="'.$pp.'" '.$pp_s.'>'.$pp.' '.$gmw['labels']['search_results']['per_page'].'</option>';
