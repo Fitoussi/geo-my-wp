@@ -111,7 +111,7 @@ class GMW_Form_Init {
 		}
 
 		//check if form submitted
-		if ( !empty( $_GET['action'] ) && $_GET['action'] == $this->form['url_px'].'post' ) {
+		if ( !empty( $_GET['action'] ) && $_GET['action'] == $this->form['url_px'].'post' && !empty( $_GET[$this->form['url_px'].'form'] ) ) {
 
 			$this->form['query_type'] = 'form_submitted';
 			$this->form['submitted']  = true;
