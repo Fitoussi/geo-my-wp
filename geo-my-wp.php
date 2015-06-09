@@ -38,6 +38,16 @@ class GEO_my_WP {
 	private $settings;
 
 	/**
+	 * GEO my WP URL parameteres prefix
+	 *
+	 * This is the prefix used for the URL paramaters that GEO my WP
+	 * uses with submitted form. IT can modified if needed
+	 * 
+	 * @var string
+	 */
+	public $url_px = 'gmw_';
+	
+	/**
 	 * Main Instance
 	 *
 	 * Insures that only one instance of GEO_my_WP exists in memory at any one
@@ -105,6 +115,9 @@ class GEO_my_WP {
 		$gmw_options = get_option( 'gmw_options' );
 		$gmw_forms   = get_option( 'gmw_forms' );
 		$gmw_addons  = get_option( 'gmw_addons' );
+
+		//append url prefix to gmw_options
+		$gmw_options['general_settings']['url_px'] = apply_filters( 'gmw_form_url_prefix', $this->url_px );
 
 		//include deprecated functions. Should be removed in the future
 		include( 'includes/geo-my-wp-functions.php' );
@@ -215,7 +228,7 @@ class GEO_my_WP {
 		//add_action('wp_ajax_list_update_order', array( $this, 'order_list' ) );
 	}
 	
-	//not ready yet. just playing around with an idea...
+	//not ready yet. just playing around with an idea.
 	/* function order_list(){
 		
 		die(json_encode($_POST));
