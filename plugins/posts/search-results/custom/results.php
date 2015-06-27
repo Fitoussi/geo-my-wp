@@ -40,9 +40,11 @@
 		<?php while ( $gmw_query->have_posts() ) : $gmw_query->the_post(); ?>
 			
 			<!--  single results wrapper  -->
-			<div id="post-<?php the_ID(); ?>" <?php post_class( 'wppl-single-results featured-post-'.$post->feature ); ?>>
+			<?php $featured = ( !empty( $post->feature ) ) ? 'gmw-featured-post' : ''; ?>
+
+			<div id="post-<?php the_ID(); ?>" <?php post_class( 'wppl-single-result '.$featured ); ?>>
 				
-				<?php do_action( 'gmw_posts_loop_post_start' , $gmw, $post ); ?>
+				<?php do_action( 'gmw_search_results_loop_item_start' , $gmw, $post ); ?>
 				
 				<!-- Title -->
 				<h2>

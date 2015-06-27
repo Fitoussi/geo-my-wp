@@ -18,7 +18,8 @@
 .gmw-posts-wrapper .wppl-single-result {
 	padding:15px 10px;
 	border-bottom: 1px solid #eee;
-	margin-bottom: 0px
+	margin-bottom: 0px;
+	position:relative;
 }
 
 .wppl-single-result .wppl-thumb {

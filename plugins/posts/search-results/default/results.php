@@ -20,7 +20,7 @@
  */
 ?>
 <!--  Main results wrapper - wraps the paginations, map and results -->
-<div class="gmw-results-wrapper gmw-results-wrapper-<?php echo $gmw['ID']; ?> gmw-pt-results-wrapper">
+<div class="gmw-results-wrapper gmw-results-wrapper-<?php echo $gmw['ID']; ?> gmw-pt-default-results-wrapper">
 	
 	<?php do_action( 'gmw_search_results_start' , $gmw, $post ); ?>
 	
@@ -54,7 +54,9 @@
 		<?php while ( $gmw_query->have_posts() ) : $gmw_query->the_post(); ?>
 			
 			<!--  single results wrapper  -->
-			<div id="post-<?php the_ID(); ?>" <?php post_class( 'wppl-single-results featured-post-'.$post->feature ); ?>>
+			<?php $featured = ( !empty( $post->feature ) ) ? 'gmw-featured-post' : ''; ?>
+
+			<div id="post-<?php the_ID(); ?>" <?php post_class( 'wppl-single-result '.$featured ); ?>>
 				
 				<?php do_action( 'gmw_search_results_loop_item_start' , $gmw, $post ); ?>
 				

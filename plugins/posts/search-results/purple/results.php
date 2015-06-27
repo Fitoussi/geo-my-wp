@@ -50,7 +50,9 @@
 
 		<?php while ( $gmw_query->have_posts() ) : $gmw_query->the_post(); ?>
 		
-			<li id="post-<?php the_ID(); ?>" <?php post_class( 'single-post featured-post-'.$post->feature ); ?>>
+			<?php $featured = ( !empty( $post->feature ) ) ? 'gmw-featured-post' : ''; ?>
+
+			<li id="post-<?php the_ID(); ?>" <?php post_class( 'single-post '.$featured ); ?>>
 				
 				<?php do_action( 'gmw_search_results_loop_item_start' , $gmw, $post ); ?>
 			

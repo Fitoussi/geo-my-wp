@@ -40,7 +40,9 @@
 		<?php while ( $gmw_query->have_posts() ) : $gmw_query->the_post(); ?>
 			
 			<!--  single results wrapper  -->
-			<article id="post-<?php the_ID(); ?>" <?php post_class('wppl-single-result'); ?>>
+			<?php $featured = ( !empty( $post->feature ) ) ? 'gmw-featured-post' : ''; ?>
+
+			<article id="post-<?php the_ID(); ?>" <?php post_class( 'wppl-single-result '.$featured ); ?>>
 				
 				<?php do_action( 'gmw_posts_loop_post_start' , $gmw, $post ); ?>
 				
