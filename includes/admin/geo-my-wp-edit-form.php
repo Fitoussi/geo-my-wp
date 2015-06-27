@@ -75,7 +75,7 @@ class GMW_Edit_Form {
 										'placeholder' => __( 'Radius value', 'GMW' ),
 										'label'       => __( 'Radius / Distance', 'GMW' ),
 										'desc'        => __( "Set the radius to be used when searching based on the address enterd above or when searching based on the user's current location.", 'GMW' ),
-										'attributes'  => array( 'size' => '10' )
+										'attributes'  => array( 'size' => '8' )
 								),
 								'units'           => array(
 										'name'    => 'units',
@@ -183,7 +183,7 @@ class GMW_Edit_Form {
 										'placeholder' => __( 'Radius values', 'GMW' ),
 										'label'       => __( 'Radius / Distance', 'GMW' ),
 										'desc'        => __( "Enter multiple distance values comma separated in the input if you'd like to have a select dropdown menu of multiple radius values in the search form; this way the user can choose the distance when searching. Enter a single value to have a deafult distance value.", 'GMW' ),
-										'attributes'  => array( 'size' => '30' )
+										'attributes'  => array( 'size' => '20' )
 								),
 								'units'           => array(
 										'name'    => 'units',
