@@ -178,7 +178,7 @@ function gmw_admin_support_button() {
 	
 	if ( !empty( $_GET['page'] ) && $_GET['page'] != 'gmw-forms' ) { ?>
 		<span style="font-size:14px;margin-right:5px;"> - Developed by Eyal Fitoussi</span>
-		<a class="button action gmw-donate" title="Donate to GEO my WP" href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_flow&SESSION=rAW1w0xrqGW-TH-SKcCjMEkmf2AWHeGbFw8UdYBCFoJe7mX3HsGIY8Ys_Te&dispatch=5885d80a13c0db1f8e263663d3faee8d99e4111b56ef0eae45e68b8988f5b2dd" target="_blank"><i style="color:red;margin-right:4px;" class="fa fa-heart"></i>Donate</a>
+		<a class="button action gmw-donate" title="Donate to GEO my WP" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7FK9DTB9N2EEU" target="_blank"><i style="color:red;margin-right:4px;" class="fa fa-heart"></i>Donate</a>
 	<?php } ?>	
 	<span class="gmw-helpful-links-wrapper">
 		<a class="button action" title="GEO my WP Official Website" href="http://geomywp.com" target="_blank"><i class="fa fa-map-marker"></i>Geomywp.com</a>
