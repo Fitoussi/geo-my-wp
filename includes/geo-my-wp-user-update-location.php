@@ -12,7 +12,6 @@
  *      'map_icon'  => false
  *  );
  */
-
 function gmw_update_user_location( $args ) {
 
 	//default args
