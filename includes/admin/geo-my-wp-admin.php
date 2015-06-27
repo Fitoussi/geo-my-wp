@@ -7,6 +7,10 @@ if (!defined('ABSPATH'))
  */
 class GMW_Admin {
 
+	/**
+	 * Add-ons required versions for this version of GEO my WP.
+	 * @var array
+	 */
 	public $required_versions = array(
 		'premium_settings' => '1.6'
 	);
@@ -154,7 +158,7 @@ class GMW_Admin {
 						'title'   	=> __( 'Post Types Locator', 'GMW' ),
 						'version' 	=> GMW_VERSION,
 						'item'	  	=> 'Post Types Locator',
-						'file' 	  	=> GMW_PATH . '/plugins/posts/connect.php',
+						'file' 	  	=> GMW_PATH . '/plugins/posts/loader.php',
 						'folder'	=> 'posts',
 						'author'  	=> 'Eyal Fitoussi',
 						'desc'    	=> __( 'Add geo-location to Posts and pages. Create an advance proximity search forms to search for locations based on post types, categories, distance and more.', 'GMW' ),
@@ -172,7 +176,7 @@ class GMW_Admin {
 						'title'   	=> __( 'Members Locator', 'GMW' ),
 						'version' 	=> GMW_VERSION,
 						'item'	  	=> 'Members Locator',
-						'file' 	  	=> GMW_PATH . '/plugins/friends/includes/gmw-fl-component.php',
+						'file' 	  	=> GMW_PATH . '/plugins/friends/loader.php',
 						'folder'	=> 'friends',
 						'author'  	=> 'Eyal Fitoussi',
 						'desc'    	=> __( 'Let the BuddyPress members of your site to add location to thier profile. Create an advance proximity search forms to search for members based on location, Xprofile Fields and more.', 'GMW' ),
@@ -299,7 +303,7 @@ class GMW_Admin {
 				if ( !empty( $addon['gmw_version'] ) && version_compare( GMW_VERSION, $addon['gmw_version'], '<' ) ) {
 
 					$addons_data[$key]['gmw_required'] 		   = $addon['gmw_version'];
-					$addons_data[$key]['gmw_required_message'] = $addon['title'].' add-on version '.$addon['gmw_version'].' requires GEO my WP plugin version '.$addon['gmw_version'].' or higher.';
+					$addons_data[$key]['gmw_required_message'] = $addon['title'].' add-on version '.$addon['version'].' requires GEO my WP plugin version '.$addon['gmw_version'].' or higher.';
 
 					//disabled add-on if doesnt meet requiremenst and display a message to update it
 					add_action(
