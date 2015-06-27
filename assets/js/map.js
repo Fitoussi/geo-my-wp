@@ -2,6 +2,7 @@
  * GMW main map function
  * @param gmwForm
  */
+
 function gmwMapInit( mapObject ) {
 	
 	//make sure the map element exists to prevent JS error
