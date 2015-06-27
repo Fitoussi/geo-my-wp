@@ -262,7 +262,7 @@ class GMW_Addons {
                             $addon['installed'] = false;
                             $addon['activated'] = false;
                             $addon['license']   = true;
-                            $addon['version']   = $addon['current_version'];
+                            $addon['version']   = ( !empty( $addon['current_version'] ) ) ? $addon['current_version'] : '1.0';
 
                             //create basename if not exist
                             if ( empty( $addon['basename'] ) ) {
