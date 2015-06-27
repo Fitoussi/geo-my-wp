@@ -3,11 +3,12 @@
 Plugin Name: GEO my WP
 Plugin URI: http://www.geomywp.com
 Description: Assign geolocation to post types and BuddyPress members. Create an advance proximity search forms to search for locations based on address, radius, units and more.
-Version: 2.6.1-beta3
+Version: 2.6.1
 Author: Eyal Fitoussi
 Author URI: http://www.geomywp.com
 Requires at least: 4.0
 Tested up to: 4.2.2
+Buddypress: 2.1.1 and up
 Text Domain: GMW
 Domain Path: /languages/
 License: GNU General Public License v3.0
@@ -119,9 +120,9 @@ class GEO_my_WP {
 		//append url prefix to gmw_options
 		$gmw_options['general_settings']['url_px'] = apply_filters( 'gmw_form_url_prefix', $this->url_px );
 
-		//include deprecated functions. Should be removed in the future
+		//include gmw functions.
 		include( 'includes/geo-my-wp-functions.php' );
-		include( 'includes/geo-my-wp-user-update-location.php' );
+		//include( 'includes/geo-my-wp-user-update-location.php' );
 		//include( 'includes/geo-my-wp-cache-helper.php' );
 
 		//some default options if not exist
@@ -135,7 +136,7 @@ class GEO_my_WP {
 			include( GMW_PATH . '/includes/admin/geo-my-wp-admin.php' ); 	
 		}
 
-		//should be removed at some point.
+		//include deprecated functions. Should be removed in the future.
 		include( 'includes/geo-my-wp-deprecated-functions.php' );
 
 		//include files in front-end
@@ -188,23 +189,13 @@ class GEO_my_WP {
 
 		//load friends locator add-on
 		if ( GEO_my_WP::gmw_check_addon( 'friends' ) ) {
-			add_action( 'bp_loaded', array( $this, 'members_locator_addon_init' ), 20 );
+			include( 'plugins/friends/loader.php' );
 		}
 
 		//load Sweetdate Theme locator add-on
 		if ( GEO_my_WP::gmw_check_addon( 'sweetdate_geolocation' ) ) {
 			include( 'plugins/sweetdate-geolocation/loader.php' );
 		}
-	}
-
-	/**
-	 * Load members locator add-on component
-	 */
-	function members_locator_addon_init() {
-		global $bp;
-
-		include_once( 'plugins/friends/includes/gmw-fl-component.php' );
-		$bp->gmw_location = new GMW_Members_Locator_Component;
 	}
 	
 	/**
@@ -220,7 +211,7 @@ class GEO_my_WP {
 		add_filter( 'clean_url', 		  	 array( $this, 'clean_google_url' ), 99, 3 );
 
 		//map options
-		add_action( 'wp_footer', array( $this, 'google_api_features_init' ), 5 );
+		add_action( 'wp_footer', array( $this, 'google_api_features_init' ) );
 		
 		//Load google places autocomplete in admin dashboard
 		add_action( 'admin_footer', array( $this, 'google_places_address_autocomplete' ), 10 );
@@ -228,26 +219,6 @@ class GEO_my_WP {
 		//add_action('wp_ajax_list_update_order', array( $this, 'order_list' ) );
 	}
 	
-	//not ready yet. just playing around with an idea.
-	/* function order_list(){
-		
-		die(json_encode($_POST));
-		global $wp_logo_slider_images;
-	
-		$list 	   = $wp_logo_slider_images;
-		$new_order = $_POST['list_item'];
-		$new_list  = array();
-	
-		foreach( $new_order as $v ){
-			if ( isset( $list[$v] ) ){
-				$new_list[$v] = $list[$v];
-			}
-		}
-			
-		die($new_list);
-		//update_option('wp_logo_slider_images',$new_list);
-	} */
-
 	/**
 	 * Localization
 	 *
@@ -268,7 +239,6 @@ class GEO_my_WP {
 		
 		global $gmw_options;
 
-		//$settings  = get_option( 'gmw_options' );
 		$protocol  = is_ssl() ? 'https' : 'http';
 			
 		//register google maps api
@@ -290,11 +260,12 @@ class GEO_my_WP {
 			wp_register_script( 'google-maps', implode( '', $google_url ) , array( 'jquery' ), GMW_VERSION, false );
 		}
 
-		//include font-awesome
+		//register font-awesome
 		if ( !wp_style_is( 'font-awesome', 'enqueued' ) ) {
 			wp_enqueue_style( 'font-awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css', array(), GMW_VERSION );
 		}
 
+		//register chosen
 		if ( !wp_script_is( 'chosen', 'registered' ) ) {
 			wp_register_script( 'chosen', GMW_URL . '/assets/js/chosen.jquery.min.js', array( 'jquery' ), GMW_VERSION, true );
 		}
@@ -303,6 +274,7 @@ class GEO_my_WP {
 			wp_register_style( 'chosen',  GMW_URL . '/assets/css/chosen.min.css', array(), GMW_VERSION );
 		}
 
+		//register in front-end only
 		if ( !is_admin() ) {
 
 			//enqueue google maps api
@@ -317,15 +289,16 @@ class GEO_my_WP {
 			wp_register_style( 'gmw-style', GMW_URL.'/assets/css/style.css', array(), GMW_VERSION );
 			wp_enqueue_style( 'gmw-style' );
 			
-			//temporary until this feature will be removed
-			if ( !GEO_my_WP::gmw_check_addon( 'current_location' ) ) {
+			//temporary until this feature will be removed. It is being replaced by the new Current Location core add-on
+			if ( !class_exists( 'GMW_Current_Location' ) ) {
 				wp_register_style( 'gmw-cl-style-dep', GMW_URL.'/assets/css/gmw-cl-style-dep.css', array(), GMW_VERSION );
 				wp_enqueue_style( 'gmw-cl-style-dep' );
+				wp_register_script( 'gmw-cl-map', GMW_URL . '/assets/js/gmw-cl.min.js', array('jquery', 'google-maps' ), GMW_VERSION, true );
 			}
 			
 			//register gmw script
 			wp_register_script( 'gmw-js', GMW_URL.'/assets/js/gmw.min.js', array( 'jquery' ), GMW_VERSION, true );
-			
+			//localize gmw options
 			wp_localize_script( 'gmw-js', 'gmwSettings', $gmw_options );
 			  
 			//register gmw map script
@@ -334,11 +307,7 @@ class GEO_my_WP {
 			//register gmw autocomplete script
 			wp_register_script( 'gmw-google-autocomplete', GMW_URL.'/assets/js/googleAddressAutocomplete.js', array( 'jquery' ), GMW_VERSION, true );
 			
-			//will be removed in the future replaced by the new current location core add-on
-			if ( !class_exists( 'GMW_Current_Location' ) ) {
-				wp_register_script( 'gmw-cl-map', GMW_URL . '/assets/js/gmw-cl.min.js', array('jquery', 'google-maps' ), GMW_VERSION, true );
-			}
-					
+			//register some Jquery ui components					
 			wp_register_style( 'ui-comp', GMW_URL .'/assets/css/ui-comp.min.css' );
 
 			//Google Maps Infobox - only register, to be used with premium features
@@ -460,11 +429,11 @@ class GEO_my_WP {
 			wp_enqueue_script( 'gmw-map' );
 		}
 
+		//modify the autocomplete global
+		$gmwAutocompleteElements = apply_filters( 'gmw_google_places_address_autocomplete_fields', $gmwAutocompleteElements );
+
 		//verify the autocomplete global
 		if ( !empty( $gmwAutocompleteElements ) ) {
-		
-			//modify the autocomplete global
-			$gmwAutocompleteElements = apply_filters( 'gmw_google_places_address_autocomplete_fields', $gmwAutocompleteElements );
 
 			//trigger autocomplete
 			wp_localize_script( 'gmw-google-autocomplete', 'gacFields', $gmwAutocompleteElements );
@@ -494,6 +463,26 @@ class GEO_my_WP {
 		}
 		return;
    }
+
+   //not ready yet. just playing around with an idea.
+	/* function order_list(){
+		
+		die(json_encode($_POST));
+		global $wp_logo_slider_images;
+	
+		$list 	   = $wp_logo_slider_images;
+		$new_order = $_POST['list_item'];
+		$new_list  = array();
+	
+		foreach( $new_order as $v ){
+			if ( isset( $list[$v] ) ){
+				$new_list[$v] = $list[$v];
+			}
+		}
+			
+		die($new_list);
+		//update_option('wp_logo_slider_images',$new_list);
+	} */
 }
 
 /**
