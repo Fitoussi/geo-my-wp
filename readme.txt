@@ -2,12 +2,12 @@
 Contributors: ninjew
 Donate link: http://geomywp.com/
 Tags: Geo-location, Geolocation, proximity search, zipcode search, radius search, store locator, Geolocate posts, address search, search distance, google v3 , Google maps, get directions, search locations, Geolocate, GEO, members locator, Geolocate memebrs, mapping, mapping software, latitude, longitude, locations finder, map creator.
-Requires at least: 3.8
-Tested up to: 4.0.1
+Requires at least: 4.0
+Tested up to: 4.2.2
 Buddypress: 2.1.1
-Stable tag: 2.5
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Stable tag: 2.6.1
+License: GPLv3
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Using Google's API tools GEO my WP provides an advance proximity search for any post type or buddypress's members based on a given address and radius.
 
@@ -129,6 +129,10 @@ For screenshots please visit [GEO my WP](http://www.geomywp.com)
 == Other Notes ==
 
 == Changelog ==
+
+= 2.6.1 = 
+
+* This is a major update. Please click <a href="https://geomywp.com/blog/geo-my-wp-2-6-1/" target="_blank">here</a> to see full version change-log before updating.
 
 = 2.5 = 
 
