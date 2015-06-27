@@ -415,7 +415,7 @@ function gmw_get_search_form_radius_values( $gmw, $class=false ) {
 
     $miles  	   = explode( ",", $gmw['search_form']['radius'] );
 	$output 	   = '';
-	$default_value = absint( end( $miles ) );
+	$default_value = apply_filters( 'gmw_search_form_default_radius', absint( end( $miles ) ), $gmw );
 	
 	if ( count( $miles ) > 1 ) {
 	    
