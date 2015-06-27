@@ -121,7 +121,7 @@ function gmw_new_map_element( $args, $return = false ) {
 		'triggerMap'		=> true,
 		'form' 		 		=> false,
 		'hiddenElement' 	=> '#gmw-map-wrapper-'.$mapID,					
-		'mapLoaderElement' 	=> 'gmw-map-loader-'.$mapID,
+		'mapLoaderElement' 	=> '#gmw-map-loader-'.$mapID,
 		'locations'			=> array(),
 		'infoWindowType'	=> 'normal',
 		'zoomLevel'			=> 13,
@@ -161,7 +161,6 @@ function gmw_new_map_element( $args, $return = false ) {
 		'draggableWindow'	=> false
 	);
 	
-
 	//merge default args with incoming args
 	$gmwMapElements[$mapID] = array_replace_recursive( $defaultArgs, $args );
 
