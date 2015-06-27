@@ -149,7 +149,7 @@ div.gmw-tabs-table {
 }
 
 .gmw-settings-panel label {
-	text-transform: lowercase;
+	//text-transform: lowercase;
 }
 
 .gmw-settings-panel label:first-letter {
