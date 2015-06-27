@@ -13,7 +13,7 @@
  *   jquery.ui.autocomplete.js
  */
 jQuery(document).ready(function($) {
-		
+	
     var zoomLevel = gmwSettings.post_types_settings.edit_post_zoom_level;
 	/*
 	 * Get the initial lat/long if exists in post to initiate the map
@@ -124,7 +124,8 @@ jQuery(document).ready(function($) {
     //// when drag marker - also removed all fields ///
     _markerMoved: function() {
     	loaderOn();
-    	$('#gmw-location-wrapper input:text').val('');
+ 
+    	$('.gmw-location-section input:text').val('');
       	$('#gmw-saved-data input:text').val('');
       	this._updatePosition(this.gmarker.getPosition(),'yes');
     },
@@ -182,8 +183,11 @@ jQuery(document).ready(function($) {
          
       if (this.street_number) {
 		this.street_number.val(this._findInfo(address, 'street_number'));
+		$('#_wppl_street_number').val(this._findInfoLong(address, 'street_number'));
+		
         if (this.route) {
        	 	this.route.val(this._findInfo(address, 'street_number') + " " + this._findInfo(address, 'route'));
+       	 	$('#_wppl_street_name').val(this._findInfoLong(address, 'route'));
       	}
       } else 
       if (this.route) {
@@ -253,9 +257,9 @@ jQuery(document).ready(function($) {
 	
 	$('#publish').click(function(e) {
 	
-		if ( addressMandatory == 1) {
-			
-			if( ( $('#_wppl_lat').val() == "" ) || ( $('#_wppl_long').val() == "" ) || ( $('#_wppl_address').val() == "" ) ) {
+		if ( gmwOptions.post_types_settings.mandatory_address == 1 ) {
+	
+			if ( ( $('#_wppl_lat').val() == "" ) || ( $('#_wppl_long').val() == "" ) || ( $('#_wppl_address').val() == "" ) ) {
 				
 				e.preventDefault(e);
 				$('.spinner').hide();
@@ -391,6 +395,9 @@ jQuery(document).ready(function($) {
 	        		/* longitude */
 	        		$("#_wppl_long").val(gotLong);
 	        		$('#gmw_check_long').val(gotLong);
+	        		
+	        		 document.getElementById("_wppl_street_number").value = '';
+	        		 document.getElementById("_wppl_street_name").value = '';
 	       			
 	        		/* brekdown address to components */
 	         		var address = results[0].address_components;
@@ -399,6 +406,7 @@ jQuery(document).ready(function($) {
 						if(address[x].types == 'street_number') {
 							if(address[x].long_name != undefined) {
 	          					streetNumber = address[x].long_name;
+	          					$("#_wppl_street_number").val(streetNumber);
 	          					$("#_wppl_street").val(streetNumber);
 	          				}
 	          			}
@@ -406,6 +414,7 @@ jQuery(document).ready(function($) {
 	          			if (address[x].types == 'route') {
 	          				if(address[x].long_name != undefined) {
 	          					var streetName = address[x].long_name;
+	          					$("#_wppl_street_name").val(streetName);
 	          					if( streetNumber != false && streetNumber != undefined ) {
 	          						var street = streetNumber + " " + streetName;
 	          						$("#_wppl_street").val(street);
@@ -473,6 +482,9 @@ jQuery(document).ready(function($) {
 	    var zipcode = $("#_wppl_zipcode").val();
 	    var country = $("#_wppl_country").val();
 	    
+	    document.getElementById("_wppl_street_number").value = '';
+	    document.getElementById("_wppl_street_name").value = '';
+	    
 	    retAddress = street + " " + city + " " + state + " " + zipcode + " " + country;
 	    addressApt = street + " " + apt + " " + city + " " + state + " " + zipcode + " " + country;
 	    
@@ -496,6 +508,20 @@ jQuery(document).ready(function($) {
          		var address = results[0].address_components;
         
 				for ( x in address ) {
+					
+					if (address[x].types == 'street_number') {
+	      				if(address[x].long_name != undefined) {
+	      					var street_number = address[x].long_name;
+	      					document.getElementById("_wppl_street_number").value = street_number;
+	      				}	
+	      			}
+					
+					if (address[x].types == 'route') {
+	      				if(address[x].long_name != undefined) {
+	      					var street_name= address[x].long_name;
+	      					document.getElementById("_wppl_street_name").value = street_name;
+	      				}	
+	      			}
 					
 		        	if (address[x].types == 'administrative_area_level_1,political') {
 	      				if(address[x].short_name != undefined) {

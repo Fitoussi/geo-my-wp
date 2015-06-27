@@ -1,93 +1,95 @@
 jQuery(document).ready(function($) {
 	
-	//trigger cl form
-	$('.gmw-cl-form-trigger, #gmw-cl-close-btn').click(function(e) {
+	$('.gmw-cl-form-trigger').click(function(e) {
 		e.preventDefault();
-		$('.gmw-cl-form-wrapper').fadeToggle();
-	});
+		$(this).closest('.gmw-cl-form-wrapper').find('form').slideToggle();
+	})
 	
-	/**
-	 * gmw JavaScript - Get the user's current location
-	 * @version 1.0
-	 * @author Eyal Fitoussi
-	 */
-	function GmwGetLocation() {
-		// if GPS exists locate the user //
-		if (navigator.geolocation) {
-	    	navigator.geolocation.getCurrentPosition(showPosition,showError, {timeout:10000});
-	    	$('#gmw-cl-message').html('<div id="gmw-locator-success-message">Getting your current location...</div>');
-	    	
-		} else {
-			// if nothing found we cant do much. we cant locate the user :( //
-			$('#gmw-cl-message').html('<div id="gmw-locator-success-message">we are sorry! Geolocation is not supported by this browser and we cannot locate you.</div>');
-			setTimeout(function() {
-	      		$('#gmw-cl-message').html('');
-	    		$("#gmw-cl-spinner").fadeToggle();
-	    		$('#gmw-cl-address').prop('disabled',false);
-	      	},2500);
-		} 
-		
-		// GPS locator function //
-		function showPosition(position) {
-			var geocoder = new google.maps.Geocoder();
-	  		geocoder.geocode({'latLng': new google.maps.LatLng(position.coords.latitude, position.coords.longitude)}, function (results, status) {
-	        	if ( status == google.maps.GeocoderStatus.OK ) {
-	          		gmwGetAddressFields(results);
-	        	} else {
-	          		alert('Geocoder failed due to: ' + status);
-	        	}
-	      	});
-	  	}
+	gmwClObject = {};
 	
-		function showError(error) {
-			
-			switch(error.code) {
-	    		case error.PERMISSION_DENIED:
-	    			$('#gmw-cl-message').html('<div id="gmw-locator-error-message">User denied the request for Geolocation</div>');	
-	      		break;
-	    		case error.POSITION_UNAVAILABLE:
-	    			$('#gmw-cl-message').html('<div id="gmw-locator-error-message">Location information is unavailable</div>');
-	      		break;
-	    		case 3:
-	    			$('#gmw-cl-message').html('<div id="gmw-locator-error-message">The request to get user location timed out</div>');
-	      		break;
-	    		case error.UNKNOWN_ERROR:
-	    			$('#gmw-cl-message').html('<div id="gmw-locator-error-message">An unknown error occurred</div>');
-	      		break;
-			}
-			
-			setTimeout(function() {
-  				$('#gmw-cl-message').html('');
-  				$("#gmw-cl-spinner").fadeToggle();
-  				$('#gmw-cl-address').prop('disabled',false);
-  			},1500);
-		}
-	}
-	
-	$('#gmw-cl-address').bind('keypress', function (e){
+	$('.gmw-cl-address-input').bind('keypress', function (e){
         if ( e.keyCode == 13 ) {
-        	$('#gmw-cl-submit-address').click();
+        	$(this).closest('form').find('.gmw-cl-form-submit-icon').click();
         }
     });
 	
+	/**
+	 * Locator success message
+	 * @param  {[type]} returnedLocator [description]
+	 * @return {[type]}                 [description]
+	 */
+	function gmwLocatorSuccess( returnedLocator ) {
+
+		gmwClObject['results'] = returnedLocator.results;
+	    gmwClObject['address'] = returnedLocator.results[0].formatted_address;
+	        		
+	    gmwGetAddressFields( returnedLocator.results );
+    }
+
+    /**
+     * Locator failed message
+     * @param  {return message} returnedLocator 
+     * @return {[type]}              
+     */
+    function gmwLocatorFailed( returnedLocator ) {
+
+    	//show faield message
+        $('#gmw-cl-message-'+gmwClObject['elementID']).addClass('error').html('Geocoder failed due to: ' + returnedLocator.message );
+
+        setTimeout(function() {
+			$('#gmw-cl-respond-wrapper-'+gmwClObject['elementID']).slideToggle();
+			$('#gmw-cl-message-'+gmwClObject['elementID']).html('');
+			$('.gmw-cl-address-input').prop('disabled',false);
+		},3000);
+    }
+
 	/* when autolocating user */
-	$('#gmw-cl-trigger').click(function(e) {
-		e.preventDefault();
-		$('#gmw-cl-address').prop( 'disabled', true );
-		$("#gmw-cl-respond-wrapper").fadeToggle();
-		GmwGetLocation();
+	$('.gmw-cl-locator-trigger').click(function(e) {
 		
+		gmwClObject = {};
+		
+		//get the form object
+		gmwClObject['form'] 	 = jQuery(this).closest('form');
+
+		//get the element ID
+		gmwClObject['elementID'] = gmwClObject['form'].find('.gmw-cl-element-id').val();
+		
+		e.preventDefault();
+		
+		//disbale the address field
+		$('.gmw-cl-address-input').prop( 'disabled', true );
+
+		//show message holder
+		$("#gmw-cl-respond-wrapper-"+gmwClObject['elementID']).slideToggle('fast', function() {
+			
+			//show loading message
+			$('#gmw-cl-message-'+gmwClObject['elementID']).addClass('locating').html('Getting your current location...'); 	
+		});
+		
+		//run the locator
+		GmwAutoLocator( gmwLocatorSuccess, gmwLocatorFailed )
 	});
 
 	/* get location in user's location widget when manually typing address */	
-	$('#gmw-cl-submit-address').click(function(e) {
+	$('.gmw-cl-form-submit-icon').click(function(e) {
 		
+		if ( jQuery(this).closest('.gmw-cl-address-input-wrapper').find('.gmw-cl-address-input').val().length === 0 ) {
+			alert( 'Address field cannot be empty' );
+			return false;
+		}
+
+		gmwClObject = {};
+		
+		gmwClObject['form'] 	 = jQuery(this).closest('form');
+		gmwClObject['elementID'] = gmwClObject['form'].find('.gmw-cl-element-id').val();
+
 		e.preventDefault();
+				
+		$('.gmw-cl-address-input').prop( 'disabled', true );
+		$("#gmw-cl-respond-wrapper-"+gmwClObject['elementID']).slideToggle();
 		
-		$('#gmw-cl-address').prop( 'disabled', true );
-		$("#gmw-cl-respond-wrapper").slideToggle();
-		
-		retAddress = $(this).closest('form').find("#gmw-cl-address").val();
+		clAddress = $("#gmw-cl-address-input-"+gmwClObject['elementID']).val();
+		gmwClObject['address'] = clAddress;
 		
 		geocoder = new google.maps.Geocoder();
 	
@@ -97,22 +99,24 @@ jQuery(document).ready(function($) {
 			countryCode = gmwSettings.general_settings.country_code;
 		}
 			
-	   	geocoder.geocode( { 'address': retAddress, 'region': countryCode }, function(results, status) {
-	      	if (status == google.maps.GeocoderStatus.OK) {	
+	   	geocoder.geocode( { 'address': clAddress, 'region': countryCode }, function(results, status) {
+	      	
+	   		if (status == google.maps.GeocoderStatus.OK) {	
 	      		geocoder.geocode({'latLng': new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng())}, function (results, status) {
 	        		if ( status == google.maps.GeocoderStatus.OK ) {
+	        			gmwClObject['results'] = results
 	        			gmwGetAddressFields(results);
 	        		} else {
-	        			$('#gmw-cl-message').html('Geocoder failed due to: ' + status);
+	        			$('#gmw-cl-message-'+gmwClObject['elementID']).addClass('error').html('Geocoder failed due to: ' + status);
 	        		}
 	      		});
 	    	} else {
 	   
-	    		$('#gmw-cl-message').addClass('error').html('Geocode was not successful for the following reason: ' + status);
+	    		$('#gmw-cl-message-'+gmwClObject['elementID']).addClass('error').html('Geocode was not successful for the following reason: ' + status);
 	      		setTimeout(function() {
-	      			$("#gmw-cl-respond-wrapper").slideToggle();
-	      			$('#gmw-cl-message').removeClass('error').html('');
-	      			$('#gmw-cl-address').prop('disabled',false);
+	      			$('#gmw-cl-respond-wrapper-'+gmwClObject['elementID']).slideToggle();
+	      			$('#gmw-cl-message-'+gmwClObject['elementID']).removeClass('error').html('');
+	      			$('.gmw-cl-address-input').prop('disabled',false);
 	      		},3000);
 	    	}
 	   	}); 
@@ -120,143 +124,60 @@ jQuery(document).ready(function($) {
 	
 	/* main function to geocoding from lat/long to address or the other way around when locating the user */
 	function gmwGetAddressFields(results) {
-		
-		/* remove all cookies - we gonna get new values */
-		gmwDeleteCookie('gmw_city');
-		gmwDeleteCookie('gmw_state');
-		gmwDeleteCookie('gmw_zipcode');
-		gmwDeleteCookie('gmw_country');
-		gmwDeleteCookie('gmw_lat');
-		gmwDeleteCookie('gmw_lng');
-	
+			
 		var street_number = false;
 		var street 		  = false;
 		var address 	  = results[0].address_components;
-		
-		gotLat  	= results[0].geometry.location.lat();
-	    gotLng 		= results[0].geometry.location.lng();
-	    
-	    $('#gmw-cl-lat').val(gotLat);
-	    $('#gmw-cl-lng').val(gotLng);
-		$('#gmw-cl-org-address').val(retAddress);
-	    $('#gmw-cl-formatted-address').val(results[0].formatted_address);
-	    
-	    gmwSetCookie( "gmw_address", results[0].formatted_address, 7 );
-	    gmwSetCookie( "gmw_formatted_address", results[0].formatted_address, 7 );
-	    gmwSetCookie( "gmw_lat", gotLat, 7 );
-	    gmwSetCookie( "gmw_lng", gotLng, 7 );
-		
+		var gotLat  	  = results[0].geometry.location.lat();
+	    var gotLng 		  = results[0].geometry.location.lng();
+	    	    
+	    $('#gmw_cl_lat_'+gmwClObject['elementID']).val(gotLat);
+	    $('#gmw_cl_lng_'+gmwClObject['elementID']).val(gotLng);
+		$('#gmw_cl_address_'+gmwClObject['elementID']).val(gmwClObject['address']);
+	    $('#gmw_cl_formatted_address_'+gmwClObject['elementID']).val(results[0].formatted_address);
+	    		
 		/* check for each of the address components and if exist save it in a cookie */
 		for ( x in address ) {
 			
 			if ( address[x].types == 'street_number' ) {
 				street_number = address[x].long_name; 
+				$('#gmw_cl_street_number_'+gmwClObject['elementID']).val(street_number);
 			}
 			
 			if ( address[x].types == 'route' ) {
 				street = address[x].long_name;  
+
+				$('#gmw_cl_street_name_'+gmwClObject['elementID']).val(street);
 				if ( street_number != false ) {
 					street = street_number + ' ' + street;
 				} 
-				gmwSetCookie( "gmw_street",street,7);
-				$('#gmw-cl-street').val(street);
+				$('#gmw_cl_street_'+gmwClObject['elementID']).val(street);
 			}
 	
 			if ( address[x].types == 'administrative_area_level_1,political' ) {
-	          	gmwSetCookie("gmw_state",address[x].short_name,7);
-	          	$('#gmw-cl-state').val(address[x].short_name);
-	          	$('#gmw-cl-state-long').val(address[x].long_name);
+	          	$('#gmw_cl_state_'+gmwClObject['elementID']).val(address[x].short_name);
+	          	$('#gmw_cl_state_long_'+gmwClObject['elementID']).val(address[x].long_name);
 	         } 
 	         
 	         if(address[x].types == 'locality,political') {
-	          	gmwSetCookie("gmw_city",address[x].long_name,7);
-	          	$('#gmw-cl-city').val(address[x].long_name);
+	          	$('#gmw_cl_city_'+gmwClObject['elementID']).val(address[x].long_name);
 	         } 
 	         
 	         if (address[x].types == 'postal_code') {
-	          	gmwSetCookie("gmw_zipcode",address[x].long_name,7);
-	          	$('#gmw-cl-zipcode').val(address[x].long_name);
+	          	$('#gmw_cl_zipcode_'+gmwClObject['elementID']).val(address[x].long_name);
 	          	
 	        } 
 	        
 	        if (address[x].types == 'country,political') {
-	          	gmwSetCookie("gmw_country",address[x].short_name,7);
-	          	$('#gmw-cl-country').val(address[x].short_name);
-	          	$('#gmw-cl-country-long').val(address[x].long_name);
+	          	$('#gmw_cl_country_'+gmwClObject['elementID']).val(address[x].short_name);
+	          	$('#gmw_cl_country_long_'+gmwClObject['elementID']).val(address[x].long_name);
 	         } 
 		}
 			
-		$('#gmw-cl-message').addClass('success').html('We found you at ' + results[0].formatted_address);
+		$('#gmw-cl-message-'+gmwClObject['elementID']).removeClass('error').addClass('success').html('We found you at ' + results[0].formatted_address);
 		
-		$('#gmw-cl-map').fadeToggle(function() {
-			
-			var latLng = new google.maps.LatLng( gotLat, gotLng );
-			clMap = new google.maps.Map(document.getElementById('gmw-cl-map'), {
-				zoom: 12,
-				center:latLng
-			});	
-			
-			marker = new google.maps.Marker({
-			    position: latLng,
-			    map: clMap
-			});
-			
-			setTimeout(function() {
-				$('#gmw-cl-hidden-form').submit();
-			},3500);
-			
-		});
-	}
-	
-	if ( typeof gmwCurrentLocationMaps != 'undefined' ) {
-		
-		//create global maps object if was not created already
-		if ( typeof gmwMapObjects == 'undefined' ) {
-			gmwMapObjects = {};
-		}
-		
-		//create global maps object if was not created already
-		gmwMapObjects['currentLocation'] = {};
-		
-		$.each(gmwCurrentLocationMaps, function( index, values ) {
-					
-		   var userPosition = new google.maps.LatLng(values.userPosition['lat'], values.userPosition['long']);
-		   
-		   gmwMapObjects['currentLocation'][index] = {
-				   element:index,
-				   mapId:index,
-				   mapElement:'gmw-cl-map-'+index,
-				   mapType:'current-location-map',
-				   zoomLevel:values.args.zoom_level,
-				   mapType:values.args.map_type,
-				   userPosition: userPosition,
-		   }
-		   
-		   gmwMapObjects['currentLocation'][index]['mapOptions'] = {
-	    	   zoom: parseInt(values.args.zoom_level),
-	    	   draggable: true,
-	    	   panControl: true,
-	    	   zoomControl: true,
-	    	   mapTypeControl: true,
-	    	   scrollwheel: values.args.scrollwheel,
-	    	   mapTypeControlOptions: {
-	    		   style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-	    		   position: google.maps.ControlPosition.TOP_RIGHT
-	    	   },
-	    	   center: postPosition,
-	    	   mapTypeId: google.maps.MapTypeId[values.args.map_type]
-	       },
-	       
-	       gmwMapObjects['currentLocation'][index]['map'] = new google.maps.Map(
-	    		   document.getElementById('gmw-cl-map-'+index), 
-	    		   gmwMapObjects['currentLocation'][index]['mapOptions']
-	       );
-		   
-		   gmwMapObjects['currentLocation'][index]['postMarker'] = new google.maps.Marker({
-	           position: gmwMapObjects['currentLocation'][index]['userPosition'],
-	           map: gmwMapObjects['currentLocation'][index]['map'],
-	           icon:values.args.map_marker
-	       });               
-		});
+		setTimeout(function() {
+			$('#gmw-cl-hidden-form-'+gmwClObject['elementID']).submit();
+		},3500);	
 	}
 });
