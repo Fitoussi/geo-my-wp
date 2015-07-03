@@ -1161,24 +1161,10 @@ function gmw_per_page( $gmw, $totalCount, $pagName ) {
             echo '<option value="'.$pp.'" '.$pp_s.'>'.$pp.' '.$gmw['labels']['search_results']['per_page'].'</option>';
         }
         echo '</select>';
-    
-    echo "<script> 
-        jQuery(document).ready(function($) {
 
-            $('.gmw-{$gmw['ID']}-per-page').change(function() {
-
-                var totalResults = {$totalCount};
-                var lastPage     = Math.ceil(totalResults / $(this).val());
-                var newPaged     = ( {$paged} > lastPage || lastPage == 1 ) ? lastPage : {$paged};
-
-                if ( window.location.search.indexOf('gmw_post') === -1 ) {     
-                	window.location.href = window.location.href + '?gmw_auto=auto&gmw_per_page='+$(this).val() + '&gmw_form={$gmw['ID']}&{$pagName}='+newPaged;           			   		
-			   	} else {
-			   		window.location.href = location.href.replace(/([?&]gmw_per_page)=([^#&]*)/g, '$1='+$(this).val()).replace(/([?/]page[?/])([^#/]*)/g,'$1'+newPaged);
-			   	}
-            });
-        });
-    </script>";
+        $url_px = esc_attr( $gmw['url_px'] );
+        $action = ( !empty( $_GET[$url_px.'post'] ) ) ? 1 : 0;
+        echo '<input type="hidden" id="gmw-per-page-hidden" formid="'.$gmw['ID'].'" totalcount="'.$totalCount.'" pagname="'.$pagName.'" paged="'.$paged.'" gmwpost="'.$action.'" urlpx="'.$url_px.'">';
     }
 }
 
