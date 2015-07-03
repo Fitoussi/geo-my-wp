@@ -169,6 +169,33 @@ jQuery(document).ready(function($) {
             $(this).closest('form').submit();
         }
     });
+
+    //remove hidden coordinates when address field changed
+    $('.gmw-address').keyup(function () { 
+        $(this).closest('form').find('.gmw-lat').val('');
+        $(this).closest('form').find('.gmw-lng').val('');
+    });
+
+    //per page dropdown
+    $('.gmw-per-page').change(function() {
+
+        thisValue    = $(this).val();
+        ppValues     = $(this).next();
+        formID       = ppValues.attr('formid');
+        totalResults = ppValues.attr('totalcount');
+        paged        = ppValues.attr('paged');
+        pageName     = ppValues.attr('pageName');
+        urlPx        = ppValues.attr('urlpx');
+        gmwPost      = ppValues.attr('gmwpost');
+        lastPage     = Math.ceil(totalResults / thisValue );
+        newPaged     = ( paged > lastPage || lastPage == 1 ) ? lastPage : paged;
+
+        if ( gmwPost == 0 ) {     
+            window.location.href = window.location.href + '?'+urlPx+'auto=auto&'+urlPx+'per_page=' + thisValue + '&'+urlPx+'form='+formID+'&'+pageName+'='+newPaged;                            
+        } else {
+            window.location.href = location.href.replace(/([?&]gmw_per_page)=([^#&]*)/g, '$1='+thisValue).replace(/([?/]page[?/])([^#/]*)/g,'$1'+newPaged);
+        }
+    });
     
     $('.gmw-form').submit(function(e) {
         
@@ -186,7 +213,7 @@ jQuery(document).ready(function($) {
             });
             address = address.join(' ');               
         }
-        
+
         //if address field is empty create a red border for the input field and stop the function
         if ( !$.trim(address).length ) {
             var addressField = sForm.find('.gmw-address');
@@ -202,10 +229,10 @@ jQuery(document).ready(function($) {
        
         //geocode address via javascript
         if ( gmwSettings.general_settings.js_geocode == 1 ) {
-       
+
             // check if we are submmiting the same address and if we have lat/long. 
             //if so no need to geocode again and submit the form with the information we already have
-            if ( sForm.find('.prev-address').val() == address && $.trim(sForm.find('.gmw-lat').val()).length > 0 ) {            
+            if ( sForm.find( '.gmw-lat').val() != '' && sForm.find( '.gmw-lng').val() != '' ) {            
                 return true;
             }
                   
@@ -249,7 +276,8 @@ jQuery(document).ready(function($) {
     });
 
     var autoLocator = false;
-    
+    var gForm = false;
+
     function gmwLocatorSuccess( returnedLocator ) {
         getAddressFields( returnedLocator.results )
     }
@@ -289,7 +317,10 @@ jQuery(document).ready(function($) {
    
         locatorClicked = $(this).attr('id');
         locatorButton  = $(this);
+        gForm          = $(this).closest('form');
         
+        gForm.find('.gmw-lat').val('');
+        gForm.find('.gmw-lng').val('');
         $(this).toggleClass('locator-submitted');
         
         locatorButton.fadeToggle('fast',function() {
@@ -320,6 +351,11 @@ jQuery(document).ready(function($) {
         gmwSetCookie("gmw_lng", gotLng, 7);
         gmwSetCookie("gmw_address", results[0].formatted_address, 7);
         
+        if ( gForm != false ) {
+            gForm.find('.gmw-lat').val(gotLat);
+            gForm.find('.gmw-lng').val(gotLng);
+        }
+                
         /* check for each of the address components and if exist save it in a cookie */
         for ( x in address ) {
 
@@ -402,7 +438,7 @@ jQuery(document).ready(function($) {
         // if a form was submitted */
         if ( $(".locator-submitted")[0] ) {
 
-            gForm = $('.locator-submitted').closest('form');
+            //gForm = $('.locator-submitted').closest('form');
 
             $('.gmw-address').removeAttr('disabled');
             $('.gmw-submit').removeAttr('disabled');
