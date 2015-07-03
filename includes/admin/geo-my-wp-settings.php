@@ -222,10 +222,18 @@ class GMW_Settings {
         	
         	                                case "multicheckbox" :
         	                                    foreach ( $option[ 'options' ] as $keyVal => $name ) {
-        	                                        ?><label><input class="setting-<?php echo $option[ 'name' ]; ?>" name="<?php echo 'gmw_options[' . $key . '][' . $option[ 'name' ] . '][' . $keyVal . ']'; ?>" type="checkbox" value="1" <?php if ( isset( $gmw_options[ $key ][ $option[ 'name' ] ][ $keyVal ] ) && $gmw_options[ $key ][ $option[ 'name' ] ][ $keyVal ] == 1 ) echo 'checked="checked"'; ?> /> <?php echo $name; ?></label><br /> <?php
+        	                                        ?><label><input class="setting-<?php echo $option[ 'name' ]; ?>" name="<?php echo 'gmw_options['.$key.']['.$option['name'].']['.$keyVal.']'; ?>" type="checkbox" value="1" <?php if ( isset( $gmw_options[ $key ][ $option[ 'name' ] ][ $keyVal ] ) && $gmw_options[ $key ][ $option[ 'name' ] ][ $keyVal ] == 1 ) echo 'checked="checked"'; ?> /> <?php echo $name; ?></label><br /> <?php
         	                                    }
         	                                break;
-        	
+        	                                
+                                            //needs improvment
+                                            /*                                 
+                                            case "multicheckboxvalues" :
+                                                foreach ($option['options'] as $keyVal => $name) {
+                                                    ?><p><label><input id="setting-<?php echo $option[ 'name' ]; ?>" class="setting-<?php echo $option['name']; ?>"  name="<?php echo 'gmw_options['.$key.']['.$option['name'].']['.$keyVal.']'; ?>" type="checkbox" value="<?php echo $keyVal; ?>" <?php if ( isset( $gmw_options[ $key ][ $option[ 'name' ] ][ $keyVal ] ) && $gmw_options[ $key ][ $option[ 'name' ] ][ $keyVal ] == 1 ) echo 'checked="checked"'; ?> /> <?php echo $name; ?></label><br /> <?php
+                                                }
+                                            break;
+                                            */
         	                                case "textarea" :
         	                                	?><textarea id="setting-<?php echo $option[ 'name' ]; ?>" class="large-text" cols="50" rows="3" name="<?php echo 'gmw_options[' . $key . '][' . $option[ 'name' ] . ']'; ?>" <?php echo implode( ' ', $attributes ); ?> <?php echo $placeholder; ?>><?php echo esc_textarea( $value ); ?></textarea><?php
         	                                break;
