@@ -220,7 +220,10 @@ class GMW_PT_Admin {
         <div>
         	<?php foreach ( get_post_types() as $post ) { ?>
 				<?php $checked = ( isset( $saved_data ) && !empty( $saved_data ) && in_array( $post, $saved_data ) ) ? ' checked="checked"' : ''; ?>
-            	<p><label><input type="checkbox" name="<?php echo 'gmw_options[' . $section . '][post_types][]'; ?>" value="<?php echo $post; ?>" id="<?php echo $post; ?>" class="post-types-tax" <?php echo $checked; ?>><?php echo get_post_type_object( $post )->labels->name; ?></label></p>
+            	<p><label>
+                <input type="checkbox" name="<?php echo 'gmw_options[' . $section . '][post_types][]'; ?>" value="<?php echo $post; ?>" id="<?php echo $post; ?>" class="post-types-tax" <?php echo $checked; ?>>
+                <?php echo get_post_type_object( $post )->labels->name . ' ( '. $post .' ) '; ?>
+                </label></p>
          	<?php } ?>
         </div>
         <?php
@@ -237,7 +240,7 @@ class GMW_PT_Admin {
             	<?php $checked = ( isset( $saved_data ) && !empty( $saved_data ) && in_array( $post, $saved_data ) ) ? ' checked="checked"' : ''; ?>
                 <p>
                 	<input type="checkbox" name="<?php echo 'gmw_forms[' . $_GET['formID'] . '][' . $section . '][post_types][]'; ?>" value="<?php echo $post; ?>" id="<?php echo $post; ?>" class="post-types-tax" <?php echo $checked; ?> />
-                	<label><?php echo get_post_type_object( $post )->labels->name; ?></label>
+                	<label><?php echo get_post_type_object( $post )->labels->name . ' ( '. $post .' ) '; ?></label>
                 </p>
             <?php } ?>
         </div>
