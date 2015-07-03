@@ -38,7 +38,7 @@ class GMW {
 	 */
 	public function form_submitted() {
 		
-		//$this->form['org_address']  	   = ( isset(  $_GET['gmw_address'] ) && array_filter( $_GET['gmw_address'] ) ) ? str_replace( '+', ' ', implode( ' ', $_GET['gmw_address'] ) ) : '';
+		//$this->form['org_address'] = ( isset(  $_GET['gmw_address'] ) && array_filter( $_GET['gmw_address'] ) ) ? str_replace( '+', ' ', implode( ' ', $_GET['gmw_address'] ) ) : '';
 		
 		$this->form['radius'] 		= ( isset( $_GET[$this->form['url_px'].'distance'] ) ) ? $_GET[$this->form['url_px'].'distance'] : 500;	
 		$this->form['org_address']  = ( isset( $_GET[$this->form['url_px'].'address'] ) && array_filter( $_GET[$this->form['url_px'].'address'] ) ) ? implode( ' ', $_GET[$this->form['url_px'].'address'] ) : '';
@@ -47,7 +47,7 @@ class GMW {
 		$this->form['units_array']  = gmw_get_units_array( isset( $_GET[ $this->form['url_px'].'units' ] ) ? $_GET[ $this->form['url_px'].'units' ] : 'imperial' );
 						 
 		//otherwise if lat/lng exist in URL then use that
-		if ( !empty( $_GET[$this->form['url_px'].'lat'] ) && !empty( $_GET[$this->form['url_px'].'lng'] ) ) {
+		if ( !empty( $_GET[$this->form['url_px'].'lat'] ) && !empty( $_GET[$this->form['url_px'].'lng'] ) && !empty( $_GET[$this->form['url_px'].'lng'] )) {
 
 			$this->form['your_lat'] = $_GET[$this->form['url_px'].'lat'];
 			$this->form['your_lng'] = $_GET[$this->form['url_px'].'lng'];
