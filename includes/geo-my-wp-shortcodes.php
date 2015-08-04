@@ -40,6 +40,9 @@ function gmw_shortcode( $atts ) {
 	 */
 	$gmw_prefix = gmw_get_option( 'general_settings', 'url_px', 'gmw_' );
 
+	//modify the URL parameters
+	$_GET = apply_filters( 'gmw_modify_get_args', $_GET );
+
 	//if this is results page we get the formId from URL
 	if ( $formId == 'results' ) {
 
