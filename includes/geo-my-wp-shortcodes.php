@@ -30,8 +30,15 @@ function gmw_shortcode( $atts ) {
 	if ( empty( $formId ) || !in_array( $element, array( 'search_form', 'map', 'search_results', 'form' ) ) )
 		return;
 
-	$gmw_prefix = 'gmw_';
-	$gmw_prefix = apply_filters( 'gmw_form_url_prefix', $gmw_prefix, $atts, $element );
+	/**
+	 * GEO my WP URL parameteres prefix
+	 *
+	 * This is the prefix used for the URL paramaters that GEO my WP
+	 * uses with submitted form. IT can modified if needed
+	 * 
+	 * @var string
+	 */
+	$gmw_prefix = gmw_get_option( 'general_settings', 'url_px', 'gmw_' );
 
 	//if this is results page we get the formId from URL
 	if ( $formId == 'results' ) {
