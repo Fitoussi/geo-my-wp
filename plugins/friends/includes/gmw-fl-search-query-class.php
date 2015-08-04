@@ -182,7 +182,7 @@ class GMW_FL_Search_Query extends GMW {
     
     	//query args
     	$this->form['query_args'] = apply_filters( 'gmw_fl_search_query_args', array(
-    			'type'     	=> 'alphabetical',
+    			'type'     	=> 'distance',
     			'per_page' 	=> $this->form['get_per_page'],
     			'page'		=> $this->form['paged']
     	), $this->form );
