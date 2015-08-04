@@ -461,7 +461,7 @@ class GMW_Addons {
     	                                    <input type="submit" class="button-secondary button-primary gmw-addon-activation-btn" value="<?php _e( 'Activate Add-on', 'GMW' ); ?>" />
     	                                    <input type="hidden" name="gmw_addon_basename" value="<?php echo plugin_basename( esc_attr( $addon['file'] ) ); ?>" />
     										<input type="hidden" name="gmw_action" value="activate_addon" />
-    										<input type="hidden" name="gmw_addon_activated" value="<?php esc_attr_e( $addon['name'] ); ?>" />										
+    										<input type="hidden" name="gmw_addon_activated" value="<?php echo esc_attr( $addon['name'] ); ?>" />										
     										<?php wp_nonce_field( $addon['name'].'_activate_addon_nonce', $addon['name'].'_activate_addon_nonce' ); ?> 	
     									</form>
 
@@ -533,7 +533,7 @@ class GMW_Addons {
 		                                    	
 		                                    <input type="hidden" name="gmw_addon_basename" value="<?php echo plugin_basename( esc_attr( $addon['file'] ) ); ?>" />
 		                                    <input type="hidden" name="gmw_action" value="deactivate_addon" />
-		                                    <input type="hidden" name="gmw_addon_deactivated" value="<?php esc_attr_e( $addon['name'] ); ?>" />										
+		                                    <input type="hidden" name="gmw_addon_deactivated" value="<?php echo esc_attr( $addon['name'] ); ?>" />										
 											<?php wp_nonce_field( $addon['name'].'_deactivate_addon_nonce', $addon['name'].'_deactivate_addon_nonce' ); ?>
 	                                    	
 	                                    </form>  									
