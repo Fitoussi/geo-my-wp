@@ -65,9 +65,12 @@ class GEO_my_WP {
 
 			self::$instance = new GEO_my_WP;
 			self::$instance->constants();
+
+			//load textdomain
+			add_action( 'plugins_loaded', array( self::$instance, 'load_textdomain' ) );
+
 			self::$instance->includes();
 			self::$instance->actions();
-			self::$instance->load_textdomain();
 			self::$instance->core_addons();	
 		}
 
