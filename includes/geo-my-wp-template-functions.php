@@ -266,59 +266,15 @@ function gmw_get_form_submit_fields( $gmw, $subValue ) {
     $output['field_id']   = "<input type=\"hidden\" id=\"gmw-form-id-{$gmw['ID']}\" class=\"gmw-form-id gmw-form-id-{$gmw['ID']}\" name=\"{$url_px}form\" value=\"{$gmw['ID']}\" />";
         
     //set the page number to 1. We do this to reset the page number when form submitted again
-    $output['field_page'] = "<input 
-        	type=\"hidden\" 
-        	id=\"gmw-page-{$gmw['ID']}\" 
-        	class=\"gmw-page gmw-page-{$gmw['ID']}\" 
-        	name=\"paged\" value=\"1\" 
-        	/>";
-
-    $output['field_pre_page'] = "<input 
-        	type=\"hidden\" 
-        	id=\"gmw-per-page-{$gmw['ID']}\" 
-        	class=\"gmw-per-page gmw-per-page-{$gmw['ID']}\" 
-        	name=\"{$url_px}per_page\" value=\"{$per_page}\" 
-        	/>";
-        	
-    $output['field_address'] = "<input 
-        	type=\"hidden\" 
-        	id=\"prev-address-{$gmw['ID']}\" 
-        	class=\"prev-address prev-address-{$gmw['ID']}\" 
-        	value=\"{$address}\"
-        	/>";
-    
-    $output['field_lat'] = "<input 
-        	type=\"hidden\" 
-        	id=\"gmw-lat-{$gmw['ID']}\" 
-        	class=\"gmw-lat gmw-lat-{$gmw['ID']}\" 
-        	name=\"{$url_px}lat\" value=\"{$lat}\"
-        	/>";
-        	
-    $output['field_lng'] = "<input 
-        	type=\"hidden\" 
-        	id=\"gmw-long-{$gmw['ID']}\" 
-        	class=\"gmw-lng gmw-long-{$gmw['ID']}\" 
-        	name=\"{$url_px}lng\" value=\"{$lng}\"
-        	/>";
-
-    $output['field_prefix'] = "<input 
-        	type=\"hidden\" 
-        	id=\"gmw-prefix-{$gmw['ID']}\" 
-        	class=\"gmw-prefix gmw-prefix-{$gmw['ID']}\" 
-        	name=\"{$url_px}px\" value=\"{$gmw['prefix']}\" 
-        	/>";
-        	
-    $output['field_action'] = "<input 
-        	type=\"hidden\" 
-        	id=\"gmw-action-{$gmw['ID']}\" 
-        	class=\"gmw-action gmw-action-{$gmw['ID']}\" 
-        	name=\"action\" 
-        	value=\"{$url_px}post\" 
-        	/>";
-
-    $output['field_submit'] = $submit_button;
-    
-    $output['wrap_end'] = '</div>';
+    $output['field_page'] 	  = "<input type=\"hidden\" id=\"gmw-page-{$gmw['ID']}\" class=\"gmw-page gmw-page-{$gmw['ID']}\" name=\"paged\" value=\"1\" />";
+    $output['field_pre_page'] = "<input type=\"hidden\" id=\"gmw-per-page-{$gmw['ID']}\" class=\"gmw-per-page gmw-per-page-{$gmw['ID']}\" name=\"{$url_px}per_page\" value=\"{$per_page}\" />";   	
+    $output['field_address']  = "<input type=\"hidden\" id=\"prev-address-{$gmw['ID']}\" class=\"prev-address prev-address-{$gmw['ID']}\" value=\"{$address}\"/>";
+    $output['field_lat'] 	  = "<input type=\"hidden\" id=\"gmw-lat-{$gmw['ID']}\" class=\"gmw-lat gmw-lat-{$gmw['ID']}\" name=\"{$url_px}lat\" value=\"{$lat}\"/>";      	
+    $output['field_lng'] 	  = "<input type=\"hidden\" id=\"gmw-long-{$gmw['ID']}\" class=\"gmw-lng gmw-long-{$gmw['ID']}\" name=\"{$url_px}lng\" value=\"{$lng}\"/>";
+    $output['field_prefix']   = "<input type=\"hidden\" id=\"gmw-prefix-{$gmw['ID']}\" class=\"gmw-prefix gmw-prefix-{$gmw['ID']}\" name=\"{$url_px}px\" value=\"{$gmw['prefix']}\" />";   	
+    $output['field_action']   = "<input type=\"hidden\" id=\"gmw-action-{$gmw['ID']}\" class=\"gmw-action gmw-action-{$gmw['ID']}\" name=\"action\" value=\"{$url_px}post\" />";
+    $output['field_submit']   = $submit_button;  
+    $output['wrap_end'] 	  = '</div>';
 
     $output  = apply_filters( 'gmw_from_submit_fields', $output, $gmw, $_GET );
 
