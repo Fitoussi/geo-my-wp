@@ -124,7 +124,7 @@ function gmw_pt_get_form_taxonomies( $gmw, $tag, $class ) {
         			'name'            => 'tax_' . $tax,
         			'selected'        => $tax_value,
         			'show_option_all' => __( ' - All - ', 'GMW' ),
-        	), $gmw, $taxonomy );
+        	), $gmw, $taxonomy, $tax, $values );
 
        		$single_tax .= wp_dropdown_categories( $args );
 
