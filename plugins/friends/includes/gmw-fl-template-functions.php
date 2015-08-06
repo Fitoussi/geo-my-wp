@@ -23,7 +23,7 @@ function gmw_fl_xprofile_fields( $gmw, $class ) {
 
 		$fdata  	= new BP_XProfile_Field( $field_id );
 		$fname  	= 'field_'.$field_id;
-		$label		= $fdata->name;
+		$label		= apply_filters( 'gmw_fl_xprofile_field_label', $fdata->name, $field_id, $fdata );
 		$fclass		= 'field-'.$field_id;
 		$fid		= 'gmw-'.$gmw['ID'].'-field-'.$field_id;
 		$children 	= $fdata->get_children();
@@ -41,28 +41,29 @@ function gmw_fl_xprofile_fields( $gmw, $class ) {
 				echo 	'<input size="3" type="text" name="'.$fname.'" id="'.$fid.'" class="'.$fclass.'" value="'.$value.'" placeholder="'.__( 'Min', 'GMW' ).'" />';
 				echo 	'&nbsp;-&nbsp;';
 				echo 	'<input size="3" type="text" name="'.$fname.'_max" id="'.$fid.'_max" class="'.$fclass.'_max" value="'.$max.'" placeholder="'.__( 'Max', 'GMW' ).'" />';
-				break;				 
+			break;	
+
 			case 'textbox':
 				$value = ( isset( $_REQUEST[$fname] ) ) ? esc_attr (stripslashes ( $_REQUEST[$fname] ) ) : '';
 				 
 				echo '<label for="'.$fid.'">'.$label.'</label>';
 				echo '<input type="text" name="'.$fname.'" id="'.$fid.'" class="'.$fclass.'" value="'.$value.'" />';
-				break;
+			break;
 
 			case 'number':
 				$value = ( isset( $_REQUEST[$fname] ) ) ? esc_attr (stripslashes ( $_REQUEST[$fname] ) ) : '';
 				 
 				echo '<label for="'.$fid.'">'.$label.'</label>';
 				echo '<input type="number" name="'.$fname.'" id="'.$fid.'" value="'.$value.'" />';
-				break;
-				 
+			break;	
+
 			case 'textarea':
 				$value = ( isset( $_REQUEST[$fname] ) ) ? esc_attr (stripslashes ( $_REQUEST[$fname] ) ) : '';
 				 
 				echo '<label for="'.$fid.'">'.$label.'</label>';
 				echo '<textarea rows="5" cols="40" name="'.$fname.'" id="'.$fid.'" class="'.$fclass.'">'.$value.'</textarea>';
-				break;
-					
+			break;
+
 			case 'selectbox':
 				$value = ( isset( $_REQUEST[$fname] ) ) ? esc_attr (stripslashes ( $_REQUEST[$fname] ) ) : '';
 
@@ -77,8 +78,7 @@ function gmw_fl_xprofile_fields( $gmw, $class ) {
 				}
 				 
 				echo '</select>';
-				break;
-
+			break;
 			case 'multiselectbox':
 				$value = ( isset( $_REQUEST[$fname] ) ) ? $_REQUEST[$fname] : array();
 
@@ -92,7 +92,7 @@ function gmw_fl_xprofile_fields( $gmw, $class ) {
 				}
 				 
 				echo "</select>";
-				break;
+			break;
 				 
 			case 'radio':
 				$value = ( isset( $_REQUEST[$fname] ) ) ? esc_attr (stripslashes ( $_REQUEST[$fname] ) ) : '';
@@ -109,7 +109,7 @@ function gmw_fl_xprofile_fields( $gmw, $class ) {
 				echo '<a href="#" onclick="event.preventDefault();jQuery(this).closest(\'div\').find(\'input\').prop(\'checked\', false);">'. __('Clear', 'buddypress'). '</a><br/>';
 				echo '</div>';
 
-				break;
+			break;
 			case 'checkbox':
 				$value = ( isset( $_REQUEST[$fname] ) ) ? $_REQUEST[$fname] : array();
 
@@ -123,7 +123,7 @@ function gmw_fl_xprofile_fields( $gmw, $class ) {
 				}
 				echo '</div>';
 
-				break;
+			break;
 		} // switch
 
 		echo '</div>';
