@@ -177,7 +177,7 @@ function gmw_replace_pt_location_in_db( $location ) {
 function gmw_admin_support_button() {
 	
 	if ( !empty( $_GET['page'] ) && $_GET['page'] != 'gmw-forms' ) { ?>
-		<span style="font-size:14px;margin-right:5px;"> - Developed by Eyal Fitoussi</span>
+		<span style="font-size:14px;margin-right:5px;"> - GEO my WP developed by Eyal Fitoussi</span>
 		<a class="button action gmw-donate" title="Donate to GEO my WP" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7FK9DTB9N2EEU" target="_blank"><i style="color:red;margin-right:4px;" class="fa fa-heart"></i>Donate</a>
 	<?php } ?>	
 	<span class="gmw-helpful-links-wrapper">
