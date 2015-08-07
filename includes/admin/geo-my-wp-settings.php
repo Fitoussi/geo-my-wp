@@ -144,7 +144,7 @@ class GMW_Settings {
 
             <h2 class="gmw-wrap-top-h2">
                 <i class="fa fa-cog"></i>
-                <?php echo _e( 'GEO my WP Settings', 'GMW' ); ?>
+                <?php echo _e( 'Settings', 'GMW' ); ?>
                 <?php gmw_admin_support_button(); ?>
             </h2>
 

@@ -30,7 +30,7 @@ function gmw_tools_page_output() {
     		
             <h2 class="gmw-wrap-top-h2">
                 <i class="fa fa-wrench"></i>
-                <?php echo _e('GEO my WP Tools', 'GMW'); ?>
+                <?php echo _e('Tools', 'GMW'); ?>
                 <?php gmw_admin_support_button(); ?>
             </h2>
 

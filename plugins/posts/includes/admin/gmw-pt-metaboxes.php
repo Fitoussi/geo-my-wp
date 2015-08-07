@@ -55,7 +55,7 @@ class GMW_PT_Meta_Boxes {
     	$prefix     	= '_wppl_';
     	$meta_boxes 	= array(
     			'id'       => 'wppl-meta-box',
-    			'title'    => apply_filters( 'gmw_pt_mb_title', __( 'GMW Location', 'GMW' ) ),
+    			'title'    => apply_filters( 'gmw_pt_mb_title', __( 'Location', 'GMW' ) ),
     			'pages'    => $post_types,
     			'context'  => 'normal',
     			'priority' => 'high',

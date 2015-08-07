@@ -217,7 +217,7 @@ class GMW_Shortcodes_page {
         <div class="wrap">
 
             <h2 class="gmw-wrap-top-h2">
-                <?php echo _e( 'GEO my WP Shortcodes', 'GMW' ); ?>
+                <?php echo _e( 'Shortcodes', 'GMW' ); ?>
                 <?php gmw_admin_support_button(); ?>
             </h2>
 

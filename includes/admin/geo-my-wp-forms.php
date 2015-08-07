@@ -260,7 +260,7 @@ class GMW_Forms {
 
             <h2 class="gmw-wrap-top-h2">
                 <i class="fa fa-map-marker"></i>
-                <?php echo _e('GEO my WP Forms', 'GMW'); ?>
+                <?php echo _e('Forms', 'GMW'); ?>
                 <?php echo self::new_form_list(); ?>
                 <?php gmw_admin_support_button(); ?>
             </h2>

@@ -606,7 +606,7 @@ class GMW_Edit_Form {
         
             <h2 class="gmw-wrap-top-h2">
             	<i class="fa fa-pencil"></i>
-                <?php echo _e('GEO my WP Edit Form Page', 'GMW'); ?>
+                <?php echo _e('Edit Form', 'GMW'); ?>
                 <?php gmw_admin_support_button(); ?>
             </h2>
 
