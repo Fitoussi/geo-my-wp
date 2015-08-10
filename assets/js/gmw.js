@@ -314,8 +314,8 @@ jQuery(document).ready(function($) {
         
     // When click on locator button in a form
     $('.gmw-locate-btn').click(function() {
-   
-        locatorClicked = $(this).attr('id');
+    
+        locatorClicked = $(this).closest('form').find('.gmw-form-id').val();
         locatorButton  = $(this);
         gForm          = $(this).closest('form');
         
@@ -478,3 +478,5 @@ jQuery(document).ready(function($) {
         }
     }
 });
+
+
