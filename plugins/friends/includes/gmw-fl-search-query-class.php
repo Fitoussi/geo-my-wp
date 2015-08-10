@@ -131,7 +131,7 @@ class GMW_FL_Search_Query extends GMW {
     	//modify the clauses
     	$gmwBpQuery = apply_filters( 'gmw_fl_after_query_clauses', $gmwBpQuery, $this->form );
     	$gmwBpQuery = apply_filters( "gmw_fl_after_query_clauses_{$this->form['ID']}", $gmwBpQuery, $this->form );
-
+        
         return $gmwBpQuery;
     }
 
@@ -164,7 +164,7 @@ class GMW_FL_Search_Query extends GMW {
     	  	
         $gmwWpQuery->query_fields  .= $fields;
         $gmwWpQuery->query_from    .= $from;
-        
+
         return $gmwWpQuery;
     }
 
@@ -174,17 +174,39 @@ class GMW_FL_Search_Query extends GMW {
     public function results() {
     
     	//Show/hide members with no location in the results. Default set to false
-    	$this->show_non_located_users = apply_filters( 'show_users_without_location', true, $this->form );
+    	$this->show_non_located_users = apply_filters( 'show_users_without_location', false, $this->form );
     	 
     	//prevent BuddyPress from using its own "paged" value for the current page
     	if ( !empty( $_REQUEST['upage'] ) )
     		unset( $_REQUEST['upage'] );
-    
+        
+        /*
+        $xp_ids = array();
+
+        //query the xprofile fields. This is done in a saperate function
+        if ( apply_filters( 'gmw_fl_do_xprofile_query', true ) ) {
+            
+            $xprofile_users = gmw_fl_query_xprofile_fields( $this->form ,$_GET );
+        
+            //if fields entered but no users returned abort the query
+            if ( $xprofile_users['status'] == 'no_ids_found' ) {
+
+                $xp_ids = 0;
+
+            //if users returned. add them to query
+            } elseif ( $xprofile_users['status'] == 'ids_found' ) {
+
+                $xp_ids = $xprofile_users['ids'];
+            }
+        }
+        */
+       
     	//query args
     	$this->form['query_args'] = apply_filters( 'gmw_fl_search_query_args', array(
     			'type'     	=> 'distance',
     			'per_page' 	=> $this->form['get_per_page'],
-    			'page'		=> $this->form['paged']
+    			'page'		=> $this->form['paged'],
+                //'include'   => $xp_ids
     	), $this->form );
     
     	//modify the form values before query
