@@ -315,8 +315,8 @@ function gmw_get_search_form_address_field( $gmw, $id=false, $class='') {
     	$lSubmit = ( isset( $gmw['search_form']['locator_submit'] ) ) ? 'gmw-locator-submit' : '';
     	
     	$output .= '<div class="gmw-locator-btn-wrapper gmw-locator-btn-within-wrapper">';
-    	$output .= 	"<i id=\"{$gmw['ID']}\" class=\"fa fa-map-marker gmw-locator-btn-within gmw-locator-button gmw-locate-btn {$lSubmit}\"></i>";
-    	$output .= 	"<i id=\"gmw-locator-btn-loader-{$gmw['ID']}\" class=\"gmw-locator-btn-loader fa fa-refresh fa-spin\" alt=\"Locator image loader\" style=\"display:none;\"></i>";
+    	$output .= "<i id=\"{$gmw['ID']}\" class=\"fa fa-map-marker gmw-locator-btn-within gmw-locator-button gmw-locate-btn {$lSubmit}\"></i>";
+    	$output .= "<i id=\"gmw-locator-btn-loader-{$gmw['ID']}\" class=\"gmw-locator-btn-loader fa fa-refresh fa-spin\" alt=\"Locator image loader\" style=\"display:none;\"></i>";
     	$output .= '</div>';
     }
     
