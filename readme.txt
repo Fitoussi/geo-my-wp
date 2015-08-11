@@ -3,9 +3,9 @@ Contributors: ninjew
 Donate link: http://geomywp.com/
 Tags: Geo-location, Geolocation, proximity search, zipcode search, radius search, store locator, Geolocate posts, address search, search distance, google v3 , Google maps, get directions, search locations, Geolocate, GEO, members locator, Geolocate memebrs, mapping, mapping software, latitude, longitude, locations finder, map creator.
 Requires at least: 4.0
-Tested up to: 4.2.2
+Tested up to: 4.2.4
 Buddypress: 2.1.1
-Stable tag: 2.6.1
+Stable tag: 2.6.1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -129,6 +129,21 @@ For screenshots please visit [GEO my WP](http://www.geomywp.com)
 == Other Notes ==
 
 == Changelog ==
+
+= 2.6.1.1 =
+
+* Compatible with WordPress 4.2.4
+* Fix: Members Locator search results ordered Alphabetically instead of by distance.
+* Fix: Unable to activate/diactivate Posts Locator add-on when site language is different than English.
+* Fix: locator button disappear when clicked.
+* Fix: load text domain properly using plugin_loaded hook.
+* Fix: Remove line break in script to prevent code from "breaking".
+* Tweak: admin pages title modifyed ( GEO my WP was removed from titles ).
+* Tweak: pass $tax and $values arguments to gmw_pt_get_form_taxonomies filter.
+* Tweak: Save url_px value in gmw_settings.
+* Tweak: temporary set 'show_users_without_location' filter to false by default which means that members without location wont be displayed in earch results. There are issues with the no location members query and once fixed it will be set back to true by default. It is possible to enable it using add_filter( 'show_users_without_location', '_return__true' );.
+* New filter: 'gmw_fl_xprofile_field_label' allows to modify the Xprofile Fields label of Members Locator search form.
+* New filter: Modify the $_GET parameters before form is being generated in the front end.
 
 = 2.6.1 = 
 
