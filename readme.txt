@@ -144,6 +144,7 @@ For screenshots please visit [GEO my WP](http://www.geomywp.com)
 * Tweak: temporary set 'show_users_without_location' filter to false by default which means that members without location wont be displayed in earch results. There are issues with the no location members query and once fixed it will be set back to true by default. It is possible to enable it using add_filter( 'show_users_without_location', '_return__true' );.
 * New filter: 'gmw_fl_xprofile_field_label' allows to modify the Xprofile Fields label of Members Locator search form.
 * New filter: Modify the $_GET parameters before form is being generated in the front end.
+* Update language files.
 
 = 2.6.1 = 
 
