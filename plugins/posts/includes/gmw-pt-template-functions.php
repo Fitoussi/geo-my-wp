@@ -23,16 +23,23 @@ function gmw_pt_form_get_post_types_dropdown( $gmw, $title, $class, $all_label )
 		
     	$output .= '<span class="search-all">'.$all_label.'</span>';
     	$output .= '<ul class="post-types-checkboxes">';
+
 		foreach ( $gmw['search_form']['post_types'] as $post_type ) {
-		
-			if ( isset( $_GET[$gmw['url_px'].'post'] ) && $_GET[$gmw['url_px'].'post'] == $post_type )
+		      
+            $pto = get_post_type_object( $post_type );
+
+            if ( empty( $pto ) ) 
+               continue;
+
+			if ( isset( $_GET[$gmw['url_px'].'post'] ) && $_GET[$gmw['url_px'].'post'] == $post_type ) {
 				$pti_post = 'checked="checked"';
-			else
+            } else {
 				$pti_post = "";
+            }
+
 			$output .= '<li id="gmw-'.$gmw['ID'].'-'.$post_type.'-post-type-cb-wrapper" class="post-type-checkbox-wrapper pt-'.$post_type.'">';
 			$output .= '<input type="checkbox" name="'.$gmw['url_px'].'post[]" id="gmw-'.$gmw['ID'].'-'.$post_type.'-post-type-cb" class="post-type-checkbox pt-'.$post_type.'" value="'.$post_type.'" '.$pti_post.' checked="checked">';
-			$output .= '<label for="gmw-'.$gmw['ID'].'-'.$post_type.'-post-type-cb">'.get_post_type_object( $post_type )->labels->name.'</label></li>';
-		
+			$output .= '<label for="gmw-'.$gmw['ID'].'-'.$post_type.'-post-type-cb">'.$pto->labels->name.'</label></li>';
 		}
 		
 	} else {
