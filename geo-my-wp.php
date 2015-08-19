@@ -3,11 +3,11 @@
 Plugin Name: GEO my WP
 Plugin URI: http://www.geomywp.com
 Description: Assign geolocation to post types and BuddyPress members. Create an advance proximity search forms to search for locations based on address, radius, units and more.
-Version: 2.6.1.1
+Version: 2.6.2
 Author: Eyal Fitoussi
 Author URI: http://www.geomywp.com
 Requires at least: 4.0
-Tested up to: 4.2.4
+Tested up to: 4.3
 Buddypress: 2.1.1 and up
 Text Domain: GMW
 Domain Path: /languages/
@@ -37,16 +37,6 @@ class GEO_my_WP {
 	 * @access private
 	 */
 	private $settings;
-
-	/**
-	 * GEO my WP URL parameteres prefix
-	 *
-	 * This is the prefix used for the URL paramaters that GEO my WP
-	 * uses with submitted form. IT can modified if needed
-	 * 
-	 * @var string
-	 */
-	public $url_px = 'gmw_';
 	
 	/**
 	 * Main Instance
@@ -70,6 +60,10 @@ class GEO_my_WP {
 			add_action( 'plugins_loaded', array( self::$instance, 'load_textdomain' ) );
 
 			self::$instance->includes();
+
+			//Run installer on plugin's activation
+			register_activation_hook( basename( dirname( __FILE__ ) ) . '/' . basename( __FILE__ ), array( self::$instance, 'activate' ) );
+
 			self::$instance->actions();
 			self::$instance->core_addons();	
 		}
@@ -92,13 +86,13 @@ class GEO_my_WP {
 	 * @return void
 	 */
 	private function constants() {
-
+	
 		// Define constants
 		if ( !defined( 'GMW_REMOTE_SITE_URL' ) ) {
 			define( 'GMW_REMOTE_SITE_URL', 'https://geomywp.com' );
 		}
 		
-		define( 'GMW_VERSION', '2.6.1.1' );
+		define( 'GMW_VERSION', '2.6.2' );
 		define( 'GMW_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 		define( 'GMW_URL', untrailingslashit( plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) ) );
 		define( 'GMW_IMAGES', GMW_URL . '/assets/images' );
@@ -107,6 +101,16 @@ class GEO_my_WP {
 		define( 'GMW_BASENAME', plugin_basename( GMW_FILE ) );		
 	}
 
+	/**
+	 * Localization
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function load_textdomain() {
+		load_plugin_textdomain( 'GMW', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+	}
+	
 	/**
 	 * Include files
 	 * 
@@ -120,19 +124,31 @@ class GEO_my_WP {
 		$gmw_forms   = get_option( 'gmw_forms' );
 		$gmw_addons  = get_option( 'gmw_addons' );
 
-		//append url prefix to gmw_options
-		$gmw_options['general_settings']['url_px'] = apply_filters( 'gmw_form_url_prefix', $this->url_px );
-
-		//include gmw functions.
 		include( 'includes/geo-my-wp-functions.php' );
-		//include( 'includes/geo-my-wp-user-update-location.php' );
-		//include( 'includes/geo-my-wp-cache-helper.php' );
 
-		//some default options if not exist
+		//append url prefix to gmw_options
+		/**
+		 * GEO my WP URL parameteres prefix
+		 *
+		 * This is the prefix used for the URL paramaters that GEO my WP
+		 * uses with submitted form. IT can modified if needed
+		 * 
+		 * @var string
+		 */
+		$gmw_options['general_settings']['url_px'] 		  = apply_filters( 'gmw_form_url_prefix', 'gmw_' );
+		
+		//add some default options if not exist
 		$gmw_options['general_settings']['js_geocode']    = gmw_get_option( 'general_settings', 'js_geocode', false   );
 		$gmw_options['general_settings']['auto_locate']   = gmw_get_option( 'general_settings', 'auto_locate', false  );
 		$gmw_options['general_settings']['country_code']  = gmw_get_option( 'general_settings', 'country_code', 'US'  );
 		$gmw_options['general_settings']['language_code'] = gmw_get_option( 'general_settings', 'language_code', 'EN' );
+
+		include( 'includes/geo-my-wp-installer.php' );
+
+		//enable GMW cache helper
+		if ( apply_filters( 'gmw_cache_helper_enabled', true ) ) {
+			include( 'includes/geo-my-wp-cache-helper.php' );
+		}
 
 		//include admin files
 		if ( is_admin() && !defined( 'DOING_AJAX' ) ) {
@@ -154,6 +170,35 @@ class GEO_my_WP {
 		include( 'includes/geo-my-wp-widgets.php' );
 	}
 
+	/**
+	 * Called on plugin activation
+	 */
+	public function activate() {
+		GEO_my_WP_Installer::install();
+		flush_rewrite_rules();
+	}
+
+	/**
+	 * add actions
+	 * 
+	 * @since 2.4
+	 */
+	public function actions() {
+
+		//include scripts in the front end
+		add_action( 'wp_enqueue_scripts', 	 array( $this, 'register_scripts' ), 10 );
+		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ), 10 );
+		add_filter( 'clean_url', 		  	 array( $this, 'clean_google_url' ), 99, 3 );
+
+		//map options
+		add_action( 'wp_footer', array( $this, 'google_api_features_init' ) );
+		
+		//Load google places autocomplete in admin dashboard
+		add_action( 'admin_footer', array( $this, 'google_places_address_autocomplete' ), 10 );
+		add_action( 'admin_init', array( $this, 'update' ) );
+		//add_action('wp_ajax_list_update_order', array( $this, 'order_list' ) );
+	}
+	
 	/**
 	 * Verify if add-on is active
 	 * @param  [array] $addon
@@ -200,36 +245,16 @@ class GEO_my_WP {
 			include( 'plugins/sweetdate-geolocation/loader.php' );
 		}
 	}
-	
+
 	/**
-	 * add actions
-	 * 
-	 * @since 2.4
+	 * Handle Updates
 	 */
-	public function actions() {
-
-		//include scripts in the front end
-		add_action( 'wp_enqueue_scripts', 	 array( $this, 'register_scripts' ), 10 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ), 10 );
-		add_filter( 'clean_url', 		  	 array( $this, 'clean_google_url' ), 99, 3 );
-
-		//map options
-		add_action( 'wp_footer', array( $this, 'google_api_features_init' ) );
-		
-		//Load google places autocomplete in admin dashboard
-		add_action( 'admin_footer', array( $this, 'google_places_address_autocomplete' ), 10 );
-
-		//add_action('wp_ajax_list_update_order', array( $this, 'order_list' ) );
-	}
-	
-	/**
-	 * Localization
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function load_textdomain() {
-		load_plugin_textdomain( 'GMW', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+	public function update() {
+		$gmw_version = get_option( 'gmw_version' );
+		if ( empty( $gmw_version ) || version_compare( GMW_VERSION, $gmw_version, '>' ) ) {
+			GEO_my_WP_Installer::install();
+			flush_rewrite_rules();
+		}
 	}
 
 	/**
