@@ -136,6 +136,9 @@ jQuery(document).ready(function($) {
     
     $('.gmw-map-loader').fadeOut(1500);  
 
+    if ( jQuery().chosen ) {
+        $(".gmw-chosen").chosen();
+    }
     //trigger form when click on enter within input field
     /*$('.gmw-form input[type="text"]').keypress(function(event){
         if( event.keyCode == 13 ){
@@ -478,5 +481,3 @@ jQuery(document).ready(function($) {
         }
     }
 });
-
-
