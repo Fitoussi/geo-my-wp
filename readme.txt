@@ -3,9 +3,9 @@ Contributors: ninjew
 Donate link: http://geomywp.com/
 Tags: Geo-location, Geolocation, proximity search, zipcode search, radius search, store locator, Geolocate posts, address search, search distance, google v3 , Google maps, get directions, search locations, Geolocate, GEO, members locator, Geolocate memebrs, mapping, mapping software, latitude, longitude, locations finder, map creator.
 Requires at least: 4.0
-Tested up to: 4.2.4
+Tested up to: 4.3
 Buddypress: 2.1.1
-Stable tag: 2.6.1.1
+Stable tag: 2.6.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -129,6 +129,22 @@ For screenshots please visit [GEO my WP](http://www.geomywp.com)
 == Other Notes ==
 
 == Changelog ==
+
+= 2.6.2 =
+
+* Fix: Remove php warning due to non-existing post type.
+* Fix: xprofile fields will show results when not all fields matches users. Acting more like an OR rather than AND query.
+* Security: Security patches added to xprofile fields functions.
+* Improvment: Improved xprofile fields form and queries functions.
+* Tweak: add chosen support for 'gmw-chosen' class when chosen exists ( to be used with premium features ).
+* Tweak: Added taxonomy lable name to the "All" option ( ex "All categories" ).
+* Tweak: Removed custom script from the "horizontal-gray" post types search form template file that adds the taxonomy name to the "All" option of the taxonomies dropdown. It is now the plugin's default.
+* New feature/class: GEO_my_WP_Cache_Helper class ( based a class taken from WP Job Manager plugin by Mike Jolly. Thank you! ). The class will help caching "expensive" databse queries such as terms, taxonomies, search results and more in transient to improve the plugin's performance.
+* New feature/class: GEO_my_WP_Installer to do some actions during activation and updates of the plugins.
+* New filter: 'gmw_fl_xprofile_form_default_value' allow to set default values to form xprofile fields.
+* New filter: 'gmw_fl_xprofile_form_dropdown_option_all' allows to modify the "All" option of an xprofile fields dropdown.
+* New Filter: 'gmw_fl_xprofile_query_default_value' allows to set a default values for xprofile field directly in the search query.
+* New filter: 'gmw_pt_show_tax_label' allows to disable the taxonomy label.
 
 = 2.6.1.1 =
 
