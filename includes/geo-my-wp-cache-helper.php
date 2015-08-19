@@ -90,8 +90,6 @@ class GEO_my_WP_Cache_Helper {
 		global $wpdb;
 
 		if ( ! wp_using_ext_object_cache() && ! defined( 'WP_SETUP_CONFIG' ) && ! defined( 'WP_INSTALLING' ) ) {
-			echo 'transient deleted';
-			sdf();
 			$sql = "DELETE a, b FROM $wpdb->options a, $wpdb->options b
 				WHERE a.option_name LIKE %s
 				AND a.option_name NOT LIKE %s
