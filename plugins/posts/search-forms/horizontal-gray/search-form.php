@@ -18,21 +18,6 @@
  * It will show in the "Search results" dropdown menu as "Custom: horizontal-gray".
  */
 ?>
-<?php 
-//create custom drop-down labels
-if ( !function_exists('gmw_modify_tax_all_value') ) {
-	function gmw_modify_tax_all_value( $args, $gmw, $get_tax ) {
-
-		//remove this filter to prevent it from effecting other forms
-		remove_filter( 'gmw_pt_dropdown_taxonomy_args', 'gmw_modify_tax_all_value', 10, 3 );
-		
-		$args['show_option_all'] = ' All '.$get_tax->labels->name;
-		return $args;
-		
-	}
-	add_filter( 'gmw_pt_dropdown_taxonomy_args', 'gmw_modify_tax_all_value', 10, 3 );
-}
-?>
 <?php do_action( 'gmw_before_search_form_template', $gmw ); ?>
 
 <div class="gmw-form-wrapper gmw-form-wrapper<?php echo $gmw['ID']; ?> gmw-pt-form-wrapper gmw-pt-horizontal-gray-form-wrapper">
