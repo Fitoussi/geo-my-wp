@@ -21,12 +21,23 @@ function gmw_fl_xprofile_fields( $gmw, $class ) {
 	
 	foreach ( $total_fields as $field_id ) {
 
-		$fdata  	= new BP_XProfile_Field( $field_id );
-		$fname  	= 'field_'.$field_id;
-		$label		= apply_filters( 'gmw_fl_xprofile_field_label', $fdata->name, $field_id, $fdata );
-		$fclass		= 'field-'.$field_id;
-		$fid		= 'gmw-'.$gmw['ID'].'-field-'.$field_id;
-		$children 	= $fdata->get_children();
+		$field_id = esc_attr( $field_id );
+		$fdata    = new BP_XProfile_Field( $field_id );
+		$fname    = 'field_'.$field_id;
+		$label	  = apply_filters( 'gmw_fl_xprofile_form_field_label', $fdata->name, $field_id, $fdata );
+		$fclass	  = 'field-'.$field_id;
+		$fid	  = 'gmw-'.esc_attr( $gmw['ID'] ).'-field-'.$field_id;
+		$value    = '';
+
+		if ( !empty( $_REQUEST[$fname] ) ) {
+			$value = ( is_array( $_REQUEST[$fname] ) ) ? array_map( 'esc_attr', $_REQUEST[$fname] ) : esc_attr( stripslashes( $_REQUEST[$fname] ) );
+		} elseif ( !$gmw['submitted'] ) {
+			$value = apply_filters( 'gmw_fl_xprofile_form_default_value', '', $field_id, $fdata );
+
+			if ( !empty( $value ) ) {
+				$value = ( is_array( $value ) ) ? array_map( 'esc_attr', $value ) : esc_attr( stripslashes( $value ) );
+			}
+		}
 
 		echo '<div class="editfield '.$fdata->type.' gmw-'.$gmw['ID'].'-field-'.$field_id.'-wrapper">';
 		 
@@ -34,43 +45,41 @@ function gmw_fl_xprofile_fields( $gmw, $class ) {
 
 			case 'datebox':
 			case 'birthdate':
-				$value = ( isset( $_REQUEST[$fname] ) ) ? esc_attr (stripslashes ( $_REQUEST[$fname] ) ) : '';
-				$max   = ( isset( $_REQUEST[$fname . '_max'] ) ) ? esc_attr (stripslashes ( $_REQUEST[$fname.'_max'] ) ) : '';
+				$max   = ( isset( $_REQUEST[$fname . '_max'] ) ) ? esc_attr( stripslashes( $_REQUEST[$fname.'_max'] ) ) : '';
 				
-				echo 	'<label for="'.$fid.'">' . __('Age Range (min - max)', 'GMW') . '</label>';
-				echo 	'<input size="3" type="text" name="'.$fname.'" id="'.$fid.'" class="'.$fclass.'" value="'.$value.'" placeholder="'.__( 'Min', 'GMW' ).'" />';
-				echo 	'&nbsp;-&nbsp;';
-				echo 	'<input size="3" type="text" name="'.$fname.'_max" id="'.$fid.'_max" class="'.$fclass.'_max" value="'.$max.'" placeholder="'.__( 'Max', 'GMW' ).'" />';
+				echo '<label for="'.$fid.'">' . __('Age Range (min - max)', 'GMW') . '</label>';
+				echo '<input size="3" type="text" name="'.$fname.'" id="'.$fid.'" class="'.$fclass.'" value="'.$value.'" placeholder="'.__( 'Min', 'GMW' ).'" />';
+				echo '&nbsp;-&nbsp;';
+				echo '<input size="3" type="text" name="'.$fname.'_max" id="'.$fid.'_max" class="'.$fclass.'_max" value="'.$max.'" placeholder="'.__( 'Max', 'GMW' ).'" />';
 			break;	
 
-			case 'textbox':
-				$value = ( isset( $_REQUEST[$fname] ) ) ? esc_attr (stripslashes ( $_REQUEST[$fname] ) ) : '';
-				 
+			case 'textbox':				 
 				echo '<label for="'.$fid.'">'.$label.'</label>';
 				echo '<input type="text" name="'.$fname.'" id="'.$fid.'" class="'.$fclass.'" value="'.$value.'" />';
 			break;
 
 			case 'number':
-				$value = ( isset( $_REQUEST[$fname] ) ) ? esc_attr (stripslashes ( $_REQUEST[$fname] ) ) : '';
-				 
 				echo '<label for="'.$fid.'">'.$label.'</label>';
 				echo '<input type="number" name="'.$fname.'" id="'.$fid.'" value="'.$value.'" />';
 			break;	
 
 			case 'textarea':
-				$value = ( isset( $_REQUEST[$fname] ) ) ? esc_attr (stripslashes ( $_REQUEST[$fname] ) ) : '';
-				 
 				echo '<label for="'.$fid.'">'.$label.'</label>';
 				echo '<textarea rows="5" cols="40" name="'.$fname.'" id="'.$fid.'" class="'.$fclass.'">'.$value.'</textarea>';
 			break;
 
 			case 'selectbox':
-				$value = ( isset( $_REQUEST[$fname] ) ) ? esc_attr (stripslashes ( $_REQUEST[$fname] ) ) : '';
-
 				echo '<label for="'.$fid.'">'.$label.'</label>';
 				echo '<select name="'.$fname.'" id="'.$fid.'" class="'.$fclass.'">';
-				echo 	'<option value="">'.__( ' -- All -- ', 'GMW' ).'</option>';
-				 
+
+				$option_all = apply_filters( 'gmw_fl_xprofile_form_dropdown_option_all', __( ' -- All -- ', 'GMW' ), $field_id, $fdata );
+
+				if ( !empty( $option_all ) ) {
+					echo '<option value="">'.$option_all.'</option>';
+				}
+
+				$children = $fdata->get_children();
+
 				foreach ( $children as $child ) {
 					$option   = trim( $child->name );
 					$selected = ( $option == $value ) ? "selected='selected'" : "";
@@ -80,14 +89,15 @@ function gmw_fl_xprofile_fields( $gmw, $class ) {
 				echo '</select>';
 			break;
 			case 'multiselectbox':
-				$value = ( isset( $_REQUEST[$fname] ) ) ? $_REQUEST[$fname] : array();
 
 				echo '<label for="'.$fid.'">'.$label.'</label>';
 				echo '<select name="'.$fname.'[]" id="'.$fid.'" class="'.$fclass.'" multiple="multiple">';
-				 
+				
+				$children = $fdata->get_children();
+
 				foreach ( $children as $child ) {
 					$option   = trim( $child->name );
-					$selected = ( in_array( $option, $value ) ) ? "selected='selected'" : "";
+					$selected = ( !empty( $value ) && in_array( $option, $value ) ) ? "selected='selected'" : "";
 					echo '<option '.$selected.' value="'.$option.'" />'.$option.'</label>';
 				}
 				 
@@ -95,10 +105,10 @@ function gmw_fl_xprofile_fields( $gmw, $class ) {
 			break;
 				 
 			case 'radio':
-				$value = ( isset( $_REQUEST[$fname] ) ) ? esc_attr (stripslashes ( $_REQUEST[$fname] ) ) : '';
-				 
 				echo '<div class="radio">';
 				echo '<span class="label">'.$label.'</span>';
+
+				$children = $fdata->get_children();
 
 				foreach ( $children as $child ) {
 					$option  = trim( $child->name );
@@ -106,19 +116,20 @@ function gmw_fl_xprofile_fields( $gmw, $class ) {
 					echo '<label><input '.$checked.' type="radio" name="'.$fname.'" value="'.$option.'" />'.$option.'</label>';
 				}
 
-				echo '<a href="#" onclick="event.preventDefault();jQuery(this).closest(\'div\').find(\'input\').prop(\'checked\', false);">'. __('Clear', 'buddypress'). '</a><br/>';
+				echo '<a href="#" onclick="event.preventDefault();jQuery(this).closest(\'div\').find(\'input\').prop(\'checked\', false);">'. __( 'Clear', 'buddypress' ). '</a><br/>';
 				echo '</div>';
 
 			break;
 			case 'checkbox':
-				$value = ( isset( $_REQUEST[$fname] ) ) ? $_REQUEST[$fname] : array();
 
 				echo '<div class="checkbox">';
 				echo '<span class="label">'.$label.'</span>';
 
+				$children = $fdata->get_children();
+
 				foreach ( $children as $child ) {
 					$option	 = trim( $child->name );
-					$checked = ( in_array( $option, $value ) ) ? "checked='checked'" : "";
+					$checked = ( !empty( $value ) && in_array( $option, $value ) ) ? "checked='checked'" : "";
 					echo '<label><input '.$checked.' type="checkbox" name="'.$fname.'[]" value="'.$option.'" />'.$option.'</label>';
 				}
 				echo '</div>';
@@ -162,16 +173,23 @@ function gmw_fl_query_xprofile_fields( $gmw, $formValues ) {
 	
 	foreach ( $total_fields as $field_id ) {
 
-		$fdata  = new BP_XProfile_Field( $field_id );
-		$fname  = 'field_'.$field_id;
-		$value  = '';
+		$field_id = esc_attr( $field_id );
+		$fdata    = new BP_XProfile_Field( $field_id );
+		$fname    = 'field_'.$field_id;
+		$value    = '';
 
-		if ( isset( $formValues[$fname] ) ) {
+		if ( $gmw['submitted'] && !empty( $formValues[$fname] ) ) {
 
 			if ( is_array( $formValues[$fname] ) ) {
 				$value  = array_map( 'esc_attr', $formValues[$fname] );
 			} else {
 				$value = esc_attr( $formValues[$fname] );
+			}
+		} else {
+			$value = apply_filters( 'gmw_fl_xprofile_query_default_value', '', $field_id, $fdata );
+
+			if ( !empty( $value ) ) {
+				$value = ( is_array( $value ) ) ? array_map( 'esc_attr', $value ) : esc_attr( stripslashes( $value ) );
 			}
 		}
 
@@ -216,28 +234,18 @@ function gmw_fl_query_xprofile_fields( $gmw, $formValues ) {
 					$values = $value;
 					$like   = array ();
 					 
-					foreach ($values as $value) {
-						$value   = str_replace ( '&', '&amp;', $value );
+					foreach ( $values as $value ) {
+						$value = str_replace ( '&', '&amp;', $value );
 
 						if ( $wp_version < 4.0 ) {
 							$escaped = '%'. esc_sql ( like_escape( $value ) ). '%';
 						} else {
 							$escaped = '%' . $wpdb->esc_like( $value ) . '%';
 						}
-						$like[]  = $wpdb->prepare ( "value = %s OR value LIKE %s", $value, $escaped );
+						$like[]  = $wpdb->prepare( "value = %s OR value LIKE %s", $value, $escaped );
 					}
 					 
 					$sql .= 'AND ('. implode (' OR ', $like). ')';
-					 
-					/*
-					 $like = array();
-
-					foreach ( $value as $curvalue ) {
-					$like[] = "value = '$curvalue' OR value LIKE '%\"$curvalue\"%' ";
-					}
-
-					$sql .= ' AND (' . implode(' OR ', $like) . ')';
-					*/
 					 
 				break;
 				case 'datebox':
@@ -259,15 +267,17 @@ function gmw_fl_query_xprofile_fields( $gmw, $formValues ) {
 
 					if ( $max !== '')   $sql .= $wpdb->prepare("AND DATE(value) > %s", "$ymin-$month-$day");
 					if ( $value !== '') $sql .= $wpdb->prepare(" AND DATE(value) <= %s", "$ymax-$month-$day");
-					
-					// $sql = "SELECT user_id from {$bp->profile->table_name_data}";
-					//$sql .= " WHERE field_id = $field_id AND value > '$ymin-$month-$day' AND value <= '$ymax-$month-$day'";
 
 					break;					 
 			}
 					
 			$results 		= $wpdb->get_col( $sql, 0 );
 			$usersid['ids'] = ( empty( $usersid['ids'] ) ) ? $results : array_intersect( $usersid['ids'], $results ); 
+
+			//abort if no users found for this fields
+			if ( empty( $usersid['ids'] ) ) {
+				return array( 'status' => 'no_ids_found', 'ids' => array() );
+			}
 					 
 		} // if value //
 	} // for eaech //
