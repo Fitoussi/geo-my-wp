@@ -17,7 +17,6 @@ class GMW_FL_Search_Query extends GMW {
         '',
         'lat', 
         'long', 
-        'feature', 
         'street', 
         'city', 
         'state', 

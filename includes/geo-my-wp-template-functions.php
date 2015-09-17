@@ -1055,7 +1055,7 @@ function gmw_driving_distance( $info, $gmw, $title ) {
  */
 function gmw_get_pagination( $gmw, $pageName, $maxPages ) {
 
-	$maxPages    = ceil( (int) $maxPages );
+	$maxPages    = ceil( $maxPages );
 	$paged_check = ( is_front_page() ) ? 'page' : $pageName;
 	
 	$args = apply_filters( 'gmw_get_pagination_args', array(
