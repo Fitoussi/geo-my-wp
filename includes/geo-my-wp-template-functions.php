@@ -371,7 +371,7 @@ function gmw_get_search_form_radius_values( $gmw, $class=false ) {
 
     $miles  	   = explode( ",", $gmw['search_form']['radius'] );
 	$output 	   = '';
-	$default_value = apply_filters( 'gmw_search_form_default_radius', absint( end( $miles ) ), $gmw );
+	$default_value = apply_filters( 'gmw_search_form_default_radius', end( $miles ), $gmw );
 	
 	if ( count( $miles ) > 1 ) {
 	    
@@ -384,11 +384,12 @@ function gmw_get_search_form_radius_values( $gmw, $class=false ) {
 		$title = apply_filters( 'gmw_radius_dropdown_title', $title, $gmw );
 		
         $output .= "<select class=\"gmw-distance-select gmw-distance-select-{$gmw['ID']}\" name=\"{$gmw['url_px']}distance\">";
-        $output .= 	'<option value="'.$default_value.'">'.esc_attr( $title ).'</option>';
+        $output .= 	'<option value="'.esc_attr( $default_value ).'">'.esc_attr( $title ).'</option>';
 
         foreach ( $miles as $mile ) {
-        	
-        	$mile = absint($mile);
+      
+        	if ( !is_numeric( $mile ) )
+        		continue;
 
             if ( isset( $_GET[$gmw['url_px'].'distance'] ) && $_GET[$gmw['url_px'].'distance'] == $mile ) {
                 $mile_s = 'selected="selected"';
