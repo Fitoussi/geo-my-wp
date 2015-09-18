@@ -5,7 +5,7 @@ Tags: Geo-location, Geolocation, proximity search, zipcode search, radius search
 Requires at least: 4.0
 Tested up to: 4.3
 Buddypress: 2.1.1
-Stable tag: 2.6.2.1
+Stable tag: 2.6.2.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -130,7 +130,11 @@ For screenshots please visit [GEO my WP](http://www.geomywp.com)
 
 == Changelog ==
 
-= 2.6.1 =
+= 2.6.2.2 =
+
+Fix: Allow decimals for radius values.
+
+= 2.6.2.1 =
 
 Fix: issue with pagination not working properly.
 Fix: Members Locator get no results due to missing 'feature' column in database
