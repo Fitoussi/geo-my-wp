@@ -21,11 +21,11 @@ class GMW_Single_Post_Location extends GMW_Single_Location {
 	 *
 	 */
 	protected $ext_args = array(
-			'elements'			=> 'title,address,map,distance,directions,additional_info',
-			'item_type'	 		=> 'post',
-			'prefix'	 		=> 'pt',
-			'additional_info' 	=> 'address,phone,fax,email,website',
-			'item_info_window'	=> 'title,address,distance,additional_info',
+		'elements'			=> 'title,address,map,distance,directions,additional_info',
+		'item_type'	 		=> 'post',
+		'prefix'	 		=> 'pt',
+		'additional_info' 	=> 'address,phone,fax,email,website',
+		'item_info_window'	=> 'title,address,distance,additional_info',
 	);
 
 	/**
@@ -38,12 +38,10 @@ class GMW_Single_Post_Location extends GMW_Single_Location {
 		//check if user entered post id
 		if ( empty( $this->args['item_id'] ) ) {
 	
-			global $post;
+			$this->args['item_id'] = get_queried_object_id();
 	
-			if ( empty( $post ) )
+			if ( empty( $this->args['item_id'] ) )
 				return;
-	
-			$this->args['item_id'] = $post->ID;
 		}
 			
 		//get the post's info
@@ -61,16 +59,16 @@ class GMW_Single_Post_Location extends GMW_Single_Location {
 		
 		//labels
 		$labels = apply_filters( 'gmw_sl_labels', array(
-				'distance_label'	=> __( 'Distance: ', 'GMW' ),
-				'directions_submit' => __( 'Go', 'GMW' ),
-				'directions_label' 	=> __( 'Get Directions', 'GMW' ),
-				'resize_map'		=> __( 'Resize map', 'GMW' ),
-				'address_label' 	=> __( 'Address', 'GMW' ),
-				'phone_label' 		=> __( 'Phone', 'GMW' ),
-				'fax_label' 		=> __( 'Fax', 'GMW' ),
-				'email_label' 		=> __( 'Email', 'GMW' ),
-				'website_label' 	=> __( 'Website', 'GMW' ),
-				'na'				=> __( 'N/A', 'GMW' )
+			'distance_label'	=> __( 'Distance: ', 'GMW' ),
+			'directions_submit' => __( 'Go', 'GMW' ),
+			'directions_label' 	=> __( 'Get Directions', 'GMW' ),
+			'resize_map'		=> __( 'Resize map', 'GMW' ),
+			'address_label' 	=> __( 'Address', 'GMW' ),
+			'phone_label' 		=> __( 'Phone', 'GMW' ),
+			'fax_label' 		=> __( 'Fax', 'GMW' ),
+			'email_label' 		=> __( 'Email', 'GMW' ),
+			'website_label' 	=> __( 'Website', 'GMW' ),
+			'na'				=> __( 'N/A', 'GMW' )
 		), $this->args, $this->item_info );
 		
 		return $labels;
@@ -93,7 +91,7 @@ class GMW_Single_Post_Location extends GMW_Single_Location {
 	 * @access public
 	 */
 	public function additional_info() {
-		 
+		
 		$contact_info = explode( ',', $this->args['additional_info'] );
 
 		$output = '<div id="gmw-sl-additional-info-wrapper-'.$this->args['element_id'].'" class="gmw-sl-additional-info-wrapper gmw-sl-'.$this->args['item_type'].'-additional-info-wrapper">';
