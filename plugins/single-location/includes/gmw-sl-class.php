@@ -21,24 +21,25 @@ class GMW_Single_Location {
 	 * Array of Incoming arguments
 	 */
 	protected $args = array(
-			'element_id'			=> 0,
-			'item_id'         		=> 0,
-			'elements'				=> 0,
-			'item_type'				=> 'post',
-			'address_fields'		=> 'address',
-			'units'					=> 'm',
-			'map_height'      		=> '250px',
-			'map_width'       		=> '250px',
-			'map_type'        		=> 'ROADMAP',
-			'zoom_level'      		=> 13,
-			'scrollwheel_map_zoom'	=> 1,
-			'expand_map_on_load'	=> 0,
-			'item_map_icon'			=> 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
-			'user_map_icon'   	  	=> 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
-			'user_info_window'	  	=> 'Your Location',
-			'no_location_message'   => 0,
-			'is_widget'				=> 0,
-			'widget_title'			=> 0
+		'element_id'			=> 0,
+		'item_id'         		=> 0,
+		'elements'				=> 0,
+		'item_type'				=> 'post',
+		'address_fields'		=> 'address',
+		'units'					=> 'm',
+		'map_height'      		=> '250px',
+		'map_width'       		=> '250px',
+		'map_type'        		=> 'ROADMAP',
+		'zoom_level'      		=> 'auto',
+		'scrollwheel_map_zoom'	=> 1,
+		'expand_map_on_load'	=> 0,
+		'item_map_icon'			=> 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+		'user_map_icon'   	  	=> 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
+		'user_info_window'	  	=> 'Your Location',
+		'item_info_window'		=> 'title,address,distance',
+		'no_location_message'   => 0,
+		'is_widget'				=> 0,
+		'widget_title'			=> 0
 	);
 
 	/**
@@ -61,10 +62,10 @@ class GMW_Single_Location {
 	 * array contains the current user position if exists
 	 */
 	public  $user_position = array(
-			'exists' 	=> false,
-			'lat'		=> false,
-			'lng'		=> false,
-			'address'	=> false
+		'exists' 	=> false,
+		'lat'		=> false,
+		'lng'		=> false,
+		'address'	=> false
 	);
 
 	/**
@@ -113,7 +114,7 @@ class GMW_Single_Location {
 		
 		//get the shortcode atts
 		$this->args = shortcode_atts( $this->args, $atts );
-		
+
 		//set random element id if not exists
 		$this->args['element_id'] = ( !empty( $this->args['element_id'] ) ) ? $this->args['element_id'] : rand( 100, 549 );
 				
@@ -302,25 +303,25 @@ class GMW_Single_Location {
 				'prefix'			=> 'sl',
 				'mapElement' 		=> 'gmw-map-'.$this->args['element_id'],
 				'locations'			=> array( 0 => array(
-						'lat'				  	=> $this->item_info->lat,
-						'long'				  	=> $this->item_info->long,
-						'info_window_content' 	=> $this->info_window_content(),
-						'mapIcon'				=> apply_filters( 'gmw_sl_post_map_icon', $post_map_icon, $this->args, $this->item_info, $this->user_position ),
+					'lat'				  	=> $this->item_info->lat,
+					'long'				  	=> $this->item_info->long,
+					'info_window_content' 	=> $this->info_window_content(),
+					'mapIcon'				=> apply_filters( 'gmw_sl_post_map_icon', $post_map_icon, $this->args, $this->item_info, $this->user_position ),
 				)),
-				'zoomLevel'			=> ( !empty( $this->user_position['exists'] ) ) ? 'auto' : $this->args['zoom_level'],
+				'zoomLevel'			=> $this->args['zoom_level'],
 				'mapOptions'		=> array(
-						'mapTypeId'			=> $this->args['map_type'],
-						'mapTypeControl' 	=> false,
-						'streetViewControl' => false,
-						'scrollwheel'		=> ( !empty( $this->args['scrollwheel_map_zoom'] ) ) ? true : false,
-						'panControl'		=> false
+					'mapTypeId'			=> $this->args['map_type'],
+					'mapTypeControl' 	=> false,
+					'streetViewControl' => false,
+					'scrollwheel'		=> ( !empty( $this->args['scrollwheel_map_zoom'] ) ) ? true : false,
+					'panControl'		=> false
 				),
 				'userPosition'		=> array(
-						'lat'		=> $this->user_position['lat'],
-						'lng'		=> $this->user_position['lng'],
-						'address' 	=> $this->user_position['address'],
-						'mapIcon'	=> $this->args['user_map_icon'],
-						'iwContent' => $this->args['user_info_window'],				
+					'lat'		=> $this->user_position['lat'],
+					'lng'		=> $this->user_position['lng'],
+					'address' 	=> $this->user_position['address'],
+					'mapIcon'	=> $this->args['user_map_icon'],
+					'iwContent' => ! empty( $this->args['user_info_window'] ) ? $this->args['user_info_window'] : null,			
 				)
 		);
 
@@ -504,7 +505,7 @@ class GMW_Single_Location {
 			$this->elements['directions_panel'] = $this->directions_panel();
 		}
 
-		if ( isset( $this->elements['additional_info'] ) ) {
+		if ( isset( $this->elements['additional_info'] ) && ! empty( $this->args['additional_info'] ) ) {
 			$this->elements['additional_info'] = $this->additional_info();
 		}
 
