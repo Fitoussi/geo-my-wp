@@ -280,6 +280,8 @@ class GMW_Forms {
                 </thead>
                 <tbody class="list:user user-list">
 
+                    <?php $alternate = ''; ?>
+
                     <?php if ( !empty( $this->forms ) ) : ?>
 
                         <?php $rowNumber = 0; ?>
@@ -301,7 +303,7 @@ class GMW_Forms {
                                     </td>
 									<td>
                                         <span>
-                                        	<a title="<?php echo $formName; ?>" href="admin.php?page=gmw-forms&gmw_action=edit_form&gmw_form_title=<?php echo $option['form_title']; ?>&gmw_form_prefix=<?php echo $option['prefix']; ?>&form_type=<?php echo $option['form_type']; ?>&formID=<?php echo $option['ID']; ?>&gmw_form_name=<?php echo $formName; ?>""><?php echo $formName; ?></a></span>
+                                        	<a title="<?php echo $formName; ?>" href="admin.php?page=gmw-forms&gmw_action=edit_form&gmw_form_title=<?php echo $option['form_title']; ?>&gmw_form_prefix=<?php echo $option['prefix']; ?>&form_type=<?php echo $option['form_type']; ?>&formID=<?php echo $option['ID']; ?>&gmw_form_name=<?php echo $formName; ?>"><?php echo $formName; ?></a></span>
                                     </td>
                                     <td>		
                                         <span class="edit">
