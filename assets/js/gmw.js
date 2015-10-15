@@ -184,19 +184,20 @@ jQuery(document).ready(function($) {
 
         thisValue    = $(this).val();
         ppValues     = $(this).next();
-        formID       = ppValues.attr('formid');
-        totalResults = ppValues.attr('totalcount');
-        paged        = ppValues.attr('paged');
-        pageName     = ppValues.attr('pageName');
-        urlPx        = ppValues.attr('urlpx');
+        formID       = ppValues.attr('data-formid');
+        totalResults = ppValues.attr('data-totalcount');
+        paged        = ppValues.attr('data-paged');
+        pageName     = ppValues.attr('data-pagename');
+        urlPx        = ppValues.attr('data-urlpx');
         gmwPost      = ppValues.attr('gmwpost');
+        perPage      = ppValues.attr('data-perpage');
         lastPage     = Math.ceil(totalResults / thisValue );
         newPaged     = ( paged > lastPage || lastPage == 1 ) ? lastPage : paged;
 
         if ( gmwPost == 0 ) {     
             window.location.href = window.location.href + '?'+urlPx+'auto=auto&'+urlPx+'per_page=' + thisValue + '&'+urlPx+'form='+formID+'&'+pageName+'='+newPaged;                            
         } else {
-            window.location.href = location.href.replace(/([?&]gmw_per_page)=([^#&]*)/g, '$1='+thisValue).replace(/([?/]page[?/])([^#/]*)/g,'$1'+newPaged);
+            window.location.href = location.href.replace( urlPx + 'per_page=' + perPage,  urlPx + 'per_page=' + thisValue ).replace( '&page=' + paged, '&'+pageName + '=' + newPaged );
         }
     });
     
