@@ -61,9 +61,6 @@ class GEO_my_WP_Cache_Helper {
 		$transient_name  = $group . '-transient-version';
 		$transient_value = get_transient( $transient_name );
 
-		//echo $transient_name;
-		//echo $transient_value;
-
 		if ( false === $transient_value || true === $refresh ) {
 			self::delete_version_transients( $transient_value );
 			set_transient( $transient_name, $transient_value = time() );
