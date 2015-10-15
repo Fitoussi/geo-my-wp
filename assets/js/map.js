@@ -118,7 +118,7 @@ function gmwMapInit( mapObject ) {
 		});
 		
 		//create user's marker info-window
-		if ( mapObject['userPosition']['iwContent'] != null ) {
+		if ( mapObject['userPosition']['iwContent'] != false && mapObject['userPosition']['iwContent'] != null ) {
 		
 			var iw = new google.maps.InfoWindow({
 				content: mapObject['userPosition']['iwContent']
