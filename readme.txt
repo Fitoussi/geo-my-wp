@@ -5,7 +5,7 @@ Tags: Geo-location, Geolocation, proximity search, zipcode search, radius search
 Requires at least: 4.0
 Tested up to: 4.3
 Buddypress: 2.1.1
-Stable tag: 2.6.2.2
+Stable tag: 2.6.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -129,6 +129,13 @@ For screenshots please visit [GEO my WP](http://www.geomywp.com)
 == Other Notes ==
 
 == Changelog ==
+
+= 2.6.3 =
+
+Fix: per page function.
+Fix: verify if info-window content is false || null to prevent errors.
+Fix: remove warning in "Forms" page when no forms exist.
+Fix: Street name and Street number switched when updating post type location.
 
 = 2.6.2.2 =
 
