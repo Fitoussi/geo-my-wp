@@ -48,6 +48,7 @@ class GMW_License {
 		$this->statuses 	= get_option( 'gmw_premium_plugin_status' );
 		$this->file         = $_file;
 		$this->item_name    = $_item_name;
+		$this->item_id      = $_item_id;
 		$this->license_name = $_license;
 		$this->license      = isset( $this->licenses[$_license] ) ? trim( $this->licenses[$_license] ) : '';
 		$this->version      = $_version;
@@ -118,14 +119,15 @@ class GMW_License {
 
 		// Setup the updater
 		$gmw_updater = new GMW_Premium_Plugin_Updater(
-				$this->api_url,
-				$this->file,
-				array(
-						'version'   => $this->version,
-						'license'   => $this->license,
-						'item_name' => $this->item_name,
-						'author'    => $this->author
-				)
+			$this->api_url,
+			$this->file,
+			array(
+				'version'   => $this->version,
+				'license'   => $this->license,
+				'item_name' => $this->item_name,
+				'item_id'	=> $this->item_id,
+				'author'    => $this->author
+			)
 		);
 	}
 }
@@ -144,7 +146,7 @@ class GMW_License_Key {
 	 * Class constructor
 	 *
 	 */
-	function __construct( $file ,$item_name, $license_name, $item_id=false ) {
+	function __construct( $file ,$item_name, $license_name, $item_id = null ) {
 
 		$this->licenses	 	= get_option( 'gmw_license_keys' );
 		$this->statuses  	= get_option( 'gmw_premium_plugin_status' );
