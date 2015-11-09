@@ -111,22 +111,22 @@ function gmw_update_user_location( $args ) {
 	global $wpdb;
 
 	$wpdb->replace( 'wppl_friends_locator', array(
-			'member_id'         => $args['user_id'],
-			'street_number'		=> $locationArgs['geocoded']['street_number'],
-			'street_name'		=> $locationArgs['geocoded']['street_name'],
-			'street'            => $street,
-			'apt'               => $apt,
-			'city'              => $city,
-			'state'             => $state,
-			'state_long'        => $locationArgs['geocoded']['state_long'],
-			'zipcode'           => $zipcode,
-			'country'           => $country,
-			'country_long'      => $locationArgs['geocoded']['country_long'],
-			'address'           => $address_apt,
-			'formatted_address' => $locationArgs['geocoded']['formatted_address'],
-			'lat'               => $locationArgs['geocoded']['lat'],
-			'long'              => $locationArgs['geocoded']['lng'],
-			'map_icon'          => $args['map_icon'],
+		'member_id'         => $args['user_id'],
+		//'street_number'		=> $locationArgs['geocoded']['street_number'],
+		//'street_name'		=> $locationArgs['geocoded']['street_name'],
+		'street'            => $street,
+		'apt'               => $apt,
+		'city'              => $city,
+		'state'             => $state,
+		'state_long'        => $locationArgs['geocoded']['state_long'],
+		'zipcode'           => $zipcode,
+		'country'           => $country,
+		'country_long'      => $locationArgs['geocoded']['country_long'],
+		'address'           => $address_apt,
+		'formatted_address' => $locationArgs['geocoded']['formatted_address'],
+		'lat'               => $locationArgs['geocoded']['lat'],
+		'long'              => $locationArgs['geocoded']['lng'],
+		'map_icon'          => $args['map_icon'],
 		)
 	);
 
