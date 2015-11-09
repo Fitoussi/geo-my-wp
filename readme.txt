@@ -130,21 +130,27 @@ For screenshots please visit [GEO my WP](http://www.geomywp.com)
 
 == Changelog ==
 
+= 2.6.4 =
+
+* Fix: Custom Zoom level issue..
+* Tweak: Pass item_id to the license updater.
+* Tweak: remove street_number and street_name field when updating user location. This is a temporary solution to prevent issues for installation that memebrs database table was not updated properly. This will be fixed in the next major update of GEO my WP.
+
 = 2.6.3 =
 
-Fix: per page function.
-Fix: verify if info-window content is false || null to prevent errors.
-Fix: remove warning in "Forms" page when no forms exist.
-Fix: Street name and Street number switched when updating post type location.
+* Fix: per page function.
+* Fix: verify if info-window content is false || null to prevent errors.
+* Fix: remove warning in "Forms" page when no forms exist.
+* Fix: Street name and Street number switched when updating post type location.
 
 = 2.6.2.2 =
 
-Fix: Allow decimals for radius values.
+* Fix: Allow decimals for radius values.
 
 = 2.6.2.1 =
 
-Fix: issue with pagination not working properly.
-Fix: Members Locator get no results due to missing 'feature' column in database
+* Fix: issue with pagination not working properly.
+* Fix: Members Locator get no results due to missing 'feature' column in database
 
 = 2.6.2 =
 
