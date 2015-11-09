@@ -1,8 +1,3 @@
-/**
- * GMW main map function
- * @param gmwForm
- */
-
 function gmwMapInit( mapObject ) {
 	
 	//make sure the map element exists to prevent JS error
@@ -146,7 +141,12 @@ function gmwMapInit( mapObject ) {
 
 		} else if ( mapObject['locations'].length == 1 && mapObject['userPosition']['location'] == false ) {
 
-			mapObject['map'].setZoom(13);
+			if ( mapObject['zoomLevel'] == 'auto' ) {
+				mapObject['map'].setZoom(13);
+			} else {
+				mapObject['map'].setZoom( parseInt( mapObject['zoomLevel'] ) );
+			}
+
 			mapObject['map'].panTo(mapObject['markers'][0].getPosition());	
 
 		} else if ( mapObject['zoomLevel'] != 'auto' && mapObject['userPosition']['location'] != false ) {
