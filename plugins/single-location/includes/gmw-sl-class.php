@@ -353,7 +353,7 @@ class GMW_Single_Location {
 		$output .= 		"<div class=\"address-field-wrapper\">";
 		$output .= 				'<label for="start-address-'.$element_id.'">'.esc_attr( $this->labels['live_directions']['from'] ).'</label>';
 		$output .= 				'<input type="text" size="35" id="start-address-'.$element_id.'" class="start-address" name="saddr" value="'.esc_attr( $this->user_position['address'] ).'" placeholder="Your location" />';
-		$output .= 				"<i class=\"get-directions-submit fa fa-search get-directions-submit-icon\"></i>";
+		$output .= 				"<i class=\"get-directions-link-submit fa fa-search get-directions-submit-icon\" onclick=\"jQuery( this ).closest( 'form' ).submit();\"></i>";
 		$output .= 			"</div>";
 		$output .= 			'<input type="hidden" name="daddr" value="'.esc_attr( $this->item_info->address ).'" />';
 		$output .= 		"</form>";
