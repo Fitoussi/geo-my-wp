@@ -1,6 +1,6 @@
 === GEO my Wordpress ===
 Contributors: ninjew
-Donate link: http://geomywp.com/
+Donate link: www.paypal.me/fitoussi
 Tags: Geo-location, Geolocation, proximity search, zipcode search, radius search, store locator, Geolocate posts, address search, search distance, google v3 , Google maps, get directions, search locations, Geolocate, GEO, members locator, Geolocate memebrs, mapping, mapping software, latitude, longitude, locations finder, map creator.
 Requires at least: 4.2
 Tested up to: 4.5.2
