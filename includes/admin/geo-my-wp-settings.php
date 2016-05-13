@@ -211,7 +211,7 @@ class GMW_Settings {
         	                                case "function" :
         	
         	                                    $function = ( !empty( $option['function'] ) ) ? $option['function'] : $option['name'];
-        	
+        	                                       
         	                                    do_action( 'gmw_main_settings_' . $function, $gmw_options, $key, $option );
         	
         	                                break;

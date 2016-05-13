@@ -44,7 +44,7 @@ function gmw_geocoder( $raw_address, $force_refresh = false ) {
             return;
 
         $data = wp_remote_retrieve_body( $response );
-
+        
         if( is_wp_error( $data ) )
             return;
 
