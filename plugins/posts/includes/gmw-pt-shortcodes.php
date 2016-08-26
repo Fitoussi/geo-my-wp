@@ -32,6 +32,7 @@ class GMW_Single_Post_Location {
     							'map_width'       => '250px',
     							'map_type'        => 'ROADMAP',
     							'zoom_level'      => 13,
+							'scrollwheel'     => true,
     							'additional_info' => 'address,phone,fax,email,website',
     							'directions'      => 1,
     							'info_window'	  => 1,
@@ -191,7 +192,8 @@ class GMW_Single_Post_Location {
                         mapTypeId: google.maps.MapTypeId['<?php echo $map_type; ?>'],
                         mapTypeControlOptions: {
                             style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
-                        }
+                        },
+			scrollwheel: <?php echo $scrollwheel; ?>
                     });
 
                     var latlngbounds = new google.maps.LatLngBounds();
