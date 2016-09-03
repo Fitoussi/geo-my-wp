@@ -39,10 +39,12 @@ function gmw_location_record_activity( $args ) {
     $region	  = ( !empty( $settings['general_settings']['country_code'] ) )  ? '&region=' .$settings['general_settings']['country_code'] : '';
     $language = ( !empty( $settings['general_settings']['language_code'] ) ) ? '&hl=' .$settings['general_settings']['language_code'] : '';
     	
-    $activity_id = bp_activity_add(array(
+    $activity_text = apply_filters( 'gmw_fl_update_activity_text', 'Updated new location at' );
+
+    $activity_id = bp_activity_add( apply_filters( 'gmw_fl_activity_args', array(
     		//'id' => $id,
     		'user_id'           => $user_id,
-    		'action'            => sprintf( __( '%s Updated new location at %s', 'GMW' ), $from_user_link, '<span class="gmw-fl-activity-map-marker fa fa-map-marker"></span><a target="_blank" href="https://maps.google.com/maps?f=d'.$language.''.$region.'&geocode=&saddr='.$location.'&daddr='.$cCity.' '.$cState.' '.$cCountry.'&ie=UTF8&z=12" >' . $location . '</a>' ),
+    		'action'            => sprintf( __( '%s %s %s', 'GMW' ), $from_user_link, $activity_text, '<span class="gmw-fl-activity-map-marker fa fa-map-marker"></span><a target="_blank" href="https://maps.google.com/maps?f=d'.$language.''.$region.'&geocode=&saddr='.$location.'&daddr='.$cCity.' '.$cState.' '.$cCountry.'&ie=UTF8&z=12" >' . $location . '</a>' ),
     		'content'           => $content,
     		'primary_link'      => $primary_link,
     		'component'         => $component,
@@ -50,7 +52,7 @@ function gmw_location_record_activity( $args ) {
     		'item_id'           => $item_id,
     		'secondary_item_id' => $secondary_item_id,
     		'recorded_time'     => $recorded_time
-    ));
+    ) ) );
 
     //if ( $type == 'gmw_location' )
         //bp_update_user_meta( $user_id, 'bp_latest_update', array( 'id' => $activity_id, 'content' => wp_filter_kses( $content ) ) );
