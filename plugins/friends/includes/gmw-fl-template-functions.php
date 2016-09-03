@@ -41,6 +41,7 @@ function gmw_fl_xprofile_fields( $gmw, $class ) {
 
 		echo '<div class="editfield '.$fdata->type.' gmw-'.$gmw['ID'].'-field-'.$field_id.'-wrapper">';
 		 
+		 echo $fdata->type;
 		switch ( $fdata->type ) {
 
 			case 'datebox':
@@ -83,12 +84,57 @@ function gmw_fl_xprofile_fields( $gmw, $class ) {
 				foreach ( $children as $child ) {
 					$option   = trim( $child->name );
 					$selected = ( $option == $value ) ? "selected='selected'" : "";
-					echo '<option '.$selected.' value="'.$option.'" />'.$option.'</label>';
+					echo '<option '.$selected.' value="'.$option.'" />'.$option.'</option>';
 				}
 				 
 				echo '</select>';
 			break;
+
+			// field belong to Buddypress Xprofile Custom Fields Type plugin
+			case 'select_custom_post_type':
+
+			$options = $fdata->get_children();
+
+			// get the post type need to filter
+			$post_type_selected = $options[0]->name;
+            
+            if ( $options ) {
+
+                $post_type_selected = $options[0]->name;
+
+                // Get posts of custom post type selected.
+                $posts = new WP_Query( array(
+                    'posts_per_page'    => -1,
+                    'post_type'         => $post_type_selected,
+                    'orderby'           => 'title',
+                    'order'             => 'ASC'
+                ) );
+
+                echo '<label for="'.$fid.'">'.$label.'</label>';
+				echo '<select name="'.$fname.'" id="'.$fid.'" class="'.$fclass.'">';
+
+				$option_all = apply_filters( 'gmw_fl_xprofile_form_dropdown_option_all', __( ' -- All -- ', 'GMW' ), $field_id, $fdata );
+
+				if ( ! empty( $option_all ) ) {
+					echo '<option value="">'.$option_all.'</option>';
+				}
+
+				if ( $posts ) {
+
+					foreach ( $posts->posts as $post ) {
+						
+						$selected = ( $post->ID == $value ) ? "selected='selected'" : "";
+						echo '<option '.$selected.' value="'.$post->ID.'" />'.$post->post_title.'</option>';
+                    }
+				}
+				 
+				echo '</select>';
+            }
+            break;
+
 			case 'multiselectbox':
+			case 'multiselect_custom_post_type':
+			case 'multiselect_custom_taxonomy':
 
 				echo '<label for="'.$fid.'">'.$label.'</label>';
 				echo '<select name="'.$fname.'[]" id="'.$fid.'" class="'.$fclass.'" multiple="multiple">';
@@ -224,6 +270,7 @@ function gmw_fl_query_xprofile_fields( $gmw, $formValues ) {
 
 				case 'selectbox':
 				case 'radio':
+				case 'select_custom_post_type':
 					$value = str_replace ( '&', '&amp;', $value );
 					$sql  .= $wpdb->prepare ( "AND value = %s", $value );
 				break;
