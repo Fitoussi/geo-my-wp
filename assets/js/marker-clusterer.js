@@ -5,7 +5,7 @@
 
 /**
  * @name MarkerClusterer for Google Maps v3
- * @version version 1.0
+ * @version version 1.0.1
  * @author Luke Mahe
  * @fileoverview
  * The library creates and manages per-zoom-level clusters for large amounts of
@@ -56,7 +56,6 @@
  *       'textColor': (string) The text color.
  *       'textSize': (number) The text size.
  *       'backgroundPosition': (string) The position of the backgound x, y.
- *       'iconAnchor': (Array) The anchor position of the icon x, y.
  * @constructor
  * @extends google.maps.OverlayView
  */
@@ -93,7 +92,9 @@ function MarkerClusterer(map, opt_markers, opt_options) {
    */
   this.ready_ = false;
 
-  var options = opt_options || {};
+  var options = opt_options || {
+    maxZoom : 15 
+  };
 
   /**
    * @type {number}
@@ -162,7 +163,12 @@ function MarkerClusterer(map, opt_markers, opt_options) {
   // Add the map event listeners
   var that = this;
   google.maps.event.addListener(this.map_, 'zoom_changed', function() {
+    // Determines map type and prevent illegal zoom levels
     var zoom = that.map_.getZoom();
+    var minZoom = that.map_.minZoom || 0;
+    var maxZoom = Math.min(that.map_.maxZoom || 100,
+                         that.map_.mapTypes[that.map_.getMapTypeId()].maxZoom);
+    zoom = Math.min(Math.max(zoom,minZoom),maxZoom);
 
     if (that.prevZoom_ != zoom) {
       that.prevZoom_ = zoom;
@@ -175,7 +181,7 @@ function MarkerClusterer(map, opt_markers, opt_options) {
   });
 
   // Finally, add the markers
-  if (opt_markers && opt_markers.length) {
+  if (opt_markers && (opt_markers.length || Object.keys(opt_markers).length)) {
     this.addMarkers(opt_markers, false);
   }
 }
@@ -188,8 +194,6 @@ function MarkerClusterer(map, opt_markers, opt_options) {
  * @private
  */
 MarkerClusterer.prototype.MARKER_CLUSTER_IMAGE_PATH_ = clusterImage;
-    //'https://raw.githubusercontent.com/googlemaps/js-marker-clusterer/gh-pages/' +
-    //'images/m';
 
 
 /**
@@ -400,8 +404,14 @@ MarkerClusterer.prototype.getCalculator = function() {
  * @param {boolean=} opt_nodraw Whether to redraw the clusters.
  */
 MarkerClusterer.prototype.addMarkers = function(markers, opt_nodraw) {
-  for (var i = 0, marker; marker = markers[i]; i++) {
-    this.pushMarkerTo_(marker);
+  if (markers.length) {
+    for (var i = 0, marker; marker = markers[i]; i++) {
+      this.pushMarkerTo_(marker);
+    }
+  } else if (Object.keys(markers).length) {
+    for (var marker in markers) {
+      this.pushMarkerTo_(markers[marker]);
+    }
   }
   if (!opt_nodraw) {
     this.redraw();
@@ -1042,14 +1052,12 @@ function ClusterIcon(cluster, styles, opt_padding) {
 
 /**
  * Triggers the clusterclick event and zoom's if the option is set.
- *
- * @param {google.maps.MouseEvent} event The event to propagate
  */
-ClusterIcon.prototype.triggerClusterClick = function(event) {
+ClusterIcon.prototype.triggerClusterClick = function() {
   var markerClusterer = this.cluster_.getMarkerClusterer();
 
   // Trigger the clusterclick event.
-  google.maps.event.trigger(markerClusterer, 'clusterclick', this.cluster_, event);
+  google.maps.event.trigger(markerClusterer, 'clusterclick', this.cluster_);
 
   if (markerClusterer.isZoomOnClick()) {
     // Zoom into the cluster.
@@ -1074,8 +1082,8 @@ ClusterIcon.prototype.onAdd = function() {
   panes.overlayMouseTarget.appendChild(this.div_);
 
   var that = this;
-  google.maps.event.addDomListener(this.div_, 'click', function(event) {
-    that.triggerClusterClick(event);
+  google.maps.event.addDomListener(this.div_, 'click', function() {
+    that.triggerClusterClick();
   });
 };
 
@@ -1089,14 +1097,8 @@ ClusterIcon.prototype.onAdd = function() {
  */
 ClusterIcon.prototype.getPosFromLatLng_ = function(latlng) {
   var pos = this.getProjection().fromLatLngToDivPixel(latlng);
-
-  if (typeof this.iconAnchor_ === 'object' && this.iconAnchor_.length === 2) {
-    pos.x -= this.iconAnchor_[0];
-    pos.y -= this.iconAnchor_[1];
-  } else {
-    pos.x -= parseInt(this.width_ / 2, 10);
-    pos.y -= parseInt(this.height_ / 2, 10);
-  }
+  pos.x -= parseInt(this.width_ / 2, 10);
+  pos.y -= parseInt(this.height_ / 2, 10);
   return pos;
 };
 
@@ -1192,7 +1194,6 @@ ClusterIcon.prototype.useStyle = function() {
   this.anchor_ = style['anchor'];
   this.textSize_ = style['textSize'];
   this.backgroundPosition_ = style['backgroundPosition'];
-  this.iconAnchor_ = style['iconAnchor'];
 };
 
 
@@ -1223,10 +1224,6 @@ ClusterIcon.prototype.createCss = function(pos) {
         this.anchor_[0] < this.height_) {
       style.push('height:' + (this.height_ - this.anchor_[0]) +
           'px; padding-top:' + this.anchor_[0] + 'px;');
-    } else if (typeof this.anchor_[0] === 'number' && this.anchor_[0] < 0 &&
-        -this.anchor_[0] < this.height_) {
-      style.push('height:' + this.height_ + 'px; line-height:' + (this.height_ + this.anchor_[0]) +
-          'px;');
     } else {
       style.push('height:' + this.height_ + 'px; line-height:' + this.height_ +
           'px;');
@@ -1302,3 +1299,12 @@ Cluster.prototype['getMarkers'] = Cluster.prototype.getMarkers;
 ClusterIcon.prototype['onAdd'] = ClusterIcon.prototype.onAdd;
 ClusterIcon.prototype['draw'] = ClusterIcon.prototype.draw;
 ClusterIcon.prototype['onRemove'] = ClusterIcon.prototype.onRemove;
+
+Object.keys = Object.keys || function(o) {  
+    var result = [];  
+    for(var name in o) {  
+        if (o.hasOwnProperty(name))  
+          result.push(name);  
+    }  
+    return result;  
+};
