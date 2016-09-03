@@ -41,26 +41,33 @@ function gmwMapInit( mapObject ) {
 		}
 
 		var gmwLocation = new google.maps.LatLng( mapObject['locations'][i]['lat'], mapObject['locations'][i]['long'] );
-	
-		//offset markers with same location
-		if ( markersClustereOk == false && mapObject['bounds'].contains(gmwLocation) ) {
 
-			var a = 360.0 / mapObject['locations'].length;
-			var orgPosition = gmwLocation;
-	        var newLat = orgPosition.lat() + -.0005 * Math.cos((+a*i) / 180 * Math.PI);  // x
-	        var newLng = orgPosition.lng() + -.0005 * Math.sin((+a*i) / 180 * Math.PI);  // Y
-	        var gmwLocation = new google.maps.LatLng(newLat,newLng);
-	        
-	        var markerPath = new google.maps.Polyline({
-	            path: [orgPosition, gmwLocation],
-	            strokeColor: "#FF0000",
-	            strokeOpacity: 1.0,
-	            strokeWeight: 2
-	          });
-	        
-	        markerPath.setMap(mapObject['map']);
-		}
-		
+		// check if marker with the same location already exists
+		// if so, we will move it a bit
+		if ( mapObject['bounds'].contains( gmwLocation ) ) {
+            
+            // do the math     
+            var a = 360.0 / mapObject['locations'].length;
+            var newLat = gmwLocation.lat() + - .00003 * Math.cos( ( +a*i ) / 180 * Math.PI );  //x
+            var newLng = gmwLocation.lng() + - .00003 * Math.sin( ( +a*i )  / 180 * Math.PI );  //Y
+            var newPosition = new google.maps.LatLng( newLat,newLng );
+
+            // draw a line between the original location 
+            // to the new location of the marker after it moves
+            var polyline = new google.maps.Polyline( {
+			    path: [
+			        gmwLocation, 
+			        newPosition
+			    ],
+			    strokeColor: "#FF0000",
+			    strokeOpacity: 1.0,
+			    strokeWeight: 2,
+			    map: mapObject['map']
+			});
+
+			var gmwLocation = newPosition;
+	   	}
+	
 		mapObject['bounds'].extend(gmwLocation);
         	
 		mapObject['markers'][i] = new google.maps.Marker({
