@@ -179,27 +179,29 @@ jQuery(document).ready(function($) {
         $(this).closest('form').find('.gmw-lng').val('');
     });
 
-    //per page dropdown
-    $('.gmw-per-page').change(function() {
+    // per page dropdown
+    jQuery( '.gmw-per-page' ).change( function() {
 
-        thisValue    = $(this).val();
-        ppValues     = $(this).next();
+        thisValue    = jQuery(this).val();
+        ppValues     = jQuery(this).next();
         formID       = ppValues.attr('data-formid');
         totalResults = ppValues.attr('data-totalcount');
         paged        = ppValues.attr('data-paged');
         pageName     = ppValues.attr('data-pagename');
         urlPx        = ppValues.attr('data-urlpx');
-        gmwPost      = ppValues.attr('gmwpost');
+        gmwPost      = ppValues.attr('data-gmwpost');
         perPage      = ppValues.attr('data-perpage');
         lastPage     = Math.ceil(totalResults / thisValue );
         newPaged     = ( paged > lastPage || lastPage == 1 ) ? lastPage : paged;
 
-        if ( gmwPost == 0 ) {     
+        if ( gmwPost == 0 ) {   
             window.location.href = window.location.href + '?'+urlPx+'auto=auto&'+urlPx+'per_page=' + thisValue + '&'+urlPx+'form='+formID+'&'+pageName+'='+newPaged;                            
         } else {
             window.location.href = location.href.replace( urlPx + 'per_page=' + perPage,  urlPx + 'per_page=' + thisValue ).replace( '&page=' + paged, '&'+pageName + '=' + newPaged );
         }
     });
+
+
     
     $('.gmw-form').submit(function(e) {
         
