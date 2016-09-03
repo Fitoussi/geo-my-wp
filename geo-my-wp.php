@@ -3,11 +3,11 @@
 Plugin Name: GEO my WP
 Plugin URI: http://www.geomywp.com
 Description: Assign geolocation to post types and BuddyPress members. Create an advance proximity search forms to search for locations based on address, radius, units and more.
-Version: 2.6.5
+Version: 2.6.6
 Author: Eyal Fitoussi
 Author URI: http://www.geomywp.com
-Requires at least: 4.0
-Tested up to: 4.5.2
+Requires at least: 4.2
+Tested up to: 4.6.1
 Buddypress: 2.1.1 and up
 Text Domain: GMW
 Domain Path: /languages/
