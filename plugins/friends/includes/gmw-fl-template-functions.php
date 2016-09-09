@@ -41,7 +41,6 @@ function gmw_fl_xprofile_fields( $gmw, $class ) {
 
 		echo '<div class="editfield '.$fdata->type.' gmw-'.$gmw['ID'].'-field-'.$field_id.'-wrapper">';
 		 
-		 echo $fdata->type;
 		switch ( $fdata->type ) {
 
 			case 'datebox':
