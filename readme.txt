@@ -130,6 +130,10 @@ For screenshots please visit [GEO my WP](http://www.geomywp.com)
 
 == Changelog ==
 
+= 2.6.6.2 =
+
+* Security patch - Prevent sensitive information from passing to JavaScript.
+
 = 2.6.6.1 =
 
 * Remove debugging text
