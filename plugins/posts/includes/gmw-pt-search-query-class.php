@@ -226,10 +226,10 @@ class GMW_PT_Search_Query extends GMW {
     	
     	        //add filters to wp_query to do radius calculation and get locations detail into results
     	        add_filter( 'posts_clauses', array( $this, 'query_clauses' ) );
-    	
+    	   
     	        /* posts query */
     	        $gmw_query = new WP_Query( $this->form['query_args'] );
-    
+
                 //set new query in transient - for future caching        
                 //set_transient( $query_args_hash, $gmw_query, DAY_IN_SECONDS * 30 );
     	
