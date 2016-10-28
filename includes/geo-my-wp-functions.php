@@ -168,9 +168,62 @@ function gmw_new_map_element( $args, $return = false ) {
 	$gmwMapElements[$mapID] = apply_filters( 'gmw_map_element', $gmwMapElements[$mapID], $gmwMapElements[$mapID]['form'] );
 	$gmwMapElements[$mapID] = apply_filters( "gmw_map_element_{$mapID}", $gmwMapElements[$mapID], $gmwMapElements[$mapID]['form'] );
 	$gmwMapElements[$mapID] = apply_filters( "gmw_{$args['prefix']}_map_element", $gmwMapElements[$mapID], $gmwMapElements[$mapID]['form'] );
+	
+	$temp_locations = array();
+
+	/**
+	 * This is "dirty" but temporary security fix. To prevent the map object
+	 * from passing sensitive data via the browser console. This fix might slow things 
+	 * down when performing a search. However, a proper solution will be provided in a future
+	 * update.
+	 */
+	if ( ! empty( $gmwMapElements[$mapID]['locations'] ) ) {
+
+		foreach ( $gmwMapElements[$mapID]['locations'] as $k => $v ) {
+
+			if ( is_array( $v ) ) {
+				$v = ( object ) $v;
+			}
+
+			if ( ! empty( $v->ID ) ) {
+				$temp_locations[$k]['ID'] = $v->ID;
+			}
+
+			if ( ! empty( $v->lat ) ) {
+				$temp_locations[$k]['lat'] = $v->lat;
+			}
 			
-	if ( $return ) 
+			if ( ! empty( $v->long ) ) {
+				$temp_locations[$k]['long'] = $v->long;
+			}
+
+			if ( ! empty( $v->lng ) ) {
+				$temp_locations[$k]['lng'] = $v->lng;
+			}
+			
+			if ( ! empty( $v->mapIcon ) ) {
+				$temp_locations[$k]['mapIcon'] = $v->mapIcon;
+			} else {
+				$temp_locations[$k]['mapIcon'] = '_default.png';
+			}
+
+			if ( ! empty( $v->info_window_content ) ) {
+				$temp_locations[$k]['info_window_content'] = $v->info_window_content;
+			}
+
+			( object ) $temp_locations[$k];
+ 		}
+	} 
+
+	$gmwMapElements[$mapID]['locations'] = $temp_locations;
+	
+	$gmwMapElements[$mapID]['form']['results'] = $temp_locations;
+
+	/***** end of temporary fix *****/
+
+	if ( $return ) {
 		return $gmwMapElements[$mapID];
+	}
 }
 
 /**
