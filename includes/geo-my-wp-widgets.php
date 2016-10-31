@@ -75,6 +75,11 @@ class GMW_Search_Form_Widget extends WP_Widget {
 			<br />
 			<select name="<?php echo $this->get_field_name('short_code'); ?>">		
 			<?php
+
+				if ( empty( $forms ) || ! is_array( $forms ) ) {
+					$forms = array();
+				}
+
 				foreach ( $forms as $form ) {
 					
 					$form_id = absint( $form['ID'] );

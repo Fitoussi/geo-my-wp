@@ -463,6 +463,11 @@ class GMW_Admin {
                             <option value="">  <?php _e("Select a Form", "GMW"); ?>  </option>
                             <?php
                                 $forms = get_option('gmw_forms');
+
+                                if ( empty( $forms ) || ! is_array( $forms ) ) {
+									$forms = array();
+								}
+				
                                 foreach( $forms as $form ) {
                                 	$form['name'] = ( !empty( $form['name'] ) ) ? $form['name'] : 'form_id_'.$form['ID'];
                                     ?>

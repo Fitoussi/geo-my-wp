@@ -487,7 +487,7 @@ class GEO_my_WP {
 			$gmwAutocompleteElements = array();
 		} 
 
-		if ( !empty( $ac_fields ) ) {
+		if ( ! empty( $ac_fields ) && is_array( $ac_fields ) ) {
 			$gmwAutocompleteElements = array_merge( $gmwAutocompleteElements, $ac_fields );
 		}
 		return;
