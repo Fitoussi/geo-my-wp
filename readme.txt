@@ -5,7 +5,7 @@ Tags: Geo-location, Geolocation, proximity search, zipcode search, radius search
 Requires at least: 4.2
 Tested up to: 4.6.1
 Buddypress: 2.1.1
-Stable tag: 2.6.6.1
+Stable tag: 2.6.6.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -50,11 +50,11 @@ Together with other great features like auto locating user's current location, d
 * Meta boxes for opening days & hours.
 * Make address fields mandatory to make sure that users enter an address when creating a new post.
 * 5 different way to enter address and lat/long:
-	* Autolocate the current location.
-	* Autocomplete input fields that get results from google.
-	* Drag and drop marker on the map to choose the location.
-	* Enter address manually and return lat/long
-	* Enter lat/long manually and return the address
+* Autolocate the current location.
+* Autocomplete input fields that get results from google.
+* Drag and drop marker on the map to choose the location.
+* Enter address manually and return lat/long
+* Enter lat/long manually and return the address
 
 = Buddypress =
 
@@ -130,9 +130,13 @@ For screenshots please visit [GEO my WP](http://www.geomywp.com)
 
 == Changelog ==
 
+= 2.6.6.3 =
+
+* Fix: single location map error.
+
 = 2.6.6.2 =
 
-* Security patch - Prevent sensitive information from passing to JavaScript.
+* Security patch.
 
 = 2.6.6.1 =
 

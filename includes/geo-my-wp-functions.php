@@ -217,8 +217,10 @@ function gmw_new_map_element( $args, $return = false ) {
 
 	$gmwMapElements[$mapID]['locations'] = $temp_locations;
 	
-	$gmwMapElements[$mapID]['form']['results'] = $temp_locations;
-
+	if ( ! empty( $gmwMapElements[$mapID]['form']['results'] ) ) {
+		$gmwMapElements[$mapID]['form']['results'] = $temp_locations;
+	}
+	
 	/***** end of temporary fix *****/
 
 	if ( $return ) {
