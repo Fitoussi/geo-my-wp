@@ -133,6 +133,7 @@ For screenshots please visit [GEO my WP](http://www.geomywp.com)
 = 2.6.6.3 =
 
 * Fix: single location map error.
+* Remove PHP warnings.
 
 = 2.6.6.2 =
 
