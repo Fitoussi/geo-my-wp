@@ -316,7 +316,7 @@ class GMW_PT_Meta_Boxes {
 			</h3>
 			<div class="autocomplete-location-inner">
 				<input type="text" id="wppl-addresspicker"
-					value="<?php echo $post_info->address; ?>" />
+					value="<?php echo sanitize_text_field( esc_attr( stripslashes( $post_info->address ) ) ); ?>" />
 			</div>
 		</div>
 		
@@ -338,7 +338,7 @@ class GMW_PT_Meta_Boxes {
 	            		<table class="gmw-admin-location-table">
 	            			<tr>
 	            				<th><label for="<?php echo $this->meta_boxes['fields'][0]['id']; ?>"><?php echo $this->meta_boxes['fields'][0]['name']; ?></label></th>
-	           					<td><input type="text" name="<?php echo $this->meta_boxes['fields'][0]['id']; ?>" id="<?php echo $this->meta_boxes['fields'][0]['id']; ?>" value="<?php echo $post_info->street; ?>"   /><br /></td>
+	           					<td><input type="text" name="<?php echo $this->meta_boxes['fields'][0]['id']; ?>" id="<?php echo $this->meta_boxes['fields'][0]['id']; ?>" value="<?php echo sanitize_text_field( esc_attr( stripslashes( $post_info->street ) ) ); ?>"   /><br /></td>
 	            			</tr>
 	            			<tr>
 	            				<th><label for="<?php echo $this->meta_boxes['fields'][1]['id']; ?>"><?php echo $this->meta_boxes['fields'][1]['name']; ?></label></th>
@@ -346,7 +346,7 @@ class GMW_PT_Meta_Boxes {
 	            			</tr>
 	            			<tr>
 	            				<th><label for="<?php echo $this->meta_boxes['fields'][2]['id']; ?>"><?php echo $this->meta_boxes['fields'][2]['name']; ?></label></th>
-	            				<td><input type="text" name="<?php echo $this->meta_boxes['fields'][2]['id']; ?>" id="<?php echo $this->meta_boxes['fields'][2]['id']; ?>" value="<?php echo $post_info->city; ?>"   /><br /></td>
+	            				<td><input type="text" name="<?php echo $this->meta_boxes['fields'][2]['id']; ?>" id="<?php echo $this->meta_boxes['fields'][2]['id']; ?>" value="<?php echo sanitize_text_field( esc_attr( stripslashes( $post_info->city ) ) ); ?>"   /><br /></td>
 	            			</tr>
 	            			<tr>
 	            				<th><label for="<?php echo $this->meta_boxes['fields'][3]['id']; ?>"><?php echo $this->meta_boxes['fields'][3]['name']; ?></label></th>
@@ -411,13 +411,13 @@ class GMW_PT_Meta_Boxes {
 	            				<th><label for="<?php echo $this->meta_boxes['fields'][14]['id']; ?>"><?php echo $this->meta_boxes['fields'][14]['name']; ?></label></th>
 	            			</tr>
 	            			<tr>
-	            				<td><input type="text" name="<?php echo $this->meta_boxes['fields'][14]['id']; ?>" id="<?php echo $this->meta_boxes['fields'][14]['id']; ?>" class="<?php echo $this->meta_boxes['fields'][14]['id']; ?>" value="<?php echo $post_info->address; ?>" style="width: 100%;"/><br /></td>
+	            				<td><input type="text" name="<?php echo $this->meta_boxes['fields'][14]['id']; ?>" id="<?php echo $this->meta_boxes['fields'][14]['id']; ?>" class="<?php echo $this->meta_boxes['fields'][14]['id']; ?>" value="<?php echo sanitize_text_field( esc_attr( stripslashes( $post_info->address ) ) ); ?>" style="width: 100%;"/><br /></td>
 	            			</tr>
 	            			<tr>
 	            				<th><label for="<?php echo $this->meta_boxes['fields'][18]['id']; ?>"><?php echo $this->meta_boxes['fields'][18]['name']; ?></label></th>
 	            			</tr>
 	            			<tr>
-	            				<td><input type="text" name="<?php echo $this->meta_boxes['fields'][18]['id']; ?>" id="<?php echo $this->meta_boxes['fields'][18]['id']; ?>" class="<?php echo $this->meta_boxes['fields'][18]['id']; ?>" value="<?php echo $post_info->formatted_address; ?>" style="width: 100%;" /><br /></td>
+	            				<td><input type="text" name="<?php echo $this->meta_boxes['fields'][18]['id']; ?>" id="<?php echo $this->meta_boxes['fields'][18]['id']; ?>" class="<?php echo $this->meta_boxes['fields'][18]['id']; ?>" value="<?php echo sanitize_text_field( esc_attr( stripslashes( $post_info->formatted_address ) ) ); ?>" style="width: 100%;" /><br /></td>
 	            			</tr>
 	            		</table>
 	            	</div>
