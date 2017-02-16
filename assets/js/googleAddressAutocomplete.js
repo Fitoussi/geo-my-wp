@@ -1,8 +1,8 @@
 function gmwGoogleAddressAutocomplete( gacFields ) {
         
-	jQuery.each( gacFields, function( key, field ) {
+    jQuery.each( gacFields, function( key, field ) {
  
-    	var input = document.getElementById(field);
+        var input = document.getElementById(field);
  
             //varify the field
         if ( input != null ) {
