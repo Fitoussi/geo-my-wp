@@ -518,7 +518,7 @@ function gmw_get_location_address( $info, $gmw ) {
 	$address = apply_filters( "gmw_location_address", $address, $info, $gmw );
 	$address = apply_filters( "gmw_location_address_{$gmw['ID']}", $address, $info, $gmw );
 	
-	return esc_attr( $address ); 
+	return stripslashes( esc_attr( $address ) ); 
 }
 
 	function gmw_location_address( $info, $gmw ) {
