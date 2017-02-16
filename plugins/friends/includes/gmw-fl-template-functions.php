@@ -180,6 +180,52 @@ function gmw_fl_xprofile_fields( $gmw, $class ) {
 				echo '</div>';
 
 			break;
+
+			/**
+             * Make multiselect_custom_taxonomy field type compatible with
+             * GEO my WP.
+             *
+             * @author Miguel López <miguel@donmik.com>
+             *
+             */
+            case 'multiselect_custom_taxonomy':
+
+            $name_of_allow_new_tags = 'allow_new_tags';
+            if ( class_exists("Bxcft_Field_Type_MultiSelectCustomTaxonomy" ) ) {
+                $name_of_allow_new_tags = Bxcft_Field_Type_MultiSelectCustomTaxonomy::ALLOW_NEW_TAGS;
+            }
+
+            $options = $fdata->get_children();
+
+            $taxonomy_selected = false;
+            foreach ( $options as $option ) {
+                if ( $name_of_allow_new_tags !== $option->name
+                    && taxonomy_exists( $option->name ) ) {
+                    $taxonomy_selected = $option->name;
+                    break;
+                }
+            }
+
+            if ( $taxonomy_selected ) {
+                $terms = get_terms( $taxonomy_selected, array(
+                    'hide_empty' => false
+                ) );
+                if ( $terms ) {
+                    echo '<label for="' . $fid . '">' . $label . '</label>';
+                    echo '<select name="' . $fname . '[]" id="' . $fid.'" class="' . $fclass . '" multiple="multiple">';
+
+                    foreach ( $terms as $term ) {
+                        $selected = ( !empty( $value ) && in_array( $term->term_id, $value ) )
+                            ? "selected='selected'" : "";
+                        printf( '<option value="%s"%s>%s</option>',
+                            $term->term_id, $selected, $term->name
+                        );
+                    }
+
+                    echo "</select>";
+                }
+            }
+            break;
 		} // switch
 
 		echo '</div>';
@@ -276,6 +322,7 @@ function gmw_fl_query_xprofile_fields( $gmw, $formValues ) {
 						
 				case 'multiselectbox':
 				case 'checkbox':
+				case 'multiselect_custom_taxonomy':
 
 					$values = $value;
 					$like   = array ();
