@@ -63,7 +63,7 @@ class GMW_FL_Search_Query extends GMW {
     		$from = "INNER JOIN wppl_friends_locator gmwlocations ON {$uid_col} = gmwlocations.member_id";
     		
     		//HAVING clause to display members within the distance entered
-    		$having = $wpdb->prepare( 'HAVING distance <= %d OR distance IS NULL ', $this->form['radius'] );
+    		$having = $wpdb->prepare( ' HAVING distance <= %d OR distance IS NULL ', $this->form['radius'] );
     	
     	//if no address entered 
     	} else {
