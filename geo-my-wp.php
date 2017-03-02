@@ -93,7 +93,7 @@ class GEO_my_WP {
 			define( 'GMW_REMOTE_SITE_URL', 'https://geomywp.com' );
 		}
 		
-		define( 'GMW_VERSION', '2.6.8' );
+		define( 'GMW_VERSION', '2.6.7' );
 		define( 'GMW_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 		define( 'GMW_URL', untrailingslashit( plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) ) );
 		define( 'GMW_IMAGES', GMW_URL . '/assets/images' );
