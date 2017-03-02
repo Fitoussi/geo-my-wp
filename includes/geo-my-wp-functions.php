@@ -201,6 +201,14 @@ function gmw_new_map_element( $args, $return = false ) {
 				$temp_locations[$k]['lng'] = $v->lng;
 			}
 			
+			if ( ! empty( $v->address ) ) {
+				$temp_locations[$k]['address'] = $v->address;
+			}
+
+			if ( ! empty( $v->formatted_address ) ) {
+				$temp_locations[$k]['formatted_address'] = $v->formatted_address;
+			}
+
 			if ( ! empty( $v->mapIcon ) ) {
 				$temp_locations[$k]['mapIcon'] = $v->mapIcon;
 			} else {
