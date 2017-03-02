@@ -1,0 +1,76 @@
+/* Members Locator search results stylesheet "kleo"  */
+ 
+.gmw-fl-kleo-results-wrapper div.gmw-location-wrapper {
+	margin: 0 20px;
+}
+
+div.gmw-fl-kleo-results-wrapper div.gmw-map-wrapper {
+	padding: 0px 10px;
+}
+
+div.gmw-fl-kleo-results-wrapper .gmw-per-page {
+	float: right;
+}
+
+div.gmw-fl-kleo-results-wrapper div.gmw-map-wrapper .gmw-map {
+	box-shadow: 0 0 0 4px #f7f7f7;
+	border-color: #e5e5e5;
+}
+
+/* pagination */
+
+.gmw-fl-kleo-results-wrapper .pagination-per-page-wrapper {
+	clear: both;
+	font-size: 12px;
+	padding: 5px 15px;
+	min-height: 25px;
+	border-bottom: 1px solid #ddd;
+	margin-bottom:3px;
+	display: inline-block;
+	width:100%;
+	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;    
+	box-sizing: border-box;
+	padding:10px 0px;
+	background: #f8f8f8;
+	padding:10px;
+}
+
+.gmw-fl-kleo-results-wrapper .pagination-per-page-wrapper.bottom {
+	border-top: 1px solid #ddd;
+}
+
+.gmw-fl-kleo-results-wrapper .pagination-wrapper {
+	float: right;
+	text-align: center;	
+	line-height:30px;	
+}
+	
+.gmw-fl-kleo-results-wrapper ul.gmw-pagination {
+	float: right;
+	text-align: center;
+	margin:0px;
+	list-style:none;
+	padding:0px;
+}
+
+.gmw-fl-kleo-results-wrapper ul.gmw-pagination li  {
+	text-align:center;
+	display: inline-block;
+	margin:0 0 0 2px;
+}
+
+#buddypress div.pagination .pagination-links span,
+#buddypress div.pagination .pagination-links a {
+	padding: 0 1px;
+}
+
+.gmw-fl-kleo-results-wrapper ul.gmw-pagination li a, 
+.gmw-fl-kleo-results-wrapper ul.gmw-pagination li span {
+
+}
+
+.gmw-fl-kleo-results-wrapper ul.gmw-pagination li a:hover, 
+.gmw-fl-kleo-results-wrapper	 ul.gmw-pagination li span {
+	
+}

@@ -1,0 +1,172 @@
+/**
+ * Members Locator search form stylesheet "horizontal-gray"
+ */
+
+div.gmw-fl-kleo-form-wrapper {
+	//min-width: 80%;
+}
+
+div.gmw-fl-kleo-form-wrapper #search-members-form {
+	box-sizing: none;
+	border: 0;
+	min-width: 80% !important;
+	margin-left: auto;
+	margin-right: auto;
+	display: inline-block;
+	border: 0;
+	//border-style: solid;
+	//border-width: 1px;
+	height: initla;
+	line-height: initial;
+	padding: initial;
+	min-width: initial;
+	-webkit-transition: 0;
+	-moz-transition: 0;
+	-o-transition: 0;
+	transition: 0;
+	text-align: left;
+	box-shadow: none;
+}
+
+#buddypress div#members-dir-search.gmw-fl-kleo-form-wrapper label[for="members_search"] {
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+	display: inline-block;
+	border-radius: 22px;
+	border-style: solid;
+	border-width: 1px;
+	height: 33px;
+	line-height: 30px;
+	padding: 0 10px;
+	min-width: 60%;
+	-webkit-transition: .7s;
+	-moz-transition: .7s;
+	-o-transition: .7s;
+	transition: .7s;
+	text-align: left;
+	box-shadow: 0 0 0 4px #f7f7f7;
+	border-color: #e5e5e5;
+}
+
+div.gmw-fl-kleo-form-wrapper label[for="members_search"] {
+	width: 50%;
+}
+
+div.gmw-fl-kleo-form-wrapper div.gmw-locator-btn-within-wrapper {
+	padding: 3px 5px;
+}
+
+div.gmw-fl-kleo-form-wrapper div.xfield-trigger-wrapper {
+	height: 30px;
+	padding: 5px 8px;
+	border-radius: 2px;
+	border-style: solid;
+	border-width: 1px;
+	outline: 0;
+	display: inline-block;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	cursor: pointer;
+	text-indent: .01px;
+	text-overflow: "";
+	border: 1px solid #e5e5e5;
+	margin: 0px 5px;
+}
+
+div.gmw-fl-kleo-form-wrapper .gmw-kleo-advanced-search-wrapper {
+	display: none;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+div.gmw-fl-kleo-form-wrapper form .editfield label {
+	display:block;
+}
+
+div.gmw-fl-kleo-form-wrapper form .editfield span.label,
+div.gmw-fl-kleo-form-wrapper form .editfield label {
+	display: block;
+	font-weight: bold;
+	margin: 15px 0px 5px 0;
+}
+
+div.gmw-fl-kleo-form-wrapper form .editfield div.checkbox label,
+div.gmw-fl-kleo-form-wrapper form .editfield div.radio label {
+	color: #888;
+	font-size: 100%;
+	font-weight: normal;
+	margin: 0;
+}
+
+div.gmw-fl-kleo-form-wrapper form .editfield span.label {
+        display:inline-block;
+        width:100%;
+        margin:3px 0px 3px      
+}
+
+div.gmw-fl-kleo-form-wrapper .gmw-submit-wrapper {
+	display:inline-block;
+	margin:0 5px 10px 0px;
+	vertical-align: top;
+}
+
+#buddypress div.dir-search.gmw-fl-kleo-form-wrapper input[type=submit] {
+	border: 1px solid #e5e5e5;
+	text-indent: 0;
+	background: none;
+	width: initial;
+	float: none;
+	margin-top: 0;
+	height: 30px;
+	border-radius: 2px;
+	border-style: solid;
+	outline: 0;
+	display: inline-block;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+/* widget */
+
+.widget_gmw_search_form_widget div.gmw-fl-kleo-form-wrapper {
+ 	background: none;
+	padding:0px;
+	border:0;
+}
+
+.widget_gmw_search_form_widget #buddypress div#members-dir-search label[for="members_search"] {
+ 	width: 100%;
+ 	height:40px;
+ 	margin-bottom: 15px;
+}
+
+.widget_gmw_search_form_widget div.gmw-fl-kleo-form-wrapper input[type="text"], 
+.widget_gmw_search_form_widget div.gmw-fl-kleo-form-wrapper select {
+	width:100%;
+	margin: 5px 0px !important;
+}
+
+.widget_gmw_search_form_widget div.gmw-fl-horizontal-gray-form-wrapper .gmw-submit-button {
+	width:100%;
+	padding:10px 0px;
+}
+
+@media (max-width:600px) {
+	
+	div.gmw-fl-kleo-form-wrapper {
+		min-width: 100%;
+	}
+
+	div.gmw-fl-kleo-form-wrapper #search-members-form {
+		min-width: 100% !important;
+	}
+
+	#buddypress div#members-dir-search.gmw-fl-kleo-form-wrapper label[for="members_search"] {
+		width: 100%;
+		margin-bottom: 20px;
+		padding: 0px 10px;
+	}	
+}
