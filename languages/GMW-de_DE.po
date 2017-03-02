@@ -2,16 +2,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GEO my WP v2.4.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-11 08:38-1000\n"
-"PO-Revision-Date: 2015-08-11 08:38-1000\n"
-"Last-Translator: Eyal Fitoussi <info@geomywp.com>\n"
+"POT-Creation-Date: 2017-03-01 16:18-1000\n"
+"PO-Revision-Date: 2017-03-01 16:18-1000\n"
+"Last-Translator: Eyal Fitoussi <fitoussi_eyal@hotmail.com>\n"
 "Language-Team: Eyal Fitoussi <info@geomywp.com>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 1.8.4\n"
+"X-Generator: Poedit 1.8.11\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
 "_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
@@ -127,110 +127,110 @@ msgstr ""
 msgid "Disable Updater"
 msgstr ""
 
-#: includes/admin/geo-my-wp-addons.php:309
+#: includes/admin/geo-my-wp-addons.php:310
 msgid "Free Add-on"
 msgstr ""
 
-#: includes/admin/geo-my-wp-addons.php:314
+#: includes/admin/geo-my-wp-addons.php:315
 msgid "New Add-on"
 msgstr ""
 
-#: includes/admin/geo-my-wp-addons.php:319
+#: includes/admin/geo-my-wp-addons.php:320
 msgid "Incompatible"
 msgstr ""
 
-#: includes/admin/geo-my-wp-addons.php:322
+#: includes/admin/geo-my-wp-addons.php:323
 msgid "Update Required"
 msgstr ""
 
-#: includes/admin/geo-my-wp-addons.php:325
+#: includes/admin/geo-my-wp-addons.php:326
 msgid "Update Available"
 msgstr ""
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:397
-#: includes/admin/geo-my-wp-license-handler.php:179
-#: includes/admin/geo-my-wp-license-handler.php:223
+#: includes/admin/geo-my-wp-addons.php:398
+#: includes/admin/geo-my-wp-license-handler.php:204
+#: includes/admin/geo-my-wp-license-handler.php:248
 #, fuzzy
 msgid "License Key:"
 msgstr "Aktivieren"
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:411
-#: includes/admin/geo-my-wp-license-handler.php:238
+#: includes/admin/geo-my-wp-addons.php:412
+#: includes/admin/geo-my-wp-license-handler.php:263
 #, fuzzy
 msgid "Activate License Key"
 msgstr "Aktivieren"
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:413
-#: includes/admin/geo-my-wp-license-handler.php:240
+#: includes/admin/geo-my-wp-addons.php:414
+#: includes/admin/geo-my-wp-license-handler.php:265
 #, fuzzy
 msgid "Activate License"
 msgstr "Aktivieren"
 
-#: includes/admin/geo-my-wp-addons.php:415
+#: includes/admin/geo-my-wp-addons.php:416
 msgid ""
 "Please activate the add-on to be able to enter and activate the license key."
 msgstr ""
 
-#: includes/admin/geo-my-wp-addons.php:446
+#: includes/admin/geo-my-wp-addons.php:447
 msgid ""
 "This is a free add-on and does not require a license key. Please activate "
 "the add-on to start using it."
 msgstr ""
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:461
+#: includes/admin/geo-my-wp-addons.php:462
 #, fuzzy
 msgid "Activate Add-on"
 msgstr "Aktivieren"
 
-#: includes/admin/geo-my-wp-addons.php:469
+#: includes/admin/geo-my-wp-addons.php:470
 msgid "Get Add-on"
 msgstr ""
 
-#: includes/admin/geo-my-wp-addons.php:508
+#: includes/admin/geo-my-wp-addons.php:509
 msgid ""
 "This is a free add-on and does not require a license key. Thank you for "
 "using GEO my WP."
 msgstr ""
 
-#: includes/admin/geo-my-wp-addons.php:519
-#: includes/admin/geo-my-wp-license-handler.php:79
+#: includes/admin/geo-my-wp-addons.php:520
+#: includes/admin/geo-my-wp-license-handler.php:81
 msgid "Please deactivate the license key before deactivating the plugin"
 msgstr ""
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:532
+#: includes/admin/geo-my-wp-addons.php:533
 #, fuzzy
 msgid "Deactivate Add-on"
 msgstr "Aktivieren"
 
-#: includes/admin/geo-my-wp-addons.php:580
+#: includes/admin/geo-my-wp-addons.php:581
 msgid ""
 "There was an error retrieving the add-ons list from the server. Please try "
 "again later. Error Code: "
 msgstr ""
 
-#: includes/admin/geo-my-wp-addons.php:598
+#: includes/admin/geo-my-wp-addons.php:599
 msgid "Add-on updater enabled."
 msgstr ""
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:599
+#: includes/admin/geo-my-wp-addons.php:600
 #, fuzzy
 msgid "Add-on updater disabled."
 msgstr "Aktivieren"
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:600
+#: includes/admin/geo-my-wp-addons.php:601
 #, fuzzy
 msgid "Add-on deactivated."
 msgstr "Aktivieren"
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:601
+#: includes/admin/geo-my-wp-addons.php:602
 #, fuzzy
 msgid "Add-on activated."
 msgstr "Aktivieren"
@@ -256,7 +256,7 @@ msgstr "GEO my Wp - Haupteinstellungen"
 
 # @ GMW
 #: includes/admin/geo-my-wp-admin.php:132
-#: includes/admin/geo-my-wp-admin.php:363
+#: includes/admin/geo-my-wp-admin.php:366
 #: includes/admin/geo-my-wp-edit-form.php:722
 #: includes/admin/geo-my-wp-settings.php:147
 #: includes/admin/geo-my-wp-settings.php:179
@@ -288,12 +288,12 @@ msgid "Shortcodes"
 msgstr "Shortcode"
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:158
+#: includes/admin/geo-my-wp-admin.php:159
 #, fuzzy
 msgid "Post Types Locator"
 msgstr "Beitragstyp"
 
-#: includes/admin/geo-my-wp-admin.php:164
+#: includes/admin/geo-my-wp-admin.php:165
 msgid ""
 "Add geo-location to Posts and pages. Create an advance proximity search "
 "forms to search for locations based on post types, categories, distance and "
@@ -301,13 +301,13 @@ msgid ""
 msgstr ""
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:176
+#: includes/admin/geo-my-wp-admin.php:177
 #: plugins/friends/includes/admin/gmw-fl-admin.php:41
 #, fuzzy
 msgid "Members Locator"
 msgstr "Mitglieder Standort"
 
-#: includes/admin/geo-my-wp-admin.php:182
+#: includes/admin/geo-my-wp-admin.php:183
 msgid ""
 "Let the BuddyPress members of your site to add location to thier profile. "
 "Create an advance proximity search forms to search for members based on "
@@ -315,96 +315,96 @@ msgid ""
 msgstr ""
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:196
+#: includes/admin/geo-my-wp-admin.php:197
 #: includes/geo-my-wp-deprecated-functions.php:841
 #, fuzzy
 msgid "Current Location"
 msgstr "Dein Standort"
 
-#: includes/admin/geo-my-wp-admin.php:202
+#: includes/admin/geo-my-wp-admin.php:203
 msgid "Get and Display the visitor's current position."
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:214
+#: includes/admin/geo-my-wp-admin.php:215
 msgid "Single Location"
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:220
+#: includes/admin/geo-my-wp-admin.php:221
 msgid ""
 "Display location of certain component ( post, member... ) via shortcode and "
 "widget."
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:231
+#: includes/admin/geo-my-wp-admin.php:232
 msgid "Sweet Date Geolocation"
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:237
+#: includes/admin/geo-my-wp-admin.php:238
 msgid "Enhance Sweet-date theme with geolocation features. "
 msgstr ""
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:393
-#: includes/admin/geo-my-wp-admin.php:409
+#: includes/admin/geo-my-wp-admin.php:396
+#: includes/admin/geo-my-wp-admin.php:412
 #, fuzzy
 msgid "Add GEO my WP Form"
 msgstr "GEO my WP - Erweiterungen"
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:393
-#: includes/admin/geo-my-wp-admin.php:409
+#: includes/admin/geo-my-wp-admin.php:396
+#: includes/admin/geo-my-wp-admin.php:412
 #: includes/admin/geo-my-wp-shortcodes.php:29 includes/geo-my-wp-widgets.php:20
 #, fuzzy
 msgid "GMW Form"
 msgstr "Suchformular"
 
-#: includes/admin/geo-my-wp-admin.php:427
+#: includes/admin/geo-my-wp-admin.php:430
 msgid "Please select a form"
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:445
+#: includes/admin/geo-my-wp-admin.php:448
 msgid "Insert A Form Shortcode"
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:447
+#: includes/admin/geo-my-wp-admin.php:450
 msgid "Select the type of shortcode you wish to add"
 msgstr ""
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:452
+#: includes/admin/geo-my-wp-admin.php:455
 #, fuzzy
 msgid "Form shortcode"
 msgstr "Eingabe des Shortcodes"
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:454
+#: includes/admin/geo-my-wp-admin.php:457
 #, fuzzy
 msgid "Map Shortcode"
 msgstr "Shortcode"
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:456
+#: includes/admin/geo-my-wp-admin.php:459
 #, fuzzy
 msgid "Results shortcode"
 msgstr "Eingabe des Shortcodes"
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:460
+#: includes/admin/geo-my-wp-admin.php:463
 #, fuzzy
 msgid "Select a Form"
 msgstr "Suchformular"
 
 # @ GMW
-#: includes/admin/geo-my-wp-admin.php:474
+#: includes/admin/geo-my-wp-admin.php:482
 #, fuzzy
 msgid "Insert Shortcode"
 msgstr "Shortcode"
 
-#: includes/admin/geo-my-wp-admin.php:475
+#: includes/admin/geo-my-wp-admin.php:483
 msgid "Cancel"
 msgstr ""
 
-#: includes/admin/geo-my-wp-admin.php:490
+#: includes/admin/geo-my-wp-admin.php:498
 #, php-format
 msgid ""
 "and Geolocating with <a %s>GEO my WP</a>. Please take a moment to show your "
@@ -527,7 +527,7 @@ msgstr ""
 #: includes/admin/geo-my-wp-edit-form.php:547
 #: includes/geo-my-wp-template-functions.php:23
 #: includes/geo-my-wp-template-functions.php:107
-#: plugins/single-location/includes/gmw-sl-class.php:148
+#: plugins/single-location/includes/gmw-sl-class.php:149
 #: plugins/single-location/includes/gmw-sl-widgets.php:202
 #: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:86
 #: plugins/sweetdate-geolocation/includes/geo-my-wp-sd-class.php:107
@@ -540,7 +540,7 @@ msgstr "Meilen"
 #: includes/admin/geo-my-wp-edit-form.php:548
 #: includes/geo-my-wp-template-functions.php:22
 #: includes/geo-my-wp-template-functions.php:108
-#: plugins/single-location/includes/gmw-sl-class.php:149
+#: plugins/single-location/includes/gmw-sl-class.php:150
 #: plugins/single-location/includes/gmw-sl-widgets.php:203
 #: plugins/sweetdate-geolocation/includes/admin/geo-my-wp-sd-admin.php:87
 #: plugins/sweetdate-geolocation/includes/geo-my-wp-sd-class.php:108
@@ -786,7 +786,7 @@ msgstr ""
 # @ GMW
 #: includes/admin/geo-my-wp-edit-form.php:191
 #: includes/geo-my-wp-template-functions.php:106
-#: plugins/single-location/includes/gmw-sl-class.php:147
+#: plugins/single-location/includes/gmw-sl-class.php:148
 #, fuzzy
 msgid "Distance Units"
 msgstr "Entfernung"
@@ -1201,7 +1201,7 @@ msgstr ""
 
 # @ GMW
 #: includes/admin/geo-my-wp-edit-form.php:675
-#: includes/admin/geo-my-wp-forms.php:314
+#: includes/admin/geo-my-wp-forms.php:316
 #, fuzzy
 msgid "Delete this form"
 msgstr "Löschen des Standortes"
@@ -1363,37 +1363,37 @@ msgstr "Neues Suchformular erstellen"
 
 # @ GMW
 #: includes/admin/geo-my-wp-forms.php:273
-#: includes/admin/geo-my-wp-forms.php:350
+#: includes/admin/geo-my-wp-forms.php:352
 msgid "ID"
 msgstr "ID"
 
 # @ GMW
 #: includes/admin/geo-my-wp-forms.php:274
-#: includes/admin/geo-my-wp-forms.php:351
+#: includes/admin/geo-my-wp-forms.php:353
 msgid "Type"
 msgstr "Typ"
 
 #: includes/admin/geo-my-wp-forms.php:275
-#: includes/admin/geo-my-wp-forms.php:352
+#: includes/admin/geo-my-wp-forms.php:354
 msgid "Name"
 msgstr ""
 
 # @ GMW
 #: includes/admin/geo-my-wp-forms.php:276
-#: includes/admin/geo-my-wp-forms.php:354
+#: includes/admin/geo-my-wp-forms.php:356
 msgid "Action"
 msgstr "Aktion"
 
 # @ GMW
 #: includes/admin/geo-my-wp-forms.php:277
-#: includes/admin/geo-my-wp-forms.php:353
+#: includes/admin/geo-my-wp-forms.php:355
 #: includes/admin/geo-my-wp-shortcodes.php:323
 msgid "Usage"
 msgstr ""
 
 # @ GMW
-#: includes/admin/geo-my-wp-forms.php:300
-#: includes/admin/geo-my-wp-forms.php:308
+#: includes/admin/geo-my-wp-forms.php:302
+#: includes/admin/geo-my-wp-forms.php:310
 msgid "Edit this form"
 msgstr ""
 
@@ -1401,7 +1401,7 @@ msgstr ""
 # @ twentyfourteen
 # @ twentythirteen
 # @ twentytwelve
-#: includes/admin/geo-my-wp-forms.php:308
+#: includes/admin/geo-my-wp-forms.php:310
 #: plugins/posts/search-results/twenty-fourteen/results.php:75
 #: plugins/posts/search-results/twenty-thirteen/results.php:64
 #: plugins/posts/search-results/wordpress-twentytwelve/results.php:115
@@ -1409,100 +1409,147 @@ msgid "Edit"
 msgstr "Eingabe"
 
 # @ GMW
-#: includes/admin/geo-my-wp-forms.php:311
+#: includes/admin/geo-my-wp-forms.php:313
 #, fuzzy
 msgid "Duplicate this form"
 msgstr "Duplizieren"
 
 # @ GMW
-#: includes/admin/geo-my-wp-forms.php:311
+#: includes/admin/geo-my-wp-forms.php:313
 msgid "Duplicate"
 msgstr "Duplizieren"
 
 # @ GMW
-#: includes/admin/geo-my-wp-forms.php:314
+#: includes/admin/geo-my-wp-forms.php:316
 msgid "Delete"
 msgstr "Löschen"
 
 # @ GMW
-#: includes/admin/geo-my-wp-forms.php:335
+#: includes/admin/geo-my-wp-forms.php:337
 msgid "You don't have any forms yet."
 msgstr ""
 
 # @ GMW
-#: includes/admin/geo-my-wp-license-handler.php:198
-#: includes/admin/geo-my-wp-license-handler.php:199
+#: includes/admin/geo-my-wp-license-handler.php:223
+#: includes/admin/geo-my-wp-license-handler.php:224
 #, fuzzy
 msgid "Deactivate License Key"
 msgstr "Deaktivieren"
 
 # @ GMW
-#: includes/admin/geo-my-wp-license-handler.php:231
+#: includes/admin/geo-my-wp-license-handler.php:256
 #, fuzzy
 msgid "Enter license key"
 msgstr "Gib hier Deinen Lizenzschlüssel"
 
-#: includes/admin/geo-my-wp-license-handler.php:290
+#: includes/admin/geo-my-wp-license-handler.php:322
 msgid ""
 "Please enter your license key and click \"Activate License\". The license "
 "key is required in order to receive automatic updated for the plugin."
 msgstr ""
 
-#: includes/admin/geo-my-wp-license-handler.php:291
+#: includes/admin/geo-my-wp-license-handler.php:323
 #, php-format
 msgid ""
 "Your license for %s plugin successfully activated. Thank you for your "
 "support!"
 msgstr ""
 
-#: includes/admin/geo-my-wp-license-handler.php:292
+#: includes/admin/geo-my-wp-license-handler.php:324
 #, php-format
 msgid "Your license for %s plugin successfully deactivated."
 msgstr ""
 
-#: includes/admin/geo-my-wp-license-handler.php:293
+#: includes/admin/geo-my-wp-license-handler.php:325
 msgid "License is activated. Thank you for your support!"
 msgstr ""
 
-#: includes/admin/geo-my-wp-license-handler.php:294
+#: includes/admin/geo-my-wp-license-handler.php:326
 msgid "No license key entered. Please enter the license key and try again."
 msgstr ""
 
-#: includes/admin/geo-my-wp-license-handler.php:295
+#: includes/admin/geo-my-wp-license-handler.php:327
 msgid ""
 "Your license has expired. Please renew your license in order to keep getting "
 "its updates and support."
 msgstr ""
 
-#: includes/admin/geo-my-wp-license-handler.php:296
+#: includes/admin/geo-my-wp-license-handler.php:328
+msgid ""
+"Your license key has been disabled. Please contact support for more "
+"information."
+msgstr ""
+
+#: includes/admin/geo-my-wp-license-handler.php:329
+msgid ""
+"Something is wrong with the key you entered. Please verify the key and try "
+"again."
+msgstr ""
+
+#: includes/admin/geo-my-wp-license-handler.php:330
+#: includes/admin/geo-my-wp-license-handler.php:331
+#: includes/admin/geo-my-wp-license-handler.php:524
+msgid "Your license is not active for this URL."
+msgstr ""
+
+#: includes/admin/geo-my-wp-license-handler.php:332
+msgid "The license key you entered does not belong to this extension."
+msgstr ""
+
+#: includes/admin/geo-my-wp-license-handler.php:333
+#, php-format
+msgid ""
+"An error occurred while trying to activate your %s license. ERROR "
+"item_name_mismatch"
+msgstr ""
+
+#: includes/admin/geo-my-wp-license-handler.php:334
 #, php-format
 msgid ""
 "Your license has no activations left. Click <a %s>here</a> to manager your "
 "license activations."
 msgstr ""
 
-#: includes/admin/geo-my-wp-license-handler.php:297
-msgid ""
-"Something is wrong with the key you entered. Please verify the key and try "
-"again."
-msgstr ""
-
-#: includes/admin/geo-my-wp-license-handler.php:298
+#: includes/admin/geo-my-wp-license-handler.php:336
 #, php-format
 msgid "Lost or forgot your license key? <a %s >Retrieve it here.</a>"
 msgstr ""
 
-#: includes/admin/geo-my-wp-license-handler.php:299
+#: includes/admin/geo-my-wp-license-handler.php:337
 #, php-format
 msgid ""
 "Your license for %s plugin could not be activated. See error message below!"
 msgstr ""
 
-#: includes/admin/geo-my-wp-license-handler.php:300
+#: includes/admin/geo-my-wp-license-handler.php:338
+msgid "An error occurred, please try again or contact support."
+msgstr ""
+
+#: includes/admin/geo-my-wp-license-handler.php:491
+#: includes/admin/geo-my-wp-license-handler.php:539
+msgid "An error occurred, please try again."
+msgstr ""
+
+#: includes/admin/geo-my-wp-license-handler.php:506
 #, php-format
-msgid ""
-"An error occurred while trying to activate your %s license. ERROR "
-"item_name_mismatch"
+msgid "Your license key expired on %s."
+msgstr ""
+
+#: includes/admin/geo-my-wp-license-handler.php:513
+msgid "Your license key has been disabled."
+msgstr ""
+
+#: includes/admin/geo-my-wp-license-handler.php:518
+msgid "Invalid license."
+msgstr ""
+
+#: includes/admin/geo-my-wp-license-handler.php:529
+#, php-format
+msgid "This appears to be an invalid license key for %s."
+msgstr ""
+
+#: includes/admin/geo-my-wp-license-handler.php:534
+msgid "Your license key has reached its activation limit."
 msgstr ""
 
 # @ GMW
@@ -1521,16 +1568,16 @@ msgstr "Gib hier Deinen Lizenzschlüssel"
 msgid "Google Maps API V3 Key"
 msgstr "Google Maps API V3 Key"
 
-# @ GMW
 #: includes/admin/geo-my-wp-settings.php:43
 msgid ""
-"This is optional but will let you track your API requests. you can obtain "
-"your free Goole API key <a href=\"https://code.google.com/apis/console/\" "
-"target=\"_blank\">here</a>."
+"Google Maps API is required in order to use GEO my WP plugin ( and Google "
+"Maps features in general ). Please follow <a href=\"http://docs."
+"gravitygeolocation.com/article/101-create-google-map-api-key\" target="
+"\"_blank\">this tutorial</a> on how to create the required API key and how "
+"to enable the required API services. Note that the tutorial refers to "
+"Gravity Geolocation add-on. However, the API key creation process is the "
+"same for GEO my WP plugin."
 msgstr ""
-"Dies ist optional, unterstützt Dich allerdings beim Tracken Deiner API-"
-"Anfragen. Du kannst einen kostenlosen Goole API Key unter <a href=\"https://"
-"code.google.com/apis/console/\" target=\"_blank\">erhalten</a>."
 
 #: includes/admin/geo-my-wp-settings.php:49
 msgid "Client-side Geocoder"
@@ -1825,12 +1872,12 @@ msgstr "Zusätzliche Informationen"
 #: includes/geo-my-wp-template-functions.php:63
 #: includes/geo-my-wp-template-functions.php:70
 #: includes/geo-my-wp-template-functions.php:90
-#: includes/geo-my-wp-template-functions.php:996
-#: plugins/posts/includes/gmw-pt-shortcodes.php:146
-#: plugins/posts/includes/gmw-pt-shortcodes.php:152
-#: plugins/posts/includes/gmw-pt-shortcodes.php:158
-#: plugins/posts/includes/gmw-pt-shortcodes.php:164
-#: plugins/posts/includes/gmw-pt-single-post-location-class.php:73
+#: includes/geo-my-wp-template-functions.php:997
+#: plugins/posts/includes/gmw-pt-shortcodes.php:147
+#: plugins/posts/includes/gmw-pt-shortcodes.php:153
+#: plugins/posts/includes/gmw-pt-shortcodes.php:159
+#: plugins/posts/includes/gmw-pt-shortcodes.php:165
+#: plugins/posts/includes/gmw-pt-single-post-location-class.php:71
 msgid "N/A"
 msgstr "Nicht verfügbar"
 
@@ -1840,26 +1887,24 @@ msgstr "Nicht verfügbar"
 msgid "Shortcode Examples"
 msgstr "Shortcode"
 
-#: includes/admin/geo-my-wp-updater.php:181
+#: includes/admin/geo-my-wp-updater.php:208
 #, php-format
 msgid ""
-"There is a new version of %1$s available. <a target=\"_blank\" class="
-"\"thickbox\" href=\"%2$s\">View version %3$s details</a>."
+"There is a new version of %1$s available. %2$sView version %3$s details%4$s."
 msgstr ""
 
-#: includes/admin/geo-my-wp-updater.php:188
+#: includes/admin/geo-my-wp-updater.php:216
 #, php-format
 msgid ""
-"There is a new version of %1$s available. <a target=\"_blank\" class="
-"\"thickbox\" href=\"%2$s\">View version %3$s details</a> or <a href=\"%4$s"
-"\">update now</a>."
+"There is a new version of %1$s available. %2$sView version %3$s details%4$s "
+"or %5$supdate now%6$s."
 msgstr ""
 
-#: includes/admin/geo-my-wp-updater.php:328
+#: includes/admin/geo-my-wp-updater.php:405
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: includes/admin/geo-my-wp-updater.php:328
+#: includes/admin/geo-my-wp-updater.php:405
 #: includes/admin/tools/gmw-tools-class-export.php:172
 msgid "Error"
 msgstr ""
@@ -2289,21 +2334,21 @@ msgstr ""
 # @ GMW
 #: includes/admin/tools/gmw-tools-import-export-tab.php:292
 #: plugins/posts/includes/admin/gmw-pt-admin.php:436
-#: plugins/posts/includes/gmw-pt-single-post-location-class.php:69
+#: plugins/posts/includes/gmw-pt-single-post-location-class.php:67
 msgid "Phone"
 msgstr "Telefon"
 
 # @ GMW
 #: includes/admin/tools/gmw-tools-import-export-tab.php:293
 #: plugins/posts/includes/admin/gmw-pt-admin.php:437
-#: plugins/posts/includes/gmw-pt-single-post-location-class.php:70
+#: plugins/posts/includes/gmw-pt-single-post-location-class.php:68
 msgid "Fax"
 msgstr "Fax"
 
 # @ GMW
 #: includes/admin/tools/gmw-tools-import-export-tab.php:294
 #: plugins/posts/includes/admin/gmw-pt-admin.php:438
-#: plugins/posts/includes/gmw-pt-single-post-location-class.php:71
+#: plugins/posts/includes/gmw-pt-single-post-location-class.php:69
 msgid "Email"
 msgstr "E-Mail"
 
@@ -2311,7 +2356,7 @@ msgstr "E-Mail"
 #: includes/admin/tools/gmw-tools-import-export-tab.php:295
 #: plugins/posts/includes/admin/gmw-pt-admin.php:439
 #: plugins/posts/includes/admin/gmw-pt-metaboxes.php:136
-#: plugins/posts/includes/gmw-pt-single-post-location-class.php:72
+#: plugins/posts/includes/gmw-pt-single-post-location-class.php:70
 msgid "Website"
 msgstr "Internetseite"
 
@@ -2594,7 +2639,7 @@ msgstr "Erhalte Deinen aktuellen Standort"
 # @ GMW
 #: includes/geo-my-wp-deprecated-functions.php:842
 #: plugins/friends/includes/gmw-fl-location-tab.php:404
-#: plugins/posts/includes/gmw-pt-shortcodes.php:40
+#: plugins/posts/includes/gmw-pt-shortcodes.php:41
 msgid "Your Location"
 msgstr "Dein Standort"
 
@@ -2823,7 +2868,7 @@ msgstr ""
 #: includes/geo-my-wp-template-functions.php:52
 #: includes/geo-my-wp-template-functions.php:85
 #: plugins/friends/includes/gmw-fl-single-member-location-class.php:74
-#: plugins/posts/includes/gmw-pt-single-post-location-class.php:64
+#: plugins/posts/includes/gmw-pt-single-post-location-class.php:62
 #, fuzzy
 msgid "Distance: "
 msgstr "Entfernung"
@@ -2840,7 +2885,7 @@ msgstr "Entfernung"
 #: includes/geo-my-wp-template-functions.php:82
 #: plugins/friends/includes/gmw-fl-member-location-shortcode.php:79
 #: plugins/friends/includes/gmw-fl-single-member-location-class.php:77
-#: plugins/posts/includes/gmw-pt-shortcodes.php:144
+#: plugins/posts/includes/gmw-pt-shortcodes.php:145
 msgid "Address: "
 msgstr "Adresse: "
 
@@ -2849,8 +2894,8 @@ msgstr "Adresse: "
 #: includes/geo-my-wp-template-functions.php:83
 #: plugins/friends/includes/gmw-fl-member-location-shortcode.php:91
 #: plugins/friends/includes/gmw-fl-single-member-location-class.php:76
-#: plugins/posts/includes/gmw-pt-shortcodes.php:126
-#: plugins/posts/includes/gmw-pt-single-post-location-class.php:66
+#: plugins/posts/includes/gmw-pt-shortcodes.php:127
+#: plugins/posts/includes/gmw-pt-single-post-location-class.php:64
 msgid "Get Directions"
 msgstr "Routenplaner"
 
@@ -2898,21 +2943,21 @@ msgstr ""
 # @ GMW
 #: includes/geo-my-wp-template-functions.php:66
 #: includes/geo-my-wp-template-functions.php:86
-#: plugins/posts/includes/gmw-pt-shortcodes.php:150
+#: plugins/posts/includes/gmw-pt-shortcodes.php:151
 msgid "Phone: "
 msgstr "Telefon: "
 
 # @ GMW
 #: includes/geo-my-wp-template-functions.php:67
 #: includes/geo-my-wp-template-functions.php:87
-#: plugins/posts/includes/gmw-pt-shortcodes.php:156
+#: plugins/posts/includes/gmw-pt-shortcodes.php:157
 msgid "Fax: "
 msgstr "Fax: "
 
 # @ GMW
 #: includes/geo-my-wp-template-functions.php:68
 #: includes/geo-my-wp-template-functions.php:88
-#: plugins/posts/includes/gmw-pt-shortcodes.php:162
+#: plugins/posts/includes/gmw-pt-shortcodes.php:163
 msgid "Email: "
 msgstr "E-Mail: "
 
@@ -2962,72 +3007,72 @@ msgid "Formatted Address: "
 msgstr "Erhalte die Adresse"
 
 #: includes/geo-my-wp-template-functions.php:97
-#: plugins/single-location/includes/gmw-sl-class.php:138
+#: plugins/single-location/includes/gmw-sl-class.php:139
 msgid "Start point"
 msgstr ""
 
 #: includes/geo-my-wp-template-functions.php:98
-#: plugins/single-location/includes/gmw-sl-class.php:139
+#: plugins/single-location/includes/gmw-sl-class.php:140
 msgid "Destination point"
 msgstr ""
 
 # @ GMW
 #: includes/geo-my-wp-template-functions.php:99
-#: plugins/single-location/includes/gmw-sl-class.php:140
+#: plugins/single-location/includes/gmw-sl-class.php:141
 #, fuzzy
 msgid "Directions"
 msgstr "Routenplaner"
 
 #: includes/geo-my-wp-template-functions.php:100
-#: plugins/single-location/includes/gmw-sl-class.php:141
+#: plugins/single-location/includes/gmw-sl-class.php:142
 msgid "From:"
 msgstr ""
 
 #: includes/geo-my-wp-template-functions.php:101
-#: plugins/single-location/includes/gmw-sl-class.php:142
+#: plugins/single-location/includes/gmw-sl-class.php:143
 msgid "To:"
 msgstr ""
 
 # @ GMW
 #: includes/geo-my-wp-template-functions.php:102
-#: plugins/single-location/includes/gmw-sl-class.php:143
+#: plugins/single-location/includes/gmw-sl-class.php:144
 #, fuzzy
 msgid "Driving"
 msgstr "Entfernung"
 
 #: includes/geo-my-wp-template-functions.php:103
-#: plugins/single-location/includes/gmw-sl-class.php:144
+#: plugins/single-location/includes/gmw-sl-class.php:145
 msgid "Walking"
 msgstr ""
 
 #: includes/geo-my-wp-template-functions.php:104
-#: plugins/single-location/includes/gmw-sl-class.php:145
+#: plugins/single-location/includes/gmw-sl-class.php:146
 msgid "Bicycling"
 msgstr ""
 
 #: includes/geo-my-wp-template-functions.php:105
-#: plugins/single-location/includes/gmw-sl-class.php:146
+#: plugins/single-location/includes/gmw-sl-class.php:147
 msgid "Transit"
 msgstr ""
 
 #: includes/geo-my-wp-template-functions.php:109
-#: plugins/single-location/includes/gmw-sl-class.php:150
+#: plugins/single-location/includes/gmw-sl-class.php:151
 msgid "Avoid"
 msgstr ""
 
 #: includes/geo-my-wp-template-functions.php:110
-#: plugins/single-location/includes/gmw-sl-class.php:151
+#: plugins/single-location/includes/gmw-sl-class.php:152
 msgid "highways"
 msgstr ""
 
 #: includes/geo-my-wp-template-functions.php:111
-#: plugins/single-location/includes/gmw-sl-class.php:152
+#: plugins/single-location/includes/gmw-sl-class.php:153
 msgid "Tolls"
 msgstr ""
 
 #: includes/geo-my-wp-template-functions.php:151
 #: plugins/friends/includes/gmw-fl-single-member-location-class.php:78
-#: plugins/posts/includes/gmw-pt-single-post-location-class.php:67
+#: plugins/posts/includes/gmw-pt-single-post-location-class.php:65
 msgid "Resize map"
 msgstr ""
 
@@ -3035,11 +3080,11 @@ msgstr ""
 msgid "locator button"
 msgstr ""
 
-#: includes/geo-my-wp-template-functions.php:985
+#: includes/geo-my-wp-template-functions.php:986
 msgid " Years old"
 msgstr ""
 
-#: includes/geo-my-wp-template-functions.php:986
+#: includes/geo-my-wp-template-functions.php:987
 msgid "Age"
 msgstr ""
 
@@ -3364,9 +3409,9 @@ msgstr "Aktualisiere Datenbank"
 msgid "Member's location updated"
 msgstr "Standort des Mitgliedes"
 
-#: plugins/friends/includes/gmw-fl-activity.php:45
+#: plugins/friends/includes/gmw-fl-activity.php:47
 #, php-format
-msgid "%s Updated new location at %s"
+msgid "%s %s %s"
 msgstr ""
 
 # @ GMW
@@ -3511,7 +3556,7 @@ msgstr "Gebe Deinen Standort manuell ein"
 # @ GMW
 #: plugins/friends/includes/gmw-fl-location-tab.php:409
 #: plugins/posts/includes/admin/gmw-pt-metaboxes.php:332
-#: plugins/posts/includes/gmw-pt-single-post-location-class.php:68
+#: plugins/posts/includes/gmw-pt-single-post-location-class.php:66
 #: plugins/sweetdate-geolocation/includes/geo-my-wp-sd-class.php:118
 msgid "Address"
 msgstr "Adresse"
@@ -3531,7 +3576,7 @@ msgstr "Speichere den Standort"
 # @ GMW
 #: plugins/friends/includes/gmw-fl-member-location-shortcode.php:88
 #: plugins/friends/includes/gmw-fl-single-member-location-class.php:75
-#: plugins/posts/includes/gmw-pt-single-post-location-class.php:65
+#: plugins/posts/includes/gmw-pt-single-post-location-class.php:63
 msgid "Go"
 msgstr "Los"
 
@@ -3541,29 +3586,30 @@ msgid " has not added a location yet"
 msgstr " kein Standort bis jetzt hinzugefügt"
 
 # @ GMW
-#: plugins/friends/includes/gmw-fl-template-functions.php:40
+#: plugins/friends/includes/gmw-fl-template-functions.php:50
 msgid "Age Range (min - max)"
 msgstr ""
 
 # @ GMW
-#: plugins/friends/includes/gmw-fl-template-functions.php:41
+#: plugins/friends/includes/gmw-fl-template-functions.php:51
 #, fuzzy
 msgid "Min"
 msgstr "Mi"
 
 # @ GMW
-#: plugins/friends/includes/gmw-fl-template-functions.php:43
+#: plugins/friends/includes/gmw-fl-template-functions.php:53
 #, fuzzy
 msgid "Max"
 msgstr "Fax"
 
 # @ GMW
-#: plugins/friends/includes/gmw-fl-template-functions.php:72
+#: plugins/friends/includes/gmw-fl-template-functions.php:75
+#: plugins/friends/includes/gmw-fl-template-functions.php:115
 #, fuzzy
 msgid " -- All -- "
 msgstr "- Alle -"
 
-#: plugins/friends/includes/gmw-fl-template-functions.php:109
+#: plugins/friends/includes/gmw-fl-template-functions.php:164
 msgid "Clear"
 msgstr ""
 
@@ -4124,25 +4170,25 @@ msgid "Hours"
 msgstr ""
 
 # @ GMW
-#: plugins/posts/includes/gmw-pt-shortcodes.php:96
+#: plugins/posts/includes/gmw-pt-shortcodes.php:97
 #, fuzzy
 msgid "Distance:"
 msgstr "Entfernung"
 
 # @ GMW
-#: plugins/posts/includes/gmw-pt-shortcodes.php:123
+#: plugins/posts/includes/gmw-pt-shortcodes.php:124
 msgid "GO"
 msgstr "LOS"
 
 # @ GMW
-#: plugins/posts/includes/gmw-pt-shortcodes.php:168
+#: plugins/posts/includes/gmw-pt-shortcodes.php:169
 msgid "Website: "
 msgstr "Internetseite: "
 
-# @ GMW
-#: plugins/posts/includes/gmw-pt-template-functions.php:126
-msgid " - All - "
-msgstr "- Alle -"
+#: plugins/posts/includes/gmw-pt-template-functions.php:135
+#, php-format
+msgid "All %s"
+msgstr ""
 
 # @ twentyfourteen
 #: plugins/posts/search-results/twenty-fourteen/results.php:56
@@ -4219,7 +4265,7 @@ msgstr "Über %s"
 msgid "View all posts by %s <span class=\"meta-nav\">&rarr;</span>"
 msgstr "Anzeigen aller Beiträge von %s <span class=\"meta-nav\">&rarr;</span>"
 
-#: plugins/single-location/includes/gmw-sl-class.php:153
+#: plugins/single-location/includes/gmw-sl-class.php:154
 msgid "Show directions"
 msgstr ""
 
@@ -4545,6 +4591,20 @@ msgid ""
 "Sweet-date Geolocation add-on requires BuddyPress plugin version 2.0 or "
 "higher in order to work."
 msgstr ""
+
+# @ GMW
+#~ msgid ""
+#~ "This is optional but will let you track your API requests. you can obtain "
+#~ "your free Goole API key <a href=\"https://code.google.com/apis/console/\" "
+#~ "target=\"_blank\">here</a>."
+#~ msgstr ""
+#~ "Dies ist optional, unterstützt Dich allerdings beim Tracken Deiner API-"
+#~ "Anfragen. Du kannst einen kostenlosen Goole API Key unter <a href="
+#~ "\"https://code.google.com/apis/console/\" target=\"_blank\">erhalten</a>."
+
+# @ GMW
+#~ msgid " - All - "
+#~ msgstr "- Alle -"
 
 # @ GMW
 #, fuzzy

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GEO my WP v2.4.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-16 15:06-1000\n"
-"PO-Revision-Date: 2016-11-16 15:06-1000\n"
+"POT-Creation-Date: 2017-03-01 16:18-1000\n"
+"PO-Revision-Date: 2017-03-01 16:18-1000\n"
 "Last-Translator: Eyal Fitoussi <fitoussi_eyal@hotmail.com>\n"
 "Language-Team: Eyal Fitoussi <info@geomywp.com>\n"
 "Language: fr_FR\n"
@@ -160,53 +160,53 @@ msgstr ""
 msgid "Disable Updater"
 msgstr "D&eacute;sactiver la mise &agrave; jour auto."
 
-#: includes/admin/geo-my-wp-addons.php:309
+#: includes/admin/geo-my-wp-addons.php:310
 msgid "Free Add-on"
 msgstr ""
 
-#: includes/admin/geo-my-wp-addons.php:314
+#: includes/admin/geo-my-wp-addons.php:315
 msgid "New Add-on"
 msgstr ""
 
-#: includes/admin/geo-my-wp-addons.php:319
+#: includes/admin/geo-my-wp-addons.php:320
 msgid "Incompatible"
 msgstr ""
 
-#: includes/admin/geo-my-wp-addons.php:322
+#: includes/admin/geo-my-wp-addons.php:323
 msgid "Update Required"
 msgstr ""
 
-#: includes/admin/geo-my-wp-addons.php:325
+#: includes/admin/geo-my-wp-addons.php:326
 msgid "Update Available"
 msgstr ""
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:397
-#: includes/admin/geo-my-wp-license-handler.php:181
-#: includes/admin/geo-my-wp-license-handler.php:225
+#: includes/admin/geo-my-wp-addons.php:398
+#: includes/admin/geo-my-wp-license-handler.php:204
+#: includes/admin/geo-my-wp-license-handler.php:248
 msgid "License Key:"
 msgstr "Cl&eacute; de licence :"
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:411
-#: includes/admin/geo-my-wp-license-handler.php:240
+#: includes/admin/geo-my-wp-addons.php:412
+#: includes/admin/geo-my-wp-license-handler.php:263
 msgid "Activate License Key"
 msgstr "Activer la cl&eacute; de licence"
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:413
-#: includes/admin/geo-my-wp-license-handler.php:242
+#: includes/admin/geo-my-wp-addons.php:414
+#: includes/admin/geo-my-wp-license-handler.php:265
 msgid "Activate License"
 msgstr "Activer la licence"
 
-#: includes/admin/geo-my-wp-addons.php:415
+#: includes/admin/geo-my-wp-addons.php:416
 msgid ""
 "Please activate the add-on to be able to enter and activate the license key."
 msgstr ""
 "Merci d&#8217;activer le module avant d&#8217;indiquer et de valider votre "
 "cl&eacute; de licence."
 
-#: includes/admin/geo-my-wp-addons.php:446
+#: includes/admin/geo-my-wp-addons.php:447
 msgid ""
 "This is a free add-on and does not require a license key. Please activate "
 "the add-on to start using it."
@@ -215,54 +215,54 @@ msgstr ""
 "pour pouvoir l&#8217;utiliser."
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:461
+#: includes/admin/geo-my-wp-addons.php:462
 msgid "Activate Add-on"
 msgstr "Activer le module"
 
-#: includes/admin/geo-my-wp-addons.php:469
+#: includes/admin/geo-my-wp-addons.php:470
 msgid "Get Add-on"
 msgstr ""
 
-#: includes/admin/geo-my-wp-addons.php:508
+#: includes/admin/geo-my-wp-addons.php:509
 msgid ""
 "This is a free add-on and does not require a license key. Thank you for "
 "using GEO my WP."
 msgstr "Ce module est gratuit. Merci d&#8217;utiliser Geo my WP."
 
-#: includes/admin/geo-my-wp-addons.php:519
-#: includes/admin/geo-my-wp-license-handler.php:80
+#: includes/admin/geo-my-wp-addons.php:520
+#: includes/admin/geo-my-wp-license-handler.php:81
 msgid "Please deactivate the license key before deactivating the plugin"
 msgstr ""
 "Merci de d&eacute;sactiver la cl&eacute; de licence avant de d&eacute;"
 "sactiver le plugin"
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:532
+#: includes/admin/geo-my-wp-addons.php:533
 msgid "Deactivate Add-on"
 msgstr "D&eacute;sactiver le module"
 
-#: includes/admin/geo-my-wp-addons.php:580
+#: includes/admin/geo-my-wp-addons.php:581
 msgid ""
 "There was an error retrieving the add-ons list from the server. Please try "
 "again later. Error Code: "
 msgstr ""
 
-#: includes/admin/geo-my-wp-addons.php:598
+#: includes/admin/geo-my-wp-addons.php:599
 msgid "Add-on updater enabled."
 msgstr "Mise &agrave; jour auto. activ&eacute;e"
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:599
+#: includes/admin/geo-my-wp-addons.php:600
 msgid "Add-on updater disabled."
 msgstr "Mise &agrave; jour auto. d&eacute;sactiv&eacute;e"
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:600
+#: includes/admin/geo-my-wp-addons.php:601
 msgid "Add-on deactivated."
 msgstr "Module d&eacute;sactiv&eacute;"
 
 # @ GMW
-#: includes/admin/geo-my-wp-addons.php:601
+#: includes/admin/geo-my-wp-addons.php:602
 msgid "Add-on activated."
 msgstr "Module activ&eacute;"
 
@@ -1480,23 +1480,23 @@ msgid "You don't have any forms yet."
 msgstr "Vous n&#8217;avez pas de formulaires pour le moment."
 
 # @ GMW
-#: includes/admin/geo-my-wp-license-handler.php:200
-#: includes/admin/geo-my-wp-license-handler.php:201
+#: includes/admin/geo-my-wp-license-handler.php:223
+#: includes/admin/geo-my-wp-license-handler.php:224
 msgid "Deactivate License Key"
 msgstr "D&eacute;sactiver la cl&eacute;"
 
 # @ GMW
-#: includes/admin/geo-my-wp-license-handler.php:233
+#: includes/admin/geo-my-wp-license-handler.php:256
 msgid "Enter license key"
 msgstr "Entrez votre cl&eacute;"
 
-#: includes/admin/geo-my-wp-license-handler.php:292
+#: includes/admin/geo-my-wp-license-handler.php:322
 msgid ""
 "Please enter your license key and click \"Activate License\". The license "
 "key is required in order to receive automatic updated for the plugin."
 msgstr ""
 
-#: includes/admin/geo-my-wp-license-handler.php:293
+#: includes/admin/geo-my-wp-license-handler.php:323
 #, php-format
 msgid ""
 "Your license for %s plugin successfully activated. Thank you for your "
@@ -1505,24 +1505,24 @@ msgstr ""
 "Votre licence a bien &eacute;t&eacute; activ&eacute;e pour le module %s. "
 "Merci pour votre soutien !"
 
-#: includes/admin/geo-my-wp-license-handler.php:294
+#: includes/admin/geo-my-wp-license-handler.php:324
 #, php-format
 msgid "Your license for %s plugin successfully deactivated."
 msgstr ""
 "Votre licence a bien &eacute;t&eacute; d&eacute;sactiv&eacute;e pour le "
 "module %s."
 
-#: includes/admin/geo-my-wp-license-handler.php:295
+#: includes/admin/geo-my-wp-license-handler.php:325
 msgid "License is activated. Thank you for your support!"
 msgstr "Licence activ&eacute;e. Merci pour votr soutien !"
 
-#: includes/admin/geo-my-wp-license-handler.php:296
+#: includes/admin/geo-my-wp-license-handler.php:326
 msgid "No license key entered. Please enter the license key and try again."
 msgstr ""
 "Pas de cl&eacute;e de licence. Merci d&#8217;entrer votre cl&eacute; et de "
 "r&eacute;&eacute;ssayer."
 
-#: includes/admin/geo-my-wp-license-handler.php:297
+#: includes/admin/geo-my-wp-license-handler.php:327
 msgid ""
 "Your license has expired. Please renew your license in order to keep getting "
 "its updates and support."
@@ -1530,14 +1530,13 @@ msgstr ""
 "Votre licence a expir&eacute;. Merci de la renouveler pour continuer de "
 "recevoir mises &agrave; jour et support."
 
-#: includes/admin/geo-my-wp-license-handler.php:298
-#, php-format
+#: includes/admin/geo-my-wp-license-handler.php:328
 msgid ""
-"Your license has no activations left. Click <a %s>here</a> to manager your "
-"license activations."
+"Your license key has been disabled. Please contact support for more "
+"information."
 msgstr ""
 
-#: includes/admin/geo-my-wp-license-handler.php:299
+#: includes/admin/geo-my-wp-license-handler.php:329
 msgid ""
 "Something is wrong with the key you entered. Please verify the key and try "
 "again."
@@ -1545,20 +1544,17 @@ msgstr ""
 "Quelque chose ne va pas avec cette cl&eacute;e de licence. Merci de la "
 "v&eacute;rifier et de r&eacute;&eacute;ssayer."
 
-#: includes/admin/geo-my-wp-license-handler.php:300
-#, php-format
-msgid "Lost or forgot your license key? <a %s >Retrieve it here.</a>"
+#: includes/admin/geo-my-wp-license-handler.php:330
+#: includes/admin/geo-my-wp-license-handler.php:331
+#: includes/admin/geo-my-wp-license-handler.php:524
+msgid "Your license is not active for this URL."
 msgstr ""
 
-#: includes/admin/geo-my-wp-license-handler.php:301
-#, php-format
-msgid ""
-"Your license for %s plugin could not be activated. See error message below!"
+#: includes/admin/geo-my-wp-license-handler.php:332
+msgid "The license key you entered does not belong to this extension."
 msgstr ""
-"Votre licence n&#8217;a pas pu &ecirc;tre activ&eacute;e pour le module %s. "
-"Cf. le message d&#8217;erreur qui suit."
 
-#: includes/admin/geo-my-wp-license-handler.php:302
+#: includes/admin/geo-my-wp-license-handler.php:333
 #, php-format
 msgid ""
 "An error occurred while trying to activate your %s license. ERROR "
@@ -1566,6 +1562,57 @@ msgid ""
 msgstr ""
 "Une erreur est survenue lors de l&#8217;activation de votre licence %s. "
 "ERROR item_name_mismatch"
+
+#: includes/admin/geo-my-wp-license-handler.php:334
+#, php-format
+msgid ""
+"Your license has no activations left. Click <a %s>here</a> to manager your "
+"license activations."
+msgstr ""
+
+#: includes/admin/geo-my-wp-license-handler.php:336
+#, php-format
+msgid "Lost or forgot your license key? <a %s >Retrieve it here.</a>"
+msgstr ""
+
+#: includes/admin/geo-my-wp-license-handler.php:337
+#, php-format
+msgid ""
+"Your license for %s plugin could not be activated. See error message below!"
+msgstr ""
+"Votre licence n&#8217;a pas pu &ecirc;tre activ&eacute;e pour le module %s. "
+"Cf. le message d&#8217;erreur qui suit."
+
+#: includes/admin/geo-my-wp-license-handler.php:338
+msgid "An error occurred, please try again or contact support."
+msgstr ""
+
+#: includes/admin/geo-my-wp-license-handler.php:491
+#: includes/admin/geo-my-wp-license-handler.php:539
+msgid "An error occurred, please try again."
+msgstr ""
+
+#: includes/admin/geo-my-wp-license-handler.php:506
+#, php-format
+msgid "Your license key expired on %s."
+msgstr ""
+
+#: includes/admin/geo-my-wp-license-handler.php:513
+msgid "Your license key has been disabled."
+msgstr ""
+
+#: includes/admin/geo-my-wp-license-handler.php:518
+msgid "Invalid license."
+msgstr ""
+
+#: includes/admin/geo-my-wp-license-handler.php:529
+#, php-format
+msgid "This appears to be an invalid license key for %s."
+msgstr ""
+
+#: includes/admin/geo-my-wp-license-handler.php:534
+msgid "Your license key has reached its activation limit."
+msgstr ""
 
 # @ GMW
 #: includes/admin/geo-my-wp-settings.php:35
@@ -1929,33 +1976,26 @@ msgstr "N/A"
 msgid "Shortcode Examples"
 msgstr "Exemples de shortcode"
 
-#: includes/admin/geo-my-wp-updater.php:181
+#: includes/admin/geo-my-wp-updater.php:208
 #, php-format
 msgid ""
-"There is a new version of %1$s available. <a target=\"_blank\" class="
-"\"thickbox\" href=\"%2$s\">View version %3$s details</a>."
+"There is a new version of %1$s available. %2$sView version %3$s details%4$s."
 msgstr ""
-"Une nouvelle version de %1$s est disponible. <a target=\"_blank\" class="
-"\"thickbox\" href=\"%2$s\">Voir %3$s les d&eacute;tails</a>."
 
-#: includes/admin/geo-my-wp-updater.php:188
+#: includes/admin/geo-my-wp-updater.php:216
 #, php-format
 msgid ""
-"There is a new version of %1$s available. <a target=\"_blank\" class="
-"\"thickbox\" href=\"%2$s\">View version %3$s details</a> or <a href=\"%4$s"
-"\">update now</a>."
+"There is a new version of %1$s available. %2$sView version %3$s details%4$s "
+"or %5$supdate now%6$s."
 msgstr ""
-"Une nouvelle version de %1$s est disponible. <a target=\"_blank\" class="
-"\"thickbox\" href=\"%2$s\">Voir %3$s les d&eacute;tails</a> ou <a href=\"%4$s"
-"\">mettre &agrave; jour</a>."
 
-#: includes/admin/geo-my-wp-updater.php:328
+#: includes/admin/geo-my-wp-updater.php:405
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 "Vous n&#8217;avez pas l&#8217;autorisation d&#8217;installer des mises "
 "&agrave; jour de plugins."
 
-#: includes/admin/geo-my-wp-updater.php:328
+#: includes/admin/geo-my-wp-updater.php:405
 #: includes/admin/tools/gmw-tools-class-export.php:172
 msgid "Error"
 msgstr "Erreur"
@@ -4720,6 +4760,22 @@ msgid ""
 "Sweet-date Geolocation add-on requires BuddyPress plugin version 2.0 or "
 "higher in order to work."
 msgstr ""
+
+#~ msgid ""
+#~ "There is a new version of %1$s available. <a target=\"_blank\" class="
+#~ "\"thickbox\" href=\"%2$s\">View version %3$s details</a>."
+#~ msgstr ""
+#~ "Une nouvelle version de %1$s est disponible. <a target=\"_blank\" class="
+#~ "\"thickbox\" href=\"%2$s\">Voir %3$s les d&eacute;tails</a>."
+
+#~ msgid ""
+#~ "There is a new version of %1$s available. <a target=\"_blank\" class="
+#~ "\"thickbox\" href=\"%2$s\">View version %3$s details</a> or <a href=\"%4$s"
+#~ "\">update now</a>."
+#~ msgstr ""
+#~ "Une nouvelle version de %1$s est disponible. <a target=\"_blank\" class="
+#~ "\"thickbox\" href=\"%2$s\">Voir %3$s les d&eacute;tails</a> ou <a href="
+#~ "\"%4$s\">mettre &agrave; jour</a>."
 
 # @ GMW
 #~ msgid ""
