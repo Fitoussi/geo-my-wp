@@ -254,7 +254,8 @@ class GMW_Addons {
                         <?php
                         //Reset some variables
                         $addon['update_avaliable'] = '0';
-                    
+                        $addon['item_id'] = ! empty( $addon['item_id'] ) ? $addon['item_id'] : '';
+
                         //check for some data in permium add-ons
                         if ( empty( $addon['core'] ) ) {
                             
@@ -478,7 +479,7 @@ class GMW_Addons {
 										<?php 
 										if ( class_exists( 'GMW_License_Key' ) ) {
 											//display license key box
-											$gmw_license_key = new GMW_License_Key( $addon['file'], $addon['item'], $addon['name'] );
+											$gmw_license_key = new GMW_License_Key( $addon['file'], $addon['item'], $addon['name'], $addon['item_id'] );
 											$gmw_license_key->license_key_output();
 										}
 										?>
