@@ -130,7 +130,7 @@ For screenshots please visit [GEO my WP](http://www.geomywp.com)
 
 == Changelog ==
 
-= 2.6.7 =
+= 2.7 =
 
 * Fix: issue with slashes when saving addresses that has double quotation marks.
 * Fix: Member search query fails with BuddyPress 2.8 and higher.
