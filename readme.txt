@@ -2,10 +2,10 @@
 Contributors: ninjew
 Donate link: www.paypal.me/fitoussi
 Tags: Geo-location, Geolocation, proximity search, zipcode search, radius search, store locator, Geolocate posts, address search, search distance, google v3 , Google maps, get directions, search locations, Geolocate, GEO, members locator, Geolocate memebrs, mapping, mapping software, latitude, longitude, locations finder, map creator.
-Requires at least: 4.2
-Tested up to: 4.6.1
-Buddypress: 2.1.1
-Stable tag: 2.6.6.3
+Requires at least: 4.5
+Tested up to: 4.7.2
+Buddypress: 2.7
+Stable tag: 2.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -129,6 +129,19 @@ For screenshots please visit [GEO my WP](http://www.geomywp.com)
 == Other Notes ==
 
 == Changelog ==
+
+= 2.6.7 =
+
+* Fix: issue with slashes when saving addresses that has double quotation marks.
+* Fix: Member search query fails with BuddyPress 2.8 and higher.
+* Fix: stripslashes in address field.
+* Fix: issues with license key activation.
+* Fix: Item ID does not pass to the license activation causes activation to fail.
+* Fix: Include full address value in item object to prevent showing N/A instead of the address in some cases.
+* Update: license updater system. Improves automatic updates and license keys activation. 
+* Update: sanitize address fields.
+* Tweak: added support for multiselect_custom_taxonomy field of the plugin Buddypress Xprofile Custom Fields Type ( special thanks to Miguel López <miguel@donmik.com> the author of Buddypress Xprofile Custom Fields Type plugin ).
+* New: Members Locator's search form and search results template files for Kleo theme.
 
 = 2.6.6.3 =
 
