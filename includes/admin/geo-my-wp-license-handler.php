@@ -10,8 +10,9 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) 
+if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
+}
 
 //abort if this page already loaded
 if ( !class_exists( 'GMW_License' ) ) :
@@ -87,7 +88,7 @@ class GMW_License {
 	 * @return [type] [description]
 	 */
 	public function license_key_input() {
-		$license_key = new GMW_License_Key( $this->file, $this->item_name, $this->license_name );
+		$license_key = new GMW_License_Key( $this->file, $this->item_name, $this->license_name, $this->item_id );
 		$license_key->license_key_output();	 
 	}
 
@@ -111,11 +112,13 @@ class GMW_License {
 	 */
 	private function auto_updater() {
 
-		if ( empty( $this->license ) )
+		if ( empty( $this->license ) ) {
 			return;
+		}
 
-		if ( !isset( $this->statuses[$this->license_name] ) || 'valid' !== $this->statuses[$this->license_name] )
+		if ( ! isset( $this->statuses[$this->license_name] ) || 'valid' !== $this->statuses[$this->license_name] ) {
 			return;
+		}
 
 		// Setup the updater
 		$gmw_updater = new GMW_Premium_Plugin_Updater(
@@ -142,11 +145,27 @@ class GMW_License_Key {
 	private $file;
 	private $license_name;
 
+	public $item_ids = array( 
+		'xprofile_fields' 		 	  => 670,
+		'formidable_geolocation' 	  => 54725,
+		'global_maps'			 	  => 2602,
+		'gravity_forms_geo_fields' 	  => 2273,
+		'groups_locator'			  => 4647,
+		'gmw_kleo_geolocation'		  => 42902,
+		'nearby_posts'				  => 7991,
+		'premium_settings'			  => 668,
+		'geo_job_manager'			  => 5417,
+		'wp_users_geo-location'		  => 11188,
+		'resume_manager_geo-location' => 8547,
+		'geo_members_directory'       => 2347,
+		'exclude_members' 			  => 800
+	);
+
 	/**
 	 * Class constructor
 	 *
 	 */
-	function __construct( $file ,$item_name, $license_name, $item_id = null ) {
+	public function __construct( $file ,$item_name, $license_name, $item_id = null ) {
 
 		$this->licenses	 	= get_option( 'gmw_license_keys' );
 		$this->statuses  	= get_option( 'gmw_premium_plugin_status' );
@@ -156,6 +175,10 @@ class GMW_License_Key {
 		$this->item_id		= $item_id;
 		$this->license_name = $license_name;
 		$this->messages		= gmw_update_key_api_notices();
+
+		if ( empty( $this->item_id ) && ! empty( $this->item_ids[$this->license_name] ) ) {
+			$this->item_id = $this->item_ids[$this->license_name];
+		}
 	}
 
 	/**
@@ -272,9 +295,16 @@ class GMW_License_Key {
 					$('tr#<?php echo esc_attr( $this->file ); ?>-license-key-row').prev().addClass('gmw-license-key-addon-wrapper');
 					if ( $('tr#<?php echo esc_attr( $this->file ); ?>-license-key-row').prev().hasClass('update') ) {
 						$('tr#<?php echo esc_attr( $this->file ); ?>-license-key-row').addClass( 'update');
-					}				 
+					}	
+
+					$('tr#<?php echo esc_attr( $this->file ); ?>-license-key-row').find( '.activate-license-btn' ).click( function() {
+						jQuery( this ).closest( 'tr' ).prev( 'tr' ).find( 'th input[type=checkbox]' ).prop('checked', true);
+					});		 
 				});
 			</script>
+
+			<!-- dynamically check the plugin checkbox to allow the license activation/deactivation -->
+			
 		</tr>
 		<?php 
 	}
@@ -295,11 +325,18 @@ function gmw_update_key_api_notices() {
 			'valid'					=> __( 'License is activated. Thank you for your support!', 'GMW' ),
 			'no_key_entered'		=> __( 'No license key entered. Please enter the license key and try again.', 'GMW' ),
 			'expired' 				=> __( 'Your license has expired. Please renew your license in order to keep getting its updates and support.', 'GMW' ),
-			'no_activations_left' 	=> sprintf( __( 'Your license has no activations left. Click <a %s>here</a> to manager your license activations.', 'GMW' ), 'href="http://geomywp.com/purchase-history/" target="_blank"' ),
+			'revoked' 				=> __( 'Your license key has been disabled. Please contact support for more information.', 'GMW' ),
 			'missing'				=> __( 'Something is wrong with the key you entered. Please verify the key and try again.', 'GMW' ),
+			'invalid'				=> __( 'Your license is not active for this URL.', 'GMW' ),
+			'site_inactive'			=> __( 'Your license is not active for this URL.', 'GMW' ),
+			'invalid_item_id'		=> __( 'The license key you entered does not belong to this extension.', 'GMW' ),
+			'item_name_mismatch'	=> __( 'An error occurred while trying to activate your %s license. ERROR item_name_mismatch', 'GMW' ),
+			'no_activations_left' 	=> sprintf( __( 'Your license has no activations left. Click <a %s>here</a> to manager your license activations.', 'GMW' ), 'href="http://geomywp.com/purchase-history/" target="_blank"' ),
+			
 			'retrieve_key'			=> sprintf( __( 'Lost or forgot your license key? <a %s >Retrieve it here.</a>', 'GMW' ), 'href="http://geomywp.com/purchase-history/" target="_blank"' ),
 			'activation_error'		=> __( 'Your license for %s plugin could not be activated. See error message below!', 'GMW' ),
-			'item_name_mismatch'	=> __( 'An error occurred while trying to activate your %s license. ERROR item_name_mismatch', 'GMW' )
+			'default'				=> __( 'An error occurred, please try again or contact support.', 'GMW' ),
+			
 	) );
 	
 }
@@ -332,52 +369,60 @@ function gmw_is_license_valid( $addon ) {
 function gmw_check_license() {
 
 	//run licenses check every 96 hours just to make sure that their status is correct
-	if ( get_transient( 'gmw_licenses_check_transient' ) == true )
+	if ( get_transient( 'gmw_licenses_check_transient' ) == true ) {
 		return;
+	}
 	
 	//set new transient
 	set_transient( 'gmw_licenses_check_transient' , true, 60*60*96 );
 		
 	$licenses = get_option( 'gmw_license_keys' );
 	
-	if ( empty( $licenses ) )
+	if ( empty( $licenses ) ) {
 		return;
+	}
 	
 	$statuses = get_option( 'gmw_premium_plugin_status' );
 
 	foreach ( $licenses as $license_name => $license ) {
 		
-		if ( isset( $statuses[$license_name] ) && $statuses[$license_name] == 'valid' ) {
+		if ( isset( $statuses[$license_name] ) ) {
 					
 			$this_license = trim( $license );
 			$this_name    = ucwords( str_replace( '_', ' ', $license_name ) );
-		
+			
 			$api_params = array(
-					'edd_action' => 'check_license',
-					'license'    => $this_license,
-					'item_name'  => urlencode( $this_name )
+				'edd_action' => 'check_license',
+				'license'    => $this_license,
+				'item_name'  => urlencode( $this_name ),
+				'url'        => home_url()
 			);
 		
 			// Call the custom API.
-			$response = wp_remote_get( add_query_arg( $api_params, GMW_REMOTE_SITE_URL ), array(
-					'timeout' 	=> 15,
-					'sslverify' => false
+			$response = wp_remote_post( GMW_REMOTE_SITE_URL, array(
+				'timeout' 	=> 15,
+				'sslverify' => false,
+				'body'		=> $api_params
 			));
-		
-			if ( is_wp_error( $response ) )
+			
+			if ( is_wp_error( $response ) ) {
 				return false;
+			}
 		
 			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
-				
-			if ( !isset( $license_data ) ) {
-				$statuses[$license_name] = 'inactive';
-			} else {
+			
+			if ( $license_data->license == 'valid' ) {
+
 				$statuses[$license_name] = $license_data->license;
+			
+			} else {
+			
+				$statuses[$license_name] = 'inactive';
+			
 			}
 			
 			// $license_data->license will be either "active" or "inactive"
 			update_option( 'gmw_premium_plugin_status', $statuses );
-
 		}
 	}
 }
@@ -392,15 +437,17 @@ add_action( 'admin_init', 'gmw_check_license');
 function gmw_update_key_api() {
 	
 	//check if updating license key
-	if ( empty( $_POST['gmw_update_key_submit'] ) || empty( $_POST['gmw_update_key_api'] ) )
+	if ( empty( $_POST['gmw_update_key_submit'] ) || empty( $_POST['gmw_update_key_api'] ) ) {
 		return;
+	}
 	
 	//get the license being updated
 	$license_name = $_POST['gmw_update_key_api'];
 	
 	// run a quick security check
-	if ( !check_admin_referer( $license_name, $license_name ) )
+	if ( ! check_admin_referer( $license_name, $license_name ) ) {
 		return;
+	}
 	
 	$licenses	 = get_option( 'gmw_license_keys' );
 	$statuses  	 = get_option( 'gmw_premium_plugin_status' );
@@ -420,59 +467,114 @@ function gmw_update_key_api() {
 		exit;	
 	}
 	
-	if ( empty( $_POST['gmw_license_key'] ) )
+	if ( empty( $_POST['gmw_license_key'] ) ) {
 		return;
+	}
 				
 	// data to send in our API request
 	$api_params = array(
-			'edd_action' => $action .'_license',
-			'license'    => $license_key,
-			'item_name'  => urlencode( $item_name ), // the name of our product in EDD
-			'item_id'	 => $item_id
+		'edd_action' => $action .'_license',
+		'license'    => $license_key,
+		'item_name'  => urlencode( $item_name ), // the name of our product in EDD
+		'item_id'	 => $item_id
 	);
-		
+	
 	// Call the custom API.
-	$response = wp_remote_get( add_query_arg( $api_params, GMW_REMOTE_SITE_URL ), array( 'timeout' => 15, 'sslverify' => false ) );
-		
-	// make sure the response came back okay
-	if ( is_wp_error( $response ) )
-		return false;
-		
-	// decode the license data
-	$license_data = json_decode( wp_remote_retrieve_body( $response ) );
-	
-	if ( $license_data->license == 'valid' ) {
-		
-		$license_notice 			= 'activated';
-		$notice_status  			= 'updated';
-		$statuses[$license_name] 	= $license_data->license;
-		$licenses[$license_name]  	= $license_key;
+	$response = wp_remote_post( GMW_REMOTE_SITE_URL, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
 
-		// $license_data->license will be either "active" or "inactive"
-		update_option( 'gmw_premium_plugin_status', $statuses );
-		update_option( 'gmw_license_keys', $licenses );
-			
-	} elseif ( $license_data->license == 'invalid' ) {
-		
-		$license_notice 			= $license_data->error;
-		$notice_status  			= 'error';
-		$statuses[$license_name] 	= $license_data->error;
-		$licenses[$license_name]  	= $license_key;
-		
-		// $license_data->license will be either "active" or "inactive"
-		update_option( 'gmw_premium_plugin_status', $statuses );
-		update_option( 'gmw_license_keys', $licenses );
-				
-	} elseif ( $license_data->license == 'deactivated' || $license_data->license == 'failed' ) {
-		
-		$license_notice = 'deactivated';
-		$notice_status  = 'updated';
-		
-		unset( $statuses[$license_name] );
-		update_option( 'gmw_premium_plugin_status', $statuses );
-		
-	}
+	// make sure the response came back okay
+	if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+
+		if ( is_wp_error( $response ) ) {
+			$message = $response->get_error_message();
+		} else {
+			$message = __( 'An error occurred, please try again.' );
+		}
+
+	} else {
+
+		// decode the license data
+		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+		if ( false === $license_data->success ) {
+
+			switch( $license_data->error ) {
+
+				case 'expired' :
+
+					$message = sprintf(
+						__( 'Your license key expired on %s.' ),
+						date_i18n( get_option( 'date_format' ), strtotime( $license_data->expires, current_time( 'timestamp' ) ) )
+					);
+					break;
+
+				case 'revoked' :
+
+					$message = __( 'Your license key has been disabled.' );
+					break;
+
+				case 'missing' :
+
+					$message = __( 'Invalid license.' );
+					break;
+
+				case 'invalid' :
+				case 'site_inactive' :
+
+					$message = __( 'Your license is not active for this URL.' );
+					break;
+
+				case 'item_name_mismatch' :
+
+					$message = sprintf( __( 'This appears to be an invalid license key for %s.' ), EDD_SAMPLE_ITEM_NAME );
+					break;
+
+				case 'no_activations_left':
+
+					$message = __( 'Your license key has reached its activation limit.' );
+					break;
+
+				default :
+
+					$message = __( 'An error occurred, please try again.' );
+					break;
+			}
+
+		}
 	
+		if ( $license_data->license == 'valid' ) {
+			
+			$license_notice 			= 'activated';
+			$notice_status  			= 'updated';
+			$statuses[$license_name] 	= $license_data->license;
+			$licenses[$license_name]  	= $license_key;
+
+			// $license_data->license will be either "active" or "inactive"
+			update_option( 'gmw_premium_plugin_status', $statuses );
+			update_option( 'gmw_license_keys', $licenses );
+				
+		} elseif ( $license_data->license == 'invalid' ) {
+			
+			$license_notice 			= $license_data->error;;
+			$notice_status  			= 'error';
+			$statuses[$license_name] 	= $license_data->error;
+			$licenses[$license_name]  	= $license_key;
+			
+			// $license_data->license will be either "active" or "inactive"
+			update_option( 'gmw_premium_plugin_status', $statuses );
+			update_option( 'gmw_license_keys', $licenses );
+					
+		} elseif ( $license_data->license == 'deactivated' || $license_data->license == 'failed' ) {
+			
+			$license_notice = 'deactivated';
+			$notice_status  = 'updated';
+			
+			unset( $statuses[$license_name] );
+			update_option( 'gmw_premium_plugin_status', $statuses );
+			
+		}
+	}
+
 	//reload the page to prevent resubmission
 	wp_safe_redirect( admin_url( $page.'&gmw_license_status_notice='.$license_notice.'&license_name='.$license_name.'&item_name='.str_replace( ' ', '-', $item_name ).'&gmw_notice_status='.$notice_status ) );
 	exit;
@@ -487,18 +589,20 @@ add_action( 'admin_init', 'gmw_update_key_api');
 function gmw_update_api_notices() {
 
 	//check if updating license key
-	if (  empty( $_GET['gmw_license_status_notice'] ) )
+	if (  empty( $_GET['gmw_license_status_notice'] ) ) {
 		return;
+	}
 	
 	$statuses  	 	= get_option( 'gmw_premium_plugin_status' );
 	$messages  		= gmw_update_key_api_notices();
 	$item_name 		= str_replace( '-', ' ', $_GET['item_name'] );
 	$license_name 	= $_GET['license_name'];
+	$message 		= ! empty( $messages[$_GET['gmw_license_status_notice']] ) ? $messages[$_GET['gmw_license_status_notice']] : $messages['default'];
 	
 	?>
 	<div class="<?php echo $_GET['gmw_notice_status']; ?>">
 		<p>
-		<?php esc_html( printf( $messages[$_GET['gmw_license_status_notice']], $item_name ) ); ?>
+		<?php esc_html( printf( $message, $item_name ) ); ?>
 		</p>
 	</div>
 	<?php
