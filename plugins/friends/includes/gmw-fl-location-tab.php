@@ -294,7 +294,9 @@ class GMW_FL_Location_Page {
 		            	$optionName = ( $option['name'] == 'long' ) ? 'lng' : $option['name'];
 		            	$value = ( isset( $_COOKIE['gmw_'.$optionName] ) ) ? urldecode( $_COOKIE['gmw_'.$optionName] ) : '';
 		            } else {
-		            	$value = ( isset( $location->$option['name'] ) ) ? $location->$option['name'] : '';
+				//added to fix Notice: Array to string conversion in PHP 7
+				$opt_name = $option['name'];
+ 		            	$value = ( isset( $location->$opt_name ) ) ? $location->$opt_name : '';
 		            }      
 		            
 		            $attributes  = array();
@@ -421,8 +423,9 @@ class GMW_FL_Location_Page {
             	<p class="field-title"><?php echo $fieldsLabel['your_location']; ?></p>
             	
             	<div id="your-location-section-inner">
-            		<input type="text" id="gmw-yl-field" value="<?php echo ( isset($location->formatted_address) ) ? $location->formatted_address : $fieldsLabel['no_location']; ?>" disabled="disabled" />
-            		<input type="button" id="gmw-yl-edit" class="first" value="<?php echo $fieldsLabel['edit_location']; ?>" />
+			<?php //escaped $location->formatted_address as otherwise it gets slashed when there are quotes ?>
+			<input type="text" id="gmw-yl-field" value="<?php echo ( isset($location->formatted_address) ) ? esc_html( $location->formatted_address ) : $fieldsLabel['no_location']; ?>" disabled="disabled" />
+			<input type="button" id="gmw-yl-edit" class="first" value="<?php echo $fieldsLabel['edit_location']; ?>" />
             		<input type="button" id="gmw-yl-delete" value="<?php echo $fieldsLabel['delete_location']; ?>" />
            			<img src="<?php echo GMW_FL_URL . 'assets/images/ajax-loader.gif'; ?>" id="gmw-yl-spinner" alt="" />
            		</div>
