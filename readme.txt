@@ -3,9 +3,9 @@ Contributors: ninjew
 Donate link: www.paypal.me/fitoussi
 Tags: Geo-location, Geolocation, proximity search, zipcode search, radius search, store locator, Geolocate posts, address search, search distance, google v3 , Google maps, get directions, search locations, Geolocate, GEO, members locator, Geolocate memebrs, mapping, mapping software, latitude, longitude, locations finder, map creator.
 Requires at least: 4.5
-Tested up to: 4.7.2
+Tested up to: 4.8.2
 Buddypress: 2.7
-Stable tag: 2.7
+Stable tag: 2.7.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -129,6 +129,13 @@ For screenshots please visit [GEO my WP](http://www.geomywp.com)
 == Other Notes ==
 
 == Changelog ==
+
+= 2.7.1 =
+
+* Fix: remove PHP 7.0 errors.
+* Fix: "Save Changes" button doesn't show in Map Icons tab of Location tab in Members Profile page.
+* Tweak: Minify location tab JS file.
+* Fix: contact info doesn't show properly in AJAX powered info-window.
 
 = 2.7 =
 
