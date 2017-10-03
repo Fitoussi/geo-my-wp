@@ -294,7 +294,7 @@ class GMW_FL_Location_Page {
 		            	$optionName = ( $option['name'] == 'long' ) ? 'lng' : $option['name'];
 		            	$value = ( isset( $_COOKIE['gmw_'.$optionName] ) ) ? urldecode( $_COOKIE['gmw_'.$optionName] ) : '';
 		            } else {
-		            	$value = ( isset( $location->$option['name'] ) ) ? $location->$option['name'] : '';
+		            	$value = ( isset( $location->{$option['name']} ) ) ? $location->{$option['name']} : '';
 		            }      
 		            
 		            $attributes  = array();
