@@ -57,6 +57,11 @@ jQuery(document).ready(function($) {
         var tabId = $(this).attr('id');
         $('#'+tabId +'-wrapper').show();
         $('#'+tabId +'-btn-wrapper').show();
+
+        // temporary fix to show "save changes" button in map icons tab
+        if ( $(this).attr('id') == 'gmw-yl-map-icons-tab' ) {
+        	$( '#gmw-yl-address-tab-btn-wrapper').show();
+        }
     });
        
 	$('#gmw-yl-delete').click(function() {
