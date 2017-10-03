@@ -200,6 +200,22 @@ function gmw_new_map_element( $args, $return = false ) {
 			if ( ! empty( $v->lng ) ) {
 				$temp_locations[$k]['lng'] = $v->lng;
 			}
+
+			if ( ! empty( $v->email ) ) {
+				$temp_locations[$k]['email'] = $v->email;
+			}
+
+			if ( ! empty( $v->phone ) ) {
+				$temp_locations[$k]['phone'] = $v->phone;
+			}
+
+			if ( ! empty( $v->fax ) ) {
+				$temp_locations[$k]['fax'] = $v->fax;
+			}
+
+			if ( ! empty( $v->website ) ) {
+				$temp_locations[$k]['website'] = $v->website;
+			}
 			
 			if ( ! empty( $v->address ) ) {
 				$temp_locations[$k]['address'] = $v->address;
