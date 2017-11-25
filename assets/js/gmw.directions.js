@@ -1,6 +1,6 @@
 function gmwCalculateRoute( elementId ) {
 
-	jQuery( '#get-directions-submit-' + elementId ).removeClass( 'gmw-icon-search' ).addClass( 'gmw-icon-spin-1 animate-spin' );
+	jQuery( '#get-directions-submit-' + elementId ).removeClass( 'gmw-icon-search' ).addClass( 'gmw-icon-spin-light animate-spin' );
 
 	// clear directions panel
 	jQuery( '#gmw-directions-panel-wrapper-' + elementId ).html( '' );
@@ -81,7 +81,7 @@ function gmwCalculateRoute( elementId ) {
 	      	jQuery('#gmw-directions-panel-wrapper-' + elementId).html( '<div id="error-message">' + errorMessage + '</div>' );
 		}
 		
-		jQuery( '#get-directions-submit-' + elementId ).removeClass( 'gmw-icon-spin-1 animate-spin' ).addClass( 'gmw-icon-search' );
+		jQuery( '#get-directions-submit-' + elementId ).removeClass( 'gmw-icon-spin-light animate-spin' ).addClass( 'gmw-icon-search' );
   	});
 }
 
