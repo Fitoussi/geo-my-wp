@@ -1,0 +1,84 @@
+/**
+ * Posts Locator search form stylesheet "default"
+ */
+div.gmw-form-wrapper.default {
+ 	margin:10px 0px;
+ }
+ 
+div.gmw-form-wrapper.default input[type="text"] {
+     margin-top:6px;
+     padding:8px 10px 7px;
+ } 
+ 
+div.gmw-form-wrapper.default .gmw-address-field-wrapper {
+	display: inline-block;
+}
+
+.widget_gmw_search_form_widget .gmw-address-field-wrapper {
+    float:none;
+}
+
+div.gmw-form-wrapper.default .gmw-single-address-field {
+	float:left;
+}
+
+div.gmw-form-wrapper.default .gmw-unit-distance-wrapper {
+	margin:10px 0px;
+}
+
+div.gmw-form-wrapper.default .gmw-checkbox-taxonomy-wrapper label {
+	display:block;
+}
+
+div.gmw-form-wrapper.default .gmw-saf-wrapper label {
+    margin-right:5px;
+}
+
+div.gmw-form-wrapper.default .gmw-checkbox-category {
+    margin-right:5px;
+}
+
+div.gmw-form-wrapper.default .gmw-checkbox-taxonomy-wrapper label {
+    text-transform: capitalize;	
+}
+
+div.gmw-form-wrapper.default .gmw-checkbox-taxonomy-wrapper span.label {
+	font-weight:bold;
+}
+
+div.gmw-form-wrapper.default .gmw-radius-dropdown-wrapper, div.gmw-form-wrapper.default .gmw-units-dropdown-wrapper {
+	display:inline;
+	margin-right:5px;
+}
+
+div.gmw-form-wrapper.default .gmw-radius-slider-wrapper {
+    margin-bottom:10px;
+}
+
+
+div.gmw-form-wrapper.default .gmw-radius-slider-range-wrapper {
+    margin:5px 0px;
+}
+
+div.gmw-form-wrapper.default .gmw-no-address-error {
+	border: 1px solid rgb(252, 165, 165) !important;
+}
+
+div.gmw-form-wrapper.default .gmw-locator-btn-wrapper {
+	width: 28px;
+	height: 28px;
+	padding: 3px 0px;
+	display: inline-block;
+}
+
+div.gmw-form-wrapper.default .gmw-locator-btn-wrapper img {
+	position: absolute;
+	width: 28px;
+	height: 28px;
+	border-radius: 0px !important;
+	box-shadow: none !important;
+}
+
+div.gmw-form-wrapper.default .gmw-locate-btn {
+	cursor: pointer;
+}

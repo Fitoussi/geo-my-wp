@@ -1,0 +1,59 @@
+/**
+ * License box styling
+ */
+.gmw-license-key-row {
+	border-top: 0px;
+}
+
+.gmw-license-key-row td {
+	border-left: 4px solid #2ea2cc !important;
+	padding: 0px !important;
+	background: #f7fcfe;
+}
+
+.gmw-license-key-row.update td {
+	border-left: 4px solid #d54e21 !important;
+}
+
+.gmw-license-key-row div.gmw-license-wrapper {
+	padding: 10px 40px;
+	min-height: 75px;
+	-webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .1);
+	box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .1)
+}
+
+.gmw-license-key-row div.gmw-license-wrapper.inactive {
+	background: #f1f1f1;
+}
+
+.gmw-license-key-row div.gmw-license-wrapper.inactive.gmw-license-error {
+	background: rgb(255, 237, 237);	
+}
+
+.gmw-license-key-row div.gmw-license-wrapper.valid {
+	background: #E9F5E8;
+}
+
+.gmw-license-key-row div.gmw-license-wrapper .field-wrapper {
+	float: left;
+	margin-right: 10px;
+}
+
+.gmw-license-key-row div.gmw-license-wrapper .field-wrapper input.gmw-license-key {
+	padding: 4px 6px;
+}
+
+.gmw-license-key-row div.gmw-license-wrapper p.description {
+	margin: 0px;
+	max-width: 500px;
+	padding: 5px 0px;
+	font-size: 13px;
+	margin-top: 8px;
+}
+
+.gmw-license-key-row div.gmw-license-wrapper p.description i {
+	font-size: 18px;
+	padding-right: 2px;
+}
+
+

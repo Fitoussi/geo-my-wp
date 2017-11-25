@@ -1,0 +1,102 @@
+/**
+ * Members Locator search form stylesheet "default"
+ */
+div.gmw-fl-default-form-wrapper {
+ 	margin:10px 0px;
+ }
+ 
+div.gmw-fl-default-form-wrapper input[type="text"] {
+     margin-top:6px;
+     padding:8px 10px 7px;
+ } 
+ 
+div.gmw-fl-default-form-wrapper .gmw-address-field-wrapper {
+	float:left;
+}
+
+div.gmw-fl-default-form-wrapper .gmw-locator-btn-wrapper img {
+	height: 25px;
+	width: 25px;
+}
+
+div.gmw-form-wrapper.default label {
+    margin-right:5px;
+}
+
+div.gmw-form-wrapper.default .editfield label {
+	display:block;
+}
+
+div.gmw-form-wrapper.default .editfield span.label,
+div.gmw-form-wrapper.default .editfield label {
+	display: block;
+	font-weight: bold;
+	margin: 15px 0 0px 0;
+}
+
+div.gmw-form-wrapper.default .editfield div.checkbox label,
+div.gmw-form-wrapper.default .editfield div.radio label {
+	color: #888;
+	font-size: 100%;
+	font-weight: normal;
+	margin: 0;
+}
+
+.widget_gmw_search_form_widget div.gmw-fl-default-form-wrapper .editfield span.label {
+    display:inline-block;
+    width:100%;
+    margin:3px 0px 3px;      
+}
+
+div.gmw-form-wrapper.default .gmw-unit-distance-wrapper {
+	margin: 0px;
+	display: inline-block;
+	width: 100%;
+}
+	
+div.gmw-form-wrapper.default .date input[type="text"] {
+	width:30px;
+}		
+
+div.gmw-form-wrapper.default .gmw-single-address-field {
+	float:left;
+}
+
+div.gmw-form-wrapper.default .gmw-radius-dropdown-wrapper, 
+div.gmw-form-wrapper.default .gmw-units-dropdown-wrapper {
+	display:inline;
+	margin-right:5px;
+}
+
+div.gmw-form-wrapper.default .gmw-radius-slider-wrapper {
+    margin-bottom:10px;
+}
+
+div.gmw-form-wrapper.default .gmw-radius-slider-range-wrapper {
+    margin:5px 0px;
+}
+
+div.gmw-form-wrapper.default .gmw-no-address-error {
+	border: 1px solid rgb(252, 165, 165) !important;
+}
+
+div.gmw-form-wrapper.default .gmw-locator-btn-wrapper {
+	padding: 5px 0px;
+	margin-left: 5px;
+}
+
+div.gmw-form-wrapper.default .gmw-locator-btn-wrapper.usage-icon.location-inside {
+	top: 8px;
+}
+
+div.gmw-form-wrapper.default .gmw-locator-btn-wrapper img {
+	position: absolute;
+	border-radius: 0px !important;
+	box-shadow: none !important;
+	width: 28px;
+	height: 28px;
+}
+
+div.gmw-form-wrapper.default .gmw-locate-btn {
+	cursor: pointer;
+}

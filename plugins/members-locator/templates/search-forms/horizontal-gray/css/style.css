@@ -1,0 +1,236 @@
+/**
+ * Members Locator search form stylesheet "horizontal-gray"
+ */
+div.gmw-form-wrapper.horizontal-gray {
+ 	background: #f8f8f8;
+	padding:10px 10px 0;
+	border-top:1px solid #ddd;
+	border-bottom:1px solid #ddd;
+	margin-bottom: 1px
+}
+
+div.gmw-form-wrapper.horizontal-gray .address-locator-wrapper,
+div.gmw-form-wrapper.horizontal-gray .gmw-submit-wrapper,
+div.gmw-form-wrapper.horizontal-gray .gmw-keywords-field,
+div.gmw-form-wrapper.horizontal-gray select {
+	display: inline-block;
+	margin: 0 5px 0 0;
+	vertical-align: top;
+}
+
+div.gmw-form-wrapper.horizontal-gray div.xfield-trigger-wrapper {
+	display: inline-block;
+	padding: 6px 7px;
+	border: 1px solid #ccc;
+	margin: 0 5px 10px 0;
+	color:#555;
+	font-size: 12px;
+	background: #fafafa;
+	cursor: pointer;
+	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;    
+	box-sizing: border-box;
+	text-align:center;
+}
+
+div.gmw-form-wrapper.horizontal-gray input[type="text"] {
+     margin-top:6px;
+     padding:8px 10px 7px;
+} 
+ 
+div.gmw-form-wrapper.horizontal-gray form .editfield {
+	margin-bottom: 10px;
+}
+
+div.gmw-form-wrapper.horizontal-gray form .editfield label {
+	display:block;
+}
+
+div.gmw-form-wrapper.horizontal-gray .gmw-fl-form-xprofile-fields .editfield span,
+div.gmw-form-wrapper.horizontal-gray .gmw-saf-wrapper label,
+div.gmw-form-wrapper.horizontal-gray .gmw-address-field-wrapper label,
+div.gmw-form-wrapper.horizontal-gray .gmw-fl-form-xprofile-fields .editfield label:first-child {
+	display: block;
+	color: #626332;
+	margin: 15px 0 7px;
+	font-weight: 600;
+	font-size: 14px;
+}
+
+div.gmw-form-wrapper.horizontal-gray form .editfield .checkbox label {
+	display: block;
+	font-weight: normal;
+	margin: 5px 0 0px 0;
+	font-size: 14px;
+}
+	
+div.gmw-form-wrapper.horizontal-gray form .date input[type="text"] {
+	width: 30px;
+}	
+
+div.gmw-form-wrapper.horizontal-gray .gmw-fl-form-xprofile-fields {
+	display:none;
+	background-color: rgb(254, 254, 254);
+	border: 1px solid rgb(238, 238, 238);
+	padding: 5px 15px;
+	background-position: initial initial;
+	background-repeat: initial initial;
+	margin-bottom: 10px;
+}
+
+div.gmw-form-wrapper.horizontal-gray input[type="text"] {
+	height: 32px;
+	font-size: 12px;
+	margin: 0px;
+} 
+ 
+div.gmw-form-wrapper.horizontal-gray select {
+	height: 32px;
+	font-size: 12px;
+}
+
+div.gmw-form-wrapper.horizontal-gray .gmw-dropdown-taxonomy-wrapper label, 
+div.gmw-form-wrapper.horizontal-gray .gmw-checkbox-taxonomy-wrapper span,
+div.gmw-form-wrapper.horizontal-gray .gmw-custom-field-wrapper label,
+div.gmw-form-wrapper.horizontal-gray .gmw-saf-wrapper label,
+div.gmw-form-wrapper.horizontal-gray .gmw-address-field-wrapper label {
+	padding: 5px;
+	background-color: #ABF1D4;
+	font-size: 12px;
+	text-align:center;
+	border:1px solid #9BDFC3;
+	width:100%;
+	color:#626332;
+	margin-right:3px;
+}
+
+div.gmw-form-wrapper.horizontal-gray .gmw-no-address-error {
+	border: 1px solid rgb(252, 165, 165) !important;
+}
+
+div.gmw-form-wrapper.horizontal-gray .gmw-locator-btn-wrapper.usage-icon.location-inside {
+	padding: 4px 5px;
+}
+
+div.gmw-form-wrapper.horizontal-gray .gmw-locator-btn-wrapper img {
+	-moz-box-shadow:    none;
+  	-webkit-box-shadow: none;
+	box-shadow: none;
+	max-height: 20px;
+	margin-left: 5px;
+}
+
+div.gmw-form-wrapper.horizontal-gray .gmw-locator-btn-wrapper img.gmw-locator-btn-loader {
+	max-height: 17px;
+	margin-left: 3px;
+	padding-top: 5px;
+}
+
+/* premium features */
+
+div.gmw-form-wrapper.horizontal-gray .gmw-radius-slider-wrapper {
+    text-align:center;
+    display:inline-block;
+}
+
+div.gmw-form-wrapper.horizontal-gray .gmw-radius-slider-wrapper label {
+	margin-right:1px;
+	font-size: 12px;
+	vertical-align: top;
+}
+
+div.gmw-form-wrapper.horizontal-gray .gmw-radius-slider-wrapper input {
+     max-width:60px;
+	font-size:12px;
+	vertical-align: top;
+	height:18px;
+}
+
+div.gmw-form-wrapper.horizontal-gray .gmw-radius-slider-wrapper .gmw-slider-range {
+	height: 1.0em;
+	-moz-border-radius: 0px/*{cornerRadius}*/;
+	-webkit-border-radius: 0px/*{cornerRadius}*/;
+	border-radius: 0px/*{cornerRadius}*/;
+	margin-top: -7px;
+	height: 8px;
+}
+
+div.gmw-form-wrapper.horizontal-gray .gmw-radius-slider-wrapper .gmw-slider-range a {
+	height:0.9em;
+	width:15px
+}
+
+div.gmw-form-wrapper.horizontal-gray .gmw-checkbox-taxonomy-wrapper {
+	margin-bottom:10px;
+	vertical-align:top;
+}
+
+div.gmw-form-wrapper.horizontal-gray .gmw-checkbox-taxonomy-wrapper span {
+	display:block
+}
+
+div.gmw-form-wrapper.horizontal-gray input.gmw-single-checkbox {
+	margin-right: 5px;
+	
+	
+}
+
+div.gmw-form-wrapper.horizontal-gray gmw-checkbox-taxonomy-wrapper span.label {
+	font-weight:bold;
+}
+
+/* widget */
+
+.widget_gmw_search_form_widget div.gmw-form-wrapper.horizontal-gray .gmw-single-taxonomy-wrapper,
+.widget_gmw_search_form_widget div.gmw-form-wrapper.horizontal-gray .address-locator-wrapper,
+.widget_gmw_search_form_widget div.gmw-form-wrapper.horizontal-gray .post-types-wrapper,
+.widget_gmw_search_form_widget div.gmw-form-wrapper.horizontal-gray .gmw-submit-wrapper,
+.widget_gmw_search_form_widget div.gmw-form-wrapper.horizontal-gray .gmw-custom-field-wrapper,
+.widget_gmw_search_form_widget div.gmw-form-wrapper.horizontal-gray .gmw-keywords-field,
+.widget_gmw_search_form_widget div.gmw-form-wrapper.horizontal-gray .gmw-distance {
+	display:block;
+	margin:0 0px 10px 0px;
+}
+
+.widget_gmw_search_form_widget div.gmw-form-wrapper.horizontal-gray {
+ 	background: none;
+	padding:0px;
+	border:0;
+}
+
+.widget_gmw_search_form_widget div.gmw-form-wrapper.horizontal-gray input[type="text"], 
+.widget_gmw_search_form_widget div.gmw-form-wrapper.horizontal-gray select {
+	width:100%;
+}
+
+.widget_gmw_search_form_widget div.gmw-form-wrapper.horizontal-gray .gmw-submit-button {
+	width:100%;
+	padding:10px 0px;
+}
+
+@media (max-width:600px) {
+	
+	div.gmw-form-wrapper.horizontal-gray .address-locator-wrapper,
+	div.gmw-form-wrapper.horizontal-gray .gmw-address-field-wrapper,
+	div.gmw-form-wrapper.horizontal-gray select,
+	div.gmw-form-wrapper.horizontal-gray input[type="text"],
+	div.gmw-form-wrapper.horizontal-gray .gmw-submit-wrapper,
+	div.gmw-form-wrapper.horizontal-gray .gmw-submit {
+		width:100% !important;
+		-webkit-box-sizing: border-box; 
+		-moz-box-sizing: border-box;    
+		box-sizing: border-box;
+		margin:0 0px 10px 0px !important;
+		display:block;
+	}
+	
+	div.gmw-form-wrapper.horizontal-gray div.xfield-trigger-wrapper {
+		width:100%;
+	}
+	
+	div.gmw-form-wrapper.horizontal-gray .gmw-locator-btn-wrapper {
+		bottom:5px;
+		right: 8px;
+	}
+	
+}

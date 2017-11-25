@@ -1,0 +1,64 @@
+/** Locations Importer */
+
+.gmw-locations-importer-wrapper {
+	padding: 5px 5px 15px;
+}
+.gmw-importer-details {
+	margin-top: 25px;
+}
+
+.gmw-importer-details p {
+	border-bottom: 1px solid #efefef;
+	padding-bottom: 12px;
+	font-weight:bold;
+}
+
+.gmw-importer-details .locations-completed-message {
+	border-top: 1px solid #efefef;
+	padding-top: 12px;
+}
+
+.gmw-importer-details .updated-locations-message {
+	color: brown;
+}
+
+.gmw-importer-details .imported-locations-message {
+	color: green;
+}
+
+.gmw-importer-details .existing-locations-message {
+	color: #dd823b;
+}
+
+.gmw-importer-details .failed-locations-message {
+	color: red;
+}
+
+.gmw-importer-progress-bar {
+	background: #eee;
+	border: 1px solid #ddd;
+	bottom: -20px;
+	height: 15px;
+	width: 100%;
+	margin:10px 0px 25px;
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+.gmw-importer-progress-bar div.importing { 
+	height: 100%; 
+	width: 0; 
+	background: #dd823b;
+	transform: skew(-20deg, 0deg);
+}
+
+.gmw-importer-progress-bar div.completed { 
+	height: 100%; 
+	width: 0; 
+	background: #a3b745;
+}
+
+.gmw-importer-details .importer-action-message span.error {
+	color:red;
+	font-weight:bold;
+}

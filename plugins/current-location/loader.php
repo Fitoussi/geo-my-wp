@@ -1,21 +1,72 @@
 <?php
-define( 'GMW_CL_PATH', GMW_PATH . '/plugins/current-location' );
-define( 'GMW_CL_URL', GMW_URL . '/plugins/current-location' );
-
-//include scripts in the front end
-function gmw_cl_register_scripts() {
-	
-	wp_register_script( 'gmw-cl', GMW_CL_URL.'/assets/js/gmw-cl.min.js', array( 'jquery', 'gmw-js' ), GMW_VERSION, true );
-	wp_register_style( 'gmw-cl-style', GMW_CL_URL.'/assets/css/gmw-cl-style.css' );
-	wp_enqueue_style( 'gmw-cl-style' );
-}
-add_action( 'wp_enqueue_scripts', 'gmw_cl_register_scripts' );
-
-//include files in front-end
-if ( !is_admin() || defined( 'DOING_AJAX' ) ) {
-	include( 'includes/geo-my-wp-current-location-class.php' );
-	include( 'includes/geo-my-wp-current-location-shortcode.php' );
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
-//include widgets
-include( 'includes/geo-my-wp-current-location-widget.php' );
+if ( ! class_exists( 'GMW_Register_Addon' ) ) {
+    return;
+}
+
+/**
+ * Current Location addon
+ * 
+ */
+class GMW_Current_Location_Addon extends GMW_Register_Addon {
+
+    // slug
+    public $slug = "current_location";
+
+    // add-on's name
+    public $name = "Current Location";
+
+    // prefix
+    public $prefix = "cl";
+
+    // version
+    public $version = GMW_VERSION;
+    
+    // description
+    public $description = "Retreive and display the visitor's current position.";
+
+    // path
+    public $full_path = __FILE__;
+    
+    // core add-on
+    public $is_core = true;
+    
+    /**
+     * Load widget
+     * 
+     * @return [type] [description]
+     */
+    function init_widgets() {
+        include( 'includes/widget-gmw-current-location.php' );
+    }
+
+    /**
+     * Include files
+     * @return [type] [description]
+     */
+    public function pre_init() {  
+        
+        parent::pre_init();
+        
+        if ( ! IS_ADMIN || defined( 'DOING_AJAX' ) ) {
+            include( 'includes/class-gmw-current-location.php' );
+            include( 'includes/gmw-current-location-shortcode.php' );     
+        }
+    }
+
+    /**
+     * Enqueue scripts
+     * 
+     * @return [type] [description]
+     */
+    public function enqueue_scripts() {
+        
+        // register gmw script
+        wp_register_script( 'gmw-current-location', GMW_URL.'/assets/js/gmw.current.location.min.js', array( 'jquery', 'google-maps', 'gmw' ), GMW_VERSION, true );       
+    }
+}
+new GMW_Current_Location_Addon();

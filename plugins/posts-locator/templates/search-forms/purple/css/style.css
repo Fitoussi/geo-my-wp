@@ -1,0 +1,178 @@
+/**
+ * Posts Locator search form stylesheet "purple"
+ */
+div.gmw-form-wrapper.purple {
+ 	background: #f8f8f8;
+	padding:15px;
+	border-top:1px solid #ddd;
+	border-bottom:1px solid #ddd;
+	margin-bottom:1px;
+}
+
+div.gmw-form-wrapper.purple label {
+	text-transform:capitalize;
+	color:#555;
+}
+
+div.gmw-form-wrapper.purple input[type="text"] {
+     padding:8px 10px 7px;	
+} 
+ 
+div.gmw-form-wrapper.purple input[type="text"], 
+div.gmw-form-wrapper.purple select {
+     width:100%;
+     margin-bottom:10px;
+     -webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;    
+	box-sizing: border-box;
+}
+
+div.gmw-form-wrapper.purple select {
+	border: 1px solid #ccc;
+	height:30px;
+	font-size: 14px;
+	color:#555;
+	margin-top:5px
+}
+
+div.gmw-form-wrapper.purple .gmw-address-field-wrapper {
+	position:relative;
+}
+
+div.gmw-form-wrapper.purple .gmw-single-taxonomy-wrapper.dropdown label, 
+div.gmw-form-wrapper.purple .gmw-single-taxonomy-wrapper.checkbox span:first-child,
+div.gmw-form-wrapper.purple .gmw-custom-field-wrapper label,
+div.gmw-form-wrapper.purple .gmw-saf-wrapper label,
+div.gmw-form-wrapper.purple .gmw-address-field-wrapper label {
+	background-color: #CFD2FF;
+	border:1px solid #B6B9F9;
+	color:#575FF4;
+	padding: 2px 0px;
+	font-size: 13px;
+	text-align:center;
+	display: inline-block;
+	width:100%;
+	margin-bottom:5px;
+}
+
+div.gmw-form-wrapper.purple .gmw-taxonomies-wrapper {
+	margin-bottom: 20px;
+	border-bottom: 1px solid #e1e1e1;
+	padding-bottom: 10px;
+}
+
+div.gmw-form-wrapper.purple .gmw-single-taxonomy-wrapper label {
+	display:inline-block;
+	font-size: 13px;
+	margin:5px 8px 5px 0px;
+	text-transform: capitalize;	
+}
+
+div.gmw-form-wrapper.purple .gmw-no-address-error {
+	border: 1px solid rgb(252, 165, 165) !important;
+}
+
+div.gmw-form-wrapper.purple div.gmw-locator-btn-wrapper.usage-icon.location-inside {
+	padding: 12px 10px;
+}
+
+div.gmw-form-wrapper.purple div.gmw-locator-btn-wrapper.usage-text {
+	background-color: #CFD2FF;
+	border: 1px solid #B6B9F9;
+	color: #575FF4;
+	width: 100%;
+	padding: 6px;
+}
+
+div.gmw-form-wrapper.purple div.gmw-locator-btn-wrapper.usage-text:hover {
+	background-color:#BCC0FA;
+}
+
+div.gmw-form-wrapper.purple .gmw-locator-btn-wrapper .gmw-locator-submit {
+	display: inline;
+}
+
+div.gmw-form-wrapper.purple .gmw-locator-btn-wrapper img {
+	box-shadow: none;
+	max-height: 15px;
+	margin-left: 5px;
+}
+
+div.gmw-form-wrapper.purple.gmw-form-wrapper .gmw-locator-btn-within-wrapper {
+	cursor: pointer;
+	padding:5px 5px;
+	position: absolute;
+	right:0px;
+	height: 25px;
+	width:25px;
+	top:0px;
+	background: none;
+	border: 0px;
+}
+
+div.gmw-form-wrapper.purple .gmw-locator-btn-within-wrapper:hover {
+	background: none;
+	border: 0px;
+}
+
+div.gmw-form-wrapper.purple .gmw-locator-btn-wrapper .gmw-locator-btn-within {
+	color: #CFD2FF; !important;
+	font-size:24px;
+}
+
+div.gmw-form-wrapper.purple .gmw-submit {
+	width:100%;
+}
+
+
+/* widget */
+.widget_gmw_search_form_widget div.gmw-form-wrapper.purple {
+ 	background: none;
+	padding:0px;
+	border:0;
+}
+
+.widget_gmw_search_form_widget div.gmw-form-wrapper.purple .gmw-locator-btn-wrapper, 
+.widget_gmw_search_form_widget div.gmw-form-wrapper.purple .gmw-submit-button {
+	//padding: 9px 0px;
+}
+
+/* premium features */
+
+div.gmw-form-wrapper.purple .gmw-radius-slider-wrapper {
+    margin-bottom:10px;
+    text-align:center;
+}
+
+div.gmw-form-wrapper.purple .gmw-radius-slider-wrapper input {
+    max-width:60px;
+    font-size:14px;
+}
+
+div.gmw-form-wrapper.purple .gmw-radius-slider-wrapper .gmw-slider-range {
+	height: 0.8em;
+	-moz-border-radius: 0px/*{cornerRadius}*/;
+	-webkit-border-radius: 0px/*{cornerRadius}*/;
+	border-radius: 0px/*{cornerRadius}*/;
+}
+
+div.gmw-form-wrapper.purple .gmw-radius-slider-wrapper .gmw-slider-range a {
+	height:1.3em;
+}
+
+div.gmw-form-wrapper.purple .gmw-checkbox-taxonomy-wrapper {
+	margin-bottom:10px;
+}
+
+div.gmw-form-wrapper.purple .gmw-checkbox-taxonomy-wrapper span {
+	display:block;
+}
+
+div.gmw-form-wrapper.purple input.gmw-single-checkbox {
+	margin-right: 5px;
+	
+}
+
+.div.gmw-form-wrapper.purple gmw-checkbox-taxonomy-wrapper span.label {
+	font-weight:bold;
+}

@@ -1,0 +1,164 @@
+/**
+ * Members Locator search form stylesheet "yellow"
+ */
+div.gmw-form-wrapper.yellow {
+ 	background: #f8f8f8;
+	padding:15px;
+	border-top:1px solid #ddd;
+	border-bottom:1px solid #ddd;
+	margin-bottom: 1px
+}
+
+div.gmw-form-wrapper.yellow label {
+	text-transform: capitalize;
+	display: block;
+	font-weight: normal;
+	margin: 7px 0 5px 0;
+	font-size: 13px;
+}
+
+div.gmw-form-wrapper.yellow input[type="text"], 
+div.gmw-form-wrapper.yellow select,
+div.gmw-form-wrapper.yellow textarea,
+div.gmw-form-wrapper.yellow .gmw-locator-btn-wrapper.usage-text {
+	width: 100%;
+}
+
+div.gmw-form-wrapper.yellow .editfield.multiselectbox select {
+	height:initial;
+}
+
+div.gmw-form-wrapper.yellow .xfield-trigger-wrapper {
+	border-bottom: 5px solid #e1e1e1
+}
+
+div.gmw-form-wrapper.yellow .xfield-trigger {
+	width:80px;
+	margin:0 auto;
+	padding:2px;
+	background: #FFFFFF;
+	float: none;
+	border:1px solid #e1e1e1;
+	border-bottom: 0px;
+	font-size: 11px;
+	text-align: center;
+	cursor: pointer;
+}
+
+div.gmw-form-wrapper.yellow .gmw-fl-form-xprofile-fields {
+	display:none;
+	background-color: rgb(254, 254, 254);
+	border: 1px solid rgb(238, 238, 238);
+	padding: 15px;
+	background-position: initial initial;
+	background-repeat: initial initial;
+	margin-bottom: 10px;
+}
+
+div.gmw-form-wrapper.yellow .gmw-fl-form-xprofile-fields .editfield.datebox input {
+	display:inline;
+	width:48%;
+	margin: 8px 0px;	
+}
+
+div.gmw-form-wrapper.yellow .gmw-fl-form-xprofile-fields .editfield input[type="text"] {
+	background: #fafafa;
+}
+
+div.gmw-form-wrapper.yellow .gmw-fl-form-xprofile-fields .editfield.datebox input:last-child {
+	float:right;
+}	
+
+div.gmw-form-wrapper.yellow .gmw-fl-form-xprofile-fields .editfield span,
+div.gmw-form-wrapper.yellow .gmw-saf-wrapper label,
+div.gmw-form-wrapper.yellow .gmw-address-field-wrapper label,
+div.gmw-form-wrapper.yellow .gmw-fl-form-xprofile-fields .editfield label:first-child {
+	padding: 4px 0px;
+	background-color: #FBFCBA;
+	font-size: 13px;
+	text-align: center;
+	border: 1px solid #D1D296;
+	display: inline-block;
+	width: 100%;
+	color: #626332;
+	margin: 10px 0 3px;
+	font-weight: normal;
+}
+
+div.gmw-form-wrapper.yellow .gmw-address-fields-wrapper {
+	margin-top:10px;
+}
+
+div.gmw-form-wrapper.yellow .gmw-address-field-wrapper {
+	position:relative;
+}
+
+div.gmw-form-wrapper.yellow .gmw-no-address-error {
+	border: 1px solid rgb(252, 165, 165) !important;
+}
+
+div.gmw-form-wrapper.yellow .gmw-locator-btn-wrapper.usage-text, 
+div.gmw-form-wrapper.yellow .gmw-submit-button {
+	background-color: #FBFCBA;
+	text-align: center;
+	border: 1px solid #D1D296;
+	color: #626332;
+}
+
+div.gmw-form-wrapper.yellow .gmw-locator-btn-wrapper.usage-text:hover, 
+div.gmw-form-wrapper.yellow .gmw-submit-button:hover {
+	background:#E8E979;
+}
+
+div.gmw-form-wrapper.yellow .gmw-locator-btn-wrapper .gmw-locator-submit {
+	display: inline;
+}
+
+div.gmw-form-wrapper.yellow .gmw-locator-btn-wrapper img {
+	box-shadow: none;
+	max-height: 15px;
+	margin-left: 5px;
+}
+
+div.gmw-form-wrapper.yellow .gmw-submit {
+	width:100%;
+}
+
+/* widget */
+.widget_gmw_search_form_widget div.gmw-form-wrapper.yellow {
+ 	background: none;
+	padding:0px;
+	border-top:0;
+}
+
+.widget_gmw_search_form_widget div.gmw-form-wrapper.yellow .gmw-locator-btn-wrapper, 
+.widget_gmw_search_form_widget div.gmw-form-wrapper.yellow .gmw-submit-button {
+	padding: 10px 0px;
+}
+
+.widget_gmw_search_form_widget div.gmw-form-wrapper.yellow .gmw-submit {
+	width:100%;
+}
+
+/* premium features */
+
+div.gmw-form-wrapper.yellow .gmw-radius-slider-wrapper {
+    margin-bottom:10px;
+    text-align: center;
+}
+
+div.gmw-form-wrapper.yellow .gmw-radius-slider-wrapper input {
+    max-width:60px;
+    font-size:14px;
+}
+
+div.gmw-form-wrapper.yellow .gmw-radius-slider-wrapper .gmw-slider-range {
+	height: 1.0em;
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+	border-radius: 0px;
+}
+
+div.gmw-form-wrapper.yellow .gmw-radius-slider-wrapper .gmw-slider-range a {
+	height:1.3em;
+}
