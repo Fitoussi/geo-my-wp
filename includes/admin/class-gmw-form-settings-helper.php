@@ -1,0 +1,538 @@
+<?php
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+class GMW_Form_Settings_Helper {
+
+	/**
+	 * Get list of pages
+	 * 
+	 * @return [type] [description]
+	 */
+	public static function get_pages() {
+		$pages = array();
+	
+		$pages[''] = __( ' -- Same Page -- ', 'GMW' );
+		foreach ( get_pages() as $page ) {
+			$pages[$page->ID] = $page->post_title;
+		}
+	
+		return $pages;
+	}
+
+	/**
+     * Generate array of post types
+     * 
+     * @return [type] [description]
+     */
+    public static function get_post_types() {
+
+        $output = array();
+        
+        foreach ( get_post_types() as $post ) {
+            $output[$post] = get_post_type_object( $post )->labels->name . ' ( '.$post.' )';
+        }
+
+        return $output;
+    }
+
+    /**
+	 * Get location meta fields
+	 * 
+	 * @return [type] [description]
+	 */
+	public static function get_location_meta() {
+
+		global $wpdb, $blog_id, $location_meta, $location_meta_status;
+
+		if ( ! empty( $location_meta_status ) ) {
+
+			return $location_meta;
+
+		} else {
+
+			$location_meta_status = true;
+
+			$location_meta = $wpdb->get_col(
+				$wpdb->prepare( "
+					SELECT DISTINCT meta.`meta_key`
+				 	FROM {$wpdb->base_prefix}gmw_locationmeta meta
+				 	INNER JOIN {$wpdb->base_prefix}gmw_locations locations
+				 	ON meta.location_id = locations.ID
+				 	WHERE locations.blog_id = %d",
+				 	array( $blog_id )
+				)
+			);
+
+			if ( empty( $location_meta ) ) {
+				return array();
+			}
+
+			$new_array = array();
+
+			foreach( $location_meta as $meta ) {
+
+				// skip days_hours since it has its own settings
+				if ( $meta == 'days_hours' ) {
+					continue;
+				}
+				
+			    $new_array[$meta] = $meta;
+			}
+
+			$location_meta = $new_array;
+
+			return $location_meta;
+		}
+	}
+
+	/**
+	 * Address Field
+	 * 
+	 * @param  [type] $value     [description]
+	 * @param  [type] $name_attr [description]
+	 * @return [type]            [description]
+	 */
+	public static function address_field( $value, $name_attr ) {
+		$name_attr = esc_attr( $name_attr ); 
+		?>
+	    <div class="gmw-options-box gmw-address-fields-settings single">    	
+			<div class="single-option label">	
+					<label><?php _e( 'Label', 'GMW-PS' ); ?></label>	
+					<div class="option-content">
+					<input 
+						type="text" 
+						id="gmw-form-address-field-label" 
+						name="<?php echo $name_attr.'[label]'; ?>" 
+						value="<?php echo isset( $value['label'] ) ? esc_attr( stripcslashes( $value['label'] ) ) : ''; ?>"
+					/>	 
+				</div>
+			</div>
+
+			<div class="single-option placeholder">	
+					<label><?php _e( 'Placeholder', 'GMW-PS' ); ?></label>	
+					<div class="option-content">
+					<input 
+						type="text" 
+						id="gmw-form-address-field-label" 
+						name="<?php echo $name_attr.'[placeholder]'; ?>" 
+						value="<?php echo isset( $value['placeholder'] ) ? esc_attr( stripcslashes( $value['placeholder'] ) ) : ''; ?>" 
+					/>	 
+				</div>
+			</div>
+
+			<div class="single-option locator">	
+					<label>
+					<input 
+						type="checkbox" 
+						value="1" 
+						name="<?php echo $name_attr.'[locator]'; ?>" 
+						<?php echo ! empty( $value['locator'] ) ? 'checked="checked"' : ''; ?>
+					/>	 
+					<?php _e( 'Locator Button', 'GMW-PS' ); ?>
+				</label>	
+			</div>
+
+			<div class="single-option autocomplete">	
+					<label>
+					<input 
+						type="checkbox" 
+						value="1" 
+						name="<?php echo $name_attr.'[address_autocomplete]'; ?>" 
+						<?php echo ! empty( $value['address_autocomplete'] ) ? 'checked="checked"' : ''; ?>
+					/>
+					<?php _e( 'Address Autocomplete', 'GMW-PS' ); ?>
+				</label>
+			</div>
+
+			<div class="single-option locator-submit">	
+					<label>
+					<input 
+						type="checkbox" 
+						value="1" 
+						name="<?php echo $name_attr.'[locator_submit]'; ?>" 
+						<?php echo ! empty( $value['locator_submit'] ) ? 'checked="checked"' : ''; ?>
+					/>
+					<?php _e( 'Locator Submit', 'GMW-PS' ); ?>
+				</label>
+			</div>
+
+			<div class="single-option mandatory">	
+				<label>	
+					<input 
+						type="checkbox" 
+						value="1" 
+						name="<?php echo $name_attr.'[mandatory]'; ?>" 
+						<?php echo ! empty( $value['mandatory'] ) ? 'checked="checked"' : ''; ?>
+					/>	
+					<?php _e( 'Mandatory', 'GMW-PS' ); ?> 
+				</label>
+			</div>			
+		</div>
+	    <?php
+	}
+
+	/**
+	 * Validate address field input in form settings
+	 * 
+	 * @param  array $output input values before validation
+	 * 
+	 * @return array validated input
+	 */
+	public static function validate_address_field( $output ) {
+
+		$output['label']       	  = sanitize_text_field( $output['label'] );
+		$output['placeholder'] 	  = sanitize_text_field( $output['placeholder'] );
+		$output['locator'] 		  = ! empty( $output['locator'] ) ? 1 : '';
+		$output['locator_submit'] = ! empty( $output['locator_submit'] ) ? 1 : '';
+		$output['mandatory'] 	  = ! empty( $output['mandatory'] ) ? 1 : '';
+		$output['address_autocomplete'] = ! empty( $output['address_autocomplete'] ) ? 1 : '';
+		
+		return $output;
+	}
+
+	/**
+	 * Search form image
+	 * 
+	 * @param  [type] $value     [description]
+	 * @param  [type] $name_attr [description]
+	 * @return [type]            [description]
+	 */
+    public static function image( $value, $name_attr ) {
+    	
+    	$name_attr = esc_attr( $name_attr );
+
+    	if ( empty( $value ) ) {
+    		$value = array(
+    			'enabled' => '',
+    			'width'   => '200',
+    			'height'  => '200'
+    		);
+    	}
+        ?>
+        <p>
+        	<label>
+	            <input 
+	            	type="checkbox" 
+	            	onclick="jQuery( '.featured-image-options' ).slideToggle();" 
+	            	name="<?php echo $name_attr.'[enabled]'; ?>" 
+	            	value="1" 
+	            	<?php checked( '1', $value['enabled'] ); ?> 
+	            />
+	            <?php _e( 'Enable', 'GMW' ); ?>
+	       	 </label>
+        </p>
+
+        <div class="featured-image-options gmw-options-box" <?php echo empty( $value['enabled'] ) ? 'style="display:none";' : ""; ?>>
+             
+            <div class="single-option">
+                <label><?php _e( 'Width', 'GMW' ); ?></label>
+                
+                <div class="option-content">
+                	<input 
+                		type="text" 
+                		size="5" 
+                		name="<?php echo $name_attr.'[width]'; ?>" 
+                		value="<?php echo ! empty( $value['width'] ) ? esc_attr( $value['width'] ) : '200'; ?>" 
+                		placeholder="Numeric value"
+                	/>
+                </div>
+            </div>
+            
+            <div class="single-option">
+                
+                <label><?php _e( 'Height', 'GMW' ); ?></label>
+                
+                <div class="option-content">
+                	<input 
+                		type="text" 
+                		size="5" 
+                		name="<?php echo $name_attr.'[height]'; ?>" 
+                		value="<?php echo ! empty( $value['height'] ) ? esc_attr( $value['height'] ) : '200'; ?>"
+                		placeholder="Numeric value"
+                	/>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+	
+	/**
+	 * Validate image field
+	 * 
+	 * @param  array $output Input values before validation
+	 * @return array         Input values after validation
+	 */
+	public static function validate_image( $output ) {
+		
+		$output['enabled'] = ! empty( $output['enabled'] ) ? 1 : '';
+		$output['width']   = isset( $output['width'] ) ? preg_replace( '/[^0-9%xp]/', '', $output['width'] ) : '200';
+		$output['height']  = isset( $output['height'] ) ? preg_replace( '/[^0-9%xp]/', '', $output['height'] ) : '200';
+		
+		return $output;
+	}
+
+	/**
+     * Taxonomies in form settongs
+     */
+    public static function taxonomies( $value, $name_attr, $form ) {
+        ?>
+        <div id="taxonomies-wrapper" class="gmw-options-box">
+            <?php
+            foreach ( get_post_types() as $post ) {
+
+                $taxes = get_object_taxonomies( $post );
+                
+                if ( ! empty( $taxes ) ) { 
+                    
+                    $style = ( isset( $form['search_form']['post_types'] ) && ( count( $form['search_form']['post_types'] ) == 1 ) && is_array( $form['search_form']['post_types'] ) && ( in_array( $post, $form['search_form']['post_types'] ) ) ) ? '' : 'style="display:none"';
+
+                    echo '<div id="post-type-'.$post.'-taxonomies-wrapper" class="single-option post-type-taxonomies-wrapper" '.$style.'>';
+                    
+                        foreach ( $taxes as $tax ) {
+
+                            echo '<label>' . esc_html( get_taxonomy( $tax )->labels->singular_name ) . '</label>';
+
+                            echo '<div id="' . esc_attr( $post ) . '_cat' . '" class="taxonomy-wrapper option-content">';
+
+                                $nameAttr = esc_attr( $name_attr."[{$post}][{$tax}][style]" );
+                                $selected  = ( ! empty( $value[$post][$tax]['style'] ) && ( $value[$post][$tax]['style'] == 'dropdown' || $value[$post][$tax]['style'] == 'drop' ) ) ? 'selected="seletced"' : '';
+
+                                
+                                echo '<select name="'.$nameAttr.'">';
+                                echo '<option value="disable" checked="checked">' . __( 'Disable', 'GMW' ).'</option>';
+                                echo '<option value="dropdown" '.$selected.'>' . __( 'Dropdown', 'GMW' ). '</option>';
+                                echo '</select>';
+  
+                            echo '</div>';
+                        }
+
+                    echo '</div>';
+                }
+            }
+        echo '</div>';
+
+        $style = ( empty( $form['search_form']['post_types'] ) || ( count( $form['search_form']['post_types'] ) == 0 ) ) ? '' : 'style="display: none;"';
+
+        echo '<div id="post-types-select-taxonomies-message" '.$style.'>';
+        echo '<p>'.__( 'Select a post type to see its taxonomies.', 'GMW' ) .'</p>';
+        echo '</div>';
+
+        $style = ( isset( $form['search_form']['post_types'] ) && ( count( $form['search_form']['post_types'] ) == 1 ) ) ? 'style="display: none;"' : ''; 
+
+        echo '<div id="post-types-no-taxonomies-message" '.$style.'>';
+        echo '<p>'.__( 'This feature is not availabe with multiple post types.', 'GMW' ) .'</p>';
+        echo '</div>';      
+    }
+
+    /**
+     * Excerpt settings
+     * 
+     * @param  [type] $value     [description]
+     * @param  [type] $name_attr [description]
+     * @return [type]            [description]
+     */
+    public static function excerpt( $value, $name_attr ) {
+    	$name_attr = esc_attr( $name_attr );
+
+    	if ( empty( $value ) ) {
+    		$value = array(
+    			'enabled' => '',
+    			'count'   => '10',
+    			'link'    => 'read more...'
+    		);
+    	}
+        ?>
+        <p>
+            <label>
+                <input 
+                    type="checkbox" 
+                    value="1" 
+                    name="<?php echo $name_attr.'[enabled]'; ?>" 
+                    onclick="jQuery( '.excerpt-options' ).slideToggle();" 
+                    <?php echo ! empty( $value['enabled'] ) ? "checked=checked" : ''; ?> 
+                />
+                <?php _e( 'Enable', 'GMW' ); ?>
+            </label>
+        </p>
+
+        <div class="excerpt-options gmw-options-box" <?php echo empty( $value['enabled'] ) ? 'style="display:none";' : ""; ?>>
+            <div class="single-option">
+                <label><?php _e( 'Words count', 'GMW' ); ?></label>
+                <div class="option-content">
+                    <input 
+                        type="number" 
+                        name="<?php echo $name_attr.'[count]'; ?>" 
+                        value="<?php echo ( ! empty( $value['count'] ) ) ? esc_attr( $value['count'] ) : ''; ?>"
+                        placeholder="Enter numeric value"
+                    />
+                </div>
+            </div>
+            
+            <div class="single-option">
+                <label><?php _e( 'Read more link', 'GMW' ); ?></label>
+                <div class="option-content">
+                    <input 
+                        type="text" 
+                        name="<?php echo $name_attr.'[link]'; ?>" 
+                        value="<?php echo ( ! empty( $value['link'] ) ) ? esc_attr( stripslashes( $value['link'] ) ) : ''; ?>" 
+                        placeholder="Enter text"
+                    />  
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
+    /**
+     * Validate excerpt
+     * 
+     * @param  [type] $output [description]
+     * @return [type]         [description]
+     */
+    public static function validate_excerpt( $output ) {
+
+        $output['enabled'] = ! empty( $output['enabled'] ) ? 1 : '';
+        $output['count']   = isset( $output['count'] ) ? preg_replace( '/[^0-9]/', '', $output['count'] ) : '';
+        $output['link']    = isset( $output['link'] ) ? sanitize_text_field( $output['link'] ) : '';
+
+        return $output;
+    }
+
+    /**
+     * Get BNP xprofile fields array
+     * 
+     * @param  boolean $date_fields [description]
+     * @return [type]               [description]
+     */
+    public static function get_xprofile_fields() {
+
+        // verify BuddyPress plugin
+        if ( ! class_exists( 'Buddypress' ) ) {
+            return array();
+        }
+
+        global $bp;
+
+        //show message if Xprofile Fields component deactivated
+        if ( ! bp_is_active( 'xprofile' ) ) {
+            trigger_error( __( 'Buddypress xprofile fields component is deactivated. You need to activate in in order to use this feature.', 'GMW'), E_USER_NOTICE );
+            return array();
+        }
+
+        //check for profile fields
+        if ( function_exists( 'bp_has_profile' ) ) {
+            
+            $args = array ( 
+                'hide_empty_fields' => false, 
+                'member_type'       => bp_get_member_types()
+            );
+
+            $fields = array(
+                'fields'     => array(),
+                'date_field' => array()
+            );
+
+            //display profile fields
+            if ( bp_has_profile( $args ) ) {
+
+                while ( bp_profile_groups() ) {
+                    
+                    bp_the_profile_group();
+
+                    while ( bp_profile_fields() ) {
+                        
+                        bp_the_profile_field();
+
+                        $field_type = bp_get_the_profile_field_type();
+
+                        if ( $field_type == 'datebox' || $field_type == 'birthdate' ) {
+                            $fields['date_field'][bp_get_the_profile_field_id()] = bp_get_the_profile_field_name();
+                        } else {
+                            $fields['fields'][bp_get_the_profile_field_id()] = bp_get_the_profile_field_name();
+                        }
+                    }
+                }
+            }
+        }
+
+        return $fields;
+    }
+    /**
+     * Form settings xprofile fields function
+     * @param  [type] $formID    [description]
+     * @param  [type] $section   [description]
+     * @param  [type] $option    [description]
+     * @return [type]            [description]
+     */
+    public static function bp_xprofile_fields( $value, $name_attr ) {
+        
+        global $bp;
+
+        //show message if Xprofile Fields component deactivated
+        if ( ! class_exists( 'Buddypress' ) || ! bp_is_active( 'xprofile' ) ) {
+            return _e( 'Buddypress xprofile fields component is required for this feature.', 'GMW');
+        }
+
+        $fields = self::get_xprofile_fields();
+
+        if ( ! array_filter( $fields ) ) {
+            return array();
+        }
+        ?>
+        <div class="gmw-options-box">
+            <div class="single-option">
+                <label><?php _e( 'Select Profile Fields', 'GMW' ); ?></label>
+                <div class="option-content">
+                    <select 
+                        name="<?php echo esc_attr( $name_attr.'[fields][]' ); ?>" 
+                        multiple 
+                        data-placehoder="<?php _e( 'Select profile fields', 'GMW-PS' ); ?>" 
+                    >
+                    <?php 
+                       foreach( $fields['fields'] as $field_id => $field_name ) {
+                            $selected  = ( isset( $value['fields'] ) && in_array( $field_id, $value['fields'] ) ) ? 'selected="slected"' : ''; ?>
+                            ?>
+                            <option value="<?php echo esc_attr( $field_id ); ?>" <?php echo $selected; ?>>
+                                <?php echo esc_html( $field_name ); ?>
+                            </option>
+                            <?php  
+                        } ?>
+                    </select>
+                </div>
+            
+                <label><?php _e( 'Select date field as "Age range" filter.', 'GMW' ); ?></label>   
+
+                    <div class="option-content">
+                        <select name="<?php echo esc_attr( $name_attr.'[date_field]' ); ?>">
+                            <option value="" selected="selected"><?php _e( 'N/A', 'GMW' ); ?></option>
+                            <?php foreach ( $fields['date_field'] as $field_value => $field_name ) { ?>
+                                <?php $selected = ( ! empty( $value['date_field'] ) && $value['date_field'] == $field_value ) ? 'selected="selected"' : ''; ?>
+                                <option value="<?php echo esc_attr( $field_value ); ?>" <?php echo $selected; ?> >
+                                    <?php echo esc_html( $field_name ); ?>        
+                                </option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
+    /**
+     * validate xprofile fields
+     * 
+     * @param  [type] $output [description]
+     * @return [type]         [description]
+     */
+    public static function validate_bp_xprofile_fields( $output ) {
+
+        $output['fields']     = ! empty( $output['fields'] ) ? array_map( 'intval', $output['fields'] ) : array();
+        $output['date_field'] = ! empty( $output['date_field'] ) ? intval( $output['date_field'] ) : '';
+
+        return $output;
+    }
+}

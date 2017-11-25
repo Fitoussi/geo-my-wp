@@ -63,11 +63,11 @@ class GMW_System_Info {
 
         // check for browser class add on
         if ( ! class_exists( 'Browser' ) ) {
-            //require_once GMW_PATH . '/includes/lib/browser.php';
+            require_once( GMW_PATH . '/includes/libraries/browser.php' );
         }
 
         // do WP version check and get data accordingly
-        //$browser = new Browser();
+        $browser = new Browser();
         if ( get_bloginfo( 'version' ) < '3.4' ) :
             $theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
             $theme      = $theme_data['Name'] . ' ' . $theme_data['Version'];
@@ -202,7 +202,7 @@ class GMW_System_Info {
             $report .= "\n";
         endif;
 
-        /*
+        
         $report .= "\n".'---------------------------------------------';
         $report .= "\n\t\t".'** BROWSER DATA **'."\n";
         $report .= '---------------------------------------------'."\n";
@@ -210,7 +210,7 @@ class GMW_System_Info {
         $report .= 'Browser Name'."\t\t\t". $browser->getBrowser() ."\n";
         $report .= 'Browser Version:'."\t\t\t".$browser->getVersion()."\n";
         $report .= 'Browser User Agent:'."\t\t".$browser->getUserAgent()."\n";
-        */
+        
        
         $report .= "\n".'---------------------------------------------';
         $report .= "\n\t\t".'** SERVER DATA **'."\n";
@@ -252,7 +252,11 @@ class GMW_System_Info {
 
         // output must-use plugins
         if ( $mu_plugins ) :
-            $report .= 'Must-Use Plugins: ('.count( $mu_plugins ).')'. "\n";
+
+            $report .= "\n".'------------------------'."\n";
+            $report .= 'Must-Use Plugins: ('.count( $mu_plugins ).')';
+            $report .= "\n".'------------------------'."\n";
+
             foreach ( $mu_plugins as $mu_path => $mu_plugin ) :
                 $report .= "\t".'- '.$mu_plugin['Name'] . ' ' . $mu_plugin['Version'] ."\n";
             endforeach;
@@ -260,12 +264,16 @@ class GMW_System_Info {
         endif;
 
         // if multisite, grab active network as well
-        /*if ( is_multisite() ) :
+        if ( is_multisite() ) :
             // active network
-            $report .= 'Network Active Plugins: ('.count( $nt_plugins ).')'. "\n";
+            $report .= "\n".'-------------------------------'."\n";
+            $report .= 'Network Active Plugins: ('.count( $nt_plugins ).')';
+            $report .= "\n".'-------------------------------'."\n";
 
             foreach ( $nt_plugins as $plugin_path ) :
-                if ( array_key_exists( $plugin_base, $nt_plugins ) )
+                $plugin_base = plugin_basename( $plugin_path );
+
+                if ( ! array_key_exists( $plugin_base, $nt_active ) )
                     continue;
 
                 $plugin = get_plugin_data( $plugin_path );
@@ -274,11 +282,15 @@ class GMW_System_Info {
             endforeach;
             $report .= "\n";
 
-        endif; */
+        endif;
 
         // output active plugins
         if ( $plugins ) :
-            $report .= 'Active Plugins: ('.count( $active ).')'. "\n";
+
+            $report .= "\n".'------------------------'."\n";
+            $report .= 'Active Plugins: ('.count( $active ).')';
+            $report .= "\n".'------------------------'."\n";
+
             foreach ( $plugins as $plugin_path => $plugin ) :
                 if ( ! in_array( $plugin_path, $active ) )
                     continue;
@@ -289,7 +301,11 @@ class GMW_System_Info {
 
         // output inactive plugins
         if ( $plugins ) :
-            $report .= 'Inactive Plugins: ('.( count( $plugins ) - count( $active ) ).')'. "\n";
+
+            $report .= "\n".'------------------------'."\n";
+            $report .= 'Inactive Plugins: ('.( count( $plugins ) - count( $active ) ).')';
+            $report .= "\n".'------------------------'."\n";
+
             foreach ( $plugins as $plugin_path => $plugin ) :
                 if ( in_array( $plugin_path, $active ) )
                     continue;
@@ -364,23 +380,18 @@ class GMW_System_Info {
             $theme_data = wp_get_theme();
             $theme      = $theme_data->Name . ' ' . $theme_data->Version;
         }
-
         ?>     
         <form action="" method="post">
-
             <p>
                 <input type="hidden" name="gmw_action" value="download_system_info">
                 <input type="submit" value="<?php _e( 'Downlaod system info file', 'GMW' ); ?>" class="button button-primary gmw-system-info-download" name="gmw_system_info_download">
                 <input type="button" value="<?php _e( 'Highlight Data', 'GMW' ); ?>" onclick="jQuery( 'textarea#gmw-system-info-content' ).focus().select();" class="button button-secondary" name="">
             </p>
-
             <p><?php echo $this->get_data(); ?></p>
-
             <p>
                 <input type="submit" value="<?php _e( 'Downlaod system info file', 'GMW' ); ?>" class="button button-primary gmw-system-info-download" name="gmw_system_info_download">
                 <input type="button" value="<?php _e( 'Highlight Data', 'GMW' ); ?>" onclick="jQuery( 'textarea#gmw-system-info-content' ).focus().select();" class="button button-secondary" name="">
             </p>
-
         </form>
         <?php
     }

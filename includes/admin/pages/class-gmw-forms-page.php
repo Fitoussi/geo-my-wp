@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * GEO my WP forms page
  */
-class GMW_Forms {
+class GMW_Forms_Page {
 
     /**
      * __construct function.
@@ -18,7 +18,11 @@ class GMW_Forms {
      * @return void
      */
     public function __construct() {
-    		    	               
+    		    	
+        if ( empty( $_GET['page'] ) || $_GET['page'] != 'gmw-forms' ) {
+            return;
+        }
+
         add_filter( 'gmw_admin_notices_messages', array( $this, 'notices_messages' ) );
         add_action( 'gmw_create_new_form', 		  array( $this, 'create_new_form'  ) );
         add_action( 'gmw_duplicate_form',  		  array( $this, 'duplicate_form'   ) );
@@ -47,68 +51,6 @@ class GMW_Forms {
     }
 
     /**
-     * Default form values
-     * 
-     * @param  [type] $args [description]
-     * @return [type]       [description]
-     */
-    public static function new_form_defaults( $args ) {
-
-        return apply_filters( 'gmw_new_form_defaults', array(
-            
-            'page_load_results' => array (
-                'post_types'       => array( 'post' ),
-                'display_results'  => 1,
-                'display_map'      => 'results'
-            ),
-            'search_form' => array (
-                'post_types'     => array( 'post' ),
-                'form_template'  => 'gray',
-                'address_field'  => array(
-                    'title'                => __( 'Enter Address...', 'GMW' ),
-                    'within'               => 1,
-                    'address_autocomplete' => 1
-                ),
-                'locator_icon'   => 'within_address_field',
-                'locator_submit' => 1,
-                'units'          => 'both',
-                'radius'         => '5,10,25,50,100,150,200'
-            ),
-            'form_submission' => array (
-                'results_page'     => '',
-                'display_results'  => 1,
-                'display_map'      => 'results',
-                'per_page'         => '5,10,15,25',
-            ),
-            'search_results' => array (
-                'results_template' => 'gray',
-                'get_directions'   => 1,
-                'excerpt'          => array(
-                    'use'   => 1,
-                    'more'  => 'read more...'
-                ),
-            ),
-            'results_map' => array(
-                'map_width'        => '100%',
-                'map_height'       => '300px',
-                'map_type'         => 'ROADMAP',
-                'zoom_level'       => 'auto',
-                'map_icon_usage'   => 'same',
-                'markers_display'  => 'normal'                      
-            ),
-            'info_window' => array(
-                'iw_type'         => 'popup',
-                'popup_template'  => 'left-white',
-                'address'         => 1,
-                'draggable_use'   => 1,
-                'get_directions'  => 1,
-                'live_directions' => 1,
-                'address'         => 1
-            )
-        ), $args );
-    }
-
-    /**
      * Create new form
      * 
      * @access public
@@ -132,7 +74,7 @@ class GMW_Forms {
         $new_form['addon']  = $_GET['addon'];
         $new_form['name']   = str_replace( '+', ' ', $_GET['name'] );    
         $new_form['prefix'] = $_GET['prefix'];
-        $new_form['data']   = serialize( $this->new_form_defaults( $new_form ) );
+        $new_form['data']   = serialize( GMW_Forms_Helper::default_settings( $new_form ) );
 
         global $wpdb;
 
@@ -180,10 +122,10 @@ class GMW_Forms {
         );
         
         // update forms in cache
-        GMW_Helper::update_forms_cache();
+        GMW_Forms_Helper::update_forms_cache();
 
         //reload the page to prevent resubmission
-        wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_action=edit_form&form_id='.$new_form_id ) );
+        wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_action=edit_form&form_id='.$new_form_id.'&prefix='.$new_form['prefix'] ) );
         
         exit;
     }
@@ -239,7 +181,7 @@ class GMW_Forms {
         );
 
         // update forms in cache
-        GMW_Helper::update_forms_cache();
+        GMW_Forms_Helper::update_forms_cache();
 
         //reload the page to prevent resubmission
         wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_duplicated&gmw_notice_status=updated' ) );
@@ -260,24 +202,11 @@ class GMW_Forms {
     		exit;
     	}
     	
-        global $wpdb;
-
-        //delete form from database
-        $wpdb->delete( 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
-                'ID' => $_GET['form_id'] 
-            ), 
-            array( 
-                '%d' 
-            ) 
-        );
-
-        // update forms in cache
-        GMW_Helper::update_forms_cache();
+        GMW_Forms_Helper::delete_form( $_GET['form_id'] );
 
         //reload the page to prevent resubmission
         wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_deleted&gmw_notice_status=updated' ) );
+        
         exit;       
     }
 
@@ -307,7 +236,7 @@ class GMW_Forms {
         );
 
         // update forms in cache
-        GMW_Helper::update_forms_cache();
+        GMW_Forms_Helper::update_forms_cache();
         
         wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_deleted&gmw_notice_status=updated' ) );
         exit;  
@@ -335,20 +264,36 @@ class GMW_Forms {
                       
         $buttons = array();
         $buttons = apply_filters( 'gmw_admin_new_form_button', $buttons );
-            
+        
         // order buttons by priority
         usort( $buttons, 'gmw_sort_by_priority' );
 
         $output  = '<select onchange="window.location.href = jQuery(this).val();">';
-        $output .= '<option value="">'.__( 'Create new form', 'GMW' ).'</option>';
 
-        // Generate buttons
-        foreach ( $buttons as $button ) {
+        if ( empty( $buttons ) ) {
 
-            $form_url = 'admin.php?page=gmw-forms&gmw_action=create_new_form&name='.str_replace( ' ', '+', $button['name'] ).'&addon='.$button['addon'].'&prefix='.$button['prefix'].'&slug='.$button['slug'];
+            $output .= '<option value="">'.__( 'Form buttons are not available', 'GMW' ).'</option>';
 
-            $output  .= '<option value="'. esc_url( $form_url ).'">'.esc_html( $button['name'] ).'</option>';
+        } else { 
+            
+            $output .= '<option value="">'.__( 'Create new form', 'GMW' ).'</option>';
+
+            // Generate buttons
+            foreach ( $buttons as $button ) {
+
+                // support older version of the extensions.
+                if ( empty( $button['slug'] ) && ( ! empty( $button['title'] ) && ! empty( $button['name'] ) ) ) {
+
+                    $button['slug'] = $button['name'];
+                    $button['name'] = $button['title'];
+                }
+
+                $form_url = 'admin.php?page=gmw-forms&gmw_action=create_new_form&name='.str_replace( ' ', '+', $button['name'] ).'&addon='.$button['addon'].'&prefix='.$button['prefix'].'&slug='.$button['slug'];
+
+                $output  .= '<option value="'. esc_url( $form_url ).'">'.esc_html( $button['name'] ).'</option>';
+            }
         }
+
         $output .= '</select>';
 
         return $output;
@@ -363,32 +308,25 @@ class GMW_Forms {
     public function output() {
 
         //get forms
-        $forms = GMW_Helper::get_forms();
+        $forms = GMW_Forms_Helper::get_forms();
         ?>
         <div class="wrap">
-
            <h2 class="gmw-wrap-top-h2">
-                
                 <i class="gmw-icon-doc-text-inv"></i>
-            
                 <?php echo _e( 'GEO my WP Forms', 'GMW' ); ?> 
-
                 <?php echo self::new_form_buttons(); ?>
-                
                 <?php gmw_admin_helpful_buttons(); ?>
             </h2>
                 
-            <!-- Forms -->
             <form id="gmw_forms_admin" enctype="multipart/form-data" method="post">
-
                 <input type="hidden" name="gmw_page" id="gmw_page" value="gmw-forms">
-
+                
                 <?php wp_nonce_field( 'gmw_forms_page', 'gmw_forms_page' ); ?>
                 
                 <div class="clear"></div>
-
+                
                 <table class="widefat" style="margin-top: 10px">
-
+                    
                     <!-- bulk actions -->
                     <div id="" class="tablenav top">
 
@@ -407,12 +345,9 @@ class GMW_Forms {
                                 <input type="submit" name="submit" onclick="return confirm( '<?php echo $delete_messages; ?>' );" value="<?php _e( 'Apply', 'GMW' ); ?>" class="button-secondary">
                             
                             <?php } ?>
-
                         </div>
-
                     </div>
 
-                    <!-- table head -->
                     <thead>
                         <tr>
                             <th class="check-column"  style="width:2%;padding: 15px 3px 15px;">
@@ -421,7 +356,7 @@ class GMW_Forms {
                             <th scope="col" id="id" class="manage-column"   style="width:3%;"><?php _e( 'ID', 'GMW' ); ?></th>
                             <th scope="col" id="title" class="manage-column"  style="width:25%;"><?php _e( 'Form Title', 'GMW' ); ?></th>
                             <th scope="col" id="type" class="manage-column"  style="width:25%;"><?php _e( 'Form Type', 'GMW' ); ?></th>
-                            <th scope="col" id="extension" class="manage-column"  style="width:25%;"><?php _e( 'Extension', 'GMW' ); ?></th>         
+                            <th scope="col" id="extension" class="manage-column"  style="width:25%;"><?php _e( 'Extension', 'GMW' ); ?></th> 
                             <th scope="col" id="shortcode" class="manage-column" style="width:20%;"><?php _e( 'Shortcode', 'GMW' ); ?></th> 
                         </tr>
                     </thead>
@@ -444,28 +379,22 @@ class GMW_Forms {
     								<?php $formName = ( ! empty( $option['title'] ) ) ? $option['title'] : 'form_id_'.$option['ID']; ?>
     								
                                     <tr class="<?php echo $alternate; ?>" style="height:50px;">
-
-                                        <!-- checkbox -->
                                         <th scope="row" class="check-column">
                                             <input type="checkbox" id="" name="form_ids[]" value="<?php echo $option['ID']; ?>" class="gmw-forms-bulk-action">
                                         </th>
-
-                                        <!-- ID -->
                                         <td>
                                             <span><?php echo esc_attr( $option['ID'] ); ?></span>
                                         </td>
-                                        
-                                        <!-- Form Title and actions -->
                                         <td>
                                             <span>
                                                 <?php if ( gmw_is_addon_active( $option['addon'] ) ) { ?>
                                                     
-                                                    <strong><a class="row-title" title="<?php _e( 'Edit this form', 'GMW' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=edit_form&form_id='.$option['ID'] ); ?>"><?php echo esc_html( $formName ); ?></a></strong>
+                                                    <strong><a class="row-title" title="<?php _e( 'Edit this form', 'GMW' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=edit_form&form_id='.$option['ID'].'&prefix='.$option['prefix'] ); ?>"><?php echo esc_html( $formName ); ?></a></strong>
                                                     
                                                     <div class="row-actions">
                                                                                                         
                                                         <span class="edit">
-                                                            <a title="<?php _e( 'Edit form', 'GMW' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=edit_form&form_id='.$option['ID'] ); ?>"><?php _e( 'Edit', 'GMW' ); ?></a> | 
+                                                            <a title="<?php _e( 'Edit form', 'GMW' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=edit_form&form_id='.$option['ID'].'&prefix='.$option['prefix'] ); ?>"><?php _e( 'Edit', 'GMW' ); ?></a> | 
                                                         </span>
                                                         <span class="duplicate">
                                                             <a title="<?php _e( 'Duplicate form', 'GMW' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=duplicate_form&slug='.$option['slug'].'&form_id='.$option['ID'] ); ?>"><?php _e( 'Duplicate', 'GMW' ); ?></a> | 
@@ -476,15 +405,12 @@ class GMW_Forms {
 
                                                             <a title="<?php _e( 'Delete form', 'GMW' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=delete_form&form_id='.$option['ID'] ); ?>" onclick="return confirm( '<?php echo $delete_message; ?>' ); "><?php _e( 'Delete', 'GMW' ); ?></a>                                                    
                                                         </span> 
-
                                                     </div>
 
                                                 <?php } else { ?>
                                                     
                                                     <strong class="row-title"><?php echo esc_attr( $formName ); ?></strong>
-                                                    
                                                     <div class="row-actions">
-
                                                         <span style="color:#444">
                                                             <?php _e( 'Extension deactivated.', 'GMW' ); ?></em> <a href="<?php echo esc_url( 'admin.php?page=gmw-extensions' ); ?>"><?php _e( 'Manage extensions', 'GMW' ); ?></a>
                                                         </span>
@@ -493,15 +419,8 @@ class GMW_Forms {
                                                 <?php } ?>
                                             </span>
                                         </td>
-
-    									<td>
-                                            <span><?php echo esc_attr( $option['name'] ); ?></span>
-                                        </td>
-
-                                        <td>
-                                            <span><?php echo esc_attr( $option['name'] ); ?></span>
-                                        </td>
-
+    									<td><span><?php echo esc_attr( $option['name'] ); ?></span></td>
+                                        <td><span><?php echo esc_attr( $option['name'] ); ?></span></td>
                                         <td class="column-title" style="padding: 5px 0px;">
                                             <code>[gmw form="<?php echo esc_attr( $option['ID'] ); ?>"]</code>
                                         </td>

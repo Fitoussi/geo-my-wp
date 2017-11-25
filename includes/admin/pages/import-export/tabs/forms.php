@@ -265,7 +265,7 @@ function gmw_import_forms() {
 	    }
 
 		// update forms in cache
-    	GMW_Helper::update_forms_cache();
+    	GMW_Forms_Helper::update_forms_cache();
 
    		wp_safe_redirect( admin_url( 'admin.php?page=gmw-import-export&tab=forms&gmw_notice=forms_imported&gmw_notice_status=updated' ) ); 
 	

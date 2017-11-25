@@ -11,7 +11,11 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; 
 }
 
-// include tabs files
+// include files in tools page only
+if ( empty( $_GET['page'] ) || $_GET['page'] != 'gmw-tools' ) {
+    return;
+}
+
 include( 'tabs/reset-gmw.php' );
 include( 'tabs/system-info.php' );
 
@@ -35,19 +39,12 @@ class GMW_Tools {
         $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'system_info';
         ?>
         <div id="gmw-tools-page" class="wrap gmw-admin-page">
-            
-            <h2 class="gmw-wrap-top-h2">
-                
+            <h2 class="gmw-wrap-top-h2">   
                 <i class="gmw-icon-wrench"></i>
-                
                 <?php _e( 'Tools', 'GMW' ); ?>
-                
                 <?php gmw_admin_helpful_buttons(); ?>
-            
             </h2>
-
             <div class="clear"></div>
-
             <h2 class="nav-tab-wrapper">
                 <?php
                 foreach( $this->get_tabs() as $tab_id => $tab_name ) {
@@ -60,18 +57,12 @@ class GMW_Tools {
                 }
                 ?>
             </h2>
-
             <div class="content metabox-holder">
-
                 <div id="gmw-<?php echo $active_tab; ?>-tab-content" class="gmw-tools-tab-content">
-                    
                     <?php do_action( 'gmw_tools_'.$active_tab.'_tab' ); ?>
-                
                 </div>
-
-            </div><!-- .metabox-holder -->
-
-        </div><!-- .wrap -->
+            </div>
+        </div>
         <?php
     }
 

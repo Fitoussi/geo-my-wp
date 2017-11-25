@@ -39,22 +39,30 @@ class GMW_Admin {
 		include( 'gmw-admin-functions.php' );
 		include( 'class-gmw-tracking.php' );
 		include( 'updater/class-gmw-license.php' ); 
+		include( 'class-gmw-form-settings-helper.php' );
 
 		// admin pages
 		include( 'pages/class-gmw-extensions.php' );
 		include( 'pages/class-gmw-settings.php' );
-		include( 'pages/class-gmw-forms.php' );
-		include( 'pages/class-gmw-edit-form.php' );
+		include( 'pages/class-gmw-forms-page.php' );
+		include( 'pages/class-gmw-form-editor.php' );
 		include( 'pages/tools/class-gmw-tools.php' );
 		include( 'pages/import-export/class-gmw-import-export-page.php' );
-
-		//include( 'class-gmw-shortcodes-page.php' );
 				
+		do_action( 'gmw_pre_admin_include_pages' );
+
 		//set pages
-		$this->addons_page     	  = new GMW_Extensions();
-		$this->settings_page   	  = new GMW_Settings();
-		$this->forms_page      	  = new GMW_Forms();
-		$this->edit_form_page 	  = new GMW_Edit_Form();
+		$this->addons_page   = new GMW_Extensions();
+		$this->settings_page = new GMW_Settings();
+		$this->forms_page    = new GMW_Forms_Page();
+
+		if ( isset( $_GET['page'] ) && $_GET['page'] == 'gmw-forms' && isset( $_GET['gmw_action'] ) && $_GET['gmw_action'] == 'edit_form' && ! empty( $_GET['prefix'] ) && class_exists( 'GMW_'.$_GET['prefix'].'_Form_Editor') ) {
+			$class_name = 'GMW_'.$_GET['prefix'].'_Form_Editor';
+		} else {
+			$class_name = 'GMW_Form_Editor';
+		}
+
+		$this->edit_form_page 	  = new $class_name();
 		$this->tools_page 		  = new GMW_Tools();
 		$this->import_export_page = new GMW_Import_Export_Page();
 		//$this->shortcodes_page 	= new GMW_Shortcodes_page();
@@ -98,7 +106,7 @@ class GMW_Admin {
 	public function admin_menu() {
 	
 		//GEO my WP menu items
-		add_menu_page( 'GEO my WP', 'GEO my WP', 'manage_options', 'gmw-extensions', array( $this->addons_page, 'output' ), 'dashicons-location-alt', 80 );
+		add_menu_page( 'GEO my WP', 'GEO my WP', 'manage_options', 'gmw-extensions', array( $this->addons_page, 'output' ), 'dashicons-location-alt', 66 );
 		
 		// sub menu pages
 		$menu_items = array();
@@ -306,11 +314,9 @@ class GMW_Admin {
 	public static function add_form_button_pages() {
 		
 		//alowed pages can be modified
-		$pages = apply_filters( 'gmw_add_form_button_pages', array( 'post.php', 'page.php', 'page-new.php', 'post-new.php' ) );
+		$pages = apply_filters( 'gmw_add_form_button_admin_pages', array( 'post.php', 'page.php', 'page-new.php', 'post-new.php' ) );
 
-		$page = in_array( basename( $_SERVER['PHP_SELF'] ), $pages );
-
-		return $page;
+		return ( is_array( $pages ) && in_array( basename( $_SERVER['PHP_SELF'] ), $pages ) ) ? 1 : 0;
 	}
 	
 	/**
@@ -319,21 +325,31 @@ class GMW_Admin {
 	 * This script inspired by the the work of the developers of Gravity Forms plugin
 	 */
     public static function add_form_button(){	
-    	
-        echo '<style>
-        		.gmw_media_icon:before {
-        			content: "\f230" !important;
-					color: rgb(103, 199, 134) !important;
-				}
-        		.gmw_media_icon {
-                	vertical-align: text-top;
-                	width: 18px;
-                }
-                .wp-core-ui a.gmw_media_link{
-                 	padding-left: 0.4em;
-                }
-             </style>
-             <a href="#TB_inline?width=480&inlineId=select_gmw_form" class="thickbox button gmw_media_link" id="add_gmw_form" title="' . __( 'GEO my WP Form Shortcode', 'GMW' ) . '"><span class="dashicons-location-alt dashicons"></span> ' . __( 'GMW Form', 'GMW' ) . '</a>';
+    	?>
+        <style>
+    		.gmw_media_icon:before {
+    			content: "\f230" !important;
+				color: rgb(103, 199, 134) !important;
+			}
+    		.gmw_media_icon {
+            	vertical-align: text-top;
+            	width: 18px;
+            }
+            .wp-core-ui a.gmw_media_link{
+             	padding-left: 0.4em;
+            }
+        </style>
+
+        <a 
+        	href="#TB_inline?width=480&inlineId=select_gmw_form" 
+        	class="thickbox button gmw_media_link" 
+        	id="add_gmw_form" 
+        	title="<?php _e( 'GEO my WP Form Shortcode', 'GMW' ); ?>"
+        >
+        	<span class="dashicons-location-alt dashicons"></span>
+        	<?php _e( 'GMW Form', 'GMW' ); ?>
+       	</a>
+       	<?php
     }
     
     /**
@@ -368,53 +384,43 @@ class GMW_Admin {
                 <div>
                     <div>
                         <h3><?php _e( 'Insert A Form Shortcode', 'GMW' ); ?></h3>
-                        <p>
-                            <?php _e( 'Select the type of shortcode you wish to add', 'GMW' ); ?>
-                        </p>
+                        <p><?php _e( 'Select the type of shortcode you wish to add:', 'GMW' ); ?></p>
                     </div>
                     
                     <div class="checkboxes">
-
-                    	<label for="gmw-form">
+                    	<label>
                         	<input 
                         		type="radio" class="gmw_form_type" checked="checked" name="gmw_form_type" value="form" 
                         		onclick="if ( jQuery( '#gmw-forms-dropdown-wrapper' ).is( ':hidden' ) ) jQuery( '#gmw-forms-dropdown-wrapper' ).slideToggle();" 
                         	/> 
-
-                        
                         	<?php _e( 'Complete Form', 'GMW' ); ?>	
                         </label>
 
-                        <label for="gmw-search-form">
+                        <label>
                         	<input type="radio" class="gmw_form_type" name="gmw_form_type"  value="search_form" 
                         		onclick="if ( jQuery( '#gmw-forms-dropdown-wrapper' ).is( ':hidden' ) ) jQuery('#gmw-forms-dropdown-wrapper' ).slideToggle();" 
                         	/> 
-
                         	<?php _e( 'Search Form Only', 'GMW' ); ?>	
                         </label>
 
-                        <label for="gmw-map">
+                        <label>
 	                        <input type="radio" class="gmw_form_type" name="gmw_form_type"  value="map" 
 	                        	onclick="if ( jQuery( '#gmw-forms-dropdown-wrapper' ).is( ':hidden' ) ) jQuery('#gmw-forms-dropdown-wrapper').slideToggle();" 
 	                        /> 
-
                         	<?php _e( 'Map Only', 'GMW'); ?>	
                         </label>
 
-                        <label for="gmw-search-results">
+                        <label>
 	                        <input type="radio" class="gmw_form_type" name="gmw_form_type" value="search_results" 
 	                        	onclick="if ( jQuery( '#gmw-forms-dropdown-wrappe' ).is( ':visible' ) ) jQuery('#gmw-forms-dropdown-wrapper').slideToggle();" 
 	                        /> 
-
                         	<?php _e( 'Search Results Only', 'GMW' ); ?>	
                        	</label>
 
                     </div>
 
                     <div id="gmw-forms-dropdown-wrapper">
-
                         <select id="gmw_form_id">
-
                             <option value="">
                             	<?php _e( 'Select a Form', 'GMW' ); ?>	
                             </option>
@@ -425,7 +431,9 @@ class GMW_Admin {
                                 	
                                 	$form['title'] = ! empty( $form['title'] ) ? $form['title'] : 'form_id_'.$form['ID'];
                                     ?>
-                                    <option value="<?php echo absint( $form['ID'] ); ?>"><?php echo esc_attr( $form['title'] ); ?></option>
+                                    <option value="<?php echo absint( $form['ID'] ); ?>">
+                                    	<?php echo esc_html( $form['title'] ); ?>	
+                                    </option>
                                     <?php
                                 }
                             ?>
@@ -433,7 +441,10 @@ class GMW_Admin {
                     </div>
                    
                     <div>
-                        <input type="button" class="button-primary" value="<?php _e("Insert Shortcode", "GMW"); ?>" 
+                        <input 
+                        	type="button" 
+                        	class="button-primary" 
+                        	value="<?php _e( 'Insert Shortcode', 'GMW' ); ?>" 
                         	onclick="gmwInsertForm();"
                         />
                     	<a class="button" href="#" onclick="tb_remove(); return false;">

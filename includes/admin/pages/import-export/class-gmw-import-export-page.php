@@ -114,7 +114,7 @@ class GMW_Import_Export_Page {
         $tabs['location_tables'] = __( 'Location Tables', 'GMW' );
         
         // if posts locator add-on active
-        if ( GMW_Helper::is_addon_active( 'posts_locator' ) ) {
+        if ( gmw_is_addon_active( 'posts_locator' ) ) {
 
             // create tab
             $tabs['posts_locator'] = __( 'Posts Locator', 'GMW' );
@@ -123,7 +123,7 @@ class GMW_Import_Export_Page {
         }
 
         // if posts locator add-on active
-        if ( GMW_Helper::is_addon_active( 'members_locator' ) ) {
+        if ( gmw_is_addon_active( 'members_locator' ) ) {
             $tabs['memebrs_locator'] = __( 'Members Locator', 'GMW' );
         }
          

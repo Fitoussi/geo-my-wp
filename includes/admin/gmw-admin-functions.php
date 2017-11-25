@@ -1,5 +1,4 @@
 <?php
-
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -56,12 +55,20 @@ function gmw_output_admin_notices() {
 		'tracking_allowed'		   => __( 'Thank you for helping us improve GEO my WP.', 'GMW' )
 	) );
 	
-	$notice_type   = ( isset( $_GET['gmw_notice'] ) ) ? $_GET['gmw_notice'] : $_POST['gmw_notice'];
-	$notice_status = ( isset( $_GET['gmw_notice_status'] ) ) ? $_GET['gmw_notice_status'] : $_POST['gmw_notice_status'];
+	$notice_type   = isset( $_GET['gmw_notice'] ) ? $_GET['gmw_notice'] : $_POST['gmw_notice'];
+	$notice_status = isset( $_GET['gmw_notice_status'] ) ? $_GET['gmw_notice_status'] : $_POST['gmw_notice_status'];
 	
+	$allowed = array(
+		'a'  => array( 
+			'title' => array(),
+			'href'  => array()
+		),
+		'p'  => array(),
+		'em' => array()
+	);
 	?>
     <div class="<?php echo $notice_status;?>">
-    	<p><?php echo $gmw_messages[$notice_type]; ?></p>
+    	<p><?php echo isset( $gmw_messages[$notice_type] ) ? wp_kses( $gmw_messages[$notice_type], $allowed ) : ''; ?></p>
     </div>
 	<?php
 	    	 		
@@ -177,6 +184,18 @@ function gmw_replace_pt_location_in_db( $location ) {
 	);
 }
 */
+
+function gmw_get_post_types_array() {
+
+    $output = array();
+    
+    foreach ( get_post_types() as $post ) {
+        $output[$post] = get_post_type_object( $post )->labels->name . ' ( '.$post.' )';
+    }
+
+    return $output;
+}
+
 /**
  * GEO my WP top credits
  * @return [type] [description]
@@ -187,7 +206,6 @@ function gmw_admin_helpful_buttons() {
 		<span style="font-size:14px;margin-right:5px;"> - <?php echo sprintf( __( 'GEO my WP developed by %s', 'GMW' ), 'Eyal Fitoussi' ); ?></span>
 		<a class="button action gmw-donate" title="Donate to GEO my WP" href="https://www.paypal.me/fitoussi" target="_blank"><i style="color:red;margin-right:4px;" class="gmw-icon-heart"></i><?php _e( 'Donate', 'GMW' ); ?></a>
 	<?php } ?>
-
 	<span class="gmw-helpful-links-wrapper">
 		<a class="button action" title="GEO my WP Official Website" href="http://geomywp.com" target="_blank"><i class="dashicons dashicons-welcome-view-site" style="font-size:18px;margin-top:4px"></i>GEOmyWP.com</a>
 		<a class="button action" title="GEO my WP Extensions" href="http://geomywp.com/extensions" target="_blank" style="color:green"><i class="gmw-icon-puzzle"></i>Extensions</a>
@@ -198,9 +216,7 @@ function gmw_admin_helpful_buttons() {
 		<a class="button action" title="Show your support" href="https://wordpress.org/support/view/plugin-reviews/geo-my-wp?filter=5" target="_blank"><i style="color:orange" class="gmw-icon-star"></i><?php _e( 'Love', 'GMW' ); ?></a>
 		<a class="button action" title="GEO my WP on Facebook" href="https://www.facebook.com/geomywp" target="_blank"><i style="color:blue;font-size: 16px" class="gmw-icon-facebook-squared"></i><?php _e( 'Like', 'GMW' ); ?></a>
 		<a class="button action" title="GEO my WP on Twitter" href="https://twitter.com/GEOmyWP" target="_blank"><i style="color:lightblue;font-size: 16px;" class="gmw-icon-twitter"></i><?php _e( 'Follow', 'GMW' ); ?></a>
-
 		<?php do_action( 'gmw_admin_helpful_buttons' ); ?>
 	</span>
-
 	<?php
 }

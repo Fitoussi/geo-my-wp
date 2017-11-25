@@ -361,7 +361,7 @@ function gmw_get_license_data( $license_name = '', $data = 'key' ) {
 		return false;
 	}
 
-	$license_keys = get_option( 'gmw_license_keys' );
+	$license_keys = get_option( 'gmw_license_data' );
 
 	if ( $data == 'status' ) {
 		$output = ! empty( $license_keys[$license_name]['status'] ) ? $license_keys[$license_name]['status'] : 'inactive';
@@ -380,7 +380,7 @@ function gmw_get_license_data( $license_name = '', $data = 'key' ) {
  */
 function gmw_is_license_valid( $addon ) {
 
-	$license_keys = get_option( 'gmw_license_keys' );
+	$license_keys = get_option( 'gmw_license_data' );
 
 	if ( ! empty( $license_keys[$addon]['key'] ) && ! empty( $license_keys[$addon]['status'] ) && $license_keys[$addon]['status'] == 'valid' ) {
 		return true;
@@ -408,7 +408,7 @@ function gmw_check_license() {
 	set_transient( 'gmw_verify_license_keys', true, DAY_IN_SECONDS );
 		
 	// get license keys 
-	$license_keys = get_option( 'gmw_license_keys' );
+	$license_keys = get_option( 'gmw_license_data' );
 	
 	if ( empty( $license_keys ) ) {
 		return;
@@ -456,7 +456,7 @@ function gmw_check_license() {
 	}
 
 	// udpate new data to database
-	update_option( 'gmw_license_keys', $license_keys );
+	update_option( 'gmw_license_data', $license_keys );
 
 }
 add_action( 'admin_init', 'gmw_check_license');
@@ -486,7 +486,7 @@ function gmw_license_key_actions( $form_args = array() ) {
 	}
 
 	// get licenses data from database
-	$license_keys = get_option( 'gmw_license_keys' );
+	$license_keys = get_option( 'gmw_license_data' );
 
 	$action		  = $form_args['action'];
 	$license_name = $form_args['license_name'];
@@ -500,7 +500,7 @@ function gmw_license_key_actions( $form_args = array() ) {
 		
 		unset( $license_keys[$license_name] );
 
-		update_option( 'gmw_license_keys', $license_keys );
+		update_option( 'gmw_license_data', $license_keys );
 		
 		$license_data->license_name      = $form_args['license_name'];
 		$license_data->notice_message    = 'no_key_entered';
@@ -614,7 +614,7 @@ function gmw_license_key_actions( $form_args = array() ) {
 			$license_keys[$license_name]['key']    = $license_key;
 			$license_keys[$license_name]['status'] = 'valid';
 			
-			update_option( 'gmw_license_keys', $license_keys );
+			update_option( 'gmw_license_data', $license_keys );
 				
 		} elseif ( $license_data->license == 'invalid' ) {
 			
@@ -624,7 +624,7 @@ function gmw_license_key_actions( $form_args = array() ) {
 			$license_keys[$license_name]['key']    = $license_key;
 			$license_keys[$license_name]['status'] = $license_data->error;
 			
-			update_option( 'gmw_license_keys', $license_keys );
+			update_option( 'gmw_license_data', $license_keys );
 					
 		} elseif ( $license_data->license == 'deactivated' || $license_data->license == 'failed' ) {
 			
@@ -634,7 +634,7 @@ function gmw_license_key_actions( $form_args = array() ) {
 			$license_keys[$license_name]['key']    = $license_key;
 			$license_keys[$license_name]['status'] = 'inactive';
 			
-			update_option( 'gmw_license_keys', $license_keys );
+			update_option( 'gmw_license_data', $license_keys );
 		}
 	}
 

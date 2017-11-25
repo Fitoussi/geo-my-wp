@@ -28,7 +28,6 @@ class GMW_Extensions {
         add_action( 'gmw_deactivate_extension',   array( $this, 'deactivate_extension'   ) );    
         add_action( 'gmw_updater_action', 		  array( $this, 'extensions_updater'     ) );
         add_filter( 'gmw_admin_notices_messages', array( $this, 'notices_messages'       ) ); 
-        add_filter( 'gmw_admin_notices_messages', array( $this, 'notices_messages'       ) );  
         add_action( 'gmw_clear_extensions_cache', array( $this, 'clear_extensions_cache' ) );      
     }
     

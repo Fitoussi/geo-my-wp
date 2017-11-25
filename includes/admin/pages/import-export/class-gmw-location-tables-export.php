@@ -33,6 +33,7 @@ class GMW_Locations_Table_Export extends GMW_Export {
 			'ID'				=> 'ID',
 			'object_type'		=> 'object_type',
 			'object_id'			=> 'object_id',
+			'blog_id'			=> 'blog_id',
 			'user_id'			=> 'user_id',
 			'parent'			=> 'parent',
 			'status'        	=> 'status',
