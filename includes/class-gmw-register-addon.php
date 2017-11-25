@@ -631,7 +631,8 @@ class GMW_Register_Addon {
 				$required['version'] = '1.0';
 			}
 
-			$theme = wp_get_theme();
+			// get parent theme data
+			$theme = wp_get_theme( get_template() );
 
 			// check template and version
     		if ( $theme->template != $required['template'] || version_compare( $theme->version, $required['version'], '<' ) ) {
@@ -696,7 +697,7 @@ class GMW_Register_Addon {
 					$type
 				);	
 			}
-
+			
 			$verified['details'] = array(
 				'error' 		   => $type.'_missing',
 				'required_version' => $required['version'],
