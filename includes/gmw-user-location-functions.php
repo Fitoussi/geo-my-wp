@@ -307,6 +307,14 @@ function gmw_user_location_status( $user_id = 0, $status = 1 ) {
  */
 function gmw_get_user_address( $args = array() ) {
     
+    // to support older versions. should be removed in the future
+    if ( empty( $args['fields'] ) && ! empty( $args['info'] ) ) {
+
+        trigger_error( 'The "info" shortcode attribute of the shortcode [gmw_member_address] is deprecated since GEO my WP version 3.0. Please use the shortcode attribute "fields" instead.', E_USER_NOTICE );
+
+        $args['fields'] = $args['info'];
+    }
+
     //default shortcode attributes
     $attr = shortcode_atts( array(
         'user_id'   => 0,

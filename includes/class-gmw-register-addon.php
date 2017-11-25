@@ -60,20 +60,20 @@ class GMW_Register_Addon {
 	 * 
 	 * @var boolean
 	 */
-	protected $license_name = false;
+	public $license_name = false;
 
 	/**
 	 * When licesing is being used the the $_item_name will be the title of the plugin's post in http://geomywp.com which hosts the add-ons.
 	 * 
 	 * @var string
 	 */
-	protected $item_name = null;
+	public $item_name = null;
 
 	/**
 	 * When licesing is being used the the item_id will be the post ID of the plugin's post in http://geomywp.com which hosts the add-ons.
 	 * @var string
 	 */
-	protected $item_id = null;
+	public $item_id = null;
 
 	/**
 	 * URL of the site hosting the add-on ( currently works with geo my wp hosted add-on only ).
@@ -94,17 +94,18 @@ class GMW_Register_Addon {
 	public $object_type = false;
 
 	/**
-	 * Database table prefix
+	 * Locations blog ID
 	 *
 	 * For some objects, such as user, WordPress use a global database table when using multisite installation.
 	 * That is instead of creating a db table per blog ( subsite ).
 	 *
-	 * In such case we need to have a similar behaviour with GEO my WP. For that we can set this variable
-	 * to true so the users, or other objects, from all subsites will all be saved in the based database table of * GEO my WP.
+	 * In such case we need to have a similar behaviour with GEO my WP. For that we can use this variable
+	 * to set a specific blog ID per object type, and all locations from all subsites will be saved with this blog ID
+	 * in GEO my WP locations table. 
 	 * 
 	 * @var boolean
 	 */
-	public $global_db = false;
+	public $locations_blog_id = false;
 
     /**
 	 * Add-on's description for Extensions page.
@@ -188,13 +189,51 @@ class GMW_Register_Addon {
 	public $gmw_min_version = GMW_VERSION;
 
 	/**
+	 * Set to true if the extension uses template files
+	 *
+	 * When enabled, the template files in the extension must be 
+	 *
+	 * in the extension's-folder/templates/.
+	 * 
+	 * The name of the folder which holds the custom templates files will be genrated
+	 * 
+	 * from the extension slug when underscore will be replaced with a dash. for example
+	 * 
+	 * for the Post Types locator extension with the slug posts_locator, the folder name will be
+	 * 
+	 * posts-locator. And this custom folder with the template fiels should be placed in
+	 *
+	 * the theme's-folder/geo-my-wp/
+	 *
+	 * In the future it might be possible to change the name of the template and custom
+	 * 
+	 * template files using the arguments below.
+	 * 
+	 * @var boolean
+	 */
+	public $templates = false;
+
+	/**
 	 * add-on's folder name
 	 *
-	 * The folder that holds template files and custom template files if needed.
+	 * The folder that holds the template files.
 	 * 
 	 * @var string | boolean
+	 *
+	 * --- Not being used at the moment. ---
 	 */
 	public $templates_folder = false;
+
+	/**
+	 * add-on's custom folder name
+	 *
+	 * The folder that holds custom template files and other custom file.
+	 * 
+	 * @var string | boolean
+	 *
+	 * --- Not being used at the moment. ---
+	 */
+	public $custom_templates_folder = false;
 
 	/**
 	 * Array of extension ( slug ) required for this extension to work
@@ -216,7 +255,7 @@ class GMW_Register_Addon {
 	/*
      *  Create GEO my WP submenu item
      *  
-     *  To create a button you will need to pass an array with the following arg:
+     *  To create a submenu you will need to pass an array with the following arg:
      *
      *  parent_slug - the parent menu. By default, and in ost cases, it will be GEO my WP menu item ( 'gmw-extensions' ).
      *  page_title - The menu item's page title ( ex. Tools Page )
@@ -248,16 +287,16 @@ class GMW_Register_Addon {
      *  
      *  pass an array with the following arg:
      *
-     *  name - the name/slug for the button and form ( ex. posts or post_types ).
-     *  title - the title/lable for the button and form ( ex. Posts locator ). Leave blank to use addon's Title
+     *  slug - the slug for the button. Can be as the slug of the extension unless the extension creates multiple buttons.
+     *  name - the name/title of the button.
      *  prefix - a prefix for the button and form( ex. for post_type a good prefix would be "pt" ). Leave blank to use addon's prefix.
      *  priority - the priority the button will show in the buttons dropdown
      *
      *  example :
      *  
      *  array(
-     *      'name'       => 'posts',
-     *      'title'      => __( 'Post Types ','GMW' ),
+     *  	'slug'       => 'posts_locator'
+     *      'name'       => 'Posts Locator',
      *      'prefix'     => pt,
      *      'priority'   => 1
      *  );
@@ -274,15 +313,15 @@ class GMW_Register_Addon {
 	 * @return void
 	 */
 	public function __construct() {
-		
+			
 		// add object type to global
 		if ( ! empty( $this->object_type ) ) {
 			GMW()->object_types[] = $this->object_type;
 		}
 
 		// add object type to global
-		if ( $this->global_db ) {
-			GMW()->global_db_objects[] = $this->object_type;
+		if ( is_multisite() && absint( $this->locations_blog_id ) ) {
+			GMW()->locations_blogs[$this->object_type] = $this->locations_blog_id;
 		}
 
 		// plugin basename
@@ -323,7 +362,7 @@ class GMW_Register_Addon {
 		// The addon data will be collected while in admin and saved in options table so it can be used 
 		// in the fron-end. The data is collected when activating/deactivating plugins.
 		// if the data does not exists in option, it will be then retrived using the below in the front-end as well.
-		if ( IS_ADMIN || empty( GMW()->addons[$this->slug] ) ) {
+		if ( IS_ADMIN || empty( GMW()->addons[$this->slug] ) || empty( GMW()->addons[$this->slug]['status'] ) ) {
 
 			// default status and details
 			$this->status 		  = 'inactive';
@@ -434,20 +473,37 @@ class GMW_Register_Addon {
 	 */
 	public function setup_addon_data() {
 
+		// make sure custom template folder exists if template folder exsist as well
+		// -- not being used at the momoent.
+		/*if ( $this->templates_folder != false && $this->custom_templates_folder == false ) {
+			$this->custom_templates_folder = str_replace( '_', '-', $this->slug );
+		} */
+
+		// for now, the template files are being generated by GEO my WP.
+		// It might be possible to control the folders name in the future.
+		if ( $this->templates ) {
+			$this->templates_folder = 'templates';
+			$this->custom_templates_folder = str_replace( '_', '-', $this->slug );	
+		} else {
+			$this->templates_folder = '';
+			$this->custom_templates_folder = '';	
+		}
+
     	return array(
-    		'slug'    	   		=> $this->slug,
-    		'name'   	   		=> $this->name,
-    		'prefix'			=> $this->prefix,
-			'version' 	   		=> $this->version,	
-			'is_core'         	=> $this->is_core,
-			'object_type'		=> $this->object_type,
-			'global_db'			=> $this->global_db,
-			'full_path'    		=> $this->full_path,
-			'basename'     		=> $this->basename,
-			'plugin_dir'		=> $this->plugin_dir,
-			'plugin_url'		=> $this->plugin_url,
-			'templates_folder'  => $this->templates_folder,	
-            'status'	   		=> $this->status
+    		'slug'    	   				=> $this->slug,
+    		'status'	   				=> $this->status,
+    		'name'   	   				=> $this->name,
+    		'prefix'					=> $this->prefix,
+			'version' 	   				=> $this->version,	
+			'is_core'         			=> $this->is_core,
+			'object_type'				=> $this->object_type,
+			'locations_blog_id'			=> $this->locations_blog_id,
+			'full_path'    				=> $this->full_path,
+			'basename'     				=> $this->basename,
+			'plugin_dir'				=> $this->plugin_dir,
+			'plugin_url'				=> $this->plugin_url,
+			'templates_folder'  	   	=> $this->templates_folder,
+			'custom_templates_folder'  	=> $this->custom_templates_folder
     	);
     }
 
@@ -838,7 +894,7 @@ class GMW_Register_Addon {
 
 		// return button args
     	return array(
-    		'slug'		 => $button['slug'],
+    		'slug'		 => ! empty( $button['slug'] ) ? $button['slug'] : $this->slug,
             'addon'      => $this->slug,
             'name'       => ! empty( $button['name'] ) ? $button['name'] : $this->name,
             'prefix'     => ! empty( $button['prefix'] ) ? $button['prefix'] : $this->prefix,

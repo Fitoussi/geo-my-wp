@@ -18,7 +18,7 @@ class GMW_Search_Form_Widget extends WP_Widget {
 
 		parent::__construct(
 			'gmw_search_form_widget', 
-			__( 'GMW Form', 'GMW' ),
+			__( 'GEO my WP Form', 'GMW' ),
 			array( 
 				'description' => __( 'Displays GEO my WP forms.', 'GMW' ), 
 			) 
@@ -100,13 +100,12 @@ class GMW_Search_Form_Widget extends WP_Widget {
 
 		?>
 		<p>
-			<label><?php esc_attr( __( 'Widget Title:', 'GMW' ) ); ?></label> 
+			<label><?php echo esc_attr( __( 'Title:', 'GMW' ) ); ?></label> 
 			<input type="text" name="<?php echo $this->get_field_name( 'title' ); ?>" value="<?php echo sanitize_text_field( $instance['title'] ); ?>" class="widefat" />
 		</p>
 		<p>
-			<label><?php esc_attr( __( 'Form:', 'GMW' ) ); ?> </label>
-			<br />
-			<select name="<?php echo $this->get_field_name( 'short_code' ); ?>">		
+			<label><?php echo esc_attr( __( 'Form:', 'GMW' ) ); ?></label>
+			<select style="width:100%;" name="<?php echo esc_attr( $this->get_field_name( 'short_code' ) ); ?>">		
 			<?php
 
 				if ( empty( $forms ) || ! is_array( $forms ) ) {
@@ -123,7 +122,7 @@ class GMW_Search_Form_Widget extends WP_Widget {
 
 					$form_name  = ! empty( $form['name'] ) ? $form['name'] : 'form_id_'.$form_id;
 					$selected   = ( ! empty( $instance['short_code'] ) && $instance['short_code'] == $form_id ) ? 'selected="selected"' : '';
-					$form_label = $form_name.' - Form ID '.$form_id.' ( '.$form['addon'].' )';
+					$form_label = 'Form ID '.$form_id.' ( '.$form_name.' )';
 					
 					echo '<option value="'.$form_id.'" '.$selected.'>'. esc_html( $form_label ).'</option>';
 				} 

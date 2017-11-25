@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function gmw_get_option( $group = '', $key ='', $default = false ) {
 
-	global $gmw_options;
+	$gmw_options = GMW()->options;
 	
 	$value = ! empty( $gmw_options[$group][$key] ) ? $gmw_options[$group][$key] : $default;
 	$value = apply_filters( 'gmw_get_option', $value, $group, $key, $default );
@@ -32,7 +32,7 @@ function gmw_get_option( $group = '', $key ='', $default = false ) {
  */
 function gmw_get_options_group( $group = 'gmw_options' ) {
 	
-	global $gmw_options;
+	$gmw_options = GMW()->options;
 	
 	if ( empty( $group ) || $group == 'gmw_options' ) {
 		return $gmw_options;
@@ -45,6 +45,42 @@ function gmw_get_options_group( $group = 'gmw_options' ) {
 	return false;
 }
 
+function gmw_get_object_blog_id( $object = '' ) {
+	if ( $object != '' && isset( GMW()->locations_blogs[$object] ) && absint( GMW()->locations_blogs[$object] ) ) {
+		return GMW()->locations_blogs[$object];
+	}
+	return false;
+}
+
+/**
+ * Get blog ID
+ * 
+ * @return [type] [description]
+ */
+function gmw_get_blog_id( $object = '' ) {
+ 	
+ 	if ( is_multisite() ) {
+		
+		if ( $object != '' ) {
+			
+			$loc_blog = gmw_get_object_blog_id( $object );
+
+			if ( $loc_blog != false ) {
+				return $loc_blog;
+			}
+		}
+
+		global $blog_id;
+
+		return $blog_id;
+	
+	} else {			
+		return 1;
+	}
+}
+
+
+
 /**
  * Get specific form data
  * 
@@ -52,7 +88,7 @@ function gmw_get_options_group( $group = 'gmw_options' ) {
  * @return array      Form data
  */
 function gmw_get_form( $id = false ) {
-	return GMW_Helper::get_form( $id );
+	return GMW_Forms_Helper::get_form( $id );
 }
 
 /**
@@ -61,7 +97,16 @@ function gmw_get_form( $id = false ) {
  * @return array GEo my WP forms data
  */
 function gmw_get_forms() {
-	return GMW_Helper::get_forms();
+	return GMW_Forms_Helper::get_forms();
+}
+
+/**
+ * Get addons ( extensions ) data
+ * 
+ * @return array  data of all loaded addons
+ */
+function gmw_get_object_types() {
+	return GMW()->object_types;
 }
 
 /**
@@ -72,17 +117,11 @@ function gmw_get_forms() {
  * @return boolean true/false
  */
 function gmw_is_addon_active( $addon = '' ) {
-	return GMW_Helper::is_addon_active( $addon );
-}
-
-/**
- * Get addons ( extensions ) data
- * 
- * @return array  data of all loaded addons
- */
-function gmw_get_object_types() {
-
-	return GMW()->object_types;
+	if ( ! empty( GMW()->addons_status[$addon] ) && GMW()->addons_status[$addon] == 'active' && ! isset( $_POST['gmw_premium_license'] ) ) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 /**
@@ -91,7 +130,6 @@ function gmw_get_object_types() {
  * @return array  data of all loaded addons
  */
 function gmw_get_addon_status( $addon = false ) {
-
 	return ! empty( GMW()->addons_status[$addon] ) ? GMW()->addons_status[$addon] : 'inactive';
 }
 
@@ -101,7 +139,6 @@ function gmw_get_addon_status( $addon = false ) {
  * @return array  data of all loaded addons
  */
 function gmw_get_addons_status() {
-
 	return GMW()->addons_status;
 }
 
@@ -111,7 +148,6 @@ function gmw_get_addons_status() {
  * @return array  data of all loaded addons
  */
 function gmw_get_addons_data() {
-
 	return GMW()->addons;
 }
 
@@ -122,10 +158,17 @@ function gmw_get_addons_data() {
  * 
  * @return array  add-on's data
  */
-function gmw_get_addon_data( $addon = false ) {
-	
+function gmw_get_addon_data( $addon = '', $var = '' ) {
 	if ( ! empty( GMW()->addons[$addon] ) )  {
-		return GMW()->addons[$addon];
+		if ( $var != '' ) {
+			if ( isset( GMW()->addons[$addon][$var] ) ) {
+				return GMW()->addons[$addon][$var];
+			} else {
+				return false;
+			}
+		} else {
+			return GMW()->addons[$addon];
+		}
 	} else {
 		return false;
 	}
@@ -166,6 +209,12 @@ function gmw_update_addon_status( $addon = false, $status = 'active', $details =
 	return GMW()->addons[$addon];
 }
 
+/**
+ * Update addon data
+ * 
+ * @param  array  $addon [description]
+ * @return [type]        [description]
+ */
 function gmw_update_addon_data( $addon = array() ) {
 
 	if ( empty( $addon ) ) {
@@ -186,54 +235,54 @@ function gmw_update_addon_data( $addon = array() ) {
 }
 
 /**
+ * Get URL prefix
+ * 
+ * @return [type] [description]
+ */
+function gmw_get_url_prefix() {
+	return GMW()->url_prefix;
+}
+
+/**
  * Get the user current location
  * 
- * @param  array  $fields field to output from the list of field below
- * @param  string $type   array or object
- * 
- * @return ARRAY | OBJECT of the user location
+ * @return OBJECT of the user location
  */
 function gmw_get_user_current_location() {
-	
-	// abort if user's location does not exist in cookies
-	if ( empty( $_COOKIE['gmw_ul_lat'] ) || empty( $_COOKIE['gmw_ul_lng'] ) ) {
-		return false;
-	}
-
-	$fields = array( 
-		'lat',          	
-		'lng',
-		'street',
-		'city',
-		'region_name',
-		'region_code',
-		'postcode',
-		'country_name',
-		'country_code',
-		'address',
-		'formatted_address'
-	);
-	
-	$location = wp_cache_get( 'gmw_user_current_location' );
-
-	if ( false === $location ) {
-
-		$location = ( object ) array();
-
-		foreach ( $fields as $field ) {
-		    
-		    if ( ! empty( $_COOKIE['gmw_ul_'. $field] ) ) {
-		        $location->$field = urldecode( $_COOKIE['gmw_ul_'.$field] );
-		    } else {
-		    	$location->$field = '';
-		    }
-		}	
-		
-		wp_cache_set( 'gmw_user_current_location', $location, '', 86400 );
-	}
-
-	return $location;
+	return GMW_Helper::get_user_current_location();
 }
+
+	/**
+	 * Get the user current coords
+	 * 
+	 * @return ARRAY of the user current coordinates
+	 */
+	function gmw_get_user_current_coords() {
+		
+		$ul = GMW_Helper::get_user_current_location();
+		
+		if ( $ul == false) {
+			return false;
+		}
+
+		return array( 'lat' => $ul->lat, 'lng' => $ul->lng );
+	}
+
+	/**
+	 * Get the user current address
+	 * 
+	 * @return ARRAY of the user current address
+	 */
+	function gmw_get_user_current_address() {
+		
+		$ul = GMW_Helper::get_user_current_location();
+		
+		if ( $ul == false) {
+			return false;
+		}
+
+		return $ul->formatted_address;
+	}
 
 /**
  * Processes all GMW actions sent via POST and GET by looking for the 'gmw_action'
@@ -243,7 +292,7 @@ function gmw_get_user_current_location() {
  * @return void
  */
 function gmw_process_actions() {
-	
+
 	if ( isset( $_POST['gmw_action'] ) ) {
 		do_action( 'gmw_' . $_POST['gmw_action'], $_POST );
 	}
@@ -252,6 +301,7 @@ function gmw_process_actions() {
 		do_action( 'gmw_' . $_GET['gmw_action'], $_GET );
 	}
 }
+
 if ( IS_ADMIN ) {
 	add_action( 'admin_init', 'gmw_process_actions' );
 } else {
@@ -279,14 +329,6 @@ function gmw_object_to_array( $data ) {
 	}
 	
 	return $data;
-}
-
-function gmw_multiexplode( $delimiters, $string ) {
-
-    $ready  = str_replace( $delimiters, $delimiters[0], $string );
-    $launch = explode( $delimiters[0], $ready );
-
-    return $launch;
 }
 
 /**
@@ -375,7 +417,143 @@ if ( ! function_exists( 'array_replace_recursive' ) ) {
 }
 
 /**
- * get tempalte file and its stylesheet
+ * Calculate the distance between two points
+ * 
+ * @param  [type] $start_lat latitude of start point
+ * @param  [type] $start_lng longitude of start point
+ * @param  [type] $end_lat   latitude of end point
+ * @param  [type] $end_lng   longitude of end point
+ * @param  string $units     m for miles k for kilometers
+ * 
+ * @return [type]            [description]
+ */
+function gmw_calculate_distance( $start_lat, $start_lng, $end_lat, $end_lng, $units="m" ) {
+
+	$theta 	  = $start_lng - $end_lng;
+	$distance = sin( deg2rad( $start_lat ) ) * sin( deg2rad( $end_lat ) ) +  cos( deg2rad( $start_lat ) ) * cos( deg2rad( $end_lat ) ) * cos( deg2rad( $theta ) );
+	$distance = acos( $distance );
+	$distance = rad2deg( $distance );
+	$miles 	  = $distance * 60 * 1.1515;
+
+	if ( $units == "k" ) {
+		$distance = ( $miles * 1.609344 );
+	} else {
+		$distance = ( $miles * 0.8684 );
+	}
+
+	return round( $distance, 2 );
+}
+
+/**
+ * Get labels
+ * 
+ * most of the labels of the forms are set below.
+ * it makes it easier to manage and it is now possible to modify a single or multiple
+ * labels using the filter provided instead of using the translation files.
+ *
+ * You can create a custom function in the functions.php file of your theme and hook it using the filter gmw_shortcode_set_labels.
+ * You should check for the $form['ID'] in your custom function to make sure the function apply only for the required forms.
+ * 
+ * @since 2.5
+ */
+function gmw_get_labels( $form = array() ) {
+
+	$labels = array(
+		'search_form'		=> array(
+			'search_site'		=> __( 'Search Site', 'GMW' ),
+			'radius_within'		=> __( 'Within',   'GMW' ),
+			'kilometers'		=> __( 'Kilometers',      'GMW' ),
+			'miles'				=> __( 'Miles', 'GMW' ),
+			'submit'			=> __( 'Submit', 'GMW' ),
+			'get_my_location' 	=> __( 'Get my current location','GMW'),
+			'show_options'		=> __( 'Advanced options', 'GMW' ),
+			'select_groups'		=> __( 'Select Groups', 'GMW' ),
+			'no_groups'			=> __( 'No Groups', 'GMW' ),
+			'all_groups'		=> __( 'All Groups', 'GMW' )
+		),
+		'pagination'		=> array(
+			'prev'  => __( 'Prev', 	'GMW' ),
+			'next'  => __( 'Next', 	'GMW' ),
+		),
+		'search_results'	=> array(
+			'results_message' => array(
+				'count_message'  => __( 'Showing {results_count} out of {total_results} results', 'GMW' ),
+				'radius_message' => __( ' within {radius} {units} from {address}', 'GMW' ),
+			),
+			'pt_results_message' 	  => array(
+				'showing'	=> __( 'Showing {results_count} out of {total_results} results', 'GMW' ),
+				'within'	=> __( 'within {radius} {units} from {address}', 'GMW' ),
+			),
+			'fl_results_message' => array(
+				'showing'	=> __( 'Viewing %s out of %s members', 'GMW' ),
+				'within'	=> __( 'within %s from %s', 'GMW' ),
+			),
+			'gl_results_message' => array(
+				'showing' 	=> __( 'Viewing %s out of %s groups', 'GMW' ),
+				'within'	=> __( 'within %s from %s', 'GMW' ),
+			),
+			'ug_results_message' => array(
+				'showing'	=> __( 'Viewing %s out of %s users', 'GMW' ),
+				'within'	=> __( 'within %s from %s', 'GMW' ),
+			),
+			'distance'          => __( 'Distance: ', 'GMW' ),
+			'driving_distance'	=> __( 'Driving distance:', 'GMW' ),
+			'address'           => __( 'Address: ',  'GMW' ),
+			'formatted_address' => __( 'Address: ',  'GMW' ),
+			'directions'        => __( 'Get directions', 'GMW' ),
+			'your_location'     => __( 'Your Location ', 'GMW' ),
+			'pt_no_results'		=> __( 'No results found', 'GMW' ),
+			'fl_no_results'		=> __( 'No members found', 'GMW' ),
+			'gl_no_results'		=> __( 'No groups found', 'GMW' ),
+			'ug_no_results'		=> __( 'No users found', 'GMW' ),
+			'not_avaliable'		=> __( 'N/A', 'GMW' ),
+			'read_more'			=> __( 'Read more',	'GMW' ),
+			'contact_info'		=> array(
+				'phone'	  		=> __( 'Phone: ', 'GMW' ),
+				'fax'	  		=> __( 'Fax: ', 'GMW' ),
+				'email'	  		=> __( 'Email: ', 'GMW' ),
+				'website' 		=> __( 'website: ', 'GMW' ),
+				'na'	  		=> __( 'N/A', 'GMW' ),
+				'contact_info'	=> __( 'Contact Information','GMW' ),
+			),
+			'opening_hours'			=> __( 'Opening Hours' ),
+			'member_info'			=> __( 'Member Information', 'GMW' ),
+			'google_map_directions' => __( 'Show directions on Google Map', 'GMW' ),
+			'active_since'			=> __( 'active %s', 'GMW' ),
+			'per_page'				=> __( 'per page', 'GMW' ),
+		),
+		'results_message' 	=> array(
+				'showing'
+		),
+		'info_window'		=> array(
+			'address'  			 => __( 'Address: ', 'GMW' ),
+			'directions'         => __( 'Get Directions', 'GMW' ),
+			'formatted_address'  => __( 'Formatted Address: ', 'GMW' ),
+			'distance' 			 => __( 'Distance: ', 'GMW' ),
+			'phone'	   			 => __( 'Phone: ', 'GMW' ),
+			'fax'	   			 => __( 'Fax: ', 'GMW' ),
+			'email'	   			 => __( 'Email: ', 'GMW' ),
+			'website'  			 => __( 'website: ', 'GMW' ),
+			'na'	   			 => __( 'N/A', 'GMW' ),
+			'your_location'		 => __( 'Your Location ', 'GMW' ),
+			'contact_info'		 => __( 'Contact Information','GMW' ),
+			'read_more'			 => __( 'Read more', 'GMW' ),
+			'member_info'	     => __( 'Member Information', 'GMW' )
+		)
+	);
+	
+	//modify the labels
+	$labels = apply_filters( 'gmw_set_labels', $labels, $form );
+
+	if ( ! empty( $form['ID'] ) ) {
+		$labels = apply_filters( "gmw_set_labels_{$form['ID']}", $labels, $form );
+	}
+
+	return $labels;
+}
+
+/**
+ * get template file and its stylesheet
  *
  * @since 3.0
  * 
@@ -385,9 +563,128 @@ if ( ! function_exists( 'array_replace_recursive' ) ) {
  * 
  * @return 
  */
-function gmw_get_template( $slug='posts_locator', $folder_name='search-forms', $template_name='default' ) {
-	return GMW_Helper::get_template( $slug, $folder_name, $template_name );
+function gmw_get_template( $addon = 'posts_locator', $template_type = 'search-forms', $iw_type = 'popup', $template_name = 'default', $base_path = '' ) {
+	return GMW_Helper::get_template( $addon, $template_type, $iw_type, $template_name, $base_path );
 }
+	
+	/**
+	 * Get search form template
+	 * @param  string $addon         [description]
+	 * @param  string $template_name [description]
+	 * @param  string $base_path     [description]
+	 * @return [type]                [description]
+	 */
+	function gmw_get_search_form_template( $addon = 'posts_locator', $template_name = 'default', $base_addon = '' ) {
+		return GMW_Helper::get_template( $addon, 'search-forms', $iw_type = 'popup', $template_name, $base_addon );
+	}
+
+	/**
+	 * Get search results template
+	 * @param  string $addon         [description]
+	 * @param  string $template_name [description]
+	 * @param  string $base_path     [description]
+	 * @return [type]                [description]
+	 */
+	function gmw_get_search_results_template( $addon = 'posts_locator', $template_name = 'default', $base_addon = '' ) {
+		return GMW_Helper::get_template( $addon, 'search-results', $iw_type = 'popup', $template_name, $base_addon );
+	}
+
+	/**
+	 * Get info-window template
+	 * @param  string $addon         [description]
+	 * @param  string $template_name [description]
+	 * @param  string $base_path     [description]
+	 * @return [type]                [description]
+	 */
+	function gmw_get_info_window_template( $addon = 'posts_locator', $iw_type = 'popup', $template_name = 'default', $base_addon = '' ) {
+		return GMW_Helper::get_template( $addon, 'info-window', $iw_type, $template_name, $base_addon );
+	}
+
+/**
+ * Element toggle button
+ *
+ * Will usually be used with Popup info-window
+ * 
+ * @param  array  $args [description]
+ * @return [type]       [description]
+ */
+function gmw_get_element_toggle_button( $args = array() ) {
+
+	$defaults = array( 
+		'id' 		   => 0,
+		'show_icon'    => 'gmw-icon-arrow-down',
+		'hide_icon'    => 'gmw-icon-arrow-up',
+		'target'	   => '#gmw-popup-info-window',
+		'animation'    => 'height',
+		'open_length'  => '100%',
+		'close_length' => '35px',
+		'duration'     => '100',
+	);
+
+	$args = wp_parse_args( $args, $defaults );
+	$args = apply_filters( 'gmw_element_toggle_button_args', $args );
+
+	return '<span class="gmw-element-toggle-button '.esc_attr( $args['hide_icon'] ).' visible" data-target="'.esc_attr( $args['target'] ).'" data-show_icon="'.esc_attr( $args['show_icon'] ).'" data-hide_icon="'.esc_attr( $args['hide_icon'] ).'" data-animation="'.esc_attr( $args['animation'] ).'" data-open_length="'.esc_attr( $args['open_length'] ).'" data-close_length="'.esc_attr( $args['close_length'] ).'" data-duration="'.esc_attr( $args['data_duration'] ).'"></span>';
+}
+	
+	/**
+	 * Display toggle button in info window
+	 * @param  array  $args [description]
+	 * @return [type]       [description]
+	 */
+	function gmw_element_toggle_button( $args = array() ) {
+		echo gmw_get_element_toggle_button( $args );
+	}
+
+	/**
+	 * Toggle button for left side info-window
+	 * @return [type] [description]
+	 */
+	function gmw_left_window_toggle_button() { 
+	    gmw_element_toggle_button( array( 
+	        'animation'    => 'width', 
+	        'open_length'  => '35%',
+	        'close_length' => '30px', 
+	        'hide_icon'    => 'gmw-icon-arrow-left', 
+	        'show_icon'    => 'gmw-icon-arrow-right' 
+	    ) ); 
+	}
+
+/**
+ * Close button for info window
+ * 
+ * @param unknown_type $post
+ * @param unknown_type $gmw
+ */
+function gmw_get_element_close_button( $icon = 'gmw-icon-cancel-circled' ) {
+	return	'<span class="iw-close-button '.esc_attr( $icon ).'"></span>';
+}
+	function gmw_element_close_button( $icon = 'gmw-icon-cancel-circled' ) {
+		echo gmw_get_element_close_button( $icon );
+	}
+
+/**
+ * Info window dragging element
+ * 
+ * @param unknown_type $post
+ * @param unknown_type $gmw
+ */
+function gmw_get_element_dragging_handle( $args = array() ) {
+
+	$defaults = array( 
+		'icon'   	  => 'gmw-icon-menu',
+		'target' 	  => 'gmw-popup-info-window',
+		'containment' => 'window'
+	);
+	
+	$args = wp_parse_args( $args, $defaults );
+	$args = apply_filters( 'gmw_draggable_button_args', $args );
+
+	return	'<span class="gmw-draggable '.esc_attr( $args['icon'] ).'" data-draggable="'.esc_attr( $args['target'] ).'" data-containment="'.esc_attr( $args['containment'] ).'"></span>';
+}
+	function gmw_element_dragging_handle( $args = array() ) {
+		echo gmw_get_element_dragging_handle( $args );
+	}
 
 /**
  * Create new map element
@@ -402,24 +699,50 @@ function gmw_new_map_element( $map_args = array(), $map_options = array(), $loca
 	return GMW_Maps_API::get_map_args( $map_args, $map_options, $locations, $user_position, $form );
 }
 
-
+/**
+ * Get map element 
+ * 
+ * @param  array  $map_args      [description]
+ * @param  array  $map_options   [description]
+ * @param  array  $locations     [description]
+ * @param  array  $user_position [description]
+ * @param  array  $form          [description]
+ * @return [type]                [description]
+ */
 function gmw_get_map( $map_args = array(), $map_options = array(), $locations = array(), $user_position = array(), $form = array() ) {
 	return GMW_Maps_API::get_map( $map_args, $map_options, $locations, $user_position, $form );	
 }
 
+/**
+ * Get directions system form
+ * 
+ * @param  array  $args [description]
+ * @return [type]       [description]
+ */
 function gmw_get_directions_form( $args = array() ) {
-	return GMW_Maps_API::directions_form( $args );
+	return GMW_Maps_API::get_directions_form( $args );
 }
 
 /**
- * GMW function - live directions results panel. To be used with live directions function only.
+ * Get directions system panel
+ * 
  * @param unknown_type $info
  * @param unknown_type $gmw
  */
 function gmw_get_directions_panel( $id = 0 ) {
-	return GMW_Maps_API::directions_panel( $id );
+	return GMW_Maps_API::get_directions_panel( $id );
 }
 	
+/**
+ * Get directions system
+ * 
+ * @param  array  $args [description]
+ * @return [type]       [description]
+ */
+function gmw_get_directions_system( $args = array() ) {
+	return GMW_Maps_API::get_directions_system( $args );
+}
+
 /**
  * Enqueue search form/results stylesheet earlier in the <HEAD> tag
  *
@@ -456,17 +779,17 @@ function gmw_enqueue_form_styles( $args = array( 'form_id' => 0, 'pages' => arra
 
 			$template = $form['search_form']['form_template'];
 
-			// Get custom tempalte and css from child/theme folder
+			// Get custom template and css from child/theme folder
 			if ( strpos( $template, 'custom_' ) !== false ) {
 
 				$template     	   = str_replace( 'custom_', '', $template );
 				$stylesheet_handle = "gmw-{$addon_data['prefix']}-search-forms-custom-{$template}";
-				$stylesheet_url	   = get_stylesheet_directory_uri(). "/geo-my-wp/{$addon_data['templates_folder']}/search-forms/{$template}/css/style.css";
+				$stylesheet_url	   = get_stylesheet_directory_uri(). "/geo-my-wp/{$addon_data['custom_templates_folder']}/search-forms/{$template}/css/style.css";
 		
-			// load tempalte files from plugin's folder
+			// load template files from plugin's folder
 			} else {
 				$stylesheet_handle = "gmw-{$addon_data['prefix']}-search-forms-{$template}";
-				$stylesheet_url    = $addon_data['plugin_url']."/templates/search-forms/{$template}/css/style.css";
+				$stylesheet_url    = $addon_data['plugin_url']."/{$addon_data['templates_folder']}/search-forms/{$template}/css/style.css";
 			}
 
 			if ( ! wp_style_is( $stylesheet_handle, 'enqueued' ) ) {
@@ -478,17 +801,17 @@ function gmw_enqueue_form_styles( $args = array( 'form_id' => 0, 'pages' => arra
 
 			$template = $form['search_results']['results_template'];
 
-			// Get custom tempalte and css from child/theme folder
+			// Get custom template and css from child/theme folder
 			if ( strpos( $template, 'custom_' ) !== false ) {
 
 				$template     	   = str_replace( 'custom_', '', $template );
 				$stylesheet_handle = "gmw-{$addon_data['prefix']}-search-results-custom-{$template}";
-				$stylesheet_url	   = get_stylesheet_directory_uri(). "/geo-my-wp/{$addon_data['templates_folder']}/search-results/{$template}/css/style.css";
+				$stylesheet_url	   = get_stylesheet_directory_uri(). "/geo-my-wp/{$addon_data['custom_templates_folder']}/search-results/{$template}/css/style.css";
 		
-			// load tempalte files from plugin's folder
+			// load template files from plugin's folder
 			} else {
 				$stylesheet_handle = "gmw-{$addon_data['prefix']}-search-results-{$template}";
-				$stylesheet_url    = $addon_data['plugin_url']."/templates/search-results/{$template}/css/style.css";
+				$stylesheet_url    = $addon_data['plugin_url']."/{$addon_data['templates_folder']}/search-results/{$template}/css/style.css";
 			}
 
 			if ( ! wp_style_is( $stylesheet_handle, 'enqueued' ) ) {
@@ -507,96 +830,8 @@ function gmw_enqueue_form_styles( $args = array( 'form_id' => 0, 'pages' => arra
  * 
  * @return [type]    [description]
  */
-function gmw_get_info_window_content( $location, $args, $gmw=array() ) {
-	
-	$default_args = array(
-        'url'    	=> '#',
-        'title'  	=> false,
-        'image_url' => false,
-        'image'		=> false
-    );
-
-	$args = wp_parse_args( $args, $default_args );
-
-	// labels
-	$labels = gmw_get_labels()['info_window'];
-	
-	// object URL
-	if ( $args['url'] != '#' && ! empty( $args['url'] ) ) {
-		$args['url'] = esc_url( $args['url'] );
-	}
-
-	// address
-	$address = ! empty( $location->formatted_address ) ? $location->formatted_address : $location->address;
-	
-	// prefix
-	$prefix = ! empty( $gmw['prefix'] ) ? ' '.esc_attr( $gmw['prefix'] ) : '';
-
-	$output  	     = array();
-	$output['wrap'] = '<div class="gmw-info-window-wrapper'.$prefix.'" data-location_id="'.absint( $location->location_id ) .'" data-object="'. esc_attr( $location->object_type ).'" data-prefix="'.$prefix.'">';
-	
-	// Look for image
-	if ( ! empty( $args['image_url'] ) || ! empty( $args['image'] ) ) {
-
-		if ( ! empty( $args['image_url'] ) ) {
-			$output['image'] = '<div class="image"><a href="'. $args['url'] .'"><img tag="'.esc_attr( $args['title'] ).'" src="'.esc_html( $args['image_url'] ) .'" /></a></div>';
-		} else {
-			$output['image'] = '<div class="image"><a href="'. $args['url'] .'">'. $args['image'] .'</a></div>';
-		}
-	}
-
-	$output['header'] = '<div class="header">';
-
-	// distance if exists
-	if ( ! empty( $location->distance ) ) {
-		$output['distance'] = '<span class="distance">'. esc_attr( $location->distance ) . ' ' .$location->units.'</span>';
-	}
-
-	// title
-	if ( ! empty( $args['title'] ) ) {
-		$output['title'] = '<h2 class="title"><a href="'.$args['url'] .'">'. esc_attr( $args['title'] ) .'</a></h2>';
-	}
-
-	$output['/header'] = '</div>';
-
-	// content
-	$output['content'] = '<div class="content">';
-	
-	// location meta if needed
-	if ( ! empty( $location->location_meta ) && apply_filters( 'gmw_enable_info_window_location_meta', false) ) {
-
-		$output['location_meta'] = '<ul class="location-meta">';
-
-		foreach ( $location->location_meta as $field => $value ) {
-
-    		if ( ! empty( $value ) ) {
-
-    			$label = ! empty( $labels[$field] ) ? esc_attr( $labels[$field] ) : esc_attr( $field );
-
-    			$output['lm_'.$field] = '<li><span class="label '.$label.'">'. $label .'</span>'. esc_attr( $value ) .'</li>';
-    		}
-		}
-
-		$output['/location_meta'] = '</ul>';
-	}
-	
-	// address
-	$output['address'] = '<span class="address"><i class="gmw-icon-location"></i>'. esc_attr( $address ) .'</span>';
-	// directions link
-	$output['directions'] = '<span class="directions">'.gmw_get_directions_link( $location, $gmw ).'</span>';
-
-	$output['/content'] = '</div>';
-	$output['/wrap']    = '</div>';
-
-	// modify the output
-	$output = apply_filters( 'gmw_info_window_content', $output, $location, $args, $gmw );
-
-	if ( ! empty( $prefix ) ) {
-		$output = apply_filters( "gmw_{$prefix}_info_window_content", $output, $location, $args, $gmw );
-	}
-
-	// output content
-	return implode( ' ', $output );
+function gmw_get_info_window_content( $location, $args = array(), $gmw = array() ) {
+	return GMW_Maps_API::get_info_window_content( $location, $args, $gmw = array() );
 }
 
 /**
@@ -862,5 +1097,259 @@ function gmw_get_countries_list_array( $first = false ) {
 	}
 
 	return $countries;
+}
+
+function gmw_get_countries_array() {
+
+	return $Countries = [
+        [ 'code' => 'US', 'name' => 'United States'],
+        [ 'code' => 'CA', 'name' => 'Canada'],
+        [ 'code' => 'AU', 'name' => 'Australia'],
+        [ 'code' => 'FR', 'name' => 'France'],
+        [ 'code' => 'DE', 'name' => 'Germany'],
+        [ 'code' => 'IS', 'name' => 'Iceland'],
+        [ 'code' => 'IE', 'name' => 'Ireland'],
+        [ 'code' => 'IT', 'name' => 'Italy'],
+        [ 'code' => 'ES', 'name' => 'Spain'],
+        [ 'code' => 'SE', 'name' => 'Sweden'],
+        [ 'code' => 'AT', 'name' => 'Austria'],
+        [ 'code' => 'BE', 'name' => 'Belgium'],
+        [ 'code' => 'FI', 'name' => 'Finland'],
+        [ 'code' => 'CZ', 'name' => 'Czech Republic'],
+        [ 'code' => 'DK', 'name' => 'Denmark'],
+        [ 'code' => 'NO', 'name' => 'Norway'],
+        [ 'code' => 'GB', 'name' => 'United Kingdom'],
+        [ 'code' => 'CH', 'name' => 'Switzerland'],
+        [ 'code' => 'NZ', 'name' => 'New Zealand'],
+        [ 'code' => 'RU', 'name' => 'Russian Federation'],
+        [ 'code' => 'PT', 'name' => 'Portugal'],
+        [ 'code' => 'NL', 'name' => 'Netherlands'],
+        [ 'code' => 'IM', 'name' => 'Isle of Man'],
+        [ 'code' => 'AF', 'name' => 'Afghanistan'],
+        [ 'code' => 'AX', 'name' => 'Aland Islands '],
+        [ 'code' => 'AL', 'name' => 'Albania'],
+        [ 'code' => 'DZ', 'name' => 'Algeria'],
+        [ 'code' => 'AS', 'name' => 'American Samoa'],
+        [ 'code' => 'AD', 'name' => 'Andorra'],
+        [ 'code' => 'AO', 'name' => 'Angola'],
+        [ 'code' => 'AI', 'name' => 'Anguilla'],
+        [ 'code' => 'AQ', 'name' => 'Antarctica'],
+        [ 'code' => 'AG', 'name' => 'Antigua and Barbuda'],
+        [ 'code' => 'AR', 'name' => 'Argentina'],
+        [ 'code' => 'AM', 'name' => 'Armenia'],
+        [ 'code' => 'AW', 'name' => 'Aruba'],
+        [ 'code' => 'AZ', 'name' => 'Azerbaijan'],
+        [ 'code' => 'BS', 'name' => 'Bahamas'],
+        [ 'code' => 'BH', 'name' => 'Bahrain'],
+        [ 'code' => 'BD', 'name' => 'Bangladesh'],
+        [ 'code' => 'BB', 'name' => 'Barbados'],
+        [ 'code' => 'BY', 'name' => 'Belarus'],
+        [ 'code' => 'BZ', 'name' => 'Belize'],
+        [ 'code' => 'BJ', 'name' => 'Benin'],
+        [ 'code' => 'BM', 'name' => 'Bermuda'],
+        [ 'code' => 'BT', 'name' => 'Bhutan'],
+        [ 'code' => 'BO', 'name' => 'Bolivia, Plurinational State of'],
+        [ 'code' => 'BQ', 'name' => 'Bonaire, Sint Eustatius and Saba'],
+        [ 'code' => 'BA', 'name' => 'Bosnia and Herzegovina'],
+        [ 'code' => 'BW', 'name' => 'Botswana'],
+        [ 'code' => 'BV', 'name' => 'Bouvet Island'],
+        [ 'code' => 'BR', 'name' => 'Brazil'],
+        [ 'code' => 'IO', 'name' => 'British Indian Ocean Territory'],
+        [ 'code' => 'BN', 'name' => 'Brunei Darussalam'],
+        [ 'code' => 'BG', 'name' => 'Bulgaria'],
+        [ 'code' => 'BF', 'name' => 'Burkina Faso'],
+        [ 'code' => 'BI', 'name' => 'Burundi'],
+        [ 'code' => 'KH', 'name' => 'Cambodia'],
+        [ 'code' => 'CM', 'name' => 'Cameroon'],
+        [ 'code' => 'CV', 'name' => 'Cape Verde'],
+        [ 'code' => 'KY', 'name' => 'Cayman Islands'],
+        [ 'code' => 'CF', 'name' => 'Central African Republic'],
+        [ 'code' => 'TD', 'name' => 'Chad'],
+        [ 'code' => 'CL', 'name' => 'Chile'],
+        [ 'code' => 'CN', 'name' => 'China'],
+        [ 'code' => 'CX', 'name' => 'Christmas Island'],
+        [ 'code' => 'CC', 'name' => 'Cocos (Keeling) Islands'],
+        [ 'code' => 'CO', 'name' => 'Colombia'],
+        [ 'code' => 'KM', 'name' => 'Comoros'],
+        [ 'code' => 'CG', 'name' => 'Congo'],
+        [ 'code' => 'CD', 'name' => 'Congo, the Democratic Republic of the'],
+        [ 'code' => 'CK', 'name' => 'Cook Islands'],
+        [ 'code' => 'CR', 'name' => 'Costa Rica'],
+        [ 'code' => 'CI', 'name' => 'Cote d\'Ivoire'],
+        [ 'code' => 'HR', 'name' => 'Croatia'],
+        [ 'code' => 'CU', 'name' => 'Cuba'],
+        [ 'code' => 'CW', 'name' => 'Curaçao'],
+        [ 'code' => 'CY', 'name' => 'Cyprus'],
+        [ 'code' => 'DJ', 'name' => 'Djibouti'],
+        [ 'code' => 'DM', 'name' => 'Dominica'],
+        [ 'code' => 'DO', 'name' => 'Dominican Republic'],
+        [ 'code' => 'EC', 'name' => 'Ecuador'],
+        [ 'code' => 'EG', 'name' => 'Egypt'],
+        [ 'code' => 'SV', 'name' => 'El Salvador'],
+        [ 'code' => 'GQ', 'name' => 'Equatorial Guinea'],
+        [ 'code' => 'ER', 'name' => 'Eritrea'],
+        [ 'code' => 'EE', 'name' => 'Estonia'],
+        [ 'code' => 'ET', 'name' => 'Ethiopia'],
+        [ 'code' => 'FK', 'name' => 'Falkland Islands (Malvinas)'],
+        [ 'code' => 'FO', 'name' => 'Faroe Islands'],
+        [ 'code' => 'FJ', 'name' => 'Fiji'],
+        [ 'code' => 'GF', 'name' => 'French Guiana'],
+        [ 'code' => 'PF', 'name' => 'French Polynesia'],
+        [ 'code' => 'TF', 'name' => 'French Southern Territories'],
+        [ 'code' => 'GA', 'name' => 'Gabon'],
+        [ 'code' => 'GM', 'name' => 'Gambia'],
+        [ 'code' => 'GE', 'name' => 'Georgia'],
+        [ 'code' => 'GH', 'name' => 'Ghana'],
+        [ 'code' => 'GI', 'name' => 'Gibraltar'],
+        [ 'code' => 'GR', 'name' => 'Greece'],
+        [ 'code' => 'GL', 'name' => 'Greenland'],
+        [ 'code' => 'GD', 'name' => 'Grenada'],
+        [ 'code' => 'GP', 'name' => 'Guadeloupe'],
+        [ 'code' => 'GU', 'name' => 'Guam'],
+        [ 'code' => 'GT', 'name' => 'Guatemala'],
+        [ 'code' => 'GG', 'name' => 'Guernsey'],
+        [ 'code' => 'GN', 'name' => 'Guinea'],
+        [ 'code' => 'GW', 'name' => 'Guinea-Bissau'],
+        [ 'code' => 'GY', 'name' => 'Guyana'],
+        [ 'code' => 'HT', 'name' => 'Haiti'],
+        [ 'code' => 'HM', 'name' => 'Heard Island and McDonald Islands'],
+        [ 'code' => 'VA', 'name' => 'Holy See (Vatican City State)'],
+        [ 'code' => 'HN', 'name' => 'Honduras'],
+        [ 'code' => 'HK', 'name' => 'Hong Kong'],
+        [ 'code' => 'HU', 'name' => 'Hungary'],
+        [ 'code' => 'IN', 'name' => 'India'],
+        [ 'code' => 'ID', 'name' => 'Indonesia'],
+        [ 'code' => 'IR', 'name' => 'Iran, Islamic Republic of'],
+        [ 'code' => 'IQ', 'name' => 'Iraq'],
+        [ 'code' => 'IL', 'name' => 'Israel'],
+        [ 'code' => 'JM', 'name' => 'Jamaica'],
+        [ 'code' => 'JP', 'name' => 'Japan'],
+        [ 'code' => 'JE', 'name' => 'Jersey'],
+        [ 'code' => 'JO', 'name' => 'Jordan'],
+        [ 'code' => 'KZ', 'name' => 'Kazakhstan'],
+        [ 'code' => 'KE', 'name' => 'Kenya'],
+        [ 'code' => 'KI', 'name' => 'Kiribati'],
+        [ 'code' => 'KP', 'name' => 'Korea, Democratic People\'s Republic of'],
+        [ 'code' => 'KR', 'name' => 'Korea, Republic of'],
+        [ 'code' => 'KW', 'name' => 'Kuwait'],
+        [ 'code' => 'KG', 'name' => 'Kyrgyzstan'],
+        [ 'code' => 'LA', 'name' => 'Lao People\'s Democratic Republic'],
+        [ 'code' => 'LV', 'name' => 'Latvia'],
+        [ 'code' => 'LB', 'name' => 'Lebanon'],
+        [ 'code' => 'LS', 'name' => 'Lesotho'],
+        [ 'code' => 'LR', 'name' => 'Liberia'],
+        [ 'code' => 'LY', 'name' => 'Libyan Arab Jamahiriya'],
+        [ 'code' => 'LI', 'name' => 'Liechtenstein'],
+        [ 'code' => 'LT', 'name' => 'Lithuania'],
+        [ 'code' => 'LU', 'name' => 'Luxembourg'],
+        [ 'code' => 'MO', 'name' => 'Macao'],
+        [ 'code' => 'MK', 'name' => 'Macedonia'],
+        [ 'code' => 'MG', 'name' => 'Madagascar'],
+        [ 'code' => 'MW', 'name' => 'Malawi'],
+        [ 'code' => 'MY', 'name' => 'Malaysia'],
+        [ 'code' => 'MV', 'name' => 'Maldives'],
+        [ 'code' => 'ML', 'name' => 'Mali'],
+        [ 'code' => 'MT', 'name' => 'Malta'],
+        [ 'code' => 'MH', 'name' => 'Marshall Islands'],
+        [ 'code' => 'MQ', 'name' => 'Martinique'],
+        [ 'code' => 'MR', 'name' => 'Mauritania'],
+        [ 'code' => 'MU', 'name' => 'Mauritius'],
+        [ 'code' => 'YT', 'name' => 'Mayotte'],
+        [ 'code' => 'MX', 'name' => 'Mexico'],
+        [ 'code' => 'FM', 'name' => 'Micronesia, Federated States of'],
+        [ 'code' => 'MD', 'name' => 'Moldova, Republic of'],
+        [ 'code' => 'MC', 'name' => 'Monaco'],
+        [ 'code' => 'MN', 'name' => 'Mongolia'],
+        [ 'code' => 'ME', 'name' => 'Montenegro'],
+        [ 'code' => 'MS', 'name' => 'Montserrat'],
+        [ 'code' => 'MA', 'name' => 'Morocco'],
+        [ 'code' => 'MZ', 'name' => 'Mozambique'],
+        [ 'code' => 'MM', 'name' => 'Myanmar'],
+        [ 'code' => 'NA', 'name' => 'Namibia'],
+        [ 'code' => 'NR', 'name' => 'Nauru'],
+        [ 'code' => 'NP', 'name' => 'Nepal'],
+        [ 'code' => 'NC', 'name' => 'New Caledonia'],
+        [ 'code' => 'NI', 'name' => 'Nicaragua'],
+        [ 'code' => 'NE', 'name' => 'Niger'],
+        [ 'code' => 'NG', 'name' => 'Nigeria'],
+        [ 'code' => 'NU', 'name' => 'Niue'],
+        [ 'code' => 'NF', 'name' => 'Norfolk Island'],
+        [ 'code' => 'MP', 'name' => 'Northern Mariana Islands'],
+        [ 'code' => 'OM', 'name' => 'Oman'],
+        [ 'code' => 'PK', 'name' => 'Pakistan'],
+        [ 'code' => 'PW', 'name' => 'Palau'],
+        [ 'code' => 'PS', 'name' => 'Palestinian Territory, Occupied'],
+        [ 'code' => 'PA', 'name' => 'Panama'],
+        [ 'code' => 'PG', 'name' => 'Papua New Guinea'],
+        [ 'code' => 'PY', 'name' => 'Paraguay'],
+        [ 'code' => 'PE', 'name' => 'Peru'],
+        [ 'code' => 'PH', 'name' => 'Philippines'],
+        [ 'code' => 'PN', 'name' => 'Pitcairn'],
+        [ 'code' => 'PL', 'name' => 'Poland'],
+        [ 'code' => 'PR', 'name' => 'Puerto Rico'],
+        [ 'code' => 'QA', 'name' => 'Qatar'],
+        [ 'code' => 'RE', 'name' => 'Reunion'],
+        [ 'code' => 'RO', 'name' => 'Romania'],
+        [ 'code' => 'RW', 'name' => 'Rwanda'],
+        [ 'code' => 'BL', 'name' => 'Saint Barthélemy'],
+        [ 'code' => 'SH', 'name' => 'Saint Helena'],
+        [ 'code' => 'KN', 'name' => 'Saint Kitts and Nevis'],
+        [ 'code' => 'LC', 'name' => 'Saint Lucia'],
+        [ 'code' => 'MF', 'name' => 'Saint Martin (French part)'],
+        [ 'code' => 'PM', 'name' => 'Saint Pierre and Miquelon'],
+        [ 'code' => 'VC', 'name' => 'Saint Vincent and the Grenadines'],
+        [ 'code' => 'WS', 'name' => 'Samoa'],
+        [ 'code' => 'SM', 'name' => 'San Marino'],
+        [ 'code' => 'ST', 'name' => 'Sao Tome and Principe'],
+        [ 'code' => 'SA', 'name' => 'Saudi Arabia'],
+        [ 'code' => 'SN', 'name' => 'Senegal'],
+        [ 'code' => 'RS', 'name' => 'Serbia'],
+        [ 'code' => 'SC', 'name' => 'Seychelles'],
+        [ 'code' => 'SL', 'name' => 'Sierra Leone'],
+        [ 'code' => 'SG', 'name' => 'Singapore'],
+        [ 'code' => 'SX', 'name' => 'Sint Maarten (Dutch part)'],
+        [ 'code' => 'SK', 'name' => 'Slovakia'],
+        [ 'code' => 'SI', 'name' => 'Slovenia'],
+        [ 'code' => 'SB', 'name' => 'Solomon Islands'],
+        [ 'code' => 'SO', 'name' => 'Somalia'],
+        [ 'code' => 'ZA', 'name' => 'South Africa'],
+        [ 'code' => 'GS', 'name' => 'South Georgia and the South Sandwich Islands'],
+        [ 'code' => 'LK', 'name' => 'Sri Lanka'],
+        [ 'code' => 'SD', 'name' => 'Sudan'],
+        [ 'code' => 'SR', 'name' => 'Suriname'],
+        [ 'code' => 'SJ', 'name' => 'Svalbard and Jan Mayen'],
+        [ 'code' => 'SZ', 'name' => 'Swaziland'],
+        [ 'code' => 'SY', 'name' => 'Syrian Arab Republic'],
+        [ 'code' => 'TW', 'name' => 'Taiwan, Province of China'],
+        [ 'code' => 'TJ', 'name' => 'Tajikistan'],
+        [ 'code' => 'TZ', 'name' => 'Tanzania, United Republic of'],
+        [ 'code' => 'TH', 'name' => 'Thailand'],
+        [ 'code' => 'TL', 'name' => 'Timor-Leste'],
+        [ 'code' => 'TG', 'name' => 'Togo'],
+        [ 'code' => 'TK', 'name' => 'Tokelau'],
+        [ 'code' => 'TO', 'name' => 'Tonga'],
+        [ 'code' => 'TT', 'name' => 'Trinidad and Tobago'],
+        [ 'code' => 'TN', 'name' => 'Tunisia'],
+        [ 'code' => 'TR', 'name' => 'Turkey'],
+        [ 'code' => 'TM', 'name' => 'Turkmenistan'],
+        [ 'code' => 'TC', 'name' => 'Turks and Caicos Islands'],
+        [ 'code' => 'TV', 'name' => 'Tuvalu'],
+        [ 'code' => 'UG', 'name' => 'Uganda'],
+        [ 'code' => 'UA', 'name' => 'Ukraine'],
+        [ 'code' => 'AE', 'name' => 'United Arab Emirates'],
+        [ 'code' => 'UM', 'name' => 'United States Minor Outlying Islands'],
+        [ 'code' => 'UY', 'name' => 'Uruguay'],
+        [ 'code' => 'UZ', 'name' => 'Uzbekistan'],
+        [ 'code' => 'VU', 'name' => 'Vanuatu'],
+        [ 'code' => 'VE', 'name' => 'Venezuela, Bolivarian Republic of'],
+        [ 'code' => 'VN', 'name' => 'Viet Nam'],
+        [ 'code' => 'VG', 'name' => 'Virgin Islands, British'],
+        [ 'code' => 'VI', 'name' => 'Virgin Islands, U.S.'],
+        [ 'code' => 'WF', 'name' => 'Wallis and Futuna'],
+        [ 'code' => 'EH', 'name' => 'Western Sahara'],
+        [ 'code' => 'YE', 'name' => 'Yemen'],
+        [ 'code' => 'ZM', 'name' => 'Zambia'],
+        [ 'code' => 'ZW', 'name' => 'Zimbabwe']
+    ];
 }
 ?>

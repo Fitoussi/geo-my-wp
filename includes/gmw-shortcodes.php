@@ -37,16 +37,19 @@ function gmw_shortcode( $attr ) {
 
 		$status = 'error';
 
-		$error_message = __( 'Invalid form type.', 'GMW' );
+		$error_message = __( 'Invalid or missing form type.', 'GMW' );
 
 		return;
 	}
 
+	$url_px = gmw_get_url_prefix();
+
 	// if this is results page we get the form ID from URL
 	if ( $element_value == 'results' || $element == 'search_results' ) {
 
+
 		// abort if form was not submitted
-		if ( empty( $_GET['action'] ) || $_GET['action'] != GMW()->url_prefix.'post' || empty( $_GET[GMW()->url_prefix.'form'] ) ) {
+		if ( ! isset( $_GET['action'] ) || $_GET['action'] != $url_px.'post' || ! isset( $_GET[$url_px.'form'] ) ) {
 
 			$status = 'results page was not submitted.';
 
@@ -54,7 +57,7 @@ function gmw_shortcode( $attr ) {
 		}
 
 		// get the form ID from URL
-		$form_id = absint( $_GET[GMW()->url_prefix.'form'] );
+		$form_id = absint( $_GET[$url_px.'form'] );
 
 		// abort if search_results shortcode is being used but does not belong
 		// to the submitted search form.
@@ -125,9 +128,12 @@ function gmw_shortcode( $attr ) {
 
 	GMW()->current_form = $new_form->form;
 
-	//display the form
-	$new_form->output();
-		
+	// output only if element allowed
+	if ( $new_form->element_allowed ) {
+		//display the form
+		$new_form->output();
+	}
+
 	$output_form = ob_get_contents();
 
 	ob_end_clean();

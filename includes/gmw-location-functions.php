@@ -46,101 +46,8 @@ function gmw_get_location_by_id( $location_id = 0, $output = OBJECT, $cache = tr
  * @return int location ID
  */
 function gmw_get_location_id( $object_type = 'post', $object_id = 0, $cache = true ) {
-	
 	$location = GMW_Location::get_location( $object_type, $object_id, OBJECT, $cache );
-	
 	return ! empty( $location->ID ) ? $location->ID : false;
-}
-
-/**
- * Get specific location address fields
- *
- * @since 3.0
- *        
- * @param  string  $object_type object_type object type ( post, user... )
- * @param  boolean $object_id   object ID ( post ID, user ID.... )
- * @param  array   $fields      array of address fields to retrive
- * @param  string  $separator   character to be used as separator between fields
- * 
- * @return string
- */
-function gmw_get_address_fields( $object_type = false, $object_id = 0, $fields = array( 'formatted_address' ), $separator = ', ' ) {
-
-	// all address fields
-    $all_fields = array( 
-		'latitude',
-		'longitude',
-		'street_number',
-		'street_name',
-		'street',
-		'premise',
-		'neighborhood',
-		'city',
-		'county',
-		'state',
-		'region_name',
-		'region_code',
-		'postcode',
-		'country',
-		'country_name',
-		'country_code',
-		'address',
-		'formatted_address'
-	);
-
-    // if string convert to array
-    if ( is_string( $fields ) ) {
-    	$fields = array( $fields );
-    }
-
-    // for backward compatibility
-    if ( in_array( 'lat', $fields ) ) {
-    	$fields[] = 'latitude';
-    }
-
-    // for backward compatibility
-    if ( in_array( 'lng', $fields ) ) {
-    	$fields[] = 'longitude';
-    }
-
-    if ( empty( $fields ) || $fields[0] == '*' ) {
-    	$fields = $all_fields;
-    } else {
-		$fields = array_intersect( array_map( 'trim', $fields ), $all_fields );
-	}
-
-	// get location data
-    $location = gmw_get_location( $object_type, $object_id );
-
-    $fields_count = count( $fields );
-    $count 		  = 1;
-    $output 	  = '';
-
-    // loop trough fields and get the specified address fields
-    foreach ( $fields as $field ) {
-
-    	if ( $field == 'country' ) {
-    		$field = 'country_name';
-    	}
-
-    	if ( $field == 'state' ) {
-    		$field = 'region_name';
-    	}
-
-    	if ( ! empty( $location->$field ) ) {
-    		
-    		$output .= $location->$field;
-
-    		if ( $count != $fields_count ) {
-    			
-    			$output .= $separator;
-    		}
-    	}
-
-    	$count++;
-    }
-
-	return $output;
 }
 
 /**
@@ -356,6 +263,99 @@ function gmw_update_location( $object_type = '', $object_id = 0, $address = fals
 }
 
 /**
+ * Get specific location address fields
+ *
+ * @since 3.0
+ *        
+ * @param  string  $object_type object_type object type ( post, user... )
+ * @param  boolean $object_id   object ID ( post ID, user ID.... )
+ * @param  array   $fields      array of address fields to retrive
+ * @param  string  $separator   character to be used as separator between fields
+ * 
+ * @return string
+ */
+function gmw_get_address_fields( $object_type = false, $object_id = 0, $fields = array( 'formatted_address' ), $separator = ', ' ) {
+
+	// all address fields
+    $all_fields = array( 
+		'latitude',
+		'longitude',
+		'street_number',
+		'street_name',
+		'street',
+		'premise',
+		'neighborhood',
+		'city',
+		'county',
+		'state',
+		'region_name',
+		'region_code',
+		'postcode',
+		'country',
+		'country_name',
+		'country_code',
+		'address',
+		'formatted_address'
+	);
+
+    // if string convert to array
+    if ( is_string( $fields ) ) {
+    	$fields = array( $fields );
+    }
+
+    // for backward compatibility
+    if ( in_array( 'lat', $fields ) ) {
+    	$fields[] = 'latitude';
+    }
+
+    // for backward compatibility
+    if ( in_array( 'lng', $fields ) ) {
+    	$fields[] = 'longitude';
+    }
+
+    // for backward compatibility
+    if ( in_array( 'zipcode', $fields ) ) {
+    	$fields[] = 'postcode';
+    }
+
+    if ( empty( $fields ) || $fields[0] == '*' ) {
+    	$fields = $all_fields;
+    } else {
+		$fields = array_intersect( array_map( 'trim', $fields ), $all_fields );
+	}
+
+	// get location data
+    $location = gmw_get_location( $object_type, $object_id );
+
+    $fields_count = count( $fields );
+    $count 		  = 1;
+    $output 	  = '';
+
+    // loop trough fields and get the specified address fields
+    foreach ( $fields as $field ) {
+
+    	if ( $field == 'country' ) {
+    		$field = 'country_name';
+    	}
+
+    	if ( $field == 'state' ) {
+    		$field = 'region_name';
+    	}
+
+    	if ( isset( $location->$field ) ) {
+    		$output .= $location->$field;
+    		if ( $count != $fields_count ) {	
+    			$output .= $separator;
+    		}
+    	}
+
+    	$count++;
+    }
+
+	return $output;
+}
+
+/**
  * get the address of an object ( post, user... )
  * 
  * @param  object || integer $location object or location ID
@@ -363,7 +363,23 @@ function gmw_update_location( $object_type = '', $object_id = 0, $address = fals
  * 
  * @return string       address
  */
-function gmw_get_location_address( $location, $gmw = array() ) {
+function gmw_get_location_address( $location, $fields = array( 'formatted_address' ), $gmw = array() ) {
+
+	if ( ! empty( $fields['addon'] ) ) {
+
+		$gmw    = $fields;
+		$fields = array( 'formatted_address' );
+
+		trigger_error( 'Since GEO my WP 3.0 gmw_get_location_address function excepts an additional $fields argument. You need to modify the arguments pass to the function. gmw_get_location_address( $location, $fields, $gmw ).', E_USER_NOTICE );
+	}
+
+	if ( ! is_array( $fields ) ) {
+		$fields = explode( ',',$fields );
+	}
+
+	if ( empty( $fields ) ) {
+		return;
+	}
 
 	// if location is integer
 	if ( is_int( $location ) ) {
@@ -373,48 +389,70 @@ function gmw_get_location_address( $location, $gmw = array() ) {
 	
 	// otherwise, abort if location is not an object
 	} elseif ( ! is_object( $location ) ) {
-
 		$location = false;
 	}
 
 	// abort if no location
-	if ( empty( $location ) || ( empty( $location->formatted_address ) && empty( $location->address ) ) ) {
+	if ( empty( $location ) ) {
 		return false;
 	}
 	
-	// first look for formatted address, if not found get the original address entered
-	$address = ! empty( $location->formatted_address ) ? $location->formatted_address : $location->address;
+	$output = '';
+
+	// loop trough fields and get the specified address fields
+    foreach ( $fields as $field ) {
+
+    	if ( $field == 'country' ) {
+    		$field = 'country_name';
+    	}
+
+    	if ( $field == 'state' ) {
+    		$field = 'region_name';
+    	}
+
+    	if ( isset( $location->$field ) ) {
+    		$output .= $location->$field . ' ';
+    	}
+    }
 
 	// modify the output address
-	$address = apply_filters( "gmw_location_address", $address, $location, $gmw );
-	$address = apply_filters( "gmw_{$location->object_type}_location_address", $address, $location, $gmw );
+	$output = apply_filters( 'gmw_location_address', $output, $location, $fields, $gmw );
+	$output = apply_filters( "gmw_{$location->object_type}_location_address", $output, $location, $fields, $gmw );
 
-	// if in GEO my WP search results
-	if ( ! empty( $gmw['ID'] ) ) {
-		$address = apply_filters( "gmw_location_address_{$gmw['ID']}", $address, $location, $gmw );
-	}
-
-	return stripslashes( esc_html( $address ) ); 
+	return ! empty( $output ) ? stripslashes( esc_html( $output ) ) : '';
 }
 
-	function gmw_location_address( $location, $gmw = array() ) {
-		echo gmw_get_location_address( $location, $gmw );
+	function gmw_location_address( $location, $fields = array(), $gmw = array() ) {
+		echo gmw_get_location_address( $location, $fields, $gmw );
 	}
 
 /**
- * GMW Addition information
- *
- * @since 3.0
+ * Return the address of a location as a link to google maps
  * 
- * @param  object|int $info    the object's info or location ID
- * @param  array      $fields  array or a comma separeted string of the fields that needs to be displayed
- * @param  array 	  $labels  array of labels to be used with the fields. Otherwise, the filed name will also be served as its label
- * @param  string     $tag     opening and closing tag
- * @param  array      $gmw     the form being used if any
- * 
- * @return HTML HTML element of the additional info
+ * @param  [type] $location [description]
+ * @param  array  $gmw      [description]
+ * @return [type]           [description]
  */
-function gmw_get_location_meta_output( $location = false, $gmw = array(), $fields = array(), $labels = array(), $tag = 'ul' ) {
+function gmw_get_linked_location_address( $location, $fields = array( 'formatted_address' ), $gmw = array() ) {
+
+	$address = gmw_get_location_address( $location, $fields, $gmw );
+
+    if ( empty( $address ) ) {
+        return;
+    }
+
+	return '<a href="https://maps.google.com/?q='.$address.'" target="_blank">'.$address.'</a>';
+}
+
+/**
+ * Output list of location meta fields
+ * 
+ * @param  boolean $location [description]
+ * @param  array   $fields   [description]
+ * @param  array   $labels   [description]
+ * @return [type]            [description]
+ */
+function gmw_get_location_meta_list( $location = false, $fields = array(), $labels = array() ) {
 
 	// check if $location is an object and contains location meta. This will usually be used in the loop
 	if ( is_object( $location ) ) {
@@ -426,11 +464,8 @@ function gmw_get_location_meta_output( $location = false, $gmw = array(), $field
 		$location_id = $location->ID;
 
 		if ( ! empty( $location->location_meta ) ) {
-
 			$location_meta = $location->location_meta;
-
 		} else {
-
 			$location_meta = gmw_get_location_meta( $location_id, $fields );
 		}	
 
@@ -460,53 +495,35 @@ function gmw_get_location_meta_output( $location = false, $gmw = array(), $field
 	if ( empty( $location_meta ) ) {
 		return;
 	}
-
-	// get the tag type
-	$tag = ! empty( $tag ) ? $tag : 'div';
-
-	if ( $tag == 'ul' || $tag == 'ol' ) {
-		$subTag = 'li';
-	} else {
-		$tag    = 'div';
-		$subTag = 'div';
-	}
 	
 	$count  = 0;
-	$prefix = ! empty( $gmw['prefix'] ) ? $gmw['prefix'] : '';
-	$title  = ! empty( $gmw['labels']['search_results']['contact_info']['contact_info'] ) ? $gmw['labels']['search_results']['contact_info']['contact_info'] : gmw_get_labels()['search_results']['contact_info']['contact_info'];
-
-	$output['wrap']  = '<'.$tag.' class="gmw-location-meta-wrapper gmw-additional-info-wrapper '.$prefix.'">';
-	$output['title'] = '<h4>' . esc_attr( $title ) .'</h4>';
-
+	$output = '';
+	
 	// loop through fields
 	foreach ( $location_meta as $field => $value ) {
 
-		$field = esc_attr( $field );
-
-		// skip if field has no value
-		if ( empty( $value ) ) {
+		if ( empty( $value ) || ( ! empty( $fields ) && ! in_array( $field, $fields ) ) ) {
 			continue;
 		}
 
-		$value = esc_attr( $value );
+		$count++;
 
 		// check for field label
-		$label = ! empty( $labels[$field] ) ? esc_attr( $labels[$field] ) : esc_attr( $field );
+		$label = isset( $labels[$field] ) ? $labels[$field] : $field;
 		
 		// email field
 		if ( $field == 'email' ) {
 			
-			$count++;
-			$output[$field]  = '<'.$subTag.' class="field field-'.$field.'">';
-			$output[$field] .= '<i class="gmw-icon-mail"></i>';
-			$output[$field] .= '<span class="label">'.$label.' </span>';
-			$output[$field] .= '<span class="info"><a href="mailto:'.$value.'">'.$value.'</a></span>';
-			$output[$field] .= '</'.$subTag.'>';			
+			$value = esc_url( $value );
+
+			$output .= '<li class="field '.sanitize_key( esc_attr( $field ) ).'">';
+			$output .= '<span class="label">'.esc_html( $label ).': </span>';
+			$output .= '<span class="info"><a href="mailto:'.$value.'">'.$value.'</a></span>';
+			$output .= '</li>';			
 
 		// website field
 		} elseif ( in_array( $field, array( 'website', 'url', 'site' ) )  ) {
 			
-			$count++;
 			$url = parse_url( $value );
 
 			if ( empty( $url['scheme'] ) ) {
@@ -516,111 +533,94 @@ function gmw_get_location_meta_output( $location = false, $gmw = array(), $field
 			$scheme = $url['scheme'].'://';
 			$path   = str_replace( $scheme,'',$value );
 			
-			$output[$field]  = '<'.$subTag.' class="field field-'.$field.'">';
-			$output[$field] .= '<i class="gmw-icon-globe"></i>';
-			$output[$field] .= '<span class="label">'. $label.' </span>';
-			$output[$field] .= '<span class="info"><a href="'.esc_url( $scheme.$path ).'" title="'.esc_attr( $path ).'" target="_blank">'. esc_attr( $path ). '</a></span>';
-			$output[$field] .= '</'.$subTag.'>';
+			$output .= '<li class="field '.sanitize_key( esc_attr( $field ) ).'">';
+			$output .= '<span class="label">'.esc_html( $label ).': </span>';
+			$output .= '<span class="info"><a href="'.esc_url( $scheme.$path ).'" target="_blank">'. esc_html( $path ). '</a></span>';
+			$output .= '</li>';
 
 		// phone field
 		} elseif ( in_array( $field, array( 'phone', 'cell', 'tel', 'telephone', 'mobile' ) ) ) {
 			
-			$count++;
+			$value = esc_attr( $value );
 			
-			$output[$field]  = '<'.$subTag.' class="field field-'.$field.'">';
-			$output[$field] .= '<i class="gmw-icon-phone"></i>';
-			$output[$field] .= '<span class="label">'.$label.' </span>';
-			$output[$field] .= '<span class="info"><a href="tel:'.$value.'">'.$value.'</a></span>';
-			$output[$field] .= '</'.$subTag.'>';
-
-		// fax field
-		} elseif ( $field == 'fax' ) {
-			
-			$count++;
-			
-			$output[$field]  = '<'.$subTag.' class="field field-'.$field.'">';
-			$output[$field] .= '<i class="gmw-icon-fax"></i>';
-			$output[$field] .= '<span class="label">'.$label.' </span>';
-			$output[$field] .= '<span class="info"><a href="tel:'.$value.'">'.$value.'</a></span>';
-			$output[$field] .= '</'.$subTag.'>';
+			$output .= '<li class="field '.sanitize_key( esc_attr( $field ) ).'">';
+			$output .= '<span class="label">'.esc_html( $label ).': </span>';
+			$output .= '<span class="info"><a href="tel:'.$value.'">'.$value.'</a></span>';
+			$output .= '</li>';
 
 		// other fields
 		} else {
-
-			$count++;
 			
-			$output[$field]  = '<'.$subTag.' class="field field-'.$field.'">';
-			$output[$field] .= '<span class="label">'.$label.' </span>';
-			$output[$field] .= '<span class="info">'.$value.'</span></a>';
-			$output[$field] .= '</'.$subTag.'>';
+			$output .= '<li class="field '.sanitize_key( esc_attr( $field ) ).'">';
+			$output .= '<span class="label">'.esc_html( $label ).': </span>';
+			$output .= '<span class="info">'.esc_attr( $value ).'</span></a>';
+			$output .= '</li>';
 		}
-
-		// modify each field if needed
-		$output[$field] = apply_filters( 'gmw_get_location_meta_field_output', $output[$field], $gmw, $field, $value, $location_id, $location_meta, $fields, $labels );
 	}
-	$output['/wrap'] = "</{$tag}>";
-		
-	$output = apply_filters( 'gmw_get_location_meta_output', $output, $gmw, $location_id, $location_meta, $fields, $labels );
 
-	return ( $count > 0 ) ? implode( '', $output ) : false;
+	return $count == 0 ? false : '<ul class="gmw-location-meta gmw-additional-info-wrapper">'.$output.'</ul>';
 }
 
-	function gmw_location_meta_output( $location, $gmw = array(), $fields = array(), $labels = array(), $tag='ul' ) {
-		echo gmw_get_location_meta_output( $location, $gmw, $fields, $labels, $tag );
+	function gmw_location_meta_list( $location, $fields = array(), $labels = array() ) {
+		echo gmw_get_location_meta_list( $location, $fields, $labels );
 	}
 
 /**
- * Get directions link - open new page with google map
+ * Get directions link
  * 
- * @param  object $info  the item's info ( post, member... )
- * @param  array  $gmw   the form being used
- * @param  string $title the title of the directions link
- * @return string        directions link
+ * @param  object $location    location object
+ * @param  array  $from_coords array of coords array( lat,lng )
+ * @param  string $label       default "get directions"
+ * 
+ * @return [type]              [description]
  */
-function gmw_get_directions_link( $location, $gmw = array(), $label = '' ) {
+function gmw_get_directions_link( $location, $from_coords = array(), $label = '' ) {
 
-	// if location ID pass get the location data
-	if ( is_int( $location ) ) {
-		
-		$location = gmw_get_location_by_id( $location );
-	
-	// abort if not ID or object data
-	} elseif ( ! is_object( $location ) ) {
+    // if location ID pass get the location data
+    if ( is_int( $location ) ) {
+        
+        $location = gmw_get_location_by_id( $location );
+    
+    // abort if not ID or object data
+    } elseif ( ! is_object( $location ) ) {
 
-		$location = false;
-	}
+        $location = false;
+    }
 
-	//abort if no coordinates
-	if ( empty( $location->lat ) || empty( $location->lng ) ) {
-		return;
-	}
+    //abort if no coordinates
+    if ( empty( $location->lat ) || empty( $location->lng ) ) {
+        return;
+    }
 
-	if ( ! empty( $gmw ) ) {
+    $args = array(
+        'to_lat' => $location->lat,
+        'to_lng' => $location->lng
+    );
 
-		$user_latlng = ( ! empty( $gmw['lat'] ) && ! empty( $gmw['lng'] ) ) ? "{$gmw['lat']},{$gmw['lng']}" : "";
-		$language 	 = $gmw['language'];
-		$region   	 = $gmw['region'];
-		$prefix   	 = ! empty( $gmw['prefix'] ) ? ' '.esc_attr( $gmw['prefix'] ) : '';
-	
-	} else {
-	
-		$ul 	  = gmw_get_user_current_location( array( 'lat','lng' ) );
-		$user_latlng = ( ! empty( $ul->lat ) && ! empty( $ul->lng ) ) ? "{$ul->lat},{$ul->lng}" : "";
-		$language = gmw_get_option( 'general_settings', 'langugae_code', 'EN' );
-		$region   = gmw_get_option( 'general_settings', 'country_code', 'US' );
-		$prefix   = '';
-	}
+    if ( isset( $from_coords[0] ) && isset( $from_coords[1] )  ) {
+        
+        $args['from_lat'] = $from_coords[0];
+        $args['from_lng'] = $from_coords[1];
+    
+    } else {
 
-	$units = ( empty( $location->units ) || $location->units == 'mi' ) ? 'ptm' : 'ptk';
-	$label = ! empty( $label ) ? $label : gmw_get_labels()['search_results']['directions'];
-	$link  = esc_url( "http://maps.google.com/maps?f=d&hl={$language}&region={$region}&doflg={$units}&saddr={$user_latlng}&daddr={$location->lat},{$location->lng}&ie=UTF8&z=12" );
+        $user_coords = gmw_get_user_current_coords();
 
-	$output = "<a class=\"gmw-get-directions{$prefix}\" title=\"{$label}\" href=\"{$link}\" target=\"_blank\"><i class=\"gmw-icon-compass\"></i>{$label}</a>";
+        if ( $user_coords != false ) {
+            $args['from_lat'] = $user_coords['lat'];
+            $args['from_lng'] = $user_coords['lng'];
+        }
+    }
 
-	return apply_filters( 'gmw_get_directions_link', $output, $location, $gmw, $label );
+    $args['units'] = ( empty( $location->units ) || $location->units == 'mi' ) ? 'imperial' : 'metric';
+    
+    if ( $label != '' ) {
+        $args['label'] = $label;
+    }
+
+    return GMW_Maps_API::get_directions_link( $args );
 }
 
-	function gmw_directions_link( $location, $gmw = array(), $label ) {
-		echo gmw_get_directions_link( $location, $gmw, $label );
-	}
-
+    function gmw_directions_link( $location, $from_coords = array(), $label = '' ) {
+        echo gmw_get_directions_link( $location, $from_coords, $label );
+    }

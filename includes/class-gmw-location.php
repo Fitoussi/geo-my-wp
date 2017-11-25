@@ -1,5 +1,4 @@
 <?php
-
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -67,20 +66,6 @@ class GMW_Location {
 	 */
 	function __construct() {}
 
-	public static function get_blog_id() {
-
-		if ( is_multisite() ) {
-		
-			global $blog_id;
-
-			return $blog_id;
-		
-		} else {
-			
-			return 1;
-		}
-	}
-
 	/**
 	 * Get locations table 
 	 * 
@@ -125,7 +110,7 @@ class GMW_Location {
 		return array( 
 			'object_type'		=> '',
 			'object_id'			=> 0,
-			'blog_id'			=> self::get_blog_id(),
+			'blog_id'			=> gmw_get_blog_id(),
 			'user_id'			=> $user_id,
 			'status'        	=> 1,
 			'parent'			=> 0,
@@ -546,8 +531,9 @@ class GMW_Location {
 			
 			global $wpdb;
 
-			$table     = self::get_locations_table();
-			$location  = $wpdb->get_row( 
+			$blog_id  = gmw_get_blog_id( $object_type );
+			$table    = self::get_locations_table();
+			$location = $wpdb->get_row( 
 				$wpdb->prepare( "
 					SELECT *
 		            FROM   $table
@@ -555,7 +541,7 @@ class GMW_Location {
 		            AND    object_type = %s 
 		            AND    object_id   = %d
 		            AND    parent      = 0",
-		            self::get_blog_id(),
+		            $blog_id,
             		$object_type, 
             		$object_id 
             	), 
@@ -627,6 +613,7 @@ class GMW_Location {
 
 			global $wpdb;
 
+			$blog_id   = gmw_get_blog_id( $object_type );
 			$table     = self::get_locations_table();
 			$locations = $wpdb->get_results( 
 				$wpdb->prepare( "
@@ -635,7 +622,7 @@ class GMW_Location {
 		            WHERE  blog_id     = %d 
 		            AND    object_type = %s 
 		            AND    object_id   = %d", 
-		            self::get_blog_id(),
+		            $blog_id,
             		$object_type, 
             		$object_id 
             	), 
@@ -703,22 +690,22 @@ class GMW_Location {
         	// filter region
         	if ( in_array( $key, array( 'region_name', 'region_code', 'state' ) ) ) {
         		
-        		$output .= $wpdb->prepare( " AND ( gmwlocations.region_name = %s OR gmwlocations.region_code = %s )", $value, $value );
+        		$output .= $wpdb->prepare( " AND ( gmw_locations.region_name = %s OR gmw_locations.region_code = %s )", $value, $value );
         	
         	// filter country
         	} elseif ( in_array( $key, array( 'country_name', 'country_code', 'country' ) ) ) {
         		
-        		$output .= $wpdb->prepare( " AND ( gmwlocations.country_name = %s OR gmwlocations.country_code = %s )", $value, $value );
+        		$output .= $wpdb->prepare( " AND ( gmw_locations.country_name = %s OR gmw_locations.country_code = %s )", $value, $value );
         	
         	// filter postcode
         	} elseif ( $key  == 'postcode' || $key  == 'zipcode' ) {
         	
-        		$output .= $wpdb->prepare( " AND gmwlocations.postcode = %s", $value );
+        		$output .= $wpdb->prepare( " AND gmw_locations.postcode = %s", $value );
         	
         	// filter the rest
         	} elseif ( in_array( $key, array( 'street', 'county', 'neighborhood', 'city' ) ) ) {
   
-        		$output .= $wpdb->prepare( " AND gmwlocations.{$key} = %s", $value );
+        		$output .= $wpdb->prepare( " AND gmw_locations.{$key} = %s", $value );
         	}
         }  
 
@@ -762,6 +749,8 @@ class GMW_Location {
 			'radius'	  	 => false,
 			'units'		  	 => 'imperial'
 		) );
+		
+		$args = apply_filters( 'gmw_get_locations_data_args', $args, $gmw );
 
 		if ( empty( $db_fields ) ) {
 
@@ -813,12 +802,12 @@ class GMW_Location {
 				// The lat and lng field are too involve and need to carfully change it.
 				// eventually we wont to completly move to using latitude and longitude.
 				if ( $field[0] == 'latitude' || $field[0] == 'longitude' ) {
-					$output .= ",gmw.{$field[0]}";
+					$output .= ",gmw_locations.{$field[0]}";
 				}
 
 			} else {
 
-				$output .= "gmw.{$field}";
+				$output .= "gmw_locations.{$field}";
 			}
 		}
 		
@@ -839,7 +828,7 @@ class GMW_Location {
 	    }
            
         if ( ! $internal_cache || false === ( $locations_data = get_transient( $query_args_hash ) ) ) {
-        	
+        //if ( 1 == 1 ) {	
             //print_r( 'locations query done' );
         
 	        // Get earth radius based on units
@@ -859,18 +848,18 @@ class GMW_Location {
 			$clauses['select']	 = "SELECT";
 			$clauses['fields'] 	 = $db_fields;
 			$clauses['distance'] = "";
-			$clauses['from']	 = "FROM {$wpdb->base_prefix}{$db_table} gmw";
+			$clauses['from']	 = "FROM {$wpdb->base_prefix}{$db_table} gmw_locations";
 
-			$clauses['where'] = $wpdb->prepare( "
-				WHERE gmw.object_type = '%s' 
-				AND   gmw.parent      = '0'", 
-				$args['object_type']  
-			);
+			$clauses['where'] = $wpdb->prepare( " WHERE gmw_locations.object_type = '%s' AND gmw_locations.parent = '0'", $args['object_type'] );
 
 			// if object type uses database table as global, means it doesn't save locations per blog,
 			// such as "user" we search within the entire database table. Otherwise, if data saved per blog, such as "post", we will filter locations based on blog ID
-			if ( ! in_array( $args['object_type'], GMW()->global_db_objects ) ) {	
-				$clauses['where'] .= $wpdb->prepare( "AND gmw.blog_id = %d", self::get_blog_id() );
+			//if ( ! in_array( $args['object_type'], GMW()->global_db_objects ) ) {	
+			
+			$loc_blog_id = gmw_get_blog_id( $args['object_type'] );
+
+			if ( absint( $loc_blog_id ) ) {
+				$clauses['where'] .= $wpdb->prepare( "AND gmw_locations.blog_id = %d", $loc_blog_id );
 			}
 
 			$clauses['address_filters'] = self::query_address_fields( $address_filters );
@@ -878,7 +867,7 @@ class GMW_Location {
 			$clauses['orderby']  = '';
 
 		 	// if address entered, do a proximity search and get locations within the radius entered.
-	        if ( ! empty( $args['lat'] ) && ! empty( $args['lng'] ) ) {
+	        if ( empty( $clauses['address_filters'] ) && ! empty( $args['lat'] ) && ! empty( $args['lng'] ) ) {
 
 	        	/*
 	        	$rad = deg2rad( $args['lat'] );
@@ -887,7 +876,7 @@ class GMW_Location {
         		$c   = sin( $rad );
 
         		$clauses['distance'] = $wpdb->prepare( ", 
-	        		ROUND( %d * acos( %s * cos( radians( gmw.latitude ) ) * cos( radians( gmw.longitude ) - ( %s ) ) + ( %s ) * sin( radians( gmw.latitude ) ) ),1 ) AS distance", 
+	        		ROUND( %d * acos( %s * cos( radians( gmw_locations.latitude ) ) * cos( radians( gmw_locations.longitude ) - ( %s ) ) + ( %s ) * sin( radians( gmw_locations.latitude ) ) ),1 ) AS distance", 
 	    			array( 
 	    				$earth_radius, 
 	    				$a, 
@@ -898,7 +887,7 @@ class GMW_Location {
 				*/
         		
 	        	$clauses['distance'] = $wpdb->prepare( ", 
-	        		ROUND( %d * acos( cos( radians( %s ) ) * cos( radians( gmw.latitude ) ) * cos( radians( gmw.longitude ) - radians( %s ) ) + sin( radians( %s ) ) * sin( radians( gmw.latitude ) ) ),1 ) AS distance", 
+	        		ROUND( %d * acos( cos( radians( %s ) ) * cos( radians( gmw_locations.latitude ) ) * cos( radians( gmw_locations.longitude ) - radians( %s ) ) + sin( radians( %s ) ) * sin( radians( gmw_locations.latitude ) ) ),1 ) AS distance", 
 	    			array( 
 	    				$earth_radius, 
 	    				$args['lat'], 
@@ -1067,6 +1056,8 @@ class GMW_Location {
 
 		global $wpdb;
 
+		$blog_id = gmw_get_blog_id( $object_type );
+
 		// delete location from database
 		$table   = self::get_locations_table();
 		$deleted = $wpdb->query( 
@@ -1076,7 +1067,7 @@ class GMW_Location {
 	            WHERE  blog_id     = %d 
 	            AND    object_type = %s 
 	            AND    object_id   = %d", 
-	            $self::get_blog_id(),
+	            $blog_id,
 	            $object_type, 
 	            $object_id 
 	        )

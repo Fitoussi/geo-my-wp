@@ -49,36 +49,55 @@ class GMW_Installer {
 	}
 
 	/**
-	 * Update loicense key database.
-	 * 
+	 * Update license keys data.
+	 *
+	 * This should happens only once after the update to GEO my WP 3.0
+	 *
+	 * since the wp options for the license keys has changed.
+	 *
+	 * This as well a fix when updating from v3.0 - beta 1
+	 * 	 
 	 * @return [type] [description]
 	 */
 	public static function update_license_keys() {
 
-		if ( get_option( 'gmw_premium_plugin_status' ) != FALSE ) {
-	
-			$statuses 	  = get_option( 'gmw_premium_plugin_status' );
+		// do this only if the new license keys option is not yet exist
+		if ( get_option( 'gmw_license_data' ) === FALSE ) {
+			
+			// look for license data in old option
 			$license_keys = get_option( 'gmw_license_keys' );
-
+			// look for statuses in old option
+			$statuses = get_option( 'gmw_premium_plugin_status' );
+			
 			$new_licenses = array();
 			
-			foreach ( $license_keys as $key => $value ) {
+			// proceed only if licenses data exists in old option
+			if ( ! empty( $license_keys ) ) {
 
-				if ( empty( $key ) ) {
-					continue;
-				}
-				
-				if ( ! is_array( $value ) ) {
-					$new_licenses[$key] = array(
-						'key' 	 => $value,
-						'status' => ! empty( $statuses[$key] ) ? $statuses[$key] : 'inactive'
-					);
-				} else {
-					$new_licenses[$key] = $value;
+				foreach ( $license_keys as $key => $value ) {
+
+					if ( empty( $key ) ) {
+						continue;
+					}
+					
+					// if value is not an array means it is coming from old
+					// options and need to generate an array.
+					if ( ! is_array( $value ) ) {
+
+						$new_licenses[$key] = array(
+							'key' 	 => $value,
+							'status' => ! empty( $statuses[$key] ) ? $statuses[$key] : 'inactive'
+						);
+
+					// if this is already an array we keep the value as is
+					} else {
+
+						$new_licenses[$key] = $value;
+					}
 				}
 			}
 						
-			update_option( 'gmw_license_keys', $new_licenses );
+			update_option( 'gmw_license_data', $new_licenses );
 		}
 	}
 
@@ -306,10 +325,20 @@ class GMW_Installer {
 				$prefix = '';
 			}
 
+			if ( ! empty( $form['search_form']['address_field']['title'] ) ) {
+				if ( ! empty( $form['search_form']['address_field']['within'] ) ) {
+					$form['search_form']['address_field']['placeholder'] = $form['search_form']['address_field']['title'];
+				} else {
+					$form['search_form']['address_field']['label'] = $form['search_form']['address_field']['title'];
+				}	
+			}
+
+			// update page load tab settings
+			$form['page_load_results']['enabled'] = ! empty( $form['page_load_results']['all_locations'] ) ? 1 : '';
+
 			// update the new form_submission tab
 			$form['form_submission'] = array(
 				'results_page'    => ! empty( $form['search_results']['results_page'] ) ? $form['search_results']['results_page'] : '',
-				'per_page' 	      => ! empty( $form['search_results']['per_page'] )     ? $form['search_results']['per_page'] : '',
 				'display_results' => '',
 				'display_map'     => ! empty( $form['search_results']['display_map'] ) ? $form['search_results']['display_map'] : 'results'
 			);
@@ -320,41 +349,49 @@ class GMW_Installer {
 				'height'  => '200px'
 			);
 
+			$form['search_results']['directions_link'] = ! empty( $form['search_results']['get_directions'] ) ? $form['search_results']['get_directions'] : '';
+
+			
 			// update posts locator form data
 			if ( $slug == 'posts' ) {
 
-				if ( ! empty( $form['page_load_results']['display_posts'] ) ) {
-					$form['page_load_results']['display_results'] = 1;
-				}
+				$form['page_load_results']['display_results'] = ! empty( $form['page_load_results']['display_posts'] ) ? 1 : '';
 
-				if ( ! empty( $form['search_results']['display_posts'] ) ) {
-					$form['form_submission']['display_results'] = 1;
-				}
+				$form['form_submission']['display_results'] = ! empty( $form['search_results']['display_posts'] ) ? 1 : '';
 
 				if ( ! empty( $form['search_results']['featured_image']['use'] ) ) {
 					$form['search_results']['image']['enabled'] = 1;
 					$form['search_results']['image']['height']  = $form['search_results']['featured_image']['height'];
 					$form['search_results']['image']['width']   = $form['search_results']['featured_image']['width']; 
 				}
+
+				if ( ! empty( $form['search_results']['additional_info'] ) ) {
+					$form['search_results']['location_meta'] = array_keys( $form['search_results']['additional_info'] );
+				}
+
+				if ( ! empty( $form['search_results']['excerpt']['use'] ) ) {
+					$form['search_results']['excerpt']['enabled'] = 1;
+					$form['search_results']['excerpt']['link'] = ! empty( $form['search_results']['more'] ) ? $form['search_results']['more'] : '';
+				}
+
+				if ( ! empty( $form['search_results']['custom_taxes'] ) ) {
+					$form['search_results']['taxonomies'] = 1;
+				}
 			}
 
 			// update friends locator form data
 			if ( $slug == 'friends' ) {
 
-				if ( ! empty( $form['page_load_results']['display_posts'] ) ) {
-					$form['page_load_results']['display_results'] = 1;
-				}
+				$form['page_load_results']['display_results'] = ! empty( $form['page_load_results']['display_posts'] ) ? 1 : '';
+
+				$form['form_submission']['display_results'] = ! empty( $form['search_results']['display_members'] ) ? 1 : '';
 
 				if ( ! empty( $form['search_form']['profile_fields'] ) ) {
-					$form['search_form']['profile_fields']['fields'] = $form['search_form']['profile_fields'];
+					$form['search_form']['xprofile_fields']['fields'] = $form['search_form']['profile_fields'];
 				}
 
 				if ( ! empty( $form['search_form']['profile_fields_date'] ) ) {
-					$form['search_form']['profile_fields']['date_field'] = $form['search_form']['profile_fields_date'];
-				}
-
-				if ( ! empty( $form['search_results']['display_members'] ) ) {
-					$form['form_submission']['display_results'] = 1;
+					$form['search_form']['xprofile_fields']['date_field'] = $form['search_form']['profile_fields_date'];
 				}
 
 				if ( ! empty( $form['search_results']['avatar']['use'] ) ) {

@@ -32,8 +32,6 @@ function gmw_geocoder( $raw_address, $force_refresh = false ) {
     // if no location found in cache or if forced referesh try to geocode
     if ( $force_refresh == true || $location === false ) {
 
-        global $gmw_options;
-
         //Build Google API url. elements can be modified via filters
         $url = apply_filters( 'gmw_google_maps_api_geocoder_url', array( 
             'protocol'  => is_ssl() ? 'https' : 'http',
@@ -44,7 +42,7 @@ function gmw_geocoder( $raw_address, $force_refresh = false ) {
                 'region'    => gmw_get_option( 'general_settings', 'country_code', 'us' ),
                 'language'  => gmw_get_option( 'general_settings', 'language_code', 'en' ),
             ) ), '', '&amp;' ),
-        ), $gmw_options );
+        ) );
 
         // try geocoding
         $response = wp_remote_get( implode( '', $url ) );
