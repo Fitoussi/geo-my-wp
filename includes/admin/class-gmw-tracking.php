@@ -88,13 +88,10 @@ class GMW_Tracking {
 			
 			$optin_url  = add_query_arg( 'gmw_action', 'opt_into_tracking' );
 			$optout_url = add_query_arg( 'gmw_action', 'opt_out_of_tracking' );
-
-			//$addons_url   = 'https://geomywp.com/add-ons';
-			//$tracking_url = 'https://geomywp.com/tracking-data';
 			
 			$output  = '<div class="gmw-tracking-notice updated notice is-dismissible">';
 			$output .= '<p>';
- 			$output .= sprintf( __( '<p>Allow GEO my WP to track the plugin usage on your site? Tracking non-sensitive data can help us improve GEO my WP.', 'GMW' ), $addons_url, $tracking_url );
+ 			$output .= sprintf( __( '<h4>Allow GEO my WP to track the plugin usage on your site?</h4><p>Tracking non-sensitive data can help us improve GEO my WP plugin. You can read more about the tracking usage <a href="%s" target="_blank">here</a>.</p><em>*You can disable/enable tracking at any time from GEO my WP Settings page.</em>', 'GMW' ), 'https://geomywp.com/tracking-data' );
 			
 			$output .= '</p>';
 			$output .= '<p>';	
@@ -115,7 +112,7 @@ class GMW_Tracking {
 	 */
 	public function optin_tracking( $data ) {
 
-		global $gmw_options;
+		$gmw_options = gmw_get_options_group();
 
 		// set true in admin settings global
 		$gmw_options['general_settings']['allow_tracking'] = '1';
@@ -146,7 +143,7 @@ class GMW_Tracking {
 	 */
 	public function optout_tracking( $data ) {
 
-		global $gmw_options;
+		$gmw_options = gmw_get_options_group();
 
 		// set admin settings to false
 		$gmw_options['general_settings']['allow_tracking'] = '0';
