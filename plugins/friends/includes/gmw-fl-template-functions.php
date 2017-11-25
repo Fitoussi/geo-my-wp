@@ -83,7 +83,7 @@ function gmw_fl_xprofile_fields( $gmw, $class ) {
 				foreach ( $children as $child ) {
 					$option   = trim( $child->name );
 					$selected = ( $option == $value ) ? "selected='selected'" : "";
-					echo '<option '.$selected.' value="'.$option.'" />'.$option.'</option>';
+					echo '<option '.$selected.' value="'.$option.'">'.$option.'</option>';
 				}
 				 
 				echo '</select>';
@@ -123,7 +123,7 @@ function gmw_fl_xprofile_fields( $gmw, $class ) {
 					foreach ( $posts->posts as $post ) {
 						
 						$selected = ( $post->ID == $value ) ? "selected='selected'" : "";
-						echo '<option '.$selected.' value="'.$post->ID.'" />'.$post->post_title.'</option>';
+						echo '<option '.$selected.' value="'.$post->ID.'">'.$post->post_title.'</option>';
                     }
 				}
 				 
@@ -143,7 +143,7 @@ function gmw_fl_xprofile_fields( $gmw, $class ) {
 				foreach ( $children as $child ) {
 					$option   = trim( $child->name );
 					$selected = ( !empty( $value ) && in_array( $option, $value ) ) ? "selected='selected'" : "";
-					echo '<option '.$selected.' value="'.$option.'" />'.$option.'</label>';
+					echo '<option '.$selected.' value="'.$option.'">'.$option.'</option>';
 				}
 				 
 				echo "</select>";
