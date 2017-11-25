@@ -267,6 +267,14 @@ class GMW_Sweet_Date_Search_Query {
         $this->locations_data = $gmw_locations['locations_data'];
         $this->objects_id     = $gmw_locations['objects_id'];
 
+        // if no members found stop the query
+        if ( empty( $this->objects_id ) ) {
+            
+            $query->query_vars['include'] = 0;
+
+            return $query;
+        }
+
         // include locations in BP search query
         $query->query_vars['include'] = $this->objects_id;   
 
@@ -422,18 +430,20 @@ class GMW_Sweet_Date_Search_Query {
      * @return [type] [description]
      */
     public function trigger_js_and_map() {
-            
+        
         // create the map object
         $map_args = array(
-    		'map_id' 	 	=> 'sd',
-    		'map_type'		=> 'sweetdate_geolocation',
-            'prefix'        => 'sd',
-    		'locations'		=> $this->map_locations,
-            'group_markers' => 'markers_clusterer'
+    		'map_id' 	 	       => 'sd',
+    		'map_type'		       => 'sweetdate_geolocation',
+            'prefix'               => 'sd',
+            'info_window_type'     => 'standard',
+            'info_window_ajax'     => false,
+            'info_window_template' => 'default',
+            'group_markers'        => 'markers_clusterer'
         );
 
         $map_options = array(
-		  'zoomLevel' => 'auto',
+		  'zoom'      => 'auto',
 		  'mapTypeId' => ! empty( $this->options['map_type'] ) ? $this->options['map_type'] : 'ROADMAP'	
     	);
         
@@ -443,17 +453,23 @@ class GMW_Sweet_Date_Search_Query {
 			'address' 	   => $this->form_data['address'],
 			'map_icon'	   => 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
 			'iw_content'   => __( 'You are here', 'GMW' ),
-			'iw_open'	   => true
+			'iw_open'	   => false
         );
         
+        // triggers map on page load
         $map_args = gmw_new_map_element( $map_args, $map_options, $this->map_locations, $user_position );
+
+        $map_args = wp_json_encode( $map_args );
         ?>
-        <script>        
+        <script>       
         jQuery( window ).ready( function() {
-            //generate/update map
-            if ( typeof GMW_Maps['sd'] !== 'undefined' ) {
-                GMW_Maps['sd'].init( <?php echo json_encode( $map_args ); ?> );
-            }
+
+            var mapArgs = <?php echo $map_args; ?>;
+
+            // generate map when ajax is triggered
+            GMW_Maps['sd'] = new GMW_Map( mapArgs.settings, mapArgs.map_options, {} );
+            // initiate it
+            GMW_Maps['sd'].render( mapArgs.locations, mapArgs.user_location );
         });
         </script>
         <?php      
@@ -588,13 +604,20 @@ class GMW_Sweet_Date_Search_Query {
         // if displaying map, collect some data to pass to the map script
         if ( ! empty( $this->options['map'] ) ) {
 
-            $object_data = array(
-                'url'       => bp_get_member_permalink(),
-                'title'     => $member->display_name,
-                'image_url' => bp_core_fetch_avatar( 'item_id='.$member->ID.'&type=thumb&html=FALSE' )
+            $info_window_args = array(
+                'prefix'          => 'sd',
+                'url'             => bp_get_member_permalink(),
+                'title'           => $member->display_name,
+                'image_url'       => false,
+                //'image_url'       => bp_core_fetch_avatar( 'item_id='.$member->ID.'&type=thumb&html=FALSE' ),
+                'iw_type'         => 'standard',
+                'address'         => true,
+                'directions_link' => false,
+                'distance'        => true,
+                'location_meta'   => ''
             );
 
-            $info_window = gmw_get_info_window_content( $member, $object_data, $this->form_data );
+            $info_window = gmw_get_info_window_content( $member, $info_window_args, $this->form_data );
 
             $this->map_locations[] = $this->map_location( $members_template->member, $info_window ); 
         }    

@@ -78,26 +78,25 @@ class GMW_Sweet_Date_Admin {
     public function settings_init( $settings ) {
 
     	$settings['sweet_date'] = array(
-    		
     		'features_enabled' => array(
 				'name'       => 'features_enabled',
 				'type'       => 'checkbox',
 				'cb_label'   => 'Enabled',
 				'default'    => '',
-				'label'      => __( 'Sweet Date Geolocation', 'GMW' ),
-				'desc'       => __( 'Here you can completely enable/disable the Geolocation features for the Sweet Date theme.', 'GMW' ),
+				'label'      => __( 'Geolocation Features', 'GMW' ),
+				'desc'       => __( 'Enable/disable the geolocation features for the Sweet Date theme.', 'GMW' ),
 				'attributes' => array(),
-				'priority'	 => 2
+				'priority'	 => 10
 			),
 			'address_autocomplete' => array(
 				'name'       => 'address_autocomplete',
 				'type'       => 'checkbox',
 				'cb_label'   => 'Enabled',
 				'default'    => '',
-				'label'      => __( 'Google Places Address Autocomplete', 'GMW' ),
-				'desc'       => __( 'Display suggested results via Google address autocomplete while typing an address.', 'GMW' ),
+				'label'      => __( 'Address Autocomplete', 'GMW' ),
+				'desc'       => __( 'Enable address autocomplete on the address field of the Sweet-Date search form.', 'GMW' ),
 				'attributes' => array(),
-				'priority'	 => 5
+				'priority'	 => 20
 			),
 			'radius'     => array(
 				'name'        => 'radius',
@@ -105,32 +104,32 @@ class GMW_Sweet_Date_Admin {
 				'default'     => '10,25,50,100,200',
 				'label'       => __( 'Radius', 'GMW' ),
 				'placeholder' => __( 'Enter radius values', 'GMW' ),
-				'desc'        => __( 'Enter the radius values. Single value to be default value or multiple values comma separated for a drop-down select box.', 'GMW' ),
+				'desc'        => __( 'Enter a single value to be used as the default, or multiple values, comma separated, that will be displayed as a dropdown select box in the search form.', 'GMW' ),
 				'attributes' => array(),
-				'priority'	 => 10
+				'priority'	 => 30
 			),
 			'units'      => array(
 				'name'       => 'units',
 				'type'       => 'select',
 				'default'    => '3959',
-				'label'      => __( 'Units', 'GMW' ),
-				'desc'       => __( 'Choose Between Miles and Kilometers.', 'GMW' ),
+				'label'      => __( 'Distance Units', 'GMW' ),
+				'desc'       => __( 'Select between miles or kilometers.', 'GMW' ),
 				'options'    => array(
 					'3959' => __( 'Miles', 'GMW' ),
 					'6371' => __( 'Kilometers', 'GMW' ),
 				),
 				'attributes' => array(),
-				'priority'	 => 15
+				'priority'	 => 40
 			),
 			'orderby'  	  => array(
 				'name'       => 'orderby',
 				'type'       => 'checkbox',
 				'cb_label'   => 'Enabled',
 				'default'    => '',
-				'label'      => __( 'Order-by filter', 'GMW' ),
-				'desc'       => __( 'Display Order-by dropdown select box.', 'GMW' ),
+				'label'      => __( 'Orderby Filter', 'GMW' ),
+				'desc'       => __( 'Display Orderby dropdown menu in the search form.', 'GMW' ),
 				'attributes' => array(),
-				'priority'	 => 20
+				'priority'	 => 50
 			),
 			'map'    => array(
 				'name'       => 'map',
@@ -138,19 +137,19 @@ class GMW_Sweet_Date_Admin {
 				'default'    => '',
 				'cb_label'   => 'Enabled',
 				'label'      => __( 'Google Map', 'GMW' ),
-				'desc'       => __( 'Show Google map above list of members.', 'GMW' ),
+				'desc'       => __( 'Enable this feature to display Google map above list of members.', 'GMW' ),
 				'attributes' => array(),
-				'priority'	 => 25
+				'priority'	 => 60
 			),
 			'map_width'  => array(
 				'name'        => 'map_width',
 				'type'        => 'text',
 				'default'     => '100%',
 				'label'       => __( 'Map Width', 'GMW' ),
-				'placeholder' => __( 'Map width in pixels or percentage', 'GMW' ),
-				'desc'        => __( 'Maps width in pixels or percentage', 'GMW' ),
+				'placeholder' => __( 'Enter map width', 'GMW' ),
+				'desc'        => __( 'Map width in pixels or percentage ( ex. 100% or 200px ).', 'GMW' ),
 				'attributes'  => array(),
-				'priority'	  => 30
+				'priority'	  => 70
 				
 			),
 			'map_height' => array(
@@ -158,17 +157,17 @@ class GMW_Sweet_Date_Admin {
 				'type'        => 'text',
 				'default'     => '300px',
 				'label'       => __( 'Map Height', 'GMW' ),
-				'placeholder' => __( 'Map height in pixels or percentage', 'GMW' ),
-				'desc'        => __( 'Maps height in pixels or percentage', 'GMW' ),
+				'placeholder' => __( 'Enter map height', 'GMW' ),
+				'desc'        => __( 'Map height in pixels or percentage ( ex. 100% or 200px ).', 'GMW' ),
 				'attributes'  => array(),
-				'priority'	  => 35
+				'priority'	  => 80
 			),
 			'map_type'   => array(
 				'name'        => 'map_type',
 				'type'        => 'select',
 				'default'     => 'ROADMAP',
 				'label'       => __( 'Map Type', 'GMW' ),
-				'desc'        => __( 'Map type', 'GMW' ),
+				'desc'        => __( 'Select the map type.', 'GMW' ),
 				'options'     => array(
 					'ROADMAP'   => __( 'ROADMAP', 'GMW' ),
 					'SATELLITE' => __( 'SATELLITE', 'GMW' ),
@@ -176,7 +175,7 @@ class GMW_Sweet_Date_Admin {
 					'TERRAIN'   => __( 'TERRAIN', 'GMW' ),
 				),
 				'attributes'  => array(),
-				'priority'	  => 40
+				'priority'	  => 90
 			),
 			'distance'   => array(
 				'name'        => 'distance',
@@ -184,29 +183,29 @@ class GMW_Sweet_Date_Admin {
 				'default'     => '',
 				'label'       => __( 'Distance', 'GMW' ),
 				'cb_label'    => __( 'Enabled', 'GMW' ),
-				'desc'        => __( 'Show the distance for each member in the list of results.', 'GMW' ),
+				'desc'        => __( 'Display the distance to each member in the list of results.', 'GMW' ),
 				'attributes'  => array(),
-				'priority'	  => 45
+				'priority'	  => 100
 			),
 			'address'    => array(
 				'name'        => 'address',
 				'default'     => '',
-				'label'       => __( 'Member Address', 'GMW' ),
+				'label'       => __( 'Address', 'GMW' ),
 				'cb_label'    => __( 'Enabled', 'GMW' ),
-				'desc'        => __( 'Show the address for each member in the list of results.', 'GMW' ),
+				'desc'        => __( 'Display the address of each member in the list of results.', 'GMW' ),
 				'type'        => 'checkbox',
 				'attributes'  => array(),
-				'priority'	  => 50
+				'priority'	  => 110
 			),
 			'directions' => array(
 				'name'        => 'directions',
 				'type'        => 'checkbox',
 				'default'     => '',
-				'label'       => __( 'Get directions Link', 'GMW' ),
+				'label'       => __( 'Directions Link', 'GMW' ),
 				'cb_label'    => __( 'Enabled', 'GMW' ),
-				'desc'        => __( 'Show get directions link for each memebr in the list of results. The link will open a new page with Google map showing the directions from the address entered by the user to the member\'s location.', 'GMW' ),
+				'desc'        => __( 'Display directions link, that will open a new window with Google map showing the driving directions, in each member in the list of results.', 'GMW' ),
 				'attributes'  => array(),
-				'priority'	  => 55
+				'priority'	  => 120
 			),
     	);
 
