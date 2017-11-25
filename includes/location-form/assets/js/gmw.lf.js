@@ -26,19 +26,19 @@ jQuery( document ).ready( function( $ ) {
 		wrapper_element : '.gmw-location-form-wrapper',
 
 		// location fields
-		location_fields : ( typeof gmw_lf_args.fields.location !== 'undefined' ) ? gmw_lf_args.fields.location['fields'] : false,
+		location_fields : gmw_lf_args.fields.location['fields'] || false,
 
 		// address fields
-		address_fields : ( typeof gmw_lf_args.fields.address !== undefined ) ? gmw_lf_args.fields.address['fields'] : false,
+		address_fields : gmw_lf_args.fields.address['fields'] || false,
 
 		// coordinates fields
-		coords_fields : ( typeof gmw_lf_args.fields.coordinates !== undefined ) ? gmw_lf_args.fields.coordinates['fields'] : false,
+		coords_fields : gmw_lf_args.fields.coordinates['fields'] || false,
 		
 		// action fields
-		action_fields : ( typeof gmw_lf_args.fields.actions !== undefined ) ? gmw_lf_args.fields.actions['fields'] : false,
+		action_fields : gmw_lf_args.fields.actions['fields'] || false,
 
 		// map status
-		map_enabled : ( $( '#gmw-lf-map' ).length ) ? true : false,
+		map_enabled : $( '#gmw-lf-map' ).length ? true : false,
 
 		// fields value changed
 		fields_changed : 1,
@@ -65,7 +65,7 @@ jQuery( document ).ready( function( $ ) {
 		init : function() {
 
 			this_form = GMW_Location_Form;
-		
+			
 			// hide confirm location button
 			$( '#' + this_form.action_fields.confirm_location.id ).fadeOut( 'fast' );
 
@@ -101,7 +101,7 @@ jQuery( document ).ready( function( $ ) {
 			}
 
 			// render map if needed
-			if ( this_form.map_enabled ) {
+			if ( this_form.map_enabled && $( '#gmw-lf-map' ).length ) {
 				this_form.render_map();
 			}
 
@@ -182,10 +182,7 @@ jQuery( document ).ready( function( $ ) {
 				});
 
 			}
-			*/
-			
-			
-			
+			*/	
 		},
 
 		/**
@@ -198,7 +195,15 @@ jQuery( document ).ready( function( $ ) {
 			// show activate tab content and hide the rest
 			firstTab = $( '.gmw-lf-tabs-wrapper li' ).first().attr( 'id' );
 			$( '#' + firstTab + '-panel' ).show().siblings().hide();
-					
+			
+			// dynamically remove any excluded tab containers that might be still exists 
+			// on the page
+			if ( gmw_lf_args.args.exclude_tabs.length ) {
+				$.each( gmw_lf_args.args.exclude_tabs, function( index, value ) {
+					$( '#' + value + '-tab-panel' ).remove();
+				});	
+			}
+
 			//tabs on click
 		    $( '.gmw-lf-tabs-wrapper li a' ).on( 'click', function( e ) {
 
@@ -419,8 +424,11 @@ jQuery( document ).ready( function( $ ) {
 			// set initial coords based on saved location or user's current location 
 			if ( this_form.is_location_confirmed ) {
 
-				lat = $( '#gmw_lf_' + this_form.coords_fields.latitude.name ).val();
-				lng = $( '#gmw_lf_' + this_form.coords_fields.longitude.name ).val();
+				//lat = $( '#gmw_lf_' + this_form.coords_fields.latitude.name ).val();
+				//lng = $( '#gmw_lf_' + this_form.coords_fields.longitude.name ).val();
+
+				lat = $( '#gmw_lf_latitude' ).val();
+				lng = $( '#gmw_lf_longitude' ).val();
 
 			// Otehrwise, if no location exists on page load get coords from form args
 			} else {
@@ -523,8 +531,8 @@ jQuery( document ).ready( function( $ ) {
 					$( '.group_coordinates, .group_address' ).val( '' );
 
 					//update coords
-					$( '.group_coordinates.' + this_form.coords_fields.latitude.name ).val( place.geometry.location.lat() );
-					$( '.group_coordinates.' + this_form.coords_fields.longitude.name ).val( place.geometry.location.lng() );
+					$( '.group_coordinates.latitude' ).val( place.geometry.location.lat() );
+					$( '.group_coordinates.longitude' ).val( place.geometry.location.lng() );
 
 					//update address and formatted address fields
 					$( '#gmw_lf_address, #gmw_lf_formatted_address' ).val( $( '#' + this_form.location_fields.address.id ).val() );
@@ -663,8 +671,8 @@ jQuery( document ).ready( function( $ ) {
 		    			}
 
 		    			// add values to coords
-		    			$( '.group_coordinates.' + this_form.coords_fields.latitude.name ).val( lat );
-		    			$( '.group_coordinates.' + this_form.coords_fields.longitude.name ).val( lng );
+		    			$( '.group_coordinates.latitude' ).val( lat );
+		    			$( '.group_coordinates.longitude' ).val( lng );
 
 		    			// populate value in full address fields
 		       			$( '#' + this_form.location_fields.address.id +', #gmw_lf_address' ).val( address );
@@ -693,8 +701,8 @@ jQuery( document ).ready( function( $ ) {
 		reverse_geocode : function( lat, lng, save_data ) {
 					
 			// populate coords fields with the original coords values
-			$( '.group_coordinates.' + this_form.coords_fields.latitude.name ).val( lat );
-			$( '.group_coordinates.' + this_form.coords_fields.longitude.name ).val( lng );
+			$( '.group_coordinates.latitude' ).val( lat );
+			$( '.group_coordinates.longitude' ).val( lng );
 
 			// init google geocoder
 			geocoder = new google.maps.Geocoder();
@@ -821,8 +829,8 @@ jQuery( document ).ready( function( $ ) {
 	        }
 			
 			// update map based of new coords
-			if ( this_form.map_enabled ) {
-				this_form.update_map( $( '#gmw_lf_' + this_form.coords_fields.latitude.name ).val(), $( '#gmw_lf_' + this_form.coords_fields.longitude.name ).val() );
+			if ( this_form.map_enabled && $( '#gmw-lf-map' ).length ) {
+				this_form.update_map( $( '#gmw_lf_latitude' ).val(), $( '#gmw_lf_longitude' ).val() );
 			}
 
 			//mark location as confirmed
@@ -841,8 +849,13 @@ jQuery( document ).ready( function( $ ) {
 				// show loader
 		  		$( '#' + this_form.action_fields.loader.id ).fadeIn( 'fast' );	
 
-		  		latVal = $( '#' + this_form.coords_fields.latitude.id ).val();
-		  		lngVal = $( '#' + this_form.coords_fields.longitude.id ).val();
+		  		latVal = lngVal = '';
+
+		  		// make sure coords exist in form
+		  		if ( typeof this_form.coords_fields != false && this_form.coords_fields.length ) {
+			  		latVal = $( '#' + this_form.coords_fields.latitude.id ).val();
+			  		lngVal = $( '#' + this_form.coords_fields.longitude.id ).val();
+			  	}
 
 		  		// if address changed or coordinates missing
 				if ( this_form.fields_changed != 3 || $.trim( latVal ).length == 0 || $.trim( lngVal ).length == 0 ) {
@@ -854,13 +867,14 @@ jQuery( document ).ready( function( $ ) {
 
 					// otherwise, check for multiple address fields
 					} else {
-			
+				
 						address = '';
-						$.each( [ 'street', 'premise', 'city', 'region_name', 'postcode', 'country_code' ], function( index, value ) {
+						
+						$.each( this_form.address_fields, function( index, value ) {
 							
 							// if address field and value exist
-							if ( $( '#' + this_form.address_fields[value].id ).length && $.trim( $( '#' + this_form.address_fields[value].id ).val() ).length > 0 ) {
-								address += $( '#' + this_form.address_fields[value].id ).val() + ' ';
+							if ( $( '#' + value.id ).length && $.trim( $( '#' + value.id ).val() ).length > 0 ) {
+								address += $( '#' + value.id ).val() + ' ';
 							}
 						});			    	
 					}
@@ -1008,8 +1022,8 @@ jQuery( document ).ready( function( $ ) {
 			//or abort it in order to confirm the location
 			} else {
 
-				lat = $( '#gmw_lf_' + this_form.coords_fields.latitude.name ).val();
-				lng = $( '#gmw_lf_' + this_form.coords_fields.longitude.name ).val();
+				lat = $( '#gmw_lf_latitude' ).val();
+				lng = $( '#gmw_lf_longitude' ).val();
 
 				// verify coords
 				if ( $.trim( lat ).length == 0 || $.trim( lng ).length == 0 || ! $.isNumeric( lat ) || ! $.isNumeric( lng ) ) {
