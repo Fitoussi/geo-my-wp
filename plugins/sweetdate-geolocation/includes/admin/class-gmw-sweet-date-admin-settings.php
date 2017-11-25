@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * GMW_Sweet_Date_Admin class
  */
-class GMW_Sweet_Date_Admin {
+class GMW_Sweet_Date_Admin_settings {
 
     /**
      * __construct function.
@@ -47,7 +47,7 @@ class GMW_Sweet_Date_Admin {
 			'map_type'   			=> 'ROADMAP',
 			'distance'   			=> 1,
 			'address'    			=> 1,
-			'directions' 			=> 1
+			'directions_link' 		=> 1
     	);
     	
     	update_option( 'gmw_options', $this->settings );
@@ -63,7 +63,8 @@ class GMW_Sweet_Date_Admin {
 
         $groups[] = array(
             'id'    => 'sweet_date',
-            'label' => __( 'Sweet Date', 'GMW' )
+            'label' => __( 'Sweet Date', 'GMW' ),
+            'icon'  => 'location-outline'
         );  
 
         return $groups;
@@ -78,13 +79,13 @@ class GMW_Sweet_Date_Admin {
     public function settings_init( $settings ) {
 
     	$settings['sweet_date'] = array(
-    		'features_enabled' => array(
-				'name'       => 'features_enabled',
+    		'enabled' => array(
+				'name'       => 'enabled',
 				'type'       => 'checkbox',
 				'cb_label'   => 'Enabled',
 				'default'    => '',
-				'label'      => __( 'Geolocation Features', 'GMW' ),
-				'desc'       => __( 'Enable/disable the geolocation features for the Sweet Date theme.', 'GMW' ),
+				'label'      => __( 'Enable Geolocation', 'GMW' ),
+				'desc'       => __( 'Enable/disable the geolocation features in the Members Directory page of the Sweet Date theme.', 'GMW' ),
 				'attributes' => array(),
 				'priority'	 => 10
 			),
@@ -94,7 +95,7 @@ class GMW_Sweet_Date_Admin {
 				'cb_label'   => 'Enabled',
 				'default'    => '',
 				'label'      => __( 'Address Autocomplete', 'GMW' ),
-				'desc'       => __( 'Enable address autocomplete on the address field of the Sweet-Date search form.', 'GMW' ),
+				'desc'       => __( 'Enable address autocomplete feature in the address field.', 'GMW' ),
 				'attributes' => array(),
 				'priority'	 => 20
 			),
@@ -104,7 +105,7 @@ class GMW_Sweet_Date_Admin {
 				'default'     => '10,25,50,100,200',
 				'label'       => __( 'Radius', 'GMW' ),
 				'placeholder' => __( 'Enter radius values', 'GMW' ),
-				'desc'        => __( 'Enter a single value to be used as the default, or multiple values, comma separated, that will be displayed as a dropdown select box in the search form.', 'GMW' ),
+				'desc'        => __( 'Enter a single numeric value to be used as the default, or multiple values, comma separated, that will be displayed as a dropdown select box in the search form.', 'GMW' ),
 				'attributes' => array(),
 				'priority'	 => 30
 			),
@@ -113,7 +114,7 @@ class GMW_Sweet_Date_Admin {
 				'type'       => 'select',
 				'default'    => '3959',
 				'label'      => __( 'Distance Units', 'GMW' ),
-				'desc'       => __( 'Select between miles or kilometers.', 'GMW' ),
+				'desc'       => __( 'Select miles or kilometers.', 'GMW' ),
 				'options'    => array(
 					'3959' => __( 'Miles', 'GMW' ),
 					'6371' => __( 'Kilometers', 'GMW' ),
@@ -127,7 +128,7 @@ class GMW_Sweet_Date_Admin {
 				'cb_label'   => 'Enabled',
 				'default'    => '',
 				'label'      => __( 'Orderby Filter', 'GMW' ),
-				'desc'       => __( 'Display Orderby dropdown menu in the search form.', 'GMW' ),
+				'desc'       => __( 'Enable Orderby dropdown menu in the search form.', 'GMW' ),
 				'attributes' => array(),
 				'priority'	 => 50
 			),
@@ -137,7 +138,7 @@ class GMW_Sweet_Date_Admin {
 				'default'    => '',
 				'cb_label'   => 'Enabled',
 				'label'      => __( 'Google Map', 'GMW' ),
-				'desc'       => __( 'Enable this feature to display Google map above list of members.', 'GMW' ),
+				'desc'       => __( 'Enable Google map above list of members.', 'GMW' ),
 				'attributes' => array(),
 				'priority'	 => 60
 			),
@@ -197,13 +198,13 @@ class GMW_Sweet_Date_Admin {
 				'attributes'  => array(),
 				'priority'	  => 110
 			),
-			'directions' => array(
-				'name'        => 'directions',
+			'directions_link' => array(
+				'name'        => 'directions_link',
 				'type'        => 'checkbox',
 				'default'     => '',
 				'label'       => __( 'Directions Link', 'GMW' ),
 				'cb_label'    => __( 'Enabled', 'GMW' ),
-				'desc'        => __( 'Display directions link, that will open a new window with Google map showing the driving directions, in each member in the list of results.', 'GMW' ),
+				'desc'        => __( 'Display directions link, which will open a new window with Google map showing the driving directions, in each member in the list of results.', 'GMW' ),
 				'attributes'  => array(),
 				'priority'	  => 120
 			),
@@ -222,14 +223,14 @@ class GMW_Sweet_Date_Admin {
 		jQuery( document ).ready( function( $ ) {
 
 			function hideRows() {
-				$( "#setting-sweet_date-features_enabled-row" ).show().siblings().toggle();
+				$( "#sweet_date-enabled-tr" ).show().siblings().toggle();
 			}
 
-			if ( ! $( '#setting-sweet_date-features_enabled' ).is( ':checked' ) ) {
+			if ( ! $( '#setting-sweet_date-enabled' ).is( ':checked' ) ) {
 				hideRows();
 			}
 
-			$( '#setting-sweet_date-features_enabled' ).on( 'change', function() {
+			$( '#setting-sweet_date-enabled' ).on( 'change', function() {
 				hideRows();
 			});
 		} );
