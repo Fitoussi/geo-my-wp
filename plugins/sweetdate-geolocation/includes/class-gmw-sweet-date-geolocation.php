@@ -5,9 +5,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * GMW_SD_Query class.
+ *  GMW_Sweet_Date_Geolocation class
  */
-class GMW_Sweet_Date_Search_Query {
+class GMW_Sweet_Date_Geolocation {
 
     /**
      * gmw_location database fields that will be pulled in the search query
@@ -139,7 +139,7 @@ class GMW_Sweet_Date_Search_Query {
         // enable map
         if ( ! empty( $this->options['map'] ) ) {
             add_action( 'bp_members_directory_member_sub_types', array( $this, 'map_element' ) );
-            add_action( 'member_loop_end', array( $this, 'trigger_js_and_map' ) );
+            add_action( 'bp_after_members_loop', array( $this, 'trigger_js_and_map' ) );
         }
     }
     
@@ -245,9 +245,7 @@ class GMW_Sweet_Date_Search_Query {
                 $this->form_data['lat'] = $this->returned_address['lat'];
                 $this->form_data['lng'] = $this->returned_address['lng'];
             }
-        
         } else {
-
             $this->form_data['lat'] = false;
             $this->form_data['lng'] = false;
         }
@@ -340,36 +338,33 @@ class GMW_Sweet_Date_Search_Query {
     	);
     	    	
     	// modify the orderby dropdown using a filter if needed
-    	$orderby = apply_filters( 'gmw_sd_orderby_values', $orderby, $this );
+    	$orderby = apply_filters( 'gmw_sd_orderby_options', $orderby, $this );
     	
         $output = '';
 
     	if ( ! empty( $orderby ) ) {
     	
-    		$output['wrpa']    = '<div class="two columns">';
-    		$output['select'] = '<select id="gmw-sd-orderby-dropdown" class="expand gmw-sd-dropdown" name="orderby">';
-    		$output['option_default'] = '<option value="">'.esc_attr( $this->labels['orderby'] ).'</option>';
+    		$output .= '<div class="two columns">';
+    		$output .= '<select id="gmw-sd-orderby-dropdown" class="expand gmw-sd-dropdown" name="orderby">';
+    		$output .= '<option value="">'.esc_attr( $this->labels['orderby'] ).'</option>';
     	   
-            $options = '';
-
     		foreach ( $orderby as $key => $value ) {
     	           
-                if ( empty( $value ) ) {
+                if ( ! isset( $value ) ) {
                     continue;
                 }
 
     			$selected = ( $key == $this->form_data['orderby'] ) ? 'selected="selected"' : '';
-    			$options .= '<option value="'. sanitize_title( $key ).'" '.$selected.'>'. esc_attr( $value ) .'</option>';
+    			$output .= '<option value="'. sanitize_title( $key ).'" '.$selected.'>'. esc_html( $value ) .'</option>';
     		}
 
-    	    $output['options'] = $options;
-    		$output['/select'] = '</select>';
-    		$output['/wrap'] = '</div>';
+    		$output .= '</select>';
+    		$output .= '</div>';
     	}
     	
         $output = apply_filters( 'gmw_sd_form_orderby', $output, $orderby, $this );
     	
-        return implode( ' ', $output ); 
+        return $output; 
     }
     
     /**
@@ -458,14 +453,11 @@ class GMW_Sweet_Date_Search_Query {
         
         // triggers map on page load
         $map_args = gmw_new_map_element( $map_args, $map_options, $this->map_locations, $user_position );
-
         $map_args = wp_json_encode( $map_args );
         ?>
         <script>       
         jQuery( window ).ready( function() {
-
             var mapArgs = <?php echo $map_args; ?>;
-
             // generate map when ajax is triggered
             GMW_Maps['sd'] = new GMW_Map( mapArgs.settings, mapArgs.map_options, {} );
             // initiate it
@@ -599,7 +591,9 @@ class GMW_Sweet_Date_Search_Query {
         // show address in results
         echo self::get_address();
         // show directions in results
-        echo gmw_get_directions_link( $member, $this->form_data, $this->labels['get_directions'] );
+        if ( isset( $this->options['directions_link'] ) && $this->options['directions_link'] != '' ) {
+            echo gmw_get_directions_link( $member, $this->form_data, $this->labels['get_directions'] );
+        }
 
         // if displaying map, collect some data to pass to the map script
         if ( ! empty( $this->options['map'] ) ) {
