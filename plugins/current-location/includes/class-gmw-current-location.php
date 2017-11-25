@@ -247,7 +247,7 @@ class GMW_Current_location {
 			'mapTypeControl' 	=> false,
 			'streetViewControl' => false,
 			'panControl'		=> false,
-			'zoomLevel'			=> $this->args['zoom_level'],
+			'zoom'				=> $this->args['zoom_level'],
 		);
 
 		// user position

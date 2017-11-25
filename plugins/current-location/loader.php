@@ -66,7 +66,7 @@ class GMW_Current_Location_Addon extends GMW_Register_Addon {
     public function enqueue_scripts() {
         
         // register gmw script
-        wp_register_script( 'gmw-current-location', GMW_URL.'/assets/js/gmw.current.location.min.js', array( 'jquery', 'google-maps', 'gmw' ), GMW_VERSION, true );       
+        wp_register_script( 'gmw-current-location', GMW_URL.'/assets/js/gmw.current.location.min.js', array( 'jquery', 'gmw' ), GMW_VERSION, true );       
     }
 }
 new GMW_Current_Location_Addon();
