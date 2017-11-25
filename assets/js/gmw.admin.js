@@ -4,7 +4,7 @@ var GMW_Admin = {
 
         // apply chosen to all select elements in GEO my WP admin pages
         if ( jQuery().chosen ) {
-            jQuery( '.gmw-admin-page select' ).chosen( {
+            jQuery( '.gmw-admin-page select:not( .gmw-smartbox-not )' ).chosen( {
                 width : "100%"
             });
         }
@@ -12,11 +12,15 @@ var GMW_Admin = {
         // initiate tabs
         GMW_Admin.tabs_switcher_init();
 
+        GMW_Admin.multiple_address_fields_selector();
+
         // do only on form editor page
-        if ( jQuery( '#gmw-edit-form-page' ).length ) {
+        if ( jQuery( '#gmw-edit-form-page, .geo-my-wp_page_gmw-settings' ).length ) {
 
             // initiate form editor functions
             GMW_Admin.form_editor_init();
+
+            GMW_Admin.limit_description();
         }
     },
 
@@ -65,6 +69,52 @@ var GMW_Admin = {
     },
 
     /**
+     * [multiple_address_fields_selector description]
+     * @return {[type]} [description]
+     */
+    multiple_address_fields_selector : function() {
+
+        // members locator address fields settings 
+        jQuery( '.gmw-admin-page [data="multiselect_address_fields"]' ).on( 'change', function( evt, params ) {
+
+            var multiSelect = jQuery( this );
+
+            if ( params.selected ) {
+
+                if ( params.selected == "address" || params.selected == "disabled" ) {
+                    
+                    multiSelect.children( 'option' ).each( function() {
+
+                        if ( jQuery( this ).val() != params.selected ) {
+                            
+                            if ( jQuery( this ).is( ':selected' ) ) {
+
+                                jQuery( this ).attr( 'selected', false );
+                            }
+                        }
+                    });
+                
+               } else  {
+                  
+                    multiSelect.children( 'option' ).each( function() {
+
+                        if ( jQuery( this ).val() == 'address' || jQuery( this ).val() == 'disabled'  ) {
+                            
+                            if ( jQuery( this ).is( ':selected' ) ) {
+
+                                jQuery( this ).attr( 'selected', false );
+                            }
+                        }
+                    });
+                }
+
+                multiSelect.trigger( 'chosen:updated' );
+            }
+        }); 
+
+    },
+
+    /**
      * form editor functions
      * 
      * @return {[type]} [description]
@@ -75,22 +125,86 @@ var GMW_Admin = {
             GMW.set_cookie( 'gmw_admin_tab', '', 1 );
         });
         
+        //options box tabs
+        jQuery( '.gmw-options-box ul.options-tabs li a' ).on( 'click', function( e ) {
+        
+            e.preventDefault();
+
+            thisTab = jQuery( this );
+            tabName = jQuery( this ).attr( 'class' ).replace( 'tab-anchor ', '' );
+
+            thisTab.closest( 'ul.options-tabs' ).find( 'li' ).removeClass( 'active' );
+            thisTab.closest( 'li' ).addClass( 'active' );
+
+            thisTab.closest( 'div.gmw-options-box' ).find( 'ul.options-tabs-content li.tab-content' ).hide();
+            thisTab.closest( 'div.gmw-options-box' ).find( 'ul.options-tabs-content li.'+tabName ).show();
+        });
+
+        function locator_button_setting( value ) {
+        
+            if ( value == 'disabled' ) {
+                jQuery( '.fields-group-locator_button' ).find( '.single-option:not( .option-locator )' ).slideUp( 'fast' );            
+            } else {
+                jQuery( '.fields-group-locator_button' ).find( '.single-option:not( .option-locator )' ).slideUp( 'fast' );  
+                jQuery( '.fields-group-locator_button' ).find( '.option-locator_submit, .option-locator_' + value ).slideDown( 'fast' );
+            }
+        }
+
+        locator_button_setting( jQuery( '#setting-search_form-locator' ).val() );
+
+        jQuery( '#setting-search_form-locator' ).change( function() {
+            locator_button_setting( jQuery( this ).val() );
+        } );
+
+        var selectedCount = jQuery( '#gmw-edit-form-page #setting-search_form-post_types option:selected' ).length;
+
+        if ( selectedCount == 1 ) {
+
+            var selected = jQuery( '#gmw-edit-form-page #setting-search_form-post_types option:selected' ).val();
+
+            jQuery( '#post-type-' + selected + '-taxonomies-wrapper' ).slideDown( 'fast' );
+        
+        } else if ( selectedCount > 1 ) {
+
+            jQuery( '.posts-types-settings-wrapper' ).slideDown( 'fase' );
+
+            // premium settings option
+            jQuery( '#post-types-no-taxonomies-message' ).slideDown( 'fast' );
+        }
+
         // Post types/taxonmies switcher. for post types locator extension
-        jQuery( '#gmw-edit-form-page .post-types-tax' ).click( function() {
+        jQuery( '#gmw-edit-form-page #setting-search_form-post_types' ).change( function() {
                 
-            var checked = jQuery( this ).closest( '.posts-checkboxes-wrapper' ).find( ':checkbox:checked' );
+            var selected = jQuery( this ).find( 'option:selected' );
 
-            if ( checked.length == 1  ) {
+            if ( selected.length == 0 ) {
 
-                checked = checked.attr('id');
+                jQuery( '.post-type-taxonomies-wrapper').slideUp( 'fast' );
+                jQuery( '#post-types-no-taxonomies-message' ).slideUp( 'fast' );
+                jQuery( '#post-types-select-taxonomies-message').slideDown( 'fast' );
 
-                jQuery( '#post-types-no-taxonomies-message' ).slideUp();
-                jQuery( '#post-type-' + checked + '-taxonomies-wrapper' ).slideDown( 'fast' ); 
+                // premium settings options
+                jQuery( '.posts-types-settings-wrapper' ).slideUp( 'fase' );
+
+            } else if ( selected.length == 1  ) {
+
+                selected = selected.val();
+
+                jQuery( '#post-types-no-taxonomies-message' ).slideUp( 'fast' );
+                jQuery( '#post-types-select-taxonomies-message').slideUp( 'fast' );
+                jQuery( '#post-type-' + selected + '-taxonomies-wrapper' ).slideDown( 'fast' ); 
+
+                 // premium settings options
+                jQuery( '.posts-types-settings-wrapper' ).slideUp( 'fase' );
             
             } else {
 
+                jQuery( '#post-types-select-taxonomies-message').slideUp( 'fast' );
                 jQuery( '.post-type-taxonomies-wrapper').slideUp();
                 jQuery( '#post-types-no-taxonomies-message' ).slideDown( 'fast' );
+
+                 // premium settings options
+                jQuery( '.posts-types-settings-wrapper' ).slideDown( 'fase' );
             }                   
         } );
 
@@ -189,6 +303,43 @@ var GMW_Admin = {
                    
                 }, 5000 );  
             });
+        });
+    },
+
+    /**
+     * Create smoe more link in feature description in admin
+     * 
+     * @return {[type]} [description]
+     */
+    limit_description : function() {
+        
+        jQuery( '.gmw-nav-tab' ).click( function() {
+
+            var tab = jQuery( this ).data( 'name' );
+
+            jQuery( '.gmw-tab-panel.' + tab + ' .gmw-form-feature-desc-content .description:not( .long )' ).each( function() {
+            
+                var height = jQuery( this ).outerHeight();
+                
+                if ( height > 80 ) {
+                    jQuery( this ).addClass( 'long' );
+                    jQuery( this ).after( '<span class="read-more"></span>' );
+                }
+            });
+        })
+
+        jQuery( '.gmw-form-feature-desc-content .description' ).each( function() {
+            
+            var height = jQuery( this ).outerHeight();
+            
+            if ( height > 80 ) {
+                jQuery( this ).addClass( 'long' );
+                jQuery( this ).after( '<span class="read-more"></span>' );
+            }
+        });
+
+        jQuery( document ).on( 'click', '.gmw-form-feature-desc-content .read-more', function() {
+            jQuery( this ).toggleClass( 'open' ).closest( 'div' ).find( 'em' ).toggleClass( 'long' )
         });
     }
 }
