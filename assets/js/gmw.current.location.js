@@ -51,7 +51,7 @@ jQuery( document ).ready( function( $ ) {
 	            jQuery( '.gmw-cl-address-input' ).prop( 'readonly', true );
 
 	            // show loader icon
-	            jQuery( '.gmw-cl-form-submit' ).removeClass( 'gmw-icon-search' ).addClass( 'gmw-icon-spin-1 animate-spin' );
+	            jQuery( '.gmw-cl-form-submit' ).removeClass( 'gmw-icon-search' ).addClass( 'gmw-icon-spin-light animate-spin' );
 
 	            // get loading message
 	            var loadingMessage = jQuery( '#gmw-cl-message-' + GMW_Current_Location.object_id ).data( 'loading_message' );
@@ -98,7 +98,7 @@ jQuery( document ).ready( function( $ ) {
 	           	jQuery( '.gmw-cl-address-input' ).prop( 'readonly', true );
 
 	           	// show loader icon
-	            jQuery( '.gmw-cl-form-submit' ).removeClass( 'gmw-icon-search' ).addClass( 'gmw-icon-spin-1 animate-spin' );
+	            jQuery( '.gmw-cl-form-submit' ).removeClass( 'gmw-icon-search' ).addClass( 'gmw-icon-spin-light animate-spin' );
 
 	            // get loading message
 	            var loadingMessage = jQuery( '#gmw-cl-message-' + GMW_Current_Location.object_id ).data( 'loading_message' );
@@ -178,7 +178,7 @@ jQuery( document ).ready( function( $ ) {
 		            jQuery( '.gmw-cl-respond-wrapper' ).slideUp();
 		            //jQuery( '#gmw-cl-message-' + GMW.current_location.id ).removeClass( 'error' ).html('');
 		            jQuery( '.gmw-cl-address-input' ).prop( 'readonly', false );
-		            jQuery( '.gmw-cl-form-submit' ).removeClass( 'gmw-icon-spin-1 animate-spin' ).addClass( 'gmw-icon-search' );
+		            jQuery( '.gmw-cl-form-submit' ).removeClass( 'gmw-icon-spin-light animate-spin' ).addClass( 'gmw-icon-search' );
 
 		        }, 500 ); 
 	        });   
@@ -247,7 +247,7 @@ jQuery( document ).ready( function( $ ) {
 	            jQuery( '.gmw-cl-respond-wrapper' ).slideUp();
 	            jQuery( '.gmw-cl-message' ).removeClass( 'error' ).html( '' );
 	            jQuery( '.gmw-cl-address-input' ).prop( 'readonly',false );
-	            jQuery( '.gmw-cl-form-submit' ).removeClass( 'gmw-icon-spin-1 animate-spin').addClass( 'gmw-icon-search' );
+	            jQuery( '.gmw-cl-form-submit' ).removeClass( 'gmw-icon-spin-light animate-spin').addClass( 'gmw-icon-search' );
 	        }, 3000 );                       
 	    },
 	}
