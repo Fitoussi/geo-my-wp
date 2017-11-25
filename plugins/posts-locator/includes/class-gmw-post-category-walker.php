@@ -15,6 +15,8 @@ class GMW_Post_Category_Walker extends Walker {
 		'slug' 	 => 'slug' 
 	);
 
+	public $category_icons = false;
+
 	/**
 	 * Start level
 	 * @param  &$output 
@@ -24,7 +26,7 @@ class GMW_Post_Category_Walker extends Walker {
 	 */
 	public function start_lvl( &$output, $depth = 0, $args = array() ) {
 
-		if ( $args['style'] != 'checkbox' ) {
+		if ( $args['usage'] != 'checkbox' ) {
 			return; 
 		}
 
@@ -41,7 +43,7 @@ class GMW_Post_Category_Walker extends Walker {
 	 */
 	public function end_lvl( &$output, $depth = 0, $args = array() ) {
 		
-		if ( $args['style'] != 'checkbox' ) {
+		if ( $args['usage'] != 'checkbox' ) {
 			return;
 		}
 
@@ -55,52 +57,58 @@ class GMW_Post_Category_Walker extends Walker {
 	public function start_el( &$output, $term, $depth = 0, $args = array(), $current_object_id = 0 ) {
 		
 		if ( ! empty( $args['hierarchical'] ) ) {
-		
 			$pad = str_repeat( '&nbsp;', $depth * 3 );
-		
 		} else {
-
 			$pad = '';
 		}
 
-		$tax_value = is_array( $args['selected'] ) ? array_map( 'esc_attr', $args['selected'] ) : esc_attr( $args['selected'] );
+		$value 	   = ! empty( $args['selected'] ) ? $args['selected'] : array();
 		$term_name = $args['show_count'] ? $term->name . '&nbsp;(' . $term->count . ')' : $term->name;
-		$term_id   = esc_attr( $term->term_id );
+		$term_id   = absint( $term->term_id );
 
-		if ( 'checkbox' == $args['style'] ) {
+		if ( 'checkbox' == $args['usage'] ) {
 			
 			$checked 		  	 = '';
 			$icon_checked     	 = '';
 			$category_icon_ok 	 = false;
-			$display_none 	  	 = '';
     		$category_icon_class = '';
+
+    		// get icons only once
+    		if ( $args['category_icons'] && ! $this->category_icons ) {
+    			$icons = gmw_get_icons();
+    			$this->category_icons = $icons['pt_category_icons'];
+    		}
     		
-			if ( is_array( $tax_value ) && in_array( $term->term_id, $tax_value ) ) {
+			if ( in_array( $term->term_id, $value ) ) {
 				$checked 	  = 'checked="checked"';
 				$icon_checked = 'checked';	
 			}
 			
-			if ( ! empty( $args['cat_icons']['icons'][$term->term_id] ) ) {
+			if ( isset( $this->category_icons['set_icons'][$term->term_id] ) ) {
 				$category_icon_ok 	 = true;
-				$display_none 	  	 = 'style="display:none;"';
-				$category_icon_class = 'category-icons';
+				$category_icon_class = ' category-icon';
+				$icon = esc_url( $this->category_icons['url'].$this->category_icons['set_icons'][$term->term_id] );
 			}
-				
-			$checkbox  = '<li class="gmw-checkbox-wrapper checkbox-id-'.$term_id.'-wrapper '.$category_icon_class.'">'; 
-			$checkbox .= '<input type="checkbox" name="tax_'.esc_attr( $args['taxonomy'] ).'[]" id="gmw-checkbox-id-'.$term_id.'" class="gmw-single-checkbox '.esc_attr( $args['taxonomy'] ).'" value="'.$term_id.'" '.$checked.' '.$display_none.' />';
+			
+			$checkbox  = '<li class="gmw-taxonomy-checkbox-wrapper term-'.$term_id.$category_icon_class.'">'; 
+			$checkbox .= '<label>';
+			$checkbox .= '<input type="checkbox" name="tax['.esc_attr( $args['taxonomy'] ).'][]" id="'.$term_id.'" class="gmw-taxonomy-checkbox" value="'.$term_id.'" '.$checked.'/>';
 			
 			if ( $category_icon_ok ) {
-				$checkbox .= '<img id="gmw-cat-icon-'.$term_id.'" class="category-icon gmw-checkbox-cat-icons '.$icon_checked.'" src="'.esc_url( $args['cat_icons']['url'].$args['cat_icons']['icons'][$term_id] ).'" onclick="jQuery(this).toggleClass(\'checked\');jQuery(this).closest(\'li.gmw-checkbox-wrapper\').find(\'.gmw-single-checkbox\').click();" />';
+				$checkbox .= '<img class="category-icon gmw-checkbox-cat-icon'.$icon_checked.'" src="'.$icon.'" onclick="jQuery(this).toggleClass(\'checked\');" />';
 			}
 			
-			$checkbox .= '<label for="gmw-checkbox-id-'.$term_id.'">'.esc_attr( $term_name ).' </label>';
+			$checkbox .= esc_html( $term_name );
+			$checkbox .= '</label>';
 			$checkbox .= '</li>';
-			$output   .= apply_filters( "gmw_search_form_display_checkbox", $checkbox, $term, $args['taxonomy'], $tax_value );
+			$output   .= $checkbox;
 		
 		} else { 
-			$selected  = ( ( isset( $tax_value ) && $tax_value == $term->term_id ) || ( is_array( $tax_value ) && ! empty( $tax_value ) && in_array( $term->term_id, $tax_value ) ) ) ? 'selected="selected"' : '';
+			$selected  = in_array( $term->term_id, $value ) ? 'selected="selected"' : '';
 			$output   .= "\t<option class=\"level-$depth\" value=\"$term_id\" $selected>$pad $term_name</option>\n";	
 		}
+
+		return $output;
 	}
 }
 

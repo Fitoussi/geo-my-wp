@@ -278,6 +278,65 @@ function gmw_get_post_location_data( $post_id = 0, $output = OBJECT, $cache = tr
 }
 
 /**
+ * Get post taxonomies terms list
+ * 
+ * @param  [type] $post [description]
+ * @param  array  $args [description]
+ * @return [type]       [description]
+ */
+function gmw_get_post_taxonomies_terms_list( $post, $args = array() ) {
+
+    $defaults = array(
+        'id'         => 0,
+        'class'      => '',
+        'exclude'    => '',
+        'terms_link' => 1
+    );
+
+    $args = wp_parse_args( $args, $defaults );
+    $args = apply_filters( 'gmw_post_taxonomies_list_args', $args, $post );
+
+    $excluded_taxes = $args['exclude'] != '' ? explode( ',', $args['exclude'] ) : array();
+
+    // get taxonomies attached to the post
+    $taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
+
+    $output = '';
+
+    // loop through taxonomies 
+    foreach ( $taxonomies as $taxonomy ) {
+            
+        // skip if taxonomy excluded
+        if ( in_array( $taxonomy->name, $excluded_taxes ) ) {
+            continue;
+        }
+
+        // get terms attached to the post
+        $terms = gmw_get_the_terms( $post->ID, $taxonomy->name );
+
+        if ( $terms && ! is_wp_error( $terms ) ) {
+
+            $tax_output = array();
+            $terms_list = array();
+            
+            //generate comma separated list of terms with or without a link
+            foreach ( $terms as $term ) {
+                $terms_list[] = $args['terms_link'] ? '<a href="'.esc_url( get_term_link( $term->term_id, $taxonomy->name ) ).'">'.esc_html( $term->name ).'</a>' : esc_html( $term->name );
+            }
+
+            $output .= '<div class="gmw-taxonomy-terms gmw-taxes '. esc_attr( $taxonomy->rewrite['slug'] ).' '.esc_attr( $args['class'] ).'">';
+            $output .= '<span class="label">'. esc_attr( $taxonomy->label ) .': </span>';
+            $output .= '<span class="gmw-terms-wrapper">';
+            $output .= join( ", ", $terms_list );
+            $output .= '</span>';
+            $output .= '</div>';
+        }
+    }
+
+    return $output;
+}
+
+/**
  * Delete post location
  *
  * @since 3.0
@@ -311,11 +370,12 @@ function gmw_post_location_status( $post_id = 0, $status = 1 ) {
     
     $wpdb->query( 
         $wpdb->prepare( "
-            UPDATE {$wpdb->prefix}gmw_locations 
+            UPDATE {$wpdb->base_prefix}gmw_locations 
             SET   `status`      = $status 
             WHERE `object_type` = 'post' 
+            AND   `blog_id`     = %d
             AND   `object_id`   = %d", 
-            array( $post_id ) 
+            array( gmw_get_blog_id(), $post_id ) 
         ) 
     );
 }
@@ -330,6 +390,14 @@ function gmw_post_location_status( $post_id = 0, $status = 1 ) {
  */
 function gmw_get_post_address( $args = array() ) {
     
+    // to support older versions. should be removed in the future
+    if ( empty( $args['fields'] ) && ! empty( $args['info'] ) ) {
+
+        trigger_error( 'The "info" shortcode attribute of the shortcode [gmw_post_address] is deprecated since GEO my WP version 3.0. Please use the shortcode attribute "fields" instead.', E_USER_NOTICE );
+
+        $args['fields'] = $args['info'];
+    }
+
     //default shortcode attributes
     $attr = shortcode_atts( array(
         'post_id'   => 0,

@@ -26,23 +26,19 @@
 ?>
 <?php do_action( 'gmw_before_search_form_template', $gmw ); ?>
 
-<div class="gmw-form-wrapper horizontal-gray gmw-pt-horizontal-gray-form-wrapper <?php echo $gmw['ID']; ?> <?php echo $gmw['prefix']; ?>">
+<div class="gmw-form-wrapper horizontal-gray gmw-pt-horizontal-gray-form-wrapper <?php echo esc_attr( $gmw['prefix'] ); ?>">
 	
 	<?php do_action( 'gmw_before_search_form', $gmw ); ?>
 	
-	<form class="gmw-form" data-form_id="<?php echo $gmw['ID']; ?>" name="gmw_form" action="<?php echo $gmw_form->get_results_page(); ?>" method="get">
+	<form class="gmw-form" name="gmw_form" action="<?php echo esc_attr( $gmw_form->get_results_page() ); ?>" method="get" data-id="<?php echo absint( $gmw['ID'] ); ?>" data-prefix="<?php echo esc_attr( $gmw['prefix'] ); ?>">
 			
 		<?php do_action( 'gmw_search_form_start', $gmw ); ?>
 				
 		<?php do_action( 'gmw_search_form_before_address', $gmw ); ?>
+					
+		<?php gmw_search_form_address_field( $gmw ); ?>
 		
-		<div class="address-locator-wrapper">
-			
-			<?php gmw_search_form_address_field( $gmw ); ?>
-		
-			<?php gmw_search_form_locator_button( $gmw ); ?>
-
-		</div>
+		<?php gmw_search_form_locator_button( $gmw ); ?>
 
 		<?php do_action( 'gmw_search_form_before_post_types', $gmw ); ?>
 				
@@ -58,7 +54,7 @@
 		
 		<?php gmw_search_form_units( $gmw ); ?>	
 		
-		<?php gmw_form_submit_fields( $gmw, false ); ?>
+		<?php gmw_search_form_submit_button( $gmw ); ?>
 		
 		<?php do_action( 'gmw_search_form_end', $gmw ); ?>
 		

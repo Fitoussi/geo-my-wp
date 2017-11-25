@@ -10,85 +10,45 @@ div.gmw-form-wrapper.gray {
 }
 
 div.gmw-form-wrapper.gray label {
-	text-transform:capitalize;
-	color:#555;
+	text-transform: capitalize;
+	color: #555;
 }
-
-div.gmw-form-wrapper.gray input[type="text"] {
-     padding:8px 10px 7px;	
-} 
  
-div.gmw-form-wrapper.gray input[type="text"], 
-div.gmw-form-wrapper.gray select {
-    width:100%;
-    margin-bottom:15px;
-    -webkit-box-sizing: border-box; 
-	-moz-box-sizing: border-box;    
-	box-sizing: border-box;
-}
-
-div.gmw-form-wrapper.gray .gmw-single-taxonomy-wrapper input[type="text"],
-div.gmw-form-wrapper.gray .gmw-single-taxonomy-wrapper select {
-	margin-bottom:0px;
-}
 
 div.gmw-form-wrapper.gray select {
 	border: 1px solid #ccc;
 	height:30px;
 	font-size: 14px;
 	color:#555;
-	//margin-top:5px
-}
-
-div.gmw-form-wrapper.gray .gmw-address-field-wrapper {
-	position:relative;
 }
 
 div.gmw-form-wrapper.gray .gmw-field-label {
-	padding: 2px 0px;
+	padding: 5px 0px;
 	background-color: #ABF1D4;
-	font-size: 14px;
-	text-align:center;
-	border:1px solid #9BDFC3;
+	font-size: 13px;
+	text-align: center;
+	border: 1px solid #9BDFC3;
 	display: inline-block;
-	width:100%;
-	color:#476458;
-	margin-bottom:3px;
-}
-
-div.gmw-form-wrapper.gray .gmw-taxonomies-wrapper {
-	margin-bottom: 20px;
-	border-bottom: 1px solid #e1e1e1;
-	padding-bottom: 10px;
+	width: 100%;
+	color: #555;
+	line-height: 20px;
 }
 
 div.gmw-form-wrapper.gray .gmw-no-address-error {
 	border: 1px solid rgb(252, 165, 165) !important;
 }
 
-div.gmw-form-wrapper.gmw-form-wrapper.gray .gmw-locator-btn-wrapper.usage-text, div.gmw-form-wrapper.gray .gmw-submit-button {
+div.gmw-form-wrapper.gmw-form-wrapper.gray .gmw-locator-button-wrapper.text, 
+div.gmw-form-wrapper.gray .gmw-submit-button {
 	padding: 6px 0px;
-	background-color: #ABF1D4;
-	border:1px solid #9BDFC3;
+	background-color: #333;
+	line-height: 24px;
+	color: white;
 }
 
-div.gmw-form-wrapper.gmw-form-wrapper.gray .gmw-locator-btn-wrapper.usage-text:hover, div.gmw-form-wrapper.gray .gmw-submit-button:hover {
-	background-color:#72D9AE;
-}
-
-div.gmw-form-wrapper.gray .gmw-locator-btn-wrapper .gmw-locator-submit {
-	display: inline;
-}
-
-div.gmw-form-wrapper.gray .gmw-locator-btn-wrapper img {
-	box-shadow: none;
-	//max-height: 15px;
-	//margin-left: 5px;
-}
-
-div.gmw-form-wrapper.gmw-form-wrapper.gray .gmw-address-field-wrapper i.gmw-locate-btn,
-div.gmw-form-wrapper.gmw-form-wrapper.gray .gmw-address-field-wrapper i.gmw-locate-loader {
-	color: rgb(135, 169, 146);
+div.gmw-form-wrapper.gmw-form-wrapper.gray .gmw-locator-button-wrapper.text:hover, 
+div.gmw-form-wrapper.gray .gmw-submit-button:hover {
+	background-color:#666;
 }
 
 div.gmw-form-wrapper.gray .gmw-submit {
@@ -102,96 +62,12 @@ div.gmw-form-wrapper.gray .gmw-submit {
 	border:0;
 }
 
-.widget_gmw_search_form_widget div.gmw-form-wrapper.gray .gmw-locator-btn-wrapper, .widget_gmw_search_form_widget div.gmw-form-wrapper.gray .gmw-submit-button {
+.widget_gmw_search_form_widget div.gmw-form-wrapper.gray .gmw-submit-button {
 	padding: 9px 0px;
-}
-
-/* premium features */
-
-div.gmw-form-wrapper.gray .gmw-radius-slider-wrapper {
-    margin-bottom:10px;
-    text-align:center;
-}
-
-div.gmw-form-wrapper.gray .gmw-radius-slider-wrapper label {
-    max-width: 52px;
-	text-align: left;
-	background: none;
-	border: 0px;
-}
-
-div.gmw-form-wrapper.gray .gmw-radius-slider-wrapper input {
-    max-width:60px;
-    font-size:14px;
-}
-
-div.gmw-form-wrapper.gray .gmw-radius-slider-wrapper .gmw-slider-range {
-	height: 0.8em;
-	-moz-border-radius: 0px/*{cornerRadius}*/;
-	-webkit-border-radius: 0px/*{cornerRadius}*/;
-	border-radius: 0px/*{cornerRadius}*/;
-}
-
-div.gmw-form-wrapper.gray .gmw-radius-slider-wrapper .gmw-slider-range a {
-	height:1.3em;
-}
-
-div.gmw-form-wrapper.gray .gmw-single-taxonomy-wrapper {
-	margin-bottom:15px;
-}
-
-div.gmw-form-wrapper.gray .gmw-checkbox-taxonomy-wrapper ul {
-	margin:0px;
-	padding:0px;
-}
-
-div.gmw-form-wrapper.gray .gmw-checkbox-taxonomy-wrapper ul.gmw-checkbox-level-top {
-	margin:-5px 0px 10px 0px;
-	max-height: 140px;
-	background: white;
-	padding:5px;
-	border:1px solid #e5e5e5;
-	overflow-y: scroll;
-}
-
-div.gmw-form-wrapper.gray .gmw-checkbox-taxonomy-wrapper ul.gmw-checkbox-children {
-	padding-left:12px;
-}
-
-div.gmw-form-wrapper.gray .gmw-checkbox-taxonomy-wrapper li {
-	list-style:none;
-	padding:0px;
-	margin:2px;
-}
-
-div.gmw-form-wrapper.gray .gmw-checkbox-taxonomy-wrapper ul li label {
-	display:inline-block;
-	font-size: 13px;
-	margin:0px;
-	text-transform: capitalize;
-	color:#555;
-	line-height: 24px;
-}
-
-div.gmw-form-wrapper.gray .gmw-checkbox-taxonomy-wrapper span {
-	display:inline-block;
 }
 
 div.gmw-form-wrapper.gray input.gmw-single-checkbox {
 	margin-right: 5px;	
-}
-
-div.gmw-form-wrapper.gray .gmw-checkbox-taxonomy-wrapper ul li.gmw-checkbox-wrapper img.category-icon {
-	vertical-align: top;
-	max-height: 18px;
-	box-shadow: none;
-	border: 1px solid #dedede;
-	margin-right: 4px;
-	cursor: pointer;
-}
-
-div.gmw-form-wrapper.gray .gmw-checkbox-taxonomy-wrapper ul li.gmw-checkbox-wrapper img.category-icon.checked {
-	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
 div.gmw-form-wrapper.gray ul.chosen-choices {

@@ -24,7 +24,7 @@
  */
 ?>
 <!--  Main results wrapper - wraps the paginations, map and results -->
-<div class="gmw-results-wrapper custom <?php echo $gmw['ID']; ?> <?php echo $gmw['prefix']; ?>">
+<div class="gmw-results-wrapper custom <?php echo esc_attr( $gmw['prefix'] ); ?>" data-id="<?php absint( $gmw['ID'] ); ?>" data-prefix="<?php echo esc_attr( $gmw['prefix'] ); ?>">
 	
 	<?php if ( $gmw_form->has_locations() ) : ?>
 
@@ -33,19 +33,17 @@
 			<?php do_action( 'gmw_search_results_start', $gmw ); ?>
 			
 			<div class="gmw-results-count">
-				<span><?php gmw_results_message( $gmw, false ); ?></span>
+				<span><?php gmw_results_message( $gmw ); ?></span>
+				<?php do_action( 'gmw_search_results_after_results_message', $gmw ); ?>
 			</div>
 			
 			<?php do_action( 'gmw_before_top_pagination', $gmw ); ?>
 			
 			<div class="gmw-pt-pagination-wrapper gmw-pt-top-pagination-wrapper">
-
-				<?php gmw_per_page( $gmw, $gmw['total_results'], 'paged' ); ?>
-				<?php gmw_pagination( $gmw, 'paged', $gmw['max_pages'] ); ?>
-			
+				<?php gmw_per_page( $gmw ); ?>
+				<?php gmw_pagination( $gmw ); ?>
 			</div> 
 				
-			 <!-- GEO my WP Map -->
 		    <?php gmw_results_map( $gmw ); ?>
 			
 			<div class="clear"></div>
@@ -58,7 +56,7 @@
 					
 					<?php global $post; ?>
 
-					<li id="post-<?php the_ID(); ?>" class="<?php echo $post->location_class; ?>">
+					<li id="post-<?php absint( $post->ID ); ?>" class="<?php echo esc_attr( $post->location_class ); ?>">
 						
 						<?php do_action( 'gmw_search_results_loop_item_start', $gmw, $post ); ?>
 						
@@ -67,86 +65,44 @@
 								<?php echo $post->location_count; ?>) <?php the_title(); ?>	
 							</a>
 
-							<span class="radius-dis">(<?php gmw_distance_to_location( $post, $gmw ); ?>)</span>
+							<span class="radius-dis">
+								<?php gmw_distance_to_location( $post, $gmw ); ?>	
+							</span>
 						</h2>
-						
-						<?php do_action( 'gmw_posts_loop_after_title' , $gmw, $post ); ?>
-						
-						<?php if ( isset( $gmw['search_results']['image']['enabled'] ) && has_post_thumbnail() ) { ?>
-							
-							<?php do_action( 'gmw_search_results_before_image' , $gmw, $post ); ?>
-						
-							<div class="post-thumbnail">
-								<?php 
-									the_post_thumbnail( array( 
-										$gmw['search_results']['image']['width'], 
-										$gmw['search_results']['image']['height'] 
-									) ); 
-								?>
-							</div>
+												
+						<?php do_action( 'gmw_search_results_before_image', $gmw, $post ); ?>
 
-						<?php } ?>
+						<?php gmw_search_results_featured_image( $post, $gmw ); ?>
 					
-						<?php if ( isset( $gmw['search_results']['excerpt']['use'] ) ) { ?>
-
-							<div class="excerpt">
-								<?php gmw_excerpt( $post, $gmw, $post->post_content, $gmw['search_results']['excerpt']['count'], $gmw['search_results']['excerpt']['more'] ); ?>
-							</div>
-
-						<?php } ?>
+						<?php do_action( 'gmw_search_results_before_excerpt', $gmw, $post ); ?>
+							
+						<?php gmw_search_results_post_excerpt( $post, $gmw ); ?>
 						
-						<?php do_action( 'gmw_posts_loop_after_content' , $gmw, $post ); ?>
-						
-						<div>
-							<?php gmw_taxonomies_list( $post, $gmw ); ?>
-						</div>
+						<?php gmw_search_results_taxonomies( $post, $gmw ); ?>
 						
 				    	<div class="clear"></div>
 				    	
 				    	<div class="wppl-info">
 			    			
-			    			<?php if ( ! empty( $post->location_meta ) ) { ?>
-    	
-						    	<?php do_action( 'gmw_search_results_before_contact_info', $post, $gmw ); ?>
-							   	
-						    	<?php gmw_location_meta_output( $post, $gmw ); ?>
+			    			<?php do_action( 'gmw_search_results_before_contact_info', $post, $gmw ); ?>
+							   		
+						   	<?php gmw_search_results_location_meta( $post, $gmw ); ?>
 
-						    <?php } ?>
+						    <?php do_action( 'gmw_search_results_before_hours_of_operation', $post, $gmw ); ?>
 
-						    <?php if ( ! empty( $gmw['search_results']['opening_hours'] ) ) { ?>
-	    
-						    	<?php do_action( 'gmw_search_results_before_opening_hours', $post, $gmw ); ?>
-							   	
-						    	<div class="opening-hours">
-						    		<?php gmw_opening_hours( $post, $gmw ); ?>
-						    	</div>
-
-						    <?php } ?>
+							<?php gmw_search_results_hours_of_operation( $post, $gmw ); ?>
 							    
 			    			<div class="wppl-address">
-
-			    				<span class="gmw-icon-address address-icon"></span>
-			    				<?php gmw_location_address( $post, $gmw ); ?>
-
+			    				<?php gmw_search_results_address( $post, $gmw ); ?>
 			    			</div>
-
-							<?php if ( isset( $gmw['search_results']['by_driving'] ) ) { ?>
-			    				<?php gmw_driving_distance( $post, $gmw, false ); ?>
-			    			<?php } ?>
 			    				
-							<?php if ( isset( $gmw['search_results']['get_directions'] ) ) { ?>
-
-								<div class="get-directions-link">
-			    					<?php gmw_directions_link( $post, $gmw, $gmw['labels']['search_results']['directions'] ); ?>
-			    				</div>
-
-			    			<?php } ?>
+			    			<?php gmw_search_results_directions_link( $post, $gmw ); ?>
 
 				    	</div> 
 				    	
-				    	<?php do_action( 'gmw_posts_loop_post_end', $gmw, $post ); ?>
+				    	<?php do_action( 'gmw_search_results_loop_item_end', $gmw, $post ); ?>
 				    	
-				    </div>
+				    </li>
 				    
 				    <div class="clear"></div>     
 			
@@ -157,10 +113,8 @@
 			<?php do_action( 'gmw_search_results_after_loop', $gmw ); ?>
 			
 			<div class="gmw-pt-pagination-wrapper gmw-pt-bottom-pagination-wrapper">
-				
-				<?php gmw_per_page( $gmw, $gmw['total_results'], 'paged' ); ?>
-				<?php gmw_pagination( $gmw, 'paged', $gmw['max_pages'] ); ?>
-				
+				<?php gmw_per_page( $gmw ); ?>
+				<?php gmw_pagination( $gmw ); ?>
 			</div>
 
 		</div>
@@ -171,7 +125,7 @@
             
             <?php do_action( 'gmw_no_results_start', $gmw ); ?>
 
-            <p><?php echo esc_attr( $gmw['no_results_message'] ); ?></p>
+            <?php gmw_no_results_message( $gmw ); ?>
             
             <?php do_action( 'gmw_no_results_end', $gmw ); ?> 
 

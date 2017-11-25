@@ -20,6 +20,20 @@ if ( ! class_exists( 'GMW_Location_Form' ) ) {
 class GMW_Posts_Location_Form extends GMW_Location_Form {
 
     /**
+     * Addon
+     * 
+     * @var string
+     */
+    public $slug = 'posts_locator';
+
+    /**
+     * Object type
+     * 
+     * @var string
+     */
+    public $object_type = 'post';
+
+    /**
      * Run the form class
      * @param array $attr [description]
      */
@@ -50,6 +64,9 @@ class GMW_Posts_Location_Form extends GMW_Location_Form {
             'icon'         => 'gmw-icon-clock',
             'priority'     => 25,
         );
+
+        // filter tabs
+        $tabs = apply_filters( 'gmw_pt_location_form_tabs', $tabs, $this );
 
         return $tabs;
     }
@@ -137,6 +154,8 @@ class GMW_Posts_Location_Form extends GMW_Location_Form {
             )
         );
 
+        $fields = apply_filters( 'gmw_pt_location_form_fields', $fields, $this );
+
         return $fields;
     }
 
@@ -146,6 +165,8 @@ class GMW_Posts_Location_Form extends GMW_Location_Form {
      * @return void
      */
     public function create_tabs_panels() {
+
+        do_action( 'gmw_pt_location_form_before_panels', $this );
         ?>
         <!-- contact info tab -->
         <div id="contact-tab-panel" class="section-wrapper contact">
@@ -194,5 +215,6 @@ class GMW_Posts_Location_Form extends GMW_Location_Form {
 
         </div>
         <?php 
+        do_action( 'gmw_pt_location_form_after_panels', $this );
     }
 }

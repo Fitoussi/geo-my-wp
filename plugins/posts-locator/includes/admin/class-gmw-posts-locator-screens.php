@@ -158,10 +158,15 @@ class GMW_Posts_Locator_Screens {
             // expand button
             echo '<i type="button" id="gmw-location-section-resize" class="gmw-icon-resize-full" title="Expand full screen" style="display: block" onclick="jQuery( this ).closest( \'#gmw-location-meta-box\' ).find( \'.inside\' ).toggleClass( \'fullscreen\' );"></i>';
 
+            $admins_map_settings = gmw_get_option( 'post_types_settings', 'edit_post_map_settings', array(
+                'latitude'    => '40.711544',
+                'longitude'   => '-74.013486', 
+                'map_type'    => 'ROADMAP',
+                'zoom_level'  => 7   
+            ) );
+
             // form args
             $form_args = apply_filters( 'gmw_edit_post_location_form_args', array(
-                'slug'                  => 'posts_locator',
-                'object_type'           => 'post',
                 'object_id'             => $post->ID,
                 'exclude_tabs'          => '',
                 'form_template'         => 'location-form-tabs-left',
@@ -171,10 +176,10 @@ class GMW_Posts_Locator_Screens {
                 'ajax_enabled'          => 0,
                 'confirm_required'      => 0,
                 'form_element'          => '.wrap form',
-                'map_zoom_level'        =>  gmw_get_option( 'post_types_settings', 'edit_post_zoom_level', 13 ),
-                'map_type'              =>  gmw_get_option( 'post_types_settings', 'edit_post_map_type', 'ROADMAP' ),
-                'map_lat'               =>  gmw_get_option( 'post_types_settings', 'edit_post_latitude', '40.7827096' ),
-                'map_lng'               =>  gmw_get_option( 'post_types_settings', 'edit_post_longitude', '-73.9653099' ),
+                'map_zoom_level'        =>  $admins_map_settings['zoom_level'],
+                'map_type'              =>  $admins_map_settings['map_type'],
+                'map_lat'               =>  $admins_map_settings['latitude'],
+                'map_lng'               =>  $admins_map_settings['longitude'],
                 'location_mandatory'    =>  gmw_get_option( 'post_types_settings', 'mandatory_address', 0 ),
                 'location_required'     =>  gmw_get_option( 'post_types_settings', 'mandatory_address', 0 )        
             ) );

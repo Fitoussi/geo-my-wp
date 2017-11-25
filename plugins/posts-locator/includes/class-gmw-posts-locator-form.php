@@ -16,21 +16,22 @@ class GMW_Posts_Locator_Form extends GMW_Form {
     public $object_permalink_hook = 'the_permalink';
 
     /**
-     * [get_object_data description]
+     * [get_info_window_args description]
      * @param  [type] $location [description]
      * @return [type]           [description]
      */
-    public function get_object_data( $post ) {
-     
+    public function get_info_window_args( $post ) {
         return array(
-            'url'   => get_permalink( $post->ID ),
-            'title' => esc_attr( $post->post_title ),
-            'image' => get_the_post_thumbnail( $post->ID )
+            'prefix' => $this->prefix,
+            'type'   => ! empty( $this->form['info_window']['iw_type'] ) ? $this->form['info_window']['iw_type'] : 'standard',
+            'image'  => get_the_post_thumbnail( $post->ID ),
+            'url'    => get_permalink( $post->ID ),
+            'title'  => $post->post_title
         );
     }
 
     /**
-     * Query taxonomies
+     * Query taxonomies on form submission
      * 
      * @param  [type] $tax_args [description]
      * @param  [type] $gmw      [description]
@@ -38,52 +39,35 @@ class GMW_Posts_Locator_Form extends GMW_Form {
      */
     public function query_taxonomies() {
 
-        if ( apply_filters( 'gmw_pt_disable_tax_query', false, $this->form, $this ) ) {
+        // query taxonomies if submitted in form
+        if ( empty( $this->form['form_values']['tax'] ) ) {
             return false;
         }
 
-        // abort if multiple post types were set.
-        if ( empty( $this->form['search_form']['post_types'] ) || count( $this->form['search_form']['post_types'] ) != 1 ) {
-            return false;   
-        }
-
-        $postType = $this->form['search_form']['post_types'][0];
-
-        // abort if no taxonomies were set for the choosen post type.
-        if ( empty( $this->form['search_form']['taxonomies'] ) || empty( $this->form['search_form']['taxonomies'][$postType] ) ) {
-            return false;
-        }
-
-        $rr      = 0;
-        $get_tax = false;
-        $args    = array( 'relation' => 'AND' );
+        $tax_value = false;
+        $output    = array( 'relation' => 'AND' );
             
-        foreach ( $this->form['search_form']['taxonomies'][$postType] as $tax => $values ) {
+        foreach ( $this->form['form_values']['tax'] as $taxonomy => $values ) {
 
-            if ( $values['style'] == 'dropdown' ) {
-                 
-                $get_tax = false;
+            if ( array_filter( $values ) )  { 
+                $output[] = array(
+                    'taxonomy' => $taxonomy,
+                    'field'    => 'id',
+                    'terms'    => $values,
+                    'operator' => 'IN'
+                );
+            }
 
-                if ( isset( $_GET['tax_' . $tax] ) ) {
-                    $get_tax = sanitize_text_field( $_GET['tax_' . $tax] );
-                }
-
-                if ( $get_tax != 0 ) {
-                    $rr++;
-                    $args[] = array(
-                        'taxonomy' => $tax,
-                        'field'    => 'id',
-                        'terms'    => array( $get_tax )
-                    );
-                }
-            } 
+            // extend the taxonomy query
+            $output = apply_filters( 'gmw_pt_query_taxonomy', $output, $taxonomy, $values, $this->form );
         }
 
-        if ( $rr == 0 ) {
-            $args = false;
+        // verify that there is at least one query to performe
+        if ( empty( $output[0] ) ) {
+            $output = false;
         }
 
-        return $args;
+        return $output;
     }
 
     /**
@@ -97,7 +81,6 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 
         // do locations query. If nothing was found abort and show no result
         if ( empty( $locations_objects_id ) ) {
-       
             return false;
         }
 
@@ -107,7 +90,16 @@ class GMW_Posts_Locator_Form extends GMW_Form {
             $post_types = ! empty( $this->form['page_load_results']['post_types'] ) ? $this->form['page_load_results']['post_types'] : 'post';	
 
         // when set to 1 means that we need to show all post types
-        } elseif ( ! empty( $this->form['form_values']['post'] ) && $_GET[$this->form['url_px'].'post'] != '1' ) {
+        } elseif ( ! empty( $this->form['form_values']['post'] ) && array_filter( $this->form['form_values']['post'] ) ) {
+            
+            $post_types = $this->form['form_values']['post'];
+        
+        } else {
+            
+            $post_types = ! empty( $this->form['search_form']['post_types'] ) ? $this->form['search_form']['post_types'] : 'post';
+        }
+
+        /*} elseif ( ! empty( $this->form['form_values']['post'] ) && $_GET[$this->form['url_px'].'post'] != '1' ) {
             
             if ( ! is_array( $this->form['form_values']['post'] ) ) {
                 
@@ -116,7 +108,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 
         } else {     	
         	$post_types = ! empty( $this->form['search_form']['post_types'] ) ? $this->form['search_form']['post_types'] : 'post';
-        }
+        } */
         
         // get query args for cache
         if ( $this->form['page_load_action'] ) {
@@ -162,7 +154,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
             'ignore_sticky_posts' => 1,
             'post__in'            => $post__in,
             'orderby'             => $order_by,
-            'gmw_args'            => $gmw_query_args,
+            'gmw_args'            => $gmw_query_args
         ), $this->form, $this );
 
         //Modify the form before the search query
@@ -179,7 +171,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 
         // look for query in cache
         if ( ! $internal_cache || false === ( $this->query = get_transient( $query_args_hash ) ) ) {
-        
+            
             //print_r( 'WP posts query done' );
         
 	        // posts query
@@ -187,12 +179,30 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 
             // set new query in transient     
             if ( $internal_cache ) {
+                    
+                /**
+                 * This is a temporary solution for an issue with caching SQL requests
+                 * For some reason when LIKE is being used in SQL WordPress replace the % of the LIKE
+                 * with long random numbers. This SQL is still being saved in the transient. Hoever,
+                 * it is not being pulled back properly when GEO my WP trying to use it. 
+                 * It shows an error "unserialize(): Error at offset " and the value returns blank.
+                 * As a temporary work around, we remove the [request] value, which contains the long numbers, from the WP_Query and save it in the transien without it. 
+                 * @var [type]
+                 */
+                $request = $this->query->request;
+                unset( $this->query->request );
                 set_transient( $query_args_hash, $this->query, GMW()->internal_cache_expiration );
+                $this->query->request = $request;
             }
-        }
+        }   
 
         //Modify the form before the search query
         $this->form = apply_filters( 'gmw_pt_form_after_posts_query', $this->form, $this );
+
+        // make sure posts exist
+        if ( empty( $this->query->posts ) ) {
+            return false;
+        }
 
         $this->form['results'] 	     = $this->query->posts;
         $this->form['results_count'] = count( $this->query->posts );
@@ -202,7 +212,6 @@ class GMW_Posts_Locator_Form extends GMW_Form {
         $temp_array = array();
 
         foreach ( $this->form['results'] as $post ) {
-
             $temp_array[] = parent::the_location( $post->ID, $post );
         }
 

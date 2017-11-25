@@ -26,23 +26,19 @@
 ?>
 <?php do_action( 'gmw_before_search_form_template', $gmw ); ?>
 
-<div class="gmw-form-wrapper default gmw-pt-default-form-wrapper <?php echo $gmw['ID']; ?> <?php echo $gmw['prefix']; ?>">
+<div class="gmw-form-wrapper default gmw-pt-default-form-wrapper <?php echo esc_attr( $gmw['prefix'] ); ?>">
 	
 	<?php do_action( 'gmw_before_search_form', $gmw ); ?>
 	
-	<form class="gmw-form" data-form_id="<?php echo $gmw['ID']; ?>" name="gmw_form" action="<?php echo $gmw_form->get_results_page(); ?>" method="get">
+	<form class="gmw-form" name="gmw_form" action="<?php echo esc_attr( $gmw_form->get_results_page() ); ?>" method="get" data-id="<?php echo absint( $gmw['ID'] ); ?>" data-prefix="<?php echo esc_attr( $gmw['prefix'] ); ?>">
 			
 		<?php do_action( 'gmw_search_form_start', $gmw ); ?>
 		
-		<div class="gmw-post-types-wrapper">
-			<?php gmw_search_form_post_types ( $gmw ); ?>
-		</div>
+		<?php gmw_search_form_post_types( $gmw ); ?>
 		
 		<?php do_action( 'gmw_search_form_before_taxonomies', $gmw ); ?>
 		
-		<div class="gmw-taxonomies-wrapper">
-			<?php gmw_search_form_taxonomies( $gmw ); ?>
-		</div>
+		<?php gmw_search_form_taxonomies( $gmw ); ?>
 		
 		<?php do_action( 'gmw_search_form_before_address', $gmw ); ?>
 		            
@@ -51,31 +47,20 @@
 		<?php do_action( 'gmw_search_form_before_locator', $gmw ); ?>
 		
 		<?php gmw_search_form_locator_button( $gmw ); ?>
-			
-		<div class="clear"></div>
-		
+					
 		<?php do_action( 'gmw_search_form_before_distance', $gmw ); ?>
-		
-		<div class="gmw-unit-distance-wrapper">
-			
-			<div class="gmw-radius-dropdown-wrapper">
-            	<?php gmw_search_form_radius( $gmw ); ?>
-            </div>
+					
+        <?php gmw_search_form_radius( $gmw ); ?>
             
-			<div class="gmw-units-dropdown-wrapper">
-            	<?php gmw_search_form_units( $gmw ); ?>
-            </div>	
-            
-		</div>
-		
-		<?php gmw_form_submit_fields( $gmw, false ); ?>
+        <?php gmw_search_form_units( $gmw ); ?>
+            		
+		<?php gmw_search_form_submit_button( $gmw ); ?>
 		
 		<?php do_action( 'gmw_search_form_end', $gmw ); ?>
 		
 	</form>
-	
-	<?php do_action( 'gmw_after_search_form', $gmw ); ?>
-	
-</div>	
 
+	<?php do_action( 'gmw_after_search_form', $gmw ); ?>
+
+</div>	
 <?php do_action( 'gmw_after_search_form_template', $gmw ); ?>

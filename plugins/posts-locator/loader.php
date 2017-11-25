@@ -40,8 +40,13 @@ class GMW_Posts_Locator_Addon extends GMW_Register_Addon {
     // db table prefix
     public $global_db = false;
 
+    public $templates = true;
+
     // folder name
-    public $templates_folder = 'posts';
+    //public $templates_folder = 'templates';
+
+    // custom folder name
+    //public $custom_templates_folder = 'posts-locator';
 
     // path
     public $full_path = __FILE__;
@@ -61,15 +66,14 @@ class GMW_Posts_Locator_Addon extends GMW_Register_Addon {
 
         parent::pre_init();
 
-        include( 'includes/gmw-pt-functions.php' );
+        include( 'includes/gmw-posts-locator-functions.php' );
 
         // include admin files
         if ( IS_ADMIN ) {
-            
-            include( 'includes/admin/class-gmw-pt-admin.php' );
-            include( 'includes/admin/class-gmw-pt-screens.php' );
-            include( 'includes/admin/class-gmw-pt-location-form.php' );
-        
+            include( 'includes/admin/class-gmw-posts-locator-admin-settings.php' );
+            include( 'includes/admin/class-gmw-posts-locator-form-editor.php' );
+            include( 'includes/admin/class-gmw-posts-locator-screens.php' );
+            include( 'includes/admin/class-gmw-posts-locator-location-form.php' );
         } 
         //else {
 
@@ -80,7 +84,9 @@ class GMW_Posts_Locator_Addon extends GMW_Register_Addon {
             } 
         //}
 
-        include( 'includes/gmw-pt-template-functions.php' );
+        include( 'includes/gmw-posts-locator-search-form-template-functions.php' );
+        include( 'includes/gmw-posts-locator-search-results-template-functions.php' );
+
     }
 }
 new GMW_Posts_Locator_Addon();
