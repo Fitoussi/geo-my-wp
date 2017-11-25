@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'geo-my-wp';
-  src: url('../font/geo-my-wp.eot?16227729');
-  src: url('../font/geo-my-wp.eot?16227729#iefix') format('embedded-opentype'),
-       url('../font/geo-my-wp.woff2?16227729') format('woff2'),
-       url('../font/geo-my-wp.woff?16227729') format('woff'),
-       url('../font/geo-my-wp.ttf?16227729') format('truetype'),
-       url('../font/geo-my-wp.svg?16227729#geo-my-wp') format('svg');
+  src: url('../font/geo-my-wp.eot?51219496');
+  src: url('../font/geo-my-wp.eot?51219496#iefix') format('embedded-opentype'),
+       url('../font/geo-my-wp.woff2?51219496') format('woff2'),
+       url('../font/geo-my-wp.woff?51219496') format('woff'),
+       url('../font/geo-my-wp.ttf?51219496') format('truetype'),
+       url('../font/geo-my-wp.svg?51219496#geo-my-wp') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'geo-my-wp';
-    src: url('../font/geo-my-wp.svg?16227729#geo-my-wp') format('svg');
+    src: url('../font/geo-my-wp.svg?51219496#geo-my-wp') format('svg');
   }
 }
 */
@@ -57,7 +57,7 @@
  
 .gmw-icon-spin-3:before { content: '\e800'; } /* '' */
 .gmw-icon-spin:before { content: '\e801'; } /* '' */
-.gmw-icon-spin-1:before { content: '\e802'; } /* '' */
+.gmw-icon-spin-light:before { content: '\e802'; } /* '' */
 .gmw-icon-spin-2:before { content: '\e803'; } /* '' */
 .gmw-icon-heart:before { content: '\e804'; } /* '' */
 .gmw-icon-heart-empty:before { content: '\e805'; } /* '' */
@@ -69,7 +69,7 @@
 .gmw-icon-flag:before { content: '\e80b'; } /* '' */
 .gmw-icon-flag-empty:before { content: '\e80c'; } /* '' */
 .gmw-icon-pencil:before { content: '\e80d'; } /* '' */
-.gmw-icon-location-1:before { content: '\e80e'; } /* '' */
+.gmw-icon-left-open:before { content: '\e80e'; } /* '' */
 .gmw-icon-direction:before { content: '\e80f'; } /* '' */
 .gmw-icon-doc:before { content: '\e810'; } /* '' */
 .gmw-icon-doc-text:before { content: '\e811'; } /* '' */
@@ -131,10 +131,20 @@
 .gmw-icon-params:before { content: '\e849'; } /* '' */
 .gmw-icon-cog:before { content: '\e84a'; } /* '' */
 .gmw-icon-pinboard:before { content: '\e84b'; } /* '' */
-.gmw-icon-link:before { content: '\e84c'; } /* '' */
+.gmw-icon-updown-circle:before { content: '\e84c'; } /* '' */
 .gmw-icon-info-circled:before { content: '\e84d'; } /* '' */
 .gmw-icon-info:before { content: '\e84e'; } /* '' */
 .gmw-icon-info-circled-1:before { content: '\e84f'; } /* '' */
+.gmw-icon-buddypress:before { content: '\e850'; } /* '' */
+.gmw-icon-wpjmgeo-logo:before { content: '\e851'; } /* '' */
+.gmw-icon-location-thin:before { content: '\e852'; } /* '' */
+.gmw-icon-arrow-left:before { content: '\e853'; } /* '' */
+.gmw-icon-arrow-right:before { content: '\e854'; } /* '' */
+.gmw-icon-arrow-up:before { content: '\e855'; } /* '' */
+.gmw-icon-arrow-down:before { content: '\e856'; } /* '' */
+.gmw-icon-move:before { content: '\f047'; } /* '' */
+.gmw-icon-sort:before { content: '\f0dc'; } /* '' */
+.gmw-icon-map-pin:before { content: '\f276'; } /* '' */
 
 /*
    Animation example, for spinners
