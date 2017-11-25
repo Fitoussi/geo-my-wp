@@ -217,11 +217,22 @@ class GMW_Single_Location {
 
 			// check for last location in URL
 			if ( ! empty( $_GET['lat'] ) && ! empty( $_GET['lng'] ) ) {
-			
+				
 				$this->user_position['exists']  = true;
 				$this->user_position['lat'] 	= sanitize_text_field( $_GET['lat'] );
 				$this->user_position['lng'] 	= sanitize_text_field( $_GET['lng'] );
-				$this->user_position['address'] = sanitize_text_field( $_GET['address'] );
+
+				$address = '';
+
+				if ( ! empty( $_GET['address'] ) ) {
+					if ( is_array( $_GET['address'] ) ) {
+						$address = implode( ' ', $_GET['address'] );
+					} else {
+						$address = $_GET['address'];
+					}
+				}
+
+				$this->user_position['address'] = sanitize_text_field( $address );
 			
 			// Otherwise check for user location in cookies
 			} elseif ( !empty( $_COOKIE['gmw_ul_lat'] ) && !empty( $_COOKIE['gmw_ul_lng'] ) ) {
@@ -286,6 +297,11 @@ class GMW_Single_Location {
             $address_array = array();
 
             foreach ( $this->args['address_fields'] as $field ) {
+
+            	if ( empty( $this->location_data->$field ) ) {
+            		continue;
+            	}
+
                 $address_array[] = $this->location_data->$field;
             }
             
@@ -353,7 +369,7 @@ class GMW_Single_Location {
 			'map_id' 	 	=> $this->args['element_id'],
 			'map_type'		=> 'single_location',
 			'prefix'		=> 'sl',
-			'map_element' 	=> 'gmw-map-'.$this->args['element_id'],
+			//'map_element' 	=> 'gmw-map-'.$this->args['element_id'],
 			'zoom_position' => array( 
 				'lat' => $this->location_data->lat,
 				'lng' => $this->location_data->lng,
@@ -375,7 +391,7 @@ class GMW_Single_Location {
 
 		$map_options = array(
 			'mapTypeId'			=> $this->args['map_type'],
-			'zoomLevel'			=> $this->args['zoom_level'],
+			'zoom'				=> $this->args['zoom_level'],
 			'mapTypeControl' 	=> false,
 			'streetViewControl' => false,
 			'scrollwheel'		=> ! empty( $this->args['scrollwheel_map_zoom'] ) ? true : false,
@@ -383,11 +399,11 @@ class GMW_Single_Location {
 		);
 		
 		$user_position = array(
-			'lat'			=> $this->user_position['lat'],
-			'lng'			=> $this->user_position['lng'],
-			'address' 		=> $this->user_position['address'],
-			'map_icon'		=> $this->args['user_map_icon'],
-			'iw_content'	=> ! empty( $this->args['user_info_window'] ) ? $this->args['user_info_window'] : null,	
+			'lat'		 => $this->user_position['lat'],
+			'lng'		 => $this->user_position['lng'],
+			'address' 	 => $this->user_position['address'],
+			'map_icon'	 => $this->args['user_map_icon'],
+			'iw_content' => ! empty( $this->args['user_info_window'] ) ? $this->args['user_info_window'] : null,	
 		);
 
 	    return gmw_get_map( $map_args, $map_options, $locations, $user_position );
@@ -412,7 +428,7 @@ class GMW_Single_Location {
 		$output  = '';
 		$output .= "<div id=\"gmw-sl-directions-link-wrapper-{$element_id}\" class=\"gmw-sl-directions-link-wrapper gmw-sl-element gmw-sl-{$i_type}-direction-link-wrapper\">";
 		$output .= 	"<div class=\"trigger-wrapper\">";
-		$output .=		"<i class=\"gmw-icon-address\"></i>";
+		$output .=		"<i class=\"gmw-icon-location-thin\"></i>";
 		$output .=		"<a href=\"#\" id=\"form-trigger-{$element_id}\" class=\"form-trigger\" onclick=\"event.preventDefault();jQuery(this).closest( '.gmw-sl-element' ).find( '.directions-link-form-wrapper' ).slideToggle();\">".esc_attr( $this->labels['directions'] )."</a>";
 		$output .=	"</div>";
 		$output .= 	"<div id=\"directions-link-form-wrapper-{$element_id}\" class=\"directions-link-form-wrapper\" style=\"display:none;\">";
@@ -452,7 +468,7 @@ class GMW_Single_Location {
 		);
 
 		$output  = "<div class=\"gmw-sl-directions-trigger-wrapper\">";
-		$output .= 	"<i class=\"gmw-directions-icon gmw-icon-address\"></i>";
+		$output .= 	"<i class=\"gmw-directions-icon gmw-icon-location-thin\"></i>";
 		$output .= 	"<a href=\"#\" id=\"gmw-sl-directions-trigger-{$element_id}\" class=\"gmw-sl-directions-trigger\" onclick=\"event.preventDefault();jQuery('#gmw-directions-form-wrapper-{$element_id}, #gmw-directions-panel-wrapper-{$element_id}').slideToggle();\">". esc_attr( $this->labels['show_directions'] ) ."</a>";
 		$output .= "</div>";		
 
@@ -493,7 +509,7 @@ class GMW_Single_Location {
 		$contact_info = explode( ',', $this->args['location_meta'] );
 
 		$output  = '<div class="gmw-sl-location-metas gmw-sl-element gmw-sl-additional-info-wrapper">';
-		$output .= gmw_get_location_meta_output( $this->location_data->ID, $contact_info );
+		$output .= gmw_get_location_meta_list( $this->location_data->ID, $contact_info );
 		$output .= '</div>';
 
 		// for older version - to be removed 

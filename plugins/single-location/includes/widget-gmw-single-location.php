@@ -43,9 +43,18 @@ class GMW_Single_Location_Widget extends WP_Widget {
 
 		$widget_title = ! empty( $instance['widget_title'] ) ? htmlentities( $args['before_title'].$instance['widget_title'].$args['after_title'], ENT_QUOTES ) : 0;
 
+        // support for previous versions
+        if ( empty( $instance['object_type'] ) && ! empty( $instance['item_type'] ) ) {
+            $instance['object_type'] = $instance['item_type'];
+        }
+
+        if ( empty( $instance['location_meta'] ) && ! empty( $instance['additional_info'] ) ) {
+            $instance['location_meta'] = $instance['additional_info'];
+        }
+
 		echo do_shortcode('[gmw_single_location
 			element_id="'.$instance['element_id'].'"
-			item_type="'.$instance['item_type'].'"
+			object_type="'.$instance['object_type'].'"
 			elements="'.$instance['elements'].'"
 			address_fields="'.$instance['address_fields'].'"
 			item_id="'.$instance['item_id'].'"
@@ -55,7 +64,7 @@ class GMW_Single_Location_Widget extends WP_Widget {
 			map_type="'.$instance['map_type'].'"
 			zoom_level="'.$instance['zoom_level'].'"
             scrollwheel_map_zoom="'.$instance['scrollwheel'].'"
-			additional_info="'.$instance['additional_info'].'"
+			location_meta="'.$instance['location_meta'].'"
 			item_info_window="'.$instance['item_info_window'].'"
 			user_map_icon="'.$instance['user_map_icon'].'"
 			user_info_window="'.$instance['user_info_window'].'"
@@ -81,11 +90,11 @@ class GMW_Single_Location_Widget extends WP_Widget {
 		$defaults = array(
 			'widget_title'			=> 'Single location',
 			'element_id'	  		=> rand( 100, 549 ),
-			'item_type'				=> 'post',
+			'object_type'				=> 'post',
 			'item_id'         		=> 0,
-			'elements'				=> 'title,distance,map,address,live_directions,directions_panel,additional_info',
+			'elements'				=> 'title,distance,map,address,directions_form,directions_panel,location_meta',
 			'address_fields'		=> 'address',
-			'additional_info' 		=> 'phone,fax,email,website',
+			'location_meta' 		=> 'phone,fax,email,website',
 			'units'		            => 'm',
 			'map_height'      		=> '250px',
 			'map_width'       		=> '250px',
@@ -93,7 +102,7 @@ class GMW_Single_Location_Widget extends WP_Widget {
 			'zoom_level'      		=> 'auto',
             'scrollwheel'           => 1,
 			'item_map_icon'			=> 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
-			'item_info_window'	  	=> 'distance,title,address,additional_info',
+			'item_info_window'	  	=> 'distance,title,address,location_meta',
 			'user_map_icon'   	  	=> 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
 			'user_info_window'	  	=> 'Your Location',
 			'no_location_message'	=> 'No location found',
@@ -124,18 +133,18 @@ class GMW_Single_Location_Widget extends WP_Widget {
             </p>
 
             <p>
-    	        <label for="<?php echo $this->get_field_name('item_type'); ?>">
+    	        <label for="<?php echo $this->get_field_name('object_type'); ?>">
     	        	<?php echo _e('Item type', 'GMW'); ?>:
     	        </label>
                 
-                <select id="<?php echo $this->get_field_name('item_type'); ?>" name="<?php echo $this->get_field_name('item_type'); ?>" onchange="if ( jQuery(this).val() == 'member' ) { jQuery('p.single-post-wrapper').show() } else { jQuery('p.single-post-wrapper').hide() }; if ( jQuery(this).val() == 'post' ) { jQuery('p.additional-info-wrapper').show() } else { jQuery('p.additional-info-wrapper').hide() };">
+                <select id="<?php echo $this->get_field_name('object_type'); ?>" name="<?php echo $this->get_field_name('object_type'); ?>" onchange="if ( jQuery(this).val() == 'member' ) { jQuery('p.single-post-wrapper').show() } else { jQuery('p.single-post-wrapper').hide() }; if ( jQuery(this).val() == 'post' ) { jQuery('p.additional-info-wrapper').show() } else { jQuery('p.additional-info-wrapper').hide() };">
                 	
                     <?php if ( gmw_is_addon_active( 'posts_locator' ) ) { ?>
-                		<option value="post" <?php if ( isset( $instance['item_type'] ) && $instance['item_type'] == "post" ) echo 'selected="selected"' ; ?>><?php _e( 'Post', 'GMW' ); ?></option>
+                		<option value="post" <?php if ( isset( $instance['object_type'] ) && $instance['object_type'] == "post" ) echo 'selected="selected"' ; ?>><?php _e( 'Post', 'GMW' ); ?></option>
                 	<?php } ?>
                 	
                     <?php if ( gmw_is_addon_active( 'members_locator' ) ) { ?>
-                		<option value="member" <?php if ( isset( $instance['item_type'] ) && $instance['item_type'] == "member" ) echo 'selected="selected"' ; ?>><?php _e( 'BuddyPress Member', 'GMW' ); ?></option>
+                		<option value="member" <?php if ( isset( $instance['object_type'] ) && $instance['object_type'] == "member" ) echo 'selected="selected"' ; ?>><?php _e( 'BuddyPress Member', 'GMW' ); ?></option>
                 	<?php } ?>
 
                 </select>
@@ -164,7 +173,7 @@ class GMW_Single_Location_Widget extends WP_Widget {
                 </em>
             </p>
 
-            <p class="single-post-wrapper" <?php if ( isset( $instance['item_type'] ) && $instance['item_type'] != "member" ) echo 'style="display:none"'; ?>>
+            <p class="single-post-wrapper" <?php if ( isset( $instance['object_type'] ) && $instance['object_type'] != "member" ) echo 'style="display:none"'; ?>>
                 
                 <label for="<?php echo $this->get_field_name('show_in_single_post'); ?>">
                 	<input id="<?php echo $this->get_field_name('show_in_single_post'); ?>" type="checkbox" value="1"  name="<?php echo $this->get_field_name('show_in_single_post'); ?>" <?php if ( ! empty( $instance['show_in_single_post'] ) ) echo 'checked="checked"'; ?> class="checkbox" />
@@ -181,7 +190,7 @@ class GMW_Single_Location_Widget extends WP_Widget {
                 </label>
                 <input type="text" id="<?php echo $this->get_field_name('elements'); ?>" name="<?php echo $this->get_field_name('elements'); ?>" value="<?php if ( isset( $instance['elements'] ) ) echo esc_attr( $instance['elements'] ); ?>" class="widefat" />
                 <em>
-                	<?php _e( "Enter the elements that you would like to display, in the order that you want to display them, comma separated. The available elements are title, distance, map, address, directions_link, live_directions, directions_panel and additional_info ( additional_info is only available for post ).", 'GMW' ); ?>
+                	<?php _e( "Enter the elements that you would like to display, in the order that you want to display them, comma separated. The available elements are title, distance, map, address, directions_link, directions_form, directions_panel and location_meta ( location_meta is only available for post ).", 'GMW' ); ?>
                 </em>
             </p>
             <p>
@@ -198,10 +207,10 @@ class GMW_Single_Location_Widget extends WP_Widget {
             </p>
             
             <p>
-                <label for="<?php echo $this->get_field_name('additional_info'); ?>">
+                <label for="<?php echo $this->get_field_name('location_meta'); ?>">
                 	<?php _e( "Additional info fields", 'GMW' ); ?>:
                 </label>     
-                <input type="text" id="<?php echo $this->get_field_name('additional_info'); ?>" name="<?php echo $this->get_field_name( 'additional_info' ); ?>" value="<?php if ( isset( $instance['additional_info'] ) ) echo esc_attr( $instance['additional_info'] ); ?>" class="widefat" />
+                <input type="text" id="<?php echo $this->get_field_name('location_meta'); ?>" name="<?php echo $this->get_field_name( 'location_meta' ); ?>" value="<?php if ( isset( $instance['location_meta'] ) ) echo esc_attr( $instance['location_meta'] ); ?>" class="widefat" />
                 <em>
                 	<?php _e( "Enter the additional information that you would like to display, comma separated. Ex. Phone, fax, email, website.", 'GMW' ); ?>
                 </em>
@@ -276,7 +285,7 @@ class GMW_Single_Location_Widget extends WP_Widget {
                 </label>     
                 <input type="text" id="<?php echo $this->get_field_name('item_info_window'); ?>" name="<?php echo $this->get_field_name('item_info_window'); ?>" value="<?php if ( isset( $instance['item_info_window'] ) ) echo esc_attr( $instance['item_info_window'] ); ?>" class="widefat" />
             	<em>
-                	<?php _e( "Enter the elements that you would like to display in the item's info-window in the order that you want to display them, comma saperated. Otherwise, leave the input box blank to disable the info-window. The elements available are distance, title, address, additional_info ( additional info is only available for post ).", 'GMW' ); ?>
+                	<?php _e( "Enter the elements that you would like to display in the item's info-window in the order that you want to display them, comma saperated. Otherwise, leave the input box blank to disable the info-window. The elements available are distance, title, address, location_meta ( additional info is only available for post ).", 'GMW' ); ?>
                 </em>
             </p>
             <p>
@@ -325,7 +334,7 @@ class GMW_Single_Location_Widget extends WP_Widget {
     	$instance['widget_title']    	 = $new_instance['widget_title'];
     	$instance['element_id']    		 = $new_instance['element_id'];
     	$instance['elements']   		 = $new_instance['elements'];
-    	$instance['item_type']    		 = $new_instance['item_type'];
+    	$instance['object_type']    		 = $new_instance['object_type'];
         $instance['address_fields']      = $new_instance['address_fields'];
         $instance['item_id']      		 = $new_instance['item_id'];
         $instance['units']               = $new_instance['units'];
@@ -334,7 +343,7 @@ class GMW_Single_Location_Widget extends WP_Widget {
         $instance['map_type']    		 = $new_instance['map_type'];
         $instance['zoom_level']     	 = $new_instance['zoom_level'];
         $instance['scrollwheel']         = $new_instance['scrollwheel'];
-        $instance['additional_info'] 	 = $new_instance['additional_info'];
+        $instance['location_meta'] 	 = $new_instance['location_meta'];
         $instance['item_info_window'] 	 = $new_instance['item_info_window'];
         $instance['item_map_icon'] 	 	 = $new_instance['item_map_icon'];
         $instance['user_map_icon'] 		 = $new_instance['user_map_icon'];
