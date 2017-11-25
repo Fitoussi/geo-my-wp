@@ -3,12 +3,12 @@
 Plugin Name: GEO my WP
 Plugin URI: http://www.geomywp.com
 Description: GEO my WP is an adavanced mapping and proximity search plugin. Geotag post types and BuddyPress members and create proximity search forms to search and find locations based on address, radius, categories and more.
-Version: 3.0-beta-1
+Version: 3.0-beta-2
 Author: Eyal Fitoussi
 Author URI: http://www.geomywp.com
-Requires at least: 4.0
-Tested up to: 4.8.1
-Buddypress: 2.1.1 and up
+Requires at least: 4.5
+Tested up to: 4.9
+Buddypress: 2.8 or higher
 Text Domain: GMW
 Domain Path: /languages/
 License: GNU General Public License v3.0
@@ -29,7 +29,7 @@ class GEO_my_WP {
 	 * GEO my WP version
 	 * @var string
 	 */
-	public $version = '3.0-beta-1';
+	public $version = '3.0';
 
 	/**
 	 * Database version
@@ -53,7 +53,7 @@ class GEO_my_WP {
 	 * 
 	 * @var string
 	 */
-	public $url_prefix = 'gmw_';
+	public $url_prefix = '';
 
 	/**
 	 * Showing on mobile device?
@@ -117,10 +117,15 @@ class GEO_my_WP {
 	public $addons_status = array();
 
 	/**
-	 * array of objects which will use the database base prefix
+	 * Collections of object types and blog ID. 
+	 * This will be used on multisite installation 
+	 * and with objects that use different blog IDs. For example, 
+	 * users will be saved in the main blog even on multisite since users 
+	 * share the same table across all blogs.
+	 *  
 	 * @var array
 	 */
-	public $global_db_objects = array();
+	public $locations_blogs = array();
 
 	/**
 	 * Core addons
@@ -175,7 +180,6 @@ class GEO_my_WP {
 			self::$instance->setup_globals();
 			self::$instance->includes();
 			self::$instance->actions();
-			self::$instance->load_core_addons();	
 		}
 
 		return self::$instance;
@@ -312,7 +316,7 @@ class GEO_my_WP {
 		$this->addons_status = $addons_status;
 
 		// filter url prefix
-		$this->url_prefix     = apply_filters( 'gmw_form_url_prefix', $this->url_prefix );
+		$this->url_prefix     = esc_attr( apply_filters( 'gmw_form_url_prefix', $this->url_prefix ) );
 		$this->ajax_url       = admin_url( 'admin-ajax.php', is_ssl() ? 'admin' : 'http' );
 		$this->internal_cache = apply_filters( 'gmw_internal_cache_enabled', $this->internal_cache );
 		$this->internal_cache_expiration = apply_filters( 'gmw_internal_cache_expiration', $this->internal_cache_expiration );
@@ -333,6 +337,7 @@ class GEO_my_WP {
 
 		// include files
 		include( 'includes/class-gmw-helper.php' );
+		include( 'includes/class-gmw-forms-helper.php' );
 		include( 'includes/gmw-functions.php' );
 		include( 'includes/class-gmw-register-addon.php' );
 		include( 'includes/class-gmw-location.php' );
@@ -344,10 +349,17 @@ class GEO_my_WP {
 		include( 'includes/gmw-enqueue-scripts.php' );
 		include( 'includes/location-form/includes/class-gmw-location-form.php' );
 		include( 'includes/gmw-widgets.php' );
-		include( 'includes/gmw-template-functions.php' );
+		include( 'includes/template-functions/class-gmw-search-form-helper.php' );
+		include( 'includes/template-functions/class-gmw-template-functions-helper.php' );
+		include( 'includes/template-functions/gmw-template-functions.php' );
+		include( 'includes/template-functions/gmw-search-form-template-functions.php' );
+		include( 'includes/template-functions/gmw-search-results-template-functions.php' );
 		include( 'includes/class-gmw-form.php' );
 		include( 'includes/gmw-shortcodes.php' );
 
+		// load core add-ons
+		self::$instance->load_core_addons();
+		
 		//include admin files
 		if ( IS_ADMIN ) {
 			include( GMW_PATH . '/includes/admin/class-gmw-admin.php' ); 	
@@ -376,14 +388,13 @@ class GEO_my_WP {
 	 * @return [boolean]      
 	 */
 	public static function gmw_check_addon( $addon ) {
-		return GMW_Helper::is_addon_active( $addon );
+		return gmw_is_addon_active( $addon );
 	}
 
 	/**
 	 * Include core add-ons
 	 */
 	private function load_core_addons() {
-		
 		include( GMW_PLUGINS_PATH . '/single-location/loader.php' );
 		include( GMW_PLUGINS_PATH . '/posts-locator/loader.php' );
 		include( GMW_PLUGINS_PATH . '/members-locator/loader.php' );
