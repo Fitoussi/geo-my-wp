@@ -22,47 +22,35 @@
 
 <div id="buddypress">
 
-	<div id="members-dir-search" class="dir-search gmw-form-wrapper gmw-form-wrapper<?php echo $gmw['ID']; ?> gmw-fl-form-wrapper gmw-fl-kleo-form-wrapper">
+	<div id="members-dir-search" class="dir-search gmw-form-wrapper gmw-fl-kleo-form-wrapper <?php echo esc_attr( $gmw['prefix'] ); ?>">
 		
 		<?php do_action( 'gmw_before_search_form', $gmw ); ?>
 		
-		<form id="search-members-form" class="search-members-form gmw-form gmw-form-<?php echo $gmw['ID']; ?>" name="gmw_form" action="<?php echo $gmw['search_results']['results_page']; ?>" method="get">
+		<form id="search-members-form" class="search-members-form gmw-form" name="gmw_form" action="<?php echo esc_attr( $gmw_form->get_results_page() ); ?>" method="get" data-id="<?php echo absint( $gmw['ID'] ); ?>" data-prefix="<?php echo esc_attr( $gmw['prefix'] ); ?>">
 				
 			<?php do_action( 'gmw_search_form_start', $gmw ); ?>
 			
 			<?php do_action( 'gmw_search_form_before_address', $gmw ); ?>		
 
-			<label for="members_search">
+			<?php gmw_search_form_address_field( $gmw, $id='members_search', $class='' ); ?>
+				
+			<?php gmw_search_form_locator_button( $gmw ); ?>
 
-				<!-- Address Field -->
-				<?php gmw_search_form_address_field( $gmw, $id='members_search', $class='' ); ?>
-					
-				<!--  locator icon -->
-				<?php gmw_search_form_locator_icon( $gmw ); ?>
+			<span class="xprofile-fields-trigger" onclick="jQuery(this).closest('form').find('.gmw-kleo-advanced-search-wrapper' ).slideToggle();">
+				<?php _e( 'More options','GMW' ); ?>
+			</span>
 
-			</label>
+			<?php gmw_search_form_submit_button( $gmw ); ?>	
+
+			<div class="gmw-kleo-advanced-search-wrapper">				
+				
+				<?php gmw_search_form_radius( $gmw ); ?>
 			
-			<div class="xfield-trigger-wrapper">
-				<div class="xfield-trigger" onclick="jQuery(this).closest('form').find('.gmw-kleo-advanced-search-wrapper' ).slideToggle();jQuery(this).html(jQuery(this).html() == 'Hide Options' ? 'More Options' : 'Hide Options');">
-					More Options
-				</div>
-			</div>
+				<?php gmw_search_form_units( $gmw ); ?>	
 
-			<?php gmw_form_submit_fields( $gmw, false ); ?>	
-
-			<div class="gmw-kleo-advanced-search-wrapper">
-				
-				<!--distance values -->
-				<?php gmw_search_form_radius_values( $gmw ); ?>
-				
-				<?php do_action( 'gmw_search_form_before_distance', $gmw ); ?>
-				
-				<!--distance units-->
-				<?php gmw_search_form_units( $gmw, $class='' ); ?>	
-						
 				<?php do_action( 'gmw_search_form_before_xprofile', $gmw ); ?>
 						            						
-				<?php gmw_fl_xprofile_fields( $gmw, $class='' ); ?>
+				<?php gmw_search_form_xprofile_fields( $gmw ); ?>
 				
 			</div>
 			
@@ -72,7 +60,7 @@
 		
 		<?php do_action( 'gmw_after_search_form', $gmw ); ?>
 		
-	</div><!--form wrapper -->	
+	</div>
 
 </div>
 

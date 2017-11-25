@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * 
  * @return [type]       [description]
  */
-function gmw_record_member_location_activity( $user_id, $location ) {
+function gmw_record_member_location_activity( $user_id, $user_location ) {
    
     if ( ! function_exists( 'bp_activity_add' ) ) {
     	return false;
@@ -19,8 +19,8 @@ function gmw_record_member_location_activity( $user_id, $location ) {
     
     global $bp;
 
-    // get user ID
-    $new_address = apply_filters( 'gmw_fl_activity_address_fields', $location['formatted_address'], $location, $user_id );
+    // get user location
+    $new_address = apply_filters( 'gmw_fl_activity_address_fields', $user_location['formatted_address'], $user_location, $user_id );
         
     // get user link
     $from_user_link = bp_core_get_userlink( $user_id );
@@ -32,8 +32,15 @@ function gmw_record_member_location_activity( $user_id, $location ) {
     $region   = '&region='.gmw_get_option( 'general_settings', 'country_code', 'us' );
     $language = '&hl='.gmw_get_option( 'general_settings', 'langauge_code', 'en' );
     
+    $updated_text = __( '%s updated new location', 'GMW' );
+
+    // show address in activity only if enabled or not empty
+    if ( ! empty( $new_address ) ) {
+        $updated_text .= __( ' at %s', 'GMW' );
+    }
+
     // activity updated text
-    $activity_text = apply_filters( 'gmw_fl_update_activity_text', __( '%s updated new location at %s', 'GMW' ), $user_id, $new_address, $location );
+    $activity_text = apply_filters( 'gmw_fl_update_activity_text', $updated_text, $user_id, $new_address, $user_location );
     
     // generate activity arguments
     $args = apply_filters( 'gmw_fl_activity_update_args', array(
@@ -46,13 +53,13 @@ function gmw_record_member_location_activity( $user_id, $location ) {
 		'item_id'           => false,
 		'secondary_item_id' => false,
 		'recorded_time'     => gmdate( 'Y-m-d H:i:s' )
-    ), $user_id, $location, $current_address );
+    ), $user_id, $user_location, $current_address );
     
     // generate activity
     $activity_id = bp_activity_add( $args );
 
     // do something after activity updated
-    do_action( 'gmw_fl_after_activity_updated', $activity_id, $args, $user_id, $location );
+    do_action( 'gmw_fl_after_activity_updated', $activity_id, $args, $user_id, $user_location );
 
     return $activity_id;
 }

@@ -68,7 +68,7 @@ class GMW_Members_Locator_Component extends BP_Component {
     	
         // admin files
     	if ( is_admin() ) {
-    		$includes[] = 'includes/admin/class-gmw-members-locator-admin.php';
+    		$includes[] = 'includes/admin/class-gmw-members-locator-form-editor.php';
     	}
 
     	parent::includes( $includes );
@@ -165,6 +165,7 @@ class GMW_Members_Locator_Component extends BP_Component {
      */
     public function displayed_user_content() {
     	
+        echo '<div class="location gmw">';
         // Single Location add-on must be activated to display full location details
     	if ( gmw_is_addon_active( 'single_location' ) ) {
     		
@@ -173,10 +174,12 @@ class GMW_Members_Locator_Component extends BP_Component {
         // otherwise, display only address field
         } else {
     		
-            $content = '<div id="gmw-ml-member-address">'. esc_attr( gmw_get_user_address() ) .'</div>';
+            $content = '<div id="gmw-ml-member-address"><i class="gmw-icon-location"></i>'. esc_attr( gmw_get_user_address() ) .'</div>';
     	}
     	
         echo do_shortcode( apply_filters( 'gmw_fl_user_location_tab_content', $content ) );
+
+        echo '</div>';
     }
 
     /**

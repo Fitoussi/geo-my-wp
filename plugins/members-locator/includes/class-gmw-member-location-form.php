@@ -15,6 +15,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 class GMW_Member_Location_Form extends GMW_Location_Form {
 
     /**
+     * addon
+     * @var string
+     */
+    public $slug = 'members_locator';
+
+    /**
+     * [$object_type description]
+     * @var string
+     */
+    public $object_type = 'user'; 
+
+    /**
      * Run the form class
      * 
      * @param array $attr [description]
@@ -36,7 +48,7 @@ class GMW_Member_Location_Form extends GMW_Location_Form {
         
         $tabs = parent::form_tabs();
 
-        return apply_filters( 'gmw_member_location_form_tabs', $tabs );
+        return apply_filters( 'gmw_member_location_form_tabs', $tabs, $this->args );
     }
 
     /**
@@ -49,7 +61,7 @@ class GMW_Member_Location_Form extends GMW_Location_Form {
         // retreive parent fields
         $fields = parent::form_fields();
 
-        return apply_filters( 'gmw_member_location_tab_fields', $fields );
+        return apply_filters( 'gmw_member_location_tab_fields', $fields, $this->args );
     }
 
     /**
@@ -58,7 +70,6 @@ class GMW_Member_Location_Form extends GMW_Location_Form {
      * @return void
      */
     public function create_tabs_panels() {
-        
         do_action( 'gmw_member_location_tabs_panels', $this );
     }
 }
@@ -67,10 +78,10 @@ global $bp;
 
 // form args
 $form_args = apply_filters( 'gmw_member_location_form_args', array(
-    'slug'           => 'members_locator',
-    'object_type'    => 'user',
     'object_id'      => $bp->displayed_user->id,
-    'form_template'  => 'location-form-tabs-left',
+    'exclude_tabs'   => gmw_get_option( 'members_locator', 'location_form_exclude_fields_groups', array() ),
+    'exclude_fields' => gmw_get_option( 'members_locator', 'location_form_exclude_fields', array() ),
+    'form_template'  => gmw_get_option( 'members_locator', 'location_form_template', 'location-form-no-tabs' ),
     'submit_enabled' => 1,
     'stand_alone'    => 1,
     'ajax_enabled'   => 1,

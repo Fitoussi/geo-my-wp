@@ -9,14 +9,6 @@ div.gmw-form-wrapper.yellow {
 	margin-bottom: 1px
 }
 
-div.gmw-form-wrapper.yellow label {
-	text-transform: capitalize;
-	display: block;
-	font-weight: normal;
-	margin: 7px 0 5px 0;
-	font-size: 13px;
-}
-
 div.gmw-form-wrapper.yellow input[type="text"], 
 div.gmw-form-wrapper.yellow select,
 div.gmw-form-wrapper.yellow textarea,
@@ -45,24 +37,10 @@ div.gmw-form-wrapper.yellow .xfield-trigger {
 	cursor: pointer;
 }
 
-div.gmw-form-wrapper.yellow .gmw-fl-form-xprofile-fields {
-	display:none;
-	background-color: rgb(254, 254, 254);
-	border: 1px solid rgb(238, 238, 238);
-	padding: 15px;
-	background-position: initial initial;
-	background-repeat: initial initial;
-	margin-bottom: 10px;
-}
-
 div.gmw-form-wrapper.yellow .gmw-fl-form-xprofile-fields .editfield.datebox input {
 	display:inline;
 	width:48%;
 	margin: 8px 0px;	
-}
-
-div.gmw-form-wrapper.yellow .gmw-fl-form-xprofile-fields .editfield input[type="text"] {
-	background: #fafafa;
 }
 
 div.gmw-form-wrapper.yellow .gmw-fl-form-xprofile-fields .editfield.datebox input:last-child {
@@ -70,19 +48,17 @@ div.gmw-form-wrapper.yellow .gmw-fl-form-xprofile-fields .editfield.datebox inpu
 }	
 
 div.gmw-form-wrapper.yellow .gmw-fl-form-xprofile-fields .editfield span,
-div.gmw-form-wrapper.yellow .gmw-saf-wrapper label,
-div.gmw-form-wrapper.yellow .gmw-address-field-wrapper label,
+div.gmw-form-wrapper.yellow .gmw-field-label,
 div.gmw-form-wrapper.yellow .gmw-fl-form-xprofile-fields .editfield label:first-child {
-	padding: 4px 0px;
-	background-color: #FBFCBA;
+	padding: 5px 0px;
 	font-size: 13px;
 	text-align: center;
-	border: 1px solid #D1D296;
 	display: inline-block;
 	width: 100%;
-	color: #626332;
-	margin: 10px 0 3px;
-	font-weight: normal;
+	color: #555;
+	line-height: 24px;
+	background-color: #FBFCBA;
+	border: 1px solid #e6e7a5;
 }
 
 div.gmw-form-wrapper.yellow .gmw-address-fields-wrapper {
@@ -99,15 +75,12 @@ div.gmw-form-wrapper.yellow .gmw-no-address-error {
 
 div.gmw-form-wrapper.yellow .gmw-locator-btn-wrapper.usage-text, 
 div.gmw-form-wrapper.yellow .gmw-submit-button {
-	background-color: #FBFCBA;
 	text-align: center;
-	border: 1px solid #D1D296;
-	color: #626332;
 }
 
 div.gmw-form-wrapper.yellow .gmw-locator-btn-wrapper.usage-text:hover, 
 div.gmw-form-wrapper.yellow .gmw-submit-button:hover {
-	background:#E8E979;
+	//background:#E8E979;
 }
 
 div.gmw-form-wrapper.yellow .gmw-locator-btn-wrapper .gmw-locator-submit {
@@ -138,27 +111,4 @@ div.gmw-form-wrapper.yellow .gmw-submit {
 
 .widget_gmw_search_form_widget div.gmw-form-wrapper.yellow .gmw-submit {
 	width:100%;
-}
-
-/* premium features */
-
-div.gmw-form-wrapper.yellow .gmw-radius-slider-wrapper {
-    margin-bottom:10px;
-    text-align: center;
-}
-
-div.gmw-form-wrapper.yellow .gmw-radius-slider-wrapper input {
-    max-width:60px;
-    font-size:14px;
-}
-
-div.gmw-form-wrapper.yellow .gmw-radius-slider-wrapper .gmw-slider-range {
-	height: 1.0em;
-	-moz-border-radius: 0px;
-	-webkit-border-radius: 0px;
-	border-radius: 0px;
-}
-
-div.gmw-form-wrapper.yellow .gmw-radius-slider-wrapper .gmw-slider-range a {
-	height:1.3em;
 }

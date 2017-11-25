@@ -35,8 +35,13 @@ class GMW_Members_locator_Addon extends GMW_Register_Addon {
     // in multisite installation
     public $global_db = true;
 
+    public $templates = true;
+
     // folder name
-    public $templates_folder = 'members';
+    //public $templates_folder = 'templates';
+
+    // custom folder name
+    //public $custom_templates_folder = 'members-locator';
 
     // path
     public $full_path = __FILE__;
@@ -55,6 +60,21 @@ class GMW_Members_locator_Addon extends GMW_Register_Addon {
         'priority'  => 10 
     );
     
+    public function __construct() {
+        
+        // When multisite enabled, and buddypress is multisite activated,
+        // the blog_id we will be using will be buddypress's root blog.
+        // Otherwise, members will be saved per blog 
+        if ( is_multisite() && function_exists( 'bp_is_network_activated' ) && bp_is_network_activated() ) {
+            $this->locations_blog_id = BP_ROOT_BLOG;
+        }
+
+        parent::__construct();
+    }
+    /**
+     * [required description]
+     * @return [type] [description]
+     */
     public function required() {
 
         return array(

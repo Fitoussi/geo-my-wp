@@ -29,7 +29,7 @@ add_action( 'bp_register_activity_actions', 'gmw_members_locator_activity_action
  * 
  * @return mixed              
  */
-function gmw_after_member_location_updated( $location, $form_values ) {
+function gmw_after_member_location_updated( $user_location, $form_values ) {
 
 	// proceed only if BP member Location updated
 	if ( empty( $form_values['gmw_lf_slug'] ) || $form_values['gmw_lf_slug'] != 'members_locator' ) {
@@ -50,11 +50,17 @@ function gmw_after_member_location_updated( $location, $form_values ) {
 
     // hook from previous versions of GEO my WP
     // do something after location updated
-    do_action( 'gmw_fl_after_location_saved', $user_id , $location, $form_values );
+    do_action( 'gmw_fl_after_location_saved', $user_id , $user_location, $form_values );
 
-    // disable activity update
-    if ( ! apply_filters( 'gmw_fl_disable_location_activity_update', false ) && function_exists( 'gmw_record_member_location_activity' ) ) {
-        return gmw_record_member_location_activity( $user_id, $location );
+    // filter allows to disable activity update
+    if ( ! apply_filters( 'gmw_fl_disable_location_activity_update', false ) ) {
+
+        include_once( 'gmw-members-locator-activity.php' );
+
+        // update activity
+        if ( function_exists( 'gmw_record_member_location_activity' ) ) {
+            gmw_record_member_location_activity( $user_id, $user_location );
+        }
     }
 }
 add_action( 'gmw_lf_after_user_location_updated', 'gmw_after_member_location_updated', 10 , 2 );

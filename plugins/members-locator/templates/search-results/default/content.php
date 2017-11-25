@@ -25,29 +25,27 @@
 ?>
 <?php global $members_template; ?>
 
-<div class="gmw-results-wrapper default gmw-fl-default-results-wrapper <?php echo $gmw['ID']; ?> <?php echo $gmw['prefix']; ?>">
+<div class="gmw-results-wrapper default gmw-fl-default-results-wrapper <?php echo esc_attr( $gmw['prefix'] ); ?>" data-id="<?php absint( $gmw['ID'] ); ?>" data-prefix="<?php echo esc_attr( $gmw['prefix'] ); ?>">
 
     <?php if ( $gmw_form->has_locations() ) : ?>
 
         <div class="gmw-results">
 
-        	<?php do_action( 'gmw_search_results_start' , $gmw ); ?>
+        	<?php do_action( 'gmw_search_results_start', $gmw ); ?>
         	
             <div id="pag-top" class="pagination">
 
                 <div class="pag-count" id="member-dir-count-top">
-                    <p>
-                        <?php bp_members_pagination_count(); ?>
-                        <?php gmw_results_message( $gmw, false ); ?>        
-                    </p>
+                    <span><?php gmw_results_message( $gmw ); ?></span>
+                    <?php do_action( 'gmw_search_results_after_results_message', $gmw ); ?>
                 </div>
 
                 <div class="clear"></div>
         		
-        		<?php gmw_per_page( $gmw, $gmw['total_results'], 'paged' ); ?>
+        		<?php gmw_per_page( $gmw ); ?>
         		
                 <div class="pagination-links" id="member-dir-pag-top">
-            		<?php gmw_pagination( $gmw, 'paged', $gmw['max_pages'] ); ?>
+            		<?php gmw_pagination( $gmw ); ?>
                 </div>
 
             </div>
@@ -62,24 +60,27 @@
 
             	<?php while ( bp_members() ) : bp_the_member(); ?>
 
-                    <li>         
-                        <?php do_action( 'gmw_search_results_loop_item_start', $gmw, $members_template->member ); ?>
-
+                    <?php $member = $members_template->member; ?>
+                    
+                    <li class="<?php echo esc_attr( $member->location_class ); ?>">
+                             
+                        <?php do_action( 'gmw_search_results_loop_item_start', $gmw, $member ); ?>
+                        
                         <div class="item">
                         
                             <div class="item-title">
                             	
                                 <div class="gmw-fl-member-count">
-                                    <?php echo $members_template->member->location_count; ?>)
+                                    <?php echo absint( $member->location_count ); ?>)
                                 </div>
                                 
                                 <a href="<?php bp_member_permalink(); ?>">
                                     <?php bp_member_name(); ?>    
                                 </a>
                             		
-                            	<?php do_action( 'gmw_search_results_before_distance', $gmw, $members_template->member ); ?>
+                            	<?php do_action( 'gmw_search_results_before_distance', $gmw, $member ); ?>
                             	
-                            	<?php gmw_distance_to_location( $members_template->member, $gmw ); ?>
+                            	<?php gmw_distance_to_location( $member, $gmw ); ?>
 
                					<?php if ( bp_get_member_latest_update() ) { ?>
                                     <span class="update"> <?php bp_member_latest_update(); ?></span>
@@ -87,25 +88,9 @@
 
                             </div>
 
-                             <?php if ( isset( $gmw['search_results']['image']['enabled'] ) ) { ?>
-                            
-                                <div class="item-avatar">
-                                    
-                                    <a href="<?php bp_member_permalink(); ?>">
-                                        
-                                        <?php 
-                                            bp_member_avatar( array( 
-                                                'type'   => 'full', 
-                                                'width'  => $gmw['search_results']['image']['width'], 
-                                                'height' => $gmw['search_results']['image']['height'] 
-                                            ) ); 
-                                        ?>
-                                    
-                                    </a>
-                                
-                                </div>
-                            
-                            <?php } ?>
+                            <?php do_action( 'gmw_search_results_before_image', $gmw, $member ); ?>
+
+                            <?php gmw_search_results_bp_avatar( $member, $gmw ); ?>
 
                             <div class="item-meta">
                             	<span class="activity">
@@ -114,7 +99,7 @@
                             </div>
 
                 			<?php do_action( 'bp_directory_members_item' ); ?>
-                			<?php do_action( 'gmw_fl_search_results_member_items', $gmw, $members_template->member ); ?>
+                			<?php do_action( 'gmw_fl_search_results_member_items', $gmw, $member ); ?>
 
                             <?php
                             /*                     * *
@@ -133,34 +118,13 @@
 
                         <div class="clear"></div>
 
-                        <?php do_action( 'gmw_search_results_before_address', $gmw, $members_template->member ); ?>
+                        <?php do_action( 'gmw_search_results_before_address', $gmw, $member ); ?>
 
-                        <div>
-        	                <span>
-                                <?php echo $gmw['labels']['search_results']['address'] ?>        
-                            </span>
-                        	<?php gmw_location_address( $members_template->member, $gmw ); ?>
-                        </div>
+                        <?php gmw_search_results_address( $member, $gmw ); ?>
                         	
-        				<?php if ( isset( $gmw['search_results']['get_directions'] ) ) { ?>
-        					
-                            <?php global $members_template; ?>
-        					
-                            <div class="get-directions-link">
-            					
-                                <?php gmw_directions_link( $members_template->member, $gmw, $gmw['labels']['search_results']['directions'] ); ?>
-            				</div>
-
-            			<?php } ?>
-                        
-        				<?php if ( isset( $gmw['search_results']['by_driving'] ) ) { ?>
-            				
-                            <?php gmw_driving_distance( $members_template->member, $gmw, false ); ?>
-            			
-                        <?php } ?>
-
-                		<?php do_action( 'gmw_search_results_loop_item_end', $gmw, $members_template->member ); ?>
-
+                        <?php gmw_search_results_directions_link( $member, $gmw ); ?>
+               			
+                		<?php do_action( 'gmw_search_results_loop_item_end', $gmw, $member ); ?>
                     </li>
 
             	<?php endwhile; ?>
@@ -174,15 +138,15 @@
             <div id="pag-bottom" class="pagination">
 
                 <div class="pag-count" id="member-dir-count-top">
-                    <p><?php bp_members_pagination_count(); ?><?php gmw_results_message( $gmw, false ); ?></p>
+                    <span><?php gmw_results_message( $gmw ); ?></span>
                 </div>
             		
                 <div class="clear"></div>
         		
-        		<?php gmw_per_page( $gmw, $gmw['total_results'], 'paged' ); ?>
+        		<?php gmw_per_page( $gmw ); ?>
         		
                 <div class="pagination-links" id="member-dir-pag-top">
-            		<?php gmw_pagination( $gmw, 'paged', $gmw['max_pages'] ); ?>
+            		<?php gmw_pagination( $gmw ); ?>
                 </div>
 
             </div>
@@ -197,7 +161,7 @@
             
             <?php do_action( 'gmw_no_results_start', $gmw ); ?>
 
-            <p><?php echo esc_attr( $gmw['no_results_message'] ); ?></p>
+            <?php gmw_no_results_message( $gmw ); ?>
             
             <?php do_action( 'gmw_no_results_end', $gmw ); ?> 
 

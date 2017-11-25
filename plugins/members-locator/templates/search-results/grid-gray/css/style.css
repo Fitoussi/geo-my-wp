@@ -54,13 +54,13 @@ div.gmw-results-wrapper.grid-gray ul.gmw-pagination li  {
 
 div.gmw-results-wrapper.grid-gray ul.gmw-pagination li a, 
 div.gmw-results-wrapper.grid-gray ul.gmw-pagination li span {
-	border: 1px solid #ccc;
 	background-color: #fff;
 	color: #1B5A64;
 }
 
-div.gmw-results-wrapper.grid-gray ul.gmw-pagination li a: hover, 
-div.gmw-results-wrapper.grid-gray	 ul.gmw-pagination li span {
+div.gmw-results-wrapper.grid-gray ul.gmw-pagination li a:hover, 
+div.gmw-results-wrapper.grid-gray ul.gmw-pagination li span,
+div.gmw-results-wrapper.grid-gray ul.gmw-pagination li span.current {
 	background-color: rgba(168, 242, 211, 0.76);
 	border: 1px solid #ddd;
 }
@@ -151,17 +151,28 @@ div.gmw-results-wrapper.grid-gray ul.members-list-wrapper li .top-wrapper {
 }
 
 div.gmw-results-wrapper.grid-gray ul.members-list-wrapper li .top-wrapper span.radius {
+	font-style: italic;
+	font-size: 11px;
+	color: #333;
+	padding: 1px 4px;
+	background: #f5f5f5;
+	display: inline-block;
 	float: right;
-	font-size: 12px;
+	box-sizing: border-box;
+	vertical-align: top;
+	border: 1px solid #f1f1f1;
+	line-height: 16px;
 }
 
 div.gmw-results-wrapper.grid-gray ul.members-list-wrapper li .top-wrapper h2.user-name-wrapper {
 	margin: 0px;
 	display: inline-block;
-	font-size: 14px;
+	font-size: 15px;
 	text-decoration: none;
 	margin-right: 10px;
 	text-transform: capitalize;
+	font-weight: 500;
+	line-height: 22px;
 }
 
 div.gmw-results-wrapper.grid-gray ul.members-list-wrapper li .top-wrapper h2.user-name-wrapper a {
@@ -265,22 +276,14 @@ div.gmw-results-wrapper.grid-gray ul.gmw-additional-info-wrapper li {
 div.gmw-results-wrapper.grid-gray .bottom-wrapper {
 	background-color: #9BDFC3;
 	color: white;
-	font-size: 12px;
 	min-height: 30px;
-	margin-bottom: 1px;
 	position: relative;
+	padding: 6px 10px;
+	box-sizing: border-box;
+	line-height: 18px;
 }
 
 div.gmw-results-wrapper.grid-gray .bottom-wrapper a {
-	box-shadow: none;
-	font-size: 11px;
-	text-decoration: underline;
-	padding: 5px 7px;
-	display: inline-block;
-	box-sizing: border-box;
-	color: white;
-	text-shadow: 1px 1px 0px #aaa;
-	line-height: 16px;
 }
 
 div.gmw-results-wrapper.grid-gray ul.members-list-wrapper li.single-member .get-directions-icon {
@@ -289,21 +292,30 @@ div.gmw-results-wrapper.grid-gray ul.members-list-wrapper li.single-member .get-
 	padding: 0px;
 }
 
-div.gmw-results-wrapper.grid-gray ul.members-list-wrapper li.single-member .get-directions-wrapper a {
-	color: #1A694A;
-}
-
-div.gmw-results-wrapper.grid-gray ul.members-list-wrapper li.single-member .get-directions,
-div.gmw-results-wrapper.grid-gray ul.members-list-wrapper li.single-member .address-wrapper {
-	color: #1A694A;
-	overflow: hidden;
+div.gmw-results-wrapper.grid-gray ul.members-list-wrapper li.single-member .get-directions-wrapper {
+	margin: 5px 0px 0px;
+	font-size: 320;
 }
 
 div.gmw-results-wrapper.grid-gray ul.members-list-wrapper li.single-member .address-wrapper {
-	padding: 5px 10px 0px 5px;
+	display: inline-block;
+	width: 100%;
+	box-sizing: border-box;
+	line-height: 18px;
+	font-size: 12px;
 }
 
- #no-results-message p {
+div.gmw-results-wrapper.grid-gray ul.members-list-wrapper li.single-member .address-wrapper .address a:link,
+div.gmw-results-wrapper.grid-gray ul.members-list-wrapper li.single-member .address-wrapper .address a:visited {
+	color: white;
+}
+
+div.gmw-results-wrapper.grid-gray ul.members-list-wrapper li.single-member .address-wrapper .address a:hover,
+div.gmw-results-wrapper.grid-gray ul.members-list-wrapper li.single-member .address-wrapper .address a:active {
+	text-decoration: underline;
+}
+
+#no-results-message p {
 	background-color: #f7f7f7;
 	text-align: center;
 	border: 1px solid #e5e5e5;

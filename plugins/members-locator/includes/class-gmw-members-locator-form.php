@@ -20,29 +20,38 @@ class GMW_Members_Locator_Form extends GMW_Form {
      * 
      * @var string
      */
-    public $object_permalink_hook = "bp_get_member_permalink";
+    public $object_permalink_hook = 'bp_get_member_permalink';
 
     /**
-     * [get_object_data description]
+     * Results message
+     * 
+     * @var array
+     */
+    public $results_message = array(
+        'count_message'  => 'Viewing {from_count} - {to_count} of {total_results} members',
+        'radius_message' => ' within {radius} {units} from {address}'
+    );
+
+    /**
+     * [get_info_window_args description]
      * @param  [type] $location [description]
      * @return [type]           [description]
      */
-    public function get_object_data( $member ) {
-
+    public function get_info_window_args( $member ) {
         return array(
+            'prefix'    => $this->prefix,
+            'type'   => ! empty( $this->form['info_window']['iw_type'] ) ? $this->form['info_window']['iw_type'] : 'standard',
+            'image_url' => bp_core_fetch_avatar( 'item_id='.$member->ID.'&type=thumb&html=FALSE' ),
             'url'       => bp_core_get_user_domain( $member->ID ),
-            'title'     => $member->display_name,
-            'image_url' => bp_core_fetch_avatar( 'item_id='.$member->ID.'&type=thumb&html=FALSE' )
+            'title'     => $member->display_name
         );
     }
 
     public function before_search_results() {
-
         echo '<div class="buddypress">';
     }
 
     public function after_search_results() {
-
         echo '</div>';
     }
 
@@ -56,159 +65,123 @@ class GMW_Members_Locator_Form extends GMW_Form {
      * @author Some of the code in this function was inspired by the code written by Andrea Taranti the creator of BP Profile Search - Thank you
      * 
     */
-    public static function query_xprofile_fields( $form_values = array(), $gmw = array() ) {
+    public static function query_xprofile_fields( $fields_values = array(), $gmw = array() ) {
 
         global $bp, $wpdb, $wp_version;
 
         $users_id = array();
 
-        foreach ( $form_values as $field_name => $value ) {
-     
-            // skip if not xprofile value
-            if ( ! absint( $field_id = trim( $field_name, 'field_' ) ) ) {
+        foreach ( $fields_values as $field_id => $value ) {
+        
+            if ( empty( $value ) || ( is_array( $value ) && ! array_filter( $value ) ) ) {
                 continue;
             }
 
             // get the field data
             $field_data = new BP_XProfile_Field( $field_id );
-            $field_name = esc_attr( $field_name );
-            $value      = '';
 
-            // if form submitted
-            if ( ! empty( $_GET['action'] ) && ! empty( $form_values[$field_name] ) ) {
-
-                if ( is_array( $form_values[$field_name] ) ) {
-
-                    $value  = array_map( 'esc_attr', $form_values[$field_name] );
-
-                } else {
-
-                    $value = esc_attr( stripslashes( $form_values[$field_name] ) );
-                }
-
-            } else {
-                    
-                $value = apply_filters( 'gmw_fl_xprofile_query_default_value', '', $field_id, $field_data, $gmw );
-
-                if ( ! empty( $value ) ) {
-                    $value = ( is_array( $value ) ) ? array_map( 'esc_attr', $value ) : esc_attr( stripslashes( $value ) );
-                }
-            }
-
-            $max = ( isset( $form_values[$field_name.'_max'] ) ) ? absint( $form_values[$field_name.'_max'] ) : '';
             $sql = $wpdb->prepare ( "SELECT `user_id` FROM {$bp->profile->table_name_data} WHERE `field_id` = %d ", $field_id );
-             
-            if ( ! $value && ! $max ) {
-                continue;
-            }
 
-            $fields_empty = false;
+            switch ( $field_data->type ) {
             
-            if ( $value || $max ) {
+                case 'textbox':
+                case 'textarea':
 
-                switch ( $field_data->type ) {
+                    $value = str_replace( '&', '&amp;', $value );
+
+                    if ( $wp_version < 4.0 ) {
+                        $escaped = '%'. esc_sql( like_escape( trim( $value ) ) ). '%';
+                    } else {
+                        $escaped = '%' . $wpdb->esc_like( trim( $value ) ) . '%';
+                    }
+
+                    $sql .= $wpdb->prepare ( "AND value LIKE %s", $escaped );
+
+                break;
+
+                case 'number':
+                    
+                    $sql .= $wpdb->prepare ( "AND value = %d", $value );
                 
-                    case 'textbox':
-                    case 'textarea':
+                break;
 
-                        $value = str_replace ( '&', '&amp;', $value );
+                case 'selectbox':
+                case 'radio':
+                    
+                    $value = str_replace( '&', '&amp;', $value );
+                    $sql  .= $wpdb->prepare( 'AND value = %s', $value );
+                
+                break;
+                        
+                case 'multiselectbox':
+                case 'checkbox':
 
+                    $values = $value;
+                    $like   = array ();
+                     
+                    foreach ( $values as $value ) {
+                        $value = str_replace( '&', '&amp;', $value );
                         if ( $wp_version < 4.0 ) {
-
-                            $escaped = '%'. esc_sql( like_escape( trim( $value ) ) ). '%';
-                        
+                            $escaped = '%'.esc_sql( like_escape( $value ) ).'%';
                         } else {
-                            
-                            $escaped = '%' . $wpdb->esc_like( trim( $value ) ) . '%';
+                            $escaped = '%'.$wpdb->esc_like( $value ).'%';
                         }
 
-                        $sql .= $wpdb->prepare ( "AND value LIKE %s", $escaped );
+                        $like[] = $wpdb->prepare( 'value = %s OR value LIKE %s', $value, $escaped );
+                    }
+                     
+                    $sql .= 'AND ('. implode (' OR ', $like). ')';
+                     
+                break;
 
-                    break;
+                case 'datebox':
+                case 'birthdate':
 
-                    case 'number':
-                        
-                        $sql .= $wpdb->prepare ( "AND value = %d", $value );
+                    if ( ! is_array( $value ) || ! array_filter( $value ) ) {
+                        continue;
+                    }
                     
-                    break;
+                    $min = ! empty( $value['min'] ) ? $value['min'] : '1';
+                    $max = ! empty( $value['max'] ) ? $value['max'] : '200';
 
-                    case 'selectbox':
-                    case 'radio':
-                        
-                        $value = str_replace ( '&', '&amp;', $value );
-                        $sql  .= $wpdb->prepare ( "AND value = %s", $value );
+                    if ( $min > $max ) $max = $min;
+
+                    $time  = time();
+                    $day   = date( 'j', $time );
+                    $month = date( 'n', $time );
+                    $year  = date( 'Y', $time );
+                    $ymin  = $year - $max - 1;
+                    $ymax  = $year - $min;
+
+                    if ( $max !== '' ) $sql .= $wpdb->prepare( " AND DATE(value) > %s", "$ymin-$month-$day" );
+                    if ( $min !== '' ) $sql .= $wpdb->prepare( " AND DATE(value) <= %s", "$ymax-$month-$day" );
+
+                break;                   
+            }
                     
-                    break;
-                            
-                    case 'multiselectbox':
-                    case 'checkbox':
+            $results  = $wpdb->get_col( $sql, 0 );
+            $users_id = empty( $users_id ) ? $results : array_intersect( $users_id, $results ); 
 
-                        $values = $value;
-                        $like   = array ();
-                         
-                        foreach ( $values as $value ) {
-                            
-                            $value = str_replace ( '&', '&amp;', $value );
+            //abort if no users found for this fields
+            if ( empty( $users_id ) ) {
+                return -1;
+            }         
+        }
 
-                            if ( $wp_version < 4.0 ) {
-
-                                $escaped = '%'. esc_sql( like_escape( $value ) ). '%';
-                            
-                            } else {
-                            
-                                $escaped = '%' . $wpdb->esc_like( $value ) . '%';
-                            }
-
-                            $like[] = $wpdb->prepare( "value = %s OR value LIKE %s", $value, $escaped );
-                        }
-                         
-                        $sql .= 'AND ('. implode (' OR ', $like). ')';
-                         
-                    break;
-
-                    case 'datebox':
-                    case 'birthdate':
-
-                        $value = ! $value ? '1'   : $value;
-                        $max   = ! $max   ? '200' : $max;
-                                            
-                        if ( $max < $value ) {
-                            $max = $value;
-                        }
-
-                        $time  = time();
-                        $day   = date( 'j', $time );
-                        $month = date( 'n', $time );
-                        $year  = date( 'Y', $time );
-                        $ymin  = $year - $max - 1;
-                        $ymax  = $year - $value;
-
-                        if ( $max   !== '') $sql .= $wpdb->prepare( " AND DATE(value) > %s", "$ymin-$month-$day" );
-                        if ( $value !== '') $sql .= $wpdb->prepare( " AND DATE(value) <= %s", "$ymax-$month-$day" );
-
-                    break;                   
-                }
-                        
-                $results  = $wpdb->get_col( $sql, 0 );
-                $users_id = empty( $users_id ) ? $results : array_intersect( $users_id, $results ); 
-
-                //abort if no users found for this fields
-                if ( empty( $users_id ) ) {
-                    return -1;
-                }
-                         
-            } // if value //
-        } // for eaech //
-            
         return $users_id;
     }
 
+    /**
+     * Orderby distance
+     * 
+     * @param  [type] $clauses [description]
+     * @param  [type] $vars    [description]
+     * @return [type]          [description]
+     */
     function oreder_results_by_distance( $clauses, $vars ) {
 
         if ( $vars->query_vars['type'] == 'distance' ) {
-    
             $objects_id = implode( ',', $this->objects_id );
-     
             $clauses['orderby'] = " ORDER BY FIELD( id, {$objects_id} )";
         }
 
@@ -227,24 +200,34 @@ class GMW_Members_Locator_Form extends GMW_Form {
     		unset( $_GET['upage'] );
         }
         
-        $include_users = array();
+        $include_users = $loc_args = array();
 
         $locations_objects_id = $this->pre_get_locations_data();
 
         // do locations query. If nothing was found abort and show no result
         if ( empty( $locations_objects_id ) ) {
-       
             return false;
         }
 
+        $include_users = $locations_objects_id;
+
+        // look for xprofile values in URL
+        if ( isset( $this->form['form_values']['xf'] ) && array_filter( $this->form['form_values']['xf'] ) ) {
+            $fields_values = $this->form['form_values']['xf'];
+        // otherwise, can do something custom with xprofile fields
+        // by passing array of array( fields => value ).
+        } else {
+            $fields_values = apply_filters( 'gmw_fl_xprofile_fields_query_default_values', array(), $this->form );
+        }
+
         // query xprofile fields
-        if ( apply_filters( 'gmw_fl_xprofile_query_enabled', true, $this->form ) && array_filter( $this->form['search_form']['profile_fields'] ) ) {
-            $xf_users = self::query_xprofile_fields( $this->form['form_values'], $this->form );
+        if ( apply_filters( 'gmw_fl_xprofile_query_enabled', true, $this->form ) && array_filter( $fields_values ) ) {
+            
+            $xf_users = self::query_xprofile_fields( $fields_values, $this->form );
 
             // if no users returned from xprofile fields we can skip the rest and return
             // no results
             if ( $xf_users == -1 ) {
-
                 return false;
             } 
 
@@ -252,9 +235,13 @@ class GMW_Members_Locator_Form extends GMW_Form {
             // with users returned from locations. Otherwise we will keep the original users
             // fron location query
             if ( ! empty( $xf_users ) ) {
-
-                $include_users = array_intersect( $locations_objects_id, $xf_users );
+                $include_users = array_intersect( $include_users, $xf_users );
             }
+        }   
+
+        // abort if no users found
+        if ( empty( $include_users ) ) {
+            return false;
         }
 
         // get query args for cache
@@ -280,14 +267,14 @@ class GMW_Members_Locator_Form extends GMW_Form {
         $this->form = apply_filters( 'gmw_fl_form_before_members_query', $this->form, $this );
 
         // order results by distance if needed
-        add_filter( 'bp_user_query_uid_clauses', array( $this, 'oreder_results_by_distance' ), 50, 2 );
+        add_filter( 'bp_user_query_uid_clauses', array( $this, 'oreder_results_by_distance' ), 30, 2 );
 
         $internal_cache = GMW()->internal_cache;
 
         if ( $internal_cache ) {
 
             // prepare for cache
-            $hash            = md5( json_encode( $this->form['query_args'] ) );
+            $hash = md5( json_encode( $this->form['query_args'] ) );
             $query_args_hash = 'gmw' . $hash . GMW_Cache_Helper::get_transient_version( 'gmw_get_object_user_query' );
         }
 
@@ -319,7 +306,6 @@ class GMW_Members_Locator_Form extends GMW_Form {
         $temp_array = array();
 
         foreach ( $this->form['results'] as $member ) {
-
             $temp_array[] = parent::the_location( $member->ID, $member );
         }
 

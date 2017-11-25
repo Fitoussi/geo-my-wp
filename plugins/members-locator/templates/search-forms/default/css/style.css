@@ -11,12 +11,7 @@ div.gmw-fl-default-form-wrapper input[type="text"] {
  } 
  
 div.gmw-fl-default-form-wrapper .gmw-address-field-wrapper {
-	float:left;
-}
 
-div.gmw-fl-default-form-wrapper .gmw-locator-btn-wrapper img {
-	height: 25px;
-	width: 25px;
 }
 
 div.gmw-form-wrapper.default label {
@@ -78,23 +73,6 @@ div.gmw-form-wrapper.default .gmw-radius-slider-range-wrapper {
 
 div.gmw-form-wrapper.default .gmw-no-address-error {
 	border: 1px solid rgb(252, 165, 165) !important;
-}
-
-div.gmw-form-wrapper.default .gmw-locator-btn-wrapper {
-	padding: 5px 0px;
-	margin-left: 5px;
-}
-
-div.gmw-form-wrapper.default .gmw-locator-btn-wrapper.usage-icon.location-inside {
-	top: 8px;
-}
-
-div.gmw-form-wrapper.default .gmw-locator-btn-wrapper img {
-	position: absolute;
-	border-radius: 0px !important;
-	box-shadow: none !important;
-	width: 28px;
-	height: 28px;
 }
 
 div.gmw-form-wrapper.default .gmw-locate-btn {

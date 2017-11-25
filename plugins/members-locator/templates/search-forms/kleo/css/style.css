@@ -28,17 +28,23 @@ div.gmw-fl-kleo-form-wrapper #search-members-form {
 	box-shadow: none;
 }
 
-#buddypress div#members-dir-search.gmw-fl-kleo-form-wrapper label[for="members_search"] {
+#buddypress div#members-dir-search.gmw-fl-kleo-form-wrapper .gmw-form-field-wrapper {
+	display: inline-block;
+}
+
+#buddypress div#members-dir-search.gmw-fl-kleo-form-wrapper .gmw-form-field-wrapper input[type="text"] {
+	border: 1px solid #e5e5e5;
+}
+
+#buddypress div#members-dir-search.gmw-fl-kleo-form-wrapper .gmw-form-field-wrapper.gmw-address-field-wrapper {
 	width: 50%;
-	margin-left: auto;
-	margin-right: auto;
 	display: inline-block;
 	border-radius: 22px;
 	border-style: solid;
 	border-width: 1px;
 	height: 33px;
 	line-height: 30px;
-	padding: 0 10px;
+	padding: 0 30px 0 10px;
 	min-width: 60%;
 	-webkit-transition: .7s;
 	-moz-transition: .7s;
@@ -47,17 +53,15 @@ div.gmw-fl-kleo-form-wrapper #search-members-form {
 	text-align: left;
 	box-shadow: 0 0 0 4px #f7f7f7;
 	border-color: #e5e5e5;
-}
-
-div.gmw-fl-kleo-form-wrapper label[for="members_search"] {
+	margin: 0;
 	width: 50%;
 }
 
-div.gmw-fl-kleo-form-wrapper div.gmw-locator-btn-within-wrapper {
-	padding: 3px 5px;
+#buddypress div#members-dir-search.gmw-fl-kleo-form-wrapper .gmw-form-field-wrapper.gmw-address-field-wrapper input[type="text"] {
+	border: 0;
 }
 
-div.gmw-fl-kleo-form-wrapper div.xfield-trigger-wrapper {
+div.gmw-fl-kleo-form-wrapper span.xprofile-fields-trigger {
 	height: 30px;
 	padding: 5px 8px;
 	border-radius: 2px;
@@ -137,16 +141,15 @@ div.gmw-fl-kleo-form-wrapper .gmw-submit-wrapper {
 	border:0;
 }
 
-.widget_gmw_search_form_widget #buddypress div#members-dir-search label[for="members_search"] {
+.widget_gmw_search_form_widget #buddypress div#members-dir-search.gmw-fl-kleo-form-wrapper .gmw-form-field-wrapper.gmw-address-field-wrapper {
  	width: 100%;
- 	height:40px;
  	margin-bottom: 15px;
 }
 
 .widget_gmw_search_form_widget div.gmw-fl-kleo-form-wrapper input[type="text"], 
 .widget_gmw_search_form_widget div.gmw-fl-kleo-form-wrapper select {
 	width:100%;
-	margin: 5px 0px !important;
+	//margin: 5px 0px !important;
 }
 
 .widget_gmw_search_form_widget div.gmw-fl-horizontal-gray-form-wrapper .gmw-submit-button {
