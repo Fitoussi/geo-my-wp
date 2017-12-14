@@ -5,49 +5,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Display search form and enqueue its stylesheet
- * 
- * @param  array $gmw the form being processed 
- * 
- * @return display search form
- */
-/*
-function gmw_search_form( $gmw ) {
-
-	// get search form template files
-	$search_form = gmw_get_search_form_template( $gmw['slug'], $gmw['search_form']['form_template'] );
-
-	// enqueue style only once
-	if ( ! wp_style_is( $search_form['stylesheet_handle'], 'enqueued' ) ) {
-		wp_enqueue_style( $search_form['stylesheet_handle'], $search_form['stylesheet_url'], array(), GMW_VERSION );
-	}
-
-	// if results page is set get its permalink
-	if ( ! empty( $gmw['form_submission']['results_page'] ) ) {
-
-		$gmw['form_submission']['results_page'] = get_permalink( $gmw['form_submission']['results_page'] );
-
-	// if this is a widget and results page is not set in the shorcode settings we will get the results page from the main settings
-	} elseif ( $gmw['in_widget'] ) {
-		
-		$gmw_options = gmw_get_options_group();
-
-		$gmw['form_submission']['results_page'] = get_permalink( $gmw_options['general_settings']['results_page'] );
-	} else {
-		
-		$gmw['form_submission']['results_page'] = false;
-	}
-
-	do_action( "gmw_before_search_form", $gmw );
-	do_action( "gmw_{$gmw['prefix']}_before_search_form", $gmw );
-
-	include( $search_form['content_path'] );
-
-	do_action( "gmw_after_search_form", $gmw );
-	do_action( "gmw_{$gmw['prefix']}_after_search_form", $gmw );
-}
-*/
-/**
  * Form submission hidden fields
  * 
  * @param  array  $gmw          the form being used
