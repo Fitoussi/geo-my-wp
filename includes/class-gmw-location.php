@@ -240,7 +240,7 @@ class GMW_Location {
 
 			return false;
 		}
-	
+
 		// verify valid coordinates
 		if ( ! is_numeric( $args['latitude'] ) || ! is_numeric( $args['longitude'] ) ) {
 
@@ -505,9 +505,9 @@ class GMW_Location {
 			// try to get location usign global variables
 			return self::try_get_locations( true, $output, $cache );
 		} 
-
+		
 		// verify object types
-		if ( ! in_array( $object_type, array( 'post', 'user', 'comment', 'term' ) ) ) {
+		if ( ! in_array( $object_type, GMW()->object_types ) ) {
 
 			trigger_error( 'Trying to get a location using invalid object type.', E_USER_NOTICE );
 			
@@ -588,7 +588,7 @@ class GMW_Location {
 		} 
 
 		// verify object type
-		if ( ! in_array( $object_type, array( 'post', 'user', 'comment', 'term' ) ) ) {
+		if ( ! in_array( $object_type, GMW()->object_types ) ) {
 
 			trigger_error( 'Trying to get a location using invalid object type.', E_USER_NOTICE );
 			
@@ -747,7 +747,8 @@ class GMW_Location {
 			'lat'		  	 => false,
 			'lng'		  	 => false,
 			'radius'	  	 => false,
-			'units'		  	 => 'imperial'
+			'units'		  	 => 'imperial',
+			'unique'	 	 => ''
 		) );
 		
 		$args = apply_filters( 'gmw_get_locations_data_args', $args, $gmw );
@@ -956,7 +957,7 @@ class GMW_Location {
 		} 
 
 		// verify object type
-		if ( ! in_array( $object_type, array( 'post', 'user', 'comment', 'term' ) ) ) {
+		if ( ! in_array( $object_type, GMW()->object_types ) ) {
 
 			trigger_error( 'Trying to delete a location using invalid object type.', E_USER_NOTICE );
 			
@@ -1037,7 +1038,7 @@ class GMW_Location {
 		} 
 
 		// verify object type
-		if ( ! in_array( $object_type, array( 'post', 'user', 'comment', 'term' ) ) ) {
+		if ( ! in_array( $object_type, GMW()->object_types ) ) {
 
 			trigger_error( 'Trying to delete a location using invalid object type.', E_USER_NOTICE );
 			
