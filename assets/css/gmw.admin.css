@@ -103,6 +103,16 @@ div.menu-footer input.button-primary.update-form {
 	min-height: 50px;
 }
 
+.gmw-options-box .single-option .option-content p {
+	padding: 0px;
+	margin:6px 0;
+	width: 100%;
+	line-height: 16px;
+	font-style: italic;
+	color: #555;
+	font-size: 12px;
+}
+
 .gmw-options-box .single-option:last-child {
 	border-bottom: 0;
 }
@@ -175,7 +185,7 @@ div.menu-footer input.button-primary.update-form {
 /******* GMW tabs *********/
 
 .gmw-left-tabs-menu-wrapper {
-	padding-left: 165px;
+	padding-left: 180px;
 	//height: 100%;*/
 	width: 100%;
 	box-sizing: border-box;
@@ -186,7 +196,7 @@ div.menu-footer input.button-primary.update-form {
 }
 
 .gmw-left-tabs-menu-wrapper ul.gmw-tabs-wrapper {
-	width: 165px;
+	width: 180px;
 	padding: 0;
 	margin: 0;
 	z-index: 10;
@@ -804,8 +814,8 @@ body.wp-admin.admin-bar #gmw-edit-form-page #form-wrapper #gmw-form-cover {
 	border-right: 1px solid #e7e7e7;
 	padding: 20px;
 	border-bottom: 1px solid #e7e7e7;
-	width: 180px;
-	max-width: 180px;
+	width: 200px;
+	max-width: 200px;
 }
 
 .gmw-tab-panel table tbody tr td.gmw-form-feature-desc .gmw-form-feature-desc-content {
