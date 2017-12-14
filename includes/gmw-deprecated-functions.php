@@ -223,6 +223,16 @@ function gmw_get_member_info_from_db( $user_id = 0 ) {
 	return gmw_get_user_location( $user_id );
 }
 
+/**
+ * GMW FL function - get members location from database or cache
+ * @param unknown_type $user_id
+ */
+function gmw_get_user_info_from_db( $user_id = 0 ) {
+
+    _deprecated_function( 'gmw_get_user_location_from_db', '3.0', 'gmw_get_user_location' );
+	return gmw_get_user_location( $user_id );
+}
+
 function search_form_radius_field( $gmw ) {
 
     _deprecated_function( 'search_form_radius_field', '3.0', 'gmw_get_search_form_radius_slider' );
@@ -277,6 +287,29 @@ function gmw_get_member_info( $args = array(), $from_shortcode = false ) {
 
 	if ( ! $from_shortcode ) {
 		trigger_error( 'gmw_get_member_info function is deprecated since GEO my WP version 3.0. Please use gmw_get_user_address instead.', E_USER_NOTICE );
+	}
+
+	if ( function_exists( 'gmw_get_user_address' ) ) {
+
+		$attr = array(
+			'user_id'   => ! empty( $args['user_id'] ) ? $args['user_id'] : 0,
+        	'fields'    => ! empty( $args['info'] )    ? $args['info']    : 'formatted_address',
+        	'separator' => ! empty( $args['divider'] ) ? $args['divider'] : ', '
+        );
+
+		return gmw_get_user_address( $attr );
+	}
+
+	return;
+}
+
+/**
+ * GMW FL function - display members's info
+ */
+function gmw_get_user_info( $args = array(), $from_shortcode = false ) {
+
+	if ( ! $from_shortcode ) {
+		trigger_error( 'gmw_get_user_info function is deprecated since Users Locator version 2.0. Please use gmw_get_user_address instead.', E_USER_NOTICE );
 	}
 
 	if ( function_exists( 'gmw_get_user_address' ) ) {
@@ -655,6 +688,27 @@ function gmw_driving_distance( $info, $gmw, $title ) {
         });
     </script>";
     */
+}
+
+/**
+ * GMW UG author page
+ * @since 1.0
+ * @author Eyal Fitoussi
+ */
+function gmw_ug_get_author_url( $gmw, $user ) {
+
+	_deprecated_function( 'gmw_ug_get_author_url', '2.0', 'gmw_get_user_permalink' );
+
+	$page_id         = gmw_get_option( 'users_locator', 'author_page', '' );
+    $query_string    = gmw_get_option( 'users_locator', 'author_page_query_string', '' );
+    $replace_content = gmw_get_option( 'users_locator', 'author_page_location_enabled', 1 );
+
+	return gmw_get_user_permalink( $user, $page_id, $query_string, $replace_content );
+}
+
+function gmw_ug_author_url( $gmw = array(), $user ) {
+	_deprecated_function( 'gmw_ug_author_url', '2.0', 'gmw_search_results_user_permalink' );
+	echo gmw_search_results_user_permalink( $user, $gmw );
 }
 
 /**
