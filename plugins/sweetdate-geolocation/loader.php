@@ -97,6 +97,7 @@ class GMW_Sweetdate_Geolcation_Addon extends GMW_Register_Addon {
      * @return void
      */
     public function pre_init() {
+        parent::pre_init();
     	add_action( 'bp_init', array( $this, 'sd_init' ), 20 );
 	}
 
