@@ -435,11 +435,22 @@ var GMW = {
                 
                 GMW.do_action( 'gmw_address_autocomplete_place_changed', place, autocomplete, field_id, input_field, options );
                 
-                // if place exists and autocomplete is within a form
-                // get the coords from the place details into the hidden coordinates fields of the form
-                if ( place.geometry && jQuery( '#' + field_id ).closest( 'form' ).hasClass( 'gmw-form' ) ) {
+                if ( place.geometry ) {
 
-                    var gmwFormID = jQuery( '#' + field_id ).closest( 'form' ).find( '.gmw-form-id' ).val();
+                    var formElement = jQuery( '#' + field_id ).closest( 'form' );
+
+                     // if place exists and autocomplete is within a form, look for form ID and 
+                    // get the coords from the place details into the hidden coordinates fields of the form
+                    if ( formElement.attr( 'data-form_id' ) ) {
+                        
+                        var gmwFormID = formElement.data( 'form_id' );
+                    
+                    } else if ( formElement.find( '.gmw-form-id' ).length ) {
+
+                        var gmwFormID = formElement.find( '.gmw-form-id' ).val();
+                    } else {
+                        return
+                    }
 
                     // if only country entered set its value in hidden fields
                     if ( place.address_components.length == 1 && place.address_components[0].types[0] == 'country' ) {                  
@@ -717,7 +728,6 @@ var GMW = {
     form_functions : function() {
 
         GMW.enable_smartbox();
-       // GMW.orderby_dropdown();
 
         // hide locator icon if browser does not support navigation
         if ( ! navigator.geolocation ) {
@@ -730,35 +740,25 @@ var GMW = {
         });
      
         // remove hidden coordinates when address field value changes
-        jQuery( '.gmw-address' ).keyup( function () { 
-            var gmwFormID = jQuery( this ).closest( 'form' ).find( '.gmw-form-id' ).val();
+        jQuery( '.gmw-address' ).keyup( function ( event ) { 
+            
+            if ( event.which == 13 ) {
+                return;
+            }
+
+            var formElement = jQuery( this ).closest( 'form' );
+
+            if ( formElement.attr( 'data-form_id' ) ) {
+                var gmwFormID = formElement.data( 'form_id' );
+            } else {
+                var gmwFormID = formElement.find( '.gmw-form-id' ).val();
+            }
+
             jQuery( '#gmw-lat-' + gmwFormID ).val('');
             jQuery( '#gmw-lng-' + gmwFormID ).val('');
             jQuery( '#gmw-state-' + gmwFormID ).val('').prop( 'disabled', true );
             jQuery( '#gmw-country-' + gmwFormID ).val('').prop( 'disabled', true );
         });
-
-        // per page dropdown
-        /*jQuery( '.gmw-per-page' ).change( function() {
-
-            thisValue    = jQuery(this).val();
-            ppData       = jQuery(this).data();
-            totalResults = ppData['total_results'];
-            lastPage     = Math.ceil( totalResults / thisValue );
-            newPaged     = ( ppData['paged'] > lastPage || lastPage == 1 ) ? lastPage : ppData['paged'];
-
-            // generate new URL based on new page values
-            if ( ppData['gmw_post'] == 0 ) {  
-                
-                //page load submission   
-                window.location.href = window.location.href + '?' + ppData['url_px'] + 'auto=auto&' + ppData['url_px'] + 'per_page=' + thisValue + '&' + ppData['url_px'] + 'form=' + ppData['form_id'] + '&' + ppData['page_name'] + '='+ newPaged;                            
-            
-            } else {
-                
-                // new URl for form submission
-                window.location.href = location.href.replace( ppData['url_px'] + 'per_page=' + ppData['per_page'], ppData['url_px'] + 'per_page=' + thisValue ).replace( '&' + ppData['page_name'] + '=' + ppData['paged'], '&' + ppData['page_name'] + '=' + newPaged ) + '&' + ppData['page_name'] + '=' + newPaged;
-            }
-        }); */
 
         // When click on locator button in a form
         jQuery( '.gmw-locator-button' ).click( function() {
@@ -784,42 +784,6 @@ var GMW = {
         });
     },
 
-    /**
-     * Orderby dropdown trigger ( exists in premium features )
-     *
-     * @return {[type]} [description]
-     */
-    /*
-    orderby_dropdown : function() {
-
-        jQuery( '.gmw-orderby-dropdown' ).change( function() {
-        
-            if ( jQuery( this ).val() == '' ) {
-                return;     
-            }
-
-            var value    = jQuery( this ).val();
-            var data     = jQuery( this ).data();
-            var name_tag = data.url_px + 'orderby';
-            var window_location = window.location;
-            var current_url = window_location.href;
-            
-            // if orderby parameter is not already exist in URL we need to append it
-            if ( window_location.search.indexOf( name_tag ) === -1 ) {    
-                
-                if ( window_location.search == '' ) { 
-                    window.location.href = current_url + '?' + name_tag +'=' + value;   
-               } else{ 
-                    window.location.href = current_url + '&' + name_tag +'=' + value;   
-                } 
-
-            // otherwise, we replace the existing value                           
-            } else {
-                window.location.href = current_url.replace( name_tag + '=' + data.value, name_tag + '=' + value );
-            }                   
-        });
-    },
-    */
     /**
      * Enable smartbox libraries
      * @return {[type]} [description]
@@ -888,7 +852,7 @@ var GMW = {
             var addressField = GMW.form_submission.form.find( '.gmw-address' );
             
             // check if address is mendatory and if so show error and abort submission.
-            if ( addressField.hasClass( 'mandatory') ) {
+            if ( addressField.hasClass( 'mandatory' ) ) {
 
                 // add error class to address fields
                 if ( ! addressField.hasClass( 'gmw-no-address-error' ) ) {
@@ -981,7 +945,8 @@ var GMW = {
         // set the locator vars.
         GMW.locator_button.status  = true;
         GMW.locator_button.element = locator;
-        GMW.locator_button.form_id = locator.closest( 'form.gmw-form' ).find( '.gmw-submission-fields .gmw-form-id' ).val();
+        //GMW.locator_button.form_id = locator.closest( 'form.gmw-form' ).find( '.gmw-submission-fields .gmw-form-id' ).val();
+        GMW.locator_button.form_id = locator.data( 'form_id' );
         GMW.locator_button.loader  = locator.next();
         GMW.locator_button.submit  = locator.attr( 'data-locator_submit' ) == 1 ? true : false;
 
