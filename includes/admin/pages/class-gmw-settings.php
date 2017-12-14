@@ -490,7 +490,7 @@ class GMW_Settings {
                             id="<?php echo $attr_id .'-'. esc_attr( $keyVal ); ?>" 
                             class="setting-<?php echo esc_attr( $option['name'] ); ?> checkbox multicheckboxvalues" 
                             name="<?php echo $attr_name.'[]'; ?>" 
-                            value="<?php echo sanitize_title( $keyVal ); ?>" 
+                            value="<?php echo esc_attr( $keyVal ); ?>" 
                             <?php echo $checked; ?> 
                         /> 
                         <?php echo esc_html( $name ); ?>
@@ -530,7 +530,7 @@ class GMW_Settings {
                     <?php echo implode( ' ', $attributes ); ?>
                 >
                     <?php foreach ( $option[ 'options' ] as $keyVal => $name ) { ?>
-                        <?php echo '<option value="' . sanitize_title( $keyVal ) . '" ' . selected( $value, $keyVal, false ) . '>' . esc_html( $name ) . '</option>'; ?>
+                        <?php echo '<option value="'.esc_attr( $keyVal ).'" '.selected( $value, $keyVal, false ).'>'.esc_html( $name ).'</option>'; ?>
                     <?php } ?>
                 </select>
                 <?php 
@@ -549,7 +549,7 @@ class GMW_Settings {
                     <?php 
                     foreach ( $option[ 'options' ] as $keyVal => $name ) {
                         $selected = ( is_array( $value ) && in_array( $keyVal, $value ) ) ? 'selected="selected"' : '';
-                        echo '<option value="' . sanitize_title( $keyVal ) . '" ' . $selected . '>' . esc_attr( $name ) . '</option>'; 
+                        echo '<option value="'.esc_attr( $keyVal ).'" '.$selected.'>'.esc_html( $name ).'</option>'; 
                     } 
                     ?>
                 </select>
