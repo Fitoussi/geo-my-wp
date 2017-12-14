@@ -106,7 +106,7 @@
 				   			</div>
 			   			</div>
 			   						
-		    			<?php do_action( 'gmw_posts_loop_loop_item_end' , $gmw, $post ); ?>
+		    			<?php do_action( 'gmw_posts_loop_item_end' , $gmw, $post ); ?>
 						
 					</li>
 				
