@@ -182,7 +182,7 @@ function gmw_get_per_page( $gmw = array() ) {
 function gmw_get_distance_to_location( $object = array() ) {
     
     if ( empty( $object->distance ) ) {
-        return;
+        return false;
     }
     
     $distance = $object->distance . ' ' . $object->units;
@@ -191,8 +191,8 @@ function gmw_get_distance_to_location( $object = array() ) {
     return esc_html( $distance );
 }
 
-    function gmw_distance_to_location( $info ) {
-        echo gmw_get_distance_to_location( $info );
+    function gmw_distance_to_location( $object = array() ) {
+        echo gmw_get_distance_to_location( $object );
     }
 
 /**
