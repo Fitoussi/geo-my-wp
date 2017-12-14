@@ -10,10 +10,10 @@ class GMW_V_3_Import_Page {
 		$this->posts_table = $wpdb->get_results( "SHOW TABLES LIKE '{$wpdb->prefix}places_locator'", ARRAY_A );
 
 		// look for users table
-		$this->members_table = $wpdb->get_results( "SHOW TABLES LIKE 'wppl_friends_locator'", ARRAY_A );
+		$this->users_table = $wpdb->get_results( "SHOW TABLES LIKE 'wppl_friends_locator'", ARRAY_A );
 
 		// abort if tables do not exsit
-		if ( count( $this->posts_table ) == 0 && count( $this->members_table ) == 0 ) {
+		if ( count( $this->posts_table ) == 0 && count( $this->users_table ) == 0 ) {
 		    return;
 		}
 
@@ -31,7 +31,9 @@ class GMW_V_3_Import_Page {
 	}
 
 	public function tab_content() {
-	
+		
+		do_action( 'gmw_v3_import_page_start' ); 
+
 		if ( count( $this->posts_table ) != 0 ) : ?>
 
 			<div id="poststuff" class="metabox-holder">
@@ -61,7 +63,7 @@ class GMW_V_3_Import_Page {
 
 		<?php endif; ?>
 
-		<?php if ( count( $this->members_table ) != 0 ) : ?>
+		<?php if ( count( $this->users_table ) != 0 ) : ?>
 
 			<div id="poststuff" class="metabox-holder">
 					
@@ -72,14 +74,14 @@ class GMW_V_3_Import_Page {
 						<div class="postbox ">
 				
 							<h3 class="hndle">
-								<span><?php _e( 'Import Members Locations', 'GMW' ); ?></span>
+								<span><?php _e( 'Import Users/Members Locations', 'GMW' ); ?></span>
 							</h3>
 
 							<div class="inside">
 									
 								<?php 
-						    		$fl_importer = new GMW_Members_Locations_Importer_V3(); 
-						    		$fl_importer->output(); 
+						    		$users_importer = new GMW_Users_Locations_Importer_V3(); 
+						    		$users_importer->output(); 
 						    	?>		  
 								
 							</div><!-- .inside -->
@@ -88,12 +90,11 @@ class GMW_V_3_Import_Page {
 				</div>
 			</div>
 
-		<?php endif; ?>
-
-	    <?php
+		<?php endif;
+	
+		do_action( 'gmw_v3_import_page_end' ); 
 	}
 }
-
 new GMW_V_3_Import_Page();
 
 /**
@@ -196,11 +197,11 @@ class GMW_Posts_Locations_Importer_V3 extends GMW_Locations_Importer {
 }
 
 /**
- * Members locator importer class
+ * Users Locations importer class
  *
  * @since 3.0
  */
-class GMW_Members_Locations_Importer_V3 extends GMW_Locations_Importer {
+class GMW_Users_Locations_Importer_V3 extends GMW_Locations_Importer {
 
 	/**
 	 * The object type we importing.
@@ -218,7 +219,7 @@ class GMW_Members_Locations_Importer_V3 extends GMW_Locations_Importer {
 	 * Message
 	 * @var string
 	 */
-	public $form_message = 'Import existing Members locations into GEO my WP v3.0 database table.';
+	public $form_message = 'Import existing users/members locations into GEO my WP v3.0 database table.';
 
 	/**
 	 * Get location from database
@@ -229,7 +230,7 @@ class GMW_Members_Locations_Importer_V3 extends GMW_Locations_Importer {
 		global $wpdb;
 
 		//check for post types table
-		$gmw_fl_table = 'wppl_friends_locator';
+		$gmw_users_table = 'wppl_friends_locator';
 
 		//count rows only when init the importer
 		$count_rows = $this->total_locations == 0 ? 'SQL_CALC_FOUND_ROWS' : '';
@@ -258,7 +259,7 @@ class GMW_Members_Locations_Importer_V3 extends GMW_Locations_Importer {
 			gmwLocations.formatted_address,
 			gmwLocations.map_icon,
 			wpusers.user_registered as created
-			FROM {$gmw_fl_table} gmwLocations 
+			FROM {$gmw_users_table} gmwLocations 
 			INNER JOIN {$wpdb->users} wpusers 
 			ON gmwLocations.member_id = wpusers.ID
 			LIMIT {$this->records_completed}, {$this->records_per_batch}
