@@ -67,9 +67,30 @@ class GMW_Single_Post_Location extends GMW_Single_Location {
 	 */
 	public function title() {
 		
-		$title     = $this->location_data->post_title;
-		$permalink = get_the_permalink( $this->location_data->post_id );
+		$title     = ! empty( $this->location_data->post_title ) ? $this->location_data->post_title : get_the_title( $this->args['object_id'] ) ;
+		$permalink = get_the_permalink( $this->args['object_id'] );
 		
 		return apply_filters( 'gmw_sl_title', "<h3 class=\"gmw-sl-title post-title gmw-sl-element\"><a href=\"{$permalink}\" title=\"{$title}\"'>{$title}</a></h3>", $this->location_data, $this->args, $this->user_position );
 	}
 }
+
+/**
+ * GMW Single post location shortcode
+ * 
+ * @version 2.0
+ * 
+ * @author Eyal Fitoussi
+ */
+function gmw_single_post_location_shortcode( $atts = array() ) {
+	
+	$atts['object_type'] = 'post';
+
+	if ( isset( $atts['post_id'] ) ) {
+		$atts['object_id'] = $atts['post_id'];
+	}
+
+	$single_post_location = new GMW_Single_Post_Location( $atts );
+
+	return $single_post_location->output();
+}
+add_shortcode( 'gmw_single_post_location', 'gmw_single_post_location_shortcode' );
