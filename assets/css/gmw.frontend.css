@@ -44,7 +44,7 @@ div.gmw-map img {
 }
 div.gmw-map-wrapper {
 	position: relative;
-	display: inline-block;
+	//display: inline-block;
 }
 
 div.gmw-map-wrapper.gmw-map-frame {
