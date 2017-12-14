@@ -89,6 +89,13 @@ var GMW_Map = function( options, map_options, form ) {
 	this.markers = [];
 	
 	/**
+	 * Hide map if no locations found
+	 * 
+	 * @type {Boolean}
+	 */
+	this.hide_no_locations = options['hide_no_locations'] || false;
+
+	/**
 	 * Location info-window
 	 * 
 	 * @type {Boolean}
@@ -241,6 +248,8 @@ GMW_Map.prototype.init = function() {
  * @return {[type]} [description]
  */
 GMW_Map.prototype.render = function( locations, user_location ) {
+	
+	console.log( 'render map' );
 
 	var self = this;
 
@@ -278,8 +287,16 @@ GMW_Map.prototype.render = function( locations, user_location ) {
 	// map type
 	self.options['mapTypeId'] = google.maps.MapTypeId[self.options['mapTypeId']];
 	
+	// abort if not locations found and we don't want to show the map
+	// we still render it but keep it hidden
+	if ( self.locations.length == 0 && self.hide_no_locations ) {
+		var slideFunction = 'slideUp';
+	} else {
+		var slideFunction = 'slideDown';
+	}
+
 	// generate the map element
-	self.wrap_element.slideDown( 'fast', function() {
+	self.wrap_element[slideFunction]( 'fast', function() {
 		
 		self.map = new google.maps.Map( 
 			document.getElementById( self.map_element ),
@@ -352,12 +369,20 @@ GMW_Map.prototype.render = function( locations, user_location ) {
  * @return {[type]}         [description]
  */
 GMW_Map.prototype.update = function( locations, user_location ) {
+	
+	console.log( 'update map' );
 
 	var self = this;
 
 	self.locations = locations || self.locations;
 
 	self.user_location = user_location || self.user_location;
+
+	// abort if not locations found and we don't want to show the map
+	if ( self.locations.length == 0 && self.hide_no_locations ) {
+		this.wrap_element.slideUp();
+		return;
+	}
 
 	// if map does not exist, render it instead
 	if ( self.map === false ) {
@@ -374,6 +399,8 @@ GMW_Map.prototype.update = function( locations, user_location ) {
 
 	// make sure map is not hidden
 	self.wrap_element.slideDown( 'fast', function() {
+
+		google.maps.event.trigger( self.map, 'resize' );
 
 		// clear existing markers
 		self.clear();
@@ -446,36 +473,6 @@ GMW_Map.prototype.clear_polylines = function() {
  		}            
  	}
 }
-
-/**
- * Initilize markers grouping. 
- * 
- * markers clusters, spiderfier and can be extended
- * 
- * @return {[type]} [description]
- */
-/*
-GMW_Map.prototype.group_markers = function() {
-	
-	// hook custom functions if needed
-	GMW.do_action( 'gmw_map_group_markers', this.grouping_type, this );
-
-	// generate the grouping function
-	var groupMarkerFunction = 'grouping_type_' + this.grouping_type;
-
-	// verify grouping function
-	if ( typeof this[groupMarkerFunction] === 'function' ) {
-
-		// run marker grouping
-		this[groupMarkerFunction]();
-	
-	// otherwise show error message
-	} else {
-
-		console.log( 'The function ' + groupMarkerFunction + ' not exists.' );
-	}
-};
-*/
 
 /**
  * Initilize markers grouping. 
@@ -781,6 +778,11 @@ GMW_Map.prototype.render_markers = function( locations ) {
 
 	var locations_count = self.locations.length;
 
+	// abort if not locations found and we don't want to show the map
+	if ( locations_count == 0 && self.hide_no_locations ) {
+		this.wrap_element.slideUp();
+	}
+
 	// loop through locations
 	for ( i = 0; i < locations_count + 1 ; i++ ) {  
 		
@@ -1025,9 +1027,14 @@ jQuery( document ).ready( function($){
 	// loop through and generate all maps
 	jQuery.each( gmwMapObjects, function( map_id, vars ) {	
 
-		// generate new map
-		GMW_Maps[map_id] = new GMW_Map( vars.settings, vars.map_options, vars.form );
-		// initiate it
-		GMW_Maps[map_id].render( vars.locations, vars.user_location );
+		if ( vars.settings.render_map ) {
+			
+			console.log( 'render map dynamically' );
+
+			// generate new map
+			GMW_Maps[map_id] = new GMW_Map( vars.settings, vars.map_options, vars.form );
+			// initiate it
+			GMW_Maps[map_id].render( vars.locations, vars.user_location );
+		}
 	});
 });
