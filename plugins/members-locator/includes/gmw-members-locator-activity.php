@@ -17,41 +17,36 @@ function gmw_record_member_location_activity( $user_id, $user_location ) {
     	return false;
     }
     
-    global $bp;
-
-    // get user location
-    $new_address = apply_filters( 'gmw_fl_activity_address_fields', $user_location['formatted_address'], $user_location, $user_id );
-        
     // get user link
-    $from_user_link = bp_core_get_userlink( $user_id );
-    
+    $user_link = bp_core_get_userlink( $user_id );
     // get user's current address if exists
     $current_address = ! empty( $_COOKIE['gmw_ul_formatted_address'] ) ? '&daddr='. str_replace( ' ', '+', urldecode( $_COOKIE['gmw_ul_formatted_address'] ) ) : '';
-    
     // region and language
     $region   = '&region='.gmw_get_option( 'general_settings', 'country_code', 'us' );
     $language = '&hl='.gmw_get_option( 'general_settings', 'langauge_code', 'en' );
-    
-    $updated_text = __( '%s updated new location', 'GMW' );
+ 
+    // modify the address
+    $activity_address = apply_filters( 'gmw_fl_activity_address_fields', $user_location['formatted_address'], $user_location, $user_id );
 
     // show address in activity only if enabled or not empty
-    if ( ! empty( $new_address ) ) {
-        $updated_text .= __( ' at %s', 'GMW' );
+    if ( ! empty( $activity_address ) ) {
+       
+        $activity_text     = __( '%s updated new location at %s', 'GMW' );
+        $activity_location = '<a class="gmw-fl-location-activity gmw-icon-location" target="_blank" href="'.esc_url( 'https://maps.google.com/maps?f=d'.$language.$region.'&geocode=&saddr='.$activity_address.$current_address.'&ie=UTF8&z=12' ).'" >'.esc_attr( $activity_address ).'</a>';
+        $activity_action   = sprintf( $activity_text, $user_link, $activity_location );
+    
+    } else {
+        $activity_text   = __( '%s updated new location', 'GMW' );
+        $activity_action = sprintf( $activity_text, $user_link );
     }
-
-    // activity updated text
-    $activity_text = apply_filters( 'gmw_fl_update_activity_text', $updated_text, $user_id, $new_address, $user_location );
     
     // generate activity arguments
     $args = apply_filters( 'gmw_fl_activity_update_args', array(
 		'user_id'           => $user_id,
-		'action'            => sprintf( esc_attr( $activity_text ), $from_user_link, '<span class="gmw-fl-activity-map-marker gmw-icon-location"></span><a target="_blank" href="https://maps.google.com/maps?f=d'.esc_attr( $language ).esc_attr( $region ).'&geocode=&saddr='.esc_attr( $new_address ). esc_attr( $current_address ).'&ie=UTF8&z=12" >' . esc_attr( $new_address ) . '</a>' ),
-		'content'           => '',
+		'action'            => $activity_action,
 		'primary_link'      => bp_core_get_userlink( $user_id, false, true ),
-		'component'         => $bp->gmw_location->id,
-		'type'              => 'gmw_location',
-		'item_id'           => false,
-		'secondary_item_id' => false,
+		'component'         => buddypress()->members->id,
+		'type'              => 'gmw_member_location_updated',
 		'recorded_time'     => gmdate( 'Y-m-d H:i:s' )
     ), $user_id, $user_location, $current_address );
     
