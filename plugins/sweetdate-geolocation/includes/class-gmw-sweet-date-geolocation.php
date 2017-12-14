@@ -129,12 +129,12 @@ class GMW_Sweet_Date_Geolocation {
         $this->form_data = apply_filters( 'gmw_sd_form_data', $this->form_data, $this );
 
         // action hooks / filters
-        add_action( 'wp_enqueue_scripts', 		   array( $this, 'register_scripts' 		         ) );
-        add_filter( 'kleo_bp_search_add_data', 	   array( $this, 'members_directory_form'            ) );
-        add_filter( 'bp_pre_user_query_construct', array( $this, 'query_vars'                        ) );
-        add_action( 'bp_members_inside_avatar',    array( $this, 'get_distance' 			         ) );
-        add_action( 'bp_directory_members_item',   array( $this, 'add_elements_to_results'           ) );
-        add_filter( 'bp_user_query_uid_clauses',   array( $this, 'oreder_results_by_distance' ), 50, 2 );
+        add_action( 'wp_enqueue_scripts', 		   array( $this, 'register_scripts' 		        ) );
+        add_filter( 'kleo_bp_search_add_data', 	   array( $this, 'members_directory_form'           ) );
+        add_filter( 'bp_pre_user_query_construct', array( $this, 'query_vars'                       ) );
+        add_action( 'bp_members_inside_avatar',    array( $this, 'get_distance' 			        ) );
+        add_action( 'bp_directory_members_item',   array( $this, 'add_elements_to_results'          ) );
+        add_filter( 'bp_user_query_uid_clauses',   array( $this, 'order_results_by_distance' ), 50, 2 );
         
         // enable map
         if ( ! empty( $this->options['map'] ) ) {
@@ -189,7 +189,7 @@ class GMW_Sweet_Date_Geolocation {
      * @param  [type] $vars    [description]
      * @return [type]          [description]
      */
-    function oreder_results_by_distance( $clauses, $vars ) {
+    function order_results_by_distance( $clauses, $vars ) {
 
         if ( $vars->query_vars['type'] == 'distance' ) {
             
