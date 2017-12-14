@@ -35,7 +35,8 @@ class GMW_Members_locator_Addon extends GMW_Register_Addon {
     // in multisite installation
     public $global_db = true;
 
-    public $templates = true;
+    // plugin uses template files
+    public $template_files = true;
 
     // folder name
     //public $templates_folder = 'templates';
@@ -71,14 +72,13 @@ class GMW_Members_locator_Addon extends GMW_Register_Addon {
 
         parent::__construct();
     }
+    
     /**
      * [required description]
      * @return [type] [description]
      */
     public function required() {
-
         return array(
-
             'plugins' => array(
                 array(
                     'function' => 'BuddyPress',
@@ -89,68 +89,6 @@ class GMW_Members_locator_Addon extends GMW_Register_Addon {
     }
 
     /**
-     * Disable activation in add-ons page if BP is not installed.
-     * 
-     * @return [type] [description]
-     */
-    /*
-    public function disable_activation() {
-
-        $this->verify_bp = ( ! class_exists( 'BuddyPress' ) || version_compare( BP_VERSION, 2.8, '<' )  ) ? false : true;
-
-        $this->deactivation_message = __( 'Members Locator add-on requires BuddyPress plugin version 2.8 or higher.', 'GMW' );
-
-        if ( ! $this->verify_bp ) {
-            
-            return $this->deactivation_message;
-        
-        } else {
-            
-            return false;
-        }
-    }
-    */
-    /**
-     * Missing plugin notice
-     * 
-     * @return [type] [description]
-     */
-    /*
-    public function buddypress_missing_notice() {
-        ?>
-        <div class="error">
-            <p><?php echo $this->deactivation_message; ?></p>
-        </div> 
-        <?php 
-    }
-    */
-    /**
-     * Verify BuddyPress plugin
-     * 
-     * @return [type] [description]
-     */
-    /*
-    public function verify_activation() {
-
-        if ( ! $this->verify_bp ) {
-            
-            add_action( 'admin_notices', array( $this, 'buddypress_missing_notice' ) );
-
-            // deactivate addon
-            if ( IS_ADMIN ) {
-                $this->deactivate_addon();
-            }
-
-            return false;
-
-        } else {
-
-            return true;
-        }
-    }
-    */
-
-    /**
      * Initiate the plugin
      * @return void
      */
@@ -159,23 +97,28 @@ class GMW_Members_locator_Addon extends GMW_Register_Addon {
         parent::pre_init();
 
         // load add-on with bp initiate
-        add_action( 'bp_loaded', array( $this, 'load_members_locator' ), 20 );
+        add_action( 'bp_loaded', array( $this, 'members_locator_init' ), 20 );
     }
 
     /**
-     * Initicallback function
+     * Init addon
      * @return [type] [description]
      */
-    public function load_members_locator() {
-    	global $bp;
+    public function members_locator_init() {
 
-	    //include component files
-	    include_once( 'includes/class-gmw-members-locator-component.php' );
+        if ( IS_ADMIN ) {
+            include( 'includes/admin/class-gmw-members-locator-form-editor.php' );
+        }
 
-	    //load Members Locator component
-	    if ( class_exists( 'GMW_Members_Locator_Component' ) ) {
-	        $bp->gmw_location = new GMW_Members_Locator_Component;
-	    }
+        include( 'includes/class-gmw-members-locator-location-tab.php' );
+        include( 'includes/gmw-members-locator-actions.php' );
+        include( 'includes/gmw-members-locator-activity.php' );
+        include( 'includes/gmw-members-locator-template-functions.php' );
+        include( 'includes/class-gmw-members-locator-form.php' );
+
+        if ( gmw_is_addon_active( 'single_location' ) ) {
+            include( 'includes/class-gmw-single-member-location.php' );
+        }
     }
 }
 new GMW_Members_locator_Addon();
