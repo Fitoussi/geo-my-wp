@@ -93,6 +93,18 @@ function gmw_update_location_meta( $location_id = 0, $meta_key = '' , $meta_valu
 }
 
 /**
+ * Delete location by object type and object ID
+ * 
+ * @param  boolean $object_type [description]
+ * @param  integer $object_id   [description]
+ * @param  string  $meta_key    [description]
+ * @return [type]               [description]
+ */
+function gmw_delete_location( $object_type = false, $object_id = 0, $delete_meta = false ) {
+    return GMW_Location::delete_location( $object_type, $object_id, $delete_meta );
+}
+
+/**
  * Delete location meta
  * 
  * @param  integer $location_id [description]
@@ -597,7 +609,7 @@ function gmw_get_directions_link( $location, $from_coords = array(), $label = ''
         'to_lng' => $location->lng
     );
 
-    if ( isset( $from_coords[0] ) && isset( $from_coords[1] )  ) {
+    if ( ! empty( $from_coords[0] ) && ! empty( $from_coords[1] )  ) {
         
         $args['from_lat'] = $from_coords[0];
         $args['from_lng'] = $from_coords[1];
