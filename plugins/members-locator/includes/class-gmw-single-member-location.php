@@ -98,3 +98,24 @@ class GMW_Single_Member_Location extends GMW_Single_Location {
 		return apply_filters( 'gmw_sl_title', '<h3 class="gmw-sl-title member-name gmw-sl-element">'. bp_core_get_userlink( $this->args['object_id'] ) .'</h3>', $this->location_data, $this->args, $this->user_position );
 	}
 }
+
+/**
+ * GMW Single member location shortcode
+ * 
+ * @version 2.0
+ * 
+ * @author Eyal Fitoussi
+ */
+function gmw_single_bp_member_location_shortcode( $atts = array() ) {
+	
+	$atts['object_type'] = 'user';
+
+	if ( isset( $atts['user_id'] ) ) {
+		$atts['object_id'] = $atts['user_id'];
+	}
+
+	$single_member_location = new GMW_Single_BP_Member_Location( $atts );
+
+	return $single_member_location->output();
+}
+add_shortcode( 'gmw_single_bp_member_location', 'gmw_single_bp_member_location_shortcode' );
