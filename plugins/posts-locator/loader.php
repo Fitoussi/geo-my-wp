@@ -40,7 +40,8 @@ class GMW_Posts_Locator_Addon extends GMW_Register_Addon {
     // db table prefix
     public $global_db = false;
 
-    public $templates = true;
+    // Plugin use template files
+    public $template_files = true;
 
     // folder name
     //public $templates_folder = 'templates';
@@ -59,7 +60,7 @@ class GMW_Posts_Locator_Addon extends GMW_Register_Addon {
         'slug'      => 'posts_locator',
         'name'      => 'Posts Locator',
         'prefix'    => 'pt',
-        'priority'  => 1 
+        'priority'  => 5 
     );
     
     public function pre_init() {  
