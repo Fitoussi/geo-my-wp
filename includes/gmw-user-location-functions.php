@@ -1,4 +1,9 @@
 <?php
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 /**
  * Try to get the user ID
  *
@@ -14,11 +19,10 @@ function gmw_try_get_user_id() {
 
     $user_id = 0;
 
-    // if BuddyPress activated we look for user ID
-    // using $bp
+    // if BuddyPress activated we look for member ID
     if ( class_exists( 'BuddyPress' ) ) {
 
-        global $bp, $members_template;
+        global $members_template;
 
         // look for member ID in the loop
         if ( ! empty( $members_template->member->id ) ) {
@@ -26,19 +30,18 @@ function gmw_try_get_user_id() {
             $user_id = $members_template->member->id;
 
         // look for displayed user ID
-        } elseif ( ! empty( $bp->displayed_user->id ) ) {
+        } elseif ( ! empty( buddypress()->displayed_user->id ) ) {
         
-            $user_id = $bp->displayed_user->id;
+            $user_id = buddypress()->displayed_user->id;
 
-         } elseif ( ! empty( $bp->loggedin_user->id ) ) {
+         } elseif ( ! empty( buddypress()->loggedin_user->id ) ) {
         
-            $user_id = $bp->loggedin_user->id;
+            $user_id = buddypress()->loggedin_user->id;
         } 
     }
 
     // if not found via BuddyPress look for loggedin user ID
     if ( empty( $user_id ) ) {
-
         $user_id = get_current_user_id();
     }
     
@@ -266,7 +269,6 @@ function gmw_delete_user_location( $user_id = 0, $delete_meta = false ) {
  * @return [type]          [description]
  */
 function gmw_delete_user_location_action( $user_id ) {
-    
     gmw_delete_user_location( $user_id, true );
 }
 add_action( 'delete_user', 'gmw_delete_user_location_action' );
