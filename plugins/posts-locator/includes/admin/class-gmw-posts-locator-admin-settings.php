@@ -104,7 +104,7 @@ class GMW_Posts_Locator_Admin_Settings {
                     'zoom_level'  => 7   
                 ),
                 'label'      => __( 'Map Settings ( admin\'s "Edit Post" Page )', 'GMW' ),
-                'desc'       => __( 'Deafult settings for the map displayed in the Location section in the "Edit Post" page.' , 'GMW' ),
+                'desc'       => __( 'Default settings for the map displayed in the Location section in the "Edit Post" page.' , 'GMW' ),
                 'attributes' => array(),
                 'priority'   => 20
             ),

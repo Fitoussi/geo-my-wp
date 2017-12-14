@@ -423,7 +423,7 @@ class GMW_Form_Editor {
 					'type'     		=> 'function',
 					'default'       => '',
 					'label'    		=> __( 'Image', 'GMW' ),
-					'desc'     		=> __( 'Check this checkbox to disply the image of each location in the list of results, then enter the width and height in pixels ( enter numeric value only, without "px" ).', 'GMW' ),
+					'desc'     		=> __( '<p>Check this checkbox to display the image of each location in the list of results, then enter the width and height in pixels ( enter numeric value only, without "px" ).</p>', 'GMW' ),
 					'attributes' 	=> array(),
 					'priority'		=> 30
 				),
@@ -719,7 +719,7 @@ class GMW_Form_Editor {
             		</tr>
             		<tr>
             			<td class="gmw-form-usage-desc">
-            				<p><?php _e( 'Use this shortcode to display the results map anywhere on a page. By default, the form you create will display the map above the list of results. Using this shortcode you can display the map anywhere else on the page. Note that when using this shortcode you also need to place either the <code>[gmw search_results="'.$this->form['ID'].'"]</code> or <code>[gmw form="results"]</code> shortocde on the page. You also need to set the "Display Map" feature ( "Search Results" tab ) to "using shortcode".', 'GMW' ); ?></p>
+            				<p><?php _e( 'Use this shortcode to display the results map anywhere on a page. By default, the form you create will display the map above the list of results. Using this shortcode you can display the map anywhere else on the page. Note that when using this shortcode you also need to place either the <code>[gmw search_results="'.$this->form['ID'].'"]</code> or <code>[gmw form="results"]</code> shortcode on the page. You also need to set the "Display Map" feature ( "Search Results" tab ) to "using shortcode".', 'GMW' ); ?></p>
             			</td>
             			<td class="gmw-form-usage">
             				<p><code>[gmw map="<?php echo $this->form['ID']; ?>"]</code></p>

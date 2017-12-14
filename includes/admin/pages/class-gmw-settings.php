@@ -110,7 +110,7 @@ class GMW_Settings {
                     'type'        => 'select',
                     'default'     => 'enabled',
                     'label'       => __( 'Google Maps API', 'GMW' ),
-                    'desc'        => __( 'Using this feature you prevent GEO my WP from registering the Google Map API ( which it does by deafult ). In most cases this feature should be set to "Enabled". It should disabled only if there are other mapping plugin installed on your site, which also register the Google Maps API and cause for conflicts. Note that disabling this feature might solve a conflict cause by multiple calles to Google Maps API, it might also results in GEO my WP to not work properly.', 'GMW' ),                  
+                    'desc'        => __( 'Using this feature you prevent GEO my WP from registering the Google Map API ( which it does by default ). In most cases this feature should be set to "Enabled". It should disabled only if there are other mapping plugin installed on your site, which also register the Google Maps API and cause for conflicts. Note that disabling this feature might solve a conflict cause by multiple calles to Google Maps API, it might also results in GEO my WP to not work properly.', 'GMW' ),                  
                     'attributes'  => array(),
                     'options'     => array(
                         'enabled'   => __( 'Enabled', 'GMW' ),

@@ -30,7 +30,7 @@ class GMW_Sweet_Date_Admin_settings {
     }
    
     /**
-     * Set deafult values if not exists
+     * Set default values if not exists
      * 
      */
     public function default_options() {

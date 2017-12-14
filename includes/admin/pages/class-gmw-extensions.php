@@ -611,7 +611,7 @@ class GMW_Extensions {
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="filter-tab" data-filter=".premium"><?php _e( 'Prmeium', 'GMW' ); ?>
+                        <a href="#" class="filter-tab" data-filter=".premium"><?php _e( 'Premium', 'GMW' ); ?>
                             <span class="count">( <?php echo $extensions_count - $core_extensions_count; ?> )</span>
                         </a>
                     <li>
