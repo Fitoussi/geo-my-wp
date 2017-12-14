@@ -18,7 +18,7 @@ class GMW_Members_Locator_Form_Editor {
     public function __construct() {
         
         add_filter( 'gmw_form_default_settings', array( $this, 'set_defaults' ), 20 );
-        add_filter( 'gmw_members_locator_form_settings', array( $this, 'get_fields' ), 15 ); 
+        add_filter( 'gmw_members_locator_form_settings', array( $this, 'form_settings' ), 15 ); 
         // settings fields
         add_action( 'gmw_members_locator_form_settings_xprofile_fields', array( 'GMW_Form_Settings_Helper', 'bp_xprofile_fields' ), 10, 2 );
         // validations
@@ -49,7 +49,7 @@ class GMW_Members_Locator_Form_Editor {
      * @access public
      * @return $settings
      */
-    function get_fields( $fields ) {
+    function form_settings( $fields ) {
         
         //search form features
         $fields['search_form']['xprofile_fields'] = array(
