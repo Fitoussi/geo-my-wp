@@ -66,7 +66,7 @@ class GMW_Posts_Location_Form extends GMW_Location_Form {
         );
 
         // filter tabs
-        $tabs = apply_filters( 'gmw_pt_location_form_tabs', $tabs, $this );
+        $tabs = apply_filters( 'gmw_post_location_form_tabs', $tabs, $this );
 
         return $tabs;
     }
@@ -154,7 +154,7 @@ class GMW_Posts_Location_Form extends GMW_Location_Form {
             )
         );
 
-        $fields = apply_filters( 'gmw_pt_location_form_fields', $fields, $this );
+        $fields = apply_filters( 'gmw_post_location_form_fields', $fields, $this );
 
         return $fields;
     }
@@ -166,7 +166,7 @@ class GMW_Posts_Location_Form extends GMW_Location_Form {
      */
     public function create_tabs_panels() {
 
-        do_action( 'gmw_pt_location_form_before_panels', $this );
+        do_action( 'gmw_post_location_form_before_panels', $this );
         ?>
         <!-- contact info tab -->
         <div id="contact-tab-panel" class="section-wrapper contact">
@@ -182,7 +182,7 @@ class GMW_Posts_Location_Form extends GMW_Location_Form {
          <!-- contact info tab -->
         <div id="days_hours-tab-panel" class="section-wrapper days-hours">
 
-            <?php do_action( 'gmw_lf_pt_days_hours_section_start', $this ); ?>
+            <?php do_action( 'gmw_lf_post_days_hours_section_start', $this ); ?>
 
             <h3><?php _e( 'Days & Hours', 'GMW' ) ?></h3>
         
@@ -211,10 +211,10 @@ class GMW_Posts_Location_Form extends GMW_Location_Form {
                 <?php } ?>
             </table>
 
-            <?php do_action( 'gmw_lf_pt_days_hours_section_end', $this ); ?>
+            <?php do_action( 'gmw_lf_post_days_hours_section_end', $this ); ?>
 
         </div>
         <?php 
-        do_action( 'gmw_pt_location_form_after_panels', $this );
+        do_action( 'gmw_post_location_form_after_panels', $this );
     }
 }
