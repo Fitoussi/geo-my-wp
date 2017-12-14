@@ -116,8 +116,10 @@ class GMW_Form_Editor {
 				'label'		=> __( 'Map', 'GMW' ),
 				'priority'	=> 50
         	),
-        ) );
+        ), $this->form );
 
+		$groups = apply_filters( 'gmw_'.$this->form['slug'].'_form_settings_groups', $groups, $this->form );
+		
         uasort( $groups, 'gmw_sort_by_priority' );
 
         return $groups;
@@ -271,7 +273,7 @@ class GMW_Form_Editor {
 					'default'       => 'gray',
 					'label'    		=> __( 'Search Form Template', 'GMW' ),
 					'desc'  		=> __( 'Select The search form template file.', 'GMW' ),		
-					'options'		=> array_merge( array( '-1' => __( ' - Disabled search form - ' ) ), GMW_Helper::get_templates( $this->form['slug'], 'search-forms' ) ),
+					'options'		=> array( '' => __( 'Disabled', 'GMW' ) ) + GMW_Helper::get_templates( $this->form['addon'], 'search-forms' ),
 					'attributes' 	=> array(),
 					'priority'		=> 10
 				),
@@ -366,7 +368,7 @@ class GMW_Form_Editor {
 					'default'       => '',
 					'label'   		=> __( 'Results Page', 'GMW' ),
 					'desc'    		=> __( "The results page displays the search results in the selected page when using the \"GMW Search Form\" widget, or when you wish to have the search form in one page and the results showing in a different page. To use this feature, select the results page from the dropdown menu and paste the shortcode <code>[gmw form=\"results\"]</code> into the content area of that page. Otherwise, select \"Same Page\" to display both the search form and search results in the same page.", 'GMW' ),
-					'options' 		=> GMW_Form_Settings_Helper::get_pages(),
+					'options' 		=> array( '' => __( ' -- Same Page -- ', 'GMW' ) ) + GMW_Form_Settings_Helper::get_pages(),
 					'attributes'  	=> '',
 					'priority'		=> 10
 				),
@@ -402,7 +404,7 @@ class GMW_Form_Editor {
 					'default'   	=> 'gray',
 					'label' 		=> __( 'Results Template', 'GMW' ),
 					'desc'  		=> __( 'Select the search results template file.', 'GMW' ),
-					'options'		=> GMW_Helper::get_templates( $this->form['slug'], 'search-results' ),
+					'options'		=> GMW_Helper::get_templates( $this->form['addon'], 'search-results' ),
 					'attributes' 	=> array(),
 					'priority'		=> 10
 				),
