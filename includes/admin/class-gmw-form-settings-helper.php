@@ -13,8 +13,7 @@ class GMW_Form_Settings_Helper {
 	 */
 	public static function get_pages() {
 		$pages = array();
-	
-		$pages[''] = __( ' -- Same Page -- ', 'GMW' );
+        
 		foreach ( get_pages() as $page ) {
 			$pages[$page->ID] = $page->post_title;
 		}
