@@ -198,8 +198,8 @@ jQuery( document ).ready( function( $ ) {
 			
 			// dynamically remove any excluded tab containers that might be still exists 
 			// on the page
-			if ( gmw_lf_args.args.exclude_tabs.length ) {
-				$.each( gmw_lf_args.args.exclude_tabs, function( index, value ) {
+			if ( typeof this_form.vars.exclude_fields_groups !== undefined && this_form.vars.exclude_fields_groups.length ) {
+				$.each( this_form.vars.exclude_fields_groups, function( index, value ) {
 					$( '#' + value + '-tab-panel' ).remove();
 				});	
 			}
