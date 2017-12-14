@@ -108,14 +108,16 @@ class GMW_Search_Form_Helper {
 
 		$defaults = array(
 			'id'			   	   => 0,
-			'class'				   => '',
+			'id_attr'			   => '',
+			'class_attr'		   => '',
 			'placeholder'		   => __( 'Enter address', 'GMW' ), 
 			'locator_button'	   => 1,
 			'locator_submit'	   => 0,
 			'icon'				   => 'gmw-icon-target-light',
 			'mandatory'			   => 0,
 			'address_autocomplete' => 1,
-			'name_tag'			   => $url_px.'address[]'
+			'name_attr'			   => $url_px.'address[]',
+			'value'				   => '',
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -128,15 +130,20 @@ class GMW_Search_Form_Helper {
 		if ( isset( $_GET[$url_px.'address'] ) ) {
 			$value = is_array( $_GET[$url_px.'address'] ) ? implode( ' ', $_GET[$url_px.'address'] ) : $_GET[$url_px.'address'];
 			$value = esc_attr( stripslashes( $value ) );
+		} else if ( $args['value'] != '' ) {
+			$value = esc_attr( stripslashes( $args['value'] ) );
 		} else {
 			$value = '';
 		}
-				 
-	    $output = '<input type="text" name="'.esc_attr( $args['name_tag'] ).'" id="gmw-address-field-'.absint( $args['id'] ).'" class="gmw-form-field gmw-address gmw-full-address '.$mandatory.' '.$autocomplete.' '.esc_attr( $args['class'] ).'" value="'.$value.'" placeholder="'.$placeholder.'" autocorrect="off" autocapitalize="off" spellcheck="false" />';
+		
+		$id = esc_attr( $args['id'] );
+		$id_attr = $args['id_attr'] != '' ? esc_attr( $args['id_attr'] ) : 'gmw-address-field-'.$id;
+
+	    $output = '<input type="text" name="'.esc_attr( $args['name_attr'] ).'" id="'.$id_attr.'" class="gmw-form-field gmw-address gmw-full-address '.$mandatory.' '.$autocomplete.' '.esc_attr( $args['class_attr'] ).'" value="'.$value.'" placeholder="'.$placeholder.'" autocorrect="off" autocapitalize="off" spellcheck="false" />';
 	   
 	    // if the locator button in within the address field
 	    if ( $args['locator_button'] ) {
-	    	$output .= '<i class="gmw-locator-button inside '.$args['icon'].'" data-locator_submit="'.esc_attr( $args['locator_submit'] ).'"></i>';
+	    	$output .= '<i class="gmw-locator-button inside '.$args['icon'].'" data-locator_submit="'.esc_attr( $args['locator_submit'] ).'" data-form_id="'.$id.'"></i>';
 	    }
 	    
 	    return $output;
@@ -262,14 +269,14 @@ class GMW_Search_Form_Helper {
 							
 			$img_url = GMW_IMAGES .'/locator-images/'.$args['image'];
 
-			$output .= '<img id="gmw-locator-image-'.$id.'" class="gmw-locator-button image '.esc_attr( $args['class'] ).'" data-locator_submit="'. absint( $args['form_submit'] ).'" src="'.esc_url( $img_url ).'" alt="'.__( 'locator button', 'GMW' ).'" />';
+			$output .= '<img id="gmw-locator-image-'.$id.'" class="gmw-locator-button image '.esc_attr( $args['class'] ).'" data-locator_submit="'. absint( $args['form_submit'] ).'" src="'.esc_url( $img_url ).'" alt="'.__( 'locator button', 'GMW' ).'" data-form_id="'.$id.'" />';
 
 		// text button
 		} elseif ( $usage == 'text' ) {
 
 			$label = ! empty( $args['label'] ) ? esc_attr( $args['label'] ) : '';
 
-			$output .= '<span id="gmw-locator-text-'.$id.'" class="gmw-locator-button text" data-locator_submit="'.absint( $args['form_submit'] ).'">'. esc_attr( $args['label'] ) .'</span>';
+			$output .= '<span id="gmw-locator-text-'.$id.'" class="gmw-locator-button text" data-locator_submit="'.absint( $args['form_submit'] ).'" data-form_id="'.$id.'">'. esc_attr( $args['label'] ) .'</span>';
 		}
 		
 		$output .= '<i id="gmw-locator-loader-'.$id.'" class="gmw-locator-loader gmw-icon-spin animate-spin" style="display:none;"></i>';
