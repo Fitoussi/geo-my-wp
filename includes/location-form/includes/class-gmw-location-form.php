@@ -33,11 +33,11 @@ class GMW_Location_Form {
 	/**
 	 * Exclude form tabs
 	 *
-	 * Additional tabs can be excluded via the $args array
+	 * Additional groups can be excluded via the $args array
 	 * 
 	 * @var array
 	 */
-	public $exclude_tabs = array();
+	public $exclude_fields_groups = array();
 
 	/**
 	 * Exclude form fields
@@ -109,7 +109,8 @@ class GMW_Location_Form {
 		//'object_type' 			=> 'post',					  // Object type being used in this form.
 		'object_id' 		  	=> 0,						  // Object ID.
 		'user_id'				=> 0,						  // User ID of the user updating the location.
-		'exclude_tabs'			=> '',						  // array of tabs to exclude from the location form. Otherwise set to 0 if no need to exclude.
+		//'exclude_tabs'			=> '',						  // array of tabs to exclude from the location form. Otherwise set to 0 if no need to exclude.
+		'exclude_fields_groups'	=> '',						  // array of fields groups to exclude from the location form.
 		'exclude_fields'		=> '',                        // exclude fields
 		'ajax_enabled'			=> 1,						  // Enable / disable AJAX form submission
 		'update_on_submission'	=> 1,						  // Use the built in form submission process to update the location. Otherwise you can use your own functions to save the location data.
@@ -180,22 +181,22 @@ class GMW_Location_Form {
 		// verify user ID
 		$this->args['user_id'] = ! empty( $this->args['user_id'] ) ? $this->args['user_id'] : get_current_user_id();
 
-		if ( ! empty( $this->args['stand_alone'] ) ) {
+		if ( $this->args['stand_alone'] ) {
 			$this->args['form_element'] = '#gmw-location-form';
 		} 
 
-		// exclude entire tabs and thier fields
-		if ( empty( $this->args['exclude_tabs'] ) ) {
-			$this->args['exclude_tabs'] = array();
-		} elseif ( ! is_array( $this->args['exclude_tabs'] ) ) {
-			$this->args['exclude_tabs'] = explode( ',', $this->args['exclude_tabs'] );
+		// get fields groups excluded via form arguments
+		if ( empty( $this->args['exclude_fields_groups'] ) ) {
+			$this->args['exclude_fields_groups'] = array();
+		} elseif ( ! is_array( $this->args['exclude_fields_groups'] ) ) {
+			$this->args['exclude_fields_groups'] = explode( ',', $this->args['exclude_fields_groups'] );
 		}
 
-		if ( ! empty( $this->exclude_tabs ) ) {
-			if ( ! is_array( $this->exclude_tabs ) ) {
-				$this->exclude_tabs = explode( ',', $this->exclude_tabs );
+		if ( ! empty( $this->exclude_fields_groups ) ) {
+			if ( ! is_array( $this->exclude_fields_groups ) ) {
+				$this->exclude_fields_groups = explode( ',', $this->exclude_fields_groups );
 			}
-			$this->args['exclude_tabs'] = array_merge( $this->exclude_tabs, $this->args['exclude_tabs'] );
+			$this->args['exclude_fields_groups'] = array_merge( $this->exclude_fields_groups, $this->args['exclude_fields_groups'] );
 		}
 
 		// exclude fields
@@ -389,9 +390,9 @@ class GMW_Location_Form {
 	 */
 	public function exclude_tabs() {
 
-    	if ( array_filter( $this->args['exclude_tabs'] ) ) {
+    	if ( array_filter( $this->args['exclude_fields_groups'] ) ) {
 	 	
-	    	foreach ( $this->args['exclude_tabs'] as $exclude_tab ) {   
+	    	foreach ( $this->args['exclude_fields_groups'] as $exclude_tab ) {   
 
 	    		if ( isset( $this->tabs[$exclude_tab] ) ) {
 
@@ -653,7 +654,7 @@ class GMW_Location_Form {
 					)
 				)
 			),
-    	));
+    	), $this );
     }
 
     /**
@@ -859,18 +860,19 @@ class GMW_Location_Form {
     protected function submission_fields() {
 
     	// check for locaiton ID
-        $location_id = ( $this->saved_location ) ? ( int ) $this->saved_location->ID : '';
+        $location_id = $this->saved_location ? ( int ) $this->saved_location->ID : '';
 
         $output = '<div class="gmw-lf-submission-fields-wrapper">';
 
         // add few more hidden fields with location data
         $output .= '<input type="hidden" class="gmw-lf-submission-field location-id" id="gmw_lf_location_id" name="gmw_location_form[ID]" 		   value="'.absint( $location_id ).'" />';
         $output .= '<input type="hidden" class="gmw-lf-submission-field object_type" id="gmw_lf_object_type" name="gmw_location_form[object_type]" value="'.esc_attr( $this->object_type ).'" />';
-        $output .= '<input type="hidden" class="gmw-lf-submission-field object-id"   id="gmw_lf_object_id"   name="gmw_location_form[object_id]"   value="'.absint( $this->args['object_id'] ).'" />';
-        $output .= '<input type="hidden" class="gmw-lf-submission-field user-id"   	 id="gmw_lf_user_id"   	 name="gmw_location_form[user_id]" 	   value="'.absint( $this->args['user_id'] ).'" />';
+        $output .= '<input type="hidden" class="gmw-lf-submission-field object-id" id="gmw_lf_object_id" name="gmw_location_form[object_id]"   value="'.absint( $this->args['object_id'] ).'" />';
+        $output .= '<input type="hidden" class="gmw-lf-submission-field user-id" id="gmw_lf_user_id" name="gmw_location_form[user_id]" 	   value="'.absint( $this->args['user_id'] ).'" />';
         $output .= '<input type="hidden" class="gmw-lf-submission-field auto-update" id="gmw_lf_auto_update" name="gmw_location_form[auto_update]" value="'.absint( $this->args['update_on_submission'] ).'" />';
-        $output .= '<input type="hidden" class="gmw-lf-submission-field action" 	 id="gmw_lf_action" 	 name="gmw_action" 		      	 	   value="update_lf_location" />';
-        $output .= '<input type="hidden" class="gmw-lf-submission-field location-id" id="gmw_lf_slug" name="gmw_lf_slug" 		   value="'.esc_attr( $this->slug ).'" />';
+        $output .= '<input type="hidden" class="gmw-lf-submission-field action" id="gmw_lf_action" name="gmw_action" 		      	 	   value="update_lf_location" />';
+        $output .= '<input type="hidden" class="gmw-lf-submission-field gmw-slug" id="gmw_lf_slug" name="gmw_lf_slug" value="'.esc_attr( $this->slug ).'" />';
+        $output .= '<input type="hidden" class="gmw-lf-submission-field gmw-lf-stand-alone" id="gmw_lf_stand_alone" name="gmw_lf_stand_alone" value="'.absint( $this->args['stand_alone'] ).'" />';
 
     	// the default location fields
         $address_fields = apply_filters( 'gmw_lf_submission_fields', array(
@@ -891,7 +893,7 @@ class GMW_Location_Form {
             'address',           
             'formatted_address',
             'place_id'
-        ));
+        ), $this );
 
         $excluded_fields = false;
 
@@ -922,8 +924,6 @@ class GMW_Location_Form {
 	        	$value = ( !empty( $this->saved_location->$field ) ) ? stripslashes( $this->saved_location->$field ) : '';
 	        }      
 
-	        $field = esc_attr( $field );
-
 	        $disable = '';
 
 	        /*if ( $excluded_fields != false ) {
@@ -932,7 +932,9 @@ class GMW_Location_Form {
 		        } 
 	        } */
 
-            $output .= '<input type="hidden" class="gmw-lf-submission-field '.$field.' '.$group.'" id="gmw_lf_'.$field.'" name="gmw_location_form['.$field.']"  value="'.esc_attr( sanitize_text_field( stripslashes( $value ) ) ).'" '.$disable.' />';
+	        $field = esc_attr( $field );
+
+            $output .= '<input type="hidden" class="gmw-lf-submission-field '.$field.' '.$group.'" id="gmw_lf_'.$field.'" name="gmw_location_form['.$field.']"  value="'.esc_attr( stripslashes( $value ) ).'">';
         }
 
        	wp_nonce_field( 'gmw_lf_update_location', 'gmw_lf_update_location' );
@@ -1073,7 +1075,6 @@ class GMW_Location_Form {
 
 		//when saving location via page load
 		} else {
-
 			$form_values = self::page_load_submission();
 		}
 	    
@@ -1157,11 +1158,8 @@ class GMW_Location_Form {
 				}
 
 				if ( empty( $meta_value ) || ( is_array( $meta_value ) && ! array_filter( $meta_value ) ) ) {
-								
 					gmw_delete_location_meta( $location['ID'], $meta_key );
-
 				} else {
-					
 					gmw_update_location_meta( $location['ID'], $meta_key, $meta_value );
 				}
 			}
@@ -1184,7 +1182,12 @@ class GMW_Location_Form {
 
 	    		// reload page to prevent re-submission
 	    		wp_redirect( $_SERVER['REQUEST_URI'] );
-	    		exit;
+
+	    		// exist only if stand alone form. Otherwise, we need
+	    		// to allow the original form to process
+	    		if ( $_POST['gmw_lf_stand_alone'] ) {
+	    			exit;
+	    		}
 	    	}
 	    }
     }
