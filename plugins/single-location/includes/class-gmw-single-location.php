@@ -108,7 +108,7 @@ class GMW_Single_Location {
 	 * Constaruct
 	 * @param unknown_type $args
 	 */
-	public function __construct( $atts=array() ) {
+	public function __construct( $atts = array() ) {
 		
 		// item_type replaced by object_type - remove in the future
 		if ( empty( $atts['object_type'] ) && ! empty( $atts['item_type'] ) ) {
