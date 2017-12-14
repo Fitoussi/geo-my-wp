@@ -17,7 +17,7 @@ if ( ! class_exists( 'GMW_Location_Form' ) ) {
  * @since 3.0
  * 
  */
-class GMW_Posts_Location_Form extends GMW_Location_Form {
+class GMW_Post_Location_Form extends GMW_Location_Form {
 
     /**
      * Addon
