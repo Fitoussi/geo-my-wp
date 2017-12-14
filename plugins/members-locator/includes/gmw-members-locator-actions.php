@@ -3,19 +3,73 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
+
+/**
+ * Filter activity by location
+ * 
+ * @param  [type] $where [description]
+ * @param  [type] $args  [description]
+ * @return [type]        [description]
+ */
+function gmw_fl_filter_location_activity( $where, $args ) {
+    if ( isset( $_COOKIE['bp-activity-filter'] ) && $_COOKIE['bp-activity-filter'] == 'gmw_member_location_updated' ) {
+        if ( ! isset( $where['filter_sql'] ) ) {
+            $where['filter_sql'] = " a.type IN ( 'gmw_member_location_updated' )";
+        } else {
+            $where['filter_sql'] .= " AND a.type IN ( 'gmw_member_location_updated' )";
+        }
+    }
     
+    return $where;
+}
+add_filter( 'bp_activity_get_where_conditions', 'gmw_fl_filter_location_activity', 50, 2 );
+
+/**
+ * Get the member name to save as location title before location is saved
+ * 
+ * @param  [type] $location [description]
+ * @return [type]           [description]
+ */
+function gmw_fl_get_member_name( $location ) {
+
+    $name = bp_core_get_username( $location['object_id'] );
+
+    if ( ! empty( $name ) ) {
+        $location['title'] = sanitize_text_field( stripslashes( $name ) );
+    }
+    
+    return $location;
+}
+add_filter( 'gmw_lf_user_location_args_before_location_updated', 'gmw_fl_get_member_name' );
+
+/**
+ * Add location item to dropdown menu filter
+ * 
+ * @return [type] [description]
+ */
+function gmw_fl_location_filter_options() {
+?>
+    <option value="gmw_member_location_updated"><?php _e( 'Member Location', 'GMW' ); ?></option>
+<?php
+}
+add_action( 'bp_activity_filter_options',        'gmw_fl_location_filter_options', 10 );
+add_action( 'bp_member_activity_filter_options', 'gmw_fl_location_filter_options', 10 );
+
+/**
+ * Register location activity for members
+ * 
+ * @return [type] [description]
+ */
 function gmw_members_locator_activity_actions() {
-	
-	global $bp;
+    
+    // abort if activity is not active
+    if ( ! bp_is_active( 'activity' ) ) {
+        return false;
+    }
 
-	// abort if activity is not active
-	if ( ! bp_is_active( 'activity' ) ) {
-		return false;
-	}
-
-	bp_activity_set_action( $bp->gmw_location->id, 'gmw_location', __( 'Member\'s location updated', 'GMW' ) );
-	
-	do_action( 'gmw_fl_activity_actions' );
+    bp_activity_set_action( buddypress()->members->id, 'gmw_member_location_updated', __( 'Member location updated', 'GMW' ) );
+    
+    do_action( 'gmw_fl_activity_actions' );
 }
 add_action( 'bp_register_activity_actions', 'gmw_members_locator_activity_actions' );
 
