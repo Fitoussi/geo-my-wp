@@ -154,13 +154,13 @@ class GMW_Maps_API {
 		
 		// default map args
 		$default_args = array( 
-			'map_id'		=> '',
-			'map_type'		=> 'na',
-			'prefix'		=> '',
-			'map_width'		=> '100%',
-			'map_height'	=> '350px',
-			'expand_on_load'=> false,
-			'init_visible'	=> false,
+			'map_id'			=> '',
+			'map_type'			=> 'na',
+			'prefix'			=> '',
+			'map_width'			=> '100%',
+			'map_height'		=> '350px',
+			'expand_on_load'	=> false,
+			'init_visible'		=> false,
 			//'form'			=> false
 		);
 
@@ -192,7 +192,7 @@ class GMW_Maps_API {
 	    $output['wrap']   = "<div id=\"gmw-map-wrapper-{$map_id}\" class=\"gmw-map-wrapper {$prefix} {$map_type} {$expanded}\" style=\"{$display}width:{$map_width};height:{$map_height};\">";
 	    $output['toggle'] = "<span id=\"gmw-resize-map-toggle-{$map_id}\" class=\"gmw-resize-map-toggle {$trigger}\" style=\"display:none;\" title=\"{$map_title}\"></span>";
 	    $output['map']    = "<div id=\"gmw-map-{$map_id}\" class=\"gmw-map {$prefix} {$map_type}\" style=\"width:100%; height:100%\" data-map_id=\"{$map_id}\" data-prefix=\"{$prefix}\" data-map_type=\"{$map_type}\"></div>";
-	    $output['cover']  = '<div class="gmw-map-cover">';
+	    $output['cover']  = '<div class="gmw-map-cover"></div>';
 	    $output['loader'] = "<i id=\"gmw-map-loader-{$map_id}\" class=\"gmw-map-loader gmw-icon-spin-light animate-spin\"></i>";
 	    $output['/wrap']  = '</div>';
 
@@ -219,11 +219,17 @@ class GMW_Maps_API {
 	 * 
 	 * @author Eyal Fitoussi
 	 * 	 
-	 * @param  array  $map_args      map arguments
-	 * @param  array  $map_options   map_options
-	 * @param  array  $locations     object's locations ( posts, users... )
-	 * @param  array  $user_position user position
-	 * @param  array  $form          GEO my WP form if exists
+	 * @param  string  map_id     		map/form ID
+	 * @param  string  map_type   		usually slug if attached to an addon ( ex. posts_locator ).
+	 * @param  string  prefix     	    usually addon prefix if attached to an addon ( ex. pt ).
+	 * @param  string  info_window_type - default to "standard". Premium extension might provide additional types 
+	 * @param  boolean info_window_ajax - true || false will be used with premium extension to load IW content via AJAX
+	 * @param  string  info_window_template - default to "default". To be used when AJAX enabled
+	 * @param  string  group_markers - default to "standard". clusters, spiderfie and other can be provided via extensions.
+	 * @param  boolean hide_no_locations - true || false to show or hide map if no locations found.
+	 * @param  boolean render_map - true || false if to render map on page load.
+	 * 
+	 * 
 	 * 
 	 * return array map arguments
 	 * 
@@ -243,7 +249,9 @@ class GMW_Maps_API {
 			'info_window_template' => 'default',
 			'zoom_position'		   => false,
 			'group_markers'		   => 'standard',
-			'draggable_window'	   => 1
+			'draggable_window'	   => 1,
+			'hide_no_locations'    => true,
+			'render_map'		   => true
 		);
 
 		// merge default with incoming map args
@@ -318,28 +326,28 @@ class GMW_Maps_API {
 		self::$map_enabled = true;
 
 		// enable Markers Clusterer library
-		if ( $map_args['group_markers'] == 'markers_clusterer' ) {	
+		if ( self::$map_elements[$map_id]['settings']['group_markers'] == 'markers_clusterer' ) {	
 			self::$markers_clusterer = true;
 		}
 
 		// enable Markers Spiderfier library
-		if ( $map_args['group_markers'] == 'markers_spiderfier' ) {	
+		if ( self::$map_elements[$map_id]['settings']['group_markers'] == 'markers_spiderfier' ) {	
 			self::$markers_spiderfier = true;
 		}
 
 		// enable infobox js file if needed
-		if ( $map_args['info_window_type'] == 'infobox' ) {
+		if ( self::$map_elements[$map_id]['settings']['info_window_type'] == 'infobox' ) {
 			self::$infobox = true;
 		}
 
 		// enable infobox js file if needed
-		if ( $map_args['info_window_type'] == 'infobubble' ) {
+		if ( self::$map_elements[$map_id]['settings']['info_window_type'] == 'infobubble' ) {
 			self::$infobubble = true;
 		}
 
 		// enable jQuery ui draggable for popup info-windows
 		//if ( $map_args['info_window_ajax'] && $map_args['draggable_window'] ) {
-		if ( $map_args['info_window_type'] == 'popup' ) {
+		if ( self::$map_elements[$map_id]['settings']['info_window_type'] == 'popup' ) {
 			self::$draggable_window = true;
 		}
 		
