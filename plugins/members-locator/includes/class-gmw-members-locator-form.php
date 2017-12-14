@@ -48,7 +48,7 @@ class GMW_Members_Locator_Form extends GMW_Form {
     }
 
     public function before_search_results() {
-        echo '<div class="buddypress">';
+        echo '<div id="buddypress">';
     }
 
     public function after_search_results() {
@@ -178,7 +178,7 @@ class GMW_Members_Locator_Form extends GMW_Form {
      * @param  [type] $vars    [description]
      * @return [type]          [description]
      */
-    function oreder_results_by_distance( $clauses, $vars ) {
+    function order_results_by_distance( $clauses, $vars ) {
 
         if ( $vars->query_vars['type'] == 'distance' ) {
             $objects_id = implode( ',', $this->objects_id );
@@ -267,7 +267,7 @@ class GMW_Members_Locator_Form extends GMW_Form {
         $this->form = apply_filters( 'gmw_fl_form_before_members_query', $this->form, $this );
 
         // order results by distance if needed
-        add_filter( 'bp_user_query_uid_clauses', array( $this, 'oreder_results_by_distance' ), 30, 2 );
+        add_filter( 'bp_user_query_uid_clauses', array( $this, 'order_results_by_distance' ), 30, 2 );
 
         $internal_cache = GMW()->internal_cache;
 
