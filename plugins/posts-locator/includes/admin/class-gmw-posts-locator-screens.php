@@ -153,7 +153,7 @@ class GMW_Posts_Locator_Screens {
         
         global $wpdb;
 
-        if ( class_exists( 'GMW_Posts_Location_Form' ) ) {
+        if ( class_exists( 'GMW_Post_Location_Form' ) ) {
 
             // expand button
             echo '<i type="button" id="gmw-location-section-resize" class="gmw-icon-resize-full" title="Expand full screen" style="display: block" onclick="jQuery( this ).closest( \'#gmw-location-meta-box\' ).find( \'.inside\' ).toggleClass( \'fullscreen\' );"></i>';
@@ -168,7 +168,6 @@ class GMW_Posts_Locator_Screens {
             // form args
             $form_args = apply_filters( 'gmw_edit_post_location_form_args', array(
                 'object_id'             => $post->ID,
-                'exclude_tabs'          => '',
                 'form_template'         => 'location-form-tabs-left',
                 'submit_enabled'        => 0,
                 'auto_confirm'          => 0,
@@ -185,7 +184,7 @@ class GMW_Posts_Locator_Screens {
             ) );
             
             // create new location form
-            $this->location_form = new GMW_Posts_Location_Form( $form_args );
+            $this->location_form = new GMW_Post_Location_Form( $form_args );
 
             // display the location form
             $this->location_form->display_form();          
