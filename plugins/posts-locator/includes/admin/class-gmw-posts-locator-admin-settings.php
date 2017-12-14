@@ -69,7 +69,7 @@ class GMW_Posts_Locator_Admin_Settings {
             'id'       => 'post_types_settings',
             'label'    => __( 'Post Types', 'GMW' ),
             'icon'     => 'pinboard', 
-            'priority' => 10
+            'priority' => 5
         );  
 
         return $groups;
