@@ -714,6 +714,16 @@ function gmw_get_map( $map_args = array(), $map_options = array(), $locations = 
 }
 
 /**
+ * Get map element
+ * 
+ * @param  array  $args [description]
+ * @return [type]       [description]
+ */
+function gmw_get_map_element( $args = array() ) {
+	return GMW_Maps_API::get_map_element( $args );
+}
+
+/**
  * Get directions system form
  * 
  * @param  array  $args [description]
@@ -784,16 +794,16 @@ function gmw_enqueue_form_styles( $args = array( 'form_id' => 0, 'pages' => arra
 
 				$template     	   = str_replace( 'custom_', '', $template );
 				$stylesheet_handle = "gmw-{$addon_data['prefix']}-search-forms-custom-{$template}";
-				$stylesheet_url	   = get_stylesheet_directory_uri(). "/geo-my-wp/{$addon_data['custom_templates_folder']}/search-forms/{$template}/css/style.css";
+				$stylesheet_uri	   = get_stylesheet_directory_uri(). "/geo-my-wp/{$addon_data['custom_templates_folder']}/search-forms/{$template}/css/style.css";
 		
 			// load template files from plugin's folder
 			} else {
 				$stylesheet_handle = "gmw-{$addon_data['prefix']}-search-forms-{$template}";
-				$stylesheet_url    = $addon_data['plugin_url']."/{$addon_data['templates_folder']}/search-forms/{$template}/css/style.css";
+				$stylesheet_uri    = $addon_data['plugin_url']."/{$addon_data['templates_folder']}/search-forms/{$template}/css/style.css";
 			}
 
 			if ( ! wp_style_is( $stylesheet_handle, 'enqueued' ) ) {
-				wp_enqueue_style( $stylesheet_handle, $stylesheet_url, array(), GMW_VERSION );
+				wp_enqueue_style( $stylesheet_handle, $stylesheet_uri, array(), GMW_VERSION );
 			}
 		}
 		
@@ -806,16 +816,16 @@ function gmw_enqueue_form_styles( $args = array( 'form_id' => 0, 'pages' => arra
 
 				$template     	   = str_replace( 'custom_', '', $template );
 				$stylesheet_handle = "gmw-{$addon_data['prefix']}-search-results-custom-{$template}";
-				$stylesheet_url	   = get_stylesheet_directory_uri(). "/geo-my-wp/{$addon_data['custom_templates_folder']}/search-results/{$template}/css/style.css";
+				$stylesheet_uri	   = get_stylesheet_directory_uri(). "/geo-my-wp/{$addon_data['custom_templates_folder']}/search-results/{$template}/css/style.css";
 		
 			// load template files from plugin's folder
 			} else {
 				$stylesheet_handle = "gmw-{$addon_data['prefix']}-search-results-{$template}";
-				$stylesheet_url    = $addon_data['plugin_url']."/{$addon_data['templates_folder']}/search-results/{$template}/css/style.css";
+				$stylesheet_uri    = $addon_data['plugin_url']."/{$addon_data['templates_folder']}/search-results/{$template}/css/style.css";
 			}
 
 			if ( ! wp_style_is( $stylesheet_handle, 'enqueued' ) ) {
-				wp_enqueue_style( $stylesheet_handle, $stylesheet_url, array(), GMW_VERSION );
+				wp_enqueue_style( $stylesheet_handle, $stylesheet_uri, array(), GMW_VERSION );
 			}
 		}
 	}	
