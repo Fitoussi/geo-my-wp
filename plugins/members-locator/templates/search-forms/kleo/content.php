@@ -7,7 +7,7 @@
  * The function pass 1 args for you to use:
  * $gmw  - the form being used ( array )
  * 
- * You could but It is not recomemnded to edit this file directly as your changes will be overridden on the next update of the plugin.
+ * You could but It is not recomemnded to edit this file directly as your changes will be overwritten on the next update of the plugin.
  * Instead you can copy-paste this template ( the "kleo" folder contains this file and the "css" folder ) 
  * into the theme's or child theme's folder of your site and apply your changes from there. 
  * 

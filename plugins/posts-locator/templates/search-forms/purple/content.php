@@ -5,7 +5,7 @@
  * The information on this file outputs the search form.
  * 
  * You can modify this file to apply custom changes. However, it is not recomended
- * since your changes will be overridden on the next update of the plugin.
+ * since your changes will be overwritten on the next update of the plugin.
  * 
  * Instead you can copy-paste this template ( the "purple" folder contains this file 
  * and the "css" folder ) into the theme's or child theme's folder of your site 

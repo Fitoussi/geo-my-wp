@@ -57,7 +57,7 @@
 					
 					<?php global $post; ?>
 
-					<li id="post-<?php absint( $post->ID ); ?>" class="<?php echo $post->location_class; ?>">
+					<li id="single-post-<?php echo absint( $post->ID ); ?>" class="<?php echo esc_attr( $post->location_class ); ?>">
 					
 						<?php do_action( 'gmw_search_results_loop_item_start' , $gmw, $post ); ?>
 						

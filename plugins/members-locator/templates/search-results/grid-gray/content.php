@@ -5,7 +5,7 @@
  * This file outputs the search results.
  * 
  * You can modify this file to apply custom changes. However, it is not recomended
- * since your changes will be overridden on the next update of the plugin.
+ * since your changes will be overwritten on the next update of the plugin.
  * 
  * Instead you can copy-paste this template ( the "grid-gray" folder contains this file 
  * and the "css" folder ) into the theme's or child theme's folder of your site 
@@ -57,7 +57,7 @@
 		       	    
 		       	    <?php $member = $members_template->member; ?>
 
-			        <li class="single-member <?php echo esc_attr( $member->location_class ); ?>">
+			        <li id="single-member-<?php echo absint( $member->id ); ?>" class="single-member <?php echo esc_attr( $member->location_class ); ?>">
 			        		
 		                <?php do_action( 'gmw_search_results_loop_item_start', $gmw, $member ); ?>
 						
