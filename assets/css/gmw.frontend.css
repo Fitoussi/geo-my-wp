@@ -561,7 +561,11 @@ span.gmw-resize-map-toggle.gmw-icon-resize-small {
 
 /********** Search Results ****************/
 	
-	/********** Results count   ***************/
+	select.gmw-orderby-dropdown {
+		float: right;
+	}
+	
+	/********** Results count ***************/
 
 	div.gmw-results-message {
 		background: #fdfdfd;
@@ -1106,7 +1110,7 @@ span.gmw-resize-map-toggle.gmw-icon-resize-small {
 	div.gmw-info-window-inner.infobubble a.image img,
 	div.gmw-info-window-inner.infobox a.image img,
 	div.gmw-info-window-inner.popup a.image img {
-		width: 100%;
+		//width: 100%;
 		height: auto;
 		padding:0;
 		margin: 0;
