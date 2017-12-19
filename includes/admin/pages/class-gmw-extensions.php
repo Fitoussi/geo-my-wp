@@ -60,8 +60,8 @@ class GMW_Extensions {
     private static function get_extensions_feed() {
 
         // look for extensions feed in transient. Transient should clear every 24 hours 
-        if ( false === ( $output = get_transient( 'gmw_get_extensions_feed' ) ) ) {
- 
+        if ( false === ( $output = get_transient( 'gmw_extensions_feed' ) ) ) {
+    
             $feed = wp_remote_get( 'http://geomywp.com/extensions/?feed=extensions', array( 'sslverify' => false ) );
 
             if ( ! is_wp_error( $feed ) && $feed['response']['code'] == '200' ) {
@@ -72,7 +72,7 @@ class GMW_Extensions {
                     $output = simplexml_load_string( $output );
                     $output = json_decode( json_encode( (array) $output ), TRUE );
 
-                    set_transient( 'gmw_get_extensions_feed', $output, DAY_IN_SECONDS );
+                    set_transient( 'gmw_extensions_feed', $output, DAY_IN_SECONDS );
                 }
 
             } else {
@@ -516,7 +516,7 @@ class GMW_Extensions {
 
         // get remote extensions data via geomywp.com feed
         $remote_extensions = self::get_extensions_feed();
-        
+
         // verify feed. if feed ok merge some data with local extensions
         if ( ! empty( $remote_extensions ) ) {
 
@@ -537,9 +537,7 @@ class GMW_Extensions {
                 // if remote extension do not exists in GEO my WP extension 
                 // get the data from remote
                 if ( empty( $extensions_data[$slug] ) ) {
-                    
                     $extensions_data[$slug] = $values;
-                
                 } else {
 
                     foreach ( $replace_data as $rd ) {
@@ -574,7 +572,6 @@ class GMW_Extensions {
             $names[$key] = $value['name'];
 
             if ( ! empty( $value['is_core'] ) && $key != 'posts_locator' && $key != 'members_locator' ) {
-                
                 $core_extensions_count ++;
                 $core_extensions[$key] = $value;
             }
