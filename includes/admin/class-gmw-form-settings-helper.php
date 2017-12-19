@@ -206,8 +206,8 @@ class GMW_Form_Settings_Helper {
     	if ( empty( $value ) ) {
     		$value = array(
     			'enabled' => '',
-    			'width'   => '200',
-    			'height'  => '200'
+    			'width'   => '100',
+    			'height'  => '100'
     		);
     	}
         ?>
@@ -234,7 +234,7 @@ class GMW_Form_Settings_Helper {
                 		type="text" 
                 		size="5" 
                 		name="<?php echo $name_attr.'[width]'; ?>" 
-                		value="<?php echo ! empty( $value['width'] ) ? esc_attr( $value['width'] ) : '200'; ?>" 
+                		value="<?php echo ! empty( $value['width'] ) ? esc_attr( $value['width'] ) : '100'; ?>" 
                 		placeholder="Numeric value"
                 	/>
                 </div>
@@ -249,7 +249,7 @@ class GMW_Form_Settings_Helper {
                 		type="text" 
                 		size="5" 
                 		name="<?php echo $name_attr.'[height]'; ?>" 
-                		value="<?php echo ! empty( $value['height'] ) ? esc_attr( $value['height'] ) : '200'; ?>"
+                		value="<?php echo ! empty( $value['height'] ) ? esc_attr( $value['height'] ) : '100'; ?>"
                 		placeholder="Numeric value"
                 	/>
                 </div>
@@ -267,8 +267,8 @@ class GMW_Form_Settings_Helper {
 	public static function validate_image( $output ) {
 		
 		$output['enabled'] = ! empty( $output['enabled'] ) ? 1 : '';
-		$output['width']   = isset( $output['width'] ) ? preg_replace( '/[^0-9%xp]/', '', $output['width'] ) : '200';
-		$output['height']  = isset( $output['height'] ) ? preg_replace( '/[^0-9%xp]/', '', $output['height'] ) : '200';
+		$output['width']   = isset( $output['width'] ) ? preg_replace( '/[^0-9%xp]/', '', $output['width'] ) : '100';
+		$output['height']  = isset( $output['height'] ) ? preg_replace( '/[^0-9%xp]/', '', $output['height'] ) : '100';
 		
 		return $output;
 	}
