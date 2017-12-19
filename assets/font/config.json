@@ -595,6 +595,18 @@
       ]
     },
     {
+      "uid": "31972e4e9d080eaa796290349ae6c1fd",
+      "css": "users",
+      "code": 59479,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "05ef9b5e8742971aa85b23cfcbe71594",
+      "css": "users-1",
+      "code": 61540,
+      "src": "mfglabs"
+    },
+    {
       "uid": "b445e87bb489f12f36b58165747a481b",
       "css": "apple-touch-icon-144x144",
       "code": 59395,
