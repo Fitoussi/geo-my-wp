@@ -104,13 +104,18 @@ div.menu-footer input.button-primary.update-form {
 }
 
 .gmw-options-box .single-option .option-content p {
-	padding: 0px;
-	margin:6px 0;
 	width: 100%;
-	line-height: 16px;
+	line-height: 18px;
 	font-style: italic;
 	color: #555;
 	font-size: 12px;
+	display: inline-block;
+	padding: 10px;
+	background: #fafafa;
+	border: 1px solid #ededed;
+	box-sizing: border-box;
+	margin-top: 10px;
+	margin-bottom: 0;
 }
 
 .gmw-options-box .single-option:last-child {
@@ -180,6 +185,18 @@ div.menu-footer input.button-primary.update-form {
 	max-width: 100%;
 	margin: 0px;
 }
+
+.gmw-options-box .single-option.checkbox .option-content {
+	min-height: 0;
+	line-height: 20px;
+}
+
+.gmw-options-box .single-option.checkbox .option-content label {
+	background: 0;
+	border: 0;
+	padding: 0;
+}
+
 /******* /options box *********/
 
 /******* GMW tabs *********/
