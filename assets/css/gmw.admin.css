@@ -50,6 +50,21 @@ div.menu-footer input.button-primary.update-form {
 	margin: 25px 0;
 }
 
+.gmw-description-box {
+	width: 100%;
+	line-height: 18px;
+	font-style: italic;
+	color: #555;
+	font-size: 12px;
+	display: inline-block;
+	padding: 10px;
+	background: #fafafa;
+	border: 1px solid #ededed;
+	box-sizing: border-box;
+	margin-top: 10px;
+	margin-bottom: 0;
+}
+
 /******* Options box ******/
 
 .gmw-options-box {
