@@ -25,9 +25,9 @@ class GMW_Members_Locator_Location_Tab {
 	 * [__construct description]
 	 */
 	public function __construct() {
-
-		add_filter( 'bp_members_admin_nav', array( $this, 'adminbar_nav' ), 50 ); 
-		add_action( 'bp_setup_nav', array( $this, 'add_animal_tabs' ), 50 );
+		add_filter( 'bp_members_admin_nav', array( $this, 'adminbar_nav' ), 20 ); 
+		add_action( 'bp_setup_nav', array( $this, 'location_tab' ), 20 );
+		add_action( 'wp_footer', array( $this, 'move_location_navbar' ) );
 	}
 
 	/**
@@ -46,15 +46,15 @@ class GMW_Members_Locator_Location_Tab {
 	        // Add location tab
 	        $wp_admin_nav[] = apply_filters( 'gmw_fl_setup_admin_bar', array(
 	    		'parent' => 'my-account-buddypress',
-	    		'id'     => 'my-account-'.$this->slug,
+	    		'id'     => 'my-account-gmw-'.$this->slug,
 	    		'title'  => __( 'Location', 'GMW' ),
 	    		'href'   => $location_link
 	        ));
 
 	        // add submenu tab
 	        $wp_admin_nav[] = array(
-	    		'parent' => 'my-account-'.$this->slug,
-	    		'id'     => 'my-account-'.$this->slug . '-gmw-location',
+	    		'parent' => 'my-account-gmw-'.$this->slug,
+	    		'id'     => 'my-account-gmw-update-'.$this->slug,
 	    		'title'  => __( 'Update Location', 'GMW' ),
 	    		'href'   => $location_link
 	        );
@@ -64,16 +64,38 @@ class GMW_Members_Locator_Location_Tab {
 	}
 
 	/**
-	 * Generate the location tab
+	 * Workaround to move the Location navbar link
+	 *
+	 * below the "Profile" link. I couldn't find a way to do it using the
+	 *
+	 * filters provided.
 	 * 
+	 * @return [type] [description]
 	 */
-	public function add_animal_tabs() {
+	public function move_location_navbar() {
+		?>
+		<script type="text/javascript">
+			jQuery( document ).ready( function($) {
+				$( '#wp-admin-bar-my-account-gmw-location' ).each( function() { 
+					$( this ).insertAfter( $( this ).next() ); 
+				});
+			});
+		</script>
+		<?php
+	}
+
+	/**
+	 * Generate the Location tab
+	 * 
+	 * @return [type] [description]
+	 */
+	public function location_tab() {
 		
 		bp_core_new_nav_item( apply_filters( 'gmw_fl_setup_nav', array(
 			'name'                  => __( 'Location', 'GMW' ),
 			'slug'                  => $this->slug,
 			'screen_function'       => array( $this, 'screen_display' ),			
-			'position'              => 60,
+			'position'              => 20,
 			'default_subnav_slug'   => $this->slug
 		), buddypress()->displayed_user ) );
 	}
@@ -97,7 +119,7 @@ class GMW_Members_Locator_Location_Tab {
 	 * @return [type] [description]
 	 */
 	public function loggedin_user_screen() {
-		include( 'class-gmw-member-location-form.php' );
+		gmw_member_location_form();
 	}
 
 	/**
