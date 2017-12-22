@@ -697,13 +697,14 @@ function gmw_driving_distance( $info, $gmw, $title ) {
  */
 function gmw_ug_get_author_url( $gmw, $user ) {
 
-	_deprecated_function( 'gmw_ug_get_author_url', '2.0', 'gmw_get_user_permalink' );
+	_deprecated_function( 'gmw_ug_get_author_url', '2.0', 'gmw_get_search_results_user_permalink' );
 
-	$page_id         = gmw_get_option( 'users_locator', 'author_page', '' );
-    $query_string    = gmw_get_option( 'users_locator', 'author_page_query_string', '' );
-    $replace_content = gmw_get_option( 'users_locator', 'author_page_location_enabled', 1 );
+	$url         	 = gmw_get_option( 'users_locator', 'user_permalink_usage', '' );
+	$page_id         = gmw_get_option( 'users_locator', 'user_permalink_page_id', 0 );
+    $query_string    = gmw_get_option( 'users_locator', 'user_permalink_query_string', '' );
+    $replace_content = gmw_get_option( 'users_locator', 'displayed_user_location_enabled', false );
 
-	return gmw_get_user_permalink( $user, $page_id, $query_string, $replace_content );
+	return gmw_get_user_permalink( $user, $url, $page_id, $query_string, $replace_content );
 }
 
 function gmw_ug_author_url( $gmw = array(), $user ) {
