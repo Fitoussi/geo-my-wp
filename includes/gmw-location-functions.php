@@ -69,7 +69,7 @@ function gmw_get_location_meta( $location_id = 0, $meta_keys = array(), $cache =
  * 
  * @param  boolean $object_type object_type object type ( post, user... )
  * @param  boolean $object_id   object ID ( post ID, user ID.... )
- * @param  array   $meta_keys   sting of a single or array of multiple meta keys to retrive their values
+ * @param  array   $meta_keys   string of a single or array of multiple meta keys to retrive their values
  * 
  * @return [type]  string || array of values
  */
@@ -261,7 +261,7 @@ function gmw_update_location( $object_type = '', $object_id = 0, $address = fals
     );
 
     // modify the data if needed
-    $location_data = apply_filters( "gmw_pre_update_location_data", $object_type, $location_data, $geocoded_address );
+    $location_data = apply_filters( "gmw_pre_update_location_data", $location_data, $object_type, $geocoded_address );
     $location_data = apply_filters( "gmw_pre_update_{$object_type}_location_data", $location_data, $geocoded_address );
 
     do_action( "gmw_pre_update_{$object_type}_location", $location_data, $geocoded_address );
