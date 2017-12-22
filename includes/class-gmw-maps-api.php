@@ -416,12 +416,9 @@ class GMW_Maps_API {
 			$args['url'] = esc_url( $args['url'] );
 		}
 		
-		// prefix
-		$prefix = $args['prefix'] != '' ? ' '.esc_attr( $args['prefix'] ) : '';
-
 		$output = array();
 		
-		$output['wrap'] = '<div class="gmw-info-window-inner '.esc_attr( $args['type'] ).'" data-location_id="'.absint( $location->location_id ) .'" data-object="'. esc_attr( $location->object_type ).'" data-prefix="'.$prefix.'">';
+		$output['wrap'] = '<div class="gmw-info-window-inner '.esc_attr( $args['type'] ).'" data-location_id="'.absint( $location->location_id ) .'" data-object="'. esc_attr( $location->object_type ).'" data-prefix="'.esc_attr( $args['prefix'] ).'">';
 		
 		// Look for image
 		if ( $args['image_url'] != '' || $args['image'] != '' ) {
@@ -465,8 +462,8 @@ class GMW_Maps_API {
 		// modify the output
 		$output = apply_filters( 'gmw_info_window_content', $output, $location, $args, $gmw );
 
-		if ( ! empty( $prefix ) ) {
-			$output = apply_filters( "gmw_{$prefix}_info_window_content", $output, $location, $args, $gmw );
+		if ( $args['prefix'] != '' ) {
+			$output = apply_filters( "gmw_{$args['prefix']}_info_window_content", $output, $location, $args, $gmw );
 		}
 
 		// output content
