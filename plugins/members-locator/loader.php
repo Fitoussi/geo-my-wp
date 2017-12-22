@@ -96,7 +96,7 @@ class GMW_Members_locator_Addon extends GMW_Register_Addon {
        
         parent::pre_init();
 
-        // load add-on with bp initiate
+        // load add-on 
         add_action( 'bp_loaded', array( $this, 'members_locator_init' ), 20 );
     }
 
@@ -110,6 +110,7 @@ class GMW_Members_locator_Addon extends GMW_Register_Addon {
             include( 'includes/admin/class-gmw-members-locator-form-editor.php' );
         }
 
+        include( 'includes/gmw-members-locator-functions.php' );
         include( 'includes/class-gmw-members-locator-location-tab.php' );
         include( 'includes/gmw-members-locator-actions.php' );
         include( 'includes/gmw-members-locator-activity.php' );
