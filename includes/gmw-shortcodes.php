@@ -49,7 +49,7 @@ function gmw_shortcode( $attr ) {
 
 
 		// abort if form was not submitted
-		if ( ! isset( $_GET['action'] ) || $_GET['action'] != $url_px.'post' || ! isset( $_GET[$url_px.'form'] ) ) {
+		if ( ! isset( $_GET[$url_px.'form'] ) ) {
 
 			$status = 'results page was not submitted.';
 
