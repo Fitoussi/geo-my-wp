@@ -367,6 +367,9 @@ class GMW_Form_Settings_Helper {
                         value="<?php echo ( ! empty( $value['count'] ) ) ? esc_attr( $value['count'] ) : ''; ?>"
                         placeholder="Enter numeric value"
                     />
+                    <p class="description">
+                        <?php _e( 'Enter the number of words that you would like to display from the post content or leave blank to show the entire content.', 'GMW' );?>
+                    </p>
                 </div>
             </div>
             
@@ -379,6 +382,9 @@ class GMW_Form_Settings_Helper {
                         value="<?php echo ( ! empty( $value['link'] ) ) ? esc_attr( stripslashes( $value['link'] ) ) : ''; ?>" 
                         placeholder="Enter text"
                     />  
+                    <p class="description">
+                        <?php _e( 'Enter a text that will be used as the "Read more" link and will link to the post page.', 'GMW' );?>
+                    </p>
                 </div>
             </div>
         </div>
