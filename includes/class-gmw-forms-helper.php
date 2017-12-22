@@ -67,8 +67,8 @@ class GMW_Forms_Helper {
                 'per_page'         => '5,10,15,25',
                 'image'            => array(
                     'enabled' => 1,
-                    'width'   => '200',
-                    'height'  => '200'
+                    'width'   => '100',
+                    'height'  => '100'
                 ),
                 'location_meta'   => array(),
                 'opening_hour'    => '',
