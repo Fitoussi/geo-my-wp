@@ -673,7 +673,6 @@ GMW_Map.prototype.render_marker = function( options ) {
 
 	marker_options = GMW.apply_filters( 'gmw_generate_marker_options', marker_options, options['id'], this );
 
-
 	// generate marker
 	return new google.maps.Marker( marker_options );
 }
