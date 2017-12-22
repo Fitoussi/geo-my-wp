@@ -5,6 +5,79 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Generate the post location form 
+ * 
+ * @param  array  $args [description]
+ * @return [type]       [description]
+ */
+function gmw_post_location_form( $args = array() ) {
+
+    if ( isset( $args['post_id'] ) ) {
+        $args['object_id'] = $args['post_id'];
+    } else {
+        $args['object_id'] = 0;
+    }
+
+    // default args
+    $defaults = array(
+        'object_id'      => $args['object_id'],
+        'form_template'  => 'location-form-tabs-left',
+        'submit_enabled' => 1,
+        'stand_alone'    => 1,
+        'ajax_enabled'   => 1,
+        'auto_confirm'   => 1
+    );
+
+    $args = wp_parse_args( $args, $defaults );
+    $args = apply_filters( 'gmw_post_location_form_args', $args );
+
+    if ( ! absint( $args['object_id'] ) ) {
+         
+        global $post;
+
+        if ( isset( $post->ID ) ) {
+            $args['object_id'] = $post->ID;
+        } else {
+            return;
+        }
+    }
+
+    include( 'class-gmw-post-location-form.php' );
+
+    if ( ! class_exists( 'GMW_Post_Location_Form' ) ) {
+        return;
+    }
+
+    // generate new location form
+    $location_form = new GMW_Post_Location_Form( $args );
+
+    // display the location form
+    $location_form->display_form();  
+}
+
+    /**
+     * Generate the post location form using shortcode
+     * 
+     * @param  array  $atts [description]
+     * @return [type]       [description]
+     */
+    function gmw_post_location_form_shortcode( $atts = array() ) {
+        
+        if ( empty( $atts ) ) {
+            $atts = array();
+        }
+
+        ob_start();
+            
+        gmw_post_location_form( $atts );     
+        
+        $content = ob_get_clean(); 
+
+        return $content;
+    }
+    add_shortcode( 'gmw_post_location_form', 'gmw_post_location_form_shortcode' ); 
+
+/**
  * Get terms function using GEO my WP internal cache
  *
  * @since 3.0
