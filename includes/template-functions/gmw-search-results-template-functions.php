@@ -57,7 +57,10 @@ function gmw_search_results_linked_address( $post, $gmw = array() ) {
  * @return string       distance + units
  */
 function gmw_search_results_distance( $object = array(), $gmw = array() ) {
-    echo gmw_get_distance_to_location( $object );
+    $distance = gmw_get_distance_to_location( $object );
+    if ( $distance ) {
+        echo '<span class="distance">'.$distance.'</span>';
+    }
 }
 
 /**
