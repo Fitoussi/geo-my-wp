@@ -78,8 +78,8 @@ function gmw_enqueue_scripts() {
 	wp_enqueue_style( 'gmw-fonts', GMW_URL . '/assets/css/gmw.font.min.css', array(), GMW_VERSION );
 
 	// register location form scripts/styles
-	wp_register_style( 'gmw-location-form', GMW_URL.'/includes/location-form/assets/css/gmw.lf.css', array(), GMW_VERSION );            
-    wp_register_script( 'gmw-location-form', GMW_URL.'/includes/location-form/assets/js/gmw.lf.min.js', array( 'jquery', 'gmw' ), GMW_VERSION, true );
+	wp_register_style( 'gmw-location-form', GMW_URL.'/includes/location-form/assets/css/gmw.location.form.min.css', array(), GMW_VERSION );            
+    wp_register_script( 'gmw-location-form', GMW_URL.'/includes/location-form/assets/js/gmw.location.form.min.js', array( 'jquery', 'gmw' ), GMW_VERSION, true );
    
 	// register in front-end only
 	if ( ! IS_ADMIN ) {
