@@ -263,6 +263,7 @@ div#gmw-location-form-wrapper div#gmw-lf-autocomplete-wrapper i {
 	cursor: pointer;
 	right: 0px;
 	font-size: 20px;
+	line-height: 20px;
 }
 
 div#gmw-location-form-wrapper div#gmw-lf-autocomplete-wrapper i#gmw-lf-locator-button:hover {
