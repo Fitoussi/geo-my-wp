@@ -785,52 +785,98 @@ jQuery( document ).ready( function( $ ) {
 	    	// place ID	
 	    	$( '.group_address.place_id' ).val( pid );
 
+	    	// collect the geocoded data to later use it in action hook
+	    	var geocoded_data = {
+	    		street_number 	  : null,
+	    		street_name 	  : null,
+	    		street 			  : null,
+	    		premise 		  : null,
+	    		neighborhood 	  : null,
+	    		city 			  : null,
+	    		county 			  : null,
+	    		region_name 	  : null,
+	    		region_code 	  : null,
+	    		postcode 		  : null,
+	    		country_name 	  : null,
+	    		country_code 	  : null,
+	    		latitude 		  : null,
+	    		longitude 		  : null,
+	    		formatted_address : null
+	    	}
+
+	    	// modify the address component before populating the location fields.
+	    	// can also performe custom tasks perform 
+	    	ac = GMW.apply_filters( 'gmw_lf_address_component', ac, this_form );
+
+	    	// ac ( address_component ): complete location data object
+	    	// ac[x]: each location field in the address component
 			for ( x in ac ) {
 
 				if ( ac[x].types == 'street_number' && ac[x].long_name != undefined ) {
+					geocoded_data.street_number = ac[x].long_name;
 					$( '.group_address.street_number' ).val( ac[x].long_name );
 				}
 				
-				if ( ac[x].types == 'route' && ac[x].long_name != undefined ) {				
+				if ( ac[x].types == 'route' && ac[x].long_name != undefined ) {	
+					geocoded_data.street_name = ac[x].long_name;
 					$( '.group_address.street_name' ).val( ac[x].long_name );
 
-					$( '.group_address.street' ).val( $( '.group_address.street_number' ).val() + ' ' + $( '.group_address.street_name' ).val() );
+					geocoded_data.street = $( '.group_address.street_number' ).val() + ' ' + $( '.group_address.street_name' ).val(); 
+					$( '.group_address.street' ).val( geocoded_data.street );
 				}
 
 				if ( ac[x].types == 'subpremise' && ac[x].long_name != undefined ) {
+					geocoded_data.premise = ac[x].long_name;
 					$( '.group_address.premise' ).val( ac[x].long_name );
 				}
 				
 				 if ( ac[x].types == 'neighborhood,political' && ac[x].long_name != undefined ) {
+				 	geocoded_data.neighborhood = ac[x].long_name;
 					$( '.group_address.neighborhood' ).val( ac[x].long_name );
 				}
 	 
 		        if( ac[x].types == 'locality,political' && ac[x].long_name != undefined ) {
+		        	geocoded_data.city = ac[x].long_name;
 					$( '.group_address.city' ).val( ac[x].long_name );
 				}
 		        
 		        if ( ac[x].types == 'administrative_area_level_1,political' ) {
+		        	geocoded_data.region_name = ac[x].long_name;
 		          	$( '.group_address.region_name' ).val( ac[x].long_name );
+
+		          	geocoded_data.region_code = ac[x].short_name;
 		          	$( '.group_address.region_code' ).val( ac[x].short_name );
 		        }  
 		       
 	  			if ( ac[x].types == 'administrative_area_level_2,political' && ac[x].long_name != undefined ) {
+	  				geocoded_data.county = ac[x].long_name;
 					$( '.group_address.county' ).val( ac[x].long_name );
 				}
 
 		        if ( ac[x].types == 'postal_code' && ac[x].long_name != undefined ) {
+		        	geocoded_data.postcode = ac[x].long_name;
 					$( '.group_address.postcode' ).val( ac[x].long_name );
 				}
 		        
 		        if ( ac[x].types == 'country,political' ) {
+		        	geocoded_data.country_name = ac[x].long_name;
 		          	$( '.group_address.country_name' ).val( ac[x].long_name );
+		        
+		          	geocoded_data.country_code = ac[x].short_name;
 		          	$( '.group_address.country_code' ).val( ac[x].short_name );
 		        } 
 	        }
 			
+			geocoded_data.latitude  		= $( '#gmw_lf_latitude' ).val();
+			geocoded_data.longitude 		= $( '#gmw_lf_longitude' ).val();
+			geocoded_data.formatted_address = $( '#gmw_lf_formatted_address' ).val();
+
+			// do something custom with the location data
+			GMW.do_action( 'gmw_lf_geocoded_location_data', geocoded_data, location, this_form );
+
 			// update map based of new coords
 			if ( this_form.map_enabled && $( '#gmw-lf-map' ).length ) {
-				this_form.update_map( $( '#gmw_lf_latitude' ).val(), $( '#gmw_lf_longitude' ).val() );
+				this_form.update_map( geocoded_data.latitude, geocoded_data.longitude );
 			}
 
 			//mark location as confirmed
