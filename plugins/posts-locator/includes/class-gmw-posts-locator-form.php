@@ -21,10 +21,24 @@ class GMW_Posts_Locator_Form extends GMW_Form {
      * @return [type]           [description]
      */
     public function get_info_window_args( $post ) {
+
+        if ( isset( $this->form['info_window']['image'] ) ) {
+            if ( $this->form['info_window']['image']['enabled'] == '' ) {
+                $image = false;
+            } else {
+                $image = get_the_post_thumbnail( $post->ID, array( 
+                    $this->form['info_window']['image']['width'],
+                    $this->form['info_window']['image']['height'] 
+                ) );
+            }
+        } else {
+            $image = get_the_post_thumbnail( $post->ID, array( 200, 200 ) );
+        }
+
         return array(
             'prefix' => $this->prefix,
             'type'   => ! empty( $this->form['info_window']['iw_type'] ) ? $this->form['info_window']['iw_type'] : 'standard',
-            'image'  => get_the_post_thumbnail( $post->ID ),
+            'image'  => $image,
             'url'    => get_permalink( $post->ID ),
             'title'  => $post->post_title
         );
@@ -86,16 +100,11 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 
     	// get the post types from page load settings
         if ( $this->form['page_load_action'] ) {  
-
             $post_types = ! empty( $this->form['page_load_results']['post_types'] ) ? $this->form['page_load_results']['post_types'] : 'post';	
-
         // when set to 1 means that we need to show all post types
         } elseif ( ! empty( $this->form['form_values']['post'] ) && array_filter( $this->form['form_values']['post'] ) ) {
-            
             $post_types = $this->form['form_values']['post'];
-        
         } else {
-            
             $post_types = ! empty( $this->form['search_form']['post_types'] ) ? $this->form['search_form']['post_types'] : 'post';
         }
 
@@ -112,33 +121,24 @@ class GMW_Posts_Locator_Form extends GMW_Form {
         
         // get query args for cache
         if ( $this->form['page_load_action'] ) {
-
             $gmw_query_args = $this->form['page_load_results'];
-
         } elseif ( $this->form['submitted'] ) {  
-
             $gmw_query_args = $this->form['form_values'];
         }
 
         // tax query can be disable if a custom query is needed.
         if ( apply_filters( 'gmw_enable_taxonomy_search_query', true, $this->form, $this ) ) {
-            
             $tax_args = $this->query_taxonomies(); 
-        
         } else {
-        
             $tax_args = array();
         }
         
         $meta_args = false;
         
         if ( ! empty( $this->form['org_address'] ) ) {
-            
             $post__in = $locations_objects_id;
             $order_by = 'post__in';
-   
         } else {
-
             $order_by = '';
             $post__in = apply_filters( "gmw_show_posts_without_location", false, $this->form, $this ) ? '' : $locations_objects_id;
         }
@@ -152,13 +152,32 @@ class GMW_Posts_Locator_Form extends GMW_Form {
             'paged'               => $this->form['paged'],
             'meta_query'          => apply_filters( 'gmw_pt_meta_query', $meta_args, $this->form ),
             'ignore_sticky_posts' => 1,
-            'post__in'            => $post__in,
+            //'post__in'            => $post__in,
             'orderby'             => $order_by,
             'gmw_args'            => $gmw_query_args
         ), $this->form, $this );
 
+        /*
+         * compute the posts to include based on the post__in arguments and 
+         * the included posts returned from the locations query.
+         *
+         * We do this to allow other plugins use the post__in argument first.
+         */ 
+        if ( ! empty( $this->form['query_args']['post__in'] ) && is_array( $this->form['query_args']['post__in'] ) ) {
+            $this->form['query_args']['post__in'] = array_intersect( $this->form['query_args']['post__in'], $post__in );
+        } else if ( ! empty( $this->form['query_args']['post__not_in'] ) && is_array( $this->form['query_args']['post__not_in'] ) ) {
+            $this->form['query_args']['post__in'] = array_diff( $post__in, $this->form['query_args']['post__not_in'] );
+        } else {
+            $this->form['query_args']['post__in'] = $post__in;
+        }
+
         //Modify the form before the search query
         $this->form = apply_filters( 'gmw_pt_form_before_posts_query', $this->form, $this );
+
+        // if no posts included at this point we can abort.
+        if ( empty( $this->form['query_args']['post__in'] ) || in_array( '-1', $this->form['query_args']['post__in'] ) ) {
+            return false;
+        }
 
         $internal_cache = GMW()->internal_cache;
 
@@ -171,7 +190,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 
         // look for query in cache
         if ( ! $internal_cache || false === ( $this->query = get_transient( $query_args_hash ) ) ) {
-            
+        //if ( 1 == 1 ) {   
             //print_r( 'WP posts query done' );
         
 	        // posts query
