@@ -38,10 +38,29 @@ class GMW_Members_Locator_Form extends GMW_Form {
      * @return [type]           [description]
      */
     public function get_info_window_args( $member ) {
+
+        if ( isset( $this->form['info_window']['image'] ) ) {
+            if ( $this->form['info_window']['image']['enabled'] == '' ) {
+                $avatar = false;
+            } else {
+                $avatar = bp_core_fetch_avatar( array( 
+                    'item_id' => $member->ID,
+                    'width'   => $this->form['info_window']['image']['width'],
+                    'height'  => $this->form['info_window']['image']['height']
+                ) );
+            }
+        } else {
+            $avatar = bp_core_fetch_avatar( array( 
+                'item_id' => $member->ID,
+                'width'   => 180,
+                'height'  => 180
+            ) );
+        }
+
         return array(
             'prefix'    => $this->prefix,
-            'type'   => ! empty( $this->form['info_window']['iw_type'] ) ? $this->form['info_window']['iw_type'] : 'standard',
-            'image_url' => bp_core_fetch_avatar( 'item_id='.$member->ID.'&type=thumb&html=FALSE' ),
+            'type'      => ! empty( $this->form['info_window']['iw_type'] ) ? $this->form['info_window']['iw_type'] : 'standard',
+            'image'     => $avatar,
             'url'       => bp_core_get_user_domain( $member->ID ),
             'title'     => $member->display_name
         );
@@ -259,12 +278,31 @@ class GMW_Members_Locator_Form extends GMW_Form {
             'type'      => 'distance',
             'per_page'  => $this->form['get_per_page'],
             'page'      => $this->form['paged'],
-            'include'   => $include_users,
             'gmw_args'  => $gmw_query_args,
         ), $this->form, $this );
 
+        /*
+         * compute the members to include based on the include arguments and 
+         * 
+         * returned from the locations query args.
+         *
+         * We do this to allow other plugins use the include argument first.
+         */ 
+        if ( ! empty( $this->form['query_args']['include'] ) ) {
+            if ( ! is_array( $this->form['query_args']['include'] ) ) {
+                $this->form['query_args']['include'] = explode( ',', $this->form['query_args']['include'] );
+            }
+            $this->form['query_args']['include'] = array_intersect( $this->form['query_args']['include'], $include_users );
+        } else {
+            $this->form['query_args']['include'] = $include_users;
+        }
+
         //modify the form values before the query takes place
         $this->form = apply_filters( 'gmw_fl_form_before_members_query', $this->form, $this );
+
+        if ( empty( $this->form['query_args']['include'] ) || in_array( 0, $this->form['query_args']['include'] ) ) {
+            return false;
+        }
 
         // order results by distance if needed
         add_filter( 'bp_user_query_uid_clauses', array( $this, 'order_results_by_distance' ), 30, 2 );
