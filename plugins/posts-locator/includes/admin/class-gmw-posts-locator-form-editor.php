@@ -18,16 +18,12 @@ class GMW_Posts_Locator_Form_Editor {
      * @return void
      */
     public function __construct() {
-
         add_filter( 'gmw_form_default_settings', array( $this, 'default_settings' ), 20, 2 );
-
         // init form settings
         add_filter( 'gmw_posts_locator_form_settings', array( $this, 'form_settings_init' ), 5 );
-
         // form settings functions
         add_action( 'gmw_posts_locator_form_settings_form_taxonomies', array( 'GMW_Form_Settings_Helper', 'taxonomies' ), 10, 3 );
         add_action( 'gmw_posts_locator_form_settings_excerpt', array( 'GMW_Form_Settings_Helper', 'excerpt' ), 10, 2 );
-
         // form settings validations
         add_filter( 'gmw_posts_locator_validate_form_settings_excerpt', array( 'GMW_Form_Settings_Helper', 'validate_excerpt' ) );
     }
@@ -41,11 +37,10 @@ class GMW_Posts_Locator_Form_Editor {
     public function default_settings( $settings, $args ) {
 
         if ( isset( $args['prefix'] ) && $args['prefix'] == 'pt' ) {
-
             $settings['page_load_results']['post_types'] = array( 'post' ); 
             $settings['search_form']['form_template']    = 'gray';
-            $settings['search_form']['post_types'] = array( 'post' );
-            $settings['search_results']['excerpt'] = array( 
+            $settings['search_form']['post_types']       = array( 'post' );
+            $settings['search_results']['excerpt']       = array( 
                 'use'   => '', 
                 'count' => 10,
                 'link'  => 'read more...' 
@@ -70,7 +65,7 @@ class GMW_Posts_Locator_Form_Editor {
             'default'       => array( 'post' ),
             'label'         => __( 'Post Types', 'GMW' ),
             'placeholder'   => __( 'Select post types', 'GMW' ),
-            'desc'          => __( 'Select the post types which you would like to filter the search results.', 'GMW' ),
+            'desc'          => __( 'Select the post types to filter the search results.', 'GMW' ),
             'options'       => GMW_Form_Settings_Helper::get_post_types(), 
             'attributes'    => '',
             'priority'      => 13     
@@ -82,7 +77,7 @@ class GMW_Posts_Locator_Form_Editor {
             'default'       => array( 'post' ),
             'label'         => __( 'Post Types', 'GMW' ),
             'placeholder'   => __( 'Select post types', 'GMW' ),
-            'desc'          => __( 'Select a single post type to set as the default, or select multiple post types to display as a dropdown select box in the search form.', 'GMW' ),
+            'desc'          => __( 'Select a single post type to set as the default, or multiple post types to display as a dropdown select box in the search form.', 'GMW' ),
             'options'       => GMW_Form_Settings_Helper::get_post_types(),
             'attributes'    => '',
             'priority'      => 12    
@@ -94,7 +89,7 @@ class GMW_Posts_Locator_Form_Editor {
             'function'      => 'form_taxonomies',
             'default'       => '',
             'label'         => __( 'Taxonomies', 'GMW' ),
-            'desc'          => __( "Enable the taxonomies which you would like to display in the search form. This feature availabe only when selecting a single post type above.", 'GMW' ),
+            'desc'          => __( 'Enable the taxonomies which you would like to use as filters in the search form. This feature availabe only when selecting a single post type above.', 'GMW' ),
             'attributes'    => '',
             'priority'      => 13                
         );
@@ -133,7 +128,7 @@ class GMW_Posts_Locator_Form_Editor {
             'default'       => '',
             'label'         => __( 'Excerpt', 'GMW' ),
             'cb_label'      => '',
-            'desc'          => __( '<ul><li> - Check the checkbox to display the post content in the list of results.</li><li> - Words count - enter the number of words that you would like to display from the post content or leave blank to show the entire content.</li><li> - Read more link - enter a text that will be used as the "Read more" link and will link to the post page.</li></ul>', 'GMW' ),
+            'desc'          => __( 'Display excerpt in each location in the results.', 'GMW' ),
             'attributes'    => '',
             'priority'      => 40   
         );
