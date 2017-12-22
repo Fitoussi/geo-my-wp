@@ -232,7 +232,7 @@ class GMW_Location_Form {
 		$this->fields = $this->form_fields();
 
 		// exclude fields
-		$this->exclude_tabs();
+		$this->exclude_fields_groups();
 
 		// exclude some fields
 		$this->exclude_fields();
@@ -243,10 +243,9 @@ class GMW_Location_Form {
 		// get template folders
 		$this->template_folders = self::get_folders();
 
-		// pass the values to JavaScript
+		// enqueue scripts and pass the values to JavaScript
     	wp_enqueue_style( 'gmw-location-form' );
     	wp_enqueue_script( 'gmw-location-form' );
-
 	    wp_localize_script( 'gmw-location-form', 'gmw_lf_args', array(
 	    	'slug'			 => $this->slug,
 	    	'object_type'    => $this->object_type,
@@ -260,7 +259,7 @@ class GMW_Location_Form {
 	    	'nonce' 	 	 =>	wp_create_nonce( "gmw_lf_update_location" )
 	    ) );
 
-	    // load chosen if not already loader 
+	    // load chosen if not already loaded 
 	    if ( ! wp_script_is( 'chosen', 'enqueued' ) ) {
             wp_enqueue_script( 'chosen' );
             wp_enqueue_style( 'chosen' );
@@ -388,6 +387,7 @@ class GMW_Location_Form {
 	 *
 	 * @return [type] [description]
 	 */
+	/*
 	public function exclude_tabs() {
 
     	if ( array_filter( $this->args['exclude_fields_groups'] ) ) {
@@ -406,6 +406,7 @@ class GMW_Location_Form {
 	    	}
 	    }
 	}
+	*/
 
     /**
      * Default location fields.
@@ -658,6 +659,36 @@ class GMW_Location_Form {
     }
 
     /**
+	 * Exclude tabs and its fields
+	 *
+	 * Note that this function exclude the tabs only, not thier containers 
+	 * with the field. The containers are being excluded via JS.
+	 *
+	 * @return [type] [description]
+	 */
+	public function exclude_fields_groups() {
+
+    	if ( array_filter( $this->args['exclude_fields_groups'] ) ) {
+	 	
+	    	foreach ( $this->args['exclude_fields_groups'] as $fields_group ) {   
+
+	    		//if ( isset( $this->fields[$fields_group] ) ) {
+
+	    			if ( ! empty( $this->fields[$fields_group]['fields'] ) ) {
+			    		// collect all fields and the tab that belong to the excluded group. We will exlcude the fields of the group and the tab if exists
+						$this->args['exclude_fields'] = array_merge( $this->args['exclude_fields'], array_keys( $this->fields[$fields_group]['fields'] ) );
+					}
+
+					// exclude tab	
+					if ( isset( $this->tabs[$fields_group] ) ) {	
+		    			unset( $this->tabs[$fields_group] );
+		    		}
+		    	//}
+	    	}
+	    }
+	}
+
+    /**
 	 * Exclude fields
 	 * 
 	 * @return [type] [description]
@@ -665,24 +696,26 @@ class GMW_Location_Form {
 	public function exclude_fields() {
 
     	if ( array_filter( $this->args['exclude_fields'] ) ) {
-	 	
-	    	foreach ( $this->fields as $tab_name => $tab_args ) {   
+	 		
+	    	foreach ( $this->fields as $fields_group => $group_args ) {   
+
+	    		//$this->fields[$fields_group]['fields'] = array_diff_key( $this->fields[$fields_group]['fields'], array_flip( $this->args['exclude_fields'] ) );
 
 	    		foreach ( $this->args['exclude_fields'] as $exclude_field ) {
 
 	    			// disable and hide excluded fields
-	    			if ( isset( $this->fields[$tab_name]['fields'][$exclude_field] ) ) {
+	    			if ( isset( $this->fields[$fields_group]['fields'][$exclude_field] ) ) {
 
 	    				// when excluding the main address field ( with the autocomplete )
 	    				// we actually only hide it. At the moment the field is too invlove with the JavaSctipt 
 	    				// and the other field that things might break if we completly remove it. 
 	    				// The field being completly removed only when excluding the entire Location tab.
 	    				// Which is done in via the JavaScript file
-	    				if ( $exclude_field == 'address' ) {
-	    					$this->fields[$tab_name]['fields'][$exclude_field]['attributes'] = array( 'disabled' => 'disabled' );
-	    					$this->fields[$tab_name]['fields'][$exclude_field]['type'] = 'hidden';
+	    				if ( in_array( $exclude_field, array( 'address', 'delete_location', 'message', 'loader' ) ) ) {
+	    					$this->fields[$fields_group]['fields'][$exclude_field]['attributes'] = array( 'disabled' => 'disabled' );
+	    					$this->fields[$fields_group]['fields'][$exclude_field]['type'] = 'hidden';
 	    				} else {
-	    					unset( $this->fields[$tab_name]['fields'][$exclude_field] );
+	    					unset( $this->fields[$fields_group]['fields'][$exclude_field] );
 	    				}
 	    			}
 	    		}
