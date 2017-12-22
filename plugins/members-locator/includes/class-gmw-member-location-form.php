@@ -73,22 +73,3 @@ class GMW_Member_Location_Form extends GMW_Location_Form {
         do_action( 'gmw_member_location_tabs_panels', $this );
     }
 }
-
-global $bp;
-
-// form args
-$form_args = apply_filters( 'gmw_member_location_form_args', array(
-    'object_id'      => $bp->displayed_user->id,
-    'form_template'  => 'location-form-tabs-top',
-    'submit_enabled' => 1,
-    'stand_alone'    => 1,
-    'ajax_enabled'   => 1,
-    'auto_confirm'   => 1
-), $bp->displayed_user->id );
-    
-// generate new location form
-$location_form = new GMW_Member_Location_Form( $form_args );
-
-// display the location form
-$location_form->display_form();      
-?>
