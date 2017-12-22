@@ -4,32 +4,36 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-/**
- * Display featured image in search results
- * 
- * @param  [type] $post [description]
- * @param  array  $gmw  [description]
- * @return [type]       [description]
- */
-function gmw_search_results_bp_avatar( $member, $gmw = array() ) {
+if ( ! function_exists( 'gmw_search_results_bp_avatar' ) ) {
+	/**
+	 * Display featured image in search results
+	 * 
+	 * @param  [type] $post [description]
+	 * @param  array  $gmw  [description]
+	 * @return [type]       [description]
+	 */
+	function gmw_search_results_bp_avatar( $object_type, $gmw = array() ) {
 
-    if ( ! $gmw['search_results']['image']['enabled'] ) { 
-        return;
-    }
+	    if ( ! $gmw['search_results']['image']['enabled'] ) { 
+	            return;
+	        }
 
-    ?>   
-    <div class="item-avatar">
-        <a href="<?php bp_member_permalink(); ?>">    
-        <?php 
-            bp_member_avatar( array( 
-                'type'   => 'full', 
-                'width'  => $gmw['search_results']['image']['width'], 
-                'height' => $gmw['search_results']['image']['height']
-            ) ); 
-        ?>
-        </a>
-    </div>                                 
-    <?php
+	    $object_type = $gmw['slug'] == 'groups_locator' ? 'group' : 'member';
+
+	    $permalink_function = 'bp_'.$object_type.'_permalink';
+	    $avatar_function 	= 'bp_'.$object_type.'_avatar';
+	    ?>
+	    <a class="image" href="<?php $permalink_function(); ?>" >
+	        <?php 
+	        $avatar_function( array( 
+	            'type'   => 'full', 
+	            'width'  => $gmw['search_results']['image']['width'], 
+	            'height' => $gmw['search_results']['image']['height']
+	        ) );  
+	        ?> 
+	    </a>                                                              
+	    <?php
+	}
 }
 
 /**
