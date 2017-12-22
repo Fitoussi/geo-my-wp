@@ -175,7 +175,7 @@ function gmw_get_addon_data( $addon = '', $var = '' ) {
 }
 
 /**
- * Update addon_data
+ * Update addon status
  * 
  * @param  [type] $addon [description]
  * @return [type]        [description]
@@ -502,10 +502,6 @@ function gmw_get_labels( $form = array() ) {
 			'formatted_address' => __( 'Address: ',  'GMW' ),
 			'directions'        => __( 'Get directions', 'GMW' ),
 			'your_location'     => __( 'Your Location ', 'GMW' ),
-			'pt_no_results'		=> __( 'No results found', 'GMW' ),
-			'fl_no_results'		=> __( 'No members found', 'GMW' ),
-			'gl_no_results'		=> __( 'No groups found', 'GMW' ),
-			'ug_no_results'		=> __( 'No users found', 'GMW' ),
 			'not_avaliable'		=> __( 'N/A', 'GMW' ),
 			'read_more'			=> __( 'Read more',	'GMW' ),
 			'contact_info'		=> array(
@@ -643,7 +639,7 @@ function gmw_get_element_toggle_button( $args = array() ) {
 	function gmw_left_window_toggle_button() { 
 	    gmw_element_toggle_button( array( 
 	        'animation'    => 'width', 
-	        'open_length'  => '35%',
+	        'open_length'  => '100%',
 	        'close_length' => '30px', 
 	        'hide_icon'    => 'gmw-icon-arrow-left', 
 	        'show_icon'    => 'gmw-icon-arrow-right' 
@@ -841,7 +837,7 @@ function gmw_enqueue_form_styles( $args = array( 'form_id' => 0, 'pages' => arra
  * @return [type]    [description]
  */
 function gmw_get_info_window_content( $location, $args = array(), $gmw = array() ) {
-	return GMW_Maps_API::get_info_window_content( $location, $args, $gmw = array() );
+	return GMW_Maps_API::get_info_window_content( $location, $args, $gmw );
 }
 
 /**
