@@ -151,44 +151,29 @@ class GMW_Posts_Locator_Screens {
      */
     function display_meta_box( $post ) {
         
-        global $wpdb;
+        // expand button
+        echo '<i type="button" id="gmw-location-section-resize" class="gmw-icon-resize-full" title="Expand full screen" style="display: block" onclick="jQuery( this ).closest( \'#gmw-location-meta-box\' ).find( \'.inside\' ).toggleClass( \'fullscreen\' );"></i>';
 
-        if ( class_exists( 'GMW_Post_Location_Form' ) ) {
-
-            // expand button
-            echo '<i type="button" id="gmw-location-section-resize" class="gmw-icon-resize-full" title="Expand full screen" style="display: block" onclick="jQuery( this ).closest( \'#gmw-location-meta-box\' ).find( \'.inside\' ).toggleClass( \'fullscreen\' );"></i>';
-
-            $admins_map_settings = gmw_get_option( 'post_types_settings', 'edit_post_map_settings', array(
-                'latitude'    => '40.711544',
-                'longitude'   => '-74.013486', 
-                'map_type'    => 'ROADMAP',
-                'zoom_level'  => 7   
-            ) );
-
-            // form args
-            $form_args = apply_filters( 'gmw_edit_post_location_form_args', array(
-                'object_id'             => $post->ID,
-                'form_template'         => 'location-form-tabs-left',
-                'submit_enabled'        => 0,
-                'auto_confirm'          => 0,
-                'stand_alone'           => 0,
-                'ajax_enabled'          => 0,
-                'confirm_required'      => 0,
-                'form_element'          => '.wrap form',
-                'map_zoom_level'        =>  $admins_map_settings['zoom_level'],
-                'map_type'              =>  $admins_map_settings['map_type'],
-                'map_lat'               =>  $admins_map_settings['latitude'],
-                'map_lng'               =>  $admins_map_settings['longitude'],
-                'location_mandatory'    =>  gmw_get_option( 'post_types_settings', 'mandatory_address', 0 ),
-                'location_required'     =>  gmw_get_option( 'post_types_settings', 'mandatory_address', 0 )        
-            ) );
+        // form args
+        $form_args = apply_filters( 'gmw_edit_post_location_form_args', array(
+            'object_id'             => $post->ID,
+            'form_template'         => 'location-form-tabs-left',
+            'submit_enabled'        => 0,
+            'auto_confirm'          => 0,
+            'stand_alone'           => 0,
+            'ajax_enabled'          => 0,
+            'confirm_required'      => 0,
+            'form_element'          => '.wrap form',
+            'map_zoom_level'        =>  gmw_get_option( 'post_types_settings', 'edit_post_page_map_zoom_level', 7 ),
+            'map_type'              =>  gmw_get_option( 'post_types_settings', 'edit_post_page_map_type', 'ROADMAP' ),
+            'map_lat'               =>  gmw_get_option( 'post_types_settings', 'edit_post_page_map_latitude', '40.711544' ),
+            'map_lng'               =>  gmw_get_option( 'post_types_settings', 'edit_post_page_map_longitude', '-74.013486' ),
+            'location_mandatory'    =>  gmw_get_option( 'post_types_settings', 'mandatory_address', 0 ),
+            'location_required'     =>  gmw_get_option( 'post_types_settings', 'mandatory_address', 0 )        
+        ) );
             
-            // create new location form
-            $this->location_form = new GMW_Post_Location_Form( $form_args );
-
-            // display the location form
-            $this->location_form->display_form();          
-        }
+        // generate the form
+        gmw_post_location_form( $form_args );
 
         // enqueue Google API if not yet enqueued
         if ( ! wp_script_is( 'google-maps', 'enqueued' ) ) {
