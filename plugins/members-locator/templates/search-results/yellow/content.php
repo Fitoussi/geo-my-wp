@@ -73,10 +73,7 @@
 		                		<span class="member-count"><?php echo $member->location_count; ?>)</span>
 		                    	
 		                    	<a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a>
-		                    
-		                    	<span class="radius">
-		                    		<?php gmw_distance_to_location( $member, $gmw ); ?>
-		                    	</span>
+								<?php gmw_search_results_distance( $member, $gmw ); ?>
 		                    
 		                    </span>
 		                    

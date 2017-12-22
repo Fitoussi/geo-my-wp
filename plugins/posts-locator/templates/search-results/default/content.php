@@ -66,7 +66,7 @@
 		                        <a href="<?php echo the_permalink(); ?>">
 		                        	<?php echo $post->location_count; ?>) <?php the_title(); ?>		
 		                        </a>
-		                        <span class="radius-dis"><?php gmw_distance_to_location( $post, $gmw ); ?></span>
+		                        <?php gmw_search_results_distance( $post, $gmw ); ?>
 		                    </h2>
 		                </div>
 		                

@@ -80,7 +80,7 @@
                             		
                             	<?php do_action( 'gmw_search_results_before_distance', $gmw, $member ); ?>
                             	
-                            	<?php gmw_distance_to_location( $member, $gmw ); ?>
+                            	<?php gmw_search_results_distance( $member, $gmw ); ?>
 
                					<?php if ( bp_get_member_latest_update() ) { ?>
                                     <span class="update"> <?php bp_member_latest_update(); ?></span>

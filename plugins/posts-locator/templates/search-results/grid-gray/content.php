@@ -67,7 +67,7 @@
 										<?php the_title(); ?> 
 									</a>
 								</h2>
-								<span class="radius"><?php gmw_distance_to_location( $post, $gmw ); ?></span>
+								<?php gmw_search_results_distance( $post, $gmw ); ?>
 							</div>
 												
 							<div class="post-content">

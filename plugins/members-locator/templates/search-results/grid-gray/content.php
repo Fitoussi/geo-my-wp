@@ -71,11 +71,8 @@
 			                    	<a href="<?php bp_member_permalink(); ?>">
 			                    		<?php bp_member_name(); ?>		
 			                    	</a>
-			                    </h2>   
-			                         	
-			                    <span class="radius">
-		                    		<?php gmw_distance_to_location( $member, $gmw ); ?>
-		                    	</span>
+			                    </h2>    	
+			                    <?php gmw_search_results_distance( $member, $gmw ); ?>
 			                </div>
 			                    
 			                <div class="user-info">

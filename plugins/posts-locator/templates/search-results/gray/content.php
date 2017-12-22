@@ -68,7 +68,7 @@
 							
 							<div class="address-wrapper">
 						    	<span class="address"><?php gmw_search_results_address( $post, $gmw ); ?></span>
-						    	<span class="radius"><?php gmw_distance_to_location( $post, $gmw ); ?></span>
+						    	<?php gmw_search_results_distance( $post, $gmw ); ?>
 						    </div>
 						</div>
 
