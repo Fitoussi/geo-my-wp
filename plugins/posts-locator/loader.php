@@ -74,7 +74,7 @@ class GMW_Posts_Locator_Addon extends GMW_Register_Addon {
             include( 'includes/admin/class-gmw-posts-locator-admin-settings.php' );
             include( 'includes/admin/class-gmw-posts-locator-form-editor.php' );
             include( 'includes/admin/class-gmw-posts-locator-screens.php' );
-            include( 'includes/admin/class-gmw-post-location-form.php' );
+            //include( 'includes/admin/class-gmw-post-location-form.php' );
         } 
         //else {
 
@@ -87,7 +87,6 @@ class GMW_Posts_Locator_Addon extends GMW_Register_Addon {
 
         include( 'includes/gmw-posts-locator-search-form-template-functions.php' );
         include( 'includes/gmw-posts-locator-search-results-template-functions.php' );
-
     }
 }
 new GMW_Posts_Locator_Addon();
