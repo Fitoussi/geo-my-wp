@@ -14,20 +14,28 @@ class GMW_Register_Addon {
 	/********** required variables ********/
 
 	/**
-	 * Add-on's slug. Identifire to be used with URL, settings, add-on setup... Ex. "posts_locator"
+	 * Add-on's slug. 
+	 * 
+	 * Identifire to be used with URL, settings, add-on setup... Ex. "posts_locator"
+	 * 
 	 * @var string
 	 */
 	public $slug = "";
 
 	/**
-	 * Add-on's name. To be used on GEO my WP pages, Add-ons page... Ex. "Post Types Locator".
+	 * Add-on's name. 
+	 * 
+	 * To be used on GEO my WP pages, Add-ons page... Ex. "Post Types Locator".
 	 * 
 	 * @var string
 	 */
 	public $name = "";
 
 	/**
-	 * Add-on prefix. To be used with hooks, CLASS/ID tags... Ex. if add-on's name is Posts Locator the prefix can be "pl".
+	 * Add-on prefix. 
+	 * 
+	 * To be used with hooks, CLASS/ID tags... Ex. if add-on's name is Posts Locator the prefix can be "pl".
+	 * 
 	 * @var string
 	 */
 	public $prefix = "";
@@ -357,11 +365,15 @@ class GMW_Register_Addon {
 			}
 		}
 
-		// we try to prevent the below from running in front-end to save a bit of memory and performance.
-		// i.e collecting data and verifying activation.
-		// The addon data will be collected while in admin and saved in options table so it can be used 
-		// in the fron-end. The data is collected when activating/deactivating plugins.
-		// if the data does not exists in option, it will be then retrived using the below in the front-end as well.
+		/** 
+		 * we try to prevent the below from running in front-end to save on memory and performance.
+		 *
+		 * i.e collecting data and verifying activation.
+		 * The addon data will be collected while in admin and saved in options table so it can be used 
+		 * in the fron-end. The data is collected when activating/deactivating plugins.
+		 * if the data does not exists in option, it will be then retrived using the below in the front-end as well.
+		 * 
+		 */
 		if ( IS_ADMIN || empty( GMW()->addons[$this->slug] ) || empty( GMW()->addons[$this->slug]['status'] ) ) {
 
 			// default status and details
@@ -414,7 +426,6 @@ class GMW_Register_Addon {
 
 		// if addon data exists in databases we only need to get the status.
 		} else {
-	
 			$this->status = GMW()->addons[$this->slug]['status'];
 		}
 
@@ -895,11 +906,11 @@ class GMW_Register_Addon {
 
 		// return button args
     	return array(
-    		'slug'		 => ! empty( $button['slug'] ) ? $button['slug'] : $this->slug,
-            'addon'      => $this->slug,
-            'name'       => ! empty( $button['name'] ) ? $button['name'] : $this->name,
-            'prefix'     => ! empty( $button['prefix'] ) ? $button['prefix'] : $this->prefix,
-            'priority'	 => ! empty( $button['priority'] ) ? $button['priority'] : 99,
+    		'slug'	   => ! empty( $button['slug'] ) ? $button['slug'] : $this->slug,
+            'addon'    => $this->slug,
+            'name'     => ! empty( $button['name'] ) ? $button['name'] : $this->name,
+            'prefix'   => ! empty( $button['prefix'] ) ? $button['prefix'] : $this->prefix,
+            'priority' => ! empty( $button['priority'] ) ? $button['priority'] : 99,
         );
 	}
 
