@@ -924,6 +924,10 @@ span.gmw-resize-map-toggle.gmw-icon-resize-small {
 		padding: 0px 0px 10px;
 	}
 
+	.gmw-info-window {
+		padding-bottom: 5px;
+		box-sizing: border-box;
+	}
 	.gmw-info-window.standard {
 		min-width: 180px;
 		min-height: 110px;
@@ -991,7 +995,7 @@ span.gmw-resize-map-toggle.gmw-icon-resize-small {
 
 	div.gmw-info-window.standard,
 	div.gmw-info-window.infobubble {
-		max-height: 100%;
+		//max-height: 100%;
 		max-width: 100%;
 		overflow: hidden;
 	}
@@ -1013,18 +1017,24 @@ span.gmw-resize-map-toggle.gmw-icon-resize-small {
 
 	div.gmw-info-window.popup {
 		z-index: 99999999999;
-		background-color: white;
+		background-color: #fff;
 		position: fixed;
-		width: 400px;
-		height: 400px;
+		width: 300px;
+		height: 300px;
 		max-height: 550px;
 		top: 15%;
-		left: 35%;
+		left: 40%;
 		overflow: hidden;
-		padding: 0px 20px 20px;
+		padding: 0 20px 20px;
 		box-sizing: border-box;
 		border-radius: 5px;
-		border:1px solid #f1f1f1;
+		border: 1px solid #f1f1f1;
+	}
+
+	div.gmw-info-window.popup.ajax {
+		width: 350px;
+		height: 350px;
+		max-height: 350px;
 	}
 
 	div.gmw-info-window.popup .buttons-wrapper {
