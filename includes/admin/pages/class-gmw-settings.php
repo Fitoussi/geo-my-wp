@@ -694,16 +694,16 @@ class GMW_Settings {
                                                     <div class="<?php echo $ob_class; ?> <?php if ( isset( $option['name'] ) ) echo 'fields-group-'.esc_attr( $option['name'] ); ?>">                                                       
                                                             <?php foreach ( $option['fields'] as $option ) { ?>
 
-                                                                <div class="single-option option-<?php echo esc_attr( $option['name'] );?>">
-                                                                    <?php if ( $option['type'] == 'checkbox' ) { ?>
+                                                                <div class="single-option option-<?php echo esc_attr( $option['name'] );?> <?php echo esc_attr( $option['type'] ); ?>">
+                                                                    <?php /*if ( $option['type'] == 'checkbox' ) { ?>
 
                                                                         <?php $this->get_form_field( $settings, $option, $tab, $section ); ?>
                                                                                 
                                                                         <?php if ( ! empty( $option['desc'] ) ) { ?>
-                                                                            <em class="description"><?php echo $option['desc']; ?></em>
+                                                                            <p class="description"><?php echo $option['desc']; ?></p>
                                                                         <?php } ?>
 
-                                                                    <?php } else { ?>
+                                                                    <?php } else { */?>
                                         
                                                                         <?php if ( ! empty( $option['label'] ) ) { ?>
                                                                             <label for="setting-<?php echo esc_attr( $option['name'] ); ?>">
@@ -715,10 +715,10 @@ class GMW_Settings {
                                                                             <?php $this->get_form_field( $settings, $option, $tab, $section ); ?>
                                                                             
                                                                             <?php if ( isset( $option['desc'] ) ) { ?>
-                                                                                <em class="description"><?php echo $option['desc']; ?></em>
+                                                                                <p class="description"><?php echo $option['desc']; ?></p>
                                                                             <?php } ?>
                                                                         </div>
-                                                                    <?php } ?>
+                                                                    <?php //} ?>
                                                                 </div>
                                                             <?php } ?>
                                                         </div>
