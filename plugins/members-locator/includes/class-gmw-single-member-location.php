@@ -28,10 +28,10 @@ class GMW_Single_Member_Location extends GMW_Single_Location {
 	 *
 	 */
 	protected $ext_args = array(
-		'elements'			  => 'title,address,map,distance,directions_link',
+		'elements'			  => 'name,address,map,distance,directions_link',
 		'object_type'	 	  => 'member',
 		'prefix'	 		  => 'fl',
-		'item_info_window'	  => 'title,address,distance',
+		'item_info_window'	  => 'name,address,distance',
 		'show_in_single_post' => 0,
 		'no_location_message' => ''
 	);
@@ -94,8 +94,17 @@ class GMW_Single_Member_Location extends GMW_Single_Location {
 	 * 
 	 * @return [type] [description]
 	 */
-	public function title() {
+	public function name() {
 		return apply_filters( 'gmw_sl_title', '<h3 class="gmw-sl-title member-name gmw-sl-element">'. bp_core_get_userlink( $this->args['object_id'] ) .'</h3>', $this->location_data, $this->args, $this->user_position );
+	}
+
+	/**
+	 * Use title for the name
+	 * 
+	 * @return [type] [description]
+	 */
+	public function title() {
+		return $this->name();
 	}
 }
 
@@ -118,4 +127,4 @@ function gmw_single_bp_member_location_shortcode( $atts = array() ) {
 
 	return $single_member_location->output();
 }
-add_shortcode( 'gmw_single_bp_member_location', 'gmw_single_bp_member_location_shortcode' );
+add_shortcode( 'gmw_bp_member_location', 'gmw_single_bp_member_location_shortcode' );
