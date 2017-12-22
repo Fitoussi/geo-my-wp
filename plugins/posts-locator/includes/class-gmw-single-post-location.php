@@ -66,7 +66,6 @@ class GMW_Single_Post_Location extends GMW_Single_Location {
 	 * @return [type] [description]
 	 */
 	public function title() {
-		
 		$title     = ! empty( $this->location_data->post_title ) ? $this->location_data->post_title : get_the_title( $this->args['object_id'] ) ;
 		$permalink = get_the_permalink( $this->args['object_id'] );
 		
@@ -83,6 +82,10 @@ class GMW_Single_Post_Location extends GMW_Single_Location {
  */
 function gmw_single_post_location_shortcode( $atts = array() ) {
 	
+	if ( empty( $atts ) ) {
+		$atts = array();
+	}
+	
 	$atts['object_type'] = 'post';
 
 	if ( isset( $atts['post_id'] ) ) {
@@ -93,4 +96,4 @@ function gmw_single_post_location_shortcode( $atts = array() ) {
 
 	return $single_post_location->output();
 }
-add_shortcode( 'gmw_single_post_location', 'gmw_single_post_location_shortcode' );
+add_shortcode( 'gmw_post_location', 'gmw_single_post_location_shortcode' );
