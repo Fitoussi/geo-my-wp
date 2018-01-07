@@ -6,15 +6,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 //abort if register add-on class is not found
-if ( ! class_exists( 'GMW_Register_Addon' ) ) {
+if ( ! class_exists( 'GMW_Addon' ) ) {
     return;
 }
 
 /**
  * Register Posts locator add-on
- * 
  */
-class GMW_Posts_Locator_Addon extends GMW_Register_Addon {
+class GMW_Posts_Locator_Addon extends GMW_Addon {
     
     // slug
     public $slug = "posts_locator";
@@ -34,8 +33,22 @@ class GMW_Posts_Locator_Addon extends GMW_Register_Addon {
     // description
     public $description = "Provides geolocation for WordPress post types.";
 
+    /**
+     * Objects
+     * 
+     * @var array
+     */
+    public $objects = array(
+        'slug' => 'post',
+        'name' => 'Post',
+        'type' => 'post'
+    );
+
+    // object
+    //public $object = 'post';
+
     // database object type
-    public $object_type = 'post';
+    //public $object_type = 'post';
 
     // db table prefix
     public $global_db = false;
@@ -54,39 +67,96 @@ class GMW_Posts_Locator_Addon extends GMW_Register_Addon {
     
     // core add-on
     public $is_core = true;
+        
+    /**
+     * Settings groups
+     * 
+     * @return [type] [description]
+     */
+    public function admin_settings_groups() {
+        return array(
+            'slug'     => 'post_types_settings',
+            'label'    => __( 'Post Types', 'GMW' ),
+            'icon'     => 'pinboard', 
+            'priority' => 5
+        );  
+    }
 
-    // New form button
-    public $form_buttons =  array( 
-        'slug'      => 'posts_locator',
-        'name'      => 'Posts Locator',
-        'prefix'    => 'pt',
-        'priority'  => 5 
-    );
-    
+    /**
+     * Form button
+     * 
+     * @return [type] [description]
+     */
+    public function form_buttons() {
+        return array( 
+            'slug'      => 'posts_locator',
+            'name'      => 'Posts Locator',
+            'prefix'    => 'pt',
+            'priority'  => 5 
+        );
+    }
+
+    private static $instance = null;
+
+    /**
+     * Create new instance 
+     * 
+     * @return [type] [description]
+     */
+    public static function get_instance() {
+
+        if ( self::$instance == null ) {
+            self::$instance = new self;
+        }
+
+        return self::$instance;
+    }
+
+    /**
+     * [pre_init description]
+     * @return [type] [description]
+     */
     public function pre_init() {  
 
         parent::pre_init();
 
         include( 'includes/gmw-posts-locator-functions.php' );
-
+        
         // include admin files
         if ( IS_ADMIN ) {
             include( 'includes/admin/class-gmw-posts-locator-admin-settings.php' );
             include( 'includes/admin/class-gmw-posts-locator-form-editor.php' );
             include( 'includes/admin/class-gmw-posts-locator-screens.php' );
             //include( 'includes/admin/class-gmw-post-location-form.php' );
-        } 
-        //else {
+        } else {
+            include( 'includes/gmw-posts-locator-search-form-template-functions.php' );
+            include( 'includes/gmw-posts-locator-search-results-template-functions.php' );
+            include( 'includes/class-gmw-posts-locator-form.php' ); 
+        }
 
-            include( 'includes/class-gmw-posts-locator-form.php' );
+        // load single location post
+        if ( gmw_is_addon_active( 'single_location' ) ) {
+        
+            if ( IS_ADMIN ) { 
 
-            if ( gmw_is_addon_active( 'single_location' ) ) {
+                /**
+                 * Add post object to objects dropdown in single location widget
+                 * 
+                 * @param  [type] $args [description]
+                 * @return [type]       [description]
+                 */
+                function gmw_pt_single_location_widget_object( $args ) {
+                
+                    $args['post'] = __( 'Post', 'GMW' );
+                
+                    return $args;
+                }
+                add_filter( 'gmw_single_location_widget_objects', 'gmw_pt_single_location_widget_object', 5 );
+
+            } else {
                 include( 'includes/class-gmw-single-post-location.php' );
-            } 
-        //}
-
-        include( 'includes/gmw-posts-locator-search-form-template-functions.php' );
-        include( 'includes/gmw-posts-locator-search-results-template-functions.php' );
+            }
+        }
     }
 }
-new GMW_Posts_Locator_Addon();
+GMW_Addon::register( 'GMW_Posts_Locator_Addon' );
