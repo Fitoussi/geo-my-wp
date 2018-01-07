@@ -116,7 +116,6 @@ function gmw_get_terms( $taxonomy = 'category', $args = array() ) {
         $terms = get_terms( $taxonomy, $args );
     }
 
-
     return $terms;
 }
 
