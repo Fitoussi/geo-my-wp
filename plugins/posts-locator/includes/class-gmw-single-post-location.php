@@ -27,9 +27,9 @@ class GMW_Single_Post_Location extends GMW_Single_Location {
 	 * Public $args
 	 *
 	 */
-	protected $ext_args = array(
+	protected $args = array(
 		'elements'			=> 'title,address,map,distance,location_meta,directions_link',
-		'object_type'		=> 'post',
+		'object'			=> 'post',
 		'prefix'	 		=> 'pt',
 		'location_meta' 	=> 'address,phone,fax,email,website',
 		'item_info_window'	=> 'title,address,distance,location_meta',
@@ -86,7 +86,7 @@ function gmw_single_post_location_shortcode( $atts = array() ) {
 		$atts = array();
 	}
 	
-	$atts['object_type'] = 'post';
+	$atts['object'] = 'post';
 
 	if ( isset( $atts['post_id'] ) ) {
 		$atts['object_id'] = $atts['post_id'];
