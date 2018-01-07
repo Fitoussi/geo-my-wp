@@ -140,7 +140,7 @@ class GMW_Admin {
 			'capability' 		=> 'manage_options',
 			'menu_slug' 		=> 'gmw-forms',
 			'callback_function' => array( $forms_output, 'output' ),
-			'priority'			=> 10
+			'priority'			=> 8
 		);
 
 		$menu_items[] = array(
@@ -150,7 +150,7 @@ class GMW_Admin {
 			'capability' 		=> 'manage_options',
 			'menu_slug' 		=> 'gmw-import-export',
 			'callback_function' => array( $this->import_export_page, 'output' ),
-			'priority'			=> 15
+			'priority'			=> 10
 		);
 
 		$menu_items[] = array(
@@ -160,7 +160,7 @@ class GMW_Admin {
 			'capability' 		=> 'manage_options',
 			'menu_slug' 		=> 'gmw-tools',
 			'callback_function' => array( $this->tools_page, 'output' ),
-			'priority'			=> 20
+			'priority'			=> 15
 		);
 		
 		/** 
@@ -190,9 +190,9 @@ class GMW_Admin {
 
 		// loop and create menu items and pages
 		foreach ( $menu_items as $key => $item ) {
-
+		
 			add_submenu_page( 
-				! empty( $item['parent_slug'] ) ? $item['parent_slug'] : 'gmw-extensions' ,
+				! empty( $item['parent_slug'] ) ? $item['parent_slug'] : 'gmw-extensions',
 				! empty( $item['page_title'] )  ? $item['page_title']  : '',
 				! empty( $item['menu_title'] )  ? $item['menu_title']  : '',
 				! empty( $item['capability'] )  ? $item['capability']  : 'manage_options',
@@ -202,6 +202,7 @@ class GMW_Admin {
 
 			$gmw_pages[] = $item['menu_slug'];
 		}	
+
 
 		// apply credit and enqueue scripts and styles in GEO my WP admin pages only
 		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], $gmw_pages ) ) {
@@ -295,7 +296,7 @@ class GMW_Admin {
 
 				GMW()->addons[$new_addon['slug']] = $new_addon;
 
-				GMW()->loaded_addons[] = $new_addon['slug'];
+				GMW()->registered_addons[] = $new_addon['slug'];
 
 				if ( ! empty( $new_addon['object_type'] ) ) {
 					GMW()->object_types[] = $new_addon['object_type'];
