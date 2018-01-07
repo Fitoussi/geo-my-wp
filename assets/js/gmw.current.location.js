@@ -145,9 +145,9 @@ jQuery( document ).ready( function( $ ) {
 
 	                	var map_id 		 = GMW_Current_Location.object_id;
 	                	var new_position = new google.maps.LatLng( response.lat, response.lng );
-
-	                	GMW_Maps[map_id]['data']['userMarker'].setPosition( new_position );
- 						GMW_Maps[map_id]['data']['map'].panTo( new_position );
+	                	
+	                	GMW_Maps[map_id].user_marker.setPosition( new_position );
+ 						GMW_Maps[map_id].map.panTo( new_position );
 	                }
 
 	                newAddress = jQuery( '#gmw-cl-address-input-' + GMW_Current_Location.object_id ).val();
