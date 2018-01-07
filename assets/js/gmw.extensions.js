@@ -267,7 +267,6 @@ var GMW_Extensions = {
             // saving success
             success : function( response ) {             
 
-                console.log( response);
                 // new activate/deactivate link
                 newLink = response.newLink;
 
