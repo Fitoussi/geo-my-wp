@@ -393,7 +393,7 @@ function gmw_get_location_address( $location, $fields = array( 'formatted_addres
 		return;
 	}
 
-	// if location is integer
+	// if location is ID rather than object
 	if ( is_int( $location ) ) {
 		
 		// get location by ID
@@ -431,7 +431,7 @@ function gmw_get_location_address( $location, $fields = array( 'formatted_addres
 	$output = apply_filters( 'gmw_location_address', $output, $location, $fields, $gmw );
 	$output = apply_filters( "gmw_{$location->object_type}_location_address", $output, $location, $fields, $gmw );
 
-	return ! empty( $output ) ? stripslashes( esc_html( $output ) ) : '';
+	return ! empty( $output ) ? stripslashes( esc_attr( $output ) ) : '';
 }
 
 	function gmw_location_address( $location, $fields = array(), $gmw = array() ) {
@@ -610,17 +610,14 @@ function gmw_get_directions_link( $location, $from_coords = array(), $label = ''
     );
 
     if ( ! empty( $from_coords[0] ) && ! empty( $from_coords[1] )  ) {
-        
         $args['from_lat'] = $from_coords[0];
         $args['from_lng'] = $from_coords[1];
-    
     } else {
+        //$user_coords = gmw_get_user_current_coords();
 
-        $user_coords = gmw_get_user_current_coords();
-
-        if ( $user_coords != false ) {
-            $args['from_lat'] = $user_coords['lat'];
-            $args['from_lng'] = $user_coords['lng'];
+        if ( ! empty( $_COOKIE['gmw_ul_lat'] ) && ! empty( $_COOKIE['gmw_ul_lng'] ) ) {
+            $args['from_lat'] = urldecode( $_COOKIE['gmw_ul_lat'] );;
+            $args['from_lng'] = urldecode( $_COOKIE['gmw_ul_lng'] );;
         }
     }
 
