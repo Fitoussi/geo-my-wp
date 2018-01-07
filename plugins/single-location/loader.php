@@ -4,15 +4,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'GMW_Register_Addon' ) ) {
+if ( ! class_exists( 'GMW_Addon' ) ) {
     return;
 }
 
 /**
- * Current Location addon
+ * Current Location addon class
  * 
  */
-class GMW_Single_Location_Addon extends GMW_Register_Addon {
+class GMW_Single_Location_Addon extends GMW_Addon {
     
     // slug
     public $slug = "single_location";
@@ -38,13 +38,29 @@ class GMW_Single_Location_Addon extends GMW_Register_Addon {
     // core add-on
     public $is_core = true;
 
+    private static $instance = null;
+
+    /**
+     * Create new instance 
+     * 
+     * @return [type] [description]
+     */
+    public static function get_instance() {
+
+        if ( self::$instance == null ) {
+            self::$instance = new self;
+        }
+
+        return self::$instance;
+    }
+    
     /**
      * Init widgets
      * 
      * @return [type] [description]
      */
     function init_widgets() {
-        include( 'includes/widget-gmw-single-location.php' );
+        include( 'includes/gmw-single-location-widget.php' );
     }
     
     /**
@@ -55,12 +71,12 @@ class GMW_Single_Location_Addon extends GMW_Register_Addon {
     public function pre_init() {  
         
         parent::pre_init();
-        
+
         //include classes files
         if ( ! IS_ADMIN ) {  
             include( 'includes/class-gmw-single-location.php' );
-            include( 'includes/shortcode-gmw-single-location.php' );  
+            include( 'includes/gmw-single-location-shortcode.php' );  
         }
     }
 }
-new GMW_Single_Location_Addon();
+GMW_Addon::register( 'GMW_Single_Location_Addon' );
