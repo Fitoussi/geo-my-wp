@@ -270,7 +270,7 @@ class GMW_Form_Editor {
 				'form_template'  => array(
 					'name'     		=> 'form_template',
 					'type'     		=> 'select',
-					'default'       => 'gray',
+					'default'       => '',
 					'label'    		=> __( 'Search Form Template', 'GMW' ),
 					'desc'  		=> __( 'Select The search form template file.', 'GMW' ),		
 					'options'		=> array( '' => __( 'Disabled', 'GMW' ) ) + GMW_Helper::get_templates( $this->form['addon'], 'search-forms' ),
