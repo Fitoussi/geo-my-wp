@@ -147,31 +147,72 @@ function gmw_get_addons_status() {
  * 
  * @return array  data of all loaded addons
  */
-function gmw_get_addons_data() {
-	return GMW()->addons;
+function gmw_get_addons_data( $get_licenses = false ) {
+	return ( IS_ADMIN && $get_licenses ) ? array_merge_recursive( GMW()->addons, GMW()->licenses ) : GMW()->addons;
 }
 
 /**
  * Get addon ( extension ) data
  * 
  * @param  string $addon slug/name of the addon to pull its data
+ * @param  string $var   specific data value
  * 
  * @return array  add-on's data
  */
-function gmw_get_addon_data( $addon = '', $var = '' ) {
+function gmw_get_addon_data( $addon = '', $var = '', $get_license_data = false ) {
+
 	if ( ! empty( GMW()->addons[$addon] ) )  {
+
+		$addon = GMW()->addons[$addon];
+		
+		if ( IS_ADMIN && $get_license_data && ( $licenses = GMW()->licenses[$addon] ) !== FALSE )  {
+			$addon = array_merge( $addons, $licenses );
+		}
+
 		if ( $var != '' ) {
-			if ( isset( GMW()->addons[$addon][$var] ) ) {
-				return GMW()->addons[$addon][$var];
+			if ( isset( $addon[$var] ) ) {
+				return $addon[$var];
 			} else {
 				return false;
 			}
 		} else {
-			return GMW()->addons[$addon];
+			return $addon;
 		}
 	} else {
 		return false;
 	}
+}
+
+/**
+ * Get addon ( extension ) data
+ * 
+ * @param  string $addon slug/name of the addon to pull its data
+ * @param  string $var   specific data value
+ * 
+ * @return array  add-on's data
+ */
+function gmw_get_addon_license_data( $addon = '', $var = '' ) {
+	
+	if ( ! empty( GMW()->licenses[$addon] ) )  {
+		
+		$licenses = GMW()->licenses;
+
+		if ( $var != '' ) {
+			if ( isset( $licenses[$addon][$var] ) ) {
+				return $licenses[$addon][$var];
+			} else {
+				return false;
+			}
+		} else {
+			return $licenses[$addon];
+		}
+	} else {
+		return false;
+	}
+}
+
+function gmw_get_object_type( $object = false ) {
+	return ( $object && isset( GMW()->object_types[$object] ) ) ? GMW()->object_types[$object] : false;
 }
 
 /**
@@ -221,7 +262,7 @@ function gmw_update_addon_data( $addon = array() ) {
 		return;
 	}
 
-	$addon_data = get_option( 'gmw_addons_data' );
+	$addons_data = get_option( 'gmw_addons_data' );
 
 	if ( empty( $addons_data ) ) {
 		$addons_data = array();
@@ -570,8 +611,15 @@ function gmw_get_template( $addon = 'posts_locator', $template_type = 'search-fo
 	 * @param  string $base_path     [description]
 	 * @return [type]                [description]
 	 */
-	function gmw_get_search_form_template( $addon = 'posts_locator', $template_name = 'default', $base_addon = '' ) {
-		return GMW_Helper::get_template( $addon, 'search-forms', $iw_type = 'popup', $template_name, $base_addon );
+	function gmw_get_search_form_template( $addon = 'posts_locator', $template_name = 'default', $base_addon = '', $include = false ) {
+		$args = array(
+			'base_addon'       => $base_addon,
+			'addon' 	       => $addon, 
+			'folder_name'      => 'search-forms', 
+			'template_name'    => $template_name,
+			'include_template' => $include
+		);
+		return GMW_Helper::get_template( $args );
 	}
 
 	/**
@@ -581,8 +629,15 @@ function gmw_get_template( $addon = 'posts_locator', $template_type = 'search-fo
 	 * @param  string $base_path     [description]
 	 * @return [type]                [description]
 	 */
-	function gmw_get_search_results_template( $addon = 'posts_locator', $template_name = 'default', $base_addon = '' ) {
-		return GMW_Helper::get_template( $addon, 'search-results', $iw_type = 'popup', $template_name, $base_addon );
+	function gmw_get_search_results_template( $addon = 'posts_locator', $template_name = 'default', $base_addon = '', $include = false ) {
+		$args = array(
+			'base_addon'       => $base_addon,
+			'addon' 	       => $addon, 
+			'folder_name'      => 'search-results', 
+			'template_name'    => $template_name,
+			'include_template' => $include
+		);
+		return GMW_Helper::get_template( $args );
 	}
 
 	/**
@@ -592,8 +647,16 @@ function gmw_get_template( $addon = 'posts_locator', $template_type = 'search-fo
 	 * @param  string $base_path     [description]
 	 * @return [type]                [description]
 	 */
-	function gmw_get_info_window_template( $addon = 'posts_locator', $iw_type = 'popup', $template_name = 'default', $base_addon = '' ) {
-		return GMW_Helper::get_template( $addon, 'info-window', $iw_type, $template_name, $base_addon );
+	function gmw_get_info_window_template( $addon = 'posts_locator', $iw_type = 'popup', $template_name = 'default', $base_addon = '', $include = false ) {
+		$args = array(
+			'base_addon'       => $base_addon,
+			'addon' 	       => $addon, 
+			'folder_name'      => 'info-window', 
+			'iw_type'		   => $iw_type,
+			'template_name'    => $template_name,
+			'include_template' => $include
+		);
+		return GMW_Helper::get_template( $args );
 	}
 
 /**
