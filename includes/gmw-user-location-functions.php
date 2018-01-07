@@ -106,7 +106,7 @@ function gmw_get_user_location( $user_id = 0 ) {
 
         // abort if no user ID
         if ( empty( $user_id ) ) {
-            return;
+            return false;
         }
     }
 
@@ -247,7 +247,7 @@ function gmw_get_user_location_data( $user_id = 0, $output = OBJECT, $cache = tr
  * @param  [type] $post_id [description]
  * @return [type]          [description]
  */
-function gmw_delete_user_location( $user_id = 0, $delete_meta = false ) {
+function gmw_delete_user_location( $user_id = 0, $delete_meta = true ) {
 
     if ( empty( $user_id ) ) {
         return;
