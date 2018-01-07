@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'GMW_Register_Addon' ) ) {
+if ( ! class_exists( 'GMW_Addon' ) ) {
     return;
 }
 
@@ -12,7 +12,7 @@ if ( ! class_exists( 'GMW_Register_Addon' ) ) {
  * Current Location addon
  * 
  */
-class GMW_Sweetdate_Geolcation_Addon extends GMW_Register_Addon {
+class GMW_Sweetdate_Geolcation_Addon extends GMW_Addon {
     
     /**
      * Slug 
@@ -59,6 +59,22 @@ class GMW_Sweetdate_Geolcation_Addon extends GMW_Register_Addon {
      */
     public $is_core = true;
     
+    private static $instance = null;
+
+    /**
+     * Create new instance 
+     * 
+     * @return [type] [description]
+     */
+    public static function get_instance() {
+
+        if ( self::$instance == null ) {
+            self::$instance = new self;
+        }
+
+        return self::$instance;
+    }
+
     /**
      * required extensions
      * @var array
@@ -97,8 +113,10 @@ class GMW_Sweetdate_Geolcation_Addon extends GMW_Register_Addon {
      * @return void
      */
     public function pre_init() {
+        
         parent::pre_init();
-    	add_action( 'bp_init', array( $this, 'sd_init' ), 20 );
+        
+    	add_action( 'bp_init', array( $this, 'sweetdate_geolocation_init' ), 20 );
 	}
 
 	/**
@@ -106,7 +124,7 @@ class GMW_Sweetdate_Geolcation_Addon extends GMW_Register_Addon {
 	 * 
 	 * @return [type] [description]
 	 */
-    public function sd_init() {
+    public function sweetdate_geolocation_init() {
 
     	//admin settings
 		if ( is_admin() ) {
@@ -121,4 +139,4 @@ class GMW_Sweetdate_Geolcation_Addon extends GMW_Register_Addon {
 		}
     }
 }
-new GMW_Sweetdate_Geolcation_Addon();
+GMW_Addon::register( 'GMW_Sweetdate_Geolcation_Addon' );
