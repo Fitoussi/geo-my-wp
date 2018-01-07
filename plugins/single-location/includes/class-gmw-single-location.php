@@ -7,12 +7,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
 * GMW_Single_Location Class
 *
-* Core class for displaying location information of an object/item ( post, member, group.. )
-* You can extend this class to be used with a custom object/item.
-*
-* @version 1.0
+* Core class for displaying location information of an object ( post, member, group.. ).
+* 
+* You can extend this class to be used with a custom objects.
+* 
 * @author Eyal Fitoussi
+* 
 * @since 2.6.1
+* 
 */
 class GMW_Single_Location {
 
@@ -21,25 +23,25 @@ class GMW_Single_Location {
 	 * Public $args
 	 * Array of Incoming arguments
 	 */
-	protected $args = array(
+	protected $defaults = array(
 		'element_id'			=> 0,
-		'object_type'			=> 'post', // replaced item_type
+		'object'				=> 'post', // replaced item_type
 		'object_id'				=> 0, // replaced item_id
 		'elements'				=> 0,
 		'address_fields'		=> 'address',
 		'additional_info'		=> '', //deprecated - replaced with location_meta
 		'location_meta'			=> '',
-		'units'					=> 'm',
+		'units'					=> 'metric',
 		'map_height'      		=> '250px',
 		'map_width'       		=> '250px',
 		'map_type'        		=> 'ROADMAP',
 		'zoom_level'      		=> 13,
 		'scrollwheel_map_zoom'	=> 1,
 		'expand_map_on_load'	=> 0,
-		'item_map_icon'			=> 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+		'object_map_icon'		=> 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+		'object_info_window'    => 'title,address,distance',
 		'user_map_icon'   	  	=> 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
 		'user_info_window'	  	=> 'Your Location',
-		'item_info_window'		=> 'title,address,distance',
 		'no_location_message'   => 0,
 		'is_widget'				=> 0,
 		'widget_title'			=> 0
@@ -50,7 +52,7 @@ class GMW_Single_Location {
 	 * Public $args
 	 * Array for child class to extends the main array above
 	 */
-	protected $ext_args = array();
+	protected $args = array();
 	
 	/**
 	 * @since 2.6.1
@@ -110,12 +112,12 @@ class GMW_Single_Location {
 	 */
 	public function __construct( $atts = array() ) {
 		
-		// item_type replaced by object_type - remove in the future
-		if ( empty( $atts['object_type'] ) && ! empty( $atts['item_type'] ) ) {
+		// item_type replaced by object - remove in the future
+		if ( empty( $atts['object'] ) && ! empty( $atts['item_type'] ) ) {
 			
-			$atts['object_type'] = $atts['item_type'];
+			$atts['object'] = $atts['item_type'];
 
-			trigger_error( 'item_type shortcode attribute is deprecated. Please use object_type instead.', E_USER_NOTICE );
+			trigger_error( '[gmw_single_location] attribute item_type is deprecated since version 3.0. Use "object" instead.', E_USER_NOTICE );
 
 			unset( $atts['item_type'] );
 		}
@@ -125,7 +127,7 @@ class GMW_Single_Location {
 			
 			$atts['object_id'] = $atts['item_id'];
 
-			trigger_error( 'item_id shortcode attribute is deprecated. Please use object_id instead.', E_USER_NOTICE );
+			trigger_error( '[gmw_single_location] shortcode attribute item_id is deprecated since version 3.0. Use object_id instead.', E_USER_NOTICE );
 
 			unset( $atts['item_id'] );
 		}
@@ -135,13 +137,27 @@ class GMW_Single_Location {
 			
 			$atts['location_meta'] = $atts['additional_info'];
 			
-			trigger_error( 'additional_info shortcode attribute is deprecated. Please use location_meta instead.', E_USER_NOTICE );
+			trigger_error( '[gmw_single_location] shortcode attribute additional_info is deprecated since version 3.0. Use location_meta instead.', E_USER_NOTICE );
 
 			unset( $atts['additional_info'] );
 		}
 
+		if ( isset( $atts['item_map_icon'] ) ) {
+			
+			$atts['object_map_icon'] = $atts['item_map_icon'];
+
+			unset( $atts['item_map_icon'] );
+		}
+
+		if ( isset( $atts['item_info_window'] ) ) {
+			
+			$atts['object_info_window'] = $atts['item_info_window'];
+
+			unset( $atts['item_info_window'] );
+		}
+
 		// extend the default args
-		$this->args = array_merge( $this->args, $this->ext_args );
+		$this->args = array_merge( $this->defaults, $this->args );
 				
 		// get the shortcode atts
 		$this->args = shortcode_atts( $this->args, $atts, 'gmw_single_location' );
@@ -159,14 +175,14 @@ class GMW_Single_Location {
 
 				$this->elements_value[$key] = 'location_meta';
 
-				trigger_error( 'additional_info element value is deprecated. Please use location_meta instead.', E_USER_NOTICE );
+				trigger_error( 'The additional_info value of the [gmw_single_location] shortcode attribute "elements" is deprecated since version 3.0. Use location_meta instead.', E_USER_NOTICE );
 			}
 
 			if ( $value == 'live_directions' ) {
 
 				$this->elements_value[$key] = 'directions_form';
 
-				trigger_error( 'live_directions element value is deprecated. Please use directions_form instead.', E_USER_NOTICE );
+				trigger_error( 'The live_directions value of the [gmw_single_location] shortcode attribute "elements" is deprecated since version 3.0. Use directions_form instead.', E_USER_NOTICE );
 			}
 		}
 		
@@ -191,7 +207,7 @@ class GMW_Single_Location {
 		}		
 		
 		// generate the elements array
-		$this->elements['element_wrap_start'] = '<div id="gmw-single-location-wrapper-'.esc_attr( $this->args['element_id'] ).'" class="gmw-single-location-wrapper gmw-sl-wrapper '.esc_attr( $this->args['object_type'] ).' gmw-single-'.esc_attr( $this->args['object_type'] ).'-sc-wrapper">';
+		$this->elements['element_wrap_start'] = '<div id="gmw-single-location-wrapper-'.esc_attr( $this->args['element_id'] ).'" class="gmw-single-location-wrapper gmw-sl-wrapper '.esc_attr( $this->args['object'] ).' gmw-single-'.esc_attr( $this->args['object'] ).'-sc-wrapper">';
 
 		// check if this is widget and we use widget title
 		if ( $this->args['is_widget'] && ! empty( $this->args['widget_title'] ) ) {
@@ -333,7 +349,7 @@ class GMW_Single_Location {
 			return;
 		}
 		
-		if ( $this->args['units'] == "k" ) {
+		if ( $this->args['units'] == 'k' || $this->args['units'] == 'imperial' ) {
 			$units = 'km';
 		} else {
 			$units = 'mi';
@@ -362,7 +378,7 @@ class GMW_Single_Location {
 		}
 				
 		// location map icon
-		$post_map_icon = ! empty( $this->args['item_map_icon'] ) ? $this->args['item_map_icon'] : false;
+		$post_map_icon = ! empty( $this->args['object_map_icon'] ) ? $this->args['object_map_icon'] : false;
 		
 		// map args
 		$map_args = array(
@@ -423,10 +439,10 @@ class GMW_Single_Location {
 		}
 				
 		$element_id = esc_attr( $this->args['element_id'] );
-		$i_type 	= esc_attr( $this->args['object_type'] );
+		$object 	= esc_attr( $this->args['object'] );
 
 		$output  = '';
-		$output .= "<div id=\"gmw-sl-directions-link-wrapper-{$element_id}\" class=\"gmw-sl-directions-link-wrapper gmw-sl-element gmw-sl-{$i_type}-direction-link-wrapper\">";
+		$output .= "<div id=\"gmw-sl-directions-link-wrapper-{$element_id}\" class=\"gmw-sl-directions-link-wrapper gmw-sl-element gmw-sl-{$object}-direction-link-wrapper\">";
 		$output .= 	"<div class=\"trigger-wrapper\">";
 		$output .=		"<i class=\"gmw-icon-location-thin\"></i>";
 		$output .=		"<a href=\"#\" id=\"form-trigger-{$element_id}\" class=\"form-trigger\" onclick=\"event.preventDefault();jQuery(this).closest( '.gmw-sl-element' ).find( '.directions-link-form-wrapper' ).slideToggle();\">".esc_attr( $this->labels['directions'] )."</a>";
@@ -459,7 +475,6 @@ class GMW_Single_Location {
 		}
 				
 		$element_id = esc_attr( $this->args['element_id'] );
-		$i_type 	= esc_attr( $this->args['object_type'] );
 
 		$args = array(
 			'element_id'	=> $this->args['element_id'],
@@ -525,16 +540,16 @@ class GMW_Single_Location {
 	 */
 	public function info_window_content() {
 			 
-		if ( empty( $this->args['item_info_window'] ) ) {
+		if ( empty( $this->args['object_info_window'] ) ) {
 			return false;
 		}
 		
 		// get info window elements
-		$iw_elements_array = explode( ',', $this->args['item_info_window'] );
+		$iw_elements_array = explode( ',', $this->args['object_info_window'] );
 
 		$iw_elements = array();
 						
-		$iw_elements['iw_start'] = '<div class="gmw-iw-wrapper gmw-sl-iw-wrapper '.esc_attr( $this->args['object_type'] ).'">';
+		$iw_elements['iw_start'] = '<div class="gmw-iw-wrapper gmw-sl-iw-wrapper '.esc_attr( $this->args['object'] ).'">';
 
 		foreach ( $iw_elements_array as $value ) {
 			$iw_elements[$value] = false;
@@ -555,7 +570,7 @@ class GMW_Single_Location {
 			$iw_elements['location_meta'] = ! empty( $this->location_meta ) ? $this->location_meta : $this->location_meta();
 		}
 		
-		$output = apply_filters( 'gmw_sl_item_info_window', $iw_elements, $this->args, $this->location_data, $this->user_position );
+		$output = apply_filters( 'gmw_sl_object_info_window', $iw_elements, $this->args, $this->location_data, $this->user_position );
 		 
 		return implode( ' ', $output );
 	}
@@ -596,39 +611,7 @@ class GMW_Single_Location {
 				$this->elements[$element] = $this->$element();
 			}
 		}
-		/*
-		if ( isset( $this->elements['title'] ) ) {
-			$this->elements['title'] = $this->title();
-		}
-
-		if ( isset( $this->elements['address'] ) ) {
-			$this->elements['address'] = $this->address();
-		}
-		
-		if ( isset( $this->elements['distance'] ) ) {
-			$this->elements['distance'] = $this->distance();
-		}
-
-		if ( isset( $this->elements['directions_link'] ) ) {
-			$this->elements['directions_link'] = $this->directions_link();
-		}
-		
-		if ( isset( $this->elements['directions_form'] ) ) {
-			$this->elements['directions_form'] = $this->directions_form();
-		}
-		
-		if ( isset( $this->elements['directions_form'] ) && isset( $this->elements['directions_panel'] ) ) {
-			$this->elements['directions_panel'] = $this->directions_panel();
-		}
-
-		if ( isset( $this->elements['location_meta'] ) && ! empty( $this->args['location_meta'] ) ) {
-			$this->elements['location_meta'] = $this->location_meta();
-		}
-
-		if ( isset( $this->elements['map'] ) ) {
-			$this->elements['map'] = $this->map();
-		}
-	*/
+	
 		do_action( 'gmw_sl_before_output_elements', $this->elements, $this->args, $this->location_data, $this->user_position );
 		
 		$output = implode('', $this->elements);
