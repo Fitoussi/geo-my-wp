@@ -231,13 +231,14 @@ class GMW_Current_location {
 	
 		//map args
 		$map_args = array(
-			'map_id' 	 	 => $this->args['element_id'],
-			'map_type'		 => 'current_location',
-			'prefix'		 => 'cl',
-			'map_width'  	 => $this->args['map_width'],
-			'map_height' 	 => $this->args['map_height'],
-			'expand_on_load' => $this->args['expand_on_load'],
-			'init_visible'	 => true
+			'map_id' 	 	 	=> $this->args['element_id'],
+			'map_type'		 	=> 'current_location',
+			'prefix'		 	=> 'cl',
+			'map_width'  	 	=> $this->args['map_width'],
+			'map_height' 	 	=> $this->args['map_height'],
+			'expand_on_load' 	=> $this->args['expand_on_load'],
+			'init_visible'	 	=> true,
+			'hide_no_locations' => false
 		);
 
 		// map options
@@ -518,7 +519,6 @@ class GMW_Current_location {
 	}
 }
 endif;
-
 add_action( 'gmw_current_location_submit', array( 'GMW_Current_location', 'page_load_update_location' ) );
 add_action( 'wp_ajax_gmw_update_current_location', array( 'GMW_Current_location', 'ajax_update_location' ) );
 add_action( 'wp_ajax_nopriv_gmw_update_current_location', array( 'GMW_Current_location', 'ajax_update_location' ) );
