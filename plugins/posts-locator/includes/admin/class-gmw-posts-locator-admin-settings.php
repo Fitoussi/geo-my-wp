@@ -21,7 +21,6 @@ class GMW_Posts_Locator_Admin_Settings {
 
         // setup default values for settings
         add_filter( 'gmw_admin_settings_setup_defaults', array( $this, 'setup_defaults' ) );
-        add_filter( 'gmw_admin_settings_groups', array( $this, 'admin_settings_group' ), 5 );
         add_filter( 'gmw_admin_settings', array( $this, 'admin_settings' ), 5 );
     }
 
@@ -50,24 +49,6 @@ class GMW_Posts_Locator_Admin_Settings {
         );
 
         return $defaults;
-    }
-
-    /**
-     * Create Post Types settings group
-     * 
-     * @param  [type] $groups [description]
-     * @return [type]         [description]
-     */
-    public function admin_settings_group( $groups ) {
-
-        $groups[] = array(
-            'id'       => 'post_types_settings',
-            'label'    => __( 'Post Types', 'GMW' ),
-            'icon'     => 'pinboard', 
-            'priority' => 5
-        );  
-
-        return $groups;
     }
 
     /**
