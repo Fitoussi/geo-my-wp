@@ -694,7 +694,7 @@ class GMW_Maps_API {
 		$units 		 = $args['units'] == 'imperial' ? 'ptm' : 'ptk';
 		$link  		 = esc_url( "http://maps.google.com/maps?f=d&hl={$language}&region={$region}&doflg={$units}&saddr={$from_latlng}&daddr={$to_latlng}&ie=UTF8&z=12" );
 		$label 		 = esc_html( $args['label'] );
-
+		
 		return "<a class=\"gmw-get-directions\" title=\"{$label}\" href=\"{$link}\" target=\"_blank\">{$label}</a>";
 	}
 
