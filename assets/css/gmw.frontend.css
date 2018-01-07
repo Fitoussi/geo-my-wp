@@ -1816,13 +1816,11 @@ div.gmw-current-location-wrapper div.gmw-cl-form-wrapper p.gmw-current-location-
 
 	div.gmw-single-location-wrapper,
 	.widget div.gmw-single-location-wrapper {
-		box-shadow: 0 0 2px #cac2c5;
-		-webkit-box-shadow: 0 0 3px #cac2c5;
-		-moz-box-shadow: 0 0 2px #cac2c5;
-		-o-box-shadow: 0 0 2px #cac2c5;
 		padding: 15px 15px;
 		background: white;
-		margin-bottom:15px;
+		margin-bottom: 15px;
+		border: 1px solid #e5e5e5;
+		border-radius: 3px;
 	}
 
 	div.gmw-single-location-wrapper a:link,
@@ -1836,7 +1834,7 @@ div.gmw-current-location-wrapper div.gmw-cl-form-wrapper p.gmw-current-location-
 	div.gmw-single-location-wrapper i[class*="gmw-icon-"],
 	.widget div.gmw-single-location-wrapper i[class*="gmw-icon-"],
 	.widget div.gmw-single-location-wrapper i[class*="gmw-icon-"] { 
-		color: lightcoral;
+		color: #444;
 	}
 
 
@@ -1868,7 +1866,7 @@ div.gmw-current-location-wrapper div.gmw-cl-form-wrapper p.gmw-current-location-
 	div.gmw-single-location-wrapper div.gmw-sl-address i.gmw-location-icon,
 	div.gmw-single-location-wrapper div.gmw-sl-distance i.gmw-distance-icon,
 	div.gmw-single-location-wrapper i.gmw-directions-icon {
-		color:lightcoral;
+		color: #444;
 	}
 
 	div.gmw-single-location-wrapper .gmw-sl-map-wrapper,
@@ -1926,7 +1924,7 @@ div.gmw-current-location-wrapper div.gmw-cl-form-wrapper p.gmw-current-location-
 
 	div.gmw-sl-iw-wrapper .gmw-sl-additional-info-wrapper ul li a,
 	div.gmw-sl-iw-wrapper .gmw-sl-additional-info-wrapper ul li span.label {
-		color:lightcoral;
+		color: #444;
 		font-weight: 500
 	}
 
@@ -1950,7 +1948,7 @@ div.gmw-current-location-wrapper div.gmw-cl-form-wrapper p.gmw-current-location-
 	}
 
 	div.gmw-single-location-wrapper div.gmw-sl-directions-trigger-wrapper i.live-directions-icon::before {
-		color:lightcoral;
+		color: #444;
 		font-size:16px;
 		margin-right:5px;
 	}
@@ -2016,7 +2014,7 @@ div.gmw-current-location-wrapper div.gmw-cl-form-wrapper p.gmw-current-location-
 		display: inline-block;
 		position: absolute;
 		cursor: pointer;
-		color: lightcoral;
+		color: #444;
 		left:5px
 	}
 
@@ -2028,7 +2026,7 @@ div.gmw-current-location-wrapper div.gmw-cl-form-wrapper p.gmw-current-location-
 		display: inline-block;
 		position: absolute;
 		cursor: pointer;
-		color: lightcoral;
+		color: #444;
 		right: 3px;
 		text-decoration: none;
 	}
