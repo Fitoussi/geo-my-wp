@@ -60,7 +60,7 @@ class GMW_Single_Location_Addon extends GMW_Addon {
      * @return [type] [description]
      */
     function init_widgets() {
-        include( 'includes/gmw-single-location-widget.php' );
+        include( 'includes/class-gmw-single-location-widget.php' );
     }
     
     /**
