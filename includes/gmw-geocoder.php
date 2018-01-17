@@ -4,30 +4,49 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-if ( function_exists( 'gmw_geocoder' ) ) {
-    return;
-}
+if ( ! function_exists( 'gmw_geocoder' ) ) :
 
 /**
+ * 
  * GMW function - Geocode address
+ * 
  * @since 1.0
+ * 
  * @author Eyal Fitoussi
  * @author This function inspired by a script written by Pippin Williamson - Thank you
+ * 
+ * @param  string||array  $raw_data  can be address as a string or coords as of array( 'latitude','longitude' ) 
+ * @param  boolean $force_refresh true to ignore data saved in cache
+ * 
+ * @return array geocoded data.
+ * 
  */
-function gmw_geocoder( $raw_address, $force_refresh = false ) {
+function gmw_geocoder( $raw_data = '', $force_refresh = false ) {
 
-    // remove invalid characters from address
-    $invalid_chars = array( " " => "+", "," => "", "?" => "", "&" => "", "=" => "" , "" => "" );
-    $raw_address   = trim( strtolower( str_replace( array_keys( $invalid_chars ), array_values( $invalid_chars ), $raw_address ) ) );
+    // if data is array, then it should be coordinates
+    if ( is_array( $raw_data ) ) {
+        
+        // convert to lat,lng comma separated
+        $data = implode( ',', $raw_data ); 
+        $type = 'latlng';
+
+    // if not array, then it should be an address
+    } else {
+
+        // remove invalid characters from address
+        $invalid_chars = array( " " => "+", "," => "", "?" => "", "&" => "", "=" => "" , "" => "" );
+        $data          = trim( strtolower( str_replace( array_keys( $invalid_chars ), array_values( $invalid_chars ), $raw_data ) ) );
+        $type          = 'address';
+    }
     
-    // abort if no address entered 
-    if ( empty( $raw_address ) ) {
+    // abort if data is blank
+    if ( empty( $data ) ) {
         return false;
     }
 
-    // look for location in cache
-    $address_hash = md5( $raw_address );
-    $location     = get_transient( 'gmw_geocoded_'.$address_hash );
+    // look for geocoded location in cache
+    $address_hash = md5( $data );
+    $location     = get_transient( 'gmw_geocoded_'.$data );
     
     // if no location found in cache or if forced referesh try to geocode
     if ( $force_refresh == true || $location === false ) {
@@ -37,7 +56,7 @@ function gmw_geocoder( $raw_address, $force_refresh = false ) {
             'protocol'  => is_ssl() ? 'https' : 'http',
             'url_base'  => '://maps.googleapis.com/maps/api/geocode/json?',
             'url_data'  => http_build_query( apply_filters( 'gmw_google_maps_api_geocoder_args', array(
-                'address'   => $raw_address,
+                $type       => $data,
                 'key'       => gmw_get_option( 'general_settings', 'google_api', '' ),
                 'region'    => gmw_get_option( 'general_settings', 'country_code', 'us' ),
                 'language'  => gmw_get_option( 'general_settings', 'language_code', 'en' ),
@@ -52,10 +71,10 @@ function gmw_geocoder( $raw_address, $force_refresh = false ) {
             return;
         }
 
-        // get geocoding data
+        // get geocoded data
         $data = wp_remote_retrieve_body( $response );
 
-        // abort if data is error
+        // abort if geocoding failed
         if ( is_wp_error( $data ) ) {
             return;
         }
@@ -68,6 +87,7 @@ function gmw_geocoder( $raw_address, $force_refresh = false ) {
 
             if ( ! empty( $data ) && $data->status === 'OK' ) {
 
+                // default values
                 $location = array(
                     'street_number'     => '',
                     'street_name'       => '',
@@ -83,8 +103,12 @@ function gmw_geocoder( $raw_address, $force_refresh = false ) {
                     'country_code'      => '',
                     'address'           => '',
                     'formatted_address' => sanitize_text_field( $data->results[0]->formatted_address ),
+                    // to support older versions
                     'lat'               => sanitize_text_field( $data->results[0]->geometry->location->lat ),
+                    // to support older versions
                     'lng'               => sanitize_text_field( $data->results[0]->geometry->location->lng ),
+                    'latitude'          => sanitize_text_field( $data->results[0]->geometry->location->lat ),
+                    'longitude'         => sanitize_text_field( $data->results[0]->geometry->location->lng ),
                     'place_id'          => ! empty( $data->results[0]->place_id ) ? sanitize_text_field( $data->results[0]->place_id ) : '',
                 );
 
@@ -100,11 +124,13 @@ function gmw_geocoder( $raw_address, $force_refresh = false ) {
                             $location['street_number'] = $location['street'] = sanitize_text_field( $data->long_name );
                         break;
 
-                        // street name
+                        // street name and street
                         case 'route' :
                             
+                            // street name
                             $location['street_name'] = sanitize_text_field( $data->long_name );
 
+                            // street ( number + name )
                             if ( ! empty( $location['street_number'] ) ) {
                                 
                                 $location['street'] = $location['street_number'].' '.$location['street_name'];
@@ -165,7 +191,7 @@ function gmw_geocoder( $raw_address, $force_refresh = false ) {
 
             // otherwise, if no results. display errors
             } elseif ( $data->status === 'ZERO_RESULTS' ) {
-                return array( 'geocoded' => false, 'error' => __( 'The address entered could not be geocoded.', 'GMW' ) );
+                return array( 'geocoded' => false, 'error' => __( 'The data entered could not be geocoded.', 'GMW' ) );
             } elseif ( $data->status === 'INVALID_REQUEST' ) {
                 return array( 'geocoded' => false, 'error' => __( 'Invalid request. Did you enter an address?', 'GMW' ) );
             } elseif ( $data->status === 'OVER_QUERY_LIMIT' ) { 
@@ -181,3 +207,5 @@ function gmw_geocoder( $raw_address, $force_refresh = false ) {
     
     return $location;
 }
+
+endif;
