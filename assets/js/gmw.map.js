@@ -249,7 +249,7 @@ GMW_Map.prototype.init = function() {
  */
 GMW_Map.prototype.render = function( locations, user_location ) {
 	
-	console.log( 'render map' );
+	//console.log( 'render map' );
 
 	var self = this;
 
@@ -370,7 +370,7 @@ GMW_Map.prototype.render = function( locations, user_location ) {
  */
 GMW_Map.prototype.update = function( locations, user_location ) {
 	
-	console.log( 'update map' );
+	//console.log( 'update map' );
 
 	var self = this;
 
@@ -1028,7 +1028,7 @@ jQuery( document ).ready( function($){
 
 		if ( vars.settings.render_map ) {
 			
-			console.log( 'render map dynamically' );
+			//console.log( 'render map dynamically' );
 
 			// generate new map
 			GMW_Maps[map_id] = new GMW_Map( vars.settings, vars.map_options, vars.form );
