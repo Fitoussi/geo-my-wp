@@ -12,9 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return [type]        [description]
  */
 function gmw_fl_filter_location_activity( $where, $args ) {
+    
     if ( isset( $_COOKIE['bp-activity-filter'] ) && $_COOKIE['bp-activity-filter'] == 'gmw_member_location_updated' ) {
+        
         if ( ! isset( $where['filter_sql'] ) ) {
+        
             $where['filter_sql'] = " a.type IN ( 'gmw_member_location_updated' )";
+        
         } else {
             $where['filter_sql'] .= " AND a.type IN ( 'gmw_member_location_updated' )";
         }
