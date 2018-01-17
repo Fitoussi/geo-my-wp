@@ -217,7 +217,7 @@ div.menu-footer input.button-primary.update-form {
 /******* GMW tabs *********/
 
 .gmw-left-tabs-menu-wrapper {
-	padding-left: 180px;
+	padding-left: 200px;
 	//height: 100%;*/
 	width: 100%;
 	box-sizing: border-box;
@@ -228,7 +228,7 @@ div.menu-footer input.button-primary.update-form {
 }
 
 .gmw-left-tabs-menu-wrapper ul.gmw-tabs-wrapper {
-	width: 180px;
+	width: 200px;
 	padding: 0;
 	margin: 0;
 	z-index: 10;
