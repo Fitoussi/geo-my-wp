@@ -200,7 +200,8 @@ class GMW_Members_Locator_Form extends GMW_Form {
     function order_results_by_distance( $clauses, $vars ) {
 
         if ( $vars->query_vars['type'] == 'distance' ) {
-            $objects_id = implode( ',', $this->objects_id );
+
+            $objects_id         = implode( ',', $this->objects_id );
             $clauses['orderby'] = " ORDER BY FIELD( id, {$objects_id} )";
         }
 
@@ -289,11 +290,15 @@ class GMW_Members_Locator_Form extends GMW_Form {
          * We do this to allow other plugins use the include argument first.
          */ 
         if ( ! empty( $this->form['query_args']['include'] ) ) {
+
             if ( ! is_array( $this->form['query_args']['include'] ) ) {
                 $this->form['query_args']['include'] = explode( ',', $this->form['query_args']['include'] );
             }
+
             $this->form['query_args']['include'] = array_intersect( $this->form['query_args']['include'], $include_users );
+        
         } else {
+        
             $this->form['query_args']['include'] = $include_users;
         }
 
@@ -319,9 +324,9 @@ class GMW_Members_Locator_Form extends GMW_Form {
         global $members_template;
 
         if ( ! $internal_cache || false === ( $members_template = get_transient( $query_args_hash ) ) ) {
-        
+        //if ( 1 == 1 ){ 
             //print_r( 'Members query done' );
-            
+
             // query members
             $results = bp_has_members( $this->form['query_args'] ) ? true : false;
 
@@ -336,19 +341,29 @@ class GMW_Members_Locator_Form extends GMW_Form {
 
         $members_template = $this->query = apply_filters( 'gmw_fl_members_before_members_loop', $members_template, $this->form, $this );
 
-        $this->form['results']       = $members_template->members;
         $this->form['results_count'] = count( $members_template->members );
         $this->form['total_results'] = $members_template->total_member_count;
         $this->form['max_pages']     = $this->form['total_results']/$this->form['get_per_page'];
 
-        $temp_array = array();
+        $temp_array = [];
 
-        foreach ( $this->form['results'] as $member ) {
-            $temp_array[] = parent::the_location( $member->ID, $member );
+        foreach ( $members_template->members as $member ) {
+            $temp_array[] = parent::the_location( $member->id, $member );
         }
 
-        $this->form['results'] = $temp_array;
+         $this->form['results'] = $members_template->members = $temp_array;
 
         return $this->form['results'];
     }
+
+    /**
+     * Merge member object with location object
+     * 
+     * @param  [type] $member [description]
+     * @return [type]         [description]
+     */
+    public function the_member( $member ) {
+        return $this->the_location( $member->id, $member );
+    }
+
 }
