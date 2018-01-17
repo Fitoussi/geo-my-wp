@@ -170,7 +170,7 @@ class GMW_License_Key {
 		'formidable_geolocation' 	  => 54725,
 		'global_maps'			 	  => 2602,
 		'gravity_forms_geo_fields' 	  => 2273,
-		'groups_locator'			  => 4647,
+		'bp_groups_locator'			  => 4647,
 		'gmw_kleo_geolocation'		  => 42902,
 		'nearby_posts'				  => 7991,
 		'premium_settings'			  => 668,
