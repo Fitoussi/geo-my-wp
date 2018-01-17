@@ -106,7 +106,7 @@ class GMW_Members_Locator_Location_Tab {
 	 */
 	public function screen_display() {
 
-		$who = ( bp_is_my_profile() && ! apply_filters( 'gmw_fl_disable_logged_in_location_tab', false ) ) ? 'loggedin_user' : 'displayed_user';
+		$who = ( bp_is_my_profile() && ! apply_filters( 'gmw_fl_disable_logged_in_location_tab_form', false ) ) ? 'loggedin_user' : 'displayed_user';
 
 		add_action( 'bp_template_content', array( $this, $who.'_screen' ) );
 
@@ -134,7 +134,7 @@ class GMW_Members_Locator_Location_Tab {
 	    // Single Location add-on must be activated to display full location details
 		if ( gmw_is_addon_active( 'single_location' ) ) {
 			
-	        $content = '[gmw_single_location object_type="member" elements="address,map" address_fields="address" map_height="300px" map_width="100%" user_map_icon="0" no_location_message="'.__( ' The user has not added his location yet.', 'GMW' ).'"]';
+	        $content = '[gmw_bp_member_location elements="address,map" address_fields="address" map_height="300px" map_width="100%" user_map_icon="0"]';
 		
 	    // otherwise, display only address field
 	    } else {
