@@ -287,17 +287,20 @@ class GMW_Extensions {
     
         $plugins = get_plugins();
 
-        //activate the WordPress plugin reagrdless of it is set as disabled or inactive in GEO my WP.
+        //activate the WordPress plugin reagrdless it later it is set as disabled or inactive in GEO my WP.
         //We do so to allow the license key to load so updates will be available.
         if ( array_key_exists( $basename, $plugins ) && is_plugin_inactive( $basename ) ) {
             activate_plugins( $basename );
         }
 
+        // enable addons after activation
+        GMW_Addon::init_addons();
+
         // update active status and get the addon data.
         $extension = gmw_update_addon_status( $slug, 'active' );
         
         // get all extensions
-        $gmw_extensions = gmw_get_addons_data();
+        $extensions_data = gmw_get_addons_data( true );
 
         // if AJAX enabled
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
@@ -306,23 +309,23 @@ class GMW_Extensions {
 
             // look for other extensions dependends on this extension.
             // we will enable them.
-            foreach( $gmw_extensions as $ext ) {
+            foreach( $extensions_data as $ext_data ) {
 
                 // if disabled because of a theme skip checking for addons.
-                if ( $ext['status'] == 'disabled' && $ext['status_details']['error'] == 'theme_missing' ) {
+                if ( $ext_data['status'] == 'disabled' && $ext_data['status_details']['error'] == 'theme_missing' ) {
 
-                    break;
+                    continue;
 
-                } elseif ( ! empty( $ext['required']['addons'] ) ) {
+                } elseif ( ! empty( $ext_data['required']['addons'] ) ) {
 
-                    foreach( $ext['required']['addons'] as $required_addon ) {
+                    foreach( $ext_data['required']['addons'] as $required_addon ) {
 
                         if ( $required_addon['slug'] == $extension['slug'] ) {
 
-                            $dependends[$ext['slug']] = '';
+                            $dependends[$ext_data['slug']] = '';
 
                             // deactivate addon
-                            gmw_update_addon_status( $ext['slug'], 'inactive' );
+                            gmw_update_addon_status( $ext_data['slug'], 'inactive' );
                         }
                     }
                 }
@@ -398,7 +401,7 @@ class GMW_Extensions {
         $extension = gmw_update_addon_status( $slug, 'inactive' );
 
         // get extensions
-        $gmw_extensions = gmw_get_addons_data();
+        $extensions_data = gmw_get_addons_data( true );
 
         // if doing AJAX
         if ( defined( 'DOING_AJAX' ) ) {
@@ -407,23 +410,23 @@ class GMW_Extensions {
 
             // look for other extensions dependends on this extension.
             // we will disable them.
-            foreach( $gmw_extensions as $ext ) {
+            foreach( $extensions_data as $ext_data ) {
 
                 // abort if already disabled because of a theme.
-                if ( $ext['status'] == 'disabled' && $ext['status_details']['error'] == 'theme_missing' ) {
+                if ( $ext_data['status'] == 'disabled' && $ext_data['status_details']['error'] == 'theme_missing' ) {
 
-                    break;
+                    continue;
 
-                } elseif ( ! empty( $ext['required']['addons'] ) ) {
+                } elseif ( ! empty( $ext_data['required']['addons'] ) ) {
 
-                    foreach( $ext['required']['addons'] as $required_addon ) {
+                    foreach( $ext_data['required']['addons'] as $required_addon ) {
 
                         if ( $required_addon['slug'] == $extension['slug'] ) {
 
-                            $dependends[$ext['slug']] = $required_addon['notice'];
+                            $dependends[$ext_data['slug']] = $required_addon['notice'];
                             
                             // update extensions status in database
-                            gmw_update_addon_status( $ext['slug'], 'disabled', $required_addon );
+                            gmw_update_addon_status( $ext_data['slug'], 'disabled', $required_addon );
                         }
                     }
                 }
@@ -634,8 +637,8 @@ class GMW_Extensions {
                         $label  = __( 'Disable Updater', 'GMW' );
                     }
 
-                    $nonce    = wp_create_nonce( 'gmw_extension_updater_nonce' );
-                    $url      = admin_url( 'admin.php?page=gmw-extensions&gmw_action=updater_action&action='.$action.'&_wpnonce='.$nonce );
+                    $nonce = wp_create_nonce( 'gmw_extension_updater_nonce' );
+                    $url   = admin_url( 'admin.php?page=gmw-extensions&gmw_action=updater_action&action='.$action.'&_wpnonce='.$nonce );
                     
                     ?>
                     <a 
@@ -897,7 +900,9 @@ class GMW_Extensions {
                                 <span>
                                 <?php 
                                 if ( $extension['status'] == 'disabled' ) {
-                                    echo $extension['status_details']['notice'];
+                                    // in rare cases the notice can be an array. 
+                                    // When 2 versions of the same extension are installed.
+                                    echo is_array( $extension['status_details']['notice'] ) ?  $extension['status_details']['notice'][0] : $extension['status_details']['notice'];
                                 }
                                 ?>
                                 </span>
