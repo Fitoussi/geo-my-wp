@@ -32,7 +32,7 @@
 		
 		<div class="gmw-results">
 
-			<?php do_action( 'gmw_search_results_start' , $gmw ); ?>
+			<?php do_action( 'gmw_search_results_start', $gmw ); ?>
 			
 			<div class="results-count-wrapper">
 				<span><?php gmw_results_message( $gmw ); ?></span>
