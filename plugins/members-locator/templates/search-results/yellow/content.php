@@ -55,7 +55,7 @@
 		    	<?php while ( bp_members() ) : bp_the_member() ; ?>
 		            
 		            <?php $member = $members_template->member; ?>
-
+		            
 		            <li id="single-member-<?php echo absint( $member->id ); ?>" class="single-member <?php echo esc_attr( $member->location_class ); ?>">
 
 		                <?php do_action( 'gmw_search_results_loop_item_start', $gmw, $member ); ?>
