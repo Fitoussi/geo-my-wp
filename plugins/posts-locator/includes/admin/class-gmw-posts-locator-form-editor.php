@@ -18,6 +18,7 @@ class GMW_Posts_Locator_Form_Editor {
      * @return void
      */
     public function __construct() {
+        
         add_filter( 'gmw_form_default_settings', array( $this, 'default_settings' ), 20, 2 );
         // init form settings
         add_filter( 'gmw_posts_locator_form_settings', array( $this, 'form_settings_init' ), 5 );
