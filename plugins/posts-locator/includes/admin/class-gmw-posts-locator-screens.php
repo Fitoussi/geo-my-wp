@@ -172,8 +172,12 @@ class GMW_Posts_Locator_Screens {
             'location_required'     =>  gmw_get_option( 'post_types_settings', 'mandatory_address', 0 )        
         ) );
             
+        do_action( 'gmw_edit_post_page_before_location_form', $post );
+
         // generate the form
         gmw_post_location_form( $form_args );
+
+        do_action( 'gmw_edit_post_page_after_location_form', $post );
 
         // enqueue Google API if not yet enqueued
         if ( ! wp_script_is( 'google-maps', 'enqueued' ) ) {
