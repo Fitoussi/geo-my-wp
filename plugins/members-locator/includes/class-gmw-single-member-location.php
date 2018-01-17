@@ -19,7 +19,7 @@ if ( ! class_exists( 'GMW_Single_Location' ) ) {
 * 
 * @since 2.6.1
 */
-class GMW_Single_Member_Location extends GMW_Single_Location {
+class GMW_Single_BP_Member_Location extends GMW_Single_Location {
 
 	/**
 	 * Extends the default shortcode atts
@@ -27,15 +27,22 @@ class GMW_Single_Member_Location extends GMW_Single_Location {
 	 * Public $args
 	 *
 	 */
-	protected $ext_args = array(
+	protected $args = array(
 		'elements'			  => 'name,address,map,distance,directions_link',
-		'object_type'	 	  => 'member',
+		'object'	 	  	  => 'member',
 		'prefix'	 		  => 'fl',
 		'item_info_window'	  => 'name,address,distance',
 		'show_in_single_post' => 0,
 		'no_location_message' => ''
 	);
-	
+		
+	public function __construct( $atts = [] ) {
+
+		$this->args['no_location_message'] = __( 'The member has not added a location yet.', 'GMW' );
+
+		parent::__construct( $atts );
+	}
+
 	/**
 	 * @since 2.6.1
 	 * Public $item_info
@@ -43,15 +50,15 @@ class GMW_Single_Member_Location extends GMW_Single_Location {
 	 */
 	public function location_data() {
 
-		global $members_template;
-		
 		// disable no location message
 		if ( is_single() && empty( $this->args['show_in_single_post'] ) ) {
 			$this->args['no_location_message'] = false;
 		}
-		
+	
 		// check if passing user ID
 		if ( empty( $this->args['object_id'] ) ) {
+
+			global $members_template;
 
 			// look for BP displayed user ID
 			if ( bp_is_user() ) {
@@ -117,9 +124,18 @@ class GMW_Single_Member_Location extends GMW_Single_Location {
  */
 function gmw_single_bp_member_location_shortcode( $atts = array() ) {
 	
-	$atts['object_type'] = 'user';
+	if ( empty( $atts ) ) {
+		$atts = [];
+	}
 
-	if ( isset( $atts['user_id'] ) ) {
+	$atts['object'] = 'bp_member';
+
+	if ( isset( $atts['member_id'] ) ) {
+
+		$atts['object_id'] = $atts['member_id'];
+
+	} elseif ( isset( $atts['user_id'] ) ) {
+
 		$atts['object_id'] = $atts['user_id'];
 	}
 
