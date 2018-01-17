@@ -18,7 +18,7 @@ if ( ! function_exists( 'gmw_search_results_bp_avatar' ) ) {
 	            return;
 	        }
 
-	    $object_type = $gmw['slug'] == 'groups_locator' ? 'group' : 'member';
+	    $object_type = $gmw['slug'] == 'bp_groups_locator' ? 'group' : 'member';
 
 	    $permalink_function = 'bp_'.$object_type.'_permalink';
 	    $avatar_function 	= 'bp_'.$object_type.'_avatar';
