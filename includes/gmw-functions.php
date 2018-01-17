@@ -853,12 +853,12 @@ function gmw_enqueue_form_styles( $args = array( 'form_id' => 0, 'pages' => arra
 
 				$template     	   = str_replace( 'custom_', '', $template );
 				$stylesheet_handle = "gmw-{$addon_data['prefix']}-search-forms-custom-{$template}";
-				$stylesheet_uri	   = get_stylesheet_directory_uri(). "/geo-my-wp/{$addon_data['custom_templates_folder']}/search-forms/{$template}/css/style.css";
+				$stylesheet_uri	   = get_stylesheet_directory_uri(). "/geo-my-wp/{$addon_data['templates_folder']}/search-forms/{$template}/css/style.css";
 		
 			// load template files from plugin's folder
 			} else {
 				$stylesheet_handle = "gmw-{$addon_data['prefix']}-search-forms-{$template}";
-				$stylesheet_uri    = $addon_data['plugin_url']."/{$addon_data['templates_folder']}/search-forms/{$template}/css/style.css";
+				$stylesheet_uri    = $addon_data['plugin_url']."/templates/search-forms/{$template}/css/style.css";
 			}
 
 			if ( ! wp_style_is( $stylesheet_handle, 'enqueued' ) ) {
@@ -875,12 +875,12 @@ function gmw_enqueue_form_styles( $args = array( 'form_id' => 0, 'pages' => arra
 
 				$template     	   = str_replace( 'custom_', '', $template );
 				$stylesheet_handle = "gmw-{$addon_data['prefix']}-search-results-custom-{$template}";
-				$stylesheet_uri	   = get_stylesheet_directory_uri(). "/geo-my-wp/{$addon_data['custom_templates_folder']}/search-results/{$template}/css/style.css";
+				$stylesheet_uri	   = get_stylesheet_directory_uri(). "/geo-my-wp/{$addon_data['templates_folder']}/search-results/{$template}/css/style.css";
 		
 			// load template files from plugin's folder
 			} else {
 				$stylesheet_handle = "gmw-{$addon_data['prefix']}-search-results-{$template}";
-				$stylesheet_uri    = $addon_data['plugin_url']."/{$addon_data['templates_folder']}/search-results/{$template}/css/style.css";
+				$stylesheet_uri    = $addon_data['plugin_url']."/templates/search-results/{$template}/css/style.css";
 			}
 
 			if ( ! wp_style_is( $stylesheet_handle, 'enqueued' ) ) {
