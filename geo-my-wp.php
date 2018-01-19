@@ -3,7 +3,7 @@
 Plugin Name: GEO my WP
 Plugin URI: http://www.geomywp.com
 Description: GEO my WP is an adavanced mapping and proximity search plugin. Geotag post types and BuddyPress members and create proximity search forms to search and find locations based on address, radius, categories and more.
-Version: 3.0-beta-4
+Version: 3.0-beta-5
 Author: Eyal Fitoussi
 Author URI: http://www.geomywp.com
 Requires at least: 4.5
@@ -89,7 +89,7 @@ class GEO_my_WP {
 	public $required_versions = array(
 		'premium_settings' 	    => '2.0',
 		'global_maps' 	        => '2.1',
-		'groups_locator'   	    => '2.0',
+		'bp_groups_locator'   	=> '2.0',
 		'gmw_kleo_geolocation'  => '2.0',
 		'wp_users_geo-location' => '2.0',
 		'users_locator'			=> '2.0',
@@ -98,6 +98,13 @@ class GEO_my_WP {
 		'exclude_members'		=> '2.0',
 		'xprofile_fields'		=> '2.0'
 	);
+
+	/**
+	 * Registered Objects
+	 * 
+	 * @var array
+	 */
+	public $objects = array();
 
 	/**
 	 * Registered Objects Types 
@@ -109,7 +116,7 @@ class GEO_my_WP {
 	 * Loaded addons
 	 * @var array
 	 */
-	public $loaded_addons = array();
+	public $registered_addons = array();
 
 	/**
 	 * Addons Status
@@ -154,15 +161,34 @@ class GEO_my_WP {
 	private static $instance;
 	
 	/**
-	 * Main Instance
+	 * Runs once GEO my WP Loaded
 	 *
-	 * Insures that only one instance of GEO_my_WP exists in memory at any one
-	 * time.
+	 * @return void
+	 */
+	public static function loaded() {
+
+		// load textdomain
+		load_plugin_textdomain( 'GMW', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+
+		// fires when GEO my WP has loaded.
+		do_action( 'gmw_loaded' );
+
+		// initializing add-ons that registered using GMW_Addon class
+		if ( class_exists( 'GMW_Addon' ) ) {
+			GMW_Addon::init_addons();
+		}		
+	}
+
+	/**
+	 * 
+	 * GEO_my_WP Instance
+	 *
+	 * Make sure that only one instance exists.
 	 *
 	 * @since 2.4
-	 * @static
-	 * @staticvar array $instance
+	 * 
 	 * @return GEO_my_WP
+	 * 
 	 */
 	public static function instance() {
 
@@ -170,9 +196,6 @@ class GEO_my_WP {
 
 			self::$instance = new GEO_my_WP;
 			self::$instance->constants();
-
-			// load textdomain
-			add_action( 'plugins_loaded', array( self::$instance, 'load_textdomain' ) );
 
 			// run plugin installer once GEO my WP activated
 			register_activation_hook( __FILE__, array( self::$instance, 'install' ) );
@@ -241,16 +264,6 @@ class GEO_my_WP {
 		define( 'GMW_FILE', __FILE__ );
 		define( 'GMW_BASENAME', plugin_basename( GMW_FILE ) );	
 	}
-
-	/**
-	 * Localization
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function load_textdomain() {
-		load_plugin_textdomain( 'GMW', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-	}
 	
 	/**
 	 * Plugin installer. Execute when plugin activated
@@ -291,8 +304,10 @@ class GEO_my_WP {
 	 */
 	public function setup_globals() {
 
+		// for previous version, should be removed in the future.
 		global $gmw_options;
 
+		// get some addons data
 		$gmw_options   = $this->options = get_option( 'gmw_options' );
 		$addons_status = get_option( 'gmw_addons_status' );
 		
@@ -300,8 +315,16 @@ class GEO_my_WP {
 			$addons_status = array();
 		}
 
-		// we get the addons data from database only in front-end.
-		// We do this to saved a bit on performance.
+		/**
+		 * We get the addons data from database only in front-end.
+		 * 
+		 * while in the back-end the addons data is being collected 
+		 * 
+		 * and saved in the options table to later be used in the front-end.
+		 * 
+		 * We do this to prevent some addons data from generating on every page load.
+		 *
+		 */
 		if ( ! IS_ADMIN ) {
 
 			$addons_data = get_option( 'gmw_addons_data' );
@@ -315,12 +338,12 @@ class GEO_my_WP {
 
 		// addons statuses: active, inactive or disabled.
 		$this->addons_status = $addons_status;
-
-		// filter url prefix
+		
 		$this->url_prefix     = esc_attr( apply_filters( 'gmw_form_url_prefix', $this->url_prefix ) );
 		$this->ajax_url       = admin_url( 'admin-ajax.php', is_ssl() ? 'admin' : 'http' );
 		$this->internal_cache = apply_filters( 'gmw_internal_cache_enabled', $this->internal_cache );
 		$this->internal_cache_expiration = apply_filters( 'gmw_internal_cache_expiration', $this->internal_cache_expiration );
+		$this->is_mobile 	  = ( function_exists( 'wp_is_mobile' ) && wp_is_mobile() ) ? true : false;
 	}
 
 	/**
@@ -340,7 +363,7 @@ class GEO_my_WP {
 		include( 'includes/class-gmw-helper.php' );
 		include( 'includes/class-gmw-forms-helper.php' );
 		include( 'includes/gmw-functions.php' );
-		include( 'includes/class-gmw-register-addon.php' );
+		include( 'includes/class-gmw-addon.php' );
 		include( 'includes/class-gmw-location.php' );
 		include( 'includes/gmw-location-functions.php' );
 		include( 'includes/gmw-user-location-functions.php' );
@@ -349,7 +372,6 @@ class GEO_my_WP {
 		include( 'includes/class-gmw-cron.php' );
 		include( 'includes/gmw-enqueue-scripts.php' );
 		include( 'includes/location-form/includes/class-gmw-location-form.php' );
-		include( 'includes/gmw-widgets.php' );
 		include( 'includes/template-functions/class-gmw-search-form-helper.php' );
 		include( 'includes/template-functions/class-gmw-template-functions-helper.php' );
 		include( 'includes/template-functions/gmw-template-functions.php' );
@@ -358,9 +380,11 @@ class GEO_my_WP {
 		include( 'includes/class-gmw-form.php' );
 		include( 'includes/gmw-shortcodes.php' );
 
+		
+		//sdf();
 		// load core add-ons
 		self::$instance->load_core_addons();
-		
+				
 		//include admin files
 		if ( IS_ADMIN ) {
 			include( GMW_PATH . '/includes/admin/class-gmw-admin.php' ); 	
@@ -375,16 +399,24 @@ class GEO_my_WP {
 	 * @since 2.4
 	 */
 	public function actions() {
-		add_action( 'init', array( $this, 'init' ) );
+
+		add_action( 'plugins_loaded', array( $this, 'loaded' ) );
+		add_action( 'widgets_init', array( $this, 'widgets_init' ), 5 );
 		add_action( 'admin_init', array( $this, 'update' ) );
 	}
 	
-	public function init() {
-		$this->is_mobile = ( function_exists( 'wp_is_mobile' ) && wp_is_mobile() ) ? true : false;
+	/**
+	 * Loads widgets.
+	 */
+	public function widgets_init() {
+
+		include( 'includes/class-gmw-widget.php' );
+		include( 'includes/widgets/class-gmw-search-form-widget.php' );
 	}
 
 	/**
-	 * Verify if add-on is active
+	 * Verify if add-on is active ( deprecated )
+	 * 
 	 * @param  [array] $addon
 	 * @return [boolean]      
 	 */
