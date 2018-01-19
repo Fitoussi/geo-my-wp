@@ -262,7 +262,7 @@ class GEO_my_WP {
 		// initializing add-ons that registered using GMW_Addon class
 		if ( class_exists( 'GMW_Addon' ) ) {
 			GMW_Addon::init_addons();
-		}		
+		}
 	}
 	
 	/**
