@@ -161,25 +161,6 @@ class GEO_my_WP {
 	private static $instance;
 	
 	/**
-	 * Runs once GEO my WP Loaded
-	 *
-	 * @return void
-	 */
-	public static function loaded() {
-
-		// load textdomain
-		load_plugin_textdomain( 'GMW', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-
-		// fires when GEO my WP has loaded.
-		do_action( 'gmw_loaded' );
-
-		// initializing add-ons that registered using GMW_Addon class
-		if ( class_exists( 'GMW_Addon' ) ) {
-			GMW_Addon::init_addons();
-		}		
-	}
-
-	/**
 	 * 
 	 * GEO_my_WP Instance
 	 *
@@ -263,6 +244,25 @@ class GEO_my_WP {
 		define( 'GMW_IMAGES', GMW_URL . '/assets/images' );
 		define( 'GMW_FILE', __FILE__ );
 		define( 'GMW_BASENAME', plugin_basename( GMW_FILE ) );	
+	}
+	
+	/**
+	 * Runs once GEO my WP Loaded
+	 *
+	 * @return void
+	 */
+	public static function loaded() {
+
+		// load textdomain
+		load_plugin_textdomain( 'GMW', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+
+		// fires when GEO my WP has loaded.
+		do_action( 'gmw_loaded' );
+
+		// initializing add-ons that registered using GMW_Addon class
+		if ( class_exists( 'GMW_Addon' ) ) {
+			GMW_Addon::init_addons();
+		}		
 	}
 	
 	/**
