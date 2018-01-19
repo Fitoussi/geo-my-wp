@@ -884,8 +884,8 @@ class GMW_Location {
 		         *
 		         * the query instead of running multiple prepares.
 		         */
-	        	$lat 	= esc_sql( $args['lat'] );
-	        	$lng 	= esc_sql( $args['lng'] );
+	        	$lat = esc_sql( $args['lat'] );
+	        	$lng = esc_sql( $args['lng'] );
 	        	
 	        	$clauses['distance'] = ", ROUND( {$earth_radius} * acos( cos( radians( {$lat} ) ) * cos( radians( gmw_locations.latitude ) ) * cos( radians( gmw_locations.longitude ) - radians( {$lng} ) ) + sin( radians( {$lat} ) ) * sin( radians( gmw_locations.latitude ) ) ),1 ) AS distance";
 
@@ -920,7 +920,7 @@ class GMW_Location {
 	        		$clauses['where'] .= " AND gmw_locations.latitude BETWEEN {$bet_lat1} AND {$bet_lat2}";
 	            	$clauses['where'] .= " AND gmw_locations.longitude BETWEEN {$bet_lng1} AND {$bet_lng2} ";
 
-	        	   $clauses['having'] = "HAVING distance <= {$args['radius']} OR distance IS NULL";
+	        	   $clauses['having'] = "HAVING distance <= {$radius} OR distance IS NULL";
 	        	}
 
 	        	$clauses['orderby'] = "ORDER BY distance ASC";
