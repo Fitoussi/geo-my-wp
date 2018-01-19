@@ -82,38 +82,451 @@ class GMW_Form_Editor {
 	 * 
 	 * @return [type] [description]
 	 */
-	public function form_groups() {
+	public function fields_groups() {
 
 		// settings groups
 		$groups = apply_filters( 'gmw_form_settings_groups', array(
 			array( 
-                'id'    	=> 'hidden',
+				'slug'    	=> 'hidden',
                 'label' 	=> __( 'hidden', 'GMW' ),
+                'fields'	=> array(),
                 'priority'  => 1
             ),
             array( 
-                'id'    	=> 'page_load_results',
+            	'slug'    	=> 'page_load_results',
                 'label' 	=> __( 'Page Load Results', 'GMW' ),
+                'fields'	=> array(
+                	'enabled'  => array(
+						'name'  		=> 'enabled',
+						'type'     		=> 'checkbox',
+						'default'   	=> '',
+						'label' 		=> __( 'Enable Page Load Features', 'GMW' ),
+						'desc'  		=> __( 'Check this checkbox to dynamically display all existing posts on page load. You can filter the initial search result using the rest of the filters below.', 'GMW' ),
+						'cb_label' 		=> __( 'Enable', 'GMW' ),
+						'attributes'  	=> '',
+						'priority'		=> 10
+					),
+					'user_location'	 => array(
+						'name'     		=> 'user_location',
+						'type'     		=> 'checkbox',
+						'default'      	=> '',
+						'label'    		=> __( "Visitor's Current Location Filter", "GMW" ),
+						'desc'     		=> __( "GEO my WP will first check for the visitor's current location on page load. And If exists, the locations will be displayed based on that. Note, that the address filter below will be ingnored if the visitor's location exists.", 'GMW' ),
+						'cb_label' 		=> __( 'Enable', 'GMW' ),
+						'attributes'  	=> '',
+						'priority'		=> 20
+					),
+					'address_filter' => array(
+						'name'        	=> 'address_filter',
+						'type'			=> 'text',
+						'default'       => '',
+						'placeholder' 	=> __( 'Enter an address', 'GMW' ),
+						'label'       	=> __( 'Address Filter', 'GMW' ),
+						'desc'        	=> __( "Enter an address if you would like to search for locations neaby it when the form first loads.", 'GMW' ),
+						'attributes'  	=> array( 'size' => '25' ),
+						'priority'		=> 30
+					),
+					'radius'         => array(
+						'name'        	=> 'radius',
+						'type'			=> 'text',
+						'default'       => '',
+						'placeholder' 	=> __( 'Ex. 100', 'GMW' ),
+						'label'       	=> __( 'Distance ( radius )', 'GMW' ),
+						'desc'        	=> __( 'Enter a radius to search within. The radius is being used only when an address filter provided or the visitor\'s location exists.', 'GMW' ),
+						'attributes'  	=> array(),
+						'priority'		=> 40
+					),
+					'units'           => array(
+						'name'    		=> 'units',
+						'type'    		=> 'select',
+						'default'       => 'imperial',
+						'label'   		=> __( 'Units', 'GMW' ),
+						'desc'    		=> __( 'Select the distance units that you would like to use.', 'GMW' ),
+						'options' 		=> array(
+							'imperial' 	=> __( 'Miles', 'GMW' ),
+							'metric'   	=> __( 'Kilometers', 'GMW' )
+						),
+						'attributes'  	=> array(),
+						'priority'		=> 50
+					),
+					'city_filter' 	=> array(
+						'name'        	=> 'city_filter',
+						'type'			=> 'text',
+						'default'       => '',
+						'placeholder' 	=> __( 'Enter city', 'GMW'),
+						'label'       	=> __( 'City Filter', 'GMW' ),
+						'desc'        	=> __( 'Filter locations by city ( leave blank for no filtering ). When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching city name.', 'GMW' ),
+						'attributes'  	=> array(),
+						'priority'		=> 60
+					),
+					'state_filter' 	=> array(
+						'name'        	=> 'state_filter',
+						'type'			=> 'text',
+						'default'       => '',
+						'placeholder' 	=> __( 'Enter state', 'GMW'),
+						'label'       	=> __( 'State Filter', 'GMW' ),
+						'desc'        	=> __( 'Filter locations by state ( leave blank for no filtering ). When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching state name.', 'GMW' ),
+						'attributes'  	=> array( 'size' => '25' ),
+						'priority'		=> 70
+					),
+					'zipcode_filter' => array(
+						'name'        	=> 'zipcode_filter',
+						'type'			=> 'text',
+						'default'       => '',
+						'placeholder' 	=> __( 'Enter postcode', 'GMW'),
+						'label'       	=> __( 'Zipcode Filter', 'GMW' ),
+						'desc'        	=> __( 'Filter locations by zipcode ( leave blank for no filtering ). When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching zipcode.', 'GMW' ),
+						'attributes'  	=> array( 'size' => '25' ),
+						'priority'		=> 80
+					),
+					'country_filter' 	=> array(
+						'name'        	=> 'country_filter',
+						'type'			=> 'select',
+						'default'       => '',
+						'placeholder' 	=> __( 'Enter country', 'GMW'),
+						'label'       	=> __( 'Country Filter', 'GMW' ),
+						'desc'        	=> __( 'Filter locations by country ( leave blank for no filtering ). When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching country name.', 'GMW' ),
+						'options'		=> gmw_get_countries_list_array( 'Disable' ),
+						'attributes'  	=> array( 'size' => '25' ),
+						'priority'		=> 90
+					),
+					'display_results'  => array(
+						'name'     		=> 'display_results',
+						'type'     		=> 'checkbox',
+						'default'       => '',
+						'label'    		=> __( 'Display list of results', 'GMW' ),
+						'desc'     		=> __( 'Display list of results.', 'GMW' ),
+						'cb_label' 		=> __( 'Enable', 'GMW' ),
+						'attributes' 	=> array(),
+						'priority'		=> 100
+					),
+					'display_map'    => array(
+						'name'    		=> 'display_map',
+						'type'    		=> 'select',
+						'default'       => '',
+						'label'   		=> __( 'Display Map', 'GMW' ),
+						'desc'    		=> __( 'Disable the map completly, display it above the list of result, or display it anywhere on the page using the shortcode <code>[gmw map=\"form ID\"]</code>.', 'GMW' ),
+						'options' 		=> array(
+							''        	=> __( 'Disable map', 'GMW' ),
+							'results'   => __( 'Above the list of result', 'GMW' ),
+							'shortcode' => __( 'Using shortcode', 'GMW' ),
+						),
+						'priority'		=> 110
+					),
+					'per_page'       => array(
+						'name'        	=> 'per_page',
+						'type'    		=> 'text',
+						'default'       => '5,10,15,25',
+						'placeholder' 	=> __( 'Enter values', 'GMW' ),
+						'label'       	=> __( 'Results Per Page', 'GMW' ),
+						'desc'        	=> __( 'Set the per page value of the initial form load. Enter multiple values, comma separated, to display a per page select dropdown menu in the search results, or enter a single value to set a default per-page value.', 'GMW' ),
+						'attributes'  	=> array(),
+						'priority'		=> 120
+					)
+                ),
                 'priority'  => 10
             ),
             array( 
-            	'id'		=> 'search_form',
+            	'slug'		=> 'search_form',
 				'label'		=> __( 'Search Form', 'GMW' ),
+				'fields'	=> array(
+					'form_template'  => array(
+						'name'     		=> 'form_template',
+						'type'     		=> 'select',
+						'default'       => '',
+						'label'    		=> __( 'Search Form Template', 'GMW' ),
+						'desc'  		=> __( 'Select The search form template file.', 'GMW' ),		
+						'options'		=> array( '' => __( 'Disabled', 'GMW' ) ) + GMW_Helper::get_templates( $this->form['addon'], 'search-forms' ),
+						'attributes' 	=> array(),
+						'priority'		=> 10
+					),
+					'address_field' => array(
+						'name'     		=> 'address_field',
+						'type'     		=> 'function',
+						'default'       => '',
+						'label'    		=> __( 'Address Field', 'GMW' ),
+						'cb_label' 		=> '',
+						'desc'     		=> __( "<ul><li>- Label - enter a lable that you would like to use or leave blank for no label.</li><li>- Placeholder - enter a placeholder that you would like to use or leave blank for no placeholder.</li><li>Mandatory - check to make the field mandatory</li><li>- Address autocomplete - check to enable Google address autocomplete feature.</li><li>- Locator button - check to display a locator button inside the address field.</li><li>-Locator submit - check to dynaimcally submit the form when the address was found using the locator button.</li></ul>" , 'GMW' ),
+						'attributes' 	=> array(),
+						'priority'		=> 20       
+					),
+					'locator_button'    => array(
+						'name'    		=> 'locator_button',
+						'type'    		=> 'fields_group',
+						'label'   		=> __( 'Locator Button', 'GMW' ),
+						'desc'    		=> __( '<p>Using the locator button the visitor can dynamically retrive his current location.</p><p>- Select "disabled" to disable the locator button.</p><p>- Select "Image" and select an image that will be used as the locator button.</p><p>- Select "Text" and enter any text that you would like to use as the locator button.</p><p>- Check the "Auto form Submission" text box to dynamically submit the search form once the visitors locator was found.</p>', 'GMW' ),
+						'fields'		=> array(
+							array(
+								'name'     		=> 'locator',
+								'type'     		=> 'select',
+								'default'       => '',
+								'label'    		=> __( 'Usage', 'GMW' ),
+								'attributes' 	=> array(),
+								'options'		=> array(
+									'disabled'	=> __( 'Disabled', 'GMW' ),
+									'text'		=> __( 'Text', 'GMW' ),
+									'image'		=> __( 'Image', 'GMW' )
+								),
+								'priority'		=> 5
+							),
+							array(
+								'name'     		=> 'locator_text',
+								'type'     		=> 'text',
+								'default'       => '',
+								'label'    		=> __( 'Label', 'GMW' ),				
+								'attributes' 	=> array(),
+								'priority'		=> 10
+							),
+							array(
+								'name'     		=> 'locator_image',
+								'type'     		=> 'radio',
+								'default'       => '',
+								'label'    		=> __( 'Image', 'GMW' ),
+								'options'		=> $this->locator_options(),
+								'attributes' 	=> array(),
+								'priority'		=> 15
+							),
+							array(
+								'name'     		=> 'locator_submit',
+								'type'     		=> 'checkbox',
+								'default'       => '',
+								'cb_label'		=> __( 'Auto submission', 'GMW' ),			
+								'attributes' 	=> array(),
+								'priority'		=> 20
+							),
+						),
+						'attributes'  	=> '',
+						'optionsbox'	=> 1,	
+						'priority'		=> 30,
+					),
+					'radius'          => array(
+						'name'        	=> 'radius',
+						'type'			=> 'text',
+						'default'       => '5,10,15,25,50,100',
+						'placeholder' 	=> __( 'Radius values', 'GMW' ),
+						'label'       	=> __( 'Distance ( radius )', 'GMW' ),
+						'desc'        	=> __( "Enter multiple distance values, comma separated, to display a select dropdown menu in the search form. Or enter a single value to set a default distance value.", 'GMW' ),
+						'attributes'  	=> array( 'size' => '25' ),
+						'priority'		=> 40
+					),
+					'units'       => array(
+						'name'    		=> 'units',
+						'type'    		=> 'select',
+						'default'       => 'both',
+						'label'   		=> __( 'Distance Units', 'GMW' ),
+						'desc'    		=> __( 'Choose between miles or kilometers to set a default units value, or select "both" to display a select dropdown menu in the search form.', 'GMW' ),
+						'options' 		=> array(
+							'both'     => __( 'Both', 'GMW' ),
+							'imperial' => __( 'Miles', 'GMW' ),
+							'metric'   => __( 'Kilometers', 'GMW' )
+						),
+						'attributes'  	=> '',
+						'priority'		=> 50
+					)
+				),
 				'priority'	=> 20
         	),
         	array( 
-            	'id'		=> 'form_submission',
+        		'slug'		=> 'form_submission',
 				'label'		=> __( 'Form Submission', 'GMW' ),
+				'fields'	=> array(
+					'results_page'   => array(
+						'name'    		=> 'results_page',
+						'type'    		=> 'select',
+						'default'       => '',
+						'label'   		=> __( 'Results Page', 'GMW' ),
+						'desc'    		=> __( "The results page displays the search results in the selected page when using the \"GMW Search Form\" widget, or when you wish to have the search form in one page and the results showing in a different page. To use this feature, select the results page from the dropdown menu and paste the shortcode <code>[gmw form=\"results\"]</code> into the content area of that page. Otherwise, select \"Same Page\" to display both the search form and search results in the same page.", 'GMW' ),
+						'options' 		=> array( '' => __( ' -- Same Page -- ', 'GMW' ) ) + GMW_Form_Settings_Helper::get_pages(),
+						'attributes'  	=> '',
+						'priority'		=> 10
+					),
+					'display_results'  => array(
+						'name'     		=> 'display_results',
+						'type'     		=> 'checkbox',
+						'default'       => '',
+						'label'    		=> __( 'Display list of results', 'GMW' ),
+						'desc'     		=> __( 'Check this checkbox to output a list of results on form submission.', 'GMW' ),
+						'cb_label' 		=> __( 'Enable', 'GMW' ),
+						'attributes' 	=> array(),
+						'priority'		=> 30
+					),
+					'display_map'      => array(
+						'name'    		=> 'display_map',
+						'type'    		=> 'select',	
+						'default'       => '',
+						'label'   		=> __( 'Display Map', 'GMW' ),
+						'desc'    		=> __( "Select if to disable the map completly, display it above the list of result, or display it anywhere on the page using the shortcode <code>[gmw map=\"form ID\"]</code>.", 'GMW' ),
+						'options' 		=> array(
+							''          => __( 'Disable map', 'GMW' ),
+							'results'   => __( 'Above the list of result', 'GMW' ),
+							'shortcode' => __( 'Using shortcode', 'GMW' ),
+						),
+						'attributes' 	=> array(),
+						'priority'		=> 40
+					)
+				),
 				'priority'	=> 30
         	),
         	array( 
-            	'id'		=> 'search_results',
+        		'slug'		=> 'search_results',
 				'label'		=> __( 'Search Results', 'GMW' ),
+				'fields'	=> array(
+					'results_template' => array(
+						'name'  		=> 'results_template',
+						'type'     		=> 'select',
+						'default'   	=> 'gray',
+						'label' 		=> __( 'Results Template', 'GMW' ),
+						'desc'  		=> __( 'Select the search results template file.', 'GMW' ),
+						'options'		=> GMW_Helper::get_templates( $this->form['addon'], 'search-results' ),
+						'attributes' 	=> array(),
+						'priority'		=> 10
+					),
+					'per_page'         => array(
+						'name'        	=> 'per_page',
+						'type'			=> 'text',
+						'default'       => '5,10,15,25',
+						'placeholder' 	=> __( 'Enter values', 'GMW' ),
+						'label'       	=> __( 'Results Per Page', 'GMW' ),
+						'desc'        	=> __( 'Enter multiple values, comma separated, to display a per page select dropdown menu in the search results, or enter a single value to set a default per-page value.', 'GMW' ),
+						'attributes' 	=> array(),
+						'priority'		=> 20
+					),
+					'image'   		  => array(
+						'name'     		=> 'image',
+						'type'     		=> 'function',
+						'default'       => '',
+						'label'    		=> __( 'Image', 'GMW' ),
+						'desc'     		=> __( '<p>Check this checkbox to display the image of each location in the list of results, then enter the width and height in pixels ( enter numeric value only, without "px" ).</p>', 'GMW' ),
+						'attributes' 	=> array(),
+						'priority'		=> 30
+					),
+					/*
+					'by_driving'       => array(
+						'name'       	=> 'by_driving',
+						'type'       	=> 'checkbox',
+						'default'       => '',
+						'label'      	=> __( 'Driving Distance', 'GMW' ),
+						'cb_label'   	=> __( 'Enable', 'GMW' ),
+						'desc'       	=> __( 'While the results showing the radius distance from the user to each of the locations, this feature let you display the exact driving distance. Please note that each driving distance request counts with google API when you can have 2500 requests per day.', 'GMW' ),
+						'attributes' 	=> array(),
+						'priority'		=> 35
+					),
+					*/
+					'directions_link'   => array(
+						'name'       	=> 'directions_link',
+						'type'       	=> 'checkbox',
+						'default'       => '',
+						'label'      	=> __( 'Directions Link', 'GMW' ),
+						'cb_label'   	=> __( 'Enable', 'GMW' ),
+						'desc'       	=> __( 'Display directions link, that will open a new window showing the driving directions, in each location in the list of results.', 'GMW' ),
+						'attributes' 	=> array(),
+						'priority'		=> 40
+					)
+				),
 				'priority'	=> 40
         	),
         	array( 
-            	'id'		=> 'results_map',
+        		'slug'		=> 'results_map',
 				'label'		=> __( 'Map', 'GMW' ),
+				'fields'	=> array(
+					'map_width'  => array(
+						'name'        	=> 'map_width',
+						'type'			=> 'text',
+						'default'       => '100%',
+						'placeholder' 	=> __( 'Map width in px or %', 'GMW' ),
+						'label'       	=> __( 'Map width', 'GMW' ),
+						'desc'        	=> __( 'Enter the map\'s width in pixels or percentage ( ex. 100% or 200px ).', 'GMW' ),
+						'attributes'  	=> array(),
+						'priority'		=> 10
+					),
+					'map_height' => array(
+						'name'        	=> 'map_height',
+						'type'			=> 'text',
+						'default'       => '300px',
+						'placeholder' 	=> __( 'Map height in px or %', 'GMW' ),
+						'label'       	=> __( 'Map height', 'GMW' ),
+						'desc'        	=> __( 'Enter the map\'s height in pixels or percentage ( ex. 100% or 200px ).', 'GMW' ),
+						'attributes'  	=> array(),
+						'priority'		=> 20
+					),
+					'map_type'   => array(
+						'name'    		=> 'map_type',
+						'type'    		=> 'select',
+						'default'       => 'ROADMAP',
+						'label'   		=> __( 'Map type', 'GMW' ),
+						'desc'    		=> __( 'Select the map type.', 'GMW' ),
+						'options' 		=> array(
+							'ROADMAP'   	=> __( 'ROADMAP', 'GMW' ),
+							'SATELLITE' 	=> __( 'SATELLITE', 'GMW' ),
+							'HYBRID'    	=> __( 'HYBRID', 'GMW' ),
+							'TERRAIN'   	=> __( 'TERRAIN', 'GMW' )
+						),
+						'attributes'  	=> '',
+						'priority'		=> 30
+					),
+					'zoom_level' => array(
+						'name'    		=> 'zoom_level',
+						'default'       => 'auto',
+						'type'    		=> 'select',
+						'label'   		=> __( 'Zoom level', 'GMW' ),	
+						'desc'    		=> __( 'Select "Auto zoom" to fit all the markers on the map, or select a numeric value that will be used to zoom into the marker which represents the visitor\'s current location on the map.', 'GMW' ),		
+						'options' 		=> array(
+							'auto' 	=> __( 'Auto Zoom', 'GMW' ),
+							'1'    	=> '1',
+							'2'    	=> '2',
+							'3'    	=> '3',
+							'4'    	=> '4',
+							'5'    	=> '5',
+							'6'    	=> '6',
+							'7'    	=> '7',
+							'8'    	=> '8',
+							'9'    	=> '9',
+							'10'   	=> '10',
+							'11'   	=> '11',
+							'12'   	=> '12',
+							'13'   	=> '13',
+							'14'   	=> '14',
+							'15'   	=> '15',
+							'16'   	=> '16',
+							'17'   	=> '17',
+							'18'   	=> '18',
+							'19'   	=> '19',
+							'20'   	=> '20',
+						),
+						'attributes'  	=> '',
+						'priority'		=> 40
+					),
+					/*'yl_icon'     	=> array(
+						'name'        	=> 'yl_icon',
+						'type'  	  	=> 'checkbox',
+						'default'       => '',
+						'label' 	  	=> __( 'Open "User Location" info window', 'GMW'),
+						'cb_label'    	=> __( 'Enable', 'GMW'),
+						'desc'        	=> __( "Dynamically open on page load the info window of the marker which represents the user's location.", 'GMW' ),
+						'attributes'  	=> array(),
+						'priority'		=> 25
+					),
+					'map_frame'  	=> array(
+						'name'       	=> 'map_frame',
+						'type'       	=> 'checkbox',
+						'default'       => '',
+						'label'      	=> __( 'Map frame', 'GMW' ),
+						'cb_label'   	=> __( 'Enable', 'GMW' ),
+						'desc'       	=> __( 'show frame around the map?', 'GMW' ),
+						'attributes' 	=> array(),
+						'priority'		=> 30
+					),
+					'no_results_enabled'  	=> array(
+						'name'       	=> 'no_results_enabled',
+						'type'       	=> 'checkbox',
+						'default'       => '',
+						'label'      	=> __( 'Show if no results', 'GMW' ),
+						'cb_label'   	=> __( 'Enable', 'GMW' ),
+						'desc'       	=> __( 'Display map even if no results were found.', 'GMW' ),
+						'attributes' 	=> array(),
+						'priority'		=> 35
+					), */
+				),
 				'priority'	=> 50
         	),
         ), $this->form );
@@ -126,430 +539,46 @@ class GMW_Form_Editor {
 	}
 
 	/**
-	 * Form fields
+	 * Get fields
 	 * 
 	 * @return [type] [description]
 	 */
-	public function fields() {
+	public function get_fields() {
 
-		// settings fields
-		return array(
-			'hidden' => array(
-				array(),
-			),
-			'page_load_results'	=> array(
-				'enabled'  => array(
-					'name'  		=> 'enabled',
-					'type'     		=> 'checkbox',
-					'default'   	=> '',
-					'label' 		=> __( 'Enable Page Load Features', 'GMW' ),
-					'desc'  		=> __( 'Check this checkbox to dynamically display all existing posts on page load. You can filter the initial search result using the rest of the filters below.', 'GMW' ),
-					'cb_label' 		=> __( 'Enable', 'GMW' ),
-					'attributes'  	=> '',
-					'priority'		=> 10
-				),
-				'user_location'	 => array(
-					'name'     		=> 'user_location',
-					'type'     		=> 'checkbox',
-					'default'      	=> '',
-					'label'    		=> __( "Visitor's Current Location Filter", "GMW" ),
-					'desc'     		=> __( "GEO my WP will first check for the visitor's current location on page load. And If exists, the locations will be displayed based on that. Note, that the address filter below will be ingnored if the visitor's location exists.", 'GMW' ),
-					'cb_label' 		=> __( 'Enable', 'GMW' ),
-					'attributes'  	=> '',
-					'priority'		=> 20
-				),
-				'address_filter' => array(
-					'name'        	=> 'address_filter',
-					'type'			=> 'text',
-					'default'       => '',
-					'placeholder' 	=> __( 'Enter an address', 'GMW' ),
-					'label'       	=> __( 'Address Filter', 'GMW' ),
-					'desc'        	=> __( "Enter an address if you would like to search for locations neaby it when the form first loads.", 'GMW' ),
-					'attributes'  	=> array( 'size' => '25' ),
-					'priority'		=> 30
-				),
-				'radius'         => array(
-					'name'        	=> 'radius',
-					'type'			=> 'text',
-					'default'       => '',
-					'placeholder' 	=> __( 'Ex. 100', 'GMW' ),
-					'label'       	=> __( 'Distance ( radius )', 'GMW' ),
-					'desc'        	=> __( 'Enter a radius to search within. The radius is being used only when an address filter provided or the visitor\'s location exists.', 'GMW' ),
-					'attributes'  	=> array(),
-					'priority'		=> 40
-				),
-				'units'           => array(
-					'name'    		=> 'units',
-					'type'    		=> 'select',
-					'default'       => 'imperial',
-					'label'   		=> __( 'Units', 'GMW' ),
-					'desc'    		=> __( 'Select the distance units that you would like to use.', 'GMW' ),
-					'options' 		=> array(
-						'imperial' 	=> __( 'Miles', 'GMW' ),
-						'metric'   	=> __( 'Kilometers', 'GMW' )
-					),
-					'attributes'  	=> array(),
-					'priority'		=> 50
-				),
-				'city_filter' 	=> array(
-					'name'        	=> 'city_filter',
-					'type'			=> 'text',
-					'default'       => '',
-					'placeholder' 	=> __( 'Enter city', 'GMW'),
-					'label'       	=> __( 'City Filter', 'GMW' ),
-					'desc'        	=> __( 'Filter locations by city ( leave blank for no filtering ). When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching city name.', 'GMW' ),
-					'attributes'  	=> array(),
-					'priority'		=> 60
-				),
-				'state_filter' 	=> array(
-					'name'        	=> 'state_filter',
-					'type'			=> 'text',
-					'default'       => '',
-					'placeholder' 	=> __( 'Enter state', 'GMW'),
-					'label'       	=> __( 'State Filter', 'GMW' ),
-					'desc'        	=> __( 'Filter locations by state ( leave blank for no filtering ). When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching state name.', 'GMW' ),
-					'attributes'  	=> array( 'size' => '25' ),
-					'priority'		=> 70
-				),
-				'zipcode_filter' => array(
-					'name'        	=> 'zipcode_filter',
-					'type'			=> 'text',
-					'default'       => '',
-					'placeholder' 	=> __( 'Enter postcode', 'GMW'),
-					'label'       	=> __( 'Zipcode Filter', 'GMW' ),
-					'desc'        	=> __( 'Filter locations by zipcode ( leave blank for no filtering ). When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching zipcode.', 'GMW' ),
-					'attributes'  	=> array( 'size' => '25' ),
-					'priority'		=> 80
-				),
-				'country_filter' 	=> array(
-					'name'        	=> 'country_filter',
-					'type'			=> 'select',
-					'default'       => '',
-					'placeholder' 	=> __( 'Enter country', 'GMW'),
-					'label'       	=> __( 'Country Filter', 'GMW' ),
-					'desc'        	=> __( 'Filter locations by country ( leave blank for no filtering ). When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching country name.', 'GMW' ),
-					'options'		=> gmw_get_countries_list_array( 'Disable' ),
-					'attributes'  	=> array( 'size' => '25' ),
-					'priority'		=> 90
-				),
-				'display_results'  => array(
-					'name'     		=> 'display_results',
-					'type'     		=> 'checkbox',
-					'default'       => '',
-					'label'    		=> __( 'Display list of results', 'GMW' ),
-					'desc'     		=> __( 'Display list of results.', 'GMW' ),
-					'cb_label' 		=> __( 'Enable', 'GMW' ),
-					'attributes' 	=> array(),
-					'priority'		=> 100
-				),
-				'display_map'    => array(
-					'name'    		=> 'display_map',
-					'type'    		=> 'select',
-					'default'       => '',
-					'label'   		=> __( 'Display Map', 'GMW' ),
-					'desc'    		=> __( 'Disable the map completly, display it above the list of result, or display it anywhere on the page using the shortcode <code>[gmw map=\"form ID\"]</code>.', 'GMW' ),
-					'options' 		=> array(
-						''        	=> __( 'Disable map', 'GMW' ),
-						'results'   => __( 'Above the list of result', 'GMW' ),
-						'shortcode' => __( 'Using shortcode', 'GMW' ),
-					),
-					'priority'		=> 110
-				),
-				'per_page'       => array(
-					'name'        	=> 'per_page',
-					'type'    		=> 'text',
-					'default'       => '5,10,15,25',
-					'placeholder' 	=> __( 'Enter values', 'GMW' ),
-					'label'       	=> __( 'Results Per Page', 'GMW' ),
-					'desc'        	=> __( 'Set the per page value of the initial form load. Enter multiple values, comma separated, to display a per page select dropdown menu in the search results, or enter a single value to set a default per-page value.', 'GMW' ),
-					'attributes'  	=> array(),
-					'priority'		=> 120
-				)
-			),
-			'search_form' => array(
-				'form_template'  => array(
-					'name'     		=> 'form_template',
-					'type'     		=> 'select',
-					'default'       => '',
-					'label'    		=> __( 'Search Form Template', 'GMW' ),
-					'desc'  		=> __( 'Select The search form template file.', 'GMW' ),		
-					'options'		=> array( '' => __( 'Disabled', 'GMW' ) ) + GMW_Helper::get_templates( $this->form['addon'], 'search-forms' ),
-					'attributes' 	=> array(),
-					'priority'		=> 10
-				),
-				'address_field' => array(
-					'name'     		=> 'address_field',
-					'type'     		=> 'function',
-					'default'       => '',
-					'label'    		=> __( 'Address Field', 'GMW' ),
-					'cb_label' 		=> '',
-					'desc'     		=> __( "<ul><li>- Label - enter a lable that you would like to use or leave blank for no label.</li><li>- Placeholder - enter a placeholder that you would like to use or leave blank for no placeholder.</li><li>Mandatory - check to make the field mandatory</li><li>- Address autocomplete - check to enable Google address autocomplete feature.</li><li>- Locator button - check to display a locator button inside the address field.</li><li>-Locator submit - check to dynaimcally submit the form when the address was found using the locator button.</li></ul>" , 'GMW' ),
-					'attributes' 	=> array(),
-					'priority'		=> 20       
-				),
-				'locator_button'    => array(
-					'name'    		=> 'locator_button',
-					'type'    		=> 'fields_group',
-					'label'   		=> __( 'Locator Button', 'GMW' ),
-					'desc'    		=> __( '<p>Using the locator button the visitor can dynamically retrive his current location.</p><p>- Select "disabled" to disable the locator button.</p><p>- Select "Image" and select an image that will be used as the locator button.</p><p>- Select "Text" and enter any text that you would like to use as the locator button.</p><p>- Check the "Auto form Submission" text box to dynamically submit the search form once the visitors locator was found.</p>', 'GMW' ),
-					'fields'		=> array(
-						array(
-							'name'     		=> 'locator',
-							'type'     		=> 'select',
-							'default'       => '',
-							'label'    		=> __( 'Usage', 'GMW' ),
-							'attributes' 	=> array(),
-							'options'		=> array(
-								'disabled'	=> __( 'Disabled', 'GMW' ),
-								'text'		=> __( 'Text', 'GMW' ),
-								'image'		=> __( 'Image', 'GMW' )
-							),
-							'priority'		=> 5
-						),
-						array(
-							'name'     		=> 'locator_text',
-							'type'     		=> 'text',
-							'default'       => '',
-							'label'    		=> __( 'Label', 'GMW' ),				
-							'attributes' 	=> array(),
-							'priority'		=> 10
-						),
-						array(
-							'name'     		=> 'locator_image',
-							'type'     		=> 'radio',
-							'default'       => '',
-							'label'    		=> __( 'Image', 'GMW' ),
-							'options'		=> $this->locator_options(),
-							'attributes' 	=> array(),
-							'priority'		=> 15
-						),
-						array(
-							'name'     		=> 'locator_submit',
-							'type'     		=> 'checkbox',
-							'default'       => '',
-							'cb_label'		=> __( 'Auto submission', 'GMW' ),			
-							'attributes' 	=> array(),
-							'priority'		=> 20
-						),
-					),
-					'attributes'  	=> '',
-					'optionsbox'	=> 1,	
-					'priority'		=> 30,
-				),
-				'radius'          => array(
-					'name'        	=> 'radius',
-					'type'			=> 'text',
-					'default'       => '5,10,15,25,50,100',
-					'placeholder' 	=> __( 'Radius values', 'GMW' ),
-					'label'       	=> __( 'Distance ( radius )', 'GMW' ),
-					'desc'        	=> __( "Enter multiple distance values, comma separated, to display a select dropdown menu in the search form. Or enter a single value to set a default distance value.", 'GMW' ),
-					'attributes'  	=> array( 'size' => '25' ),
-					'priority'		=> 40
-				),
-				'units'       => array(
-					'name'    		=> 'units',
-					'type'    		=> 'select',
-					'default'       => 'both',
-					'label'   		=> __( 'Distance Units', 'GMW' ),
-					'desc'    		=> __( 'Choose between miles or kilometers to set a default units value, or select "both" to display a select dropdown menu in the search form.', 'GMW' ),
-					'options' 		=> array(
-						'both'     => __( 'Both', 'GMW' ),
-						'imperial' => __( 'Miles', 'GMW' ),
-						'metric'   => __( 'Kilometers', 'GMW' )
-					),
-					'attributes'  	=> '',
-					'priority'		=> 50
-				)
-			),
-			'form_submission' => array(
-				'results_page'   => array(
-					'name'    		=> 'results_page',
-					'type'    		=> 'select',
-					'default'       => '',
-					'label'   		=> __( 'Results Page', 'GMW' ),
-					'desc'    		=> __( "The results page displays the search results in the selected page when using the \"GMW Search Form\" widget, or when you wish to have the search form in one page and the results showing in a different page. To use this feature, select the results page from the dropdown menu and paste the shortcode <code>[gmw form=\"results\"]</code> into the content area of that page. Otherwise, select \"Same Page\" to display both the search form and search results in the same page.", 'GMW' ),
-					'options' 		=> array( '' => __( ' -- Same Page -- ', 'GMW' ) ) + GMW_Form_Settings_Helper::get_pages(),
-					'attributes'  	=> '',
-					'priority'		=> 10
-				),
-				'display_results'  => array(
-					'name'     		=> 'display_results',
-					'type'     		=> 'checkbox',
-					'default'       => '',
-					'label'    		=> __( 'Display list of results', 'GMW' ),
-					'desc'     		=> __( 'Check this checkbox to output a list of results on form submission.', 'GMW' ),
-					'cb_label' 		=> __( 'Enable', 'GMW' ),
-					'attributes' 	=> array(),
-					'priority'		=> 30
-				),
-				'display_map'      => array(
-					'name'    		=> 'display_map',
-					'type'    		=> 'select',	
-					'default'       => '',
-					'label'   		=> __( 'Display Map', 'GMW' ),
-					'desc'    		=> __( "Select if to disable the map completly, display it above the list of result, or display it anywhere on the page using the shortcode <code>[gmw map=\"form ID\"]</code>.", 'GMW' ),
-					'options' 		=> array(
-						''          => __( 'Disable map', 'GMW' ),
-						'results'   => __( 'Above the list of result', 'GMW' ),
-						'shortcode' => __( 'Using shortcode', 'GMW' ),
-					),
-					'attributes' 	=> array(),
-					'priority'		=> 40
-				)
-			),
-			'search_results' => array(	
-				'results_template' => array(
-					'name'  		=> 'results_template',
-					'type'     		=> 'select',
-					'default'   	=> 'gray',
-					'label' 		=> __( 'Results Template', 'GMW' ),
-					'desc'  		=> __( 'Select the search results template file.', 'GMW' ),
-					'options'		=> GMW_Helper::get_templates( $this->form['addon'], 'search-results' ),
-					'attributes' 	=> array(),
-					'priority'		=> 10
-				),
-				'per_page'         => array(
-					'name'        	=> 'per_page',
-					'type'			=> 'text',
-					'default'       => '5,10,15,25',
-					'placeholder' 	=> __( 'Enter values', 'GMW' ),
-					'label'       	=> __( 'Results Per Page', 'GMW' ),
-					'desc'        	=> __( 'Enter multiple values, comma separated, to display a per page select dropdown menu in the search results, or enter a single value to set a default per-page value.', 'GMW' ),
-					'attributes' 	=> array(),
-					'priority'		=> 20
-				),
-				'image'   		  => array(
-					'name'     		=> 'image',
-					'type'     		=> 'function',
-					'default'       => '',
-					'label'    		=> __( 'Image', 'GMW' ),
-					'desc'     		=> __( '<p>Check this checkbox to display the image of each location in the list of results, then enter the width and height in pixels ( enter numeric value only, without "px" ).</p>', 'GMW' ),
-					'attributes' 	=> array(),
-					'priority'		=> 30
-				),
-				/*
-				'by_driving'       => array(
-					'name'       	=> 'by_driving',
-					'type'       	=> 'checkbox',
-					'default'       => '',
-					'label'      	=> __( 'Driving Distance', 'GMW' ),
-					'cb_label'   	=> __( 'Enable', 'GMW' ),
-					'desc'       	=> __( 'While the results showing the radius distance from the user to each of the locations, this feature let you display the exact driving distance. Please note that each driving distance request counts with google API when you can have 2500 requests per day.', 'GMW' ),
-					'attributes' 	=> array(),
-					'priority'		=> 35
-				),
-				*/
-				'directions_link'   => array(
-					'name'       	=> 'directions_link',
-					'type'       	=> 'checkbox',
-					'default'       => '',
-					'label'      	=> __( 'Directions Link', 'GMW' ),
-					'cb_label'   	=> __( 'Enable', 'GMW' ),
-					'desc'       	=> __( 'Display directions link, that will open a new window showing the driving directions, in each location in the list of results.', 'GMW' ),
-					'attributes' 	=> array(),
-					'priority'		=> 40
-				)
-			),
-			'results_map'    => array(
-				'map_width'  => array(
-					'name'        	=> 'map_width',
-					'type'			=> 'text',
-					'default'       => '100%',
-					'placeholder' 	=> __( 'Map width in px or %', 'GMW' ),
-					'label'       	=> __( 'Map width', 'GMW' ),
-					'desc'        	=> __( 'Enter the map\'s width in pixels or percentage ( ex. 100% or 200px ).', 'GMW' ),
-					'attributes'  	=> array(),
-					'priority'		=> 10
-				),
-				'map_height' => array(
-					'name'        	=> 'map_height',
-					'type'			=> 'text',
-					'default'       => '300px',
-					'placeholder' 	=> __( 'Map height in px or %', 'GMW' ),
-					'label'       	=> __( 'Map height', 'GMW' ),
-					'desc'        	=> __( 'Enter the map\'s height in pixels or percentage ( ex. 100% or 200px ).', 'GMW' ),
-					'attributes'  	=> array(),
-					'priority'		=> 20
-				),
-				'map_type'   => array(
-					'name'    		=> 'map_type',
-					'type'    		=> 'select',
-					'default'       => 'ROADMAP',
-					'label'   		=> __( 'Map type', 'GMW' ),
-					'desc'    		=> __( 'Select the map type.', 'GMW' ),
-					'options' 		=> array(
-						'ROADMAP'   	=> __( 'ROADMAP', 'GMW' ),
-						'SATELLITE' 	=> __( 'SATELLITE', 'GMW' ),
-						'HYBRID'    	=> __( 'HYBRID', 'GMW' ),
-						'TERRAIN'   	=> __( 'TERRAIN', 'GMW' )
-					),
-					'attributes'  	=> '',
-					'priority'		=> 30
-				),
-				'zoom_level' => array(
-					'name'    		=> 'zoom_level',
-					'default'       => 'auto',
-					'type'    		=> 'select',
-					'label'   		=> __( 'Zoom level', 'GMW' ),	
-					'desc'    		=> __( 'Select "Auto zoom" to fit all the markers on the map, or select a numeric value that will be used to zoom into the marker which represents the visitor\'s current location on the map.', 'GMW' ),		
-					'options' 		=> array(
-						'auto' 	=> __( 'Auto Zoom', 'GMW' ),
-						'1'    	=> '1',
-						'2'    	=> '2',
-						'3'    	=> '3',
-						'4'    	=> '4',
-						'5'    	=> '5',
-						'6'    	=> '6',
-						'7'    	=> '7',
-						'8'    	=> '8',
-						'9'    	=> '9',
-						'10'   	=> '10',
-						'11'   	=> '11',
-						'12'   	=> '12',
-						'13'   	=> '13',
-						'14'   	=> '14',
-						'15'   	=> '15',
-						'16'   	=> '16',
-						'17'   	=> '17',
-						'18'   	=> '18',
-						'19'   	=> '19',
-						'20'   	=> '20',
-					),
-					'attributes'  	=> '',
-					'priority'		=> 40
-				),
-				/*'yl_icon'     	=> array(
-					'name'        	=> 'yl_icon',
-					'type'  	  	=> 'checkbox',
-					'default'       => '',
-					'label' 	  	=> __( 'Open "User Location" info window', 'GMW'),
-					'cb_label'    	=> __( 'Enable', 'GMW'),
-					'desc'        	=> __( "Dynamically open on page load the info window of the marker which represents the user's location.", 'GMW' ),
-					'attributes'  	=> array(),
-					'priority'		=> 25
-				),
-				'map_frame'  	=> array(
-					'name'       	=> 'map_frame',
-					'type'       	=> 'checkbox',
-					'default'       => '',
-					'label'      	=> __( 'Map frame', 'GMW' ),
-					'cb_label'   	=> __( 'Enable', 'GMW' ),
-					'desc'       	=> __( 'show frame around the map?', 'GMW' ),
-					'attributes' 	=> array(),
-					'priority'		=> 30
-				),
-				'no_results_enabled'  	=> array(
-					'name'       	=> 'no_results_enabled',
-					'type'       	=> 'checkbox',
-					'default'       => '',
-					'label'      	=> __( 'Show if no results', 'GMW' ),
-					'cb_label'   	=> __( 'Enable', 'GMW' ),
-					'desc'       	=> __( 'Display map even if no results were found.', 'GMW' ),
-					'attributes' 	=> array(),
-					'priority'		=> 35
-				), */
-			),
-		);
+		$fields = [];
+
+        // loop through settings groups
+        foreach ( $this->form_settings_groups as $key => $group ) {
+
+            // verify groups slug
+            if ( empty( $group['slug'] ) ) {
+                continue;
+            }
+
+            // Generate the group if does not exsist
+            if ( ! isset( $fields[$group['slug']] ) ) {
+            
+                $fields[$group['slug']] = ! empty( $group['fields'] ) ? $group['fields'] : array();
+ 
+            // otehrwise, merge the fields of the existing group
+            // with the current group.
+            } else {
+
+                $fields[$group['slug']] = array_merge_recursive( $fields[$group['slug']], $group['fields'] );
+
+                // remove the duplicate group/tab
+                unset( $this->form_settings_groups[$key] );
+            }
+
+            // allow filtering the specific group
+            $fields[$group['slug']] = apply_filters( 'gmw_'.$group['slug'].'_form_settings', $fields[$group['slug']], $this->form['slug'], $this->form );
+        }
+
+        // filter all fieldss groups
+        $fields = apply_filters( 'gmw_' . $this->form['slug'] . '_form_settings', $fields, $this->form );
+		$fields = apply_filters( 'gmw_form_settings', $fields, $this->form );
+
+        return $fields;
 	}
 
 	/**
@@ -562,15 +591,15 @@ class GMW_Form_Editor {
 	protected function init_form_settings() {
 
 		// get groups
-		$this->form_settings_groups = $this->form_groups();
+		$this->form_settings_groups = $this->fields_groups();
 
 		// get fields
-		$this->form_fields = $this->fields();
+		$this->form_fields = $this->get_fields();
 
 		// allow plugins to extend the form fields
 		//$new_settings = array();
-		$this->form_fields = apply_filters( 'gmw_' . $this->form['slug'] . '_form_settings', $this->form_fields, $this->form );
-		$this->form_fields = apply_filters( 'gmw_form_settings', $this->form_fields, $this->form );
+		//$this->form_fields = apply_filters( 'gmw_' . $this->form['slug'] . '_form_settings', $this->form_fields, $this->form );
+		//$this->form_fields = apply_filters( 'gmw_form_settings', $this->form_fields, $this->form );
 
 		// merge settings added from other plugins
 		/*foreach ( $new_settings as $group => $fields ) {
@@ -590,7 +619,7 @@ class GMW_Form_Editor {
                 trigger_error( 'Using deprecated method for registering GMW settings and settings groups.', E_USER_NOTICE );
 
                 $this->form_settings_groups[] = array(
-                    'id'    => $key,
+                    'slug'  => $key,
                     'label' => $section[0]
                 );
 
@@ -1070,14 +1099,23 @@ class GMW_Form_Editor {
 			            <ul class="gmw-tabs-wrapper gmw-edit-form-page-nav-tabs">
 			            	<?php
 			                foreach ( $this->form_settings_groups as $group ) {
-			                				                	
-			                	if ( $group['id'] != 'hidden' ) {
-			                		echo '<li>';
-			                    	echo '<a  href="#settings-' . sanitize_title( $group['id'] ) . '" id="'.esc_attr( $group['id'] ).'" class="gmw-nav-tab gmw-nav-trigger" data-name="'. sanitize_title( $group['id'] ).'">';
-		                            echo '<span>' . esc_html( $group['label'] ) . '</span>';
-		                            echo '</a>';
-		                            echo '</li>';
+			                	
+			                	if ( isset( $group['id'] ) ) {
+			                		$group['slug'] = $group['id'];
 			                	}
+
+			                	if ( $group['slug'] != 'hidden' ) { ?>
+			                		<li>
+			                    		<a 
+			                    			href="#settings-<?php echo sanitize_title( $group['slug'] ); ?>" 
+			                    			id="<?php echo esc_attr( $group['slug'] ); ?>" 
+			                    			class="gmw-nav-tab gmw-nav-trigger" 
+			                    			data-name="<?php echo sanitize_title( $group['slug'] ); ?>"
+			                    		>
+		                            	<span><?php echo esc_attr( $group['label'] ); ?></span>
+		                            	</a>
+		                            </li>
+			                	<?php }
 			                }
 			                ?>  
 			                <li>
