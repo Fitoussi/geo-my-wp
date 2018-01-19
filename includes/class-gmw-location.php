@@ -748,7 +748,9 @@ class GMW_Location {
 			'lng'		  	 => false,
 			'radius'	  	 => false,
 			'units'		  	 => 'imperial',
-			'unique'	 	 => ''
+			'unique'	 	 => '',
+			'limit'			 => '',
+			'orderby'		 => '',
 		) );
 		
 		$args = apply_filters( 'gmw_get_locations_data_args', $args, $gmw );
@@ -777,7 +779,10 @@ class GMW_Location {
 		// modify the database columns if needed
 		$db_fields = apply_filters( 'gmw_get_locations_db_fields', $db_fields, $gmw );
 		$db_fields = apply_filters( "gmw_get_{$args['object_type']}_locations_db_fields", $db_fields, $gmw );
-
+		
+		// for cache key
+		$args['db_fields'] = $db_fields;
+		
 		$count  = 0;
 		$output = '';
 
@@ -794,14 +799,14 @@ class GMW_Location {
 				
 				$field = explode( ' as ', $field );
 				
-				$output .= "{$field[0]} as {$field[1]}";
+				$output .= "gmw_locations.{$field[0]} as {$field[1]}";
 
 				// Here we are including latitude and longitude fields
 				// using their original field name.
 				// for backward compatibility, we also need to have "lat" and "lng" 
 				// in the location object and that is what we did in the line above.
 				// The lat and lng field are too involve and need to carfully change it.
-				// eventually we wont to completly move to using latitude and longitude.
+				// eventually we want to completly move to using latitude and longitude.
 				if ( $field[0] == 'latitude' || $field[0] == 'longitude' ) {
 					$output .= ",gmw_locations.{$field[0]}";
 				}
@@ -814,44 +819,28 @@ class GMW_Location {
 		
 		$db_fields = $output;
 
-		$args['db_fields'] = $db_fields;
-        $args['db_table']  = $db_table;
+        $args['db_table']  		 = $db_table;
         $args['address_filters'] = $address_filters;
 
         $internal_cache = GMW()->internal_cache;
 
         if ( $internal_cache ) {
-	        
 	        // prepare for cache
-	        $hash = md5( json_encode( $args ) );
-
-	        $query_args_hash = 'gmw' . $hash . GMW_Cache_Helper::get_transient_version( 'gmw_get_object_'.$args['object_type'].'_locations' );
+	        $hash 			 = md5( json_encode( $args ) );
+	        $query_args_hash = 'gmw'.$hash.GMW_Cache_Helper::get_transient_version( 'gmw_get_object_'.$args['object_type'].'_locations' );
 	    }
-           
+      	
         if ( ! $internal_cache || false === ( $locations_data = get_transient( $query_args_hash ) ) ) {
         //if ( 1 == 1 ) {	
             //print_r( 'locations query done' );
-        
-	        // Get earth radius based on units
-	        if ( $args['units'] == 'imperial' ) {
-	        	$earth_radius = 3959;
-	        	$units = 'mi';
-	        } else {
-	        	$earth_radius = 6371;
-	        	$units = 'km';
-	        }
-
-	        // add units to locations data
-	        $db_fields .= ", '{$units}' AS units";
-
+       
 			global $wpdb;
 
 			$clauses['select']	 = "SELECT";
 			$clauses['fields'] 	 = $db_fields;
 			$clauses['distance'] = "";
 			$clauses['from']	 = "FROM {$wpdb->base_prefix}{$db_table} gmw_locations";
-
-			$clauses['where'] = $wpdb->prepare( " WHERE gmw_locations.object_type = '%s' AND gmw_locations.parent = '0'", $args['object_type'] );
+			$clauses['where'] 	 = $wpdb->prepare( " WHERE gmw_locations.object_type = '%s' AND gmw_locations.parent = '0'", $args['object_type'] );
 
 			// if object type uses database table as global, means it doesn't save locations per blog,
 			// such as "user" we search within the entire database table. Otherwise, if data saved per blog, such as "post", we will filter locations based on blog ID
@@ -860,17 +849,47 @@ class GMW_Location {
 			$loc_blog_id = gmw_get_blog_id( $args['object_type'] );
 
 			if ( absint( $loc_blog_id ) ) {
-				$clauses['where'] .= $wpdb->prepare( "AND gmw_locations.blog_id = %d", $loc_blog_id );
+				$clauses['where'] .= " AND gmw_locations.blog_id = {$loc_blog_id} ";
 			}
 
 			$clauses['address_filters'] = self::query_address_fields( $address_filters );
-			$clauses['having']   = '';
-			$clauses['orderby']  = '';
+			$clauses['having']   		= '';
+			$clauses['orderby']  		= '';
 
+			if ( is_numeric( $args['limit'] ) ) {
+				$clauses['limit'] = $wpdb->prepare( "LIMIT %s", $args['limit'] );
+			} else {
+				$clauses['limit'] = '';
+			}
+			
 		 	// if address entered, do a proximity search and get locations within the radius entered.
 	        if ( empty( $clauses['address_filters'] ) && ! empty( $args['lat'] ) && ! empty( $args['lng'] ) ) {
 
-	        	/*
+	        	// Get earth radius based on units
+		        if ( $args['units'] == 'imperial' || $args['units'] == 3959 || $args['units'] == 'miles' ) {
+		        	$earth_radius = 3959;
+		        	$units 		  = 'mi';
+		        	$degree       = 69.0;
+		        } else {
+		        	$earth_radius = 6371;
+		        	$units 		  = 'km';
+		        	$degree       = 111.045;
+		        }
+
+		        // add units to locations data
+		        $clauses['fields'] .= ", '{$units}' AS units";
+
+		        /**
+		         * since these values are repeatable, we escape them previous
+		         *
+		         * the query instead of running multiple prepares.
+		         */
+	        	$lat 	= esc_sql( $args['lat'] );
+	        	$lng 	= esc_sql( $args['lng'] );
+	        	
+	        	$clauses['distance'] = ", ROUND( {$earth_radius} * acos( cos( radians( {$lat} ) ) * cos( radians( gmw_locations.latitude ) ) * cos( radians( gmw_locations.longitude ) - radians( {$lng} ) ) + sin( radians( {$lat} ) ) * sin( radians( gmw_locations.latitude ) ) ),1 ) AS distance";
+
+         		/*
 	        	$rad = deg2rad( $args['lat'] );
 	        	$a   = cos( $rad );
         		$b   = deg2rad( $args['lng'] );
@@ -886,24 +905,30 @@ class GMW_Location {
 	    			) 
 	    		);
 				*/
-        		
-	        	$clauses['distance'] = $wpdb->prepare( ", 
-	        		ROUND( %d * acos( cos( radians( %s ) ) * cos( radians( gmw_locations.latitude ) ) * cos( radians( gmw_locations.longitude ) - radians( %s ) ) + sin( radians( %s ) ) * sin( radians( gmw_locations.latitude ) ) ),1 ) AS distance", 
-	    			array( 
-	    				$earth_radius, 
-	    				$args['lat'], 
-	    				$args['lng'], 
-	    				$args['lat']
-	    			) 
-	    		);
-				
+							
 	        	// make sure we pass only numeric or decimal as radius
 	            if ( ! empty( $args['radius'] ) && is_numeric( $args['radius'] ) ) {
-	        	   $clauses['having'] = $wpdb->prepare( "HAVING distance <= %s OR distance IS NULL", $args['radius'] );
+
+	            	$radius = esc_sql( $args['radius'] );
+
+		        	// calculate the between point 
+		        	$bet_lat1 = $lat - ( $radius / $degree );
+		        	$bet_lat2 = $lat + ( $radius / $degree );
+		        	$bet_lng1 = $lng - ( $radius / ( $degree * cos( deg2rad( $lat ) ) ) );
+		        	$bet_lng2 = $lng + ( $radius / ( $degree * cos( deg2rad( $lat ) ) ) );
+		        	
+	        		$clauses['where'] .= " AND gmw_locations.latitude BETWEEN {$bet_lat1} AND {$bet_lat2}";
+	            	$clauses['where'] .= " AND gmw_locations.longitude BETWEEN {$bet_lng1} AND {$bet_lng2} ";
+
+	        	   $clauses['having'] = "HAVING distance <= {$args['radius']} OR distance IS NULL";
 	        	}
 
-	        	$clauses['orderby'] = "ORDER BY distance";
-		    } 
+	        	$clauses['orderby'] = "ORDER BY distance ASC";
+		    }
+
+		    if ( $args['orderby'] != '' ) {
+		    	$clauses['orderby'] = $args['orderby'];
+		    }
 
 		  	// query the locations
 		    $locations = $wpdb->get_results( 
