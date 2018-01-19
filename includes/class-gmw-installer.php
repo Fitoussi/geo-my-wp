@@ -31,7 +31,7 @@ class GMW_Installer {
 		self::schedule_cron();	
 
 		// run update if version changed
-		if ( version_compare( GMW_VERSION, get_option( 'gmw_version' ) , '>' ) ) {
+		if ( version_compare( GMW_VERSION, get_option( 'gmw_version' ), '>' ) ) {
 			self::update();
 		}
 		
@@ -145,6 +145,8 @@ class GMW_Installer {
 
 			// import existing forms to the new table
 			self::import_forms();
+
+			update_option( 'gmw_forms_db_table_version', '1.0' );
 		}
 
 		// locations table name
@@ -203,6 +205,8 @@ class GMW_Installer {
 
 			// create database table
 			dbDelta( $sql );
+
+			update_option( 'gmw_locations_db_table_version', '1.0' );
 		}
 		
 		// location meta table
@@ -230,6 +234,8 @@ class GMW_Installer {
 
 			// create database table
 			dbDelta( $sql );
+
+			update_option( 'gmw_locationmeta_db_table_version', '1.0' );
 		}
 
 		// look for post types table
@@ -326,9 +332,12 @@ class GMW_Installer {
 			}
 
 			if ( ! empty( $form['search_form']['address_field']['title'] ) ) {
+
 				if ( ! empty( $form['search_form']['address_field']['within'] ) ) {
+
 					$form['search_form']['address_field']['placeholder'] = $form['search_form']['address_field']['title'];
 				} else {
+					
 					$form['search_form']['address_field']['label'] = $form['search_form']['address_field']['title'];
 				}	
 			}
