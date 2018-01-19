@@ -4,12 +4,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
+// load class only once
+if ( ! class_exists( 'GMW_Addon' ) ) :
+
 /**
- * GMW_Register_Addon class
+ * GMW_Addon class
  *
  * Register new add-on
  */
-class GMW_Register_Addon {
+class GMW_Addon {
 
 	/********** required variables ********/
 
@@ -93,11 +96,28 @@ class GMW_Register_Addon {
 	/********** Optional variables ************/
 
 	/**
-	 * Object type 
+	 * Object 
 	 * 
-	 * if the add-ons will use its own object type for location. For example, post, member, user....
+	 * Set this if the add-ons will use its own objects for location. For example, post, BP member, WP user....
+	 *
+	 * Example:
 	 * 
-	 * @var boolean | string
+	 * array( 
+	 * 	'slug' => 'post', // the slug of the object
+	 *  'name' => 'Wordpress Post', // name/label for the pbject
+	 *  'type' => 'post' // the type of the object which will also be saved in the locations database ( post, user, group... ) 
+	 * );
+	 * 
+	 * @var boolean | array
+	 */
+	public $objects = false;
+
+	/**
+	 * This is not being used at the moment and is generated automatically.
+	 *
+	 * Use the objects array above to generate an object which also include its type.
+	 * 
+	 * @var boolean
 	 */
 	public $object_type = false;
 
@@ -197,51 +217,21 @@ class GMW_Register_Addon {
 	public $gmw_min_version = GMW_VERSION;
 
 	/**
-	 * Set to true if the extension uses template files
+	 * Set to true, or pass the folder name as a string, if the extension uses template files.
 	 *
-	 * When enabled, the template files in the extension must be 
+	 * When set to true the folder of the custom template files will be the extension's slug.
 	 *
-	 * in the extension's-folder/templates/.
-	 * 
-	 * The name of the folder which holds the custom templates files will be genrated
-	 * 
-	 * from the extension slug when underscore will be replaced with a dash. for example
-	 * 
-	 * for the Post Types locator extension with the slug posts_locator, the folder name will be
-	 * 
-	 * posts-locator. And this custom folder with the template fiels should be placed in
+	 * Otherwise, pass the folder name as a string.
 	 *
-	 * the theme's-folder/geo-my-wp/
+	 * The template files in the plugin's folder must placed under the folder templates
 	 *
-	 * In the future it might be possible to change the name of the template and custom
-	 * 
-	 * template files using the arguments below.
-	 * 
-	 * @var boolean
-	 */
-	public $template_files = false;
-
-	/**
-	 * add-on's folder name
-	 *
-	 * The folder that holds the template files.
+	 * for example gmw-places-locator/templates/.... 
 	 * 
 	 * @var string | boolean
 	 *
 	 * --- Not being used at the moment. ---
 	 */
 	public $templates_folder = false;
-
-	/**
-	 * add-on's custom folder name
-	 *
-	 * The folder that holds custom template files and other custom file.
-	 * 
-	 * @var string | boolean
-	 *
-	 * --- Not being used at the moment. ---
-	 */
-	public $custom_templates_folder = false;
 
 	/**
 	 * Array of extension ( slug ) required for this extension to work
@@ -265,12 +255,13 @@ class GMW_Register_Addon {
      *  
      *  To create a submenu you will need to pass an array with the following arg:
      *
-     *  parent_slug - the parent menu. By default, and in ost cases, it will be GEO my WP menu item ( 'gmw-extensions' ).
+     *  parent_slug - the parent menu. By default, and in most cases, it will be GEO my WP menu item ( 'gmw-extensions' ).
      *  page_title - The menu item's page title ( ex. Tools Page )
      *  menu_title - The menu item's title ( ex. Tools )
-     *  capability - User Capability that can access the menu item ( default is 'manage_options ).
+     *  capability - User Capability that can access the menu item ( default is manage_options ).
      *  menu_slug -  menu slug ( ex. gmw_tools ).
-     *  callback_function - the callback function for the menu items ( ex. gmw_get_tools_page ). IT can also be a class method by passing an array with the name of the class and the method. For ex. array( 'Tools_Page', 'output' )
+     *  callback_function - the callback function for the menu items ( ex. gmw_get_tools_page ). It can also be a class method by passing an array with the name of the class and the method. For ex. array( 'Tools_Page', 'output' )
+     *  priority - priority of the menu item ( ex. 25 ). 
      *
      * example :
      *  
@@ -281,6 +272,7 @@ class GMW_Register_Addon {
      *      'capability'  		=> 'manage_options',
      *      'menu_slug'   	    => 'gmw-tools',
      *      'callback_function' => 'gmw_get_tools_page',
+     *      'priority'		    => 25 
      *  );
      *  
      * 	More information about creating submenu items can be found here -> https://codex.wordpress.org/Function_Reference/add_submenu_page
@@ -288,10 +280,64 @@ class GMW_Register_Addon {
      *  You can also create multiple menu items by passing a multidimensional array or items.
      *  
      */
-	public $menu_items = false;
+	public function admin_menu_items() {
+		return false;
+	}
 
 	/*
-     *  Create GEO my WP "New form" button for your add-on
+     * Create GEO my WP admin settings groups
+     *  
+     *  pass an array with the following arg:
+     *
+     *  slug - the slug for the group, which will also be used to save the data in database. 
+     *  label - the label/title of the group's tab in the settings page.
+     *  icon - any of GEO my WP font icons.
+     *  priority - the priority the tab will show in the settings page.
+     *
+     *  example :
+     *  
+     *  array(
+     *  	'slug'       => 'posts_locator'
+     *      'label'      => 'Posts Locator',
+     *      'icon'       => 'pinboard',
+     *      'priority'   => 5
+     *  );
+     *   
+     *  You can also create multiple groups by passing a multidimensional array.
+     *  
+     */
+	public function admin_settings_groups() {
+		return false;
+	}
+
+	/*
+     * Create GEO my WP admin settings groups
+     *  
+     *  pass an array with the following arg:
+     *
+     *  slug - the slug for the group, which will also be used to save the data in database. 
+     *  label - the label/title of the group's tab in the settings page.
+     *  icon - any of GEO my WP font icons.
+     *  priority - the priority the tab will show in the settings page.
+     *
+     *  example :
+     *  
+     *  array(
+     *  	'slug'       => 'posts_locator'
+     *      'label'      => 'Posts Locator',
+     *      'icon'       => 'pinboard',
+     *      'priority'   => 5
+     *  );
+     *   
+     *  You can also create multiple groups by passing a multidimensional array.
+     *  
+     */
+	public function form_settings_groups() {
+		return false;
+	}
+
+	/*
+     * Create GEO my WP "New form" button for your add-on
      *  
      *  pass an array with the following arg:
      *
@@ -312,7 +358,103 @@ class GMW_Register_Addon {
      *  You can also create multiple buttons by passing a multidimensional array or buttons.
      *  
      */
-	public $form_buttons = false;
+	public function form_buttons() {
+		return false;
+	}
+
+	/**
+	 * Collection of addons class that need to be registered by GEO my WP plugin.
+	 *
+	 * Registration takes place on 'plugins_loaded' action.
+	 * 
+	 * @var array
+	 * 
+	 */
+	private static $registered_addons = array();
+
+	/**
+	 * Register an addon
+	 *
+	 * Use this function to register an addon properly. 
+	 *
+	 * GEO my WP collects its addons and initialize them after is done loading.
+	 *
+	 * To make sure that addons do not load before GEO my WP.
+	 *
+	 * @param string $class the class name
+	 */
+	public static function register( $class = false ) {
+
+		if ( $class && ! in_array( $class, self::$registered_addons ) ) {
+			self::$registered_addons[] = $class;
+		}
+	}
+
+	/**
+	 * Initializes addons.
+	 *
+	 * This class initializes the addons once GEO my WP is loaded.
+	 *
+	 * An addons must use the register function above so the addon 
+	 *
+	 * will initialize properly using this function.
+	 * 
+	 * @return [type] [description]
+	 */
+	public static function init_addons() {
+
+		foreach ( self::$registered_addons as $addon ) {
+
+			call_user_func( array( $addon, 'get_instance' ) );
+
+		}
+	}	
+
+	/**
+	 * Wordpress active plugins.
+	 * 
+	 * @var boolean
+	 */
+	public static $active_plugins = false;
+
+	/**
+	 * Check if a Wordpress plugin is active.
+	 * 
+	 * @param  [type]  $basename [description]
+	 * @return boolean           [description]
+	 */
+    public static function is_plugin_active( $basename ) {
+
+    	// get the data from database only once.
+    	if ( ! self::$active_plugins ) {
+    		self::$active_plugins = get_option( 'active_plugins' );
+    	}
+		
+		return in_array( $basename, self::$active_plugins ) ? true : false;
+    }
+
+    /**
+	 * Saved addon data which is being used in the front end
+	 * 
+	 * @var boolean
+	 */
+	public static $saved_addons_data = false;
+
+	/**
+	 * Check status of saved addon data.
+	 * 
+	 * @param  [type]  $addon [description]
+	 * @return boolean           [description]
+	 */
+    public static function verify_saved_addon_data( $addon ) {
+
+    	// get the data from database only once.
+    	if ( ! self::$saved_addons_data ) {
+    		self::$saved_addons_data = get_option( 'gmw_addons_data' );
+    	}
+		
+		return ( isset( self::$saved_addons_data[$addon] ) && isset( self::$saved_addons_data[$addon]['slug'] ) ) ? true : false;
+    }
 
 	/**
 	 * __construct function.
@@ -322,12 +464,40 @@ class GMW_Register_Addon {
 	 */
 	public function __construct() {
 			
-		// add object type to global
+		//setup plugin's globals
+		$this->setup_globals();
+
+		// run verifications and veget status
+		// abort if addon is not active
+		if ( $this->get_status() != 'active' ) {
+			return;
+		}
+		
+		// initialize the addon
+		$this->initialize();
+	}
+
+	/**
+	 * Setup addon's globals
+	 * 
+	 * @return [type] [description]
+	 */
+	public function setup_globals() {
+
+		// add object to global
 		if ( ! empty( $this->object_type ) ) {
-			GMW()->object_types[] = $this->object_type;
+
+			if ( ! $this->object ) {
+				$this->object = $this->object_type;
+			}
+
+			// add objects to global
+			GMW()->objects[] = $this->object;
+			
+			// add object type to global
+			GMW()->object_types[$this->object] = $this->object_type;
 		}
 
-		// add object type to global
 		if ( is_multisite() && absint( $this->locations_blog_id ) ) {
 			GMW()->locations_blogs[$this->object_type] = $this->locations_blog_id;
 		}
@@ -348,7 +518,7 @@ class GMW_Register_Addon {
 		}
 
 		// appened addon to loaded addons 
-		GMW()->loaded_addons[] = $this->slug;
+		GMW()->registered_addons[] = $this->slug;
 
 		// appened addon to core addons
 		if ( $this->is_core ) {
@@ -364,19 +534,35 @@ class GMW_Register_Addon {
 				add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 			}
 		}
+	}
+
+	/**
+	 * Verify addon requirements, and get its status and data.
+	 *
+	 * Requirments such as specific theme, plugin or an addon.
+	 *
+	 * This function mostly runs on the back-end and save the data in the options table
+	 *
+	 * to later be used in the front-end.
+	 * 
+	 * @return [type] [description]
+	 */
+	public function get_status() {
 
 		/** 
-		 * we try to prevent the below from running in front-end to save on memory and performance.
+		 * we try to prevent the below from running in front-end to save memory and performance.
 		 *
 		 * i.e collecting data and verifying activation.
+		 * 
 		 * The addon data will be collected while in admin and saved in options table so it can be used 
+		 * 
 		 * in the fron-end. The data is collected when activating/deactivating plugins.
+		 * 
 		 * if the data does not exists in option, it will be then retrived using the below in the front-end as well.
 		 * 
 		 */
-		if ( IS_ADMIN || empty( GMW()->addons[$this->slug] ) || empty( GMW()->addons[$this->slug]['status'] ) ) {
-
-			// default status and details
+		if ( IS_ADMIN || ! isset( GMW()->addons[$this->slug] ) || empty( GMW()->addons[$this->slug]['status'] ) ) {
+	
 			$this->status 		  = 'inactive';
 			$this->status_details = false;
 
@@ -392,27 +578,41 @@ class GMW_Register_Addon {
 			// verify activation and get status
 			$this->status = self::verify_activation();
 
-			// verify that addon status matches in database and in this object
-			// it can be different if a plugin or a theme that the addon depends on was activated/deactivated
-			// In this case we will update the status in database
-			if ( empty( GMW()->addons_status[$this->slug] ) || $this->status != GMW()->addons_status[$this->slug] ) {
-				gmw_update_addon_status( $this->slug, $this->status, $this->status_details );
-			}
-			
 			// generate addon data
 			GMW()->addons[$this->slug] = self::setup_addon_data();
 
+			/* 
+			 * verify a few scenarios where the addon status doesn't match in database the value in database,
+			 * 
+			 * in this object, or missing some data.
+			 * 
+			 * Once example where the status can be different is if a plugin or a theme that the addon depends on 
+			 * 
+			 * was activated/deactivated.
+			 * 
+			 * In this case we will update the status in database.
+			 * 
+			 */
+			
+			if ( ! isset( GMW()->addons_status[$this->slug] ) || $this->status != GMW()->addons_status[$this->slug] || ! $this->verify_saved_addon_data( $this->slug ) ) {
+									
+				/**
+				 * This function updates both the addon status and addon data objects
+				 */
+				gmw_update_addon_status( $this->slug, $this->status, $this->status_details );
+			}
+
 			// only in admin
 			if ( IS_ADMIN ) {
-
+				
 				// generate license data
 				GMW()->licenses[$this->slug] = self::setup_license_data();
 
 				// activate addon when WordPress plugin activated
-				register_activation_hook( $this->full_path, array( $this, 'activate_addon' ) );
+				//register_activation_hook( $this->full_path, array( $this, 'activate_addon' ) );
 
 				// deactivate addon when WordPress plugin deactivated
-				register_deactivation_hook( $this->full_path, array( $this, 'deactivate_addon' ) );
+				//register_deactivation_hook( $this->full_path, array( $this, 'deactivate_addon' ) );
 
 				// run installer. 
 				// check for add-ons data if missing, when probably first installed, or if plugin updated
@@ -429,11 +629,15 @@ class GMW_Register_Addon {
 			$this->status = GMW()->addons[$this->slug]['status'];
 		}
 
-		// abort if plugin is not active
-		// no need to proceed.
-		if ( $this->status != 'active' ) {
-			return;
-		}
+		return $this->status;
+	}
+
+	/**
+	 * Initialize the addon
+	 * 
+	 * @return [type] [description]
+	 */
+	public function initialize() {
 
 		// enqueue scripts admin
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -453,15 +657,20 @@ class GMW_Register_Addon {
 		// if in admin
 		if ( IS_ADMIN ) {
 
-			// generate admin menu items
-			if ( ! empty( $this->menu_items ) && is_array( $this->menu_items ) ) {
-				add_filter( 'gmw_admin_menu_items', array( $this, 'admin_menu_items' ) );
-			}
+			//if ( ! defined( 'DOING_AJAX' ) ) {
 
-			// create form button
-			if ( ! empty( $this->form_buttons ) && is_array( $this->form_buttons ) ) {
-				add_filter( 'gmw_admin_new_form_button', array( $this, 'new_form_buttons' ) );
-			}
+				// generate admin menu items
+				add_filter( 'gmw_admin_menu_items', array( $this, 'admin_menu_items_init' ) );
+
+				// generate admin settings groups
+				add_filter( 'gmw_admin_settings_groups', array( $this, 'admin_settings_groups_init' ) );
+
+				// generate form settings groups
+				add_filter( 'gmw_form_settings_groups', array( $this, 'form_settings_groups_init' ) );
+
+				// generate form button
+				add_filter( 'gmw_admin_new_form_button', array( $this, 'form_buttons_init' ) );
+			//}
 
 			// pre init admin
 			$this->pre_init_admin();
@@ -474,7 +683,7 @@ class GMW_Register_Addon {
 		}
 
 		// include widgets
-		$this->init_widgets();
+		add_action( 'widgets_init', array( $this, 'init_widgets' ) );
 	}
 
 	/**
@@ -484,20 +693,15 @@ class GMW_Register_Addon {
 	 */
 	public function setup_addon_data() {
 
-		// make sure custom template folder exists if template folder exsist as well
-		// -- not being used at the momoent.
-		/*if ( $this->templates_folder != false && $this->custom_templates_folder == false ) {
-			$this->custom_templates_folder = str_replace( '_', '-', $this->slug );
-		} */
-
 		// for now, the template files are being generated by GEO my WP.
 		// It might be possible to control the folders name in the future.
-		if ( $this->template_files ) {
-			$this->templates_folder = 'templates';
-			$this->custom_templates_folder = str_replace( '_', '-', $this->slug );	
+		if ( ! empty( $this->templates_folder ) ) {
+
+			$this->templates_folder = is_string( $this->templates_folder ) ? $this->templates_folder : $this->slug;	
+
 		} else {
+
 			$this->templates_folder = '';
-			$this->custom_templates_folder = '';	
 		}
 
     	return array(
@@ -507,6 +711,7 @@ class GMW_Register_Addon {
     		'prefix'					=> $this->prefix,
 			'version' 	   				=> $this->version,	
 			'is_core'         			=> $this->is_core,
+			'objects'					=> $this->objects,
 			'object_type'				=> $this->object_type,
 			'locations_blog_id'			=> $this->locations_blog_id,
 			'full_path'    				=> $this->full_path,
@@ -514,12 +719,14 @@ class GMW_Register_Addon {
 			'plugin_dir'				=> $this->plugin_dir,
 			'plugin_url'				=> $this->plugin_url,
 			'templates_folder'  	   	=> $this->templates_folder,
-			'custom_templates_folder'  	=> $this->custom_templates_folder
+			//'custom_templates_folder'  	=> $this->custom_templates_folder
     	);
     }
 
     /**
-	 * Collect add-on's data
+	 * Collect add-on's license data.
+	 *
+	 * This data required in the backend only.
 	 * 
 	 * @return array pass to $_register_addons
 	 */
@@ -590,6 +797,7 @@ class GMW_Register_Addon {
             $verified['status'] = false;
 		} 
 
+		// verify required themes, plugins and addons and return the status
 		if ( $verified['status'] && ! empty( $this->required ) ) {
 			$verified = $this->verify_required();
 		}
@@ -600,7 +808,7 @@ class GMW_Register_Addon {
 		//	return false;
 		//}
 
-		// disable addon
+		// disable the addon if requirments did not match.
 		if ( ! $verified['status'] ) {
 			
 			$this->status_details = $verified['details'];
@@ -608,12 +816,24 @@ class GMW_Register_Addon {
 			return 'disabled'; 
 		}
 
+		/**
+		 * if this isn't a core addon, which means it is a WordPress plugin
+		 * 
+		 * and is activated in Wordpress, then we need to activate it in GEO my WP as well.
+		 * 
+		 */
+		if ( ! $this->is_core && self::is_plugin_active( $this->basename ) ) {
+
+			return 'active';
+		}	
+
+		// deactivate if status is missing or is not set to 'active'.
 		if ( empty( GMW()->addons_status[$this->slug] ) || GMW()->addons_status[$this->slug] != 'active' ) {
 			
 			return 'inactive';
 		}
 		
-		// activate addon
+		// Everythis is good, active me.
         return 'active';
     }
 
@@ -653,7 +873,7 @@ class GMW_Register_Addon {
     		}
 		}
 
-		// verify required addons
+		// verify required GEO my WP addons
 		if ( $status && ! empty( $this->required['addons'] ) ) {
 
 			foreach ( $this->required['addons'] as $required ) {
@@ -722,8 +942,9 @@ class GMW_Register_Addon {
     }
 
     /**
-     * Allow plugins verify requierments, such as specific plugin or a version, before addon/extension
-     * is being activated
+     * Allow plugins verify requierments, such as specific plugin or a version, 
+     * 
+     * before addon/extension is being activated
      * 
      * @return true | false
      */
@@ -739,7 +960,7 @@ class GMW_Register_Addon {
     public function min_version_notice() {
         ?>
         <div class="error">
-            <p><?php echo $this->status_details['notice']; ?></p>
+            <p><?php echo esc_attr( $this->status_details['notice'] ); ?></p>
         </div>  
         <?php
     }
@@ -755,22 +976,26 @@ class GMW_Register_Addon {
 
     /**
 	 * Activate addon / extension
+	 * 
 	 * @return [type] [description]
 	 */
+	/*
 	public function activate_addon() {
 		gmw_update_addon_status( $this->slug, 'active' );
-	}
+	}*/
 
 	/**
 	 * Deactivate addon / extension
+	 * 
 	 * @return [type] [description]
 	 */
+	/*
 	public function deactivate_addon() {
 		gmw_update_addon_status( $this->slug, 'inactive' );
-    }
+    }*/
 
 	/**
-	 * When plugin first installed or updated
+	 * When plugin first installed or updated.
 	 * 
 	 * @return [type] [description]
 	 */
@@ -864,6 +1089,7 @@ class GMW_Register_Addon {
         define( $this->gmw_px.'_URL', $this->plugin_url );    
    	}
 
+
 	/**
 	 * Generate admin menu items
 	 *
@@ -873,7 +1099,7 @@ class GMW_Register_Addon {
 	 * 
 	 * @return array        
 	 */
-	public function admin_menu_items( $items ) {
+	/*public function admin_menu_items( $items ) {
 
 		// Loop through multi-array for multiple menu item
 		if ( ! empty( $this->menu_items[0] ) && is_array( $this->menu_items[0] ) ) {
@@ -894,6 +1120,181 @@ class GMW_Register_Addon {
 		}
 	    	
         return $items;
+	} */
+
+	/**
+	 * Generate admin settings groups
+	 *
+	 * @since 3.0
+	 * 
+	 * @param  array $settings_groups
+	 * 
+	 * @return array        
+	 */
+	public function init_objects() {
+
+		$objects = $this->set_objects();
+
+		// Loop through multi-array for multiple menu item
+		if ( ! empty( $objects[0] ) && is_array( $objects[0] ) ) {
+
+			foreach ( $objects as $key => $object ) {
+
+				if ( empty( $object['slug'] ) ) {
+					return;
+				}
+
+				$settings_groups[$group['slug']] = $this->get_settings_group( $group );
+			}
+
+		// generate single menu item
+		} elseif ( ! empty( $groups['slug'] ) ) {
+
+			$settings_groups[$groups['slug']] = $this->get_settings_group( $groups );
+		}
+	    	
+        return $settings_groups;
+	}
+
+	/**
+	 * Generate menu item
+	 * 	
+	 * @param  array $group
+	 * @return array
+	 */
+	protected function get_menu_item( $menu_item ) {
+
+		return array(
+			'parent_slug' 		=> ! empty( $menu_item['slug'] ) ? $menu_item['slug'] : 'gmw-extensions',
+	     	'page_title'  		=> ! empty( $menu_item['page_title'] ) ? $menu_item['page_title'] : $this->name,
+	     	'menu_title'  		=> ! empty( $menu_item['menu_title'] ) ? $menu_item['menu_title'] : $this->name,
+	     	'capability'  		=> ! empty( $menu_item['capability'] ) ? $menu_item['capability'] : 'manage_options',
+	     	'menu_slug'   	    => ! empty( $menu_item['menu_slug'] ) ? $menu_item['menu_slug'] : $this->slug,
+	     	'callback_function' => $menu_item['callback_function'],
+	     	'priority'			=> ! empty( $menu_item['menu_slug'] ) ? $menu_item['menu_slug'] : $this->slug
+	    );
+	}
+
+	/**
+	 * Generate admin settings groups
+	 *
+	 * @since 3.0
+	 * 
+	 * @param  array $settings_groups
+	 * 
+	 * @return array        
+	 */
+	public function admin_menu_items_init( $menu_items ) {
+
+		if ( ( $items = $this->admin_menu_items() ) == false ) {
+			return $menu_items;
+		}
+
+		// Loop through multi-array for multiple menu item
+		if ( ! empty( $items[0] ) && is_array( $items[0] ) ) {
+
+			foreach ( $items as $key => $item ) {
+
+				if ( empty( $item['callback_function'] ) ) {
+					continue;
+				}
+
+				$menu_items[] = $item;
+			}
+
+		// generate single menu item
+		} elseif ( ! empty( $items['callback_function'] ) ) {
+
+			$menu_items[] = $items;
+		}
+	    	
+        return $menu_items;
+	}
+
+	/**
+	 * Generate new settings group
+	 * 	
+	 * @param  array $group
+	 * @return array
+	 */
+	protected function get_settings_group( $group ) {
+
+		// return button args
+    	return array(
+    		'slug'	   => ! empty( $group['slug'] ) ? $group['slug'] : $this->slug,
+            'label'    => ! empty( $group['label'] ) ? $group['label'] : $this->name,
+            'icon'     => ! empty( $group['icon'] ) ? $group['icon'] : 'location-outline',
+            'fields'   => ! empty( $group['fields'] ) ? $group['fields'] : array(),
+            'priority' => ! empty( $group['priority'] ) ? $group['priority'] : 99,
+        );
+	}
+
+	/**
+	 * Generate admin settings groups
+	 *
+	 * @since 3.0
+	 * 
+	 * @param  array $settings_groups
+	 * 
+	 * @return array        
+	 */
+	public function admin_settings_groups_init( $settings_groups ) {
+
+		$groups = $this->admin_settings_groups();
+
+		// Loop through multi-array for multiple menu item
+		if ( ! empty( $groups[0] ) && is_array( $groups[0] ) ) {
+
+			foreach ( $groups as $key => $group ) {
+
+				if ( empty( $group['slug'] ) ) {
+					return;
+				}
+
+				$settings_groups[$group['slug']] = $this->get_settings_group( $group );
+			}
+
+		// generate single menu item
+		} elseif ( ! empty( $groups['slug'] ) ) {
+
+			$settings_groups[$groups['slug']] = $this->get_settings_group( $groups );
+		}
+	    	
+        return $settings_groups;
+	}
+
+	/**
+	 * Generate form settings groups
+	 *
+	 * @since 3.0
+	 * 
+	 * @param  array $settings_groups
+	 * 
+	 * @return array        
+	 */
+	public function form_settings_groups_init( $settings_groups ) {
+
+		$groups = $this->form_settings_groups();
+
+		// Loop through multi-array for multiple menu item
+		if ( ! empty( $groups[0] ) && is_array( $groups[0] ) ) {
+
+			foreach ( $groups as $key => $group ) {
+
+				if ( empty( $group['slug'] ) ) {
+					return;
+				}
+
+				$settings_groups[$group['slug']] = $group;
+			}
+
+		// generate single menu item
+		} elseif ( ! empty( $groups['slug'] ) ) {
+
+			$settings_groups[$groups['slug']] = $groups;
+		}
+	    	
+        return $settings_groups;
 	}
 
 	/**
@@ -923,27 +1324,29 @@ class GMW_Register_Addon {
 	 * 
 	 * @return array          
 	 */
-	public function new_form_buttons( $buttons ) {
+	public function form_buttons_init( $form_buttons ) {
+
+		$buttons = $this->form_buttons();
 
 		// Generate multiple button using multi-array
-		if ( ! empty( $this->form_buttons[0] ) && is_array( $this->form_buttons[0] ) ) {
+		if ( ! empty( $buttons[0] ) && is_array( $buttons[0] ) ) {
 
-			foreach ( $this->form_buttons as $key => $button ) {
+			foreach ( $buttons as $key => $button ) {
 
 				if ( empty( $button['slug'] ) ) {
 					return;
 				}
 
-				$buttons[$key] = $this->get_form_button( $button );
+				$form_buttons[$key] = $this->get_form_button( $button );
 			}
 			
 		// generate single button from an array
-		} elseif ( ! empty( $this->form_buttons['slug'] ) ) {
+		} elseif ( ! empty( $buttons['slug'] ) ) {
 
-			$buttons[$this->form_buttons['slug']] = $this->get_form_button( $this->form_buttons );
+			$form_buttons[$buttons['slug']] = $this->get_form_button( $buttons );
 		}
 	    	
-        return $buttons;
+        return $form_buttons;
 	}
 
 	/**
@@ -1027,3 +1430,5 @@ class GMW_Register_Addon {
 	 */
 	public function enqueue_scripts() {}	
 }
+
+endif;
