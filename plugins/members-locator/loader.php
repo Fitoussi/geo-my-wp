@@ -28,32 +28,18 @@ class GMW_Members_locator_Addon extends GMW_Addon {
      // description
     public $description = "Geotag Buddypress members and create proximity form to search and find BuddyPress members location based.";
 
-    public $objects = array(
-        'slug' => 'bp_member',
-        'name' => 'Buddypress Member',
-        'type' => 'user'
-    );
-
-    /*
     // object
     public $object = 'bp_member';
 
     // database object type
     public $object_type = 'user';
-    */
    
     // db table prefix. We use the base prefix table to save users across all subsites 
     // in multisite installation
     public $global_db = true;
 
-    // plugin uses template files
-    public $template_files = true;
-
-    // folder name
-    //public $templates_folder = 'templates';
-
-    // custom folder name
-    //public $custom_templates_folder = 'members-locator';
+    // templates folder name
+    public $templates_folder = 'members-locator';
 
     // path
     public $full_path = __FILE__;

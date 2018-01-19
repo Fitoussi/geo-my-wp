@@ -33,34 +33,17 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
     // description
     public $description = "Provides geolocation for WordPress post types.";
 
-    /**
-     * Objects
-     * 
-     * @var array
-     */
-    public $objects = array(
-        'slug' => 'post',
-        'name' => 'Post',
-        'type' => 'post'
-    );
-
     // object
-    //public $object = 'post';
+    public $object = 'post';
 
     // database object type
-    //public $object_type = 'post';
+    public $object_type = 'post';
 
     // db table prefix
     public $global_db = false;
 
     // Plugin use template files
-    public $template_files = true;
-
-    // folder name
-    //public $templates_folder = 'templates';
-
-    // custom folder name
-    //public $custom_templates_folder = 'posts-locator';
+    public $templates_folder = 'posts-locator';
 
     // path
     public $full_path = __FILE__;
