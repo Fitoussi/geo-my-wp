@@ -130,17 +130,19 @@ function gmw_delete_location_meta_by_object( $object_type = false, $object_id = 
 }
 
 /**
- * Update location using object type, object ID and an address.
+ * Update location using object type, object ID and an address or coordinates.
  *
- * The function will geocode the address and save it in the locations table in DB
+ * The function will geocode the address, or reverse geocode coords, and save it in the locations table in DB
  *
  * @since 3.0
+ * 
  * @author Eyal Fitoussi
  * 
  * @param  string  $object_type   string ( post, user, comment.... )
  * @param  integer $object_id     int ( post ID, user ID, comment ID... )
- * @param  boolean $address       can be either a string or an array of address field for example:
- * $defaults = array(
+ * @param  boolean $location      to pass an address it can be either a string or an array of address field for example:
+ * 
+ * $location = array(
  *      'street'    => 285 Fulton St,
  *      'apt'       => '',
  *      'city'      => 'New York',
@@ -148,48 +150,68 @@ function gmw_delete_location_meta_by_object( $object_type = false, $object_id = 
  *      'zipcode'   => '10007',
  *      'country'   => 'USA'
  * );
- * @param  integer $user_id       the user whom the location belongs to. By default it will belong to the user who creates/update the location ( logeed in user ).
+ *
+ * or pass a set of coordinates via an array of lat,lng. Ex 
+ *
+ * $location = array( 
+ *     'lat' => 26.1345,
+ *     'lng' => -80.4362
+ * );
+ * 
+ * @param  integer $user_id      the user whom the location belongs to. By default it will belong to the user who creates/update the location ( logged in user ).
  * @param  boolean $force_refresh false to use geocoded address in cache || true to force address geocoding
  * 
  * @return int location ID
  */
-function gmw_update_location( $object_type = '', $object_id = 0, $address = false, $user_id = 0, $force_refresh = false ) {
+function gmw_update_location( $object_type = '', $object_id = 0, $location = false, $user_id = 0, $force_refresh = false ) {
 
     // abort if data is missing
-    if ( empty( $object_type ) || empty( $object_id ) || empty( $address ) ) {
+    if ( empty( $object_type ) || empty( $object_id ) || empty( $location ) ) {
         return;
     }
 
     if ( empty( $user_id ) ) {
     	$user_id = get_current_user_id();
     }
+ 
+    $geo_address = $location;
+    $type        = 'address_single';
 
-    $geo_address     = $address;
-    $multiple_fields = false;
-
-    // if address is an array
-    if ( is_array( $address ) ) {
+    // if location is an array
+    if ( is_array( $location ) ) {
         
-        $multiple_fields = true;
+        if ( ! empty( $location['lat'] ) && ! empty( $location['lng'] ) ) {
 
-        $defaults = array(
-            'street'    => '',
-            'apt'       => '',
-            'city'      => '',
-            'state'     => '',
-            'zipcode'   => '',
-            'country'   => ''
-        );
-      
-        // Parse incoming $args into an array and merge it with $defaults
-        $address = wp_parse_args( $address, $defaults );
+            $type = 'coords';
 
-        $geo_address = $address;
+            $geo_address = array(
+                $location['lat'],
+                $location['lng']
+            );
 
-        // remove apt from address field to be able to geocode it properly
-        unset( $geo_address['apt'] );
+        } else {
 
-        $geo_address = implode( ' ', $geo_address );
+            $type = 'address_multiple';
+
+            $defaults = array(
+                'street'    => '',
+                'apt'       => '',
+                'city'      => '',
+                'state'     => '',
+                'zipcode'   => '',
+                'country'   => ''
+            );
+          
+            // Parse incoming $args into an array and merge it with $defaults
+            $location = wp_parse_args( $location, $defaults );
+
+            $geo_address = $location;
+
+            // remove apt from address field to be able to geocode it properly
+            unset( $geo_address['apt'] );
+
+            $geo_address = implode( ' ', $geo_address );
+        }
     }
 
     // include geocoder file
@@ -202,38 +224,50 @@ function gmw_update_location( $object_type = '', $object_id = 0, $address = fals
     	return false;
     }
 
-    //geocode the address
-    $geocoded_address = gmw_geocoder( $geo_address, $force_refresh );
+    //geocode the location
+    $geocoded_data = gmw_geocoder( $geo_address, $force_refresh );
 
     // abort if geocode failed
-    if ( isset( $geocoded_address['error'] ) ) {
+    if ( isset( $geocoded_data['error'] ) ) {
         
         //GMW_Location::delete_location( $object_type, $object_id, false );
 
-        do_action( 'gmw_udpate_location_failed', $geocoded_address, $object_type, $object_id, $address );
+        do_action( 'gmw_udpate_location_failed', $geocoded_data, $object_type, $object_id, $location );
 
         return;
     }
 
+    $latitude  = $geocoded_data['latitude'];
+    $longitude = $geocoded_data['longitude'];
+
     // if multiple address field passed through array 
     // get the original address field entered
-    if ( $multiple_fields ) {
+    if ( $type == 'address_multiple' ) {
  
-        $street   = ! empty( $address['street'] ) ? sanitize_text_field( $address['street'] ) : $geocoded_address['street']; 
-        $premise  = ! empty( $address['apt'] ) 	? sanitize_text_field( $address['apt'] ) : $geocoded_address['premise'];
-        $city     = ! empty( $address['city'] ) ? sanitize_text_field( $address['city'] ) : $geocoded_address['city'];
-        $postcode = ! empty( $address['zipcode'] ) ? sanitize_text_field( $address['zipcode'] ) : $geocoded_address['postcode'];
-        $region_code  = $geocoded_address['region_code'];
-        $country_code = $geocoded_address['country_code'];
+        $street       = ! empty( $location['street'] ) ? sanitize_text_field( $location['street'] ) : $geocoded_data['street']; 
+        $premise      = ! empty( $location['apt'] ) 	? sanitize_text_field( $location['apt'] ) : $geocoded_data['premise'];
+        $city         = ! empty( $location['city'] ) ? sanitize_text_field( $location['city'] ) : $geocoded_data['city'];
+        $postcode     = ! empty( $location['zipcode'] ) ? sanitize_text_field( $location['zipcode'] ) : $geocoded_data['postcode'];
+        $region_code  = $geocoded_data['region_code'];
+        $country_code = $geocoded_data['country_code'];
+        $latitude     = $geocoded_data['lat'];
+        $longitude    = $geocoded_data['lng'];
 
     } else {
 
-        $street       = $geocoded_address['street'];
-        $premise      = $geocoded_address['premise'];
-        $city         = $geocoded_address['city'];
-        $region_code  = $geocoded_address['region_code'];
-        $postcode     = $geocoded_address['postcode'];
-        $country_code = $geocoded_address['country_code'];
+        $street       = $geocoded_data['street'];
+        $premise      = $geocoded_data['premise'];
+        $city         = $geocoded_data['city'];
+        $region_code  = $geocoded_data['region_code'];
+        $postcode     = $geocoded_data['postcode'];
+        $country_code = $geocoded_data['country_code'];
+
+        if ( $type == 'coords' ) {
+
+            $latitude  = $location['lat'];
+            $longitude = $location['lng'];
+            $location  = $geocoded_data['formatted_address'];
+        }
     }
 
     // collect location data into array
@@ -241,35 +275,35 @@ function gmw_update_location( $object_type = '', $object_id = 0, $address = fals
         'object_type'       => $object_type,
         'object_id'         => $object_id,
         'user_id'			=> $user_id,
-        'latitude'          => $geocoded_address['lat'],
-        'longitude'         => $geocoded_address['lng'],
-        'street_number'     => $geocoded_address['street_number'],
-        'street_name'       => $geocoded_address['street_name'],
+        'latitude'          => $latitude,
+        'longitude'         => $longitude,
+        'street_number'     => $geocoded_data['street_number'],
+        'street_name'       => $geocoded_data['street_name'],
         'street'            => $street,
         'premise'           => $premise,
-        'neighborhood'      => $geocoded_address['neighborhood'],
+        'neighborhood'      => $geocoded_data['neighborhood'],
         'city'              => $city,
-        'county'            => $geocoded_address['county'],
-        'region_name'       => $geocoded_address['region_name'],
+        'county'            => $geocoded_data['county'],
+        'region_name'       => $geocoded_data['region_name'],
         'region_code'       => $region_code,
         'postcode'          => $postcode,
-        'country_name'      => $geocoded_address['country_name'],
+        'country_name'      => $geocoded_data['country_name'],
         'country_code'      => $country_code,
-        'address'           => is_array( $address ) ? implode( ' ', $address ) : $address,
-        'formatted_address' => $geocoded_address['formatted_address'],
-        'place_id'			=> $geocoded_address['place_id']
+        'address'           => is_array( $location ) ? implode( ' ', $location ) : $location,
+        'formatted_address' => $geocoded_data['formatted_address'],
+        'place_id'			=> $geocoded_data['place_id']
     );
 
     // modify the data if needed
-    $location_data = apply_filters( "gmw_pre_update_location_data", $location_data, $object_type, $geocoded_address );
-    $location_data = apply_filters( "gmw_pre_update_{$object_type}_location_data", $location_data, $geocoded_address );
+    $location_data = apply_filters( "gmw_pre_update_location_data", $location_data, $object_type, $geocoded_data );
+    $location_data = apply_filters( "gmw_pre_update_{$object_type}_location_data", $location_data, $geocoded_data );
 
-    do_action( "gmw_pre_update_{$object_type}_location", $location_data, $geocoded_address );
+    do_action( "gmw_pre_update_{$object_type}_location", $location_data, $geocoded_data );
     
     //Save information to database
     $location_id = GMW_Location::update_location( $location_data );
 
-    do_action( "gmw_{$object_type}_location_updated", $location_data, $geocoded_address );
+    do_action( "gmw_{$object_type}_location_updated", $location_data, $geocoded_data );
 
     return $location_id;
 }
@@ -468,16 +502,31 @@ function gmw_get_location_meta_list( $location = false, $fields = array(), $labe
 
 	// check if $location is an object and contains location meta. This will usually be used in the loop
 	if ( is_object( $location ) ) {
-		
-		if ( empty( $location->ID ) ) {
-			return;
-		}
-
-		$location_id = $location->ID;
-
+	   
+        // look for location meta in the object.
+        // It might generated during the loop.
 		if ( ! empty( $location->location_meta ) ) {
+
 			$location_meta = $location->location_meta;
-		} else {
+		
+        } else {
+
+            // can sometimes be location_id in some loops
+            if ( isset( $location->location_id ) ) {
+                
+                $location_id = $location->location_id;
+            
+            // otherwwise, it might be saved as ID
+            } elseif ( isset( $location->ID ) ) {
+
+                $location_id = $location->ID;
+            
+            // return if no location ID 
+            } else {
+                return;
+            }
+
+            // get he location meta
 			$location_meta = gmw_get_location_meta( $location_id, $fields );
 		}	
 
