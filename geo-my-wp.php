@@ -87,16 +87,21 @@ class GEO_my_WP {
 	 * @var array
 	 */
 	public $required_versions = array(
-		'premium_settings' 	    => '2.0',
-		'global_maps' 	        => '2.1',
-		'bp_groups_locator'   	=> '2.0',
-		'gmw_kleo_geolocation'  => '2.0',
-		'wp_users_geo-location' => '2.0',
-		'users_locator'			=> '2.0',
-		'nearby_posts'			=> '2.0',
-		'geo_members_directory' => '2.0',
-		'exclude_members'		=> '2.0',
-		'xprofile_fields'		=> '2.0'
+		'bp_groups_locator'   			   => '1.6',
+		'groups_locator'				   => '1.6', // old slug
+		'bp_members_directory_geolocation' => '1.5',
+		'geo_members_directory'			   => '1.5', // old slug
+		'bp_xprofile_geolocation' 		   => '1.5',
+		'xprofile_fields'				   => '1.5', // old slug
+		'exclude_locations'				   => '1.3',
+		'exclude_members'				   => '1.3', // old slug
+		'gmw_kleo_geolocation'  		   => '1.4',
+		'nearby_locations'				   => '1.3',
+		'nearby_posts'				   	   => '1.3', // old slug
+		'premium_settings' 	    		   => '2.0',
+		'global_maps' 	        		   => '2.1',
+		'users_locator'					   => '1.3',
+		'wp_users_geo-location' 		   => '1.3', // old slug
 	);
 
 	/**
