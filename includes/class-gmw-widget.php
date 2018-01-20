@@ -130,10 +130,28 @@ class GMW_Widget extends WP_Widget {
             </p>
 		<?php }
 		
+		$allowed_html = array(
+			'a'  => array( 
+				'title' => array(),
+				'href'  => array()
+			),
+			'p'  => array(),
+			'em' => array(),
+			'ul' => array( 'li' => array() ),
+			'ol' => array( 'li' => array() ),
+			'li' => array()
+		);
+
 		foreach ( $this->settings as $key => $setting ) {
 
 			// get saved or default value
 			$value = isset( $instance[ $key ] ) ? $instance[ $key ] : $setting['default'];
+
+			$description = '';
+
+			if ( ! empty( $setting['description'] ) ) {
+				$description = '<em class="desc">'. wp_kses( $setting['description'], $allowed_html ).'</em>';
+			}
 
 			switch ( $setting['type'] ) {
 				case 'text' :
@@ -141,9 +159,7 @@ class GMW_Widget extends WP_Widget {
 					<p>
 						<label for="<?php echo $this->get_field_id( $key ); ?>"><?php echo $setting['label']; ?></label>
 						<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( $key ) ); ?>" name="<?php echo $this->get_field_name( $key ); ?>" type="text" value="<?php echo esc_attr( $value ); ?>" />
-						<?php if ( ! empty( $setting['description'] ) ) { ?>
-							<em class="desc"><?php echo esc_attr( $setting['description'] ); ?></em>
-						<?php } ?>
+						<?php echo $description; ?>
 					</p>
 					<?php
 				break;
@@ -152,9 +168,7 @@ class GMW_Widget extends WP_Widget {
 					<p>
 						<label for="<?php echo $this->get_field_id( $key ); ?>"><?php echo $setting['label']; ?></label>
 						<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( $key ) ); ?>" name="<?php echo $this->get_field_name( $key ); ?>" type="number" step="<?php echo esc_attr( $setting['step'] ); ?>" min="<?php echo esc_attr( $setting['min'] ); ?>" max="<?php echo esc_attr( $setting['max'] ); ?>" value="<?php echo esc_attr( $value ); ?>" />
-						<?php if ( ! empty( $setting['description'] ) ) { ?>
-							<em class="desc"><?php echo esc_attr( $setting['description'] ); ?></em>
-						<?php } ?>
+						<?php echo $description; ?>
 					</p>
 					<?php
 				break;
@@ -173,9 +187,7 @@ class GMW_Widget extends WP_Widget {
 								</option>
 							<?php } ?>
 						</select>
-						<?php if ( ! empty( $setting['description'] ) ) { ?>
-							<em class="desc"><?php echo esc_attr( $setting['description'] ); ?></em>
-						<?php } ?>
+						<?php echo $description; ?>
 					</p>
 					<?php
 				break;
@@ -187,9 +199,7 @@ class GMW_Widget extends WP_Widget {
 							<?php echo $setting['label']; ?>
 						</label>
 						<br />
-						<?php if ( ! empty( $setting['description'] ) ) { ?>
-							<em class="desc"><?php echo esc_attr( $setting['description'] ); ?></em>
-						<?php } ?>
+						<?php echo $description; ?>
 					</p>
 					<?php
 				break;
@@ -217,9 +227,7 @@ class GMW_Widget extends WP_Widget {
 							</label>
 							<br />
 						<?php } ?>
-						<?php if ( ! empty( $setting['description'] ) ) { ?>
-							<em class="desc"><?php echo esc_attr( $setting['description'] ); ?></em>
-						<?php } ?>
+						<?php echo $description; ?>
 					</p>
 					<?php
 				break;
