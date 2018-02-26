@@ -349,7 +349,7 @@ class GMW_Single_Location {
 			return;
 		}
 		
-		if ( $this->args['units'] == 'k' || $this->args['units'] == 'imperial' ) {
+		if ( $this->args['units'] == 'k' || $this->args['units'] == 'metric' ) {
 			$units = 'km';
 		} else {
 			$units = 'mi';
