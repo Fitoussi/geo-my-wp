@@ -2,8 +2,26 @@
  * GEO my WP main stylesheet
  * @author Eyal Fitoussi
  */
- div.pac-container {
-	z-index:99999999;
+body.gmw-scroll-disabled,
+html.gmw-scroll-disabled {
+	overflow: hidden;
+}
+
+div.pac-container {
+	z-index: 99999999999;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+	margin-top: -1px;
+}
+
+div.pac-container .pac-item {
+	line-height: 40px;
+	font-size: 12px;
+	font-weight: 100 !important;
+	font-family: initial;
+}
+
+div.pac-container span.pac-icon.pac-icon-marker {
+	margin: 10px 7px 0 8px;
 }
 
 .gmw-geocode-error p {
@@ -11,6 +29,9 @@
 	border: 1px solid #CC4222;
 }
 
+.gmw-draggable {
+	cursor: grab;
+}
 /********** map ********/
 
 div.gmw-map img {
@@ -23,7 +44,7 @@ div.gmw-map img {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background: #f1f1f1;
+	background: #f7f5e8;
 }
 
 .gm-fullscreen-control::before {
@@ -44,6 +65,7 @@ div.gmw-map img {
 }
 div.gmw-map-wrapper {
 	position: relative;
+	background: #f7f5e8;
 	//display: inline-block;
 }
 
@@ -68,8 +90,8 @@ div.gmw-map-wrapper .gmw-map-loader {
 }
 
 div.gmw-map-wrapper.gmw-expanded-map {
-	position:fixed !important;
-	z-index:99999999999 !important;
+	position:fixed;
+	z-index: 99999999 !important;
 	width:100% !important;
 	height:100% !important;
 	left:0px;
@@ -97,6 +119,7 @@ span.gmw-resize-map-toggle.gmw-icon-resize-small {
 .gmw-element-toggle-button {
 	cursor: pointer;
 }
+
 /********** end map ********/
 
 /********** search forms ******************/
@@ -748,6 +771,13 @@ span.gmw-resize-map-toggle.gmw-icon-resize-small {
 
 /********** search results end **********/
 
+/********** Toggled windows **********/
+
+.gmw-toggle-element {
+	transition-duration: .4s;
+	-webkit-transition-duration: .4s;
+}
+
 /********** Info-window start **********/
 	
 
@@ -946,7 +976,7 @@ span.gmw-resize-map-toggle.gmw-icon-resize-small {
 		max-width: 255px;
 		min-height: 140px;
 		padding: 12px;
-		z-index: 9999999;
+		z-index: 999999999;
 		overflow: visible !important;
 		-webkit-box-sizing: border-box;
 		-moz-box-sizing: border-box;
@@ -1016,7 +1046,7 @@ span.gmw-resize-map-toggle.gmw-icon-resize-small {
 	/***** Popup start *****/
 
 	div.gmw-info-window.popup {
-		z-index: 99999999999;
+		z-index: 9999999999;
 		background-color: #fff;
 		position: fixed;
 		width: 300px;
@@ -1326,7 +1356,7 @@ span.gmw-resize-map-toggle.gmw-icon-resize-small {
 	}
 
 	div.gmw-info-window-inner.popup ul.gmw-xprofile-fields li {
-		font-size: 12px;
+		font-size: 13px;
 		line-height: 24px;
 		color: #444;
 	}
@@ -1893,7 +1923,7 @@ div.gmw-current-location-wrapper div.gmw-cl-form-wrapper p.gmw-current-location-
 	div.gmw-single-location-wrapper .gmw-sl-map-wrapper.gmw-expanded-map,
 	.widget .gmw-single-location-wrapper div.gmw-sl-map-wrapper.gmw-expanded-map {
 		position:fixed;
-		z-index:9999999;
+		z-index: 9999999;
 		width:100% !important;
 		height:100% !important;
 		left:0px;
