@@ -26,25 +26,40 @@ class GMW_Installer {
 
 		// create database tables
 		self::create_tables();
+		
+		// update the forms table only once.
+		if ( empty( get_option( 'gmw_forms_table_updated' ) ) ) {
+			self::update_forms_table();
+		}
 
 		// schedule cron jobs
 		self::schedule_cron();	
 
-		// run update if version changed
+		// run GMW update if version changed
 		if ( version_compare( GMW_VERSION, get_option( 'gmw_version' ), '>' ) ) {
 			self::update();
 		}
 		
-		// get db version
-		$gmw_db_version = get_option( 'gmw_db_version' );
+		// get forms db version
+		$db_versions = get_option( 'gmw_db_tables_version' );
+	
+		// upgrade forms db
+		if ( empty( $db_versions['forms'] ) || version_compare( GMW_DB_VERSION['forms'], $db_versions['forms'], '>' ) ) {
+			self::upgrade_forms_db();
+		}
 		
-		// upgrade db if needed
-		if ( empty( $gmw_db_version ) || version_compare( GMW_DB_VERSION, $gmw_db_version, '>' ) ) {
-			self::upgrade_db();
+		// upgrade locations db
+		if ( empty( $db_versions['locations'] ) || version_compare( GMW_DB_VERSION['locations'], $db_versions['locations'], '>' ) ) {
+			self::upgrade_locations_db();
+		}
+
+		// upgrade location meta db if needed
+		if ( empty( $db_versions['locationmeta'] ) || version_compare( GMW_DB_VERSION['locationmeta'], $db_versions['locationmeta'], '>' ) ) {
+			self::upgrade_locationmeta_db();
 		}
 
 		// update versions
-		update_option( 'gmw_db_version', GMW_DB_VERSION );
+		update_option( 'gmw_db_tables_version', GMW_DB_VERSION );
 		update_option( 'gmw_version', GMW_VERSION );	
 	}
 
@@ -131,6 +146,8 @@ class GMW_Installer {
 				ID INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 				slug VARCHAR( 50 ) NOT NULL,
 				addon VARCHAR( 50 ) NOT NULL,
+				sub_addon VARCHAR( 50 ) NOT NULL,
+				object_type VARCHAR( 50 ) NOT NULL,
 				name VARCHAR( 50 ) NOT NULL,
 				title VARCHAR( 50 ) NOT NULL,
 				prefix VARCHAR( 20 ) NOT NULL,
@@ -142,11 +159,6 @@ class GMW_Installer {
 			
 			// create database table
 			dbDelta( $sql );
-
-			// import existing forms to the new table
-			self::import_forms();
-
-			update_option( 'gmw_forms_db_table_version', '1.0' );
 		}
 
 		// locations table name
@@ -205,8 +217,6 @@ class GMW_Installer {
 
 			// create database table
 			dbDelta( $sql );
-
-			update_option( 'gmw_locations_db_table_version', '1.0' );
 		}
 		
 		// location meta table
@@ -234,8 +244,6 @@ class GMW_Installer {
 
 			// create database table
 			dbDelta( $sql );
-
-			update_option( 'gmw_locationmeta_db_table_version', '1.0' );
 		}
 
 		// look for post types table
@@ -252,251 +260,19 @@ class GMW_Installer {
 	}
 	
 	/**
-	 * Import existing forms to new database table created in version 3.0
+	 * Update forms table
 	 * 
 	 * @return [type] [description]
 	 */
-	public static function import_forms() {
-	    
-	    global $wpdb;
+	public static function update_forms_table() {
 
-	     // get existing forms
-	    $gmw_forms = get_option( 'gmw_forms' );
-		
-		// abort if not forms to import
-		if ( empty( $gmw_forms ) ) {
-			return;
-		}
+		include( GMW_PATH . '/includes/admin/pages/tools/class-gmw-update-forms-table.php' );
 
-	    // look for forms table
-		$forms_table  = $wpdb->prefix . 'gmw_forms';
-		$table_exists = $wpdb->get_results( "SHOW TABLES LIKE '{$forms_table}'", ARRAY_A );
+		$form_updater = new GMW_Update_Forms_Table();
 
-		// abort if forms table not exists
-		if ( count( $table_exists ) == 0 ) {
+		$form_updater->init();
 
-			trigger_error( 'GEO my WP Forms table not exists.', E_USER_NOTICE );
-
-			return;
-		}
-		
-		// loop through forms and insert into new table
-		foreach ( $gmw_forms as $key => $form ) {
-
-			if ( empty( $form['ID'] ) || empty( $form['addon'] ) ) {
-				continue;
-			}
-
-			$form_id = ( int ) $form['ID'];
-			unset( $form['ID'] );
-			
-			$addon = $form['addon'];
-			unset( $form['addon'] );
-
-			if ( ! empty( $form['form_type'] ) ) {
-
-				$slug = $form['form_type'];
-				unset( $form['form_type'] );
-
-			} else {
-
-				$slug = $addon;
-			}
-
-			if ( ! empty( $form['form_title'] ) ) {
-
-				$form_name = $form['form_title'];
-				unset( $form['form_title'] );
-
-			} else {
-
-				$form_name = '';
-			}
-			
-			if ( ! empty( $form['name'] ) ) {
-				
-				$form_title = $form['name'];
-				unset( $form['name'] );
-			
-			} else {
-				$form_title = 'form_id_'.$form_id;
-			}
-			
-			if ( ! empty( $form['prefix'] ) ) {
-
-				$prefix = $form['prefix'];
-				unset( $form['prefix'] );
-			} else {
-
-				$prefix = '';
-			}
-
-			if ( ! empty( $form['search_form']['address_field']['title'] ) ) {
-
-				if ( ! empty( $form['search_form']['address_field']['within'] ) ) {
-
-					$form['search_form']['address_field']['placeholder'] = $form['search_form']['address_field']['title'];
-				} else {
-					
-					$form['search_form']['address_field']['label'] = $form['search_form']['address_field']['title'];
-				}	
-			}
-
-			// update page load tab settings
-			$form['page_load_results']['enabled'] = ! empty( $form['page_load_results']['all_locations'] ) ? 1 : '';
-
-			// update the new form_submission tab
-			$form['form_submission'] = array(
-				'results_page'    => ! empty( $form['search_results']['results_page'] ) ? $form['search_results']['results_page'] : '',
-				'display_results' => '',
-				'display_map'     => ! empty( $form['search_results']['display_map'] ) ? $form['search_results']['display_map'] : 'results'
-			);
-
-			$form['search_results']['image'] = array(
-				'enabled' => '',
-				'width'   => '200px',
-				'height'  => '200px'
-			);
-
-			$form['search_results']['directions_link'] = ! empty( $form['search_results']['get_directions'] ) ? $form['search_results']['get_directions'] : '';
-
-			
-			// update posts locator form data
-			if ( $slug == 'posts' ) {
-
-				$form['page_load_results']['display_results'] = ! empty( $form['page_load_results']['display_posts'] ) ? 1 : '';
-
-				$form['form_submission']['display_results'] = ! empty( $form['search_results']['display_posts'] ) ? 1 : '';
-
-				if ( ! empty( $form['search_results']['featured_image']['use'] ) ) {
-					$form['search_results']['image']['enabled'] = 1;
-					$form['search_results']['image']['height']  = $form['search_results']['featured_image']['height'];
-					$form['search_results']['image']['width']   = $form['search_results']['featured_image']['width']; 
-				}
-
-				if ( ! empty( $form['search_results']['additional_info'] ) ) {
-					$form['search_results']['location_meta'] = array_keys( $form['search_results']['additional_info'] );
-				}
-
-				if ( ! empty( $form['search_results']['excerpt']['use'] ) ) {
-					$form['search_results']['excerpt']['enabled'] = 1;
-					$form['search_results']['excerpt']['link'] = ! empty( $form['search_results']['more'] ) ? $form['search_results']['more'] : '';
-				}
-
-				if ( ! empty( $form['search_results']['custom_taxes'] ) ) {
-					$form['search_results']['taxonomies'] = 1;
-				}
-			}
-
-			// update friends locator form data
-			if ( $slug == 'friends' ) {
-
-				$form['page_load_results']['display_results'] = ! empty( $form['page_load_results']['display_posts'] ) ? 1 : '';
-
-				$form['form_submission']['display_results'] = ! empty( $form['search_results']['display_members'] ) ? 1 : '';
-
-				if ( ! empty( $form['search_form']['profile_fields'] ) ) {
-					$form['search_form']['xprofile_fields']['fields'] = $form['search_form']['profile_fields'];
-				}
-
-				if ( ! empty( $form['search_form']['profile_fields_date'] ) ) {
-					$form['search_form']['xprofile_fields']['date_field'] = $form['search_form']['profile_fields_date'];
-				}
-
-				if ( ! empty( $form['search_results']['avatar']['use'] ) ) {
-					$form['search_results']['image']['enabled'] = 1;
-					$form['search_results']['image']['height']  = $form['search_results']['avatar']['height'];
-					$form['search_results']['image']['width']   = $form['search_results']['avatar']['width']; 
-				}
-			}
-
-			$data = array(
-				'ID'	 => $form_id,
-				'slug'	 => $slug,
-				'addon'  => $addon, 
-				'name'   => $form_name,
-				'title'  => $form_title,
-				'prefix' => $prefix,
-				'data'   => maybe_serialize( $form ),
-			);
-
-			// Insert form to database
-			$wpdb->insert( 
-				$forms_table, 
-				$data, 
-				array( '%d', '%s', '%s', '%s', '%s', '%s', '%s' ) 
-			);
-		}
-
-		// backup old forms in a new option to prevent the plugin
-		// from trying to import forms again after it was already done.
-		update_option( 'gmw_forms_old', $gmw_forms );
-		delete_option( 'gmw_forms' );
-
-		self::fix_forms_table();
-	}
-
-	/**
-	 * Update data in forms table
-	 * @return [type] [description]
-	 */
-	public static function fix_forms_table() {
-
-		global $wpdb;
-
-		// forms table name
-		$forms_table = $wpdb->prefix . 'gmw_forms';
-		
-		// check if table exists already 
-		$table_exists = $wpdb->get_results( "SHOW TABLES LIKE '{$forms_table}'", ARRAY_A );
-		
-		// if form table not exists create it
-		if ( count( $table_exists ) == 0 ) {
-
-			trigger_error( 'GEO my WP Forms table not exists.', E_USER_NOTICE );
-
-			return;
-		}
-
-		$wpdb->update( 
-
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
-            	'slug'   => 'posts_locator',
-                'addon'  => 'posts_locator',
-                'name'   => 'Posts Locator',
-                'prefix' => 'pt'
-            ), 
-            array( 
-            	'addon' => 'posts'
-            ), 
-            array( 
-                '%s',
-                '%s',
-                '%s',
-                '%s'
-            )
-        );
-
-        $wpdb->update( 
-
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
-            	'slug'   => 'members_locator',
-                'addon'  => 'members_locator',
-                'name'   => 'Memebrs Locator',
-                'prefix' => 'fl'
-            ), 
-            array( 
-            	'addon' => 'friends'
-            ), 
-            array( 
-                '%s',
-                '%s',
-                '%s',
-                '%s'
-            )
-        );
+		update_option( 'gmw_forms_table_updated', 1 );
 	}
 
 	/**
@@ -507,11 +283,27 @@ class GMW_Installer {
 	public static function update() {}
 
 	/**
-	 * Updarte database tables if needed
+	 * Upgrade forms database tables
 	 * 
 	 * @return [type] [description]
 	 */
-	public static function upgrade_db() {}
+	public static function upgrade_forms_db() {}
+
+	/**
+	 * Upgrade locations database tables
+	 * 
+	 * @return [type] [description]
+	 */
+	public static function upgrade_locations_db() {
+
+	}
+
+	/**
+	 * Upgrade location meta database tables
+	 * 
+	 * @return [type] [description]
+	 */
+	public static function upgrade_locationmeta_db() {}
 
 	/**
 	 * Setup cron jobs
