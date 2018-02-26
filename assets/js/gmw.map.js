@@ -201,7 +201,7 @@ var GMW_Map = function( options, map_options, form ) {
 	 * 
 	 * @type {Boolean}
 	 */
-	this.zoom_position = false;
+	this.zoom_position = options['zoom_position'] || false;
 
 	this.init();
 	/**
@@ -268,7 +268,7 @@ GMW_Map.prototype.render = function( locations, user_location ) {
 	if ( self.options['zoom'] == 'auto' ) {
 
 		self.auto_zoom_level = true;
-		self.options.zoom = 13;
+		self.options.zoom 	 = 13;
 	
 	// otherwise specifiy the zoom level
 	} else {
@@ -285,7 +285,17 @@ GMW_Map.prototype.render = function( locations, user_location ) {
 	self.options['center'] = new google.maps.LatLng( '40.758895', '-73.985131' );
 
 	// map type
-	self.options['mapTypeId'] = google.maps.MapTypeId[self.options['mapTypeId']];
+	self.options['mapTypeId'] 			  = google.maps.MapTypeId[self.options['mapTypeId']];
+	self.options['mapTypeControlOptions'] = {
+	    style    : google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+	    position : google.maps.ControlPosition.TOP_CENTER
+	}
+    self.options['zoomControlOptions'] = {
+      	position : google.maps.ControlPosition.RIGHT_CENTER
+    }
+	self.options['streetViewControlOptions'] = {
+	    position : google.maps.ControlPosition.RIGHT_CENTER
+	}
 	
 	// abort if not locations found and we don't want to show the map
 	// we still render it but keep it hidden
@@ -308,7 +318,7 @@ GMW_Map.prototype.render = function( locations, user_location ) {
 			
 			// fadeout the map loader
 			jQuery( '#gmw-map-loader-' + self.id ).fadeOut( 1000 );
-			self.wrap_element.find( '.gmw-map-cover' ).fadeOut( 1000 );
+			self.wrap_element.find( '.gmw-map-cover' ).fadeOut( 500 );
 			
 			// create map expand toggle if needed
 			// temporary disabled. It seems that Google added this feature to his API
@@ -327,8 +337,14 @@ GMW_Map.prototype.render = function( locations, user_location ) {
 		    		var mapCenter = self.map.getCenter();
 
 		    		// replace map wrapper class to expended
-		    		self.wrap_element.toggleClass( 'gmw-expanded-map' ); 
+		    		self.wrap_element.toggleClass( 'gmw-expanded-map' );
 
+		    		if ( self.wrap_element.hasClass( 'gmw-expanded-map' ) ) {
+		    			jQuery( 'body, html' ).addClass( 'gmw-scroll-disabled' ); 
+		    		} else {
+		    			jQuery( 'body, html' ).removeClass( 'gmw-scroll-disabled' );
+		    		}
+		    		
 		    		// replace the toggle icon         		
 		    		jQuery( this ).toggleClass( 'gmw-icon-resize-full' ).toggleClass( 'gmw-icon-resize-small' );
 		    		
@@ -628,13 +644,13 @@ GMW_Map.prototype.grouping_type_markers_clusterer = function() {
  * 
  * @return {[type]} [description]
  */
-GMW_Map.prototype.move_marker = function() {
+GMW_Map.prototype.move_marker = function( marker_position ) {
 
     // do the math     
     var a = 360.0 / this.locations.length;
    
-    var newLat = this.locations[i]['marker_position'].lat() + - .000025 * Math.cos( ( + a * i ) / 180 * Math.PI );  //x
-    var newLng = this.locations[i]['marker_position'].lng() + - .000025 * Math.sin( ( + a * i )  / 180 * Math.PI );  //Y
+    var newLat = marker_position.lat() + - .000025 * Math.cos( ( + a * i ) / 180 * Math.PI );  //x
+    var newLng = marker_position.lng() + - .000025 * Math.sin( ( + a * i )  / 180 * Math.PI );  //Y
     
     var newPosition = new google.maps.LatLng( newLat, newLng );
 
@@ -642,7 +658,7 @@ GMW_Map.prototype.move_marker = function() {
     // to the new location of the marker after it moves
     this.polylines.push( new google.maps.Polyline( {
 	    path : [
-	        this.locations[i]['marker_position'], 
+	        marker_position, 
 	        newPosition
 	    ],
 	    strokeColor   : "#FF0000",
@@ -770,6 +786,9 @@ GMW_Map.prototype.render_markers = function( locations ) {
 
 	var self = this;
 
+	// hook custom functions if needed
+	GMW.do_action( 'gmw_map_pre_render_markers', locations, this );
+
 	// init grouping
 	self.markers_grouping_init();
 
@@ -794,23 +813,23 @@ GMW_Map.prototype.render_markers = function( locations ) {
 			}
 	
 			// generate the marker position
-			self.locations[i]['marker_position'] = new google.maps.LatLng( 
+			var marker_position = new google.maps.LatLng( 
 				self.locations[i]['lat'], 
 				self.locations[i]['lng'] 
 			);
 			
 			// only if not using markers spiderfeir and if marker with the same location already exists
 			// if so, we will move it a bit
- 			if ( self.grouping_type != 'markers_spiderfier' && self.bounds.contains( self.locations[i]['marker_position'] ) ) {
- 				self.locations[i]['marker_position'] = self.move_marker();
+ 			if ( self.grouping_type != 'markers_spiderfier' && self.bounds.contains( marker_position ) ) {
+ 				marker_position = self.move_marker( marker_position );
 	        }
 
 			// append location into bounds
-			self.bounds.extend( self.locations[i]['marker_position'] );
+			self.bounds.extend( marker_position );
 
 		    // generate marker
 			var markerOptions = {
-				position : self.locations[i]['marker_position'],
+				position : marker_position,
 				icon     : self.locations[i]['map_icon'],
 				id       : i,
 				content  : self.locations[i]['info_window_content']
@@ -857,8 +876,13 @@ GMW_Map.prototype.render_markers = function( locations ) {
 		// Continue when done generating the markers.
 		} else {
 			
-			// center map when done creating the users position
-			self.center_map();
+			// hook custom functions if needed
+			GMW.do_action( 'gmw_map_after_render_markers', locations, this );
+
+			// center map only if locations or user location exist
+			if ( locations_count > 0 || self.user_marker != false ) {
+				self.center_map();
+			}
 		}
 	} 
 };
@@ -877,8 +901,8 @@ GMW_Map.prototype.center_map = function() {
 
 		// get position
 		var latLng = new google.maps.LatLng( 
-			self.zoom_position, 
-			self.zoom_position 
+			self.zoom_position.lat, 
+			self.zoom_position.lng 
 		);
 
 		self.map.setZoom( parseInt( self.options['zoom'] ) );
