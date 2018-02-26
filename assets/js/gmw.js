@@ -58,6 +58,10 @@ var GMW = {
         // hide all map loaders
         jQuery( '.gmw-map-loader' ).fadeOut( 1500 );  
 
+        if ( jQuery( '.gmw-expanded-map' ).length ) {
+            jQuery( 'body, html' ).addClass( 'gmw-scroll-disabled' ); 
+        }
+
         // run form functions only when a form is present on the page
         if ( jQuery( '.gmw-form-wrapper' ).length ) {
             GMW.form_functions();
@@ -462,7 +466,7 @@ var GMW = {
                     }
 
                     jQuery( '#gmw-lat-' + gmwFormID ).val( place.geometry.location.lat().toFixed(6) );
-                    jQuery( '#gmw-lng-' + gmwFormID ).val( place.geometry.location.lng().toFixed(6) );
+                    jQuery( '#gmw-lng-' + gmwFormID ).val( place.geometry.location.lng().toFixed(6) );               
                 }   
             });
         }
@@ -1025,13 +1029,17 @@ var GMW = {
        
         // if form locator set to auto submit form. 
         if ( GMW.locator_button.submit ) {
-                
+            
             setTimeout( function() {
+                
                 jQuery( '#gmw-submit-' + GMW.locator_button.form_id ).click();
+
+                // we do this in case of an ajax submission
+                GMW.locator_button_done();
+
             }, 500);
             
         } else {
-            
             GMW.locator_button_done();
         }
     },
@@ -1139,6 +1147,30 @@ var GMW = {
      */
     draggable_element : function() {
 
+        /**
+         * If this is a remote draggable element
+         *
+         * we need to pass some data from the original to the 
+         * 
+         * remote element. 
+         * 
+         * @param  {[type]}   var data [description]
+         * @return {[type]}   [description]
+         */
+        jQuery( '.gmw-draggable.remote-toggle' ).each( function() {
+
+            var data   = jQuery( this ).data();
+            var target = jQuery( data.handle );
+            
+            target.addClass( 'gmw-draggable' ).attr( 'data-draggable', data.draggable ).attr( 'data-containment', data.containment );
+        });
+
+        /**
+         * Enable draggable on mouseenter
+         * 
+         * @param  {[type]} e )             {            if ( ! jQuery( this ).hasClass( 'enabled' ) ) {                            jQuery( this ).addClass( 'enabled' );                var dragData [description]
+         * @return {[type]}   [description]
+         */
         jQuery( document ).on( 'mouseenter', '.gmw-draggable', function( e ) {
 
             if ( ! jQuery( this ).hasClass( 'enabled' ) ) {
@@ -1147,7 +1179,12 @@ var GMW = {
 
                 var dragData = jQuery( this ).data();
 
-                jQuery( '#' + dragData.draggable ).draggable({
+                if ( dragData.draggable == 'global_map' ) {
+                    dragData.draggable   = jQuery( this ).closest( '.gmw-form-wrapper' );
+                    dragData.containment = jQuery( this ).closest( '.gmw-global-map-wrapper' );
+                }
+                
+                jQuery( dragData.draggable ).draggable({
                     containment : dragData.containment,
                     handle      : jQuery( this )        
                 });
@@ -1156,33 +1193,52 @@ var GMW = {
     },
 
     /**
-     * Toggle window
+     * Toggle elements
      * 
      * @return {[type]} [description]
      */
     toggle_element : function() {
 
+        // do it on click
         jQuery( document ).on( 'click', '.gmw-element-toggle-button', function( e ) {
-                
-            var button = jQuery( this );
-            var data   = jQuery( this ).data();
-            var target = jQuery( data.target );
+      
+            var button  = jQuery( this );
+            var data    = jQuery( this ).data();
+            var target  = jQuery( data.target );
             var options = {};
             var visible = 1;
 
+            // toggle icon class
             button.toggleClass( data.show_icon ).toggleClass( data.hide_icon );
 
-            if ( button.hasClass( 'visible' ) ) {
+            // if expanded, callapse windpw
+            if ( button.attr( 'data-state' ) == 'expand' ) {
+
                 options[data.animation] = data.close_length;
-                target.addClass( 'hidden' );
+
+                button.attr( 'data-state', 'collapse' );
+                target.attr( 'data-state', 'collapse' );
+
+            // otherwise, expand
             } else {  
+
                 options[data.animation] = data.open_length;
-                target.removeClass( 'hidden' );
+                
+                button.attr( 'data-state', 'expand' );
+                target.attr( 'data-state', 'expand' );
             }
 
-            target.animate( options, data.duration, function() {
-                button.toggleClass( 'visible hidden' ); 
-            });
+            // if we do height or width animation we will use 
+            // jquery aniation
+            if ( data.animation == 'height' || data.animation == 'width'  ) {
+               
+               target.animate( options, data.duration ) ;
+            
+            // otherwise, we can use translatex, and we do it using css
+            } else {
+
+                target.addClass( 'gmw-toggle-element' ).css( data.animation, options[data.animation] );
+            }
         });
     }
 }
