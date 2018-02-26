@@ -34,30 +34,32 @@
 		
 		<?php do_action( 'gmw_search_form_start', $gmw ); ?>
 		
-		<?php gmw_search_form_post_types( $gmw ); ?>
-		
-		<?php do_action( 'gmw_search_form_before_taxonomies', $gmw ); ?>
-		
-		<?php gmw_search_form_taxonomies( $gmw ); ?>
-		
-		<?php do_action( 'gmw_search_form_before_address', $gmw ); ?>
-		
 		<?php gmw_search_form_address_field( $gmw ); ?>
-		
+
 		<?php gmw_search_form_locator_button( $gmw ); ?>
-		
+
+		<?php do_action( 'gmw_search_form_filters', $gmw ); ?>
+
+		<?php gmw_search_form_post_types( $gmw ); ?>
+				
+		<?php gmw_search_form_taxonomies( $gmw ); ?>		
+				
 		<?php do_action( 'gmw_search_form_before_distance', $gmw ); ?>
-		
-		<?php gmw_search_form_radius( $gmw ); ?>
-		
-		<?php gmw_search_form_units( $gmw ); ?>	
-		
+					
+        <?php gmw_search_form_radius( $gmw ); ?>
+            
+        <?php gmw_search_form_units( $gmw ); ?>
+            		
+        <?php do_action( 'gmw_search_form_before_submit', $gmw ); ?>
+        
 		<?php gmw_search_form_submit_button( $gmw ); ?>
 		
 		<?php do_action( 'gmw_search_form_end', $gmw ); ?>
 		
 	</form>
 	
-	<?php do_action( 'gmw_after_search_form', $gmw ); ?>	
+	<?php do_action( 'gmw_after_search_form', $gmw ); ?>
+
 </div>
+
 <?php do_action( 'gmw_after_search_form_template', $gmw ); ?>

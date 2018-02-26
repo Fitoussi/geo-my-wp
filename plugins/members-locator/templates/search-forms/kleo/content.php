@@ -30,8 +30,6 @@
 				
 			<?php do_action( 'gmw_search_form_start', $gmw ); ?>
 			
-			<?php do_action( 'gmw_search_form_before_address', $gmw ); ?>		
-
 			<?php gmw_search_form_address_field( $gmw, $id='members_search', $class='' ); ?>
 				
 			<?php gmw_search_form_locator_button( $gmw ); ?>
@@ -40,15 +38,19 @@
 				<?php _e( 'More options','GMW' ); ?>
 			</span>
 
+			<?php do_action( 'gmw_search_form_before_submit', $gmw ); ?>
+
 			<?php gmw_search_form_submit_button( $gmw ); ?>	
 
 			<div class="gmw-kleo-advanced-search-wrapper">				
+				
+				<?php do_action( 'gmw_search_form_before_distance', $gmw ); ?>
 				
 				<?php gmw_search_form_radius( $gmw ); ?>
 			
 				<?php gmw_search_form_units( $gmw ); ?>	
 
-				<?php do_action( 'gmw_search_form_before_xprofile', $gmw ); ?>
+				<?php do_action( 'gmw_search_form_filters', $gmw ); ?>
 						            						
 				<?php gmw_search_form_xprofile_fields( $gmw ); ?>
 				
