@@ -239,6 +239,12 @@ function search_form_radius_field( $gmw ) {
 	echo gmw_get_search_form_radius_slider( $gmw );
 }
 
+function gmaps_search_form_taxonomies( $gmw = array(), $tag='div', $class='' ) {
+
+	_deprecated_function( 'gmaps_search_form_taxonomies', '2.2', 'gmw_search_form_taxonomies' );
+	return gmw_search_form_taxonomies( $gmw );
+}
+
 /**
  * GMW PT function - get post location from database or cache
  * @param $post_id
