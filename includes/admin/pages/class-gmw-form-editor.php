@@ -42,6 +42,8 @@ class GMW_Form_Editor {
 			return;
 		}
 
+		do_action( 'gmw_admin_form_editor_init', $_GET );
+
 		if ( ! $this->ajax_enabled ) {
 			add_filter( 'gmw_admin_notices_messages', array( $this, 'notices_messages' ) );
 			add_action( 'gmw_update_admin_form',	  array( $this, 'update_form' 	   ) );
@@ -54,6 +56,13 @@ class GMW_Form_Editor {
 
 		// get form data
 		$this->form = GMW_Forms_Helper::get_form( $_GET['form_id'] );
+
+		if ( ! gmw_is_addon_active( $this->form['addon'] ) ) {
+
+			$link = 'The extension this form belongs to is deactivated. <a href="'.esc_url( 'admin.php?page=gmw-extensions' ).'">Manage extensions</a>';
+
+			wp_die( $link );
+		}
 
 		// varify if the form exists
 		if ( empty( $this->form ) ) {
@@ -85,7 +94,7 @@ class GMW_Form_Editor {
 	public function fields_groups() {
 
 		// settings groups
-		$groups = apply_filters( 'gmw_form_settings_groups', array(
+		$groups = array(
 			array( 
 				'slug'    	=> 'hidden',
                 'label' 	=> __( 'hidden', 'GMW' ),
@@ -111,7 +120,7 @@ class GMW_Form_Editor {
 						'type'     		=> 'checkbox',
 						'default'      	=> '',
 						'label'    		=> __( "Visitor's Current Location Filter", "GMW" ),
-						'desc'     		=> __( "GEO my WP will first check for the visitor's current location on page load. And If exists, the locations will be displayed based on that. Note, that the address filter below will be ingnored if the visitor's location exists.", 'GMW' ),
+						'desc'     		=> __( "GEO my WP will first check for the visitor's current location on page load. And If exists, the locations will be displayed based on that. Notice that the address filter below will be ingnored if the visitor's location exists.", 'GMW' ),
 						'cb_label' 		=> __( 'Enable', 'GMW' ),
 						'attributes'  	=> '',
 						'priority'		=> 20
@@ -122,7 +131,7 @@ class GMW_Form_Editor {
 						'default'       => '',
 						'placeholder' 	=> __( 'Enter an address', 'GMW' ),
 						'label'       	=> __( 'Address Filter', 'GMW' ),
-						'desc'        	=> __( "Enter an address if you would like to search for locations neaby it when the form first loads.", 'GMW' ),
+						'desc'        	=> __( "Enter an address to search for locations neaby it when the form first loads.", 'GMW' ),
 						'attributes'  	=> array( 'size' => '25' ),
 						'priority'		=> 30
 					),
@@ -132,7 +141,7 @@ class GMW_Form_Editor {
 						'default'       => '',
 						'placeholder' 	=> __( 'Ex. 100', 'GMW' ),
 						'label'       	=> __( 'Distance ( radius )', 'GMW' ),
-						'desc'        	=> __( 'Enter a radius to search within. The radius is being used only when an address filter provided or the visitor\'s location exists.', 'GMW' ),
+						'desc'        	=> __( 'Enter default radius value, which will be used when visitor\'s location exists or when address is provided.', 'GMW' ),
 						'attributes'  	=> array(),
 						'priority'		=> 40
 					),
@@ -141,7 +150,7 @@ class GMW_Form_Editor {
 						'type'    		=> 'select',
 						'default'       => 'imperial',
 						'label'   		=> __( 'Units', 'GMW' ),
-						'desc'    		=> __( 'Select the distance units that you would like to use.', 'GMW' ),
+						'desc'    		=> __( 'Select the distance units.', 'GMW' ),
 						'options' 		=> array(
 							'imperial' 	=> __( 'Miles', 'GMW' ),
 							'metric'   	=> __( 'Kilometers', 'GMW' )
@@ -155,7 +164,7 @@ class GMW_Form_Editor {
 						'default'       => '',
 						'placeholder' 	=> __( 'Enter city', 'GMW'),
 						'label'       	=> __( 'City Filter', 'GMW' ),
-						'desc'        	=> __( 'Filter locations by city ( leave blank for no filtering ). When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching city name.', 'GMW' ),
+						'desc'        	=> __( 'Filter locations by city, or leave blank to omit. When using this filter, GEO my WP does not do a proximity search, but will pull locations with the exact matching city name.', 'GMW' ),
 						'attributes'  	=> array(),
 						'priority'		=> 60
 					),
@@ -165,7 +174,7 @@ class GMW_Form_Editor {
 						'default'       => '',
 						'placeholder' 	=> __( 'Enter state', 'GMW'),
 						'label'       	=> __( 'State Filter', 'GMW' ),
-						'desc'        	=> __( 'Filter locations by state ( leave blank for no filtering ). When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching state name.', 'GMW' ),
+						'desc'        	=> __( 'Filter locations by state, or leave blank to omit. When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching state name.', 'GMW' ),
 						'attributes'  	=> array( 'size' => '25' ),
 						'priority'		=> 70
 					),
@@ -175,7 +184,7 @@ class GMW_Form_Editor {
 						'default'       => '',
 						'placeholder' 	=> __( 'Enter postcode', 'GMW'),
 						'label'       	=> __( 'Zipcode Filter', 'GMW' ),
-						'desc'        	=> __( 'Filter locations by zipcode ( leave blank for no filtering ). When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching zipcode.', 'GMW' ),
+						'desc'        	=> __( 'Filter locations by zipcode, or leave blank to omit. When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching zipcode.', 'GMW' ),
 						'attributes'  	=> array( 'size' => '25' ),
 						'priority'		=> 80
 					),
@@ -185,7 +194,7 @@ class GMW_Form_Editor {
 						'default'       => '',
 						'placeholder' 	=> __( 'Enter country', 'GMW'),
 						'label'       	=> __( 'Country Filter', 'GMW' ),
-						'desc'        	=> __( 'Filter locations by country ( leave blank for no filtering ). When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching country name.', 'GMW' ),
+						'desc'        	=> __( 'Filter locations by country, or leave blank to omit. When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching country name.', 'GMW' ),
 						'options'		=> gmw_get_countries_list_array( 'Disable' ),
 						'attributes'  	=> array( 'size' => '25' ),
 						'priority'		=> 90
@@ -236,7 +245,7 @@ class GMW_Form_Editor {
 						'default'       => '',
 						'label'    		=> __( 'Search Form Template', 'GMW' ),
 						'desc'  		=> __( 'Select The search form template file.', 'GMW' ),		
-						'options'		=> array( '' => __( 'Disabled', 'GMW' ) ) + GMW_Helper::get_templates( $this->form['addon'], 'search-forms' ),
+						'options'		=> array( '' => __( 'Disabled', 'GMW' ) ) + ( empty( $this->form['sub_addon'] ) ?gmw_get_search_form_templates( $this->form['addon'] ) : gmw_get_search_form_templates( $this->form['sub_addon'], $this->form['addon'] ) ),
 						'attributes' 	=> array(),
 						'priority'		=> 10
 					),
@@ -377,7 +386,7 @@ class GMW_Form_Editor {
 						'default'   	=> 'gray',
 						'label' 		=> __( 'Results Template', 'GMW' ),
 						'desc'  		=> __( 'Select the search results template file.', 'GMW' ),
-						'options'		=> GMW_Helper::get_templates( $this->form['addon'], 'search-results' ),
+						'options'		=> empty( $this->form['sub_addon'] ) ? gmw_get_search_results_templates( $this->form['addon'] ) : gmw_get_search_form_templates( $this->form['sub_addon'], $this->form['addon'] ),
 						'attributes' 	=> array(),
 						'priority'		=> 10
 					),
@@ -529,9 +538,19 @@ class GMW_Form_Editor {
 				),
 				'priority'	=> 50
         	),
-        ), $this->form );
+        );
+			
+		$temp_array = [];
 
+		// generate slug for groups. To easier unset groups if needed.
+		foreach ( $groups as $group ) {
+			$temp_array[$group['slug']] = $group;
+		}
+		
+		$groups = $temp_array;
 		$groups = apply_filters( 'gmw_'.$this->form['slug'].'_form_settings_groups', $groups, $this->form );
+		$groups = apply_filters( 'gmw_'.$this->form['addon'].'_addon_form_settings_groups', $groups, $this->form );
+		$groups = apply_filters( 'gmw_form_settings_groups', $groups, $this->form );
 		
         uasort( $groups, 'gmw_sort_by_priority' );
 
@@ -574,8 +593,9 @@ class GMW_Form_Editor {
             $fields[$group['slug']] = apply_filters( 'gmw_'.$group['slug'].'_form_settings', $fields[$group['slug']], $this->form['slug'], $this->form );
         }
 
-        // filter all fieldss groups
-        $fields = apply_filters( 'gmw_' . $this->form['slug'] . '_form_settings', $fields, $this->form );
+        // filter all fields groups
+        $fields = apply_filters( 'gmw_'.$this->form['slug'].'_form_settings', $fields, $this->form );
+		$fields = apply_filters( 'gmw_'.$this->form['addon'].'_addon_form_settings', $fields, $this->form );
 		$fields = apply_filters( 'gmw_form_settings', $fields, $this->form );
 
         return $fields;
@@ -802,8 +822,10 @@ class GMW_Form_Editor {
 	            $function = ! empty( $option['function'] ) ? $option['function'] : $option['name'];
 				//$this_value = ! empty( $this->form[$tab][$sec] ) ? $this->form[$tab][$sec] : array();
 
-				do_action( 'gmw_'.$this->form['slug'].'_form_settings_' . $function, $value, $attr_name, $this->form, $this->form_fields, $tab, $option );
+	            do_action( 'gmw_'.$this->form['slug'].'_form_settings_' . $function, $value, $attr_name, $this->form, $this->form_fields, $tab, $option );
+	            do_action( 'gmw_'.$this->form['addon'].'_addon_form_settings_' . $function, $value, $attr_name, $this->form, $this->form_fields, $tab, $option );	
 	        	do_action( 'gmw_form_settings_' . $function, $value, $attr_name, $this->form, $this->form_fields, $tab, $option );
+
 	        break;
 			
 			// checkbox
@@ -1038,7 +1060,7 @@ class GMW_Form_Editor {
 	 * @return void
 	 */
 	public function output() {
-
+		
 		// apply to all forms
 		add_action( 'gmw_form_settings_address_field', array( 'GMW_Form_Settings_Helper', 'address_field' ), 10, 2 );
 		add_action( 'gmw_form_settings_image', array( 'GMW_Form_Settings_Helper', 'image' ), 10, 2 );
@@ -1104,6 +1126,11 @@ class GMW_Form_Editor {
 			                		$group['slug'] = $group['id'];
 			                	}
 
+			                	// verify that there are settings for this tab
+			                	if ( empty( $this->form_fields[$group['slug']] ) ) {
+			                		continue;
+			                	}
+
 			                	if ( $group['slug'] != 'hidden' ) { ?>
 			                		<li>
 			                    		<a 
@@ -1136,6 +1163,8 @@ class GMW_Form_Editor {
 	            
 		            	<input type="hidden" name="gmw_form[ID]" value="<?php echo absint( $this->form['ID'] ); ?>" />	
 		            	<input type="hidden" name="gmw_form[slug]" value="<?php echo sanitize_text_field( esc_attr( $this->form['slug'] ) ); ?>" />
+		            	<input type="hidden" name="gmw_form[addon]" value="<?php echo sanitize_text_field( esc_attr( $this->form['addon'] ) ); ?>" />
+		            	<input type="hidden" name="gmw_form[sub_addon]" value="<?php echo sanitize_text_field( esc_attr( $this->form['sub_addon'] ) ); ?>" />
 
 		            	<?php
 		            	//form filds
@@ -1276,6 +1305,7 @@ class GMW_Form_Editor {
 				$function = ! empty( $option['function'] ) ? $option['function'] : $option['name'];
 
 				$valid_value = apply_filters( 'gmw_'.$form['slug'].'_validate_form_settings_'.$function, $valid_value, $form );
+				$valid_value = apply_filters( 'gmw_'.$this->form['addon'].'_addon_validate_form_settings_'.$function, $valid_value, $form );
             	$valid_value = apply_filters( 'gmw_validate_form_settings_'.$function, $valid_value, $form );
 
             break;
@@ -1449,8 +1479,10 @@ class GMW_Form_Editor {
     	// get the submitted values
     	parse_str( $_POST['form_values'], $form_values );
 
+    	$form = $form_values['gmw_form'];
+
     	// validate the values
-    	$valid_input = self::validate( $form_values['gmw_form'] );
+    	$valid_input = self::validate( $form );
 
     	global $wpdb;
 
