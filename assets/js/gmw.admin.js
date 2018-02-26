@@ -235,7 +235,7 @@ var GMW_Admin = {
 
         //show form cover
         jQuery( '.gmw-edit-form #gmw-form-cover' ).fadeToggle();
-
+        
         // Update form via ajax
         jQuery.ajax( {
             type     : 'POST',
