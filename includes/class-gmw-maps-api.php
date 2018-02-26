@@ -150,7 +150,7 @@ class GMW_Maps_API {
 	 * @return HTML element of map
 	 * 
 	 */
-	public static function get_map_element( $args ) {
+	public static function get_map_element( $args, $implode = true ) {
 		
 		// default map args
 		$default_args = array( 
@@ -200,7 +200,7 @@ class GMW_Maps_API {
 	    $output = apply_filters( "gmw_map_output", $output, $args );
 	    $output = apply_filters( "gmw_map_output_{$args['map_id']}", $output, $args );
 	    
-	    return implode( ' ', $output );
+	    return $implode ? implode( ' ', $output ) : $output;
 	}
 
 	/**
@@ -259,7 +259,7 @@ class GMW_Maps_API {
 
 		// default map options
 		$default_map_options = array(
-			'backgroundColor' 		 => '#f7f7f7',			
+			'backgroundColor' 		 => '#f7f5e8',			
 			'disableDefaultUI' 		 => false,
 			'disableDoubleClickZoom' => false,
 			'draggable'				 => true,
@@ -309,8 +309,12 @@ class GMW_Maps_API {
 			$user_location = $default_user_location;
 		}
 		
+		// no need to pass the results in the form as well
+		// since we already have locations data in the locations object
+		$form['results'] = array();
+
 		// push the map args into the global array of maps
-		self::$map_elements[$map_id] = array(
+		$map_element = array(
 			'settings'		=> $map_args,
 			'map_options'   => $map_options,
 			'locations'		=> $locations,
@@ -319,39 +323,43 @@ class GMW_Maps_API {
 		);
 
 		// allow plugins modify the map args
-		self::$map_elements[$map_id] = apply_filters( 'gmw_map_element', self::$map_elements[$map_id], $form );
-		self::$map_elements[$map_id] = apply_filters( "gmw_map_element_{$map_id}", self::$map_elements[$map_id], $form );
+		$map_element = apply_filters( 'gmw_map_element', $map_element, $form );
+		$map_element = apply_filters( "gmw_map_element_{$map_id}", $map_element, $form );
 		
 		// enable maps
 		self::$map_enabled = true;
 
 		// enable Markers Clusterer library
-		if ( self::$map_elements[$map_id]['settings']['group_markers'] == 'markers_clusterer' ) {	
+		if ( $map_element['settings']['group_markers'] == 'markers_clusterer' ) {	
 			self::$markers_clusterer = true;
 		}
 
 		// enable Markers Spiderfier library
-		if ( self::$map_elements[$map_id]['settings']['group_markers'] == 'markers_spiderfier' ) {	
+		if ( $map_element['settings']['group_markers'] == 'markers_spiderfier' ) {	
 			self::$markers_spiderfier = true;
 		}
 
 		// enable infobox js file if needed
-		if ( self::$map_elements[$map_id]['settings']['info_window_type'] == 'infobox' ) {
+		if ( $map_element['settings']['info_window_type'] == 'infobox' ) {
 			self::$infobox = true;
 		}
 
 		// enable infobox js file if needed
-		if ( self::$map_elements[$map_id]['settings']['info_window_type'] == 'infobubble' ) {
+		if ( $map_element['settings']['info_window_type'] == 'infobubble' ) {
 			self::$infobubble = true;
 		}
 
 		// enable jQuery ui draggable for popup info-windows
 		//if ( $map_args['info_window_ajax'] && $map_args['draggable_window'] ) {
-		if ( self::$map_elements[$map_id]['settings']['info_window_type'] == 'popup' ) {
+		if ( $map_element['settings']['info_window_type'] == 'popup' ) {
 			self::$draggable_window = true;
 		}
-		
-		return self::$map_elements[$map_id];
+
+		if ( $map_element['settings']['render_map'] ) {
+			self::$map_elements[$map_id] = $map_element;
+		}
+
+		return $map_element;
 	}
 
 	/**
@@ -367,6 +375,7 @@ class GMW_Maps_API {
 		if ( ! empty( $ac_fields ) ) {
 			self::$address_autocomplete = array_merge( self::$address_autocomplete, $ac_fields );
 		}
+
 		return;
    	}
 
