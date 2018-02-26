@@ -40,9 +40,11 @@ class GMW_Single_Location_Widget extends GMW_Widget {
         $this->widget_description = __( 'Display the location of a single object ( Post, BP member... ).', 'GMW' );
         $this->widget_name        = __( 'GEO my WP Single Location', 'GMW' );
 
-        $objects = [];
+        $objects = array();
 
-        $zoom_options = [];
+        $zoom_options = array(
+            'auto' => __( 'Auto Zoom', 'GMW' ) 
+        );
 
         for ( $i = 1; $i < 21; $i++ ) {
             $zoom_options[$i] = $i;
@@ -117,8 +119,8 @@ class GMW_Single_Location_Widget extends GMW_Widget {
                 'default'     => '',
                 'label'       => __( 'Distance units', 'GMW' ),
                 'options'     => array( 
-                    'metric'   => __( 'Miles', 'GMW' ),
-                    'imperial' => __( 'Kilometers', 'GMW' )
+                    'imperial' => __( 'Miles', 'GMW' ),
+                    'metric'   => __( 'Kilometers', 'GMW' )
                 ),
             ),
             'map_width' => array(
