@@ -35,6 +35,8 @@ class GMW_Admin {
 			add_action( 'admin_footer', array( $this, 'form_insert_popup' ) );
 		}
 
+		do_action( 'gmw_pre_admin_include_pages' );
+
 		// admin functions
 		include( 'gmw-admin-functions.php' );
 		include( 'class-gmw-tracking.php' );
@@ -49,8 +51,6 @@ class GMW_Admin {
 		include( 'pages/tools/class-gmw-tools.php' );
 		include( 'pages/import-export/class-gmw-import-export-page.php' );
 				
-		do_action( 'gmw_pre_admin_include_pages' );
-
 		//set pages
 		$this->addons_page   = new GMW_Extensions();
 		$this->settings_page = new GMW_Settings();
