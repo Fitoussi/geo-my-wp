@@ -496,6 +496,7 @@ class GMW_Addon {
 			
 			// add object type to global
 			GMW()->object_types[$this->object] = $this->object_type;
+			GMW()->object_types[$this->slug]   = $this->object_type;
 		}
 
 		if ( is_multisite() && absint( $this->locations_blog_id ) ) {
@@ -1305,13 +1306,32 @@ class GMW_Addon {
 	 */
 	protected function get_form_button( $button ) {
 
+		$sub_addon = '';
+
+		if ( ! empty( $button['sub_addon'] ) ) {
+			
+			$sub_addon = $button['sub_addon'];
+
+			if ( empty( $button['object_type'] ) ) {
+				$button['object_type'] = GMW()->object_types[$sub_addon];
+			}
+
+		} else {
+
+			if ( empty( $button['object_type'] ) ) {
+				$button['object_type'] = $this->object_type;
+			}
+		}
+
 		// return button args
     	return array(
-    		'slug'	   => ! empty( $button['slug'] ) ? $button['slug'] : $this->slug,
-            'addon'    => $this->slug,
-            'name'     => ! empty( $button['name'] ) ? $button['name'] : $this->name,
-            'prefix'   => ! empty( $button['prefix'] ) ? $button['prefix'] : $this->prefix,
-            'priority' => ! empty( $button['priority'] ) ? $button['priority'] : 99,
+    		'slug'	      => ! empty( $button['slug'] ) ? $button['slug'] : $this->slug,
+            'addon'       => $this->slug,
+            'sub_addon'   => $sub_addon,
+            'object_type' => $button['object_type'],
+            'name'        => ! empty( $button['name'] ) ? $button['name'] : $this->name,
+            'prefix'      => ! empty( $button['prefix'] ) ? $button['prefix'] : $this->prefix,
+            'priority'    => ! empty( $button['priority'] ) ? $button['priority'] : 99,
         );
 	}
 
@@ -1331,13 +1351,13 @@ class GMW_Addon {
 		// Generate multiple button using multi-array
 		if ( ! empty( $buttons[0] ) && is_array( $buttons[0] ) ) {
 
-			foreach ( $buttons as $key => $button ) {
+			foreach ( $buttons as $button ) {
 
 				if ( empty( $button['slug'] ) ) {
 					return;
 				}
 
-				$form_buttons[$key] = $this->get_form_button( $button );
+				$form_buttons[$button['slug']] = $this->get_form_button( $button );
 			}
 			
 		// generate single button from an array
