@@ -349,6 +349,25 @@ if ( IS_ADMIN ) {
 	add_action( 'init', 'gmw_process_actions' );
 }
 
+function gmw_get_form_values( $prefix, $query_string = '' ) {
+
+	$output = array();
+
+	if ( ! empty( $query_string ) ) {
+		
+		$query_string = $prefix == '' ? $query_string : str_replace( $prefix, '', $query_string );
+
+		parse_str( $query_string, $output );
+
+		// for some case where address is not an array
+		if ( isset( $output['address'] ) && ! is_array( $output['address'] ) ) {
+			$output['address'] = urldecode( $output['address'] );
+		}
+	}
+
+	return $output;
+}
+
 /**
  * GMW Function - Covert object to array
  * 
@@ -468,21 +487,13 @@ if ( ! function_exists( 'array_replace_recursive' ) ) {
  * 
  * @return [type]            [description]
  */
-function gmw_calculate_distance( $start_lat, $start_lng, $end_lat, $end_lng, $units="m" ) {
+function gmw_calculate_distance( $start_lat, $start_lng, $end_lat, $end_lng, $units="k" ) {
 
-	$theta 	  = $start_lng - $end_lng;
-	$distance = sin( deg2rad( $start_lat ) ) * sin( deg2rad( $end_lat ) ) +  cos( deg2rad( $start_lat ) ) * cos( deg2rad( $end_lat ) ) * cos( deg2rad( $theta ) );
-	$distance = acos( $distance );
-	$distance = rad2deg( $distance );
-	$miles 	  = $distance * 60 * 1.1515;
-
-	if ( $units == "k" ) {
-		$distance = ( $miles * 1.609344 );
-	} else {
-		$distance = ( $miles * 0.8684 );
-	}
-
-	return round( $distance, 2 );
+	$rad 	  = M_PI / 180;
+	$radius   = in_array( $units, array( 'k', 'metric', 'kilometers', 'K', 'kilometer' ) ) ? 6371 : 3959; 
+  	$distance = acos( sin( $end_lat * $rad ) * sin( $start_lat * $rad ) + cos( $end_lat * $rad ) * cos( $start_lat * $rad ) * cos( $end_lng * $rad - $start_lng * $rad ) ) * $radius;
+  	
+  	return round( $distance, 2 );
 }
 
 /**
@@ -497,16 +508,13 @@ function gmw_calculate_distance( $start_lat, $start_lng, $end_lat, $end_lng, $un
  * 
  * @since 2.5
  */
-function gmw_get_labels( $form = array() ) {
+/*function gmw_get_labels( $form = array() ) {
 
 	$labels = array(
 		'search_form'		=> array(
-			'search_site'		=> __( 'Search Site', 'GMW' ),
 			'radius_within'		=> __( 'Within',   'GMW' ),
 			'kilometers'		=> __( 'Kilometers',      'GMW' ),
 			'miles'				=> __( 'Miles', 'GMW' ),
-			'submit'			=> __( 'Submit', 'GMW' ),
-			'get_my_location' 	=> __( 'Get my current location','GMW'),
 			'show_options'		=> __( 'Advanced options', 'GMW' ),
 			'select_groups'		=> __( 'Select Groups', 'GMW' ),
 			'no_groups'			=> __( 'No Groups', 'GMW' ),
@@ -517,26 +525,6 @@ function gmw_get_labels( $form = array() ) {
 			'next'  => __( 'Next', 	'GMW' ),
 		),
 		'search_results'	=> array(
-			'results_message' => array(
-				'count_message'  => __( 'Showing {results_count} out of {total_results} results', 'GMW' ),
-				'radius_message' => __( ' within {radius} {units} from {address}', 'GMW' ),
-			),
-			'pt_results_message' 	  => array(
-				'showing'	=> __( 'Showing {results_count} out of {total_results} results', 'GMW' ),
-				'within'	=> __( 'within {radius} {units} from {address}', 'GMW' ),
-			),
-			'fl_results_message' => array(
-				'showing'	=> __( 'Viewing %s out of %s members', 'GMW' ),
-				'within'	=> __( 'within %s from %s', 'GMW' ),
-			),
-			'gl_results_message' => array(
-				'showing' 	=> __( 'Viewing %s out of %s groups', 'GMW' ),
-				'within'	=> __( 'within %s from %s', 'GMW' ),
-			),
-			'ug_results_message' => array(
-				'showing'	=> __( 'Viewing %s out of %s users', 'GMW' ),
-				'within'	=> __( 'within %s from %s', 'GMW' ),
-			),
 			'distance'          => __( 'Distance: ', 'GMW' ),
 			'driving_distance'	=> __( 'Driving distance:', 'GMW' ),
 			'address'           => __( 'Address: ',  'GMW' ),
@@ -587,7 +575,77 @@ function gmw_get_labels( $form = array() ) {
 	}
 
 	return $labels;
+} */
+
+/**
+ * get template file and its stylesheet
+ *
+ * @since 3.0
+ * 
+ * @param  string $addon         the slug of the add-on which the tmeplate file belongs to.
+ * @param  string $folder_name   folder name ( search-forms, search-results... ).
+ * @param  string $template_name tempalte name
+ * 
+ * @return 
+ */
+function gmw_get_templates( $args = [] ) {
+	return GMW_Helper::get_templates( $args );
 }
+	
+	/**
+	 * Get search form template
+	 * @param  string $addon         [description]
+	 * @param  string $template_name [description]
+	 * @param  string $base_path     [description]
+	 * @return [type]                [description]
+	 */
+	function gmw_get_search_form_templates( $addon = 'posts_locator', $base_addon = '' ) {
+		
+		$args = array(
+			'base_addon'  => $base_addon,
+			'addon' 	  => $addon, 
+			'folder_name' => 'search-forms'
+		);
+
+		return GMW_Helper::get_templates( $args );
+	}
+
+	/**
+	 * Get search results template
+	 * @param  string $addon         [description]
+	 * @param  string $template_name [description]
+	 * @param  string $base_path     [description]
+	 * @return [type]                [description]
+	 */
+	function gmw_get_search_results_templates( $addon = 'posts_locator', $base_addon = '' ) {
+		
+		$args = array(
+			'base_addon'  => $base_addon,
+			'addon' 	  => $addon, 
+			'folder_name' => 'search-results'
+		);
+
+		return GMW_Helper::get_templates( $args );
+	}
+
+	/**
+	 * Get info-window template
+	 * @param  string $addon         [description]
+	 * @param  string $template_name [description]
+	 * @param  string $base_path     [description]
+	 * @return [type]                [description]
+	 */
+	function gmw_get_info_window_templates( $addon = 'posts_locator', $iw_type = 'popup', $base_addon = '' ) {
+		
+		$args = array(
+			'base_addon'       => $base_addon,
+			'addon' 	       => $addon, 
+			'folder_name'      => 'info-window', 
+			'iw_type'		   => $iw_type
+		);
+
+		return GMW_Helper::get_templates( $args );
+	}
 
 /**
  * get template file and its stylesheet
@@ -677,13 +735,24 @@ function gmw_get_element_toggle_button( $args = array() ) {
 		'animation'    => 'height',
 		'open_length'  => '100%',
 		'close_length' => '35px',
-		'duration'     => '100',
+		'duration'     => '200',
+		'init_visible' => true
 	);
 
 	$args = wp_parse_args( $args, $defaults );
 	$args = apply_filters( 'gmw_element_toggle_button_args', $args );
 
-	return '<span class="gmw-element-toggle-button '.esc_attr( $args['hide_icon'] ).' visible" data-target="'.esc_attr( $args['target'] ).'" data-show_icon="'.esc_attr( $args['show_icon'] ).'" data-hide_icon="'.esc_attr( $args['hide_icon'] ).'" data-animation="'.esc_attr( $args['animation'] ).'" data-open_length="'.esc_attr( $args['open_length'] ).'" data-close_length="'.esc_attr( $args['close_length'] ).'" data-duration="'.esc_attr( $args['data_duration'] ).'"></span>';
+	if ( $args['init_visible'] ) {
+		$state = 'expand';
+		$icon  = $args['hide_icon'];
+	} else {
+		$state = 'collapse';
+		$icon  = $args['show_icon'];
+	}
+	
+	$id = ! empty( $args['id'] ) ? 'id="gmw-element-toggle-button-'.esc_attr( $args['id'] ).'"' : '';
+
+	return '<span '.$id.' class="gmw-element-toggle-button '.esc_attr( $icon ).'" data-state="'.$state .'" data-target="'.esc_attr( $args['target'] ).'" data-show_icon="'.esc_attr( $args['show_icon'] ).'" data-hide_icon="'.esc_attr( $args['hide_icon'] ).'" data-animation="'.esc_attr( $args['animation'] ).'" data-open_length="'.esc_attr( $args['open_length'] ).'" data-close_length="'.esc_attr( $args['close_length'] ).'" data-duration="'.esc_attr( $args['duration'] ).'"></span>';
 }
 	
 	/**
@@ -696,16 +765,63 @@ function gmw_get_element_toggle_button( $args = array() ) {
 	}
 
 	/**
+	 * Toggle left element
+	 * @return [type] [description]
+	 */
+	function gmw_left_element_toggle_button( $target = '', $length = '-300px' ) { 
+	   
+	   echo gmw_get_element_toggle_button( array( 
+	    	'target'	   => $target,
+	        'animation'    => 'transform', 
+	        'open_length'  => 'translatex(0px)',
+	        'close_length' => 'translatex('.esc_attr( $length ).')', 
+	        'hide_icon'    => 'gmw-icon-arrow-left', 
+	        'show_icon'    => 'gmw-icon-arrow-right'
+	    ) ); 
+	}
+
+	/**
+	 * Toggle left element
+	 * @return [type] [description]
+	 */
+	function gmw_right_element_toggle_button( $target = '', $length = '300px' ) { 
+	   
+	   echo gmw_get_element_toggle_button( array( 
+	    	'target'	   => $target,
+	        'animation'    => 'transform', 
+	        'open_length'  => 'translatex(0px)',
+	        'close_length' => 'translatex('.esc_attr( $length ).')', 
+	        'hide_icon'    => 'gmw-icon-arrow-right', 
+	        'show_icon'    => 'gmw-icon-arrow-left'
+	    ) ); 
+	}
+
+	/**
 	 * Toggle button for left side info-window
+	 * 
 	 * @return [type] [description]
 	 */
 	function gmw_left_window_toggle_button() { 
-	    gmw_element_toggle_button( array( 
+	    echo gmw_get_element_toggle_button( array( 
 	        'animation'    => 'width', 
 	        'open_length'  => '100%',
 	        'close_length' => '30px', 
 	        'hide_icon'    => 'gmw-icon-arrow-left', 
-	        'show_icon'    => 'gmw-icon-arrow-right' 
+	        'show_icon'    => 'gmw-icon-arrow-right'
+	    ) ); 
+	}
+
+	/**
+	 * Toggle button for right side info-window
+	 * @return [type] [description]
+	 */
+	function gmw_right_window_toggle_button() { 
+	    echo gmw_get_element_toggle_button( array( 
+	        'animation'    => 'width', 
+	        'open_length'  => '100%',
+	        'close_length' => '30px', 
+	        'hide_icon'    => 'gmw-icon-arrow-right', 
+	        'show_icon'    => 'gmw-icon-arrow-left'
 	    ) ); 
 	}
 
@@ -731,15 +847,24 @@ function gmw_get_element_close_button( $icon = 'gmw-icon-cancel-circled' ) {
 function gmw_get_element_dragging_handle( $args = array() ) {
 
 	$defaults = array( 
-		'icon'   	  => 'gmw-icon-menu',
-		'target' 	  => 'gmw-popup-info-window',
-		'containment' => 'window'
+		'icon'   	  => 'gmw-icon-sort',
+		'target' 	  => '#gmw-popup-info-window',
+		'containment' => 'window',
+		'handle'	  => ''
 	);
 	
 	$args = wp_parse_args( $args, $defaults );
 	$args = apply_filters( 'gmw_draggable_button_args', $args );
 
-	return	'<span class="gmw-draggable '.esc_attr( $args['icon'] ).'" data-draggable="'.esc_attr( $args['target'] ).'" data-containment="'.esc_attr( $args['containment'] ).'"></span>';
+	if ( $args['handle'] != '' ) {
+		$display = 'style="display:none"';
+		$remote  = ' remote-toggle';
+	} else {
+		$display = '';
+		$remote  = '';
+	}
+
+	return	'<span class="gmw-draggable '.esc_attr( $args['icon'] ).$remote.'" data-draggable="'.esc_attr( $args['target'] ).'" data-containment="'.esc_attr( $args['containment'] ).'" data-handle="'.esc_attr( $args['handle'] ).'" '.$display.'></span>';
 }
 	function gmw_element_dragging_handle( $args = array() ) {
 		echo gmw_get_element_dragging_handle( $args );
@@ -889,6 +1014,40 @@ function gmw_enqueue_form_styles( $args = array( 'form_id' => 0, 'pages' => arra
 		}
 	}	
 }
+
+/**
+ * Ajax info window loader 
+ *
+ * This is a global function that can be used to generate
+ *
+ * info-window via AJAX. 
+ *
+ * The function triggered using the hooks below.
+ *
+ * This means that the ajax callback function should be gmw_info_window_init.
+ * 
+ * @return [type] [description]
+ */
+function gmw_ajax_info_window_init() {
+
+	$location = is_object( $_POST['location'] ) ? $_POST['location'] : ( object ) $_POST['location'];
+    $gmw      = $_POST['form'];
+    
+    // include info-window template functions
+    include_once( GMW_PATH .'/includes/template-functions/gmw-info-window-template-functions.php' );
+    
+    // modify the location object
+    $location = apply_filters( 'gmw_location_pre_ajax_info_window_init', $location, $gmw );
+    $location = apply_filters( 'gmw_'.$gmw['prefix'].'_location_pre_ajax_info_window_init', $location, $gmw );
+
+    // execute custom info-window functions
+    do_action( 'gmw_'.$gmw['prefix'].'_ajax_info_window_init', $location, $gmw );
+    do_action( 'gmw_ajax_info_window_init'       			 , $location, $gmw );
+    
+    die();
+}
+add_action( 'wp_ajax_gmw_info_window_init',        'gmw_ajax_info_window_init' );
+add_action( 'wp_ajax_nopriv_gmw_info_window_init', 'gmw_ajax_info_window_init' );
 
 /**
  * Info window content
