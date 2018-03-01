@@ -107,11 +107,14 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
         
         // include admin files
         if ( IS_ADMIN ) {
-            include( 'includes/admin/class-gmw-posts-locator-admin-settings.php' );
+
             include( 'includes/admin/class-gmw-posts-locator-form-editor.php' );
+            include( 'includes/admin/class-gmw-posts-locator-admin-settings.php' );
             include( 'includes/admin/class-gmw-posts-locator-screens.php' );
+
             //include( 'includes/admin/class-gmw-post-location-form.php' );
         } else {
+
             include( 'includes/gmw-posts-locator-search-form-template-functions.php' );
             include( 'includes/gmw-posts-locator-search-results-template-functions.php' );
             include( 'includes/class-gmw-posts-locator-form.php' ); 
