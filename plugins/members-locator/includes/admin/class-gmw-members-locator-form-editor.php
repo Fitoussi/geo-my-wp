@@ -16,13 +16,13 @@ class GMW_Members_Locator_Form_Editor {
      * @return void
      */
     public function __construct() {
-        
-        add_filter( 'gmw_form_default_settings', array( $this, 'set_defaults' ), 20 );
+
+        add_filter( 'gmw_members_locator_form_default_settings', array( $this, 'set_defaults' ), 20 );
         add_filter( 'gmw_members_locator_form_settings', array( $this, 'form_settings' ), 15 ); 
         // settings fields
         add_action( 'gmw_members_locator_form_settings_xprofile_fields', array( 'GMW_Form_Settings_Helper', 'bp_xprofile_fields' ), 10, 2 );
         // validations
-        add_filter( 'gmw_validate_form_settings_xprofile_fields', array( 'GMW_Form_Settings_Helper', 'validate_bp_xprofile_fields' ) );
+        add_filter( 'gmw_members_locator_validate_form_settings_xprofile_fields', array( 'GMW_Form_Settings_Helper', 'validate_bp_xprofile_fields' ) );
     }
 
     /**
@@ -33,12 +33,10 @@ class GMW_Members_Locator_Form_Editor {
      */
     public function set_defaults( $settings ) {
         
-        if ( isset( $_GET['prefix'] ) && $_GET['prefix'] == 'fl' ) {
-            $settings['search_form']['form_template'] = 'yellow';
-            $settings['search_results']['results_template'] = 'yellow';
-            $settings['search_form']['xprofile_fields']['fields'] = array();
-            $settings['search_form']['xprofile_fields']['date_field'] = '';
-        }
+        $settings['search_form']['form_template'] = 'yellow';
+        $settings['search_results']['results_template'] = 'yellow';
+        $settings['search_form']['xprofile_fields']['fields'] = array();
+        $settings['search_form']['xprofile_fields']['date_field'] = '';
         
         return $settings;
     }
