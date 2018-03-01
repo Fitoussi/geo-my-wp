@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * GMW_PT_Admin class
+ * GMW_Posts_Locator_Form_Editor
  * 
  * Post type locator admin functions
  */
@@ -19,12 +19,15 @@ class GMW_Posts_Locator_Form_Editor {
      */
     public function __construct() {
         
-        add_filter( 'gmw_form_default_settings', array( $this, 'default_settings' ), 20, 2 );
+        add_filter( 'gmw_posts_locator_form_default_settings', array( $this, 'default_settings' ), 5, 2 );
+        
         // init form settings
         add_filter( 'gmw_posts_locator_form_settings', array( $this, 'form_settings_init' ), 5 );
+        
         // form settings functions
-        add_action( 'gmw_posts_locator_form_settings_form_taxonomies', array( 'GMW_Form_Settings_Helper', 'taxonomies' ), 10, 3 );
-        add_action( 'gmw_posts_locator_form_settings_excerpt', array( 'GMW_Form_Settings_Helper', 'excerpt' ), 10, 2 );
+        add_action( 'gmw_posts_locator_form_settings_form_taxonomies', array( 'GMW_Form_Settings_Helper', 'taxonomies' ), 5, 3 );
+        add_action( 'gmw_posts_locator_form_settings_excerpt', array( 'GMW_Form_Settings_Helper', 'excerpt' ), 5, 2 );
+        
         // form settings validations
         add_filter( 'gmw_posts_locator_validate_form_settings_excerpt', array( 'GMW_Form_Settings_Helper', 'validate_excerpt' ) );
     }
@@ -37,17 +40,15 @@ class GMW_Posts_Locator_Form_Editor {
      */
     public function default_settings( $settings, $args ) {
 
-        if ( isset( $args['prefix'] ) && $args['prefix'] == 'pt' ) {
-            $settings['page_load_results']['post_types'] = array( 'post' ); 
-            $settings['search_form']['form_template']    = 'gray';
-            $settings['search_form']['post_types']       = array( 'post' );
-            $settings['search_results']['excerpt']       = array( 
-                'use'   => '', 
-                'count' => 10,
-                'link'  => 'read more...' 
-            ); 
-            $settings['search_results']['taxonomies'] = '';
-        }
+        $settings['page_load_results']['post_types'] = array( 'post' ); 
+        $settings['search_form']['form_template']    = 'gray';
+        $settings['search_form']['post_types']       = array( 'post' );
+        $settings['search_results']['excerpt']       = array( 
+            'use'   => '', 
+            'count' => 10,
+            'link'  => 'read more...' 
+        ); 
+        $settings['search_results']['taxonomies'] = '';
 
         return $settings;
     }
@@ -58,7 +59,7 @@ class GMW_Posts_Locator_Form_Editor {
      * @access public
      * @return $settings
      */
-    function form_settings_init( $settings ) {
+    public function form_settings_init( $settings ) {
 
         $settings['page_load_results']['post_types'] = array( 
             'name'          => 'post_types',
