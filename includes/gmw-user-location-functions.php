@@ -110,7 +110,7 @@ function gmw_get_user_location( $user_id = 0 ) {
         }
     }
 
-    // get post location from database
+    // get user location from database
     return GMW_Location::get_location( 'user', $user_id );
 }
 
@@ -155,7 +155,7 @@ function gmw_get_user_location_meta( $user_id = 0, $meta_keys = array() ) {
  * 
  * @return object  user data + location 
  */
-function gmw_get_user_location_data( $user_id = 0, $output = OBJECT, $cache = true) {
+function gmw_get_user_location_data( $user_id = 0, $output = OBJECT, $cache = true ) {
     
     if ( empty( $fields ) ) {
 
