@@ -456,7 +456,7 @@ class GMW_Location {
 			$table    = self::get_locations_table();
 			$location = $wpdb->get_row( 
 				$wpdb->prepare( "
-					SELECT *
+					SELECT *, latitude as lat, longitude as lng
 	            	FROM   $table
 	            	WHERE  ID = %d", 
 	            	$location_id 
@@ -535,7 +535,7 @@ class GMW_Location {
 			$table    = self::get_locations_table();
 			$location = $wpdb->get_row( 
 				$wpdb->prepare( "
-					SELECT *
+					SELECT *, latitude as lat, longitude as lng
 		            FROM   $table
 		            WHERE  blog_id     = %d 
 		            AND    object_type = %s 
@@ -743,14 +743,18 @@ class GMW_Location {
 
 		// default values
 		$args = wp_parse_args( $args, array(
-			'object_type' 	 => 'post',
-			'lat'		  	 => false,
-			'lng'		  	 => false,
-			'radius'	  	 => false,
-			'units'		  	 => 'imperial',
-			'unique'	 	 => '',
-			'limit'			 => '',
-			'orderby'		 => '',
+			'object_type' 	    => 'post',
+			'lat'		  	    => false,
+			'lng'		  	    => false,
+			'radius'	  	    => false,
+			'units'		  	    => 'imperial',
+			'unique'	 	    => '',
+			'count'			    => '',
+			'offset'			=> '',
+			'paged'				=> 1,
+			'orderby'		    => '',
+			'object__in'	 	=> '',
+			'output_objects_id' => false
 		) );
 		
 		$args = apply_filters( 'gmw_get_locations_data_args', $args, $gmw );
@@ -830,10 +834,10 @@ class GMW_Location {
 	        $query_args_hash = 'gmw'.$hash.GMW_Cache_Helper::get_transient_version( 'gmw_get_object_'.$args['object_type'].'_locations' );
 	    }
       	
-        if ( ! $internal_cache || false === ( $locations_data = get_transient( $query_args_hash ) ) ) {
+        if ( ! $internal_cache || false === ( $locations = get_transient( $query_args_hash ) ) ) {
         //if ( 1 == 1 ) {	
             //print_r( 'locations query done' );
-       
+       	
 			global $wpdb;
 
 			$clauses['select']	 = "SELECT";
@@ -841,6 +845,19 @@ class GMW_Location {
 			$clauses['distance'] = "";
 			$clauses['from']	 = "FROM {$wpdb->base_prefix}{$db_table} gmw_locations";
 			$clauses['where'] 	 = $wpdb->prepare( " WHERE gmw_locations.object_type = '%s' AND gmw_locations.parent = '0'", $args['object_type'] );
+			$clauses['address_filters'] = '';
+			$clauses['having']   = '';
+			$clauses['orderby']  = '';
+			$clauses['limit']    = '';
+
+			if ( ! empty( $args['object__in'] ) ) {
+
+				// escape terms ID
+		       	$terms_id = esc_sql( $args['object__in'] );
+				$terms_id = implode( ',', $terms_id );
+
+				$clauses['where'] .= " AND object_id IN ( {$terms_id} ) ";
+			}
 
 			// if object type uses database table as global, means it doesn't save locations per blog,
 			// such as "user" we search within the entire database table. Otherwise, if data saved per blog, such as "post", we will filter locations based on blog ID
@@ -853,13 +870,14 @@ class GMW_Location {
 			}
 
 			$clauses['address_filters'] = self::query_address_fields( $address_filters );
-			$clauses['having']   		= '';
-			$clauses['orderby']  		= '';
 
-			if ( is_numeric( $args['limit'] ) ) {
-				$clauses['limit'] = $wpdb->prepare( "LIMIT %s", $args['limit'] );
-			} else {
-				$clauses['limit'] = '';
+			if ( is_numeric( $args['count'] ) ) {
+
+				if ( is_numeric( $args['offset'] ) ) {
+					$clauses['limit'] = $wpdb->prepare( "LIMIT %d, %d", $args['offset'], $args['count'] );
+				} else {
+					$clauses['limit'] = $wpdb->prepare( "LIMIT %d, %d", $args['count'] * ( $args['paged'] - 1 ), $args['count'] );
+				}
 			}
 			
 		 	// if address entered, do a proximity search and get locations within the radius entered.
@@ -930,36 +948,43 @@ class GMW_Location {
 		    	$clauses['orderby'] = $args['orderby'];
 		    }
 
+
+		    //wp_send_json( $clauses );
 		  	// query the locations
 		    $locations = $wpdb->get_results( 
-		    	implode( ' ', apply_filters( 'gmw_get_locations_query_clauses', $clauses, $args['object_type'], $gmw ) ) 
+		    	implode( ' ', apply_filters( 'gmw_get_locations_query_clauses', $clauses, $args, $gmw ) ) 
 		    );
 
-		    $locations_data = array(
-				'objects_id' 	 => array(),
-				'locations_data' => array()
-			);
+		    if ( $args['output_objects_id'] ) {
 
-		    // abort if no locations found
-		    if ( ! empty( $locations ) ) {
+			    $locations_data = array(
+					'objects_id' 	 => array(),
+					'locations_data' => array()
+				);
 
-			   	// modify the locations query
-			    foreach ( $locations as $value ) {
-						
-					// collect objects id into an array
-					$locations_data['objects_id'][] = $value->object_id;
-					// replace array keys with object id to be able to do some queries later
-					$locations_data['locations_data'][ $value->object_id ] = $value;
-			    }
+			    // abort if no locations found
+			    if ( ! empty( $locations ) ) {
+
+				   	// modify the locations query
+				    foreach ( $locations as $value ) {
+							
+						// collect objects id into an array
+						$locations_data['objects_id'][] = $value->object_id;
+						// replace array keys with object id to be able to do some queries later
+						$locations_data['locations_data'][ $value->object_id ] = $value;
+				    }
+				}
+
+				$locations = $locations_data;
 			}
 
             // set new query in transient only if cache enabled     
             if ( $internal_cache ) {  
-            	set_transient( $query_args_hash, $locations_data, GMW()->internal_cache_expiration );
+            	set_transient( $query_args_hash, $locations, GMW()->internal_cache_expiration );
             }
         }
 
-	    return $locations_data;
+	    return $locations;
 	}
 
 	/**
