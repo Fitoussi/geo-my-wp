@@ -311,7 +311,9 @@ class GMW_Maps_API {
 		
 		// no need to pass the results in the form as well
 		// since we already have locations data in the locations object
-		$form['results'] = array();
+		if ( ! empty( $form ) ) {
+			$form['results'] = array();
+		}
 
 		// push the map args into the global array of maps
 		$map_element = array(
@@ -416,9 +418,6 @@ class GMW_Maps_API {
 
 		$args = apply_filters( 'gmw_info_window_args', $args, $location, $gmw );
 		$args = wp_parse_args( $args, $default_args );
-
-		// labels
-		$labels = gmw_get_labels()['info_window'];
 		
 		// object URL
 		if ( $args['url'] != '#' ) {
@@ -463,7 +462,7 @@ class GMW_Maps_API {
 
 			$location_meta = is_array( $args['location_meta'] ) ? $args['location_meta'] : explode( ',', $args['location_meta'] );
 
-			$output['location_meta'] = gmw_get_location_meta_list( $location, $args['location_meta'], gmw_get_labels()['info_window'] );
+			$output['location_meta'] = gmw_get_location_meta_list( $location, $args['location_meta'], array() );
 		}
 
 		$output['/wrap'] = '</div>';
