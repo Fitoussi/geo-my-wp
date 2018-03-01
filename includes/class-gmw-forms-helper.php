@@ -21,9 +21,9 @@ class GMW_Forms_Helper {
      * @param  [type] $args [description]
      * @return [type]       [description]
      */
-    public static function default_settings( $args = array() ) {
+    public static function default_settings( $form = array() ) {
 
-        return apply_filters( 'gmw_form_default_settings', array(
+    	$form_data = array(
             
             'page_load_results' => array(
             	'enabled' 		   => 1,
@@ -80,7 +80,19 @@ class GMW_Forms_Helper {
                 'map_type'         => 'ROADMAP',
                 'zoom_level'       => 'auto'                    
             )
-        ), $args );
+        );
+
+        $form_data = apply_filters( 'gmw_form_default_settings', $form_data, $form );
+
+        if ( ! empty( $form['addon'] ) ) {
+        	$form_data = apply_filters( 'gmw_'.$form['addon'].'_addon_form_default_settings', $form_data, $form );
+        }
+
+        if ( ! empty( $form['slug'] ) ) {
+        	$form_data = apply_filters( 'gmw_'.$form['slug'].'_form_default_settings', $form_data, $form );
+        }
+
+        return $form_data;
     }
 
 	/**
