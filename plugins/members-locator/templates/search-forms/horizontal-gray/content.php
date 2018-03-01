@@ -39,7 +39,7 @@
 						
 		<span class="xfield-trigger" onclick="jQuery(this).closest( 'form' ).find( '.gmw-search-form-xprofile-fields' ).slideToggle();">
 			
-			<?php echo $gmw['labels']['search_form']['show_options']; ?>
+			<?php _e( 'Advanced options', 'GMW' ); ?>
 		</span>
 				            		
 		<?php do_action( 'gmw_search_form_before_distance', $gmw ); ?>
