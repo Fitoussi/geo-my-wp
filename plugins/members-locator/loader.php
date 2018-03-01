@@ -55,7 +55,7 @@ class GMW_Members_locator_Addon extends GMW_Addon {
     public function form_buttons() {
         return array( 
             'slug'      => 'members_locator',
-            'name'      => 'Members Locator',
+            'name'      => 'BP Members Locator',
             'prefix'    => 'fl',
             'priority'  => 10 
         );
