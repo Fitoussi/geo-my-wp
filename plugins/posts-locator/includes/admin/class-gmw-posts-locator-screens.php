@@ -168,8 +168,8 @@ class GMW_Posts_Locator_Screens {
             'map_type'              =>  gmw_get_option( 'post_types_settings', 'edit_post_page_map_type', 'ROADMAP' ),
             'map_lat'               =>  gmw_get_option( 'post_types_settings', 'edit_post_page_map_latitude', '40.711544' ),
             'map_lng'               =>  gmw_get_option( 'post_types_settings', 'edit_post_page_map_longitude', '-74.013486' ),
-            'location_mandatory'    =>  gmw_get_option( 'post_types_settings', 'mandatory_address', 0 ),
-            'location_required'     =>  gmw_get_option( 'post_types_settings', 'mandatory_address', 0 )        
+            'location_mandatory'    =>  gmw_get_option( 'post_types_settings', 'location_mandatory', 0 ),
+            'location_required'     =>  gmw_get_option( 'post_types_settings', 'location_mandatory', 0 )        
         ) );
             
         do_action( 'gmw_edit_post_page_before_location_form', $post );
