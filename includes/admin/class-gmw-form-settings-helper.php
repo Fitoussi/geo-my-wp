@@ -38,6 +38,67 @@ class GMW_Form_Settings_Helper {
     }
 
     /**
+     * Taxonomy group sorting 
+     * @param  [type] $a [description]
+     * @param  [type] $b [description]
+     * @return [type]    [description]
+     */
+    public static function sort_taxonomy_terms_groups( $a, $b ) {
+        return strcmp( $a->taxonomy, $b->taxonomy );
+    }
+
+    /**
+     * Get terms taxonomy array
+     * 
+     * @param unknown_type $tax_slug
+     * @param unknown_type $options
+     */
+    public static function get_taxonomy_terms( $taxonomy = 'category', $values = array(), $sort_groups = false ) {
+        
+        if ( ! is_array( $values ) ) {
+            $values = explode( ',', $values );
+        }
+
+        $terms = get_terms( $taxonomy, array( 'hide_empty' => false ) );
+        
+        if ( empty( $terms ) ) {
+            return;
+        }
+
+        if ( ! $sort_groups ) {
+
+            $current_tax = $terms[0]->taxonomy;
+                    
+            foreach ( $terms as $term ) {   
+                $selected = ( ! empty( $values ) && in_array( $term->term_id, $values ) ) ? 'selected="selected"' : '';
+                echo '<option value="'.$term->term_id.'" '.$selected.' >'.$term->name.'</option>';
+            }
+
+        } else {
+            
+            $current_tax = $terms[0]->taxonomy;
+
+            usort( $terms, array( 'self', 'sort_taxonomy_terms_groups' ) );
+        
+            echo '<optgroup label="'.$current_tax.'">';
+            
+            foreach ( $terms as $term ) {
+
+                $selected = in_array( $term->term_taxonomy_id, $values ) ? 'selected="selected"' : '';
+                
+                if ( $term->taxonomy != $current_tax ) {    
+                    
+                    echo '</optgroup>';
+                    $current_tax = $term->taxonomy;
+                    echo '<optgroup label="'.$term->taxonomy.'">';
+                }
+                
+                echo '<option value="'.$term->term_taxonomy_id.'" '.$selected.' >'.$term->slug.'</option>';
+            }
+        }
+    }
+
+    /**
 	 * Get location meta fields
 	 * 
 	 * @return [type] [description]
@@ -506,6 +567,9 @@ class GMW_Form_Settings_Helper {
                             <?php  
                         } ?>
                     </select>
+                    <p class="description">
+                        <?php _e( 'Select the profile fields to be used as filters in the search form.', 'GMW' ); ?>
+                    </p>
                 </div>
             
                 <label><?php _e( 'Select date field as "Age range" filter.', 'GMW' ); ?></label>   
@@ -520,6 +584,9 @@ class GMW_Form_Settings_Helper {
                                 </option>
                             <?php } ?>
                         </select>
+                        <p class="description">
+                            <?php _e( 'select a date field to be used as a age range filter in the search form.', 'GMW' ); ?>
+                        </p>
                     </div>
                 </div>
             </div>
