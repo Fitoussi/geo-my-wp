@@ -65,8 +65,8 @@ function gmw_search_form_locator_icon( $gmw=array(), $class=false ) {
 }
 
 function gmw_form_set_labels( $form = array() ) {
-	_deprecated_function( 'gmw_form_set_labels', '3.0', 'gmw_get_labels' );
-	return gmw_get_labels( $form );
+	_deprecated_function( 'gmw_form_set_labels', '3.0', 'There is no replacement for this function at this moment.' );
+	return;
 }
 
 function gmw_get_additional_info( $info, $gmw = array(), $fields = array(), $labels = array(), $tag='div' ) {
@@ -582,7 +582,7 @@ function gmw_fl_member_count($gmw) {
  */
 function gmw_fl_no_members( $gmw ) {
 	_deprecated_function( 'gmw_fl_no_members', '2.5', 'gmw_no_results_found' );
-	gmw_no_results_found( $gmw, $gmw['labels']['search_results']['fl_no_results'] );
+	gmw_no_results_found( $gmw, 'No results found' );
 }
 
 function gmw_no_results_found( $gmw, $message = '' ) {
@@ -624,7 +624,7 @@ function gmw_ug_directions( $gmw, $user, $title ) {
 		return;
 
 	if ( empty( $title ) )
-		$title = $gmw['labels']['search_results']['directions'];
+		$title = 'Get directions';
 
 	_deprecated_function( 'gmw_ug_directions', '2.5', 'gmw_directions_link' );
 	gmw_directions_link( $user, $gmw, $title );
