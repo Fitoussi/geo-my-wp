@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * 
  * @return mix HTML elements of the submission fields
  */
-function gmw_get_search_form_submit_button( $gmw = array(), $label = 'Submit' ) {
+function gmw_get_search_form_submit_button( $gmw = array(), $label = '' ) {
 	
 	$id = absint( $gmw['ID'] );
 	
@@ -24,7 +24,7 @@ function gmw_get_search_form_submit_button( $gmw = array(), $label = 'Submit' ) 
 	
 	$args = array(
 		'id' 	=> $id,
-		'label' => ! empty( $label ) ? $label : $gmw['labels']['search_form']['submit']
+		'label' => ! empty( $label ) ? $label : __( 'Submit', 'GMW' )
 	);
 
 	$output  = '';
@@ -37,7 +37,7 @@ function gmw_get_search_form_submit_button( $gmw = array(), $label = 'Submit' ) 
 	return $output;
 }
 
-	function gmw_search_form_submit_button( $gmw = array(), $label = 'Submit' ) {
+	function gmw_search_form_submit_button( $gmw = array(), $label = '' ) {
 		echo gmw_get_search_form_submit_button( $gmw, $label );
 	}
 
@@ -126,9 +126,9 @@ function gmw_get_search_form_locator_button( $gmw ) {
 function gmw_get_search_form_radius( $gmw ) {
 	
 	if ( $gmw['search_form']['units'] == 'both' ) {
-		$label = $gmw['labels']['search_form']['radius_within'];
+		$label = __( 'Within', 'GMW' );
 	} else {
-    	$label = $gmw['search_form']['units'] == 'imperial' ? $gmw['labels']['search_form']['miles'] : $gmw['labels']['search_form']['kilometers'];
+    	$label = $gmw['search_form']['units'] == 'imperial' ? __( 'Miles', 'GMW' ) : __( 'Kilometers', 'GMW' );
 	}
 
 	$args = array(
@@ -164,8 +164,8 @@ function gmw_get_search_form_units( $gmw ) {
 	$args = array(
 		'id'	   => $gmw['ID'], 
 		'units'	   => $gmw['search_form']['units'],
-		'mi_label' => $gmw['labels']['search_form']['miles'],
-		'km_label' => $gmw['labels']['search_form']['kilometers']
+		'mi_label' => __( 'Miles', 'GMW' ),
+		'km_label' => __( 'Kilometers', 'GMW' )
 	);
 
 	$output  = '<div class="gmw-form-field-wrapper gmw-units-field-wrapper">';
