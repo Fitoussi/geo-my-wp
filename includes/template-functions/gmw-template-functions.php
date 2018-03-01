@@ -57,20 +57,21 @@ function gmw_get_no_results_message( $gmw = array() ) {
  * 
  * @author Eyal Fitoussi
  */
-function gmw_get_results_map( $gmw ) {
+function gmw_get_results_map( $gmw, $implode = true ) {
     
     $args = array( 
         'map_id'         => $gmw['ID'],
         'prefix'         => $gmw['prefix'],
         'map_type'       => $gmw['addon'],
-        'map_width'      => '100%',
-        'map_height'     => '350px',
-        'expand_on_load' => ! empty( $gmw['general_settings']['pl_expand_map'] ) ? true : false,
+        'map_width'      => $gmw['results_map']['map_width'],
+        'map_height'     => $gmw['results_map']['map_height'],
+        'expand_on_load' => ! empty( $gmw['results_map']['expand_on_load'] ) ? true : false,
         //'form'           => $gmw,
-        'init_visible'   => $gmw['map_usage'] == 'shortcode' ? false : true
+       // 'init_visible'   => ( ! isset( $gmw['map_usage'] ) || $gmw['map_usage'] == 'shortcode' ) ? false : true
+        'init_visible'   => true
     );
 
-    return GMW_Maps_API::get_map_element( $args );
+    return GMW_Maps_API::get_map_element( $args, $implode );
 }
     
     /**
@@ -134,8 +135,8 @@ function gmw_get_pagination( $gmw = array() ) {
     $args = array(
         'id'                 => $gmw['ID'],
         'total'              => $gmw['max_pages'],
-        'prev_text'          => $gmw['labels']['pagination']['prev'],
-        'next_text'          => $gmw['labels']['pagination']['next'],
+        'prev_text'          => __( 'Prev', 'GMW' ),
+        'next_text'          => __( 'Next', 'GMW' ),
         'page_name'          => $gmw['paged_name']
     );
 
@@ -157,7 +158,7 @@ function gmw_get_per_page( $gmw = array() ) {
     
     $args = array(
         'id'            => $gmw['ID'],
-        'label'         => $gmw['labels']['search_results']['per_page'],
+        'label'         => __( 'Per page', 'GMW' ),
         'per_page'      => $gmw['page_load_action'] ? explode( ",", $gmw['page_load_results']['per_page'] ) : explode( ",", $gmw['search_results']['per_page'] ),
         'paged'         => $gmw['paged'],
         'total_results' => $gmw['total_results'],
@@ -286,4 +287,3 @@ function gmw_get_hours_of_operation( $object ) {
     function gmw_hours_of_operation( $location ) {
         echo gmw_get_hours_of_operation( $location );
     }
-    
