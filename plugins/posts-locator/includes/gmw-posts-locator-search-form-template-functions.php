@@ -179,7 +179,10 @@ function gmw_get_search_form_post_types( $args = array(), $post_types = array( '
     }
 
     foreach( $post_types as $post_type ) {
-        $options[$post_type] = get_post_type_object( $post_type )->labels->name;
+        
+        if ( ( $post_object = get_post_type_object( $post_type ) ) != false ) {
+            $options[$post_type] = $post_object->labels->name;
+        }
     }
 
     // generate new post types selector
@@ -193,9 +196,23 @@ function gmw_get_search_form_post_types( $args = array(), $post_types = array( '
      * @return [type]      [description]
      */
     function gmw_search_form_post_types( $gmw = array() ) {
-
-        $settings = ! empty( $gmw['search_form']['post_types_settings'] ) ? $gmw['search_form']['post_types_settings'] : array();
         
+        if ( isset( $gmw['search_form']['post_types_settings'] ) ) {
+
+            $settings = $gmw['search_form']['post_types_settings'];
+
+        // for different cases like Global Maps
+        } elseif ( isset( $gmw['search_form']['post_types_usage'] ) ) {
+
+            $settings = [
+                'usage' => $gmw['search_form']['post_types_usage']
+            ];
+        
+        } else {
+
+            $settings = array();
+        }
+
         $args = array(
             'id'               => $gmw['ID'],
             'usage'            => isset( $settings['usage'] ) ? $settings['usage'] : 'dropdown',
