@@ -133,13 +133,13 @@ class GMW_Posts_Locator_Admin_Settings {
             'priority'   => 20
         );
 
-        $settings['post_types_settings']['mandatory_address'] = array(
-            'name'          => 'mandatory_address',
+        $settings['post_types_settings']['location_mandatory'] = array(
+            'name'          => 'location_mandatory',
             'type'          => 'checkbox',
             'default'       => 0,
-            'label'         => __( 'Mandatory Address fields', 'GMW' ),
-            'cb_label'      => __( 'Yes', 'GMW' ),
-            'desc'          => __( 'Enable this feature to make the post location required.', 'GMW' ),
+            'label'         => __( 'Mandatory Location', 'GMW' ),
+            'cb_label'      => __( 'Enable', 'GMW' ),
+            'desc'          => __( 'Prevent post submission when no location entered.', 'GMW' ),
             'attributes'    => array(),
             'priority'      => 30
         );
