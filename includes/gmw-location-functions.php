@@ -401,6 +401,47 @@ function gmw_get_address_fields( $object_type = false, $object_id = 0, $fields =
 	return $output;
 }
 
+function gmw_get_location_address_fields( $object_type = 'post', $object_id = 0, $fields = [] ) {
+
+    $location = gmw_get_location( $object_type, $object_id );
+
+    if ( ! $location ) {
+        return false;
+    }
+
+    if ( ! is_array( $fields ) ) {
+        $fields = explode( ',',$fields );
+    }
+
+    if ( empty( $fields ) ) {
+
+        $fields = [ 
+            'lat',
+            'lng',
+            'latitude', 
+            'longitude', 
+            'street_number', 
+            'street_name',
+            'street',
+            'premise',
+            'neighborhood',
+            'city',
+            'county',
+            'region_name',
+            'region_code',
+            'postcode',
+            'country_name',
+            'country_code',
+            'address',
+            'formatted_address'
+        ];
+    }
+
+    $output = [];
+
+    return ( object ) array_intersect_key( ( array ) $location, array_flip( $fields ) );
+}
+
 /**
  * get the address of an object ( post, user... )
  * 
@@ -443,8 +484,8 @@ function gmw_get_location_address( $location, $fields = array( 'formatted_addres
 		return false;
 	}
 	
-	$output = '';
-
+    $output = '';
+    
 	// loop trough fields and get the specified address fields
     foreach ( $fields as $field ) {
 
@@ -463,7 +504,11 @@ function gmw_get_location_address( $location, $fields = array( 'formatted_addres
 
 	// modify the output address
 	$output = apply_filters( 'gmw_location_address', $output, $location, $fields, $gmw );
-	$output = apply_filters( "gmw_{$location->object_type}_location_address", $output, $location, $fields, $gmw );
+
+    // in some cases object type might not provided. This might also be a non location.
+    if ( ! empty( $location->object_type ) ) {
+	   $output = apply_filters( "gmw_{$location->object_type}_location_address", $output, $location, $fields, $gmw );
+    }
 
 	return ! empty( $output ) ? stripslashes( esc_attr( $output ) ) : '';
 }
@@ -559,7 +604,8 @@ function gmw_get_location_meta_list( $location = false, $fields = array(), $labe
 	
 	$count  = 0;
 	$output = '';
-	
+	$labels = apply_filters( 'gmw_get_location_meta_list_labels', $labels, $fields, $location );
+
 	// loop through fields
 	foreach ( $location_meta as $field => $value ) {
 
@@ -650,9 +696,18 @@ function gmw_get_directions_link( $location, $from_coords = array(), $label = ''
 
     //abort if no coordinates
     if ( empty( $location->lat ) || empty( $location->lng ) ) {
-        return;
+            
+        // maybe coords in latitude, longitude
+        if ( empty( $location->latitude ) || empty( $location->longitude ) ) {
+            
+            return;
+        
+        } else {
+            $location->lat = $location->latitude;
+            $location->lng = $location->longitude;
+        }
     }
-
+   
     $args = array(
         'to_lat' => $location->lat,
         'to_lng' => $location->lng
