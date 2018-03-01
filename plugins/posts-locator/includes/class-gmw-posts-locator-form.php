@@ -118,7 +118,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
      */
     public function query_clauses( $clauses ) {
                   
-        $count  = 0;
+        $count     = 0;
         $db_fields = '';
            
         // generate the db fields
@@ -283,6 +283,10 @@ class GMW_Posts_Locator_Form extends GMW_Form {
         
         $meta_args = false;
         
+        if ( empty( $this->form['get_per_page'] ) || $this->form['get_per_page'] == -1 ) {
+            $this->form['get_per_page'] = -1;
+        }
+
         //query args
         $this->form['query_args'] = apply_filters( 'gmw_pt_search_query_args', array(
             'post_type'           => $post_types,
@@ -295,6 +299,8 @@ class GMW_Posts_Locator_Form extends GMW_Form {
             'orderby'             => 'distance',
             'gmw_args'            => $gmw_query_args
         ), $this->form, $this );
+
+        $this->form = apply_filters( 'gmw_pt_form_before_posts_query', $this->form, $this );
 
         $internal_cache = GMW()->internal_cache;
 
@@ -330,10 +336,9 @@ class GMW_Posts_Locator_Form extends GMW_Form {
                  * As a temporary work around, we remove the [request] value, which contains the long numbers, from the WP_Query and save it in the transien without it. 
                  * @var [type]
                  */
-                $request = $this->query->request;
                 unset( $this->query->request );
+
                 set_transient( $query_args_hash, $this->query, GMW()->internal_cache_expiration );
-                $this->query->request = $request;
             }
         }   
 
