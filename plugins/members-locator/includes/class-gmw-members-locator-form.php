@@ -27,10 +27,12 @@ class GMW_Members_Locator_Form extends GMW_Form {
      * 
      * @var array
      */
-    public $results_message = array(
-        'count_message'  => 'Viewing {from_count} - {to_count} of {total_results} members',
-        'radius_message' => ' within {radius} {units} from {address}'
-    );
+    public function results_message_placeholders() { 
+        return array(
+            'count_message'  => __( 'Viewing {from_count} - {to_count} of {total_results} members', 'GMW' ),
+            'radius_message' => __( ' within {radius} {units} from {address}', 'GMW' )
+        );
+    }
 
     /**
      * [get_info_window_args description]
@@ -75,123 +77,44 @@ class GMW_Members_Locator_Form extends GMW_Form {
     }
 
     /**
-     * Query xprofile fields
+     * Inclued users Id returned from xprofile fields.
+     *    
+     * @param  [type] $sql [description]
+     * @return [type]      [description]
      *
-     * Note $formValues might come from URL. IT needs to be sanitized before being used
+     * @since 3.0
      * 
-     * @version 1.0
-     * @author Eyal Fitoussi
-     * @author Some of the code in this function was inspired by the code written by Andrea Taranti the creator of BP Profile Search - Thank you
-     * 
-    */
-    public static function query_xprofile_fields( $fields_values = array(), $gmw = array() ) {
+     */
+    public function include_xprofile_users_id( $sql ) {
 
-        global $bp, $wpdb, $wp_version;
+        $users_id       = esc_sql( implode( ',', $this->xp_users_id ) );
+        $sql['where'][] = " u.ID IN ( {$users_id} ) ";   
 
-        $users_id = array();
-
-        foreach ( $fields_values as $field_id => $value ) {
-        
-            if ( empty( $value ) || ( is_array( $value ) && ! array_filter( $value ) ) ) {
-                continue;
-            }
-
-            // get the field data
-            $field_data = new BP_XProfile_Field( $field_id );
-
-            $sql = $wpdb->prepare ( "SELECT `user_id` FROM {$bp->profile->table_name_data} WHERE `field_id` = %d ", $field_id );
-
-            switch ( $field_data->type ) {
-            
-                case 'textbox':
-                case 'textarea':
-
-                    $value = str_replace( '&', '&amp;', $value );
-
-                    if ( $wp_version < 4.0 ) {
-                        $escaped = '%'. esc_sql( like_escape( trim( $value ) ) ). '%';
-                    } else {
-                        $escaped = '%' . $wpdb->esc_like( trim( $value ) ) . '%';
-                    }
-
-                    $sql .= $wpdb->prepare ( "AND value LIKE %s", $escaped );
-
-                break;
-
-                case 'number':
-                    
-                    $sql .= $wpdb->prepare ( "AND value = %d", $value );
-                
-                break;
-
-                case 'selectbox':
-                case 'radio':
-                    
-                    $value = str_replace( '&', '&amp;', $value );
-                    $sql  .= $wpdb->prepare( 'AND value = %s', $value );
-                
-                break;
-                        
-                case 'multiselectbox':
-                case 'checkbox':
-
-                    $values = $value;
-                    $like   = array ();
-                     
-                    foreach ( $values as $value ) {
-                        $value = str_replace( '&', '&amp;', $value );
-                        if ( $wp_version < 4.0 ) {
-                            $escaped = '%'.esc_sql( like_escape( $value ) ).'%';
-                        } else {
-                            $escaped = '%'.$wpdb->esc_like( $value ).'%';
-                        }
-
-                        $like[] = $wpdb->prepare( 'value = %s OR value LIKE %s', $value, $escaped );
-                    }
-                     
-                    $sql .= 'AND ('. implode (' OR ', $like). ')';
-                     
-                break;
-
-                case 'datebox':
-                case 'birthdate':
-
-                    if ( ! is_array( $value ) || ! array_filter( $value ) ) {
-                        continue;
-                    }
-                    
-                    $min = ! empty( $value['min'] ) ? $value['min'] : '1';
-                    $max = ! empty( $value['max'] ) ? $value['max'] : '200';
-
-                    if ( $min > $max ) $max = $min;
-
-                    $time  = time();
-                    $day   = date( 'j', $time );
-                    $month = date( 'n', $time );
-                    $year  = date( 'Y', $time );
-                    $ymin  = $year - $max - 1;
-                    $ymax  = $year - $min;
-
-                    if ( $max !== '' ) $sql .= $wpdb->prepare( " AND DATE(value) > %s", "$ymin-$month-$day" );
-                    if ( $min !== '' ) $sql .= $wpdb->prepare( " AND DATE(value) <= %s", "$ymax-$month-$day" );
-
-                break;                   
-            }
-                    
-            $results  = $wpdb->get_col( $sql, 0 );
-            $users_id = empty( $users_id ) ? $results : array_intersect( $users_id, $results ); 
-
-            //abort if no users found for this fields
-            if ( empty( $users_id ) ) {
-                return -1;
-            }         
-        }
-
-        return $users_id;
+        return $sql;
     }
 
     /**
-     * Orderby distance
+     * Inclued users Id returned from locations query.
+     *
+     * $this->objects_id is returned from pre_get_locations_data function.
+     * 
+     * @param  [type] $sql [description]
+     * @return [type]      [description]
+     *
+     * @since 3.0
+     */
+    public function include_locations_users_id( $sql ) {
+
+        $users_id       = esc_sql( implode( ',', $this->objects_id ) );
+        $sql['where'][] = " u.ID IN ( {$users_id} ) ";   
+
+        return $sql;
+    }
+
+    /**
+     * Order by distance
+     *
+     * $this->objects_id is returned from pre_get_locations_data function.
      * 
      * @param  [type] $clauses [description]
      * @param  [type] $vars    [description]
@@ -201,8 +124,8 @@ class GMW_Members_Locator_Form extends GMW_Form {
 
         if ( $vars->query_vars['type'] == 'distance' ) {
 
-            $objects_id         = implode( ',', $this->objects_id );
-            $clauses['orderby'] = " ORDER BY FIELD( id, {$objects_id} )";
+            $users_id           = esc_sql( implode( ',', $this->objects_id ) );
+            $clauses['orderby'] = " ORDER BY FIELD( id, {$users_id} )";
         }
 
         return $clauses;
@@ -214,53 +137,60 @@ class GMW_Members_Locator_Form extends GMW_Form {
      * @return [type] [description]
      */
     public function search_query() {
-        	 
-    	//prevent BuddyPress from using its own "paged" value for the current page
-    	if ( ! empty( $_GET['upage'] ) ) {
-    		unset( $_GET['upage'] );
-        }
         
-        $include_users = $loc_args = array();
-
-        $locations_objects_id = $this->pre_get_locations_data();
-
-        // do locations query. If nothing was found abort and show no result
-        if ( empty( $locations_objects_id ) ) {
-            return false;
-        }
-
-        $include_users = $locations_objects_id;
-
         // look for xprofile values in URL
         if ( isset( $this->form['form_values']['xf'] ) && array_filter( $this->form['form_values']['xf'] ) ) {
+            
             $fields_values = $this->form['form_values']['xf'];
+        
         // otherwise, can do something custom with xprofile fields
         // by passing array of array( fields => value ).
         } else {
             $fields_values = apply_filters( 'gmw_fl_xprofile_fields_query_default_values', array(), $this->form );
         }
 
-        // query xprofile fields
-        if ( apply_filters( 'gmw_fl_xprofile_query_enabled', true, $this->form ) && array_filter( $fields_values ) ) {
-            
-            $xf_users = self::query_xprofile_fields( $fields_values, $this->form );
+        $this->xp_users_id = array();
 
-            // if no users returned from xprofile fields we can skip the rest and return
-            // no results
-            if ( $xf_users == -1 ) {
-                return false;
-            } 
-
-            // only if users returned from xprofile fields query we will compare it 
-            // with users returned from locations. Otherwise we will keep the original users
-            // fron location query
-            if ( ! empty( $xf_users ) ) {
-                $include_users = array_intersect( $include_users, $xf_users );
-            }
+        /**
+         *
+         * Query xprofile fields
+         * 
+         * if xprofile query returns -1, it means no users were 
+         * 
+         * found and we can skip the rest and return no results.
+         *
+         */
+        if ( apply_filters( 'gmw_fl_xprofile_query_enabled', true, $this->form ) && array_filter( $fields_values ) && ( $this->xp_users_id = gmw_query_xprofile_fields( $fields_values, $this->form ) ) == -1 ) {
+                
+            return false;
         }   
 
-        // abort if no users found
-        if ( empty( $include_users ) ) {
+        // can show members without locations
+        $show_non_located_members = apply_filters( 'gmw_show_members_without_locations', false, $this->form );
+
+        /**
+         * Get users locations data.
+         *
+         * This function returns an array of locations data ( $this->locations_data ) and an array 
+         * 
+         * of users ID ( $this->objects_id ), that is ordered by the distance.
+         * 
+         * We use this array to include in the members query and in the orderby caluse to order
+         * 
+         * the results by distance.
+         * 
+         * We also pass the users ID returned from the xprofile fields query into the function.
+         *
+         * If no users returned from the function, we can abort and skip the rest.
+         *
+         */
+        $this->pre_get_locations_data( $this->xp_users_id );
+
+        $address_ok = ! empty( $this->form['org_address'] ) ? true : false;
+        $objects_ok = ! empty( $this->objects_id ) ? true : false;
+
+        //// abort based on location found and non_located_members status
+        if ( ( $address_ok && ! $objects_ok ) || ( ! $address_ok && ! $show_non_located_members && ! $objects_ok ) ) {
             return false;
         }
 
@@ -274,43 +204,18 @@ class GMW_Members_Locator_Form extends GMW_Form {
             $gmw_query_args = $this->form['form_values'];
         }
 
+        $gmw_query_args['non_located_members'] = $show_non_located_members;
+
         //query args
         $this->form['query_args'] = apply_filters( 'gmw_fl_search_query_args', array(
             'type'      => 'distance',
             'per_page'  => $this->form['get_per_page'],
             'page'      => $this->form['paged'],
-            'gmw_args'  => $gmw_query_args,
+            'gmw_args'  => $gmw_query_args
         ), $this->form, $this );
-
-        /*
-         * compute the members to include based on the include arguments and 
-         * 
-         * returned from the locations query args.
-         *
-         * We do this to allow other plugins use the include argument first.
-         */ 
-        if ( ! empty( $this->form['query_args']['include'] ) ) {
-
-            if ( ! is_array( $this->form['query_args']['include'] ) ) {
-                $this->form['query_args']['include'] = explode( ',', $this->form['query_args']['include'] );
-            }
-
-            $this->form['query_args']['include'] = array_intersect( $this->form['query_args']['include'], $include_users );
         
-        } else {
-        
-            $this->form['query_args']['include'] = $include_users;
-        }
-
         //modify the form values before the query takes place
         $this->form = apply_filters( 'gmw_fl_form_before_members_query', $this->form, $this );
-
-        if ( empty( $this->form['query_args']['include'] ) || in_array( 0, $this->form['query_args']['include'] ) ) {
-            return false;
-        }
-
-        // order results by distance if needed
-        add_filter( 'bp_user_query_uid_clauses', array( $this, 'order_results_by_distance' ), 30, 2 );
 
         $internal_cache = GMW()->internal_cache;
 
@@ -327,8 +232,32 @@ class GMW_Members_Locator_Form extends GMW_Form {
         //if ( 1 == 1 ){ 
             //print_r( 'Members query done' );
 
+            // if address entered and showing only located members
+            if ( ( $address_ok && $objects_ok ) || ( ! $address_ok && ! $show_non_located_members ) ) {
+                
+                // include users ID 
+                add_filter( 'bp_user_query_uid_clauses', array( $this, 'include_locations_users_id' ), 20 );
+
+                // order results by distance
+                add_filter( 'bp_user_query_uid_clauses', array( $this, 'order_results_by_distance' ), 30, 2 );
+            
+            // otherwise, if showing also non located memebrs
+            // we need to pass the users Id from xprofile fields
+            // into the query directly.
+            } elseif ( ! empty( $this->xp_users_id ) ) {
+
+                // include users ID 
+                add_filter( 'bp_user_query_uid_clauses', array( $this, 'include_xprofile_users_id' ), 20 );
+            }
+
             // query members
             $results = bp_has_members( $this->form['query_args'] ) ? true : false;
+
+            // include users ID 
+            remove_filter( 'bp_user_query_uid_clauses', array( $this, 'include_users_id' ), 20 );
+
+            // order results by distance
+            remove_filter( 'bp_user_query_uid_clauses', array( $this, 'order_results_by_distance' ), 30, 2 );
 
             // set new query in transient    
             if ( $internal_cache ) {
@@ -345,7 +274,7 @@ class GMW_Members_Locator_Form extends GMW_Form {
         $this->form['total_results'] = $members_template->total_member_count;
         $this->form['max_pages']     = $this->form['total_results']/$this->form['get_per_page'];
 
-        $temp_array = [];
+        $temp_array = array();
 
         foreach ( $members_template->members as $member ) {
             $temp_array[] = parent::the_location( $member->id, $member );
@@ -365,5 +294,4 @@ class GMW_Members_Locator_Form extends GMW_Form {
     public function the_member( $member ) {
         return $this->the_location( $member->id, $member );
     }
-
 }
