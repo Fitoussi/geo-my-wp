@@ -91,6 +91,13 @@ function gmw_shortcode( $attr ) {
 		return;
 	}
 
+	if ( $form['addon'] == 'global_maps' ) {
+
+		trigger_error( 'The usage of [gmw] shortcode for global maps is deprecated since GEO my WP 3.0. Use [gmw_global_maps] shortcode instead.' , E_USER_NOTICE );
+
+		return gmw_global_map_shortcode( [ 'form' => $form['ID'] ] );
+	}
+
 	// Abort if the add-on this form belongs to is deactivated
 	if ( ! gmw_is_addon_active( $form['addon'] ) ) {
 
@@ -101,6 +108,20 @@ function gmw_shortcode( $attr ) {
 		return;
 	}
 	
+	// get current form element ( form, map, results... )
+	$form['current_element'] = key( $attr );
+
+	// set form="results" as search results element
+	if ( isset( $attr['form'] ) && $attr['form'] == 'results' ) {
+		$form['current_element'] = 'search_results';
+	}
+
+	// shortcode attributes
+	$form['params'] = $attr;
+
+	// do something before everything begines
+	do_action( 'gmw_shortcode_pre_init', $form );
+
 	ob_start();
 
 	// if form verified
@@ -114,17 +135,19 @@ function gmw_shortcode( $attr ) {
 	}
 
 	// get the class name of the add-on need to be queried based on its slug
-	$class_name = 'GMW_'.$form['slug'].'_Form';
-					
-	// check if the child class exists
-	if ( ! class_exists( $class_name ) ) {
-
-		trigger_error( $class_name . ' class is missing.' , E_USER_NOTICE );
+	if ( class_exists( 'GMW_'.$form['slug'].'_Form' ) ) {
+		
+		$class_name = 'GMW_'.$form['slug'].'_Form';
+	
+	// otherwise, can use the filter for custom class
+	} else if ( ! class_exists( $class_name = apply_filters( 'gmw_form_custom_class_name', '', $form['slug'], $form ) ) ) {
+		
+		trigger_error( 'GMW form class is missing.' , E_USER_NOTICE );
 
 		return;
 	}
 
-	$new_form = new $class_name( $attr, $form );
+	$new_form = new $class_name( $form );
 
 	GMW()->current_form = $new_form->form;
 
