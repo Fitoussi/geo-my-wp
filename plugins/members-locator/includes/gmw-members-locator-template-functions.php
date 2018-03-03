@@ -37,6 +37,120 @@ if ( ! function_exists( 'gmw_search_results_bp_avatar' ) ) {
 }
 
 /**
+ * Search form BP member types filter
+ * 
+ * @param  array  $gmw [description]
+ * @return [type]      [description]
+ */
+function gmw_search_form_bp_member_types( $gmw = array() ) {
+
+    $settings = $gmw['search_form']['member_types_filter'];
+
+    if ( ! isset( $settings['usage'] ) || $settings['usage'] == 'disabled' || $settings['usage'] == 'pre_defined' ) {
+        return;
+    }
+
+    $url_px = gmw_get_url_prefix();
+      
+    // can be used with premium features to pass specific
+    // member types via array
+    if ( empty( $settings['member_types'] ) ) {
+        
+        $member_types = array();
+
+        foreach( bp_get_member_types( array(), 'object' ) as $type ) {
+            $member_types[$type->name] = $type->labels['name'];
+        }
+
+    } else {
+        
+        $member_types = array_flip( $settings['member_types'] );
+    } 
+
+    $args = array(
+        'id'               => $gmw['ID'],
+        'usage'            => isset( $settings['usage'] ) ? $settings['usage'] : 'disabled',
+        'show_options_all' => isset( $settings['show_options_all'] ) ? $settings['show_options_all'] : __( 'Search member types', 'GMW' ),
+    );
+
+    $element = GMW_Search_Form_Helper::bp_member_types_filter( $args, $member_types );
+    
+    $output = '';
+
+    if ( $args['usage'] != 'pre_defined' ) {
+
+        $output .= '<div class="gmw-form-field-wrapper gmw-bp-member-types-wrapper gmw-bp-member-type-'.esc_attr( $args['usage'] ).'">';
+
+        if ( ! empty( $settings['label'] ) ) {
+
+            $tag = ( $args['usage'] == 'checkboxes' ) ? 'span' : 'label';
+
+            $output .= '<'.$tag.' class="gmw-field-label">'.esc_attr( $settings['label'] ).'</'.$tag.'>';
+        }
+
+        $output .= $element;
+        $output .= '</div>';
+    
+    } else {
+        $output .= $element;
+    }
+
+    echo $output;
+}
+
+/**
+ * Search form BP Groups filter
+ * 
+ * @param  array  $gmw [description]
+ * @return [type]      [description]
+ */
+function gmw_search_form_bp_groups_filter( $gmw = array() ) {
+
+    if ( ! function_exists( 'bp_is_active' ) || ! bp_is_active( 'groups' ) ) {
+        return;
+    }
+        
+    // abort if no need to display the groups filter
+    if ( ! isset( $gmw['search_form']['bp_groups']['usage'] ) || $gmw['search_form']['bp_groups']['usage'] == 'pre_defined' ) {
+        return;
+    }
+
+    $settings = $gmw['search_form']['bp_groups'];
+    
+    // set args
+    $args = array(
+        'id'               => $gmw['ID'],
+        'usage'            => isset( $settings['usage'] ) ? $settings['usage'] : 'dropdown',
+        'show_options_all' => isset( $settings['show_options_all'] ) ? $settings['show_options_all'] : __( 'Search Groups', 'gmw-premium-settings' ),
+    );
+
+    // get the filter element
+    $element = GMW_Search_Form_Helper::bp_groups_filter( $args, $settings['groups'] );
+    
+    $output = '';
+
+    if ( $args['usage'] != 'pre_defined' ) {
+
+        $output .= '<div class="gmw-form-field-wrapper gmw-bp-groups-wrapper gmw-bp-groups-'.esc_attr( $args['usage'] ).'">';
+
+        if ( ! empty( $settings['label'] ) ) {
+
+            $tag = ( $args['usage'] == 'checkboxes' ) ? 'span' : 'label';
+
+            $output .= '<'.$tag.' class="gmw-field-label">'.esc_attr( $settings['label'] ).'</'.$tag.'>';
+        }
+
+        $output .= $element;
+        $output .= '</div>';
+    
+    } else {
+        $output .= $element;
+    }
+
+    echo $output;
+}
+
+/**
  * Get buddyPress Xprofile Fields
  * 
  * @version 1.0
@@ -79,9 +193,12 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 
 		// get the submitted value if form submitted
 		if ( isset( $values[$field_id] ) ) {
+			
 			$value = $values[$field_id];
+		
 		// otherwise set default values
-		} elseif ( ! $gmw['submitted'] ) {	
+		} elseif ( empty( $gmw['submitted'] ) ) {	
+			
 			$value = apply_filters( 'gmw_fl_xprofile_form_default_value', '', $field_id, $field_data );
 		}
 
@@ -316,7 +433,7 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 
 			default : 
 
-				$output = apply_filters( 'gmw_fl_get_xprofile_fields', $output, $field_id, $field_data, $name_attr, $label, $field_class, $fid, $value );
+				$output = apply_filters( 'gmw_fl_get_xprofile_fields', $output, $field_id, $field_data, $label, $field_class, $fid, $value );
 			break;
 
 		} // switch
@@ -331,6 +448,124 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 	function gmw_search_form_xprofile_fields( $gmw ) {
 		echo gmw_get_search_form_xprofile_fields( $gmw );
 	}
+
+/**
+ * Query xprofile fields
+ *
+ * Note $formValues might come from URL. It needs to be sanitized before being used
+ * 
+ * @version 1.0
+ * 
+ * @author Eyal Fitoussi
+ * 
+ * @author Some of the code in this function was inspired by the code written by Andrea Taranti the creator of BP Profile Search - Thank you
+ * 
+*/
+function gmw_query_xprofile_fields( $fields_values = array(), $gmw = array() ) {
+
+    global $bp, $wpdb, $wp_version;
+
+    $users_id = array();
+
+    foreach ( $fields_values as $field_id => $value ) {
+    
+        if ( empty( $value ) || ( is_array( $value ) && ! array_filter( $value ) ) ) {
+            continue;
+        }
+
+        // get the field data
+        $field_data = new BP_XProfile_Field( $field_id );
+
+        $sql = $wpdb->prepare( "SELECT `user_id` FROM {$bp->profile->table_name_data} WHERE `field_id` = %d ", $field_id );
+
+        switch ( $field_data->type ) {
+        
+            case 'textbox':
+            case 'textarea':
+
+                $value = str_replace( '&', '&amp;', $value );
+
+                if ( $wp_version < 4.0 ) {
+                    $escaped = '%'. esc_sql( like_escape( trim( $value ) ) ). '%';
+                } else {
+                    $escaped = '%' . $wpdb->esc_like( trim( $value ) ) . '%';
+                }
+
+                $sql .= $wpdb->prepare ( "AND value LIKE %s", $escaped );
+
+            break;
+
+            case 'number':
+                
+                $sql .= $wpdb->prepare ( "AND value = %d", $value );
+            
+            break;
+
+            case 'selectbox':
+            case 'radio':
+                
+                $value = str_replace( '&', '&amp;', $value );
+                $sql  .= $wpdb->prepare( 'AND value = %s', $value );
+            
+            break;
+                    
+            case 'multiselectbox':
+            case 'checkbox':
+
+                $values = $value;
+                $like   = array ();
+                 
+                foreach ( $values as $value ) {
+                    $value = str_replace( '&', '&amp;', $value );
+                    if ( $wp_version < 4.0 ) {
+                        $escaped = '%'.esc_sql( like_escape( $value ) ).'%';
+                    } else {
+                        $escaped = '%'.$wpdb->esc_like( $value ).'%';
+                    }
+
+                    $like[] = $wpdb->prepare( 'value = %s OR value LIKE %s', $value, $escaped );
+                }
+                 
+                $sql .= 'AND ('. implode (' OR ', $like). ')';
+                 
+            break;
+
+            case 'datebox':
+            case 'birthdate':
+
+                if ( ! is_array( $value ) || ! array_filter( $value ) ) {
+                    continue;
+                }
+                
+                $min = ! empty( $value['min'] ) ? $value['min'] : '1';
+                $max = ! empty( $value['max'] ) ? $value['max'] : '200';
+
+                if ( $min > $max ) $max = $min;
+
+                $time  = time();
+                $day   = date( 'j', $time );
+                $month = date( 'n', $time );
+                $year  = date( 'Y', $time );
+                $ymin  = $year - $max - 1;
+                $ymax  = $year - $min;
+
+                if ( $max !== '' ) $sql .= $wpdb->prepare( " AND DATE(value) > %s", "$ymin-$month-$day" );
+                if ( $min !== '' ) $sql .= $wpdb->prepare( " AND DATE(value) <= %s", "$ymax-$month-$day" );
+
+            break;                   
+        }
+                
+        $results  = $wpdb->get_col( $sql, 0 );
+        $users_id = empty( $users_id ) ? $results : array_intersect( $users_id, $results ); 
+
+        //abort if no users found for this fields
+        if ( empty( $users_id ) ) {
+            return -1;
+        }         
+    }
+
+    return $users_id;
+}
 
 /**
  * GMW FL search results function - xprofile fields
