@@ -111,7 +111,7 @@ function gmw_get_user_location( $user_id = 0 ) {
     }
 
     // get user location from database
-    return GMW_Location::get_location( 'user', $user_id );
+    return gmw_get_location( 'user', $user_id );
 }
 
 /**
@@ -137,7 +137,7 @@ function gmw_get_user_location_meta( $user_id = 0, $meta_keys = array() ) {
     }
 
     // get user location from database
-    return GMW_Location::get_location_meta_by_object( 'user', $user_id, $meta_keys );
+    return gmw_get_location_meta_by_object( 'user', $user_id, $meta_keys );
 }
 
 /**
@@ -255,7 +255,7 @@ function gmw_delete_user_location( $user_id = 0, $delete_meta = true ) {
 
     do_action( 'gmw_before_user_location_deleted', $user_id );
 
-    GMW_Location::delete_location( 'user', $user_id, $delete_meta );
+    gmw_delete_location( 'user', $user_id, $delete_meta );
 
     do_action( 'gmw_after_user_location_deleted', $user_id );
 }
@@ -343,31 +343,44 @@ add_shortcode( 'gmw_user_address', 'gmw_get_user_address' );
 	}
 
 /**
- * Add/update user location
+ * Update user location.
+ *
+ * The function will geocode the address, or reverse geocode coords, and save it in the locations table in DB
+ *
+ * @since 3.0
  * 
- * use this function if you want to add or update user location.
+ * @author Eyal Fitoussi
  * 
- * function accepts an accociative array as below:
+ * @param  integer          $user_id  
+ * @param  string || array  $location to pass an address it can be either a string or an array of address field for example:
  * 
- * $args = array (
- *     'user_id' => 1,      //must pass post id in order to work
- *     'address' => false,  //can be eiter single line of full address field or an array of the adress components - 
- *      array( 
- *          'street'  => 'Lincoln st', 
- *          'apt'     => '',
- *          'city'    => 'Hollywood', 
- *          'state'   => 'Florida',
- *          'country' => 'USA'
- *      );
- *  );
+ * $location = array(
+ *      'street'    => 285 Fulton St,
+ *      'apt'       => '',
+ *      'city'      => 'New York',
+ *      'state'     => 'NY',
+ *      'zipcode'   => '10007',
+ *      'country'   => 'USA'
+ * );
+ *
+ * or pass a set of coordinates via an array of lat,lng. Ex 
+ *
+ * $location = array( 
+ *     'lat' => 26.1345,
+ *     'lng' => -80.4362
+ * );
+ * 
+ * @param  boolean $force_refresh false to use geocoded address in cache || true to force address geocoding
+ * 
+ * @return int location ID
  */
-function gmw_update_user_location( $user_id = 0, $address = false, $force_refresh = false ) {
+function gmw_update_user_location( $user_id = 0, $location = [], $force_refresh = false ) {
 
     if ( ! gmw_is_user_exists( $user_id ) ) {
         return;
     }
 
-    return gmw_update_location( 'user', $user_id, $address, $user_id, $force_refresh );
+    return gmw_update_location( 'user', $user_id, $location, $user_id, $force_refresh );
 }
 
 /**
@@ -396,5 +409,5 @@ function gmw_update_user_location_meta( $user_id = 0, $metadata = array(), $meta
         return false;
     }
 
-    GMW_Location::update_location_metas( $location_id, $metadata, $meta_value );
+    gmw_update_location_metas( $location_id, $metadata, $meta_value );
 }
