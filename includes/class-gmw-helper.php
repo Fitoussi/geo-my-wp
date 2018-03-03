@@ -143,9 +143,9 @@ class GMW_Helper {
 			$custom_path 	  	  = $custom_path .'/'.$templates_folder.'/'.$folder.'*';
 			$template_custom_path = TEMPLATEPATH . '/geo-my-wp/'.$templates_folder.'/'.$folder.'*';
 		}
-
+		
 		// look for custom templates in child theme or custom path. If not found check in parent theme
-		if ( empty( $custom_templates = glob( $custom_path, GLOB_ONLYDIR ) ) ) {
+		if ( ( $custom_templates = glob( $custom_path, GLOB_ONLYDIR ) ) == false ) {
 			$custom_templates = glob( $template_custom_path, GLOB_ONLYDIR );
 		};
 		
