@@ -3,7 +3,7 @@
 Plugin Name: GEO my WP
 Plugin URI: http://www.geomywp.com
 Description: GEO my WP is an adavanced mapping and proximity search plugin. Geotag post types and BuddyPress members and create proximity search forms to search and find locations based on address, radius, categories and more.
-Version: 3.0-beta-6
+Version: 3.0-beta-7
 Author: Eyal Fitoussi
 Author URI: http://www.geomywp.com
 Requires at least: 4.5
@@ -30,12 +30,6 @@ class GEO_my_WP {
 	 * @var string
 	 */
 	public $version = '3.0';
-
-	/**
-	 * Database version
-	 * @var integer
-	 */
-	public $db_version = 3;
 
 	/**
 	 * GEO my WP & Extensions options
@@ -241,7 +235,6 @@ class GEO_my_WP {
 		}
 
 		define( 'GMW_VERSION', $this->version );
-		define( 'GMW_DB_VERSION', $this->db_version );
 		define( 'GMW_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 		define( 'GMW_URL', untrailingslashit( plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) ) );
 		define( 'GMW_PLUGINS_PATH', GMW_PATH . '/plugins' );
@@ -249,6 +242,7 @@ class GEO_my_WP {
 		define( 'GMW_IMAGES', GMW_URL . '/assets/images' );
 		define( 'GMW_FILE', __FILE__ );
 		define( 'GMW_BASENAME', plugin_basename( GMW_FILE ) );	
+		define( 'GMW_DOING_AJAX', wp_doing_ajax() );
 	}
 	
 	/**
@@ -369,6 +363,7 @@ class GEO_my_WP {
 		include( 'includes/class-gmw-forms-helper.php' );
 		include( 'includes/gmw-functions.php' );
 		include( 'includes/class-gmw-addon.php' );
+		include( 'includes/class-gmw-location-meta.php' );
 		include( 'includes/class-gmw-location.php' );
 		include( 'includes/gmw-location-functions.php' );
 		include( 'includes/gmw-user-location-functions.php' );
@@ -385,8 +380,6 @@ class GEO_my_WP {
 		include( 'includes/class-gmw-form.php' );
 		include( 'includes/gmw-shortcodes.php' );
 
-		
-		//sdf();
 		// load core add-ons
 		self::$instance->load_core_addons();
 				
