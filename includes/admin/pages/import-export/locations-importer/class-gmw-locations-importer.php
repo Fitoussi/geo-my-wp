@@ -339,7 +339,7 @@ class GMW_Locations_Importer {
 		foreach ( $this->location_meta_fields as $field => $meta_key ) {
 
 			if ( ! empty( $location->$field ) ) {
-				GMW_Location::update_location_meta( $location_id, $meta_key, $location->$field );
+				gmw_update_location_meta( $location_id, $meta_key, $location->$field );
 			}
 		}
 	}
@@ -374,7 +374,7 @@ class GMW_Locations_Importer {
 				}
 			}
 
-			$default_location_fields = GMW_Location::default_location_database_values();
+			$default_location_fields = GMW_Location::default_values();
 	
 			$location_args = array(
 				'object_type' => $this->object_type
@@ -445,7 +445,7 @@ class GMW_Locations_Importer {
 			$location_args = apply_filters( 'gmw_locations_importer_location_args', $location_args, $this );
 
 			// try to import location	
-			$location_id = GMW_Location::update_location( $location_args );
+			$location_id = gmw_update_location_data( $location_args );
 
 			// if location failed importing
 			if ( empty( $location_id ) ) {
