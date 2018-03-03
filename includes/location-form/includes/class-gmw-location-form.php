@@ -304,7 +304,7 @@ class GMW_Location_Form {
      */
     protected function get_saved_location() {
     	
-    	$location = GMW_Location::get_location( $this->object_type, $this->args['object_id'] );
+    	$location = gmw_get_location( $this->object_type, $this->args['object_id'] );
 
 		return ! empty( $location ) ? $location : false;        
     } 
@@ -1175,7 +1175,7 @@ class GMW_Location_Form {
 	    do_action( 'gmw_lf_before_'.$location['object_type'].'_location_updated', $location, $location_args, $form_values );
 
 		// save location
-		$location['ID'] = GMW_Location::update_location( $location_args );
+		$location['ID'] = gmw_update_location_data( $location_args );
 
 		// filter location meta before updating
 		$location_meta = apply_filters( 'gmw_lf_location_meta_before_location_updated', $location_meta, $location, $form_values );
@@ -1257,7 +1257,7 @@ class GMW_Location_Form {
 		do_action( 'gmw_lf_before_location_deleted', $location, $form_values );
 	    do_action( 'gmw_lf_before_'.$location['object_type'].'_location_deleted', $location, $form_values );
 
-	   	$location_id = GMW_Location::delete_location_by_id( $location['ID'], true );
+	   	$location_id = GMW_Location::delete_by_id( $location['ID'], true );
 
 	   	// do something after location deleted
 		do_action( 'gmw_lf_after_location_deleted', $location, $form_values );
