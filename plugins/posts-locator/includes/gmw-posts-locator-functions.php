@@ -220,7 +220,7 @@ function gmw_get_post_location( $post_id = 0 ) {
     }
 
     // get post location from database
-    return GMW_Location::get_location( 'post', $post_id );
+    return gmw_get_location( 'post', $post_id );
 }
 
 /**
@@ -246,7 +246,7 @@ function gmw_get_post_location_meta( $post_id = false, $meta_keys = array() ) {
     }
 
     // get post location from database
-    return GMW_Location::get_location_meta_by_object( 'post', $post_id, $meta_keys );
+    return gmw_get_location_meta_by_object( 'post', $post_id, $meta_keys );
 }
 
 /**
@@ -422,7 +422,7 @@ function gmw_delete_post_location( $post_id = false, $delete_meta = false ) {
         return;
     }
 
-    GMW_Location::delete_location( 'post', $post_id, $delete_meta );
+    gmw_delete_location( 'post', $post_id, $delete_meta );
 }
 
 /**
@@ -497,33 +497,46 @@ add_shortcode( 'gmw_post_address', 'gmw_get_post_address' );
 	}
 
 /**
- * Update Post location 
+ * Update post location.
+ *
+ * The function will geocode the address, or reverse geocode coords, and save it in the locations table in DB
+ *
+ * @since 3.0
  * 
- * use this function if you want to add location to a post using a custom form.
+ * @author Eyal Fitoussi
  * 
- * @param  integer $post_id   post ID
- * @param  boolean $address   can be eiter single line of full address field or an array of the adress components - 
- *      array( 
- *          'street'  => 'Lincoln st', 
- *          'apt'     => '',
- *          'city'    => 'Hollywood', 
- *          'state'   => 'Florida',
- *          'country' => 'USA'
- *      );
- *      
- * @param  integer $user_id       the author ID. Passing false will use the logged in user ID
- * @param  boolean $force_refresh use address found in cache or force new geocoding
+ * @param  integer          $post_id  int ( post ID, user ID, comment ID... )
+ * @param  string || array  $location to pass an address it can be either a string or an array of address field for example:
  * 
- * @return [type]                 [description]
+ * $location = array(
+ *      'street'    => 285 Fulton St,
+ *      'apt'       => '',
+ *      'city'      => 'New York',
+ *      'state'     => 'NY',
+ *      'zipcode'   => '10007',
+ *      'country'   => 'USA'
+ * );
+ *
+ * or pass a set of coordinates via an array of lat,lng. Ex 
+ *
+ * $location = array( 
+ *     'lat' => 26.1345,
+ *     'lng' => -80.4362
+ * );
+ * 
+ * @param  integer $user_id      the user whom the location belongs to. By default it will belong to the user who creates/update the post location ( logged in user ).
+ * @param  boolean $force_refresh false to use geocoded address in cache || true to force address geocoding
+ * 
+ * @return int location ID
  */
-function gmw_update_post_location( $post_id = 0, $address = false, $user_id = 0, $force_refresh = false ) {
+function gmw_update_post_location( $post_id = 0, $location = [], $user_id = 0, $force_refresh = false ) {
 
     if ( ! gmw_is_post_exists( $post_id ) ) {
         return;
     }
 
     // update post location
-    return gmw_update_location( 'post', $post_id, $address, $user_id, $force_refresh );
+    return gmw_update_location( 'post', $post_id, $location, $user_id, $force_refresh );
 }
 
 /**
@@ -552,7 +565,7 @@ function gmw_update_post_location_meta( $post_id = 0, $metadata = array(), $meta
         return false;
     }
 
-    GMW_Location::update_location_metas( $location_id, $metadata, $meta_value );
+    gmw_update_location_metas( $location_id, $metadata, $meta_value );
 }
 
 /**
@@ -588,7 +601,7 @@ add_action( 'wp_trash_post', 'gmw_trash_post_location' );
  */
 function gmw_after_delete_post( $post_id ) {
 
-    GMW_Location::delete_location( 'post', $post_id, true );
+    gmw_delete_location( 'post', $post_id, true );
 }
 add_action( 'after_delete_post', 'gmw_after_delete_post' );
 ?>
