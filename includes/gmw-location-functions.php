@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return object              complete location data.
  */
 function gmw_get_location( $object_type = '', $object_id = 0, $output = OBJECT, $cache = true ) {
-	return GMW_Location::get_location( $object_type, $object_id, $output, $cache );
+	return GMW_Location::get( $object_type, $object_id, $output, $cache );
 }
 
 /**
@@ -31,7 +31,7 @@ function gmw_get_location( $object_type = '', $object_id = 0, $output = OBJECT, 
  * @return [type]               [description]
  */
 function gmw_get_location_by_id( $location_id = 0, $output = OBJECT, $cache = true ) {
-	return GMW_Location::get_location_by_id( $location_id, $output, $cache );
+	return GMW_Location::get_by_id( $location_id, $output, $cache );
 }
 
 /**
@@ -46,7 +46,9 @@ function gmw_get_location_by_id( $location_id = 0, $output = OBJECT, $cache = tr
  * @return int location ID
  */
 function gmw_get_location_id( $object_type = 'post', $object_id = 0, $cache = true ) {
-	$location = GMW_Location::get_location( $object_type, $object_id, OBJECT, $cache );
+
+	$location = gmw_get_location( $object_type, $object_id, OBJECT, $cache );
+    
 	return ! empty( $location->ID ) ? $location->ID : false;
 }
 
@@ -61,24 +63,24 @@ function gmw_get_location_id( $object_type = 'post', $object_id = 0, $cache = tr
  * 
  */
 function gmw_get_location_meta( $location_id = 0, $meta_keys = array(), $cache = true ) {
-	return GMW_Location::get_location_meta( $location_id, $meta_keys, $cache );
+	return GMW_Location_Meta::get( $location_id, $meta_keys, $cache );
 }
 
 /**
  * Get location metadata by object type and object ID
  * 
- * @param  boolean $object_type object_type object type ( post, user... )
- * @param  boolean $object_id   object ID ( post ID, user ID.... )
+ * @param  string  $object_type object_type object type ( post, user... )
+ * @param  integer $object_id   object ID ( post ID, user ID.... )
  * @param  array   $meta_keys   string of a single or array of multiple meta keys to retrive their values
  * 
  * @return [type]  string || array of values
  */
-function gmw_get_location_meta_by_object( $object_type = false, $object_id = false, $meta_keys = array() ) {
-	return GMW_Location::get_location_meta_by_object( $object_type, $object_id, $meta_keys );
+function gmw_get_location_meta_by_object( $object_type = '', $object_id = 0, $meta_keys = array() ) {
+	return GMW_Location_Meta::get_by_object( $object_type, $object_id, $meta_keys );
 }
 
 /**
- * Update location meta
+ * Create / Update location meta
  * 
  * @param  integer $location_id 
  * @param  string  $meta_key   
@@ -89,19 +91,34 @@ function gmw_get_location_meta_by_object( $object_type = false, $object_id = fal
  * @return int meta ID
  */
 function gmw_update_location_meta( $location_id = 0, $meta_key = '' , $meta_value = '' ) {
-	return GMW_Location::update_location_meta( $location_id, $meta_key, $meta_value );
+	return GMW_Location_Meta::update( $location_id, $meta_key, $meta_value );
+}
+
+/**
+ * Create / Update multiple location metas
+ * 
+ * @param  integer $location_id 
+ * @param  array   $metadata    location metadata in meta_key => meta value pairs
+ * @param  mixed   $meta_value  can also update single meta by passing single meta_data and meta_vale
+ *
+ * @since 3.0 
+ * 
+ * @return int meta ID
+ */
+function gmw_update_location_metas( $location_id = 0, $metadata = array() , $meta_value = '' ) {
+    return GMW_Location_Meta::update_metas( $location_id, $metadata, $meta_value );
 }
 
 /**
  * Delete location by object type and object ID
  * 
- * @param  boolean $object_type [description]
+ * @param  string  $object_type [description]
  * @param  integer $object_id   [description]
  * @param  string  $meta_key    [description]
  * @return [type]               [description]
  */
-function gmw_delete_location( $object_type = false, $object_id = 0, $delete_meta = false ) {
-    return GMW_Location::delete_location( $object_type, $object_id, $delete_meta );
+function gmw_delete_location( $object_type = '', $object_id = 0, $delete_meta = false ) {
+    return GMW_Location::delete( $object_type, $object_id, $delete_meta );
 }
 
 /**
@@ -113,7 +130,7 @@ function gmw_delete_location( $object_type = false, $object_id = 0, $delete_meta
  * @return [type]               [description]
  */
 function gmw_delete_location_meta( $location_id = 0, $meta_key = '' ) {
-	return GMW_Location::delete_location_meta( $location_id, $meta_key );
+	return GMW_Location_Meta::delete( $location_id, $meta_key );
 }
 
 /**
@@ -125,8 +142,19 @@ function gmw_delete_location_meta( $location_id = 0, $meta_key = '' ) {
  * 
  * @return [type]  string || array of values
  */
-function gmw_delete_location_meta_by_object( $object_type = false, $object_id = 0, $meta_key = '' ) {
-	return GMW_Location::delete_location_meta_by_object( $object_type, $object_id, $meta_key );
+function gmw_delete_location_meta_by_object( $object_type = '', $object_id = 0, $meta_key = '' ) {
+	return GMW_Location::delete_by_object( $object_type, $object_id, $meta_key );
+}
+
+/**
+ * Update location data by passing an array with the complete location data.
+ * 
+ * @param  array  $location_data complete location data
+ * 
+ * @return int location ID
+ */
+function gmw_update_location_data( $location_data = [] ) {
+    return GMW_Location::update( $location_data );
 }
 
 /**
@@ -138,9 +166,9 @@ function gmw_delete_location_meta_by_object( $object_type = false, $object_id = 
  * 
  * @author Eyal Fitoussi
  * 
- * @param  string  $object_type   string ( post, user, comment.... )
- * @param  integer $object_id     int ( post ID, user ID, comment ID... )
- * @param  boolean $location      to pass an address it can be either a string or an array of address field for example:
+ * @param  string           $object_type   string ( post, user, comment.... )
+ * @param  integer          $object_id     int ( post ID, user ID, comment ID... )
+ * @param  string || array  $location      to pass an address it can be either a string or an array of address field for example:
  * 
  * $location = array(
  *      'street'    => 285 Fulton St,
@@ -163,8 +191,8 @@ function gmw_delete_location_meta_by_object( $object_type = false, $object_id = 
  * 
  * @return int location ID
  */
-function gmw_update_location( $object_type = '', $object_id = 0, $location = false, $user_id = 0, $force_refresh = false ) {
-
+function gmw_update_location( $object_type = '', $object_id = 0, $location = array(), $user_id = 0, $force_refresh = false ) {
+    
     // abort if data is missing
     if ( empty( $object_type ) || empty( $object_id ) || empty( $location ) ) {
         return;
@@ -230,8 +258,6 @@ function gmw_update_location( $object_type = '', $object_id = 0, $location = fal
     // abort if geocode failed
     if ( isset( $geocoded_data['error'] ) ) {
         
-        //GMW_Location::delete_location( $object_type, $object_id, false );
-
         do_action( 'gmw_udpate_location_failed', $geocoded_data, $object_type, $object_id, $location );
 
         return;
@@ -297,15 +323,9 @@ function gmw_update_location( $object_type = '', $object_id = 0, $location = fal
     // modify the data if needed
     $location_data = apply_filters( "gmw_pre_update_location_data", $location_data, $object_type, $geocoded_data );
     $location_data = apply_filters( "gmw_pre_update_{$object_type}_location_data", $location_data, $geocoded_data );
-
-    do_action( "gmw_pre_update_{$object_type}_location", $location_data, $geocoded_data );
     
-    //Save information to database
-    $location_id = GMW_Location::update_location( $location_data );
-
-    do_action( "gmw_{$object_type}_location_updated", $location_data, $geocoded_data );
-
-    return $location_id;
+    // Save information to database
+    return gmw_update_location_data( $location_data );
 }
 
 /**
