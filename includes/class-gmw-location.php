@@ -9,28 +9,28 @@ if ( ! class_exists( 'GMW_Location' ) ) :
 /**
  * Class GMW_Location
  *
- * This class responsible for location and locationmeta process. Craete, update, delete....
+ * This class responsible for location process. Craete, update, delete....
+ *
+ * @since 3.0
+ *
+ * @author Eyal Fitoussi
  * 
  */
 class GMW_Location {
 
 	/**
-	 * GEO my WP locations table
+	 * locations table name
+	 * 
 	 * @var string
 	 */
-	public static $locations_table = 'gmw_locations';
-
-	/**
-	 * GEO my WP Location meta table
-	 * @var string
-	 */
-	public static $locationmeta_table = 'gmw_locationmeta';
+	public static $table_name = 'gmw_locations';
 
 	/**
 	 * Locations table format
+	 * 
 	 * @var array
 	 */
-	public static $location_format = array( 
+	public static $format = array( 
 		'%s',
 		'%d',
 		'%d',
@@ -62,38 +62,17 @@ class GMW_Location {
 	);
 
 	/**
-	 * [__construct description]
-	 */
-	function __construct() {}
-
-	/**
 	 * Get locations table 
 	 * 
 	 * @param  boolean $base_prefix use based prefix instead of blog prefix when in multisite.
 	 * 
 	 * @return [type]               [description]
 	 */
-	public static function get_locations_table() {
+	public static function get_table() {
 
 		global $wpdb;
 
-		$table = $wpdb->base_prefix . self::$locations_table;
-
-		return $table;
-	}
-
-	/**
-	 * Get locationmeta table 
-	 * 
-	 * @param  boolean $base_prefix use based prefix instead of blog prerfix when in multisite.
-	 * 
-	 * @return [type]               [description]
-	 */
-	public static function get_locationmeta_table() {
-
-		global $wpdb;
-
-		$table = $wpdb->base_prefix . self::$locationmeta_table;
+		$table = $wpdb->base_prefix . self::$table_name;
 
 		return $table;
 	}
@@ -103,7 +82,7 @@ class GMW_Location {
 	 * 
 	 * @return array
 	 */
-	public static function default_location_database_values() {
+	public static function default_values() {
 
 		$user_id = function_exists( 'get_current_user_id' ) ? get_current_user_id() : 1;
 	
@@ -146,7 +125,7 @@ class GMW_Location {
 	 * 
 	 * @return absint   
 	 *
-	 * DONE 
+	 * @since 3.0 
 	 */
 	public static function verify_id( $id ) {
 
@@ -177,7 +156,7 @@ class GMW_Location {
 	 *
 	 * @return location object or empty if no locaiton was found
 	 *
-	 * DONE
+	 * @since 3.0
 	 */
 	private static function try_get_locations( $parent = false, $output = OBJECT, $cache = true ) {
 
@@ -210,12 +189,21 @@ class GMW_Location {
 
 		// if object type and object ID were found, get the location from database
 		if ( $found ) {
-			$location = $parent == true ? self::get_location( $object_type, $object_id, $output, $cache ) : self::get_locations( $object_type, $object_id, $output, $cache );
+			$location = $parent == true ? self::get( $object_type, $object_id, $output, $cache ) : self::get_locations( $object_type, $object_id, $output, $cache );
 		}
 
 		return $location;
 	}
 
+	/**
+	 * Deprecated - use update() instead
+	 * 
+	 * @return [type] [description]
+	 */
+	public static function update_location( $args ) {
+		self::update( $args );
+	}
+	
 	/**
 	 * Save location - Save location to gmw_locations database table.
 	 *
@@ -223,15 +211,15 @@ class GMW_Location {
 	 *
 	 * fields and the object data.
 	 *
-	 * See the default_location_database_values array above for the location fields you need to pass.
+	 * See the default_values array above for the location fields you need to pass.
 	 * 	
 	 * @param  array $args array of location fields and data.
 	 * 
 	 * @return int location ID 
 	 *
-	 *  DONE
+	 * @since 3.0
 	 */
-	public static function update_location( $args ) {
+	public static function update( $args ) {
 
 		// verify object ID
 		if ( ! self::verify_id( $args['object_id'] ) ) {
@@ -250,7 +238,7 @@ class GMW_Location {
 		}
 
 		// parse location args with default location args
-		$location_data = wp_parse_args( $args, self::default_location_database_values() );
+		$location_data = wp_parse_args( $args, self::default_values() );
 
 		// verify country code
 		if ( empty( $location_data['country_code'] ) || strlen( $location_data['country_code'] ) != 2 ) {
@@ -281,11 +269,11 @@ class GMW_Location {
 		}
 		
 		// check for existing location
-		$saved_location = self::get_location( $location_data['object_type'], $location_data['object_id'] );
+		$saved_location = self::get( $location_data['object_type'], $location_data['object_id'] );
 
 		global $wpdb;
 
-		$table = self::get_locations_table();
+		$table = self::get_table();
 
 		// modify the new location args before saving
 		$location_data = apply_filters( "gmw_pre_save_location_data", $location_data, $saved_location );
@@ -302,7 +290,7 @@ class GMW_Location {
 			$location_data['created'] = current_time( 'mysql' );
 
 			// insert new location to database
-			$wpdb->insert( $table, $location_data, self::$location_format );
+			$wpdb->insert( $table, $location_data, self::$format );
 		
 			// get the new location ID
 			$location_id = $wpdb->insert_id;
@@ -311,6 +299,10 @@ class GMW_Location {
 
 		// otherwise, update existing location
 		} else {
+
+			// modify the new location args before saving
+			do_action( "gmw_pre_update_location", $location_data, $saved_location );
+			do_action( "gmw_pre_update_{$location_data['object_type']}_location", $location_data, $saved_location );
 
 			// get existing location ID
 			$location_id = isset( $saved_location->ID ) ? (int) $saved_location->ID : 0;
@@ -326,18 +318,19 @@ class GMW_Location {
 			// updated time based on current time
 			$location_data['updated'] = current_time( 'mysql' );
 
-			$location_format = self::$location_format;
-
 			// update location
 			$wpdb->update( 
 				$table, 
 				$location_data, 
 				array( 'ID' => $location_id ), 
-				self::$location_format, 
+				self::$format, 
 				array( '%d' ) 
 			);
 
 			$updated = true;
+
+			do_action( "gmw_location_updated", $location_data );
+			do_action( "gmw_{$location_data['object_type']}_location_updated", $location_data );
 		}
 
 		// append Location ID to location data array
@@ -367,9 +360,9 @@ class GMW_Location {
 	 * 
 	 * @return boolean    
 	 *
-	 * DONE 
+	 * @since 3.0
 	 */
-	public static function location_exists( $location_id = 0 ) {
+	public static function exists( $location_id = 0 ) {
 
 		// verify location ID
 		if ( ! self::verify_id( $location_id ) ) {
@@ -380,7 +373,7 @@ class GMW_Location {
 		global $wpdb, $blog_id;
 		
 		// database table name
-		$table = self::get_locations_table();
+		$table = self::get_table();
 
 		// look for the location in database
 		$location_id = $wpdb->get_var( 
@@ -396,12 +389,15 @@ class GMW_Location {
 	}
 
 	/**
-	 * Get the object of a location
+	 * Get the object type of a location
 	 * 
 	 * @param  integer $location_id [description]
+	 * 
 	 * @return [type]               [description]
+	 *
+	 * @since 3.0
 	 */
-	public static function get_location_object_type( $location_id = 0 ) {
+	public static function get_object_type( $location_id = 0 ) {
 
 		// verify location ID
 		if ( ! self::verify_id( $location_id ) ) {
@@ -411,7 +407,7 @@ class GMW_Location {
 		global $wpdb;
 
 		// database table name
-		$table = self::get_locations_table();
+		$table = self::get_table();
 
 		// look for the location in database
 		$object_type = $wpdb->get_var( 
@@ -436,9 +432,9 @@ class GMW_Location {
 	 *
 	 * @return object || Array return the location data
 	 *
-	 * DONE
+	 * @since 3.0
 	 */
-	public static function get_location_by_id( $location_id = 0, $output = OBJECT, $cache = true ) {
+	public static function get_by_id( $location_id = 0, $output = OBJECT, $cache = true ) {
 
 		// verify location ID
 		if ( ! self::verify_id( $location_id ) ) {
@@ -453,7 +449,7 @@ class GMW_Location {
 		// get location from database if not found in cache
 		if ( false === $location ) {
 
-			$table    = self::get_locations_table();
+			$table    = self::get_table();
 			$location = $wpdb->get_row( 
 				$wpdb->prepare( "
 					SELECT *, latitude as lat, longitude as lng
@@ -488,16 +484,16 @@ class GMW_Location {
 	 *
 	 * The returned location will be the parent location in case that the object_type - object_id pair has multiple locations
 	 * 
-	 * @param  string  $object_type the object type post, user...
-	 * @param  integer $object_id   the object ID. post ID, User ID...
+	 * @param  string   $object_type the object type post, user...
+	 * @param  integer  $object_id   the object ID. post ID, User ID...
 	 * @param  constant $output     OBJECT || ARRAY_A || ARRAY_N  the output type of the location data 
 	 * @param  boolean  $cache      Look for location in cache
 	 *
 	 * @return object || Array return the location data
 	 *
-	 * DONE
+	 * @since 3.0
 	 */
-	public static function get_location( $object_type = '', $object_id = 0, $output = OBJECT, $cache = true ) {
+	public static function get( $object_type = '', $object_id = 0, $output = OBJECT, $cache = true ) {
 
 		// verify object type and object ID. If any of them empty use try_get_location function
 		if ( empty( $object_type ) || empty( $object_id ) ) {
@@ -532,7 +528,7 @@ class GMW_Location {
 			global $wpdb;
 
 			$blog_id  = gmw_get_blog_id( $object_type );
-			$table    = self::get_locations_table();
+			$table    = self::get_table();
 			$location = $wpdb->get_row( 
 				$wpdb->prepare( "
 					SELECT *, latitude as lat, longitude as lng
@@ -577,7 +573,7 @@ class GMW_Location {
 	 * 
 	 * @return array of locations data.
 	 *
-	 * DONE
+	 * since 3.0
 	 */
 	public static function get_locations( $object_type = '', $object_id = 0, $output = OBJECT, $cache = true ) {
 
@@ -614,7 +610,7 @@ class GMW_Location {
 			global $wpdb;
 
 			$blog_id   = gmw_get_blog_id( $object_type );
-			$table     = self::get_locations_table();
+			$table     = self::get_table();
 			$locations = $wpdb->get_results( 
 				$wpdb->prepare( "
 					SELECT *
@@ -997,9 +993,10 @@ class GMW_Location {
 	 * 
 	 * @return boolean true for deleted false for failed
 	 *
-	 * DONE
+	 * @since 3.0
+	 * 
 	 */
-	public static function delete_location( $object_type = '', $object_id = 0, $delete_meta = false ) {
+	public static function delete( $object_type = '', $object_id = 0, $delete_meta = false ) {
 
 		// verify data
 		if ( empty( $object_type ) || empty( $object_id ) ) {
@@ -1026,7 +1023,7 @@ class GMW_Location {
 
 		// get location to make sure it exists
 		// this will get the parent location
-		$location = self::get_location( $object_type, $object_id );
+		$location = self::get( $object_type, $object_id );
 		
 		// abort if no location found
 		if ( empty( $location ) ) {
@@ -1039,7 +1036,7 @@ class GMW_Location {
 		global $wpdb;
 
 		// delete location from database
-		$table   = self::get_locations_table();
+		$table   = self::get_table();
 		$deleted = $wpdb->delete( 
 			$table, 
 			array( 'ID' => $location->ID ), 
@@ -1061,7 +1058,7 @@ class GMW_Location {
 	
 		// delete the location metadata associated with this location if needed		
 		if ( $delete_meta == true ) {
-			self::delete_all_location_meta( $location->ID );
+			GMW_Location_Meta::delete_all( $location->ID );
 		}
 
 		return $location->ID;
@@ -1078,7 +1075,7 @@ class GMW_Location {
 	 * 
 	 * @return boolean true for deleted false for failed
 	 *
-	 * DONE
+	 * @since 3.0
 	 */
 	public static function delete_locations( $object_type = '', $object_id = 0, $delete_meta = false ) {
 
@@ -1110,7 +1107,7 @@ class GMW_Location {
 		$blog_id = gmw_get_blog_id( $object_type );
 
 		// delete location from database
-		$table   = self::get_locations_table();
+		$table   = self::get_table();
 		$deleted = $wpdb->query( 
 			$wpdb->prepare( "
 				DELETE
@@ -1135,7 +1132,7 @@ class GMW_Location {
 	
 		// delete the location metadata associated with this location if needed		
 		if ( $delete_meta == true ) {
-			self::delete_all_location_meta( $location->ID );
+			GMW_Location_Meta::delete_all( $location->ID );
 		}
 
 		return $deleted;
@@ -1150,765 +1147,18 @@ class GMW_Location {
 	 * 
 	 * @return boolean  true if deleted false if failed
 	 *
-	 * DONE
+	 * @since 3.0
 	 */
-	public static function delete_location_by_id( $location_id = 0, $delete_meta = false ) {
+	public static function delete_by_id( $location_id = 0, $delete_meta = false ) {
 		
         // check if location exists
-        $location = self::get_location_by_id( $location_id );
+        $location = self::get_by_id( $location_id );
 
         if ( empty( $location ) ) {
         	return false;
         }
 
-		return self::delete_location( $location->object_type, $location->object_id, $delete_meta );
-		
-		/*
-		global $wpdb;
-
-		// delete the location
-		$table = self::get_locations_table();
-
-		// delete location from database
-		$deleted = $wpdb->delete( 
-			$table, 
-			array( 'ID' => $location_id ), 
-			array( '%d' ) 
-		);
-
-		if ( empty( $deleted ) ) {
-			return false;
-		}
-
-		$object_type = $location->object_type;
-		$object_id   = $location->object_id;
-
-		// clear locations from cache
-		wp_cache_delete( $location_id, 'gmw_location' );
-		wp_cache_delete( $object_type.'_'.$object_id, 'gmw_location' );
-		wp_cache_delete( $object_type.'_'.$object_id, 'gmw_locations' );
-
-		if ( $delete_meta == true ) {
-			//delete location meta
-			self::delete_all_location_meta( $location_id );
-		}
-
-		return $location_id;
-		*/
-	}
-
-	/**
-	 * Location meta exists
-	 *
-	 * Verify if location meta exists based on its meta_id
-	 * 		
-	 * @param  absint $meta_id 
-	 * 
-	 * @return boolean true || false
-	 *
-	 * DONE
-	 * 
-	 */
-	public static function location_meta_exists( $meta_id = 0 ) {
-
-		if ( ! self::verify_id( $meta_id ) ) {
-			return;
-		}
-
-		global $wpdb;
-
-		$table   = self::get_locationmeta_table();
-		$meta_id = $wpdb->get_var( 
-			$wpdb->prepare( "
-				SELECT meta_id 
-				FROM   $table 
-				WHERE  meta_id = %d", 
-				$meta_id 
-			) 
-		);
-
-		return ! empty( $meta_id ) ? true : false;
-	}
-
-	/**
-	 * Get location meta ID
-	 *
-	 * Get a location meta ID by passing the location ID and meta_key
-	 * 	
-	 * @param  integer $location_id [description]
-	 * @param  string  $meta_key    [description]
-	 * 
-	 * @return meta ID if found or false otherwise.
-	 *
-	 * DONE
-	 * 
-	 */
-	public static function get_location_meta_id( $location_id = 0, $meta_key = '' ) {
-
-		//verify location ID
-		if ( ! self::verify_id( $location_id ) ) {
-			return false;
-		}
-
-		// verify meta key
-		if ( ! is_string( $meta_key ) ) {
-			return false;
-		}
-
-		//sanitize meta_key
-		$meta_key = sanitize_key( $meta_key );
-
-		global $wpdb;
-
-		$table = self::get_locationmeta_table();
-
-		//get the meta ID from database if exists
-		$meta_id = (int) $wpdb->get_var( 
-			$wpdb->prepare( "
-				SELECT meta_id
-				FROM   $table
-				WHERE  location_id = %d
-				AND    meta_key    = %s
-			", $location_id, $meta_key ) 
-		);
-
-		return ! empty( $meta_id ) ? $meta_id : false;
-	}
-
-	/**
-	 * Update location meta.
-	 *
-	 * Update existing or create a new location meta
-	 * 	
-	 * @param  integer $location_id Location ID
-	 * @param  string  $meta_key    meta key
-	 * @param  string  $meta_value  meta value
-	 * 
-	 * @return [type]               [description]
-	 *
-	 * DONE 
-	 *
-	 * TODO : Cache
-	 */
-	public static function update_location_meta( $location_id = 0, $meta_key = '' , $meta_value = '' ) {
-
-		// verify if location exists
-		if ( ! self::location_exists( $location_id ) ) {
-			return false;
-		}
-
-		// verify meta key
-		if ( ! is_string( $meta_key ) || empty( $meta_key ) ) {
-
-			trigger_error( 'Trying to update a location meta using invalid or missing meta key.', E_USER_NOTICE );
-
-			return false;
-		}
-
-		global $wpdb;
-		
-		// sanitize meta_key
-		$meta_key   = sanitize_key( $meta_key );
-		$meta_value = maybe_serialize( $meta_value );
-		$table 		= self::get_locationmeta_table();
-
-		// check if meta already exists and get its ID from database
-		$save_meta = $wpdb->get_row( 
-			$wpdb->prepare( "
-				SELECT 	meta_id, meta_value
-				FROM 	$table
-				WHERE 	location_id = %d
-				AND 	meta_key    = %s
-			", $location_id, $meta_key ) 
-		);
-
-		// abort if meta already exists and the value is the same.
-		if ( ! empty( $save_meta->meta_id ) && ! empty( $save_meta->meta_value ) && $save_meta->meta_value == $meta_value ) {
-			return;
-		}
-
-		$meta_id = ! empty( $save_meta->meta_id ) ? ( int ) $save_meta->meta_id : 0;
-
- 		// the new meta data
-		$metadata = array(
-			'meta_id'	  => $meta_id,
-			'location_id' => $location_id,
-			'meta_key'    => $meta_key,
-			'meta_value'  => $meta_value
-		);
-
-		$object_type = self::get_location_object_type( $location_id );
-
-		// modify the new location meta args before saving
-		$metadata = apply_filters( "gmw_pre_save_location_meta", $metadata );
-		$metadata = apply_filters( "gmw_pre_save_{$object_type}_location_meta", $metadata );
-
-		// if not yet exists, add new location meta
-		if ( empty( $meta_id ) ) {
-
-			//insert new location to database
-			$wpdb->insert( 
-				$table, 
-				$metadata,
-				array( 
-					'%d', 
-					'%d', 
-					'%s', 
-					'%s' 
-				) 
-			);
-
-			//get the new location ID
-			$meta_id = $wpdb->insert_id;
-
-			$created = true;
-
-		// otherwise, update existing location
-		} else {
-
-			// update location
-			$wpdb->update( 
-				$table, 
-				$metadata, 
-				array( 'meta_id' => $meta_id ), 
-				array( 
-					'%d', 
-					'%d', 
-					'%s', 
-					'%s' 
-				),
-				array( '%d' ) 
-			);	
-
-			$created = false;
-		}
-
-		// do something after location meta updated
-		do_action( "gmw_save_location_meta", $object_type, $meta_id, $location_id, $meta_key, $meta_value, $created );
-		do_action( "gmw_save_{$object_type}_location_meta", $meta_id, $location_id, $meta_key, $meta_value, $created );
-
-		self::check_location_meta_cache( $location_id, true );
-
-		return $meta_id;
-	}
-
-	/**
-	 * Create / Update multiple location metas
-	 * 
-	 * @since   3.0
-	 *
-	 * @param   string  $object_type the object being updated ( post, user, comment.... )
-	 * @param   int     $location_id the ID of the corresponding location
-	 * @param   array   $args location metadata in meta_key => meta value pairs
-	 * 
-	 * @return  array   array of updated/created metadata IDs
-	 *
-	 * DONE
-	 *
-	 * TODO : cache
-	 * 
-	 */
-	public static function update_location_metas( $location_id = 0, $metadata = array(), $meta_value = false ) {
-
-		// verify if location exists
-		if ( ! self::location_exists( $location_id ) ) {
-			return false;
-		}
-
-		// verify meta_keys
-		if ( empty( $metadata ) ) {
-			return false;
-		}
-
-		$metadata_ids = false;
-
-		// loop through all meta_key => meta_values sets
-		if ( is_array( $metadata ) ) {
-			
-			$metadata_ids = array();
-
-			foreach( $metadata as $meta_key => $meta_value ) {
-
-				$meta_id = self::update_location_meta( $location_id, $meta_key , $meta_value );
-
-				if ( ! empty( $meta_id ) ) {
-					$metadata_ids[] = $meta_id;
-				}
-			}
-
-		// can be also used to update a single meta data
-		// in case that a single key value pair passed
-		} elseif ( ! empty( $meta_value ) ) {
-
-			$metadata_ids = self::update_location_meta( $location_id, $metadata , $meta_value );
-		}
-
-		return ! empty( $metadata_ids ) ? $metadata_ids : false;
-	}
-
-	/**
-	 * Get location meta by location ID.
-	 * 
-	 * @param  integer 			$location_id location ID
-	 * @param  string || array  $meta_keys   single meta key as a string or array of keys
-	 * @param  boolean $cache   
-	 * 
-	 * @return string || array
-	 *
-	 * DONE 
-	 *
-	 * TODO: cache
-	 */
-	public static function get_location_meta( $location_id = 0, $meta_keys = '', $cache = true ) {
-
-		if ( ! self::verify_id( $location_id ) ) {
-
-			//trigger_error( 'Trying to get meta using invalid location ID.', E_USER_NOTICE );
-
-			return false;
-		}
-
-		// get location metas from either cache if exists or from database
-        $location_metas = self::check_location_meta_cache( $location_id, false );
-
-        // return all location metas if no meta keys passed to the function.
-		if ( empty( $meta_keys ) ) {
-			return $location_metas;
-		}
-
-		// if a single meta key passed as string.
-		if ( is_string( $meta_keys ) ) {
-
-			$meta_key = sanitize_key( $meta_keys );
-
-			return ! empty( $location_metas[$meta_key] ) ? $location_metas[$meta_key] : false;
-		}
-
-		// if multiple meta keys passed as an array
-		if ( is_array( $meta_keys ) ) {
-
-			$output = array();
-
-			foreach ( $meta_keys as $meta_key ) {
-
-				$meta_key = sanitize_key( $meta_key );
-
-				if ( isset( $location_metas[$meta_key] ) ) {
-				
-					$output[$meta_key] = $location_metas[$meta_key];		
-				}
-			}
-
-			return $output;
-		}
-
-		return false;
-
-        //$meta_hash = 'gmw'.GMW_Cache_Helper::get_transient_version( 'gmw_location_'.$location_id.'_meta' );
-
-        //$output = $cache ? get_transient( $meta_hash ) : false;
-		/*
-		// if array of specific meta keys passes get their meta values
-		if ( ! empty( $meta_keys ) && is_array( $meta_keys ) ) {
-
-			$hash = md5( json_encode( $meta_keys ) );
-
-			//echo GMW_Cache_Helper::get_transient_version( 'gmw_get_location_'.$location_id.'_metas' );
-
-        	$locationmeta_hash = 'gmw' . $hash . GMW_Cache_Helper::get_transient_version( 'gmw_get_location'.$location_id.'_metas' );
-
-        	$output = $cache ? get_transient( $locationmeta_hash ) : false;
-
-        	if ( false === $output ) {
-
-				// sanitaize meta keys
-				$meta_keys = array_map( 'sanitize_key', $meta_keys );	
-				$values    = $meta_keys;	
-				
-				array_unshift( $values, $location_id );
-
-				//look for meta values in database
-				$results = $wpdb->get_results( $wpdb->prepare( "
-					SELECT meta_key, meta_value
-					FROM $table
-					WHERE location_id = %d
-					AND meta_key IN (".str_repeat( "%s,", count( $meta_keys ) - 1 ) . "%s )
-				", $values ) );
-		
-				$output = array();
-				
-				// generate array of $key => unserialized value
-				foreach ( $results as $key => $value ) {
-					$output[$value->meta_key] = maybe_unserialize( $value->meta_value );
-				}
-
-				// update transient       
-            	set_transient( $locationmeta_hash, $output, DAY_IN_SECONDS * 30 );
-			}
-
-			return $output;
-
-		// otherwise, if a single meta_key passed
-		} elseif ( ! empty( $meta_keys ) && is_string( $meta_keys ) ) {
-
-			$meta_value = $cache ? wp_cache_get( $location_id . '_' . $meta_keys, 'gmw_location_meta' ) : false;
-
-			// if no location found in cache get it from database
-			if ( false === $meta_value ) {
-
-				//sanitize meta key
-				$meta_keys = sanitize_key( $meta_keys );
-
-				//look for meta values in database
-				$meta_value = $wpdb->get_var( 
-					$wpdb->prepare( "
-						SELECT 	meta_value
-						FROM 	$table
-						WHERE 	location_id = %d
-						AND 	meta_key = %s
-					", $location_id, $meta_keys ) 
-				);
-
-				wp_cache_set( $location_id . '_' . $meta_keys, $meta_value, 'gmw_location_meta' );
-			}
-
-			return $meta_value ? maybe_unserialize( $meta_value ) : '';
-
-		//otehrwise get all meta values of the specific location ID
-		} else {
-
-			$output = $cache ? wp_cache_get( $location_id, 'gmw_all_location_meta' ) : false;
-
-			// if no location found in cache get it from database
-			if ( false === $output ) {
-
-				$results = $wpdb->get_results( 
-					$wpdb->prepare( "
-						SELECT 	meta_key, meta_value
-			            FROM    $table
-			            WHERE	location_id = %d
-					", $location_id ) 
-				);
-
-				$output = array();
-				
-				foreach ( $results as $key => $value ) {
-					$output[$value->meta_key] = maybe_unserialize( $value->meta_value );
-				}
-
-				wp_cache_set( $location_id, $output, 'gmw_all_location_meta' );
-			}
-
-			if ( ! empty( $meta_keys ) && is_array( $meta_keys ) ) {
-
-				$new_output = array();
-
-				foreach ( $meta_keys as $meta_key ) {
-	
-					if ( isset( $output[$meta_key] ) ) {
-					
-						$new_output[$meta_key] = $output[$meta_key];		
-					}
-				}
-
-				$output = $new_output;
-			}
-
-			return $output;
-		} */
-	}
-
-	/**
-	 * Get or update location meta in internal cache
-	 *
-	 * @param  integer $location_id  location ID
-	 * @param  boolean $force_update true || false if to force update the meta in cache
-	 * 
-	 * @return array contains all location meta associate with the location ID
-	 * 
-	 */
-	/*
-	public static function check_location_meta_cache( $location_id = 0, $force_update = false ) {
-
-		if ( empty( $location_id ) ) {
-			return false;
-		}
-
-		// if cache disabled force update data
-		if ( ! GMW()->internal_cache ) {
-			$force_update = true;
-		}
-			
-		$cache_key = 'gmw_location_'.$location_id.'_meta';
-	    $output    = ! $force_update ? get_transient( $cache_key ) : false;
-
-	    // if no value found generate it again
-        if ( false === $output ) {
-
-	    	global $wpdb;
-
-	    	$table = self::get_locationmeta_table();
-
-			$results = $wpdb->get_results( 
-				$wpdb->prepare( "
-					SELECT 	meta_key, meta_value
-		            FROM    $table
-		            WHERE	location_id = %d
-				", $location_id ) 
-			);
-
-			$output = array();
-		
-			foreach ( $results as $key => $value ) {
-				$output[$value->meta_key] = maybe_unserialize( $value->meta_value );
-			}
-
-			// save in transien only if cache enabled
-			if ( GMW()->internal_cache ) {
-				set_transient( $cache_key, $output, GMW()->internal_cache_expiration );	
-			}		
-		}
-
-		return $output;
-	}
-	*/
-
-	/**
-	 * Get or update location meta in object cache
-	 *
-	 * @param  integer $location_id  location ID
-	 * @param  boolean $force_update true || false if to force update the meta in cache
-	 * 
-	 * @return array contains all location meta associate with the location ID
-	 * 
-	 */
-	public static function check_location_meta_cache( $location_id = 0, $force_update = false ) {
-
-		if ( empty( $location_id ) ) {
-			return false;
-		}
-			
-		//$cache_key = 'gmw_location_'.$location_id.'_meta';
-	    $output = ! $force_update ? wp_cache_get( $location_id, 'gmw_location_metas' ) : false;
-
-	    // if no value found generate it again
-        if ( false === $output ) {
-
-	    	global $wpdb;
-
-	    	$table = self::get_locationmeta_table();
-
-			$results = $wpdb->get_results( 
-				$wpdb->prepare( "
-					SELECT 	meta_key, meta_value
-		            FROM    $table
-		            WHERE	location_id = %d
-				", $location_id ) 
-			);
-
-			$output = array();
-		
-			foreach ( $results as $key => $value ) {
-				$output[$value->meta_key] = maybe_unserialize( $value->meta_value );
-			}		
-
-			 wp_cache_set( $location_id, $output, 'gmw_location_metas' );
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Get location meta by object type and object ID
-	 *
-	 * function will get the meta value of the parent location based on the object type/id pair
-	 *
-	 * @since 3.0
-	 * 
-	 * @param  string  $object_type 
-	 * @param  integer $object_id   
-	 * @param  string  $meta_key    
-	 * 
-	 * @return array || false
-	 *
-	 * DONE
-	 * 
-	 */
-	public static function get_location_meta_by_object( $object_type = '', $object_id = 0, $meta_key = '' ) {
-
-		// get the location data based on the object type and object ID
-		$location = self::get_location( $object_type, $object_id );
-
-		// verify location
-		if ( empty( $location ) ) {
-			return false;
-		}
-
-		return self::get_location_meta( $location->ID, $meta_key );		
-	}
-
-	/**
-	 * Delete location meta.
-	 * 
-	 * Deletes one or more location metas from database.
-	 *
-	 * @since 3.0
-	 *
-	 * @author Eyal Fitoussi <fitoussi_eyal@hotmail.com>
-	 *
-	 * @param   int     $location_id the location ID
-	 * @param   array   $meta_keys   array in key-value pairs
-	 *
-	 * @return boolean deleted true || false
-	 *
-	 *  DONE
-	 * 
-	 */
-	public static function delete_location_meta( $location_id = 0, $meta_key = '' ) {
-
-		// verify location ID
-		if ( ! self::verify_id( $location_id ) ) {
-
-			trigger_error( 'Trying to delete location meta using invalid location ID.', E_USER_NOTICE );
-
-			return false;
-		}
-
-		// verify meta key
-		if ( ! is_string( $meta_key ) ) {
-
-			trigger_error( 'Trying to delete a location meta using invalid or missing meta key.', E_USER_NOTICE );
-
-			return false;
-		}
-
-		// senitaize key
-		$meta_key = sanitize_key( $meta_key );
-
-		global $wpdb;
-		
-		$table = self::get_locationmeta_table();
-
-		// check if meta key exists before deleting it
-		$saved_meta = $wpdb->get_row( 
-			$wpdb->prepare( "
-				SELECT *
-				FROM   $table
-				WHERE  location_id = %d
-				AND    meta_key    = %s", 
-				$location_id, 
-				$meta_key 
-			) 
-		);
-
-		if ( empty( $saved_meta ) ) {
-			return false;
-		}
-
-		$object_type = self::get_location_object_type( $location_id );
-
-		// do something before deleting the location meta
-		do_action( "gmw_pre_delete_location_meta", $object_type, $location_id, $meta_key, $saved_meta->meta_value );
-		do_action( "gmw_pre_delete_{$object_type}_location_meta", $location_id, $meta_key, $saved_meta->meta_value );
-
-		// delete from DB
-		$deleted = $wpdb->delete( 
-			$table, 
-			array( 
-				'location_id' => $location_id, 
-				'meta_key'    => $meta_key 
-			), 
-			array( 
-				'%d', 
-				'%s' 
-		) );
-
-		// do something after deleting the loation
-		do_action( "gmw_deleted_location_meta", $object_type, $location_id, $meta_key, $saved_meta->meta_value );
-		do_action( "gmw_deleted_{$object_type}location_meta", $location_id, $meta_key, $saved_meta->meta_value );
-
-		//wp_cache_delete( $location_id . '_' . $meta_key, 'gmw_location_meta' );
-		//wp_cache_delete( $location_id, 'gmw_all_location_meta' );
-
-		self::check_location_meta_cache( $location_id, true );
-
-		return ! empty( $deleted ) ? true : false; 
-	}
-
-	/**
-	 * Delete location meta by object type and object ID
-	 *
-	 * @since 3.0
-	 * 
-	 * @param  string  $object_type 
-	 * @param  integer $object_id   
-	 * @param  string  $meta_key    
-	 * 
-	 * @return TRUE || FALSE if meta deleted or not
-	 *
-	 * DONE
-	 * 
-	 */
-	public static function delete_location_meta_by_object( $object_type = '', $object_id = 0, $meta_key = '' ) {
-
-		// get the location data based on the object type and object ID
-		$location = self::get_location( $object_type, $object_id );
-
-		// verify location
-		if ( empty( $location ) ) {
-			return false;
-		}
-
-		return self::delete_location_meta( $location->ID, $meta_key );		
-	}
-
-	/**
-	 * Delete all location metas associated with a location
-	 *
-	 * @param  integer $location_id the location ID
-	 *
-	 * @since 3.0 
-	 *
-	 * @author Eyal Fitoussi <fitoussi@geomywp.com>
-	 * 
-	 * @return boolean meta delete true || false
-	 *
-	 * DONE
-	 */
-	public static function delete_all_location_meta( $location_id = 0  ) {
-
-		// verify location ID
-		if ( ! self::verify_id( $location_id ) ) {
-
-			trigger_error( 'Trying to delete location metas using invalid location ID.', E_USER_NOTICE );
-
-			return false;
-		}
-
-		global $wpdb;
-
-		$table 		 = self::get_locationmeta_table();
-		$object_type = self::get_location_object_type( $location_id );
-
-		// do something before deleting the location meta
-		do_action( "gmw_pre_delete_all_location_meta", $object_type, $location_id );
-		do_action( "gmw_pre_delete_all_{$object_type}_location_meta", $location_id );
-		
-		// delete all meta associate with the location
-		$wpdb->delete( 
-			$table, 
-			array( 'location_id' => $location_id ), 
-			array( '%d' ) 
-		);
-
-		// do something before deleting the location meta
-		do_action( "gmw_all_location_meta_deleted", $object_type, $location_id );
-		do_action( "gmw_all_{$object_type}_location_meta_deleted", $location_id );
-
-		// remove from cache
-		delete_transient( 'gmw_location_'.$location_id.'_meta' );
-
-		return true;
+		return self::delete( $location->object_type, $location->object_id, $delete_meta );
 	}
 }
 endif;
