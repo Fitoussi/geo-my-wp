@@ -17,6 +17,12 @@ if ( ! class_exists( 'GMW_Installer' ) ) :
 class GMW_Installer {
 
 	/**
+	 * Database version
+	 * @var integer
+	 */
+	public static $db_version = 3;
+
+	/**
 	 * Run installer
 	 */
 	public static function init() {
@@ -28,7 +34,7 @@ class GMW_Installer {
 		self::create_tables();
 		
 		// update the forms table only once.
-		if ( empty( get_option( 'gmw_forms_table_updated' ) ) ) {
+		if ( ( get_option( 'gmw_forms_table_updated' ) == false ) ) {
 			self::update_forms_table();
 		}
 
@@ -41,25 +47,24 @@ class GMW_Installer {
 		}
 		
 		// get forms db version
-		$db_versions = get_option( 'gmw_db_tables_version' );
-	
+		$saved_db_version = get_option( 'gmw_db_version' );
+
 		// upgrade forms db
-		if ( empty( $db_versions['forms'] ) || version_compare( GMW_DB_VERSION['forms'], $db_versions['forms'], '>' ) ) {
-			self::upgrade_forms_db();
+		if ( empty( $saved_db_version ) || is_array( $saved_db_version ) || version_compare( self::$db_version, $saved_db_version, '!=' ) ) {
+			self::update_db();
 		}
-		
+
 		// upgrade locations db
-		if ( empty( $db_versions['locations'] ) || version_compare( GMW_DB_VERSION['locations'], $db_versions['locations'], '>' ) ) {
+		/*if ( empty( $saved_db_version['locations'] ) || version_compare( self::$db_version['locations'], $saved_db_version['locations'], '>' ) ) {
 			self::upgrade_locations_db();
 		}
 
 		// upgrade location meta db if needed
-		if ( empty( $db_versions['locationmeta'] ) || version_compare( GMW_DB_VERSION['locationmeta'], $db_versions['locationmeta'], '>' ) ) {
+		if ( empty( $saved_db_version['locationmeta'] ) || version_compare( self::$db_version['locationmeta'], $saved_db_version['locationmeta'], '>' ) ) {
 			self::upgrade_locationmeta_db();
-		}
+		}*/
 
-		// update versions
-		update_option( 'gmw_db_tables_version', GMW_DB_VERSION );
+		update_option( 'gmw_db_version', self::$db_version );
 		update_option( 'gmw_version', GMW_VERSION );	
 	}
 
@@ -287,23 +292,21 @@ class GMW_Installer {
 	 * 
 	 * @return [type] [description]
 	 */
-	public static function upgrade_forms_db() {}
+	public static function update_db() {}
 
 	/**
 	 * Upgrade locations database tables
 	 * 
 	 * @return [type] [description]
 	 */
-	public static function upgrade_locations_db() {
-
-	}
+	//public static function upgrade_locations_db();
 
 	/**
 	 * Upgrade location meta database tables
 	 * 
 	 * @return [type] [description]
 	 */
-	public static function upgrade_locationmeta_db() {}
+	//public static function upgrade_locationmeta_db() {}
 
 	/**
 	 * Setup cron jobs
