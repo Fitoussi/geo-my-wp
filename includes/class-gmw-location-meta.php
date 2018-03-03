@@ -458,7 +458,7 @@ class GMW_Location_Meta {
 	 * @return boolean deleted true || false
 	 * 
 	 */
-	public static function delete_location_meta( $location_id = 0, $meta_key = '' ) {
+	public static function delete( $location_id = 0, $meta_key = '' ) {
 
 		// verify location ID
 		if ( ! self::verify_id( $location_id ) ) {
