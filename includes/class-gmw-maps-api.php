@@ -234,7 +234,7 @@ class GMW_Maps_API {
 	 * return array map arguments
 	 * 
 	 */
-	public static function get_map_args( $map_args = array(), $map_options = array(), $locations = array(), $user_location = array(), $form = array() ) {
+	public static function get_map_args( $map_args = [], $map_options = [], $locations = [], $user_location = [], $form = [] ) {
 		
 		// randomize map ID if doesn't exists
 		$map_id = ! empty( $map_args['map_id'] ) ? $map_args['map_id'] : rand( 100, 1000 );
@@ -251,7 +251,9 @@ class GMW_Maps_API {
 			'group_markers'		   => 'standard',
 			'draggable_window'	   => 1,
 			'hide_no_locations'    => true,
-			'render_map'		   => true
+			'render_map'		   => true,
+			'map_icon_width' 	   => false,
+			'map_icon_height'	   => false
 		);
 
 		// merge default with incoming map args
