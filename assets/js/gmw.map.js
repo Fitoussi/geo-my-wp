@@ -89,6 +89,13 @@ var GMW_Map = function( options, map_options, form ) {
 	this.markers = [];
 	
 	/**
+	 * Map icon size
+	 * 
+	 * @type {google}
+	 */
+	this.icon_scaled_size = options['map_icon_width'] && options['map_icon_height'] ? new google.maps.Size( parseInt( options['map_icon_width'] ), parseInt( options['map_icon_height'] ) ) : null;
+
+	/**
 	 * Hide map if no locations found
 	 * 
 	 * @type {Boolean}
@@ -678,9 +685,20 @@ GMW_Map.prototype.move_marker = function( marker_position ) {
  */
 GMW_Map.prototype.render_marker = function( options ) {
 
+	// map icon
+	var icon = options['icon'];
+
+	// if passing custom icon size we need to scale it
+	if ( this.icon_scaled_size != false && options['icon'] != '' ) {
+		icon = {
+			url 	   : options['icon'],
+			scaledSize : this.icon_scaled_size,
+		}
+	}
+
 	var marker_options = {
 		position 	: options['position'],
-		icon     	: options['icon'],
+		icon     	: icon,
 		map      	: this.map,
 		animation   : null,
 		location_id : options['id'],
