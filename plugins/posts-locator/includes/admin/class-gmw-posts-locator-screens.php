@@ -97,7 +97,7 @@ class GMW_Posts_Locator_Screens {
             ", array( $post_id )
         ) ); */
 
-        $location = GMW_Location::get_location( 'post', $post_id );
+        $location = gmw_get_location( 'post', $post_id );
 
         if ( empty( $location ) ) {
             echo '<i class="gmw-icon-cancel-circled" style="color:red;margin-right:1px;font-size: 12px"></i>'.__( 'No location found', "GMW" );
