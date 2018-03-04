@@ -272,7 +272,7 @@ if ( class_exists( 'buddypress' ) && ( gmw_is_addon_active( 'members_locator' ) 
             return;
         }
 
-        $object_type = ( $gmw['slug'] == 'bp_groups_locator' || $gmw['sub_addon'] == 'bp_groups_locator' ) ? 'group' : 'member'; 
+        $object_type = $gmw['component'] == 'bp_groups_locator' ? 'group' : 'member'; 
 
         $permalink_function = 'bp_'.$object_type.'_permalink';
         $avatar_function    = 'bp_'.$object_type.'_avatar';
