@@ -48,7 +48,7 @@ class GMW_Tracking {
 		// send data
 		add_action( 'admin_init', array( $this, 'send_data' ) );
 
-		$this->send_data();
+		//$this->send_data();
 	}
 
 	/**
@@ -75,7 +75,7 @@ class GMW_Tracking {
 		}
 
 		// disable on local sites
-		if (
+		/*if (
 			stristr( network_site_url( '/' ), 'dev'       ) !== false ||
 			stristr( network_site_url( '/' ), 'localhost' ) !== false ||
 			stristr( network_site_url( '/' ), ':8888'     ) !== false // This is common with MAMP on OS X
@@ -84,7 +84,7 @@ class GMW_Tracking {
 			// disable admin notice
 			update_option( 'gmw_tracking_notice', '1' );
 
-		} else {
+		} else {*/
 			
 			$optin_url  = add_query_arg( 'gmw_action', 'opt_into_tracking' );
 			$optout_url = add_query_arg( 'gmw_action', 'opt_out_of_tracking' );
@@ -101,7 +101,7 @@ class GMW_Tracking {
 			$output .= '</div>';
 
 			echo $output;
-		}
+		//}
 	}
 
 	/**
@@ -194,6 +194,22 @@ class GMW_Tracking {
 	}
 	
 	/**
+	 * Get plugin's name.
+	 *
+	 * @return string
+	 */
+	private function get_plugin_name( $basename ) {
+
+		$basename = strtolower( $basename );
+		
+		if ( false === strpos( $basename, '/' ) ) {
+			return basename( $basename, '.php' );
+		}
+
+		return dirname( $basename );
+	}
+
+	/**
 	 * Setup the data that is going to be tracked and sent
 	 *
 	 * @access private
@@ -203,42 +219,49 @@ class GMW_Tracking {
 
 		$data = array();
 
-		// theme data
-		$theme_data = wp_get_theme();
-		$theme      = $theme_data->Name . ' ' . $theme_data->Version;
-		
-		$data['url'] = home_url();
-		$data['email']    = get_bloginfo( 'admin_email' );
-		
+		$data['url']   		 = home_url();
+		$data['email'] 		 = get_bloginfo( 'admin_email' );
 		$data['php_version'] = phpversion();
 		$data['wp_version']  = get_bloginfo( 'version' );
 		$data['gmw_version'] = GMW_VERSION;
 		$data['server']      = isset( $_SERVER['SERVER_SOFTWARE'] ) ? $_SERVER['SERVER_SOFTWARE'] : '';
+		$data['multisite'] 	 = is_multisite() ? 1 : 0;
+		$data['locale']      = get_locale();
 
-		$data['multisite'] = is_multisite();
-		$data['theme']     = $theme;
+		// theme data
+		$theme_data    = wp_get_theme();
+		$theme         = $theme_data->Name . ' v' . $theme_data->Version;
+		$data['theme'] = $theme;
+
 		$data['gmw_options'] = gmw_get_options_group();
 		
-		// Retrieve current plugins information
+		// plugins information
 		if ( ! function_exists( 'get_plugins' ) ) {
 			include ABSPATH . '/wp-admin/includes/plugin.php';
 		}
 
-		// get plugins
-		$plugins        = array_keys( get_plugins() );
 		$active_plugins = get_option( 'active_plugins', array() );
 
-		// get inactive plugins
-		foreach ( $plugins as $key => $plugin ) {
+		$data['active_plugins']   = [];
+		$data['inactive_plugins'] = [];
 
-			if ( in_array( $plugin, $active_plugins ) ) {
-				// Remove active plugins from list so we can show active and inactive separately
-				unset( $plugins[ $key ] );
+		foreach ( get_plugins() as $plugin_basename => $plugin ) {
+			
+			$plugin_slug = preg_replace( '/[^a-z0-9]/', '_', $this->get_plugin_name( $plugin_basename ) );
+
+			if ( in_array( $plugin_basename, $active_plugins ) ) {
+
+				$data['active_plugins'][$plugin_slug] = $plugin['Version'];
+			
+			} else {
+			
+				$data['inactive_plugins'][$plugin_slug] = $plugin['Version'];
 			}
 		}
 
-		$data['active_plugins']   = $active_plugins;
-		$data['inactive_plugins'] = $plugins;
+		global $wpdb;
+
+		$data['form'] = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}gmw_forms" );
 
 		return $data;
 	}
