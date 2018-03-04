@@ -526,6 +526,12 @@ body.wp-admin.admin-bar #gmw-edit-form-page {
 	background: #f1f1f1;
 }
 
+/** dark theme **/
+#gmw-edit-form-page #top-area {
+	background: #333;
+	border: 0;
+}
+
 body.wp-admin.admin-bar #gmw-edit-form-page #top-area {
 	top: 30px;
 }
@@ -535,8 +541,8 @@ body.wp-admin.admin-bar #gmw-edit-form-page #top-area {
 	position: absolute;
 	top: 0;
 	left: 0;
-	width: 60px;
-	height: 60px;
+	width: 64px;
+	height: 64px;
 	padding: 0;
 	background: #f1f1f1;
 	border: none;
@@ -551,6 +557,12 @@ body.wp-admin.admin-bar #gmw-edit-form-page #top-area {
 	border-right: 1px solid #ddd;
 }
 
+/* dark them */
+#gmw-edit-form-page #top-area a.form-editor-close {
+	border: 0;
+	background: #444;
+}
+
 #gmw-edit-form-page #top-area a.form-editor-close:hover {
 	background: #fff;
 	border-top-color: #0073aa;
@@ -559,13 +571,23 @@ body.wp-admin.admin-bar #gmw-edit-form-page #top-area {
 	box-shadow: none;
 }
 
+/* dark theme */
+#gmw-edit-form-page #top-area a.form-editor-close:hover {
+	color: #fcfcfc;
+}
+
 #gmw-edit-form-page #top-area a.form-editor-close:before {
 	font: 400 38px/45px dashicons;
 	content: "\f335";
 	position: relative;
-	top: 8px;
-	left: 12px;
+	top: 10px;
+	left: 14px;
 	color: #444;
+}
+
+/** Dark theme **/
+#gmw-edit-form-page #top-area a.form-editor-close:before {
+	color: #ccc;
 }
 
 #gmw-edit-form-page #top-area h2 {
@@ -580,8 +602,13 @@ body.wp-admin.admin-bar #gmw-edit-form-page #top-area {
 	padding: 0px !important;
 	color: #444;
 	font-size: 23px;
-	font-weight: 400;
-	margin: 17px 0px 11px 70px;
+	font-weight: 200;
+	margin: 17px 0px 15px 80px;
+}
+
+/** dark theme **/
+#gmw-edit-form-page #top-area h2 {
+	color: #ccc;
 }
 
 #gmw-edit-form-page #top-area .error,
@@ -597,9 +624,46 @@ body.wp-admin.admin-bar #gmw-edit-form-page #top-area {
 
 #gmw-edit-form-page #top-area #action-buttons {
 	display: inline-block;
-	margin: 17px 0 11px 20px;
+	margin: 16px 50px 16px 20px;
 	width: 100%;
 	max-width: 650px;
+	vertical-align: top;
+	text-align: right;
+	float: right;
+}
+
+#gmw-edit-form-page #top-area #action-buttons a.button.action {
+	box-shadow: none;
+	background: #444;
+	color: #fcfcfc;
+	border: 1px solid #555;
+	height: 32px;
+	line-height: 30px;
+	text-shadow: none;
+	font-weight: 100;
+	border-radius: 2px;
+	-webkit-transition: color .15s ease-in-out, border-color .15s ease-in-out, background .15s ease-in-out;
+	transition: color .15s ease-in-out, border-color .15s ease-in-out, background .15s ease-in-out;
+	margin-right: 8px;
+}
+
+#gmw-edit-form-page #top-area #action-buttons a.button.action:hover {
+	background: #fff;
+	border-top-color: #0073aa;
+	outline: 0;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	color: #444;
+}
+
+#gmw-edit-form-page #top-area #action-buttons .button-primary {
+	border: 0;
+	box-shadow: none;
+	text-shadow: none;
+	font-weight: 100;
+	height: 32px;
+	margin: 0;
+	line-height: 30px;
 	vertical-align: top;
 }
 
@@ -608,7 +672,7 @@ body.wp-admin.admin-bar #gmw-edit-form-page #top-area {
 	height: 100%;
 	width: 100%;
 	box-sizing: border-box;
-	padding-top: 60px;
+	padding-top: 63px;
 }
 
 #gmw-edit-form-page #form-wrapper #top-bar {
@@ -657,6 +721,11 @@ body.wp-admin.admin-bar #gmw-edit-form-page #top-area {
 	left: 0;
 }
 
+/** dark theme **/
+#gmw-edit-form-page #form-wrapper div#left-sidebar {
+	background: #333;
+}
+
 #gmw-edit-form-page #form-wrapper div#left-sidebar #top-bar {
 	background: #eee;
 	padding: 9px 12px 6px;
@@ -665,21 +734,41 @@ body.wp-admin.admin-bar #gmw-edit-form-page #top-area {
 }
 
 body.wp-admin.admin-bar #gmw-edit-form-page #form-wrapper div#left-sidebar {
-	top: 90px;
+	top: 93px;
 }
 
 #gmw-edit-form-page #form-wrapper div#top-area span#form-title-input {
 	width: 100%;
+	max-width: 260px;
 	display: inline-block;
+	margin-right: 8px;
 	position: relative;
-	margin: 0px;
-	max-width: 200px;
-	margin-right: 5px;
+}
+
+#gmw-edit-form-page #form-wrapper div#top-area span#form-title-input #form-name-label {
+	padding: 0 11px 0px 10px;
+	background: #444;
+	color: #fcfcfc;
+	font-size: 13px;
+	font-weight: 100;
+	line-height: 30px;
+	position: absolute;
+	height: 100%;
+	box-sizing: border-box;
 }
 
 #gmw-edit-form-page #form-wrapper div#top-area span#form-title-input input[type="text"] {
 	width: 100%;
-	height: 28px;
+	height: 32px;
+	padding-left: 65px;
+	font-weight: 100;
+	font-size: 13px;
+	border-radius: 2px;
+	margin:0px;
+}
+
+#gmw-edit-form-page #form-wrapper div#top-area span#form-title-input input[type="text"]:before {
+	content: 'name';
 }
 
 #gmw-edit-form-page #form-wrapper div#top-area span#form-title-input input[type="submit"] {
@@ -705,17 +794,28 @@ body.wp-admin.admin-bar #gmw-edit-form-page #form-wrapper div#left-sidebar {
 	border-bottom: 1px solid #dfdfdf;
 	color: #222;
 	display: block;
-	font-weight: 400;
+	font-weight: 200;
 	outline: none;
 	position: relative;
 	text-decoration: none;
 	z-index: 10;
-	padding: 14px 12px 14px 16px;
+	padding: 15px 12px 15px 16px;
+}
+
+/** dark theme **/
+#gmw-edit-form-page #form-wrapper ul.gmw-tabs-wrapper li a {
+	color: #ccc;
+	border: 0;
 }
 
 #gmw-edit-form-page #form-wrapper ul.gmw-tabs-wrapper li a.active {
 	background: #fcfcfc;
 	position: relative;
+}
+
+/** dark theme  **/
+#gmw-edit-form-page #form-wrapper ul.gmw-tabs-wrapper li a.active {
+	color: #333;
 }
 
 #gmw-edit-form-page #form-wrapper ul.gmw-tabs-wrapper li a.active:before {
@@ -740,30 +840,24 @@ body.wp-admin.admin-bar #gmw-edit-form-page #form-wrapper div#left-sidebar {
 	max-width: 175px;
 	display: inline-block;
 	position: fixed;
-	top: 41px;
+	top: 93px;
 	right: 0;
+	background: #333;
 }
 #gmw-edit-form-page #form-wrapper #form-update-messages p {
-	padding: 8px 22px 8px 10px;
-	color: #fff;
-	margin: 10px 0 0;
-	border-right: 0;
-	border-left: 0;
+	padding: 12px 22px 12px 12px;
+	color: #ddd;
+	margin: 0;
 }
+
 #gmw-edit-form-page #form-wrapper #form-update-messages p.success {
 	display: none;
-	background: #82b77b;
-	border: 1px solid #79aa72;
-	margin: 0px;
+	border-bottom: 5px solid #76e370;
 }
 
 #gmw-edit-form-page #form-wrapper #form-update-messages p.failed {
 	display: none;
-	background: #ed6b8c;
-	border: 1px solid #e46787;
-	-moz-box-shadow: 0px 0px 10px rgba(228, 103, 135, 0.6);
-	-webkit-box-shadow: 0px 0px 10px rgba(228, 103, 135, 0.6);
-	box-shadow: 0px 0px 10px rgba(228, 103, 135, 0.6);
+	border-bottom: 5px solid red;
 }
 
 #gmw-edit-form-page #form-wrapper #form-update-messages p i {
@@ -906,6 +1000,7 @@ body.wp-admin.admin-bar #gmw-edit-form-page #form-wrapper #gmw-form-cover {
 	border-top: 0;
 }
 
+
 .gmw-tab-panel table tbody tr td.gmw-form-usage-desc {
 	background: #f9f9f9;
 	border-right: 1px solid #E1E1E1;
@@ -934,6 +1029,19 @@ body.wp-admin.admin-bar #gmw-edit-form-page #form-wrapper #gmw-form-cover {
 	border-right: 1px solid #E1E1E1;
 	padding: 13px 15px;
 	width:15%;
+}
+
+div.gmw-settings-panel.gmw-tab-panel.form-usage table {
+	border: 0;
+}
+
+div.gmw-settings-panel.gmw-tab-panel.form-usage table thead tr th {
+	background: #444;
+	color: #ddd;
+	border: 0;
+	font-weight: 100;
+	border: 0;
+	border-right: 1px solid #999;
 }
 
 .gmw-tab-panel table tbody tr td.gmw-form-feature-desc label {
