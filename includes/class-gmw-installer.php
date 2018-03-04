@@ -151,7 +151,7 @@ class GMW_Installer {
 				ID INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 				slug VARCHAR( 50 ) NOT NULL,
 				addon VARCHAR( 50 ) NOT NULL,
-				sub_addon VARCHAR( 50 ) NOT NULL,
+				component VARCHAR( 50 ) NOT NULL,
 				object_type VARCHAR( 50 ) NOT NULL,
 				name VARCHAR( 50 ) NOT NULL,
 				title VARCHAR( 50 ) NOT NULL,
