@@ -245,7 +245,7 @@ class GMW_Form_Editor {
 						'default'       => '',
 						'label'    		=> __( 'Search Form Template', 'GMW' ),
 						'desc'  		=> __( 'Select The search form template file.', 'GMW' ),		
-						'options'		=> array( '' => __( 'Disabled', 'GMW' ) ) + ( empty( $this->form['sub_addon'] ) ?gmw_get_search_form_templates( $this->form['addon'] ) : gmw_get_search_form_templates( $this->form['sub_addon'], $this->form['addon'] ) ),
+						'options'		=> array( '' => __( 'Disabled', 'GMW' ) ) + gmw_get_search_form_templates( $this->form['component'], $this->form['addon'] ),
 						'attributes' 	=> array(),
 						'priority'		=> 10
 					),
@@ -386,7 +386,7 @@ class GMW_Form_Editor {
 						'default'   	=> 'gray',
 						'label' 		=> __( 'Results Template', 'GMW' ),
 						'desc'  		=> __( 'Select the search results template file.', 'GMW' ),
-						'options'		=> empty( $this->form['sub_addon'] ) ? gmw_get_search_results_templates( $this->form['addon'] ) : gmw_get_search_form_templates( $this->form['sub_addon'], $this->form['addon'] ),
+						'options'		=> gmw_get_search_results_templates( $this->form['component'], $this->form['addon'] ),
 						'attributes' 	=> array(),
 						'priority'		=> 10
 					),
@@ -708,73 +708,76 @@ class GMW_Form_Editor {
             	</thead>
          
             	<tbody>
+
             		<?php if ( $this->form['addon'] == 'global_maps' ) { ?>
+
             			<tr>
             				<td class="gmw-form-usage-desc">
-                				<p><?php _e( 'Use this shortcode to display the global map anywhere on the page.', 'GMW' ); ?></p>
+                				<p><?php _e( 'Display the global map anywhere on the page.', 'GMW' ); ?></p>
                 			</td>
                 			<td class="gmw-form-usage">
-                				<p><code>[gmw form="<?php echo $this->form['ID']; ?>"]</code></p>
+                				<p><code>[gmw_global_map form="<?php echo $this->form['ID']; ?>"]</code></p>
                 			</td>
                 			<td class="gmw-form-usage">
-                				<p><code><?php echo '&#60;&#63;php echo do_shortcode(\'[gmw form="'.$this->form['ID'].'"]\'); &#63;&#62;'; ?></code></p>
+                				<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw_global_map form="'.$this->form['ID'].'"]\' ); &#63;&#62;'; ?></code></p>
                 			</td>
                 		</tr>
+
          			<?php } else { ?>
 
             		<tr>
             			<td class="gmw-form-usage-desc">
-            				<p><?php _e( 'Use this shortcode to display the search form and search results of this form.', 'GMW' ); ?></p>
+            				<p><?php _e( 'Display the complete form ( search form, map, and search results ).', 'GMW' ); ?></p>
             			</td>
             			<td class="gmw-form-usage">
             				<p><code>[gmw form="<?php echo $this->form['ID']; ?>"]</code></p>
             			</td>
             			<td class="gmw-form-usage">
-            				<p><code><?php echo '&#60;&#63;php echo do_shortcode(\'[gmw form="'.$this->form['ID'].'"]\'); &#63;&#62;'; ?></code></p>
+            				<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw form="'.$this->form['ID'].'"]\' ); &#63;&#62;'; ?></code></p>
             			</td>                			
             		</tr>
             		<tr>
             			<td class="gmw-form-usage-desc">
-            				<p><?php _e( 'Use this shortcode to display only the search form of this form.', 'GMW' ); ?></p>
+            				<p><?php _e( 'Display only the search form only.', 'GMW' ); ?></p>
             			</td>
             			<td class="gmw-form-usage">
             				<p><code>[gmw search_form="<?php echo $this->form['ID']; ?>"]</code></p>
             			</td>
             			<td class="gmw-form-usage">
-            				<p><code><?php echo '&#60;&#63;php echo do_shortcode(\'[gmw search_form="'.$this->form['ID'].'"]\'); &#63;&#62;'; ?></code></p>
+            				<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw search_form="'.$this->form['ID'].'"]\' ); &#63;&#62;'; ?></code></p>
             			</td>		
             		</tr>
             		<tr>
             			<td class="gmw-form-usage-desc">
-            				<p><?php _e( 'Use this shortcode to display only the search results of this form.', 'GMW' ); ?></p>
+            				<p><?php _e( 'Display the search results of this form only. Can be used to display the search rsults in a different page or when using the search form in a widget.', 'GMW' ); ?></p>
             			</td>            
             			<td class="gmw-form-usage">
             				<p><code>[gmw search_results="<?php echo $this->form['ID']; ?>"]</code></p>
             			</td>
             			<td class="gmw-form-usage">
-            				<p><code><?php echo '&#60;&#63;php echo do_shortcode(\'[gmw search_results="'.$this->form['ID'].'"]\'); &#63;&#62;'; ?></code></p>
+            				<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw search_results="'.$this->form['ID'].'"]\' ); &#63;&#62;'; ?></code></p>
             			</td>
             		</tr>
             		<tr>
             			<td class="gmw-form-usage-desc">
-            				<p><?php _e( 'Use this shortcode in the page where you would like to display the search results of any form. That is in case that you choose to display the search results in a different page than the search form or when using "GMW Form" widget.', 'GMW' ); ?></p>
+            				<p><?php _e( 'Display the search results of any form.', 'GMW' ); ?></p>
             			</td>
             			<td class="gmw-form-usage">
             				<p><code>[gmw form="results"]</code></p>
             			</td>
             			<td class="gmw-form-usage">
-            				<p><code><?php echo '&#60;&#63;php echo do_shortcode(\'[gmw form="results"]\'); &#63;&#62;'; ?></code></p>
+            				<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw form="results"]\' ); &#63;&#62;'; ?></code></p>
             			</td>
             		</tr>
             		<tr>
             			<td class="gmw-form-usage-desc">
-            				<p><?php _e( 'Use this shortcode to display the results map anywhere on a page. By default, the form you create will display the map above the list of results. Using this shortcode you can display the map anywhere else on the page. Note that when using this shortcode you also need to place either the <code>[gmw search_results="'.$this->form['ID'].'"]</code> or <code>[gmw form="results"]</code> shortcode on the page. You also need to set the "Display Map" feature ( "Search Results" tab ) to "using shortcode".', 'GMW' ); ?></p>
+            				<p><?php _e( 'Display the results map anywhere on a page. By default, the form you create will display the map above the list of results, but using this shortcode you can display the map anywhere else on the page. Notice that you need to set the "Display map" setting of the "Form Submission" tab to "Using shortcode". ', 'GMW' ); ?></p>
             			</td>
             			<td class="gmw-form-usage">
             				<p><code>[gmw map="<?php echo $this->form['ID']; ?>"]</code></p>
             			</td>
             			<td class="gmw-form-usage">
-            				<p><code><?php echo '&#60;&#63;php echo do_shortcode(\'[gmw map="'.$this->form['ID'].'"]\'); &#63;&#62;'; ?></code></p>
+            				<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw map="'.$this->form['ID'].'"]\' ); &#63;&#62;'; ?></code></p>
             			</td>    
             		</tr>
             		<?php } ?>
@@ -1087,13 +1090,13 @@ class GMW_Form_Editor {
 						
 						<h2 class="gmw-wrap-top-h2">
 			                <i class="gmw-icon-pencil"></i>
-			                <?php echo __( 'Edit Form', 'GMW' ) .' ' . $this->form['ID'] .' <em style="font-size: 12px">( '. $this->form['name'] . ' )</em> '; ?>
+			                <?php echo __( 'Edit Form', 'GMW' ) .' ' . $this->form['ID'] .' <em style="font-size: 13px;font-weight: 100">( '. $this->form['name'] . ' )</em> '; ?>
 			            </h2>
 
 		        		<div id="action-buttons">
 			        		
-			        		<span style="padding: 5px 10px 5px 8px;background: #fafafa;margin-right: -6px;border: 1px solid #e5e5e5"><?php _e( 'Name', 'GMW' ); ?></span>
 			        		<span id="form-title-input">
+			        			<span id="form-name-label"><?php _e( 'Name', 'GMW' ); ?></span>
 					        	<input type="text" name="gmw_form[title]" value="<?php echo ( ! empty( $this->form['title']) ) ? sanitize_text_field( esc_attr( $this->form['title'] ) ) : 'form_id_'. sanitize_text_field( esc_attr( $this->form['ID'] ) ); ?>" placeholder="Form title" />
 			            	</span>
 
@@ -1102,9 +1105,7 @@ class GMW_Form_Editor {
 							<!-- Delete Form button -->	
 			                <a class="button action delete-form" title="<?php _e( 'Delete form', 'GMW' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=delete_form&form_id='.$this->form['ID'] ); ?>" onclick="return confirm( '<?php echo $delete_message; ?>' );"><?php _e( 'Delete Form', 'GMW' ); ?></a>
 
-			                <span style="margin-left: 5px">
-		                		<a class="button action" title="<?php _e( 'Duplicate form', 'GMW' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=duplicate_form&slug='.$this->form['slug'].'&form_id='.$this->form['ID'] ); ?>"><?php _e( 'Duplicate Form', 'GMW' ); ?></a>                           
-		                	</span>
+		                	<a class="button action" title="<?php _e( 'Duplicate form', 'GMW' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=duplicate_form&slug='.$this->form['slug'].'&form_id='.$this->form['ID'] ); ?>"><?php _e( 'Duplicate Form', 'GMW' ); ?></a>                           
 		                	
 		                	<input type="submit" id="submit-button" class="button-primary" value="<?php _e( 'Save Changes', 'GMW' ); ?>" />
 
@@ -1164,7 +1165,7 @@ class GMW_Form_Editor {
 		            	<input type="hidden" name="gmw_form[ID]" value="<?php echo absint( $this->form['ID'] ); ?>" />	
 		            	<input type="hidden" name="gmw_form[slug]" value="<?php echo sanitize_text_field( esc_attr( $this->form['slug'] ) ); ?>" />
 		            	<input type="hidden" name="gmw_form[addon]" value="<?php echo sanitize_text_field( esc_attr( $this->form['addon'] ) ); ?>" />
-		            	<input type="hidden" name="gmw_form[sub_addon]" value="<?php echo sanitize_text_field( esc_attr( $this->form['sub_addon'] ) ); ?>" />
+		            	<input type="hidden" name="gmw_form[component]" value="<?php echo sanitize_text_field( esc_attr( $this->form['component'] ) ); ?>" />
 
 		            	<?php
 		            	//form filds
@@ -1268,12 +1269,29 @@ class GMW_Form_Editor {
 	    </div>   
 	    <script>
 
-	    jQuery( document ).ready( function() {
+	    jQuery( document ).ready( function( $ ) {
+
+	    	// save form using control+s keys
+	    	$( document ).on( 'keydown', function( e ){
+	    		
+	    		if ( ( e.controlKey || e.metaKey ) && ( e.which == 83 ) ) {
+					
+					e.preventDefault();
+					
+				
+					$( '#gmw-edit-form-page' ).find( '#submit-button' ).click();
+
+					return false
+				}
+	    	});
+
+	    	// prevent scroll of body when form editor open
+	    	$( 'body, html' ).css( 'overflow', 'hidden' ); 
 
 	    	// submit form when enter key presses in form title input box
-	    	jQuery( '#gmw-form-editor-wrapper ul.gmw-tabs-wrapper.left-tabs li a' ).click( function( e ) {
+	    	$( '#gmw-form-editor-wrapper ul.gmw-tabs-wrapper.left-tabs li a' ).click( function( e ) {
     			// duplicate value from title field into a hidden field in the form
-    			jQuery( '#tab-title-holder' ).html( jQuery( this ).find( 'span' ).html() );
+    			$( '#tab-title-holder' ).html( $( this ).find( 'span' ).html() );
 	    	});
 	    });
 	    </script>         
