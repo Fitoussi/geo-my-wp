@@ -1306,18 +1306,20 @@ class GMW_Addon {
 	 */
 	protected function get_form_button( $button ) {
 
-		$sub_addon = '';
+		$component = '';
 
-		if ( ! empty( $button['sub_addon'] ) ) {
+		if ( ! empty( $button['component'] ) ) {
 			
-			$sub_addon = $button['sub_addon'];
+			$component = $button['component'];
 
 			if ( empty( $button['object_type'] ) ) {
-				$button['object_type'] = GMW()->object_types[$sub_addon];
+				$button['object_type'] = GMW()->object_types[$component];
 			}
 
 		} else {
 
+			$component = $button['slug'];
+			
 			if ( empty( $button['object_type'] ) ) {
 				$button['object_type'] = $this->object_type;
 			}
@@ -1327,7 +1329,7 @@ class GMW_Addon {
     	return array(
     		'slug'	      => ! empty( $button['slug'] ) ? $button['slug'] : $this->slug,
             'addon'       => $this->slug,
-            'sub_addon'   => $sub_addon,
+            'component'   => $component,
             'object_type' => $button['object_type'],
             'name'        => ! empty( $button['name'] ) ? $button['name'] : $this->name,
             'prefix'      => ! empty( $button['prefix'] ) ? $button['prefix'] : $this->prefix,
