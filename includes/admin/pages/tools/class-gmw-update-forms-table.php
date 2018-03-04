@@ -36,16 +36,16 @@ class GMW_Update_Forms_Table {
 
 		$forms_table = $wpdb->prefix . 'gmw_forms';
 
-		$sub_addon = $wpdb->get_results( "SHOW COLUMNS FROM {$forms_table} LIKE 'sub_addon'" );
+		$component = $wpdb->get_results( "SHOW COLUMNS FROM {$forms_table} LIKE 'component'" );
 
-		if ( empty( $sub_addon ) ) {
-			$wpdb->get_results( "ALTER TABLE {$forms_table} ADD COLUMN sub_addon VARCHAR(50) NOT NULL AFTER addon" );
+		if ( empty( $component ) ) {
+			$wpdb->get_results( "ALTER TABLE {$forms_table} ADD COLUMN component VARCHAR(50) NOT NULL AFTER addon" );
 		}
 		
 		$object_type = $wpdb->get_results( "SHOW COLUMNS FROM {$forms_table} LIKE 'object_type'" );
 
 		if ( empty( $object_type ) ) {
-			$wpdb->get_results( "ALTER TABLE {$forms_table} ADD COLUMN object_type VARCHAR(50) NOT NULL AFTER sub_addon" );
+			$wpdb->get_results( "ALTER TABLE {$forms_table} ADD COLUMN object_type VARCHAR(50) NOT NULL AFTER component" );
 		}
 	}
 
@@ -53,6 +53,8 @@ class GMW_Update_Forms_Table {
 	 * Import existing forms to new database table created in version 3.0
 	 * 
 	 * @return [type] [description]
+	 *
+	 * @since 3.0
 	 */
 	public function import_forms() {
 	    
@@ -163,12 +165,16 @@ class GMW_Update_Forms_Table {
 
 			$form['search_results']['directions_link'] = ! empty( $form['search_results']['get_directions'] ) ? $form['search_results']['get_directions'] : '';
 
-			$sub_addon = '';
+			$component = '';
 
 			// update posts locator form data
 			if ( $slug == 'posts' ) {
 
+				/*
+				$addon 		 = 'posts_locator';
+				$slug		 = 'posts_locator';
 				$object_type = 'post';
+				$component   = 'posts_locator'; */
 
 				$form['form_submission']['display_results'] = ! empty( $form['search_results']['display_posts'] ) ? 1 : '';
 
@@ -195,7 +201,11 @@ class GMW_Update_Forms_Table {
 			// update friends locator form data
 			if ( $slug == 'friends' ) {
 
+				/*
+				$addon 		 = 'members_locator';
+				$slug 		 = 'members_locator';
 				$object_type = 'user';
+				$component   = 'members_locator'; */
 
 				$form['form_submission']['display_results'] = ! empty( $form['search_results']['display_members'] ) ? 1 : '';
 
@@ -216,8 +226,13 @@ class GMW_Update_Forms_Table {
 
 			if ( $slug == 'groups' ) {
 
+				/*
+				$addon 		 = 'bp_groups_locator';
+				$slug 		 = 'bp_groups_locator';
 				$object_type = 'bp_group';
-
+				$component   = 'bp_groups_locator';
+				*/
+			
 				$form['form_submission']['display_results'] = ! empty( $form['search_results']['display_groups'] ) ? 1 : '';
 
 				if ( ! empty( $form['search_results']['avatar']['use'] ) ) {
@@ -229,8 +244,13 @@ class GMW_Update_Forms_Table {
 
 			if ( $slug == 'wp_users' ) {
 				
+				/*
+				$addon 		 = 'users_locator';
+				$slug 		 = 'users_locator';
 				$object_type = 'user';
-
+				$component   = 'users_locator';
+				*/
+			
 				$form['form_submission']['display_results'] = ! empty( $form['search_results']['display_users'] ) ? 1 : '';
 
 				if ( ! empty( $form['search_results']['avatar']['use'] ) ) {
@@ -241,8 +261,10 @@ class GMW_Update_Forms_Table {
 			}
 
 			// global maps
-			if ( $addon == 'global_maps' ) {
+			if ( $addon == 'global_maps' || in_array( $slug, [ 'gmaps_groups', 'gmaps_posts', 'gmaps_friends', 'gmaps_users' ] ) ) {
 				
+				//$addon = 'global_maps';
+		
 				if ( ! empty( $form['general_settings']['output_limit'] ) ) {
 					$form['page_load_results']['pre_page'] = $form['general_settings']['output_limit'];
 					$form['form_submission']['pre_page']   = $form['general_settings']['output_limit'];
@@ -293,9 +315,12 @@ class GMW_Update_Forms_Table {
 				// psots global maps
 				if ( $slug == 'gmaps_posts' ) {
 					
+					/*
+					$slug 		 = 'posts_locator_global_map';
 					$object_type = 'post';
-					$sub_addon   = 'posts_locator_global_map';
-
+					$component   = 'posts_locator';
+					*/
+				
 					$form['search_form']['include_exclude_terms'] = $form['page_load_results']['include_exclude_terms'] = array(
 						'usage'    => '',
 						'terms_id' => ''
@@ -316,9 +341,12 @@ class GMW_Update_Forms_Table {
 				// members locator global maps
 				if ( $slug == 'gmaps_friends' ) {
 					
+					/*
+					$slug 		 = 'members_locator_global_map';
 					$object_type = 'user';
-					$sub_addon   = 'members_locator_global_map';
-
+					$component   = 'members_locator';
+					*/
+				
 					$form['search_form']['xprofile_fields']['fields']     = ! empty( $form['search_form']['profile_fields'] ) ? $form['search_form']['profile_fields'] : array();
 					$form['search_form']['xprofile_fields']['date_field'] = ! empty( $form['search_form']['profile_fields_date'] ) ? $form['search_form']['profile_fields_date'] : '';
 
@@ -340,9 +368,12 @@ class GMW_Update_Forms_Table {
 				// users global maps
 				if ( $slug == 'gmaps_users' ) {
 					
+					/*
+					$slug 		 = 'users_locator_global_map';
 					$object_type = 'user';
-					$sub_addon   = 'users_locator_global_map';
-
+					$component   = 'users_locator';
+					*/
+				
 					if ( ! empty( $form['info_window']['avatar']['use'] ) ) {
 						$form['info_window']['image']['enabled'] = 1;
 						$form['info_window']['image']['width'] = $form['info_window']['image']['height'] = $form['info_window']['avatar']['width'];
@@ -352,9 +383,12 @@ class GMW_Update_Forms_Table {
 				// users global maps
 				if ( $slug == 'gmaps_groups' ) {
 					
+					/*
+					$slug 		 = 'bp_groups_locator_global_map';
 					$object_type = 'bp_group';
-					$sub_addon   = 'groups_locator_global_map';
-
+					$component   = 'groups_locator';
+					*/
+				
 					if ( ! empty( $form['info_window']['avatar']['use'] ) ) {
 						$form['info_window']['image']['enabled'] = 1;
 						$form['info_window']['image']['width'] = $form['info_window']['image']['height'] = $form['info_window']['avatar']['width'];
@@ -366,8 +400,8 @@ class GMW_Update_Forms_Table {
 				'ID'	 	  => $form_id,
 				'slug'	 	  => $slug,
 				'addon'  	  => $addon, 
-				'sub_addon'   => $sub_addon,
-				'object_type' => $object_type,
+				'component'   => '',
+				'object_type' => '',
 				'name'   	  => $form_name,
 				'title'  	  => $form_title,
 				'prefix' 	  => $prefix,
@@ -390,6 +424,8 @@ class GMW_Update_Forms_Table {
 
 	/**
 	 * Update data in forms table
+	 *
+	 * @since 3.0
 	 * 
 	 * @return [type] [description]
 	 */
@@ -411,20 +447,73 @@ class GMW_Update_Forms_Table {
 			return;
 		}
 
+		/*** Posts locator ***/
+
 		$wpdb->update( 
 
             $wpdb->prefix . 'gmw_forms', 
             array( 
             	'slug'   	  => 'posts_locator',
                 'addon'  	  => 'posts_locator',
+                'component'   => 'posts_locator',
                 'object_type' => 'post',
                 'name'   	  => 'Posts Locator',
                 'prefix' 	  => 'pt'
             ), 
             array( 
-            	'addon' => 'posts'
+            	'slug' => 'posts_locator'
             ), 
             array( 
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s'
+            )
+        );
+
+		$wpdb->update( 
+
+            $wpdb->prefix . 'gmw_forms', 
+            array( 
+            	'slug'   	  => 'posts_locator',
+                'addon'  	  => 'posts_locator',
+                'component'   => 'posts_locator',
+                'object_type' => 'post',
+                'name'   	  => 'Posts Locator',
+                'prefix' 	  => 'pt'
+            ), 
+            array( 
+            	'slug' => 'posts'
+            ), 
+            array( 
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s'
+            )
+        );
+
+		/***** Members locator *****/
+
+        $wpdb->update( 
+
+            $wpdb->prefix . 'gmw_forms', 
+            array( 
+            	'slug'   	  => 'members_locator',
+                'addon'  	  => 'members_locator',
+                'component'   => 'members_locator',
+                'object_type' => 'user',
+                'name'   	  => 'BP Members Locator',
+                'prefix' 	  => 'fl'
+            ), 
+            array( 
+            	'slug' => 'members_locator'
+            ), 
+            array( 
+                '%s',
                 '%s',
                 '%s',
                 '%s',
@@ -439,14 +528,42 @@ class GMW_Update_Forms_Table {
             array( 
             	'slug'   	  => 'members_locator',
                 'addon'  	  => 'members_locator',
+                'component'   => 'members_locator',
                 'object_type' => 'user',
                 'name'   	  => 'BP Members Locator',
                 'prefix' 	  => 'fl'
             ), 
             array( 
-            	'addon' => 'friends'
+            	'slug' => 'friends'
             ), 
             array( 
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s'
+            )
+        );
+
+        /***** Groups Locator *****/
+
+        $wpdb->update( 
+
+            $wpdb->prefix . 'gmw_forms', 
+            array( 
+            	'slug'   	  => 'bp_groups_locator',
+                'addon'  	  => 'bp_groups_locator',
+                'component'	  => 'bp_groups_locator',
+                'object_type' => 'bp_group',
+                'name'   	  => 'BP Groups Locator',
+                'prefix' 	  => 'gl'
+            ), 
+            array( 
+            	'slug' => 'bp_groups_locator'
+            ), 
+            array( 
+                '%s',
                 '%s',
                 '%s',
                 '%s',
@@ -461,14 +578,42 @@ class GMW_Update_Forms_Table {
             array( 
             	'slug'   	  => 'bp_groups_locator',
                 'addon'  	  => 'bp_groups_locator',
+                'component'	  => 'bp_groups_locator',
                 'object_type' => 'bp_group',
                 'name'   	  => 'BP Groups Locator',
                 'prefix' 	  => 'gl'
             ), 
             array( 
-            	'addon' => 'groups_locator'
+            	'slug' => 'groups'
             ), 
             array( 
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s'
+            )
+        );
+
+        /***** Users Locator *****/
+
+        $wpdb->update( 
+
+            $wpdb->prefix . 'gmw_forms', 
+            array( 
+            	'slug'   	  => 'users_locator',
+                'addon'  	  => 'users_locator',
+                'component'   => 'users_locator',
+                'object_type' => 'user',
+                'name'   	  => 'Users Locator',
+                'prefix' 	  => 'ul'
+            ), 
+            array( 
+            	'slug' => 'users_locator'
+            ), 
+            array( 
+                '%s',
                 '%s',
                 '%s',
                 '%s',
@@ -483,14 +628,16 @@ class GMW_Update_Forms_Table {
             array( 
             	'slug'   	  => 'users_locator',
                 'addon'  	  => 'users_locator',
+                'component'   => 'users_locator',
                 'object_type' => 'user',
                 'name'   	  => 'Users Locator',
                 'prefix' 	  => 'ul'
             ), 
             array( 
-            	'addon' => 'wp_users_geo'
+            	'slug' => 'wp_users'
             ), 
             array( 
+                '%s',
                 '%s',
                 '%s',
                 '%s',
@@ -498,43 +645,25 @@ class GMW_Update_Forms_Table {
                 '%s'
             )
         );
+        
+        /*** Posts Map *****/
 
         $wpdb->update( 
 
             $wpdb->prefix . 'gmw_forms', 
             array( 
-            	'slug'   	  => 'users_locator',
-                'addon'  	  => 'users_locator',
-                'object_type' => 'user',
-                'name'   	  => 'Users Locator',
-                'prefix' 	  => 'ul'
+            	'slug'   	  => 'posts_locator_global_map',
+                'addon'  	  => 'global_maps',
+                'component'   => 'posts_locator',
+                'object_type' => 'post',
+                'name'   	  => 'Posts Global Map',
+                'prefix' 	  => 'gmapspt'
             ), 
             array( 
-            	'addon' => 'wp_users_geolocation'
+            	'slug' => 'posts_locator_global_map'
             ), 
             array( 
                 '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s'
-            )
-        );
-
-        $wpdb->update( 
-
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
-            	'slug'   	  => 'users_locator',
-                'addon'  	  => 'users_locator',
-                'object_type' => 'user',
-                'name'   	  => 'Users Locator',
-                'prefix' 	  => 'ul'
-            ), 
-            array( 
-            	'addon' => 'wp_users_geo-location'
-            ), 
-            array( 
                 '%s',
                 '%s',
                 '%s',
@@ -549,7 +678,7 @@ class GMW_Update_Forms_Table {
             array( 
             	'slug'   	  => 'posts_locator_global_map',
                 'addon'  	  => 'global_maps',
-                'sub_addon'   => 'posts_locator',
+                'component'   => 'posts_locator',
                 'object_type' => 'post',
                 'name'   	  => 'Posts Global Map',
                 'prefix' 	  => 'gmapspt'
@@ -567,13 +696,39 @@ class GMW_Update_Forms_Table {
             )
         );
 
+        /***** Members Map *****/
+
         $wpdb->update( 
 
             $wpdb->prefix . 'gmw_forms', 
             array( 
             	'slug'   	  => 'members_locator_global_map',
                 'addon'  	  => 'global_maps',
-                'sub_addon'   => 'members_locator',
+                'component'   => 'members_locator',
+                'object_type' => 'user',
+                'name'   	  => 'BP Members Global Map',
+                'prefix' 	  => 'gmapsfl'
+            ), 
+            array( 
+            	'slug' => 'members_locator_global_map'
+            ), 
+            array( 
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s'
+            )
+        );
+
+        $wpdb->update( 
+
+            $wpdb->prefix . 'gmw_forms', 
+            array( 
+            	'slug'   	  => 'members_locator_global_map',
+                'addon'  	  => 'global_maps',
+                'component'   => 'members_locator',
                 'object_type' => 'user',
                 'name'   	  => 'BP Members Global Map',
                 'prefix' 	  => 'gmapsfl'
@@ -591,13 +746,39 @@ class GMW_Update_Forms_Table {
             )
         );
 
+        /***** Groups Map *****/
+
         $wpdb->update( 
 
             $wpdb->prefix . 'gmw_forms', 
             array( 
             	'slug'   	  => 'bp_groups_locator_global_map',
                 'addon'  	  => 'global_maps',
-                'sub_addon'   => 'bp_groups_locator',
+                'component'   => 'bp_groups_locator',
+                'object_type' => 'bp_group',
+                'name'   	  => 'BP Groups Global Map',
+                'prefix' 	  => 'gmapsgl'
+            ), 
+            array( 
+            	'slug' => 'bp_groups_locator_global_map'
+            ), 
+            array( 
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s'
+            )
+        );
+
+        $wpdb->update( 
+
+            $wpdb->prefix . 'gmw_forms', 
+            array( 
+            	'slug'   	  => 'bp_groups_locator_global_map',
+                'addon'  	  => 'global_maps',
+                'component'   => 'bp_groups_locator',
                 'object_type' => 'bp_group',
                 'name'   	  => 'BP Groups Global Map',
                 'prefix' 	  => 'gmapsgl'
@@ -615,13 +796,39 @@ class GMW_Update_Forms_Table {
             )
         );
 
+        /***** Users Map *****/
+
         $wpdb->update( 
 
             $wpdb->prefix . 'gmw_forms', 
             array( 
             	'slug'   	  => 'users_locator_global_map',
                 'addon'  	  => 'global_maps',
-                'sub_addon'   => 'users_locator',
+                'component'   => 'users_locator',
+                'object_type' => 'user',
+                'name'   	  => 'Users Global Map',
+                'prefix' 	  => 'gmapsul'
+            ), 
+            array( 
+            	'slug' => 'users_locator_global_map'
+            ), 
+            array( 
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s'
+            )
+        );
+
+        $wpdb->update( 
+
+            $wpdb->prefix . 'gmw_forms', 
+            array( 
+            	'slug'   	  => 'users_locator_global_map',
+                'addon'  	  => 'global_maps',
+                'component'   => 'users_locator',
                 'object_type' => 'user',
                 'name'   	  => 'Users Global Map',
                 'prefix' 	  => 'gmapsul'
