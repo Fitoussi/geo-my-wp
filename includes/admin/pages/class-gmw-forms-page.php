@@ -72,7 +72,7 @@ class GMW_Forms_Page {
         //get form values
         $new_form['slug']        = $_GET['slug'];
         $new_form['addon']       = $_GET['addon'];
-        $new_form['sub_addon']   = $_GET['sub_addon'];
+        $new_form['component']   = $_GET['component'];
         $new_form['object_type'] = $_GET['object_type'];
         $new_form['name']        = str_replace( '+', ' ', $_GET['name'] );    
         $new_form['prefix']      = $_GET['prefix'];
@@ -86,7 +86,7 @@ class GMW_Forms_Page {
             array( 
                 'slug'        => $new_form['slug'],
                 'addon'       => $new_form['addon'],
-                'sub_addon'   => $new_form['sub_addon'],
+                'component'   => $new_form['component'],
                 'object_type' => $new_form['object_type'],
                 'addon'       => $new_form['addon'],    
                 'name'        => $new_form['name'],
@@ -172,7 +172,7 @@ class GMW_Forms_Page {
             array( 
                 'slug'        => $form->slug,
                 'addon'       => $form->addon,
-                'sub_addon'   => $form->sub_addon,
+                'component'   => $form->component,
                 'object_type' => $form->object_type,
                 'name'        => $form->name,
                 'title'       => $form->title.' copy',
@@ -299,7 +299,7 @@ class GMW_Forms_Page {
                     $button['name'] = $button['title'];
                 }
 
-                $form_url = 'admin.php?page=gmw-forms&gmw_action=create_new_form&name='.str_replace( ' ', '+', $button['name'] ).'&addon='.$button['addon'].'&sub_addon='.$button['sub_addon'].'&object_type='.$button['object_type'].'&prefix='.$button['prefix'].'&slug='.$button['slug'];
+                $form_url = 'admin.php?page=gmw-forms&gmw_action=create_new_form&name='.str_replace( ' ', '+', $button['name'] ).'&addon='.$button['addon'].'&component='.$button['component'].'&object_type='.$button['object_type'].'&prefix='.$button['prefix'].'&slug='.$button['slug'];
 
                 $output  .= '<option value="'. esc_url( $form_url ).'">'.esc_html( $button['name'] ).'</option>';
             }
