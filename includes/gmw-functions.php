@@ -582,9 +582,12 @@ function gmw_calculate_distance( $start_lat, $start_lng, $end_lat, $end_lng, $un
  *
  * @since 3.0
  * 
- * @param  string $addon         the slug of the add-on which the tmeplate file belongs to.
- * @param  string $folder_name   folder name ( search-forms, search-results... ).
- * @param  string $template_name tempalte name
+ * @param  array(
+ *  $component     => the slug of the add-on/component which the template file belongs to.
+ *  $addon         => the slug of the addon when not the original addon of the component.  
+ *  $folder_name   =>  folder name ( search-forms, search-results... ).
+ *  $template_name => template name
+ * }
  * 
  * @return 
  */
@@ -599,15 +602,15 @@ function gmw_get_templates( $args = [] ) {
 	 * @param  string $base_path     [description]
 	 * @return [type]                [description]
 	 */
-	function gmw_get_search_form_templates( $addon = 'posts_locator', $base_addon = '' ) {
+	function gmw_get_search_form_templates( $component = 'posts_locator', $addon = '' ) {
 		
 		$args = array(
-			'base_addon'  => $base_addon,
+			'component'   => $component,
 			'addon' 	  => $addon, 
 			'folder_name' => 'search-forms'
 		);
 
-		return GMW_Helper::get_templates( $args );
+		return gmw_get_templates( $args );
 	}
 
 	/**
@@ -617,15 +620,15 @@ function gmw_get_templates( $args = [] ) {
 	 * @param  string $base_path     [description]
 	 * @return [type]                [description]
 	 */
-	function gmw_get_search_results_templates( $addon = 'posts_locator', $base_addon = '' ) {
+	function gmw_get_search_results_templates( $component = 'posts_locator', $addon = '' ) {
 		
 		$args = array(
-			'base_addon'  => $base_addon,
+			'component'   => $component,
 			'addon' 	  => $addon, 
 			'folder_name' => 'search-results'
 		);
 
-		return GMW_Helper::get_templates( $args );
+		return gmw_get_templates( $args );
 	}
 
 	/**
@@ -635,31 +638,37 @@ function gmw_get_templates( $args = [] ) {
 	 * @param  string $base_path     [description]
 	 * @return [type]                [description]
 	 */
-	function gmw_get_info_window_templates( $addon = 'posts_locator', $iw_type = 'popup', $base_addon = '' ) {
+	function gmw_get_info_window_templates( $component = 'posts_locator', $iw_type = 'popup', $addon = '' ) {
 		
 		$args = array(
-			'base_addon'       => $base_addon,
-			'addon' 	       => $addon, 
+			'component'   	   => $component,
+			'addon' 	  	   => $addon,
 			'folder_name'      => 'info-window', 
 			'iw_type'		   => $iw_type
 		);
 
-		return GMW_Helper::get_templates( $args );
+		return gmw_get_templates( $args );
 	}
 
 /**
  * get template file and its stylesheet
  *
  * @since 3.0
- * 
- * @param  string $addon         the slug of the add-on which the tmeplate file belongs to.
- * @param  string $folder_name   folder name ( search-forms, search-results... ).
- * @param  string $template_name tempalte name
+ *
+ * $args = array( 
+ *   'component'     	=> slug of the addon / component the template belongs to.
+ *   'addon'  		 	=> use this if the component exists inside another add-on. ex. Global Maps which uses different components.
+ *   'folder_name'   	=> folder name ( search-forms, search-results... ).
+ *   'template_name'    => template name ( default, gray... ).
+ *   'iw_type'          => info window type ( popup, infobox... ). Folder name must be set to info-window.  
+ *	 'file_name'        => file name ( content.php ... ).
+ *	 'include_template' => true || false to include or return file.
+ * );
  * 
  * @return 
  */
-function gmw_get_template( $addon = 'posts_locator', $template_type = 'search-forms', $iw_type = 'popup', $template_name = 'default', $base_path = '' ) {
-	return GMW_Helper::get_template( $addon, $template_type, $iw_type, $template_name, $base_path );
+function gmw_get_template( $args = [] ) {
+	return GMW_Helper::get_template( $args );
 }
 	
 	/**
@@ -669,15 +678,15 @@ function gmw_get_template( $addon = 'posts_locator', $template_type = 'search-fo
 	 * @param  string $base_path     [description]
 	 * @return [type]                [description]
 	 */
-	function gmw_get_search_form_template( $addon = 'posts_locator', $template_name = 'default', $base_addon = '', $include = false ) {
+	function gmw_get_search_form_template( $component = 'posts_locator', $template_name = 'default', $addon = '', $include = false ) {
 		$args = array(
-			'base_addon'       => $base_addon,
+			'component'        => $component,
 			'addon' 	       => $addon, 
 			'folder_name'      => 'search-forms', 
 			'template_name'    => $template_name,
 			'include_template' => $include
 		);
-		return GMW_Helper::get_template( $args );
+		return gmw_get_template( $args );
 	}
 
 	/**
@@ -687,15 +696,15 @@ function gmw_get_template( $addon = 'posts_locator', $template_type = 'search-fo
 	 * @param  string $base_path     [description]
 	 * @return [type]                [description]
 	 */
-	function gmw_get_search_results_template( $addon = 'posts_locator', $template_name = 'default', $base_addon = '', $include = false ) {
+	function gmw_get_search_results_template( $component = 'posts_locator', $template_name = 'default', $addon = '', $include = false ) {
 		$args = array(
-			'base_addon'       => $base_addon,
-			'addon' 	       => $addon, 
+			'component'        => $component,
+			'addon' 	       => $addon,
 			'folder_name'      => 'search-results', 
 			'template_name'    => $template_name,
 			'include_template' => $include
 		);
-		return GMW_Helper::get_template( $args );
+		return gmw_get_template( $args );
 	}
 
 	/**
@@ -705,16 +714,16 @@ function gmw_get_template( $addon = 'posts_locator', $template_type = 'search-fo
 	 * @param  string $base_path     [description]
 	 * @return [type]                [description]
 	 */
-	function gmw_get_info_window_template( $addon = 'posts_locator', $iw_type = 'popup', $template_name = 'default', $base_addon = '', $include = false ) {
+	function gmw_get_info_window_template( $component = 'posts_locator', $iw_type = 'popup', $template_name = 'default', $addon = '', $include = false ) {
 		$args = array(
-			'base_addon'       => $base_addon,
-			'addon' 	       => $addon, 
+			'component'        => $component,
+			'addon' 	       => $addon,
 			'folder_name'      => 'info-window', 
 			'iw_type'		   => $iw_type,
 			'template_name'    => $template_name,
 			'include_template' => $include
 		);
-		return GMW_Helper::get_template( $args );
+		return gmw_get_template( $args );
 	}
 
 /**
