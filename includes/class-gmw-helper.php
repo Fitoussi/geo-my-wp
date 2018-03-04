@@ -71,10 +71,10 @@ class GMW_Helper {
 	 *
 	 * @since 3.0
 	 * 
-	 * @param  string $addon       add-on's slug
+	 * @param  string $component   slug of the add-on/component the template file belongs to.
 	 * @param  string $folder_name folder name ( ex. search-results, search-forms... ). can also left blank if no inside any folder.
 	 * @param  string $iw_type     info-window type. Will be used when $folder_name is set to info-window
-	 * @param  string $base_addon  slug of base addon. Can be used when a single or multiple addons exist 
+	 * @param  string $addon       slug of the addon when different than the component's addon. Can be used when a single or multiple addons exist 
 	 *                             inside a another base addon. In this case the the sub-addons 
 	 *                             should be placed inside a "plugins" folder within the base add-on.
 	 *                             
@@ -83,9 +83,9 @@ class GMW_Helper {
 	public static function get_templates( $args = array() ) {
 		
 		$defaults = array(
-			'addon' 	  => 'posts_locator', 
-			'base_addon'  => '',
-			'folder_name' => 'search-forms', 
+			'component'   => 'posts_locator', 
+			'addon'  	  => '',
+			'folder_name' => '', 
 			'iw_type'     => 'popup'
 		);
 		
@@ -93,30 +93,25 @@ class GMW_Helper {
 		
 		extract( $args );
 
-		// abort if addon is inactive
-		if ( ! gmw_is_addon_active( $addon ) ) {
-			return array();
-		}
-
 		$themes = array();
 		$folder = ! empty( $folder_name ) ? $folder_name.'/' : '';
 			
 		// addon data
-		$addon_data    	  = gmw_get_addon_data( $addon );
-		$templates_folder = $addon_data['templates_folder'];
+		$component_data   = gmw_get_addon_data( $component );
+		$templates_folder = $component_data['templates_folder'];
 
 		// get plugin's template folders path
 		// if no based addon provided
-		if ( $base_addon == '' ) {
+		if ( $addon == '' || $addon == $component ) {
 
-			$ba_data = false;
-			$path 	 = $addon_data['plugin_dir'].'/templates/'.$folder;
+			$addon_data = false;
+			$path 	 	= $component_data['plugin_dir'].'/templates/'.$folder;
 
 		// with based addon
 		} else {
 			
-			$ba_data = gmw_get_addon_data( $base_addon );
-			$path 	 = $ba_data['plugin_dir'].'/plugins/'.$templates_folder.'/templates/'.$folder;
+			$addon_data = gmw_get_addon_data( $addon );
+			$path 	    = $addon_data['plugin_dir'].'/plugins/'.$templates_folder.'/templates/'.$folder;
 		}
 
 		// if this is info-window templates
@@ -128,10 +123,10 @@ class GMW_Helper {
 		}
 
 		// can modify the PATH of the custom template files.
-		$custom_path = apply_filters( 'gmw_get_templates_path', STYLESHEETPATH.'/geo-my-wp', $addon, $folder_name, $iw_type, $base_addon );
+		$custom_path = apply_filters( 'gmw_get_templates_path', STYLESHEETPATH.'/geo-my-wp', $component, $folder_name, $iw_type, $addon );
 
-		if ( $ba_data != false && ! empty( $ba_data['templates_folder'] ) ) {
-			$templates_folder .= '/'.$ba_data['templates_folder']; 
+		if ( $addon_data != false && ! empty( $addon_data['templates_folder'] ) ) {
+			$templates_folder .= '/'.$addon_data['templates_folder']; 
 		}
 
 		if ( $folder_name == 'info-window' ) {
@@ -163,23 +158,26 @@ class GMW_Helper {
 	 * Get template file and its stylesheet
 	 *
 	 * @since 3.0
+	 *
+	 * array(
+	 * 	 $component     the slug of the add-on/component which the template file belongs to.
+	 *   $base_addon    when an addon/component exists inside another addon ( ex. Posts Locator inside global maps ), we pass the slug of the base addon.
+	 * 	 $folder_name   folder name ( search-forms, search-results, info-window... ). can also left blank if not inside any folder.
+	 * 	 $iw_type       info-window type ( used when folder name is set to "info-window" ).
+	 * 	 $template_name template folder name ( ex. default );
+	 * );
 	 * 
-	 * @param  string $addon         the slug of the add-on which the template file belongs to.
-	 * @param  string $folder_name   folder name ( search-forms, search-results, info-window... ). can also left blank if not inside any folder.
-	 * @param  string $iw_type       info-window type ( used when folder name is set to "info-window" ).
-	 * @param  string $template_name template folder name ( ex. default );
-	 * @param  string $base_addon    when an addon exists inside another addon, we pass the slug of the main extension as base_addon.
 	 * @return 
 	 */
 	public static function get_template( $args = array() ) {
 
 		$defaults = array(
-			'addon' 	       => 'posts_locator', 
+			'component' 	   => 'posts_locator', 
+			'addon'       	   => '',
 			'folder_name'      => 'search-forms', 
 			'iw_type'          => 'popup', 
 			'template_name'    => 'default', 
 			'file_name'        => 'content.php', 
-			'base_addon'       => '',
 			'include_template' => false
 		);
 
@@ -187,13 +185,8 @@ class GMW_Helper {
 		
 		extract( $args );
 
-		// abort if addon is inactive 
-		if ( ! gmw_is_addon_active( $addon ) ) {
-			return false;
-		}
-
 		// get addon data
-		$addon_data = gmw_get_addon_data( $addon );
+		$component_data = gmw_get_addon_data( $component );
 
 		$output = array();
 
@@ -215,13 +208,13 @@ class GMW_Helper {
 			}
 		}
 
-		$prefix_handle = $base_addon == '' ? $addon_data['prefix'] : $base_addon.'-'.$addon_data['prefix'];
+		$prefix_handle = ( $addon == '' || $addon == $component ) ? $component_data['prefix'] : $addon.'-'.$component_data['prefix'];
 
 		// Get custom template and css from child/theme folder
 		if ( strpos( $template_name, 'custom_' ) !== false ) {
 
 			$template_name 	  = str_replace( 'custom_', '', $template_name );
-			$templates_folder = $addon_data['templates_folder'];
+			$templates_folder = $component_data['templates_folder'];
 
 			$output['stylesheet_handle'] = "gmw-{$prefix_handle}-{$folder_handle}custom-{$template_name}";
 			
@@ -231,14 +224,14 @@ class GMW_Helper {
 				'uri'  => get_stylesheet_directory_uri().'/geo-my-wp' 
 			);
 
-			$custom_path_uri = apply_filters( 'gmw_get_template_path_uri', $custom_path_uri, $addon, $folder_name, $iw_type, $template_name, $base_addon );
+			$custom_path_uri = apply_filters( 'gmw_get_template_path_uri', $custom_path_uri, $component, $folder_name, $iw_type, $template_name, $addon );
 
-			if ( $base_addon != '' ){
+			if ( $addon != '' && $addon != $component ){
 
-				$ba_data = gmw_get_addon_data( $base_addon );
+				$addon_data = gmw_get_addon_data( $addon );
 
-				if ( $ba_data != false && ! empty( $ba_data['templates_folder'] ) ) {
-					$templates_folder .= '/'.$ba_data['templates_folder']; 
+				if ( $addon_data != false && ! empty( $addon_data['templates_folder'] ) ) {
+					$templates_folder .= '/'.$addon_data['templates_folder']; 
 				}
 			}
 
@@ -271,16 +264,16 @@ class GMW_Helper {
 		// load template files from plugin's folder
 		} else {
 
-			if ( $base_addon == '' ) {	
+			if ( $addon == '' || $addon == $component ) {	
 
-				$plugin_url = $addon_data['plugin_url'];
-				$plugin_dir = $addon_data['plugin_dir'];
+				$plugin_url = $component_data['plugin_url'];
+				$plugin_dir = $component_data['plugin_dir'];
 
 			} else {
 
-				$base_addon = gmw_get_addon_data( $base_addon );
-				$plugin_url = $base_addon['plugin_url'].'/plugins/'.$addon_data['templates_folder'];
-				$plugin_dir = $base_addon['plugin_dir'].'/plugins/'.$addon_data['templates_folder'];
+				$addon 		= gmw_get_addon_data( $addon );
+				$plugin_url = $addon['plugin_url'].'/plugins/'.$component_data['templates_folder'];
+				$plugin_dir = $addon['plugin_dir'].'/plugins/'.$component_data['templates_folder'];
 			}
 
 			$output['stylesheet_handle'] = "gmw-{$prefix_handle}-{$folder_handle}{$template_name}";
