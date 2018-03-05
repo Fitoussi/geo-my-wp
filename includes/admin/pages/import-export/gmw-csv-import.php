@@ -19,15 +19,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 function gmw_csv_import( $file = false, $db_table = '' ) {
 
 	if ( ! ( bool ) apply_filters( 'gmw_csv_import_capability', current_user_can( 'manage_options' ) ) ) {
-		wp_die( __( 'You do not have permission to import data.', 'GMW' ), __( 'Error', 'GMW' ) );
+		wp_die( __( 'You do not have permission to import data.', 'geo-my-wp' ), __( 'Error', 'geo-my-wp' ) );
 	}
 
 	if ( empty( $file ) ) {
-		wp_die( __( 'Please upload a file to import', 'GMW' ) );
+		wp_die( __( 'Please upload a file to import', 'geo-my-wp' ) );
 	}
 
 	if ( empty( $db_table ) ) {
-		wp_die( __( 'You did not provide a database table name.', 'GMW' ) );
+		wp_die( __( 'You did not provide a database table name.', 'geo-my-wp' ) );
 	}
 
 	$row 	 = 0;
@@ -83,13 +83,13 @@ function gmw_csv_import( $file = false, $db_table = '' ) {
 
 	// if form table not exists create it
 	if ( count( $table_exists ) == 0 ) {
-		wp_die( __( "The database table {$table_name} not exist", 'GMW' ) );
+		wp_die( __( "The database table {$table_name} not exist", 'geo-my-wp' ) );
 	}
 
 	$columns_count = $wpdb->query( "describe {$table_name}" ); 
 
 	if ( $columns_count != count( $results[0] ) ) {
-		wp_die( __( "Columns in file do not match the database table.", 'GMW' ) );
+		wp_die( __( "Columns in file do not match the database table.", 'geo-my-wp' ) );
 	}
 	
 	// update data in database

@@ -37,7 +37,7 @@ class GMW_Members_Locator_Component extends BP_Component {
        
         parent::start(
             'gmw_locations',
-            __( 'Locations', 'GMW' ),
+            __( 'Locations', 'geo-my-wp' ),
             GMW_FL_PATH
         );
     }
@@ -72,7 +72,7 @@ class GMW_Members_Locator_Component extends BP_Component {
             'root_slug'             => isset( $bp->pages->{$this->id}->slug ) ? $bp->pages->{$this->id}->slug : $this->slug,
             'has_directory'         => false,
             'notification_callback' => false,
-            'search_string'         => __( 'Search Location...', 'GMW' )
+            'search_string'         => __( 'Search Location...', 'geo-my-wp' )
         );
 
         parent::setup_globals( $globals );
@@ -92,7 +92,7 @@ class GMW_Members_Locator_Component extends BP_Component {
 
             // Add 'location' to the main navigation
             $main_nav = apply_filters( 'gmw_fl_setup_nav', array(
-                'name'                => __( 'Location', 'GMW' ),
+                'name'                => __( 'Location', 'geo-my-wp' ),
                 'slug'                => $this->slug,
                 'position'            => 60,
                 'screen_function'     => 'gmw_fl_screen_display_location',
@@ -123,7 +123,7 @@ class GMW_Members_Locator_Component extends BP_Component {
             $wp_admin_nav[] = apply_filters( 'gmw_fl_setup_admin_bar', array(
                 'parent' => 'my-account-buddypress',
                 'id'     => 'my-account-'.$this->slug,
-                'title'  => __( 'Location', 'GMW' ),
+                'title'  => __( 'Location', 'geo-my-wp' ),
                 'href'   => $location_link
             ));
 
@@ -131,7 +131,7 @@ class GMW_Members_Locator_Component extends BP_Component {
             $wp_admin_nav[] = array(
                 'parent' => 'my-account-'.$this->slug,
                 'id'     => 'my-account-'.$this->slug . '-gmw-location',
-                'title'  => __( 'Update Location', 'GMW' ),
+                'title'  => __( 'Update Location', 'geo-my-wp' ),
                 'href'   => $location_link
             );
         }

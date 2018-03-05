@@ -13,7 +13,7 @@
 		<input type="text" class="<?php echo esc_attr( $field['class'] ); ?>" id="<?php echo esc_attr( $field['id'] ); ?>" placeholder="<?php echo esc_attr( $field['placeholder'] ); ?>" value="<?php echo esc_attr( sanitize_text_field( stripslashes( $field['value'] ) ) ); ?>" autocomplete="off" <?php echo esc_attr( $field['attributes'] ); ?> />
 
 		<!-- locator icon -->
-	    <i id="gmw-lf-locator-button" title="<?php _e( 'Get your current position', 'GMW' ); ?>" class="gmw-icon-target-light gmw-lf-locator-button"></i>
+	    <i id="gmw-lf-locator-button" title="<?php _e( 'Get your current position', 'geo-my-wp' ); ?>" class="gmw-icon-target-light gmw-lf-locator-button"></i>
 	    	
 	</div>
 	

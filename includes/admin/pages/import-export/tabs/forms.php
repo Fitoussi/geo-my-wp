@@ -25,13 +25,13 @@ function gmw_import_export_forms_tab() {
 				<div class="postbox ">
 		
 					<h3 class="hndle">
-						<span><?php _e( 'Export Forms', 'GMW' ); ?> </span>
+						<span><?php _e( 'Export Forms', 'geo-my-wp' ); ?> </span>
 					</h3>
 					
 					<div class="inside">
 				    
 					    <p>
-					    	<?php _e( 'Select the forms you would like to export then click the "Export" button to generate a .json file. You can use the file to import your forms back to this site or to another site running GEO my WP version 3.0 or higher.', 'GMW' ); ?>
+					    	<?php _e( 'Select the forms you would like to export then click the "Export" button to generate a .json file. You can use the file to import your forms back to this site or to another site running GEO my WP version 3.0 or higher.', 'geo-my-wp' ); ?>
 					    </p>
 					    
 					    <?php $forms = gmw_get_forms(); ?>
@@ -48,7 +48,7 @@ function gmw_import_export_forms_tab() {
 											checked="checked" 
 											onchange="if ( jQuery( this ).is( ':checked' ) ) { jQuery( this ).closest( 'form' ).find( '.cb-export-item' ).prop( 'checked', true ); } else { jQuery( this ).closest( 'form' ).find( '.cb-export-item' ).prop( 'checked', false ); }"
 										/>
-										<?php _e( 'All forms', 'GMW' ) ; ?>
+										<?php _e( 'All forms', 'geo-my-wp' ) ; ?>
 									</label>
 
 									<?php foreach ( $forms as $form_id => $values ) { ?>
@@ -77,14 +77,14 @@ function gmw_import_export_forms_tab() {
 									
 									<?php wp_nonce_field( 'gmw_export_forms_nonce', 'gmw_export_forms_nonce' ); ?>
 									
-									<?php submit_button( __( 'Export', 'GMW' ), 'secondary', 'submit', false, array( 
+									<?php submit_button( __( 'Export', 'geo-my-wp' ), 'secondary', 'submit', false, array( 
 											'onclick' => "if ( !jQuery('.cb-export-item').is(':checked') ) { alert( 'You must check at least one form that you would like to export.' ); return false; }" ) ); 
 									?>
 								</p>
 							</form>
 						<?php } else { ?>
 
-							<p><?php _e( 'There are no forms to export', 'GMW' ); ?></p>
+							<p><?php _e( 'There are no forms to export', 'geo-my-wp' ); ?></p>
 
 						<?php } ?>
 
@@ -105,13 +105,13 @@ function gmw_import_export_forms_tab() {
 				<div class="postbox ">
 		
 					<h3 class="hndle">
-						<span><?php _e( 'Import Forms', 'GMW' ); ?> </span>
+						<span><?php _e( 'Import Forms', 'geo-my-wp' ); ?> </span>
 					</h3>
 					
 					<div class="inside">
 				    
 					    <p>
-					    	<?php _e( 'Choose the .json file that you would like to import then click Import.', 'GMW' ); ?>
+					    	<?php _e( 'Choose the .json file that you would like to import then click Import.', 'geo-my-wp' ); ?>
 					    </p>
 					    
 					    <form method="post" enctype="multipart/form-data" action="<?php echo admin_url( 'admin.php?page=gmw-import-export&tab=forms' ); ?>">					
@@ -123,7 +123,7 @@ function gmw_import_export_forms_tab() {
 								
 								<?php wp_nonce_field( 'gmw_import_forms_nonce', 'gmw_import_forms_nonce' ); ?>
 								
-								<?php submit_button( __( 'Import', 'GMW' ), 'secondary', 'submit', false ); 
+								<?php submit_button( __( 'Import', 'geo-my-wp' ), 'secondary', 'submit', false ); 
 								?>
 							</p>
 						</form>
@@ -150,21 +150,21 @@ function gmw_export_forms() {
 
 	// make sure at lease one checkbox is checked
 	if ( empty( $_POST['export_forms'] ) ) {
-		wp_die( __( 'You must check at least one checkbox of a form that you would like to export.', 'GMW' ) );
+		wp_die( __( 'You must check at least one checkbox of a form that you would like to export.', 'geo-my-wp' ) );
 	}
 	 
 	// check for nonce
 	if ( empty( $_POST['gmw_export_forms_nonce'] ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'GMW' ) );
+		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
 	// varify nonce
 	if ( ! wp_verify_nonce( $_POST['gmw_export_forms_nonce'], 'gmw_export_forms_nonce' ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'GMW' ) );
+		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
  	
  	if ( ! function_exists( 'gmw_get_forms' ) ) {
- 		wp_die( __( 'gmw_get_forms function not exists.', 'GMW' ) );
+ 		wp_die( __( 'gmw_get_forms function not exists.', 'geo-my-wp' ) );
  		return;
  	}
 
@@ -172,7 +172,7 @@ function gmw_export_forms() {
 
  	if ( empty( $forms ) ) {
 
- 		wp_die( __( 'There are no forms to export.', 'GMW' ) );
+ 		wp_die( __( 'There are no forms to export.', 'geo-my-wp' ) );
  		
  		return;
  	}
@@ -215,17 +215,17 @@ function gmw_import_forms() {
 
 	// look for nonce
 	if ( empty( $_POST['gmw_import_forms_nonce'] ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'GMW' ) );
+		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
 	// varify nonce
 	if ( ! wp_verify_nonce( $_POST['gmw_import_forms_nonce'], 'gmw_import_forms_nonce' ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'GMW' ) );
+		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
  	
  	//make sure at least one checkbox is checked
 	if ( empty( $_FILES['import_file']['tmp_name'] ) ) {
-		wp_die( __( 'Please upload a file to import', 'GMW' ) );
+		wp_die( __( 'Please upload a file to import', 'geo-my-wp' ) );
 	}
 
 	// Retrieve the data from the file and convert the json object to an array
@@ -286,8 +286,8 @@ add_action( 'gmw_import_forms', 'gmw_import_forms' );
  */
 function gmw_import_export_forms_notices_messages( $messages ) {
 
-	$messages['no_forms_to_imported'] = __( 'There were no forms to import.', 'GMW' );
-	$messages['forms_imported'] 	  = __( 'Forms successfully imported.', 'GMW' );
+	$messages['no_forms_to_imported'] = __( 'There were no forms to import.', 'geo-my-wp' );
+	$messages['forms_imported'] 	  = __( 'Forms successfully imported.', 'geo-my-wp' );
 	
 	return $messages;
 }

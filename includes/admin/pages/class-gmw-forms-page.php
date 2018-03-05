@@ -40,12 +40,12 @@ class GMW_Forms_Page {
      */
     public function notices_messages( $messages ) {
     
-    	$messages['form_created'] 		 = __( 'Form successfully created.', 'GMW' );
-    	$messages['form_not_created'] 	 = __( 'There was an error while trying to create the new form.', 'GMW' );
-    	$messages['form_duplicated']     = __( 'Form successfully duplicated.', 'GMW' );
-    	$messages['form_not_duplicated'] = __( 'There was an error while trying to duplicate the form.', 'GMW' );
-    	$messages['form_deleted'] 		 = __( 'Form successfully deleted.', 'GMW' );
-    	$messages['form_not_deleted'] 	 = __( 'There was an error while trying to delete the form.', 'GMW' );
+    	$messages['form_created'] 		 = __( 'Form successfully created.', 'geo-my-wp' );
+    	$messages['form_not_created'] 	 = __( 'There was an error while trying to create the new form.', 'geo-my-wp' );
+    	$messages['form_duplicated']     = __( 'Form successfully duplicated.', 'geo-my-wp' );
+    	$messages['form_not_duplicated'] = __( 'There was an error while trying to duplicate the form.', 'geo-my-wp' );
+    	$messages['form_deleted'] 		 = __( 'Form successfully deleted.', 'geo-my-wp' );
+    	$messages['form_not_deleted'] 	 = __( 'There was an error while trying to delete the form.', 'geo-my-wp' );
 
     	return $messages;
     }
@@ -163,7 +163,7 @@ class GMW_Forms_Page {
         );
 
         if ( empty( $form ) ) {
-            wp_die( __( 'An error occurred while trying to retrieve the form.', 'GMW' ) );
+            wp_die( __( 'An error occurred while trying to retrieve the form.', 'geo-my-wp' ) );
         }
 
         //create new form in database
@@ -233,7 +233,7 @@ class GMW_Forms_Page {
 
         // run a quick security check
         if ( ! check_admin_referer( 'gmw_forms_page', 'gmw_forms_page' ) ) {
-            wp_die( __( 'Cheatin\' eh?!', 'GMW' ) );
+            wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
         }
 
         global $wpdb;
@@ -266,7 +266,7 @@ class GMW_Forms_Page {
      *  $buttons = array(
      *      'slug'       => 'posts',
      *      'addon'      => 'posts',
-     *      'name'       => __( 'Post Types ','GMW' ),
+     *      'name'       => __( 'Post Types ','geo-my-wp' ),
      *      'prefix'     => pt,
      *      'priority'   => 1
      *   );
@@ -283,11 +283,11 @@ class GMW_Forms_Page {
 
         if ( empty( $buttons ) ) {
 
-            $output .= '<option value="">'.__( 'Form buttons are not available', 'GMW' ).'</option>';
+            $output .= '<option value="">'.__( 'Form buttons are not available', 'geo-my-wp' ).'</option>';
 
         } else { 
             
-            $output .= '<option value="">'.__( 'Create new form', 'GMW' ).'</option>';
+            $output .= '<option value="">'.__( 'Create new form', 'geo-my-wp' ).'</option>';
 
             // Generate buttons
             foreach ( $buttons as $button ) {
@@ -325,7 +325,7 @@ class GMW_Forms_Page {
         <div class="wrap">
            <h2 class="gmw-wrap-top-h2">
                 <i class="gmw-icon-doc-text-inv"></i>
-                <?php echo _e( 'GEO my WP Forms', 'GMW' ); ?> 
+                <?php echo _e( 'GEO my WP Forms', 'geo-my-wp' ); ?> 
                 <?php echo self::new_form_buttons(); ?>
                 <?php gmw_admin_helpful_buttons(); ?>
             </h2>
@@ -348,13 +348,13 @@ class GMW_Forms_Page {
                                 
                                 <!-- bulk actions -->
                                 <select id="" class="" name="bulk_action">
-                                    <option value=""><?php _e( 'Bulk Actions', 'GMW' ); ?></option>
-                                    <option value="delete"><?php _e( 'Delete', 'GMW' ); ?></option>
+                                    <option value=""><?php _e( 'Bulk Actions', 'geo-my-wp' ); ?></option>
+                                    <option value="delete"><?php _e( 'Delete', 'geo-my-wp' ); ?></option>
                                 </select>
 
-                                <?php $delete_messages = __( 'This action cannot be undone. Would you like to proceed?', 'GMW' ) ; ?>
+                                <?php $delete_messages = __( 'This action cannot be undone. Would you like to proceed?', 'geo-my-wp' ) ; ?>
 
-                                <input type="submit" name="submit" onclick="return confirm( '<?php echo $delete_messages; ?>' );" value="<?php _e( 'Apply', 'GMW' ); ?>" class="button-secondary">
+                                <input type="submit" name="submit" onclick="return confirm( '<?php echo $delete_messages; ?>' );" value="<?php _e( 'Apply', 'geo-my-wp' ); ?>" class="button-secondary">
                             
                             <?php } ?>
                         </div>
@@ -365,11 +365,11 @@ class GMW_Forms_Page {
                             <th class="check-column"  style="width:2%;padding: 15px 3px 15px;">
                                 <input type="checkbox" id="" class="gmw-forms-select-all" title="gmw-forms-bulk-action">
                             </th>
-                            <th scope="col" id="id" class="manage-column"   style="width:3%;"><?php _e( 'ID', 'GMW' ); ?></th>
-                            <th scope="col" id="title" class="manage-column"  style="width:25%;"><?php _e( 'Form Title', 'GMW' ); ?></th>
-                            <th scope="col" id="type" class="manage-column"  style="width:25%;"><?php _e( 'Form Type', 'GMW' ); ?></th>
-                            <th scope="col" id="extension" class="manage-column"  style="width:25%;"><?php _e( 'Extension', 'GMW' ); ?></th> 
-                            <th scope="col" id="shortcode" class="manage-column" style="width:20%;"><?php _e( 'Shortcode', 'GMW' ); ?></th> 
+                            <th scope="col" id="id" class="manage-column"   style="width:3%;"><?php _e( 'ID', 'geo-my-wp' ); ?></th>
+                            <th scope="col" id="title" class="manage-column"  style="width:25%;"><?php _e( 'Form Title', 'geo-my-wp' ); ?></th>
+                            <th scope="col" id="type" class="manage-column"  style="width:25%;"><?php _e( 'Form Type', 'geo-my-wp' ); ?></th>
+                            <th scope="col" id="extension" class="manage-column"  style="width:25%;"><?php _e( 'Extension', 'geo-my-wp' ); ?></th> 
+                            <th scope="col" id="shortcode" class="manage-column" style="width:20%;"><?php _e( 'Shortcode', 'geo-my-wp' ); ?></th> 
                         </tr>
                     </thead>
 
@@ -401,21 +401,21 @@ class GMW_Forms_Page {
                                             <span>
                                                 <?php if ( gmw_is_addon_active( $form['addon'] ) ) { ?>
                                                     
-                                                    <strong><a class="row-title" title="<?php _e( 'Edit this form', 'GMW' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=edit_form&form_id='.$form['ID'].'&slug='.$form['slug'].'&prefix='.$form['prefix'] ); ?>"><?php echo esc_html( $formName ); ?></a></strong>
+                                                    <strong><a class="row-title" title="<?php _e( 'Edit this form', 'geo-my-wp' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=edit_form&form_id='.$form['ID'].'&slug='.$form['slug'].'&prefix='.$form['prefix'] ); ?>"><?php echo esc_html( $formName ); ?></a></strong>
                                                     
                                                     <div class="row-actions">
                                                                                                         
                                                         <span class="edit">
-                                                            <a title="<?php _e( 'Edit form', 'GMW' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=edit_form&form_id='.$form['ID'].'&slug='.$form['slug'].'&prefix='.$form['prefix'] ); ?>"><?php _e( 'Edit', 'GMW' ); ?></a> | 
+                                                            <a title="<?php _e( 'Edit form', 'geo-my-wp' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=edit_form&form_id='.$form['ID'].'&slug='.$form['slug'].'&prefix='.$form['prefix'] ); ?>"><?php _e( 'Edit', 'geo-my-wp' ); ?></a> | 
                                                         </span>
                                                         <span class="duplicate">
-                                                            <a title="<?php _e( 'Duplicate form', 'GMW' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=duplicate_form&slug='.$form['slug'].'&form_id='.$form['ID'] ); ?>"><?php _e( 'Duplicate', 'GMW' ); ?></a> | 
+                                                            <a title="<?php _e( 'Duplicate form', 'geo-my-wp' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=duplicate_form&slug='.$form['slug'].'&form_id='.$form['ID'] ); ?>"><?php _e( 'Duplicate', 'geo-my-wp' ); ?></a> | 
                                                         </span>
                                                         <span class="delete">
 
-                                                            <?php $delete_message = __( 'This action cannot be undone. Would you like to proceed?', 'GMW' ) ; ?>
+                                                            <?php $delete_message = __( 'This action cannot be undone. Would you like to proceed?', 'geo-my-wp' ) ; ?>
 
-                                                            <a title="<?php _e( 'Delete form', 'GMW' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=delete_form&form_id='.$form['ID'] ); ?>" onclick="return confirm( '<?php echo $delete_message; ?>' ); "><?php _e( 'Delete', 'GMW' ); ?></a>                                                    
+                                                            <a title="<?php _e( 'Delete form', 'geo-my-wp' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=delete_form&form_id='.$form['ID'] ); ?>" onclick="return confirm( '<?php echo $delete_message; ?>' ); "><?php _e( 'Delete', 'geo-my-wp' ); ?></a>                                                    
                                                         </span> 
                                                     </div>
 
@@ -424,7 +424,7 @@ class GMW_Forms_Page {
                                                     <strong class="row-title"><?php echo esc_attr( $formName ); ?></strong>
                                                     <div class="row-actions">
                                                         <span style="color:#444">
-                                                            <?php _e( 'Extension deactivated.', 'GMW' ); ?></em> <a href="<?php echo esc_url( 'admin.php?page=gmw-extensions' ); ?>"><?php _e( 'Manage extensions', 'GMW' ); ?></a>
+                                                            <?php _e( 'Extension deactivated.', 'geo-my-wp' ); ?></em> <a href="<?php echo esc_url( 'admin.php?page=gmw-extensions' ); ?>"><?php _e( 'Manage extensions', 'geo-my-wp' ); ?></a>
                                                         </span>
                                                     </div>
 
@@ -457,7 +457,7 @@ class GMW_Forms_Page {
                                 <td>
                                 </td>
                                 <td>
-                                    <span><?php _e( 'No forms found.', 'GMW' ); ?></span>
+                                    <span><?php _e( 'No forms found.', 'geo-my-wp' ); ?></span>
                                 </td>
                                 <td class="column-title" style="padding: 5px 0px;"></td>
                                 <td></td>
@@ -472,11 +472,11 @@ class GMW_Forms_Page {
 	                <tfoot>
 	                    <tr>   
                             <th class="check-column" style="width: 2%;padding: 15px 3px 15px;"><input type="checkbox" id="" class="gmw-forms-select-all" title="gmw-forms-bulk-action"></th>
-	                        <th scope="col" id="id" class="manage-column" style="width: 3%;"><?php _e( 'ID', 'GMW' ); ?></th>
-                            <th scope="col" id="title" class="manage-column"><?php _e( 'Form Title', 'GMW' ); ?></th>
-	                        <th scope="col" id="type" class="manage-column"><?php _e( 'Form Type', 'GMW' ); ?></th>
-                            <th scope="col" id="extension" class="manage-column"><?php _e( 'Extension', 'GMW' ); ?></th>  
-                            <th scope="col" id="shortcode" class="manage-column"><?php _e( 'Shortcode', 'GMW' ); ?></th> 
+	                        <th scope="col" id="id" class="manage-column" style="width: 3%;"><?php _e( 'ID', 'geo-my-wp' ); ?></th>
+                            <th scope="col" id="title" class="manage-column"><?php _e( 'Form Title', 'geo-my-wp' ); ?></th>
+	                        <th scope="col" id="type" class="manage-column"><?php _e( 'Form Type', 'geo-my-wp' ); ?></th>
+                            <th scope="col" id="extension" class="manage-column"><?php _e( 'Extension', 'geo-my-wp' ); ?></th>  
+                            <th scope="col" id="shortcode" class="manage-column"><?php _e( 'Shortcode', 'geo-my-wp' ); ?></th> 
 	                    </tr>
 	                </tfoot> 
 

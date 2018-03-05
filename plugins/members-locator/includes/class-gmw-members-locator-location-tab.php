@@ -47,7 +47,7 @@ class GMW_Members_Locator_Location_Tab {
 	        $wp_admin_nav[] = apply_filters( 'gmw_fl_setup_admin_bar', array(
 	    		'parent' => 'my-account-buddypress',
 	    		'id'     => 'my-account-gmw-'.$this->slug,
-	    		'title'  => __( 'Location', 'GMW' ),
+	    		'title'  => __( 'Location', 'geo-my-wp' ),
 	    		'href'   => $location_link
 	        ));
 
@@ -55,7 +55,7 @@ class GMW_Members_Locator_Location_Tab {
 	        $wp_admin_nav[] = array(
 	    		'parent' => 'my-account-gmw-'.$this->slug,
 	    		'id'     => 'my-account-gmw-update-'.$this->slug,
-	    		'title'  => __( 'Update Location', 'GMW' ),
+	    		'title'  => __( 'Update Location', 'geo-my-wp' ),
 	    		'href'   => $location_link
 	        );
 	    }
@@ -92,7 +92,7 @@ class GMW_Members_Locator_Location_Tab {
 	public function location_tab() {
 		
 		bp_core_new_nav_item( apply_filters( 'gmw_fl_setup_nav', array(
-			'name'                  => __( 'Location', 'GMW' ),
+			'name'                  => __( 'Location', 'geo-my-wp' ),
 			'slug'                  => $this->slug,
 			'screen_function'       => array( $this, 'screen_display' ),			
 			'position'              => 20,

@@ -29,8 +29,8 @@ class GMW_Members_Locator_Form extends GMW_Form {
      */
     public function results_message_placeholders() { 
         return array(
-            'count_message'  => __( 'Viewing {from_count} - {to_count} of {total_results} members', 'GMW' ),
-            'radius_message' => __( ' within {radius} {units} from {address}', 'GMW' )
+            'count_message'  => __( 'Viewing {from_count} - {to_count} of {total_results} members', 'geo-my-wp' ),
+            'radius_message' => __( ' within {radius} {units} from {address}', 'geo-my-wp' )
         );
     }
 

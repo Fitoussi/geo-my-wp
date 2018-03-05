@@ -1076,7 +1076,7 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 					$location .= '<span class="gmw-cl-title">'.$title.'</span>';
 				}
 				 
-				$location .= '<span class="gmw-cl-location"><a href="#" class="gmw-cl-form-trigger" title="' . __( 'Your Current Location', 'GMW' ) . '">'.implode(' ', $userAddress) . '</a></span>';
+				$location .= '<span class="gmw-cl-location"><a href="#" class="gmw-cl-form-trigger" title="' . __( 'Your Current Location', 'geo-my-wp' ) . '">'.implode(' ', $userAddress) . '</a></span>';
 				$location .= '</div>';
 
 				if ( $map == 1 ) {
@@ -1175,11 +1175,11 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 	    	$template .= 	'<span id="gmw-cl-close-btn">X</span>';
 	    	$template .= 	'<form id="gmw-cl-form" name="gmw_cl_form" onsubmit="return false">';
 	    	$template .= 		'<div id="gmw-cl-info-wrapper">';
-	    	$template .= 			'<div id="gmw-cl-location-message">' . __('- Enter Your Location -', 'GMW') . '</div>';
+	    	$template .= 			'<div id="gmw-cl-location-message">' . __('- Enter Your Location -', 'geo-my-wp') . '</div>';
 	    	$template .= 			'<div id="gmw-cl-input-fields"><input type="text" name="gmw-cl_address" id="gmw-cl-address" value="" placeholder="zipcode or full address..." /><input id="gmw-cl-submit-address" type="submit" value="go" /></div>';
 	    	$template .= 			'<div> - or - </div>';
 	    	$template .= 			'<div id="gmw-cl-get-location"><a href="#" id="gmw-cl-trigger" >';
-	    	$template .= 				__('Get your current location', 'GMW');
+	    	$template .= 				__('Get your current location', 'geo-my-wp');
 	    	$template .= 			'</a></div>';
 	    	$template .= 		'</div>';
 	    	$template .=		'<div id="gmw-cl-respond-wrapper" style="display:none;">';
@@ -1231,8 +1231,8 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 		function __construct() {
 			parent::__construct(
 					'gmw_current_location_widget', // Base ID
-					__('GMW Current Location', 'GMW'), // Name
-					array('description' => __('Get/display the user\'s current location', 'GMW'),) // Args
+					__('GMW Current Location', 'geo-my-wp'), // Name
+					array('description' => __('Get/display the user\'s current location', 'geo-my-wp'),) // Args
 			);
 		}
 
@@ -1331,8 +1331,8 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 		function form( $instance ) {
 
 			$defaults = array(
-					'widget_title'   		=> __('Current Location', 'GMW'),
-					'title_location' 		=> __('Your Location', 'GMW'),
+					'widget_title'   		=> __('Current Location', 'geo-my-wp'),
+					'title_location' 		=> __('Your Location', 'geo-my-wp'),
 					'display_by'     		=> 'city,country',
 					'name_guest'     		=> 1,
 					'user_message' 			=> 'Hello',
@@ -1359,78 +1359,78 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 			?>
 
 	        <p>
-	            <label><?php echo esc_attr( __( "Widget's Title", 'GMW' ) ); ?>:</label>     
+	            <label><?php echo esc_attr( __( "Widget's Title", 'geo-my-wp' ) ); ?>:</label>     
 	            <input type="text" name="<?php echo $this->get_field_name('widget_title'); ?>" value="<?php if ( isset( $instance['widget_title'] ) ) echo $instance['widget_title']; ?>" class="widefat" />
 	        </p>
 	        <p>
-	            <label><?php echo esc_attr( __( 'Location Title', 'GMW' ) ); ?>:</label>
+	            <label><?php echo esc_attr( __( 'Location Title', 'geo-my-wp' ) ); ?>:</label>
 	            <input type="text" name="<?php echo $this->get_field_name('title_location'); ?>" value="<?php if (isset($instance['title_location'])) echo $instance['title_location']; ?>" class="widefat" />
 	            <em style="font-size:12px;color:#777;display:block;margin:5px 0px;">
-	            	<?php _e( "The title that will be displayed before the location. For example Your location...", 'GMW' ); ?>
+	            	<?php _e( "The title that will be displayed before the location. For example Your location...", 'geo-my-wp' ); ?>
 	            </em>
 	        </p>
 	         <p>
 	            <label><?php echo esc_attr(__( 'Display Location:' ) ); ?></label><br />
 	            <em style="font-size:12px;color:#777;display:block;margin:5px 0px;">
-	            	<?php _e( "The address fields to be displayed.", 'GMW' ); ?>
+	            	<?php _e( "The address fields to be displayed.", 'geo-my-wp' ); ?>
 	            </em>
-	            <input type="checkbox" value="street"  name="<?php echo $this->get_field_name('display_by'); ?>[]" <?php if (isset($instance['display_by']) && in_array('street', $instance['display_by'])) echo 'checked="checked"'; ?> class="checkbox" /><label><?php _e('Street', 'GMW'); ?></label><br />
-	            <input type="checkbox" value="city"    name="<?php echo $this->get_field_name('display_by'); ?>[]" <?php if (isset($instance['display_by']) && in_array('city', $instance['display_by'])) echo 'checked="checked"'; ?> class="checkbox" /><label><?php _e('City', 'GMW'); ?></label><br />
-	            <input type="checkbox" value="state"   name="<?php echo $this->get_field_name('display_by'); ?>[]" <?php if (isset($instance['display_by']) && in_array('state', $instance['display_by'])) echo 'checked="checked"'; ?> class="checkbox" /><label><?php _e('State', 'GMW'); ?></label><br />
-	            <input type="checkbox" value="zipcode" name="<?php echo $this->get_field_name('display_by'); ?>[]" <?php if (isset($instance['display_by']) && in_array('zipcode', $instance['display_by'])) echo 'checked="checked"'; ?> class="checkbox" /><label><?php _e('Zipcode', 'GMW'); ?></label><br />
-	            <input type="checkbox" value="country" name="<?php echo $this->get_field_name('display_by'); ?>[]" <?php if (isset($instance['display_by']) && in_array('country', $instance['display_by'])) echo 'checked="checked"'; ?> class="checkbox" /><label><?php _e('Country', 'GMW'); ?></label><br />
+	            <input type="checkbox" value="street"  name="<?php echo $this->get_field_name('display_by'); ?>[]" <?php if (isset($instance['display_by']) && in_array('street', $instance['display_by'])) echo 'checked="checked"'; ?> class="checkbox" /><label><?php _e('Street', 'geo-my-wp'); ?></label><br />
+	            <input type="checkbox" value="city"    name="<?php echo $this->get_field_name('display_by'); ?>[]" <?php if (isset($instance['display_by']) && in_array('city', $instance['display_by'])) echo 'checked="checked"'; ?> class="checkbox" /><label><?php _e('City', 'geo-my-wp'); ?></label><br />
+	            <input type="checkbox" value="state"   name="<?php echo $this->get_field_name('display_by'); ?>[]" <?php if (isset($instance['display_by']) && in_array('state', $instance['display_by'])) echo 'checked="checked"'; ?> class="checkbox" /><label><?php _e('State', 'geo-my-wp'); ?></label><br />
+	            <input type="checkbox" value="zipcode" name="<?php echo $this->get_field_name('display_by'); ?>[]" <?php if (isset($instance['display_by']) && in_array('zipcode', $instance['display_by'])) echo 'checked="checked"'; ?> class="checkbox" /><label><?php _e('Zipcode', 'geo-my-wp'); ?></label><br />
+	            <input type="checkbox" value="country" name="<?php echo $this->get_field_name('display_by'); ?>[]" <?php if (isset($instance['display_by']) && in_array('country', $instance['display_by'])) echo 'checked="checked"'; ?> class="checkbox" /><label><?php _e('Country', 'geo-my-wp'); ?></label><br />
 	        </p>
 	        <p>
 	        	<input type="checkbox" value="1" name="<?php echo $this->get_field_name('name_guest'); ?>" <?php if ( isset( $instance["name_guest"] ) ) echo 'checked="checked"'; ?> class="checkbox" />
-	            <label><?php echo esc_attr( __( 'Display guest/User Name', 'GMW' ) ); ?></label>
+	            <label><?php echo esc_attr( __( 'Display guest/User Name', 'geo-my-wp' ) ); ?></label>
 	            <em style="font-size:12px;color:#777;display:block;margin:5px 0px;">
-	            	<?php _e( "Display greeting with \"guest\" or user name before the location.", 'GMW' ); ?>
+	            	<?php _e( "Display greeting with \"guest\" or user name before the location.", 'geo-my-wp' ); ?>
 	            </em>
 	        </p>      
 	         <p>
-	            <label><?php echo esc_attr( __( 'Greeting message ( logged in users )', 'GMW' ) ); ?>:</label>
+	            <label><?php echo esc_attr( __( 'Greeting message ( logged in users )', 'geo-my-wp' ) ); ?>:</label>
 	            <input type="text" name="<?php echo $this->get_field_name('user_message'); ?>" value="<?php if ( isset($instance['user_message'] ) ) echo $instance['user_message']; ?>" class="widefat" />
 	            <em style="font-size:12px;color:#777;display:block;margin:5px 0px;">
-	            	<?php _e( "Text that will be displayed before the user name. For example \"Hello username\" ( requires the Display guest/User Name chekbox to be checked ).", 'GMW' ); ?>
+	            	<?php _e( "Text that will be displayed before the user name. For example \"Hello username\" ( requires the Display guest/User Name chekbox to be checked ).", 'geo-my-wp' ); ?>
 	            </em>           
 	        </p>    
 	        <p>
-	            <label><?php echo esc_attr( __( 'Greeting message ( guests )', 'GMW' ) ); ?>:</label>
+	            <label><?php echo esc_attr( __( 'Greeting message ( guests )', 'geo-my-wp' ) ); ?>:</label>
 	            <input type="text" name="<?php echo $this->get_field_name('guest_message'); ?>" value="<?php if ( isset( $instance['guest_message'])) echo $instance['guest_message']; ?>" class="widefat" />
 	            <em style="font-size:12px;color:#777;display:block;margin:5px 0px;">
-	            	<?php _e( "Text that will be displayed when user is not looged in. for example \"Hello Guest\" ( requires the Display guest/User Name chekbox to be checked ).", 'GMW' ); ?>
+	            	<?php _e( "Text that will be displayed when user is not looged in. for example \"Hello Guest\" ( requires the Display guest/User Name chekbox to be checked ).", 'geo-my-wp' ); ?>
 	            </em>
 	        </p>          
 	        <p>
 	        	<input type="checkbox" value="1" name="<?php echo $this->get_field_name('map'); ?>" <?php if ( isset( $instance["map"] ) ) echo 'checked="checked"'; ?> class="checkbox" />
-	            <label><?php echo esc_attr( __( 'Display Google Map', 'GMW' ) ); ?></label>
+	            <label><?php echo esc_attr( __( 'Display Google Map', 'geo-my-wp' ) ); ?></label>
 	            <em style="font-size:12px;color:#777;display:block;margin:5px 0px;">
-	            	<?php _e( "Display Google map showing the user's location.", 'GMW' ); ?>
+	            	<?php _e( "Display Google map showing the user's location.", 'geo-my-wp' ); ?>
 	            </em>
 	        </p>       
 	        <p>
-	            <label><?php echo esc_attr( __( 'Map Height', 'GMW') ); ?>:</label>
+	            <label><?php echo esc_attr( __( 'Map Height', 'geo-my-wp') ); ?>:</label>
 	            <input type="text" name="<?php echo $this->get_field_name( 'map_height' ); ?>" value="<?php if ( isset( $instance['map_height'] ) ) echo $instance['map_height']; ?>" class="widefat" />
 	            <em style="font-size:12px;color:#777;display:block;margin:5px 0px;">
-	            	<?php _e( "Set the map height in pixels or percentage ( ex. 250px ).", 'GMW' ); ?>
+	            	<?php _e( "Set the map height in pixels or percentage ( ex. 250px ).", 'geo-my-wp' ); ?>
 	            </em>
 	        </p>
 	        <p>
-	            <label><?php echo esc_attr( __( 'Map Width', 'GMW') ); ?>:</label>
+	            <label><?php echo esc_attr( __( 'Map Width', 'geo-my-wp') ); ?>:</label>
 	            <input type="text" name="<?php echo $this->get_field_name( 'map_width' ); ?>" value="<?php if ( isset( $instance['map_width'] ) ) echo $instance['map_width']; ?>" class="widefat" />
 	            <em style="font-size:12px;color:#777;display:block;margin:5px 0px;">
-	            	<?php _e( "Set the map width in pixels or percentage ( ex. 100% ).", 'GMW' ); ?>
+	            	<?php _e( "Set the map width in pixels or percentage ( ex. 100% ).", 'geo-my-wp' ); ?>
 	            </em>
 	        </p> 
 	        <p>
-	            <label><?php echo esc_attr( __( 'Map Marker', 'GMW') ); ?>:</label>
+	            <label><?php echo esc_attr( __( 'Map Marker', 'geo-my-wp') ); ?>:</label>
 	            <input type="text" name="<?php echo $this->get_field_name( 'map_marker' ); ?>" value="<?php echo ( !empty( $instance['map_marker'] ) ) ? $instance['map_marker'] : 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'; ?>" class="widefat" />
 	        	<em style="font-size:12px;color:#777;display:block;margin:5px 0px;">
-	            	<?php _e( "Link to the image that will be used as the map marker.", 'GMW' ); ?>
+	            	<?php _e( "Link to the image that will be used as the map marker.", 'geo-my-wp' ); ?>
 	            </em>  
 	        </p>       
 	        <p>
-	            <label><?php echo _e( 'Map Type', 'GMW'); ?>:</label>
+	            <label><?php echo _e( 'Map Type', 'geo-my-wp'); ?>:</label>
 	            <select name="<?php echo $this->get_field_name( 'map_type' ); ?>">
 	        		<option value="ROADMAP"   <?php if ( isset( $instance['map_type'] ) && $instance['map_type'] == "ROADMAP" ) echo 'selected="selected"'; ?>>ROADMAP</options>
 	        		<option value="SATELLITE" <?php if ( isset( $instance['map_type'] ) && $instance['map_type'] == "SATELLITE" ) echo 'selected="selected"'; ?> >SATELLITE</options>
@@ -1439,7 +1439,7 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 	            </select>
 	        </p>       
 	         <p>
-	            <label><?php echo _e( 'Zoom Level', 'GMW' ); ?>:</label>
+	            <label><?php echo _e( 'Zoom Level', 'geo-my-wp' ); ?>:</label>
 	            <select name="<?php echo $this->get_field_name('zoom_level'); ?>">
 	        	<?php for ($i = 1; $i < 18; $i++): ?>
 	            	<option value="<?php echo $i; ?> " <?php if (isset($instance['zoom_level']) && $instance['zoom_level'] == $i) echo "selected"; ?>><?php echo $i; ?></option>
@@ -1448,9 +1448,9 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 	        </p>
 	        <p>
 	        	<input type="checkbox" value="1" name="<?php echo $this->get_field_name('scrollwheel'); ?>" <?php if ( isset( $instance["scrollwheel"] ) ) echo 'checked="checked"'; ?> class="checkbox" />
-	            <label><?php echo esc_attr( __( 'ScrollWheel Enabled', 'GMW' ) ); ?></label>       
+	            <label><?php echo esc_attr( __( 'ScrollWheel Enabled', 'geo-my-wp' ) ); ?></label>       
 	        	<em style="font-size:12px;color:#777;display:block;margin:5px 0px;">
-	            	<?php _e( "When enabled the map will zoom in/out using the mouse scrollwheel.", 'GMW' ); ?>
+	            	<?php _e( "When enabled the map will zoom in/out using the mouse scrollwheel.", 'geo-my-wp' ); ?>
 	            </em> 
 	        </p>
 	        <?php
@@ -1499,7 +1499,7 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 	    							'info_window'	  => 1,
 	    							'show_info'		  => 1,
 	    							'ul_marker'   	  => 1,
-	    							'ul_message'	  => __( 'Your Location', 'GMW' ),
+	    							'ul_message'	  => __( 'Your Location', 'geo-my-wp' ),
 	    					), $args )
 	    	);
 
@@ -1560,7 +1560,7 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 		        	$units_name		= 'mi';
 		        } 
 
-		        $location_distance = '<div class="distance-wrapper"><p>'.__( 'Distance:','GMW' ). ' '. round( $distance_value, 2 ) .' '.$units_name.'</p></div>';
+		        $location_distance = '<div class="distance-wrapper"><p>'.__( 'Distance:','geo-my-wp' ). ' '. round( $distance_value, 2 ) .' '.$units_name.'</p></div>';
 	        }
 	        
 	        $location_map = '';
@@ -1587,10 +1587,10 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 	            $location_directions .= 		'<form action="https://maps.google.com/maps" method="get" target="_blank">';
 	            $location_directions .= 			'<input type="text" size="35" name="saddr" value="'. esc_attr( $your_address ).'" placeholder="Your location" />';
 	            $location_directions .= 			'<input type="hidden" name="daddr" value="' . esc_attr( $post_info->address ) . '" />';
-	            $location_directions .= 			'<input type="submit" class="button" value="' . __( 'GO', 'GMW' ) . '" />';
+	            $location_directions .= 			'<input type="submit" class="button" value="' . __( 'GO', 'geo-my-wp' ) . '" />';
 	            $location_directions .= 		'</form>';
 	            $location_directions .= 	'</div>';
-	            $location_directions .= 	'<a href="#" id="single-post-trigger-' . $element_id . '"  class="single-post-trigger">' . __( 'Get Directions', 'GMW' ) . '</a>';
+	            $location_directions .= 	'<a href="#" id="single-post-trigger-' . $element_id . '"  class="single-post-trigger">' . __( 'Get Directions', 'geo-my-wp' ) . '</a>';
 	            $location_directions .= '</div>';
 	    	}
 			
@@ -1608,31 +1608,31 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 	            $post_address = ( !empty( $post_info->formatted_address ) ) ? esc_attr( $post_info->formatted_address ) : esc_attr( $post->address );
 	            
 	            if ( in_array( 'address', $additional_info ) && !empty( $post_address ) ) {
-	                $location_info .= '<div class="gmw-address"><span>' . __( 'Address: ', 'GMW' );
+	                $location_info .= '<div class="gmw-address"><span>' . __( 'Address: ', 'geo-my-wp' );
 	                $location_info .= '</span>';
-	                $location_info .= ( !empty( $post_info->formatted_address ) ) ? esc_attr( $post_info->formatted_address ) : __( 'N/A', 'GMW' );
+	                $location_info .= ( !empty( $post_info->formatted_address ) ) ? esc_attr( $post_info->formatted_address ) : __( 'N/A', 'geo-my-wp' );
 	                $location_info .= '</div>';
 	            }
 	            if ( in_array( 'phone', $additional_info ) && !empty( $post_info->phone ) ) {
-	                $location_info .= '<div class="gmw-phone"><span>' . __( 'Phone: ', 'GMW' );
+	                $location_info .= '<div class="gmw-phone"><span>' . __( 'Phone: ', 'geo-my-wp' );
 	                $location_info .= '</span>';
-	                $location_info .= ( !empty( $post_info->phone ) ) ? esc_attr( $post_info->phone ) : __( 'N/A', 'GMW' );
+	                $location_info .= ( !empty( $post_info->phone ) ) ? esc_attr( $post_info->phone ) : __( 'N/A', 'geo-my-wp' );
 	                $location_info .= '</div>';
 	            }
 	            if ( in_array( 'fax', $additional_info ) && !empty( $post_info->fax ) ) {
-	                $location_info .= '<div class="gmw-fax"><span>' . __( 'Fax: ', 'GMW' );
+	                $location_info .= '<div class="gmw-fax"><span>' . __( 'Fax: ', 'geo-my-wp' );
 	                $location_info .= '</span>';
-	                $location_info .= ( !empty( $post_info->fax ) ) ? esc_attr( $post_info->fax ) : __( 'N/A', 'GMW' );
+	                $location_info .= ( !empty( $post_info->fax ) ) ? esc_attr( $post_info->fax ) : __( 'N/A', 'geo-my-wp' );
 	                $location_info .= '</div>';
 	            }
 	            if ( in_array( 'email', $additional_info ) && !empty( $post_info->email ) ) {
-	                $location_info .= '<div class="gmw-email"><span>' . __( 'Email: ', 'GMW' );
+	                $location_info .= '<div class="gmw-email"><span>' . __( 'Email: ', 'geo-my-wp' );
 	                $location_info .= '</span>';
-	                $location_info .= ( !empty( $post_info->email ) ) ? '<a href="mailto:' . esc_attr( $post_info->email ) . ' ">' . esc_attr( $post_info->email ) . '</a>' : __( 'N/A', 'GMW' );
+	                $location_info .= ( !empty( $post_info->email ) ) ? '<a href="mailto:' . esc_attr( $post_info->email ) . ' ">' . esc_attr( $post_info->email ) . '</a>' : __( 'N/A', 'geo-my-wp' );
 	                $location_info .= '</div>';
 	            }
 	            if ( in_array( 'website', $additional_info ) && !empty( $post_info->website ) ) {
-	                $location_info .= '<div class="gmw-website"><span>' . __( 'Website: ', 'GMW' );
+	                $location_info .= '<div class="gmw-website"><span>' . __( 'Website: ', 'geo-my-wp' );
 	                $location_info .= '</span>';
 	                $location_info .= ( !empty( $post_info->website ) ) ? '<a href="http://' . esc_attr( $post_info->website ) . '" target="_blank">' . esc_attr( $post_info->website ) . '</a>' : "N/A";
 	                $location_info .= '</div>';
@@ -1808,7 +1808,7 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 			$member_map .= '</div>'; // map wrapper //
 
 			if ( isset( $address_fields ) && !empty( $address_fields ) && $address_fields != 0 ) {
-				$member_map .= '<div class="address-wrapper"><span>' . __('Address: ', 'GMW') . '</span>' . $show_address . '</div>';
+				$member_map .= '<div class="address-wrapper"><span>' . __('Address: ', 'geo-my-wp') . '</span>' . $show_address . '</div>';
 			}
 
 			if ($directions == 1) {
@@ -1817,10 +1817,10 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 				$member_map .= 			'<form action="https://maps.google.com/maps" method="get" target="_blank">';
 				$member_map .= 				'<input type="text" name="saddr" />';
 				$member_map .= 				'<input type="hidden" name="daddr" value="' . $show_address . '" /><br />';
-				$member_map .= 				'<input type="submit" class="button" value="' . __('Go', 'GMW') . '" />';
+				$member_map .= 				'<input type="submit" class="button" value="' . __('Go', 'geo-my-wp') . '" />';
 				$member_map .= 			'</form>';
 				$member_map .= 		'</div>';
-				$member_map .= 		'<span><a href="#" class="single-member-toggle" id="single-member-toggle-' . $scID . '">' . __('Get Directions', 'GMW') . '</a></span>';
+				$member_map .= 		'<span><a href="#" class="single-member-toggle" id="single-member-toggle-' . $scID . '">' . __('Get Directions', 'geo-my-wp') . '</a></span>';
 				$member_map .= '</div>';
 			}
 
@@ -1857,7 +1857,7 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 	        <?php
 	        return apply_filters( 'gmw_fl_single_member_location', $member_map, $member_info );
 	    } elseif ( isset( $no_location ) ) {
-	        return apply_filters('gmw_fl_no_location_message', bp_core_get_user_displayname($member_id) . __(' has not added a location yet', 'GMW'), $member_id);
+	        return apply_filters('gmw_fl_no_location_message', bp_core_get_user_displayname($member_id) . __(' has not added a location yet', 'geo-my-wp'), $member_id);
 	    }
 	}
 	//add_shortcode( 'gmw_member_location', 'gmw_member_location' );

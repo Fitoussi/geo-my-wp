@@ -276,22 +276,22 @@ class GMW_Location_Form {
     public function action_messages() {
 
     	return apply_filters( 'gmw_lf_form_messages', array(
-    		'confirming_location' 	=> __( 'Comnfirming Location...', 'GMW' ),
-    		'location_exists' 		=> __( 'Location confirmed', 'GMW' ),
-    		'location_not_exists'  	=> __( 'No location found', 'GMW' ),
-    		'location_changed' 	 	=> __( 'Location changed', 'GMW' ),
-    		'location_saved' 	 	=> __( 'Location updated!', 'GMW' ),
-    		'location_not_saved' 	=> __( 'There was a problem saving your location. Please try again.', 'GMW' ),
-    		'location_deleted' 	 	=> __( 'Location deleted!', 'GMW' ),
-    		'location_not_deleted'	=> __( 'There was a problem deleting your location. Please try again.', 'GMW' ),
-    		'location_found' 		=> __( 'Location found!', 'GMW' ),
-    		'geocoder_failed' 		=> __( 'We were unable to retrieve your location. Please enter a valid address or coordinates.', 'GMW' ),
-    		'location_blank' 		=> __( 'No location entered.', 'GMW' ),
-    		'location_required' 	=> __( 'You must enter a location to proceed.', 'GMW' ),
-    		'confirm_required' 		=> __( 'You must confirm your location before it can be saved', 'GMW' ),
-    		'confirm_message' 		=> __( 'You have not confirmed your location. Would you like to proceed?', 'GMW' ),
-    		'delete_confirmation'	=> __( 'This action cannot be undone. Would you like to proceed?', 'GMW' ),
-    		'coords_invalid'		=> __( 'Coordinates are missing or invalid.', 'GMW' )
+    		'confirming_location' 	=> __( 'Comnfirming Location...', 'geo-my-wp' ),
+    		'location_exists' 		=> __( 'Location confirmed', 'geo-my-wp' ),
+    		'location_not_exists'  	=> __( 'No location found', 'geo-my-wp' ),
+    		'location_changed' 	 	=> __( 'Location changed', 'geo-my-wp' ),
+    		'location_saved' 	 	=> __( 'Location updated!', 'geo-my-wp' ),
+    		'location_not_saved' 	=> __( 'There was a problem saving your location. Please try again.', 'geo-my-wp' ),
+    		'location_deleted' 	 	=> __( 'Location deleted!', 'geo-my-wp' ),
+    		'location_not_deleted'	=> __( 'There was a problem deleting your location. Please try again.', 'geo-my-wp' ),
+    		'location_found' 		=> __( 'Location found!', 'geo-my-wp' ),
+    		'geocoder_failed' 		=> __( 'We were unable to retrieve your location. Please enter a valid address or coordinates.', 'geo-my-wp' ),
+    		'location_blank' 		=> __( 'No location entered.', 'geo-my-wp' ),
+    		'location_required' 	=> __( 'You must enter a location to proceed.', 'geo-my-wp' ),
+    		'confirm_required' 		=> __( 'You must confirm your location before it can be saved', 'geo-my-wp' ),
+    		'confirm_message' 		=> __( 'You have not confirmed your location. Would you like to proceed?', 'geo-my-wp' ),
+    		'delete_confirmation'	=> __( 'This action cannot be undone. Would you like to proceed?', 'geo-my-wp' ),
+    		'coords_invalid'		=> __( 'Coordinates are missing or invalid.', 'geo-my-wp' )
     	));
     }
 
@@ -357,19 +357,19 @@ class GMW_Location_Form {
     	
     	$tabs = apply_filters( 'gmw_location_form_tabs', array(
 			'location' 	=> array(
-                'label'        => __( 'Location', 'GMW' ),
+                'label'        => __( 'Location', 'geo-my-wp' ),
                 'icon'         => 'gmw-icon-location',
 				'fields_group' => array ( 'location' ),
                 'priority'     => 5,
 			),
 			'address' 	  => array(
-                'label'        => __( 'Address', 'GMW' ),
+                'label'        => __( 'Address', 'geo-my-wp' ),
                 'icon'         => 'gmw-icon-flag',
 				'fields_group' => array ( 'address' ),
                 'priority'     => 10,
 			),
 			'coordinates' => array(
-				'label'        => __( 'Coordinates', 'GMW' ),
+				'label'        => __( 'Coordinates', 'geo-my-wp' ),
                 'icon'         => 'gmw-icon-compass',
 				'fields_group' => array ( 'coordinates' ),
                 'priority'     => 15,
@@ -439,17 +439,17 @@ class GMW_Location_Form {
     	
     	return apply_filters( 'gmw_location_form_fields', array(
 			'location' => array(
-				'label' 	=> __( 'Find Your Location', 'GMW' ),
+				'label' 	=> __( 'Find Your Location', 'geo-my-wp' ),
 				'fields'	=> array(
 					'address' 	=> array(
 						'name'        => 'address',
-	                    'label'       => __( 'Address', 'GMW' ),
+	                    'label'       => __( 'Address', 'geo-my-wp' ),
 	                    'type'        => 'address',
 						'default'     => '',
 						'id'          => 'gmw-lf-address',
 						'class'		  => $this->args['address_autocomplete'] ? 'gmw-lf-address-autocomplete' : '',
-						'placeholder' => __( 'Enter an address...', 'GMW' ),
-	                    'desc'        => __( 'Type an address to see suggested results.', 'GMW' ),
+						'placeholder' => __( 'Enter an address...', 'geo-my-wp' ),
+	                    'desc'        => __( 'Type an address to see suggested results.', 'geo-my-wp' ),
 						'attributes'  => array( 'style' => 'width:100%' ),
 	                    'priority'    => 5,
 	                    'required'    => false,
@@ -462,7 +462,7 @@ class GMW_Location_Form {
 						'id'          => 'gmw-lf-map',
 						'class'		  => 'gmw-map',
 						'placeholder' => '',
-						'desc'        => __( 'Drag the marker to your position on the map..', 'GMW' ),
+						'desc'        => __( 'Drag the marker to your position on the map..', 'geo-my-wp' ),
 						'attributes'  => array( 'style' => 'height:210px;width:100%' ),
 	                    'priority'    => 10,
 	                    'required'    => false,
@@ -470,11 +470,11 @@ class GMW_Location_Form {
 				)
 			),
 			'address' => array(
-				'label'		=> __( 'Enter Address', 'GMW' ),
+				'label'		=> __( 'Enter Address', 'geo-my-wp' ),
 				'fields'	=> array(
 	                'street' 	=> array(
 						'name'        => 'street',
-						'label'       => __( 'Street', 'GMW' ),
+						'label'       => __( 'Street', 'geo-my-wp' ),
 						'type'        => 'text',
 						'default'     => '',
 						'id'          => 'gmw-lf-street',
@@ -487,7 +487,7 @@ class GMW_Location_Form {
 					),
 					'premise' 	 => array(
 						'name'        => 'premise',
-						'label'       => __( 'Apt/Suit', 'GMW' ),
+						'label'       => __( 'Apt/Suit', 'geo-my-wp' ),
 						'type'        => 'text',
 						'default'     => '',
 						'id'          => 'gmw-lf-premise',
@@ -500,7 +500,7 @@ class GMW_Location_Form {
 					),
 					'city' 		 => array(
 						'name'        => 'city',
-						'label'       => __( 'City', 'GMW' ),
+						'label'       => __( 'City', 'geo-my-wp' ),
 						'type'        => 'text',
 						'default'     => '',
 						'id'          => 'gmw-lf-city',
@@ -513,7 +513,7 @@ class GMW_Location_Form {
 					),
 					'region_name' => array(
 						'name'        => 'region_name',
-						'label'       => __( 'State', 'GMW' ),
+						'label'       => __( 'State', 'geo-my-wp' ),
 						'type'        => 'text',
 						'default'     => '',
 						'id'          => 'gmw-lf-region-name',
@@ -525,7 +525,7 @@ class GMW_Location_Form {
 					),
 					'postcode'	  => array(
 						'name'        => 'postcode',
-						'label'       => __( 'Zipcode', 'GMW' ),
+						'label'       => __( 'Zipcode', 'geo-my-wp' ),
 						'type'        => 'text',
 						'default'     => '',
 						'id'          => 'gmw-lf-postcode',
@@ -538,7 +538,7 @@ class GMW_Location_Form {
 					),
 					'country_code'	=> array(
 						'name'        => 'country_code',
-						'label'       => __( 'Country', 'GMW' ),
+						'label'       => __( 'Country', 'geo-my-wp' ),
 						'type'        => 'text',
 						'options'	  => '',
 						//'options'	  => gmw_get_countries_list_array(),
@@ -554,11 +554,11 @@ class GMW_Location_Form {
 				)
 			),
 			'coordinates' => array(
-				'label'		=> __( 'Enter Coordinates', 'GMW' ), 
+				'label'		=> __( 'Enter Coordinates', 'geo-my-wp' ), 
 				'fields'	=> array(
 					'latitude'	=> array(
 						'name'        => 'latitude',
-						'label'       => __( 'Latitude', 'GMW' ),
+						'label'       => __( 'Latitude', 'geo-my-wp' ),
 						'type'        => 'text',
 						'default'     => '',
 						'id'          => 'gmw-lf-latitude',
@@ -571,7 +571,7 @@ class GMW_Location_Form {
 					),
 					'longitude' => array(
 						'name'        => 'longitude',
-						'label'       => __( 'Longitude', 'GMW' ),
+						'label'       => __( 'Longitude', 'geo-my-wp' ),
 						'type'        => 'text',
 						'default'     => '',
 						'id'          => 'gmw-lf-longitude',
@@ -589,7 +589,7 @@ class GMW_Location_Form {
 				'fields'	=> array(
 					'submit_location' => array(
 						'name'        => 'submit_location',
-						'label'       => __( 'Update location', 'GMW' ),
+						'label'       => __( 'Update location', 'geo-my-wp' ),
 						'type'        => 'submit',
 						'default'     => '',
 						'id'          => 'gmw-lf-submit-location',
@@ -602,7 +602,7 @@ class GMW_Location_Form {
 					),
 					'delete_location' => array(
 						'name'        => 'delete_location',
-						'label'       => __( 'Delete Location', 'GMW' ),
+						'label'       => __( 'Delete Location', 'geo-my-wp' ),
 						'type'        => 'button',
 						'default'     => '',
 						'id'          => 'gmw-lf-delete-location',
@@ -615,7 +615,7 @@ class GMW_Location_Form {
 					),
 					'confirm_location' => array(
 						'name'        => 'confirm_location',
-						'label'       => __( 'Confirm Location', 'GMW' ),
+						'label'       => __( 'Confirm Location', 'geo-my-wp' ),
 						'type'        => 'button',
 						'default'     => '',
 						'id'          => 'gmw-lf-confirm-location',
@@ -1029,7 +1029,7 @@ class GMW_Location_Form {
 		if ( ! check_ajax_referer( 'gmw_lf_update_location', 'security', false ) ) {
 
 			//abort if bad nonce
-			wp_die( __( 'Trying to cheat or something?', 'GMW' ), __( 'Error', 'GMW' ), array( 'response' => 403 ) );
+			wp_die( __( 'Trying to cheat or something?', 'geo-my-wp' ), __( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
 		}
 
     	// parse the form values
@@ -1058,7 +1058,7 @@ class GMW_Location_Form {
 			if ( empty( $_POST ) || ! isset( $_POST['gmw_lf_update_location'] ) || ! wp_verify_nonce( $_POST['gmw_lf_update_location'], 'gmw_lf_update_location' ) ) {
 				
 				// abort if bad nonce
-				wp_die( __( 'Trying to cheat or something?', 'GMW' ), __( 'Error', 'GMW' ), array( 'response' => 403 ) );
+				wp_die( __( 'Trying to cheat or something?', 'geo-my-wp' ), __( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
 			}
 		}
 
@@ -1236,7 +1236,7 @@ class GMW_Location_Form {
 		if ( ! check_ajax_referer( 'gmw_lf_update_location', 'security', false ) ) {
 
 			//abort if bad nonce
-			wp_die( __( 'Trying to cheat or something?', 'GMW' ), __( 'Error', 'GMW' ), array( 'response' => 403 ) );
+			wp_die( __( 'Trying to cheat or something?', 'geo-my-wp' ), __( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
 		}
 
     	// parse the form values

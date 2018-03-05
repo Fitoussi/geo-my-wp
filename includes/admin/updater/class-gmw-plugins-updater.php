@@ -400,7 +400,7 @@ class GMW_Premium_Plugin_Updater {
         }
 
         if ( ! current_user_can( 'update_plugins' ) ) {
-            wp_die( __( 'You do not have permission to install plugin updates', 'GMW' ), __( 'Error', 'GMW' ), array( 'response' => 403 ) );
+            wp_die( __( 'You do not have permission to install plugin updates', 'geo-my-wp' ), __( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
         }
 
         $data         = $gmw_plugin_data[ $_REQUEST['slug'] ];

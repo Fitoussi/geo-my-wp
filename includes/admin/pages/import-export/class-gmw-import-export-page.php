@@ -44,8 +44,8 @@ class GMW_Import_Export_Page {
      */
     public function admin_notices( $messages ) {
 
-        $messages['data_imported']      = __( 'Data successfully imported.', 'GMW' );
-        $messages['data_import_failed'] = __( 'Data import failed.', 'GMW' );
+        $messages['data_imported']      = __( 'Data successfully imported.', 'geo-my-wp' );
+        $messages['data_import_failed'] = __( 'Data import failed.', 'geo-my-wp' );
         
         return $messages;
     }
@@ -65,7 +65,7 @@ class GMW_Import_Export_Page {
                 
                 <i class="gmw-icon-wrench"></i>
                 
-                <?php _e( 'Import / Export', 'GMW' ); ?>
+                <?php _e( 'Import / Export', 'geo-my-wp' ); ?>
                 
                 <?php gmw_admin_helpful_buttons(); ?>
             
@@ -109,22 +109,22 @@ class GMW_Import_Export_Page {
     public function get_tabs() {
         
         $tabs           = array();
-        $tabs['data']   = __( 'Data', 'GMW' );
-        $tabs['forms']  = __( 'Forms', 'GMW' );
-        $tabs['location_tables'] = __( 'Location Tables', 'GMW' );
+        $tabs['data']   = __( 'Data', 'geo-my-wp' );
+        $tabs['forms']  = __( 'Forms', 'geo-my-wp' );
+        $tabs['location_tables'] = __( 'Location Tables', 'geo-my-wp' );
         
         // if posts locator add-on active
         if ( gmw_is_addon_active( 'posts_locator' ) ) {
 
             // create tab
-            $tabs['posts_locator'] = __( 'Posts Locator', 'GMW' );
+            $tabs['posts_locator'] = __( 'Posts Locator', 'geo-my-wp' );
             //include tab file
             include_once ( 'tabs/posts-locator.php');
         }
 
         // if posts locator add-on active
         if ( gmw_is_addon_active( 'members_locator' ) ) {
-            $tabs['memebrs_locator'] = __( 'Members Locator', 'GMW' );
+            $tabs['memebrs_locator'] = __( 'Members Locator', 'geo-my-wp' );
         }
          
         return apply_filters( 'gmw_import_export_tabs', $tabs );

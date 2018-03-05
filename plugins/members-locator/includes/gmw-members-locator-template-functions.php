@@ -70,7 +70,7 @@ function gmw_search_form_bp_member_types( $gmw = array() ) {
     $args = array(
         'id'               => $gmw['ID'],
         'usage'            => isset( $settings['usage'] ) ? $settings['usage'] : 'disabled',
-        'show_options_all' => isset( $settings['show_options_all'] ) ? $settings['show_options_all'] : __( 'Search member types', 'GMW' ),
+        'show_options_all' => isset( $settings['show_options_all'] ) ? $settings['show_options_all'] : __( 'Search member types', 'geo-my-wp' ),
     );
 
     $element = GMW_Search_Form_Helper::bp_member_types_filter( $args, $member_types );
@@ -223,9 +223,9 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 					);
 				}
 
-				$output .= '<label for="'.$fid.'">' . __( 'Age Range (min - max)', 'GMW' ) . '</label>';
-				$output .= '<input type="number" name="xf['.$field_id.'][min]" id="'.$fid.'_min" class="'.$field_class.' range-min" value="'.$value['min'].'" placeholder="'.__( 'Min', 'GMW' ).'" />';
-				$output .= '<input type="number" name="xf['.$field_id.'][max]" id="'.$fid.'_max" class="'.$field_class.' range-max" value="'.$value['max'].'" placeholder="'.__( 'Max', 'GMW' ).'" />';
+				$output .= '<label for="'.$fid.'">' . __( 'Age Range (min - max)', 'geo-my-wp' ) . '</label>';
+				$output .= '<input type="number" name="xf['.$field_id.'][min]" id="'.$fid.'_min" class="'.$field_class.' range-min" value="'.$value['min'].'" placeholder="'.__( 'Min', 'geo-my-wp' ).'" />';
+				$output .= '<input type="number" name="xf['.$field_id.'][max]" id="'.$fid.'_max" class="'.$field_class.' range-max" value="'.$value['max'].'" placeholder="'.__( 'Max', 'geo-my-wp' ).'" />';
 			break;	
 
 			// textbox field
@@ -253,7 +253,7 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 				$output .= '<select name="xf['.$field_id.']" id="'.$fid.'" class="'.$field_class.'">';
 
 				// all option
-				$option_all = apply_filters( 'gmw_fl_xprofile_form_dropdown_option_all', __( ' -- All -- ', 'GMW' ), $field_id, $field_data );
+				$option_all = apply_filters( 'gmw_fl_xprofile_form_dropdown_option_all', __( ' -- All -- ', 'geo-my-wp' ), $field_id, $field_data );
 
 				if ( ! empty( $option_all ) ) {
 					$output .= '<option value="">'.esc_attr( $option_all ).'</option>';
@@ -265,7 +265,7 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 				foreach ( $children as $child ) {
 					$option   = trim( $child->name );
 					$selected = ( $option == $value ) ? "selected='selected'" : "";
-					$output  .= '<option '.$selected.' value="'.$option.'">'. __( $option, 'GMW' ). '</option>';
+					$output  .= '<option '.$selected.' value="'.$option.'">'. __( $option, 'geo-my-wp' ). '</option>';
 				}
 				 
 				$output .= '</select>';
@@ -295,7 +295,7 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 	                $output .= '<label for="'.$fid.'">'.$label.'</label>';
 					$output .= '<select name="xf['.$field_id.']" id="'.$fid.'" class="'.$field_class.'">';
 
-					$option_all = apply_filters( 'gmw_fl_xprofile_form_dropdown_option_all', __( ' -- All -- ', 'GMW' ), $field_id, $field_data );
+					$option_all = apply_filters( 'gmw_fl_xprofile_form_dropdown_option_all', __( ' -- All -- ', 'geo-my-wp' ), $field_id, $field_data );
 
 					if ( ! empty( $option_all ) ) {
 						$output .= '<option value="">'. esc_attr( $option_all ).'</option>';
@@ -328,7 +328,7 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 					$option   = trim( $child->name );
 					$selected = ( ! empty( $value ) && in_array( $option, $value ) ) ? "selected='selected'" : "";
 
-					$output .= '<option '.$selected.' value="'.$option.'">'. __( $option, 'GMW' ) .'</option>';
+					$output .= '<option '.$selected.' value="'.$option.'">'. __( $option, 'geo-my-wp' ) .'</option>';
 				}
 				 
 				$output .= '</select>';
@@ -348,7 +348,7 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 					$option  = trim( $child->name );
 					$checked = ( $child->name == $value ) ? "checked='checked'" : "";
 					
-					$output .= '<label><input '.$checked.' type="radio" name="xf['.$field_id.']" value="'.$option.'" />'. __( $option, 'GMW' ).'</label>';
+					$output .= '<label><input '.$checked.' type="radio" name="xf['.$field_id.']" value="'.$option.'" />'. __( $option, 'geo-my-wp' ).'</label>';
 				}
 
 				$output .= '<a href="#" onclick="event.preventDefault();jQuery(this).closest(\'div\').find(\'input\').prop(\'checked\', false);">'. __( 'Clear', 'buddypress' ). '</a><br/>';
@@ -591,8 +591,8 @@ function gmw_get_member_xprofile_fields( $member_id = 0, $fields = array() ) {
 
 		if ( $field_data->type == 'datebox' )  {
 			$age = intval( date( 'Y', time() - strtotime( $field_value ) ) ) - 1970;
-			$field_value 	  =   sprintf( __( ' %s Years old','GMW' ), $age );
-			$field_data->name = __( 'Age','GMW' );
+			$field_value 	  =   sprintf( __( ' %s Years old','geo-my-wp' ), $age );
+			$field_data->name = __( 'Age','geo-my-wp' );
 		}
 			
 		$output .= '<li class="gmw-xprofile-field type-'.esc_attr( $field_data->type ).' id-'.esc_attr( $field_id ).'">';

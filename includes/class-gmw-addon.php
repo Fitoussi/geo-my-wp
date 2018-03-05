@@ -766,7 +766,7 @@ class GMW_Addon {
 				'error'  		   => 'gmw_version_mismatch',
 				'required_version' => $this->gmw_min_version,
 				'notice' 		   => $details['notice'] = sprintf( 
-					__( '%s extension version %s requires GEO my WP plugin version %s or higher.', 'GMW' ), 
+					__( '%s extension version %s requires GEO my WP plugin version %s or higher.', 'geo-my-wp' ), 
 					$this->name, 
 					$this->version, 
 					$this->gmw_min_version 
@@ -786,7 +786,7 @@ class GMW_Addon {
 				'error'  		   => 'addon_version_mismatch',
 				'required_version' => $this->min_version,
 				'notice' 		   => sprintf( 
-					__( '%s extension requires an update to version %s.', 'GMW' ), 
+					__( '%s extension requires an update to version %s.', 'geo-my-wp' ), 
 					$this->name,
 					$this->min_version
 				)
@@ -924,7 +924,7 @@ class GMW_Addon {
 			if ( empty( $required['notice'] ) ) {
 
 				$required['notice'] = sprintf( 
-					__( '%s extension requires additional %s. Contact support form more information.', 'GMW' ), 
+					__( '%s extension requires additional %s. Contact support form more information.', 'geo-my-wp' ), 
 					$this->name, 
 					$type
 				);	

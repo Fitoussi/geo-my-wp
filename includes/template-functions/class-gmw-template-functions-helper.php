@@ -26,7 +26,7 @@ class GMW_Template_Functions_Helper {
 			'content' 	    	=> '',
 			'words_count'   	=> '10',
 			'link' 				=> '',
-			'link_text'			=> __( 'read more...', 'GMW' ),
+			'link_text'			=> __( 'read more...', 'geo-my-wp' ),
 			'enable_shortcodes' => 1,
 		);
 
@@ -81,8 +81,8 @@ class GMW_Template_Functions_Helper {
 			'end_size'     		 => 1,
 			'mid_size'     		 => 2,
 			'prev_next'    		 => True,
-			'prev_text'    		 => __( 'Prev', 'GMW' ),
-			'next_text'    		 => __( 'Next', 'GMW' ),
+			'prev_text'    		 => __( 'Prev', 'geo-my-wp' ),
+			'next_text'    		 => __( 'Next', 'geo-my-wp' ),
 			'type'         	 	 => 'array',
 			'add_args'     		 => False,
 			'add_fragment' 		 => '',
@@ -136,7 +136,7 @@ class GMW_Template_Functions_Helper {
   			'id_attr'       => '',
   			'class'			=> '',
   			'name'          => $url_px.'per_page',
-  			'label'			=> __( 'per page', 'GMW' ),
+  			'label'			=> __( 'per page', 'geo-my-wp' ),
   			'per_page' 		=> '10',
   			'paged'    		=> '1',
   			'total_results' => '',

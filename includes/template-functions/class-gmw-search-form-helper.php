@@ -92,7 +92,7 @@ class GMW_Search_Form_Helper {
 
 		$defaults = array(
 			'id'		  => 0, 
-			'placeholder' => __( 'Enter keywords', 'GMW' ),
+			'placeholder' => __( 'Enter keywords', 'geo-my-wp' ),
 			'class'		  => '',
 			'name_tag'	  => $url_px.'keywords'
 		);
@@ -119,7 +119,7 @@ class GMW_Search_Form_Helper {
 			'id'			   	   => 0,
 			'id_attr'			   => '',
 			'class_attr'		   => '',
-			'placeholder'		   => __( 'Enter address', 'GMW' ), 
+			'placeholder'		   => __( 'Enter address', 'geo-my-wp' ), 
 			'locator_button'	   => 1,
 			'locator_submit'	   => 0,
 			'icon'				   => 'gmw-icon-target-light',
@@ -171,7 +171,7 @@ class GMW_Search_Form_Helper {
 		$defaults = array(
 			'id'			=> 0, 
 			'class'			=> '',
-			'label'		    => __( 'Miles', 'GMW' ),
+			'label'		    => __( 'Miles', 'geo-my-wp' ),
 			'default_value' => '',
 			'options'		=> '10,15,25,50,100',
 			'name_tag'		=> $url_px.'distance'
@@ -222,8 +222,8 @@ class GMW_Search_Form_Helper {
 			'id'	   => 0, 
 			'class'	   => '',
 			'units'	   => 'imperial',
-			'mi_label' => __( 'Miles', 'GMW' ),
-			'km_label' => __( 'Kilometers', 'GMW' )
+			'mi_label' => __( 'Miles', 'geo-my-wp' ),
+			'km_label' => __( 'Kilometers', 'geo-my-wp' )
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -262,7 +262,7 @@ class GMW_Search_Form_Helper {
 			'usage'	      => 'image',
 			'image' 	  => 'locate-me-blue.png',
 			'form_submit' => 0,
-			'label'		  => __( 'Get my current location', 'GMW' )
+			'label'		  => __( 'Get my current location', 'geo-my-wp' )
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -278,7 +278,7 @@ class GMW_Search_Form_Helper {
 							
 			$img_url = GMW_IMAGES .'/locator-images/'.$args['image'];
 
-			$output .= '<img id="gmw-locator-image-'.$id.'" class="gmw-locator-button image '.esc_attr( $args['class'] ).'" data-locator_submit="'. absint( $args['form_submit'] ).'" src="'.esc_url( $img_url ).'" alt="'.__( 'locator button', 'GMW' ).'" data-form_id="'.$id.'" />';
+			$output .= '<img id="gmw-locator-image-'.$id.'" class="gmw-locator-button image '.esc_attr( $args['class'] ).'" data-locator_submit="'. absint( $args['form_submit'] ).'" src="'.esc_url( $img_url ).'" alt="'.__( 'locator button', 'geo-my-wp' ).'" data-form_id="'.$id.'" />';
 
 		// text button
 		} elseif ( $usage == 'text' ) {
@@ -303,7 +303,7 @@ class GMW_Search_Form_Helper {
 		$defaults = array( 
 			'id'	=> 0,
 			'class' => '',
-			'label' => __( 'Submit', 'GMW' )
+			'label' => __( 'Submit', 'geo-my-wp' )
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -373,7 +373,7 @@ class GMW_Search_Form_Helper {
             'class_tag'        => '',
             'name_tag'         => $url_px.'bpmt',
             'object'           => 'bp-member-types',
-            'show_options_all' => __( 'Search member types', 'GMW' )
+            'show_options_all' => __( 'Search member types', 'geo-my-wp' )
         );
 
         $args = wp_parse_args( $args, $defaults );

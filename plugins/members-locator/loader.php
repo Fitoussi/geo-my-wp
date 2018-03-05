@@ -98,7 +98,7 @@ class GMW_Members_locator_Addon extends GMW_Addon {
             'plugins' => array(
                 array(
                     'function' => 'BuddyPress',
-                    'notice'   => __( 'Members Locator add-on requires BuddyPress plugin version 2.8 or higher.', 'GMW' )
+                    'notice'   => __( 'Members Locator add-on requires BuddyPress plugin version 2.8 or higher.', 'geo-my-wp' )
                 )
             )
         );
@@ -136,7 +136,7 @@ class GMW_Members_locator_Addon extends GMW_Addon {
                  */
                 function gmw_fl_single_location_widget_object( $args ) {
                 
-                    $args['bp_member'] = __( 'Buddypress Member', 'GMW' );
+                    $args['bp_member'] = __( 'Buddypress Member', 'geo-my-wp' );
                 
                     return $args;
                 }

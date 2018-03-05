@@ -34,7 +34,7 @@ function gmw_reset_tab() {
 			<div class="postbox">
 
 				<h3 class="hndle">
-					<span><?php _e( 'Uninstall GEO my WP Data', 'GMW' ); ?></span>
+					<span><?php _e( 'Uninstall GEO my WP Data', 'geo-my-wp' ); ?></span>
 				</h3>
 
 				<div class="inside">
@@ -55,13 +55,13 @@ function gmw_reset_tab() {
 							<!-- Settings -->
 							<span>
 								<input type="checkbox" class="gmw-reset-item" name="gmw_reset_items[]" value="settings" />
-								<?php _e( 'Settings', 'GMW' ); ?>
+								<?php _e( 'Settings', 'geo-my-wp' ); ?>
 							</span>
 							
 							<!-- License keys -->
 							<span>
 								<input type="checkbox" class="gmw-reset-item" name="gmw_reset_items[]" value="licenses" />
-								<?php _e( 'License Keys', 'GMW' ); ?>
+								<?php _e( 'License Keys', 'geo-my-wp' ); ?>
 							</span>
 							
 							<?php 
@@ -82,7 +82,7 @@ function gmw_reset_tab() {
 										value="forms" 
 										onchange="jQuery( '#form-table-remove-warning' ).toggle();"
 									/>
-									<?php _e( 'Forms', 'GMW' ); ?>
+									<?php _e( 'Forms', 'geo-my-wp' ); ?>
 								</span>
 
 								<em id="form-table-remove-warning" class="reset-warning-cb">
@@ -105,11 +105,11 @@ function gmw_reset_tab() {
 										value="locations_table" 
 										onchange="jQuery( '#locations-table-remove-warning' ).toggle();" 
 									/>
-									<?php printf( __( 'GMW Locations Database Table ( %sgmw_locations )', 'GMW' ), $wpdb->prefix ); ?>
+									<?php printf( __( 'GMW Locations Database Table ( %sgmw_locations )', 'geo-my-wp' ), $wpdb->prefix ); ?>
 								</span>
 								
 								<em id="locations-table-remove-warning" class="reset-warning-cb">
-									<?php _e( 'This will permanently remove GEO my WP locations table and all GEO my WP locations created on this site.', 'GMW' ); ?>	
+									<?php _e( 'This will permanently remove GEO my WP locations table and all GEO my WP locations created on this site.', 'geo-my-wp' ); ?>	
 								</em>			
 							<?php
 							}
@@ -128,11 +128,11 @@ function gmw_reset_tab() {
 										value="locationmeta_table" 
 										onchange="jQuery( '#locaitonmeta-table-remove-warning' ).toggle();"
 									/>
-									<?php printf( __( 'GMW Locations Meta Database Table ( %sgmw_locationmeta )', 'GMW' ), $wpdb->prefix ); ?>
+									<?php printf( __( 'GMW Locations Meta Database Table ( %sgmw_locationmeta )', 'geo-my-wp' ), $wpdb->prefix ); ?>
 								</span>
 
 								<em id="locaitonmeta-table-remove-warning" class="reset-warning-cb">
-									<?php _e( 'This will permanently remove GEO my WP locaitons meta table and all of its content.', 'GMW' ); ?>
+									<?php _e( 'This will permanently remove GEO my WP locaitons meta table and all of its content.', 'geo-my-wp' ); ?>
 								</em>							
 							<?php } ?>	
 
@@ -144,7 +144,7 @@ function gmw_reset_tab() {
 									value="uninstall"
 									onchange="if ( jQuery( this ).is( ':checked' ) ) { jQuery( this ).closest( 'form' ).find( '.gmw-reset-item' ).prop( 'checked', true ); } else { jQuery( this ).closest( 'form' ).find( '.gmw-reset-item' ).prop( 'checked', false ); }"
 								/>
-								<?php _e( 'Completely Uninstall and deactivate GEO my WP', 'GMW' ); ?>
+								<?php _e( 'Completely Uninstall and deactivate GEO my WP', 'geo-my-wp' ); ?>
 							</span>							
 						</p>
 						<p>
@@ -152,16 +152,16 @@ function gmw_reset_tab() {
 							
 							<?php wp_nonce_field( 'gmw_reset_data_nonce', 'gmw_reset_data_nonce' ); ?>
 							
-							<input type="submit" class="button-secondary" value="<?php _e( 'Clear Data','GMW' ); ?>" id="gmw-clear-data-button" />
+							<input type="submit" class="button-secondary" value="<?php _e( 'Clear Data','geo-my-wp' ); ?>" id="gmw-clear-data-button" />
 						</p>
 						<script>
 							jQuery(document).ready(function($) {
 								$('#gmw-clear-data-button').click(function() {
 									if ( !jQuery('.gmw-reset-item').is(':checked') ) { 					
-										alert("<?php echo _e( 'You must check at least one item which you would like to remove.', 'GMW'); ?>"); 
+										alert("<?php echo _e( 'You must check at least one item which you would like to remove.', 'geo-my-wp'); ?>"); 
 										return false; 
 									} else { 
-										return confirm( "<?php echo _e( 'You are about to permanently remove some or all of GEO my WP data. This action cannot be undone! Would you like to proceed?', 'GMW'); ?>"); 
+										return confirm( "<?php echo _e( 'You are about to permanently remove some or all of GEO my WP data. This action cannot be undone! Would you like to proceed?', 'geo-my-wp'); ?>"); 
 									}
 								});				
 							});
@@ -191,7 +191,7 @@ add_action( 'gmw_tools_reset_gmw_tab', 'gmw_reset_tab' );
  */
 function gmw_reset_data_notice_message( $messages ) {
 	
-	$messages['reset_gmw_data'] = __( 'GEO my WP data cleared.', 'GMW' );
+	$messages['reset_gmw_data'] = __( 'GEO my WP data cleared.', 'geo-my-wp' );
 	
 	return $messages;
 }
@@ -214,13 +214,13 @@ function gmw_reset_data() {
 	//look for nonce
 	if ( empty( $_POST['gmw_reset_data_nonce'] ) ) {
 		
-		wp_die( __( 'Cheatin\' eh?!', 'GMW' ) );
+		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
 	//varify nonce
 	if ( ! wp_verify_nonce( $_POST['gmw_reset_data_nonce'], 'gmw_reset_data_nonce' ) ) {
 		
-		wp_die( __( 'Cheatin\' eh?!', 'GMW' ) );
+		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
 	//clear settings

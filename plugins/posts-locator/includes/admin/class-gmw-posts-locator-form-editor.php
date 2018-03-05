@@ -65,9 +65,9 @@ class GMW_Posts_Locator_Form_Editor {
             'name'          => 'post_types',
             'type'          => 'multiselect',
             'default'       => array( 'post' ),
-            'label'         => __( 'Post Types', 'GMW' ),
-            'placeholder'   => __( 'Select post types', 'GMW' ),
-            'desc'          => __( 'Select the post types to filter the search results.', 'GMW' ),
+            'label'         => __( 'Post Types', 'geo-my-wp' ),
+            'placeholder'   => __( 'Select post types', 'geo-my-wp' ),
+            'desc'          => __( 'Select the post types to filter the search results.', 'geo-my-wp' ),
             'options'       => GMW_Form_Settings_Helper::get_post_types(), 
             'attributes'    => '',
             'priority'      => 13     
@@ -77,9 +77,9 @@ class GMW_Posts_Locator_Form_Editor {
             'name'          => 'post_types',
             'type'          => 'multiselect',
             'default'       => array( 'post' ),
-            'label'         => __( 'Post Types', 'GMW' ),
-            'placeholder'   => __( 'Select post types', 'GMW' ),
-            'desc'          => __( 'Select a single post type to set as the default, or multiple post types to display as a dropdown select box in the search form.', 'GMW' ),
+            'label'         => __( 'Post Types', 'geo-my-wp' ),
+            'placeholder'   => __( 'Select post types', 'geo-my-wp' ),
+            'desc'          => __( 'Select a single post type to set as the default, or multiple post types to display as a dropdown select box in the search form.', 'geo-my-wp' ),
             'options'       => GMW_Form_Settings_Helper::get_post_types(),
             'attributes'    => '',
             'priority'      => 12    
@@ -90,8 +90,8 @@ class GMW_Posts_Locator_Form_Editor {
             'type'          => 'function',
             'function'      => 'form_taxonomies',
             'default'       => '',
-            'label'         => __( 'Taxonomies', 'GMW' ),
-            'desc'          => __( 'Enable the taxonomies which you would like to use as filters in the search form. This feature availabe only when selecting a single post type above.', 'GMW' ),
+            'label'         => __( 'Taxonomies', 'geo-my-wp' ),
+            'desc'          => __( 'Enable the taxonomies which you would like to use as filters in the search form. This feature availabe only when selecting a single post type above.', 'geo-my-wp' ),
             'attributes'    => '',
             'priority'      => 13                
         );
@@ -100,14 +100,14 @@ class GMW_Posts_Locator_Form_Editor {
             'name'          => 'location_meta',
             'type'          => 'multiselect',
             'default'       => '',
-            'label'         => __( 'Location Meta', 'GMW' ),
-            'placeholder'   => __( 'Select location metas', 'GMW' ),
-            'desc'          => __( "Select the the location meta fields which you would like to display for each location in the list of results.", 'GMW' ),
+            'label'         => __( 'Location Meta', 'geo-my-wp' ),
+            'placeholder'   => __( 'Select location metas', 'geo-my-wp' ),
+            'desc'          => __( "Select the the location meta fields which you would like to display for each location in the list of results.", 'geo-my-wp' ),
             'options'       => array(
-                'phone'     => __( 'Phone', 'GMW' ),
-                'fax'       => __( 'Fax', 'GMW' ),
-                'email'     => __( 'Email', 'GMW' ),
-                'website'   => __( 'Website', 'GMW' ),
+                'phone'     => __( 'Phone', 'geo-my-wp' ),
+                'fax'       => __( 'Fax', 'geo-my-wp' ),
+                'email'     => __( 'Email', 'geo-my-wp' ),
+                'website'   => __( 'Website', 'geo-my-wp' ),
             ),
             'attributes'    => '',
             'priority'      => 36   
@@ -117,9 +117,9 @@ class GMW_Posts_Locator_Form_Editor {
             'name'          => 'opening_hours',
             'type'          => 'checkbox',
             'default'       => '',
-            'label'         => __( 'Hours of Operation', 'GMW' ),
-            'cb_label'      => __( 'Enable', 'GMW' ),
-            'desc'          => __( 'Display opening days & hours for each location in the list of results.', 'GMW' ),
+            'label'         => __( 'Hours of Operation', 'geo-my-wp' ),
+            'cb_label'      => __( 'Enable', 'geo-my-wp' ),
+            'desc'          => __( 'Display opening days & hours for each location in the list of results.', 'geo-my-wp' ),
             'attributes'    => '',
             'priority'      => 38   
         );
@@ -128,9 +128,9 @@ class GMW_Posts_Locator_Form_Editor {
             'name'          => 'excerpt',
             'type'          => 'function',
             'default'       => '',
-            'label'         => __( 'Excerpt', 'GMW' ),
+            'label'         => __( 'Excerpt', 'geo-my-wp' ),
             'cb_label'      => '',
-            'desc'          => __( 'Display excerpt in each location in the results.', 'GMW' ),
+            'desc'          => __( 'Display excerpt in each location in the results.', 'geo-my-wp' ),
             'attributes'    => '',
             'priority'      => 40   
         );
@@ -139,9 +139,9 @@ class GMW_Posts_Locator_Form_Editor {
             'name'          => 'taxonomies',
             'type'          => 'checkbox',
             'default'       => '',
-            'label'         => __( 'Taxonomies', 'GMW' ),
-            'cb_label'      => __( 'Enable', 'GMW' ),
-            'desc'          => __( 'Check this checkbox to display the taxonomies and terms associate with each post in the list of results.', 'GMW' ),
+            'label'         => __( 'Taxonomies', 'geo-my-wp' ),
+            'cb_label'      => __( 'Enable', 'geo-my-wp' ),
+            'desc'          => __( 'Check this checkbox to display the taxonomies and terms associate with each post in the list of results.', 'geo-my-wp' ),
             'attributes'    => '',
             'priority'      => 65   
         );

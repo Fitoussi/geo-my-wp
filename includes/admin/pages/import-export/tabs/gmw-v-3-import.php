@@ -25,7 +25,7 @@ class GMW_V_3_Import_Page {
 
 	public function create_tab( $tabs ) {
 
-		$tabs['gmw_v_3'] = __( 'GEO my WP v3.0 Importer', 'GMW' );
+		$tabs['gmw_v_3'] = __( 'GEO my WP v3.0 Importer', 'geo-my-wp' );
 
 		return $tabs;
 	}
@@ -45,7 +45,7 @@ class GMW_V_3_Import_Page {
 						<div class="postbox ">
 				
 							<h3 class="hndle">
-								<span><?php _e( 'Import Post Types Locations', 'GMW' ); ?></span>
+								<span><?php _e( 'Import Post Types Locations', 'geo-my-wp' ); ?></span>
 							</h3>
 
 							<div class="inside">
@@ -74,7 +74,7 @@ class GMW_V_3_Import_Page {
 						<div class="postbox ">
 				
 							<h3 class="hndle">
-								<span><?php _e( 'Import Users/Members Locations', 'GMW' ); ?></span>
+								<span><?php _e( 'Import Users/Members Locations', 'geo-my-wp' ); ?></span>
 							</h3>
 
 							<div class="inside">

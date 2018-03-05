@@ -77,16 +77,16 @@ class GMW_Settings {
         return apply_filters( 'gmw_admin_settings_groups', array(
             array( 
                 'slug'      => 'general_settings',
-                'label'     => __( 'General Settings', 'GMW' ),
+                'label'     => __( 'General Settings', 'geo-my-wp' ),
                 'icon'      => 'cog',
                 'fields'    => array( 
                     'allow_tracking' => array(
                         'name'        => 'allow_tracking',
                         'type'        => 'checkbox',
                         'default'     => '',
-                        'label'       => __( 'Plugin Usage Tracking', 'GMW' ),
-                        'cb_label'    => __( 'Enable', 'GMW' ),
-                        'desc'        => __( 'Check this checkbox to allow GEO my WP track the plugin usage on your site.', 'GMW' ),                  
+                        'label'       => __( 'Plugin Usage Tracking', 'geo-my-wp' ),
+                        'cb_label'    => __( 'Enable', 'geo-my-wp' ),
+                        'desc'        => __( 'Check this checkbox to allow GEO my WP track the plugin usage on your site.', 'geo-my-wp' ),                  
                         'attributes'  => array(),
                         'priority'    => 10
                     ),
@@ -94,14 +94,14 @@ class GMW_Settings {
                         'name'        => 'google_maps_api_usage',
                         'type'        => 'select',
                         'default'     => 'enabled',
-                        'label'       => __( 'Google Maps API', 'GMW' ),
-                        'desc'        => __( 'Using this feature you prevent GEO my WP from registering the Google Map API ( which it does by default ). In most cases this feature should be set to "Enabled". It should disabled only if there are other mapping plugin installed on your site, which also register the Google Maps API and cause for conflicts. Note that disabling this feature might solve a conflict cause by multiple calles to Google Maps API, it might also results in GEO my WP to not work properly.', 'GMW' ),                  
+                        'label'       => __( 'Google Maps API', 'geo-my-wp' ),
+                        'desc'        => __( 'Using this feature you prevent GEO my WP from registering the Google Map API ( which it does by default ). In most cases this feature should be set to "Enabled". It should disabled only if there are other mapping plugin installed on your site, which also register the Google Maps API and cause for conflicts. Note that disabling this feature might solve a conflict cause by multiple calles to Google Maps API, it might also results in GEO my WP to not work properly.', 'geo-my-wp' ),                  
                         'attributes'  => array(),
                         'options'     => array(
-                            'enabled'   => __( 'Enabled', 'GMW' ),
-                            'frontend'  => __( 'Disable in the front-end only', 'GMW' ),
-                            'admin'     => __( 'Disable in the back-end only', 'GMW' ),
-                            'disabled'  => __( 'Disable completely', 'GMW' ),
+                            'enabled'   => __( 'Enabled', 'geo-my-wp' ),
+                            'frontend'  => __( 'Disable in the front-end only', 'geo-my-wp' ),
+                            'admin'     => __( 'Disable in the back-end only', 'geo-my-wp' ),
+                            'disabled'  => __( 'Disable completely', 'geo-my-wp' ),
                         ),
                         'priority'    => 20
                     ),
@@ -109,9 +109,9 @@ class GMW_Settings {
                         'name'        => 'google_api',
                         'type'        => 'text',
                         'default'     => '',
-                        'placeholder' => __( 'Enter your google api key', 'GMW' ),
-                        'label'       => __( 'Google Maps API V3 Key', 'GMW' ),
-                        'desc'        => sprintf( __( 'Google Maps API key is required for GEO my WP to work properly. Google Maps API key is free and can be generated <a href="%s" target="_blank">here</a>. <a href="%s" target="_blank">Here</a> you can learn how to properly generate and setup your Maps API key.', 'GMW' ), 'https://code.google.com/apis/console/', 'http://docs.gravitygeolocation.com/article/101-create-google-map-api-key' ),
+                        'placeholder' => __( 'Enter your google api key', 'geo-my-wp' ),
+                        'label'       => __( 'Google Maps API V3 Key', 'geo-my-wp' ),
+                        'desc'        => sprintf( __( 'Google Maps API key is required for GEO my WP to work properly. Google Maps API key is free and can be generated <a href="%s" target="_blank">here</a>. <a href="%s" target="_blank">Here</a> you can learn how to properly generate and setup your Maps API key.', 'geo-my-wp' ), 'https://code.google.com/apis/console/', 'http://docs.gravitygeolocation.com/article/101-create-google-map-api-key' ),
                         'attributes'  => array( 'size' => '50' ),
                         'priority'    => 30
                     ),
@@ -119,9 +119,9 @@ class GMW_Settings {
                         'name'        => 'js_geocode',
                         'type'        => 'checkbox',
                         'default'     => '',
-                        'label'       => __( 'Client-Side Geocoder', 'GMW' ),
-                        'cb_label'    => __( 'Enable', 'GMW' ),
-                        'desc'        => __( "Check this checkbox if you wish to use client-side ( JavaScript ) geocoder to geocode the address entered in GEO my WP's search forms. client-side geocoding usually overcomes Google API's OVER_QUERY_LIMIT issue. This feature should be enabled in most cases.", 'GMW' ),                  
+                        'label'       => __( 'Client-Side Geocoder', 'geo-my-wp' ),
+                        'cb_label'    => __( 'Enable', 'geo-my-wp' ),
+                        'desc'        => __( "Check this checkbox if you wish to use client-side ( JavaScript ) geocoder to geocode the address entered in GEO my WP's search forms. client-side geocoding usually overcomes Google API's OVER_QUERY_LIMIT issue. This feature should be enabled in most cases.", 'geo-my-wp' ),                  
                         'attributes'  => array(),
                         'priority'    => 40
                     ),
@@ -130,8 +130,8 @@ class GMW_Settings {
                         'type'        => 'text',
                         'default'     => '',
                         'placeholder' => 'ex. US',
-                        'label'       => __( 'Country Code', 'GMW' ),
-                        'desc'        => sprintf( __( 'Enter the country code that will be used as the default with Google Maps API. The country code controls the default region when geocoding an address and when using other services provided by Google Maps API. List of countries code can be found <a href="%s" target="_blank">here</a>.', 'GMW' ), 'http://geomywp.com/country-code/' ),
+                        'label'       => __( 'Country Code', 'geo-my-wp' ),
+                        'desc'        => sprintf( __( 'Enter the country code that will be used as the default with Google Maps API. The country code controls the default region when geocoding an address and when using other services provided by Google Maps API. List of countries code can be found <a href="%s" target="_blank">here</a>.', 'geo-my-wp' ), 'http://geomywp.com/country-code/' ),
                         'attributes'  => array( 'size' => '5' ),
                         'priority'    => 50
                     ),
@@ -140,8 +140,8 @@ class GMW_Settings {
                         'type'        => 'text',
                         'default'     => '',
                         'placeholder' => 'ex. EN',
-                        'label'       => __( 'Google API Language', 'GMW' ),
-                        'desc'        => sprintf( __( 'Set the language to be used with Google Places address auto-complete and with Google Maps API. The language codes can be found <a href="%s" target="_blank">here</a>.', 'GMW' ), 'https://sites.google.com/site/tomihasa/google-language-codes' ),
+                        'label'       => __( 'Google API Language', 'geo-my-wp' ),
+                        'desc'        => sprintf( __( 'Set the language to be used with Google Places address auto-complete and with Google Maps API. The language codes can be found <a href="%s" target="_blank">here</a>.', 'geo-my-wp' ), 'https://sites.google.com/site/tomihasa/google-language-codes' ),
                         'attributes'  => array( 'size' => '5' ),
                         'priority'    => 60
                     ),  
@@ -149,9 +149,9 @@ class GMW_Settings {
                         'name'        => 'auto_locate',
                         'type'        => 'checkbox',
                         'default'     => '',
-                        'label'       => __( 'Auto Locator', 'GMW' ),
-                        'cb_label'    => __( 'Enable', 'GMW' ),
-                        'desc'        => __( "GEO my WP will try to retrive the visitor's current location when once first visits the website. If a location was found, it will be saved via cookies and will be used with some of GEO my WP features; such as dynamically displaying results nearby the visitor.", 'GMW' ),
+                        'label'       => __( 'Auto Locator', 'geo-my-wp' ),
+                        'cb_label'    => __( 'Enable', 'geo-my-wp' ),
+                        'desc'        => __( "GEO my WP will try to retrive the visitor's current location when once first visits the website. If a location was found, it will be saved via cookies and will be used with some of GEO my WP features; such as dynamically displaying results nearby the visitor.", 'geo-my-wp' ),
                         'attributes'  => array(),
                         'priority'    => 70
                     ),
@@ -159,7 +159,7 @@ class GMW_Settings {
                         'name'        => 'results_page',
                         'type'        => 'select',
                         'default'     => '0',
-                        'label'       => __( 'Results Page', 'GMW' ),
+                        'label'       => __( 'Results Page', 'geo-my-wp' ),
                         'desc'        => __( "The page you select here displays the search results ( of any of your forms ) when using the \"GMW Search Form\" widget. The plugin will first check if a results page was set in the form settings, and if so, the results will be displayed in that page. Otherwise, if no results page was set in the form settings, the results will be displayed in the page you select here. To use this feature, select the results page from the dropdown menu and paste the shortcode <code>[gmw form=\"results\"]</code> to the content area of this page.", "GMW" ),
                         'options'     => $this->get_pages(),
                         'attributes'  => array(),
@@ -647,7 +647,7 @@ class GMW_Settings {
 
             <h2>
                 <i class="gmw-icon-cog-alt"></i>
-                <?php echo _e( 'GEO my WP Settings', 'GMW' ); ?>
+                <?php echo _e( 'GEO my WP Settings', 'geo-my-wp' ); ?>
                 <?php gmw_admin_helpful_buttons(); ?>
             </h2>
             <div class="clear"></div>
@@ -659,11 +659,11 @@ class GMW_Settings {
                     
                     flush_rewrite_rules();
 
-                    echo '<div class="updated fade gmw-settings-updated"><p>' . __( 'Settings successfully saved!', 'GMW' ) . '</p></div>';
+                    echo '<div class="updated fade gmw-settings-updated"><p>' . __( 'Settings successfully saved!', 'geo-my-wp' ) . '</p></div>';
                 }
                 ?>
                 <div class="update-button-wrapper top">
-                    <input type="submit" class="button-primary" value="<?php _e( 'Save Changes', 'GMW' ); ?>" />
+                    <input type="submit" class="button-primary" value="<?php _e( 'Save Changes', 'geo-my-wp' ); ?>" />
                 </div>
 
                 <div class="gmw-settings-wrapper gmw-left-tabs-menu-wrapper">
@@ -790,7 +790,7 @@ class GMW_Settings {
                 </div> <!-- menu wrapper -->
 
                 <div class="update-button-wrapper bottom">
-                    <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'GMW'); ?>" />
+                    <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'geo-my-wp'); ?>" />
                 </div>
 
             </form>

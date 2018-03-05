@@ -123,9 +123,9 @@ class GMW_Locations_Importer {
 		?>
 		<form method="post" class="gmw-locations-importer" action="">
 			
-			<input type="submit" class="gmw-locations-importer-submit button-primary" value="<?php _e( 'Import', 'GMW' ); ?>" />
+			<input type="submit" class="gmw-locations-importer-submit button-primary" value="<?php _e( 'Import', 'geo-my-wp' ); ?>" />
 			
-			<input type="button" class="gmw-locations-importer-abort button-secondary" value="<?php _e( 'Abort', 'GMW' ); ?>" style="display:none;" />
+			<input type="button" class="gmw-locations-importer-abort button-secondary" value="<?php _e( 'Abort', 'geo-my-wp' ); ?>" style="display:none;" />
 			
 			<input type="hidden" class="gmw_locations_importer_action" value="<?php echo esc_attr( get_class( $this ) ); ?>" />	
 	    	
@@ -157,18 +157,18 @@ class GMW_Locations_Importer {
 		// create new form details element
         $output['div'] 	     = '<div class="gmw-importer-details" style="display:none;">';
         
-        $output['importing'] = '<em class="importer-action-message"><i class="gmw-importer-spinner gmw-icon-spin-3 animate-spin"></i><span class="action-ph">' . __( 'Searching for locations...', 'GMW' ). '</span></em>';
+        $output['importing'] = '<em class="importer-action-message"><i class="gmw-importer-spinner gmw-icon-spin-3 animate-spin"></i><span class="action-ph">' . __( 'Searching for locations...', 'geo-my-wp' ). '</span></em>';
         
         $output['bar'] 		 = '<div class="gmw-importer-progress-bar"><div class="importing"></div></div>';
         
-        $output['scanned']   = '<p class="locations-completed-message">'. sprintf( __( '%s out of %s locations were scanned.', 'GMW' ), '<span class="completed-ph">0</span>', '<span class="total-ph">0</span>' ) .'</p>';
+        $output['scanned']   = '<p class="locations-completed-message">'. sprintf( __( '%s out of %s locations were scanned.', 'geo-my-wp' ), '<span class="completed-ph">0</span>', '<span class="total-ph">0</span>' ) .'</p>';
         
-        $output['updated']   = '<p class="updated-locations-message" '.$updated.'>'. sprintf( __( '%s locations successfuly updated ( were already exsist ).', 'GMW' ), '<span class="updated-ph">0</span>' ) . '</p>';
+        $output['updated']   = '<p class="updated-locations-message" '.$updated.'>'. sprintf( __( '%s locations successfuly updated ( were already exsist ).', 'geo-my-wp' ), '<span class="updated-ph">0</span>' ) . '</p>';
         
-        $output['imported']  =  '<p class="imported-locations-message">' . sprintf( __( '%s locations successfuly imported.', 'GMW' ), '<span class="imported-ph">0</span>' ) . '</p>';
+        $output['imported']  =  '<p class="imported-locations-message">' . sprintf( __( '%s locations successfuly imported.', 'geo-my-wp' ), '<span class="imported-ph">0</span>' ) . '</p>';
         
-        $output['existing']  =  '<p class="existing-locations-message" '.$exist .'>' . sprintf( __( '%s locations already exist ( were not updated ).', 'GMW' ), '<span class="existing-ph">0</span>' ) . '</p>';
-        $output['failed'] 	 =  '<p class="failed-locations-message">' . sprintf( __( '%s failed to import.', 'GMW' ), '<span class="failed-ph">0</span>' ) . '</p>';
+        $output['existing']  =  '<p class="existing-locations-message" '.$exist .'>' . sprintf( __( '%s locations already exist ( were not updated ).', 'geo-my-wp' ), '<span class="existing-ph">0</span>' ) . '</p>';
+        $output['failed'] 	 =  '<p class="failed-locations-message">' . sprintf( __( '%s failed to import.', 'geo-my-wp' ), '<span class="failed-ph">0</span>' ) . '</p>';
 
         $done_message = $this->done_message();
 
@@ -549,13 +549,13 @@ function gmw_locations_importer_init() {
 	if ( ! check_ajax_referer( 'gmw_importer_nonce_'.$_POST['importAction'], 'security', false ) ) {
 
 		//abort if bad nonce
-		wp_die( __( 'Trying to cheat or something?', 'GMW' ), __( 'Error', 'GMW' ), array( 'response' => 403 ) );
+		wp_die( __( 'Trying to cheat or something?', 'geo-my-wp' ), __( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
 	}
 
 	// verify that a child class name passes.
 	if ( empty( $_POST['importAction'] ) ) {
 		
-		wp_die( __( 'Action class name is missing', 'GMW' ), E_USER_ERROR );
+		wp_die( __( 'Action class name is missing', 'geo-my-wp' ), E_USER_ERROR );
 		
 		exit;
 	}
@@ -566,7 +566,7 @@ function gmw_locations_importer_init() {
 	//verify that the class exists.
 	if ( ! class_exists( $class_name ) ) {
 
-		wp_die( sprintf( __( 'Call to undefined function %s', 'GMW' ), $class_name ), E_USER_ERROR );
+		wp_die( sprintf( __( 'Call to undefined function %s', 'geo-my-wp' ), $class_name ), E_USER_ERROR );
 		
 		exit;
 	}

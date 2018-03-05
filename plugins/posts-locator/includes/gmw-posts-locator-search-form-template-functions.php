@@ -56,8 +56,8 @@ class GMW_PT_Search_Form_Helper {
 
             } else {
 
-                $options_all = sprintf( __( 'All %s', 'GMW' ), $taxonomy->labels->name );
-                $placeholder = sprintf( __( 'Select %s', 'GMW' ), $taxonomy->labels->name );
+                $options_all = sprintf( __( 'All %s', 'geo-my-wp' ), $taxonomy->labels->name );
+                $placeholder = sprintf( __( 'Select %s', 'geo-my-wp' ), $taxonomy->labels->name );
             }
         } 
 
@@ -83,7 +83,7 @@ class GMW_PT_Search_Form_Helper {
             'usage'               => $args['usage'],
             'multiple_selections' => $args['multiple_selections'],
             'placeholder'         => $placeholder,
-            'no_results_text'     => __( 'No results match', 'GMW' ),
+            'no_results_text'     => __( 'No results match', 'geo-my-wp' ),
         ), $taxonomy );
 
         // deprected hook. Will be removed in the future.
@@ -157,7 +157,7 @@ function gmw_get_search_form_post_types( $args = array(), $post_types = array( '
         'id_tag'           => '',
         'class_tag'        => '',
         'object'           => 'post-types',
-        'show_options_all' => __( 'Search site', 'GMW' ),
+        'show_options_all' => __( 'Search site', 'geo-my-wp' ),
         'name_tag'         => $url_px.'post'
     );
 
@@ -216,7 +216,7 @@ function gmw_get_search_form_post_types( $args = array(), $post_types = array( '
         $args = array(
             'id'               => $gmw['ID'],
             'usage'            => isset( $settings['usage'] ) ? $settings['usage'] : 'dropdown',
-            'show_options_all' => isset( $settings['show_options_all'] ) ? $settings['show_options_all'] : __( 'Search site', 'GMW' ),
+            'show_options_all' => isset( $settings['show_options_all'] ) ? $settings['show_options_all'] : __( 'Search site', 'geo-my-wp' ),
         );
 
         $element = gmw_get_search_form_post_types( $args, $gmw['search_form']['post_types'] );

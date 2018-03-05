@@ -37,7 +37,7 @@ function gmw_shortcode( $attr ) {
 
 		$status = 'error';
 
-		$error_message = __( 'Invalid or missing form type.', 'GMW' );
+		$error_message = __( 'Invalid or missing form type.', 'geo-my-wp' );
 
 		return;
 	}
@@ -86,7 +86,7 @@ function gmw_shortcode( $attr ) {
 
 		$status = 'error';
 
-		$error_message = __( 'Form does not exist.', 'GMW' );
+		$error_message = __( 'Form does not exist.', 'geo-my-wp' );
 
 		return;
 	}
@@ -103,7 +103,7 @@ function gmw_shortcode( $attr ) {
 
 		$status = 'error';
 
-		$error_message = __( 'The add-on which this form belongs to is deactivated.', 'GMW' );
+		$error_message = __( 'The add-on which this form belongs to is deactivated.', 'geo-my-wp' );
 
 		return;
 	}

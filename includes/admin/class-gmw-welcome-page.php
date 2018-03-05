@@ -44,14 +44,14 @@ class GMW_Welcome_Page {
 	private function tabs() {
 
 		?>
-		<h1><?php printf( __( 'Welcome to GEO my WP %s', 'GMW' ), GMW_VERSION ); ?></h1>
+		<h1><?php printf( __( 'Welcome to GEO my WP %s', 'geo-my-wp' ), GMW_VERSION ); ?></h1>
 
 		<h2 class="gmw-tabs-wrapper">
 			<a class="gmw-nav-tab" href="#whats-new-tab-panel">
-				<?php _e( "What's New", 'GMW' ); ?>
+				<?php _e( "What's New", 'geo-my-wp' ); ?>
 			</a>
 			<a class="gmw-nav-tab" href="#updates-tab-panel">
-				<?php _e( 'Updates', 'GMW' ); ?>
+				<?php _e( 'Updates', 'geo-my-wp' ); ?>
 			</a>
 		</h2>
 		<?php

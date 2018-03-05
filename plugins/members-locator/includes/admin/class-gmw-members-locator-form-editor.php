@@ -54,8 +54,8 @@ class GMW_Members_Locator_Form_Editor {
             'name'       => 'xprofile_fields',
             'type'       => 'function',
             'default'    => '',
-            'label'      => __( 'Xprofile Fields', 'GMW' ),
-            'desc'       => __( '<ul><li> - Profile fields - Select the profile fields that will be used as filters in the search form.</li><li> - Age range field - select a date field that will be used as a age range filter in the search form.</li></ul>', 'GMW' ),
+            'label'      => __( 'Xprofile Fields', 'geo-my-wp' ),
+            'desc'       => __( '<ul><li> - Profile fields - Select the profile fields that will be used as filters in the search form.</li><li> - Age range field - select a date field that will be used as a age range filter in the search form.</li></ul>', 'geo-my-wp' ),
             'attributes' => '',
             'priority'   => 13
         );

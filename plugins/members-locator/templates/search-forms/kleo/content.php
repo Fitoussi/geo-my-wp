@@ -35,7 +35,7 @@
 			<?php gmw_search_form_locator_button( $gmw ); ?>
 
 			<span class="xprofile-fields-trigger" onclick="jQuery(this).closest('form').find('.gmw-kleo-advanced-search-wrapper' ).slideToggle();">
-				<?php _e( 'More options','GMW' ); ?>
+				<?php _e( 'More options','geo-my-wp' ); ?>
 			</span>
 
 			<?php do_action( 'gmw_search_form_before_submit', $gmw ); ?>

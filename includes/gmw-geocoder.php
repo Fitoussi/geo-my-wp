@@ -191,17 +191,17 @@ function gmw_geocoder( $raw_data = '', $force_refresh = false ) {
 
             // otherwise, if no results. display errors
             } elseif ( $data->status === 'ZERO_RESULTS' ) {
-                return array( 'geocoded' => false, 'error' => __( 'The data entered could not be geocoded.', 'GMW' ) );
+                return array( 'geocoded' => false, 'error' => __( 'The data entered could not be geocoded.', 'geo-my-wp' ) );
             } elseif ( $data->status === 'INVALID_REQUEST' ) {
-                return array( 'geocoded' => false, 'error' => __( 'Invalid request. Did you enter an address?', 'GMW' ) );
+                return array( 'geocoded' => false, 'error' => __( 'Invalid request. Did you enter an address?', 'geo-my-wp' ) );
             } elseif ( $data->status === 'OVER_QUERY_LIMIT' ) { 
-                return array( 'geocoded' => false, 'error' => __( 'Something went wrong while retrieving your location.', 'GMW' ) . '<span style="display:none">OVER_QUERY_LIMIT</span>' );
+                return array( 'geocoded' => false, 'error' => __( 'Something went wrong while retrieving your location.', 'geo-my-wp' ) . '<span style="display:none">OVER_QUERY_LIMIT</span>' );
             } else {
-                return array( 'geocoded' => false, 'error' => __( 'Something went wrong while retrieving your location.', 'GMW' ) );
+                return array( 'geocoded' => false, 'error' => __( 'Something went wrong while retrieving your location.', 'geo-my-wp' ) );
             }
 
         } else {
-            return array( 'geocoded' => false, 'error' => __( 'Unable to contact Google API service.', 'GMW' ) );
+            return array( 'geocoded' => false, 'error' => __( 'Unable to contact Google API service.', 'geo-my-wp' ) );
         }
     } 
     

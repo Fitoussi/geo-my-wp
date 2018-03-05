@@ -86,7 +86,7 @@ function gmw_search_results_location_meta( $object, $gmw = array(), $label = tru
     $output = '<div class="gmw-location-meta-wrapper">';
 
     if ( ! empty( $label ) ) {
-        $label = is_string( $label ) ? esc_html( $label ) : __( 'Contact Information', 'GMW' ); 
+        $label = is_string( $label ) ? esc_html( $label ) : __( 'Contact Information', 'geo-my-wp' ); 
         $output .= '<h3>'.$label.'</h3>';
     }
     
@@ -121,7 +121,7 @@ function gmw_search_results_hours_of_operation( $object, $gmw = array(), $label 
     $output .= '<div class="gmw-hours-of-operation-wrapper">';
     
     if ( ! empty( $label ) ) {
-        $label = is_string( $label ) ? esc_html( $label ) : __( 'Hours of operation', 'GMW' );  
+        $label = is_string( $label ) ? esc_html( $label ) : __( 'Hours of operation', 'geo-my-wp' );  
         $output .= '<h3>'.$label.'</h3>';
     }
     

@@ -31,12 +31,12 @@ function gmw_record_member_location_activity( $user_id, $user_location ) {
     // show address in activity only if enabled or not empty
     if ( ! empty( $activity_address ) ) {
        
-        $activity_text     = __( '%s updated new location at %s', 'GMW' );
+        $activity_text     = __( '%s updated new location at %s', 'geo-my-wp' );
         $activity_location = '<a class="gmw-fl-location-activity gmw-icon-location" target="_blank" href="'.esc_url( 'https://maps.google.com/maps?f=d'.$language.$region.'&geocode=&saddr='.$activity_address.$current_address.'&ie=UTF8&z=12' ).'" >'.esc_attr( $activity_address ).'</a>';
         $activity_action   = sprintf( $activity_text, $user_link, $activity_location );
     
     } else {
-        $activity_text   = __( '%s updated new location', 'GMW' );
+        $activity_text   = __( '%s updated new location', 'geo-my-wp' );
         $activity_action = sprintf( $activity_text, $user_link );
     }
     

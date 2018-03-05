@@ -52,19 +52,19 @@ class GMW_Posts_Locator_Screens {
 
             if ( array_key_exists( 'comments', $columns ) && $key == 'comments' ) {
                 
-                $new_columns['gmw_address'] = '<i class="gmw-icon-location"></i>'. __( 'Location', 'GMW' );
+                $new_columns['gmw_address'] = '<i class="gmw-icon-location"></i>'. __( 'Location', 'geo-my-wp' );
                 $no_col = false;
             
             } elseif ( ! array_key_exists( 'comments', $columns ) && array_key_exists( 'date', $columns ) && $key == 'date' ) {
                 
-                $new_columns['gmw_address'] = '<i class="gmw-icon-location"></i>'. __( 'Location', 'GMW' ) .'</i>';
+                $new_columns['gmw_address'] = '<i class="gmw-icon-location"></i>'. __( 'Location', 'geo-my-wp' ) .'</i>';
                 $no_col = false;
             } 
             $new_columns[$key] = $column;
         }
 
         if ( $no_col ) {
-            $new_columns['gmw_address'] = __( 'Location', 'GMW' );
+            $new_columns['gmw_address'] = __( 'Location', 'geo-my-wp' );
         }
 
         return $new_columns;
@@ -134,7 +134,7 @@ class GMW_Posts_Locator_Screens {
             
         add_meta_box(
             'gmw-location-meta-box'
-            ,apply_filters( 'gmw_pt_mb_title', __( 'Location', 'GMW' ) )
+            ,apply_filters( 'gmw_pt_mb_title', __( 'Location', 'geo-my-wp' ) )
             ,array( $this, 'display_meta_box' )
             ,$post->post_type
             ,'advanced'

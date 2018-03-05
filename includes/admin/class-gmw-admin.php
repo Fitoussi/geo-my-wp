@@ -91,8 +91,8 @@ class GMW_Admin {
 	 */
 	public function gmw_action_links( $links, $file ) {
 		
-		$links[] = '<a href="' . admin_url( 'admin.php?page=gmw-settings' ).'">' . __( 'Settings' , 'GMW' ) . '</a>';
-		$links[] = '<a href="' . esc_url( 'https://geomywp.com/extensions' ).'" target="_blank">' . __( 'Extensions' , 'GMW' ) . '</a>';
+		$links[] = '<a href="' . admin_url( 'admin.php?page=gmw-settings' ).'">' . __( 'Settings' , 'geo-my-wp' ) . '</a>';
+		$links[] = '<a href="' . esc_url( 'https://geomywp.com/extensions' ).'" target="_blank">' . __( 'Extensions' , 'geo-my-wp' ) . '</a>';
 		
 		return $links;
 	}
@@ -113,8 +113,8 @@ class GMW_Admin {
 
 		$menu_items[] = array(
 			'parent_slug' 		=> 'gmw-extensions',
-			'page_title' 		=> __( 'GEO my WP Extensions', 'GMW' ),
-			'menu_title' 		=> __( 'Extensions', 'GMW' ),
+			'page_title' 		=> __( 'GEO my WP Extensions', 'geo-my-wp' ),
+			'menu_title' 		=> __( 'Extensions', 'geo-my-wp' ),
 			'capability' 		=> 'manage_options',
 			'menu_slug' 		=> 'gmw-extensions',
 			'callback_function' => array( $this->addons_page, 'output' ),
@@ -123,8 +123,8 @@ class GMW_Admin {
 
 		$menu_items[] = array(
 			'parent_slug' 		=> 'gmw-extensions',
-			'page_title' 		=> __( 'GEO my WP Settings', 'GMW' ),
-			'menu_title' 		=> __( 'Settings', 'GMW' ),
+			'page_title' 		=> __( 'GEO my WP Settings', 'geo-my-wp' ),
+			'menu_title' 		=> __( 'Settings', 'geo-my-wp' ),
 			'capability' 		=> 'manage_options',
 			'menu_slug' 		=> 'gmw-settings',
 			'callback_function' => array( $this->settings_page, 'output' ),
@@ -135,8 +135,8 @@ class GMW_Admin {
 		
 		$menu_items[] = array(
 			'parent_slug' 		=> 'gmw-extensions',
-			'page_title' 		=> __( 'GEO my WP Forms', 'GMW' ),
-			'menu_title' 		=> __( 'Forms', 'GMW' ),
+			'page_title' 		=> __( 'GEO my WP Forms', 'geo-my-wp' ),
+			'menu_title' 		=> __( 'Forms', 'geo-my-wp' ),
 			'capability' 		=> 'manage_options',
 			'menu_slug' 		=> 'gmw-forms',
 			'callback_function' => array( $forms_output, 'output' ),
@@ -145,8 +145,8 @@ class GMW_Admin {
 
 		$menu_items[] = array(
 			'parent_slug' 		=> 'gmw-extensions',
-			'page_title' 		=> __( 'GEO my WP Import / Export', 'GMW' ),
-			'menu_title' 		=> __( 'Import / Export', 'GMW' ),
+			'page_title' 		=> __( 'GEO my WP Import / Export', 'geo-my-wp' ),
+			'menu_title' 		=> __( 'Import / Export', 'geo-my-wp' ),
 			'capability' 		=> 'manage_options',
 			'menu_slug' 		=> 'gmw-import-export',
 			'callback_function' => array( $this->import_export_page, 'output' ),
@@ -155,8 +155,8 @@ class GMW_Admin {
 
 		$menu_items[] = array(
 			'parent_slug' 		=> 'gmw-extensions',
-			'page_title' 		=> __( 'GEO my WP Tools', 'GMW' ),
-			'menu_title' 		=> __( 'Tools', 'GMW' ),
+			'page_title' 		=> __( 'GEO my WP Tools', 'geo-my-wp' ),
+			'menu_title' 		=> __( 'Tools', 'geo-my-wp' ),
 			'capability' 		=> 'manage_options',
 			'menu_slug' 		=> 'gmw-tools',
 			'callback_function' => array( $this->tools_page, 'output' ),
@@ -171,8 +171,8 @@ class GMW_Admin {
 		 *
 		 * $menu_items[] = array(
 		 * 	  'parent_slug' 	  => 'gmw-extensions', // the main menu to add your sub-menu item to. Should always be gmw-extensions
-		 *	  'page_title' 		  => __( 'GEO my WP Tools', 'GMW' ),
-		 *	  'menu_title' 		  => __( 'Tools', 'GMW' ),
+		 *	  'page_title' 		  => __( 'GEO my WP Tools', 'geo-my-wp' ),
+		 *	  'menu_title' 		  => __( 'Tools', 'geo-my-wp' ),
 		 *	  'capability' 		  => 'manage_options',
 		 *	  'menu_slug' 		  => 'gmw-tools',
 		 *	  'callback_function' => array( 'tools_page', 'output' ), // this can be either a string when using a function or array of class and the function to execute.
@@ -257,7 +257,7 @@ class GMW_Admin {
 					$new_addon['status_details']['error'] = 'gmw_version_mismatch';
 					$new_addon['status_details']['required_version'] = $new_addon['gmw_min_version'];
 					$new_addon['status_details']['notice'] = sprintf( 
-						__( '%s extension version %s requires GEO my WP plugin version %s or higher.', 'GMW' ), 
+						__( '%s extension version %s requires GEO my WP plugin version %s or higher.', 'geo-my-wp' ), 
 						$new_addon['name'], 
 						$new_addon['version'], 
 						$new_addon['gmw_min_version']
@@ -269,7 +269,7 @@ class GMW_Admin {
 					$new_addon['status_details']['error'] = 'addon_version_mismatch';
 					$new_addon['status_details']['required_version'] = $new_addon['min_version'];
 					$new_addon['status_details']['notice'] = sprintf( 
-						__( '%s extension requires an update to version %s.', 'GMW' ), 
+						__( '%s extension requires an update to version %s.', 'geo-my-wp' ), 
 						$new_addon['name'],
 						$new_addon['min_version']
 					);
@@ -345,10 +345,10 @@ class GMW_Admin {
         	href="#TB_inline?width=480&inlineId=select_gmw_form" 
         	class="thickbox button gmw_media_link" 
         	id="add_gmw_form" 
-        	title="<?php _e( 'GEO my WP Form Shortcode', 'GMW' ); ?>"
+        	title="<?php _e( 'GEO my WP Form Shortcode', 'geo-my-wp' ); ?>"
         >
         	<span class="dashicons-location-alt dashicons"></span>
-        	<?php _e( 'GMW Form', 'GMW' ); ?>
+        	<?php _e( 'GMW Form', 'geo-my-wp' ); ?>
        	</a>
        	<?php
     }
@@ -369,7 +369,7 @@ class GMW_Admin {
 
                 if ( form_id == "" ){
                     
-                    alert( '<?php _e( 'Please select a form', 'GMW' ) ?>' );
+                    alert( '<?php _e( 'Please select a form', 'geo-my-wp' ) ?>' );
                     
                     return;
                 }
@@ -384,8 +384,8 @@ class GMW_Admin {
             <div class="gmw-form-shortcode-thickbox-wrap">
                 <div>
                     <div>
-                        <h3><?php _e( 'Insert A Form Shortcode', 'GMW' ); ?></h3>
-                        <p><?php _e( 'Select the type of shortcode you wish to add:', 'GMW' ); ?></p>
+                        <h3><?php _e( 'Insert A Form Shortcode', 'geo-my-wp' ); ?></h3>
+                        <p><?php _e( 'Select the type of shortcode you wish to add:', 'geo-my-wp' ); ?></p>
                     </div>
                     
                     <div class="checkboxes">
@@ -394,28 +394,28 @@ class GMW_Admin {
                         		type="radio" class="gmw_form_type" checked="checked" name="gmw_form_type" value="form" 
                         		onclick="if ( jQuery( '#gmw-forms-dropdown-wrapper' ).is( ':hidden' ) ) jQuery( '#gmw-forms-dropdown-wrapper' ).slideToggle();" 
                         	/> 
-                        	<?php _e( 'Complete Form', 'GMW' ); ?>	
+                        	<?php _e( 'Complete Form', 'geo-my-wp' ); ?>	
                         </label>
 
                         <label>
                         	<input type="radio" class="gmw_form_type" name="gmw_form_type"  value="search_form" 
                         		onclick="if ( jQuery( '#gmw-forms-dropdown-wrapper' ).is( ':hidden' ) ) jQuery('#gmw-forms-dropdown-wrapper' ).slideToggle();" 
                         	/> 
-                        	<?php _e( 'Search Form Only', 'GMW' ); ?>	
+                        	<?php _e( 'Search Form Only', 'geo-my-wp' ); ?>	
                         </label>
 
                         <label>
 	                        <input type="radio" class="gmw_form_type" name="gmw_form_type"  value="map" 
 	                        	onclick="if ( jQuery( '#gmw-forms-dropdown-wrapper' ).is( ':hidden' ) ) jQuery('#gmw-forms-dropdown-wrapper').slideToggle();" 
 	                        /> 
-                        	<?php _e( 'Map Only', 'GMW'); ?>	
+                        	<?php _e( 'Map Only', 'geo-my-wp'); ?>	
                         </label>
 
                         <label>
 	                        <input type="radio" class="gmw_form_type" name="gmw_form_type" value="search_results" 
 	                        	onclick="if ( jQuery( '#gmw-forms-dropdown-wrappe' ).is( ':visible' ) ) jQuery('#gmw-forms-dropdown-wrapper').slideToggle();" 
 	                        /> 
-                        	<?php _e( 'Search Results Only', 'GMW' ); ?>	
+                        	<?php _e( 'Search Results Only', 'geo-my-wp' ); ?>	
                        	</label>
 
                     </div>
@@ -423,7 +423,7 @@ class GMW_Admin {
                     <div id="gmw-forms-dropdown-wrapper">
                         <select id="gmw_form_id">
                             <option value="">
-                            	<?php _e( 'Select a Form', 'GMW' ); ?>	
+                            	<?php _e( 'Select a Form', 'geo-my-wp' ); ?>	
                             </option>
                             <?php
                                 $forms = gmw_get_forms();
@@ -445,11 +445,11 @@ class GMW_Admin {
                         <input 
                         	type="button" 
                         	class="button-primary" 
-                        	value="<?php _e( 'Insert Shortcode', 'GMW' ); ?>" 
+                        	value="<?php _e( 'Insert Shortcode', 'geo-my-wp' ); ?>" 
                         	onclick="gmwInsertForm();"
                         />
                     	<a class="button" href="#" onclick="tb_remove(); return false;">
-                    		<?php _e( 'Cancel', 'GMW' ); ?>
+                    		<?php _e( 'Cancel', 'geo-my-wp' ); ?>
                     	</a>
                     </div>
                 </div>
@@ -465,7 +465,7 @@ class GMW_Admin {
 	 * @return string
 	 */
 	static public function gmw_credit_footer( $content ) {
-		return preg_replace( '/[.,]/', '', $content ) . ' ' . sprintf( __( 'and Geolocating with <a %s>GEO my WP</a>. Your <a %s>feedback</a> on GEO my WP is greatly appriciated.', 'GMW' ), "href=\"http://geomywp.com\" target=\"_blank\" title=\"GEO my WP website\"", "<a href=\"https://wordpress.org/support/view/plugin-reviews/geo-my-wp?filter=5\" target=\"_blank\" title=\"Rate GEO my WP\"" );	
+		return preg_replace( '/[.,]/', '', $content ) . ' ' . sprintf( __( 'and Geolocating with <a %s>GEO my WP</a>. Your <a %s>feedback</a> on GEO my WP is greatly appriciated.', 'geo-my-wp' ), "href=\"http://geomywp.com\" target=\"_blank\" title=\"GEO my WP website\"", "<a href=\"https://wordpress.org/support/view/plugin-reviews/geo-my-wp?filter=5\" target=\"_blank\" title=\"Rate GEO my WP\"" );	
 	}
 }
 new GMW_Admin();

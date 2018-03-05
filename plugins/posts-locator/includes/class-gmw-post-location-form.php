@@ -55,12 +55,12 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
         $tabs = parent::form_tabs();
 
         $tabs['contact'] = array(
-            'label'        => __( 'Contact', 'GMW' ),
+            'label'        => __( 'Contact', 'geo-my-wp' ),
             'icon'         => 'gmw-icon-phone',
             'priority'     => 20,
         );
         $tabs['days_hours'] = array(
-            'label'        => __( 'Days & Hours', 'GMW' ),
+            'label'        => __( 'Days & Hours', 'geo-my-wp' ),
             'icon'         => 'gmw-icon-clock',
             'priority'     => 25,
         );
@@ -83,11 +83,11 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
 
         // contact meta fields
         $fields['contact_info'] = array(
-            'label'  => __( 'Contact Information', 'GMW' ),
+            'label'  => __( 'Contact Information', 'geo-my-wp' ),
             'fields' => array(
                 'phone' => array(
                     'name'        => 'gmw_pt_phone',
-                    'label'       => __( 'Phone Number', 'GMW' ),
+                    'label'       => __( 'Phone Number', 'geo-my-wp' ),
                     'desc'        => '',
                     'id'          => 'gmw-phone',
                     'type'        => 'text',
@@ -99,7 +99,7 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
                 ),
                 'fax'  => array(
                     'name'        => 'gmw_pt_fax',
-                    'label'       => __( 'Fax Number', 'GMW' ),
+                    'label'       => __( 'Fax Number', 'geo-my-wp' ),
                     'desc'        => '',
                     'id'          => 'gmw-fax',
                     'type'        => 'text',
@@ -111,7 +111,7 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
                 ),
                 'email'    => array(
                     'name'        => 'gmw_pt_email',
-                    'label'       => __( 'Email Address', 'GMW' ),
+                    'label'       => __( 'Email Address', 'geo-my-wp' ),
                     'desc'        => '',
                     'id'          => 'gmw-email',
                     'type'        => 'text',
@@ -123,7 +123,7 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
                 ),
                 'website'  => array(
                     'name'        => 'gmw_pt_website',
-                    'label'       => __( 'Website', 'GMW' ),
+                    'label'       => __( 'Website', 'geo-my-wp' ),
                     'desc'        => 'Ex: www.website.com',
                     'id'          => 'gmw-website',
                     'type'        => 'text',
@@ -138,11 +138,11 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
 
         // days and hours
         $fields['days_hours'] = array(
-            'label'     => __( 'Days & Hours', 'GMW' ),
+            'label'     => __( 'Days & Hours', 'geo-my-wp' ),
             'fields'    => array(
                 'days_hours'  => array(
                     'name'        => 'gmw_pt_days_hours',
-                    'label'       => __( 'Days & Hours', 'GMW' ),
+                    'label'       => __( 'Days & Hours', 'geo-my-wp' ),
                     'desc'        => '',
                     'id'          => 'gmw-days-hours',
                     'type'        => 'text',
@@ -184,7 +184,7 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
 
             <?php do_action( 'gmw_lf_post_days_hours_section_start', $this ); ?>
 
-            <h3><?php _e( 'Days & Hours', 'GMW' ) ?></h3>
+            <h3><?php _e( 'Days & Hours', 'geo-my-wp' ) ?></h3>
         
             <?php 
                 //get the location's days_hours from database
@@ -196,13 +196,13 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
                 <?php for ( $i = 0; $i <= 6; $i++ ) { ?>
                     <tr>
                         <th style="width:30px">
-                            <label for=""><?php _e( 'Days', 'GMW' ); ?></label>
+                            <label for=""><?php _e( 'Days', 'geo-my-wp' ); ?></label>
                         </th>
                         <td style="width:150px">
                             <input type="text" class="gmw-lf-field group_days_hours" name="gmw_location_form[location_meta][days_hours][<?php echo $i; ?>][days]" id="gmw-pt-days-<?php echo $i; ?>" value="<?php if ( ! empty( $days_hours[$i]['days'] ) ) echo esc_attr( $days_hours[$i]['days'] ); ?>" />
                         </td>
                         <th style="width:30px">
-                            <label for=""><?php _e( 'Hours', 'GMW' ); ?></label>
+                            <label for=""><?php _e( 'Hours', 'geo-my-wp' ); ?></label>
                         </th>
                         <td>
                             <input type="text" class="gmw-pt-field group_days_hours" name="gmw_location_form[location_meta][days_hours][<?php echo $i; ?>][hours]" id="gmw-pt-hours-<?php echo $i; ?>" value="<?php if ( ! empty( $days_hours[$i]['hours'] ) ) echo esc_attr( $days_hours[$i]['hours'] ); ?>" />

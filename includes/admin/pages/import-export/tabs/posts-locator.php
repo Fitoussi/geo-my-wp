@@ -24,12 +24,12 @@ function gmw_output_import_export_tab() {
 		
 		<?php 			
 		$tabs = array(
-			//'gmw_custom_fields'  => __( 'GEO my WP Custom Fields', 'GMW' ),
-			'post_custom_fields' => __( 'Post Custom Fields', 'GMW' ),	
+			//'gmw_custom_fields'  => __( 'GEO my WP Custom Fields', 'geo-my-wp' ),
+			'post_custom_fields' => __( 'Post Custom Fields', 'geo-my-wp' ),	
 		);
 
 		if ( class_exists( 'Mappress' ) ) {
-			$tabs['mappress_plugin'] = __( 'MapPress Plugin', 'GMW' );
+			$tabs['mappress_plugin'] = __( 'MapPress Plugin', 'geo-my-wp' );
 		}
 
 		// filter tabs
@@ -54,7 +54,7 @@ function gmw_output_import_export_tab() {
 					<div class="postbox ">
 			
 						<h3 class="hndle">
-							<span><?php _e( 'Export/Import Posts Types Locations using GEO my WP post_meta', 'GMW' ); ?></span>
+							<span><?php _e( 'Export/Import Posts Types Locations using GEO my WP post_meta', 'geo-my-wp' ); ?></span>
 						</h3>
 
 						<div class="inside">
@@ -95,7 +95,7 @@ function gmw_output_import_export_tab() {
 										<p>
 											<input type="hidden" name="gmw_action" value="pt_locations_post_meta_export" />
 											<?php wp_nonce_field( 'gmw_pt_locations_post_meta_export_nonce', 'gmw_pt_locations_post_meta_export_nonce' ); ?>
-											<?php submit_button( __( 'Export', 'GMW' ), 'secondary', 'submit', false ); ?>
+											<?php submit_button( __( 'Export', 'geo-my-wp' ), 'secondary', 'submit', false ); ?>
 										</p>
 									</form>
 								</li>
@@ -163,19 +163,19 @@ function gmw_output_import_export_tab() {
 					<div class="postbox ">
 			
 						<h3 class="hndle">
-							<span><?php _e( 'Post Custom Fields Importer', 'GMW' ); ?></span>
+							<span><?php _e( 'Post Custom Fields Importer', 'geo-my-wp' ); ?></span>
 						</h3>
 
 						<div class="inside">
 							<p>
-								<?php _e( 'Use this form to import locations from specific custom fields into GEO my WP. This is useful when importing locations created by another plugin and its location data is saved in custom fields.', 'GMW' ); ?><br />
+								<?php _e( 'Use this form to import locations from specific custom fields into GEO my WP. This is useful when importing locations created by another plugin and its location data is saved in custom fields.', 'geo-my-wp' ); ?><br />
 							</p>
 							<p>
-								<?php _e( 'Before you can import locations you need to set the location custom fields. To do so, Click "Set custom field" to set each of GEO my WP\'s location fields.', 'GMW' ); ?>	
+								<?php _e( 'Before you can import locations you need to set the location custom fields. To do so, Click "Set custom field" to set each of GEO my WP\'s location fields.', 'geo-my-wp' ); ?>	
 							</p>
 
 							<p>			
-								<em><?php _e( '*Note that only the latitude and longitude fields are mandatory. However, to take full advantage of GEO my WP features it is recomended to provide as many fields as possible.', 'GMW' ); ?>
+								<em><?php _e( '*Note that only the latitude and longitude fields are mandatory. However, to take full advantage of GEO my WP features it is recomended to provide as many fields as possible.', 'geo-my-wp' ); ?>
 								</em>
 							</p>
 			
@@ -203,30 +203,30 @@ function gmw_output_import_export_tab() {
 								}
 
 						        $fields_data = array(
-					        		'latitude'			=> __( 'Latitude ( mandatory )', 'GMW' ),
-					        		'longitude'			=> __( 'Longitude ( mandatory )', 'GMW' ),
-					        		'street_number'		=> __( 'Street Number', 'GMW' ),
-					        		'street_name'		=> __( 'Street Name', 'GMW' ),
-					        		'street' 			=> __( 'Street ( number + name )', 'GMW' ),
-					        		'premise' 	 		=> __( 'Apt / Premise', 'GMW' ),
-					        		'neighborhood' 	 	=> __( 'Neighborhood', 'GMW' ),
-					        		'city' 				=> __( 'City', 'GMW' ),
-					        		'county' 			=> __( 'County', 'GMW' ),
-					        		'region_name' 		=> __( 'State Name ( ex. Florida )', 'GMW' ),
-					        		'region_code' 		=> __( 'State Code ( ex. FL )', 'GMW' ),
-					        		'postcode' 			=> __( 'zipcode', 'GMW' ),
-					        		'country_name' 		=> __( 'Country Name ( ex. UNited States )', 'GMW' ),
-					        		'country_code' 		=> __( 'Country Code ( ex. US )', 'GMW' ),
-					        		'address' 			=> __( 'Address ( address field the way the user enteres )', 'GMW' ),
-					        		'formatted_address' => __( 'Formatted Address ( formatted address returned from Google after geocoding )', 'GMW' ),
-					        		'place_id'			=> __( 'Google Place ID', 'GMW' ),
-					        		'map_icon'			=> __( 'Map Icon', 'GMW' )
+					        		'latitude'			=> __( 'Latitude ( mandatory )', 'geo-my-wp' ),
+					        		'longitude'			=> __( 'Longitude ( mandatory )', 'geo-my-wp' ),
+					        		'street_number'		=> __( 'Street Number', 'geo-my-wp' ),
+					        		'street_name'		=> __( 'Street Name', 'geo-my-wp' ),
+					        		'street' 			=> __( 'Street ( number + name )', 'geo-my-wp' ),
+					        		'premise' 	 		=> __( 'Apt / Premise', 'geo-my-wp' ),
+					        		'neighborhood' 	 	=> __( 'Neighborhood', 'geo-my-wp' ),
+					        		'city' 				=> __( 'City', 'geo-my-wp' ),
+					        		'county' 			=> __( 'County', 'geo-my-wp' ),
+					        		'region_name' 		=> __( 'State Name ( ex. Florida )', 'geo-my-wp' ),
+					        		'region_code' 		=> __( 'State Code ( ex. FL )', 'geo-my-wp' ),
+					        		'postcode' 			=> __( 'zipcode', 'geo-my-wp' ),
+					        		'country_name' 		=> __( 'Country Name ( ex. UNited States )', 'geo-my-wp' ),
+					        		'country_code' 		=> __( 'Country Code ( ex. US )', 'geo-my-wp' ),
+					        		'address' 			=> __( 'Address ( address field the way the user enteres )', 'geo-my-wp' ),
+					        		'formatted_address' => __( 'Formatted Address ( formatted address returned from Google after geocoding )', 'geo-my-wp' ),
+					        		'place_id'			=> __( 'Google Place ID', 'geo-my-wp' ),
+					        		'map_icon'			=> __( 'Map Icon', 'geo-my-wp' )
 						        );
 						        ?>
 
 						        <a href="#" id="post-meta-fields-toggle" onclick="event.preventDefault(); jQuery('#post-meta-wrapper').slideToggle();">
 
-						        	<?php _e( 'Set Custom Fields', 'GMW'); ?>	
+						        	<?php _e( 'Set Custom Fields', 'geo-my-wp'); ?>	
 						        </a>
    
 						        <div id="post-meta-wrapper" style="display:none">					
@@ -242,7 +242,7 @@ function gmw_output_import_export_tab() {
 												name="gmw_post_meta[<?php echo $name; ?>]"
 											>
 												<option value="" selected="selected">
-													<?php _e( 'N/A', 'GMW' ); ?>	
+													<?php _e( 'N/A', 'geo-my-wp' ); ?>	
 												</option>
 												
 												<?php foreach ( $cFields as $cField ) { ?>			
@@ -262,7 +262,7 @@ function gmw_output_import_export_tab() {
 										
 										<?php wp_nonce_field( 'gmw_save_post_custom_fields_nonce', 'gmw_save_post_custom_fields_nonce' ); ?>
 										
-										<input type="submit" id="import-custom-post-meta-submit" class="button-secondary" value="<?php _e( 'Save Fields', 'GMW' ); ?>" />
+										<input type="submit" id="import-custom-post-meta-submit" class="button-secondary" value="<?php _e( 'Save Fields', 'geo-my-wp' ); ?>" />
 									</p>
 								</div>
 							</form>
@@ -273,7 +273,7 @@ function gmw_output_import_export_tab() {
 										?>
 											<p style="color:red"><?php _e( '*You must set the latitude and longitude fields before you can import locations.' ); ?>
 											</p>
-											<input type="submit" class="button-primary" value="<?php _e( 'Import', 'GMW' ); ?>" disabled />
+											<input type="submit" class="button-primary" value="<?php _e( 'Import', 'geo-my-wp' ); ?>" disabled />
 										<?php
 
 									} else {
@@ -301,7 +301,7 @@ function gmw_output_import_export_tab() {
 					<div class="postbox ">
 			
 						<h3 class="hndle">
-							<span><?php _e( 'MapPress Importer', 'GMW' ); ?></span>
+							<span><?php _e( 'MapPress Importer', 'geo-my-wp' ); ?></span>
 						</h3>
 
 						<div class="inside">
@@ -309,7 +309,7 @@ function gmw_output_import_export_tab() {
 								<?php _e( 'Use this form to import locations from MapPress plugin.' ); ?>
 							</p>
 							<p>
-								<em><?php _e( '*Note, since the current version of GEO my WP supports only single location per post, this importer imports only the first location created by MapPress from each post.', 'GMW' ); ?></em>	
+								<em><?php _e( '*Note, since the current version of GEO my WP supports only single location per post, this importer imports only the first location created by MapPress from each post.', 'geo-my-wp' ); ?></em>	
 							</p>			
 							<p>																				
 								<?php 
@@ -347,12 +347,12 @@ function gmw_save_post_custom_fields() {
 
 	//look for nonce
 	if ( empty( $_POST['gmw_save_post_custom_fields_nonce'] ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'GMW' ) );
+		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
 	//varify nonce
 	if ( ! wp_verify_nonce( $_POST['gmw_save_post_custom_fields_nonce'], 'gmw_save_post_custom_fields_nonce' ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'GMW' ) );
+		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
 	//save custom fields in options table	
@@ -504,7 +504,7 @@ class GMW_Map_Press_Importer extends GMW_Locations_Importer {
 
 		//abort if no table exist
 		if ( count( $table ) == 0 ) {
-			wp_die( sprintf( __( '%s database table cannot be found.', 'GMW' ), $table_name ) );
+			wp_die( sprintf( __( '%s database table cannot be found.', 'geo-my-wp' ), $table_name ) );
 		}
 
 		//count rows only when init the importer

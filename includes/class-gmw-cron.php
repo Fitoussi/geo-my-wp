@@ -38,7 +38,7 @@ class GMW_Cron {
 		// Adds once weekly to the existing schedules.
 		$schedules['weekly'] = array(
 			'interval' => 604800,
-			'display'  => __( 'Once Weekly', 'GMW' )
+			'display'  => __( 'Once Weekly', 'geo-my-wp' )
 		);
 
 		return $schedules;

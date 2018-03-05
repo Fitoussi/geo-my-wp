@@ -51,7 +51,7 @@ class GMW_Form_Editor {
 
 		// make sure form ID passed
 		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) {
-			wp_die( __( 'No form ID provided.', 'GMW' ) );
+			wp_die( __( 'No form ID provided.', 'geo-my-wp' ) );
 		}
 
 		// get form data
@@ -66,7 +66,7 @@ class GMW_Form_Editor {
 
 		// varify if the form exists
 		if ( empty( $this->form ) ) {
-			wp_die( __( 'The form you are trying to edit doe\'s not exist!', 'GMW' ) );
+			wp_die( __( 'The form you are trying to edit doe\'s not exist!', 'geo-my-wp' ) );
 		}
 	}
 
@@ -80,8 +80,8 @@ class GMW_Form_Editor {
      */
     public function notices_messages( $messages ) {
     
-    	$messages['form_updated']     = __( 'Form successfully updated.', 'GMW' );
-    	$messages['form_not_updated'] = __( 'There was an error while trying to update the form.', 'GMW' );
+    	$messages['form_updated']     = __( 'Form successfully updated.', 'geo-my-wp' );
+    	$messages['form_not_updated'] = __( 'There was an error while trying to update the form.', 'geo-my-wp' );
     	
     	return $messages;
     }
@@ -97,21 +97,21 @@ class GMW_Form_Editor {
 		$groups = array(
 			array( 
 				'slug'    	=> 'hidden',
-                'label' 	=> __( 'hidden', 'GMW' ),
+                'label' 	=> __( 'hidden', 'geo-my-wp' ),
                 'fields'	=> array(),
                 'priority'  => 1
             ),
             array( 
             	'slug'    	=> 'page_load_results',
-                'label' 	=> __( 'Page Load Results', 'GMW' ),
+                'label' 	=> __( 'Page Load Results', 'geo-my-wp' ),
                 'fields'	=> array(
                 	'enabled'  => array(
 						'name'  		=> 'enabled',
 						'type'     		=> 'checkbox',
 						'default'   	=> '',
-						'label' 		=> __( 'Enable Page Load Features', 'GMW' ),
-						'desc'  		=> __( 'Check this checkbox to dynamically display all existing posts on page load. You can filter the initial search result using the rest of the filters below.', 'GMW' ),
-						'cb_label' 		=> __( 'Enable', 'GMW' ),
+						'label' 		=> __( 'Enable Page Load Features', 'geo-my-wp' ),
+						'desc'  		=> __( 'Check this checkbox to dynamically display all existing posts on page load. You can filter the initial search result using the rest of the filters below.', 'geo-my-wp' ),
+						'cb_label' 		=> __( 'Enable', 'geo-my-wp' ),
 						'attributes'  	=> '',
 						'priority'		=> 10
 					),
@@ -120,8 +120,8 @@ class GMW_Form_Editor {
 						'type'     		=> 'checkbox',
 						'default'      	=> '',
 						'label'    		=> __( "Visitor's Current Location Filter", "GMW" ),
-						'desc'     		=> __( "GEO my WP will first check for the visitor's current location on page load. And If exists, the locations will be displayed based on that. Notice that the address filter below will be ingnored if the visitor's location exists.", 'GMW' ),
-						'cb_label' 		=> __( 'Enable', 'GMW' ),
+						'desc'     		=> __( "GEO my WP will first check for the visitor's current location on page load. And If exists, the locations will be displayed based on that. Notice that the address filter below will be ingnored if the visitor's location exists.", 'geo-my-wp' ),
+						'cb_label' 		=> __( 'Enable', 'geo-my-wp' ),
 						'attributes'  	=> '',
 						'priority'		=> 20
 					),
@@ -129,9 +129,9 @@ class GMW_Form_Editor {
 						'name'        	=> 'address_filter',
 						'type'			=> 'text',
 						'default'       => '',
-						'placeholder' 	=> __( 'Enter an address', 'GMW' ),
-						'label'       	=> __( 'Address Filter', 'GMW' ),
-						'desc'        	=> __( "Enter an address to search for locations neaby it when the form first loads.", 'GMW' ),
+						'placeholder' 	=> __( 'Enter an address', 'geo-my-wp' ),
+						'label'       	=> __( 'Address Filter', 'geo-my-wp' ),
+						'desc'        	=> __( "Enter an address to search for locations neaby it when the form first loads.", 'geo-my-wp' ),
 						'attributes'  	=> array( 'size' => '25' ),
 						'priority'		=> 30
 					),
@@ -139,9 +139,9 @@ class GMW_Form_Editor {
 						'name'        	=> 'radius',
 						'type'			=> 'text',
 						'default'       => '',
-						'placeholder' 	=> __( 'Ex. 100', 'GMW' ),
-						'label'       	=> __( 'Distance ( radius )', 'GMW' ),
-						'desc'        	=> __( 'Enter default radius value, which will be used when visitor\'s location exists or when address is provided.', 'GMW' ),
+						'placeholder' 	=> __( 'Ex. 100', 'geo-my-wp' ),
+						'label'       	=> __( 'Distance ( radius )', 'geo-my-wp' ),
+						'desc'        	=> __( 'Enter default radius value, which will be used when visitor\'s location exists or when address is provided.', 'geo-my-wp' ),
 						'attributes'  	=> array(),
 						'priority'		=> 40
 					),
@@ -149,11 +149,11 @@ class GMW_Form_Editor {
 						'name'    		=> 'units',
 						'type'    		=> 'select',
 						'default'       => 'imperial',
-						'label'   		=> __( 'Units', 'GMW' ),
-						'desc'    		=> __( 'Select the distance units.', 'GMW' ),
+						'label'   		=> __( 'Units', 'geo-my-wp' ),
+						'desc'    		=> __( 'Select the distance units.', 'geo-my-wp' ),
 						'options' 		=> array(
-							'imperial' 	=> __( 'Miles', 'GMW' ),
-							'metric'   	=> __( 'Kilometers', 'GMW' )
+							'imperial' 	=> __( 'Miles', 'geo-my-wp' ),
+							'metric'   	=> __( 'Kilometers', 'geo-my-wp' )
 						),
 						'attributes'  	=> array(),
 						'priority'		=> 50
@@ -162,9 +162,9 @@ class GMW_Form_Editor {
 						'name'        	=> 'city_filter',
 						'type'			=> 'text',
 						'default'       => '',
-						'placeholder' 	=> __( 'Enter city', 'GMW'),
-						'label'       	=> __( 'City Filter', 'GMW' ),
-						'desc'        	=> __( 'Filter locations by city, or leave blank to omit. When using this filter, GEO my WP does not do a proximity search, but will pull locations with the exact matching city name.', 'GMW' ),
+						'placeholder' 	=> __( 'Enter city', 'geo-my-wp'),
+						'label'       	=> __( 'City Filter', 'geo-my-wp' ),
+						'desc'        	=> __( 'Filter locations by city, or leave blank to omit. When using this filter, GEO my WP does not do a proximity search, but will pull locations with the exact matching city name.', 'geo-my-wp' ),
 						'attributes'  	=> array(),
 						'priority'		=> 60
 					),
@@ -172,9 +172,9 @@ class GMW_Form_Editor {
 						'name'        	=> 'state_filter',
 						'type'			=> 'text',
 						'default'       => '',
-						'placeholder' 	=> __( 'Enter state', 'GMW'),
-						'label'       	=> __( 'State Filter', 'GMW' ),
-						'desc'        	=> __( 'Filter locations by state, or leave blank to omit. When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching state name.', 'GMW' ),
+						'placeholder' 	=> __( 'Enter state', 'geo-my-wp'),
+						'label'       	=> __( 'State Filter', 'geo-my-wp' ),
+						'desc'        	=> __( 'Filter locations by state, or leave blank to omit. When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching state name.', 'geo-my-wp' ),
 						'attributes'  	=> array( 'size' => '25' ),
 						'priority'		=> 70
 					),
@@ -182,9 +182,9 @@ class GMW_Form_Editor {
 						'name'        	=> 'zipcode_filter',
 						'type'			=> 'text',
 						'default'       => '',
-						'placeholder' 	=> __( 'Enter postcode', 'GMW'),
-						'label'       	=> __( 'Zipcode Filter', 'GMW' ),
-						'desc'        	=> __( 'Filter locations by zipcode, or leave blank to omit. When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching zipcode.', 'GMW' ),
+						'placeholder' 	=> __( 'Enter postcode', 'geo-my-wp'),
+						'label'       	=> __( 'Zipcode Filter', 'geo-my-wp' ),
+						'desc'        	=> __( 'Filter locations by zipcode, or leave blank to omit. When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching zipcode.', 'geo-my-wp' ),
 						'attributes'  	=> array( 'size' => '25' ),
 						'priority'		=> 80
 					),
@@ -192,9 +192,9 @@ class GMW_Form_Editor {
 						'name'        	=> 'country_filter',
 						'type'			=> 'select',
 						'default'       => '',
-						'placeholder' 	=> __( 'Enter country', 'GMW'),
-						'label'       	=> __( 'Country Filter', 'GMW' ),
-						'desc'        	=> __( 'Filter locations by country, or leave blank to omit. When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching country name.', 'GMW' ),
+						'placeholder' 	=> __( 'Enter country', 'geo-my-wp'),
+						'label'       	=> __( 'Country Filter', 'geo-my-wp' ),
+						'desc'        	=> __( 'Filter locations by country, or leave blank to omit. When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching country name.', 'geo-my-wp' ),
 						'options'		=> gmw_get_countries_list_array( 'Disable' ),
 						'attributes'  	=> array( 'size' => '25' ),
 						'priority'		=> 90
@@ -203,9 +203,9 @@ class GMW_Form_Editor {
 						'name'     		=> 'display_results',
 						'type'     		=> 'checkbox',
 						'default'       => '',
-						'label'    		=> __( 'Display list of results', 'GMW' ),
-						'desc'     		=> __( 'Display list of results.', 'GMW' ),
-						'cb_label' 		=> __( 'Enable', 'GMW' ),
+						'label'    		=> __( 'Display list of results', 'geo-my-wp' ),
+						'desc'     		=> __( 'Display list of results.', 'geo-my-wp' ),
+						'cb_label' 		=> __( 'Enable', 'geo-my-wp' ),
 						'attributes' 	=> array(),
 						'priority'		=> 100
 					),
@@ -213,12 +213,12 @@ class GMW_Form_Editor {
 						'name'    		=> 'display_map',
 						'type'    		=> 'select',
 						'default'       => '',
-						'label'   		=> __( 'Display Map', 'GMW' ),
-						'desc'    		=> __( 'Disable the map completly, display it above the list of result, or display it anywhere on the page using the shortcode <code>[gmw map=\"form ID\"]</code>.', 'GMW' ),
+						'label'   		=> __( 'Display Map', 'geo-my-wp' ),
+						'desc'    		=> __( 'Disable the map completly, display it above the list of result, or display it anywhere on the page using the shortcode <code>[gmw map=\"form ID\"]</code>.', 'geo-my-wp' ),
 						'options' 		=> array(
-							''        	=> __( 'Disable map', 'GMW' ),
-							'results'   => __( 'Above the list of result', 'GMW' ),
-							'shortcode' => __( 'Using shortcode', 'GMW' ),
+							''        	=> __( 'Disable map', 'geo-my-wp' ),
+							'results'   => __( 'Above the list of result', 'geo-my-wp' ),
+							'shortcode' => __( 'Using shortcode', 'geo-my-wp' ),
 						),
 						'priority'		=> 110
 					),
@@ -226,9 +226,9 @@ class GMW_Form_Editor {
 						'name'        	=> 'per_page',
 						'type'    		=> 'text',
 						'default'       => '5,10,15,25',
-						'placeholder' 	=> __( 'Enter values', 'GMW' ),
-						'label'       	=> __( 'Results Per Page', 'GMW' ),
-						'desc'        	=> __( 'Set the per page value of the initial form load. Enter multiple values, comma separated, to display a per page select dropdown menu in the search results, or enter a single value to set a default per-page value.', 'GMW' ),
+						'placeholder' 	=> __( 'Enter values', 'geo-my-wp' ),
+						'label'       	=> __( 'Results Per Page', 'geo-my-wp' ),
+						'desc'        	=> __( 'Set the per page value of the initial form load. Enter multiple values, comma separated, to display a per page select dropdown menu in the search results, or enter a single value to set a default per-page value.', 'geo-my-wp' ),
 						'attributes'  	=> array(),
 						'priority'		=> 120
 					)
@@ -237,15 +237,15 @@ class GMW_Form_Editor {
             ),
             array( 
             	'slug'		=> 'search_form',
-				'label'		=> __( 'Search Form', 'GMW' ),
+				'label'		=> __( 'Search Form', 'geo-my-wp' ),
 				'fields'	=> array(
 					'form_template'  => array(
 						'name'     		=> 'form_template',
 						'type'     		=> 'select',
 						'default'       => '',
-						'label'    		=> __( 'Search Form Template', 'GMW' ),
-						'desc'  		=> __( 'Select The search form template file.', 'GMW' ),		
-						'options'		=> array( '' => __( 'Disabled', 'GMW' ) ) + gmw_get_search_form_templates( $this->form['component'], $this->form['addon'] ),
+						'label'    		=> __( 'Search Form Template', 'geo-my-wp' ),
+						'desc'  		=> __( 'Select The search form template file.', 'geo-my-wp' ),		
+						'options'		=> array( '' => __( 'Disabled', 'geo-my-wp' ) ) + gmw_get_search_form_templates( $this->form['component'], $this->form['addon'] ),
 						'attributes' 	=> array(),
 						'priority'		=> 10
 					),
@@ -253,28 +253,28 @@ class GMW_Form_Editor {
 						'name'     		=> 'address_field',
 						'type'     		=> 'function',
 						'default'       => '',
-						'label'    		=> __( 'Address Field', 'GMW' ),
+						'label'    		=> __( 'Address Field', 'geo-my-wp' ),
 						'cb_label' 		=> '',
-						'desc'     		=> __( "<ul><li>- Label - enter a lable that you would like to use or leave blank for no label.</li><li>- Placeholder - enter a placeholder that you would like to use or leave blank for no placeholder.</li><li>Mandatory - check to make the field mandatory</li><li>- Address autocomplete - check to enable Google address autocomplete feature.</li><li>- Locator button - check to display a locator button inside the address field.</li><li>-Locator submit - check to dynaimcally submit the form when the address was found using the locator button.</li></ul>" , 'GMW' ),
+						'desc'     		=> __( "<ul><li>- Label - enter a lable that you would like to use or leave blank for no label.</li><li>- Placeholder - enter a placeholder that you would like to use or leave blank for no placeholder.</li><li>Mandatory - check to make the field mandatory</li><li>- Address autocomplete - check to enable Google address autocomplete feature.</li><li>- Locator button - check to display a locator button inside the address field.</li><li>-Locator submit - check to dynaimcally submit the form when the address was found using the locator button.</li></ul>" , 'geo-my-wp' ),
 						'attributes' 	=> array(),
 						'priority'		=> 20       
 					),
 					'locator_button'    => array(
 						'name'    		=> 'locator_button',
 						'type'    		=> 'fields_group',
-						'label'   		=> __( 'Locator Button', 'GMW' ),
-						'desc'    		=> __( '<p>Using the locator button the visitor can dynamically retrive his current location.</p><p>- Select "disabled" to disable the locator button.</p><p>- Select "Image" and select an image that will be used as the locator button.</p><p>- Select "Text" and enter any text that you would like to use as the locator button.</p><p>- Check the "Auto form Submission" text box to dynamically submit the search form once the visitors locator was found.</p>', 'GMW' ),
+						'label'   		=> __( 'Locator Button', 'geo-my-wp' ),
+						'desc'    		=> __( '<p>Using the locator button the visitor can dynamically retrive his current location.</p><p>- Select "disabled" to disable the locator button.</p><p>- Select "Image" and select an image that will be used as the locator button.</p><p>- Select "Text" and enter any text that you would like to use as the locator button.</p><p>- Check the "Auto form Submission" text box to dynamically submit the search form once the visitors locator was found.</p>', 'geo-my-wp' ),
 						'fields'		=> array(
 							array(
 								'name'     		=> 'locator',
 								'type'     		=> 'select',
 								'default'       => '',
-								'label'    		=> __( 'Usage', 'GMW' ),
+								'label'    		=> __( 'Usage', 'geo-my-wp' ),
 								'attributes' 	=> array(),
 								'options'		=> array(
-									'disabled'	=> __( 'Disabled', 'GMW' ),
-									'text'		=> __( 'Text', 'GMW' ),
-									'image'		=> __( 'Image', 'GMW' )
+									'disabled'	=> __( 'Disabled', 'geo-my-wp' ),
+									'text'		=> __( 'Text', 'geo-my-wp' ),
+									'image'		=> __( 'Image', 'geo-my-wp' )
 								),
 								'priority'		=> 5
 							),
@@ -282,7 +282,7 @@ class GMW_Form_Editor {
 								'name'     		=> 'locator_text',
 								'type'     		=> 'text',
 								'default'       => '',
-								'label'    		=> __( 'Label', 'GMW' ),				
+								'label'    		=> __( 'Label', 'geo-my-wp' ),				
 								'attributes' 	=> array(),
 								'priority'		=> 10
 							),
@@ -290,7 +290,7 @@ class GMW_Form_Editor {
 								'name'     		=> 'locator_image',
 								'type'     		=> 'radio',
 								'default'       => '',
-								'label'    		=> __( 'Image', 'GMW' ),
+								'label'    		=> __( 'Image', 'geo-my-wp' ),
 								'options'		=> $this->locator_options(),
 								'attributes' 	=> array(),
 								'priority'		=> 15
@@ -299,7 +299,7 @@ class GMW_Form_Editor {
 								'name'     		=> 'locator_submit',
 								'type'     		=> 'checkbox',
 								'default'       => '',
-								'cb_label'		=> __( 'Auto submission', 'GMW' ),			
+								'cb_label'		=> __( 'Auto submission', 'geo-my-wp' ),			
 								'attributes' 	=> array(),
 								'priority'		=> 20
 							),
@@ -312,9 +312,9 @@ class GMW_Form_Editor {
 						'name'        	=> 'radius',
 						'type'			=> 'text',
 						'default'       => '5,10,15,25,50,100',
-						'placeholder' 	=> __( 'Radius values', 'GMW' ),
-						'label'       	=> __( 'Distance ( radius )', 'GMW' ),
-						'desc'        	=> __( "Enter multiple distance values, comma separated, to display a select dropdown menu in the search form. Or enter a single value to set a default distance value.", 'GMW' ),
+						'placeholder' 	=> __( 'Radius values', 'geo-my-wp' ),
+						'label'       	=> __( 'Distance ( radius )', 'geo-my-wp' ),
+						'desc'        	=> __( "Enter multiple distance values, comma separated, to display a select dropdown menu in the search form. Or enter a single value to set a default distance value.", 'geo-my-wp' ),
 						'attributes'  	=> array( 'size' => '25' ),
 						'priority'		=> 40
 					),
@@ -322,12 +322,12 @@ class GMW_Form_Editor {
 						'name'    		=> 'units',
 						'type'    		=> 'select',
 						'default'       => 'both',
-						'label'   		=> __( 'Distance Units', 'GMW' ),
-						'desc'    		=> __( 'Choose between miles or kilometers to set a default units value, or select "both" to display a select dropdown menu in the search form.', 'GMW' ),
+						'label'   		=> __( 'Distance Units', 'geo-my-wp' ),
+						'desc'    		=> __( 'Choose between miles or kilometers to set a default units value, or select "both" to display a select dropdown menu in the search form.', 'geo-my-wp' ),
 						'options' 		=> array(
-							'both'     => __( 'Both', 'GMW' ),
-							'imperial' => __( 'Miles', 'GMW' ),
-							'metric'   => __( 'Kilometers', 'GMW' )
+							'both'     => __( 'Both', 'geo-my-wp' ),
+							'imperial' => __( 'Miles', 'geo-my-wp' ),
+							'metric'   => __( 'Kilometers', 'geo-my-wp' )
 						),
 						'attributes'  	=> '',
 						'priority'		=> 50
@@ -337,15 +337,15 @@ class GMW_Form_Editor {
         	),
         	array( 
         		'slug'		=> 'form_submission',
-				'label'		=> __( 'Form Submission', 'GMW' ),
+				'label'		=> __( 'Form Submission', 'geo-my-wp' ),
 				'fields'	=> array(
 					'results_page'   => array(
 						'name'    		=> 'results_page',
 						'type'    		=> 'select',
 						'default'       => '',
-						'label'   		=> __( 'Results Page', 'GMW' ),
-						'desc'    		=> __( "The results page displays the search results in the selected page when using the \"GMW Search Form\" widget, or when you wish to have the search form in one page and the results showing in a different page. To use this feature, select the results page from the dropdown menu and paste the shortcode <code>[gmw form=\"results\"]</code> into the content area of that page. Otherwise, select \"Same Page\" to display both the search form and search results in the same page.", 'GMW' ),
-						'options' 		=> array( '' => __( ' -- Same Page -- ', 'GMW' ) ) + GMW_Form_Settings_Helper::get_pages(),
+						'label'   		=> __( 'Results Page', 'geo-my-wp' ),
+						'desc'    		=> __( "The results page displays the search results in the selected page when using the \"GMW Search Form\" widget, or when you wish to have the search form in one page and the results showing in a different page. To use this feature, select the results page from the dropdown menu and paste the shortcode <code>[gmw form=\"results\"]</code> into the content area of that page. Otherwise, select \"Same Page\" to display both the search form and search results in the same page.", 'geo-my-wp' ),
+						'options' 		=> array( '' => __( ' -- Same Page -- ', 'geo-my-wp' ) ) + GMW_Form_Settings_Helper::get_pages(),
 						'attributes'  	=> '',
 						'priority'		=> 10
 					),
@@ -353,9 +353,9 @@ class GMW_Form_Editor {
 						'name'     		=> 'display_results',
 						'type'     		=> 'checkbox',
 						'default'       => '',
-						'label'    		=> __( 'Display list of results', 'GMW' ),
-						'desc'     		=> __( 'Check this checkbox to output a list of results on form submission.', 'GMW' ),
-						'cb_label' 		=> __( 'Enable', 'GMW' ),
+						'label'    		=> __( 'Display list of results', 'geo-my-wp' ),
+						'desc'     		=> __( 'Check this checkbox to output a list of results on form submission.', 'geo-my-wp' ),
+						'cb_label' 		=> __( 'Enable', 'geo-my-wp' ),
 						'attributes' 	=> array(),
 						'priority'		=> 30
 					),
@@ -363,12 +363,12 @@ class GMW_Form_Editor {
 						'name'    		=> 'display_map',
 						'type'    		=> 'select',	
 						'default'       => '',
-						'label'   		=> __( 'Display Map', 'GMW' ),
-						'desc'    		=> __( "Select if to disable the map completly, display it above the list of result, or display it anywhere on the page using the shortcode <code>[gmw map=\"form ID\"]</code>.", 'GMW' ),
+						'label'   		=> __( 'Display Map', 'geo-my-wp' ),
+						'desc'    		=> __( "Select if to disable the map completly, display it above the list of result, or display it anywhere on the page using the shortcode <code>[gmw map=\"form ID\"]</code>.", 'geo-my-wp' ),
 						'options' 		=> array(
-							''          => __( 'Disable map', 'GMW' ),
-							'results'   => __( 'Above the list of result', 'GMW' ),
-							'shortcode' => __( 'Using shortcode', 'GMW' ),
+							''          => __( 'Disable map', 'geo-my-wp' ),
+							'results'   => __( 'Above the list of result', 'geo-my-wp' ),
+							'shortcode' => __( 'Using shortcode', 'geo-my-wp' ),
 						),
 						'attributes' 	=> array(),
 						'priority'		=> 40
@@ -378,14 +378,14 @@ class GMW_Form_Editor {
         	),
         	array( 
         		'slug'		=> 'search_results',
-				'label'		=> __( 'Search Results', 'GMW' ),
+				'label'		=> __( 'Search Results', 'geo-my-wp' ),
 				'fields'	=> array(
 					'results_template' => array(
 						'name'  		=> 'results_template',
 						'type'     		=> 'select',
 						'default'   	=> 'gray',
-						'label' 		=> __( 'Results Template', 'GMW' ),
-						'desc'  		=> __( 'Select the search results template file.', 'GMW' ),
+						'label' 		=> __( 'Results Template', 'geo-my-wp' ),
+						'desc'  		=> __( 'Select the search results template file.', 'geo-my-wp' ),
 						'options'		=> gmw_get_search_results_templates( $this->form['component'], $this->form['addon'] ),
 						'attributes' 	=> array(),
 						'priority'		=> 10
@@ -394,9 +394,9 @@ class GMW_Form_Editor {
 						'name'        	=> 'per_page',
 						'type'			=> 'text',
 						'default'       => '5,10,15,25',
-						'placeholder' 	=> __( 'Enter values', 'GMW' ),
-						'label'       	=> __( 'Results Per Page', 'GMW' ),
-						'desc'        	=> __( 'Enter multiple values, comma separated, to display a per page select dropdown menu in the search results, or enter a single value to set a default per-page value.', 'GMW' ),
+						'placeholder' 	=> __( 'Enter values', 'geo-my-wp' ),
+						'label'       	=> __( 'Results Per Page', 'geo-my-wp' ),
+						'desc'        	=> __( 'Enter multiple values, comma separated, to display a per page select dropdown menu in the search results, or enter a single value to set a default per-page value.', 'geo-my-wp' ),
 						'attributes' 	=> array(),
 						'priority'		=> 20
 					),
@@ -404,8 +404,8 @@ class GMW_Form_Editor {
 						'name'     		=> 'image',
 						'type'     		=> 'function',
 						'default'       => '',
-						'label'    		=> __( 'Image', 'GMW' ),
-						'desc'     		=> __( '<p>Check this checkbox to display the image of each location in the list of results, then enter the width and height in pixels ( enter numeric value only, without "px" ).</p>', 'GMW' ),
+						'label'    		=> __( 'Image', 'geo-my-wp' ),
+						'desc'     		=> __( '<p>Check this checkbox to display the image of each location in the list of results, then enter the width and height in pixels ( enter numeric value only, without "px" ).</p>', 'geo-my-wp' ),
 						'attributes' 	=> array(),
 						'priority'		=> 30
 					),
@@ -414,9 +414,9 @@ class GMW_Form_Editor {
 						'name'       	=> 'by_driving',
 						'type'       	=> 'checkbox',
 						'default'       => '',
-						'label'      	=> __( 'Driving Distance', 'GMW' ),
-						'cb_label'   	=> __( 'Enable', 'GMW' ),
-						'desc'       	=> __( 'While the results showing the radius distance from the user to each of the locations, this feature let you display the exact driving distance. Please note that each driving distance request counts with google API when you can have 2500 requests per day.', 'GMW' ),
+						'label'      	=> __( 'Driving Distance', 'geo-my-wp' ),
+						'cb_label'   	=> __( 'Enable', 'geo-my-wp' ),
+						'desc'       	=> __( 'While the results showing the radius distance from the user to each of the locations, this feature let you display the exact driving distance. Please note that each driving distance request counts with google API when you can have 2500 requests per day.', 'geo-my-wp' ),
 						'attributes' 	=> array(),
 						'priority'		=> 35
 					),
@@ -425,9 +425,9 @@ class GMW_Form_Editor {
 						'name'       	=> 'directions_link',
 						'type'       	=> 'checkbox',
 						'default'       => '',
-						'label'      	=> __( 'Directions Link', 'GMW' ),
-						'cb_label'   	=> __( 'Enable', 'GMW' ),
-						'desc'       	=> __( 'Display directions link, that will open a new window showing the driving directions, in each location in the list of results.', 'GMW' ),
+						'label'      	=> __( 'Directions Link', 'geo-my-wp' ),
+						'cb_label'   	=> __( 'Enable', 'geo-my-wp' ),
+						'desc'       	=> __( 'Display directions link, that will open a new window showing the driving directions, in each location in the list of results.', 'geo-my-wp' ),
 						'attributes' 	=> array(),
 						'priority'		=> 40
 					)
@@ -436,15 +436,15 @@ class GMW_Form_Editor {
         	),
         	array( 
         		'slug'		=> 'results_map',
-				'label'		=> __( 'Map', 'GMW' ),
+				'label'		=> __( 'Map', 'geo-my-wp' ),
 				'fields'	=> array(
 					'map_width'  => array(
 						'name'        	=> 'map_width',
 						'type'			=> 'text',
 						'default'       => '100%',
-						'placeholder' 	=> __( 'Map width in px or %', 'GMW' ),
-						'label'       	=> __( 'Map width', 'GMW' ),
-						'desc'        	=> __( 'Enter the map\'s width in pixels or percentage ( ex. 100% or 200px ).', 'GMW' ),
+						'placeholder' 	=> __( 'Map width in px or %', 'geo-my-wp' ),
+						'label'       	=> __( 'Map width', 'geo-my-wp' ),
+						'desc'        	=> __( 'Enter the map\'s width in pixels or percentage ( ex. 100% or 200px ).', 'geo-my-wp' ),
 						'attributes'  	=> array(),
 						'priority'		=> 10
 					),
@@ -452,9 +452,9 @@ class GMW_Form_Editor {
 						'name'        	=> 'map_height',
 						'type'			=> 'text',
 						'default'       => '300px',
-						'placeholder' 	=> __( 'Map height in px or %', 'GMW' ),
-						'label'       	=> __( 'Map height', 'GMW' ),
-						'desc'        	=> __( 'Enter the map\'s height in pixels or percentage ( ex. 100% or 200px ).', 'GMW' ),
+						'placeholder' 	=> __( 'Map height in px or %', 'geo-my-wp' ),
+						'label'       	=> __( 'Map height', 'geo-my-wp' ),
+						'desc'        	=> __( 'Enter the map\'s height in pixels or percentage ( ex. 100% or 200px ).', 'geo-my-wp' ),
 						'attributes'  	=> array(),
 						'priority'		=> 20
 					),
@@ -462,13 +462,13 @@ class GMW_Form_Editor {
 						'name'    		=> 'map_type',
 						'type'    		=> 'select',
 						'default'       => 'ROADMAP',
-						'label'   		=> __( 'Map type', 'GMW' ),
-						'desc'    		=> __( 'Select the map type.', 'GMW' ),
+						'label'   		=> __( 'Map type', 'geo-my-wp' ),
+						'desc'    		=> __( 'Select the map type.', 'geo-my-wp' ),
 						'options' 		=> array(
-							'ROADMAP'   	=> __( 'ROADMAP', 'GMW' ),
-							'SATELLITE' 	=> __( 'SATELLITE', 'GMW' ),
-							'HYBRID'    	=> __( 'HYBRID', 'GMW' ),
-							'TERRAIN'   	=> __( 'TERRAIN', 'GMW' )
+							'ROADMAP'   	=> __( 'ROADMAP', 'geo-my-wp' ),
+							'SATELLITE' 	=> __( 'SATELLITE', 'geo-my-wp' ),
+							'HYBRID'    	=> __( 'HYBRID', 'geo-my-wp' ),
+							'TERRAIN'   	=> __( 'TERRAIN', 'geo-my-wp' )
 						),
 						'attributes'  	=> '',
 						'priority'		=> 30
@@ -477,10 +477,10 @@ class GMW_Form_Editor {
 						'name'    		=> 'zoom_level',
 						'default'       => 'auto',
 						'type'    		=> 'select',
-						'label'   		=> __( 'Zoom level', 'GMW' ),	
-						'desc'    		=> __( 'Select "Auto zoom" to fit all the markers on the map, or select a numeric value that will be used to zoom into the marker which represents the visitor\'s current location on the map.', 'GMW' ),		
+						'label'   		=> __( 'Zoom level', 'geo-my-wp' ),	
+						'desc'    		=> __( 'Select "Auto zoom" to fit all the markers on the map, or select a numeric value that will be used to zoom into the marker which represents the visitor\'s current location on the map.', 'geo-my-wp' ),		
 						'options' 		=> array(
-							'auto' 	=> __( 'Auto Zoom', 'GMW' ),
+							'auto' 	=> __( 'Auto Zoom', 'geo-my-wp' ),
 							'1'    	=> '1',
 							'2'    	=> '2',
 							'3'    	=> '3',
@@ -509,9 +509,9 @@ class GMW_Form_Editor {
 						'name'        	=> 'yl_icon',
 						'type'  	  	=> 'checkbox',
 						'default'       => '',
-						'label' 	  	=> __( 'Open "User Location" info window', 'GMW'),
-						'cb_label'    	=> __( 'Enable', 'GMW'),
-						'desc'        	=> __( "Dynamically open on page load the info window of the marker which represents the user's location.", 'GMW' ),
+						'label' 	  	=> __( 'Open "User Location" info window', 'geo-my-wp'),
+						'cb_label'    	=> __( 'Enable', 'geo-my-wp'),
+						'desc'        	=> __( "Dynamically open on page load the info window of the marker which represents the user's location.", 'geo-my-wp' ),
 						'attributes'  	=> array(),
 						'priority'		=> 25
 					),
@@ -519,9 +519,9 @@ class GMW_Form_Editor {
 						'name'       	=> 'map_frame',
 						'type'       	=> 'checkbox',
 						'default'       => '',
-						'label'      	=> __( 'Map frame', 'GMW' ),
-						'cb_label'   	=> __( 'Enable', 'GMW' ),
-						'desc'       	=> __( 'show frame around the map?', 'GMW' ),
+						'label'      	=> __( 'Map frame', 'geo-my-wp' ),
+						'cb_label'   	=> __( 'Enable', 'geo-my-wp' ),
+						'desc'       	=> __( 'show frame around the map?', 'geo-my-wp' ),
 						'attributes' 	=> array(),
 						'priority'		=> 30
 					),
@@ -529,9 +529,9 @@ class GMW_Form_Editor {
 						'name'       	=> 'no_results_enabled',
 						'type'       	=> 'checkbox',
 						'default'       => '',
-						'label'      	=> __( 'Show if no results', 'GMW' ),
-						'cb_label'   	=> __( 'Enable', 'GMW' ),
-						'desc'       	=> __( 'Display map even if no results were found.', 'GMW' ),
+						'label'      	=> __( 'Show if no results', 'geo-my-wp' ),
+						'cb_label'   	=> __( 'Enable', 'geo-my-wp' ),
+						'desc'       	=> __( 'Display map even if no results were found.', 'geo-my-wp' ),
 						'attributes' 	=> array(),
 						'priority'		=> 35
 					), */
@@ -701,9 +701,9 @@ class GMW_Form_Editor {
             <table class="widefat gmw-form-usage-table">
             	<thead>
                 	<tr>
-                		<th scope="col" id="cb" class="manage-column" ><?php _e( 'Description', 'GMW'); ?></th>
-                    	<th scope="col" id="cb" class="manage-column" ><?php _e( 'Post/Page Content', 'GMW' ); ?></th>
-                    	<th scope="col" id="cb" class="manage-column" ><?php _e( 'Tempalte file', 'GMW' ); ?></th>
+                		<th scope="col" id="cb" class="manage-column" ><?php _e( 'Description', 'geo-my-wp'); ?></th>
+                    	<th scope="col" id="cb" class="manage-column" ><?php _e( 'Post/Page Content', 'geo-my-wp' ); ?></th>
+                    	<th scope="col" id="cb" class="manage-column" ><?php _e( 'Tempalte file', 'geo-my-wp' ); ?></th>
                 	</tr>
             	</thead>
          
@@ -713,7 +713,7 @@ class GMW_Form_Editor {
 
             			<tr>
             				<td class="gmw-form-usage-desc">
-                				<p><?php _e( 'Display the global map anywhere on the page.', 'GMW' ); ?></p>
+                				<p><?php _e( 'Display the global map anywhere on the page.', 'geo-my-wp' ); ?></p>
                 			</td>
                 			<td class="gmw-form-usage">
                 				<p><code>[gmw_global_map form="<?php echo $this->form['ID']; ?>"]</code></p>
@@ -727,7 +727,7 @@ class GMW_Form_Editor {
 
             		<tr>
             			<td class="gmw-form-usage-desc">
-            				<p><?php _e( 'Display the complete form ( search form, map, and search results ).', 'GMW' ); ?></p>
+            				<p><?php _e( 'Display the complete form ( search form, map, and search results ).', 'geo-my-wp' ); ?></p>
             			</td>
             			<td class="gmw-form-usage">
             				<p><code>[gmw form="<?php echo $this->form['ID']; ?>"]</code></p>
@@ -738,7 +738,7 @@ class GMW_Form_Editor {
             		</tr>
             		<tr>
             			<td class="gmw-form-usage-desc">
-            				<p><?php _e( 'Display only the search form only.', 'GMW' ); ?></p>
+            				<p><?php _e( 'Display only the search form only.', 'geo-my-wp' ); ?></p>
             			</td>
             			<td class="gmw-form-usage">
             				<p><code>[gmw search_form="<?php echo $this->form['ID']; ?>"]</code></p>
@@ -749,7 +749,7 @@ class GMW_Form_Editor {
             		</tr>
             		<tr>
             			<td class="gmw-form-usage-desc">
-            				<p><?php _e( 'Display the search results of this form only. Can be used to display the search rsults in a different page or when using the search form in a widget.', 'GMW' ); ?></p>
+            				<p><?php _e( 'Display the search results of this form only. Can be used to display the search rsults in a different page or when using the search form in a widget.', 'geo-my-wp' ); ?></p>
             			</td>            
             			<td class="gmw-form-usage">
             				<p><code>[gmw search_results="<?php echo $this->form['ID']; ?>"]</code></p>
@@ -760,7 +760,7 @@ class GMW_Form_Editor {
             		</tr>
             		<tr>
             			<td class="gmw-form-usage-desc">
-            				<p><?php _e( 'Display the search results of any form.', 'GMW' ); ?></p>
+            				<p><?php _e( 'Display the search results of any form.', 'geo-my-wp' ); ?></p>
             			</td>
             			<td class="gmw-form-usage">
             				<p><code>[gmw form="results"]</code></p>
@@ -771,7 +771,7 @@ class GMW_Form_Editor {
             		</tr>
             		<tr>
             			<td class="gmw-form-usage-desc">
-            				<p><?php _e( 'Display the results map anywhere on a page. By default, the form you create will display the map above the list of results, but using this shortcode you can display the map anywhere else on the page. Notice that you need to set the "Display map" setting of the "Form Submission" tab to "Using shortcode". ', 'GMW' ); ?></p>
+            				<p><?php _e( 'Display the results map anywhere on a page. By default, the form you create will display the map above the list of results, but using this shortcode you can display the map anywhere else on the page. Notice that you need to set the "Display map" setting of the "Form Submission" tab to "Using shortcode". ', 'geo-my-wp' ); ?></p>
             			</td>
             			<td class="gmw-form-usage">
             				<p><code>[gmw map="<?php echo $this->form['ID']; ?>"]</code></p>
@@ -1085,34 +1085,34 @@ class GMW_Form_Editor {
 		           	<div id="top-area">
 
 			    		<a class="form-editor-close" 
-		    			   title="<?php _e( 'Return to list of forms', 'GMW' ); ?>" 
+		    			   title="<?php _e( 'Return to list of forms', 'geo-my-wp' ); ?>" 
 		    			   href="admin.php?page=gmw-forms"></a>
 						
 						<h2 class="gmw-wrap-top-h2">
 			                <i class="gmw-icon-pencil"></i>
-			                <?php echo __( 'Edit Form', 'GMW' ) .' ' . $this->form['ID'] .' <em style="font-size: 13px;font-weight: 100">( '. $this->form['name'] . ' )</em> '; ?>
+			                <?php echo __( 'Edit Form', 'geo-my-wp' ) .' ' . $this->form['ID'] .' <em style="font-size: 13px;font-weight: 100">( '. $this->form['name'] . ' )</em> '; ?>
 			            </h2>
 
 		        		<div id="action-buttons">
 			        		
 			        		<span id="form-title-input">
-			        			<span id="form-name-label"><?php _e( 'Name', 'GMW' ); ?></span>
+			        			<span id="form-name-label"><?php _e( 'Name', 'geo-my-wp' ); ?></span>
 					        	<input type="text" name="gmw_form[title]" value="<?php echo ( ! empty( $this->form['title']) ) ? sanitize_text_field( esc_attr( $this->form['title'] ) ) : 'form_id_'. sanitize_text_field( esc_attr( $this->form['ID'] ) ); ?>" placeholder="Form title" />
 			            	</span>
 
-			        		<?php $delete_message = __( 'This action cannot be undone. Would you like to proceed?', 'GMW' ) ; ?>
+			        		<?php $delete_message = __( 'This action cannot be undone. Would you like to proceed?', 'geo-my-wp' ) ; ?>
 
 							<!-- Delete Form button -->	
-			                <a class="button action delete-form" title="<?php _e( 'Delete form', 'GMW' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=delete_form&form_id='.$this->form['ID'] ); ?>" onclick="return confirm( '<?php echo $delete_message; ?>' );"><?php _e( 'Delete Form', 'GMW' ); ?></a>
+			                <a class="button action delete-form" title="<?php _e( 'Delete form', 'geo-my-wp' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=delete_form&form_id='.$this->form['ID'] ); ?>" onclick="return confirm( '<?php echo $delete_message; ?>' );"><?php _e( 'Delete Form', 'geo-my-wp' ); ?></a>
 
-		                	<a class="button action" title="<?php _e( 'Duplicate form', 'GMW' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=duplicate_form&slug='.$this->form['slug'].'&form_id='.$this->form['ID'] ); ?>"><?php _e( 'Duplicate Form', 'GMW' ); ?></a>                           
+		                	<a class="button action" title="<?php _e( 'Duplicate form', 'geo-my-wp' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=duplicate_form&slug='.$this->form['slug'].'&form_id='.$this->form['ID'] ); ?>"><?php _e( 'Duplicate Form', 'geo-my-wp' ); ?></a>                           
 		                	
-		                	<input type="submit" id="submit-button" class="button-primary" value="<?php _e( 'Save Changes', 'GMW' ); ?>" />
+		                	<input type="submit" id="submit-button" class="button-primary" value="<?php _e( 'Save Changes', 'geo-my-wp' ); ?>" />
 
 				            <!-- Update status message -->
 							<div id="form-update-messages">
-								<p class="success"><i class="gmw-icon-ok-light"></i><?php _e( 'Form updated!', 'GMW' ); ?></p>
-								<p class="failed"><i class="gmw-icon-cancel"></i><?php _e( 'Form update failed!', 'GMW' ); ?></p>
+								<p class="success"><i class="gmw-icon-ok-light"></i><?php _e( 'Form updated!', 'geo-my-wp' ); ?></p>
+								<p class="failed"><i class="gmw-icon-cancel"></i><?php _e( 'Form update failed!', 'geo-my-wp' ); ?></p>
 							</div>
 						</div>
 			    	</div>
@@ -1147,7 +1147,7 @@ class GMW_Form_Editor {
 			                }
 			                ?>  
 			                <li>
-			                	<a href="#" id="form-usage" class="gmw-nav-tab" data-name="form-usage"><?php _e( 'Form Usage', 'GMW' ); ?></a>
+			                	<a href="#" id="form-usage" class="gmw-nav-tab" data-name="form-usage"><?php _e( 'Form Usage', 'geo-my-wp' ); ?></a>
 			                </li>
 			            </ul>
 			        </div>
@@ -1158,7 +1158,7 @@ class GMW_Form_Editor {
 						<div id="gmw-form-cover">
 							<div id="updating-info">
 								<i class="gmw-icon-spin-3 animate-spin"></i>
-								<span><?php _e( 'Updating form...', 'GMW' ); ?></span>
+								<span><?php _e( 'Updating form...', 'geo-my-wp' ); ?></span>
 							</div>
 						</div>
 	            
@@ -1529,8 +1529,8 @@ class GMW_Form_Editor {
         ) === FALSE ) {
 
 			wp_die( 
-				__( 'Failed saving data in database.', 'GMW' ), 
-				__( 'Error', 'GMW' ), 
+				__( 'Failed saving data in database.', 'geo-my-wp' ), 
+				__( 'Error', 'geo-my-wp' ), 
 				array( 'response' => 403 ) 
 			);
 		
@@ -1551,7 +1551,7 @@ class GMW_Form_Editor {
 
     	// run a quick security check
         if ( empty( $_POST['gmw_edit_form_nonce'] ) || ! check_admin_referer( 'gmw_edit_form_nonce', 'gmw_edit_form_nonce' ) ) {
-             wp_die( __( 'Cheatin\' eh?!', 'GMW' ) );
+             wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
         }
    
     	// validate the values

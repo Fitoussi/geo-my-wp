@@ -278,10 +278,10 @@ class GMW_Single_Location {
 	public function labels() {
 		
 		return apply_filters( 'gmw_sl_labels', array(
-			'distance'		  => __( 'Distance: ', 'GMW' ),
-			'directions' 	  => __( 'Directions', 'GMW' ),
-			'from' 			  => __( 'From:', 'GMW' ),
-			'show_directions' => __( 'Show directions', 'GMW' )
+			'distance'		  => __( 'Distance: ', 'geo-my-wp' ),
+			'directions' 	  => __( 'Directions', 'geo-my-wp' ),
+			'from' 			  => __( 'From:', 'geo-my-wp' ),
+			'show_directions' => __( 'Show directions', 'geo-my-wp' )
 		), $this->args, $this->location_data );
 	}
 

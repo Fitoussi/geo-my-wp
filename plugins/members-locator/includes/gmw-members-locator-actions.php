@@ -53,7 +53,7 @@ add_filter( 'gmw_lf_user_location_args_before_location_updated', 'gmw_fl_get_mem
  */
 function gmw_fl_location_filter_options() {
 ?>
-    <option value="gmw_member_location_updated"><?php _e( 'Member Location', 'GMW' ); ?></option>
+    <option value="gmw_member_location_updated"><?php _e( 'Member Location', 'geo-my-wp' ); ?></option>
 <?php
 }
 add_action( 'bp_activity_filter_options',        'gmw_fl_location_filter_options', 10 );
@@ -71,7 +71,7 @@ function gmw_members_locator_activity_actions() {
         return false;
     }
 
-    bp_activity_set_action( buddypress()->members->id, 'gmw_member_location_updated', __( 'Member location updated', 'GMW' ) );
+    bp_activity_set_action( buddypress()->members->id, 'gmw_member_location_updated', __( 'Member location updated', 'geo-my-wp' ) );
     
     do_action( 'gmw_fl_activity_actions' );
 }

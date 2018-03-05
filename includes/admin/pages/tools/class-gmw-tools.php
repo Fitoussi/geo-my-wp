@@ -41,7 +41,7 @@ class GMW_Tools {
         <div id="gmw-tools-page" class="wrap gmw-admin-page">
             <h2 class="gmw-wrap-top-h2">   
                 <i class="gmw-icon-wrench"></i>
-                <?php _e( 'Tools', 'GMW' ); ?>
+                <?php _e( 'Tools', 'geo-my-wp' ); ?>
                 <?php gmw_admin_helpful_buttons(); ?>
             </h2>
             <div class="clear"></div>
@@ -76,8 +76,8 @@ class GMW_Tools {
     public function get_tabs() {
         
         $tabs                = array();
-        $tabs['system_info'] = __( 'System Info', 'GMW' );
-        $tabs['reset_gmw']   = __( 'Uninstall GEO my WP', 'GMW' );
+        $tabs['system_info'] = __( 'System Info', 'geo-my-wp' );
+        $tabs['reset_gmw']   = __( 'Uninstall GEO my WP', 'geo-my-wp' );
         
         return apply_filters( 'gmw_tools_tabs', $tabs );
     }

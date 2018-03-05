@@ -41,12 +41,12 @@ class GMW_Extensions {
      */
     public function notices_messages( $messages ) {
     
-        $messages['updater_enabled']             = __( 'Extensions updater enabled.', 'GMW' );
-        $messages['updater_disabled']            = __( 'Extensions updater disabled.', 'GMW' );
-        $messages['extension_deactivated']       = __( 'Extension deactivated.', 'GMW' );
-        $messages['extension_activated']         = __( 'Extension activated.', 'GMW' );
-        $messages['extension_activation_failed'] = __( 'Extension activation failed.', 'GMW' );
-        $messages['extensions_cache_cleared']    = __( 'Extensions cache cleared.', 'GMW' );
+        $messages['updater_enabled']             = __( 'Extensions updater enabled.', 'geo-my-wp' );
+        $messages['updater_disabled']            = __( 'Extensions updater disabled.', 'geo-my-wp' );
+        $messages['extension_deactivated']       = __( 'Extension deactivated.', 'geo-my-wp' );
+        $messages['extension_activated']         = __( 'Extension activated.', 'geo-my-wp' );
+        $messages['extension_activation_failed'] = __( 'Extension activation failed.', 'geo-my-wp' );
+        $messages['extensions_cache_cleared']    = __( 'Extensions cache cleared.', 'geo-my-wp' );
     
         return $messages;
     }
@@ -88,7 +88,7 @@ class GMW_Extensions {
                     $message = 'Error message: '.$feed['errors']['http_request_failed'][0];
                 }
                
-                echo '<div class="error"><p>' . __( 'There was an error retrieving the add-ons list from the server. Please try again later.', 'GMW' ).$message.'</p></div>'; 
+                echo '<div class="error"><p>' . __( 'There was an error retrieving the add-ons list from the server. Please try again later.', 'geo-my-wp' ).$message.'</p></div>'; 
 
                 $output = false;
             }
@@ -111,8 +111,8 @@ class GMW_Extensions {
             //verify nonce
             if ( ! check_ajax_referer( 'gmw_extension_updater_nonce', 'security', false ) ) {
                 wp_die( 
-                    __( 'Cheatin\' eh?!', 'GMW' ), 
-                    __( 'Error', 'GMW' ), 
+                    __( 'Cheatin\' eh?!', 'geo-my-wp' ), 
+                    __( 'Error', 'geo-my-wp' ), 
                     array( 'response' => 403 ) 
                 );
             }
@@ -124,7 +124,7 @@ class GMW_Extensions {
             
             // verify nonce
             if ( ! check_admin_referer( 'gmw_extension_updater_nonce' ) ) {
-                wp_die( __( 'Cheatin\' eh?!', 'GMW' ) );
+                wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
             }
             
             if ( empty( $_GET['action'] ) ) { 
@@ -176,7 +176,7 @@ class GMW_Extensions {
                 
         //varify nonce
         if ( empty( $_POST['gmw_clear_extensions_cache_nonce'] ) || ! wp_verify_nonce( $_POST['gmw_clear_extensions_cache_nonce'], 'gmw_clear_extensions_cache_nonce' ) ) {
-            wp_die( __( 'Cheatin\' eh?!', 'GMW' ) );
+            wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
         }
         
         delete_transient( 'gmw_extensions_feed' );
@@ -201,7 +201,7 @@ class GMW_Extensions {
 
         $nonce   = wp_create_nonce( 'gmw_'.$slug.'_extension_nonce' );
         $url     = admin_url( 'admin.php?page=gmw-extensions&gmw_action=activate_extension&basename='.$basename.'&slug='.$slug.'&_wpnonce='.$nonce );
-        $label   = __( 'Activate', 'GMW' );
+        $label   = __( 'Activate', 'geo-my-wp' );
         
         $output  = '<a href="'.esc_url( $url ).'"';
         $output .= ' class="button button-primary gmw-extension-action-button activate"';
@@ -209,8 +209,8 @@ class GMW_Extensions {
         $output .= ' data-basename="'.esc_attr( $basename ).'"';
         $output .= ' data-action="activate_extension"';
         $output .= ' data-nonce="'.$nonce.'"';
-        $output .= ' data-updating_message="'.__( 'Activating', 'GMW' ).'"';
-        $output .= ' data-updated_message="'.__( 'Activated', 'GMW' ).'"';
+        $output .= ' data-updating_message="'.__( 'Activating', 'geo-my-wp' ).'"';
+        $output .= ' data-updated_message="'.__( 'Activated', 'geo-my-wp' ).'"';
         $output .= ' data-label="'.$label.'"';
         $output .= ' >';
         $output .= $label;
@@ -231,7 +231,7 @@ class GMW_Extensions {
 
         $nonce    = wp_create_nonce( 'gmw_'.$slug.'_extension_nonce' );
         $url      = admin_url( 'admin.php?page=gmw-extensions&gmw_action=deactivate_extension&basename='.$basename.'&slug='.$slug.'&_wpnonce='.$nonce );
-        $label   = __( 'Deactivate', 'GMW' );
+        $label   = __( 'Deactivate', 'geo-my-wp' );
 
         $output  = '<a href="'.esc_url( $url ).'"';
         $output .= ' class="button button-secondary gmw-extension-action-button deactivate"';
@@ -239,8 +239,8 @@ class GMW_Extensions {
         $output .= ' data-basename="'.esc_attr( $basename ).'"';
         $output .= ' data-action="deactivate_extension"';
         $output .= ' data-nonce="'.$nonce.'"';
-        $output .= ' data-updating_message="'.__( 'Deactivating', 'GMW' ).'"';
-        $output .= ' data-updated_message="'.__( 'Deactivated', 'GMW' ).'"';
+        $output .= ' data-updating_message="'.__( 'Deactivating', 'geo-my-wp' ).'"';
+        $output .= ' data-updated_message="'.__( 'Deactivated', 'geo-my-wp' ).'"';
         $output .= ' data-label="'.$label.'"';
         $output .= ' >';
         $output .= $label;
@@ -271,8 +271,8 @@ class GMW_Extensions {
             if ( ! check_ajax_referer( 'gmw_'.$slug.'_extension_nonce', 'security', false ) ) {
 
                 wp_die( 
-                    __( 'Cheatin\' eh?!', 'GMW' ), 
-                    __( 'Error', 'GMW' ), 
+                    __( 'Cheatin\' eh?!', 'geo-my-wp' ), 
+                    __( 'Error', 'geo-my-wp' ), 
                     array( 'response' => 403 ) 
                 );
             }
@@ -281,7 +281,7 @@ class GMW_Extensions {
         } else {
 
             if ( ! check_admin_referer( 'gmw_'.$slug.'_extension_nonce' ) ) {
-                wp_die( __( 'Cheatin\' eh?!', 'GMW' ) );
+                wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
             }
         }
     
@@ -375,8 +375,8 @@ class GMW_Extensions {
             // verify nonce
             if ( ! check_ajax_referer( 'gmw_'.$slug.'_extension_nonce', 'security', false ) ) {
                 wp_die( 
-                    __( 'Cheatin\' eh?!', 'GMW' ), 
-                    __( 'Error', 'GMW' ), 
+                    __( 'Cheatin\' eh?!', 'geo-my-wp' ), 
+                    __( 'Error', 'geo-my-wp' ), 
                     array( 'response' => 403 ) 
                 );
             }
@@ -385,7 +385,7 @@ class GMW_Extensions {
         } else {
 
             if ( ! check_admin_referer( 'gmw_'.$slug.'_extension_nonce' ) ) {
-                wp_die( __( 'Cheatin\' eh?!', 'GMW' ) );
+                wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
             }
         }
         
@@ -470,8 +470,8 @@ class GMW_Extensions {
 
             //abort if bad nonce
             wp_die( 
-                __( 'Cheatin\' eh?!', 'GMW' ), 
-                __( 'Error', 'GMW' ), 
+                __( 'Cheatin\' eh?!', 'geo-my-wp' ), 
+                __( 'Error', 'geo-my-wp' ), 
                 array( 'response' => 403 ) 
             );
         }
@@ -481,7 +481,7 @@ class GMW_Extensions {
 
         // abort if failed connecting to remote server
         if ( ! $license_data->remote_connection ) {
-             wp_die( __( 'connection to remote server failed.', 'GMW' ) );
+             wp_die( __( 'connection to remote server failed.', 'geo-my-wp' ) );
         }
         
         // generate new license element to replace with current one.
@@ -592,7 +592,7 @@ class GMW_Extensions {
             <h2>
                 <i class="gmw-icon-puzzle"></i>
 
-                <?php _e( 'GEO my WP Extensions', 'GMW' ); ?>
+                <?php _e( 'GEO my WP Extensions', 'geo-my-wp' ); ?>
 
                 <?php gmw_admin_helpful_buttons(); ?>
             </h2>
@@ -601,22 +601,22 @@ class GMW_Extensions {
             
                 <ul>
                     <li>
-                        <a href="#" class="filter-tab current" data-filter=""><?php _e( 'All', 'GMW' ); ?>
+                        <a href="#" class="filter-tab current" data-filter=""><?php _e( 'All', 'geo-my-wp' ); ?>
                             <span class="count">( <?php echo $extensions_count = count( $extensions_data ); ?> )</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="filter-tab" data-filter=".core"><?php _e( 'Core', 'GMW' ); ?>
+                        <a href="#" class="filter-tab" data-filter=".core"><?php _e( 'Core', 'geo-my-wp' ); ?>
                             <span class="count">( <?php echo $core_extensions_count; ?> )</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="filter-tab" data-filter=".premium"><?php _e( 'Premium', 'GMW' ); ?>
+                        <a href="#" class="filter-tab" data-filter=".premium"><?php _e( 'Premium', 'geo-my-wp' ); ?>
                             <span class="count">( <?php echo $extensions_count - $core_extensions_count; ?> )</span>
                         </a>
                     <li>
                     |
-                    <li><a href="#" class="active-tab" data-filter="active"><?php _e( 'Active', 'GMW' ); ?></a><li>
+                    <li><a href="#" class="active-tab" data-filter="active"><?php _e( 'Active', 'geo-my-wp' ); ?></a><li>
                 </ul>
 
                 <?php $updater = get_option( 'gmw_extensions_updater' ); ?>
@@ -628,13 +628,13 @@ class GMW_Extensions {
                         
                         $action = 'enable';
                         $button = 'button-primary';
-                        $label  = __( 'Enable Updater', 'GMW' );
+                        $label  = __( 'Enable Updater', 'geo-my-wp' );
 
                     } else {
 
                         $action = 'disable';
                         $button = 'button-secondary';
-                        $label  = __( 'Disable Updater', 'GMW' );
+                        $label  = __( 'Disable Updater', 'geo-my-wp' );
                     }
 
                     $nonce = wp_create_nonce( 'gmw_extension_updater_nonce' );
@@ -654,12 +654,12 @@ class GMW_Extensions {
                          
                         <p class="description disable">
                             
-                            <?php _e( 'Temporary disable the extensions updater to prevent slow page load on the admin\'s plugins.php/update.php pages.', 'GMW' ); ?>
+                            <?php _e( 'Temporary disable the extensions updater to prevent slow page load on the admin\'s plugins.php/update.php pages.', 'geo-my-wp' ); ?>
                         </p>
 
                         <p class="description enable">
                             
-                            <?php _e( 'Enable the extensions updater to check for new versions of the premium extensions.', 'GMW' ); ?>
+                            <?php _e( 'Enable the extensions updater to check for new versions of the premium extensions.', 'geo-my-wp' ); ?>
                         </p> 
                     </div> 
                 </div>
@@ -669,7 +669,7 @@ class GMW_Extensions {
                     
                     <form method="post">    
 
-                        <input type="submit" name="gmw_clear_extensions_cache" class="button-primary" value="<?php _e( 'Clear extensions cache', 'GMW' ); ?>" />  
+                        <input type="submit" name="gmw_clear_extensions_cache" class="button-primary" value="<?php _e( 'Clear extensions cache', 'geo-my-wp' ); ?>" />  
                                                                                 
                         <input type="hidden" name="gmw_action" value="clear_extensions_cache" />
                         
@@ -680,7 +680,7 @@ class GMW_Extensions {
 
                     <div class="cache-info info-wrapper">
                         <p class="description">
-                            <?php _e( 'Try clearing extensions cache if extensions fails to load properly on this page.', 'GMW' ); ?> 
+                            <?php _e( 'Try clearing extensions cache if extensions fails to load properly on this page.', 'geo-my-wp' ); ?> 
                         </p>
                     </div>
                 </div>
@@ -692,7 +692,7 @@ class GMW_Extensions {
       	         
                 <div class="extensions-title core">
                     <h3>
-                        <?php _e( 'Core Extensions', 'GMW' ); ?>     
+                        <?php _e( 'Core Extensions', 'geo-my-wp' ); ?>     
                     </h3>
                 </div>
                 <div></div>
@@ -715,7 +715,7 @@ class GMW_Extensions {
                         ?>
                         <div class="extensions-title premium">
                             <h3>
-                                <?php _e( 'Premium Extensions', 'GMW' ); ?>
+                                <?php _e( 'Premium Extensions', 'geo-my-wp' ); ?>
                             </h3>
                         </div>
                         <?php 
@@ -765,12 +765,12 @@ class GMW_Extensions {
                         
                         <!-- free add-on -->
                         <?php /* if ( ! empty( $extension['is_core'] ) && $extension['status'] != 'active' ) { ?>    
-                            <div class="gmw-extension-ribbon-wrapper"><div class="gmw-extension-ribbon free"><?php _e( 'Free Add-on', 'GMW' ); ?></div></div>
+                            <div class="gmw-extension-ribbon-wrapper"><div class="gmw-extension-ribbon free"><?php _e( 'Free Add-on', 'geo-my-wp' ); ?></div></div>
                         <?php } */ ?>
 
                         <!-- New add-on -->
                         <?php if ( ! $extension['installed'] && ! empty( $extension['new_addon'] ) ) { ?>                        
-                            <div class="gmw-extension-ribbon-wrapper"><div class="gmw-extension-ribbon blue"><?php _e( 'New Add-on', 'GMW' ); ?></div></div>   
+                            <div class="gmw-extension-ribbon-wrapper"><div class="gmw-extension-ribbon blue"><?php _e( 'New Add-on', 'geo-my-wp' ); ?></div></div>   
                         <?php } ?>
 
                         <div class="extension-top">
@@ -786,7 +786,7 @@ class GMW_Extensions {
 
                                 <?php if ( isset( $extension['version'] ) && $extension['version'] != 'na' ) { ?>
                                     <p class="version">
-                                        <?php echo sprintf( __( 'Version %s', 'GMW' ), esc_attr( $extension['version'] ) ); ?>
+                                        <?php echo sprintf( __( 'Version %s', 'geo-my-wp' ), esc_attr( $extension['version'] ) ); ?>
                                     </p>
                                 <?php } ?>
 
@@ -817,8 +817,8 @@ class GMW_Extensions {
 
                                             <?php } else { ?>
 
-                                                <a href="<?php echo esc_url( $extension['addon_page'] ); ?>" class="button-secondary button get-extension" target="_blank" title="<?php _e( 'Get Extension', 'GMW' ); ?>">
-                                                    <?php _e( 'Get Extension', 'GMW' ); ?>    
+                                                <a href="<?php echo esc_url( $extension['addon_page'] ); ?>" class="button-secondary button get-extension" target="_blank" title="<?php _e( 'Get Extension', 'geo-my-wp' ); ?>">
+                                                    <?php _e( 'Get Extension', 'geo-my-wp' ); ?>    
                                                 </a>
                                             
                                             <?php } ?>
@@ -833,7 +833,7 @@ class GMW_Extensions {
                                         <i class="gmw-icon-info-circled"></i>
 
                                         <a href="<?php echo esc_url( $details_link ); ?>"" target="_blank"> 
-                                            <?php _e( 'Details', 'GMW' ); ?>
+                                            <?php _e( 'Details', 'geo-my-wp' ); ?>
                                         </a>
                                     </li>
 
@@ -843,7 +843,7 @@ class GMW_Extensions {
                                         <i class="gmw-icon-doc-text"></i>
                                         
                                         <a href="<?php echo esc_url( $docs_link ); ?>"" target="_blank"> 
-                                            <?php _e( 'Documentation', 'GMW' ); ?>
+                                            <?php _e( 'Documentation', 'geo-my-wp' ); ?>
                                         </a>
                                     </li>
 
@@ -853,7 +853,7 @@ class GMW_Extensions {
                                        <i class="gmw-icon-lifebuoy"></i>
                                         
                                         <a href="<?php echo esc_url( $support_link ); ?>" target="_blank"> 
-                                            <?php _e( 'Support', 'GMW' ); ?>
+                                            <?php _e( 'Support', 'geo-my-wp' ); ?>
                                         </a>
                                     </li>
 
@@ -915,7 +915,7 @@ class GMW_Extensions {
                                 <p>
                                     <i class="gmw-icon-spin"></i>
                                     <span>
-                                        <?php echo sprintf( __( 'Version %s is now availabe. Update your plugin.', 'GMW' ), $extension['current_version'] ); ?>
+                                        <?php echo sprintf( __( 'Version %s is now availabe. Update your plugin.', 'geo-my-wp' ), $extension['current_version'] ); ?>
                                     </span>
                                 </p>
                             </div>
@@ -936,7 +936,7 @@ class GMW_Extensions {
                                         </p>
 
                                         <p class="description thank-you" >
-                                            <?php echo sprintf( __( 'Thank you for using GEO my WP. Your <a href="%s">feedback</a> is greatly appriciated.', 'GMW' ), 'https://wordpress.org/support/view/plugin-reviews/geo-my-wp?filter=5' ); ?>
+                                            <?php echo sprintf( __( 'Thank you for using GEO my WP. Your <a href="%s">feedback</a> is greatly appriciated.', 'geo-my-wp' ), 'https://wordpress.org/support/view/plugin-reviews/geo-my-wp?filter=5' ); ?>
                                         </p>
 
                                     </div> 

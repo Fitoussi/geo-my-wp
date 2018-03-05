@@ -30,8 +30,8 @@ class GMW_Search_Form_Widget extends GMW_Widget {
 	 */
 	public function __construct() {
 		
-		$this->widget_description = __( 'Display GEO my WP search form.', 'GMW' );
-		$this->widget_name        = __( 'GEO my WP Search Form', 'GMW' );
+		$this->widget_description = __( 'Display GEO my WP search form.', 'geo-my-wp' );
+		$this->widget_name        = __( 'GEO my WP Search Form', 'geo-my-wp' );
 
 		$forms = gmw_get_forms();
 
@@ -52,13 +52,13 @@ class GMW_Search_Form_Widget extends GMW_Widget {
 		$this->settings = array(
 			'title' 	=> array(
 				'type'    => 'text',
-				'default' => __( 'Search Locations', 'GMW' ),
-				'label'   => __( 'Title', 'GMW' ),
+				'default' => __( 'Search Locations', 'geo-my-wp' ),
+				'label'   => __( 'Title', 'geo-my-wp' ),
 			),
 			'form_id' => array( 
 				'type'    => 'select',
 				'default' => '',
-				'label'   => __( 'Form', 'GMW' ),
+				'label'   => __( 'Form', 'geo-my-wp' ),
 				'options' => $options
 			)
 		);

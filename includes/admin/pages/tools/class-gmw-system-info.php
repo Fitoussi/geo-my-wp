@@ -110,24 +110,24 @@ class GMW_System_Info {
         }
 
         // yes / no specifics
-        $ismulti    = is_multisite() ? __( 'Yes', 'GMW' ) : __( 'No', 'GMW' );
-        $safemode   = ini_get( 'safe_mode' ) ? __( 'Yes', 'GMW' ) : __( 'No', 'GMW' );
-        $wpdebug    = defined( 'WP_DEBUG' ) ? WP_DEBUG ? __( 'Enabled', 'GMW' ) : __( 'Disabled', 'GMW' ) : __( 'Not Set', 'GMW' );
-        $tbprefx    = strlen( $wpdb->prefix ) < 16 ? __( 'Acceptable', 'GMW' ) : __( 'Too Long', 'GMW' );
-        $fr_page    = $frontpage ? get_the_title( $frontpage ).' (ID# '.$frontpage.')'.'' : __( 'n/a', 'GMW' );
-        $fr_post    = $frontpage ? get_the_title( $frontpost ).' (ID# '.$frontpost.')'.'' : __( 'n/a', 'GMW' );
-        $errdisp    = ini_get( 'display_errors' ) != false ? __( 'On', 'GMW' ) : __( 'Off', 'GMW' );
+        $ismulti    = is_multisite() ? __( 'Yes', 'geo-my-wp' ) : __( 'No', 'geo-my-wp' );
+        $safemode   = ini_get( 'safe_mode' ) ? __( 'Yes', 'geo-my-wp' ) : __( 'No', 'geo-my-wp' );
+        $wpdebug    = defined( 'WP_DEBUG' ) ? WP_DEBUG ? __( 'Enabled', 'geo-my-wp' ) : __( 'Disabled', 'geo-my-wp' ) : __( 'Not Set', 'geo-my-wp' );
+        $tbprefx    = strlen( $wpdb->prefix ) < 16 ? __( 'Acceptable', 'geo-my-wp' ) : __( 'Too Long', 'geo-my-wp' );
+        $fr_page    = $frontpage ? get_the_title( $frontpage ).' (ID# '.$frontpage.')'.'' : __( 'n/a', 'geo-my-wp' );
+        $fr_post    = $frontpage ? get_the_title( $frontpost ).' (ID# '.$frontpost.')'.'' : __( 'n/a', 'geo-my-wp' );
+        $errdisp    = ini_get( 'display_errors' ) != false ? __( 'On', 'geo-my-wp' ) : __( 'Off', 'geo-my-wp' );
 
-        $jquchk     = wp_script_is( 'jquery', 'registered' ) ? $GLOBALS['wp_scripts']->registered['jquery']->ver : __( 'n/a', 'GMW' );
+        $jquchk     = wp_script_is( 'jquery', 'registered' ) ? $GLOBALS['wp_scripts']->registered['jquery']->ver : __( 'n/a', 'geo-my-wp' );
 
-        $sessenb    = isset( $_SESSION ) ? __( 'Enabled', 'GMW' ) : __( 'Disabled', 'GMW' );
-        $usecck     = ini_get( 'session.use_cookies' ) ? __( 'On', 'GMW' ) : __( 'Off', 'GMW' );
-        $useocck    = ini_get( 'session.use_only_cookies' ) ? __( 'On', 'GMW' ) : __( 'Off', 'GMW' );
-        $hasfsock   = function_exists( 'fsockopen' ) ? __( 'Your server supports fsockopen.', 'GMW' ) : __( 'Your server does not support fsockopen.', 'GMW' );
-        $hascurl    = function_exists( 'curl_init' ) ? __( 'Your server supports cURL.', 'GMW' ) : __( 'Your server does not support cURL.', 'GMW' );
-        $hassoap    = class_exists( 'SoapClient' ) ? __( 'Your server has the SOAP Client enabled.', 'GMW' ) : __( 'Your server does not have the SOAP Client enabled.', 'GMW' );
-        $hassuho    = extension_loaded( 'suhosin' ) ? __( 'Your server has SUHOSIN installed.', 'GMW' ) : __( 'Your server does not have SUHOSIN installed.', 'GMW' );
-        $openssl    = extension_loaded('openssl') ? __( 'Your server has OpenSSL installed.', 'GMW' ) : __( 'Your server does not have OpenSSL installed.', 'GMW' );
+        $sessenb    = isset( $_SESSION ) ? __( 'Enabled', 'geo-my-wp' ) : __( 'Disabled', 'geo-my-wp' );
+        $usecck     = ini_get( 'session.use_cookies' ) ? __( 'On', 'geo-my-wp' ) : __( 'Off', 'geo-my-wp' );
+        $useocck    = ini_get( 'session.use_only_cookies' ) ? __( 'On', 'geo-my-wp' ) : __( 'Off', 'geo-my-wp' );
+        $hasfsock   = function_exists( 'fsockopen' ) ? __( 'Your server supports fsockopen.', 'geo-my-wp' ) : __( 'Your server does not support fsockopen.', 'geo-my-wp' );
+        $hascurl    = function_exists( 'curl_init' ) ? __( 'Your server supports cURL.', 'geo-my-wp' ) : __( 'Your server does not support cURL.', 'geo-my-wp' );
+        $hassoap    = class_exists( 'SoapClient' ) ? __( 'Your server has the SOAP Client enabled.', 'geo-my-wp' ) : __( 'Your server does not have the SOAP Client enabled.', 'geo-my-wp' );
+        $hassuho    = extension_loaded( 'suhosin' ) ? __( 'Your server has SUHOSIN installed.', 'geo-my-wp' ) : __( 'Your server does not have SUHOSIN installed.', 'geo-my-wp' );
+        $openssl    = extension_loaded('openssl') ? __( 'Your server has OpenSSL installed.', 'geo-my-wp' ) : __( 'Your server does not have OpenSSL installed.', 'geo-my-wp' );
 
         // start generating report
         $report  = '';
@@ -346,7 +346,7 @@ class GMW_System_Info {
         $file   = $name.'-gmw-system-info.txt';
 
         $now    = time();
-        $stamp  = __( 'Report Generated: ', 'GMW' ).date( 'm-d-Y @ g:i:sa', $now ).' system time';
+        $stamp  = __( 'Report Generated: ', 'geo-my-wp' ).date( 'm-d-Y @ g:i:sa', $now ).' system time';
 
         $data   = '';
         $data   .= $stamp."\n\n";
@@ -384,13 +384,13 @@ class GMW_System_Info {
         <form action="" method="post">
             <p>
                 <input type="hidden" name="gmw_action" value="download_system_info">
-                <input type="submit" value="<?php _e( 'Downlaod system info file', 'GMW' ); ?>" class="button button-primary gmw-system-info-download" name="gmw_system_info_download">
-                <input type="button" value="<?php _e( 'Highlight Data', 'GMW' ); ?>" onclick="jQuery( 'textarea#gmw-system-info-content' ).focus().select();" class="button button-secondary" name="">
+                <input type="submit" value="<?php _e( 'Downlaod system info file', 'geo-my-wp' ); ?>" class="button button-primary gmw-system-info-download" name="gmw_system_info_download">
+                <input type="button" value="<?php _e( 'Highlight Data', 'geo-my-wp' ); ?>" onclick="jQuery( 'textarea#gmw-system-info-content' ).focus().select();" class="button button-secondary" name="">
             </p>
             <p><?php echo $this->get_data(); ?></p>
             <p>
-                <input type="submit" value="<?php _e( 'Downlaod system info file', 'GMW' ); ?>" class="button button-primary gmw-system-info-download" name="gmw_system_info_download">
-                <input type="button" value="<?php _e( 'Highlight Data', 'GMW' ); ?>" onclick="jQuery( 'textarea#gmw-system-info-content' ).focus().select();" class="button button-secondary" name="">
+                <input type="submit" value="<?php _e( 'Downlaod system info file', 'geo-my-wp' ); ?>" class="button button-primary gmw-system-info-download" name="gmw_system_info_download">
+                <input type="button" value="<?php _e( 'Highlight Data', 'geo-my-wp' ); ?>" onclick="jQuery( 'textarea#gmw-system-info-content' ).focus().select();" class="button button-secondary" name="">
             </p>
         </form>
         <?php

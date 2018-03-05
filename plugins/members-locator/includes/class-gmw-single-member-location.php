@@ -38,7 +38,7 @@ class GMW_Single_BP_Member_Location extends GMW_Single_Location {
 		
 	public function __construct( $atts = [] ) {
 
-		$this->args['no_location_message'] = __( 'The member has not added a location yet.', 'GMW' );
+		$this->args['no_location_message'] = __( 'The member has not added a location yet.', 'geo-my-wp' );
 
 		parent::__construct( $atts );
 	}

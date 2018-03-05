@@ -185,7 +185,7 @@ class GMW_Maps_API {
 		$map_type   = esc_attr( $args['map_type'] );
 		$map_width  = esc_attr( $args['map_width'] );
 		$map_height = esc_attr( $args['map_height'] );
-		$map_title  = esc_html( __( 'Resize map','GMW' ) );
+		$map_title  = esc_html( __( 'Resize map','geo-my-wp' ) );
 		$display    = ( $args['init_visible'] || $args['expand_on_load'] ) ? '' : 'display:none;';
 
 		// generate the map element
@@ -544,20 +544,20 @@ class GMW_Maps_API {
 		
 		// labels
 		$labels = apply_filters( 'gmw_get_directions_form_labels', array(
-			'origin' 			=> __( 'Origin', 'GMW' ),
-			'destination' 		=> __( 'Destination', 'GMW' ),
-			'directions_label'	=> __( 'Directions', 'GMW' ),
-			'from'				=> __( 'From:' , 'GMW' ),
-			'to'				=> __( 'To:' , 'GMW' ),
-			'driving'			=> __( 'Driving' , 'GMW' ),
-			'walking'			=> __( 'Walking' , 'GMW' ),
-			'bicycling'			=> __( 'Bicycling' , 'GMW' ),
-			'transit'			=> __( 'Transit' , 'GMW' ),
-			'units_mi'			=> __( 'Miles' , 'GMW' ),
-			'units_km'			=> __( 'Kilometers' , 'GMW' ),
-			'avoid_label'		=> __( 'Avoid' , 'GMW' ),
-			'avoid_hw'			=> __( 'highways' , 'GMW' ),
-			'avoid_tolls'		=> __( 'Tolls' , 'GMW' )
+			'origin' 			=> __( 'Origin', 'geo-my-wp' ),
+			'destination' 		=> __( 'Destination', 'geo-my-wp' ),
+			'directions_label'	=> __( 'Directions', 'geo-my-wp' ),
+			'from'				=> __( 'From:' , 'geo-my-wp' ),
+			'to'				=> __( 'To:' , 'geo-my-wp' ),
+			'driving'			=> __( 'Driving' , 'geo-my-wp' ),
+			'walking'			=> __( 'Walking' , 'geo-my-wp' ),
+			'bicycling'			=> __( 'Bicycling' , 'geo-my-wp' ),
+			'transit'			=> __( 'Transit' , 'geo-my-wp' ),
+			'units_mi'			=> __( 'Miles' , 'geo-my-wp' ),
+			'units_km'			=> __( 'Kilometers' , 'geo-my-wp' ),
+			'avoid_label'		=> __( 'Avoid' , 'geo-my-wp' ),
+			'avoid_hw'			=> __( 'highways' , 'geo-my-wp' ),
+			'avoid_tolls'		=> __( 'Tolls' , 'geo-my-wp' )
 		), $args );
 
 		$id 		  = esc_attr( $args['element_id'] );
@@ -687,7 +687,7 @@ class GMW_Maps_API {
 			'from_lat' => false,
 			'from_lng' => false,
 			'units'    => 'imperial',
-			'label'    => __( 'Get directions', 'GMW' )
+			'label'    => __( 'Get directions', 'geo-my-wp' )
 		);
 
 		$args = wp_parse_args( $args, $defaults );

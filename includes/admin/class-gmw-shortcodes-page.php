@@ -28,7 +28,7 @@ class GMW_Shortcodes_page {
 
     	$shortcodes = apply_filters( 'gmw_admin_shortcodes_page', array(
     			'gmw_form' => array(
-    					'name'		  	=> __( 'GMW Form', 'GMW' ),
+    					'name'		  	=> __( 'GMW Form', 'geo-my-wp' ),
     					'basic_usage' 	=> '[GMW]',
     					'template_usage'=> '&#60;&#63;php echo do_shortcode(\'[gmw]\'); &#63;&#62;',
     					'desc'        	=> __( "Use this shortcode to display any of the forms you created in the \"Forms\" Page of GEO my WP.", "GMW" ),
@@ -39,15 +39,15 @@ class GMW_Shortcodes_page {
     											'Form ID',
     											'Results',
     									),
-    									'desc'	 => __( "1) Use the attribute \"form\" with one of your forms ID to display the search form and results on that same page.", 'GMW' ).
-    												__( "2) Use the value \"results\" when you want to display only the search results. This is usefull when you want to display the search form in on page.", 'GMW' ).
+    									'desc'	 => __( "1) Use the attribute \"form\" with one of your forms ID to display the search form and results on that same page.", 'geo-my-wp' ).
+    												__( "2) Use the value \"results\" when you want to display only the search results. This is usefull when you want to display the search form in on page.", 'geo-my-wp' ).
     												__( "and the search results in a different page or when need to display the results when using the serch form in a widget.", "GMW" )
 
     							),
     							array(
     									'attr'	 => 'map',
     									'values' => array(
-    											__( 'Form ID','GMW' ),
+    											__( 'Form ID','geo-my-wp' ),
     									),
     									'desc'	 => __( "Use anywhere on a page where you want to display the results map.", "GMW" )
     							),
@@ -69,11 +69,11 @@ class GMW_Shortcodes_page {
     					),
     			),
     			'current_location' => array(
-    					'name'		  	=> __( 'Curren Location', 'GMW' ),
+    					'name'		  	=> __( 'Curren Location', 'geo-my-wp' ),
     					'basic_usage' 	=> '[gmw_current_location]',
     					'template_usage'=> '&#60;&#63;php echo do_shortcode(\'[gmw_current_location]\'); &#63;&#62;',
-    					'desc'        	=> __( "The shortcode will display a link which once clicked will open a popup window that will allow the user to get his current location.", 'GMW' ).
-    									   __( " The location, if found, will then be saved via cookies. The location in the cookies later will be", 'GMW' ).
+    					'desc'        	=> __( "The shortcode will display a link which once clicked will open a popup window that will allow the user to get his current location.", 'geo-my-wp' ).
+    									   __( " The location, if found, will then be saved via cookies. The location in the cookies later will be", 'geo-my-wp' ).
     									   __( "used with GEO my WP and other add-ons for different functionlities. ", "GMW" ),
     					'attributes'  => array(
     							array(
@@ -105,7 +105,7 @@ class GMW_Shortcodes_page {
     							array(
     									'attr'	 	=> 'title',
     									'values' 	=> array(
-    											__( 'any text','GMW' ),
+    											__( 'any text','geo-my-wp' ),
     									),
     									'default'	=> 'Your location',
     									'desc'	 	=> __( "The title that will be display before the address. For example if you use the title \"Your location\" it will be displayes as Your Location Hollywood Florida ( assuming that the user's location is Hollywood Florida ).", "GMW" )
@@ -122,7 +122,7 @@ class GMW_Shortcodes_page {
     							array(
     									'attr'	 	=> 'user_message',
     									'values' 	=> array(
-    											__( 'any text','GMW' ),
+    											__( 'any text','geo-my-wp' ),
     									),
     									'default'	=> 'Hello',
     									'desc'		=> __( "Greeting message that will be displayed before the user name when logged in ( ex Hello admin ).", "GMW" )
@@ -130,7 +130,7 @@ class GMW_Shortcodes_page {
     							array(
     									'attr'	 	=> 'guest_message',
     									'values' 	=> array(
-    											__( 'any text','GMW' ),
+    											__( 'any text','geo-my-wp' ),
     									),
     									'default'	=> 'Hello guest!',
     									'desc'		=> __( "Greeting message that will be displayed when the users is logged out.", "GMW" )
@@ -165,7 +165,7 @@ class GMW_Shortcodes_page {
     							array(
     									'attr'	 	=> 'zoom_level',
     									'values' 	=> array(
-    											__( 'Numeric value between 1 to 18', 'GMW' ),
+    											__( 'Numeric value between 1 to 18', 'geo-my-wp' ),
     									),
     									'default'	=> '12',
     									'desc'	 	=> __( "Set the map zoom level", "GMW" )
@@ -219,7 +219,7 @@ class GMW_Shortcodes_page {
         <div class="wrap">
 
             <h2 class="gmw-wrap-top-h2">
-                <?php echo _e( 'Shortcodes', 'GMW' ); ?>
+                <?php echo _e( 'Shortcodes', 'geo-my-wp' ); ?>
                 <?php gmw_admin_helpful_buttons(); ?>
             </h2>
 
@@ -243,13 +243,13 @@ class GMW_Shortcodes_page {
                         <thead>
                             <tr>
                                 <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:20%;padding:11px 10px;">
-                                	<label><?php _e( 'Post/Page Content Usage', 'GMW' ); ?></label>
+                                	<label><?php _e( 'Post/Page Content Usage', 'geo-my-wp' ); ?></label>
                                	</th>
                                	<th scope="col" id="cb" class="manage-column column-cb check-column" style="width:40%;padding:11px 10px;">
-                                	<label><?php _e( 'Template File Usage', 'GMW' ); ?></label>
+                                	<label><?php _e( 'Template File Usage', 'geo-my-wp' ); ?></label>
                                	</th>
                                 <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:40%;padding:11px 10px;">
-                                	<label><?php _e( 'Description', 'GMW' ); ?></label>
+                                	<label><?php _e( 'Description', 'geo-my-wp' ); ?></label>
                                 </th>
                             </tr>
                         </thead>
@@ -271,7 +271,7 @@ class GMW_Shortcodes_page {
                     <table class="widefat fixed" style="margin-top:10px;">
                         <thead>
                             <tr>
-                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="text-align:center;padding:11px 10px;"><?php _e( 'Shortcode Attributes', 'GMW' ); ?></th>
+                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="text-align:center;padding:11px 10px;"><?php _e( 'Shortcode Attributes', 'geo-my-wp' ); ?></th>
                             </tr>
                         </thead>
                     </table>
@@ -279,10 +279,10 @@ class GMW_Shortcodes_page {
                     <table class="widefat fixed" style="margin-top:-2px">
                         <thead  style="background-color:#f9f9f9;">
                             <tr valign="top" >
-                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Attribute', 'GMW' ); ?></th>
-                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Values Accepted', 'GMW' ); ?></th>
-                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Default Value', 'GMW' ); ?></th>
-                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Additional Information', 'GMW' ); ?></th> 
+                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Attribute', 'geo-my-wp' ); ?></th>
+                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Values Accepted', 'geo-my-wp' ); ?></th>
+                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Default Value', 'geo-my-wp' ); ?></th>
+                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Additional Information', 'geo-my-wp' ); ?></th> 
                             </tr>
                         </thead>
                         <tbody>
@@ -299,7 +299,7 @@ class GMW_Shortcodes_page {
 	                        			<p class="description"><?php echo $rowCount++.')'.' '.$value; ?></p>
 	                        		<?php } ?>
 	                        		</td>
-	                        		<?php $default = ( isset( $attr['default'] ) ) ? $attr['default'] : __( 'N/A', 'GMW' ); ?>
+	                        		<?php $default = ( isset( $attr['default'] ) ) ? $attr['default'] : __( 'N/A', 'geo-my-wp' ); ?>
 	                        		<td style="color: #555;border-bottom:1px solid #eee;min-width:400px;vertical-align: top"><p class="description"><?php echo $default; ?></p></td>
 	                        		<td style="color: #555;border-bottom:1px solid #eee;min-width:400px;vertical-align: top"><p class="description"><?php echo $attr['desc']; ?></p></td>
 	                        	</tr>
@@ -313,7 +313,7 @@ class GMW_Shortcodes_page {
                     <table class="widefat fixed" style="margin-top:10px;">
                         <thead>
                             <tr>
-                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="text-align:center;padding:11px 10px;"><?php _e( 'Shortcode Examples', 'GMW' ); ?></th>
+                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="text-align:center;padding:11px 10px;"><?php _e( 'Shortcode Examples', 'geo-my-wp' ); ?></th>
                             </tr>
                         </thead>
                     </table>
@@ -322,8 +322,8 @@ class GMW_Shortcodes_page {
 	                    <table class="widefat fixed" style="margin-top:-2px">
 	                        <thead  style="background-color:#f9f9f9;">
 	                            <tr valign="top">
-	                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Usage', 'GMW' ); ?></th>
-	                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Description', 'GMW' ); ?></th>
+	                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Usage', 'geo-my-wp' ); ?></th>
+	                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Description', 'geo-my-wp' ); ?></th>
 	                            </tr>
 	                        </thead>
 	                        <tbody>

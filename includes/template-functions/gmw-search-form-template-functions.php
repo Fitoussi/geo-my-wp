@@ -24,7 +24,7 @@ function gmw_get_search_form_submit_button( $gmw = array(), $label = '' ) {
 	
 	$args = array(
 		'id' 	=> $id,
-		'label' => ! empty( $label ) ? $label : __( 'Submit', 'GMW' )
+		'label' => ! empty( $label ) ? $label : __( 'Submit', 'geo-my-wp' )
 	);
 
 	$output  = '';
@@ -126,9 +126,9 @@ function gmw_get_search_form_locator_button( $gmw ) {
 function gmw_get_search_form_radius( $gmw ) {
 	
 	if ( $gmw['search_form']['units'] == 'both' ) {
-		$label = __( 'Within', 'GMW' );
+		$label = __( 'Within', 'geo-my-wp' );
 	} else {
-    	$label = $gmw['search_form']['units'] == 'imperial' ? __( 'Miles', 'GMW' ) : __( 'Kilometers', 'GMW' );
+    	$label = $gmw['search_form']['units'] == 'imperial' ? __( 'Miles', 'geo-my-wp' ) : __( 'Kilometers', 'geo-my-wp' );
 	}
 
 	$args = array(
@@ -164,8 +164,8 @@ function gmw_get_search_form_units( $gmw ) {
 	$args = array(
 		'id'	   => $gmw['ID'], 
 		'units'	   => $gmw['search_form']['units'],
-		'mi_label' => __( 'Miles', 'GMW' ),
-		'km_label' => __( 'Kilometers', 'GMW' )
+		'mi_label' => __( 'Miles', 'geo-my-wp' ),
+		'km_label' => __( 'Kilometers', 'geo-my-wp' )
 	);
 
 	$output  = '<div class="gmw-form-field-wrapper gmw-units-field-wrapper">';

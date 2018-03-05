@@ -179,7 +179,7 @@ class GMW_Export {
 	public function export() {
 		
 		if ( ! $this->can_export() ) {
-			wp_die( __( 'You do not have permission to export data.', 'GMW' ), __( 'Error', 'GMW' ) );
+			wp_die( __( 'You do not have permission to export data.', 'geo-my-wp' ), __( 'Error', 'geo-my-wp' ) );
 		}
 
 		// Set headers

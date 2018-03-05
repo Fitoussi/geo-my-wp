@@ -63,8 +63,8 @@ class GMW_Posts_Locator_Admin_Settings {
 			'name'          => 'post_types',
             'type'          => 'multiselect',
 			'default'       => '',
-			'label'         => __( 'Post Types', 'GMW' ),
-			'desc'          => __( 'Select the post types where you would like to enable geotagging. GEO my WP Location section will be added to the "Edit Post" page of the selected post types.', 'GMW' ),
+			'label'         => __( 'Post Types', 'geo-my-wp' ),
+			'desc'          => __( 'Select the post types where you would like to enable geotagging. GEO my WP Location section will be added to the "Edit Post" page of the selected post types.', 'geo-my-wp' ),
             'options'       => gmw_get_post_types_array(),
             'attributes'    => array(),
             'priority'      => 10
@@ -79,16 +79,16 @@ class GMW_Posts_Locator_Admin_Settings {
         $settings['post_types_settings']['edit_post_page_options'] = array(
             'name'          => 'edit_post_page_options',
             'type'          => 'fields_group',
-            'label'         => __( 'Map Settings ( "Edit Post" Page )', 'GMW' ),
-            'desc'          => __( 'Setup the map of the Location section in the "Edit Post" page.' , 'GMW' ),
+            'label'         => __( 'Map Settings ( "Edit Post" Page )', 'geo-my-wp' ),
+            'desc'          => __( 'Setup the map of the Location section in the "Edit Post" page.' , 'geo-my-wp' ),
             'fields'        => array(
                 'edit_post_page_map_latitude'  => array(
                     'name'          => 'edit_post_page_map_latitude',
                     'type'          => 'text',
                     'default'       => '40.711544',
-                    'placeholder'   => __( 'Latitude', 'GMW' ),
-                    'label'         => __( 'Default latitude', 'GMW' ),
-                    'desc'          => __( 'Enter the latitude of the default location that will show when the map first loads.', 'GMW' ),
+                    'placeholder'   => __( 'Latitude', 'geo-my-wp' ),
+                    'label'         => __( 'Default latitude', 'geo-my-wp' ),
+                    'desc'          => __( 'Enter the latitude of the default location that will show when the map first loads.', 'geo-my-wp' ),
                     'attributes'    => array(),
                     'priority'      => 5
                 ),
@@ -96,9 +96,9 @@ class GMW_Posts_Locator_Admin_Settings {
                     'name'          => 'edit_post_page_map_longitude',
                     'type'          => 'text',
                     'default'       => '-74.013486',
-                    'placeholder'   => __( 'Longitude', 'GMW' ),
-                    'label'         => __( 'Default longitude', 'GMW' ),
-                    'desc'          => __( 'Enter the longitude of the default location that will show when the map first loads.', 'GMW' ),
+                    'placeholder'   => __( 'Longitude', 'geo-my-wp' ),
+                    'label'         => __( 'Default longitude', 'geo-my-wp' ),
+                    'desc'          => __( 'Enter the longitude of the default location that will show when the map first loads.', 'geo-my-wp' ),
                     'attributes'    => array(),
                     'priority'      => 10
                 ),
@@ -106,13 +106,13 @@ class GMW_Posts_Locator_Admin_Settings {
                     'name'          => 'edit_post_page_map_type',
                     'type'          => 'select',
                     'default'       => 'ROADMAP',
-                    'label'         => __( 'Map type', 'GMW' ),
-                    'desc'          => __( 'Select the map type.', 'GMW' ),
+                    'label'         => __( 'Map type', 'geo-my-wp' ),
+                    'desc'          => __( 'Select the map type.', 'geo-my-wp' ),
                     'options'       => array(
-                        'ROADMAP'       => __( 'ROADMAP', 'GMW' ),
-                        'SATELLITE'     => __( 'SATELLITE', 'GMW' ),
-                        'HYBRID'        => __( 'HYBRID', 'GMW' ),
-                        'TERRAIN'       => __( 'TERRAIN', 'GMW' )
+                        'ROADMAP'       => __( 'ROADMAP', 'geo-my-wp' ),
+                        'SATELLITE'     => __( 'SATELLITE', 'geo-my-wp' ),
+                        'HYBRID'        => __( 'HYBRID', 'geo-my-wp' ),
+                        'TERRAIN'       => __( 'TERRAIN', 'geo-my-wp' )
                     ),
                     'attributes'    => array(),
                     'priority'      => 15
@@ -121,8 +121,8 @@ class GMW_Posts_Locator_Admin_Settings {
                     'name'          => 'edit_post_page_map_zoom_level',
                     'type'          => 'select',
                     'default'       => 7,
-                    'label'         => __( 'Map type', 'GMW' ),
-                    'desc'          => __( 'Select the zoom level of the map.', 'GMW' ),
+                    'label'         => __( 'Map type', 'geo-my-wp' ),
+                    'desc'          => __( 'Select the zoom level of the map.', 'geo-my-wp' ),
                     'options'       => $zoom_levels,
                     'attributes'    => array(),
                     'priority'      => 20
@@ -137,9 +137,9 @@ class GMW_Posts_Locator_Admin_Settings {
             'name'          => 'location_mandatory',
             'type'          => 'checkbox',
             'default'       => 0,
-            'label'         => __( 'Mandatory Location', 'GMW' ),
-            'cb_label'      => __( 'Enable', 'GMW' ),
-            'desc'          => __( 'Prevent post submission when no location entered.', 'GMW' ),
+            'label'         => __( 'Mandatory Location', 'geo-my-wp' ),
+            'cb_label'      => __( 'Enable', 'geo-my-wp' ),
+            'desc'          => __( 'Prevent post submission when no location entered.', 'geo-my-wp' ),
             'attributes'    => array(),
             'priority'      => 30
         );

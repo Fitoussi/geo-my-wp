@@ -508,7 +508,7 @@ class GMW_Current_location {
 		if ( ! check_ajax_referer( 'gmw_current_location_nonce', 'security', false ) ) {
 
 			//abort if bad nonce
-			wp_die( __( 'Trying to cheat or something?', 'GMW' ), __( 'Error', 'GMW' ), array( 'response' => 403 ) );
+			wp_die( __( 'Trying to cheat or something?', 'geo-my-wp' ), __( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
 		}
 
 		//parse the form values

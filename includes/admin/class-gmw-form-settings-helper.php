@@ -281,14 +281,14 @@ class GMW_Form_Settings_Helper {
 	            	value="1" 
 	            	<?php checked( '1', $value['enabled'] ); ?> 
 	            />
-	            <?php _e( 'Enable', 'GMW' ); ?>
+	            <?php _e( 'Enable', 'geo-my-wp' ); ?>
 	       	 </label>
         </p>
 
         <div class="featured-image-options gmw-options-box" <?php echo empty( $value['enabled'] ) ? 'style="display:none";' : ""; ?>>
              
             <div class="single-option">
-                <label><?php _e( 'Width', 'GMW' ); ?></label>
+                <label><?php _e( 'Width', 'geo-my-wp' ); ?></label>
                 
                 <div class="option-content">
                 	<input 
@@ -303,7 +303,7 @@ class GMW_Form_Settings_Helper {
             
             <div class="single-option">
                 
-                <label><?php _e( 'Height', 'GMW' ); ?></label>
+                <label><?php _e( 'Height', 'geo-my-wp' ); ?></label>
                 
                 <div class="option-content">
                 	<input 
@@ -362,8 +362,8 @@ class GMW_Form_Settings_Helper {
 
                                 
                                 echo '<select name="'.$nameAttr.'">';
-                                echo '<option value="disable" checked="checked">' . __( 'Disable', 'GMW' ).'</option>';
-                                echo '<option value="dropdown" '.$selected.'>' . __( 'Dropdown', 'GMW' ). '</option>';
+                                echo '<option value="disable" checked="checked">' . __( 'Disable', 'geo-my-wp' ).'</option>';
+                                echo '<option value="dropdown" '.$selected.'>' . __( 'Dropdown', 'geo-my-wp' ). '</option>';
                                 echo '</select>';
   
                             echo '</div>';
@@ -377,13 +377,13 @@ class GMW_Form_Settings_Helper {
         $style = ( empty( $form['search_form']['post_types'] ) || ( count( $form['search_form']['post_types'] ) == 0 ) ) ? '' : 'style="display: none;"';
 
         echo '<div id="post-types-select-taxonomies-message" '.$style.'>';
-        echo '<p>'.__( 'Select a post type to see its taxonomies.', 'GMW' ) .'</p>';
+        echo '<p>'.__( 'Select a post type to see its taxonomies.', 'geo-my-wp' ) .'</p>';
         echo '</div>';
 
         $style = ( isset( $form['search_form']['post_types'] ) && ( count( $form['search_form']['post_types'] ) == 1 ) ) ? 'style="display: none;"' : ''; 
 
         echo '<div id="post-types-no-taxonomies-message" '.$style.'>';
-        echo '<p>'.__( 'This feature is not availabe with multiple post types.', 'GMW' ) .'</p>';
+        echo '<p>'.__( 'This feature is not availabe with multiple post types.', 'geo-my-wp' ) .'</p>';
         echo '</div>';      
     }
 
@@ -414,13 +414,13 @@ class GMW_Form_Settings_Helper {
                     onclick="jQuery( '.excerpt-options' ).slideToggle();" 
                     <?php echo ! empty( $value['enabled'] ) ? "checked=checked" : ''; ?> 
                 />
-                <?php _e( 'Enable', 'GMW' ); ?>
+                <?php _e( 'Enable', 'geo-my-wp' ); ?>
             </label>
         </p>
 
         <div class="excerpt-options gmw-options-box" <?php echo empty( $value['enabled'] ) ? 'style="display:none";' : ""; ?>>
             <div class="single-option">
-                <label><?php _e( 'Words count', 'GMW' ); ?></label>
+                <label><?php _e( 'Words count', 'geo-my-wp' ); ?></label>
                 <div class="option-content">
                     <input 
                         type="number" 
@@ -429,13 +429,13 @@ class GMW_Form_Settings_Helper {
                         placeholder="Enter numeric value"
                     />
                     <p class="description">
-                        <?php _e( 'Enter the number of words that you would like to display from the post content or leave blank to show the entire content.', 'GMW' );?>
+                        <?php _e( 'Enter the number of words that you would like to display from the post content or leave blank to show the entire content.', 'geo-my-wp' );?>
                     </p>
                 </div>
             </div>
             
             <div class="single-option">
-                <label><?php _e( 'Read more link', 'GMW' ); ?></label>
+                <label><?php _e( 'Read more link', 'geo-my-wp' ); ?></label>
                 <div class="option-content">
                     <input 
                         type="text" 
@@ -444,7 +444,7 @@ class GMW_Form_Settings_Helper {
                         placeholder="Enter text"
                     />  
                     <p class="description">
-                        <?php _e( 'Enter a text that will be used as the "Read more" link and will link to the post page.', 'GMW' );?>
+                        <?php _e( 'Enter a text that will be used as the "Read more" link and will link to the post page.', 'geo-my-wp' );?>
                     </p>
                 </div>
             </div>
@@ -484,7 +484,7 @@ class GMW_Form_Settings_Helper {
 
         //show message if Xprofile Fields component deactivated
         if ( ! bp_is_active( 'xprofile' ) ) {
-            trigger_error( __( 'Buddypress xprofile fields component is deactivated. You need to activate in in order to use this feature.', 'GMW'), E_USER_NOTICE );
+            trigger_error( __( 'Buddypress xprofile fields component is deactivated. You need to activate in in order to use this feature.', 'geo-my-wp'), E_USER_NOTICE );
             return array();
         }
 
@@ -539,7 +539,7 @@ class GMW_Form_Settings_Helper {
 
         //show message if Xprofile Fields component deactivated
         if ( ! class_exists( 'Buddypress' ) || ! bp_is_active( 'xprofile' ) ) {
-            return _e( 'Buddypress xprofile fields component is required for this feature.', 'GMW');
+            return _e( 'Buddypress xprofile fields component is required for this feature.', 'geo-my-wp');
         }
 
         $fields = self::get_xprofile_fields();
@@ -550,7 +550,7 @@ class GMW_Form_Settings_Helper {
         ?>
         <div class="gmw-options-box">
             <div class="single-option">
-                <label><?php _e( 'Select Profile Fields', 'GMW' ); ?></label>
+                <label><?php _e( 'Select Profile Fields', 'geo-my-wp' ); ?></label>
                 <div class="option-content">
                     <select 
                         name="<?php echo esc_attr( $name_attr.'[fields][]' ); ?>" 
@@ -568,15 +568,15 @@ class GMW_Form_Settings_Helper {
                         } ?>
                     </select>
                     <p class="description">
-                        <?php _e( 'Select the profile fields to be used as filters in the search form.', 'GMW' ); ?>
+                        <?php _e( 'Select the profile fields to be used as filters in the search form.', 'geo-my-wp' ); ?>
                     </p>
                 </div>
             
-                <label><?php _e( 'Select date field as "Age range" filter.', 'GMW' ); ?></label>   
+                <label><?php _e( 'Select date field as "Age range" filter.', 'geo-my-wp' ); ?></label>   
 
                     <div class="option-content">
                         <select name="<?php echo esc_attr( $name_attr.'[date_field]' ); ?>">
-                            <option value="" selected="selected"><?php _e( 'N/A', 'GMW' ); ?></option>
+                            <option value="" selected="selected"><?php _e( 'N/A', 'geo-my-wp' ); ?></option>
                             <?php foreach ( $fields['date_field'] as $field_value => $field_name ) { ?>
                                 <?php $selected = ( ! empty( $value['date_field'] ) && $value['date_field'] == $field_value ) ? 'selected="selected"' : ''; ?>
                                 <option value="<?php echo esc_attr( $field_value ); ?>" <?php echo $selected; ?> >
@@ -585,7 +585,7 @@ class GMW_Form_Settings_Helper {
                             <?php } ?>
                         </select>
                         <p class="description">
-                            <?php _e( 'select a date field to be used as a age range filter in the search form.', 'GMW' ); ?>
+                            <?php _e( 'select a date field to be used as a age range filter in the search form.', 'geo-my-wp' ); ?>
                         </p>
                     </div>
                 </div>

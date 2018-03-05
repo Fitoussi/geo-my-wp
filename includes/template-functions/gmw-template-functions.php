@@ -135,8 +135,8 @@ function gmw_get_pagination( $gmw = array() ) {
     $args = array(
         'id'                 => $gmw['ID'],
         'total'              => $gmw['max_pages'],
-        'prev_text'          => __( 'Prev', 'GMW' ),
-        'next_text'          => __( 'Next', 'GMW' ),
+        'prev_text'          => __( 'Prev', 'geo-my-wp' ),
+        'next_text'          => __( 'Next', 'geo-my-wp' ),
         'page_name'          => $gmw['paged_name']
     );
 
@@ -158,7 +158,7 @@ function gmw_get_per_page( $gmw = array() ) {
     
     $args = array(
         'id'            => $gmw['ID'],
-        'label'         => __( 'Per page', 'GMW' ),
+        'label'         => __( 'Per page', 'geo-my-wp' ),
         'per_page'      => $gmw['page_load_action'] ? explode( ",", $gmw['page_load_results']['per_page'] ) : explode( ",", $gmw['search_results']['per_page'] ),
         'paged'         => $gmw['paged'],
         'total_results' => $gmw['total_results'],

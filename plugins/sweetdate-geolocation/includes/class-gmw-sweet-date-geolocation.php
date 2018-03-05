@@ -161,22 +161,22 @@ class GMW_Sweet_Date_Geolocation {
     public function labels() {
 
     	$output = apply_filters( 'gmw_sd_labels', array(
-			'address_placeholder' 	=> __( 'Enter Address...', 'GMW' ),
-			'miles'					=> __( 'Miles', 'GMW' ),
-			'kilometers'			=> __( 'Kilometers', 'GMW' ),
-			'km'					=> __( 'km', 'GMW' ),
-			'mi'					=> __( 'mi', 'GMW' ),
-			'orderby'				=> __( 'Order by', 'GMW' ),
+			'address_placeholder' 	=> __( 'Enter Address...', 'geo-my-wp' ),
+			'miles'					=> __( 'Miles', 'geo-my-wp' ),
+			'kilometers'			=> __( 'Kilometers', 'geo-my-wp' ),
+			'km'					=> __( 'km', 'geo-my-wp' ),
+			'mi'					=> __( 'mi', 'geo-my-wp' ),
+			'orderby'				=> __( 'Order by', 'geo-my-wp' ),
 			'orderby_dropdown'		=> array(
-				'active'		=> __( 'Active', 'GMW' ),
-				'newest' 	   	=> __( 'Newest', 'GMW' ),
-				'alphabetical' 	=> __( 'Alphabetical', 'GMW' ),
-				'distance' 		=> __( 'Distance', 'GMW' ),
+				'active'		=> __( 'Active', 'geo-my-wp' ),
+				'newest' 	   	=> __( 'Newest', 'geo-my-wp' ),
+				'alphabetical' 	=> __( 'Alphabetical', 'geo-my-wp' ),
+				'distance' 		=> __( 'Distance', 'geo-my-wp' ),
 			),
-			'address'				=> __( 'Address', 'GMW' ),
-			'get_directions'		=> __( 'Get directions', 'GMW' ),
+			'address'				=> __( 'Address', 'geo-my-wp' ),
+			'get_directions'		=> __( 'Get directions', 'geo-my-wp' ),
 			'address_error_message'	=> __( "Sorry, we could not find the address you entered. Please try a different address.", "GMW" ),
-			'resize_map'			=> __( 'resize map', 'GMW' )
+			'resize_map'			=> __( 'resize map', 'geo-my-wp' )
 		) );
     	
     	return $output;
@@ -447,7 +447,7 @@ class GMW_Sweet_Date_Geolocation {
 			'lng'		   => $this->form_data['lng'],
 			'address' 	   => $this->form_data['address'],
 			'map_icon'	   => 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-			'iw_content'   => __( 'You are here', 'GMW' ),
+			'iw_content'   => __( 'You are here', 'geo-my-wp' ),
 			'iw_open'	   => false
         );
         
