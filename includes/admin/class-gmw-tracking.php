@@ -91,12 +91,12 @@ class GMW_Tracking {
 			
 			$output  = '<div class="gmw-tracking-notice updated notice is-dismissible">';
 			$output .= '<p>';
- 			$output .= sprintf( __( '<h4>Allow GEO my WP to track the plugin usage on your site?</h4><p>Tracking non-sensitive data can help us improve GEO my WP plugin. You can read more about the tracking usage <a href="%s" target="_blank">here</a>.</p><em>*You can disable/enable tracking at any time from GEO my WP Settings page.</em>', 'GMW' ), 'https://geomywp.com/tracking-data' );
+ 			$output .= sprintf( __( '<h4>Allow GEO my WP to track the plugin usage on your site?</h4><p>Tracking non-sensitive data can help us improve GEO my WP plugin. You can read more about the tracking usage <a href="%s" target="_blank">here</a>.</p><em>*You can disable/enable tracking at any time from GEO my WP Settings page.</em>', 'geo-my-wp' ), 'https://geomywp.com/tracking-data' );
 			
 			$output .= '</p>';
 			$output .= '<p>';	
-			$output .= '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-primary">' . __( 'Allow tracking', 'GMW' ) . '</a>';
-			$output .= '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow tracking', 'GMW' ) . '</a>';
+			$output .= '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-primary">' . __( 'Allow tracking', 'geo-my-wp' ) . '</a>';
+			$output .= '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow tracking', 'geo-my-wp' ) . '</a>';
 			$output .= '</p>';
 			$output .= '</div>';
 
@@ -219,23 +219,23 @@ class GMW_Tracking {
 
 		$data = array();
 
-		$data['url']   		 = home_url();
-		$data['email'] 		 = get_bloginfo( 'admin_email' );
+		$data['url']   	   = home_url();
+		$data['email'] 	   = get_bloginfo( 'admin_email' );
+		$data['multisite'] = is_multisite() ? 1 : 0;
+		$data['locale']    = get_locale();
+
+		// versions
 		$data['php_version'] = phpversion();
 		$data['wp_version']  = get_bloginfo( 'version' );
 		$data['gmw_version'] = GMW_VERSION;
 		$data['server']      = isset( $_SERVER['SERVER_SOFTWARE'] ) ? $_SERVER['SERVER_SOFTWARE'] : '';
-		$data['multisite'] 	 = is_multisite() ? 1 : 0;
-		$data['locale']      = get_locale();
-
+		
 		// theme data
 		$theme_data    = wp_get_theme();
 		$theme         = $theme_data->Name . ' v' . $theme_data->Version;
 		$data['theme'] = $theme;
-
-		$data['gmw_options'] = gmw_get_options_group();
 		
-		// plugins information
+		// plugins data
 		if ( ! function_exists( 'get_plugins' ) ) {
 			include ABSPATH . '/wp-admin/includes/plugin.php';
 		}
@@ -259,9 +259,19 @@ class GMW_Tracking {
 			}
 		}
 
+		// gmw data
+		$data['gmw_options'] = gmw_get_options_group();
+
 		global $wpdb;
 
-		$data['form'] = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}gmw_forms" );
+		$data['forms'] = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}gmw_forms", ARRAY_A );
+
+		foreach ( $data['forms'] as $key => $form ) {
+
+			$form['data'] = maybe_unserialize( $form['data'] );
+
+			$data['forms'][$key] = $form;
+		}
 
 		return $data;
 	}
