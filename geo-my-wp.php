@@ -2,15 +2,15 @@
 /*
 Plugin Name: GEO my WP
 Plugin URI: http://www.geomywp.com
-Description: GEO my WP is an adavanced mapping and proximity search plugin. Geotag post types and BuddyPress members and create proximity search forms to search and find locations based on address, radius, categories and more.
+Description: GEO my WP is an adavanced mapping and proximity search plugin. Geotag post types and BuddyPress members, and create proximity search forms to search and find locations based on address, radius, categories and more.
 Version: 3.0-beta-7
 Author: Eyal Fitoussi
 Author URI: http://www.geomywp.com
 Requires at least: 4.5
 Tested up to: 4.9.1
 Buddypress: 2.8 or higher
-Text Domain: GMW
-Domain Path: /languages/
+Text Domain: geo-my-wp
+Domain Path: /languages
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -93,7 +93,7 @@ class GEO_my_WP {
 		'nearby_locations'				   => '1.3',
 		'nearby_posts'				   	   => '1.3', // old slug
 		'premium_settings' 	    		   => '2.0',
-		'global_maps' 	        		   => '2.1',
+		'global_maps' 	        		   => '2.2',
 		'users_locator'					   => '1.3',
 		'wp_users_geo-location' 		   => '1.3', // old slug
 	);
@@ -203,7 +203,7 @@ class GEO_my_WP {
 	 * @return void
 	 */
 	public function __clone() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' eh?!', 'GMW' ), '3.0' );
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' eh?!', 'geo-my-wp' ), '3.0' );
 	}
 
 	/**
@@ -213,7 +213,7 @@ class GEO_my_WP {
 	 * @return void
 	 */
 	public function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' eh?!', 'GMW' ), '3.0' );
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' eh?!', 'geo-my-wp' ), '3.0' );
 	}
 
 	/**
@@ -253,7 +253,7 @@ class GEO_my_WP {
 	public static function loaded() {
 
 		// load textdomain
-		load_plugin_textdomain( 'GMW', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+		load_plugin_textdomain( 'geo-my-wp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
 		// fires when GEO my WP has loaded.
 		do_action( 'gmw_loaded' );
