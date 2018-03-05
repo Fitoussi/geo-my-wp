@@ -120,6 +120,35 @@ span.gmw-resize-map-toggle.gmw-icon-resize-small {
 	cursor: pointer;
 }
 
+/*** map icons *****/
+
+#gmw-location-form-wrapper .icons-wrapper label {
+	background: #f7f7f7;
+	padding: 9px 7px;
+	display: inline-block;
+	border: 1px solid #ededed;
+	vertical-align: bottom;
+	margin: 4px 2px 2px 4px;
+	max-height: 50px;
+	height: 100%;
+	box-sizing: border-box;
+}
+
+#gmw-location-form-wrapper .icons-wrapper label input {
+	margin-right: 4px;
+}
+
+#gmw-location-form-wrapper .icons-wrapper label img {
+	max-width: 28px;
+	height: auto;
+	margin-left: 3px;
+	display: inline-block;
+}
+
+#gmw-location-form-wrapper .icons-wrapper {
+	padding-top: 15px;
+}
+
 /********** end map ********/
 
 /********** search forms ******************/
@@ -972,8 +1001,7 @@ span.gmw-resize-map-toggle.gmw-icon-resize-small {
 		bottom: 0;
 		box-shadow: none;
 		border-radius: 5px;
-		width: 100%;
-		max-width: 255px;
+		width: 250px;
 		min-height: 140px;
 		padding: 12px;
 		z-index: 999999999;
