@@ -91,7 +91,7 @@ function gmw_shortcode( $attr ) {
 		return;
 	}
 
-	if ( $form['addon'] == 'global_maps' ) {
+	if ( $form['addon'] == 'global_maps' && function_exists( 'gmw_global_map_shortcode' ) ) {
 
 		trigger_error( 'The usage of [gmw] shortcode for global maps is deprecated since GEO my WP 3.0. Use [gmw_global_maps] shortcode instead.' , E_USER_NOTICE );
 
