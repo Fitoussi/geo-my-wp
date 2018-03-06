@@ -166,7 +166,7 @@ class GMW_Settings {
                         'priority'    => 80
                     )
                 ),
-                'priority'  => 5
+                'priority'  => 3
             )
         ) );
     }
