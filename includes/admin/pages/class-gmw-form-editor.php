@@ -1536,6 +1536,10 @@ class GMW_Form_Editor {
 		
 		} else {
 			
+			// delete form from cache. We are updating it with new data.
+    		wp_cache_delete( 'all_forms', 'gmw_forms' );
+    		wp_cache_delete( $form['ID'], 'gmw_forms' );
+
 			wp_send_json( $valid_input );
 		}
     }
