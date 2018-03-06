@@ -57,7 +57,10 @@ class GMW_Template_Functions_Helper {
 			$content = strip_shortcodes( $content );
 		}
 		
-		$content = apply_filters( 'the_content', $content );	
+		//$content = apply_filters( 'the_content', $content );
+		// use this filter instead of the_content to prevent conflicts with
+		// other plugins.
+		$content = apply_filters( 'wpautop', $content );	
 		$content = str_replace( ']]>', ']]&gt;', $content );
 
 		return $content;
