@@ -529,7 +529,7 @@ add_shortcode( 'gmw_post_address', 'gmw_get_post_address' );
  * 
  * @return int location ID
  */
-function gmw_update_post_location( $post_id = 0, $location = [], $user_id = 0, $force_refresh = false ) {
+function gmw_update_post_location( $post_id = 0, $location = array(), $user_id = 0, $force_refresh = false ) {
 
     if ( ! gmw_is_post_exists( $post_id ) ) {
         return;
