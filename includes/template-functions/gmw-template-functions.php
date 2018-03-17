@@ -57,7 +57,7 @@ function gmw_get_no_results_message( $gmw = array() ) {
  * 
  * @author Eyal Fitoussi
  */
-function gmw_get_results_map( $gmw, $implode = true ) {
+function gmw_get_results_map( $gmw, $init_visible = true, $implode = true ) {
     
     $args = array( 
         'map_id'         => $gmw['ID'],
@@ -66,9 +66,7 @@ function gmw_get_results_map( $gmw, $implode = true ) {
         'map_width'      => $gmw['results_map']['map_width'],
         'map_height'     => $gmw['results_map']['map_height'],
         'expand_on_load' => ! empty( $gmw['results_map']['expand_on_load'] ) ? true : false,
-        //'form'           => $gmw,
-       // 'init_visible'   => ( ! isset( $gmw['map_usage'] ) || $gmw['map_usage'] == 'shortcode' ) ? false : true
-        'init_visible'   => true
+        'init_visible'   => $init_visible
     );
 
     return GMW_Maps_API::get_map_element( $args, $implode );
@@ -78,10 +76,9 @@ function gmw_get_results_map( $gmw, $implode = true ) {
      * Output map in search results template file
      * 
      * @param  [type]  $gmw        [description]
-     * @param  boolean $in_results [description]
      * @return [type]              [description]
      */
-    function gmw_results_map( $gmw ) {
+    function gmw_results_map( $gmw, $init_visible = true ) {
         
         if ( $gmw['map_usage'] != 'results' ) {
             return;
@@ -94,7 +91,7 @@ function gmw_get_results_map( $gmw, $implode = true ) {
         do_action( "gmw_before_map",                  $gmw );
         do_action( "gmw_{$gmw['prefix']}_before_map", $gmw );
         
-        echo gmw_get_results_map( $gmw );
+        echo gmw_get_results_map( $gmw, $init_visible );
       
         do_action( "gmw_after_map",                  $gmw );
         do_action( "gmw_{$gmw['prefix']}_after_map", $gmw );
@@ -145,6 +142,31 @@ function gmw_get_pagination( $gmw = array() ) {
 
     function gmw_pagination( $gmw = array() ) {
         echo gmw_get_pagination( $gmw );
+    }
+
+/**
+ * GMW Pagination function for ajax forms
+ * 
+ * @version 3.0
+ * 
+ * @author Eyal Fitoussi
+ */
+function gmw_get_ajax_pagination( $gmw = array() ) {
+
+    // pagination arguments. 
+    $args = array(
+        'id'                 => $gmw['ID'],
+        'total'              => $gmw['max_pages'],
+        'prev_text'          => __( 'Prev', 'geo-my-wp' ),
+        'next_text'          => __( 'Next', 'geo-my-wp' ),
+        'current'            => $gmw['paged']
+    );
+
+    return GMW_Template_Functions_Helper::get_ajax_pagination( $args );
+}
+
+    function gmw_ajax_pagination( $gmw = array() ) {
+        echo gmw_get_ajax_pagination( $gmw );
     }
 
 /**
