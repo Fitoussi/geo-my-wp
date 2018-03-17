@@ -452,7 +452,7 @@ class GMW_Sweet_Date_Geolocation {
         );
         
         // triggers map on page load
-        $map_args = gmw_new_map_element( $map_args, $map_options, $this->map_locations, $user_position );
+        $map_args = gmw_get_map_object( $map_args, $map_options, $this->map_locations, $user_position );
         $map_args = wp_json_encode( $map_args );
         ?>
         <script>       
