@@ -304,6 +304,7 @@ span.gmw-resize-map-toggle.gmw-icon-resize-small {
 		padding: 0;
 		line-height: 25px;
 		display: block;
+		margin-left: 0;
 	}
 
 	div.gmw-form-wrapper .gmw-checkbox-taxonomy-wrapper ul li label {
@@ -637,31 +638,36 @@ span.gmw-resize-map-toggle.gmw-icon-resize-small {
 
 	/********** Pagination Start **************/
 
-	ul.gmw-pagination {
+	.gmw-results-wrapper .gmw-pagination {
 		text-align: center;
 		margin: 5px 0px;
 		list-style: none;
 		padding: 0px;
 	}
 
-	ul.gmw-pagination li {
+	.gmw-results-wrapper .gmw-pagination li {
 		text-align: center;
 		display: inline-block;
-		margin: 0 1px;
+		margin: 0;
+		border: 1px solid #eaeaea;
+		border-left: 0;
 	}
 
-	ul.gmw-pagination li a.prev,
-	ul.gmw-pagination li a.page-numbers, 
-	ul.gmw-pagination li a.next, 
-	ul.gmw-pagination li span,
-	ul.gmw-pagination li span.page-number,
-	ul.gmw-pagination li span.current {
+	.gmw-results-wrapper .gmw-pagination li:first-child {
+		border-left: 1px solid #eaeaea;
+	}
+
+	.gmw-results-wrapper .gmw-pagination li a.prev,
+	.gmw-results-wrapper .gmw-pagination li a.page-numbers, 
+	.gmw-results-wrapper .gmw-pagination li a.next, 
+	.gmw-results-wrapper .gmw-pagination li span,
+	.gmw-results-wrapper .gmw-pagination li span.page-number,
+	.gmw-results-wrapper .gmw-pagination li span.current {
 		padding: 2px 7px;
 		font-size: 11px;
 		text-decoration: none;
-		border: 1px solid #eaeaea;
 		background-color: white;
-		display: inline-block;
+		display: block;
 		float: none;
 		border-radius: 0;
 		line-height: 20px;
@@ -669,15 +675,14 @@ span.gmw-resize-map-toggle.gmw-icon-resize-small {
 		color: #555;
 	}
 
-	ul.gmw-pagination li span.current,
-	ul.gmw-pagination li a:hover,
-	ul.gmw-pagination li a:active,
-	ul.gmw-pagination li a.prev:hover,
-	ul.gmw-pagination li a.page-numbers:hover, 
-	ul.gmw-pagination li a.next:hover {
+	.gmw-results-wrapper .gmw-pagination li span.current,
+	.gmw-results-wrapper .gmw-pagination li a:hover,
+	.gmw-results-wrapper .gmw-pagination li a:active,
+	.gmw-results-wrapper .gmw-pagination li a.prev:hover,
+	.gmw-results-wrapper .gmw-pagination li a.page-numbers:hover, 
+	.gmw-results-wrapper .gmw-pagination li a.next:hover {
 		background-color: #f8f8f8;
 		color: #111;
-		border: 1px solid #e7e7e7;
 	}
 	/********** Pagination end **************/
 
@@ -1144,6 +1149,7 @@ span.gmw-resize-map-toggle.gmw-icon-resize-small {
 		text-align: center;
 		padding: 0;
 		overflow-x: scroll;
+		box-sizing: border-box;
 	}
 
 	div.gmw-info-window-inner.popup {
