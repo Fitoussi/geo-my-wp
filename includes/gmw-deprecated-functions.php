@@ -98,6 +98,11 @@ function gmw_iw_xprofile_fields( $gmw = array() ) {
 	}
 }
 
+function gmw_new_map_element( $map_args = array(), $map_options = array(), $locations = array(), $user_position = array(), $form = array() ) {
+	_deprecated_function( 'gmw_new_map_element', '3.0', 'gmw_get_map_object' );
+	return gmw_get_map_object( $map_args, $map_options, $locations, $user_position, $form );
+}
+
 /**
  * Support previous form settings 
  * 
