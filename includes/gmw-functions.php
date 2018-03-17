@@ -696,12 +696,13 @@ function gmw_get_template( $args = [] ) {
 	 * @param  string $base_path     [description]
 	 * @return [type]                [description]
 	 */
-	function gmw_get_search_results_template( $component = 'posts_locator', $template_name = 'default', $addon = '', $include = false ) {
+	function gmw_get_search_results_template( $component = 'posts_locator', $template_name = 'default', $addon = '', $file_name = 'content.php', $include = false ) {
 		$args = array(
 			'component'        => $component,
 			'addon' 	       => $addon,
 			'folder_name'      => 'search-results', 
 			'template_name'    => $template_name,
+			'file_name'		   => $file_name,
 			'include_template' => $include
 		);
 		return gmw_get_template( $args );
@@ -883,12 +884,14 @@ function gmw_get_element_dragging_handle( $args = array() ) {
  * Create new map element
  *
  * Pass the arguments to display a map. Each element created is pushed into the global map elements.
+ * 
  * The global map elements pass to the map.js file. The map.js loop through the map elements
+ * 
  * and generates each map based on the arguments passed to the function.
  *
  * More information about google maps API can be found here - https://developers.google.com/maps/documentation/javascript/reference#MapOptions
  */
-function gmw_new_map_element( $map_args = array(), $map_options = array(), $locations = array(), $user_position = array(), $form = array() ) {
+function gmw_get_map_object( $map_args = array(), $map_options = array(), $locations = array(), $user_position = array(), $form = array() ) {
 	return GMW_Maps_API::get_map_args( $map_args, $map_options, $locations, $user_position, $form );
 }
 
@@ -1039,9 +1042,15 @@ function gmw_enqueue_form_styles( $args = array( 'form_id' => 0, 'pages' => arra
  */
 function gmw_ajax_info_window_init() {
 
+	// we used to pass the form object via the map_args and return it 
+	// via info_window ajax. This seems unessacery so we now pass the form ID
+	// only and get the form using a function.
+	// We leave this here for now in case for some reason we need the 
+	// additional data generated to the form during the search query process.
+	//$gmw = $_POST['form']; 
 	$location = is_object( $_POST['location'] ) ? $_POST['location'] : ( object ) $_POST['location'];
-    $gmw      = $_POST['form'];
-    
+    $gmw 	  = gmw_get_form( $_POST['form_id'] );
+
     // include info-window template functions
     include_once( GMW_PATH .'/includes/template-functions/gmw-info-window-template-functions.php' );
     
