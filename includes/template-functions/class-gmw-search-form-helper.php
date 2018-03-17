@@ -82,7 +82,9 @@ class GMW_Search_Form_Helper {
 
 	/**
 	 * Keywords field
-	 * 
+	 *
+	 * @since 3.0
+	 *  
 	 * @param  array  $args [description]
 	 * @return [type]       [description]
 	 */
@@ -107,7 +109,9 @@ class GMW_Search_Form_Helper {
 
 	/**
 	 * Address fields
-	 * 
+	 *
+	 * @since 3.0
+	 *  
 	 * @param  array  $args [description]
 	 * @return [type]       [description]
 	 */
@@ -160,6 +164,8 @@ class GMW_Search_Form_Helper {
 
 	/**
 	 * Radius field
+	 *
+	 * @since 3.0
 	 * 
 	 * @param  array  $args [description]
 	 * @return [type]       [description]
@@ -212,6 +218,8 @@ class GMW_Search_Form_Helper {
 
 	/**
 	 * Radius field
+	 *
+	 * @since 3.0
 	 * 
 	 * @param  array  $args [description]
 	 * @return [type]       [description]
