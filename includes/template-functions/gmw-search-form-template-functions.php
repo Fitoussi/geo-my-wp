@@ -168,9 +168,17 @@ function gmw_get_search_form_units( $gmw ) {
 		'km_label' => __( 'Kilometers', 'geo-my-wp' )
 	);
 
-	$output  = '<div class="gmw-form-field-wrapper gmw-units-field-wrapper">';
+	$output = '';
+
+	if ( $args['units'] == 'both' ) {
+		$output .= '<div class="gmw-form-field-wrapper gmw-units-field-wrapper">';
+	}
+
 	$output .= apply_filters( 'gmw_search_form_units_output', GMW_Search_Form_Helper::units_field( $args ), $gmw );
-	$output .= '</div>';
+	
+	if ( $args['units'] == 'both' ) {
+		$output .= '</div>';
+	}
 
 	return $output;
 }
