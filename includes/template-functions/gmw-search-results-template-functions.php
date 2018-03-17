@@ -163,3 +163,50 @@ function gmw_search_results_directions_system( $gmw ) {
     
     echo gmw_get_directions_system( $args );
 }
+
+/**
+ * Ouput orderby dropdown in search results template file
+ *
+ * @since 3.0
+ * 
+ * @param  array  $gmw [description]
+ * @return [type]      [description]
+ * 
+ */
+function gmw_get_search_results_orderby_filter( $gmw = array(), $args = false ) {
+
+    if ( empty( $gmw['search_results']['orderby'] ) ) {
+        return;
+    }
+
+    $orderby = explode( ',', $gmw['search_results']['orderby'] );
+
+    if ( count( $orderby ) < 1 ) {
+        return;
+    }
+
+    $options = array();
+
+    // generate orderby options
+    foreach( $orderby as $item ) {
+        
+        $item = explode( ':', $item );
+
+        if ( isset( $item[0] ) ) {
+            $options[$item[0]] = isset( $item[1] ) ? $item[1] : $item[0];
+        }
+    } 
+
+    if ( ! $args ) {
+        
+        $args = array(
+            'id' => $gmw['ID'],
+        );
+    }
+
+    return GMW_Template_Functions_Helper::get_orderby_filter( $args, $options );
+}
+
+    function gmw_search_results_orderby_filter( $gmw = array() ) {
+        echo gmw_get_search_results_orderby_filter( $gmw );
+    }
