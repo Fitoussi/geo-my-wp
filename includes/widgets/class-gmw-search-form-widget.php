@@ -5,9 +5,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
         
 /**
- * Display GEO my WP search form
+ * GEO my WP search form widget.
  *
- * @since 1.0.0
+ * @since 1.0
+ * @modified 3.0
+ * 
  */
 class GMW_Search_Form_Widget extends GMW_Widget {
 
@@ -36,13 +38,17 @@ class GMW_Search_Form_Widget extends GMW_Widget {
 		$forms = gmw_get_forms();
 
 		if ( empty( $forms ) || ! is_array( $forms ) ) {
-			$forms = [];
+			$forms = array();
 		}
 		
-		$options = [];
-
+		$options = array();
+		// allowed forms in this widget
+		$allowed_forms = apply_filters( 'gmw_search_form_widget_allowed_forms', array( 'posts_locator', 'members_locator','bp_groups_locator', 'users_locator' ) );
+		
 		foreach ( $forms as $form ) {
-			if ( ( $form_id = absint( $form['ID'] ) ) != FALSE ) {
+
+			if ( ( $form_id = absint( $form['ID'] ) ) != FALSE && in_array( $form['slug'], $allowed_forms ) ) {
+
 				$form_name  = ! empty( $form['name'] ) ? $form['name'] : 'form_id_'.$form_id;
 				$form_label = 'Form ID '.$form_id.' ( '.$form_name.' )';
 				$options[$form_id] = $form_label;
@@ -88,11 +94,7 @@ class GMW_Search_Form_Widget extends GMW_Widget {
 		
 		// verify shortcode ID
 		if ( absint( $instance['form_id'] ) != False ) {
-			if ( gmw_get_form($instance['form_id'])['addon'] == 'global_maps' ) {
-				echo do_shortcode( "[gmw form=\"{$instance['short_code']}\" widget=\"1\"]" );
-			} else {
-				echo do_shortcode( "[gmw search_form=\"{$instance['form_id']}\" widget=\"1\"]" );
-			}
+			echo do_shortcode( "[gmw search_form=\"{$instance['form_id']}\" widget=\"1\"]" );
 		}		
 			
 		echo $after_widget;
