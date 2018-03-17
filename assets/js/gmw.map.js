@@ -403,7 +403,9 @@ GMW_Map.prototype.update = function( locations, user_location ) {
 
 	// abort if not locations found and we don't want to show the map
 	if ( self.locations.length == 0 && self.hide_no_locations ) {
+
 		this.wrap_element.slideUp();
+		
 		return;
 	}
 
@@ -688,10 +690,15 @@ GMW_Map.prototype.render_marker = function( options ) {
 	// map icon
 	var icon = options['icon'];
 
+	// in case _default.png pass without a URL
+	if ( icon == '_default.png' ) {
+		icon = '';
+	}
+
 	// if passing custom icon size we need to scale it
-	if ( this.icon_scaled_size != false && options['icon'] != '' ) {
+	if ( this.icon_scaled_size != false && icon != '' ) {
 		icon = {
-			url 	   : options['icon'],
+			url 	   : icon,
 			scaledSize : this.icon_scaled_size,
 		}
 	}
