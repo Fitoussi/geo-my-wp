@@ -170,7 +170,7 @@ class GMW_Maps_API {
 		// modify the map args
 		$args = apply_filters( 'gmw_map_output_args', $args );
 	    $args = apply_filters( "gmw_map_output_args_{$args['map_id']}", $args );
-
+	    
 	    // if expend map on load
 	    if ( $args['expand_on_load'] ) {
 	    	$expanded = 'gmw-expanded-map';
@@ -187,7 +187,7 @@ class GMW_Maps_API {
 		$map_height = esc_attr( $args['map_height'] );
 		$map_title  = esc_html( __( 'Resize map','geo-my-wp' ) );
 		$display    = ( $args['init_visible'] || $args['expand_on_load'] ) ? '' : 'display:none;';
-
+		
 		// generate the map element
 	    $output['wrap']   = "<div id=\"gmw-map-wrapper-{$map_id}\" class=\"gmw-map-wrapper {$prefix} {$map_type} {$expanded}\" style=\"{$display}width:{$map_width};height:{$map_height};\">";
 	    $output['toggle'] = "<span id=\"gmw-resize-map-toggle-{$map_id}\" class=\"gmw-resize-map-toggle {$trigger}\" style=\"display:none;\" title=\"{$map_title}\"></span>";
@@ -234,7 +234,7 @@ class GMW_Maps_API {
 	 * return array map arguments
 	 * 
 	 */
-	public static function get_map_args( $map_args = [], $map_options = [], $locations = [], $user_location = [], $form = [] ) {
+	public static function get_map_args( $map_args = array(), $map_options = array(), $locations = array(), $user_location = array(), $form = array() ) {
 		
 		// randomize map ID if doesn't exists
 		$map_id = ! empty( $map_args['map_id'] ) ? $map_args['map_id'] : rand( 100, 1000 );
