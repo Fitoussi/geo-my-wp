@@ -56,14 +56,14 @@ var GMW = {
         GMW.add_action( 'gmw_init' );
 
         // hide all map loaders
-        jQuery( '.gmw-map-loader' ).fadeOut( 1500 );  
+        //jQuery( 'div.gmw-map-wrapper' ).find( 'i.gmw-map-loader' ).fadeOut( 1500 );  
 
-        if ( jQuery( '.gmw-expanded-map' ).length ) {
+        if ( jQuery( 'div.gmw-map-wrapper.gmw-expanded-map' ).length ) {
             jQuery( 'body, html' ).addClass( 'gmw-scroll-disabled' ); 
         }
 
         // run form functions only when a form is present on the page
-        if ( jQuery( '.gmw-form-wrapper' ).length ) {
+        if ( jQuery( 'div.gmw-form-wrapper, ul.gmw-form-wrapper' ).length ) {
             GMW.form_functions();
         }
 
@@ -77,8 +77,8 @@ var GMW = {
             GMW.auto_locator( 'page_locator', GMW.page_locator_success, false );
         }
 
-        // trigger address autocomplete on address fields
-        jQuery( '.gmw-address-autocomplete' ).each( function() {
+        // Enable address autocomplete on address fields
+        jQuery( 'input.gmw-address-autocomplete' ).each( function() {
             if ( jQuery( this ).is( '[id]' ) ) {
                 GMW.address_autocomplete( jQuery( this ).attr( 'id' ), jQuery( this ).data() );
             }
@@ -397,7 +397,7 @@ var GMW = {
      * 
      * @return {[type]} [description]
      */
-    geocoder_failed : function( status) {
+    geocoder_failed : function( status ) {
         alert( "We could not find the address you entered for the following reason: " + status );
     },
 
@@ -409,7 +409,7 @@ var GMW = {
     address_autocomplete : function( field_id , fieldData ) {
           
         var input_field = document.getElementById( field_id );
-   
+
         // verify the field
         if ( input_field != null ) {
             
@@ -441,32 +441,37 @@ var GMW = {
                 
                 if ( place.geometry ) {
 
-                    var formElement = jQuery( '#' + field_id ).closest( 'form' );
+                    var formElement = input_field.closest( 'form' );
 
                      // if place exists and autocomplete is within a form, look for form ID and 
                     // get the coords from the place details into the hidden coordinates fields of the form
-                    if ( formElement.attr( 'data-form_id' ) ) {
+                    /*if ( formElement.attr( 'data-form_id' ) ) {
                         
                         var gmwFormID = formElement.data( 'form_id' );
                     
                     } else if ( formElement.find( '.gmw-form-id' ).length ) {
 
                         var gmwFormID = formElement.find( '.gmw-form-id' ).val();
+
                     } else {
+                        
                         return
-                    }
+                    }*/
 
                     // if only country entered set its value in hidden fields
-                    if ( place.address_components.length == 1 && place.address_components[0].types[0] == 'country' ) {                  
-                        jQuery( '#gmw-country-' + gmwFormID ).val( place.address_components[0].short_name ).prop( 'disabled', false );
+                    if ( place.address_components.length == 1 && place.address_components[0].types[0] == 'country' ) {      
+
+                        formElement.find( '.gmw-country' ).val( place.address_components[0].short_name ).prop( 'disabled', false );
+                    
                     // otherwise if only state entered.
                     } else if ( place.address_components.length == 2 && place.address_components[0].types[0] == 'administrative_area_level_1' ) {
-                        jQuery( '#gmw-state-' + gmwFormID ).val( place.address_components[0].long_name ).prop( 'disabled', false );
-                        jQuery( '#gmw-country-' + gmwFormID ).val( place.address_components[1].short_name ).prop( 'disabled', false );
+                        
+                        formElement.find( '.gmw-state' ).val( place.address_components[0].long_name ).prop( 'disabled', false );
+                        formElement.find( '.gmw-country' ).val( place.address_components[1].short_name ).prop( 'disabled', false );
                     }
 
-                    jQuery( '#gmw-lat-' + gmwFormID ).val( place.geometry.location.lat().toFixed(6) );
-                    jQuery( '#gmw-lng-' + gmwFormID ).val( place.geometry.location.lng().toFixed(6) );               
+                    formElement.find( '.gmw-lat' ).val( place.geometry.location.lat().toFixed(6) );
+                    formElement.find( '.gmw-lng' ).val( place.geometry.location.lng().toFixed(6) );               
                 }   
             });
         }
@@ -480,9 +485,11 @@ var GMW = {
      * @return {[type]}         [description]
      */
     save_location_fields : function( results ) {
-      
-        latitude  = results[0].geometry.location.lat().toFixed(6);
-        longitude = results[0].geometry.location.lng().toFixed(6);
+        
+        // current location form
+        var cl_form   = jQuery( 'form#gmw-current-location-hidden-form' );
+        var latitude  = results[0].geometry.location.lat().toFixed(6);
+        var longitude = results[0].geometry.location.lng().toFixed(6);
 
         // address fields holder
         address_fields = {
@@ -506,16 +513,16 @@ var GMW = {
         
         // set location cookies
         GMW.set_cookie( 'gmw_ul_lat', latitude, 7 );
-        jQuery( '#gmw_cl_lat' ).val( latitude );
+        cl_form.find( 'input#gmw_cl_lat' ).val( latitude );
 
         GMW.set_cookie( 'gmw_ul_lng', longitude, 7 );
-        jQuery( '#gmw_cl_lng' ).val( longitude );
+        cl_form.find( 'input#gmw_cl_lng' ).val( longitude );
 
         GMW.set_cookie( 'gmw_ul_address', results[0].formatted_address, 7 );
-        jQuery( '#gmw_cl_address' ).val( results[0].formatted_address );
+        cl_form.find( 'input#gmw_cl_address' ).val( results[0].formatted_address );
 
         GMW.set_cookie( 'gmw_ul_formatted_address', results[0].formatted_address, 7 );
-        jQuery( '#gmw_cl_formatted_address' ).val( results[0].formatted_address );
+        cl_form.find( 'input#gmw_cl_formatted_address' ).val( results[0].formatted_address );
 
         address = results[0].address_components;
 
@@ -530,7 +537,7 @@ var GMW = {
                 
                 address_fields.street_number = address[x].long_name;
 
-                jQuery( '#gmw_cl_street_number' ).val( address_fields.street_number );
+                cl_form.find( 'input#gmw_cl_street_number' ).val( address_fields.street_number );
             } 
 
             // street name and street
@@ -539,7 +546,7 @@ var GMW = {
                  //save street name in variable
                 address_fields.street_name = address[x].long_name;
 
-                jQuery( '#gmw_cl_street_name' ).val( address_fields.street_name );
+                cl_form.find( 'input#gmw_cl_street_name' ).val( address_fields.street_name );
 
                 //combine the street number and street name into one street field
                 if ( address_fields.street_number != '' ) {
@@ -551,7 +558,7 @@ var GMW = {
                 // save street field in cookie
                 GMW.set_cookie( 'gmw_ul_street', address_fields.street, 7 );
 
-                jQuery( '#gmw_cl_street' ).val( address_fields.street );
+                cl_form.find( 'input#gmw_cl_street' ).val( address_fields.street );
             }
 
             // apt/suit number
@@ -559,7 +566,7 @@ var GMW = {
 
                 address_fields.premise = address[x].long_name;
 
-                jQuery( '#gmw_cl_premise' ).val( address[x].long_name );
+                cl_form.find( 'input#gmw_cl_premise' ).val( address[x].long_name );
             }
             
             // neighborhood
@@ -567,7 +574,7 @@ var GMW = {
 
                 address_fields.neighborhood = address[x].long_name;
 
-                jQuery( '#gmw_cl_neighborhood' ).val( address[x].long_name );
+                cl_form.find( 'input#gmw_cl_neighborhood' ).val( address[x].long_name );
             }
             
             // city
@@ -577,7 +584,7 @@ var GMW = {
 
                 GMW.set_cookie( 'gmw_ul_city', address[x].long_name, 7 );
 
-                jQuery( '#gmw_cl_city' ).val( address[x].long_name );
+                cl_form.find( 'input#gmw_cl_city' ).val( address[x].long_name );
             }
             
             // region code and name
@@ -589,8 +596,8 @@ var GMW = {
                 GMW.set_cookie( 'gmw_ul_region_name', address[x].long_name, 7 );
                 GMW.set_cookie( 'gmw_ul_region_code', address[x].short_name, 7 );
 
-                jQuery( '#gmw_cl_region_code' ).val( address[x].short_name );
-                jQuery( '#gmw_cl_region_name' ).val( address[x].long_name );
+                cl_form.find( 'input#gmw_cl_region_code' ).val( address[x].short_name );
+                cl_form.find( 'input#gmw_cl_region_name' ).val( address[x].long_name );
             }  
             
             // county
@@ -598,7 +605,7 @@ var GMW = {
 
                 address_fields.county = address[x].long_name;
 
-                jQuery( '#gmw_cl_county' ).val( address[x].long_name );
+                cl_form.find( 'input#gmw_cl_county' ).val( address[x].long_name );
             }
 
             // postal code
@@ -608,7 +615,7 @@ var GMW = {
 
                 GMW.set_cookie( 'gmw_ul_postcode', address[x].short_name, 7 );
 
-                jQuery( '#gmw_cl_postcode' ).val( address[x].long_name );
+                cl_form.find( 'input#gmw_cl_postcode' ).val( address[x].long_name );
             }
             
             // country code and name
@@ -620,8 +627,8 @@ var GMW = {
                 GMW.set_cookie( 'gmw_ul_country_name', address[x].long_name, 7 );
                 GMW.set_cookie( 'gmw_ul_country_code', address[x].short_name, 7 );
 
-                jQuery( '#gmw_cl_country_code' ).val( address[x].short_name );
-                jQuery( '#gmw_cl_country_name' ).val( address[x].long_name );
+                cl_form.find( 'input#gmw_cl_country_code' ).val( address[x].short_name );
+                cl_form.find( 'input#gmw_cl_country_name' ).val( address[x].long_name );
             } 
 
             // hook custom functions
@@ -718,7 +725,7 @@ var GMW = {
 
         // submit current location hidden form
         setTimeout(function() {
-            jQuery( '#gmw-current-location-form' ).submit();             
+            jQuery( 'form#gmw-current-location-form' ).submit();             
         }, 500); 
     },
 
@@ -732,56 +739,29 @@ var GMW = {
     form_functions : function() {
 
         GMW.enable_smartbox();
-
-        // hide locator icon if browser does not support navigation
-        if ( ! navigator.geolocation ) {
-            jQuery('.gmw-locator-btn-wrapper').hide();
-        }
-
-        // remove no address error class from input field on focus
-        jQuery( '.gmw-address' ).focus( function() {
-            jQuery( this ).removeClass( 'gmw-no-address-error' );
-        });
      
         // remove hidden coordinates when address field value changes
-        jQuery( '.gmw-address' ).keyup( function ( event ) { 
+        jQuery( 'form' ).find( 'input.gmw-address' ).keyup( function ( event ) { 
             
+            // abort if enter key.
             if ( event.which == 13 ) {
                 return;
             }
 
-            var formElement = jQuery( this ).closest( 'form' );
+            var form = jQuery( this ).closest( 'form' );
 
-            if ( formElement.attr( 'data-form_id' ) ) {
-                var gmwFormID = formElement.data( 'form_id' );
-            } else {
-                var gmwFormID = formElement.find( '.gmw-form-id' ).val();
-            }
-
-            jQuery( '#gmw-lat-' + gmwFormID ).val('');
-            jQuery( '#gmw-lng-' + gmwFormID ).val('');
-            jQuery( '#gmw-state-' + gmwFormID ).val('').prop( 'disabled', true );
-            jQuery( '#gmw-country-' + gmwFormID ).val('').prop( 'disabled', true );
+            // clear coords, state and country fields.
+            form.find( 'input.gmw-lat, input.gmw-lng' ).val( '' );
+            form.find( 'input.gmw-state, input.gmw-country' ).val( '' ).prop( 'disabled', true );
         });
 
         // When click on locator button in a form
-        jQuery( '.gmw-locator-button' ).click( function() {
-            GMW.locator_button( jQuery( this ) );
+        jQuery( 'form' ).find( '.gmw-locator-button' ).click( function() {
+            GMW.locator_button( jQuery( this ), jQuery( this ).closest( 'form' ) );
         });
 
-        // submit form when click enter in any input text field of GEO my WP form
-       /* jQuery( '.gmw-form input[type="text"]' ).keyup( function( event ){
-            
-            // check if "Enter" key pressed
-            if ( event.keyCode == 13 ) {
-
-                // run form submission function
-                GMW.form_submission( jQuery( this ).closest( 'form' ), event );
-            }
-        });*/
-
         // on form submission
-        jQuery( '.gmw-form' ).submit( function( event ) {
+        jQuery( 'form.gmw-form' ).submit( function( event ) {
 
             // run form submission
             GMW.form_submission( jQuery( this ), event );
@@ -794,15 +774,15 @@ var GMW = {
      */
     enable_smartbox : function() {
 
-        // set chosen for GEO my WP form elements
+        // enable chosen for GEO my WP form elements
         if ( jQuery().chosen ) {
-            jQuery( '.gmw-smartbox' ).chosen( {
+            jQuery( 'form' ).find( 'select.gmw-smartbox' ).chosen( {
                 width : '100%'
             });
-        }
 
-        if ( jQuery().select2 ) {
-            jQuery( '.gmw-smartbox' ).select2();
+        // enable select 2
+        } else if ( jQuery().select2 ) {
+            jQuery( 'form' ).find( 'select.gmw-smartbox' ).select2();
         }
     },
 
@@ -817,50 +797,58 @@ var GMW = {
      * @return {[type]}       [description]
      */
     form_submission : function( form, event ) {
-       
+        
         // set form variables
         GMW.form_submission.status = true;
         GMW.form_submission.form   = form;
         GMW.form_submission.id     = GMW.form_submission.form.find( '.gmw-form-id' ).val();
 
-        if ( GMW.form_submission.submit ==  true ) {
+        if ( GMW.form_submission.submit == true ) {
             return true;
         } 
 
-        // prevent form submission. We need to run some funcitons.
+        var form         = form;
+        var addressField = form.find( 'input.gmw-address' );
+        var address      = '';
+
+        // prevent form submission. We need to run some functions.
         event.preventDefault();
         
         // set the "paged" value to first page.
-        jQuery( '.gmw-paged-' + GMW.form_submission.id ).val( '1' );
+        form.find( 'input.gmw-paged' ).val( '1' );
    
         // generate the address value from a single address field
-        if ( GMW.form_submission.form.find( '.gmw-address' ).hasClass( 'gmw-full-address' ) ) {
+        if ( addressField.hasClass( 'gmw-full-address' ) ) {
             
-            address = jQuery( '#gmw-address-field-' + GMW.form_submission.id ).val();
+            address = form.find( 'input.gmw-address' ).val();
         
         // otherwise, get from from multiple fields
         } else {
 
-            address = [];
-
-            GMW.form_submission.form.find( '.gmw-address' ).each( function() {
-                address.push( jQuery( this ).val() );
-            });
-
-            address = address.join(' ');               
+            // collect value from multiple addres fields.
+            address = addressField.map( function() {
+               return jQuery( this ).val();
+            }).get().join( ' ' );           
         }
 
         // if address field is empty.
         if ( ! jQuery.trim( address ).length ) {
 
-            var addressField = GMW.form_submission.form.find( '.gmw-address' );
-            
-            // check if address is mendatory and if so show error and abort submission.
+            // check if address is mendatory, and if so, show error and abort submission.
             if ( addressField.hasClass( 'mandatory' ) ) {
 
-                // add error class to address fields
+                // add error class to address fields if no address enterd.
                 if ( ! addressField.hasClass( 'gmw-no-address-error' ) ) {
-                    addressField.toggleClass( 'gmw-no-address-error' );
+
+                    // remove the class on focus or keypress in the field
+                    addressField.addClass( 'gmw-no-address-error' ).on( 'focus keypress', function() {
+                        jQuery( this ).removeClass( 'gmw-no-address-error' ).off( 'focus keypress' );
+                    });
+
+                    // remove error class after a few seconds if was not removed already.
+                    setTimeout( function() {
+                        addressField.removeClass( 'gmw-no-address-error' ).off( 'focus keypress' );
+                    }, 4000 );
                 }
 
                 // abort submission
@@ -880,7 +868,7 @@ var GMW = {
         if ( GMW.options.general_settings.js_geocode == 1 ) {
 
             // check if hidden coords exists. if so no need to geocode the address again and we can submit the form with the information we already have.
-            if ( jQuery( '#gmw-lat-' + GMW.form_submission.id ).val() != '' && jQuery( '#gmw-lng-' + GMW.form_submission.id ).val() != '' ) {            
+            if ( form.find( 'input.gmw-lat' ).val() != '' && form.find( 'input.gmw-lng' ).val() != '' ) {            
                
                 GMW.form_submission.submit = true;
                 GMW.form_submission.form.submit(); 
@@ -912,25 +900,28 @@ var GMW = {
      */
     form_geocoder_success : function( results ) {
 
+        var form = GMW.form_submission.form;
+        var ac   = results[0].address_components;
+
         // if only country entered set its value in hidden fields
-        if ( results[0].address_components.length == 1 && results[0].address_components[0].types[0] == 'country' ) {
-            jQuery( '#gmw-country-' + GMW.form_submission.id ).val( results[0].address_components[0].short_name ).prop( 'disabled', false );
+        if ( ac.length == 1 && ac[0].types[0] == 'country' ) {
+            form.find( '.gmw-country' ).val( ac[0].short_name ).prop( 'disabled', false );
 
         // otherwise, if only state entered.
-        } else if ( results[0].address_components.length == 2 && results[0].address_components[0].types[0] == 'administrative_area_level_1' ) {
-            jQuery( '#gmw-state-' + GMW.form_submission.id ).val( results[0].address_components[0].long_name ).prop( 'disabled', false );
-            jQuery( '#gmw-country-' + GMW.form_submission.id ).val( results[0].address_components[1].short_name ).prop( 'disabled', false );
+        } else if ( ac.length == 2 && ac[0].types[0] == 'administrative_area_level_1' ) {
+            form.find( '.gmw-state' ).val( ac[0].long_name ).prop( 'disabled', false );
+            form.find( '.gmw-country' ).val( ac[1].short_name ).prop( 'disabled', false );
         }
 
         // add coordinates to hidden fields
-        jQuery( '#gmw-lat-' + GMW.form_submission.id ).val( results[0].geometry.location.lat().toFixed(6) );
-        jQuery( '#gmw-lng-' + GMW.form_submission.id ).val( results[0].geometry.location.lng().toFixed(6) );
+        form.find( '.gmw-lat' ).val( results[0].geometry.location.lat().toFixed(6) );
+        form.find( '.gmw-lng' ).val( results[0].geometry.location.lng().toFixed(6) );
 
         // submit the form
         setTimeout(function() {
             GMW.form_submission.submit = true;
             GMW.form_submission.form.submit();  
-        }, 500);
+        }, 300);
 
         return false; 
     },
@@ -944,21 +935,29 @@ var GMW = {
      * 
      * @return {[type]}         [description]
      */
-    locator_button : function( locator ) {
+    locator_button : function( locator, form ) {
 
+        // if form element is missing, try to find it.
+        if ( typeof form == 'undefined' ) {
+            var form = locator.closest( 'form' );
+        } else {
+             var form = form;
+        }
+       
+        // disabled all text fields and submit buttons while working
+        jQuery( 'form.gmw-form' ).find( 'input[type="text"], .gmw-submit' ).attr( 'disabled', 'disabled' );
+        
         // set the locator vars.
         GMW.locator_button.status  = true;
+        GMW.locator_button.form    = form;
         GMW.locator_button.element = locator;
-        //GMW.locator_button.form_id = locator.closest( 'form.gmw-form' ).find( '.gmw-submission-fields .gmw-form-id' ).val();
         GMW.locator_button.form_id = locator.data( 'form_id' );
         GMW.locator_button.loader  = locator.next();
         GMW.locator_button.submit  = locator.attr( 'data-locator_submit' ) == 1 ? true : false;
 
         // clear hidden coordinates
-        jQuery( '#gmw-lat-' + GMW.locator_button.form_id ).val('');
-        jQuery( '#gmw-lng-' + GMW.locator_button.form_id ).val('');
-        jQuery( '#gmw-state-' + GMW.locator_button.form_id ).val('').val('').prop( 'disabled', true );
-        jQuery( '#gmw-country-' + GMW.locator_button.form_id ).val('').val('').prop( 'disabled', true );
+        form.find( 'input.gmw-lat, input.gmw-lng' ).val( '' );
+        form.find( 'input.gmw-state, input.gmw-country' ).val( '' ).prop( 'disabled', true );
         
         // if this is a font icon inside address field
         if ( locator.hasClass( 'inside' ) ) {
@@ -973,21 +972,14 @@ var GMW = {
         } else {
 
             // hide locator button
-            GMW.locator_button.element.fadeOut( 'fast', function() {
+            locator.fadeOut( 'fast', function() {
                 // show spinning loader 
                 GMW.locator_button.loader.fadeIn( 'fast' )
             });
         }
 
         //very short delay to allow the locator loader to load
-        setTimeout( function() {
-
-            // disabled all text fields and submit buttons while working
-            jQuery( '.gmw-form input[type="text"]' ).attr( 'disabled', 'disabled' );
-            
-            // jQuery( '.gmw-address' ).attr('disabled', 'disabled');
-            jQuery( '.gmw-submit' ).attr( 'disabled', 'disabled' );
-
+        setTimeout( function() {            
             // run auto locator
             GMW.auto_locator( 'locator_button', GMW.locator_button_success, GMW.locator_button_failed );
         }, 500 );
@@ -1003,28 +995,28 @@ var GMW = {
      */
     locator_button_success : function( address_fields, results ) {
 
-        // enabled all text fields and submit buttons
-        jQuery( '.gmw-form input[type="text"]' ).removeAttr('disabled');
-            
-        // Enable submit buttons
-        jQuery( '.gmw-submit' ).removeAttr( 'disabled' );
+        var form         = GMW.locator_button.form;
+        var addressField = form.find( 'input.gmw-address' );
+
+        // enable all forms.
+        jQuery( 'form.gmw-form' ).find( 'input[type="text"], .gmw-submit' ).removeAttr( 'disabled' );
 
         // add coords value to hidden fields
-        jQuery( '#gmw-lat-' + GMW.locator_button.form_id ).val( results[0].geometry.location.lat().toFixed(6) );
-        jQuery( '#gmw-lng-' + GMW.locator_button.form_id ).val( results[0].geometry.location.lng().toFixed(6) );
+        form.find( 'input.gmw-lat' ).val( results[0].geometry.location.lat().toFixed(6) );
+        form.find( 'input.gmw-lng' ).val( results[0].geometry.location.lng().toFixed(6) );
 
         //dynamically fill-out the address fields of the form
-        if ( jQuery( '#gmw-address-field-' + GMW.locator_button.form_id ).hasClass( 'gmw-full-address' ) ) {
+        if ( addressField.hasClass( 'gmw-full-address' ) ) {
             
-            jQuery( '#gmw-address-field-' + GMW.locator_button.form_id ).val( address_fields.formatted_address );
+            addressField.val( address_fields.formatted_address );
         
         } else {        
 
-            jQuery( '#gmw-form-' + + GMW.locator_button.form_id ).find( '.gmw-saf-street' ).val( address_fields.street );
-            jQuery( '#gmw-form-' + + GMW.locator_button.form_id ).find( '.gmw-saf-city' ).val( address_fields.city );
-            jQuery( '#gmw-form-' + + GMW.locator_button.form_id ).find( '.gmw-saf-state' ).val( address_fields.region_name );
-            jQuery( '#gmw-form-' + + GMW.locator_button.form_id ).find( '.gmw-saf-zipcode' ).val( address_fields.postcode );
-            jQuery( '#gmw-form-' + + GMW.locator_button.form_id ).find( '.gmw-saf-country' ).val( address_fields.country_code );
+            form.find( '.gmw-address.street' ).val( address_fields.street );
+            form.find( '.gmw-address.city' ).val( address_fields.city );
+            form.find( '.gmw-address.state' ).val( address_fields.region_name );
+            form.find( '.gmw-address.zipcode' ).val( address_fields.postcode );
+            form.find( '.gmw-address.country' ).val( address_fields.country_code );
         }
        
         // if form locator set to auto submit form. 
@@ -1032,7 +1024,7 @@ var GMW = {
             
             setTimeout( function() {
                 
-                jQuery( '#gmw-submit-' + GMW.locator_button.form_id ).click();
+                form.find( '.gmw-submit' ).click();
 
                 // we do this in case of an ajax submission
                 GMW.locator_button_done();
@@ -1063,21 +1055,20 @@ var GMW = {
      */
     locator_button_done : function() {
 
+        var locator = GMW.locator_button.element;
+
         // enabled all text fields and submit buttons
-        jQuery( '.gmw-form input[type="text"]' ).removeAttr('disabled');
-        
-        // Enable submit buttons
-        jQuery( '.gmw-submit' ).removeAttr('disabled');
+        jQuery( 'form.gmw-form' ).find( 'input[type="text"], .gmw-submit' ).removeAttr( 'disabled' );
 
-        if ( GMW.locator_button.element.hasClass( 'inside' ) ) {
+        if ( locator.hasClass( 'inside' ) ) {
 
-            GMW.locator_button.element.removeClass( 'animate-spin' );
+            locator.removeClass( 'animate-spin' );
 
         } else {
             // hide spinning loader
             GMW.locator_button.loader.fadeOut( 'fast',function() {
                 // show locator button
-                GMW.locator_button.element.fadeIn( 'fast' );
+                locator.fadeIn( 'fast' );
             } );
         }
 
@@ -1097,7 +1088,7 @@ var GMW = {
      * @return {[type]} [description]
      */
     rangeslider : function() {
-        jQuery( '.gmw-range-slider' ).on( 'input change', function() {
+        jQuery( 'form' ).find( 'input.gmw-range-slider' ).on( 'input change', function() {
             jQuery( this ).next( 'span' ).find( 'output' ).html( jQuery( this ).val() );
         });
     },
