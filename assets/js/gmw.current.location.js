@@ -7,9 +7,6 @@ jQuery( document ).ready( function( $ ) {
 	 */
 	var GMW_Current_Location = {
 
-	    //GMW options
-	    options : gmwSettings,
-
 	    // alert messages
 	    messages : {
 	    	'geocoder_failed' : 'Geocoder failed due to: ',
