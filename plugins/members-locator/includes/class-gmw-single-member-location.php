@@ -32,7 +32,7 @@ class GMW_Single_BP_Member_Location extends GMW_Single_Location {
 		'object'	 	  	  => 'member',
 		'prefix'	 		  => 'fl',
 		'item_info_window'	  => 'name,address,distance',
-		'show_in_single_post' => 0,
+		'show_in_single_post' => 1,
 		'no_location_message' => ''
 	);
 		
