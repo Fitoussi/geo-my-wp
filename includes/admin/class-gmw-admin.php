@@ -91,8 +91,8 @@ class GMW_Admin {
 	 */
 	public function gmw_action_links( $links, $file ) {
 		
-		$links[] = '<a href="' . admin_url( 'admin.php?page=gmw-settings' ).'">' . __( 'Settings' , 'geo-my-wp' ) . '</a>';
-		$links[] = '<a href="' . esc_url( 'https://geomywp.com/extensions' ).'" target="_blank">' . __( 'Extensions' , 'geo-my-wp' ) . '</a>';
+		$links['settings'] = '<a href="' . admin_url( 'admin.php?page=gmw-settings' ).'">' . __( 'Settings' , 'geo-my-wp' ) . '</a>';
+		$links['extensions'] = '<a href="' . admin_url( 'admin.php?page=gmw-extensions' ).'">' . __( 'Extensions' , 'geo-my-wp' ) . '</a>';
 		
 		return $links;
 	}
