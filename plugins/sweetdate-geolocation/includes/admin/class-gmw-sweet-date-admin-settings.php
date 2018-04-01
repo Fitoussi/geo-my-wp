@@ -99,6 +99,16 @@ class GMW_Sweet_Date_Admin_settings {
 				'attributes' => array(),
 				'priority'	 => 20
 			),
+			'locator_button' => array(
+				'name'       => 'locator_button',
+				'default'    => '',
+				'label'      => __( 'Locator button', 'geo-my-wp' ),
+				'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+				'desc'       => __( 'Display locator button inside the address field.', 'geo-my-wp' ),
+				'type'       => 'checkbox',
+				'attributes' => array(),
+				'priority'	 => 30
+			),
 			'radius'     => array(
 				'name'        => 'radius',
 				'type'        => 'text',
@@ -107,7 +117,7 @@ class GMW_Sweet_Date_Admin_settings {
 				'placeholder' => __( 'Enter radius values', 'geo-my-wp' ),
 				'desc'        => __( 'Enter a single numeric value to be used as the default, or multiple values, comma separated, that will be displayed as a dropdown select box in the search form.', 'geo-my-wp' ),
 				'attributes' => array(),
-				'priority'	 => 30
+				'priority'	 => 40
 			),
 			'units'      => array(
 				'name'       => 'units',
@@ -120,7 +130,7 @@ class GMW_Sweet_Date_Admin_settings {
 					'6371' => __( 'Kilometers', 'geo-my-wp' ),
 				),
 				'attributes' => array(),
-				'priority'	 => 40
+				'priority'	 => 50
 			),
 			'orderby'  	  => array(
 				'name'       => 'orderby',
@@ -130,7 +140,7 @@ class GMW_Sweet_Date_Admin_settings {
 				'label'      => __( 'Orderby Filter', 'geo-my-wp' ),
 				'desc'       => __( 'Enable Orderby dropdown menu in the search form.', 'geo-my-wp' ),
 				'attributes' => array(),
-				'priority'	 => 50
+				'priority'	 => 60
 			),
 			'map'    => array(
 				'name'       => 'map',
@@ -140,7 +150,7 @@ class GMW_Sweet_Date_Admin_settings {
 				'label'      => __( 'Google Map', 'geo-my-wp' ),
 				'desc'       => __( 'Enable Google map above list of members.', 'geo-my-wp' ),
 				'attributes' => array(),
-				'priority'	 => 60
+				'priority'	 => 70
 			),
 			'map_width'  => array(
 				'name'        => 'map_width',
@@ -150,7 +160,7 @@ class GMW_Sweet_Date_Admin_settings {
 				'placeholder' => __( 'Enter map width', 'geo-my-wp' ),
 				'desc'        => __( 'Map width in pixels or percentage ( ex. 100% or 200px ).', 'geo-my-wp' ),
 				'attributes'  => array(),
-				'priority'	  => 70
+				'priority'	  => 80
 				
 			),
 			'map_height' => array(
@@ -161,7 +171,7 @@ class GMW_Sweet_Date_Admin_settings {
 				'placeholder' => __( 'Enter map height', 'geo-my-wp' ),
 				'desc'        => __( 'Map height in pixels or percentage ( ex. 100% or 200px ).', 'geo-my-wp' ),
 				'attributes'  => array(),
-				'priority'	  => 80
+				'priority'	  => 90
 			),
 			'map_type'   => array(
 				'name'        => 'map_type',
@@ -176,7 +186,7 @@ class GMW_Sweet_Date_Admin_settings {
 					'TERRAIN'   => __( 'TERRAIN', 'geo-my-wp' ),
 				),
 				'attributes'  => array(),
-				'priority'	  => 90
+				'priority'	  => 100
 			),
 			'distance'   => array(
 				'name'        => 'distance',
@@ -186,7 +196,7 @@ class GMW_Sweet_Date_Admin_settings {
 				'cb_label'    => __( 'Enabled', 'geo-my-wp' ),
 				'desc'        => __( 'Display the distance to each member in the list of results.', 'geo-my-wp' ),
 				'attributes'  => array(),
-				'priority'	  => 100
+				'priority'	  => 110
 			),
 			'address'    => array(
 				'name'        => 'address',
@@ -196,7 +206,7 @@ class GMW_Sweet_Date_Admin_settings {
 				'desc'        => __( 'Display the address of each member in the list of results.', 'geo-my-wp' ),
 				'type'        => 'checkbox',
 				'attributes'  => array(),
-				'priority'	  => 110
+				'priority'	  => 120
 			),
 			'directions_link' => array(
 				'name'        => 'directions_link',
@@ -206,7 +216,7 @@ class GMW_Sweet_Date_Admin_settings {
 				'cb_label'    => __( 'Enabled', 'geo-my-wp' ),
 				'desc'        => __( 'Display directions link, which will open a new window with Google map showing the driving directions, in each member in the list of results.', 'geo-my-wp' ),
 				'attributes'  => array(),
-				'priority'	  => 120
+				'priority'	  => 130
 			),
     	);
 
