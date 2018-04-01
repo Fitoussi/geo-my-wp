@@ -71,8 +71,21 @@ function gmw_enqueue_scripts() {
 	// check if in admin or front-end
 	wp_localize_script( 'gmw', 'gmwIsAdmin', array( IS_ADMIN ) );
 
-	// localize gmw options
-	wp_localize_script( 'gmw', 'gmwSettings', $gmw_options );
+	/**
+	 * localize gmw options
+	 *
+	 * For now it seems that we don't need to pass all the settings
+	 * 
+	 * So we only pass the general settings. 
+	 * 
+	 * This can be changed in the future if needed.
+	 **/
+	$general_settings = $gmw_options['general_settings'];
+
+	// remove the API key from the localize settings.
+	unset( $general_settings['google_api'] );
+
+	wp_localize_script( 'gmw', 'gmwSettings', array( 'general_settings' => $general_settings ) );
 
 	// fonts
 	wp_enqueue_style( 'gmw-fonts', GMW_URL . '/assets/css/gmw.font.min.css', array(), GMW_VERSION );
