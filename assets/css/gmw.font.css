@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'geo-my-wp';
-  src: url('../font/geo-my-wp.eot?42078040');
-  src: url('../font/geo-my-wp.eot?42078040#iefix') format('embedded-opentype'),
-       url('../font/geo-my-wp.woff2?42078040') format('woff2'),
-       url('../font/geo-my-wp.woff?42078040') format('woff'),
-       url('../font/geo-my-wp.ttf?42078040') format('truetype'),
-       url('../font/geo-my-wp.svg?42078040#geo-my-wp') format('svg');
+  src: url('../font/geo-my-wp.eot?81076368');
+  src: url('../font/geo-my-wp.eot?81076368#iefix') format('embedded-opentype'),
+       url('../font/geo-my-wp.woff2?81076368') format('woff2'),
+       url('../font/geo-my-wp.woff?81076368') format('woff'),
+       url('../font/geo-my-wp.ttf?81076368') format('truetype'),
+       url('../font/geo-my-wp.svg?81076368#geo-my-wp') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'geo-my-wp';
-    src: url('../font/geo-my-wp.svg?42078040#geo-my-wp') format('svg');
+    src: url('../font/geo-my-wp.svg?81076368#geo-my-wp') format('svg');
   }
 }
 */
@@ -143,10 +143,17 @@
 .gmw-icon-arrow-up:before { content: '\e855'; } /* '' */
 .gmw-icon-arrow-down:before { content: '\e856'; } /* '' */
 .gmw-icon-users:before { content: '\e857'; } /* '' */
+.gmw-icon-spin-1:before { content: '\e858'; } /* '' */
+.gmw-icon-spin-4:before { content: '\e859'; } /* '' */
+.gmw-icon-target-1:before { content: '\e85a'; } /* '' */
+.gmw-icon-download:before { content: '\e85b'; } /* '' */
+.gmw-icon-download-1:before { content: '\e85c'; } /* '' */
 .gmw-icon-move:before { content: '\f047'; } /* '' */
 .gmw-icon-users-1:before { content: '\f064'; } /* '' */
 .gmw-icon-sort:before { content: '\f0dc'; } /* '' */
 .gmw-icon-map-pin:before { content: '\f276'; } /* '' */
+.gmw-icon-map-o:before { content: '\f278'; } /* '' */
+.gmw-icon-map-1:before { content: '\f279'; } /* '' */
 
 /*
    Animation example, for spinners
