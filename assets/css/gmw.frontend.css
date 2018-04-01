@@ -2109,7 +2109,7 @@ div.gmw-current-location-wrapper div.gmw-cl-form-wrapper p.gmw-current-location-
 
 		/***** general *****/
 
-		#members-list span.gmw-sd-distance {
+		#members-list span.gmw-sdate-geo-distance {
 			padding:2px 8px;
 			font-size: 11px;
 			background: #f8f8f8;
@@ -2121,21 +2121,36 @@ div.gmw-current-location-wrapper div.gmw-cl-form-wrapper p.gmw-current-location-
 			border-radius:10px;
 		}
 
-		#members-list div.gmw-sd-address-wrapper {
+		#members-list div.gmw-sdate-geo-address-wrapper {
 			line-height: 20px;
 			padding: 2px 0px;
 		}
 
-		div.gmw-sd-address-wrapper i.gmw-icon-location,
-		div.gmw-sd-directions-wrapper i.gmw-icon-compass {
+		div.gmw-sdate-geo-address-wrapper i.gmw-icon-location,
+		div.gmw-sdate-geo-directions-wrapper i.gmw-icon-compass {
 			margin-right:3px;
 			font-size:13px;
 			color:lightcoral;
 		}
 
+		label.gmw-sdate-geo-address-label {
+			position: relative;
+		}
+
+		label.gmw-sdate-geo-address-label i.gmw-locator-button {
+			top: 0;
+			line-height: 35px;
+			position: absolute;
+			right: 10px;
+		}
+
+		.gmw-map-wrapper.sdate_geo {
+			border: 3px solid #eee;
+		}
+
 		/***** info window *****/
 
-		.gmw-map.sd .gmw-info-window-inner {
+		.gmw-map.sdate_geo .gmw-info-window-inner {
 			/*min-width: 280px;
 			width: 100%;
 			//overflow-x: hidden;
@@ -2145,16 +2160,16 @@ div.gmw-current-location-wrapper div.gmw-cl-form-wrapper p.gmw-current-location-
 			//float: left; */
 		}
 
-		.gmw-map.sd .gmw-info-window.standard {
+		.gmw-map.sdate_geo .gmw-info-window.standard {
 			min-height: 70px;		
 		}
 
-		.gmw-map.sd .gmw-info-window a.title {
+		.gmw-map.sdate_geo .gmw-info-window a.title {
 			margin: 5px 0;
 			font-size: 15px;		
 		}
 
-		.gmw-map.sd .gmw-info-window-inner div.image {
+		.gmw-map.sdate_geo .gmw-info-window-inner div.image {
 			border-style: solid;
 			border-width: 5px;
 			width: 60px;
@@ -2168,7 +2183,7 @@ div.gmw-current-location-wrapper div.gmw-cl-form-wrapper p.gmw-current-location-
 			border-radius: 100% !important;
 		}
 
-		.gmw-map.sd .gmw-info-window-inner div.image img {
+		.gmw-map.sdate_geo .gmw-info-window-inner div.image img {
 			border-radius: 100%;
 			-webkit-border-radius: 100%;
 			float: left;
@@ -2179,12 +2194,12 @@ div.gmw-current-location-wrapper div.gmw-cl-form-wrapper p.gmw-current-location-
 			height: 50px;
 		}
 
-		.gmw-map.sd .gmw-info-window-inner div.header {
+		.gmw-map.sdate_geo .gmw-info-window-inner div.header {
 			margin-bottom: 8px;
 			text-align: left;
 		}
 
-		.gmw-map.sd .gmw-info-window-inner div.gmw-sd-element {
+		.gmw-map.sdate_geo .gmw-info-window-inner div.gmw-sd-element {
 			padding: 0px;
 			width: 100%;
 			display: block;
@@ -2192,24 +2207,24 @@ div.gmw-current-location-wrapper div.gmw-cl-form-wrapper p.gmw-current-location-
 			font-size: 12px;
 		}
 
-		.gmw-map.sd .gmw-info-window-inner div.header h2.title {
+		.gmw-map.sdate_geo .gmw-info-window-inner div.header h2.title {
 			line-height: 0px;
 			margin: 0px;
 		}
 
-		.gmw-map.sd .gmw-info-window-inner div.header h2.title a {
+		.gmw-map.sdate_geo .gmw-info-window-inner div.header h2.title a {
 			font-size: 14px;
 		}
 
-		.gmw-map.sd .gmw-info-window-inner div.content .address,
-		.gmw-map.sd .gmw-info-window-inner div.content .directions {
+		.gmw-map.sdate_geo .gmw-info-window-inner div.content .address,
+		.gmw-map.sdate_geo .gmw-info-window-inner div.content .directions {
 			display: block;
 			clear: none;
 			font-size: 12px;
 			margin-bottom:
 		}
 
-		.gmw-map.sd .gmw-info-window-inner .distance {
+		.gmw-map.sdate_geo .gmw-info-window-inner .distance {
 			line-height: 16px;
 			font-size: 12px;
 			width: 100%;
