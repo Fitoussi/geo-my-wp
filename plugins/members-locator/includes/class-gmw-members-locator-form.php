@@ -254,7 +254,7 @@ class GMW_Members_Locator_Form extends GMW_Form {
             $results = bp_has_members( $this->form['query_args'] ) ? true : false;
 
             // include users ID 
-            remove_filter( 'bp_user_query_uid_clauses', array( $this, 'include_users_id' ), 20 );
+            remove_filter( 'bp_user_query_uid_clauses', array( $this, 'include_locations_users_id' ), 20 );
 
             // order results by distance
             remove_filter( 'bp_user_query_uid_clauses', array( $this, 'order_results_by_distance' ), 30, 2 );
