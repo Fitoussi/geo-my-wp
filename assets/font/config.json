@@ -607,6 +607,48 @@
       "src": "mfglabs"
     },
     {
+      "uid": "5d2d07f112b8de19f2c0dbfec3e42c05",
+      "css": "spin-1",
+      "code": 59480,
+      "src": "fontelico"
+    },
+    {
+      "uid": "f0c301ac841dafc38d8eb1b933fc73e5",
+      "css": "spin-4",
+      "code": 59481,
+      "src": "fontelico"
+    },
+    {
+      "uid": "3eadc3e443cf1c7e17f1b44d21254c00",
+      "css": "target-1",
+      "code": 59482,
+      "src": "entypo"
+    },
+    {
+      "uid": "c62cbc7fa604e32cc19731a3bb29be79",
+      "css": "map-o",
+      "code": 62072,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "79beb8c7fcd56e1985b70e9a120cbcbf",
+      "css": "map-1",
+      "code": 62073,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "b08cfe8039de2ce815686aced2caef06",
+      "css": "download",
+      "code": 59483,
+      "src": "entypo"
+    },
+    {
+      "uid": "9a76bc135eac17d2c8b8ad4a5774fc87",
+      "css": "download-1",
+      "code": 59484,
+      "src": "fontawesome"
+    },
+    {
       "uid": "b445e87bb489f12f36b58165747a481b",
       "css": "apple-touch-icon-144x144",
       "code": 59395,
