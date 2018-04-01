@@ -40,7 +40,7 @@ class GMW_Sweetdate_Geolcation_Addon extends GMW_Addon {
      * 
      * @var string
      */
-    public $prefix = "sd";
+    public $prefix = "sdate_geo";
 
     // version
     public $version = GMW_VERSION;
@@ -103,7 +103,7 @@ class GMW_Sweetdate_Geolcation_Addon extends GMW_Addon {
      */
     public function enqueue_scripts() {
         if ( ! IS_ADMIN ) {
-    	   wp_register_script( 'gmw-sd', GMW_SD_URL . '/assets/js/gmw.sd.min.js', array( 'jquery', 'gmw' ), GMW_VERSION, true );
+    	   wp_register_script( 'gmw-sdate-geo', GMW_SDATE_GEO_URL . '/assets/js/gmw.sd.min.js', array( 'jquery', 'gmw' ), GMW_VERSION, true );
         } 
     }
 

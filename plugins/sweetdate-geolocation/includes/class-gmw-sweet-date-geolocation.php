@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class GMW_Sweet_Date_Geolocation {
 
+    public $prefix = 'sdate_geo';
+
     /**
      * gmw_location database fields that will be pulled in the search query
      *
@@ -70,7 +72,7 @@ class GMW_Sweet_Date_Geolocation {
 
         // default values
         $this->form_data = array(
-            'prefix'        => 'sd',
+            //'prefix'        => $this->prefix,
             'language'      => gmw_get_option( 'general_settings', 'langugae_code', 'EN' ),
             'region'        => gmw_get_option( 'general_settings', 'country_code', 'US' ),
             'address'       => false,
@@ -85,28 +87,50 @@ class GMW_Sweet_Date_Geolocation {
         $this->labels = $this->labels();
         $this->units_label = ( $this->options['units'] == '6371' ) ? $this->labels['km'] : $this->labels['mi'];
         
-        //get the default addres value from URL if exists
-        if ( ! defined( 'DOING_AJAX' ) && ! empty( $_GET['field_address'] ) ) {
+        $doing_ajax = defined( 'DOING_AJAX' ) ? true : false;
 
-        	$this->form_data['address'] = sanitize_text_field( stripslashes( $_GET['field_address'] ) );
+        //get the default addres value from URL if exists
+        if ( ! $doing_ajax && ! empty( $_GET['address'] ) ) {
+
+        	$this->form_data['address'] = sanitize_text_field( stripslashes( $_GET['address'] ) );
 
         // otherwise, check in cookies
-        } else if ( ! empty( $_COOKIE['gmw_sd_address'] ) && $_COOKIE['gmw_sd_address'] != 'undefined' ) {
+        } else if ( ! empty( $_COOKIE['gmw_'.$this->prefix.'_address'] ) && $_COOKIE['gmw_'.$this->prefix.'_address'] != 'undefined' ) {
 
-        	$this->form_data['address'] = urldecode( stripslashes( $_COOKIE['gmw_sd_address'] ) );
+        	$this->form_data['address'] = urldecode( stripslashes( $_COOKIE['gmw_'.$this->prefix.'_address'] ) );
         }
         
         // orderby value from URL if exists
-        if ( ! defined( 'DOING_AJAX' ) && ! empty( $_GET['orderby'] ) ) {
+        if ( ! $doing_ajax && ! empty( $_GET['orderby'] ) ) {
 
         	$this->form_data['orderby'] =  sanitize_text_field( $_GET['orderby'] );
         
         // otherwise, check in cookies
-        } elseif ( ! empty( $_COOKIE['gmw_sd_orderby'] ) && $_COOKIE['gmw_sd_orderby'] != 'undefined' ) {
+        } elseif ( ! empty( $_COOKIE['gmw_'.$this->prefix.'_orderby'] ) && $_COOKIE['gmw_'.$this->prefix.'_orderby'] != 'undefined' ) {
 
-        	$this->form_data['orderby'] = urldecode( $_COOKIE['gmw_sd_orderby'] );
+        	$this->form_data['orderby'] = urldecode( $_COOKIE['gmw_'.$this->prefix.'_orderby'] );
         }
         
+        //get the default latitude
+        if ( ! $doing_ajax && isset( $_REQUEST['lat'] ) ) {
+
+            $this->form_data['lat'] = sanitize_text_field( $_REQUEST['lat'] );
+
+        } else if ( isset( $_COOKIE['gmw_'.$this->prefix.'_lat'] ) && $_COOKIE['gmw_'.$this->prefix.'_lat'] != 'undefined' ) {
+
+            $this->form_data['lat'] = urldecode( $_COOKIE['gmw_'.$this->prefix.'_lat'] );
+        }
+
+        //get the default longitude
+        if ( ! $doing_ajax && isset( $_REQUEST['lng'] ) ) {
+
+            $this->form_data['lng'] = sanitize_text_field( $_REQUEST['lng'] );
+
+        } else if ( isset( $_COOKIE['gmw_'.$this->prefix.'_lng'] ) && $_COOKIE['gmw_'.$this->prefix.'_lng'] != 'undefined' ) {
+
+            $this->form_data['lng'] = urldecode( $_COOKIE['gmw_'.$this->prefix.'_lng'] );
+        }
+
         // radius values
         $this->radius_values = str_replace( ' ', '', explode( ',', $this->options['radius'] ) );
 
@@ -116,21 +140,21 @@ class GMW_Sweet_Date_Geolocation {
         	$this->form_data['radius'] = end( $this->radius_values );
 
         // check in URL if exists
-        } elseif ( ! defined( 'DOING_AJAX' ) && ! empty( $_GET['field_radius'] ) ) {
+        } elseif ( ! $doing_ajax && ! empty( $_GET['field_radius'] ) ) {
 
         	$this->form_data['radius'] = $_GET['field_radius'];
 
         // otherwise, maybe in cookies
-        } elseif ( !empty( $_COOKIE['gmw_sd_radius'] )  && $_COOKIE['gmw_sd_radius'] != 'undefined' ) {
+        } elseif ( ! empty( $_COOKIE['gmw_'.$this->prefix.'_radius'] ) && $_COOKIE['gmw_'.$this->prefix.'_radius'] != 'undefined' ) {
 
-        	$this->form_data['radius'] = urldecode( $_COOKIE['gmw_sd_radius'] );
+        	$this->form_data['radius'] = urldecode( $_COOKIE['gmw_'.$this->prefix.'_radius'] );
         }
         
-        $this->form_data = apply_filters( 'gmw_sd_form_data', $this->form_data, $this );
+        $this->form_data = apply_filters( 'gmw_'.$this->prefix.'_form_data', $this->form_data, $this );
 
         // action hooks / filters
-        add_action( 'wp_enqueue_scripts', 		   array( $this, 'register_scripts' 		        ) );
-        add_filter( 'kleo_bp_search_add_data', 	   array( $this, 'members_directory_form'           ) );
+        add_action( 'wp_enqueue_scripts', 		   array( $this, 'enqueue_scripts' 		            ) );
+        add_action( 'kleo_bp_search_add_data', 	   array( $this, 'members_directory_form'           ) );
         add_filter( 'bp_pre_user_query_construct', array( $this, 'query_vars'                       ) );
         add_action( 'bp_members_inside_avatar',    array( $this, 'get_distance' 			        ) );
         add_action( 'bp_directory_members_item',   array( $this, 'add_elements_to_results'          ) );
@@ -147,8 +171,8 @@ class GMW_Sweet_Date_Geolocation {
      * Enqueue scripts
      * @return [type] [description]
      */
-    public function register_scripts() {       
-    	wp_enqueue_script( 'gmw-sd' );
+    public function enqueue_scripts() {       
+    	wp_enqueue_script( 'gmw-sdate-geo' );
     }
     
     /**
@@ -160,7 +184,7 @@ class GMW_Sweet_Date_Geolocation {
      */
     public function labels() {
 
-    	$output = apply_filters( 'gmw_sd_labels', array(
+    	$output = apply_filters( 'gmw_'.$this->prefix.'_labels', array(
 			'address_placeholder' 	=> __( 'Enter Address...', 'geo-my-wp' ),
 			'miles'					=> __( 'Miles', 'geo-my-wp' ),
 			'kilometers'			=> __( 'Kilometers', 'geo-my-wp' ),
@@ -183,13 +207,16 @@ class GMW_Sweet_Date_Geolocation {
     }
     
     /**
-     * Order search results by distance 
+     * Order search results by distance.
      * 
      * @param  [type] $clauses [description]
      * @param  [type] $vars    [description]
      * @return [type]          [description]
      */
-    function order_results_by_distance( $clauses, $vars ) {
+    public function order_results_by_distance( $clauses, $vars ) {
+
+        // remove this filter
+        remove_filter( 'bp_user_query_uid_clauses', array( $this, 'order_results_by_distance' ), 50, 2 );
 
         if ( $vars->query_vars['type'] == 'distance' ) {
             
@@ -212,9 +239,9 @@ class GMW_Sweet_Date_Geolocation {
      * @return unknown
      */
     public function query_vars( $query ) {
-    	
+    
         // if address entered
-        if ( ! empty( $this->form_data['address'] ) ) {
+        if ( ! empty( $this->form_data['address'] ) && ( empty( $this->form_data['lat'] ) || empty( $this->form_data['lng'] ) ) ) {
 
             include_once( GMW_PATH . '/includes/gmw-geocoder.php' );
 
@@ -245,17 +272,15 @@ class GMW_Sweet_Date_Geolocation {
                 $this->form_data['lat'] = $this->returned_address['lat'];
                 $this->form_data['lng'] = $this->returned_address['lng'];
             }
-        } else {
-            $this->form_data['lat'] = false;
-            $this->form_data['lng'] = false;
         }
-       
+
         $args = array(
-            'object_type' => 'user',
-            'lat'         => $this->form_data['lat'],
-            'lng'         => $this->form_data['lng'],
-            'radius'      => ! empty( $this->form_data['radius'] ) ? $this->form_data['radius'] : false,
-            'units'       => $this->options['units']
+            'object_type'       => 'user',
+            'lat'               => $this->form_data['lat'],
+            'lng'               => $this->form_data['lng'],
+            'radius'            => ! empty( $this->form_data['radius'] ) ? $this->form_data['radius'] : false,
+            'units'             => $this->options['units'],
+            'output_objects_id' => true
         );
 
         // get locations from GEO my WP db
@@ -273,8 +298,33 @@ class GMW_Sweet_Date_Geolocation {
             return $query;
         }
 
-        // include locations in BP search query
-        $query->query_vars['include'] = $this->objects_id;   
+        /*
+         * compute the members to include based on the include arguments and 
+         * 
+         * returned from the locations query args.
+         *
+         * We do this to allow other plugins use the include argument first.
+         */ 
+        if ( apply_filters( 'gmw_sdate_geo_disable_members_without_locations', false ) || ! empty( $this->form_data['address'] ) ) {
+        
+            if ( ! empty( $query->query_vars['include'] ) ) {
+
+                if ( ! is_array( $query->query_vars['include'] ) ) {
+                    $query->query_vars['include'] = explode( ',', $query->query_vars['include'] );
+                }
+                $query->query_vars['include'] = array_intersect( $query->query_vars['include'], $this->objects_id );
+
+            } else {
+                $query->query_vars['include'] = $this->objects_id;
+            }
+
+            // abort if no members to include
+            if ( empty( $query->query_vars['include'] ) || in_array( 0, $query->query_vars['include'] ) ) {
+                
+                $query->query_vars['include'] = array( 0 );   
+        
+            }
+        }
 
     	if ( ! empty( $this->form_data['orderby'] ) ) {
     		
@@ -301,9 +351,9 @@ class GMW_Sweet_Date_Geolocation {
     	
     		$radius_label = ( $this->options['units'] == '6371' ) ? $this->labels['kilometers'] : $this->labels['miles'];
     	
-    		$output .= '<div class="two columns">';
-    		$output .= 	'<select id="gmw-sd-radius-dropdown" class="expand gmw-sd-dropdown" name="field_radius">';
-    		$output .= 		'<option value="" selected="selected">'.esc_attr( $radius_label ).'</option>';
+    		$output .= '<div class="two columns gmw-sdate-geo-radius-wrapper">';
+    		$output .= '<select id="gmw-sdate-geo-radius-dropdown" class="expand gmw-sdate-geo-dropdown" name="field_radius">';
+    		$output .= '<option value="" selected="selected">'.esc_attr( $radius_label ).'</option>';
     	
     		foreach ( $this->radius_values as $value ) {
     			$selected = ( $value == $this->form_data['radius'] ) ? 'selected="selected"': '';
@@ -316,10 +366,10 @@ class GMW_Sweet_Date_Geolocation {
     		//display hidden default value
     	} else {
     		$radius = end( $this->radius_values );
-    		$output .= '<input type="hidden" id="gmw-sd-radius-dropdown" name="field_radius" value="'. esc_attr( $this->radius_values ).'" />';
+    		$output .= '<input type="hidden" id="gmw-sdate-geo-radius-dropdown" name="field_radius" value="'. esc_attr( $this->radius_values ).'" />';
     	}
     	
-    	return apply_filters( 'gmw_sd_form_radius', $output, $this );
+    	return apply_filters( 'gmw_'.$this->prefix.'_form_radius', $output, $this );
     }
     
     /**
@@ -338,14 +388,14 @@ class GMW_Sweet_Date_Geolocation {
     	);
     	    	
     	// modify the orderby dropdown using a filter if needed
-    	$orderby = apply_filters( 'gmw_sd_orderby_options', $orderby, $this );
+    	$orderby = apply_filters( 'gmw_'.$this->prefix.'_orderby_options', $orderby, $this );
     	
         $output = '';
 
     	if ( ! empty( $orderby ) ) {
     	
-    		$output .= '<div class="two columns">';
-    		$output .= '<select id="gmw-sd-orderby-dropdown" class="expand gmw-sd-dropdown" name="orderby">';
+    		$output .= '<div class="two columns gmw-sdate-geo-orderby-wrapper">';
+    		$output .= '<select id="gmw-sdate-geo-orderby-dropdown" class="expand gmw-sdate-geo-dropdown" name="orderby">';
     		$output .= '<option value="">'.esc_attr( $this->labels['orderby'] ).'</option>';
     	   
     		foreach ( $orderby as $key => $value ) {
@@ -362,7 +412,7 @@ class GMW_Sweet_Date_Geolocation {
     		$output .= '</div>';
     	}
     	
-        $output = apply_filters( 'gmw_sd_form_orderby', $output, $orderby, $this );
+        $output = apply_filters( 'gmw_'.$this->prefix.'_form_orderby', $output, $orderby, $this );
     	
         return $output; 
     }
@@ -372,27 +422,44 @@ class GMW_Sweet_Date_Geolocation {
      * 
      * @param unknown_type $search_form_html
      */
-    public function members_directory_form( $search_form_html ) {
-
-        $autocomplete = ! empty( $this->options['address_autocomplete'] ) ? 'class="gmw-address-autocomplete"' : '';
+    public function members_directory_form() {
 
         $search_form_html = array();
 
+        $args = array(
+            'id'                   => 'sdate-geo',
+            'placeholder'          => $this->labels['address_placeholder'], 
+            'locator_button'       => ! empty( $this->options['locator_button'] ) ? 1 : 0,
+            'icon'                 => 'gmw-icon-target-light',
+            'address_autocomplete' => ! empty( $this->options['address_autocomplete'] ) ? 1 : 0,
+            'name_attr'            => 'address',
+            'value'                => $this->form_data['address']
+        );
+
+        $search_form_html['address_field'] = '<label class="two columns gmw-sdate-geo-address-label">'.GMW_Search_Form_Helper::address_field( $args ).'</label>';        
+        //append radius to the search form
+        //$search_form_html['radius_field'] = self::search_form_radius();
+        //append units to the search form
+        //$search_form_html['units_field'] = self::form_units();
+
+        $search_form_html['coords'] = '<input type="hidden" name="lat" id="gmw-lat-sdate-geo" value="'.esc_attr( $this->form_data['lat'] ).'" class="gmw-lat" /><input type="hidden" name="lng" id="gmw-lng-sdate-geo" value="'.esc_attr( $this->form_data['lng'] ).'" class="gmw-lng" />'; 
+
+
         // append address field to the form
-        $search_form_html['address_label'] = '<label class="two columns">';
-        $search_form_html['address_input'] = '<input type="text" name="field_address" id="gmw-sd-address-field" value="'.sanitize_text_field( stripslashes( $this->form_data['address'] ) ).'" '.$autocomplete.' placeholder="'.esc_attr( $this->labels['address_placeholder'] ).'" />';
+        //$search_form_html['address_label'] = '<label class="two columns">';
+        //$search_form_html['address_input'] = '<input type="text" name="field_address" id="gmw-sd-address-field" value="'.sanitize_text_field( stripslashes( $this->form_data['address'] ) ).'" '.$autocomplete.' placeholder="'.esc_attr( $this->labels['address_placeholder'] ).'" />';
         
-        $search_form_html['/address_label'] = '</label>';
+        //$search_form_html['/address_label'] = '</label>';
 
         // append radius to the search form
-        $search_form_html['radius'] = self::search_form_radius();
+        $search_form_html['radius_field'] = self::search_form_radius();
         
         // append orderby to the search form
         if ( ! empty( $this->options['orderby'] ) ) {
-        	$search_form_html['orderby'] = self::search_form_orderby();
+        	$search_form_html['orderby_field'] = self::search_form_orderby();
         }
         
-        $search_form_html = apply_filters( 'gmw_sd_search_form_html', $search_form_html, $this );
+        $search_form_html = apply_filters( 'gmw_'.$this->prefix.'_search_form_html', $search_form_html, $this );
 
         echo implode( ' ', $search_form_html );
     }
@@ -406,9 +473,9 @@ class GMW_Sweet_Date_Geolocation {
         
         // map args
         $args = array( 
-            'map_id'        => 'sd',
+            'map_id'        => $this->prefix,
             'map_type'      => 'sweetdate_geolocation',
-            'prefix'        => 'sd',
+            'prefix'        => $this->prefix,
             'map_width'     => $this->options['map_width'],
             'map_height'    => $this->options['map_height'],
             'form_data'     => $this->form_data,
@@ -428,9 +495,9 @@ class GMW_Sweet_Date_Geolocation {
         
         // create the map object
         $map_args = array(
-    		'map_id' 	 	       => 'sd',
+    		'map_id' 	 	       => $this->prefix,
     		'map_type'		       => 'sweetdate_geolocation',
-            'prefix'               => 'sd',
+            'prefix'               => $this->prefix,
             'info_window_type'     => 'standard',
             'info_window_ajax'     => false,
             'info_window_template' => 'default',
@@ -457,11 +524,25 @@ class GMW_Sweet_Date_Geolocation {
         ?>
         <script>       
         jQuery( window ).ready( function() {
+
+            var mapArgs = <?php echo $map_args; ?>;
+            // create map if not exists
+            if ( typeof GMW_Maps['sdate_geo'] == 'undefined' ) {
+                // generate map when ajax is triggered
+                GMW_Maps['sdate_geo'] = new GMW_Map( mapArgs.settings, mapArgs.map_options, {} );
+                // initiate it
+                GMW_Maps['sdate_geo'].render( mapArgs.locations, mapArgs.user_location );
+            // update existing map
+            } else {
+                GMW_Maps['sdate_geo'].update( mapArgs.locations, mapArgs.user_location );
+            }
+            /*
             var mapArgs = <?php echo $map_args; ?>;
             // generate map when ajax is triggered
-            GMW_Maps['sd'] = new GMW_Map( mapArgs.settings, mapArgs.map_options, {} );
+            GMW_Maps[$this->prefix] = new GMW_Map( mapArgs.settings, mapArgs.map_options, {} );
             // initiate it
-            GMW_Maps['sd'].render( mapArgs.locations, mapArgs.user_location );
+            GMW_Maps[$this->prefix].render( mapArgs.locations, mapArgs.user_location );
+            */
         });
         </script>
         <?php      
@@ -488,7 +569,7 @@ class GMW_Sweet_Date_Geolocation {
         }
 
         // display the distance in results
-        echo apply_filters( 'gmw_sd_member_distance', '<span class="gmw-sd-distance">'.esc_attr( $this->locations_data[$member->ID]->distance ).' '.esc_attr( $this->units_label ) .'</span>', $member, $this->locations_data[$member->ID], $this );
+        echo apply_filters( 'gmw_'.$this->prefix.'_member_distance', '<span class="gmw-sdate-geo-distance">'.esc_attr( $this->locations_data[$member->ID]->distance ).' '.esc_attr( $this->units_label ) .'</span>', $member, $this->locations_data[$member->ID], $this );
     }
 
     /**
@@ -519,14 +600,14 @@ class GMW_Sweet_Date_Geolocation {
     		return;
     	}
     		
-        $output  = '<div class="gmw-sd-address-wrapper">';
+        $output  = '<div class="gmw-sdate-geo-address-wrapper">';
         $output .= '<i class="gmw-icon-location"></i>';
-        $output .= '<span class="gmw-sd-address-value">';
+        $output .= '<span class="gmw-sdate-geo-address-value">';
         $output .= esc_attr( $address_field );
         $output .= '</span>';
         $output .= '</div>';
              
-        return apply_filters( 'gmw_sd_member_address', $output, $member, $member_location, $this );
+        return apply_filters( 'gmw_'.$this->prefix.'_member_address', $output, $member, $member_location, $this );
     }
 
     /**
@@ -540,7 +621,7 @@ class GMW_Sweet_Date_Geolocation {
     public function map_location( $member, $info_window ) {
 
         //add lat/lng locations array to pass to map
-        return apply_filters( 'gmw_sd_member_data', array(
+        return apply_filters( 'gmw_'.$this->prefix.'_member_data', array(
             'ID'                  => $member->ID,
             'lat'                 => $member->lat,
             'lng'                 => $member->lng,
@@ -599,7 +680,7 @@ class GMW_Sweet_Date_Geolocation {
         if ( ! empty( $this->options['map'] ) ) {
 
             $info_window_args = array(
-                'prefix'          => 'sd',
+                'prefix'          => $this->prefix,
                 'url'             => bp_get_member_permalink(),
                 'title'           => $member->display_name,
                 'image_url'       => false,
