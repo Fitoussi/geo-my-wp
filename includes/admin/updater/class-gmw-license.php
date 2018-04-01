@@ -27,13 +27,22 @@ if ( !class_exists( 'GMW_License' ) ) :
 class GMW_License {
 
 	private $file;
+
 	private $license_name;
+
 	private $item_name;
+	
 	private $item_id;
+	
 	private $license_key;
+	
 	private $version;
+	
 	private $author;
+	
 	private $api_url = 'https://geomywp.com';
+
+	private $plugins_page_license_enabled = false;
 
 	/**
 	 * Class constructor
@@ -59,8 +68,15 @@ class GMW_License {
 
 		//action links
 		add_filter( 'plugin_action_links_' . plugin_basename( $this->file ) , array( $this, 'extension_action_links' ), 10 );
-		add_action( 'after_plugin_row_' . plugin_basename( $this->file ), array( $this, 'license_key_element' ), 10 );
-		
+
+		// license key input in plugins page is disabled by default
+		if ( apply_filters( 'gmw_plugins_page_license_key_enabled', false ) ) {
+
+			$this->plugins_page_license_enabled = true;
+
+			add_action( 'after_plugin_row_' . plugin_basename( $this->file ), array( $this, 'license_key_element' ), 10 );
+		}
+
 		// Setup hooks
 		$this->includes();
 		$this->auto_updater();	
@@ -72,15 +88,31 @@ class GMW_License {
 	 * @return $links
 	 */
 	public function extension_action_links( $links ) {
-			
-		//if license is not activated display the "Activate License" message
-		if ( empty( $this->license_key ) || $this->license_status != 'valid' ) {
-			return $links;
-		} 
 		
-		//if license activate display "Diactivate license before...." message
-		$links['deactivate'] = __( 'Deactivate the license key before deactivating the plugin', 'geo-my-wp' );
-						
+		$links['settings'] = '<a href="' . admin_url( 'admin.php?page=gmw-settings' ).'">' . __( 'Settings' , 'geo-my-wp' ) . '</a>';
+		
+		if ( ! $this->plugins_page_license_enabled ) {
+
+			//if license is not activated display the "Activate License" message
+			if ( empty( $this->license_key ) || $this->license_status != 'valid' ) {
+				
+				$action = 'active_license';
+				$text   = __( 'Activate License', 'geo-my-wp' );
+				$color  = 'red';
+
+			} else {
+
+				$action = 'deactive_license';
+				$text   = __( 'Deactivate License', 'geo-my-wp' );
+				$color  = 'green';
+			}
+
+			$links[$action] = '<a style="color:'.$color.'" href="' . admin_url( 'admin.php?page=gmw-extensions' ).'">' . $text . '</a>';
+
+		} else {
+			$links['extensions'] = '<a href="' . admin_url( 'admin.php?page=gmw-extensions' ).'">' . __( 'Extensions', 'geo-my-wp' ). '</a>';
+		}
+
 		return $links;
 	}
 	
