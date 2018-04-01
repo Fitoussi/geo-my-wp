@@ -738,7 +738,7 @@ class GMW_Form_Editor {
             		</tr>
             		<tr>
             			<td class="gmw-form-usage-desc">
-            				<p><?php _e( 'Display only the search form only.', 'geo-my-wp' ); ?></p>
+            				<p><?php _e( 'Display the search form only.', 'geo-my-wp' ); ?></p>
             			</td>
             			<td class="gmw-form-usage">
             				<p><code>[gmw search_form="<?php echo $this->form['ID']; ?>"]</code></p>
@@ -749,7 +749,7 @@ class GMW_Form_Editor {
             		</tr>
             		<tr>
             			<td class="gmw-form-usage-desc">
-            				<p><?php _e( 'Display the search results of this form only. Can be used to display the search rsults in a different page or when using the search form in a widget.', 'geo-my-wp' ); ?></p>
+            				<p><?php _e( 'Display the search results of this form only. Can be used to display the search results in a different page or when using the search form in a widget.', 'geo-my-wp' ); ?></p>
             			</td>            
             			<td class="gmw-form-usage">
             				<p><code>[gmw search_results="<?php echo $this->form['ID']; ?>"]</code></p>
