@@ -380,7 +380,7 @@ GMW_Map.prototype.render = function( locations, user_location ) {
 			self.render_user_marker();
 
 			// generate new markers
-			self.render_markers( self.locations );
+			self.render_markers( self.locations, false );
 		});
 	});
 };
@@ -391,10 +391,8 @@ GMW_Map.prototype.render = function( locations, user_location ) {
  * @param  {[type]} mapVars [description]
  * @return {[type]}         [description]
  */
-GMW_Map.prototype.update = function( locations, user_location ) {
+GMW_Map.prototype.update = function( locations, user_location, append_previous ) {
 	
-	//console.log( 'update map' );
-
 	var self = this;
 
 	self.locations = locations || self.locations;
@@ -409,7 +407,7 @@ GMW_Map.prototype.update = function( locations, user_location ) {
 		return;
 	}
 
-	// if map does not exist, render it instead
+	// if map does not exist, render it.
 	if ( self.map === false ) {
 		
 		self.render( self.locations, self.user_location );
@@ -435,7 +433,7 @@ GMW_Map.prototype.update = function( locations, user_location ) {
 		self.render_user_marker();
 
 		// generate new markers
-		self.render_markers( self.locations );
+		self.render_markers( self.locations, append_previous );
 	});
 }
 
@@ -807,7 +805,7 @@ GMW_Map.prototype.clear_user_marker = function() {
  * 
  * @return {[type]} [description]
  */
-GMW_Map.prototype.render_markers = function( locations ) {
+GMW_Map.prototype.render_markers = function( locations, append_previous ) {
 
 	var self = this;
 
@@ -818,6 +816,20 @@ GMW_Map.prototype.render_markers = function( locations ) {
 	self.markers_grouping_init();
 
 	self.locations = locations;
+
+	// get previous location if appending locations.
+	if ( ! append_previous || self.previous_locations.length == 0 ) {
+
+		self.previous_locations = self.locations;
+
+	} else {
+
+		temLoc = jQuery.merge( self.locations, self.previous_locations );
+
+		self.previous_locations = self.locations;
+
+		self.locations = temLoc;
+	}
 
 	var locations_count = self.locations.length;
 
