@@ -750,7 +750,7 @@ class GMW_Location {
 			'paged'				=> 1,
 			'orderby'		    => '',
 			'object__in'	 	=> '',
-			'output_objects_id' => false
+			'output_objects_id' => true
 		) );
 		
 		$args = apply_filters( 'gmw_get_locations_data_args', $args, $gmw );
@@ -951,6 +951,16 @@ class GMW_Location {
 		    	implode( ' ', apply_filters( 'gmw_get_locations_query_clauses', $clauses, $args, $gmw ) ) 
 		    );
 
+		    /**
+		     * Collect locations into an array of objects and locations data.
+		     *
+		     * This way we can easily append objects with thier location.
+		     *
+		     * This feature is enabled by default, but can be disabled
+		     *
+		     * If not needed to preserve performance.
+		     * 
+		     */
 		    if ( $args['output_objects_id'] ) {
 
 			    $locations_data = array(
