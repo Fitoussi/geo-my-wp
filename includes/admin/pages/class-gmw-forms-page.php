@@ -319,8 +319,8 @@ class GMW_Forms_Page {
     public function output() {
 
         //get forms
-        $forms = GMW_Forms_Helper::get_forms();
-
+        $forms       = GMW_Forms_Helper::get_forms();
+        $addons_data = gmw_get_addons_data();
         ?>
         <div class="wrap">
            <h2 class="gmw-wrap-top-h2">
@@ -432,7 +432,14 @@ class GMW_Forms_Page {
                                             </span>
                                         </td>
     									<td><span><?php echo esc_attr( $form['name'] ); ?></span></td>
-                                        <td><span><?php echo esc_attr( ucwords( str_replace( '_', ' ', $form['addon'] ) ) ); ?></span></td>
+                                        <td>
+                                            <span>
+                                                <?php 
+                                                    $name = ! empty( $addons_data[$form['slug']]['name'] ) ? $addons_data[$form['slug']]['name'] : ucwords( str_replace( '_', ' ', $form['addon'] ) );
+                                                    echo esc_attr( $name ); 
+                                                ?>
+                                            </span>
+                                        </td>
                                         <td class="column-title" style="padding: 5px 0px;">
                                             <?php 
                                                 $form_shortcode = '[gmw form="'.$form['ID'].'"]';
