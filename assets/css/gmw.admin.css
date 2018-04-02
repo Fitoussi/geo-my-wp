@@ -65,8 +65,9 @@ div.menu-footer input.button-primary.update-form {
 	margin-bottom: 0;
 }
 
-.toplevel_page_gmw-extensions .dashicons-before.dashicons-location-alt:before {
-	color: #f36354 !important;
+#toplevel_page_gmw-extensions .wp-has-current-submenu .dashicons-before.dashicons-location-alt:before,
+#toplevel_page_gmw-extensions.opensub .dashicons-before.dashicons-location-alt:before {
+	color: #ffd885 !important;
 }
 
 /******* Options box ******/
