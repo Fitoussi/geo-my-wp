@@ -606,7 +606,7 @@ class GMW_Update_Forms_Table {
                 'addon'  	  => 'users_locator',
                 'component'   => 'users_locator',
                 'object_type' => 'user',
-                'name'   	  => 'Users Locator',
+                'name'   	  => 'WP Users Locator',
                 'prefix' 	  => 'ul'
             ), 
             array( 
@@ -630,7 +630,7 @@ class GMW_Update_Forms_Table {
                 'addon'  	  => 'users_locator',
                 'component'   => 'users_locator',
                 'object_type' => 'user',
-                'name'   	  => 'Users Locator',
+                'name'   	  => 'WP Users Locator',
                 'prefix' 	  => 'ul'
             ), 
             array( 
