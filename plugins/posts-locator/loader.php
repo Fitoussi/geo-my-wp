@@ -59,7 +59,7 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
     public function admin_settings_groups() {
         return array(
             'slug'     => 'post_types_settings',
-            'label'    => __( 'Post Types', 'geo-my-wp' ),
+            'label'    => __( 'Posts Locator', 'geo-my-wp' ),
             'icon'     => 'pinboard', 
             'priority' => 5
         );  
