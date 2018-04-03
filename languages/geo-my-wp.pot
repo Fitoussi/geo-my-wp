@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: GEO my WP\n"
-"POT-Creation-Date: 2018-04-01 21:54-1000\n"
+"POT-Creation-Date: 2018-04-02 17:48-1000\n"
 "PO-Revision-Date: 2018-03-05 13:18-1000\n"
 "Last-Translator: Eyal Fitoussi <fitoussi_eyal@hotmail.com>\n"
 "Language-Team: Eyal Fitoussi <fitoussi_eyal@hotmail.com>\n"
@@ -1676,6 +1676,7 @@ msgid "Location Tables"
 msgstr ""
 
 #: includes/admin/pages/import-export/class-gmw-import-export-page.php:120
+#: plugins/posts-locator/loader.php:62
 msgid "Posts Locator"
 msgstr ""
 
@@ -2763,7 +2764,7 @@ msgstr ""
 msgid "Form does not exist."
 msgstr ""
 
-#: includes/gmw-shortcodes.php:106
+#: includes/gmw-shortcodes.php:107
 msgid "The add-on which this form belongs to is deactivated."
 msgstr ""
 
@@ -3288,7 +3289,6 @@ msgstr ""
 #: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:66
 #: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:68
 #: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:80
-#: plugins/posts-locator/loader.php:62
 msgid "Post Types"
 msgstr ""
 
