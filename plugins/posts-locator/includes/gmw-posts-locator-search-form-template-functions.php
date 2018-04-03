@@ -84,10 +84,10 @@ class GMW_PT_Search_Form_Helper {
             'multiple_selections' => $args['multiple_selections'],
             'placeholder'         => $placeholder,
             'no_results_text'     => __( 'No results match', 'geo-my-wp' ),
-        ), $taxonomy );
+        ), $taxonomy, $gmw );
 
         // deprected hook. Will be removed in the future.
-        apply_filters( 'gmw_'.$args['usage'].'_taxonomy_args', $tax_args, $gmw, $taxonomy, $tax_name, $args );
+        apply_filters( 'gmw_pt_'.$args['usage'].'_taxonomy_args', $tax_args, $gmw, $taxonomy, $tax_name, $args );
             
         //set terms_hash args. only args that control the output of the terms should be here.
         // This will be used with the cache helper
