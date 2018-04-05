@@ -281,7 +281,7 @@ class GMW_Admin {
 				}				
 
 				// trigger license key
-				if ( class_exists( 'GMW_License' ) && ! empty( $new_addon['trigger_license'] ) && ! empty( $new_addon['full_path'] ) ) {
+				if ( class_exists( 'GMW_License' ) && ! empty( $new_addon['full_path'] ) ) {
 
 					$gmw_license = new GMW_License( 
 						$new_addon['full_path'], 
