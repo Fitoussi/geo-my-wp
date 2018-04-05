@@ -63,7 +63,7 @@ class GMW_Extensions {
         if ( false === ( $output = get_transient( 'gmw_extensions_feed' ) ) ) {
     
             $feed = wp_remote_get( 'http://geomywp.com/extensions/?feed=extensions', array( 'sslverify' => false ) );
-
+            
             if ( ! is_wp_error( $feed ) && $feed['response']['code'] == '200' ) {
 
                 if ( isset( $feed['body'] ) && strlen( $feed['body'] ) > 0 ) {
