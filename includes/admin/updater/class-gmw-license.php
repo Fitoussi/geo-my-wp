@@ -70,7 +70,7 @@ class GMW_License {
 		add_filter( 'plugin_action_links_' . plugin_basename( $this->file ) , array( $this, 'extension_action_links' ), 10 );
 
 		// license key input in plugins page is disabled by default
-		if ( apply_filters( 'gmw_plugins_page_license_key_enabled', false ) ) {
+		if ( apply_filters( 'gmw_plugins_page_license_key_enabled', true ) ) {
 
 			$this->plugins_page_license_enabled = true;
 
