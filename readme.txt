@@ -5,7 +5,7 @@ Tags: Geolocation, Dirctory, Store Locator, Geolocator, Geotagging, Geocode, Map
 Requires at least: 4.3
 Tested up to: 4.9.5
 Buddypress: 2.8
-Stable tag: 3.0
+Stable tag: 3.0.1
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -117,6 +117,14 @@ for detailed installation and setup guied see the [documentation](docs.geomywp.c
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 3.0.1 =
+
+* Version 3.0 is a major release. It is highly recomended that you read [this post](http://geomywp.com/geo-my-wp-3-0-beta-7/) before updating. You should also test this version on a staging enviroment before updating on your live site.
+
+* Fix: plugin will not check for new update of extensions that are not compatible with GEO my WP v3.0 when v3.0 is installed.
+
+* Temporary bring back license key input text box to the plugins page of the admin to make it easier to update extensions that are not yet compatible with GEO my WP 3.0.
 
 = 3.0 =
 
