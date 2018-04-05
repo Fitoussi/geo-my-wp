@@ -34,14 +34,18 @@ function gmw_fl_xprofile_fields( $gmw = array() ) {
 	echo gmw_get_search_form_xprofile_fields( $gmw );
 }
 
-function gmw_get_keywords_field( $gmw = array() ) {
-	_deprecated_function( 'gmw_get_keywords_field', '3.0', 'gmw_get_search_form_keywords_field' );
-	return gmw_get_search_form_keywords_field( $gmw );
-}
+if ( ! IS_ADMIN ) {
+	
+	function gmw_get_keywords_field( $gmw = array() ) {
+		_deprecated_function( 'gmw_get_keywords_field', '3.0', 'gmw_get_search_form_keywords_field' );
+		return gmw_get_search_form_keywords_field( $gmw );
+	}
 
-function gmw_keywords_field( $gmw = array() ) {
-	_deprecated_function( 'gmw_keywords_field', '3.0', 'gmw_search_form_keywords_field' );
-	echo gmw_get_search_form_keywords_field( $gmw );
+
+	function gmw_keywords_field( $gmw = array() ) {
+		_deprecated_function( 'gmw_keywords_field', '3.0', 'gmw_search_form_keywords_field' );
+		echo gmw_get_search_form_keywords_field( $gmw );
+	}
 }
 
 function gmw_get_search_form_radius_values( $gmw = array() ) {
@@ -238,10 +242,12 @@ function gmw_get_user_info_from_db( $user_id = 0 ) {
 	return gmw_get_user_location( $user_id );
 }
 
-function search_form_radius_field( $gmw ) {
+if ( ! IS_ADMIN ) {
+	function search_form_radius_field( $gmw ) {
 
-    _deprecated_function( 'search_form_radius_field', '3.0', 'gmw_get_search_form_radius_slider' );
-	echo gmw_get_search_form_radius_slider( $gmw );
+	    _deprecated_function( 'search_form_radius_field', '3.0', 'gmw_get_search_form_radius_slider' );
+		echo gmw_get_search_form_radius_slider( $gmw );
+	}
 }
 
 function gmaps_search_form_taxonomies( $gmw = array(), $tag='div', $class='' ) {
