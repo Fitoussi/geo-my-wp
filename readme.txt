@@ -124,7 +124,9 @@ for detailed installation and setup guied see the [documentation](docs.geomywp.c
 
 * Fix: plugin will not check for new update of extensions that are not compatible with GEO my WP v3.0 when v3.0 is installed.
 
-* Temporary bring back license key input text box to the plugins page of the admin to make it easier to update extensions that are not yet compatible with GEO my WP 3.0.
+* Fix: Temporary bring back license key input text box to the plugins page of the admin to make it easier to update extensions that are not yet compatible with GEO my WP 3.0.
+
+* Fix: Some deprecated functions cause fatal errors.
 
 = 3.0 =
 
