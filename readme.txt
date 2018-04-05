@@ -20,6 +20,10 @@ Using GEO my WP plugin, and the powerful features of Google Maps API, you can ea
 
 With GEO my WP, creating a real estate, events, directory, classifieds, social networking and any other type of location based website is a simple task.
 
+Visit [GEO my WP website](https://geomywp.com) form more information.
+
+Check out the [live demo](demo.geomywp.com).
+
 == Key features of GEO my WP ==
 
 * Post Types Locator
@@ -82,11 +86,11 @@ Yes, GEO my WP is already a powerfull plugin out of the box. However, together w
 * Go to Plugins screen and find the newly uploaded Plugin in the list.
 * Click Activate Plugin to activate it.
 
-for detailed installation and setup guied click <a href="http://geomywp.com" >here</a>
+for detailed installation and setup guied see the [documentation](docs.geomywp.com).
 
 == Frequently Asked Questions ==
 
-= For questions, bugs report and suggestions please visit [GEO my WP Furom](http://geomywp.com/support/forums/) =
+* For questions, bugs report and suggestions please visit [GEO my WP Furom](https://geomywp.com/support/forums/)
 
 == Screenshots ==
 
