@@ -235,6 +235,21 @@ class GMW_Users_Locations_Importer_V3 extends GMW_Locations_Importer {
 		//count rows only when init the importer
 		$count_rows = $this->total_locations == 0 ? 'SQL_CALC_FOUND_ROWS' : '';
 
+		/** 
+		 * check if street_name and street number columns exists. If so, add them to the query below.
+		 *
+		 * These columns added to GEO my WP in a later version, so in some sites they 
+		 *
+		 * might not exists. 
+		 *
+		 * We do this to prevent error with the importer.
+		 *
+		 */
+		$street_colums = '';
+		if ( $wpdb->get_results( "SHOW COLUMNS FROM {$gmw_users_table} LIKE 'street_name'" ) != false ) {
+			$street_colums = 'gmwLocations.street_number, gmwLocations.street_name,';
+		}
+
 		//get records from database
 		$data = $wpdb->get_results( "
 			SELECT {$count_rows} 
@@ -245,8 +260,7 @@ class GMW_Users_Locations_Importer_V3 extends GMW_Locations_Importer {
 			wpusers.display_name as title,
 			gmwLocations.lat as latitude,
 			gmwLocations.long as longitude,
-			gmwLocations.street_number,
-			gmwLocations.street_name,
+			{$street_colums}
 			gmwLocations.street,
 			gmwLocations.apt as permise,
 			gmwLocations.city,
@@ -264,7 +278,7 @@ class GMW_Users_Locations_Importer_V3 extends GMW_Locations_Importer {
 			ON gmwLocations.member_id = wpusers.ID
 			LIMIT {$this->records_completed}, {$this->records_per_batch}
 		");
-		
+			
 		//count rows only when init the importer
 		$this->total_locations = $this->total_locations == 0 ? $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : $this->total_locations;
 
