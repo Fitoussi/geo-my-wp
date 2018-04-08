@@ -45,13 +45,13 @@ jQuery( document ).ready( function( $ ) {
                         GMW_Import_Locations.imported_ph = GMW_Import_Locations.import_details.find( '.imported-ph' );
                         GMW_Import_Locations.existing_ph = GMW_Import_Locations.import_details.find( '.existing-ph' );
                         GMW_Import_Locations.failed_ph   = GMW_Import_Locations.import_details.find( '.failed-ph' );
+                    
+                        //get the child class name
+                        importAction = GMW_Import_Locations.form.find( '.gmw_locations_importer_action' ).val();
+
+                        // run the importer
+                        GMW_Import_Locations.import_data( importAction, 0, 0, 0, 0, 0, 0, 0 );
                     } );
-
-                    //get the child class name
-                    importAction = GMW_Import_Locations.form.find( '.gmw_locations_importer_action' ).val();
-
-                    // run the importer
-                    GMW_Import_Locations.import_data( importAction, 0, 0, 0, 0, 0, 0, 0 );
 
                 //prevent multiple importer running the same time
                 } else {
