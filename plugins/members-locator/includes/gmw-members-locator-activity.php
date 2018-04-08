@@ -24,7 +24,7 @@ function gmw_record_member_location_activity( $user_id, $user_location ) {
     // region and language
     $region   = '&region='.gmw_get_option( 'general_settings', 'country_code', 'us' );
     $language = '&hl='.gmw_get_option( 'general_settings', 'langauge_code', 'en' );
- 
+    
     // modify the address
     $activity_address = apply_filters( 'gmw_fl_activity_address_fields', $user_location['formatted_address'], $user_location, $user_id );
 
