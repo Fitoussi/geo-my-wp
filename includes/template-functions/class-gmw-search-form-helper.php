@@ -315,6 +315,7 @@ class GMW_Search_Form_Helper {
 		);
 
 		$args = wp_parse_args( $args, $defaults );
+		$args = apply_filters( 'gmw_search_forms_submit_button_args', $args );
 
 		$args['id'] = absint( $args['id'] );
 
