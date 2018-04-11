@@ -163,9 +163,9 @@ class GMW_Locations_Importer {
         
         $output['scanned']   = '<p class="locations-completed-message">'. sprintf( __( '%s out of %s locations were scanned.', 'geo-my-wp' ), '<span class="completed-ph">0</span>', '<span class="total-ph">0</span>' ) .'</p>';
         
-        $output['updated']   = '<p class="updated-locations-message" '.$updated.'>'. sprintf( __( '%s locations successfuly updated ( were already exsist ).', 'geo-my-wp' ), '<span class="updated-ph">0</span>' ) . '</p>';
+        $output['updated']   = '<p class="updated-locations-message" '.$updated.'>'. sprintf( __( '%s locations successfully updated ( were already exsist ).', 'geo-my-wp' ), '<span class="updated-ph">0</span>' ) . '</p>';
         
-        $output['imported']  =  '<p class="imported-locations-message">' . sprintf( __( '%s locations successfuly imported.', 'geo-my-wp' ), '<span class="imported-ph">0</span>' ) . '</p>';
+        $output['imported']  =  '<p class="imported-locations-message">' . sprintf( __( '%s locations successfully imported.', 'geo-my-wp' ), '<span class="imported-ph">0</span>' ) . '</p>';
         
         $output['existing']  =  '<p class="existing-locations-message" '.$exist .'>' . sprintf( __( '%s locations already exist ( were not updated ).', 'geo-my-wp' ), '<span class="existing-ph">0</span>' ) . '</p>';
         $output['failed'] 	 =  '<p class="failed-locations-message">' . sprintf( __( '%s failed to import.', 'geo-my-wp' ), '<span class="failed-ph">0</span>' ) . '</p>';
