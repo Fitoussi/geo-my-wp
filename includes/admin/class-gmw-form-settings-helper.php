@@ -160,7 +160,7 @@ class GMW_Form_Settings_Helper {
 		?>
 	    <div class="gmw-options-box gmw-address-fields-settings single">    	
 			<div class="single-option label">	
-					<label><?php _e( 'Label', 'GMW-PS' ); ?></label>	
+					<label><?php _e( 'Label', 'geo-my-wp' ); ?></label>	
 					<div class="option-content">
 					<input 
 						type="text" 
@@ -172,7 +172,7 @@ class GMW_Form_Settings_Helper {
 			</div>
 
 			<div class="single-option placeholder">	
-					<label><?php _e( 'Placeholder', 'GMW-PS' ); ?></label>	
+					<label><?php _e( 'Placeholder', 'geo-my-wp' ); ?></label>	
 					<div class="option-content">
 					<input 
 						type="text" 
@@ -191,7 +191,7 @@ class GMW_Form_Settings_Helper {
 						name="<?php echo $name_attr.'[locator]'; ?>" 
 						<?php echo ! empty( $value['locator'] ) ? 'checked="checked"' : ''; ?>
 					/>	 
-					<?php _e( 'Locator Button', 'GMW-PS' ); ?>
+					<?php _e( 'Locator Button', 'geo-my-wp' ); ?>
 				</label>	
 			</div>
 
@@ -203,7 +203,7 @@ class GMW_Form_Settings_Helper {
 						name="<?php echo $name_attr.'[address_autocomplete]'; ?>" 
 						<?php echo ! empty( $value['address_autocomplete'] ) ? 'checked="checked"' : ''; ?>
 					/>
-					<?php _e( 'Address Autocomplete', 'GMW-PS' ); ?>
+					<?php _e( 'Address Autocomplete', 'geo-my-wp' ); ?>
 				</label>
 			</div>
 
@@ -215,7 +215,7 @@ class GMW_Form_Settings_Helper {
 						name="<?php echo $name_attr.'[locator_submit]'; ?>" 
 						<?php echo ! empty( $value['locator_submit'] ) ? 'checked="checked"' : ''; ?>
 					/>
-					<?php _e( 'Locator Submit', 'GMW-PS' ); ?>
+					<?php _e( 'Locator Submit', 'geo-my-wp' ); ?>
 				</label>
 			</div>
 
@@ -227,7 +227,7 @@ class GMW_Form_Settings_Helper {
 						name="<?php echo $name_attr.'[mandatory]'; ?>" 
 						<?php echo ! empty( $value['mandatory'] ) ? 'checked="checked"' : ''; ?>
 					/>	
-					<?php _e( 'Mandatory', 'GMW-PS' ); ?> 
+					<?php _e( 'Mandatory', 'geo-my-wp' ); ?> 
 				</label>
 			</div>			
 		</div>
@@ -419,6 +419,24 @@ class GMW_Form_Settings_Helper {
         </p>
 
         <div class="excerpt-options gmw-options-box" <?php echo empty( $value['enabled'] ) ? 'style="display:none";' : ""; ?>>
+
+            <div class="single-option">
+                <label><?php _e( 'Usage', 'geo-my-wp' ); ?></label>
+                <div class="option-content">
+                    <select 
+                        name="<?php echo esc_attr( $name_attr.'[usage]' ); ?>"
+                        data-placehoder="<?php _e( 'Select an option', 'geo-my-wp' ); ?>" 
+                    >
+                        <option value="post_content" selected="selected"><?php _e( 'Post content', 'geo-my-wp' ); ?>
+                        <option value="post_excerpt" <?php if ( ! empty( $value['usage'] ) && $value['usage'] == 'post_excerpt' ) { echo 'selected="selected"'; }; ?>><?php _e( 'Post excerpt', 'geo-my-wp' ); ?></option>
+                    </select>
+                       
+                    <p class="description">
+                        <?php _e( 'Selet the source of data between the post content or post excerpt.', 'geo-my-wp' );?>
+                    </p>
+                </div>
+            </div>
+
             <div class="single-option">
                 <label><?php _e( 'Words count', 'geo-my-wp' ); ?></label>
                 <div class="option-content">
@@ -429,7 +447,7 @@ class GMW_Form_Settings_Helper {
                         placeholder="Enter numeric value"
                     />
                     <p class="description">
-                        <?php _e( 'Enter the number of words that you would like to display from the post content or leave blank to show the entire content.', 'geo-my-wp' );?>
+                        <?php _e( 'Enter the number of words that you would like to display, or leave blank to show the entire content.', 'geo-my-wp' );?>
                     </p>
                 </div>
             </div>
@@ -555,7 +573,7 @@ class GMW_Form_Settings_Helper {
                     <select 
                         name="<?php echo esc_attr( $name_attr.'[fields][]' ); ?>" 
                         multiple 
-                        data-placehoder="<?php _e( 'Select profile fields', 'GMW-PS' ); ?>" 
+                        data-placehoder="<?php _e( 'Select profile fields', 'geo-my-wp' ); ?>" 
                     >
                     <?php 
                        foreach( $fields['fields'] as $field_id => $field_name ) {
