@@ -82,8 +82,12 @@ class GMW_Cache_Helper {
 		if ( false === $transient_value || true === $refresh ) {
 			
 			self::delete_version_transients( $transient_value );
+			
 			//set_transient( $transient_name, $transient_value = time() );
-			$rnd = rand( 0, 9999999999 );
+			
+			// 2147483647 largest value can be used as random on some OS
+			$rnd = rand( 0, 2147483647 );
+
 			set_transient( $transient_name, $transient_value = $rnd );	
 		}
 
