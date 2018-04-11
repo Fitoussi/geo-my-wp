@@ -78,7 +78,7 @@ class GMW_Admin {
 	public function update_database_notice() {
 		?>
 	    <div class="error">
-	    	<p><?php echo sprintf( __( 'GEO my WP needs to import exsiting locations into its new database table. <a href="%s" class="button-primary"> Import locations</a>' ), admin_url( 'admin.php?page=gmw-import-export&tab=gmw_v_3' ) ) ?></p>
+	    	<p><?php echo sprintf( __( 'GEO my WP needs to import existing locations into its new database table. <a href="%s" class="button-primary"> Import locations</a>' ), admin_url( 'admin.php?page=gmw-import-export&tab=gmw_v_3' ) ) ?></p>
 	    </div>
 		<?php
 	}
