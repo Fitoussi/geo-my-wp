@@ -384,12 +384,12 @@ class GMW_System_Info {
         <form action="" method="post">
             <p>
                 <input type="hidden" name="gmw_action" value="download_system_info">
-                <input type="submit" value="<?php _e( 'Downlaod system info file', 'geo-my-wp' ); ?>" class="button button-primary gmw-system-info-download" name="gmw_system_info_download">
+                <input type="submit" value="<?php _e( 'Download system info file', 'geo-my-wp' ); ?>" class="button button-primary gmw-system-info-download" name="gmw_system_info_download">
                 <input type="button" value="<?php _e( 'Highlight Data', 'geo-my-wp' ); ?>" onclick="jQuery( 'textarea#gmw-system-info-content' ).focus().select();" class="button button-secondary" name="">
             </p>
             <p><?php echo $this->get_data(); ?></p>
             <p>
-                <input type="submit" value="<?php _e( 'Downlaod system info file', 'geo-my-wp' ); ?>" class="button button-primary gmw-system-info-download" name="gmw_system_info_download">
+                <input type="submit" value="<?php _e( 'Download system info file', 'geo-my-wp' ); ?>" class="button button-primary gmw-system-info-download" name="gmw_system_info_download">
                 <input type="button" value="<?php _e( 'Highlight Data', 'geo-my-wp' ); ?>" onclick="jQuery( 'textarea#gmw-system-info-content' ).focus().select();" class="button button-secondary" name="">
             </p>
         </form>
