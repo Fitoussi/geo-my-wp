@@ -146,8 +146,7 @@ class GMW_Installer {
 		if ( count( $table_exists ) == 0 ) {
 
 			// generate table sql
-			$sql = "
-				CREATE TABLE $forms_table (
+			$sql = "CREATE TABLE $forms_table (
 				ID INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 				slug VARCHAR( 50 ) NOT NULL,
 				addon VARCHAR( 50 ) NOT NULL,
@@ -176,8 +175,7 @@ class GMW_Installer {
 		if ( count( $table_exists ) == 0 ) {
 
 			// generate table sql
-			$sql = "
-				CREATE TABLE $locations_table (
+			$sql = "CREATE TABLE $locations_table (
 				ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 				object_type VARCHAR(20) NOT NULL,
 				object_id BIGINT(20) UNSIGNED NOT NULL default 0,
@@ -234,11 +232,10 @@ class GMW_Installer {
 		if ( count( $table_exists ) == 0 ) {
 
 			// generate table sql
-			$sql = "
-				CREATE TABLE $location_meta_table (
+			$sql = "CREATE TABLE $location_meta_table (
 				meta_id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 				location_id BIGINT(20) UNSIGNED NOT NULL default 0,
-				meta_key VARCHAR(255) NULL,
+				meta_key VARCHAR(191) NULL,
 				meta_value LONGTEXT NULL,
 				PRIMARY KEY meta_id (meta_id),
 				KEY location_id (location_id),
