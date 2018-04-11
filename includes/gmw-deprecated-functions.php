@@ -282,26 +282,30 @@ function gmw_get_user_info_from_db( $user_id = 0 ) {
 function gmw_get_post_info( $args = array(), $from_shortcode = false ) {
 	
 	if ( ! $from_shortcode ) {
-		trigger_error( 'gmw_get_post_info function is deprecated since GEO my WP version 3.0. Please use gmw_get_post_address instead.', E_USER_NOTICE );
+		trigger_error( 'gmw_get_post_info function is deprecated since GEO my WP version 3.0. Instead, use gmw_get_post_address to get the address fields, and gmw_get_post_location_meta to get location meta fields.', E_USER_NOTICE );
 	}
 
-	if ( function_exists( 'gmw_get_post_address' ) ) {
+	$output = '';
 
-		$attr = array(
-			'post_id'   => ! empty( $args['post_id'] ) ? $args['post_id'] : 0,
-        	'fields'    => ! empty( $args['info'] )    ? $args['info']    : 'formatted_address',
-        	'separator' => ! empty( $args['divider'] ) ? $args['divider'] : ', '
-        );
+	$post_id   = ! empty( $args['post_id'] ) ? $args['post_id'] : 0;
+   	$fields    = ! empty( $args['info'] )    ? $args['info']    : 'formatted_address';
+    $separator = ! empty( $args['divider'] ) ? $args['divider'] : ', ';
+  
+	// try to get address fields
+	$output = gmw_get_address_fields( 'post', $post_id, $fields, $separator );
 
-		return gmw_get_post_address( $attr );
+	// if no address fields found, maybe this is location meta
+	if ( empty( $output ) ) {
+
+		$output = gmw_get_location_meta_values( 'post', $post_id, $fields, $separator );
 	}
 
-	return;
+	return $output;
 }
 
 function gmw_get_post_info_shortcode( $args = array() ) {
 
-	trigger_error( '[gmw_post_info] shortcode is deprecated since GEO my WP version 3.0. Please use [gmw_post_address] instead.', E_USER_NOTICE );
+	trigger_error( '[gmw_post_info] shortcode is deprecated since GEO my WP version 3.0. Instead, use [gmw_post_address] to get the address fields, and [gmw_post_location_meta] to get location meta fields.', E_USER_NOTICE );
 
 	return gmw_get_post_info( $args, true );
 }
