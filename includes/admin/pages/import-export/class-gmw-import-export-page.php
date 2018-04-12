@@ -124,7 +124,7 @@ class GMW_Import_Export_Page {
 
         // if posts locator add-on active
         if ( gmw_is_addon_active( 'members_locator' ) ) {
-            $tabs['memebrs_locator'] = __( 'Members Locator', 'geo-my-wp' );
+            //$tabs['members_locator'] = __( 'Members Locator', 'geo-my-wp' );
         }
          
         return apply_filters( 'gmw_import_export_tabs', $tabs );
