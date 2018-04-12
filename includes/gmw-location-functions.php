@@ -364,9 +364,13 @@ function gmw_get_address_fields( $object_type = false, $object_id = 0, $fields =
 		'formatted_address'
 	);
 
+    if ( empty( $fields ) ) {
+        $fields = array( 'formatted_address' );
+    }
+
     // if string convert to array
     if ( is_string( $fields ) ) {
-    	$fields = array( $fields );
+    	$fields = explode( ',', $fields );
     }
 
     // for backward compatibility
@@ -419,6 +423,100 @@ function gmw_get_address_fields( $object_type = false, $object_id = 0, $fields =
     }
 
 	return $output;
+}
+
+/**
+ * Get location meta values based on object type and object ID.
+ *
+ * Can retrive a single or multiple values, and use a separator between.
+ *
+ * @since 3.0.2
+ *        
+ * @param  string  $object_type object_type object type ( post, user... )
+ * @param  boolean $object_id   object ID ( post ID, user ID.... )
+ * @param  array   $fields      array of meta_keys to retrive thier values
+ * @param  string  $separator   character to be used as separator between fields
+ * 
+ * @return string
+ * 
+ */
+function gmw_get_location_meta_values( $object_type = false, $object_id = 0, $meta_keys = array( '' ), $separator = ', ' ) {
+
+    if ( empty( $meta_keys ) ) {
+        return;
+    }
+
+    // we must pass an array for multiple fields
+    if ( is_string( $meta_keys ) ) {
+        $meta_keys = explode( ',', $meta_keys );
+    }
+
+    // get location data
+    $output = gmw_get_location_meta_by_object( $object_type, $object_id, $meta_keys );
+
+    // abort if no metas found
+    if ( empty( $output ) ) {
+        return;
+    }
+
+    if ( ! empty( $separator ) ) {
+        return implode( $output, $separator );
+    }
+
+    return $output;
+}
+
+/**
+ * gmw_location_fields shortcode
+ *
+ * Disply either location fields or location meta.
+ *
+ * @since 3.0.2
+ * 
+ * @param  [type] $atts [description]
+ * @return [type]       [description]
+ */
+function gmw_get_location_fields_shortcode( $atts ) {
+
+    //default shortcode attributes
+    extract(
+        shortcode_atts( array(
+            'object_type'   => 'post',
+            'object_id'     => 0,
+            'location_meta' => 0,
+            'fields'        => '',
+            'separator'     => ' ',
+        ), $atts )
+    );
+
+    if ( ! empty( $location_meta ) ) {
+
+        return gmw_get_location_meta_values( $object_type, $object_id, $fields, $separator );
+
+    } else {
+
+        return gmw_get_address_fields( $object_type, $object_id, $fields, $separator );
+    } 
+}
+add_shortcode( 'gmw_location_fields', 'gmw_get_location_fields_shortcode' );
+
+/**
+ * Wrapper function for gmw-get_address_fields. 
+ *
+ * That's becasue it is also possible to retrive the coordinates using this function.
+ *
+ * @since 3.0.2
+ *        
+ * @param  string  $object_type object_type object type ( post, user... )
+ * @param  boolean $object_id   object ID ( post ID, user ID.... )
+ * @param  array   $fields      array of address fields to retrive
+ * @param  string  $separator   character to be used as separator between fields
+ * 
+ * @return string
+ * 
+ */
+function gmw_get_location_fields( $object_type = false, $object_id = 0, $fields = array( 'formatted_address' ), $separator = ', ' ) {
+    return gmw_get_address_fields( $object_type, $object_id, $fields, $separator );
 }
 
 function gmw_get_location_address_fields( $object_type = 'post', $object_id = 0, $fields = [] ) {
@@ -591,7 +689,7 @@ function gmw_get_location_meta_list( $location = false, $fields = array(), $labe
                 return;
             }
 
-            // get he location meta
+            // get the location meta
 			$location_meta = gmw_get_location_meta( $location_id, $fields );
 		}	
 
@@ -641,7 +739,7 @@ function gmw_get_location_meta_list( $location = false, $fields = array(), $labe
 		// email field
 		if ( $field == 'email' ) {
 			
-			$value = esc_url( $value );
+			$value = sanitize_email( $value );
 
 			$output .= '<li class="field '.sanitize_key( esc_attr( $field ) ).'">';
 			$output .= '<span class="label">'.esc_html( $label ).': </span>';
