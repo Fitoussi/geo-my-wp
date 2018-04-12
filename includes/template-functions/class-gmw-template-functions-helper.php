@@ -22,12 +22,13 @@ class GMW_Template_Functions_Helper {
 	public static function get_excerpt( $args = array() ) {
 
 		$defaults = array(
-			'id'	   	   		=> 0, 
-			'content' 	    	=> '',
-			'words_count'   	=> '10',
-			'link' 				=> '',
-			'link_text'			=> __( 'read more...', 'geo-my-wp' ),
-			'enable_shortcodes' => 1,
+			'id'	   	   		 => 0, 
+			'content' 	    	 => '',
+			'words_count'   	 => '10',
+			'link' 				 => '',
+			'link_text'			 => __( 'read more...', 'geo-my-wp' ),
+			'enable_shortcodes'  => 1,
+			'the_content_filter' => 1
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -52,16 +53,27 @@ class GMW_Template_Functions_Helper {
 			$content = wp_trim_words( $content, $args['words_count'], $more_link );
 		}	
 		
-		// enable/disable shortcodes in excerpt
+		// disable shortcodes in excerpt
 		if ( ! $args['enable_shortcodes'] ) {
+			
 			$content = strip_shortcodes( $content );
+
+		// enable shortcodes
+		} else {
+
+			if ( $args['the_content_filter'] ) {
+
+				$content = apply_filters( 'the_content', $content, 50 );
+			
+			// use this filter instead of the_content to prevent conflicts with
+			// other plugins and themes.
+			} else {
+
+				$content = apply_filters( 'wpautop', $content, 50 );
+			}
+
+			$content = str_replace( ']]>', ']]>', $content );
 		}
-		
-		//$content = apply_filters( 'the_content', $content );
-		// use this filter instead of the_content to prevent conflicts with
-		// other plugins.
-		$content = apply_filters( 'wpautop', $content );	
-		$content = str_replace( ']]>', ']]&gt;', $content );
 
 		return $content;
 	}
