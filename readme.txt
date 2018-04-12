@@ -1,7 +1,7 @@
 === GEO my Wordpress ===
 Contributors: ninjew, Eyal Fitoussi
 Donate link: http://geomywp.com/
-Tags: Geolocation, Dirctory, Store Locator, Geolocator, Geotagging, Geocode, Mapping, Proximity search, Zipcode, Geolocate posts, Address search, Distance, Google maps, Directions, Locations, Geo, Members locator, Geolocate memebrs, Latitude, Longitude, Coordinates, Locations finder, Map creator.
+Tags: Geolocation, Directory, Store Locator, Geolocator, Geotagging, Geocode, Mapping, Proximity search, Zipcode, Geolocate posts, Address search, Distance, Google maps, Directions, Locations, Geo, Members locator, Geolocate members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
 Requires at least: 4.3
 Tested up to: 4.9.5
 Buddypress: 2.8
@@ -16,7 +16,7 @@ Advanced geolocation, mapping, and proximity search plugin. Geotag post types an
 
 Welcome to the ultimate geolocation, mapping, and proximity search solution for Wordpress.
 
-Using GEO my WP plugin, and the powerful features of Google Maps API, you can easily geotag any of your post types, BuddyPress members and other components. Create unlimited advenced, proximity serach forms to search and find any of the geotagged components of your site. 
+Using GEO my WP plugin, and the powerful features of Google Maps API, you can easily geotag any of your post types, BuddyPress members and other components. Create unlimited advanced, proximity search forms to search and find any of the geotagged components of your site. 
 
 With GEO my WP, creating a real estate, events, directory, classifieds, social networking and any other type of location based website is a simple task.
 
@@ -29,7 +29,7 @@ Check out the [live demo](demo.geomywp.com).
 * Post Types Locator
 * Buddypress Members Locator
 * Advanced location form
-* Advanced Proxmity Search Forms Builder
+* Advanced Proximity Search Forms Builder
 * Mashup Maps
 * Single Location widget and shortcode
 * Current Location Shortcode and Widget
@@ -44,7 +44,7 @@ Add geographic location to any of the registered post types of your site. Displa
 Let the Buddypress members of your site to easily add location to their profile. Let them search and find other members near them or near any address using an advanced proximity search form.
 
 = Advanced Location Form = 
-Add location to your posts, Buddypress members, and other component, using the advanced location form that GEO my WP provides. Drag the marker to the location on a map, pick from suggested results using Google address autocomplete while typing an address, enter coordinates, or manually enter the address fields. This is as flexiable and accurate as it get get.
+Add location to your posts, Buddypress members, and other component, using the advanced location form that GEO my WP provides. Drag the marker to the location on a map, pick from suggested results using Google address autocomplete while typing an address, enter coordinates, or manually enter the address fields. This is as flexible and accurate as it get get.
 
 = Advanced Forms Builder = 
 Create unlimited mashup maps and proximity search forms to search and find post types, BuddyPress members, and other components, based on an address, distance, categories, profile fields and more.
@@ -53,10 +53,10 @@ Create unlimited mashup maps and proximity search forms to search and find post 
 Create unlimited mashup maps to display the location of your post types, BuddyPress members and other components.
 
 = Powered By Google Maps API = 
-GEO my WP takes full advantage of the powerfull features of Google Maps API. Allows for simple and accurate geolocation using Google maps, address autocomplete, auto-locator and more.
+GEO my WP takes full advantage of the powerful features of Google Maps API. Allows for simple and accurate geolocation using Google maps, address autocomplete, auto-locator and more.
 
 = Single Location widget and shortcode =
-Display map and location details of a single component, such as post or Buddypress memebr, any where on a page using shortcode or widget. 
+Display map and location details of a single component, such as post or Buddypress member, any where on a page using shortcode or widget. 
 
 = Current Location Shortcode and Widget =
 Present the visitors of your site with a location form which allows them to add their current location.
@@ -66,7 +66,7 @@ Once added, the visitor's current location will be saved and can be used with th
 Why limit yourself to a specific theme? Being a shortcode based plugin, GEO my WP has no limits and you can use it with any WordPress theme.
 
 = Developer Friendly = 
-Yes, GEO my WP is already a powerfull plugin out of the box. However, together with its many action hooks and filters, the options are limitless.
+Yes, GEO my WP is already a powerful plugin out of the box. However, together with its many action hooks and filters, the options are limitless.
 
 == Installation ==
 
@@ -86,11 +86,11 @@ Yes, GEO my WP is already a powerfull plugin out of the box. However, together w
 * Go to Plugins screen and find the newly uploaded Plugin in the list.
 * Click Activate Plugin to activate it.
 
-for detailed installation and setup guied see the [documentation](docs.geomywp.com).
+for detailed installation and setup guide see the [documentation](docs.geomywp.com).
 
 == Frequently Asked Questions ==
 
-* For questions, bugs report and suggestions please visit [GEO my WP Furom](https://geomywp.com/support/forums/)
+* For questions, bugs report and suggestions please visit [GEO my WP Forum](https://geomywp.com/support/forums/)
 
 == Screenshots ==
 
@@ -120,7 +120,7 @@ for detailed installation and setup guied see the [documentation](docs.geomywp.c
 
 = 3.0.1 =
 
-* Version 3.0 is a major release. It is highly recomended that you read [this post](http://geomywp.com/geo-my-wp-3-0-beta-7/) before updating. You should also test this version on a staging enviroment before updating on your live site.
+* Version 3.0 is a major release. It is highly recommended that you read the posts [GEO my WP 3.0 Beta 7](https://geomywp.com/geo-my-wp-3-0-beta-7/) and [GEO my WP Upgrade Process](https://geomywp.com/geo-my-wp-3-0-upgrade-process/) before updating. You should also test this version on a staging environment before updating on your live site.
 
 * Fix: plugin will not check for new update of extensions that are not compatible with GEO my WP v3.0 when v3.0 is installed.
 
@@ -130,33 +130,33 @@ for detailed installation and setup guied see the [documentation](docs.geomywp.c
 
 = 3.0 =
 
-Version 3.0 is a major release. It is highly recomended that you read [this post](http://geomywp.com/geo-my-wp-3-0-beta-7/) before updating. You should also test this version on a staging enviroment before updating on your live site.
+Version 3.0 is a major release. It is highly recommended that you read [this post](http://geomywp.com/geo-my-wp-3-0-beta-7/) before updating. You should also test this version on a staging environment before updating on your live site.
 
 = 2.6.2 =
 
 * Fix: Remove php warning due to non-existing post type.
-* Fix: xprofile fields will show results when not all fields matches users. Acting more like an OR rather than AND query.
-* Security: Security patches added to xprofile fields functions.
-* Improvment: Improved xprofile fields form and queries functions.
+* Fix: Xprofile fields will show results when not all fields matches users. Acting more like an OR rather than AND query.
+* Security: Security patches added to Xprofile fields functions.
+* Improvement: Improved Xprofile fields form and queries functions.
 * Tweak: add chosen support for 'gmw-chosen' class when chosen exists ( to be used with premium features ).
-* Tweak: Added taxonomy lable name to the "All" option ( ex "All categories" ).
+* Tweak: Added taxonomy label name to the "All" option ( ex "All categories" ).
 * Tweak: Removed custom script from the "horizontal-gray" post types search form template file that adds the taxonomy name to the "All" option of the taxonomies dropdown. It is now the plugin's default.
-* New feature/class: GEO_my_WP_Cache_Helper class ( based a class taken from WP Job Manager plugin by Mike Jolly. Thank you! ). The class will help caching "expensive" databse queries such as terms, taxonomies, search results and more in transient to improve the plugin's performance.
+* New feature/class: GEO_my_WP_Cache_Helper class ( based a class taken from WP Job Manager plugin by Mike Jolly. Thank you! ). The class will help caching "expensive" database queries such as terms, taxonomies, search results and more in transient to improve the plugin's performance.
 * New feature/class: GEO_my_WP_Installer to do some actions during activation and updates of the plugins.
-* New filter: 'gmw_fl_xprofile_form_default_value' allow to set default values to form xprofile fields.
-* New filter: 'gmw_fl_xprofile_form_dropdown_option_all' allows to modify the "All" option of an xprofile fields dropdown.
-* New Filter: 'gmw_fl_xprofile_query_default_value' allows to set a default values for xprofile field directly in the search query.
+* New filter: 'gmw_fl_xprofile_form_default_value' allow to set default values to form Xprofile fields.
+* New filter: 'gmw_fl_xprofile_form_dropdown_option_all' allows to modify the "All" option of an Xprofile fields dropdown.
+* New Filter: 'gmw_fl_xprofile_query_default_value' allows to set a default values for Xprofile field directly in the search query.
 * New filter: 'gmw_pt_show_tax_label' allows to disable the taxonomy label.
 
 = 2.6.1.1 =
 
 * Compatible with WordPress 4.2.4
 * Fix: Members Locator search results ordered Alphabetically instead of by distance.
-* Fix: Unable to activate/diactivate Posts Locator add-on when site language is different than English.
+* Fix: Unable to activate/deactivate Posts Locator add-on when site language is different than English.
 * Fix: locator button disappear when clicked.
 * Fix: load text domain properly using plugin_loaded hook.
 * Fix: Remove line break in script to prevent code from "breaking".
-* Tweak: admin pages title modifyed ( GEO my WP was removed from titles ).
+* Tweak: admin pages title modified ( GEO my WP was removed from titles ).
 * Tweak: pass $tax and $values arguments to gmw_pt_get_form_taxonomies filter.
 * Tweak: Save url_px value in gmw_settings.
 * Tweak: temporary set 'show_users_without_location' filter to false by default which means that members without location wont be displayed in earch results. There are issues with the no location members query and once fixed it will be set back to true by default. It is possible to enable it using add_filter( 'show_users_without_location', '_return__true' );.
@@ -188,7 +188,7 @@ Version 3.0 is a major release. It is highly recomended that you read [this post
 
 = 2.4.4 =
 
-* Full version changelog can be found <a href="https://geomywp.com/blog/geo-wp-2-4-4/" target="_blank">here</a>
+* Full version change-log can be found <a href="https://geomywp.com/blog/geo-wp-2-4-4/" target="_blank">here</a>
 
 = 2.4.3 =
 
@@ -225,7 +225,7 @@ Version 3.0 is a major release. It is highly recomended that you read [this post
 - Improved structure of search forms and search results Stylesheet
 - Added missing space when displaying taxonomies in search results
 - Improve "Gray" search forms and results template files.
-- New, responsive search form and results templates: Purple for "Posts Locator" and "Yellow" for "Members locator”.
+- New, responsive search form and results templates: Purple for "Posts Locator" and "Yellow" for "Members locatorî.
 
 = 2.4.1 = 
 
@@ -239,7 +239,7 @@ Version 3.0 is a major release. It is highly recomended that you read [this post
 
 = 2.4 =
 
-* This is a major update. It is very important that you read the update details before updating. Please refer to <a href="https://geomywp.com/blog/geo-my-wp-2-4/" target="_blank">this post</a> to read about this udpate and about the updating progress.
+* This is a major update. It is very important that you read the update details before updating. Please refer to <a href="https://geomywp.com/blog/geo-my-wp-2-4/" target="_blank">this post</a> to read about this update and about the updating progress.
 
 
 = 2.3 =
@@ -249,7 +249,7 @@ Version 3.0 is a major release. It is highly recomended that you read [this post
 * [gmw_single_location] - can now be used in the loop to display location of each post in the loop
 * [gmw_single_location] - replaced show_info attribute with additional_info. you can now pass the additional fields that will be displayed. ex [gmw_single_location additional_info="address,phone,fax,email,website"] pass the value 0 if you want to hide the additional info.
 * fix: small issue with form showing results on the same page when should be in another page
-* fix: Issue with Member location widget displaying "no location" message even when set to do otehrwise
+* fix: Issue with Member location widget displaying "no location" message even when set to do otherwise
 * Localization text
 * German translation - Provided by Frank Winter - thank you!
 
@@ -270,8 +270,8 @@ Version 3.0 is a major release. It is highly recomended that you read [this post
 
 = 2.1 =
 
-* Fix : Removed textarea type xprofile field when choosing the profile fields in the search form
-* Fix : Removed special characters from xprofile fields name in the search forms which caused issues with urls
+* Fix : Removed textarea type Xprofile field when choosing the profile fields in the search form
+* Fix : Removed special characters from Xprofile fields name in the search forms which caused issues with urls
 * Fix : Add member count for buddypress results page
 * map-icon folder was removed
 * removed filter gmw_pt_query_meta_args which filters meta_args before wp_query and added gmw_pt_query_args filter instead which let modify the entire wp_query args
@@ -285,7 +285,7 @@ Version 3.0 is a major release. It is highly recomended that you read [this post
 This is a major update with many bug fixs, core modification and improvements, new features and more. Please make sure to backup your current version before updating to the new one. 
 After updating you will need to go over the settings page and re-save your settings as well as the search forms as many things have changed.
 
-**Please vist <a href="http://geomywp.com">www.geomywp.com</a> for more information before updating your plugin**
+**Please visit <a href="http://geomywp.com">www.geomywp.com</a> for more information before updating your plugin**
 Below are some of the major changes in this version:
 
 * Core modification - The code reduced drastically, It is much cleaner, performs better, many function are documented, the number of files and folders had been reduced and more organized.
@@ -307,7 +307,7 @@ Below are some of the major changes in this version:
 	* current location - [gmw_current_location]
 	* single location - [gmw_single_location]
 	* single member - [gmw_member_location]
-* ettings in the "search form shortcodes" and other shortcodes changed as well. Now you can set the "Width" and "Height" of the maps to either pixels or percentage. in the "search form shortcodes" settings  and in the "single location" and "single member" shortcodes. for example: [gmw_single_location width="100%" height="200px"] .
+* Settings in the "search form shortcodes" and other shortcodes changed as well. Now you can set the "Width" and "Height" of the maps to either pixels or percentage. in the "search form shortcodes" settings  and in the "single location" and "single member" shortcodes. for example: [gmw_single_location width="100%" height="200px"] .
 
 = 1.7 =
 
@@ -328,14 +328,14 @@ Below are some of the major changes in this version:
 * Map, markers and info windows - visually improved as well as performance.
 
 = 1.6.1 =
-* Fixed bug with Buddypress's "Location" tab styling
+* Fixed bug with Buddypress' "Location" tab styling
 
 = 1.6 =
 
 * Bug fix - Fixed locator icon being displayed even when checkbox is unchecked 
-* Bug fix - Fixed Buddypress's issue where profile fields would not display in the search form.
+* Bug fix - Fixed Buddypress' issue where profile fields would not display in the search form.
 * Bug fix - Loading icon hold and location would not update for user enter his location in the location tab
-* Bug fix - Buddypress's search result display deleted user.
+* Bug fix - Buddypress' search result display deleted user.
 
 = 1.5.2 =
 
@@ -348,7 +348,7 @@ Below are some of the major changes in this version:
 
 * Fix issue with "User location" shortcode/widget not getting the right location.
 * Fix "undefined function" error when "Friends Connection" component (buddypress settings) is unchecked.
-* Fix avater width/height in shortcode issue.
+* Fix avatar width/height in shortcode issue.
 
 
 = 1.5 =
@@ -382,22 +382,22 @@ Below are some of the major changes in this version:
 * Single location map - now display additional information below the map and info window on marker click.
 * Much cleaner code for better performance.
 * New results styling.
-* Thickbox effect on feaure image click in results.
+* Thickbox effect on feature image click in results.
 
 = 1.2.7 =
 
 * bug fix - pagination will not work when updating to wordpress 3.4
-* bug fix - posts that have two categories from the same taxonomy assined to it will not show in search results. 
+* bug fix - posts that have two categories from the same taxonomy assigned to it will not show in search results. 
 * bug fix - fix problem where search form will always show in the top of the page.
 * CSS fix
 * code improvement - better code for filtering taxonomies.
-* Added Feature - Now you can use Latitude / longitude insted of address when creating/updating a post
+* Added Feature - Now you can use Latitude / longitude instead of address when creating/updating a post
 * Added Feature - If no address entered in the input field the plugin will display all posts ordered by the title.
 
 = 1.2.6 =
 
 * Bug fix - Form id value is not being saved and doesn't show in widget when first creating a shortcode
-* Bug fix - widget redirect to main site when plugin installed in subsite.
+* Bug fix - widget redirect to main site when plugin installed in sub-site.
 
 
 = 1.2.5 =
@@ -412,7 +412,7 @@ Below are some of the major changes in this version:
 
 = 1.2 =
 * Multisite bug fix - now works for each blog on WP Multisite.
-* Two styling added to choose from "default" and "blue" for each shortcodeand. more to come.
+* Two styling added to choose from "default" and "blue" for each shortcode, and more to come.
 * Styling for Google maps' info window.
 * Meta boxes added - phone, fax, email address, website address.
 * shortcode options added - show/hide feature image and show/hide excerpt.
@@ -422,7 +422,7 @@ Below are some of the major changes in this version:
 
 = 1.1.1 =
 * Bug fix
-* Admin page improvments
+* Admin page improvements
 * Shortcode to display map of a single location on single page template
 
 = 1.1 =
