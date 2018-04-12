@@ -241,7 +241,7 @@ class GMW_Members_Locator_Form extends GMW_Form {
                 // order results by distance
                 add_filter( 'bp_user_query_uid_clauses', array( $this, 'order_results_by_distance' ), 30, 2 );
             
-            // otherwise, if showing also non located memebrs
+            // otherwise, if showing also non located members
             // we need to pass the users Id from xprofile fields
             // into the query directly.
             } elseif ( ! empty( $this->xp_users_id ) ) {
