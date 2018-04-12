@@ -138,7 +138,7 @@ class GMW_Maps_API {
 	 * 
 	 * array( 
 	 *   'map_id'		  => '',      // the ID of the map
-	 * 	 'map_type'		  => 'na',    // Map type ( posts_locator, memebrs_locator... )
+	 * 	 'map_type'		  => 'na',    // Map type ( posts_locator, members_locator... )
 	 *	 'prefix'		  => '',      // map prefix
 	 *	 'map_width'	  => '100%',  // map width in pixels or percentage
 	 *	 'map_height'	  => '350px', // map height in pixels or percentage
