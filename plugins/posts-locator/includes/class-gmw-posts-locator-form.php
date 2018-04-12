@@ -235,7 +235,13 @@ class GMW_Posts_Locator_Form extends GMW_Form {
             $clauses['groupby'] .= ' '.$clauses['having'];
 
             unset( $clauses['having'] );
-        } 
+        
+        } else {
+
+            if ( empty( $clauses['groupby'] ) ) {
+                $clauses['groupby'] = $wpdb->prefix.'posts.ID';
+            }
+        }
 
         return $clauses; 
     }
@@ -263,16 +269,17 @@ class GMW_Posts_Locator_Form extends GMW_Form {
         }
         
         // get query args for cache
-        if ( $this->form['page_load_action'] ) {
+        // This is now happening eariler in the GMW_Form class
+        /*if ( $this->form['page_load_action'] ) {
 
             $gmw_query_args = $this->form['page_load_results'];
 
         } elseif ( $this->form['submitted'] ) {  
 
             $gmw_query_args = $this->form['form_values'];
-        }
+        }*/
 
-        $gmw_query_args['show_non_located'] = $this->enable_objects_without_location;
+        $this->query_cache_args['show_non_located'] = $this->enable_objects_without_location;
 
         // tax query can be disable if a custom query is needed.
         if ( apply_filters( 'gmw_enable_taxonomy_search_query', true, $this->form, $this ) ) {
@@ -297,7 +304,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
             'meta_query'          => apply_filters( 'gmw_pt_meta_query', $meta_args, $this->form ),
             'ignore_sticky_posts' => 1,
             'orderby'             => 'distance',
-            'gmw_args'            => $gmw_query_args
+            'gmw_args'            => $this->query_cache_args
         ), $this->form, $this );
 
         $this->form = apply_filters( 'gmw_pt_form_before_posts_query', $this->form, $this );
