@@ -45,7 +45,7 @@ function gmw_shortcode( $attr ) {
 	$url_px = gmw_get_url_prefix();
 
 	// if this is results page we get the form ID from URL
-	if ( $element_value == 'results' || $element == 'search_results' ) {
+	if ( $element_value == 'results' ) {
 
 
 		// abort if form was not submitted
@@ -61,12 +61,12 @@ function gmw_shortcode( $attr ) {
 
 		// abort if search_results shortcode is being used but does not belong
 		// to the submitted search form.
-		if ( $element == 'search_results' && $element_value != $form_id ) {
+		/*if ( $element == 'search_results' && $element_value != $form_id ) {
 
 			$status = 'results page does not match.';
 
 			return;
-		}
+		} */
 
 		// set the element as results page
 		$element = 'search_results';
