@@ -198,7 +198,7 @@ function gmw_is_post_exists( $post_id = 0 ) {
 }
 
 /**
- * get the post locaiton from database
+ * get the post location from database
  *
  * @since 3.0
  * 
@@ -224,30 +224,133 @@ function gmw_get_post_location( $post_id = 0 ) {
 }
 
 /**
- * get the post location meta from database
+ * Get specific or all post address fields
  *
  * @since 3.0
  * 
- * @param  boolean $post_id [description]
- * @return [type]           [description]
+ * @param  array  $args [description]
+ * @return [type]       [description]
  */
-function gmw_get_post_location_meta( $post_id = false, $meta_keys = array() ) {
+function gmw_get_post_address( $args = array() ) {
+    
+    // to support older versions. should be removed in the future
+    if ( empty( $args['fields'] ) && ! empty( $args['info'] ) ) {
+
+        trigger_error( 'The "info" shortcode attribute of the shortcode [gmw_post_address] is deprecated since GEO my WP version 3.0. Please use the shortcode attribute "fields" instead.', E_USER_NOTICE );
+
+        $args['fields'] = $args['info'];
+    }
+
+    //default shortcode attributes
+    extract( shortcode_atts( array(
+        'post_id'   => 0,
+        'fields'    => 'formatted_address',
+        'separator' => ', '
+    ), $args ) );
 
     // if no specific post ID pass, look for displayed post object
+    if ( empty( $post_id ) ) {
+
+        global $post;
+
+        if ( empty( $post ) ) {
+            return;
+        }
+
+        $post_id = $post->ID;
+    }
+
+    $fields = explode( ',', $fields );
+
+    // get post address fields
+    return gmw_get_address_fields( 'post', $post_id, $fields, $separator );
+}
+add_shortcode( 'gmw_post_address', 'gmw_get_post_address' );
+
+    function gmw_post_address( $args = array() ) {
+        echo gmw_get_post_address( $args );
+    }
+
+/**
+ * Output post location meta using shortcode
+ * 
+ * @param  [type] $atts [description]
+ * @return [type]       [description]
+ *
+ * @since 3.0.2
+ * 
+ */
+/*function gmw_get_post_location_meta_values( $atts ) {
+
+    //default shortcode attributes
+    extract(
+        shortcode_atts( array(
+            'post_id'   => 0,
+            'meta_keys' => '',
+            'separator' => ' '
+        ), $atts )
+    );
+
+    // verify post ID
     if ( empty( $post_id ) ) {
         
         global $post;
 
-        if ( ! empty( $post ) ) {
-            $post_id = $post->ID;
-        } else{
+        if ( empty( $post ) ) {
             return;
         }
+
+        $post_id = $post->ID;
     }
 
-    // get post location from database
-    return gmw_get_location_meta_by_object( 'post', $post_id, $meta_keys );
+    return gmw_get_location_meta_values( 'post', $post_id, $meta_keys, $separator );
 }
+add_shortcode( 'gmw_post_location_meta', 'gmw_get_post_location_meta_values' ); */
+
+/**
+ * gmw_location_fields shortcode
+ *
+ * Disply either location or location fields of a specific post.
+ *
+ * @since 3.0.2
+ * 
+ * @param  [type] $atts [description]
+ * @return [type]       [description]
+ */
+function gmw_get_post_location_fields( $atts ) {
+
+    //default shortcode attributes
+    extract(
+        shortcode_atts( array(
+            'post_id'       => 0,
+            'location_meta' => 0,
+            'fields'        => '',
+            'separator'     => ' ',
+        ), $atts )
+    );
+
+    // verify post ID
+    if ( empty( $post_id ) ) {
+        
+        global $post;
+
+        if ( empty( $post ) ) {
+            return;
+        }
+
+        $post_id = $post->ID;
+    }
+
+    if ( ! empty( $location_meta ) ) {
+
+        return gmw_get_location_meta_values( 'post', $post_id, $fields, $separator );
+
+    } else {
+
+        return gmw_get_address_fields( 'post', $post_id, $fields, $separator );
+    } 
+}
+add_shortcode( 'gmw_post_location_fields', 'gmw_get_post_location_fields' );
 
 /**
  * get post location data from database
@@ -451,50 +554,6 @@ function gmw_post_location_status( $post_id = 0, $status = 1 ) {
         ) 
     );
 }
-
-/**
- * Get specific or all post address fields
- *
- * @since 3.0
- * 
- * @param  array  $args [description]
- * @return [type]       [description]
- */
-function gmw_get_post_address( $args = array() ) {
-    
-    // to support older versions. should be removed in the future
-    if ( empty( $args['fields'] ) && ! empty( $args['info'] ) ) {
-
-        trigger_error( 'The "info" shortcode attribute of the shortcode [gmw_post_address] is deprecated since GEO my WP version 3.0. Please use the shortcode attribute "fields" instead.', E_USER_NOTICE );
-
-        $args['fields'] = $args['info'];
-    }
-
-    //default shortcode attributes
-    $attr = shortcode_atts( array(
-        'post_id'   => 0,
-        'fields'    => 'formatted_address',
-        'separator' => ', '
-    ), $args );
-
-    // if no specific post ID pass, look for displayed post object
-    if ( $attr['post_id'] == 0 ) {
-
-        global $post;
-
-        $attr['post_id'] = $post->ID;
-    }
-
-    $fields = explode( ',', $attr['fields'] );
-
-    // get post address fields
-    return gmw_get_address_fields( 'post', $attr['post_id'], $fields, $attr['separator'] );
-}
-add_shortcode( 'gmw_post_address', 'gmw_get_post_address' );
-
-	function gmw_post_address( $args = array() ) {
-		echo gmw_get_post_address( $args );
-	}
 
 /**
  * Update post location.
