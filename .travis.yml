@@ -14,7 +14,6 @@ branches:
 
 cache:
   directories:
-    - vendor
     - $HOME/.composer/cache
 
 matrix:
@@ -24,7 +23,7 @@ matrix:
     - php: 7.0
       env: WP_VERSION=latest
     - php: 5.6
-      env: WP_VERSION=4.4
+      env: WP_VERSION=4.3
     - php: 5.6
       env: WP_VERSION=latest
     - php: 5.6
@@ -53,6 +52,7 @@ before_script:
       composer global require wp-coding-standards/wpcs
       phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs
     fi
+
 script:
   - |
     if [[ ! -z "$WP_VERSION" ]] ; then
