@@ -326,7 +326,7 @@ var GMW_Admin = {
                     jQuery( this ).after( '<span class="read-more"></span>' );
                 }
             });
-        })
+        });
 
         jQuery( '.gmw-form-feature-desc-content .description' ).each( function() {
             
@@ -339,10 +339,10 @@ var GMW_Admin = {
         });
 
         jQuery( document ).on( 'click', '.gmw-form-feature-desc-content .read-more', function() {
-            jQuery( this ).toggleClass( 'open' ).closest( 'div' ).find( 'em' ).toggleClass( 'long' )
+            jQuery( this ).toggleClass( 'open' ).closest( 'div' ).find( 'em' ).toggleClass( 'long' );
         });
     }
-}
+};
 jQuery( document ).ready( function( jQuery ) {
    GMW_Admin.init(jQuery); 
 });	
