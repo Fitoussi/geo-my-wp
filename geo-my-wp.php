@@ -3,7 +3,7 @@
 Plugin Name: GEO my WP
 Plugin URI: http://www.geomywp.com
 Description: GEO my WP is an adavanced geolocation, mapping, and proximity search plugin. Geotag post types and BuddyPress members, and create advanced, proximity search forms to search and find locations based on address, radius, categories and more.
-Version: 3.0.2-beta2
+Version: 3.0.2-beta3
 Author: Eyal Fitoussi
 Author URI: http://www.geomywp.com
 Requires at least: 4.5
@@ -242,7 +242,7 @@ class GEO_my_WP {
 		define( 'GMW_IMAGES', GMW_URL . '/assets/images' );
 		define( 'GMW_FILE', __FILE__ );
 		define( 'GMW_BASENAME', plugin_basename( GMW_FILE ) );	
-		define( 'GMW_DOING_AJAX', wp_doing_ajax() );
+		//define( 'GMW_DOING_AJAX', defined( 'DOING_AJAX' ) );
 	}
 	
 	/**
@@ -337,12 +337,8 @@ class GEO_my_WP {
 
 		// addons statuses: active, inactive or disabled.
 		$this->addons_status = $addons_status;
-		
-		$this->url_prefix     = esc_attr( apply_filters( 'gmw_form_url_prefix', $this->url_prefix ) );
-		$this->ajax_url       = admin_url( 'admin-ajax.php', is_ssl() ? 'admin' : 'http' );
-		$this->internal_cache = apply_filters( 'gmw_internal_cache_enabled', $this->internal_cache );
-		$this->internal_cache_expiration = apply_filters( 'gmw_internal_cache_expiration', $this->internal_cache_expiration );
-		$this->is_mobile 	  = ( function_exists( 'wp_is_mobile' ) && wp_is_mobile() ) ? true : false;
+		$this->ajax_url      = admin_url( 'admin-ajax.php', is_ssl() ? 'admin' : 'http' );
+		$this->is_mobile 	 = ( function_exists( 'wp_is_mobile' ) && wp_is_mobile() ) ? true : false;
 	}
 
 	/**
@@ -352,13 +348,9 @@ class GEO_my_WP {
 	 * 
 	 */
 	public function includes() {
-
-		// enable GMW cache helper
-		if ( apply_filters( 'gmw_cache_helper_enabled', true ) ) {
-			include( 'includes/class-gmw-cache-helper.php' );
-		}
-
+		
 		// include files
+		include( 'includes/class-gmw-cache-helper.php' );
 		include( 'includes/class-gmw-helper.php' );
 		include( 'includes/class-gmw-forms-helper.php' );
 		include( 'includes/gmw-functions.php' );
@@ -401,6 +393,7 @@ class GEO_my_WP {
 		add_action( 'plugins_loaded', array( $this, 'loaded' ) );
 		add_action( 'widgets_init', array( $this, 'widgets_init' ), 5 );
 		add_action( 'admin_init', array( $this, 'update' ) );
+		add_action( 'init', array( $this, 'wp_init' ) );
 	}
 	
 	/**
@@ -431,6 +424,19 @@ class GEO_my_WP {
 		include( GMW_PLUGINS_PATH . '/members-locator/loader.php' );
 		include( GMW_PLUGINS_PATH . '/current-location/loader.php' );
 		include( GMW_PLUGINS_PATH . '/sweetdate-geolocation/loader.php' );
+	}
+
+	/**
+	 * When Wordpress loaded.
+	 * 
+	 * @return [type] [description]
+	 */
+	public function wp_init() {
+
+		// run some filters
+		$this->url_prefix     = esc_attr( apply_filters( 'gmw_form_url_prefix', $this->url_prefix ) );
+		$this->internal_cache = apply_filters( 'gmw_internal_cache_enabled', $this->internal_cache );
+		$this->internal_cache_expiration = apply_filters( 'gmw_internal_cache_expiration', $this->internal_cache_expiration );
 	}
 }
 
