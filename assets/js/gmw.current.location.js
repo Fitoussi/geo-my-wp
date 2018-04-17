@@ -150,7 +150,7 @@ jQuery( document ).ready( function( $ ) {
 	                newAddress = jQuery( '#gmw-cl-address-input-' + GMW_Current_Location.object_id ).val();
 
 	                // change the address in the current location element
-	                jQuery( '.gmw-cl-address .address-holder' ).html( newAddress )
+	                jQuery( '.gmw-cl-address .address-holder' ).html( newAddress );
 	            }
 
 	        // if failed
@@ -247,7 +247,7 @@ jQuery( document ).ready( function( $ ) {
 	            jQuery( '.gmw-cl-form-submit' ).removeClass( 'gmw-icon-spin-light animate-spin').addClass( 'gmw-icon-search' );
 	        }, 3000 );                       
 	    },
-	}
+	};
 
    GMW_Current_Location.init(); 
 });
