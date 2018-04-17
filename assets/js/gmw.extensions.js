@@ -377,7 +377,7 @@ var GMW_Extensions = {
         actionMessageWrap = licenseWrap.find( '.actions-message' );
                 
         // license data
-        license_data = actionButton.data()
+        license_data = actionButton.data();
         
         // get key value
         license_data.license_key = licenseWrap.find( '.gmw-license-key' ).val();
@@ -414,7 +414,7 @@ var GMW_Extensions = {
             // activation/deactivation success
             success : function( response ){             
                 
-                console.log( response )
+                console.log( response );
 
                 // new license element
                 newLicenseWrap = response.form;
@@ -445,7 +445,7 @@ var GMW_Extensions = {
                 setTimeout( function() {
 
                     // hide current license form
-                    licenseWrap.hide()
+                    licenseWrap.hide();
 
                     // get new license form
                     newLicenseWrap = jQuery( newLicenseWrap ).hide();
@@ -495,7 +495,7 @@ var GMW_Extensions = {
             GMW_Extensions.set_processing( false );
         });
     },
-}  
+};
 
 jQuery( document ).ready( function() {
    GMW_Extensions.init(); 
