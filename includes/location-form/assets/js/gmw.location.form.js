@@ -26,22 +26,22 @@ jQuery( document ).ready( function( $ ) {
 		wrapper_element : '.gmw-location-form-wrapper',
 
 		// location fields
-		location_fields : gmw_lf_args.fields.location['fields'] || false,
+		location_fields : gmw_lf_args.fields.location.fields || false,
 
 		// address fields
-		address_fields : gmw_lf_args.fields.address['fields'] || false,
+		address_fields : gmw_lf_args.fields.address.fields || false,
 
 		// coordinates fields
-		coords_fields : gmw_lf_args.fields.coordinates['fields'] || false,
+		coords_fields : gmw_lf_args.fields.coordinates.fields || false,
 		
 		// action fields
-		action_fields : gmw_lf_args.fields.actions['fields'] || false,
+		action_fields : gmw_lf_args.fields.actions.fields || false,
 
 		// map status
 		map_enabled : $( '#gmw-lf-map' ).length ? true : false,
 
 		// fields value changed
-		fields_changed : 1,
+		fields_changed_status : 1,
 
 		// additional map options
 		map_options : {},
@@ -297,7 +297,7 @@ jQuery( document ).ready( function( $ ) {
 
 			    	if ( ! $( this ).hasClass( 'gmw-lf-address-autocomplete' ) || ( $( this ).hasClass( 'gmw-lf-address-autocomplete' ) && $( '.pac-container' ).css( 'display' ) == 'none' ) ) {
 			    	
-			    		this_form.fields_changed = 1;
+			    		this_form.fields_changed_status = 1;
 
 			    		this_form.confirm_location();
 			    	}
@@ -365,15 +365,15 @@ jQuery( document ).ready( function( $ ) {
 			
 				if ( $( this ).hasClass( 'address-field' ) ) {
 
-					this_form.fields_changed = 1;
+					this_form.fields_changed_status = 1;
 
 				} else if ( $( this).hasClass( 'group_address' ) ) {
 
-					this_form.fields_changed = 2;
+					this_form.fields_changed_status = 2;
 
 				} else if ( $( this ).hasClass( 'group_coordinates' ) ) {
 
-					this_form.fields_changed = 3;
+					this_form.fields_changed_status = 3;
 				}
 
 				// silently enter the address that the user is typing also in the hidden address fields
@@ -444,7 +444,7 @@ jQuery( document ).ready( function( $ ) {
 				zoom 	  : parseInt( this_form.vars.map_zoom_level ),
 				center 	  : latLng,
 				mapTypeId : google.maps.MapTypeId[ this_form.vars.map_type ]
-			}
+			};
 
 			// modify map options
 			map_options = GMW.apply_filters( 'gmw_lf_render_map_options', map_options, this_form );
@@ -456,7 +456,7 @@ jQuery( document ).ready( function( $ ) {
 			    position  : latLng,
 			    map 	  : this_form.map,
 				draggable : true
-			}
+			};
 
 			marker_options = GMW.apply_filters( 'gmw_lf_render_map_marker_options', marker_options, this_form );
 
@@ -573,7 +573,7 @@ jQuery( document ).ready( function( $ ) {
 		   	 		alert( 'Geolocation is not supported by this browser.' );
 
 		   	 		$( '#gmw-lf-locator-button' ).removeClass( 'animate-spin' );
-		   		};	
+		   		}
 		  	});
 		},
 	    
@@ -661,11 +661,11 @@ jQuery( document ).ready( function( $ ) {
 		        		lat = results[0].geometry.location.lat();
 		        		lng = results[0].geometry.location.lng();   	        		
 		    			
-		    			if ( this_form.fields_changed == 1  ) {
+		    			if ( this_form.fields_changed_status == 1  ) {
 
 		    				$( '.group_coordinates, .group_address' ).val( '' );
 		    			
-		    			} else if ( this_form.fields_changed == 2 ) {
+		    			} else if ( this_form.fields_changed_status == 2 ) {
 		    			
 		    				$( '.group_coordinates, .gmw-lf-submission-field.group_address, #' + this_form.location_fields.address.id ).val( '' );		
 		    			}
@@ -802,7 +802,7 @@ jQuery( document ).ready( function( $ ) {
 	    		latitude 		  : null,
 	    		longitude 		  : null,
 	    		formatted_address : null
-	    	}
+	    	};
 
 	    	// modify the address component before populating the location fields.
 	    	// can also performe custom tasks perform 
@@ -810,7 +810,7 @@ jQuery( document ).ready( function( $ ) {
 
 	    	// ac ( address_component ): complete location data object
 	    	// ac[x]: each location field in the address component
-			for ( x in ac ) {
+			for ( var x in ac ) {
 
 				if ( ac[x].types == 'street_number' && ac[x].long_name != undefined ) {
 					geocoded_data.street_number = ac[x].long_name;
@@ -904,10 +904,10 @@ jQuery( document ).ready( function( $ ) {
 			  	}
 
 		  		// if address changed or coordinates missing
-				if ( this_form.fields_changed != 3 || $.trim( latVal ).length == 0 || $.trim( lngVal ).length == 0 ) {
+				if ( this_form.fields_changed_status != 3 || $.trim( latVal ).length == 0 || $.trim( lngVal ).length == 0 ) {
 
 					// check for full address first
-					if ( this_form.fields_changed == 1 && $.trim( $( '#' + this_form.location_fields.address.id ).val() ).length > 0 ) {
+					if ( this_form.fields_changed_status == 1 && $.trim( $( '#' + this_form.location_fields.address.id ).val() ).length > 0 ) {
 		
 						address = $( '#' + this_form.location_fields.address.id ).val();
 
@@ -960,7 +960,8 @@ jQuery( document ).ready( function( $ ) {
 			//event.preventDefault();
 			
 			var form_submission = form_submission;
-
+			var setTime;
+			
 			// if location does not exist 
 			if ( ! this_form.location_exists ) {
 
@@ -984,7 +985,7 @@ jQuery( document ).ready( function( $ ) {
 			//if location exists but not confirmed
 			} else if ( ! this_form.is_location_confirmed ) {
 
-				var setTime = 3000;
+				setTime = 3000;
 
 				this_form.auto_confirming = true;
 
@@ -995,7 +996,7 @@ jQuery( document ).ready( function( $ ) {
 			// otherwise, if confirmed
 			} else {
 
-				var setTime = 0;
+				setTime = 0;
 			}
 
 			setTimeout( function() {
