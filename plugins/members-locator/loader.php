@@ -1,151 +1,160 @@
 <?php
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+	exit;
 }
 
 if ( ! class_exists( 'GMW_Addon' ) ) {
-    return;
+	return;
 }
 
 /**
- * Members Locator add-on class
+ * Members Locator add-on class.
  */
-class GMW_Members_locator_Addon extends GMW_Addon {
-    
-    // slug
-    public $slug = "members_locator";
+class GMW_Members_Locator_Addon extends GMW_Addon {
 
-    // title
-    public $name = "Members Locator";
-    
-    // prefix
-    public $prefix = "fl";
+	/**
+	 * Slug.
+	 *
+	 * @var string
+	 */
+	public $slug = 'members_locator';
 
-    // version
-    public $version = GMW_VERSION;
+	/**
+	 * Title.
+	 *
+	 * @var string
+	 */
+	public $name = 'Members Locator';
 
-     // description
-    public $description = "Geotag Buddypress members and create proximity form to search and find BuddyPress members location based.";
+	/**
+	 * Prefix.
+	 *
+	 * @var string
+	 */
+	public $prefix = 'fl';
 
-    // object
-    public $object = 'bp_member';
+	// version.
+	public $version = GMW_VERSION;
 
-    // database object type
-    public $object_type = 'user';
-   
-    // db table prefix. We use the base prefix table to save users across all subsites 
-    // in multisite installation
-    public $global_db = true;
+	// description.
+	public $description = 'Geotag Buddypress members and create proximity form to search and find BuddyPress members location based.';
 
-    // templates folder name
-    public $templates_folder = 'members-locator';
+	// object.
+	public $object = 'bp_member';
 
-    // path
-    public $full_path = __FILE__;
-    
-    // is core add-on
-    public $is_core = true;
+	// database object type.
+	public $object_type = 'user';
 
-    /**
-     * Form button
-     * 
-     * @return [type] [description]
-     */
-    public function form_buttons() {
-        return array( 
-            'slug'      => 'members_locator',
-            'name'      => 'BP Members Locator',
-            'prefix'    => 'fl',
-            'priority'  => 10 
-        );
-    }
+	// db table prefix. We use the base prefix table to save users across all subsites
+	// in multisite installation.
+	public $global_db = true;
 
-    private static $instance = null;
+	// templates folder name.
+	public $templates_folder = 'members-locator';
 
-    /**
-     * Create new instance 
-     * 
-     * @return [type] [description]
-     */
-    public static function get_instance() {
+	// path.
+	public $full_path = __FILE__;
 
-        if ( self::$instance == null ) {
-            self::$instance = new self;
-        }
+	// is core add-on.
+	public $is_core = true;
 
-        return self::$instance;
-    }
-    
-    public function __construct() {
-        
-        // When multisite enabled, and buddypress is multisite activated,
-        // the blog_id we will be using will be buddypress's root blog.
-        // Otherwise, members will be saved per blog 
-        if ( is_multisite() && function_exists( 'bp_is_network_activated' ) && bp_is_network_activated() ) {
-            $this->locations_blog_id = BP_ROOT_BLOG;
-        }
+	/**
+	 * Form button.
+	 *
+	 * @return [type] [description]
+	 */
+	public function form_buttons() {
+		return array(
+			'slug'     => 'members_locator',
+			'name'     => 'BP Members Locator',
+			'prefix'   => 'fl',
+			'priority' => 10,
+		);
+	}
 
-        parent::__construct();
-    }
-    
-    /**
-     * [required description]
-     * @return [type] [description]
-     */
-    public function required() {
-        return array(
-            'plugins' => array(
-                array(
-                    'function' => 'BuddyPress',
-                    'notice'   => __( 'Members Locator add-on requires BuddyPress plugin version 2.8 or higher.', 'geo-my-wp' )
-                )
-            )
-        );
-    }
+	private static $instance = null;
 
-    /**
-     * Initiate the plugin
-     * @return void
-     */
-    public function pre_init() {
-       
-        parent::pre_init();
+	/**
+	 * Create new instance.
+	 *
+	 * @return $instance
+	 */
+	public static function get_instance() {
 
-        if ( IS_ADMIN ) {
-            include( 'includes/admin/class-gmw-members-locator-form-editor.php' );
-        }
+		if ( null === self::$instance ) {
+			self::$instance = new self;
+		}
 
-        include( 'includes/gmw-members-locator-functions.php' );
-        include( 'includes/class-gmw-members-locator-location-tab.php' );
-        include( 'includes/gmw-members-locator-actions.php' );
-        include( 'includes/gmw-members-locator-activity.php' );
-        include( 'includes/gmw-members-locator-template-functions.php' );
-        include( 'includes/class-gmw-members-locator-form.php' );
+		return self::$instance;
+	}
 
-        // load single member location
-        if ( gmw_is_addon_active( 'single_location' ) ) {
+	public function __construct() {
 
-            if ( IS_ADMIN ) { 
+		// When multisite enabled, and buddypress is multisite activated,
+		// the blog_id we will be using will be buddypress's root blog.
+		// Otherwise, members will be saved per blog.
+		if ( is_multisite() && function_exists( 'bp_is_network_activated' ) && bp_is_network_activated() ) {
+			$this->locations_blog_id = BP_ROOT_BLOG;
+		}
 
-                /**
-                 * Add post object to objects dropdown in single location widget
-                 * 
-                 * @param  [type] $args [description]
-                 * @return [type]       [description]
-                 */
-                function gmw_fl_single_location_widget_object( $args ) {
-                
-                    $args['bp_member'] = __( 'Buddypress Member', 'geo-my-wp' );
-                
-                    return $args;
-                }
-                add_filter( 'gmw_single_location_widget_objects', 'gmw_fl_single_location_widget_object', 10 );
-                
-            } else {
-                include( 'includes/class-gmw-single-member-location.php' );
-            }
-        }
-    }
+		parent::__construct();
+	}
+
+	/**
+	 * Required plugins.
+	 */
+	public function required() {
+		return array(
+			'plugins' => array(
+				array(
+					'function' => 'BuddyPress',
+					'notice'   => __( 'Members Locator add-on requires BuddyPress plugin version 2.8 or higher.', 'geo-my-wp' ),
+				),
+			),
+		);
+	}
+
+	/**
+	 * Initiate the plugin.
+	 */
+	public function pre_init() {
+
+		parent::pre_init();
+
+		if ( IS_ADMIN ) {
+			include( 'includes/admin/class-gmw-members-locator-form-editor.php' );
+		}
+
+		include( 'includes/gmw-members-locator-functions.php' );
+		include( 'includes/class-gmw-members-locator-location-tab.php' );
+		include( 'includes/gmw-members-locator-actions.php' );
+		include( 'includes/gmw-members-locator-activity.php' );
+		include( 'includes/gmw-members-locator-template-functions.php' );
+		include( 'includes/class-gmw-members-locator-form.php' );
+
+		// load single member location.
+		if ( gmw_is_addon_active( 'single_location' ) ) {
+
+			if ( IS_ADMIN ) {
+
+				/**
+				 * Add post object to objects dropdown in single location widget.
+				 *
+				 * @param  [type] $args [description]
+				 */
+				function gmw_fl_single_location_widget_object( $args ) {
+
+					$args['bp_member'] = __( 'Buddypress Member', 'geo-my-wp' );
+
+					return $args;
+				}
+				add_filter( 'gmw_single_location_widget_objects', 'gmw_fl_single_location_widget_object', 10 );
+
+			} else {
+				include( 'includes/class-gmw-single-member-location.php' );
+			}
+		}
+	}
 }
-GMW_Addon::register( 'GMW_Members_locator_Addon' );
+GMW_Addon::register( 'GMW_Members_Locator_Addon' );
