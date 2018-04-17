@@ -16,8 +16,8 @@ function gmwCalculateRoute( elementId ) {
 
 	// look for map with the same object ID as the directions form
 	// if there is a map we can show the directions on it.
-	if ( GMW_Maps[elementId]['data'] != undefined ) {
-		directionsDisplay.setMap( GMW_Maps[elementId]['data']['map'] );
+	if ( GMW_Maps[elementId].data != undefined ) {
+		directionsDisplay.setMap( GMW_Maps[elementId].data.map );
 	}
 	
 	// set direction panel
@@ -48,34 +48,36 @@ function gmwCalculateRoute( elementId ) {
 		
 		} else {
 
+			var errorMessage;
+
 	      	// alert an error errorMessage when the route could nog be calculated.
 	      	if ( status == 'ZERO_RESULTS' ) {
 
-	    	  	var errorMessage = 'No route could be found between the origin and destination.';
+	    	  	errorMessage = 'No route could be found between the origin and destination.';
 	      	
 	      	} else if (status == 'UNKNOWN_ERROR') {
 	    	  
-	    	  	var errorMessage = 'A directions request could not be processed due to a server error. The request may succeed if you try again.';
+	    	  	errorMessage = 'A directions request could not be processed due to a server error. The request may succeed if you try again.';
 	      
 	      	} else if (status == 'REQUEST_DENIED') {
 	    	  	
-	    	  	var errorMessage = 'This webpage is not allowed to use the directions service.';
+	    	  	errorMessage = 'This webpage is not allowed to use the directions service.';
 	      	
 	      	} else if (status == 'OVER_QUERY_LIMIT') {
 	    		
-	    		var errorMessage = 'The webpage has gone over the requests limit in too short a period of time.';
+	    		errorMessage = 'The webpage has gone over the requests limit in too short a period of time.';
 	      
 	      	} else if (status == 'NOT_FOUND') {
 	    	  
-	    	  	var errorMessage = 'At least one of the origin, destination, or waypoints could not be geocoded.';
+	    	  	errorMessage = 'At least one of the origin, destination, or waypoints could not be geocoded.';
 	      
 	      	} else if (status == 'INVALID_REQUEST') {
 	    	  
-	    	  	var errorMessage = 'The DirectionsRequest provided was invalid.';         
+	    	  	errorMessage = 'The DirectionsRequest provided was invalid.';         
 	      	
 	      	} else {
 	    	  
-	    	  var errorMessage = "There was an unknown error in your request. Requeststatus: nn" + status;
+	    	  	errorMessage = "There was an unknown error in your request. Requeststatus: nn" + status;
 	      	}
 
 	      	jQuery('#gmw-directions-panel-wrapper-' + elementId).html( '<div id="error-message">' + errorMessage + '</div>' );
