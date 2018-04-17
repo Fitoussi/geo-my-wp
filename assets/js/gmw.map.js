@@ -93,14 +93,14 @@ var GMW_Map = function( options, map_options, form ) {
 	 * 
 	 * @type {google}
 	 */
-	this.icon_scaled_size = options['map_icon_width'] && options['map_icon_height'] ? new google.maps.Size( parseInt( options['map_icon_width'] ), parseInt( options['map_icon_height'] ) ) : null;
+	this.icon_scaled_size = options.map_icon_width && options.map_icon_height ? new google.maps.Size( parseInt( options.map_icon_width ), parseInt( options.map_icon_height ) ) : null;
 
 	/**
 	 * Hide map if no locations found
 	 * 
 	 * @type {Boolean}
 	 */
-	this.hide_no_locations = options['hide_no_locations'] || false;
+	this.hide_no_locations = options.hide_no_locations || false;
 
 	/**
 	 * Location info-window
@@ -134,35 +134,35 @@ var GMW_Map = function( options, map_options, form ) {
 	 * Markers clusterer PATH
 	 * @type {String}
 	 */
-	this.clusters_path = options['clusters_path'] || this.default_cluster_path;
+	this.clusters_path = options.clusters_path || this.default_cluster_path;
 
 	/**
 	 * Marker grouping type
 	 * 
 	 * @type {String}
 	 */
-	this.grouping_type = options['group_markers'] || 'standard';
+	this.grouping_type = options.group_markers || 'standard';
 
 	/**
 	 * Info window type
 	 * 
 	 * @type {String}
 	 */
-	this.info_window_type = options['info_window_type'] || 'standard';
+	this.info_window_type = options.info_window_type || 'standard';
 
 	/**
 	 * IW Ajax Content
 	 * 
 	 * @type {[type]}
 	 */
-	this.info_window_ajax = options['info_window_ajax'] || false;
+	this.info_window_ajax = options.info_window_ajax || false;
 
 	/**
 	 * IW Ajax Content
 	 * 
 	 * @type {[type]}
 	 */
-	this.info_window_template = options['info_window_template'] || 'default';
+	this.info_window_template = options.info_window_template || 'default';
 			
 	/**
 	 * User location map marker
@@ -208,7 +208,7 @@ var GMW_Map = function( options, map_options, form ) {
 	 * 
 	 * @type {Boolean}
 	 */
-	this.zoom_position = options['zoom_position'] || false;
+	this.zoom_position = options.zoom_position || false;
 
 	this.init();
 	/**
@@ -241,13 +241,13 @@ var GMW_Map = function( options, map_options, form ) {
 			self.update( self.locations, self.user_location );
 		}
 	};*/
-}
+};
 
 GMW_Map.prototype.default_cluster_path = 'https://raw.githubusercontent.com/googlemaps/js-marker-clusterer/gh-pages/images/m';
 	
 GMW_Map.prototype.init = function() {
 	GMW.do_action( 'gmw_map_init', this );
-}
+};
 
 /**
  * Render the map
@@ -272,7 +272,7 @@ GMW_Map.prototype.render = function( locations, user_location ) {
 	self.bounds = new google.maps.LatLngBounds();
 
 	// set auto zoom level
-	if ( self.options['zoom'] == 'auto' ) {
+	if ( self.options.zoom == 'auto' ) {
 
 		self.auto_zoom_level = true;
 		self.options.zoom 	 = 13;
@@ -281,7 +281,7 @@ GMW_Map.prototype.render = function( locations, user_location ) {
 	} else {
 
 		self.auto_zoom_level = false;
-		self.options['zoom'] = parseInt( self.options['zoom'] );
+		self.options.zoom = parseInt( self.options.zoom );
 	}
 
 	//self.options.styles = ;
@@ -289,27 +289,31 @@ GMW_Map.prototype.render = function( locations, user_location ) {
 	// map center
 	//if ( self.user_location != false && self.user_location['lat'] != false && self.user_location['lng'] != false
 	//self.options['center'] = new google.maps.LatLng( user_position['lat'], user_position['lng'] );
-	self.options['center'] = new google.maps.LatLng( '40.758895', '-73.985131' );
+	self.options.center = new google.maps.LatLng( '40.758895', '-73.985131' );
 
 	// map type
-	self.options['mapTypeId'] 			  = google.maps.MapTypeId[self.options['mapTypeId']];
-	self.options['mapTypeControlOptions'] = {
+	self.options.mapTypeId 			   = google.maps.MapTypeId[self.options.mapTypeId];
+	self.options.mapTypeControlOptions = {
 	    style    : google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
 	    position : google.maps.ControlPosition.TOP_CENTER
-	}
-    self.options['zoomControlOptions'] = {
+	};
+
+    self.options.zoomControlOptions = {
       	position : google.maps.ControlPosition.RIGHT_CENTER
-    }
-	self.options['streetViewControlOptions'] = {
+    };
+
+	self.options.streetViewControlOptions = {
 	    position : google.maps.ControlPosition.RIGHT_CENTER
-	}
+	};
 	
+	var slideFunction;
+
 	// abort if not locations found and we don't want to show the map
 	// we still render it but keep it hidden
 	if ( self.locations.length == 0 && self.hide_no_locations ) {
-		var slideFunction = 'slideUp';
+		slideFunction = 'slideUp';
 	} else {
-		var slideFunction = 'slideDown';
+		slideFunction = 'slideDown';
 	}
 
 	// generate the map element
@@ -435,7 +439,7 @@ GMW_Map.prototype.update = function( locations, user_location, append_previous )
 		// generate new markers
 		self.render_markers( self.locations, append_previous );
 	});
-}
+};
 
 /**
  * Clear map of markers, polygens and grouping
@@ -495,7 +499,7 @@ GMW_Map.prototype.clear_polylines = function() {
  			this.polylines = [];
  		}            
  	}
-}
+};
 
 /**
  * Initilize markers grouping. 
@@ -568,8 +572,8 @@ GMW_Map.prototype.markers_grouping_clear = function() {
  * @return void
  * 
  */
-GMW_Map.prototype.standard_grouping_init = function() {}
-GMW_Map.prototype.standard_grouping_clear = function() {}
+GMW_Map.prototype.standard_grouping_init = function() {};
+GMW_Map.prototype.standard_grouping_clear = function() {};
 
 /**
  * Markers Clusterer grouping init
@@ -594,7 +598,7 @@ GMW_Map.prototype.markers_clusterer_grouping_init = function() {
 			}
 		);
 	} 
-}
+};
 
 /**
  * Markers Clusterer grouping clear
@@ -613,7 +617,7 @@ GMW_Map.prototype.markers_clusterer_grouping_clear = function() {
     		this.clusters.clearMarkers();
     	}
 	} 
-}
+};
 
 /**
  * Markers Clusterer grouping
@@ -656,8 +660,8 @@ GMW_Map.prototype.move_marker = function( marker_position ) {
     // do the math     
     var a = 360.0 / this.locations.length;
    
-    var newLat = marker_position.lat() + - .000025 * Math.cos( ( + a * i ) / 180 * Math.PI );  //x
-    var newLng = marker_position.lng() + - .000025 * Math.sin( ( + a * i )  / 180 * Math.PI );  //Y
+    var newLat = marker_position.lat() + - 0.000025 * Math.cos( ( + a * i ) / 180 * Math.PI );  //x
+    var newLng = marker_position.lng() + - 0.000025 * Math.sin( ( + a * i )  / 180 * Math.PI );  //Y
     
     var newPosition = new google.maps.LatLng( newLat, newLng );
 
@@ -675,7 +679,7 @@ GMW_Map.prototype.move_marker = function( marker_position ) {
 	} ) );
 
 	return newPosition;
-}
+};
 
 /**
  * Render a single marker
@@ -686,7 +690,7 @@ GMW_Map.prototype.move_marker = function( marker_position ) {
 GMW_Map.prototype.render_marker = function( options ) {
 
 	// map icon
-	var icon = options['icon'];
+	var icon = options.icon;
 
 	// in case _default.png pass without a URL
 	if ( icon == '_default.png' ) {
@@ -698,23 +702,23 @@ GMW_Map.prototype.render_marker = function( options ) {
 		icon = {
 			url 	   : icon,
 			scaledSize : this.icon_scaled_size,
-		}
+		};
 	}
 
 	var marker_options = {
-		position 	: options['position'],
+		position 	: options.position,
 		icon     	: icon,
 		map      	: this.map,
 		animation   : null,
-		location_id : options['id'],
-		iw_content  : options['content']
-	}
+		location_id : options.id,
+		iw_content  : options.content
+	};
 
-	marker_options = GMW.apply_filters( 'gmw_generate_marker_options', marker_options, options['id'], this );
+	marker_options = GMW.apply_filters( 'gmw_generate_marker_options', marker_options, options.id, this );
 
 	// generate marker
 	return new google.maps.Marker( marker_options );
-}
+};
 
 /**
  * User position
@@ -728,12 +732,12 @@ GMW_Map.prototype.render_user_marker = function() {
 	var self = this;
 
 	// generate new user location marker
-	if ( self.user_location != false && self.user_location['lat'] != false && self.user_location['lng'] != false && self.user_location.map_icon != '0' && self.user_location.map_icon != '' ) {
+	if ( self.user_location != false && self.user_location.lat != false && self.user_location.lng != false && self.user_location.map_icon != '0' && self.user_location.map_icon != '' ) {
 
 		// generate user's position
 		self.user_position = new google.maps.LatLng( 
-			self.user_location['lat'], 
-			self.user_location['lng'] 
+			self.user_location.lat, 
+			self.user_location.lng 
 		);
 		
 		// append user position to bounds
@@ -751,9 +755,9 @@ GMW_Map.prototype.render_user_marker = function() {
 		self.user_marker = self.render_marker( markerOptions );
 
 		// generate info-window if content exists
-		if ( self.user_location['iw_content'] != false && self.user_location['iw_content'] != null ) {
+		if ( self.user_location.iw_content != false && self.user_location.iw_content != null ) {
 
-			self.user_marker.iw_content = '<span class="title">' + self.user_location['iw_content'] + '</span>';
+			self.user_marker.iw_content = '<span class="title">' + self.user_location.iw_content + '</span>';
 			
 			// generate new window
 			self.user_info_window = new google.maps.InfoWindow( {
@@ -771,7 +775,7 @@ GMW_Map.prototype.render_user_marker = function() {
 		    });    
 		      
 		    // open info window on map load
-			if ( self.user_location['iw_open'] == true ) {
+			if ( self.user_location.iw_open == true ) {
 
 				setTimeout( function() { 
 					self.user_info_window.open( 
@@ -783,7 +787,7 @@ GMW_Map.prototype.render_user_marker = function() {
 			}
 		}
 	}	
-}
+};
 
 /**
  * Remove user marker 
@@ -798,7 +802,7 @@ GMW_Map.prototype.clear_user_marker = function() {
 		this.user_marker = false;
 		this.user_position = false;
 	}
-}
+};
 
 /**
  * Generate markers
@@ -845,14 +849,14 @@ GMW_Map.prototype.render_markers = function( locations, append_previous ) {
 		if ( i < locations_count ) {
 
 			// verify location coordinates
-			if ( self.locations[i]['lat'] == undefined || self.locations[i]['lng'] == undefined || self.locations[i]['lat'] == '0.000000' || self.locations[i]['lng'] == '0.000000' ) {
+			if ( self.locations[i].lat == undefined || self.locations[i].lng == undefined || self.locations[i].lat == '0.000000' || self.locations[i].lng == '0.000000' ) {
 				continue;
 			}
 	
 			// generate the marker position
 			var marker_position = new google.maps.LatLng( 
-				self.locations[i]['lat'], 
-				self.locations[i]['lng'] 
+				self.locations[i].lat, 
+				self.locations[i].lng 
 			);
 			
 			// only if not using markers spiderfeir and if marker with the same location already exists
@@ -867,9 +871,9 @@ GMW_Map.prototype.render_markers = function( locations, append_previous ) {
 		    // generate marker
 			var markerOptions = {
 				position : marker_position,
-				icon     : self.locations[i]['map_icon'],
+				icon     : self.locations[i].map_icon,
 				id       : i,
-				content  : self.locations[i]['info_window_content']
+				content  : self.locations[i].info_window_content
 			};
 
 			// generate marker
@@ -942,7 +946,7 @@ GMW_Map.prototype.center_map = function() {
 			self.zoom_position.lng 
 		);
 
-		self.map.setZoom( parseInt( self.options['zoom'] ) );
+		self.map.setZoom( parseInt( self.options.zoom ) );
 		self.map.panTo( latLng );
 
 	// zoom map when a single marker exists on the map
@@ -951,21 +955,21 @@ GMW_Map.prototype.center_map = function() {
 		if ( self.auto_zoom_level ) {
 			self.map.setZoom( 13 );
 		} else {
-			self.map.setZoom( parseInt( self.options['zoom'] ) );
+			self.map.setZoom( parseInt( self.options.zoom ) );
 		}
 
 		self.map.panTo( self.markers[0].getPosition() );
 
 	} else if ( ! self.auto_zoom_level && self.user_position != false ) {
 
-		self.map.setZoom( parseInt( self.options['zoom'] ) );
+		self.map.setZoom( parseInt( self.options.zoom ) );
 		self.map.panTo( self.user_position );
 
 	} else if ( self.auto_zoom_level || self.user_position == false  ) { 
 		
 		self.map.fitBounds( self.bounds );
 	}
-}
+};
 
 /**
  * Marker click event
@@ -1028,7 +1032,7 @@ GMW_Map.prototype.close_info_window = function() {
 
 		console.log( 'The function ' + functionName + ' not exists.' );
 	}
-}
+};
 
 /**
  * Close info window standard
@@ -1042,7 +1046,7 @@ GMW_Map.prototype.standard_info_window_close = function() {
 		this.active_info_window.close();
 		this.active_info_window = null;
 	}
-}
+};
 
 /**
  * Standard info window 
@@ -1054,23 +1058,28 @@ GMW_Map.prototype.standard_info_window_close = function() {
  */
 GMW_Map.prototype.standard_info_window_init = function( marker ) {
 
+	self = this;
+
 	// verify iw content
 	if ( marker.iw_content ) {
-			
-		// generate new window
-		this.active_info_window = new google.maps.InfoWindow( {
-			content  : '<div class="gmw-info-window standard map-' + this.id + ' ' + this.prefix + '">' + marker.iw_content + '</div>',
+		
+		// info window opsions. Can be modified with the filter.
+		var info_window_options = GMW.apply_filters( 'gmw_standard_info_window_options', {
+			content  : '<div class="gmw-info-window standard map-' + self.id + ' ' + self.prefix + '">' + marker.iw_content + '</div>',
 			maxWidth : 200,
 			minWidth: 200
-		} );
+		}, self );
+
+		// generate new window
+		self.active_info_window = new google.maps.InfoWindow( info_window_options );
 	
 		// open window
-		this.active_info_window.open( 
-			this.map, 
+		self.active_info_window.open( 
+			self.map, 
 			marker 
 		);
 	}
-}
+};
 
 /**
  * On document ready generate all maps exists in the global maps holder
