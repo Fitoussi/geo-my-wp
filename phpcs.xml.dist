@@ -11,6 +11,7 @@
 
 	<!-- Show progress and sniff codes in all reports -->
 	<arg value="ps"/>
+	<arg name="tab-width" value="4"/>
 
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
 	<exclude-pattern>*/vendor/*</exclude-pattern>
