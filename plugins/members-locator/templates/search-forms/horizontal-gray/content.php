@@ -1,27 +1,26 @@
-<?php 
+<?php
 /**
- * Members Locator "horizontal-gray" search form template file. 
- * 
+ * Members Locator "horizontal-gray" search form template file.
+ *
  * The information on this file outputs the search form.
- * 
+ *
  * You can modify this file to apply custom changes. However, it is not recomended
  * since your changes will be overwritten on the next update of the plugin.
- * 
- * Instead you can copy-paste this template ( the "horizontal-gray" folder contains this file 
- * and the "css" folder ) into the theme's or child theme's folder of your site 
- * and apply your changes from there. 
- * 
+ *
+ * Instead you can copy-paste this template ( the "horizontal-gray" folder contains this file
+ * and the "css" folder ) into the theme's or child theme's folder of your site
+ * and apply your changes from there.
+ *
  * The template folder will need to be placed under:
  * your-theme's-or-child-theme's-folder/geo-my-wp/members-locator/search-forms/
- * 
- * Once the template folder is in the theme's folder you will be able to select 
+ *
+ * Once the template folder is in the theme's folder you will be able to select
  * it in the form editor. It will show in the "Search form" dropdown menu as "Custom: horizontal-gray".
  *
  * @param $gmw_form ( object ) the entire form object
  * @param $gmw      ( array )  the form settings and values only
- * 
+ *
  * @author Eyal Fitoussi
- * 
  */
 ?>
 <?php do_action( 'gmw_before_search_form_template', $gmw ); ?>
@@ -41,7 +40,7 @@
 			
 			<?php _e( 'Advanced options', 'geo-my-wp' ); ?>
 		</span>
-				            		
+									
 		<?php do_action( 'gmw_search_form_before_distance', $gmw ); ?>
 
 		<?php gmw_search_form_radius( $gmw ); ?>

@@ -1,19 +1,19 @@
-<?php 
+<?php
 /**
- * Members Locator "kleo" search form template file. 
- * 
+ * Members Locator "kleo" search form template file.
+ *
  * The information on this file will be displayed as the search forms.
- * 
+ *
  * The function pass 1 args for you to use:
  * $gmw  - the form being used ( array )
- * 
+ *
  * You could but It is not recomemnded to edit this file directly as your changes will be overwritten on the next update of the plugin.
- * Instead you can copy-paste this template ( the "kleo" folder contains this file and the "css" folder ) 
- * into the theme's or child theme's folder of your site and apply your changes from there. 
- * 
+ * Instead you can copy-paste this template ( the "kleo" folder contains this file and the "css" folder )
+ * into the theme's or child theme's folder of your site and apply your changes from there.
+ *
  * The template folder will need to be placed under:
  * your-theme's-or-child-theme's-folder/geo-my-wp/friends/search-forms/
- * 
+ *
  * Once the template folder is in the theme's folder you will be able to choose it when editing the Members locator form.
  * It will show in the "Search results" dropdown menu as "Custom: kleo".
  */
@@ -30,12 +30,12 @@
 				
 			<?php do_action( 'gmw_search_form_start', $gmw ); ?>
 			
-			<?php gmw_search_form_address_field( $gmw, $id='members_search', $class='' ); ?>
+			<?php gmw_search_form_address_field( $gmw, $id = 'members_search', $class = '' ); ?>
 				
 			<?php gmw_search_form_locator_button( $gmw ); ?>
 
 			<span class="xprofile-fields-trigger" onclick="jQuery(this).closest('form').find('.gmw-kleo-advanced-search-wrapper' ).slideToggle();">
-				<?php _e( 'More options','geo-my-wp' ); ?>
+				<?php _e( 'More options', 'geo-my-wp' ); ?>
 			</span>
 
 			<?php do_action( 'gmw_search_form_before_submit', $gmw ); ?>
@@ -51,7 +51,7 @@
 				<?php gmw_search_form_units( $gmw ); ?>	
 
 				<?php do_action( 'gmw_search_form_filters', $gmw ); ?>
-						            						
+															
 				<?php gmw_search_form_xprofile_fields( $gmw ); ?>
 				
 			</div>
