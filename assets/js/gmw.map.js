@@ -837,7 +837,7 @@ GMW_Map.prototype.render_markers = function( locations, append_previous ) {
 
 	var locations_count = self.locations.length;
 
-	// abort if not locations found and we don't want to show the map
+	// abort if no locations found and we don't want to show the map
 	if ( locations_count == 0 && self.hide_no_locations ) {
 		this.wrap_element.slideUp();
 	}
@@ -913,6 +913,9 @@ GMW_Map.prototype.render_markers = function( locations, append_previous ) {
 					self.marker_click( this );
 				});
 			}
+
+			// hook custom functions if needed
+			GMW.do_action( 'gmw_map_markers_loop_single_marker', self.markers[i], self );
 
 		// Continue when done generating the markers.
 		} else {
