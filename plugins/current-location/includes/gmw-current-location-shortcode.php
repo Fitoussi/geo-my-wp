@@ -1,14 +1,14 @@
 <?php
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+	exit;
 }
 
 /**
  * GMW Current Location shortcode
- * 
+ *
  * @version 1.0
- * 
+ *
  * @author Eyal Fitoussi
  */
 function gmw_current_location_shortcode( $atts ) {
