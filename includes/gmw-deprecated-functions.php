@@ -125,6 +125,11 @@ if ( ! IS_ADMIN ) {
 	}
 }
 
+/*function GMW() {
+	_deprecated_function( 'GMW', '3.0.2', 'geo_my_wp' );
+	return geo_my_wp();
+}*/
+
 function gmw_get_additional_info( $info, $gmw = array(), $fields = array(), $labels = array(), $tag='div' ) {
 	_deprecated_function( 'gmw_get_additional_info', '3.0', 'gmw_get_location_meta_list' );
 	return gmw_get_location_meta_list( $info, $fields, $labels, $tag, $gmw );
@@ -431,13 +436,22 @@ function gmw_pt_taxonomies( $gmw, $post ) {
 
 function gmw_pt_get_days_hours( $post, $gmw ) {
 	_deprecated_function( 'gmw_pt_get_days_hours', '3.0', 'gmw_get_hours_of_operation' );
-	return gmw_get_hours_of_operation( $post, $gmw );
+	
+	$post->object_type = 'post';
+	$post->object_id   = $post->ID;
+	
+	return gmw_get_hours_of_operation( $post );
 }
 
 function gmw_pt_days_hours( $post, $gmw ) {
 	_deprecated_function( 'gmw_pt_days_hours', '3.0', 'gmw_hours_of_operation' );
-	gmw_hours_of_operation( $post, $gmw );
+	
+	$post->object_type = 'post';
+	$post->object_id   = $post->ID;
+	
+	return gmw_get_hours_of_operation( $post, $gmw );
 }
+
 
 /**
  * GMW deprecated function - Additional information.
