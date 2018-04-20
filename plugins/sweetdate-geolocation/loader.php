@@ -5,138 +5,138 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'GMW_Addon' ) ) {
-    return;
+	return;
 }
 
 /**
  * Current Location addon
- * 
  */
 class GMW_Sweetdate_Geolcation_Addon extends GMW_Addon {
-    
-    /**
-     * Slug 
-     * 
-     * @var string
-     */
-    public $slug = "sweetdate_geolocation";
 
-    /**
-     * Name
-     * 
-     * @var string
-     */
-    public $name = "Sweet Date Geolocation";
+	/**
+	 * Slug
+	 *
+	 * @var string
+	 */
+	public $slug = 'sweetdate_geolocation';
 
-     /**
-     * Description
-     * 
-     * @var string
-     */
-    public $description = "Enhance the Sweet Date theme with geolocation features.";
+	/**
+	 * Name
+	 *
+	 * @var string
+	 */
+	public $name = 'Sweet Date Geolocation';
 
-    /**
-     * prefix
-     * 
-     * @var string
-     */
-    public $prefix = "sdate_geo";
+	 /**
+	  * Description
+	  *
+	  * @var string
+	  */
+	public $description = 'Enhance the Sweet Date theme with geolocation features.';
 
-    // version
-    public $version = GMW_VERSION;
-     
-    /**
-     * Path
-     * 
-     * @var [type]
-     */
-    public $full_path = __FILE__;
-    
-    /**
-     * Is core add-on
-     * 
-     * @var boolean
-     */
-    public $is_core = true;
-    
-    private static $instance = null;
+	/**
+	 * prefix
+	 *
+	 * @var string
+	 */
+	public $prefix = 'sdate_geo';
 
-    /**
-     * Create new instance 
-     * 
-     * @return [type] [description]
-     */
-    public static function get_instance() {
+	// version
+	public $version = GMW_VERSION;
 
-        if ( self::$instance == null ) {
-            self::$instance = new self;
-        }
+	/**
+	 * Path
+	 *
+	 * @var [type]
+	 */
+	public $full_path = __FILE__;
 
-        return self::$instance;
-    }
+	/**
+	 * Is core add-on
+	 *
+	 * @var boolean
+	 */
+	public $is_core = true;
 
-    /**
-     * required extensions
-     * @var array
-     */
-    public function required() {
+	private static $instance = null;
 
-        return array( 
-            'theme' => array(
-                'template' => 'sweetdate',
-                'notice'   => sprintf( __( 'Sweet Date Geolocation extension requires the Sweet Date theme version 2.9 order higher. The theme can be purchased separately from <a href="%s" target="_blank">here</a>.' ), 'https://themeforest.net/item/sweet-date-more-than-a-wordpress-dating-theme/4994573?ref=GEOmyWP', 'geo-my-wp' ),
-                'version' => '2.9'
-            ),
-            'addons' => array(
-                array(
-                    'slug'    => 'members_locator',
-                    'notice'  => __( 'Sweet Date Geolocation extension requires the Members Locator core extension.', 'geo-my-wp' )
-                )
-            )
-        );
-    }
+	/**
+	 * Create new instance
+	 *
+	 * @return [type] [description]
+	 */
+	public static function get_instance() {
 
-    /**
-     * Register scripts
-     * 
-     * @return [type] [description]
-     */
-    public function enqueue_scripts() {
-        if ( ! IS_ADMIN ) {
-    	   wp_register_script( 'gmw-sdate-geo', GMW_SDATE_GEO_URL . '/assets/js/gmw.sd.min.js', array( 'jquery', 'gmw' ), GMW_VERSION, true );
-        } 
-    }
+		if ( self::$instance == null ) {
+			self::$instance = new self;
+		}
 
-    /**
-     * Run on BuddyPress init
-     * 
-     * @return void
-     */
-    public function pre_init() {
-        
-        parent::pre_init();
-        
-    	add_action( 'bp_init', array( $this, 'sweetdate_geolocation_init' ), 20 );
+		return self::$instance;
+	}
+
+	/**
+	 * required extensions
+	 *
+	 * @var array
+	 */
+	public function required() {
+
+		return array(
+			'theme'  => array(
+				'template' => 'sweetdate',
+				'notice'   => sprintf( __( 'Sweet Date Geolocation extension requires the Sweet Date theme version 2.9 order higher. The theme can be purchased separately from <a href="%s" target="_blank">here</a>.' ), 'https://themeforest.net/item/sweet-date-more-than-a-wordpress-dating-theme/4994573?ref=GEOmyWP', 'geo-my-wp' ),
+				'version'  => '2.9',
+			),
+			'addons' => array(
+				array(
+					'slug'   => 'members_locator',
+					'notice' => __( 'Sweet Date Geolocation extension requires the Members Locator core extension.', 'geo-my-wp' ),
+				),
+			),
+		);
+	}
+
+	/**
+	 * Register scripts
+	 *
+	 * @return [type] [description]
+	 */
+	public function enqueue_scripts() {
+		if ( ! IS_ADMIN ) {
+			wp_register_script( 'gmw-sdate-geo', GMW_SDATE_GEO_URL . '/assets/js/gmw.sd.min.js', array( 'jquery', 'gmw' ), GMW_VERSION, true );
+		}
+	}
+
+	/**
+	 * Run on BuddyPress init
+	 *
+	 * @return void
+	 */
+	public function pre_init() {
+
+		parent::pre_init();
+
+		add_action( 'bp_init', array( $this, 'sweetdate_geolocation_init' ), 20 );
 	}
 
 	/**
 	 * Load add-on
-	 * 
+	 *
 	 * @return [type] [description]
 	 */
-    public function sweetdate_geolocation_init() {
+	public function sweetdate_geolocation_init() {
 
-    	//admin settings
+		// admin settings
 		if ( is_admin() ) {
 			include( 'includes/admin/class-gmw-sweet-date-admin-settings.php' );
 			new GMW_Sweet_Date_Admin_Settings;
 		}
 
-		//include members query only on members page
-		if ( bp_current_component() == 'members' && gmw_get_option( 'sweet_date','enabled', '' ) != '' ) {
+		// include members query only on members page
+		if ( bp_current_component() == 'members' && gmw_get_option( 'sweet_date', 'enabled', '' ) != '' ) {
 			include( 'includes/class-gmw-sweet-date-geolocation.php' );
 			new GMW_Sweet_Date_Geolocation;
 		}
-    }
+	}
 }
 GMW_Addon::register( 'GMW_Sweetdate_Geolcation_Addon' );
