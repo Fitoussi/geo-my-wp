@@ -133,6 +133,17 @@ class GMW_Posts_Locations_Importer_V3 extends GMW_Locations_Importer {
 		'website' 	=> 'website'
 	);
 
+	protected function import_locationmeta( $location_id, $location ) {
+		
+		parent::import_locationmeta( $location_id, $location );
+
+		$days_hours = get_post_meta( $location->object_id, '_wppl_days_hours', true );
+
+		if ( ! empty( $days_hours ) ) {
+			gmw_update_location_meta( $location_id, 'days_hours', $days_hours );
+		}
+	}
+
 	public function query_locations() {
 
 		global $wpdb;
