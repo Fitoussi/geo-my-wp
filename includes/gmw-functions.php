@@ -591,7 +591,7 @@ function gmw_calculate_distance( $start_lat, $start_lng, $end_lat, $end_lng, $un
  * 
  * @return 
  */
-function gmw_get_templates( $args = [] ) {
+function gmw_get_templates( $args = array() ) {
 	return GMW_Helper::get_templates( $args );
 }
 	
@@ -667,7 +667,7 @@ function gmw_get_templates( $args = [] ) {
  * 
  * @return 
  */
-function gmw_get_template( $args = [] ) {
+function gmw_get_template( $args = array() ) {
 	return GMW_Helper::get_template( $args );
 }
 	
