@@ -6,12 +6,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'GMW_Installer' ) ) :
 
 /**
- * GMW_Installer class
+ * GMW_Installer class.
  *
  * Create and updated tables, import forms....
  *
  * @since  3.0
- * 
+ *
  * @author Eyal Fitoussi
  */
 class GMW_Installer {
@@ -32,20 +32,20 @@ class GMW_Installer {
 
 		// create database tables
 		self::create_tables();
-		
+
 		// update the forms table only once.
 		if ( ( get_option( 'gmw_forms_table_updated' ) == false ) ) {
 			self::update_forms_table();
 		}
 
 		// schedule cron jobs
-		self::schedule_cron();	
+		self::schedule_cron();
 
 		// run GMW update if version changed
 		if ( version_compare( GMW_VERSION, get_option( 'gmw_version' ), '>' ) ) {
 			self::update();
 		}
-		
+
 		// get forms db version
 		$saved_db_version = get_option( 'gmw_db_version' );
 
@@ -65,7 +65,7 @@ class GMW_Installer {
 		}*/
 
 		update_option( 'gmw_db_version', self::$db_version );
-		update_option( 'gmw_version', GMW_VERSION );	
+		update_option( 'gmw_version', GMW_VERSION );
 	}
 
 	/**
@@ -76,21 +76,21 @@ class GMW_Installer {
 	 * since the wp options for the license keys has changed.
 	 *
 	 * This as well a fix when updating from v3.0 - beta 1
-	 * 	 
+	 *
 	 * @return [type] [description]
 	 */
 	public static function update_license_keys() {
 
 		// do this only if the new license keys option is not yet exist
-		if ( get_option( 'gmw_license_data' ) === FALSE ) {
-			
+		if ( get_option( 'gmw_license_data' ) === false ) {
+
 			// look for license data in old option
 			$license_keys = get_option( 'gmw_license_keys' );
 			// look for statuses in old option
 			$statuses = get_option( 'gmw_premium_plugin_status' );
-			
+
 			$new_licenses = array();
-			
+
 			// proceed only if licenses data exists in old option
 			if ( ! empty( $license_keys ) ) {
 
@@ -99,31 +99,31 @@ class GMW_Installer {
 					if ( empty( $key ) ) {
 						continue;
 					}
-					
+
 					// if value is not an array means it is coming from old
 					// options and need to generate an array.
 					if ( ! is_array( $value ) ) {
 
-						$new_licenses[$key] = array(
-							'key' 	 => $value,
-							'status' => ! empty( $statuses[$key] ) ? $statuses[$key] : 'inactive'
+						$new_licenses[ $key ] = array(
+							'key'    => $value,
+							'status' => ! empty( $statuses[ $key ] ) ? $statuses[ $key ] : 'inactive',
 						);
 
-					// if this is already an array we keep the value as is
+						// if this is already an array we keep the value as is
 					} else {
 
-						$new_licenses[$key] = $value;
+						$new_licenses[ $key ] = $value;
 					}
 				}
 			}
-						
+
 			update_option( 'gmw_license_data', $new_licenses );
 		}
 	}
 
 	/**
 	 * Create GEO my WP database tables
-	 * 
+	 *
 	 * @return [type] [description]
 	 */
 	public static function create_tables() {
@@ -131,17 +131,17 @@ class GMW_Installer {
 		global $wpdb;
 
 		// charset
-		$charset_collate  = ! empty( $wpdb->charset ) ? "DEFAULT CHARACTER SET {$wpdb->charset}" : "DEFAULT CHARACTER SET utf8";
-		
+		$charset_collate = ! empty( $wpdb->charset ) ? "DEFAULT CHARACTER SET {$wpdb->charset}" : 'DEFAULT CHARACTER SET utf8';
+
 		// collation
-		$charset_collate .= ! empty( $wpdb->collate ) ? " COLLATE {$wpdb->collate}" : " COLLATE utf8_general_ci";
+		$charset_collate .= ! empty( $wpdb->collate ) ? " COLLATE {$wpdb->collate}" : ' COLLATE utf8_general_ci';
 
 		// forms table name
 		$forms_table = $wpdb->prefix . 'gmw_forms';
-		
-		// check if table exists already 
+
+		// check if table exists already
 		$table_exists = $wpdb->get_results( "SHOW TABLES LIKE '{$forms_table}'", ARRAY_A );
-		
+
 		// if form table not exists create it
 		if ( count( $table_exists ) == 0 ) {
 
@@ -158,9 +158,9 @@ class GMW_Installer {
 				data LONGTEXT NOT NULL,
 				PRIMARY KEY ID (ID)
 			) $charset_collate;";
-	
+
 			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-			
+
 			// create database table
 			dbDelta( $sql );
 		}
@@ -170,7 +170,7 @@ class GMW_Installer {
 
 		// check if table already exists
 		$table_exists = $wpdb->get_results( "SHOW TABLES LIKE '{$locations_table}'", ARRAY_A );
-		
+
 		// create table if not already exists
 		if ( count( $table_exists ) == 0 ) {
 
@@ -221,7 +221,7 @@ class GMW_Installer {
 			// create database table
 			dbDelta( $sql );
 		}
-		
+
 		// location meta table
 		$location_meta_table = $wpdb->base_prefix . 'gmw_locationmeta';
 
@@ -257,13 +257,13 @@ class GMW_Installer {
 		// if any of the tables exist set an option that will rigger an admin notice
 		// to import existing db tables
 		if ( count( $posts_table ) != 0 || count( $members_table ) != 0 ) {
-		    update_option( 'gmw_old_locations_tables_exist', true );
+			update_option( 'gmw_old_locations_tables_exist', true );
 		}
 	}
-	
+
 	/**
 	 * Update forms table
-	 * 
+	 *
 	 * @return [type] [description]
 	 */
 	public static function update_forms_table() {
@@ -279,28 +279,39 @@ class GMW_Installer {
 
 	/**
 	 * Run plugin's updates
-	 * 
+	 *
 	 * @return [type] [description]
 	 */
-	public static function update() {}
+	public static function update() {
+
+		global $wpdb;
+
+		// Get column data.
+		$column = $wpdb->get_results( "DESCRIBE {$wpdb->base_prefix}gmw_locationmeta meta_key" );
+
+		// Modify column data.
+		if ( ! empty( $column ) && 'varchar(255)' == $column[0]->Type ) {
+			$wpdb->get_results( "ALTER TABLE {$wpdb->base_prefix}gmw_locationmeta MODIFY meta_key varchar(191)" );
+		}
+	}
 
 	/**
 	 * Upgrade forms database tables
-	 * 
+	 *
 	 * @return [type] [description]
 	 */
 	public static function update_db() {}
 
 	/**
 	 * Upgrade locations database tables
-	 * 
+	 *
 	 * @return [type] [description]
 	 */
 	//public static function upgrade_locations_db();
 
 	/**
 	 * Upgrade location meta database tables
-	 * 
+	 *
 	 * @return [type] [description]
 	 */
 	//public static function upgrade_locationmeta_db() {}
