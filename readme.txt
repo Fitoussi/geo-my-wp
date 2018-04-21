@@ -5,7 +5,7 @@ Tags: Geolocation, Directory, Store Locator, Geolocator, Geotagging, Geocode, Ma
 Requires at least: 4.3
 Tested up to: 4.9.5
 Buddypress: 2.8
-Stable tag: 3.0.1
+Stable tag: 3.0.2
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -117,6 +117,39 @@ for detailed installation and setup guide see the [documentation](docs.geomywp.c
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 3.0.2 =
+
+* Version 3.0 is a major release. If you are updating from a version earlier than 3.0, it is highly recommended that you read the posts [GEO my WP 3.0 Beta 7](https://geomywp.com/geo-my-wp-3-0-beta-7/) and [GEO my WP Upgrade Process](https://geomywp.com/geo-my-wp-3-0-upgrade-process/) before updating. You should also test this version on a staging environment before updating on your live site.
+
+* Fix: Some filters load too early.
+* Fix: include gmw cache helper file by default.
+* Fix: results do not show on page load when using the search_results shortcode.
+* Fix: pass results page permalink to deprecated variable to support custom search form template file that were created previously to Geo my WP 3.0.
+* Fix: [gmw_post_info] deprecated shortcode doesn't display location meta. Use [gmw_location_fields] instead.
+* Fix: days & hours deprecated function won’t display data.
+* Fix: added days & hours location meta to v3 importer.
+* Fix: In Sweet*date Geolocation load search query hook just before the members loop to be able to override sweet*date search query.
+* Fix: Sweet*date Geolocation order by distance doesn’t work properly.
+* Fix: change meta_key in location_meta table from varchar(255) to varchar(191) to prevent errors on some environments.
+* Fix: internal cache rand() number too big on some OS and results in fatal error.
+* Fix: Update text domain in some files..
+* Fix: Users v3 importer error when street_number and street_name columns are missing from the database table.
+* Fix: v3 importer generate Javascript error that prevents the importer from working.
+* Fix: Replace wp_doing_ajax function with defined( ‘DOING_AJAX’ ) to support earlier version of Wordpress.
+* Fix: Various typos.
+* Function: gmw_get_location_meta_values() to output specific location meta fields based on object type and object ID.
+* Shortcode: [gmw_location_fields] to output specific address or location meta fields.
+* New gmw_get_post_location_fields() function and [gmw_post_location_fields] shortcode, to output specific address or location meta fields of a pots.
+* Enanchment : Choose between post_content and post_excerpt to use as excerpt in search results.
+* Tweak: Use the “the_content” filter in excerpt by default. This Can be changed to use ‘wpautop’, using a filter, if there is a conflict.
+* Tweak: Load some deprecated functions in front*end only to prevent errors in the back*end.
+* Tweak: Remove Members Locator tab in Import/export page. It is not being used at the moment.
+* Styling: Adjust form editor width.
+* Filter: new filter 'gmw_search_forms_submit_button_args' to modify submit button args.
+* Filter: new Javascript action hook - ’gmw_map_markers_loop_single_marker’.
+* Filter: new Javascript filter - ‘gmw_standard_info_window_options’
+* New: option to select between the post content and post excerpt as the excerpt in the list of results.
 
 = 3.0.1 =
 
