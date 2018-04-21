@@ -374,7 +374,7 @@ add_shortcode( 'gmw_user_address', 'gmw_get_user_address' );
  * 
  * @return int location ID
  */
-function gmw_update_user_location( $user_id = 0, $location = [], $force_refresh = false ) {
+function gmw_update_user_location( $user_id = 0, $location = array(), $force_refresh = false ) {
 
     if ( ! gmw_is_user_exists( $user_id ) ) {
         return;
