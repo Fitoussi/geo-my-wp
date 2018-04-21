@@ -1,23 +1,44 @@
-/nbproject/private/
-/node_modules/
-package-lock.json
-project.xml
-project.properties
-.DS_Store
+# Windows image file caches
 Thumbs.db
-.buildpath
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Mac crap
+.DS_Store
+
+# Sublime
+*.sublime-project
+*.sublime-workspace
+
+# PhpStorm
+.idea
+Easy-Digital-Downloads.iml
+
+# Eclipse
+*.pydevproject
 .project
-.settings*
-sftp-config.json
-/deploy/
-/vendor/
-/tmp/
+.metadata
+build/
+tmp/
+tests/clover.xml
 
-# Ignore lib/wpjm_rest but keep folder
-lib/wpjm_rest/*
-!lib/wpjm_rest/.gitkeep
-tmp/mt
+# Grunt
+node_modules
 
-# Ignore all log files except for .htaccess
-/logs/*
-!/logs/.htaccess
+# Vendor
+vendor
+
+phpcs.xml.dist
+phpunit.xml.dist
+tests/
+bin/
+.travis.yml
+.gitattributes
+
+# Temporary files
+*~
