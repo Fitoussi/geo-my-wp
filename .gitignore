@@ -1,37 +1,23 @@
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
-
-# Folder config file
-Desktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Mac crap
+/nbproject/private/
+/node_modules/
+package-lock.json
+project.xml
+project.properties
 .DS_Store
-
-# Sublime
-*.sublime-project
-*.sublime-workspace
-
-# PhpStorm
-.idea
-Easy-Digital-Downloads.iml
-
-# Eclipse
-*.pydevproject
+Thumbs.db
+.buildpath
 .project
-.metadata
-build/
-tmp/
-tests/clover.xml
+.settings*
+sftp-config.json
+/deploy/
+/vendor/
+/tmp/
 
-# Grunt
-node_modules
+# Ignore lib/wpjm_rest but keep folder
+lib/wpjm_rest/*
+!lib/wpjm_rest/.gitkeep
+tmp/mt
 
-# Vendor
-vendor
-
-# Temporary files
-*~
+# Ignore all log files except for .htaccess
+/logs/*
+!/logs/.htaccess
