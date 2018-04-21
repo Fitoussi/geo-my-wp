@@ -446,22 +446,7 @@ var GMW = {
                 
                 if ( place.geometry ) {
 
-                    var formElement = input_field.closest( 'form' );
-
-                     // if place exists and autocomplete is within a form, look for form ID and 
-                    // get the coords from the place details into the hidden coordinates fields of the form
-                    /*if ( formElement.attr( 'data-form_id' ) ) {
-                        
-                        var gmwFormID = formElement.data( 'form_id' );
-                    
-                    } else if ( formElement.find( '.gmw-form-id' ).length ) {
-
-                        var gmwFormID = formElement.find( '.gmw-form-id' ).val();
-
-                    } else {
-                        
-                        return
-                    }*/
+                    var formElement = jQuery( input_field.closest( 'form' ) );
 
                     // if only country entered set its value in hidden fields
                     if ( place.address_components.length == 1 && place.address_components[0].types[0] == 'country' ) {      
@@ -475,8 +460,9 @@ var GMW = {
                         formElement.find( '.gmw-country' ).val( place.address_components[1].short_name ).prop( 'disabled', false );
                     }
 
+                    // make sure coords fields exist.
                     formElement.find( '.gmw-lat' ).val( place.geometry.location.lat().toFixed(6) );
-                    formElement.find( '.gmw-lng' ).val( place.geometry.location.lng().toFixed(6) );               
+                    formElement.find( '.gmw-lng' ).val( place.geometry.location.lng().toFixed(6) );             
                 }   
             });
         }
