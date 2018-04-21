@@ -33,12 +33,5 @@ node_modules
 # Vendor
 vendor
 
-phpcs.xml.dist
-phpunit.xml.dist
-tests/
-bin/
-.travis.yml
-.gitattributes
-
 # Temporary files
 *~
