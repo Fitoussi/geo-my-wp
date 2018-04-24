@@ -205,8 +205,8 @@ function gmw_get_user_location_data( $user_id = 0, $output = OBJECT, $cache = tr
 
         global $wpdb;
 
-        $gmw_table  = $wpdb->prefix . 'gmw_locations';
-        $user_table = $wpdb->prefix . 'users';
+        $gmw_table  = $wpdb->base_prefix . 'gmw_locations';
+        $user_table = $wpdb->base_prefix . 'users';
 
         $location  = $wpdb->get_row( 
             $wpdb->prepare( "
