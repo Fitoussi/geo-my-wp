@@ -856,7 +856,7 @@ var GMW = {
         }
        
         // When Client-side geocoder is enabled
-        if ( GMW.options.general_settings.js_geocode == 1 ) {
+        if ( clientSideGeocoder == 1 ) {
 
             // check if hidden coords exists. if so no need to geocode the address again and we can submit the form with the information we already have.
             if ( form.find( 'input.gmw-lat' ).val() != '' && form.find( 'input.gmw-lng' ).val() != '' ) {            
