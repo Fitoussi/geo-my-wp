@@ -71,6 +71,10 @@ function gmw_enqueue_scripts() {
 	// check if in admin or front-end
 	wp_localize_script( 'gmw', 'gmwIsAdmin', array( IS_ADMIN ) );
 
+	$js_geocoder = ( apply_filters( 'gmw_client_side_geocoder_enabled', true ) ) ? array( true ) : array( false );
+	
+	wp_localize_script( 'gmw', 'clientSideGeocoder', $js_geocoder );
+
 	/**
 	 * localize gmw options
 	 *
