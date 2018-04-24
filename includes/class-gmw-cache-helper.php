@@ -11,6 +11,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class GMW_Cache_Helper {
 
+	/**
+	 * Init.
+	 *
+	 * @return [type] [description]
+	 */
 	public static function init() {
 
 		add_action( 'gmw_save_location', array( __CLASS__, 'flush_locations_cache' ), 99, 2 );
@@ -24,8 +29,22 @@ class GMW_Cache_Helper {
 	}
 
 	/**
+	 * Flush all objects.
+	 *
+	 * @since 3.0.3
+	 */
+	public static function flush_all() {
+		self::get_transient_version( 'gmw_get_object_post_locations', true );
+		self::get_transient_version( 'gmw_get_object_post_query', true );
+		self::get_transient_version( 'gmw_get_object_user_locations', true );
+		self::get_transient_version( 'gmw_get_object_user_query', true );
+		self::get_transient_version( 'gmw_get_object_bp_group_locations', true );
+		self::get_transient_version( 'gmw_get_object_bp_group_query', true );
+	}
+
+	/**
 	 * Flush locations and query cache when saving or deleting a location
-	 * 
+	 *
 	 * @param  [type] $location_id   [description]
 	 * @param  [type] $location_data [description]
 	 * @return [type]                [description]
@@ -36,9 +55,8 @@ class GMW_Cache_Helper {
 	}
 
 	/**
-	 * 
 	 * Flush post query cache when updating a post
-	 * 
+	 *
 	 * @param  [type] $post_id [description]
 	 * @param  [type] $post    [description]
 	 * @return [type]          [description]
