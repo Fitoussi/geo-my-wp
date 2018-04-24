@@ -46,7 +46,7 @@ function gmw_geocoder( $raw_data = '', $force_refresh = false ) {
 
     // look for geocoded location in cache
     $address_hash = md5( $data );
-    $location     = get_transient( 'gmw_geocoded_'.$data );
+    $location     = get_transient( 'gmw_geocoded_'.$address_hash );
     
     // if no location found in cache or if forced referesh try to geocode
     if ( $force_refresh == true || $location === false ) {
