@@ -1,7 +1,7 @@
 <?php
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
-    exit; 
+	exit;
 }
 
 /**
@@ -9,641 +9,630 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class GMW_Settings {
 
-    /**
-     * __construct function.
-     *
-     * @access public
-     * @return void
-     */
-    public function __construct() {
-       
-        if ( ( empty( $_GET['page'] ) || $_GET['page'] != 'gmw-settings' ) && ( empty( $_POST['option_page'] ) || $_POST['option_page'] != 'gmw_options' ) ) {
-            return;
-        }
-
-        $this->settings_group = 'gmw_options';
-
-        add_action( 'admin_init', array( $this, 'register_settings' ) );
-    }
-
-    /**
-     * Setup default settings values
-     * 
-     * @return [type] [description]
-     */
-    public function setup_defaults() {
-
-        $defaults = apply_filters( 'gmw_admin_settings_setup_defaults', array( 
-            'general_settings' => array(
-                'allow_tracking'         => '',
-                'google_map_api_usage'   => 'enabled',
-                'google_api'             => '',
-                'js_geocode'             => 1,
-                'country_code'           => 'US',
-                'language_code'          => 'EN',
-                'results_page'           => '',
-                'auto_locate'            => 1
-            )
-        ) );
-
-        $gmw_options = get_option( 'gmw_options' );
-        
-        if ( empty( $gmw_options ) ) {
-            $gmw_options = array();
-        }
-
-        $count = 0;
-
-        foreach( $defaults as $group_name => $values ) {
-
-            if ( empty( $gmw_options[$group_name] ) ) {
-                $gmw_options[$group_name] = $values;
-                $count++;
-            }
-        }
-
-        if ( $count > 0 ) {
-            update_option( 'gmw_options', $gmw_options );  
-        }      
-    }
-
-    /**
-     * Settings groups
-     * 
-     * @return [type] [description]
-     */
-    public function settings_groups() {
-
-        return apply_filters( 'gmw_admin_settings_groups', array(
-            array( 
-                'slug'      => 'general_settings',
-                'label'     => __( 'General Settings', 'geo-my-wp' ),
-                'icon'      => 'cog',
-                'fields'    => array( 
-                    'allow_tracking' => array(
-                        'name'        => 'allow_tracking',
-                        'type'        => 'checkbox',
-                        'default'     => '',
-                        'label'       => __( 'Plugin Usage Tracking', 'geo-my-wp' ),
-                        'cb_label'    => __( 'Enable', 'geo-my-wp' ),
-                        'desc'        => __( 'Check this checkbox to allow GEO my WP track the plugin usage on your site.', 'geo-my-wp' ),                  
-                        'attributes'  => array(),
-                        'priority'    => 10
-                    ),
-                    'google_maps_api_usage'    => array(
-                        'name'        => 'google_maps_api_usage',
-                        'type'        => 'select',
-                        'default'     => 'enabled',
-                        'label'       => __( 'Google Maps API', 'geo-my-wp' ),
-                        'desc'        => __( 'Using this feature you prevent GEO my WP from registering the Google Map API ( which it does by default ). In most cases this feature should be set to "Enabled". It should disabled only if there are other mapping plugin installed on your site, which also register the Google Maps API and cause for conflicts. Note that disabling this feature might solve a conflict cause by multiple calles to Google Maps API, it might also results in GEO my WP to not work properly.', 'geo-my-wp' ),                  
-                        'attributes'  => array(),
-                        'options'     => array(
-                            'enabled'   => __( 'Enabled', 'geo-my-wp' ),
-                            'frontend'  => __( 'Disable in the front-end only', 'geo-my-wp' ),
-                            'admin'     => __( 'Disable in the back-end only', 'geo-my-wp' ),
-                            'disabled'  => __( 'Disable completely', 'geo-my-wp' ),
-                        ),
-                        'priority'    => 20
-                    ),
-                    'google_api'    => array(
-                        'name'        => 'google_api',
-                        'type'        => 'text',
-                        'default'     => '',
-                        'placeholder' => __( 'Enter your google api key', 'geo-my-wp' ),
-                        'label'       => __( 'Google Maps API V3 Key', 'geo-my-wp' ),
-                        'desc'        => sprintf( __( 'Google Maps API key is required for GEO my WP to work properly. Google Maps API key is free and can be generated <a href="%s" target="_blank">here</a>. <a href="%s" target="_blank">Here</a> you can learn how to properly generate and setup your Maps API key.', 'geo-my-wp' ), 'https://code.google.com/apis/console/', 'http://docs.gravitygeolocation.com/article/101-create-google-map-api-key' ),
-                        'attributes'  => array( 'size' => '50' ),
-                        'priority'    => 30
-                    ),
-                    /*'js_geocode' => array(
-                        'name'        => 'js_geocode',
-                        'type'        => 'checkbox',
-                        'default'     => '',
-                        'label'       => __( 'Client-Side Geocoder', 'geo-my-wp' ),
-                        'cb_label'    => __( 'Enable', 'geo-my-wp' ),
-                        'desc'        => __( "Check this checkbox if you wish to use client-side ( JavaScript ) geocoder to geocode the address entered in GEO my WP's search forms. client-side geocoding usually overcomes Google API's OVER_QUERY_LIMIT issue. This feature should be enabled in most cases.", 'geo-my-wp' ),                  
-                        'attributes'  => array(),
-                        'priority'    => 40
-                    ), */
-                    'country_code' => array(
-                        'name'        => 'country_code',
-                        'type'        => 'text',
-                        'default'     => '',
-                        'placeholder' => 'ex. US',
-                        'label'       => __( 'Country Code', 'geo-my-wp' ),
-                        'desc'        => sprintf( __( 'Enter the country code that will be used as the default with Google Maps API. The country code controls the default region when geocoding an address and when using other services provided by Google Maps API. List of countries code can be found <a href="%s" target="_blank">here</a>.', 'geo-my-wp' ), 'http://geomywp.com/country-code/' ),
-                        'attributes'  => array( 'size' => '5' ),
-                        'priority'    => 50
-                    ),
-                    'language_code' => array(
-                        'name'        => 'language_code',
-                        'type'        => 'text',
-                        'default'     => '',
-                        'placeholder' => 'ex. EN',
-                        'label'       => __( 'Google API Language', 'geo-my-wp' ),
-                        'desc'        => sprintf( __( 'Set the language to be used with Google Places address auto-complete and with Google Maps API. The language codes can be found <a href="%s" target="_blank">here</a>.', 'geo-my-wp' ), 'https://sites.google.com/site/tomihasa/google-language-codes' ),
-                        'attributes'  => array( 'size' => '5' ),
-                        'priority'    => 60
-                    ),  
-                    'auto_locate' => array(
-                        'name'        => 'auto_locate',
-                        'type'        => 'checkbox',
-                        'default'     => '',
-                        'label'       => __( 'Auto Locator', 'geo-my-wp' ),
-                        'cb_label'    => __( 'Enable', 'geo-my-wp' ),
-                        'desc'        => __( "GEO my WP will try to retrive the visitor's current location when once first visits the website. If a location was found, it will be saved via cookies and will be used with some of GEO my WP features; such as dynamically displaying results nearby the visitor.", 'geo-my-wp' ),
-                        'attributes'  => array(),
-                        'priority'    => 70
-                    ),
-                    'results_page' => array(
-                        'name'        => 'results_page',
-                        'type'        => 'select',
-                        'default'     => '0',
-                        'label'       => __( 'Results Page', 'geo-my-wp' ),
-                        'desc'        => __( "The page you select here displays the search results ( of any of your forms ) when using the \"GMW Search Form\" widget. The plugin will first check if a results page was set in the form settings, and if so, the results will be displayed in that page. Otherwise, if no results page was set in the form settings, the results will be displayed in the page you select here. To use this feature, select the results page from the dropdown menu and paste the shortcode <code>[gmw form=\"results\"]</code> to the content area of this page.", "GMW" ),
-                        'options'     => $this->get_pages(),
-                        'attributes'  => array(),
-                        'priority'    => 80
-                    )
-                ),
-                'priority'  => 3
-            )
-        ) );
-    }
-
-    /**
-     * Generate settings
-     * 
-     * @return [type] [description]
-     */
-    public function settings() {
-    
-        $settings = [];
-
-        // loop through settings groups
-        foreach ( $this->settings_groups as $key => $group ) {
-
-            // verify groups slug
-            if ( empty( $group['slug'] ) ) {
-                continue;
-            }
-
-            // Generate the group if does not exsist
-            if ( ! isset( $settings[$group['slug']] ) ) {
-            
-                $settings[$group['slug']] = $group['fields'];
-            
-            // otehrwise, merge the fields of the existing group
-            // with the current group.
-            } else {
-
-                $settings[$group['slug']] = array_merge_recursive( $settings[$group['slug']], $group['fields'] );
-
-                // remove the duplicate group/tab
-                unset( $this->settings_groups[$key] );
-            }
-
-            // allow filtering the specific group
-            $settings[$group['slug']] = apply_filters( 'gmw_'.$group['slug'].'_admin_settings', $settings[$group['slug']], $settings );
-        }
-
-        // filter all settings groups
-        $settings = apply_filters( 'gmw_admin_settings', $settings );
-
-        return $settings;
-    }
-
-    /**
-     * init_settings function.
-     *
-     * @access protected
-     * @return void
-     */
-    protected function init_settings() {
-
-        // generate default values
-        $this->setup_defaults();
-
-        // get settings groups
-        $this->settings_groups = $this->settings_groups();
-
-        // get settings
-        $this->settings = $this->settings(); 
-
-        // backward capability for settings before settings groups were created
-        foreach ( $this->settings as $key => $section ) { 
-
-            if ( ! empty( $section[0] ) && ! empty( $section[1] ) && is_string( $section[0] ) ) {
-                
-                trigger_error( 'Using deprecated method for registering GMW settings and settings groups.', E_USER_NOTICE );
-
-                $this->settings_groups[] = array(
-                    'slug'      => $key,
-                    'label'     => $section[0],
-                    'icon'      => '',
-                    'priority'  => 99
-                );
-
-                $this->settings[$key] = $section[1];
-            }            
-        }
-
-        // backward capability for replacing std with default
-        foreach ( $this->settings as $key => $section ) { 
-
-            foreach ( $section as $sec_key => $sec_value ) {
-                
-                // skip hidden field
-                if ( empty( $sec_value ) ) {
-                    continue;
-                }
-
-                if ( isset( $sec_value['std'] ) && ! isset( $sec_value['default'] ) ) {
-
-                    trigger_error( '"std" attribute is no longer supported in GMW settings and was replaced with "default" in version 3.0.', E_USER_NOTICE );
-
-                    $this->settings[$key][$sec_key]['default'] = ! empty( $sec_value['std'] ) ? $sec_value['std'] : '';
-
-                    unset( $this->settings[$key][$sec_key]['std'] );
-                }
-            }        
-        }
-    }
-
-    /**
-     * Get list of pages
-     * 
-     * @return array of pages
-     */
-    public function get_pages() {
-         
-        $pages = array();
-        foreach ( get_pages() as $page ) {
-            $pages[ $page->ID ] = $page->post_title;
-        }
-
-        return $pages;
-    }
-
-    /**
-     * register_settings function.
-     *
-     * @access public
-     * @return void
-     */
-    public function register_settings() {
-    
-        if ( empty( $_POST['option_page'] ) || $_POST['option_page'] != $this->settings_group ) {
-            return;
-        }
-
-        if ( empty( $_POST['action'] ) || $_POST['action'] != 'update' ) {
-            return;
-        }
-
-        register_setting( $this->settings_group, 'gmw_options', array( $this, 'validate') );
-    }
-    
-    /**
-     * Validate inputs
-     * @param  [type] $values [description]
-     * @return [type]         [description]
-     */
-    function validate( $values ) {  
-        
-        $this->init_settings();
-
-        //get the submitted values into the valid_input array
-        //then below we run validation through the valid_input 
-        $valid_input = $values;
-
-        foreach ( $this->settings as $section_name => $section ) {
-            
-            foreach ( $section as $option ) {
-                
-                switch ( $option['type'] ) {
-
-                    case "tab_section" :
-
-                    Break;
-
-                    case "function" :
-                        if ( ! empty( $values[$section_name][$option['name']] ) ) {
-                            $valid_input[$section_name][$option['name']] = $values[$section_name][$option['name']];
-                        }
-                    break;
-
-                    case "checkbox" :
-                        if ( ! empty( $values[$section_name][$option['name']] ) ) {
-                            $valid_input[$section_name][$option['name']] = 1;
-                        }
-                    break;
-                    
-                    case "multicheckbox" :
-
-                        if ( empty( $values[$section_name][$option['name']] ) || ! is_array( $values[$section_name][$option['name']] ) ) {
-
-                            $valid_input[$section_name][$option['name']] = is_array( $option['default'] ) ? $option['default'] : array();
-
-                        } else {
-
-                            foreach ( $option['options'] as $keyVal => $name ) {
-
-                                if ( !empty( $values[$section_name][$option['name']][$keyVal] ) ) {
-                                    $valid_input[$section_name][$option['name']][$keyVal] = 1; 
-                                }
-                            }
-                        }
-                    break;
-
-                    case "multiselect" :
-                        if ( empty( $values[$section_name][$option['name']] ) || ! is_array( $values[$section_name][$option['name']] ) ) {
-
-                            $valid_input[$section_name][$option['name']] = is_array( $option['default'] ) ? $option['default'] : array();
-
-                        } else {
-
-                            $valid_input[$section_name][$option['name']] = array();
-
-                            foreach ( $option['options'] as $keyVal => $name ) {
-
-                                if ( in_array( $keyVal, $values[$section_name][$option['name']] ) ) {
-                            
-                                    $valid_input[$section_name][$option['name']][] = $keyVal; 
-                                }
-                            }
-                        }
-                    break;
-                                             
-                    case "multicheckboxvalues" :
-                        if ( empty( $values[$section_name][$option['name']] ) || ! is_array( $values[$section_name][$option['name']] ) ) {
-
-                            $valid_input[$section_name][$option['name']] = is_array( $option['default'] ) ? $option['default'] : array();
-
-                        } else {
-
-                            $valid_input[$section_name][$option['name']] = array();
-
-                            foreach ( $option['options'] as $keyVal => $name ) {
-                               
-                                if ( in_array( $keyVal, $values[$section_name][$option['name']] ) ) {
-                            
-                                    $valid_input[$section_name][$option['name']][] = $keyVal; 
-                                }
-                            }  
-                        }
-                    break;
-                    
-                    case "select" :
-                    case "radio" :
-                        if ( ! empty( $values[$section_name][$option['name']] ) && in_array( $values[$section_name][$option['name']], array_keys( $option['options'] ) ) ) {
-                            $valid_input[$section_name][$option['name']] = $values[$section_name][$option['name']];
-                        } else {
-                            $valid_input[$section_name][$option['name']] = ( !empty( $option['default'] ) ) ? $option['default'] : '';
-                        }
-                    break;
-
-                    case "textarea" :
-                        if ( ! empty( $values[$section_name][$option['name']] ) ) {
-                            $valid_input[$section_name][$option['name']] = esc_textarea( $values[$section_name][$option['name']] );
-                        } else {
-                            $valid_input[$section_name][$option['name']] = ( !empty( $option['default'] ) ) ? esc_textarea( $option['default'] ) : '';
-                        }
-                    break;
-
-                    case "text" :
-                    case "password" :
-                        if ( ! empty( $values[$section_name][$option['name']] ) ) {
-                            $valid_input[$section_name][$option['name']] = sanitize_text_field( $values[$section_name][$option['name']] );
-                        } else {
-                            $valid_input[$section_name][$option['name']] = ( !empty( $option['default'] ) ) ? sanitize_text_field( $option['default'] ) : '';
-                        }
-                    break;
-                }
-            }
-        }
-
-        return $valid_input;
-    }
-
-    /**
-     * Get form fields
-     * 
-     * @param  [type] $option  [description]
-     * @param  [type] $tab     [description]
-     * @param  [type] $section [description]
-     * @return [type]          [description]
-     */
-    public function get_form_field( $settings, $option, $tab, $section ) {
-        
-        $option['default']  = isset( $option['default'] ) ? $option['default'] : '';
-        $option['name']     = esc_attr( $option['name'] );
-        $option['cb_label'] = isset( $option['cb_label'] ) ? $option['cb_label'] : '';
-        $value              = ! empty( $settings[$tab][$option['name']] ) ? $settings[$tab][$option['name']] : $option['default']; 
-        $attr_id            = esc_attr( 'setting-'.$tab. '-' .$option['name'] );
-        $placeholder        = ! empty( $option['placeholder'] ) ? 'placeholder="'.esc_attr( $option['placeholder'] ).'"' : '';
-        $attr_name          = esc_attr( 'gmw_options['.$tab.']['.$option['name'].']' );
-        $attributes         = array();
-
-        if ( ! isset( $option['type'] ) ) {
-            $option['type'] = 'text';
-        }
-        
-        //attributes
-        if ( ! empty( $option['attributes'] ) && is_array( $option['attributes'] ) ) {
-            foreach ( $option['attributes'] as $attribute_name => $attribute_value ) {
-                $attributes[] = esc_attr( $attribute_name ) . '="' . esc_attr( $attribute_value ) . '"';
-            }
-        }
-
-        //display settings fields 
-        switch ( $option[ 'type' ] ) {
-                                                    
-            //create custom function
-            case "function" :
-                
-                $function  = ! empty( $option['function'] ) ? $option['function'] : $option['name'];
-                $name_attr = 'gmw_options['.$tab.']['.$option['name'].']';
-                $this_value = ! empty( $settings[$tab][$option['name']] ) ? $settings[$tab][$option['name']] : array();
-
-                do_action( 'gmw_main_settings_' . $function, $this_value, $name_attr, $settings, $tab, $option );
-
-            break;
-
-            case "checkbox" :
-                ?>
-                <label>
-                    <input 
-                        type="checkbox" 
-                        id="<?php echo $attr_id ?>" 
-                        class="setting-<?php echo esc_attr( $option['name'] ); ?> checkbox" 
-                        name="<?php echo $attr_name; ?>" 
-                        value="1" 
-                        <?php echo implode( ' ', $attributes ); ?> 
-                        <?php checked( '1', $value ); ?> 
-                    /> 
-                    <?php echo $option['cb_label']; ?>
-                </label>
-                <?php          
-            break;
-
-            case "multicheckbox" :
-                
-                foreach ( $option[ 'options' ] as $keyVal => $name ) {
-
-                    $value = ! empty( $value[$keyVal] ) ? $value[$keyVal] : $option['default']; ?>
-                    <label>
-                        <input 
-                            type="checkbox" 
-                            id="<?php echo $attr_id .'-'. esc_attr( $keyVal ); ?>" class="setting-<?php echo $option['name']; ?> checkbox multicheckbox"
-                            name="<?php echo $attr_name.'['.esc_attr( $keyVal ).']'; ?>" 
-                            value="1" <?php checked( '1', $value ); ?> 
-                        /> 
-                        <?php echo esc_html( $name ); ?>
-                    </label>
-                    <?php
-                }
-            break;
-                                        
-            case "multicheckboxvalues" :
-
-                $option['default'] = is_array( $option['default'] ) ? $option['default'] : array();
-
-                foreach ( $option['options'] as $keyVal => $name ) {
-
-                    $checked = in_array( $keyVal, $value ) ? 'checked="checked"' : '';
-                    ?>
-                    <label>
-                        <input 
-                            type="checkbox" 
-                            id="<?php echo $attr_id .'-'. esc_attr( $keyVal ); ?>" 
-                            class="setting-<?php echo esc_attr( $option['name'] ); ?> checkbox multicheckboxvalues" 
-                            name="<?php echo $attr_name.'[]'; ?>" 
-                            value="<?php echo esc_attr( $keyVal ); ?>" 
-                            <?php echo $checked; ?> 
-                        /> 
-                        <?php echo esc_html( $name ); ?>
-                    </label>
-                    <?php
-                }
-            break;
-            
-            case "textarea" :
-                ?>
-                <textarea 
-                    id="<?php echo $attr_id ?>" 
-                    class="<?php echo 'setting-'.esc_attr( $option['name'] );?> textarea large-text" 
-                    cols="50" 
-                    rows="3" 
-                    name="<?php echo $attr_name; ?>" 
-                    <?php echo implode( ' ', $attributes ); ?> 
-                    <?php echo $placeholder; ?>><?php echo esc_textarea( $value ); ?></textarea>
-                <?php
-            break;
-
-            case "radio" :
-                $rc = 1;
-                foreach ( $option['options'] as $keyVal => $name ) {
-                    $checked = ( $rc == 1 ) ? 'checked="checked"' : checked( $value, $keyVal, false );
-                    ?>
-                    <label>
-                        <input 
-                            type="radio" 
-                            id="<?php $attr_id; ?>" 
-                            class="setting-<?php echo esc_attr( $option['name'] ); ?>" 
-                            name="<?php echo $attr_name; ?>" 
-                            value="<?php echo esc_attr( $keyVal ); ?>"
-                            <?php echo $checked; ?> 
-                        />
-                        <?php echo esc_attr( $name ); ?>
-                    </label>
-                    &nbsp;&nbsp;
-                    <?php
-                    $rc++;
-                }
-            break;
-
-            case "select" :
-                ?>
-                <select 
-                    id="<?php echo $attr_id ?>" 
-                    class="<?php echo 'setting-'.esc_attr( $option['name'] );?> select" 
-                    name="<?php echo $attr_name; ?>" 
-                    <?php echo implode( ' ', $attributes ); ?>
-                >
-                    <?php foreach ( $option[ 'options' ] as $keyVal => $name ) { ?>
-                        <?php echo '<option value="'.esc_attr( $keyVal ).'" '.selected( $value, $keyVal, false ).'>'.esc_html( $name ).'</option>'; ?>
-                    <?php } ?>
-                </select>
-                <?php 
-            break;
-
-            case "multiselect" :
-
-                ?>
-                <select 
-                    id="<?php echo $attr_id ?>" 
-                    multiple 
-                    class="<?php echo 'setting-'.esc_attr( $option['name'] );?> select" 
-                    name="<?php echo $attr_name; ?>[]" 
-                    <?php echo implode( ' ', $attributes ); ?>
-                >
-                    <?php 
-                    foreach ( $option[ 'options' ] as $keyVal => $name ) {
-                        $selected = ( is_array( $value ) && in_array( $keyVal, $value ) ) ? 'selected="selected"' : '';
-                        echo '<option value="'.esc_attr( $keyVal ).'" '.$selected.'>'.esc_html( $name ).'</option>'; 
-                    } 
-                    ?>
-                </select>
-                <?php 
-
-            break;
-
-            case "password" :
-                ?>
-                <input 
-                    type="password" 
-                    id="<?php echo $attr_id ?>" 
-                    class="<?php echo 'setting-'.esc_attr( $option['name'] );?> regular-text password" name="<?php echo $attr_name; ?>" 
-                    value="<?php echo sanitize_text_field( esc_attr( $value ) ); ?>" 
-                    <?php echo implode( ' ', $attributes ); ?> 
-                    <?php echo $placeholder; ?> 
-                />
-                <?php
-            break;
-            
-            case "" :
-            case "input" :
-            case "text" :   
-            default :
-                ?>
-                <input 
-                    type="text" 
-                    id="<?php echo $attr_id ?>" 
-                    class="<?php echo 'setting-'.esc_attr( $option['name'] );?> regular-text text" 
-                    name="<?php echo $attr_name; ?>" 
-                    value="<?php echo sanitize_text_field( esc_attr( $value ) ); ?>" 
-                    <?php echo implode( ' ', $attributes ); ?> 
-                    <?php echo $placeholder; ?> 
-                />
-                <?php
-            break;
-        }
-    }
-
-    /**
-     * display settings 
-     *
-     * @access public
-     * @return void
-     */
-    public function output() {
-        
-        $this->init_settings();
-        $settings = get_option( 'gmw_options' );
-        
-        ?>
-        <div id="gmw-settings-page" class="wrap gmw-admin-page">
+	/**
+	 * __construct function.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function __construct() {
+
+		if ( ( empty( $_GET['page'] ) || 'gmw-settings' != $_GET['page'] ) && ( empty( $_POST['option_page'] ) || 'gmw_options' != $_POST['option_page'] ) ) {
+			return;
+		}
+
+		$this->settings_group = 'gmw_options';
+
+		add_action( 'admin_init', array( $this, 'register_settings' ) );
+	}
+
+	/**
+	 * Setup default settings values
+	 *
+	 * @return [type] [description]
+	 */
+	public function setup_defaults() {
+
+		$defaults = apply_filters(
+			'gmw_admin_settings_setup_defaults', array(
+				'general_settings' => array(
+					'allow_tracking'       => '',
+					'google_map_api_usage' => 'enabled',
+					'google_api'           => '',
+					'js_geocode'           => 1,
+					'country_code'         => 'US',
+					'language_code'        => 'EN',
+					'results_page'         => '',
+					'auto_locate'          => 1,
+				),
+			)
+		);
+
+		$gmw_options = get_option( 'gmw_options' );
+
+		if ( empty( $gmw_options ) ) {
+			$gmw_options = array();
+		}
+
+		$count = 0;
+
+		foreach ( $defaults as $group_name => $values ) {
+
+			if ( empty( $gmw_options[ $group_name ] ) ) {
+				$gmw_options[ $group_name ] = $values;
+				$count++;
+			}
+		}
+
+		if ( $count > 0 ) {
+			update_option( 'gmw_options', $gmw_options );
+		}
+	}
+
+	/**
+	 * Settings groups
+	 *
+	 * @return [type] [description]
+	 */
+	public function settings_groups() {
+
+		return apply_filters(
+			'gmw_admin_settings_groups', array(
+				array(
+					'slug'     => 'general_settings',
+					'label'    => __( 'General Settings', 'geo-my-wp' ),
+					'icon'     => 'cog',
+					'fields'   => array(
+						'allow_tracking'        => array(
+							'name'       => 'allow_tracking',
+							'type'       => 'checkbox',
+							'default'    => '',
+							'label'      => __( 'Plugin Usage Tracking', 'geo-my-wp' ),
+							'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+							'desc'       => __( 'Check this checkbox to allow GEO my WP track the plugin usage on your site.', 'geo-my-wp' ),
+							'attributes' => array(),
+							'priority'   => 10,
+						),
+						'google_maps_api_usage' => array(
+							'name'       => 'google_maps_api_usage',
+							'type'       => 'select',
+							'default'    => 'enabled',
+							'label'      => __( 'Google Maps API', 'geo-my-wp' ),
+							'desc'       => __( 'Using this feature you prevent GEO my WP from registering the Google Map API ( which it does by default ). In most cases this feature should be set to "Enabled". It should disabled only if there are other mapping plugin installed on your site, which also register the Google Maps API and cause for conflicts. Note that disabling this feature might solve a conflict cause by multiple calles to Google Maps API, it might also results in GEO my WP to not work properly.', 'geo-my-wp' ),
+							'attributes' => array(),
+							'options'    => array(
+								'enabled'  => __( 'Enabled', 'geo-my-wp' ),
+								'frontend' => __( 'Disable in the front-end only', 'geo-my-wp' ),
+								'admin'    => __( 'Disable in the back-end only', 'geo-my-wp' ),
+								'disabled' => __( 'Disable completely', 'geo-my-wp' ),
+							),
+							'priority'   => 20,
+						),
+						'google_api'            => array(
+							'name'        => 'google_api',
+							'type'        => 'text',
+							'default'     => '',
+							'placeholder' => __( 'Enter your google api key', 'geo-my-wp' ),
+							'label'       => __( 'Google Maps API V3 Key', 'geo-my-wp' ),
+							'desc'        => sprintf( __( 'Google Maps API key is required for GEO my WP to work properly. Google Maps API key is free and can be generated <a href="%1$s" target="_blank">here</a>. <a href="%2$s" target="_blank">Here</a> you can learn how to properly generate and setup your Maps API key.', 'geo-my-wp' ), 'https://code.google.com/apis/console/', 'http://docs.gravitygeolocation.com/article/101-create-google-map-api-key' ),
+							'attributes'  => array( 'size' => '50' ),
+							'priority'    => 30,
+						),
+						'country_code'          => array(
+							'name'        => 'country_code',
+							'type'        => 'text',
+							'default'     => '',
+							'placeholder' => 'ex. US',
+							'label'       => __( 'Country Code', 'geo-my-wp' ),
+							'desc'        => sprintf( __( 'Enter the country code that will be used as the default with Google Maps API. The country code controls the default region when geocoding an address and when using other services provided by Google Maps API. List of countries code can be found <a href="%s" target="_blank">here</a>.', 'geo-my-wp' ), 'http://geomywp.com/country-code/' ),
+							'attributes'  => array( 'size' => '5' ),
+							'priority'    => 50,
+						),
+						'language_code'         => array(
+							'name'        => 'language_code',
+							'type'        => 'text',
+							'default'     => '',
+							'placeholder' => 'ex. EN',
+							'label'       => __( 'Google API Language', 'geo-my-wp' ),
+							'desc'        => sprintf( __( 'Set the language to be used with Google Places address auto-complete and with Google Maps API. The language codes can be found <a href="%s" target="_blank">here</a>.', 'geo-my-wp' ), 'https://sites.google.com/site/tomihasa/google-language-codes' ),
+							'attributes'  => array( 'size' => '5' ),
+							'priority'    => 60,
+						),
+						'auto_locate'           => array(
+							'name'       => 'auto_locate',
+							'type'       => 'checkbox',
+							'default'    => '',
+							'label'      => __( 'Auto Locator', 'geo-my-wp' ),
+							'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+							'desc'       => __( "GEO my WP will try to retrive the visitor's current location when once first visits the website. If a location was found, it will be saved via cookies and will be used with some of GEO my WP features; such as dynamically displaying results nearby the visitor.", 'geo-my-wp' ),
+							'attributes' => array(),
+							'priority'   => 70,
+						),
+						'results_page'          => array(
+							'name'       => 'results_page',
+							'type'       => 'select',
+							'default'    => '0',
+							'label'      => __( 'Results Page', 'geo-my-wp' ),
+							'desc'       => __( 'The page you select here displays the search results ( of any of your forms ) when using the "GMW Search Form" widget. The plugin will first check if a results page was set in the form settings, and if so, the results will be displayed in that page. Otherwise, if no results page was set in the form settings, the results will be displayed in the page you select here. To use this feature, select the results page from the dropdown menu and paste the shortcode <code>[gmw form="results"]</code> to the content area of this page.', 'GMW' ),
+							'options'    => $this->get_pages(),
+							'attributes' => array(),
+							'priority'   => 80,
+						),
+					),
+					'priority' => 3,
+				),
+			)
+		);
+	}
+
+	/**
+	 * Generate settings
+	 *
+	 * @return [type] [description]
+	 */
+	public function settings() {
+
+		$settings = [];
+
+		// loop through settings groups
+		foreach ( $this->settings_groups as $key => $group ) {
+
+			// verify groups slug
+			if ( empty( $group['slug'] ) ) {
+				continue;
+			}
+
+			// Generate the group if does not exsist
+			if ( ! isset( $settings[ $group['slug'] ] ) ) {
+
+				$settings[ $group['slug'] ] = $group['fields'];
+
+				// otehrwise, merge the fields of the existing group
+				// with the current group.
+			} else {
+
+				$settings[ $group['slug'] ] = array_merge_recursive( $settings[ $group['slug'] ], $group['fields'] );
+
+				// remove the duplicate group/tab
+				unset( $this->settings_groups[ $key ] );
+			}
+
+			// allow filtering the specific group
+			$settings[ $group['slug'] ] = apply_filters( 'gmw_' . $group['slug'] . '_admin_settings', $settings[ $group['slug'] ], $settings );
+		}
+
+		// filter all settings groups
+		$settings = apply_filters( 'gmw_admin_settings', $settings );
+
+		return $settings;
+	}
+
+	/**
+	 * init_settings function.
+	 *
+	 * @access protected
+	 * @return void
+	 */
+	protected function init_settings() {
+
+		// generate default values
+		$this->setup_defaults();
+
+		// get settings groups
+		$this->settings_groups = $this->settings_groups();
+
+		// get settings
+		$this->settings = $this->settings();
+
+		// backward capability for settings before settings groups were created
+		foreach ( $this->settings as $key => $section ) {
+
+			if ( ! empty( $section[0] ) && ! empty( $section[1] ) && is_string( $section[0] ) ) {
+
+				trigger_error( 'Using deprecated method for registering GMW settings and settings groups.', E_USER_NOTICE );
+
+				$this->settings_groups[] = array(
+					'slug'     => $key,
+					'label'    => $section[0],
+					'icon'     => '',
+					'priority' => 99,
+				);
+
+				$this->settings[ $key ] = $section[1];
+			}
+		}
+
+		// backward capability for replacing std with default
+		foreach ( $this->settings as $key => $section ) {
+
+			foreach ( $section as $sec_key => $sec_value ) {
+
+				// skip hidden field
+				if ( empty( $sec_value ) ) {
+					continue;
+				}
+
+				if ( isset( $sec_value['std'] ) && ! isset( $sec_value['default'] ) ) {
+
+					trigger_error( '"std" attribute is no longer supported in GMW settings and was replaced with "default" in version 3.0.', E_USER_NOTICE );
+
+					$this->settings[ $key ][ $sec_key ]['default'] = ! empty( $sec_value['std'] ) ? $sec_value['std'] : '';
+
+					unset( $this->settings[ $key ][ $sec_key ]['std'] );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Get list of pages
+	 *
+	 * @return array of pages
+	 */
+	public function get_pages() {
+
+		$pages = array();
+		foreach ( get_pages() as $page ) {
+			$pages[ $page->ID ] = $page->post_title;
+		}
+
+		return $pages;
+	}
+
+	/**
+	 * register_settings function.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function register_settings() {
+
+		if ( empty( $_POST['option_page'] ) || $_POST['option_page'] != $this->settings_group ) {
+			return;
+		}
+
+		if ( empty( $_POST['action'] ) || 'update' != $_POST['action'] ) {
+			return;
+		}
+
+		register_setting( $this->settings_group, 'gmw_options', array( $this, 'validate' ) );
+	}
+
+	/**
+	 * Validate inputs
+	 * @param  [type] $values [description]
+	 * @return [type]         [description]
+	 */
+	function validate( $values ) {
+
+		$this->init_settings();
+
+		//get the submitted values into the valid_input array
+		//then below we run validation through the valid_input
+		$valid_input = $values;
+
+		foreach ( $this->settings as $section_name => $section ) {
+
+			foreach ( $section as $option ) {
+
+				switch ( $option['type'] ) {
+
+					case 'tab_section':
+						break;
+
+					case 'function':
+						if ( ! empty( $values[ $section_name ][ $option['name'] ] ) ) {
+							$valid_input[ $section_name ][ $option['name'] ] = $values[ $section_name ][ $option['name'] ];
+						}
+						break;
+
+					case 'checkbox':
+						if ( ! empty( $values[ $section_name ][ $option['name'] ] ) ) {
+							$valid_input[ $section_name ][ $option['name'] ] = 1;
+						}
+						break;
+
+					case 'multicheckbox':
+						if ( empty( $values[ $section_name ][ $option['name'] ] ) || ! is_array( $values[ $section_name ][ $option['name'] ] ) ) {
+
+							$valid_input[ $section_name ][ $option['name'] ] = is_array( $option['default'] ) ? $option['default'] : array();
+
+						} else {
+
+							foreach ( $option['options'] as $keyVal => $name ) {
+
+								if ( ! empty( $values[ $section_name ][ $option['name'] ][ $keyVal ] ) ) {
+									$valid_input[ $section_name ][ $option['name'] ][ $keyVal ] = 1;
+								}
+							}
+						}
+						break;
+
+					case 'multiselect':
+						if ( empty( $values[ $section_name ][ $option['name'] ] ) || ! is_array( $values[ $section_name ][ $option['name'] ] ) ) {
+
+							$valid_input[ $section_name ][ $option['name'] ] = is_array( $option['default'] ) ? $option['default'] : array();
+
+						} else {
+
+							$valid_input[ $section_name ][ $option['name'] ] = array();
+
+							foreach ( $option['options'] as $keyVal => $name ) {
+
+								if ( in_array( $keyVal, $values[ $section_name ][ $option['name'] ] ) ) {
+
+									$valid_input[ $section_name ][ $option['name'] ][] = $keyVal;
+								}
+							}
+						}
+						break;
+
+					case 'multicheckboxvalues':
+						if ( empty( $values[ $section_name ][ $option['name'] ] ) || ! is_array( $values[ $section_name ][ $option['name'] ] ) ) {
+
+							$valid_input[ $section_name ][ $option['name'] ] = is_array( $option['default'] ) ? $option['default'] : array();
+
+						} else {
+
+							$valid_input[ $section_name ][ $option['name'] ] = array();
+
+							foreach ( $option['options'] as $keyVal => $name ) {
+
+								if ( in_array( $keyVal, $values[ $section_name ][ $option['name'] ] ) ) {
+
+									$valid_input[ $section_name ][ $option['name'] ][] = $keyVal;
+								}
+							}
+						}
+						break;
+
+					case 'select':
+					case 'radio':
+						if ( ! empty( $values[ $section_name ][ $option['name'] ] ) && in_array( $values[ $section_name ][ $option['name'] ], array_keys( $option['options'] ) ) ) {
+							$valid_input[ $section_name ][ $option['name'] ] = $values[ $section_name ][ $option['name'] ];
+						} else {
+							$valid_input[ $section_name ][ $option['name'] ] = ( ! empty( $option['default'] ) ) ? $option['default'] : '';
+						}
+						break;
+
+					case 'textarea':
+						if ( ! empty( $values[ $section_name ][ $option['name'] ] ) ) {
+							$valid_input[ $section_name ][ $option['name'] ] = esc_textarea( $values[ $section_name ][ $option['name'] ] );
+						} else {
+							$valid_input[ $section_name ][ $option['name'] ] = ( ! empty( $option['default'] ) ) ? esc_textarea( $option['default'] ) : '';
+						}
+						break;
+
+					case 'text':
+					case 'password':
+						if ( ! empty( $values[ $section_name ][ $option['name'] ] ) ) {
+							$valid_input[ $section_name ][ $option['name'] ] = sanitize_text_field( $values[ $section_name ][ $option['name'] ] );
+						} else {
+							$valid_input[ $section_name ][ $option['name'] ] = ( ! empty( $option['default'] ) ) ? sanitize_text_field( $option['default'] ) : '';
+						}
+						break;
+				}
+			}
+		}
+
+		return $valid_input;
+	}
+
+	/**
+	 * Get form fields
+	 *
+	 * @param  [type] $option  [description]
+	 * @param  [type] $tab     [description]
+	 * @param  [type] $section [description]
+	 * @return [type]          [description]
+	 */
+	public function get_form_field( $settings, $option, $tab, $section ) {
+
+		$option['default']  = isset( $option['default'] ) ? $option['default'] : '';
+		$option['name']     = esc_attr( $option['name'] );
+		$option['cb_label'] = isset( $option['cb_label'] ) ? $option['cb_label'] : '';
+		$value              = ! empty( $settings[ $tab ][ $option['name'] ] ) ? $settings[ $tab ][ $option['name'] ] : $option['default'];
+		$attr_id            = esc_attr( 'setting-' . $tab . '-' . $option['name'] );
+		$placeholder        = ! empty( $option['placeholder'] ) ? 'placeholder="' . esc_attr( $option['placeholder'] ) . '"' : '';
+		$attr_name          = esc_attr( 'gmw_options[' . $tab . '][' . $option['name'] . ']' );
+		$attributes         = array();
+
+		if ( ! isset( $option['type'] ) ) {
+			$option['type'] = 'text';
+		}
+
+		//attributes
+		if ( ! empty( $option['attributes'] ) && is_array( $option['attributes'] ) ) {
+			foreach ( $option['attributes'] as $attribute_name => $attribute_value ) {
+				$attributes[] = esc_attr( $attribute_name ) . '="' . esc_attr( $attribute_value ) . '"';
+			}
+		}
+
+		//display settings fields
+		switch ( $option['type'] ) {
+
+			//create custom function
+			case 'function':
+				$function   = ! empty( $option['function'] ) ? $option['function'] : $option['name'];
+				$name_attr  = 'gmw_options[' . $tab . '][' . $option['name'] . ']';
+				$this_value = ! empty( $settings[ $tab ][ $option['name'] ] ) ? $settings[ $tab ][ $option['name'] ] : array();
+
+				do_action( 'gmw_main_settings_' . $function, $this_value, $name_attr, $settings, $tab, $option );
+
+				break;
+
+			case 'checkbox':
+				?>
+				<label>
+					<input 
+						type="checkbox" 
+						id="<?php echo $attr_id; ?>" 
+						class="setting-<?php echo esc_attr( $option['name'] ); ?> checkbox" 
+						name="<?php echo $attr_name; ?>" 
+						value="1" 
+						<?php echo implode( ' ', $attributes ); ?> 
+						<?php checked( '1', $value ); ?> 
+					/> 
+					<?php echo $option['cb_label']; ?>
+				</label>
+				<?php
+				break;
+
+			case 'multicheckbox':
+				foreach ( $option['options'] as $keyVal => $name ) {
+
+					$value = ! empty( $value[ $keyVal ] ) ? $value[ $keyVal ] : $option['default'];
+					?>
+					<label>
+						<input 
+							type="checkbox" 
+							id="<?php echo $attr_id . '-' . esc_attr( $keyVal ); ?>" class="setting-<?php echo $option['name']; ?> checkbox multicheckbox"
+							name="<?php echo $attr_name . '[' . esc_attr( $keyVal ) . ']'; ?>" 
+							value="1" <?php checked( '1', $value ); ?> 
+						/> 
+						<?php echo esc_html( $name ); ?>
+					</label>
+					<?php
+				}
+				break;
+
+			case 'multicheckboxvalues':
+				$option['default'] = is_array( $option['default'] ) ? $option['default'] : array();
+
+				foreach ( $option['options'] as $keyVal => $name ) {
+
+					$checked = in_array( $keyVal, $value ) ? 'checked="checked"' : '';
+					?>
+					<label>
+						<input 
+							type="checkbox" 
+							id="<?php echo $attr_id . '-' . esc_attr( $keyVal ); ?>" 
+							class="setting-<?php echo esc_attr( $option['name'] ); ?> checkbox multicheckboxvalues" 
+							name="<?php echo $attr_name . '[]'; ?>" 
+							value="<?php echo esc_attr( $keyVal ); ?>" 
+							<?php echo $checked; ?> 
+						/> 
+						<?php echo esc_html( $name ); ?>
+					</label>
+					<?php
+				}
+				break;
+
+			case 'textarea':
+				?>
+				<textarea 
+					id="<?php echo $attr_id; ?>" 
+					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> textarea large-text" 
+					cols="50" 
+					rows="3" 
+					name="<?php echo $attr_name; ?>" 
+					<?php echo implode( ' ', $attributes ); ?> 
+					<?php echo $placeholder; ?>><?php echo esc_textarea( $value ); ?></textarea>
+				<?php
+				break;
+
+			case 'radio':
+				$rc = 1;
+				foreach ( $option['options'] as $keyVal => $name ) {
+					$checked = ( $rc == 1 ) ? 'checked="checked"' : checked( $value, $keyVal, false );
+					?>
+					<label>
+						<input 
+							type="radio" 
+							id="<?php $attr_id; ?>" 
+							class="setting-<?php echo esc_attr( $option['name'] ); ?>" 
+							name="<?php echo $attr_name; ?>" 
+							value="<?php echo esc_attr( $keyVal ); ?>"
+							<?php echo $checked; ?> 
+						/>
+						<?php echo esc_attr( $name ); ?>
+					</label>
+					&nbsp;&nbsp;
+					<?php
+					$rc++;
+				}
+				break;
+
+			case 'select':
+				?>
+				<select 
+					id="<?php echo $attr_id; ?>" 
+					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> select" 
+					name="<?php echo $attr_name; ?>" 
+					<?php echo implode( ' ', $attributes ); ?>
+				>
+					<?php foreach ( $option['options'] as $keyVal => $name ) { ?>
+						<?php echo '<option value="' . esc_attr( $keyVal ) . '" ' . selected( $value, $keyVal, false ) . '>' . esc_html( $name ) . '</option>'; ?>
+					<?php } ?>
+				</select>
+				<?php
+				break;
+
+			case 'multiselect':
+				?>
+				<select 
+					id="<?php echo $attr_id; ?>" 
+					multiple 
+					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> select" 
+					name="<?php echo $attr_name; ?>[]" 
+					<?php echo implode( ' ', $attributes ); ?>
+				>
+					<?php
+					foreach ( $option['options'] as $keyVal => $name ) {
+						$selected = ( is_array( $value ) && in_array( $keyVal, $value ) ) ? 'selected="selected"' : '';
+						echo '<option value="' . esc_attr( $keyVal ) . '" ' . $selected . '>' . esc_html( $name ) . '</option>';
+					}
+					?>
+				</select>
+				<?php
+
+				break;
+
+			case 'password':
+				?>
+				<input 
+					type="password" 
+					id="<?php echo $attr_id; ?>" 
+					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> regular-text password" name="<?php echo $attr_name; ?>" 
+					value="<?php echo sanitize_text_field( esc_attr( $value ) ); ?>" 
+					<?php echo implode( ' ', $attributes ); ?> 
+					<?php echo $placeholder; ?> 
+				/>
+				<?php
+				break;
+
+			case '':
+			case 'input':
+			case 'text':
+			default:
+				?>
+				<input 
+					type="text" 
+					id="<?php echo $attr_id; ?>" 
+					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> regular-text text" 
+					name="<?php echo $attr_name; ?>" 
+					value="<?php echo sanitize_text_field( esc_attr( $value ) ); ?>" 
+					<?php echo implode( ' ', $attributes ); ?> 
+					<?php echo $placeholder; ?> 
+				/>
+				<?php
+				break;
+		}
+	}
+
+	/**
+	 * display settings
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function output() {
+
+		$this->init_settings();
+		$settings = get_option( 'gmw_options' );
+
+		?>
+		<div id="gmw-settings-page" class="wrap gmw-admin-page">
 
             <h2>
                 <i class="gmw-icon-cog-alt"></i>
@@ -795,11 +784,11 @@ class GMW_Settings {
 
             </form>
         </div>
-        <?php   
-        // load chosen  
-        if ( ! wp_script_is( 'chosen', 'enqueued' ) ) {
-            wp_enqueue_script( 'chosen' );
-            wp_enqueue_style( 'chosen' );
-        }
-    }
+		<?php
+		// load chosen
+		if ( ! wp_script_is( 'chosen', 'enqueued' ) ) {
+			wp_enqueue_script( 'chosen' );
+			wp_enqueue_style( 'chosen' );
+		}
+	}
 }

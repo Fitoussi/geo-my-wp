@@ -50,8 +50,8 @@ class GMW_Cache_Helper {
 	 * @return [type]                [description]
 	 */
 	public static function flush_locations_cache( $location_id, $location_data ) {
-		self::get_transient_version( 'gmw_get_object_'.$location_data->object_type.'_locations', true );
-		self::get_transient_version( 'gmw_get_object_'.$location_data->object_type.'_query', true );
+		self::get_transient_version( 'gmw_get_object_' . $location_data->object_type . '_locations', true );
+		self::get_transient_version( 'gmw_get_object_' . $location_data->object_type . '_query', true );
 	}
 
 	/**
@@ -98,20 +98,20 @@ class GMW_Cache_Helper {
 	 * @return string transient version based on time(), 10 digits
 	 */
 	public static function get_transient_version( $group, $refresh = false ) {
-		
+
 		$transient_name  = $group . '_transient_version';
 		$transient_value = get_transient( $transient_name );
 
 		if ( false === $transient_value || true === $refresh ) {
-			
+
 			self::delete_version_transients( $transient_value );
-			
+
 			//set_transient( $transient_name, $transient_value = time() );
-			
+
 			// 2147483647 largest value can be used as random on some OS
 			$rnd = rand( 0, 2147483647 );
 
-			set_transient( $transient_name, $transient_value = $rnd );	
+			set_transient( $transient_name, $transient_value = $rnd );
 		}
 
 		return $transient_value;
@@ -123,21 +123,22 @@ class GMW_Cache_Helper {
 	 * Note; this only works on transients appended with the transient version, and when object caching is not being used.
 	 */
 	private static function delete_version_transients( $version ) {
-		
+
 		if ( ! wp_using_ext_object_cache() && ! empty( $version ) ) {
-			
+
 			global $wpdb;
-			
-			$wpdb->query( 
-				$wpdb->prepare( "
+
+			$wpdb->query(
+				$wpdb->prepare(
+					"
 					DELETE FROM {$wpdb->options} 
-					WHERE option_name LIKE %s;", "\_transient\_%" . $version 
-				) 
+					WHERE option_name LIKE %s;", '\_transient\_%' . $version
+				)
 			);
 		}
 	}
 
-    /**
+	/**
 	 * Clear expired transients
 	 */
 	public static function clear_expired_transients() {
@@ -151,14 +152,14 @@ class GMW_Cache_Helper {
 				AND a.option_name NOT LIKE %s
 				AND b.option_name = CONCAT( '_transient_timeout_', SUBSTRING( a.option_name, 12 ) )
 				AND b.option_value < %d";
-			
-			$rows = $wpdb->query( 
-				$wpdb->prepare( 
-					$sql, 
-					$wpdb->esc_like( '_transient_gmw' ) . '%', 
-					$wpdb->esc_like( '_transient_timeout_gmw' ) . '%', 
-					time() 
-				) 
+
+			$rows = $wpdb->query(
+				$wpdb->prepare(
+					$sql,
+					$wpdb->esc_like( '_transient_gmw' ) . '%',
+					$wpdb->esc_like( '_transient_timeout_gmw' ) . '%',
+					time()
+				)
 			);
 		}
 	}
