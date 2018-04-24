@@ -15,4 +15,22 @@
 
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
 	<exclude-pattern>*/vendor/*</exclude-pattern>
+
+	<rule ref="Squiz.PHP.CommentedOutCode"/>
+	<rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
+	<rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
+	<rule ref="Generic.Commenting.Todo"/>
+	<rule ref="Generic.ControlStructures.InlineControlStructure"/>
+
+	<rule ref="WordPress-Extra">
+	 	<exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
+	 	<exclude name="Generic.WhiteSpace.ScopeIndent"/>
+	 	<exclude name="PEAR.Functions.FunctionCallSignature.SpaceAfterOpenBracket" />
+	 	<exclude name="PEAR.Functions.FunctionCallSignature.SpaceBeforeCloseBracket" />
+	 	<exclude name="PEAR.Functions.FunctionCallSignature.Indent" />
+	 	<exclude name="WordPress.WhiteSpace.PrecisionAlignment.Found" />
+	 	<exclude name="WordPress.Arrays.ArrayDeclaration.IndexNoNewline" />
+	 	<exclude name="WordPress.Arrays.ArrayKeySpacingRestrictions.NoSpacesAroundArrayKeys" />
+	 	<exclude name="WordPress.PHP.YodaConditions" />
+	</rule>
 </ruleset>
