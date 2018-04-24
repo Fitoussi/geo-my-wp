@@ -115,7 +115,7 @@ class GMW_Settings {
                         'attributes'  => array( 'size' => '50' ),
                         'priority'    => 30
                     ),
-                    'js_geocode' => array(
+                    /*'js_geocode' => array(
                         'name'        => 'js_geocode',
                         'type'        => 'checkbox',
                         'default'     => '',
@@ -124,7 +124,7 @@ class GMW_Settings {
                         'desc'        => __( "Check this checkbox if you wish to use client-side ( JavaScript ) geocoder to geocode the address entered in GEO my WP's search forms. client-side geocoding usually overcomes Google API's OVER_QUERY_LIMIT issue. This feature should be enabled in most cases.", 'geo-my-wp' ),                  
                         'attributes'  => array(),
                         'priority'    => 40
-                    ),
+                    ), */
                     'country_code' => array(
                         'name'        => 'country_code',
                         'type'        => 'text',
