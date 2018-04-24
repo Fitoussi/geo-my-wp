@@ -1,4 +1,8 @@
 <?php 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! class_exists( 'GMW_Form_Init' ) ) {
 	return;
 }
@@ -307,19 +311,18 @@ class GMW_Posts_Locator_Form extends GMW_Form {
             'gmw_args'            => $this->query_cache_args
         ), $this->form, $this );
 
-        $this->form = apply_filters( 'gmw_pt_form_before_posts_query', $this->form, $this );
-
+        $this->form     = apply_filters( 'gmw_pt_form_before_posts_query', $this->form, $this );
         $internal_cache = GMW()->internal_cache;
 
         if ( $internal_cache ) {
 
             // cache key
-            $hash = md5( json_encode( $this->form['query_args'] ) );
+            $hash            = md5( json_encode( $this->form['query_args'] ) );
             $query_args_hash = 'gmw' . $hash . GMW_Cache_Helper::get_transient_version( 'gmw_get_object_post_query' );
         }
 
         // look for query in cache
-        if ( ! $internal_cache || false === ( $this->query = get_transient( $query_args_hash ) ) ) {
+        if ( ! $internal_cache || false === ( $this->query = get_transient( $query_args_hash ) ) ) {        
         //if ( 1 == 1 ) {   
             //print_r( 'WP posts query done' );
             
@@ -405,4 +408,3 @@ class GMW_Posts_Locator_Form extends GMW_Form {
         }
     }
 }
-?>
