@@ -125,6 +125,36 @@ class GMW_Helper {
 		// can modify the PATH of the custom template files.
 		$custom_path = apply_filters( 'gmw_get_templates_path', STYLESHEETPATH.'/geo-my-wp', $component, $folder_name, $iw_type, $addon );
 
+		// Support deprecated custom templates folder name.
+		// To be removed in the future.
+		if ( ! is_dir( $custom_path .'/'.$templates_folder ) ) {
+			
+			if ( $component == 'posts_locator' ) {
+
+				trigger_error( 'The "posts" custom templates folder was renamed to "posts-locator" since GEO my WP 3.0. Rename your custom folder to prevent issues in the future.' , E_USER_NOTICE );
+
+				$templates_folder = 'posts';
+				
+			} elseif ( $component == 'members_locator' ) {
+				
+				trigger_error( 'The "friends" custom templates folder was renamed to "members-locator" since GEO my WP 3.0. Rename your custom folder to prevent issues in the future.' , E_USER_NOTICE );
+
+				$templates_folder = 'friends';
+			
+			} elseif ( $component == 'users_locator' ) {
+				
+				trigger_error( 'The "users" custom templates folder was renamed to "users-locator" since GEO my WP 3.0. Rename your custom folder to prevent issues in the future.' , E_USER_NOTICE );
+
+				$templates_folder = 'users';
+			
+			} elseif ( $component == 'groups_locator' ) {
+				
+				trigger_error( 'The "groups" custom templates folder was renamed to "groups-locator" since GEO my WP 3.0. Rename your custom folder to prevent issues in the future.' , E_USER_NOTICE );
+
+				$templates_folder = 'groups';
+			} 
+		}
+
 		if ( $addon_data != false && ! empty( $addon_data['templates_folder'] ) ) {
 			$templates_folder .= '/'.$addon_data['templates_folder']; 
 		}
@@ -225,6 +255,36 @@ class GMW_Helper {
 			);
 
 			$custom_path_uri = apply_filters( 'gmw_get_template_path_uri', $custom_path_uri, $component, $folder_name, $iw_type, $template_name, $addon );
+
+			// Support deprecated custom templates folder name.
+			// To be removed in the future.
+			if ( ! is_dir( $custom_path_uri['path'] .'/'.$templates_folder ) ) {
+			
+				if ( $component == 'posts_locator' ) {
+
+					trigger_error( 'The "posts" custom templates folder was renamed to "posts-locator" since GEO my WP 3.0. Rename your custom folder to prevent issues in the future.' , E_USER_NOTICE );
+
+					$templates_folder = 'posts';
+					
+				} elseif ( $component == 'members_locator' ) {
+					
+					trigger_error( 'The "friends" custom templates folder was renamed to "members-locator" since GEO my WP 3.0. Rename your custom folder to prevent issues in the future.' , E_USER_NOTICE );
+
+					$templates_folder = 'friends';
+				
+				} elseif ( $component == 'users_locator' ) {
+					
+					trigger_error( 'The "users" custom templates folder was renamed to "users-locator" since GEO my WP 3.0. Rename your custom folder to prevent issues in the future.' , E_USER_NOTICE );
+
+					$templates_folder = 'users';
+				
+				} elseif ( $component == 'groups_locator' ) {
+					
+					trigger_error( 'The "groups" custom templates folder was renamed to "groups-locator" since GEO my WP 3.0. Rename your custom folder to prevent issues in the future.' , E_USER_NOTICE );
+
+					$templates_folder = 'groups';
+				}
+			}
 
 			if ( $addon != '' && $addon != $component ){
 
