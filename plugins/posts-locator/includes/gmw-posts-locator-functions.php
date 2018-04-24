@@ -418,7 +418,7 @@ function gmw_get_post_location_data( $post_id = 0, $output = OBJECT, $cache = tr
 
         global $wpdb;
 
-        $gmw_table  = $wpdb->prefix . 'gmw_locations';
+        $gmw_table   = $wpdb->base_prefix . 'gmw_locations';
         $posts_table = $wpdb->prefix . 'posts';
 
         $location  = $wpdb->get_row( 
