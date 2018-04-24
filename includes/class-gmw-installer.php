@@ -27,13 +27,16 @@ class GMW_Installer {
 	 */
 	public static function init() {
 
-		// update license keys
+		// Run some tasks on plugin activation.
+		self::do_tasks();
+
+		// Update license keys.
 		self::update_license_keys();
 
-		// create database tables
+		// Create database tables.
 		self::create_tables();
 
-		// update the forms table only once.
+		// Update the forms table only once.
 		if ( ( get_option( 'gmw_forms_table_updated' ) == false ) ) {
 			self::update_forms_table();
 		}
@@ -66,6 +69,16 @@ class GMW_Installer {
 
 		update_option( 'gmw_db_version', self::$db_version );
 		update_option( 'gmw_version', GMW_VERSION );
+	}
+
+	public static function do_tasks() {
+
+		// Enable updater by default on activation.
+		// It is easy to forget that it is disabled and users can miss updateds.
+		update_option( 'gmw_extensions_updater', true );
+
+		// Flush all internal cache.
+		GMW_Cache_Helper::flush_all();
 	}
 
 	/**
