@@ -122,19 +122,19 @@ for detailed installation and setup guide see the [documentation](docs.geomywp.c
 
 * Version 3.0 is a major release. If you are updating from a version earlier than 3.0, it is highly recommended that you read the posts [GEO my WP 3.0 Beta 7](https://geomywp.com/geo-my-wp-3-0-beta-7/) and [GEO my WP Upgrade Process](https://geomywp.com/geo-my-wp-3-0-upgrade-process/) before updating. You should also test this version on a staging environment before updating on your live site.
 
-Fix: use $wpdb->base_prefix instead of $wpdb->prefix when getting single post location.
-Fix: single user location data does not return properly ( mainly when in multisite ). Now using $wpdb->prefix instead of to $wpdb->base_prefix.
-Fix: remove PHP warnings.
-Fix: plugin's geocoder does not cache geocoded data properly.
-Fix: Address autocomplete generates JS error.
-Tweak: client-side geocoder is now enabled by default and can be disabled using the filter 'gmw_client_side_geocoder_enabled'.
-Tweak: enable plugins updater on plugin activation/update.
-Tweak: flush internal cache on plugin activation/update.
-Tweak: Remove the client-side Geocoder option from the settings page. It is now enabled by default.
-Enhancement: support deprecated custom templates folder names.
-Enhancement: coding standards.
-Function: GMW_Cache_Helper::flush_all() to flush all internal object locations.
-Security: add defined( 'ABSPATH' ) to beginning of file.
+* Fix: use $wpdb->base_prefix instead of $wpdb->prefix when getting single post location.
+* Fix: single user location data does not return properly ( mainly when in multisite ). Now using $wpdb->* prefix instead of to $wpdb->base_prefix.
+* Fix: remove PHP warnings.
+* Fix: plugin's geocoder does not cache geocoded data properly.
+* Fix: Address autocomplete generates JS error.
+* Tweak: client-side geocoder is now enabled by default and can be disabled using the filter 'gmw_client_side_geocoder_enabled'.
+* Tweak: enable plugins updater on plugin activation/update.
+* Tweak: flush internal cache on plugin activation/update.
+* Tweak: Remove the client-side Geocoder option from the settings page. It is now enabled by default.
+* Enhancement: support deprecated custom templates folder names.
+* Enhancement: coding standards.
+* Function: GMW_Cache_Helper::flush_all() to flush all internal object locations.
+* Security: add defined( 'ABSPATH' ) to beginning of file.
 
 = 3.0.2 =
 
