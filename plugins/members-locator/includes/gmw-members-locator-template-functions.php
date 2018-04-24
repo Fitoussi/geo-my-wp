@@ -46,6 +46,10 @@ if ( ! function_exists( 'gmw_search_results_bp_avatar' ) ) {
  */
 function gmw_search_form_bp_member_types( $gmw = array() ) {
 
+	if ( empty( $gmw['search_form']['member_types_filter'] ) ) {
+		return;
+	}
+	
 	$settings = $gmw['search_form']['member_types_filter'];
 
 	if ( ! isset( $settings['usage'] ) || $settings['usage'] == 'disabled' || $settings['usage'] == 'pre_defined' ) {
