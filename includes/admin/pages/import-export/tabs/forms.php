@@ -61,7 +61,7 @@ function gmw_import_export_forms_tab() {
 											<input 
 												type="checkbox" 
 												class="cb-export-item" 
-												name="export_forms[]" 
+												name="gmw_forms[]" 
 												value="<?php echo esc_attr( $values['ID'] ); ?>" 
 												checked="checked" 
 											/>
@@ -149,7 +149,7 @@ add_action( 'gmw_import_export_forms_tab', 'gmw_import_export_forms_tab' );
 function gmw_export_forms() {
 
 	// make sure at lease one checkbox is checked
-	if ( empty( $_POST['export_forms'] ) ) {
+	if ( empty( $_POST['gmw_forms'] ) ) {
 		wp_die( __( 'You must check at least one checkbox of a form that you would like to export.', 'geo-my-wp' ) );
 	}
 	 
@@ -184,8 +184,8 @@ function gmw_export_forms() {
 		$wpdb->prepare( "
 			SELECT * 
 			FROM {$wpdb->prefix}gmw_forms
-			WHERE ID IN ( ".str_repeat( "%d,", count( $_POST['export_forms'] ) - 1 ) . "%d )"
-		, $_POST['export_forms']
+			WHERE ID IN ( ".str_repeat( "%d,", count( $_POST['gmw_forms'] ) - 1 ) . "%d )"
+		, $_POST['gmw_forms']
 		)
 	);
 
