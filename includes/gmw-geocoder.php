@@ -23,6 +23,8 @@ if ( ! function_exists( 'gmw_geocoder' ) ) :
  */
 function gmw_geocoder( $raw_data = '', $force_refresh = false ) {
 
+	$raw_data = apply_filters( 'gmw_geocoder_raw_data', $raw_data );
+
     // if data is array, then it should be coordinates
     if ( is_array( $raw_data ) ) {
         
