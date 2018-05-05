@@ -6,15 +6,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * GMW_Edit_Form calss
- * 
+ *
  * Edit GMW forms in the back end
- * 
+ *
  * @since 2.5
  * @author FitoussiEyal
  *
  */
 class GMW_Form_Editor {
-	
+
 	/**
 	 * enable / disable ajax in form editor
 	 * @var boolean
@@ -38,7 +38,7 @@ class GMW_Form_Editor {
 		}
 
 		// verify that this is Form edit page
-		if ( empty( $_GET['page'] ) || $_GET['page'] != 'gmw-forms' || empty( $_GET['gmw_action'] ) || $_GET['gmw_action'] != 'edit_form' ) {
+		if ( empty( $_GET['page'] ) || 'gmw-forms' != $_GET['page'] || empty( $_GET['gmw_action'] ) || 'edit_form' != $_GET['gmw_action'] ) {
 			return;
 		}
 
@@ -46,7 +46,7 @@ class GMW_Form_Editor {
 
 		if ( ! $this->ajax_enabled ) {
 			add_filter( 'gmw_admin_notices_messages', array( $this, 'notices_messages' ) );
-			add_action( 'gmw_update_admin_form',	  array( $this, 'update_form' 	   ) );
+			add_action( 'gmw_update_admin_form', array( $this, 'update_form' ) );
 		}
 
 		// make sure form ID passed
@@ -54,12 +54,14 @@ class GMW_Form_Editor {
 			wp_die( __( 'No form ID provided.', 'geo-my-wp' ) );
 		}
 
+		$form_id = ( int ) $_GET['form_id'];
+
 		// get form data
-		$this->form = GMW_Forms_Helper::get_form( $_GET['form_id'] );
+		$this->form = GMW_Forms_Helper::get_form( $form_id );
 
 		if ( ! gmw_is_addon_active( $this->form['addon'] ) ) {
 
-			$link = 'The extension this form belongs to is deactivated. <a href="'.esc_url( 'admin.php?page=gmw-extensions' ).'">Manage extensions</a>';
+			$link = 'The extension this form belongs to is deactivated. <a href="' . esc_url( 'admin.php?page=gmw-extensions' ) . '">Manage extensions</a>';
 
 			wp_die( $link );
 		}
@@ -71,343 +73,343 @@ class GMW_Form_Editor {
 	}
 
 	/**
-     * GMW Function - add notice messages
-     *
-     * @access public
-     * @since 3.0
-     * @author Eyal Fitoussi
-     *
-     */
-    public function notices_messages( $messages ) {
-    
-    	$messages['form_updated']     = __( 'Form successfully updated.', 'geo-my-wp' );
-    	$messages['form_not_updated'] = __( 'There was an error while trying to update the form.', 'geo-my-wp' );
-    	
-    	return $messages;
-    }
-	
+	 * GMW Function - add notice messages
+	 *
+	 * @access public
+	 * @since 3.0
+	 * @author Eyal Fitoussi
+	 *
+	 */
+	public function notices_messages( $messages ) {
+
+		$messages['form_updated']     = __( 'Form successfully updated.', 'geo-my-wp' );
+		$messages['form_not_updated'] = __( 'There was an error while trying to update the form.', 'geo-my-wp' );
+
+		return $messages;
+	}
+
 	/**
 	 * Form groups
-	 * 
+	 *
 	 * @return [type] [description]
 	 */
 	public function fields_groups() {
 
 		// settings groups
 		$groups = array(
-			array( 
-				'slug'    	=> 'hidden',
-                'label' 	=> __( 'hidden', 'geo-my-wp' ),
-                'fields'	=> array(),
-                'priority'  => 1
-            ),
-            array( 
-            	'slug'    	=> 'page_load_results',
-                'label' 	=> __( 'Page Load Results', 'geo-my-wp' ),
-                'fields'	=> array(
-                	'enabled'  => array(
-						'name'  		=> 'enabled',
-						'type'     		=> 'checkbox',
-						'default'   	=> '',
-						'label' 		=> __( 'Enable Page Load Features', 'geo-my-wp' ),
-						'desc'  		=> __( 'Check this checkbox to dynamically display all existing posts on page load. You can filter the initial search result using the rest of the filters below.', 'geo-my-wp' ),
-						'cb_label' 		=> __( 'Enable', 'geo-my-wp' ),
-						'attributes'  	=> '',
-						'priority'		=> 10
+			array(
+				'slug'     => 'hidden',
+				'label'    => __( 'hidden', 'geo-my-wp' ),
+				'fields'   => array(),
+				'priority' => 1,
+			),
+			array(
+				'slug'     => 'page_load_results',
+				'label'    => __( 'Page Load Results', 'geo-my-wp' ),
+				'fields'   => array(
+					'enabled'         => array(
+						'name'       => 'enabled',
+						'type'       => 'checkbox',
+						'default'    => '',
+						'label'      => __( 'Enable Page Load Features', 'geo-my-wp' ),
+						'desc'       => __( 'Check this checkbox to dynamically display all existing posts on page load. You can filter the initial search result using the rest of the filters below.', 'geo-my-wp' ),
+						'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+						'attributes' => '',
+						'priority'   => 10,
 					),
-					'user_location'	 => array(
-						'name'     		=> 'user_location',
-						'type'     		=> 'checkbox',
-						'default'      	=> '',
-						'label'    		=> __( "Visitor's Current Location Filter", "GMW" ),
-						'desc'     		=> __( "GEO my WP will first check for the visitor's current location on page load. And If exists, the locations will be displayed based on that. Notice that the address filter below will be ingnored if the visitor's location exists.", 'geo-my-wp' ),
-						'cb_label' 		=> __( 'Enable', 'geo-my-wp' ),
-						'attributes'  	=> '',
-						'priority'		=> 20
+					'user_location'   => array(
+						'name'       => 'user_location',
+						'type'       => 'checkbox',
+						'default'    => '',
+						'label'      => __( "Visitor's Current Location Filter", 'GMW' ),
+						'desc'       => __( "GEO my WP will first check for the visitor's current location on page load. And If exists, the locations will be displayed based on that. Notice that the address filter below will be ingnored if the visitor's location exists.", 'geo-my-wp' ),
+						'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+						'attributes' => '',
+						'priority'   => 20,
 					),
-					'address_filter' => array(
-						'name'        	=> 'address_filter',
-						'type'			=> 'text',
-						'default'       => '',
-						'placeholder' 	=> __( 'Enter an address', 'geo-my-wp' ),
-						'label'       	=> __( 'Address Filter', 'geo-my-wp' ),
-						'desc'        	=> __( "Enter an address to search for locations neaby it when the form first loads.", 'geo-my-wp' ),
-						'attributes'  	=> array( 'size' => '25' ),
-						'priority'		=> 30
-					),
-					'radius'         => array(
-						'name'        	=> 'radius',
-						'type'			=> 'text',
-						'default'       => '',
-						'placeholder' 	=> __( 'Ex. 100', 'geo-my-wp' ),
-						'label'       	=> __( 'Distance ( radius )', 'geo-my-wp' ),
-						'desc'        	=> __( 'Enter default radius value, which will be used when visitor\'s location exists or when address is provided.', 'geo-my-wp' ),
-						'attributes'  	=> array(),
-						'priority'		=> 40
-					),
-					'units'           => array(
-						'name'    		=> 'units',
-						'type'    		=> 'select',
-						'default'       => 'imperial',
-						'label'   		=> __( 'Units', 'geo-my-wp' ),
-						'desc'    		=> __( 'Select the distance units.', 'geo-my-wp' ),
-						'options' 		=> array(
-							'imperial' 	=> __( 'Miles', 'geo-my-wp' ),
-							'metric'   	=> __( 'Kilometers', 'geo-my-wp' )
-						),
-						'attributes'  	=> array(),
-						'priority'		=> 50
-					),
-					'city_filter' 	=> array(
-						'name'        	=> 'city_filter',
-						'type'			=> 'text',
-						'default'       => '',
-						'placeholder' 	=> __( 'Enter city', 'geo-my-wp'),
-						'label'       	=> __( 'City Filter', 'geo-my-wp' ),
-						'desc'        	=> __( 'Filter locations by city, or leave blank to omit. When using this filter, GEO my WP does not do a proximity search, but will pull locations with the exact matching city name.', 'geo-my-wp' ),
-						'attributes'  	=> array(),
-						'priority'		=> 60
-					),
-					'state_filter' 	=> array(
-						'name'        	=> 'state_filter',
-						'type'			=> 'text',
-						'default'       => '',
-						'placeholder' 	=> __( 'Enter state', 'geo-my-wp'),
-						'label'       	=> __( 'State Filter', 'geo-my-wp' ),
-						'desc'        	=> __( 'Filter locations by state, or leave blank to omit. When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching state name.', 'geo-my-wp' ),
-						'attributes'  	=> array( 'size' => '25' ),
-						'priority'		=> 70
-					),
-					'zipcode_filter' => array(
-						'name'        	=> 'zipcode_filter',
-						'type'			=> 'text',
-						'default'       => '',
-						'placeholder' 	=> __( 'Enter postcode', 'geo-my-wp'),
-						'label'       	=> __( 'Zipcode Filter', 'geo-my-wp' ),
-						'desc'        	=> __( 'Filter locations by zipcode, or leave blank to omit. When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching zipcode.', 'geo-my-wp' ),
-						'attributes'  	=> array( 'size' => '25' ),
-						'priority'		=> 80
-					),
-					'country_filter' 	=> array(
-						'name'        	=> 'country_filter',
-						'type'			=> 'select',
-						'default'       => '',
-						'placeholder' 	=> __( 'Enter country', 'geo-my-wp'),
-						'label'       	=> __( 'Country Filter', 'geo-my-wp' ),
-						'desc'        	=> __( 'Filter locations by country, or leave blank to omit. When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching country name.', 'geo-my-wp' ),
-						'options'		=> gmw_get_countries_list_array( 'Disable' ),
-						'attributes'  	=> array( 'size' => '25' ),
-						'priority'		=> 90
-					),
-					'display_results'  => array(
-						'name'     		=> 'display_results',
-						'type'     		=> 'checkbox',
-						'default'       => '',
-						'label'    		=> __( 'Display list of results', 'geo-my-wp' ),
-						'desc'     		=> __( 'Display list of results.', 'geo-my-wp' ),
-						'cb_label' 		=> __( 'Enable', 'geo-my-wp' ),
-						'attributes' 	=> array(),
-						'priority'		=> 100
-					),
-					'display_map'    => array(
-						'name'    		=> 'display_map',
-						'type'    		=> 'select',
-						'default'       => '',
-						'label'   		=> __( 'Display Map', 'geo-my-wp' ),
-						'desc'    		=> __( 'Disable the map completly, display it above the list of result, or display it anywhere on the page using the shortcode <code>[gmw map=\"form ID\"]</code>.', 'geo-my-wp' ),
-						'options' 		=> array(
-							''        	=> __( 'Disable map', 'geo-my-wp' ),
-							'results'   => __( 'Above the list of result', 'geo-my-wp' ),
-							'shortcode' => __( 'Using shortcode', 'geo-my-wp' ),
-						),
-						'priority'		=> 110
-					),
-					'per_page'       => array(
-						'name'        	=> 'per_page',
-						'type'    		=> 'text',
-						'default'       => '5,10,15,25',
-						'placeholder' 	=> __( 'Enter values', 'geo-my-wp' ),
-						'label'       	=> __( 'Results Per Page', 'geo-my-wp' ),
-						'desc'        	=> __( 'Set the per page value of the initial form load. Enter multiple values, comma separated, to display a per page select dropdown menu in the search results, or enter a single value to set a default per-page value.', 'geo-my-wp' ),
-						'attributes'  	=> array(),
-						'priority'		=> 120
-					)
-                ),
-                'priority'  => 10
-            ),
-            array( 
-            	'slug'		=> 'search_form',
-				'label'		=> __( 'Search Form', 'geo-my-wp' ),
-				'fields'	=> array(
-					'form_template'  => array(
-						'name'     		=> 'form_template',
-						'type'     		=> 'select',
-						'default'       => '',
-						'label'    		=> __( 'Search Form Template', 'geo-my-wp' ),
-						'desc'  		=> __( 'Select The search form template file.', 'geo-my-wp' ),		
-						'options'		=> array( '' => __( 'Disabled', 'geo-my-wp' ) ) + gmw_get_search_form_templates( $this->form['component'], $this->form['addon'] ),
-						'attributes' 	=> array(),
-						'priority'		=> 10
-					),
-					'address_field' => array(
-						'name'     		=> 'address_field',
-						'type'     		=> 'function',
-						'default'       => '',
-						'label'    		=> __( 'Address Field', 'geo-my-wp' ),
-						'cb_label' 		=> '',
-						'desc'     		=> __( "<ul><li>- Label - enter a lable that you would like to use or leave blank for no label.</li><li>- Placeholder - enter a placeholder that you would like to use or leave blank for no placeholder.</li><li>Mandatory - check to make the field mandatory</li><li>- Address autocomplete - check to enable Google address autocomplete feature.</li><li>- Locator button - check to display a locator button inside the address field.</li><li>-Locator submit - check to dynaimcally submit the form when the address was found using the locator button.</li></ul>" , 'geo-my-wp' ),
-						'attributes' 	=> array(),
-						'priority'		=> 20       
-					),
-					'locator_button'    => array(
-						'name'    		=> 'locator_button',
-						'type'    		=> 'fields_group',
-						'label'   		=> __( 'Locator Button', 'geo-my-wp' ),
-						'desc'    		=> __( '<p>Using the locator button the visitor can dynamically retrive his current location.</p><p>- Select "disabled" to disable the locator button.</p><p>- Select "Image" and select an image that will be used as the locator button.</p><p>- Select "Text" and enter any text that you would like to use as the locator button.</p><p>- Check the "Auto form Submission" text box to dynamically submit the search form once the visitors locator was found.</p>', 'geo-my-wp' ),
-						'fields'		=> array(
-							array(
-								'name'     		=> 'locator',
-								'type'     		=> 'select',
-								'default'       => '',
-								'label'    		=> __( 'Usage', 'geo-my-wp' ),
-								'attributes' 	=> array(),
-								'options'		=> array(
-									'disabled'	=> __( 'Disabled', 'geo-my-wp' ),
-									'text'		=> __( 'Text', 'geo-my-wp' ),
-									'image'		=> __( 'Image', 'geo-my-wp' )
-								),
-								'priority'		=> 5
-							),
-							array(
-								'name'     		=> 'locator_text',
-								'type'     		=> 'text',
-								'default'       => '',
-								'label'    		=> __( 'Label', 'geo-my-wp' ),				
-								'attributes' 	=> array(),
-								'priority'		=> 10
-							),
-							array(
-								'name'     		=> 'locator_image',
-								'type'     		=> 'radio',
-								'default'       => '',
-								'label'    		=> __( 'Image', 'geo-my-wp' ),
-								'options'		=> $this->locator_options(),
-								'attributes' 	=> array(),
-								'priority'		=> 15
-							),
-							array(
-								'name'     		=> 'locator_submit',
-								'type'     		=> 'checkbox',
-								'default'       => '',
-								'cb_label'		=> __( 'Auto submission', 'geo-my-wp' ),			
-								'attributes' 	=> array(),
-								'priority'		=> 20
-							),
-						),
-						'attributes'  	=> '',
-						'optionsbox'	=> 1,	
-						'priority'		=> 30,
+					'address_filter'  => array(
+						'name'        => 'address_filter',
+						'type'        => 'text',
+						'default'     => '',
+						'placeholder' => __( 'Enter an address', 'geo-my-wp' ),
+						'label'       => __( 'Address Filter', 'geo-my-wp' ),
+						'desc'        => __( 'Enter an address to search for locations neaby it when the form first loads.', 'geo-my-wp' ),
+						'attributes'  => array( 'size' => '25' ),
+						'priority'    => 30,
 					),
 					'radius'          => array(
-						'name'        	=> 'radius',
-						'type'			=> 'text',
-						'default'       => '5,10,15,25,50,100',
-						'placeholder' 	=> __( 'Radius values', 'geo-my-wp' ),
-						'label'       	=> __( 'Distance ( radius )', 'geo-my-wp' ),
-						'desc'        	=> __( "Enter multiple distance values, comma separated, to display a select dropdown menu in the search form. Or enter a single value to set a default distance value.", 'geo-my-wp' ),
-						'attributes'  	=> array( 'size' => '25' ),
-						'priority'		=> 40
+						'name'        => 'radius',
+						'type'        => 'text',
+						'default'     => '',
+						'placeholder' => __( 'Ex. 100', 'geo-my-wp' ),
+						'label'       => __( 'Distance ( radius )', 'geo-my-wp' ),
+						'desc'        => __( 'Enter default radius value, which will be used when visitor\'s location exists or when address is provided.', 'geo-my-wp' ),
+						'attributes'  => array(),
+						'priority'    => 40,
 					),
-					'units'       => array(
-						'name'    		=> 'units',
-						'type'    		=> 'select',
-						'default'       => 'both',
-						'label'   		=> __( 'Distance Units', 'geo-my-wp' ),
-						'desc'    		=> __( 'Choose between miles or kilometers to set a default units value, or select "both" to display a select dropdown menu in the search form.', 'geo-my-wp' ),
-						'options' 		=> array(
-							'both'     => __( 'Both', 'geo-my-wp' ),
+					'units'           => array(
+						'name'       => 'units',
+						'type'       => 'select',
+						'default'    => 'imperial',
+						'label'      => __( 'Units', 'geo-my-wp' ),
+						'desc'       => __( 'Select the distance units.', 'geo-my-wp' ),
+						'options'    => array(
 							'imperial' => __( 'Miles', 'geo-my-wp' ),
-							'metric'   => __( 'Kilometers', 'geo-my-wp' )
+							'metric'   => __( 'Kilometers', 'geo-my-wp' ),
 						),
-						'attributes'  	=> '',
-						'priority'		=> 50
-					)
-				),
-				'priority'	=> 20
-        	),
-        	array( 
-        		'slug'		=> 'form_submission',
-				'label'		=> __( 'Form Submission', 'geo-my-wp' ),
-				'fields'	=> array(
-					'results_page'   => array(
-						'name'    		=> 'results_page',
-						'type'    		=> 'select',
-						'default'       => '',
-						'label'   		=> __( 'Results Page', 'geo-my-wp' ),
-						'desc'    		=> __( "The results page displays the search results in the selected page when using the \"GMW Search Form\" widget, or when you wish to have the search form in one page and the results showing in a different page. To use this feature, select the results page from the dropdown menu and paste the shortcode <code>[gmw form=\"results\"]</code> into the content area of that page. Otherwise, select \"Same Page\" to display both the search form and search results in the same page.", 'geo-my-wp' ),
-						'options' 		=> array( '' => __( ' -- Same Page -- ', 'geo-my-wp' ) ) + GMW_Form_Settings_Helper::get_pages(),
-						'attributes'  	=> '',
-						'priority'		=> 10
+						'attributes' => array(),
+						'priority'   => 50,
 					),
-					'display_results'  => array(
-						'name'     		=> 'display_results',
-						'type'     		=> 'checkbox',
-						'default'       => '',
-						'label'    		=> __( 'Display list of results', 'geo-my-wp' ),
-						'desc'     		=> __( 'Check this checkbox to output a list of results on form submission.', 'geo-my-wp' ),
-						'cb_label' 		=> __( 'Enable', 'geo-my-wp' ),
-						'attributes' 	=> array(),
-						'priority'		=> 30
+					'city_filter'     => array(
+						'name'        => 'city_filter',
+						'type'        => 'text',
+						'default'     => '',
+						'placeholder' => __( 'Enter city', 'geo-my-wp' ),
+						'label'       => __( 'City Filter', 'geo-my-wp' ),
+						'desc'        => __( 'Filter locations by city, or leave blank to omit. When using this filter, GEO my WP does not do a proximity search, but will pull locations with the exact matching city name.', 'geo-my-wp' ),
+						'attributes'  => array(),
+						'priority'    => 60,
 					),
-					'display_map'      => array(
-						'name'    		=> 'display_map',
-						'type'    		=> 'select',	
-						'default'       => '',
-						'label'   		=> __( 'Display Map', 'geo-my-wp' ),
-						'desc'    		=> __( "Select if to disable the map completly, display it above the list of result, or display it anywhere on the page using the shortcode <code>[gmw map=\"form ID\"]</code>.", 'geo-my-wp' ),
-						'options' 		=> array(
+					'state_filter'    => array(
+						'name'        => 'state_filter',
+						'type'        => 'text',
+						'default'     => '',
+						'placeholder' => __( 'Enter state', 'geo-my-wp' ),
+						'label'       => __( 'State Filter', 'geo-my-wp' ),
+						'desc'        => __( 'Filter locations by state, or leave blank to omit. When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching state name.', 'geo-my-wp' ),
+						'attributes'  => array( 'size' => '25' ),
+						'priority'    => 70,
+					),
+					'zipcode_filter'  => array(
+						'name'        => 'zipcode_filter',
+						'type'        => 'text',
+						'default'     => '',
+						'placeholder' => __( 'Enter postcode', 'geo-my-wp' ),
+						'label'       => __( 'Zipcode Filter', 'geo-my-wp' ),
+						'desc'        => __( 'Filter locations by zipcode, or leave blank to omit. When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching zipcode.', 'geo-my-wp' ),
+						'attributes'  => array( 'size' => '25' ),
+						'priority'    => 80,
+					),
+					'country_filter'  => array(
+						'name'        => 'country_filter',
+						'type'        => 'select',
+						'default'     => '',
+						'placeholder' => __( 'Enter country', 'geo-my-wp' ),
+						'label'       => __( 'Country Filter', 'geo-my-wp' ),
+						'desc'        => __( 'Filter locations by country, or leave blank to omit. When using this filter, GEO my WP does not do a proximity search but will pull locations with the exact matching country name.', 'geo-my-wp' ),
+						'options'     => gmw_get_countries_list_array( 'Disable' ),
+						'attributes'  => array( 'size' => '25' ),
+						'priority'    => 90,
+					),
+					'display_results' => array(
+						'name'       => 'display_results',
+						'type'       => 'checkbox',
+						'default'    => '',
+						'label'      => __( 'Display list of results', 'geo-my-wp' ),
+						'desc'       => __( 'Display list of results.', 'geo-my-wp' ),
+						'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+						'attributes' => array(),
+						'priority'   => 100,
+					),
+					'display_map'     => array(
+						'name'     => 'display_map',
+						'type'     => 'select',
+						'default'  => '',
+						'label'    => __( 'Display Map', 'geo-my-wp' ),
+						'desc'     => __( 'Disable the map completly, display it above the list of result, or display it anywhere on the page using the shortcode <code>[gmw map=\"form ID\"]</code>.', 'geo-my-wp' ),
+						'options'  => array(
 							''          => __( 'Disable map', 'geo-my-wp' ),
 							'results'   => __( 'Above the list of result', 'geo-my-wp' ),
 							'shortcode' => __( 'Using shortcode', 'geo-my-wp' ),
 						),
-						'attributes' 	=> array(),
-						'priority'		=> 40
-					)
+						'priority' => 110,
+					),
+					'per_page'        => array(
+						'name'        => 'per_page',
+						'type'        => 'text',
+						'default'     => '5,10,15,25',
+						'placeholder' => __( 'Enter values', 'geo-my-wp' ),
+						'label'       => __( 'Results Per Page', 'geo-my-wp' ),
+						'desc'        => __( 'Set the per page value of the initial form load. Enter multiple values, comma separated, to display a per page select dropdown menu in the search results, or enter a single value to set a default per-page value.', 'geo-my-wp' ),
+						'attributes'  => array(),
+						'priority'    => 120,
+					),
 				),
-				'priority'	=> 30
-        	),
-        	array( 
-        		'slug'		=> 'search_results',
-				'label'		=> __( 'Search Results', 'geo-my-wp' ),
-				'fields'	=> array(
+				'priority' => 10,
+			),
+			array(
+				'slug'     => 'search_form',
+				'label'    => __( 'Search Form', 'geo-my-wp' ),
+				'fields'   => array(
+					'form_template'  => array(
+						'name'       => 'form_template',
+						'type'       => 'select',
+						'default'    => '',
+						'label'      => __( 'Search Form Template', 'geo-my-wp' ),
+						'desc'       => __( 'Select The search form template file.', 'geo-my-wp' ),
+						'options'    => array( '' => __( 'Disabled', 'geo-my-wp' ) ) + gmw_get_search_form_templates( $this->form['component'], $this->form['addon'] ),
+						'attributes' => array(),
+						'priority'   => 10,
+					),
+					'address_field'  => array(
+						'name'       => 'address_field',
+						'type'       => 'function',
+						'default'    => '',
+						'label'      => __( 'Address Field', 'geo-my-wp' ),
+						'cb_label'   => '',
+						'desc'       => __( '<ul><li>- Label - enter a lable that you would like to use or leave blank for no label.</li><li>- Placeholder - enter a placeholder that you would like to use or leave blank for no placeholder.</li><li>Mandatory - check to make the field mandatory</li><li>- Address autocomplete - check to enable Google address autocomplete feature.</li><li>- Locator button - check to display a locator button inside the address field.</li><li>-Locator submit - check to dynaimcally submit the form when the address was found using the locator button.</li></ul>', 'geo-my-wp' ),
+						'attributes' => array(),
+						'priority'   => 20,
+					),
+					'locator_button' => array(
+						'name'       => 'locator_button',
+						'type'       => 'fields_group',
+						'label'      => __( 'Locator Button', 'geo-my-wp' ),
+						'desc'       => __( '<p>Using the locator button the visitor can dynamically retrive his current location.</p><p>- Select "disabled" to disable the locator button.</p><p>- Select "Image" and select an image that will be used as the locator button.</p><p>- Select "Text" and enter any text that you would like to use as the locator button.</p><p>- Check the "Auto form Submission" text box to dynamically submit the search form once the visitors locator was found.</p>', 'geo-my-wp' ),
+						'fields'     => array(
+							array(
+								'name'       => 'locator',
+								'type'       => 'select',
+								'default'    => '',
+								'label'      => __( 'Usage', 'geo-my-wp' ),
+								'attributes' => array(),
+								'options'    => array(
+									'disabled' => __( 'Disabled', 'geo-my-wp' ),
+									'text'     => __( 'Text', 'geo-my-wp' ),
+									'image'    => __( 'Image', 'geo-my-wp' ),
+								),
+								'priority'   => 5,
+							),
+							array(
+								'name'       => 'locator_text',
+								'type'       => 'text',
+								'default'    => '',
+								'label'      => __( 'Label', 'geo-my-wp' ),
+								'attributes' => array(),
+								'priority'   => 10,
+							),
+							array(
+								'name'       => 'locator_image',
+								'type'       => 'radio',
+								'default'    => '',
+								'label'      => __( 'Image', 'geo-my-wp' ),
+								'options'    => $this->locator_options(),
+								'attributes' => array(),
+								'priority'   => 15,
+							),
+							array(
+								'name'       => 'locator_submit',
+								'type'       => 'checkbox',
+								'default'    => '',
+								'cb_label'   => __( 'Auto submission', 'geo-my-wp' ),
+								'attributes' => array(),
+								'priority'   => 20,
+							),
+						),
+						'attributes' => '',
+						'optionsbox' => 1,
+						'priority'   => 30,
+					),
+					'radius'         => array(
+						'name'        => 'radius',
+						'type'        => 'text',
+						'default'     => '5,10,15,25,50,100',
+						'placeholder' => __( 'Radius values', 'geo-my-wp' ),
+						'label'       => __( 'Distance ( radius )', 'geo-my-wp' ),
+						'desc'        => __( 'Enter multiple distance values, comma separated, to display a select dropdown menu in the search form. Or enter a single value to set a default distance value.', 'geo-my-wp' ),
+						'attributes'  => array( 'size' => '25' ),
+						'priority'    => 40,
+					),
+					'units'          => array(
+						'name'       => 'units',
+						'type'       => 'select',
+						'default'    => 'both',
+						'label'      => __( 'Distance Units', 'geo-my-wp' ),
+						'desc'       => __( 'Choose between miles or kilometers to set a default units value, or select "both" to display a select dropdown menu in the search form.', 'geo-my-wp' ),
+						'options'    => array(
+							'both'     => __( 'Both', 'geo-my-wp' ),
+							'imperial' => __( 'Miles', 'geo-my-wp' ),
+							'metric'   => __( 'Kilometers', 'geo-my-wp' ),
+						),
+						'attributes' => '',
+						'priority'   => 50,
+					),
+				),
+				'priority' => 20,
+			),
+			array(
+				'slug'     => 'form_submission',
+				'label'    => __( 'Form Submission', 'geo-my-wp' ),
+				'fields'   => array(
+					'results_page'    => array(
+						'name'       => 'results_page',
+						'type'       => 'select',
+						'default'    => '',
+						'label'      => __( 'Results Page', 'geo-my-wp' ),
+						'desc'       => __( 'The results page displays the search results in the selected page when using the "GMW Search Form" widget, or when you wish to have the search form in one page and the results showing in a different page. To use this feature, select the results page from the dropdown menu and paste the shortcode <code>[gmw form="results"]</code> into the content area of that page. Otherwise, select "Same Page" to display both the search form and search results in the same page.', 'geo-my-wp' ),
+						'options'    => array( '' => __( ' -- Same Page -- ', 'geo-my-wp' ) ) + GMW_Form_Settings_Helper::get_pages(),
+						'attributes' => '',
+						'priority'   => 10,
+					),
+					'display_results' => array(
+						'name'       => 'display_results',
+						'type'       => 'checkbox',
+						'default'    => '',
+						'label'      => __( 'Display list of results', 'geo-my-wp' ),
+						'desc'       => __( 'Check this checkbox to output a list of results on form submission.', 'geo-my-wp' ),
+						'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+						'attributes' => array(),
+						'priority'   => 30,
+					),
+					'display_map'     => array(
+						'name'       => 'display_map',
+						'type'       => 'select',
+						'default'    => '',
+						'label'      => __( 'Display Map', 'geo-my-wp' ),
+						'desc'       => __( 'Select if to disable the map completly, display it above the list of result, or display it anywhere on the page using the shortcode <code>[gmw map="form ID"]</code>.', 'geo-my-wp' ),
+						'options'    => array(
+							''          => __( 'Disable map', 'geo-my-wp' ),
+							'results'   => __( 'Above the list of result', 'geo-my-wp' ),
+							'shortcode' => __( 'Using shortcode', 'geo-my-wp' ),
+						),
+						'attributes' => array(),
+						'priority'   => 40,
+					),
+				),
+				'priority' => 30,
+			),
+			array(
+				'slug'     => 'search_results',
+				'label'    => __( 'Search Results', 'geo-my-wp' ),
+				'fields'   => array(
 					'results_template' => array(
-						'name'  		=> 'results_template',
-						'type'     		=> 'select',
-						'default'   	=> 'gray',
-						'label' 		=> __( 'Results Template', 'geo-my-wp' ),
-						'desc'  		=> __( 'Select the search results template file.', 'geo-my-wp' ),
-						'options'		=> gmw_get_search_results_templates( $this->form['component'], $this->form['addon'] ),
-						'attributes' 	=> array(),
-						'priority'		=> 10
+						'name'       => 'results_template',
+						'type'       => 'select',
+						'default'    => 'gray',
+						'label'      => __( 'Results Template', 'geo-my-wp' ),
+						'desc'       => __( 'Select the search results template file.', 'geo-my-wp' ),
+						'options'    => gmw_get_search_results_templates( $this->form['component'], $this->form['addon'] ),
+						'attributes' => array(),
+						'priority'   => 10,
 					),
 					'per_page'         => array(
-						'name'        	=> 'per_page',
-						'type'			=> 'text',
-						'default'       => '5,10,15,25',
-						'placeholder' 	=> __( 'Enter values', 'geo-my-wp' ),
-						'label'       	=> __( 'Results Per Page', 'geo-my-wp' ),
-						'desc'        	=> __( 'Enter multiple values, comma separated, to display a per page select dropdown menu in the search results, or enter a single value to set a default per-page value.', 'geo-my-wp' ),
-						'attributes' 	=> array(),
-						'priority'		=> 20
+						'name'        => 'per_page',
+						'type'        => 'text',
+						'default'     => '5,10,15,25',
+						'placeholder' => __( 'Enter values', 'geo-my-wp' ),
+						'label'       => __( 'Results Per Page', 'geo-my-wp' ),
+						'desc'        => __( 'Enter multiple values, comma separated, to display a per page select dropdown menu in the search results, or enter a single value to set a default per-page value.', 'geo-my-wp' ),
+						'attributes'  => array(),
+						'priority'    => 20,
 					),
-					'image'   		  => array(
-						'name'     		=> 'image',
-						'type'     		=> 'function',
-						'default'       => '',
-						'label'    		=> __( 'Image', 'geo-my-wp' ),
-						'desc'     		=> __( '<p>Check this checkbox to display the image of each location in the list of results, then enter the width and height in pixels ( enter numeric value only, without "px" ).</p>', 'geo-my-wp' ),
-						'attributes' 	=> array(),
-						'priority'		=> 30
+					'image'            => array(
+						'name'       => 'image',
+						'type'       => 'function',
+						'default'    => '',
+						'label'      => __( 'Image', 'geo-my-wp' ),
+						'desc'       => __( '<p>Check this checkbox to display the image of each location in the list of results, then enter the width and height in pixels ( enter numeric value only, without "px" ).</p>', 'geo-my-wp' ),
+						'attributes' => array(),
+						'priority'   => 30,
 					),
 					/*
 					'by_driving'       => array(
@@ -421,89 +423,89 @@ class GMW_Form_Editor {
 						'priority'		=> 35
 					),
 					*/
-					'directions_link'   => array(
-						'name'       	=> 'directions_link',
-						'type'       	=> 'checkbox',
-						'default'       => '',
-						'label'      	=> __( 'Directions Link', 'geo-my-wp' ),
-						'cb_label'   	=> __( 'Enable', 'geo-my-wp' ),
-						'desc'       	=> __( 'Display directions link, that will open a new window showing the driving directions, in each location in the list of results.', 'geo-my-wp' ),
-						'attributes' 	=> array(),
-						'priority'		=> 40
-					)
+					'directions_link'  => array(
+						'name'       => 'directions_link',
+						'type'       => 'checkbox',
+						'default'    => '',
+						'label'      => __( 'Directions Link', 'geo-my-wp' ),
+						'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+						'desc'       => __( 'Display directions link, that will open a new window showing the driving directions, in each location in the list of results.', 'geo-my-wp' ),
+						'attributes' => array(),
+						'priority'   => 40,
+					),
 				),
-				'priority'	=> 40
-        	),
-        	array( 
-        		'slug'		=> 'results_map',
-				'label'		=> __( 'Map', 'geo-my-wp' ),
-				'fields'	=> array(
+				'priority' => 40,
+			),
+			array(
+				'slug'     => 'results_map',
+				'label'    => __( 'Map', 'geo-my-wp' ),
+				'fields'   => array(
 					'map_width'  => array(
-						'name'        	=> 'map_width',
-						'type'			=> 'text',
-						'default'       => '100%',
-						'placeholder' 	=> __( 'Map width in px or %', 'geo-my-wp' ),
-						'label'       	=> __( 'Map width', 'geo-my-wp' ),
-						'desc'        	=> __( 'Enter the map\'s width in pixels or percentage ( ex. 100% or 200px ).', 'geo-my-wp' ),
-						'attributes'  	=> array(),
-						'priority'		=> 10
+						'name'        => 'map_width',
+						'type'        => 'text',
+						'default'     => '100%',
+						'placeholder' => __( 'Map width in px or %', 'geo-my-wp' ),
+						'label'       => __( 'Map width', 'geo-my-wp' ),
+						'desc'        => __( 'Enter the map\'s width in pixels or percentage ( ex. 100% or 200px ).', 'geo-my-wp' ),
+						'attributes'  => array(),
+						'priority'    => 10,
 					),
 					'map_height' => array(
-						'name'        	=> 'map_height',
-						'type'			=> 'text',
-						'default'       => '300px',
-						'placeholder' 	=> __( 'Map height in px or %', 'geo-my-wp' ),
-						'label'       	=> __( 'Map height', 'geo-my-wp' ),
-						'desc'        	=> __( 'Enter the map\'s height in pixels or percentage ( ex. 100% or 200px ).', 'geo-my-wp' ),
-						'attributes'  	=> array(),
-						'priority'		=> 20
+						'name'        => 'map_height',
+						'type'        => 'text',
+						'default'     => '300px',
+						'placeholder' => __( 'Map height in px or %', 'geo-my-wp' ),
+						'label'       => __( 'Map height', 'geo-my-wp' ),
+						'desc'        => __( 'Enter the map\'s height in pixels or percentage ( ex. 100% or 200px ).', 'geo-my-wp' ),
+						'attributes'  => array(),
+						'priority'    => 20,
 					),
 					'map_type'   => array(
-						'name'    		=> 'map_type',
-						'type'    		=> 'select',
-						'default'       => 'ROADMAP',
-						'label'   		=> __( 'Map type', 'geo-my-wp' ),
-						'desc'    		=> __( 'Select the map type.', 'geo-my-wp' ),
-						'options' 		=> array(
-							'ROADMAP'   	=> __( 'ROADMAP', 'geo-my-wp' ),
-							'SATELLITE' 	=> __( 'SATELLITE', 'geo-my-wp' ),
-							'HYBRID'    	=> __( 'HYBRID', 'geo-my-wp' ),
-							'TERRAIN'   	=> __( 'TERRAIN', 'geo-my-wp' )
+						'name'       => 'map_type',
+						'type'       => 'select',
+						'default'    => 'ROADMAP',
+						'label'      => __( 'Map type', 'geo-my-wp' ),
+						'desc'       => __( 'Select the map type.', 'geo-my-wp' ),
+						'options'    => array(
+							'ROADMAP'   => __( 'ROADMAP', 'geo-my-wp' ),
+							'SATELLITE' => __( 'SATELLITE', 'geo-my-wp' ),
+							'HYBRID'    => __( 'HYBRID', 'geo-my-wp' ),
+							'TERRAIN'   => __( 'TERRAIN', 'geo-my-wp' ),
 						),
-						'attributes'  	=> '',
-						'priority'		=> 30
+						'attributes' => '',
+						'priority'   => 30,
 					),
 					'zoom_level' => array(
-						'name'    		=> 'zoom_level',
-						'default'       => 'auto',
-						'type'    		=> 'select',
-						'label'   		=> __( 'Zoom level', 'geo-my-wp' ),	
-						'desc'    		=> __( 'Select "Auto zoom" to fit all the markers on the map, or select a numeric value that will be used to zoom into the marker which represents the visitor\'s current location on the map.', 'geo-my-wp' ),		
-						'options' 		=> array(
-							'auto' 	=> __( 'Auto Zoom', 'geo-my-wp' ),
-							'1'    	=> '1',
-							'2'    	=> '2',
-							'3'    	=> '3',
-							'4'    	=> '4',
-							'5'    	=> '5',
-							'6'    	=> '6',
-							'7'    	=> '7',
-							'8'    	=> '8',
-							'9'    	=> '9',
-							'10'   	=> '10',
-							'11'   	=> '11',
-							'12'   	=> '12',
-							'13'   	=> '13',
-							'14'   	=> '14',
-							'15'   	=> '15',
-							'16'   	=> '16',
-							'17'   	=> '17',
-							'18'   	=> '18',
-							'19'   	=> '19',
-							'20'   	=> '20',
+						'name'       => 'zoom_level',
+						'default'    => 'auto',
+						'type'       => 'select',
+						'label'      => __( 'Zoom level', 'geo-my-wp' ),
+						'desc'       => __( 'Select "Auto zoom" to fit all the markers on the map, or select a numeric value that will be used to zoom into the marker which represents the visitor\'s current location on the map.', 'geo-my-wp' ),
+						'options'    => array(
+							'auto' => __( 'Auto Zoom', 'geo-my-wp' ),
+							'1'    => '1',
+							'2'    => '2',
+							'3'    => '3',
+							'4'    => '4',
+							'5'    => '5',
+							'6'    => '6',
+							'7'    => '7',
+							'8'    => '8',
+							'9'    => '9',
+							'10'   => '10',
+							'11'   => '11',
+							'12'   => '12',
+							'13'   => '13',
+							'14'   => '14',
+							'15'   => '15',
+							'16'   => '16',
+							'17'   => '17',
+							'18'   => '18',
+							'19'   => '19',
+							'20'   => '20',
 						),
-						'attributes'  	=> '',
-						'priority'		=> 40
+						'attributes' => '',
+						'priority'   => 40,
 					),
 					/*'yl_icon'     	=> array(
 						'name'        	=> 'yl_icon',
@@ -536,76 +538,76 @@ class GMW_Form_Editor {
 						'priority'		=> 35
 					), */
 				),
-				'priority'	=> 50
-        	),
-        );
-			
+				'priority' => 50,
+			),
+		);
+
 		$temp_array = [];
 
 		// generate slug for groups. To easier unset groups if needed.
 		foreach ( $groups as $group ) {
-			$temp_array[$group['slug']] = $group;
+			$temp_array[ $group['slug'] ] = $group;
 		}
-		
-		$groups = $temp_array;
-		$groups = apply_filters( 'gmw_'.$this->form['slug'].'_form_settings_groups', $groups, $this->form );
-		$groups = apply_filters( 'gmw_'.$this->form['addon'].'_addon_form_settings_groups', $groups, $this->form );
-		$groups = apply_filters( 'gmw_form_settings_groups', $groups, $this->form );
-		
-        uasort( $groups, 'gmw_sort_by_priority' );
 
-        return $groups;
+		$groups = $temp_array;
+		$groups = apply_filters( 'gmw_' . $this->form['slug'] . '_form_settings_groups', $groups, $this->form );
+		$groups = apply_filters( 'gmw_' . $this->form['addon'] . '_addon_form_settings_groups', $groups, $this->form );
+		$groups = apply_filters( 'gmw_form_settings_groups', $groups, $this->form );
+
+		uasort( $groups, 'gmw_sort_by_priority' );
+
+		return $groups;
 	}
 
 	/**
 	 * Get fields
-	 * 
+	 *
 	 * @return [type] [description]
 	 */
 	public function get_fields() {
 
 		$fields = [];
 
-        // loop through settings groups
-        foreach ( $this->form_settings_groups as $key => $group ) {
+		// loop through settings groups
+		foreach ( $this->form_settings_groups as $key => $group ) {
 
-            // verify groups slug
-            if ( empty( $group['slug'] ) ) {
-                continue;
-            }
+			// verify groups slug
+			if ( empty( $group['slug'] ) ) {
+				continue;
+			}
 
-            // Generate the group if does not exsist
-            if ( ! isset( $fields[$group['slug']] ) ) {
-            
-                $fields[$group['slug']] = ! empty( $group['fields'] ) ? $group['fields'] : array();
- 
-            // otehrwise, merge the fields of the existing group
-            // with the current group.
-            } else {
+			// Generate the group if does not exsist
+			if ( ! isset( $fields[ $group['slug'] ] ) ) {
 
-                $fields[$group['slug']] = array_merge_recursive( $fields[$group['slug']], $group['fields'] );
+				$fields[ $group['slug'] ] = ! empty( $group['fields'] ) ? $group['fields'] : array();
 
-                // remove the duplicate group/tab
-                unset( $this->form_settings_groups[$key] );
-            }
+				// otehrwise, merge the fields of the existing group
+				// with the current group.
+			} else {
 
-            // allow filtering the specific group
-            $fields[$group['slug']] = apply_filters( 'gmw_'.$group['slug'].'_form_settings', $fields[$group['slug']], $this->form['slug'], $this->form );
-        }
+				$fields[ $group['slug'] ] = array_merge_recursive( $fields[ $group['slug'] ], $group['fields'] );
 
-        // filter all fields groups
-        $fields = apply_filters( 'gmw_'.$this->form['slug'].'_form_settings', $fields, $this->form );
-		$fields = apply_filters( 'gmw_'.$this->form['addon'].'_addon_form_settings', $fields, $this->form );
+				// remove the duplicate group/tab
+				unset( $this->form_settings_groups[ $key ] );
+			}
+
+			// allow filtering the specific group
+			$fields[ $group['slug'] ] = apply_filters( 'gmw_' . $group['slug'] . '_form_settings', $fields[ $group['slug'] ], $this->form['slug'], $this->form );
+		}
+
+		// filter all fields groups
+		$fields = apply_filters( 'gmw_' . $this->form['slug'] . '_form_settings', $fields, $this->form );
+		$fields = apply_filters( 'gmw_' . $this->form['addon'] . '_addon_form_settings', $fields, $this->form );
 		$fields = apply_filters( 'gmw_form_settings', $fields, $this->form );
 
-        return $fields;
+		return $fields;
 	}
 
 	/**
 	 * Form Fields
 	 *
 	 * @access protected
-	 * 
+	 *
 	 * @return void
 	 */
 	protected function init_form_settings() {
@@ -627,48 +629,48 @@ class GMW_Form_Editor {
 			if ( empty( $this->form_fields[$group] ) ) {
 				$this->form_fields[$group] = array();
 			}
-				
+
 			$this->form_fields[$group] = array_merge( $this->form_fields[$group], $fields );
 		} */
-		
+
 		// backward capability for settings before settings groups were created
-        foreach ( $this->form_fields as $key => $section ) { 
+		foreach ( $this->form_fields as $key => $section ) {
 
-            if ( ! empty( $section[0] ) && ! empty( $section[1] ) && is_string( $section[0] ) ) {
-                
-                trigger_error( 'Using deprecated method for registering GMW settings and settings groups.', E_USER_NOTICE );
+			if ( ! empty( $section[0] ) && ! empty( $section[1] ) && is_string( $section[0] ) ) {
 
-                $this->form_settings_groups[] = array(
-                    'slug'  => $key,
-                    'label' => $section[0]
-                );
+				trigger_error( 'Using deprecated method for registering GMW settings and settings groups.', E_USER_NOTICE );
 
-                $this->form_fields[$key] = $section[1];
-            }            
-        }
+				$this->form_settings_groups[] = array(
+					'slug'  => $key,
+					'label' => $section[0],
+				);
 
-        // backward capability for replacing std with default
-        foreach ( $this->form_fields as $key => $section ) { 
+				$this->form_fields[ $key ] = $section[1];
+			}
+		}
 
-            foreach ( $section as $sec_key => $sec_value ) {
-                
-                // skip hidden field
-                if ( empty( $sec_value ) ) {
-                	continue;
-                }
+		// backward capability for replacing std with default
+		foreach ( $this->form_fields as $key => $section ) {
 
-                if ( isset( $sec_value['std'] ) && ! isset( $sec_value['default'] ) ) {
+			foreach ( $section as $sec_key => $sec_value ) {
 
-	                trigger_error( '"std" attribute is no longer supported in GMW settings and was replaced with "default" since version 3.0.', E_USER_NOTICE );
+				// skip hidden field
+				if ( empty( $sec_value ) ) {
+					continue;
+				}
 
-	                $this->form_fields[$key][$sec_key]['default'] = ! empty( $sec_value['default'] ) ? $sec_value['default'] : '';
-	                
-	                unset( $this->form_fields[$key][$sec_key]['std'] );
-	            }
-            }        
-        }
+				if ( isset( $sec_value['std'] ) && ! isset( $sec_value['default'] ) ) {
+
+					trigger_error( '"std" attribute is no longer supported in GMW settings and was replaced with "default" since version 3.0.', E_USER_NOTICE );
+
+					$this->form_fields[ $key ][ $sec_key ]['default'] = ! empty( $sec_value['default'] ) ? $sec_value['default'] : '';
+
+					unset( $this->form_fields[ $key ][ $sec_key ]['std'] );
+				}
+			}
+		}
 	}
-	
+
 	/**
 	 * Get locator button images
 	 * @return [type] [description]
@@ -680,116 +682,116 @@ class GMW_Form_Editor {
 
 		$options = array();
 
-		foreach ( $locator_images as $locator_image ) {  
-			$basename = basename( $locator_image );  			
-	 		$options[basename( $basename )] = '<img src="'.esc_url( $display_image . $basename ).'" height="30px" width="30px" />';
+		foreach ( $locator_images as $locator_image ) {
+			$basename                         = basename( $locator_image );
+			$options[ basename( $basename ) ] = '<img src="' . esc_url( $display_image . $basename ) . '" height="30px" width="30px" />';
 		}
 
-		return $options; 
+		return $options;
 	}
 
 	/**
 	 * Form usage tab
-	 * 
+	 *
 	 * @return [type] [description]
 	 */
 	public function form_usage() {
 		?>
 		<!-- form usage -->
-    	<div class="gmw-settings-panel gmw-tab-panel form-usage">
-            
-            <table class="widefat gmw-form-usage-table">
-            	<thead>
-                	<tr>
-                		<th scope="col" id="cb" class="manage-column" ><?php _e( 'Description', 'geo-my-wp'); ?></th>
-                    	<th scope="col" id="cb" class="manage-column" ><?php _e( 'Post/Page Content', 'geo-my-wp' ); ?></th>
-                    	<th scope="col" id="cb" class="manage-column" ><?php _e( 'Tempalte file', 'geo-my-wp' ); ?></th>
-                	</tr>
-            	</thead>
-         
-            	<tbody>
+		<div class="gmw-settings-panel gmw-tab-panel form-usage">
 
-            		<?php if ( $this->form['addon'] == 'global_maps' ) { ?>
+			<table class="widefat gmw-form-usage-table">
+				<thead>
+					<tr>
+						<th scope="col" id="cb" class="manage-column" ><?php _e( 'Description', 'geo-my-wp' ); ?></th>
+						<th scope="col" id="cb" class="manage-column" ><?php _e( 'Post/Page Content', 'geo-my-wp' ); ?></th>
+						<th scope="col" id="cb" class="manage-column" ><?php _e( 'Tempalte file', 'geo-my-wp' ); ?></th>
+					</tr>
+				</thead>
 
-            			<tr>
-            				<td class="gmw-form-usage-desc">
-                				<p><?php _e( 'Display the global map anywhere on the page.', 'geo-my-wp' ); ?></p>
-                			</td>
-                			<td class="gmw-form-usage">
-                				<p><code>[gmw_global_map form="<?php echo $this->form['ID']; ?>"]</code></p>
-                			</td>
-                			<td class="gmw-form-usage">
-                				<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw_global_map form="'.$this->form['ID'].'"]\' ); &#63;&#62;'; ?></code></p>
-                			</td>
-                		</tr>
+				<tbody>
 
-         			<?php } else { ?>
+					<?php if ( 'global_maps' == $this->form['addon'] ) { ?>
 
-            		<tr>
-            			<td class="gmw-form-usage-desc">
-            				<p><?php _e( 'Display the complete form ( search form, map, and search results ).', 'geo-my-wp' ); ?></p>
-            			</td>
-            			<td class="gmw-form-usage">
-            				<p><code>[gmw form="<?php echo $this->form['ID']; ?>"]</code></p>
-            			</td>
-            			<td class="gmw-form-usage">
-            				<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw form="'.$this->form['ID'].'"]\' ); &#63;&#62;'; ?></code></p>
-            			</td>                			
-            		</tr>
-            		<tr>
-            			<td class="gmw-form-usage-desc">
-            				<p><?php _e( 'Display the search form only.', 'geo-my-wp' ); ?></p>
-            			</td>
-            			<td class="gmw-form-usage">
-            				<p><code>[gmw search_form="<?php echo $this->form['ID']; ?>"]</code></p>
-            			</td>
-            			<td class="gmw-form-usage">
-            				<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw search_form="'.$this->form['ID'].'"]\' ); &#63;&#62;'; ?></code></p>
-            			</td>		
-            		</tr>
-            		<tr>
-            			<td class="gmw-form-usage-desc">
-            				<p><?php _e( 'Display the search results of this form only. Can be used to display the search results in a different page or when using the search form in a widget.', 'geo-my-wp' ); ?></p>
-            			</td>            
-            			<td class="gmw-form-usage">
-            				<p><code>[gmw search_results="<?php echo $this->form['ID']; ?>"]</code></p>
-            			</td>
-            			<td class="gmw-form-usage">
-            				<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw search_results="'.$this->form['ID'].'"]\' ); &#63;&#62;'; ?></code></p>
-            			</td>
-            		</tr>
-            		<tr>
-            			<td class="gmw-form-usage-desc">
-            				<p><?php _e( 'Display the search results of any form.', 'geo-my-wp' ); ?></p>
-            			</td>
-            			<td class="gmw-form-usage">
-            				<p><code>[gmw form="results"]</code></p>
-            			</td>
-            			<td class="gmw-form-usage">
-            				<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw form="results"]\' ); &#63;&#62;'; ?></code></p>
-            			</td>
-            		</tr>
-            		<tr>
-            			<td class="gmw-form-usage-desc">
-            				<p><?php _e( 'Display the results map anywhere on a page. By default, the form you create will display the map above the list of results, but using this shortcode you can display the map anywhere else on the page. Notice that you need to set the "Display map" setting of the "Form Submission" tab to "Using shortcode". ', 'geo-my-wp' ); ?></p>
-            			</td>
-            			<td class="gmw-form-usage">
-            				<p><code>[gmw map="<?php echo $this->form['ID']; ?>"]</code></p>
-            			</td>
-            			<td class="gmw-form-usage">
-            				<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw map="'.$this->form['ID'].'"]\' ); &#63;&#62;'; ?></code></p>
-            			</td>    
-            		</tr>
-            		<?php } ?>
-            	</tbody>
-          	</table>
-    	</div>
-    	<?php
+						<tr>
+							<td class="gmw-form-usage-desc">
+								<p><?php _e( 'Display the global map anywhere on the page.', 'geo-my-wp' ); ?></p>
+							</td>
+							<td class="gmw-form-usage">
+								<p><code>[gmw_global_map form="<?php echo esc_attr( $this->form['ID'] ); ?>"]</code></p>
+							</td>
+							<td class="gmw-form-usage">
+								<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw_global_map form="' . esc_attr( $this->form['ID'] ) . '"]\' ); &#63;&#62;'; ?></code></p>
+							</td>
+						</tr>
+
+					<?php } else { ?>
+	
+					<tr>
+						<td class="gmw-form-usage-desc">
+							<p><?php _e( 'Display the complete form ( search form, map, and search results ).', 'geo-my-wp' ); ?></p>
+						</td>
+						<td class="gmw-form-usage">
+							<p><code>[gmw form="<?php echo esc_attr( $this->form['ID'] ); ?>"]</code></p>
+						</td>
+						<td class="gmw-form-usage">
+							<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw form="' . esc_attr( $this->form['ID'] ) . '"]\' ); &#63;&#62;'; ?></code></p>
+						</td>                			
+					</tr>
+					<tr>
+						<td class="gmw-form-usage-desc">
+							<p><?php _e( 'Display the search form only.', 'geo-my-wp' ); ?></p>
+						</td>
+						<td class="gmw-form-usage">
+							<p><code>[gmw search_form="<?php echo esc_attr( $this->form['ID'] ); ?>"]</code></p>
+						</td>
+						<td class="gmw-form-usage">
+							<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw search_form="' . esc_attr( $this->form['ID'] ) . '"]\' ); &#63;&#62;'; ?></code></p>
+						</td>		
+					</tr>
+					<tr>
+						<td class="gmw-form-usage-desc">
+							<p><?php _e( 'Display the search results of this form only. Can be used to display the search results in a different page or when using the search form in a widget.', 'geo-my-wp' ); ?></p>
+						</td>            
+						<td class="gmw-form-usage">
+							<p><code>[gmw search_results="<?php echo esc_attr( $this->form['ID'] ); ?>"]</code></p>
+						</td>
+						<td class="gmw-form-usage">
+							<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw search_results="' . esc_attr( $this->form['ID'] ) . '"]\' ); &#63;&#62;'; ?></code></p>
+						</td>
+					</tr>
+					<tr>
+						<td class="gmw-form-usage-desc">
+							<p><?php _e( 'Display the search results of any form.', 'geo-my-wp' ); ?></p>
+						</td>
+						<td class="gmw-form-usage">
+							<p><code>[gmw form="results"]</code></p>
+						</td>
+						<td class="gmw-form-usage">
+							<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw form="results"]\' ); &#63;&#62;'; ?></code></p>
+						</td>
+					</tr>
+					<tr>
+						<td class="gmw-form-usage-desc">
+							<p><?php _e( 'Display the results map anywhere on a page. By default, the form you create will display the map above the list of results, but using this shortcode you can display the map anywhere else on the page. Notice that you need to set the "Display map" setting of the "Form Submission" tab to "Using shortcode". ', 'geo-my-wp' ); ?></p>
+						</td>
+						<td class="gmw-form-usage">
+							<p><code>[gmw map="<?php echo esc_attr( $this->form['ID'] ); ?>"]</code></p>
+						</td>
+						<td class="gmw-form-usage">
+							<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw map="' . esc_attr( $this->form['ID'] ) . '"]\' ); &#63;&#62;'; ?></code></p>
+						</td>    
+					</tr>
+					<?php } ?>
+				</tbody>
+			</table>
+		</div>
+		<?php
 	}
 
 	/**
 	 * Get form fields
-	 * 
+	 *
 	 * @param  [type] $option  [description]
 	 * @param  [type] $tab     [description]
 	 * @param  [type] $section [description]
@@ -797,263 +799,262 @@ class GMW_Form_Editor {
 	 * @return [type]          [description]
 	 */
 	public function get_form_field( $option, $tab, $section, $form ) {
-		
+
 		$option['name'] = esc_attr( $option['name'] );
-		$attr_id 	 	= esc_attr( 'setting-'.$tab. '-' .$option['name'] );
-		$placeholder 	= ! empty( $option['placeholder'] ) ? 'placeholder="' . esc_attr( $option['placeholder'] ) . '"' : '';
-		$attr_name   	= esc_attr( 'gmw_form['.$tab.']['.$option['name'].']' );
-		$value       	= ! empty( $this->form[$tab][$option['name']] ) ? $this->form[$tab][$option['name']] : $option['default'];
-		$attributes  	= array();
+		$attr_id        = esc_attr( 'setting-' . $tab . '-' . $option['name'] );
+		$placeholder    = ! empty( $option['placeholder'] ) ? 'placeholder="' . esc_attr( $option['placeholder'] ) . '"' : '';
+		$attr_name      = esc_attr( 'gmw_form[' . $tab . '][' . $option['name'] . ']' );
+		$value          = ! empty( $this->form[ $tab ][ $option['name'] ] ) ? $this->form[ $tab ][ $option['name'] ] : $option['default'];
+		$attributes     = array();
 
 		if ( ! isset( $option['type'] ) ) {
 			$option['type'] = 'text';
 		}
-		
+
 		//attributes
-        if ( ! empty( $option['attributes'] ) && is_array( $option['attributes'] ) ) {
-        	foreach ( $option['attributes'] as $attribute_name => $attribute_value ) {
-        		$attributes[] = esc_attr( $attribute_name ) . '="' . esc_attr( $attribute_value ) . '"';
-        	}
-        }
+		if ( ! empty( $option['attributes'] ) && is_array( $option['attributes'] ) ) {
+			foreach ( $option['attributes'] as $attribute_name => $attribute_value ) {
+				$attributes[] = esc_attr( $attribute_name ) . '="' . esc_attr( $attribute_value ) . '"';
+			}
+		}
 
-		//display settings fields 
-      	switch ( $option['type'] ) {
-        		    	                              
-	        // custom function
-	        case "function" : 
+		//display settings fields
+		switch ( $option['type'] ) {
 
-	            $function = ! empty( $option['function'] ) ? $option['function'] : $option['name'];
+			// custom function
+			case 'function':
+
+				$function = ! empty( $option['function'] ) ? $option['function'] : $option['name'];
 				//$this_value = ! empty( $this->form[$tab][$sec] ) ? $this->form[$tab][$sec] : array();
 
-	            do_action( 'gmw_'.$this->form['slug'].'_form_settings_' . $function, $value, $attr_name, $this->form, $this->form_fields, $tab, $option );
-	            do_action( 'gmw_'.$this->form['addon'].'_addon_form_settings_' . $function, $value, $attr_name, $this->form, $this->form_fields, $tab, $option );	
-	        	do_action( 'gmw_form_settings_' . $function, $value, $attr_name, $this->form, $this->form_fields, $tab, $option );
+				do_action( 'gmw_' . $this->form['slug'] . '_form_settings_' . $function, $value, $attr_name, $this->form, $this->form_fields, $tab, $option );
+				do_action( 'gmw_' . $this->form['addon'] . '_addon_form_settings_' . $function, $value, $attr_name, $this->form, $this->form_fields, $tab, $option );
+				do_action( 'gmw_form_settings_' . $function, $value, $attr_name, $this->form, $this->form_fields, $tab, $option );
 
-	        break;
-			
+				break;
+
 			// checkbox
-	        case "checkbox" :             
-	            ?>
-	            <label>
-	            	<input 
-	            		type="checkbox" 
-	            		id="<?php echo $attr_id ?>" 
-	            		class="setting-<?php echo $option['name']; ?> checkbox" 
-	            		name="<?php echo $attr_name; ?>" 
-	            		value="1" <?php echo implode( ' ', $attributes ); ?> 
-	            		<?php checked( '1', $value ); ?> 
-	            	/> 
-	            	<?php echo esc_html( $option['cb_label'] ); ?>
-	            </label>
-	            <?php      
-	        break;
-	         
-	        // multi checkbox    						     
-			case "multicheckbox" :
+			case 'checkbox':
+				?>
+				<label>
+					<input 
+						type="checkbox" 
+						id="<?php echo $attr_id; ?>"
+						class="setting-<?php echo esc_attr( $option['name'] ); ?> checkbox" 
+						name="<?php echo $attr_name; ?>"
+						value="1" <?php echo implode( ' ', $attributes ); ?>
+						<?php checked( '1', $value ); ?> 
+					/> 
+					<?php echo esc_html( $option['cb_label'] ); ?>
+				</label>
+				<?php
+				break;
 
-	            $option['default'] = is_array( $option['default'] ) ? $option['default'] : array();
+			// multi checkbox
+			case 'multicheckbox':
+				$option['default'] = is_array( $option['default'] ) ? $option['default'] : array();
 
-	            $value = ( ! empty( $value ) && is_array( $value ) ) ? $value : $option['default'];
+				$value = ( ! empty( $value ) && is_array( $value ) ) ? $value : $option['default'];
 
-	            foreach ( $option['options'] as $v => $l ) {
+				foreach ( $option['options'] as $v => $l ) {
 
-	                $checked = in_array( $v, $value ) ? 'checked="checked"' : '';?>
+					$checked = in_array( $v, $value ) ? 'checked="checked"' : '';
+					?>
 
-	                <label>
-	                	<input 
-	                		id="<?php echo $attr_id .'-'. esc_attr( $v ); ?>" 
-	                		class="setting-<?php echo $option['name']; ?> checkbox multicheckboxvalues" 
-	                		name="<?php echo $attr_name.'[]'; ?>" 
-	                		type="checkbox" value="<?php echo esc_attr( $v ); ?>" 
-	                		<?php echo $checked; ?> /> 
-	                		<?php echo esc_html( $l ); ?>
-	                </label>
+					<label>
+						<input 
+							id="<?php echo $attr_id . '-' . esc_attr( $v ); ?>" 
+							class="setting-<?php echo esc_attr( $option['name'] ); ?> checkbox multicheckboxvalues" 
+							name="<?php echo $attr_name . '[]'; ?>" 
+							type="checkbox" value="<?php echo esc_attr( $v ); ?>" 
+							<?php echo $checked; ?> />
+							<?php echo esc_html( $l ); ?>
+					</label>
 
-	                <?php
-	            }
+					<?php
+				}
 
-	        break;
+				break;
 
-	        case "multicheckboxvalues" :
+			case 'multicheckboxvalues':
+				$option['default'] = is_array( $option['default'] ) ? $option['default'] : array();
 
-	            $option['default'] = is_array( $option['default'] ) ? $option['default'] : array();
+				$value = ( ! empty( $value ) && is_array( $value ) ) ? $value : $option['default'];
 
-	            $value = ( ! empty( $value ) && is_array( $value ) ) ? $value : $option['default'];
+				foreach ( $option['options'] as $keyVal => $name ) {
 
-	            foreach ( $option['options'] as $keyVal => $name ) {
+					$checked = in_array( $keyVal, $value ) ? 'checked="checked"' : '';
+					?>
+					<label>
+						<input 
+							type="checkbox" 
+							id="<?php echo $attr_id . '-' . esc_attr( $keyVal ); ?>"
+							class="setting-<?php echo esc_attr( $option['name'] ); ?> checkbox multicheckboxvalues" 
+							name="<?php echo $attr_name . '[]'; ?>" 
+							value="<?php echo sanitize_title( $keyVal ); ?>"
+							<?php echo $checked; ?>
+						/> 
+						<?php echo esc_html( $name ); ?>
+					</label>
+					<?php
+				}
+				break;
 
-	                $checked = in_array( $keyVal, $value ) ? 'checked="checked"' : '';
-	                ?>
-	                <label>
-	                	<input 
-	                		type="checkbox" 
-	                		id="<?php echo $attr_id .'-'. esc_attr( $keyVal ); ?>" 
-	                		class="setting-<?php echo esc_attr( $option['name'] ); ?> checkbox multicheckboxvalues" 
-	                		name="<?php echo $attr_name.'[]'; ?>" 
-	                		value="<?php echo sanitize_title( $keyVal ); ?>" 
-	                		<?php echo $checked; ?> 
-	                	/> 
-	                	<?php echo esc_html( $name ); ?>
-	                </label>
-	                <?php
-	            }
-	        break;
+			// textarea field
+			case 'textarea':
+				?>
+				<textarea 
+					id="<?php echo $attr_id; ?>"
+					class="setting-<?php echo $option['name']; ?> textarea large-text" 
+					name="<?php echo $attr_name; ?>"
+					<?php echo implode( ' ', $attributes ); ?> 
+					<?php echo $placeholder; ?>>
+					<?php echo esc_textarea( $value ); ?>
+				</textarea>
+				<?php
+				break;
 
-	        // textarea field
-	        case "textarea" :
-	        	?>
-	        	<textarea 
-	        		id="<?php echo $attr_id ?>" 
-	        		class="setting-<?php echo $option['name']; ?> textarea large-text" 
-	        		name="<?php echo $attr_name; ?>" 
-	        		<?php echo implode( ' ', $attributes ); ?> 
-	        		<?php echo $placeholder ; ?>>
-	        		<?php echo esc_textarea( $value ); ?>
-	        	</textarea>
-	        	<?php
-	        break;
-
-	        // radio bttons
-	        case "radio" :
-	        	?>
-	        	<div class="setting-radio-buttons-wrapper <?php echo $option['name']; ?>">
-	        	<?php
-	        	foreach ( $option['options'] as $keyVal => $name ) {
-	            	?>
-	             	<label>
-	             		<input 
-	             			type="radio" 
-	             			id="<?php echo $attr_id; ?>" 
-	             			class="setting-<?php echo $option['name']; ?> <?php echo esc_attr( $keyVal ); ?> radio" 
-	             			name="<?php echo $attr_name; ?>" 
-	             			value="<?php echo esc_attr( $keyVal ); ?>" 
-	             			<?php checked( $value, $keyVal ) ?> 
-	             		/>
-	             		<?php 
-	             			$allwed = array(
-							    'a' => array(
-							        'href'  => array(),
-							        'title' => array()
-							    ),
-							    'img' 	 => array(
-							    	'src' => array()
-							   	),
+			// radio bttons
+			case 'radio':
+				?>
+				<div class="setting-radio-buttons-wrapper <?php echo esc_attr( $option['name'] ); ?>">
+				<?php
+				foreach ( $option['options'] as $keyVal => $name ) {
+					?>
+					<label>
+						<input 
+							type="radio" 
+							id="<?php echo $attr_id; ?>"
+							class="setting-<?php echo esc_attr( $option['name'] ); ?> <?php echo esc_attr( $keyVal ); ?> radio"
+							name="<?php echo $attr_name; ?>"
+							value="<?php echo esc_attr( $keyVal ); ?>"
+							<?php checked( $value, $keyVal ); ?>
+						/>
+						<?php
+							$allwed = array(
+								'a'   => array(
+									'href'  => array(),
+									'title' => array(),
+								),
+								'img' => array(
+									'src' => array(),
+								),
 							);
 						?>
-	             		<?php echo wp_kses( $name, $allwed ); ?>
-	             	</label>                              	
-	                <?php    
-	            }
-	            echo '</div>';
-	        break;
-			
+						<?php echo wp_kses( $name, $allwed ); ?>
+					</label>                              	
+					<?php
+				}
+				echo '</div>';
+				break;
+
 			// select fields
-	        case "select" :
-	        	?>
-	        	<select 
-	        		id="<?php echo $attr_id ?>" 
-	        		class="setting-<?php echo $option['name']; ?> select" 
-	        		name="<?php echo $attr_name; ?>" 
+			case 'select':
+				?>
+				<select 
+					id="<?php echo $attr_id; ?>"
+					class="setting-<?php echo esc_attr( $option['name'] ); ?> select" 
+					name="<?php echo $attr_name; ?>"
 
-	        		<?php if ( ! empty( $option['placeholder'] ) ) { ?>
-	                data-placeholder="<?php echo esc_attr( $option['placeholder'] ); ?>"
-	                <?php } ?>
-	        		
-	        		<?php echo implode( ' ', $attributes ); ?>
-	        	>
-	     			<?php foreach ( $option['options'] as $keyVal => $name ) { ?>
-	        			<?php echo '<option value="'.esc_attr( $keyVal ).'" '.selected( $value, $keyVal, false ) . '>'.esc_html( $name ).'</option>'; ?>
+					<?php if ( ! empty( $option['placeholder'] ) ) { ?>
+					data-placeholder="<?php echo esc_attr( $option['placeholder'] ); ?>"
 					<?php } ?>
-	        	</select>
-	        	<?php 
-	        break;
-			
-			case "multiselect" :
-	            ?>
-	            <select 
-	                id="<?php echo $attr_id ?>" 
-	                multiple 
-	                class="setting-<?php echo $option['name']; ?> multiselect"
-	                name="<?php echo $attr_name; ?>[]"
 
-	                <?php if ( ! empty( $option['placeholder'] ) ) { ?>
-	                data-placeholder="<?php echo esc_attr( $option['placeholder'] ); ?>"
-	                <?php } ?>
+					<?php echo implode( ' ', $attributes ); ?>
+				>
+					<?php foreach ( $option['options'] as $keyVal => $name ) { ?>
+						<?php echo '<option value="' . esc_attr( $keyVal ) . '" ' . selected( $value, $keyVal, false ) . '>' . esc_html( $name ) . '</option>'; ?>
+					<?php } ?>
+				</select>
+				<?php
+				break;
 
-	                <?php echo implode( ' ', $attributes ); ?>
-	            >
-	                <?php 
-	                foreach ( $option[ 'options' ] as $keyVal => $name ) {
-	                    $selected = ( is_array( $value ) && in_array( $keyVal, $value ) ) ? 'selected="selected"' : '';
-	                    echo '<option value="'.esc_attr( $keyVal ).'" '.$selected.'>'.esc_html( $name ).'</option>'; 
-	                } 
-	                ?>
-	            </select>
-	            <?php 
+			case 'multiselect':
+				?>
+				<select 
+					id="<?php echo $attr_id; ?>"
+					multiple 
+					class="setting-<?php echo esc_attr( $option['name'] ); ?> multiselect"
+					name="<?php echo $attr_name; ?>[]"
 
-	        break;
+					<?php if ( ! empty( $option['placeholder'] ) ) { ?>
+					data-placeholder="<?php echo esc_attr( $option['placeholder'] ); ?>"
+					<?php } ?>
+
+					<?php echo implode( ' ', $attributes ); ?>
+				>
+					<?php
+					foreach ( $option['options'] as $keyVal => $name ) {
+						$selected = ( is_array( $value ) && in_array( $keyVal, $value ) ) ? 'selected="selected"' : '';
+						echo '<option value="' . esc_attr( $keyVal ) . '" ' . $selected . '>' . esc_html( $name ) . '</option>';
+					}
+					?>
+				</select>
+				<?php
+
+				break;
 
 			// password
-	        case "password" :
-	            ?>
-	            <input 
-	            	type="password" 
-	            	id="<?php echo $attr_id ?>" 
-	            	class="setting-<?php echo $option['name']; ?> regular-text password" 
-	            	name="<?php echo $attr_name; ?>" 
-	            	value="<?php echo esc_attr( sanitize_text_field( $value ) ); ?>" 
-	            	<?php echo implode( ' ', $attributes ); ?> 
-	            	<?php echo $placeholder; ?> 
-	            />
-	            <?php
-	        break;
+			case 'password':
+				?>
+				<input 
+					type="password" 
+					id="<?php echo $attr_id; ?>"
+					class="setting-<?php echo esc_attr( $option['name'] ); ?> regular-text password" 
+					name="<?php echo $attr_name; ?>"
+					value="<?php echo esc_attr( sanitize_text_field( $value ) ); ?>" 
+					<?php echo implode( ' ', $attributes ); ?> 
+					<?php echo $placeholder; ?> 
+				/>
+				<?php
+				break;
 
-	        // hidden
-	        case "hidden" :
-	            ?>
-	            <input 
-	            	type="hidden" 
-	            	id="<?php echo $attr_id ?>" 
-	            	class="setting-<?php echo $option['name']; ?> regular-text hidden" 
-	            	name="<?php echo $attr_name; ?>" 
-	            	value="<?php echo esc_attr( sanitize_text_field( $value ) ); ?>" 
-	            	<?php echo implode( ' ', $attributes ); ?> 
-	            />
-	            <?php
-	        break;
+			// hidden
+			case 'hidden':
+				?>
+				<input 
+					type="hidden" 
+					id="<?php echo $attr_id; ?>"
+					class="setting-<?php echo esc_attr( $option['name'] ); ?> regular-text hidden" 
+					name="<?php echo $attr_name; ?>"
+					value="<?php echo esc_attr( sanitize_text_field( $value ) ); ?>" 
+					<?php echo implode( ' ', $attributes ); ?> 
+				/>
+				<?php
+				break;
 
-	        // number
-	        case "number" :
-	            ?>
-	            <input 
-	            	type="number" 
-	            	id="<?php echo $attr_id ?>" 
-	            	class="setting-<?php echo $option['name']; ?> regular-text" 
-	            	name="<?php echo $attr_name; ?>" 
-	            	value="<?php echo esc_attr( sanitize_text_field( $value ) ); ?>" 
-	            	<?php echo implode( ' ', $attributes ); ?> 
-	            />
-	            <?php
-	        break;
-	        
-	        //text field
-	        case "" :
-	        case "input" :
-	        case "text" :   
-	        default :
-	        	?>
-	        	<input 
-	        		type="text" 
-	        		id="<?php echo $attr_id ?>" 
-	        		class="setting-<?php echo $option['name']; ?> regular-text text" 
-	        		name="<?php echo $attr_name; ?>" 
-	        		value="<?php echo esc_attr( $value ); ?>" 
-	        		<?php echo implode( ' ', $attributes ); ?> 
-	        		<?php echo $placeholder; ?> 
-	        	/>
-	        	<?php
-	        break;
-	    }
+			// number
+			case 'number':
+				?>
+				<input 
+					type="number" 
+					id="<?php echo $attr_id; ?>"
+					class="setting-<?php echo esc_attr( $option['name'] ); ?> regular-text" 
+					name="<?php echo $attr_name; ?>"
+					value="<?php echo esc_attr( sanitize_text_field( $value ) ); ?>" 
+					<?php echo implode( ' ', $attributes ); ?> 
+				/>
+				<?php
+				break;
+
+			//text field
+			case '':
+			case 'input':
+			case 'text':
+			default:
+				?>
+				<input 
+					type="text" 
+					id="<?php echo $attr_id; ?>"
+					class="setting-<?php echo esc_attr( $option['name'] ); ?> regular-text text" 
+					name="<?php echo $attr_name; ?>"
+					value="<?php echo esc_attr( $value ); ?>" 
+					<?php echo implode( ' ', $attributes ); ?> 
+					<?php echo $placeholder; ?> 
+				/>
+				<?php
+				break;
+		}
 	}
 
 	/**
@@ -1063,7 +1064,7 @@ class GMW_Form_Editor {
 	 * @return void
 	 */
 	public function output() {
-		
+
 		// apply to all forms
 		add_action( 'gmw_form_settings_address_field', array( 'GMW_Form_Settings_Helper', 'address_field' ), 10, 2 );
 		add_action( 'gmw_form_settings_image', array( 'GMW_Form_Settings_Helper', 'image' ), 10, 2 );
@@ -1072,9 +1073,9 @@ class GMW_Form_Editor {
 		$this->init_form_settings();
 		?>
 
-	    <div id="gmw-edit-form-page" class="wrap gmw-admin-page">
-	    	
-	    	<div id="form-wrapper">
+		<div id="gmw-edit-form-page" class="wrap gmw-admin-page">
+
+			<div id="form-wrapper">
 		        
 		        <form method="post" action="" class="gmw-edit-form" data-ajax_enabled="<?php echo esc_attr( $this->ajax_enabled ); ?>" data-nonce="<?php echo wp_create_nonce( 'gmw_edit_form_nonce' ); ?>">
 					
@@ -1299,314 +1300,311 @@ class GMW_Form_Editor {
     }
 
 	/**
-     * Validate single field
-     * @param  [type] $value  [description]
-     * @param  [type] $option [description]
-     * @param  [type] $form   [description]
-     * @return [type]         [description]
-     */
-    public function validate_field( $value, $option, $form ) {
+	 * Validate single field
+	 * @param  [type] $value  [description]
+	 * @param  [type] $option [description]
+	 * @param  [type] $form   [description]
+	 * @return [type]         [description]
+	 */
+	public function validate_field( $value, $option, $form ) {
 
-    	switch ( $option['type'] ) {
+		switch ( $option['type'] ) {
 
-        	// custom functions validation
-            case "function" :
-					    		    				    	
+			// custom functions validation
+			case 'function':
 				//save custom settings value as is. without validation
 				if ( ! empty( $value ) ) {
 					$valid_value = $value;
-                } else {
-                	$value = $valid_value = '';
-                }
+				} else {
+					$value = $valid_value = '';
+				}
 
-                //use this filter to validate custom settigns
+				//use this filter to validate custom settigns
 				$function = ! empty( $option['function'] ) ? $option['function'] : $option['name'];
 
-				$valid_value = apply_filters( 'gmw_'.$form['slug'].'_validate_form_settings_'.$function, $valid_value, $form );
-				$valid_value = apply_filters( 'gmw_'.$this->form['addon'].'_addon_validate_form_settings_'.$function, $valid_value, $form );
-            	$valid_value = apply_filters( 'gmw_validate_form_settings_'.$function, $valid_value, $form );
+				$valid_value = apply_filters( 'gmw_' . $form['slug'] . '_validate_form_settings_' . $function, $valid_value, $form );
+				$valid_value = apply_filters( 'gmw_' . $this->form['addon'] . '_addon_validate_form_settings_' . $function, $valid_value, $form );
+				$valid_value = apply_filters( 'gmw_validate_form_settings_' . $function, $valid_value, $form );
 
-            break;
+				break;
 
-            // checkbox
-            case "checkbox" :
-            	$valid_value = ! empty( $value ) ? 1 : '';
-            break;
-                   
-            // multi checbox            
-           	case "multicheckbox" :
+			// checkbox
+			case 'checkbox':
+				$valid_value = ! empty( $value ) ? 1 : '';
+				break;
 
-                if ( empty( $value ) || ! is_array( $value ) ) {
-                    $valid_value = is_array( $option['default'] ) ? $option['default'] : array();
-                } else {
-                    foreach ( $option['options'] as $v => $l ) {                           	
-                    	if ( in_array( $v, $value ) ) {
-                            $valid_value[] = $v; 
-                        }
-                    }
-                }
+			// multi checbox
+			case 'multicheckbox':
+				if ( empty( $value ) || ! is_array( $value ) ) {
+					$valid_value = is_array( $option['default'] ) ? $option['default'] : array();
+				} else {
+					foreach ( $option['options'] as $v => $l ) {
+						if ( in_array( $v, $value ) ) {
+							$valid_value[] = $v;
+						}
+					}
+				}
 
-            break;
+				break;
 
-            case "multicheckboxvalues" :
+			case 'multicheckboxvalues':
+				if ( empty( $value ) || ! is_array( $value ) ) {
+					$valid_value = is_array( $option['default'] ) ? $option['default'] : array();
+				} else {
 
-                if ( empty( $value ) || ! is_array( $value ) ) {
-                    $valid_value = is_array( $option['default'] ) ? $option['default'] : array();
-                } else {
+					$valid_value = array();
 
-                    $valid_value = array();
+					foreach ( $option['options'] as $keyVal => $name ) {
 
-                    foreach ( $option['options'] as $keyVal => $name ) {
-                       
-                        if ( in_array( $keyVal, $value ) ) {
-                    
-                            $valid_value[] = $keyVal; 
-                        }
-                    }
-                }
-            break;
+						if ( in_array( $keyVal, $value ) ) {
 
-            case "multiselect" :
+							$valid_value[] = $keyVal;
+						}
+					}
+				}
+				break;
 
-                if ( empty( $value ) || ! is_array( $value ) ) {
-                    $valid_value = is_array( $option['default'] ) ? $option['default'] : array();
-                } else {
+			case 'multiselect':
+				if ( empty( $value ) || ! is_array( $value ) ) {
+					$valid_value = is_array( $option['default'] ) ? $option['default'] : array();
+				} else {
 
-                    $valid_value = array();
+					$valid_value = array();
 
-                    foreach ( $option['options'] as $keyVal => $name ) {
-                        if ( in_array( $keyVal, $value ) ) {
-                            $valid_value[] = $keyVal; 
-                        }
-                    }
-                }
-            break;
+					foreach ( $option['options'] as $keyVal => $name ) {
+						if ( in_array( $keyVal, $value ) ) {
+							$valid_value[] = $keyVal;
+						}
+					}
+				}
+				break;
 
-            // select and radio buttons
-            case "select" :
-            case "radio" :
-                if ( ! empty( $value ) && in_array( $value, array_keys( $option['options'] ) ) ) {
-                    $valid_value = $value;
-                } else {
-                    $valid_value = ! empty( $option['default'] ) ? $option['default'] : '';
-                }
-            break;
+			// select and radio buttons
+			case 'select':
+			case 'radio':
+				if ( ! empty( $value ) && in_array( $value, array_keys( $option['options'] ) ) ) {
+					$valid_value = $value;
+				} else {
+					$valid_value = ! empty( $option['default'] ) ? $option['default'] : '';
+				}
+				break;
 
-            // textarea
-            case "textarea" :
-                if ( ! empty( $value ) ) {
-                    $valid_value = sanitize_textarea_field( $value );
-                } else {
-                    $valid_value = ! empty( $option['default'] ) ? sanitize_textarea_field( $option['default'] ) : '';
-                }
-            break;
+			// textarea
+			case 'textarea':
+				if ( ! empty( $value ) ) {
+					$valid_value = sanitize_textarea_field( $value );
+				} else {
+					$valid_value = ! empty( $option['default'] ) ? sanitize_textarea_field( $option['default'] ) : '';
+				}
+				break;
 
-            case "number" :
-                if ( ! empty( $value ) ) {
-                    $num_value = $value;
-                } else {
-                    $num_value = isset( $option['default'] ) ? $option['default'] : '';
-                }
-                $valid_value = preg_replace( '/[^0-9]/', '', $num_value );
-            break;
+			case 'number':
+				if ( ! empty( $value ) ) {
+					$num_value = $value;
+				} else {
+					$num_value = isset( $option['default'] ) ? $option['default'] : '';
+				}
+				$valid_value = preg_replace( '/[^0-9]/', '', $num_value );
+				break;
 
-            // text field
-            case "''" :
-            case "text" :
-            case "password" :
+			// text field
+			case "''":
+			case 'text':
+			case 'password':
+				if ( ! empty( $value ) ) {
+					$this_value = $value;
+				} else {
+					$this_value = ! empty( $option['default'] ) ? $option['default'] : '';
+				}
+				$valid_value = sanitize_text_field( $this_value );
+				break;
+		}
 
-                if ( !empty( $value ) ) {
-                    $this_value = $value;
-                } else {
-                    $this_value = ! empty( $option['default'] ) ? $option['default'] : '';
-                }
-                $valid_value = sanitize_text_field( $this_value );
-            break;
-        }
+		return $valid_value;
+	}
 
-        return $valid_value;
-    }
+	/**
+	 * Validate form input fields
+	 *
+	 * @param  array $values Form values after form submission
+	 *
+	 * @return array validated/sanitized values
+	 */
+	public function validate( $values ) {
 
-    /**
-     * Validate form input fields
-     * 
-     * @param  array $values Form values after form submission
-     * 
-     * @return array validated/sanitized values
-     */
-    public function validate( $values ) { 	
+		// hooks for custom validations
+		add_filter( 'gmw_validate_form_settings_address_field', array( 'GMW_Form_Settings_Helper', 'validate_address_field' ) );
+		add_filter( 'gmw_validate_form_settings_image', array( 'GMW_Form_Settings_Helper', 'validate_image' ) );
 
-    	// hooks for custom validations
-    	add_filter( 'gmw_validate_form_settings_address_field', array( 'GMW_Form_Settings_Helper', 'validate_address_field' ) );
-    	add_filter( 'gmw_validate_form_settings_image', array( 'GMW_Form_Settings_Helper', 'validate_image' ) );
+		//get the current form being updated
+		$this->form = GMW_Forms_Helper::get_form( $values['ID'] );
 
-    	//get the current form being updated
-    	$this->form = GMW_Forms_Helper::get_form( $values['ID'] );
+		$valid_input = array();
 
-    	$valid_input = array();
+		// get basic form values
+		$valid_input['ID']    = absint( $values['ID'] );
+		$valid_input['title'] = sanitize_text_field( $values['title'] );
+		$valid_input['slug']  = sanitize_text_field( $values['slug'] );
 
-    	// get basic form values
-    	$valid_input['ID'] 	  = absint( $values['ID'] );
-        $valid_input['title'] = sanitize_text_field( $values['title'] );
-        $valid_input['slug']  = sanitize_text_field( $values['slug'] );
-	
-    	// get form fields
-        $this->init_form_settings();
+		// get form fields
+		$this->init_form_settings();
 
-        // loop through and validate fields
-        foreach ( $this->form_fields as $section_name => $section ) {
-            
-            foreach ( $section as $sec => $option ) {
+		// loop through and validate fields
+		foreach ( $this->form_fields as $section_name => $section ) {
 
-            	if ( is_array( $section ) && ! array_filter( $section ) ) {
-            		continue;
-            	}
+			foreach ( $section as $sec => $option ) {
 
-            	$option['type'] = ! empty( $option['type'] ) ? $option['type'] : 'text';
+				if ( is_array( $section ) && ! array_filter( $section ) ) {
+					continue;
+				}
 
-            	if ( $option['type'] == 'fields_group' && array_filter( $option['fields'] ) ) { ?>
-        			            			
-        			<?php foreach ( $option['fields'] as $option ) {
-    					$valid_input[$section_name][$option['name']] = $this->validate_field( $values[$section_name][$option['name']], $option, $this->form );
-        			} ?>
-            	
-        		<?php } else { 
-        			$valid_input[$section_name][$option['name']] = $this->validate_field( $values[$section_name][$option['name']], $option, $this->form );
-        		}
-            }
-        }
-    	
-    	$valid_input = apply_filters( 'gmw_validated_form_settings', $valid_input, $this->form );
+				$option['type'] = ! empty( $option['type'] ) ? $option['type'] : 'text';
 
-        //return formds
-    	return $valid_input;
-    }
+				if ( $option['type'] == 'fields_group' && array_filter( $option['fields'] ) ) {
+				?>
+											
+					<?php
+					foreach ( $option['fields'] as $option ) {
+						$valid_input[ $section_name ][ $option['name'] ] = $this->validate_field( $values[ $section_name ][ $option['name'] ], $option, $this->form );
+					}
+					?>
+				
+				<?php
+				} else {
+					$valid_input[ $section_name ][ $option['name'] ] = $this->validate_field( $values[ $section_name ][ $option['name'] ], $option, $this->form );
+				}
+			}
+		}
 
-   	/**
-     * Update form via AJAX
-     *
-     * Run the form values through validations and udpate the form in database
-     * 
-     * @return void
-     */
-    public function ajax_update_form() {
+		$valid_input = apply_filters( 'gmw_validated_form_settings', $valid_input, $this->form );
 
-    	// verify nonce
-    	check_ajax_referer( 'gmw_edit_form_nonce', 'security', true );
+		//return formds
+		return $valid_input;
+	}
 
-    	// get the submitted values
-    	parse_str( $_POST['form_values'], $form_values );
+	/**
+	 * Update form via AJAX
+	 *
+	 * Run the form values through validations and udpate the form in database
+	 *
+	 * @return void
+	 */
+	public function ajax_update_form() {
 
-    	$form = $form_values['gmw_form'];
+		// verify nonce
+		check_ajax_referer( 'gmw_edit_form_nonce', 'security', true );
 
-    	// validate the values
-    	$valid_input = self::validate( $form );
+		// get the submitted values
+		parse_str( $_POST['form_values'], $form_values );
 
-    	global $wpdb;
+		$form = $form_values['gmw_form'];
 
-    	$form_id = $valid_input['ID'];
-    	unset( $valid_input['ID'] );
+		// validate the values
+		$valid_input = self::validate( $form );
 
-    	$title = $valid_input['title'];
-    	unset( $valid_input['title'] );
-    	unset( $valid_input['slug'] );
+		global $wpdb;
 
-    	// udpate form in database
-    	if ( $wpdb->update( 
+		$form_id = $valid_input['ID'];
+		unset( $valid_input['ID'] );
 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
-                'data'  => serialize( $valid_input ),
-                'title' => $title
-            ), 
-            array( 'ID' => $form_id ), 
-            array( 
-                '%s',
-                '%s'
-            ), 
-            array( '%d' )
+		$title = $valid_input['title'];
+		unset( $valid_input['title'] );
+		unset( $valid_input['slug'] );
 
-        ) === FALSE ) {
+		// udpate form in database
+		if ( $wpdb->update(
 
-			wp_die( 
-				__( 'Failed saving data in database.', 'geo-my-wp' ), 
-				__( 'Error', 'geo-my-wp' ), 
-				array( 'response' => 403 ) 
+			$wpdb->prefix . 'gmw_forms',
+			array(
+				'data'  => serialize( $valid_input ),
+				'title' => $title,
+			),
+			array( 'ID' => $form_id ),
+			array(
+				'%s',
+				'%s',
+			),
+			array( '%d' )
+		) === false ) {
+
+			wp_die(
+				__( 'Failed saving data in database.', 'geo-my-wp' ),
+				__( 'Error', 'geo-my-wp' ),
+				array( 'response' => 403 )
 			);
-		
+
 		} else {
-			
+
 			// delete form from cache. We are updating it with new data.
-    		wp_cache_delete( 'all_forms', 'gmw_forms' );
-    		wp_cache_delete( $form['ID'], 'gmw_forms' );
+			wp_cache_delete( 'all_forms', 'gmw_forms' );
+			wp_cache_delete( $form['ID'], 'gmw_forms' );
 
 			wp_send_json( $valid_input );
 		}
-    }
+	}
 
-    /**
-     * Update form via page load
-     *
-     * Run the form values through validations and udpate the form in database
-     * 
-     * @return void
-     */
-    public function update_form() {
+	/**
+	 * Update form via page load
+	 *
+	 * Run the form values through validations and udpate the form in database
+	 *
+	 * @return void
+	 */
+	public function update_form() {
 
-    	// run a quick security check
-        if ( empty( $_POST['gmw_edit_form_nonce'] ) || ! check_admin_referer( 'gmw_edit_form_nonce', 'gmw_edit_form_nonce' ) ) {
-             wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
-        }
-   
-    	// validate the values
-    	$valid_input = self::validate( $_POST['gmw_form'] );
+		// run a quick security check
+		if ( empty( $_POST['gmw_edit_form_nonce'] ) || ! check_admin_referer( 'gmw_edit_form_nonce', 'gmw_edit_form_nonce' ) ) {
+			 wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+		}
 
-    	global $wpdb;
+		// validate the values
+		$valid_input = self::validate( $_POST['gmw_form'] );
 
-    	// udpate form in database
-    	if ( $wpdb->update( 
+		global $wpdb;
 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
-                'data'  => serialize( $valid_input ),
-                'title' => $valid_input['title']
-            ), 
-            array( 'ID' => $valid_input['ID'] ), 
-            array( 
-                '%s',
-                '%s'
-            ), 
-            array( '%d' )
+		// udpate form in database
+		if ( $wpdb->update(
 
-        ) === FALSE ) {
+			$wpdb->prefix . 'gmw_forms',
+			array(
+				'data'  => serialize( $valid_input ),
+				'title' => $valid_input['title'],
+			),
+			array( 'ID' => $valid_input['ID'] ),
+			array(
+				'%s',
+				'%s',
+			),
+			array( '%d' )
+		) === false ) {
 
-        	// update forms in cache
-        	GMW_Forms_Helper::update_forms_cache();
+			// update forms in cache
+			GMW_Forms_Helper::update_forms_cache();
 
-			wp_safe_redirect( 
-				add_query_arg( 
-					array( 
-						'gmw_notice' 		=> 'form_not_update', 
-						'gmw_notice_status' => 'error' 
-					) 
-				) 
+			wp_safe_redirect(
+				add_query_arg(
+					array(
+						'gmw_notice'        => 'form_not_update',
+						'gmw_notice_status' => 'error',
+					)
+				)
 			);
 
 		} else {
 
 			// update forms in cache
-        	GMW_Forms_Helper::update_forms_cache();
-        		
-			wp_safe_redirect( 
-				add_query_arg( 
-					array( 
-						'gmw_notice' 		=> 'form_updated', 
-						'gmw_notice_status' => 'updated'
-					) 
-				) 
+			GMW_Forms_Helper::update_forms_cache();
+
+			wp_safe_redirect(
+				add_query_arg(
+					array(
+						'gmw_notice'        => 'form_updated',
+						'gmw_notice_status' => 'updated',
+					)
+				)
 			);
 		};
-    	
-    	exit;
-    }
+
+		exit;
+	}
 }
