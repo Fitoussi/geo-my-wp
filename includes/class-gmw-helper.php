@@ -115,7 +115,7 @@ class GMW_Helper {
 		}
 
 		// if this is info-window templates
-		$path .= ( 'info-window' == $folder_name ) ? $iw_type . '/*' : '*';
+		$path .= 'info-window' == $folder_name ? $iw_type . '/*' : '*';
 
 		// get templates from plugin's folder
 		foreach ( glob( $path, GLOB_ONLYDIR ) as $dir ) {
@@ -124,36 +124,6 @@ class GMW_Helper {
 
 		// can modify the PATH of the custom template files.
 		$custom_path = apply_filters( 'gmw_get_templates_path', STYLESHEETPATH . '/geo-my-wp', $component, $folder_name, $iw_type, $addon );
-
-		// Support deprecated custom templates folder name.
-		// To be removed in the future.
-		if ( ! is_dir( $custom_path . '/' . $templates_folder ) ) {
-
-			if ( 'posts_locator' == $component ) {
-
-				trigger_error( 'The "posts" custom templates folder was renamed to "posts-locator" since GEO my WP 3.0. Rename your custom folder to prevent issues in the future.', E_USER_NOTICE );
-
-				$templates_folder = 'posts';
-
-			} elseif ( 'members_locator' == $component ) {
-
-				trigger_error( 'The "friends" custom templates folder was renamed to "members-locator" since GEO my WP 3.0. Rename your custom folder to prevent issues in the future.', E_USER_NOTICE );
-
-				$templates_folder = 'friends';
-
-			} elseif ( 'users_locator' == $component ) {
-
-				trigger_error( 'The "users" custom templates folder was renamed to "users-locator" since GEO my WP 3.0. Rename your custom folder to prevent issues in the future.', E_USER_NOTICE );
-
-				$templates_folder = 'users';
-
-			} elseif ( 'groups_locator' == $component ) {
-
-				trigger_error( 'The "groups" custom templates folder was renamed to "groups-locator" since GEO my WP 3.0. Rename your custom folder to prevent issues in the future.', E_USER_NOTICE );
-
-				$templates_folder = 'groups';
-			}
-		}
 
 		if ( $addon_data != false && ! empty( $addon_data['templates_folder'] ) ) {
 			$templates_folder .= '/' . $addon_data['templates_folder'];
@@ -256,36 +226,6 @@ class GMW_Helper {
 
 			$custom_path_uri = apply_filters( 'gmw_get_template_path_uri', $custom_path_uri, $component, $folder_name, $iw_type, $template_name, $addon );
 
-			// Support deprecated custom templates folder name.
-			// To be removed in the future.
-			if ( ! is_dir( $custom_path_uri['path'] . '/' . $templates_folder ) ) {
-
-				if ( 'posts_locator' == $component ) {
-
-					trigger_error( 'The "posts" custom templates folder was renamed to "posts-locator" since GEO my WP 3.0. Rename your custom folder to prevent issues in the future.', E_USER_NOTICE );
-
-					$templates_folder = 'posts';
-
-				} elseif ( 'members_locator' == $component ) {
-
-					trigger_error( 'The "friends" custom templates folder was renamed to "members-locator" since GEO my WP 3.0. Rename your custom folder to prevent issues in the future.', E_USER_NOTICE );
-
-					$templates_folder = 'friends';
-
-				} elseif ( 'users_locator' == $component ) {
-
-					trigger_error( 'The "users" custom templates folder was renamed to "users-locator" since GEO my WP 3.0. Rename your custom folder to prevent issues in the future.', E_USER_NOTICE );
-
-					$templates_folder = 'users';
-
-				} elseif ( 'groups_locator' == $component ) {
-
-					trigger_error( 'The "groups" custom templates folder was renamed to "groups-locator" since GEO my WP 3.0. Rename your custom folder to prevent issues in the future.', E_USER_NOTICE );
-
-					$templates_folder = 'groups';
-				}
-			}
-
 			if ( '' != $addon && $addon != $component ) {
 
 				$addon_data = gmw_get_addon_data( $addon );
@@ -298,26 +238,30 @@ class GMW_Helper {
 			// look for template in custom location or in child theme. If not found check in parent theme.
 			if ( file_exists( $custom_path_uri['path'] . "/{$templates_folder}/{$folder}{$template_name}/" ) ) {
 
-				$output['content_path']   = $custom_path_uri['path'] . "/{$templates_folder}/{$folder}{$template_name}/{$file_name}";
+				$output['content_path']   = $custom_path_uri['path'] . "/{$templates_folder}/{$folder}{$template_name}/";
 				$output['stylesheet_uri'] = $custom_path_uri['uri'] . "/{$templates_folder}/{$folder}{$template_name}/css/style.css";
 
 			} else {
 
-				$output['content_path']   = TEMPLATEPATH . "/geo-my-wp/{$templates_folder}/{$folder}{$template_name}/{$file_name}";
+				$output['content_path']   = TEMPLATEPATH . "/geo-my-wp/{$templates_folder}/{$folder}{$template_name}/";
 				$output['stylesheet_uri'] = get_template_directory_uri() . "/geo-my-wp/{$templates_folder}/{$folder}{$template_name}/css/style.css";
 			}
 
 			// for previous version of GEO my WP. Need to rename all custom template files to content.php
-			// to be removed
-			if ( ! file_exists( $output['content_path'] ) ) {
+			// to be removed.
+			if ( file_exists( $output['content_path'] . $file_name ) ) {
+
+				$output['content_path'] .= $file_name;
+
+			} else {
 
 				if ( 'search-forms' == $folder_name ) {
 
-					$output['content_path'] = STYLESHEETPATH . "/geo-my-wp/{$templates_folder}/{$folder}{$template_name}/search-form.php";
+					$output['content_path'] .= 'search-form.php';
 
 				} elseif ( 'search-results' == $folder_name ) {
 
-					$output['content_path'] = STYLESHEETPATH . "/geo-my-wp/{$templates_folder}/{$folder}{$template_name}/results.php";
+					$output['content_path'] .= 'results.php';
 				}
 			}
 
