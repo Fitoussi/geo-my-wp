@@ -35,7 +35,7 @@ class GMW_Posts_Locator_Screens {
 
 			// these actions fire functions responsible for a fix where posts status wont change from pending to publish.
 			add_action( 'admin_footer', array( $this, 'add_hidden_status_field' ) );
-			add_action( 'gmw_lf_post_location_args_before_location_updated', array( $this, 'post_status_publish_fix' ) );
+			add_action( 'gmw_lf_before_post_location_updated', array( $this, 'post_status_publish_fix' ) );
 		}
 	}
 
