@@ -85,7 +85,11 @@ class GMW_Location {
 	public static function default_values() {
 
 		$user_id = function_exists( 'get_current_user_id' ) ? get_current_user_id() : 1;
-	
+
+		if ( ! $user_id ) {
+			$user_id = 1;
+		}
+		
 		return array( 
 			'object_type'		=> '',
 			'object_id'			=> 0,
@@ -119,7 +123,7 @@ class GMW_Location {
 	}
 
 	/**
-	 * helper to verify an ID.
+	 * Helper to verify an ID.
 	 * 
 	 * @param numeric $id ID as numeric values
 	 * 
