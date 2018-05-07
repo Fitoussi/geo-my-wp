@@ -32,6 +32,10 @@ class GMW_Posts_Locator_Screens {
             add_action( "manage_{$post_type}_posts_custom_column", array( $this, 'address_column_content' ), 10, 2 ); 
             add_filter( 'gmw_lf_post_location_args_before_location_updated', array( $this, 'get_post_title' ) );
             add_filter( 'gmw_lf_post_location_meta_before_location_updated', array( $this, 'verify_location_meta' ), 10, 3 ); 
+            
+            // these actions fire functions responsible for a fix where posts status wont change from pending to publish.
+            add_action( 'admin_footer', array( $this, 'add_hidden_status_field' ) );
+            add_action( 'gmw_lf_post_location_args_before_location_updated', array( $this, 'post_status_publish_fix' ) );
         }
     }
 
@@ -240,6 +244,46 @@ class GMW_Posts_Locator_Screens {
         }
 
         return $location_meta;
+    }
+
+    /**
+     * Add hidden field to hold the value 1 when the "Publish" button pressed.
+     *
+     * This way in the next function we can chnage the post status manually to publish.
+     */
+    public function add_hidden_status_field() {
+    	?>
+    	<script type="text/javascript">
+    		jQuery( 'document' ).ready( function() {
+
+   				$( 'form[name="post"]' ).append( '<input type="hidden" value="" name="gmw_post_published" id="gmw_post_published" />' );
+
+   				$( 'form[name="post"]' ).find( 'input#publish[type="submit"][value="Publish"]' ).on( 'click', function() {
+   					$( '#gmw_post_published' ).val( '1' );
+   				})
+    		})
+    	</script>
+		<?php
+    }
+
+    /**
+     * Change the post status manually to publish when click on the publish button.
+     *
+     * For some reason, on some browsers the post status wont change to publish from pending review.
+     *
+     * Looks like this happens becaue the script of the Location form disables
+     * 
+     * the original form submission ( event.preventDefault ) to allows to verify the location. Then
+     *
+     * the script will submit the form agaain.
+     * 
+     * @return [type] [description]
+     */
+    public function post_status_publish_fix() {
+    	
+    	if ( 'publish' != $_POST['post_status'] && ! empty( $_POST['gmw_post_published'] ) ) {
+    		$_POST['post_status'] = 'publish';
+    	}
     }
 }
 new GMW_Posts_Locator_Screens;
