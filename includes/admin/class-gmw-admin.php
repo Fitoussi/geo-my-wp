@@ -25,6 +25,13 @@ class GMW_Admin {
 			add_action( 'admin_notices', array( $this, 'update_database_notice' ) );
 		}
 
+		//delete_option( 'gmw_folders_names_changed_notice_viewed' );
+		// admin notice to import location to the new database table
+		if ( get_option( 'gmw_folders_names_changed_notice_viewed' ) === false ) {
+			add_action( 'admin_init', array( $this, 'folders_names_notice_dismiss' ) );
+			add_action( 'admin_notices', array( $this, 'deprecated_folder_names_notice' ) );
+		}
+
 		// do some actions
 		add_action( 'admin_menu', array( $this, 'admin_menu' ), 12 );
 		add_action( 'admin_init', array( $this, 'init_addons' ) );
@@ -69,7 +76,7 @@ class GMW_Admin {
 
 		// Setup/welcome
 		if ( ! empty( $_GET['page'] ) && $_GET['page'] == 'gmw-welcome' ) {
-			include_once( 'class-gmw-welcome-page.php' );
+			//include_once( 'class-gmw-welcome-page.php' );
 		}
 		
 		add_filter( 'plugin_action_links_' . GMW_BASENAME, array( $this, 'gmw_action_links' ), 10, 2 );
@@ -79,6 +86,26 @@ class GMW_Admin {
 		?>
 	    <div class="error">
 	    	<p><?php echo sprintf( __( 'GEO my WP needs to import existing locations into its new database table. <a href="%s" class="button-primary"> Import locations</a>' ), admin_url( 'admin.php?page=gmw-import-export&tab=gmw_v_3' ) ) ?></p>
+	    </div>
+		<?php
+	}
+
+	public function folders_names_notice_dismiss() {
+		
+		if ( ! empty( $_GET['action'] ) && 'gmw_folders_names_dismiss' == $_GET['action'] ) {
+			
+			update_option( 'gmw_folders_names_changed_notice_viewed', 1 );
+
+			wp_redirect( $_SERVER['REQUEST_URI'] );
+		}
+	}
+
+	public function deprecated_folder_names_notice() {
+
+		$page = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : 'gmw-extensions';
+		?>
+	    <div class="notice notice-warning">
+	    	<p><?php echo sprintf( __( '<h2>Important GEO my WP notice!</h2><p>The folders names for the custom template files have changed since GEO my WP version 3.0. If you have custom template files placed in the theme or child theme folder, you need to rename the folders to be able to use your custom template files.</p><p>See <a href="%s" target="_blank">this post</a> to learn about the new folders names.</p><p><a href="%s" class="button-secondary">Dismiss</a></p>'  ), 'https://geomywp.com/geo-my-wp-3-0-upgrade-process/#folders-names', admin_url( 'admin.php?page=' . $page .'&action=gmw_folders_names_dismiss' ) ); ?></p>
 	    </div>
 		<?php
 	}
