@@ -107,29 +107,30 @@ class GMW_Location_Form {
 	private $default_args = array(
 		//'slug'					=> '',
 		//'object_type' 			=> 'post',					  // Object type being used in this form.
-		'object_id' 		  	=> 0,						  // Object ID.
-		'user_id'				=> 0,						  // User ID of the user updating the location.
+		'object_id' 		  		=> 0,						  // Object ID.
+		'user_id'					=> 0,						  // User ID of the user updating the location.
 		//'exclude_tabs'			=> '',						  // array of tabs to exclude from the location form. Otherwise set to 0 if no need to exclude.
-		'exclude_fields_groups'	=> '',						  // array of fields groups to exclude from the location form.
-		'exclude_fields'		=> '',                        // exclude fields
-		'ajax_enabled'			=> 1,						  // Enable / disable AJAX form submission
-		'update_on_submission'	=> 1,						  // Use the built in form submission process to update the location. Otherwise you can use your own functions to save the location data.
-		'confirm_required'		=> 1, 						  // require address to be confirmed before saving the location. Otherwise users will be able to entere any address - coordinates without being confirmed.
-		'auto_confirm'			=> 0,
-		'default_user_location'	=> 0,						  // auto-populate location fields with the user's current position if exsist. That is in case that there is no location save for the user.
-		'stand_alone'			=> 1,						  // Wrap the location form within <form> element. That is if the location form is a stand alone and not within another form.
-		'form_element'	  		=> '#gmw-location-form',      // form wrapper element. If the location form is within another form the main form element should be used in here.
-		'form_template'			=> 'location-form-tabs-left', // Form template name.
-		'submit_enabled'		=> 1, 						  // Show "Submit" button within the location form. That can be used when the location form is a stand alone. If the location form is within another form then the submit button of that form should be used.
-		'address_autocomplete'  => 1, 						  // Enabled / disable Google Address autocomplete
-		'geolocation_button'	=> 1,						  // Enable / disable auto locator button in the address field
-		'map_zoom_level'  		=> 12, 						  // Initial map zoom level
-        'map_type'        		=> 'ROADMAP', 				  // map type ROADMAP, TERRAIN, SATELLITE or HYBRID
-        'map_lat'         		=> '40.7827096', 			  // Map initial latitude
-        'map_lng'         		=> '-73.9653099', 			  // Map initial longitude
-        'update_callback' 		=> 'gmw_lf_update_location',  // AJAX save callback function
-		'delete_callback' 		=> 'gmw_lf_delete_location',  // AJAX delete callback function
-		'location_required'     => 0
+		'exclude_fields_groups'		=> '',						  // array of fields groups to exclude from the location form.
+		'exclude_fields'			=> '',                        // exclude fields
+		'ajax_enabled'				=> 1,						  // Enable / disable AJAX form submission
+		'update_on_submission'		=> 1,						  // Use the built in form submission process to update the location. Otherwise you can use your own functions to save the location data.
+		'confirm_required'			=> 1, 						  // require address to be confirmed before saving the location. Otherwise users will be able to entere any address - coordinates without being confirmed.
+		'auto_confirm'				=> 0,
+		'default_user_location'		=> 0,						  // auto-populate location fields with the user's current position if exsist. That is in case that there is no location save for the user.
+		'stand_alone'				=> 1,						  // Wrap the location form within <form> element. That is if the location form is a stand alone and not within another form.
+		'form_element'	  			=> '#gmw-location-form',      // form wrapper element. If the location form is within another form the main form element should be used in here.
+		'form_template'				=> 'location-form-tabs-left', // Form template name.
+		'submit_enabled'			=> 1, 						  // Show "Submit" button within the location form. That can be used when the location form is a stand alone. If the location form is within another form then the submit button of that form should be used.
+		'preserve_submitted_values' => 0,                         // when form submitted via page load, populate the form with the submitted values.
+		'address_autocomplete'  	=> 1, 						  // Enabled / disable Google Address autocomplete
+		'geolocation_button'		=> 1,						  // Enable / disable auto locator button in the address field
+		'map_zoom_level'  			=> 12, 						  // Initial map zoom level
+        'map_type'        			=> 'ROADMAP', 				  // map type ROADMAP, TERRAIN, SATELLITE or HYBRID
+        'map_lat'         			=> '40.7827096', 			  // Map initial latitude
+        'map_lng'         			=> '-73.9653099', 			  // Map initial longitude
+        'update_callback' 			=> 'gmw_lf_update_location',  // AJAX save callback function
+		'delete_callback' 			=> 'gmw_lf_delete_location',  // AJAX delete callback function
+		'location_required'     	=> 0
 	);
 
 	/**
@@ -187,34 +188,62 @@ class GMW_Location_Form {
 
 		// get fields groups excluded via form arguments
 		if ( empty( $this->args['exclude_fields_groups'] ) ) {
+			
 			$this->args['exclude_fields_groups'] = array();
+		
 		} elseif ( ! is_array( $this->args['exclude_fields_groups'] ) ) {
+		
 			$this->args['exclude_fields_groups'] = explode( ',', $this->args['exclude_fields_groups'] );
 		}
 
 		if ( ! empty( $this->exclude_fields_groups ) ) {
+		
 			if ( ! is_array( $this->exclude_fields_groups ) ) {
+		
 				$this->exclude_fields_groups = explode( ',', $this->exclude_fields_groups );
+		
 			}
+		
 			$this->args['exclude_fields_groups'] = array_merge( $this->exclude_fields_groups, $this->args['exclude_fields_groups'] );
 		}
 
 		// exclude fields
 		if ( empty( $this->args['exclude_fields'] ) ) {
+
 			$this->args['exclude_fields'] = array();
+		
 		} elseif ( ! is_array( $this->args['exclude_fields'] ) ) {
+		
 			$this->args['exclude_fields'] = explode( ',', $this->args['exclude_fields'] );
 		}
 
 		if ( ! empty( $this->exclude_fields ) ) {
+			
 			if ( ! is_array( $this->exclude_fields ) ) {
+			
 				$this->exclude_fields = explode( ',', $this->exclude_fields );
+			
 			}
+			
 			$this->args['exclude_fields'] = array_merge( $this->exclude_fields, $this->args['exclude_fields'] );
 		}
 
-		// get location from database if exist
-		$this->saved_location = $this->get_saved_location();
+		if ( $this->args['preserve_submitted_values'] && ! $this->args['ajax_enabled'] && ! empty( $_POST['gmw_action'] ) && 'update_lf_location' == $_POST['gmw_action'] && ! empty( $_POST['gmw_lf_slug'] ) && $_POST['gmw_lf_slug'] == $this->slug ) {
+		
+			$this->saved_location = ( object ) $_POST['gmw_location_form'];
+		
+		} else {
+
+			// get location from database if exist
+			$this->saved_location = $this->get_saved_location();
+		}
+
+		$this->saved_location = apply_filters( 'gmw_location_form_default_location', $this->saved_location, $this->args, $this );
+
+		// Make sure default location is an object, rather than array.
+		if ( is_array( $this->saved_location ) ) {
+			$this->saved_location = ( object ) $this->saved_location;
+		}
 
 		// get existing location ID
 		$this->location_id = ! empty( $this->saved_location ) ? absint( $this->saved_location->ID ) : 0;
@@ -243,9 +272,23 @@ class GMW_Location_Form {
 		// get template folders
 		$this->template_folders = self::get_folders();
 
-		// enqueue scripts and pass the values to JavaScript
+		// enqueue scripts in footer
+		add_action( 'wp_footer', array( $this, 'enqueue_scripts' ) );
+		add_action( 'admin_footer', array( $this, 'enqueue_scripts' ) );
+    }
+
+    public function enqueue_scripts() {
+
+    	// enqueue script and style
     	wp_enqueue_style( 'gmw-location-form' );
     	wp_enqueue_script( 'gmw-location-form' );
+    	
+    	// load chosen if not already loaded 
+	    if ( ! wp_script_is( 'chosen', 'enqueued' ) ) {
+            wp_enqueue_script( 'chosen' );
+            wp_enqueue_style( 'chosen' );
+        }
+
 	    wp_localize_script( 'gmw-location-form', 'gmw_lf_args', array(
 	    	'slug'			 => $this->slug,
 	    	'object_type'    => $this->object_type,
@@ -255,15 +298,8 @@ class GMW_Location_Form {
 	    	'tabs'			 => $this->tabs,
 	    	'fields'	 	 => $this->fields,
 	    	'messages'		 => $this->messages,
-	    	//'ajaxurl'		 => GMW()->ajax_url,
 	    	'nonce' 	 	 =>	wp_create_nonce( "gmw_lf_update_location" )
 	    ) );
-
-	    // load chosen if not already loaded 
-	    if ( ! wp_script_is( 'chosen', 'enqueued' ) ) {
-            wp_enqueue_script( 'chosen' );
-            wp_enqueue_style( 'chosen' );
-        }
     }
 
     /**
@@ -318,7 +354,7 @@ class GMW_Location_Form {
      *
      * @since 3.0
      * 
-     * @return object | false all the location meta fields attached to the locaiton we are editing
+     * @return object | false all the location meta fields attached to the location we are editing
      */
     protected function get_saved_locationmeta() {
 
@@ -819,24 +855,27 @@ class GMW_Location_Form {
     	$field = $this->fields[$fields_group]['fields'][$slug];
 
     	// make sure name_attr exists otherwise create one
-    	$fieldName = ! empty( $field['name'] ) ? $field['name'] : 'gmw_lf_'.$slug;
+    	$field_name = ! empty( $field['name'] ) ? $field['name'] : 'gmw_lf_'.$slug;
 
+    	// Deprecated variable.
+    	$fieldName = $field_name;
+    	
         // look for user's current position in cookies to automatically fill out the location form if user location not already exist in databse.
         if ( $this->args['default_user_location'] && ( in_array( $fields_group, array( 'address', 'coordinates', 'location' ) ) ) && empty( $this->saved_location ) && ! empty( $this->user_location ) ) {
 
         	// get user location if found
-        	$field['value'] = isset( $this->user_location->$fieldName ) ? stripslashes( $this->user_location->$fieldName ) : '';
+        	$field['value'] = isset( $this->user_location->$field_name ) ? stripslashes( $this->user_location->$field_name ) : '';
  
         } else {
         	
         	//get tvalue from saved location if exists
-        	$field['value'] = isset( $this->saved_location->$fieldName ) ? stripslashes( $this->saved_location->$fieldName ) : '';
+        	$field['value'] = isset( $this->saved_location->$field_name ) ? stripslashes( $this->saved_location->$field_name ) : '';
         }      
 
         // get values from location meta for fields with meta_key arg
         if ( ! empty( $field['meta_key'] ) ) {
 
-        	$fieldName = 'gmw_location_form[location_meta]['.$field['meta_key'].']';
+        	$field_name = 'gmw_location_form[location_meta]['.$field['meta_key'].']';
 
         	if ( ! empty( $this->saved_locationmeta[$field['meta_key']] ) ) {
         		$field['value'] = $this->saved_locationmeta[$field['meta_key']];
@@ -1211,6 +1250,7 @@ class GMW_Location_Form {
 
 	    	if ( IS_ADMIN ) {
 
+	    
 	    	} else {
 
 	    		// reload page to prevent re-submission
