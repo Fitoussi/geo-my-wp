@@ -4,8 +4,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'GMW_Location' ) ) :
-
 /**
  * Class GMW_Location
  *
@@ -1183,4 +1181,3 @@ class GMW_Location {
 		return self::delete( $location->object_type, $location->object_id, $delete_meta );
 	}
 }
-endif;
