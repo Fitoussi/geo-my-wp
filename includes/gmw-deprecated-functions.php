@@ -354,7 +354,7 @@ function gmw_get_member_info( $args = array(), $from_shortcode = false ) {
 function gmw_get_user_info( $args = array(), $from_shortcode = false ) {
 
 	if ( ! $from_shortcode ) {
-		trigger_error( 'gmw_get_user_info function is deprecated since Users Locator version 2.0. Please use gmw_get_user_address instead.', E_USER_NOTICE );
+		trigger_error( 'gmw_get_user_info function is deprecated since WordPress Users Locator version 1.3. Use gmw_get_user_address instead.', E_USER_NOTICE );
 	}
 
 	if ( function_exists( 'gmw_get_user_address' ) ) {
@@ -371,9 +371,18 @@ function gmw_get_user_info( $args = array(), $from_shortcode = false ) {
 	return;
 }
 
+function gmw_get_user_info_shortcode( $args = array() ) {
+
+	trigger_error( '[gmw_user_info] shortcode is deprecated since WordPress Users Locator version 1.3. Use [gmw_user_address] instead.', E_USER_NOTICE );
+
+	return function_exists( 'gmw_get_user_address' ) ? gmw_get_user_address( $args ) : '';
+}
+add_shortcode( 'gmw_user_info', 'gmw_get_user_info_shortcode' );
+
+
 function gmw_get_member_info_shortcode( $args = array() ) {
 
-	trigger_error( '[gmw_member_info] shortcode is deprecated since GEO my WP version 3.0. Please use [gmw_user_address] instead.', E_USER_NOTICE );
+	trigger_error( '[gmw_member_info] shortcode is deprecated since GEO my WP version 3.0. Use [gmw_user_address] instead.', E_USER_NOTICE );
 
 	return gmw_get_member_info( $args, true );
 }
