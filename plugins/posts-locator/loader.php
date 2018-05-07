@@ -2,147 +2,147 @@
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+	exit;
 }
 
 //abort if register add-on class is not found
 if ( ! class_exists( 'GMW_Addon' ) ) {
-    return;
+	return;
 }
 
 /**
  * Register Posts locator add-on
  */
 class GMW_Posts_Locator_Addon extends GMW_Addon {
-    
-    // slug
-    public $slug = "posts_locator";
 
-    // add-on's name
-    public $name = "Posts Locator";
+	// slug
+	public $slug = 'posts_locator';
 
-    // prefix
-    public $prefix = "pt";
-    
-    // version
-    public $version = GMW_VERSION;
+	// add-on's name
+	public $name = 'Posts Locator';
 
-    // author
-    public $author = "Eyal Fitoussi";
+	// prefix
+	public $prefix = 'pt';
 
-    // description
-    public $description = "Provides geolocation for WordPress post types.";
+	// version
+	public $version = GMW_VERSION;
 
-    // object
-    public $object = 'post';
+	// author
+	public $author = 'Eyal Fitoussi';
 
-    // database object type
-    public $object_type = 'post';
+	// description
+	public $description = 'Provides geolocation for WordPress post types.';
 
-    // db table prefix
-    public $global_db = false;
+	// object
+	public $object = 'post';
 
-    // Plugin use template files
-    public $templates_folder = 'posts-locator';
+	// database object type
+	public $object_type = 'post';
 
-    // path
-    public $full_path = __FILE__;
-    
-    // core add-on
-    public $is_core = true;
-        
-    /**
-     * Settings groups
-     * 
-     * @return [type] [description]
-     */
-    public function admin_settings_groups() {
-        return array(
-            'slug'     => 'post_types_settings',
-            'label'    => __( 'Posts Locator', 'geo-my-wp' ),
-            'icon'     => 'pinboard', 
-            'priority' => 5
-        );  
-    }
+	// db table prefix
+	public $global_db = false;
 
-    /**
-     * Form button
-     * 
-     * @return [type] [description]
-     */
-    public function form_buttons() {
-        return array( 
-            'slug'      => 'posts_locator',
-            'name'      => 'Posts Locator',
-            'prefix'    => 'pt',
-            'priority'  => 5 
-        );
-    }
+	// Plugin use template files
+	public $templates_folder = 'posts-locator';
 
-    private static $instance = null;
+	// path
+	public $full_path = __FILE__;
 
-    /**
-     * Create new instance 
-     * 
-     * @return [type] [description]
-     */
-    public static function get_instance() {
+	// core add-on
+	public $is_core = true;
 
-        if ( self::$instance == null ) {
-            self::$instance = new self;
-        }
+	/**
+	 * Settings groups
+	 *
+	 * @return [type] [description]
+	 */
+	public function admin_settings_groups() {
+		return array(
+			'slug'     => 'post_types_settings',
+			'label'    => __( 'Posts Locator', 'geo-my-wp' ),
+			'icon'     => 'pinboard',
+			'priority' => 5,
+		);
+	}
 
-        return self::$instance;
-    }
+	/**
+	 * Form button
+	 *
+	 * @return [type] [description]
+	 */
+	public function form_buttons() {
+		return array(
+			'slug'     => 'posts_locator',
+			'name'     => 'Posts Locator',
+			'prefix'   => 'pt',
+			'priority' => 5,
+		);
+	}
 
-    /**
-     * [pre_init description]
-     * @return [type] [description]
-     */
-    public function pre_init() {  
+	private static $instance = null;
 
-        parent::pre_init();
+	/**
+	 * Create new instance
+	 *
+	 * @return [type] [description]
+	 */
+	public static function get_instance() {
 
-        include( 'includes/gmw-posts-locator-functions.php' );
-        
-        // include admin files
-        if ( IS_ADMIN ) {
+		if ( null == self::$instance ) {
+			self::$instance = new self;
+		}
 
-            include( 'includes/admin/class-gmw-posts-locator-form-editor.php' );
-            include( 'includes/admin/class-gmw-posts-locator-admin-settings.php' );
-            include( 'includes/admin/class-gmw-posts-locator-screens.php' );
+		return self::$instance;
+	}
 
-            //include( 'includes/admin/class-gmw-post-location-form.php' );
-        } else {
+	/**
+	 * [pre_init description]
+	 * @return [type] [description]
+	 */
+	public function pre_init() {
 
-            include( 'includes/gmw-posts-locator-search-form-template-functions.php' );
-            include( 'includes/gmw-posts-locator-search-results-template-functions.php' );
-            include( 'includes/class-gmw-posts-locator-form.php' ); 
-        }
+		parent::pre_init();
 
-        // load single location post
-        if ( gmw_is_addon_active( 'single_location' ) ) {
-        
-            if ( IS_ADMIN ) { 
+		include( 'includes/gmw-posts-locator-functions.php' );
 
-                /**
-                 * Add post object to objects dropdown in single location widget
-                 * 
-                 * @param  [type] $args [description]
-                 * @return [type]       [description]
-                 */
-                function gmw_pt_single_location_widget_object( $args ) {
-                
-                    $args['post'] = __( 'Post', 'geo-my-wp' );
-                
-                    return $args;
-                }
-                add_filter( 'gmw_single_location_widget_objects', 'gmw_pt_single_location_widget_object', 5 );
+		// include admin files
+		if ( IS_ADMIN ) {
 
-            } else {
-                include( 'includes/class-gmw-single-post-location.php' );
-            }
-        }
-    }
+			include( 'includes/admin/class-gmw-posts-locator-form-editor.php' );
+			include( 'includes/admin/class-gmw-posts-locator-admin-settings.php' );
+			include( 'includes/admin/class-gmw-posts-locator-screens.php' );
+
+			//include( 'includes/admin/class-gmw-post-location-form.php' );
+		} else {
+
+			include( 'includes/gmw-posts-locator-search-form-template-functions.php' );
+			include( 'includes/gmw-posts-locator-search-results-template-functions.php' );
+			include( 'includes/class-gmw-posts-locator-form.php' );
+		}
+
+		// load single location post
+		if ( gmw_is_addon_active( 'single_location' ) ) {
+
+			if ( IS_ADMIN ) {
+
+				/**
+				 * Add post object to objects dropdown in single location widget
+				 *
+				 * @param  [type] $args [description]
+				 * @return [type]       [description]
+				 */
+				function gmw_pt_single_location_widget_object( $args ) {
+
+					$args['post'] = __( 'Post', 'geo-my-wp' );
+
+					return $args;
+				}
+				add_filter( 'gmw_single_location_widget_objects', 'gmw_pt_single_location_widget_object', 5 );
+
+			} else {
+				include( 'includes/class-gmw-single-post-location.php' );
+			}
+		}
+	}
 }
 GMW_Addon::register( 'GMW_Posts_Locator_Addon' );
