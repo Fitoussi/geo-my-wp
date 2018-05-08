@@ -5,7 +5,7 @@ Tags: Geolocation, Directory, Store Locator, Geolocator, Geotagging, Geocode, Ma
 Requires at least: 4.3
 Tested up to: 4.9.5
 Buddypress: 2.8
-Stable tag: 3.0.3
+Stable tag: 3.0.4
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -117,6 +117,23 @@ for detailed installation and setup guide see the [documentation](docs.geomywp.c
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 3.0.4 =
+
+* Version 3.0 is a major release. If you are updating from a version earlier than 3.0, it is highly recommended that you read the posts [GEO my WP 3.0 Beta 7](https://geomywp.com/geo-my-wp-3-0-beta-7/) and [GEO my WP Upgrade Process](https://geomywp.com/geo-my-wp-3-0-upgrade-process/) before updating. You should also test this version on a staging environment before updating on your live site.
+
+* Fix: remove support for deprecated folder names which has caused many issues. Display admin notice regarding the new folders names instead.
+* Fix: clientSideGeocoder Javascript variable undefined error.
+* Fix: Issue where a post will not change to "published" from "Pending" status on some browsers.
+* Deprecated: Add missing [gmw_user_info] deprecated shortcode. Belongs to WP Users Locator extension.
+* Tweak: Load posts locator location form file in "new" or "edit" post page only.
+* Tweak: verify user_id in location default values to make sure it is not 0.
+* Tweak: enqueue location form scripts and styles in the footer.
+* Tweak: add back missing sweet-date search results template file.
+* Style: location form messages flat styling.
+* Filter: 'gmw_geocoder_raw_data' to modify raw_address before geocoding takes place.
+* Filter: 'gmw_location_form_default_location' to modify the default location in the location form.
+* Dev: new "preserve_submitted_values" argument in location form to preserve the submitted values after page load.
 
 = 3.0.3 =
 
