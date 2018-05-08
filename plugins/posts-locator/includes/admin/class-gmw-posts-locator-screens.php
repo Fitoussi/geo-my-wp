@@ -19,7 +19,14 @@ class GMW_Posts_Locator_Screens {
 	 */
 	public function __construct() {
 
-		//apply features only for the chosen post types
+		global $pagenow;
+
+		// load page only on new and edit post pages.
+		if ( empty( $pagenow ) || ! in_array( $pagenow, array( 'post-new.php', 'post.php' ) ) ) {
+			return;
+		}
+
+		// apply features only for the chosen post types
 		foreach ( gmw_get_option( 'post_types_settings', 'post_types', array() ) as $post_type ) {
 
 			// no need to show in resumes or job_listings post types
@@ -30,11 +37,12 @@ class GMW_Posts_Locator_Screens {
 			add_action( "add_meta_boxes_{$post_type}", array( $this, 'add_meta_box' ), 10 );
 			add_filter( "manage_{$post_type}_posts_columns", array( $this, 'add_address_column' ) );
 			add_action( "manage_{$post_type}_posts_custom_column", array( $this, 'address_column_content' ), 10, 2 );
+
+			// filters fires when location updated.
 			add_filter( 'gmw_lf_post_location_args_before_location_updated', array( $this, 'get_post_title' ) );
 			add_filter( 'gmw_lf_post_location_meta_before_location_updated', array( $this, 'verify_location_meta' ), 10, 3 );
 
-			// these actions fire functions responsible for a fix where posts status wont change from pending to publish.
-			add_action( 'admin_footer', array( $this, 'add_hidden_status_field' ) );
+			// these action fire functions responsible for a fix where posts status wont change from pending to publish.
 			add_action( 'gmw_lf_before_post_location_updated', array( $this, 'post_status_publish_fix' ) );
 		}
 	}
@@ -141,6 +149,9 @@ class GMW_Posts_Locator_Screens {
 		add_meta_box(
 			'gmw-location-meta-box', apply_filters( 'gmw_pt_mb_title', __( 'Location', 'geo-my-wp' ) ), array( $this, 'display_meta_box' ), $post->post_type, 'advanced', 'high'
 		);
+
+		// add hidden field that responsible for a fix where posts status wont change from pending to publish.
+		add_action( 'admin_footer', array( $this, 'add_hidden_status_field' ) );
 	}
 
 	/**
@@ -253,13 +264,19 @@ class GMW_Posts_Locator_Screens {
 	public function add_hidden_status_field() {
 		?>
 		<script type="text/javascript">
-			jQuery( 'document' ).ready( function() {
-				$( 'form[name="post"]' ).append( '<input type="hidden" value="" name="gmw_post_published" id="gmw_post_published" />' );
 
-				$( 'form[name="post"]' ).find( 'input#publish[type="submit"][value="Publish"]' ).on( 'click', function() {
-					$( '#gmw_post_published' ).val( '1' );
-				});
+			jQuery( 'document' ).ready( function() {
+
+				if ( $( 'form[name="post"]' ).length ) {
+
+					$( 'form[name="post"]' ).append( '<input type="hidden" value="" name="gmw_post_published" id="gmw_post_published" />' );
+
+					$( 'form[name="post"]' ).find( 'input#publish[type="submit"][value="Publish"]' ).on( 'click', function() {
+						$( '#gmw_post_published' ).val( '1' );
+					});
+				}
 			});
+
 		</script>
 		<?php
 	}
