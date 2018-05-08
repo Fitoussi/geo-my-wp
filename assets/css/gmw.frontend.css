@@ -768,7 +768,8 @@ span.gmw-resize-map-toggle.gmw-icon-resize-small {
 
 	/********** End - Hours of operation **********/
 
-	div.gmw-results-wrapper .gmw-per-page {
+	div.gmw-results-wrapper .gmw-per-page,
+	div.gmw-results-wrapper .gmw-orderby-dropdown {
 		margin: 0px;
 		color: #555;
 		font: inherit;
