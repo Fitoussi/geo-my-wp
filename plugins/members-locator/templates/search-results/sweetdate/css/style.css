@@ -1,0 +1,177 @@
+/* GMW FL yellow search results stylesheet */
+
+.gmw-results-wrapper.sweetdate select {
+	width: initial;
+}
+
+.gmw-results-wrapper.sweetdate .results-count-wrapper {
+	background: #fdfdfd;
+	padding:8px 15px;
+	border-bottom:1px solid #ddd;
+	border-top:1px solid #ddd;
+	line-height: 20px;
+}
+
+.gmw-results-wrapper.sweetdate .results-count-wrapper p {
+	margin:0px;
+	font-size: 13px;
+	color:#444;
+}
+
+.gmw-results-wrapper.sweetdate .pagination-per-page-wrapper {
+	clear: both;
+	font-size: 12px;
+	padding: 5px 15px;
+	min-height: 25px;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 3px;
+	display: inline-block;
+	width: 100%;
+	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;    
+	box-sizing: border-box;
+	padding: 10px 0px;
+	background: #f8f8f8;
+	padding: 10px;
+}
+
+.gmw-results-wrapper.sweetdate .pagination-wrapper {
+	float: right;
+}
+
+/* pagination */
+
+.gmw-results-wrapper.sweetdate ul.gmw-pagination {
+	float: right;
+	text-align: center;
+	margin:0px;
+	list-style:none;
+	padding:0px;
+}
+
+.gmw-results-wrapper.sweetdate ul.gmw-pagination li  {
+	text-align:center;
+	display: inline-block;
+	margin:0 0 0 2px;
+	border: 0;
+}
+
+.gmw-results-wrapper.sweetdate ul.gmw-pagination li a, 
+.gmw-results-wrapper.sweetdate ul.gmw-pagination li span {
+	border-radius: 48px 48px 48px 48px;
+    color: #555555;
+    padding: 1px 0;
+    text-align: center;
+    display: inline-block;
+    float: none;
+    font-size: 14px;
+    height: 24px;
+    margin-left: 5px;
+    width: 24px;
+}
+
+.gmw-results-wrapper.sweetdate ul.gmw-pagination li a:hover, 
+.gmw-results-wrapper.sweetdate ul.gmw-pagination li span {
+	background: none repeat scroll 0 0 #2BA6CB;
+    color: white !important;
+    //cursor: default;
+    font-weight: bold;
+    line-height: 22px;
+}
+
+/* members list */
+.gmw-results-wrapper.sweetdate ul.members-list-wrapper {
+	background:lightyellow;
+	list-style: none;
+	padding:0px;
+	border-top: 10px solid #e1e1e1;
+	margin:3px 0 0 0;
+}
+
+.gmw-results-wrapper.sweetdate ul.members-list-wrapper li {
+	margin:0px;
+	padding: 15px;
+	border-bottom: 10px solid #e1e1e1
+	
+}
+
+.gmw-results-wrapper.sweetdate ul.members-list-wrapper li:nth-child(even) {
+	background:white;
+}
+
+.gmw-results-wrapper.sweetdate ul.members-list-wrapper li .radius {
+	display: inline-block;
+	margin-left:5px;
+	font-size: 12px
+}
+
+.gmw-results-wrapper.sweetdate ul.members-list-wrapper li .avatar img {
+	border: 1px solid #ccc;
+	box-shadow: none;
+	border-radius: 0px;
+	padding:3px;
+	background: #eee;
+	float: left;
+	margin: 0 10px 0 0;
+}
+
+.gmw-fl-no-results-wrapper {
+	background-color: #FBFCBA;
+	text-align:center;
+	border:1px solid #D1D296;
+	width:100%;
+	margin-top: 15px;
+	color:#626332;
+	padding:10px 0px;
+}
+
+.gmw-fl-no-results-wrapper p {
+	background: none;
+	border: 0;
+	padding: 0;
+	display: block;
+	margin:0px !important;
+	line-height:30px !important;
+}
+
+.gmw-results-wrapper.sweetdate .location-wrapper {
+	display: block;
+	clear: both;
+	font-size: 13px;
+}
+
+.gmw-results-wrapper.sweetdate .location-wrapper div {
+	margin-bottom: 8px;
+}
+
+/* smaller screens */
+@media (max-width:800px) {
+	.gmw-results-wrapper.sweetdate select {
+		width:100%;
+		max-width:100%;
+	}
+	
+	.gmw-results-wrapper.sweetdate .pagination-wrapper {
+		float:none;
+		width:100%;
+		margin-top:10px;
+		display: inline-block;
+	}
+	
+	.gmw-results-wrapper.sweetdate ul.members-list-wrapper li .info-left-wrapper, .gmw-results-wrapper.sweetdate ul.members-list-wrapper li .info-right-wrapper {
+		width:100%;
+		margin-bottom:10px;
+	}
+	
+	.gmw-results-wrapper.sweetdate ul.members-list-wrapper li .top-wrapper {
+		width:100%;
+		display: inline-block;
+		text-align:center;
+	}
+	
+	.gmw-results-wrapper.sweetdate ul.members-list-wrapper li .top-wrapper span.radius {
+		width:100%;
+		text-align: center;
+		margin-top:10px;
+	}
+}
