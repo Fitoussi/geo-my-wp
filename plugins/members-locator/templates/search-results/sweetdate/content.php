@@ -53,64 +53,65 @@
 
 			<div class="item-list search-list" id="members-list">
 
-		    	<!-- members loop -->
-		    	<?php while ( bp_members() ) : bp_the_member() ; ?>
+				<!-- members loop -->
+				<?php
+				while ( bp_members() ) : bp_the_member(); ?>
 
-		    		<!-- do not remove this line -->
-		    		<?php $member = $members_template->member; ?>
+					<!-- do not remove this line -->
+					<?php $member = $members_template->member; ?>
 
-		    		<!-- do not remove this line -->
-		            <?php do_action( 'gmw_search_results_loop_item_start', $gmw, $member ); ?>
+					<!-- do not remove this line -->
+					<?php do_action( 'gmw_search_results_loop_item_start', $gmw, $member ); ?>
 
-		    		<div class="four columns">
+					<div class="four columns">
 
-				        <div class="search-item">
-					         
-					        <div class="avatar">
+						<div class="search-item">
 
-					            <a href="<?php bp_member_permalink(); ?>"><?php bp_member_avatar('type=full&width=94&height=94&class='); ?></a>
-					            
-					            <?php do_action('bp_members_inside_avatar');?>
+							<div class="avatar">
 
-					            <span class="radius">
-		                    		<?php gmw_search_results_distance( $member, $gmw ); ?>
-		                    	</span>
+								<a href="<?php bp_member_permalink(); ?>"><?php bp_member_avatar( 'type=full&width=94&height=94&class=' ); ?></a>
 
-					        </div>
+								<?php do_action( 'bp_members_inside_avatar' ); ?>
 
-					        <?php do_action('bp_members_meta');?>
+								<span class="radius">
+									<?php gmw_search_results_distance( $member, $gmw ); ?>
+								</span>
 
-					        <div class="search-body">
-					            <?php do_action( 'bp_directory_members_item' ); ?>
-					        </div>
-					        
-					        <div class="location-wrapper">
-			                    
-			                    <?php do_action( 'gmw_search_results_before_address', $gmw, $member ); ?>
-			                    
-			                    <div class="address-wrapper">
+							</div>
+
+							<?php do_action( 'bp_members_meta' ); ?>
+
+							<div class="search-body">
+								<?php do_action( 'bp_directory_members_item' ); ?>
+							</div>
+
+							<div class="location-wrapper">
+
+								<?php do_action( 'gmw_search_results_before_address', $gmw, $member ); ?>
+
+								<div class="address-wrapper">
 									<?php gmw_search_results_linked_address( $member, $gmw ); ?>
 								</div>
-				                
-				                <?php do_action( 'gmw_search_results_before_get_directions', $gmw, $member ); ?>
-				                
-				                <?php gmw_search_results_directions_link( $member, $gmw ); ?>
-			                
-			                </div>           
 
-					        <div class="bp-member-dir-buttons">
-					            <?php do_action('bp_directory_members_item_last');?>
-					        </div>
+								<?php do_action( 'gmw_search_results_before_get_directions', $gmw, $member ); ?>
 
-				        </div>
+								<?php gmw_search_results_directions_link( $member, $gmw ); ?>
 
-			      </div>
+							</div>           
 
-		    	<?php endwhile; ?>
+							<div class="bp-member-dir-buttons">
+								<?php do_action( 'bp_directory_members_item_last' ); ?>
+							</div>
 
-		  	</div>
-	
-    		<?php do_action( 'bp_after_directory_members_list' ); ?>
+						</div>
+
+					</div>
+
+				<?php endwhile; ?>
+
+			</div>
+
+			<?php do_action( 'bp_after_directory_members_list' ); ?>
 
 			<?php bp_member_hidden_fields(); ?>
 
@@ -126,11 +127,11 @@
 	<?php else : ?>
 
 		<div class="gmw-no-results">
-			
+
 			<?php do_action( 'gmw_no_results_start', $gmw ); ?>
 
 			<?php gmw_no_results_message( $gmw ); ?>
-			
+
 			<?php do_action( 'gmw_no_results_end', $gmw ); ?> 
 
 		</div>
@@ -138,4 +139,3 @@
 	<?php endif; ?>
 
 </div>
-
