@@ -23,7 +23,8 @@ class GMW_Current_location {
 	protected $args = array(
 		'element_id'				=> 0,
 		'elements'					=> 'username,address,map,location_form',
-		'location_form_trigger' 	=> 'Get your current location',
+		'location_form_trigger' 	=> 'Update your current location',
+		'clear_location_trigger' 	=> 'Clear location',
 		'address_field_placeholder'	=> 'Enter address',
 		'address_fields' 			=> 'city,country',
 		'address_label'   			=> 'Your location',	
@@ -273,16 +274,11 @@ class GMW_Current_location {
 		$display = ! empty( $this->user_position['exists'] ) ? 'style="display:none"' : '';
 
 		$this->args['element_id'] = esc_attr( $this->args['element_id'] );
-		$ajax_enabled = esc_attr( $this->args['ajax_update'] );
-		
-		$autocomplete = ! empty( $this->args['address_autocomplete'] ) ? 'gmw-address-autocomplete' : '';
+		$ajax_enabled 			  = esc_attr( $this->args['ajax_update'] );
+		$autocomplete 			  = ! empty( $this->args['address_autocomplete'] ) ? 'gmw-address-autocomplete' : '';
 
 		$output  = '';
-		$output .= "<div id=\"gmw-cl-form-wrapper-{$this->args['element_id']}\" data-ajax_enabled=\"{$ajax_enabled}\" class=\"gmw-cl-element gmw-cl-form-wrapper\">";
-
-		if ( ! empty( $this->args['location_form_trigger'] ) ) {
-			$output .=  '<a href="#" class="gmw-cl-form-trigger" title="'.esc_attr( $this->args['location_form_trigger'] ).'">'.esc_attr( $this->args['location_form_trigger'] ).'</a></span>'; 
-		}
+		$output .= '<div id="gmw-cl-form-wrapper-'.$this->args['element_id'].'" data-ajax_enabled="'.$ajax_enabled.'" class="gmw-cl-element gmw-cl-form-wrapper" data-element-id="'.$this->args['element_id'].'">';
 
 		$output .= 	'<form id="gmw-cl-form-'.$this->args['element_id'].'" class="gmw-cl-form" onsubmit="return false;" name="gmw_cl_form" '.$display.' data-element-id="'.$this->args['element_id'].'">';	
 		$output .= 		'<div class="gmw-cl-address-input-wrapper">';
@@ -296,6 +292,25 @@ class GMW_Current_location {
 		$output .=		'</div>';
 		$output .= 		'<input type="hidden" class="gmw-cl-element-id" value="'.$this->args['element_id'].'" />';
 		$output .= 	'</form>';
+
+
+		if ( ! empty( $this->current_location ) ) {
+
+			if ( ! empty( $this->args['location_form_trigger'] ) ) {
+				
+				$update_text = esc_attr( $this->args['location_form_trigger'] );
+
+				$output .=  '<a href="#" class="gmw-cl-form-trigger" title="'.$update_text.'"><i class="gmw-icon-spin3"></i>'.$update_text.'</a>'; 
+			}
+
+			if ( ! empty( $this->args['clear_location_trigger'] ) ) {
+				
+				$clear_text = esc_attr( $this->args['clear_location_trigger'] );
+
+				$output .=  '<a href="#" class="gmw-cl-clear-location-trigger" title="'.$clear_text.'"><i class="gmw-icon-cancel-circled"></i>'.$clear_text.'</a>'; 
+			}
+		}
+
 		$output .= '</div>';
 
 		$output = apply_filters( 'gmw_cl_form_template', $output );
