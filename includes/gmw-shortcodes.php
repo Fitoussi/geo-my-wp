@@ -4,10 +4,10 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-	
+
 /**
  * GMW main shortcode displaying the form elements
- * 
+ *
  * @param  shortcode attributes ( form, search_form, map, search_results... with form ID as the value. ex. form="1" )
  * @return [type]   [description]
  */
@@ -20,7 +20,7 @@ function gmw_shortcode( $attr ) {
 
 		return;
 	}
-		
+
 	$_GET = apply_filters( 'gmw_modify_get_args', $_GET );
 
 	// get the first attribute of the shortcode.
@@ -28,7 +28,7 @@ function gmw_shortcode( $attr ) {
 	$element = key( $attr );
 
 	// get the form ID from the shortcode attrbute
-	$element_value = $attr[$element];
+	$element_value = $attr[ $element ];
 
 	$status = 'ok';
 
@@ -45,11 +45,10 @@ function gmw_shortcode( $attr ) {
 	$url_px = gmw_get_url_prefix();
 
 	// if this is results page we get the form ID from URL
-	if ( $element_value == 'results' ) {
-
+	if ( 'results' == $element_value ) {
 
 		// abort if form was not submitted
-		if ( ! isset( $_GET[$url_px.'form'] ) ) {
+		if ( ! isset( $_GET[ $url_px . 'form' ] ) ) {
 
 			$status = 'results page was not submitted.';
 
@@ -57,7 +56,7 @@ function gmw_shortcode( $attr ) {
 		}
 
 		// get the form ID from URL
-		$form_id = absint( $_GET[$url_px.'form'] );
+		$form_id = absint( $_GET[ $url_px . 'form' ] );
 
 		// abort if search_results shortcode is being used but does not belong
 		// to the submitted search form.
@@ -71,11 +70,11 @@ function gmw_shortcode( $attr ) {
 		// set the element as results page
 		$element = 'search_results';
 
-	// otherwise, get the form ID from shortcode attribute value
+		- // otherwise, get the form ID from shortcode attribute value
 	} else {
 
 		// verify the form ID
-	 	$form_id = absint( $attr[$element] );
+		$form_id = absint( $attr[ $element ] );
 	}
 
 	// get form data
@@ -92,11 +91,11 @@ function gmw_shortcode( $attr ) {
 	}
 
 	// allow using this shortcode for global maps as well.
-	if ( $form['addon'] == 'global_maps' && function_exists( 'gmw_global_map_shortcode' ) ) {
+	if ( 'global_maps' == $form['addon'] && function_exists( 'gmw_global_map_shortcode' ) ) {
 
 		//trigger_error( 'The usage of [gmw] shortcode for global maps is deprecated since GEO my WP 3.0. Use [gmw_global_maps] shortcode instead.' , E_USER_NOTICE );
 
-		return gmw_global_map_shortcode( [ 'form' => $form['ID'] ] );
+		return gmw_global_map_shortcode( array( 'form' => $form['ID'] ) );
 	}
 
 	// Abort if the add-on this form belongs to is deactivated
@@ -108,12 +107,12 @@ function gmw_shortcode( $attr ) {
 
 		return;
 	}
-	
+
 	// get current form element ( form, map, results... )
 	$form['current_element'] = key( $attr );
 
 	// set form="results" as search results element
-	if ( isset( $attr['form'] ) && $attr['form'] == 'results' ) {
+	if ( isset( $attr['form'] ) && 'results' == $attr['form'] ) {
 		$form['current_element'] = 'search_results';
 	}
 
@@ -126,8 +125,8 @@ function gmw_shortcode( $attr ) {
 	ob_start();
 
 	// if form verified
-	if ( $status != 'ok' ) {
-		
+	if ( 'OK' != $status ) {
+
 		if ( ! empty( $error_message ) ) {
 			trigger_error( $error_message, E_USER_NOTICE );
 		}
@@ -136,14 +135,14 @@ function gmw_shortcode( $attr ) {
 	}
 
 	// get the class name of the add-on need to be queried based on its slug
-	if ( class_exists( 'GMW_'.$form['slug'].'_Form' ) ) {
-		
-		$class_name = 'GMW_'.$form['slug'].'_Form';
-	
-	// otherwise, can use the filter for custom class
-	} else if ( ! class_exists( $class_name = apply_filters( 'gmw_form_custom_class_name', '', $form['slug'], $form ) ) ) {
-		
-		trigger_error( 'GMW form class is missing.' , E_USER_NOTICE );
+	if ( class_exists( 'GMW_' . $form['slug'] . '_Form' ) ) {
+
+		$class_name = 'GMW_' . $form['slug'] . '_Form';
+
+		// otherwise, can use the filter for custom class.
+	} elseif ( ! class_exists( $class_name = apply_filters( 'gmw_form_custom_class_name', '', $form['slug'], $form ) ) ) {
+
+		trigger_error( 'GMW form class is missing.', E_USER_NOTICE );
 
 		return;
 	}
@@ -172,12 +171,14 @@ add_shortcode( 'gmw', 'gmw_shortcode' );
 function gmw_get_address_fields_shortcode( $args ) {
 
 	//default shortcode attributes
-	$attr = shortcode_atts( array(
-		'object_type'	=> '',
-		'object_id'     => '',
-		'fields' 		=> 'formatted_address',
-		'separator' 	=> ', '
-	), $args );
+	$attr = shortcode_atts(
+		array(
+			'object_type' => '',
+			'object_id'   => '',
+			'fields'      => 'formatted_address',
+			'separator'   => ', ',
+		), $args
+	);
 
 	$fields = ! empty( $attr['fields'] ) ? explode( ',', $attr['fields'] ) : array( 'formatted_address' );
 
