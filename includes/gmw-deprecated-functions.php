@@ -405,7 +405,13 @@ function gmw_pt_update_location( $args = array(), $force_refresh = false ) {
 		$post_id = ! empty( $args['post_id'] ) ? $args['post_id'] : false;
 		$address = ! empty( $args['address'] ) ? $args['address'] : false;
 
-		gmw_update_post_location( $post_id, $address, $force_refresh );
+		$user_id = get_current_user_id();
+
+		if ( empty( $user_id ) ) {
+			$user_id = 1;
+		}
+
+		gmw_update_post_location( $post_id, $address, $user_id, $force_refresh );
 
 		if ( ! empty( $args['additional_info'] ) ) {
 			gmw_update_post_location_meta( $post_id, $args['additional_info'] );
