@@ -183,6 +183,13 @@ class GMW_Form {
 	public $query = array();
 
 	/**
+	 * If query is doing proximity search ( when address entered ) or not.
+	 *
+	 * @var boolean
+	 */
+	public $is_proximity_query = false;
+
+	/**
 	 * Results message
 	 *
 	 * @var array
