@@ -170,7 +170,7 @@ class GMW_Forms_Helper {
 
 			if ( ! empty( $form ) ) {
 
-				// if happens that form has no data we need to apply the defaults
+				// if happens that form has no data, we need to apply the defaults
 				if ( empty( $form['data'] ) ) {
 					$form['data'] = GMW_Forms_Helper::default_settings( array() );
 				}
