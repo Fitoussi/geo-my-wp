@@ -7,6 +7,20 @@ jQuery( document ).ready( function( $ ) {
 	 */
 	var GMW_Current_Location = {
 
+		location_fields : [
+			'lat',
+			'lng',
+			'address',
+			'formatted_address',
+			'street',
+			'city',
+			'region_name',
+			'region_code',
+			'postcode',
+			'country_name',
+			'country_code'
+		],
+
 	    // alert messages
 	    messages : {
 	    	'geocoder_failed' : 'Geocoder failed due to: ',
@@ -33,6 +47,16 @@ jQuery( document ).ready( function( $ ) {
 	            
 	            // toggle form
 	            jQuery( this ).closest( '.gmw-cl-form-wrapper' ).find( 'form' ).slideToggle();
+	        });
+
+	        // clear location
+	        jQuery( '.gmw-cl-clear-location-trigger' ).click( function( event ) {
+	            
+	            event.preventDefault();
+	            
+	            GMW_Current_Location.object_id = jQuery( this ).closest( '.gmw-cl-form-wrapper' ).data( 'element-id' );
+
+	            GMW_Current_Location.delete_location();
 	        });
 	        
 	        // when autolocating user
@@ -115,6 +139,20 @@ jQuery( document ).ready( function( $ ) {
 	          	// geocode the address
 	            GMW.geocoder( address, GMW_Current_Location.address_geocoder_success, GMW_Current_Location.geocoder_failed );
 	        });
+	    },
+
+	    delete_location : function( element ) {
+
+	    	// delete current location cookies
+	    	jQuery.each( GMW_Current_Location.location_fields, function( index, field ) {
+	    		GMW.delete_cookie( 'gmw_ul_' + field );
+	    	});
+
+	    	jQuery( '.gmw-cl-address .address-holder' ).html( '' );
+	    	jQuery( '.gmw-cl-element.gmw-cl-address-wrapper' ).slideUp();
+	        jQuery( '.gmw-map-wrapper.current_location' ).fadeOut();
+	        jQuery( '.gmw-cl-form-trigger, .gmw-cl-clear-location-trigger' ).slideUp();
+	        jQuery( '.gmw-cl-form' ).slideDown();
 	    },
 
 	    /**
