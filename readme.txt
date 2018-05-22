@@ -5,7 +5,7 @@ Tags: Geolocation, Directory, Store Locator, Geolocator, Geotagging, Geocode, Ma
 Requires at least: 4.3
 Tested up to: 4.9.5
 Buddypress: 2.8
-Stable tag: 3.0.4
+Stable tag: 3.0.5
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -117,6 +117,20 @@ for detailed installation and setup guide see the [documentation](docs.geomywp.c
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 3.0.5 =
+
+* Version 3.0 is a major release. If you are updating from a version earlier than 3.0, it is highly recommended that you read the posts [GEO my WP 3.0 Beta 7](https://geomywp.com/geo-my-wp-3-0-beta-7/) and [GEO my WP Upgrade Process](https://geomywp.com/geo-my-wp-3-0-upgrade-process/) before updating. You should also test this version on a staging environment before updating on your live site.
+
+* Fix: Location section in Edit Post page error. JS error caused by missing $ in ready() function.
+* Fix: delete_cookie function JS error.
+* New: clear location button for Current Location widget/shortcode.
+* Filter: new JS filter ‘gmw_search_form_address_pre_geocoding’ to modify the address before it is geocoded.
+* Tweak: Use include_once instead of include for some files to prevent errors.
+* Tweak: Use array() instead of [] to support PHP 5.3.x.
+Enhancement: order posts by distance then by post title. When posts have the same exact location, they will then be ordered by the post title.
+* Enhancement: coding standards.
+* Additional minor bugs fix.
 
 = 3.0.4 =
 
