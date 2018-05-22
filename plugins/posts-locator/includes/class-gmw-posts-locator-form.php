@@ -170,6 +170,8 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 		// when address provided, and not filtering based on address fields, we will do proximity search
 		if ( '' == $address_filters && ! empty( $this->form['lat'] ) && ! empty( $this->form['lng'] ) ) {
 
+			$this->form['is_proximity_query'] = true;
+
 			// generate some radius/units data
 			if ( in_array( $this->form['units_array']['units'], array( 'imperial', 3959, 'miles' ) ) ) {
 				$earth_radius = 3959;
@@ -207,9 +209,9 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 			// filter locations based on the distance
 			$clauses['having'] = "HAVING distance <= {$distance} OR distance IS NULL";
 
-			// if we order by the distance.
+			// order by distance then title ( when posts have the same exact location )
 			if ( 'distance' == $this->form['query_args']['orderby'] ) {
-				$clauses['orderby'] = 'distance';
+				$clauses['orderby'] = 'distance, post_title';
 			}
 		} else {
 
