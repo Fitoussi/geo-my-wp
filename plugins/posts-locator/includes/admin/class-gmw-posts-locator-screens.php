@@ -257,7 +257,7 @@ class GMW_Posts_Locator_Screens {
 	}
 
 	/**
-	 * Add hidden field to hold the value 1 when the "Publish" button pressed.
+	 * Add hidden field to hold the value 1 when pressing the "Publish" button.
 	 *
 	 * This way in the next function we can chnage the post status manually to publish.
 	 */
@@ -265,7 +265,7 @@ class GMW_Posts_Locator_Screens {
 		?>
 		<script type="text/javascript">
 
-			jQuery( 'document' ).ready( function() {
+			jQuery( 'document' ).ready( function( $ ) {
 
 				if ( $( 'form[name="post"]' ).length ) {
 
