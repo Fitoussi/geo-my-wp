@@ -125,7 +125,7 @@ function gmw_shortcode( $attr ) {
 	ob_start();
 
 	// if form verified
-	if ( 'OK' != $status ) {
+	if ( 'ok' != $status ) {
 
 		if ( ! empty( $error_message ) ) {
 			trigger_error( $error_message, E_USER_NOTICE );
