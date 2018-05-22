@@ -542,7 +542,7 @@ class GMW_Form_Editor {
 			),
 		);
 
-		$temp_array = [];
+		$temp_array = array();
 
 		// generate slug for groups. To easier unset groups if needed.
 		foreach ( $groups as $group ) {
@@ -566,7 +566,7 @@ class GMW_Form_Editor {
 	 */
 	public function get_fields() {
 
-		$fields = [];
+		$fields = array();
 
 		// loop through settings groups
 		foreach ( $this->form_settings_groups as $key => $group ) {

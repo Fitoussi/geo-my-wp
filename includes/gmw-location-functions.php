@@ -153,7 +153,7 @@ function gmw_delete_location_meta_by_object( $object_type = '', $object_id = 0, 
  * 
  * @return int location ID
  */
-function gmw_update_location_data( $location_data = [] ) {
+function gmw_update_location_data( $location_data = array() ) {
     return GMW_Location::update( $location_data );
 }
 
@@ -519,7 +519,7 @@ function gmw_get_location_fields( $object_type = false, $object_id = 0, $fields 
     return gmw_get_address_fields( $object_type, $object_id, $fields, $separator );
 }
 
-function gmw_get_location_address_fields( $object_type = 'post', $object_id = 0, $fields = [] ) {
+function gmw_get_location_address_fields( $object_type = 'post', $object_id = 0, $fields = array() ) {
 
     $location = gmw_get_location( $object_type, $object_id );
 
@@ -533,7 +533,7 @@ function gmw_get_location_address_fields( $object_type = 'post', $object_id = 0,
 
     if ( empty( $fields ) ) {
 
-        $fields = [ 
+        $fields = array( 
             'lat',
             'lng',
             'latitude', 
@@ -552,10 +552,10 @@ function gmw_get_location_address_fields( $object_type = 'post', $object_id = 0,
             'country_code',
             'address',
             'formatted_address'
-        ];
+        );
     }
 
-    $output = [];
+    $output = array();
 
     return ( object ) array_intersect_key( ( array ) $location, array_flip( $fields ) );
 }

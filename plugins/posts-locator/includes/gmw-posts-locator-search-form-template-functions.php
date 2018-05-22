@@ -204,9 +204,9 @@ function gmw_get_search_form_post_types( $args = array(), $post_types = array( '
         // for different cases like Global Maps
         } elseif ( isset( $gmw['search_form']['post_types_usage'] ) ) {
 
-            $settings = [
+            $settings = array(
                 'usage' => $gmw['search_form']['post_types_usage']
-            ];
+            );
         
         } else {
 
@@ -335,3 +335,4 @@ function gmw_get_search_form_taxonomies( $gmw ) {
 	function gmw_search_form_taxonomies( $gmw, $tag='div' ) {
 		echo gmw_get_search_form_taxonomies( $gmw, $tag );
 	}
+	

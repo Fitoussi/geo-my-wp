@@ -40,7 +40,7 @@ class GMW_Current_Location_Widget extends GMW_Widget {
 		$this->widget_description = __( 'Retrieve and display the user\'s current position', 'geo-my-wp' );
 		$this->widget_name        = __( 'GEO my WP Current Location', 'geo-my-wp' );
 
-		$zoom_options = [];
+		$zoom_options = array();
 
 		for ( $i = 1; $i < 21; $i++ ) {
 			$zoom_options[ $i ] = $i;

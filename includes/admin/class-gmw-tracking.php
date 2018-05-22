@@ -242,8 +242,8 @@ class GMW_Tracking {
 
 		$active_plugins = get_option( 'active_plugins', array() );
 
-		$data['active_plugins']   = [];
-		$data['inactive_plugins'] = [];
+		$data['active_plugins']   = array();
+		$data['inactive_plugins'] = array();
 
 		foreach ( get_plugins() as $plugin_basename => $plugin ) {
 			

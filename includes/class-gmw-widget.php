@@ -209,7 +209,7 @@ class GMW_Widget extends WP_Widget {
 					$value = ! empty( $instance[ $key ] ) ? $instance[ $key ] : $setting['default'];
 
 					if ( ! is_array( $value ) ) {
-						$value = [];
+						$value = array();
 					}
 
 					if ( empty( $settings['options'] ) || ! is_array( $settings['options'] ) ) {

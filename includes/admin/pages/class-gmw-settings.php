@@ -172,7 +172,7 @@ class GMW_Settings {
 	 */
 	public function settings() {
 
-		$settings = [];
+		$settings = array();
 
 		// loop through settings groups
 		foreach ( $this->settings_groups as $key => $group ) {

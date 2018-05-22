@@ -36,7 +36,7 @@ class GMW_Single_BP_Member_Location extends GMW_Single_Location {
 		'no_location_message' => '',
 	);
 
-	public function __construct( $atts = [] ) {
+	public function __construct( $atts = array() ) {
 
 		$this->args['no_location_message'] = __( 'The member has not added a location yet.', 'geo-my-wp' );
 
@@ -124,7 +124,7 @@ class GMW_Single_BP_Member_Location extends GMW_Single_Location {
 function gmw_single_bp_member_location_shortcode( $atts = array() ) {
 
 	if ( empty( $atts ) ) {
-		$atts = [];
+		$atts = array();
 	}
 
 	$atts['object'] = 'bp_member';
