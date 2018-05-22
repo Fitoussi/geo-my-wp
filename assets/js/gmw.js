@@ -304,7 +304,9 @@ var GMW = {
      * @return {[type]}      [description]
      */
     delete_cookie : function( name ) {
-        document.cookie = encodeURIComponent( name_name ) + "=deleted; expires=" + new Date(0).toUTCString();
+    	jQuery.cookie( name, '', { path: '/' } );
+    	//document.cookie = encodeURIComponent( name ) + '=; expires=Thu, 01-Jan-70 00:00:01 GMT;';
+        //document.cookie = encodeURIComponent( name ) + "=deleted; expires=" + new Date(0).toUTCString();
     },
 
     /**
@@ -807,20 +809,23 @@ var GMW = {
         
         // set the "paged" value to first page.
         form.find( 'input.gmw-paged' ).val( '1' );
-   
+   		
+   		// modify the address before geocoding takes place.
+   		addressField = GMW.apply_filters( 'gmw_address_pre_geocoding', addressField, GMW );
+
         // generate the address value from a single address field
-        if ( addressField.hasClass( 'gmw-full-address' ) ) {
+        //if ( addressField.hasClass( 'gmw-full-address' ) ) {
             
-            address = form.find( 'input.gmw-address' ).val();
+        //    address = form.find( 'input.gmw-address' ).val();
         
         // otherwise, get from from multiple fields
-        } else {
+        //} else {
 
-            // collect value from multiple addres fields.
+            // get the address field/s value.
             address = addressField.map( function() {
                return jQuery( this ).val();
             }).get().join( ' ' );           
-        }
+        //}
 
         // if address field is empty.
         if ( ! jQuery.trim( address ).length ) {
