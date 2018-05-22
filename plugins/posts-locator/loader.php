@@ -108,17 +108,17 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 		// include admin files
 		if ( IS_ADMIN ) {
 
-			include( 'includes/admin/class-gmw-posts-locator-form-editor.php' );
-			include( 'includes/admin/class-gmw-posts-locator-admin-settings.php' );
-			include( 'includes/admin/class-gmw-posts-locator-screens.php' );
+			include_once( 'includes/admin/class-gmw-posts-locator-form-editor.php' );
+			include_once( 'includes/admin/class-gmw-posts-locator-admin-settings.php' );
+			include_once( 'includes/admin/class-gmw-posts-locator-screens.php' );
 
 			//include( 'includes/admin/class-gmw-post-location-form.php' );
-		} else {
-
-			include( 'includes/gmw-posts-locator-search-form-template-functions.php' );
-			include( 'includes/gmw-posts-locator-search-results-template-functions.php' );
-			include( 'includes/class-gmw-posts-locator-form.php' );
 		}
+
+		// include template functions.
+		include_once( 'includes/gmw-posts-locator-search-form-template-functions.php' );
+		include_once( 'includes/gmw-posts-locator-search-results-template-functions.php' );
+		include_once( 'includes/class-gmw-posts-locator-form.php' );
 
 		// load single location post
 		if ( gmw_is_addon_active( 'single_location' ) ) {
@@ -140,7 +140,7 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 				add_filter( 'gmw_single_location_widget_objects', 'gmw_pt_single_location_widget_object', 5 );
 
 			} else {
-				include( 'includes/class-gmw-single-post-location.php' );
+				include_once( 'includes/class-gmw-single-post-location.php' );
 			}
 		}
 	}
