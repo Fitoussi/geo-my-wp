@@ -492,7 +492,7 @@ input.chosen-search-input.default {
 /********** form editor Page **********/
 
 #gmw-edit-form-page {
-	z-index: 9999;
+	z-index: 999999;
 	overflow: visible;
 	right: 0;
 	min-width: 0;
