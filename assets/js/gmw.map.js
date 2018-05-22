@@ -693,7 +693,7 @@ GMW_Map.prototype.render_marker = function( options ) {
 	var icon = options.icon;
 
 	// in case _default.png pass without a URL
-	if ( icon == '_default.png' ) {
+	if ( icon == '_default.png' || icon == null ) {
 		icon = '';
 	}
 
