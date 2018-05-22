@@ -70,7 +70,7 @@ function gmw_shortcode( $attr ) {
 		// set the element as results page
 		$element = 'search_results';
 
-		- // otherwise, get the form ID from shortcode attribute value
+	// otherwise, get the form ID from shortcode attribute value
 	} else {
 
 		// verify the form ID
