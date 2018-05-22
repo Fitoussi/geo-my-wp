@@ -1797,6 +1797,13 @@ div.gmw-current-location-wrapper div.gmw-cl-form-wrapper .gmw-cl-address-input-w
 
 div.gmw-current-location-wrapper div.gmw-cl-form-wrapper .gmw-cl-form-trigger {
 	font-size: 11px;
+	text-decoration: none;
+}
+
+div.gmw-current-location-wrapper div.gmw-cl-form-wrapper .gmw-cl-clear-location-trigger {
+	font-size: 11px;
+	float: right;
+	text-decoration: none;
 }
 
 div.gmw-current-location-wrapper div.gmw-cl-form-wrapper .gmw-cl-locator-trigger,
