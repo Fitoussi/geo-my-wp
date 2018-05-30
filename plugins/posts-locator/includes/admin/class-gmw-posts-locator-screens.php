@@ -43,7 +43,8 @@ class GMW_Posts_Locator_Screens {
 			add_filter( 'gmw_lf_post_location_meta_before_location_updated', array( $this, 'verify_location_meta' ), 10, 3 );
 
 			// these action fire functions responsible for a fix where posts status wont change from pending to publish.
-			add_action( 'gmw_lf_before_post_location_updated', array( $this, 'post_status_publish_fix' ) );
+			//add_action( 'gmw_lf_before_post_location_updated', array( $this, 'post_status_publish_fix' ) );
+			$this->post_status_publish_fix();
 		}
 	}
 
@@ -296,7 +297,7 @@ class GMW_Posts_Locator_Screens {
 	 */
 	public function post_status_publish_fix() {
 
-		if ( 'publish' != $_POST['post_status'] && ! empty( $_POST['gmw_post_published'] ) ) {
+		if ( ! empty( $_POST['post_status'] ) && 'publish' != $_POST['post_status'] && ! empty( $_POST['gmw_post_published'] ) ) {
 			$_POST['post_status'] = 'publish';
 		}
 	}
