@@ -193,11 +193,6 @@ class GMW_Posts_Locator_Screens {
 		gmw_post_location_form( $form_args );
 
 		do_action( 'gmw_edit_post_page_after_location_form', $post );
-
-		// enqueue Google API if not yet enqueued
-		if ( ! wp_script_is( 'google-maps', 'enqueued' ) ) {
-			wp_enqueue_script( 'google-maps' );
-		}
 	}
 
 	/**
