@@ -91,8 +91,10 @@ class GMW_Members_Locator_Form extends GMW_Form {
 	 */
 	public function include_xprofile_users_id( $sql ) {
 
+		$column = in_array( $this->form['query_args']['type'], array( 'newest', 'active' ) ) ? 'user_id' : 'ID';
+
 		$users_id       = esc_sql( implode( ',', $this->xp_users_id ) );
-		$sql['where'][] = " u.ID IN ( {$users_id} ) ";
+		$sql['where'][] = " u.{$column} IN ( {$users_id} ) ";
 
 		return $sql;
 	}
@@ -109,8 +111,10 @@ class GMW_Members_Locator_Form extends GMW_Form {
 	 */
 	public function include_locations_users_id( $sql ) {
 
+		$column = in_array( $this->form['query_args']['type'], array( 'newest', 'active' ) ) ? 'user_id' : 'ID';
+
 		$users_id       = esc_sql( implode( ',', $this->objects_id ) );
-		$sql['where'][] = " u.ID IN ( {$users_id} ) ";
+		$sql['where'][] = " u.{$column} IN ( {$users_id} ) ";
 
 		return $sql;
 	}
@@ -233,7 +237,7 @@ class GMW_Members_Locator_Form extends GMW_Form {
 		global $members_template;
 
 		if ( ! $internal_cache || false === ( $members_template = get_transient( $query_args_hash ) ) ) {
-			// if ( 1 == 1 ){
+			//if ( 1 == 1 ){
 			// print_r( 'Members query done' );
 			// if address entered and showing only located members
 			if ( ( $address_ok && $objects_ok ) || ( ! $address_ok && ! $show_non_located_members ) ) {
