@@ -332,7 +332,7 @@ class GMW_Form {
 		$this->form['paged']            = get_query_var( $page_name ) ? get_query_var( $page_name ) : 1;
 		$this->form['per_page']         = -1;
 		// $this->form['labels']          = gmw_get_labels( $this->form );
-		$this->form['user_marker']   = 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+		//$this->form['user_marker']   = 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png';
 		$this->form['has_locations'] = false;
 		$this->form['results']       = array();
 		$this->form['results_count'] = 0;
@@ -522,7 +522,8 @@ class GMW_Form {
 			'lat'        => $this->form['lat'],
 			'lng'        => $this->form['lng'],
 			'address'    => $this->form['org_address'],
-			'map_icon'   => $this->form['user_marker'],
+			'map_icon'   => GMW()->default_icons['user_location_icon_url'],
+			'icon_size'  => GMW()->default_icons['user_location_icon_size'],
 			'iw_content' => __( 'Your location', 'geo-my-wp' ),
 			'iw_open'    => ! empty( $this->form['results_map']['yl_icon'] ) ? true : false,
 		);
@@ -841,7 +842,16 @@ class GMW_Form {
 			$info_window = gmw_get_info_window_content( $object, $this->get_info_window_args( $object ), $this->form );
 		}
 
-		$map_icon = isset( $object->location_count ) ? 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=' . $object->location_count . '|FF776B|000000' : '';
+		// enable number icons. It is now disabled by default.
+		if ( apply_filters( 'gmw_form_enable_numbered_map_icons', false, $this->form, $this ) ) {
+
+			$map_icon = isset( $object->location_count ) ? 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=' . $object->location_count . '|FF776B|000000' : '';
+			$icon_size = array( 21, 34 );
+
+		} else {
+			$map_icon  = GMW()->default_icons['location_icon_url'];
+			$icon_size = GMW()->default_icons['location_icon_size'];
+		}
 
 		$args = apply_filters(
 			'gmw_form_map_location_args', array(
@@ -854,6 +864,7 @@ class GMW_Form {
 				'distance'            => isset( $object->distance ) ? $object->distance : null,
 				'units'               => isset( $object->units ) ? $object->units : null,
 				'map_icon'            => apply_filters( 'gmw_' . $this->form['prefix'] . '_map_icon', $map_icon, $object, $this->form, $this ),
+				'icon_size'           => $icon_size,
 				'info_window_content' => $info_window,
 			), $object, $this->form, $this
 		);
