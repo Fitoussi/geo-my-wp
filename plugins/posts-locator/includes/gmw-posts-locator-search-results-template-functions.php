@@ -57,13 +57,17 @@ function gmw_search_results_taxonomies( $post, $gmw = array() ) {
  */
 function gmw_search_results_post_excerpt( $post, $gmw = array() ) {
 
-    if ( empty( $gmw['search_results']['excerpt']['enabled'] ) || empty( $post->post_content ) ) {
+    if ( empty( $gmw['search_results']['excerpt']['enabled'] ) ) {
         return;
     }
 
     // verify usage value
     $usage = isset( $gmw['search_results']['excerpt']['usage'] ) ? $gmw['search_results']['excerpt']['usage'] : 'post_content';
-        
+      
+    if ( empty( $post->$usage ) )  {
+    	return;
+	}
+
     $args = array(
         'id'                => $gmw['ID'], 
         'content'           => $post->$usage,
