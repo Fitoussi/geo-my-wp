@@ -342,13 +342,22 @@ function gmw_get_post_location_fields( $atts ) {
 		$args['post_id'] = $post->ID;
 	}
 
+	// When we know for sure that we need location meta fields.
 	if ( ! empty( $args['location_meta'] ) ) {
 
 		return gmw_get_location_meta_values( 'post', $args['post_id'], $args['fields'], $args['separator'] );
 
 	} else {
 
-		return gmw_get_address_fields( 'post', $args['post_id'], $args['fields'], $args['separator'] );
+		// try to get location field.
+		$field = gmw_get_address_fields( 'post', $args['post_id'], $args['fields'], $args['separator'] );
+
+		// if location field was not found, try location meta.
+		if ( empty( $field ) ) {
+			$field = gmw_get_location_meta_values( 'post', $args['post_id'], $args['fields'], $args['separator'] );
+		}
+
+		return $field;
 	}
 }
 add_shortcode( 'gmw_post_location_fields', 'gmw_get_post_location_fields' );
