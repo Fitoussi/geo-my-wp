@@ -269,15 +269,18 @@ class GMW_Location_Form {
 		$this->template_folders = self::get_folders();
 
 		// enqueue scripts in footer
-		add_action( 'wp_footer', array( $this, 'enqueue_scripts' ) );
-		add_action( 'admin_footer', array( $this, 'enqueue_scripts' ) );
+		add_action( 'wp_footer', array( $this, 'enqueue_scripts' ), 10 );
+		add_action( 'admin_footer', array( $this, 'enqueue_scripts' ), 10 );
 	}
 
 	public function enqueue_scripts() {
 
-		// enqueue script and style
-		wp_enqueue_style( 'gmw-location-form' );
-		wp_enqueue_script( 'gmw-location-form' );
+		if ( ! wp_script_is( 'gmw-location-form', 'enqueued' ) ) {
+			wp_enqueue_style( 'gmw-location-form' );
+			wp_enqueue_script( 'gmw-location-form' );
+		}
+
+		do_action( 'gmw_location_form_enqueue_script' );
 
 		// load chosen if not already loaded
 		if ( ! wp_script_is( 'chosen', 'enqueued' ) ) {
@@ -320,8 +323,8 @@ class GMW_Location_Form {
 				'location_deleted'     => __( 'Location deleted!', 'geo-my-wp' ),
 				'location_not_deleted' => __( 'There was a problem deleting your location. Please try again.', 'geo-my-wp' ),
 				'location_found'       => __( 'Location found!', 'geo-my-wp' ),
-				'geocoder_failed'      => __( 'We were unable to retrieve your location. Please enter a valid address or coordinates.', 'geo-my-wp' ),
-				'location_blank'       => __( 'No location entered.', 'geo-my-wp' ),
+				'geocoder_failed'      => __( 'We were unable to retrieve your location. Enter a valid address or coordinates.', 'geo-my-wp' ),
+				'location_missing'     => __( 'No location entered.', 'geo-my-wp' ),
 				'location_required'    => __( 'You must enter a location to proceed.', 'geo-my-wp' ),
 				'confirm_required'     => __( 'You must confirm your location before it can be saved', 'geo-my-wp' ),
 				'confirm_message'      => __( 'You have not confirmed your location. Would you like to proceed?', 'geo-my-wp' ),
