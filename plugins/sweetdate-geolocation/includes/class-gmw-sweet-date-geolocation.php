@@ -73,7 +73,6 @@ class GMW_Sweet_Date_Geolocation {
 
 		// default values
 		$this->form_data = array(
-			// 'prefix'        => $this->prefix,
 			'language'      => gmw_get_option( 'general_settings', 'langugae_code', 'EN' ),
 			'region'        => gmw_get_option( 'general_settings', 'country_code', 'US' ),
 			'address'       => false,
@@ -86,7 +85,7 @@ class GMW_Sweet_Date_Geolocation {
 
 		// labels
 		$this->labels      = $this->labels();
-		$this->units_label = ( $this->options['units'] == '6371' ) ? $this->labels['km'] : $this->labels['mi'];
+		$this->units_label = ( '6371' == $this->options['units'] ) ? $this->labels['km'] : $this->labels['mi'];
 
 		$doing_ajax = defined( 'DOING_AJAX' ) ? true : false;
 
@@ -96,7 +95,7 @@ class GMW_Sweet_Date_Geolocation {
 			$this->form_data['address'] = sanitize_text_field( stripslashes( $_GET['address'] ) );
 
 			// otherwise, check in cookies
-		} elseif ( ! empty( $_COOKIE[ 'gmw_' . $this->prefix . '_address' ] ) && $_COOKIE[ 'gmw_' . $this->prefix . '_address' ] != 'undefined' ) {
+		} elseif ( ! empty( $_COOKIE[ 'gmw_' . $this->prefix . '_address' ] ) && 'undefined' != $_COOKIE[ 'gmw_' . $this->prefix . '_address' ] ) {
 
 			$this->form_data['address'] = urldecode( stripslashes( $_COOKIE[ 'gmw_' . $this->prefix . '_address' ] ) );
 		}
@@ -117,7 +116,7 @@ class GMW_Sweet_Date_Geolocation {
 
 			$this->form_data['lat'] = sanitize_text_field( $_REQUEST['lat'] );
 
-		} elseif ( isset( $_COOKIE[ 'gmw_' . $this->prefix . '_lat' ] ) && $_COOKIE[ 'gmw_' . $this->prefix . '_lat' ] != 'undefined' ) {
+		} elseif ( isset( $_COOKIE[ 'gmw_' . $this->prefix . '_lat' ] ) && 'undefined' != $_COOKIE[ 'gmw_' . $this->prefix . '_lat' ] ) {
 
 			$this->form_data['lat'] = urldecode( $_COOKIE[ 'gmw_' . $this->prefix . '_lat' ] );
 		}
@@ -136,7 +135,7 @@ class GMW_Sweet_Date_Geolocation {
 		$this->radius_values = str_replace( ' ', '', explode( ',', $this->options['radius'] ) );
 
 		// if single, default value get it from the options
-		if ( count( $this->radius_values ) == 1 ) {
+		if ( 1 == count( $this->radius_values ) ) {
 
 			$this->form_data['radius'] = end( $this->radius_values );
 
@@ -146,7 +145,7 @@ class GMW_Sweet_Date_Geolocation {
 			$this->form_data['radius'] = $_GET['field_radius'];
 
 			// otherwise, maybe in cookies
-		} elseif ( ! empty( $_COOKIE[ 'gmw_' . $this->prefix . '_radius' ] ) && $_COOKIE[ 'gmw_' . $this->prefix . '_radius' ] != 'undefined' ) {
+		} elseif ( ! empty( $_COOKIE[ 'gmw_' . $this->prefix . '_radius' ] ) && 'undefined' != $_COOKIE[ 'gmw_' . $this->prefix . '_radius' ] ) {
 
 			$this->form_data['radius'] = urldecode( $_COOKIE[ 'gmw_' . $this->prefix . '_radius' ] );
 		}
@@ -240,7 +239,7 @@ class GMW_Sweet_Date_Geolocation {
 
 		// remove this filter
 		// remove_filter( 'bp_user_query_uid_clauses', array( $this, 'order_results_by_distance' ), 50, 2 );
-		if ( $vars->query_vars['type'] == 'distance' ) {
+		if ( 'distance' == $vars->query_vars['type'] ) {
 
 			// verify ID
 			$this->objects_id = array_map( 'absint', $this->objects_id );
@@ -520,7 +519,7 @@ class GMW_Sweet_Date_Geolocation {
 			'info_window_ajax'     => false,
 			'info_window_template' => 'default',
 			'group_markers'        => 'markers_clusterer',
-			'render_on_page_load'  => false
+			'render_on_page_load'  => false,
 		);
 
 		$map_options = array(
@@ -673,7 +672,7 @@ class GMW_Sweet_Date_Geolocation {
 		$this->options['per_page'] = $members_template->pag_num;
 
 		// memebr count
-		if ( $members_template->pag_page == 1 ) {
+		if ( 1 == $members_template->pag_page ) {
 
 			$members_template->member->location_count = $members_template->current_member + 1;
 
@@ -688,7 +687,7 @@ class GMW_Sweet_Date_Geolocation {
 		echo self::get_address();
 
 		// show directions in results
-		if ( isset( $this->options['directions_link'] ) && $this->options['directions_link'] != '' ) {
+		if ( isset( $this->options['directions_link'] ) && '' != $this->options['directions_link'] ) {
 			echo gmw_get_directions_link( $member, $this->form_data, $this->labels['get_directions'] );
 		}
 
