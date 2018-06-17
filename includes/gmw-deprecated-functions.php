@@ -287,7 +287,7 @@ function gmw_get_user_info_from_db( $user_id = 0 ) {
 function gmw_get_post_info( $args = array(), $from_shortcode = false ) {
 	
 	if ( ! $from_shortcode ) {
-		trigger_error( 'gmw_get_post_info function is deprecated since GEO my WP version 3.0. Instead, use gmw_get_post_address to get the address fields, and gmw_get_post_location_meta to get location meta fields.', E_USER_NOTICE );
+		_deprecated_function( 'gmw_get_post_info', '3.0', 'gmw_get_post_location_fields' );
 	}
 
 	$output = '';
@@ -310,7 +310,8 @@ function gmw_get_post_info( $args = array(), $from_shortcode = false ) {
 
 function gmw_get_post_info_shortcode( $args = array() ) {
 
-	trigger_error( '[gmw_post_info] shortcode is deprecated since GEO my WP version 3.0. Instead, use [gmw_post_address] to get the address fields, and [gmw_post_location_meta] to get location meta fields.', E_USER_NOTICE );
+	trigger_error( '[gmw_post_info] shortcode is deprecated since GEO my WP version 3.0. Use [gmw_post_location_fields] instead.', E_USER_NOTICE );
+
 
 	return gmw_get_post_info( $args, true );
 }
