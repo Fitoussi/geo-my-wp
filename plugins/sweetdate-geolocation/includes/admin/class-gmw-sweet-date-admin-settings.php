@@ -146,8 +146,8 @@ class GMW_Sweet_Date_Admin_Settings {
 				'type'       => 'checkbox',
 				'default'    => '',
 				'cb_label'   => 'Enabled',
-				'label'      => __( 'Google Map', 'geo-my-wp' ),
-				'desc'       => __( 'Enable Google map above list of members.', 'geo-my-wp' ),
+				'label'      => __( 'Map', 'geo-my-wp' ),
+				'desc'       => __( 'Enable map above list of members.', 'geo-my-wp' ),
 				'attributes' => array(),
 				'priority'   => 70,
 			),
@@ -171,21 +171,6 @@ class GMW_Sweet_Date_Admin_Settings {
 				'desc'        => __( 'Map height in pixels or percentage ( ex. 100% or 200px ).', 'geo-my-wp' ),
 				'attributes'  => array(),
 				'priority'    => 90,
-			),
-			'map_type'             => array(
-				'name'       => 'map_type',
-				'type'       => 'select',
-				'default'    => 'ROADMAP',
-				'label'      => __( 'Map Type', 'geo-my-wp' ),
-				'desc'       => __( 'Select the map type.', 'geo-my-wp' ),
-				'options'    => array(
-					'ROADMAP'   => __( 'ROADMAP', 'geo-my-wp' ),
-					'SATELLITE' => __( 'SATELLITE', 'geo-my-wp' ),
-					'HYBRID'    => __( 'HYBRID', 'geo-my-wp' ),
-					'TERRAIN'   => __( 'TERRAIN', 'geo-my-wp' ),
-				),
-				'attributes' => array(),
-				'priority'   => 100,
 			),
 			'distance'             => array(
 				'name'       => 'distance',
@@ -218,6 +203,24 @@ class GMW_Sweet_Date_Admin_Settings {
 				'priority'   => 130,
 			),
 		);
+
+		if ( 'google_maps' == GMW()->maps_provider ) {
+			$settings['sweet_date']['map_type'] = array(
+				'name'       => 'map_type',
+				'type'       => 'select',
+				'default'    => 'ROADMAP',
+				'label'      => __( 'Map Type', 'geo-my-wp' ),
+				'desc'       => __( 'Select the map type.', 'geo-my-wp' ),
+				'options'    => array(
+					'ROADMAP'   => __( 'ROADMAP', 'geo-my-wp' ),
+					'SATELLITE' => __( 'SATELLITE', 'geo-my-wp' ),
+					'HYBRID'    => __( 'HYBRID', 'geo-my-wp' ),
+					'TERRAIN'   => __( 'TERRAIN', 'geo-my-wp' ),
+				),
+				'attributes' => array(),
+				'priority'   => 100,
+			);
+		}
 
 		return $settings;
 	}
