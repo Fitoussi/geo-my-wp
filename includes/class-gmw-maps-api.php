@@ -4,8 +4,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'GMW_Maps_API' ) ) :
-
 /**
  * GEO my WP Map class
  *
@@ -45,6 +43,13 @@ class GMW_Maps_API {
 	 * @var array
 	 */
 	public static $map_elements = array();
+
+	/**
+	 * Map providers.
+	 *
+	 * @var boolean
+	 */
+	private static $map_providers = array();
 
 	/**
 	 * Collection of address fields that need to have address autocomplete triggered
@@ -100,11 +105,11 @@ class GMW_Maps_API {
 	 * @access public
 	 * @return void
 	 */
-	public function __construct() {}	
+	public function __construct() {}
 
 	/**
 	 * Generate a map.
-	 * 
+	 *
 	 * This function combines both get_map_args() and get_map_elements() methods to generate a map.
 	 *
 	 * You can use this function when you have all the aruments needed for 
@@ -115,7 +120,7 @@ class GMW_Maps_API {
 	 * @param  array  $locations     object locations ( posts, users... )
 	 * @param  array  $user_position user position
 	 * @param  array  $form          GEO my WP form if exists
-	 * 
+	 *
 	 * @return void
 	 */
 	public static function get_map( $map_args = array(), $map_options = array(), $locations = array(), $user_position = array(), $form = array() ) {
@@ -131,11 +136,11 @@ class GMW_Maps_API {
 	 * Generate the HTML map element on the page
 	 *
 	 * @Since 3.0
-	 * 
+	 *
 	 * @author Eyal Fitoussi
-	 * 
+	 *
 	 * @param  array $args map args to define the map features
-	 * 
+	 *
 	 * array( 
 	 *   'map_id'		  => '',      // the ID of the map
 	 * 	 'map_type'		  => 'na',    // Map type ( posts_locator, members_locator... )
@@ -227,7 +232,7 @@ class GMW_Maps_API {
 	 * @param  string  info_window_template - default to "default". To be used when AJAX enabled
 	 * @param  string  group_markers - default to "standard". clusters, spiderfie and other can be provided via extensions.
 	 * @param  boolean hide_no_locations - true || false to show or hide map if no locations found.
-	 * @param  boolean render_map - true || false if to render map on page load.
+	 * @param  boolean render_on_page_load - true || false if to render map on page load.
 	 * 
 	 * 
 	 * 
@@ -251,16 +256,29 @@ class GMW_Maps_API {
 			'group_markers'		   => 'standard',
 			'draggable_window'	   => 1,
 			'hide_no_locations'    => true,
-			'render_map'		   => true,
+			'render_on_page_load'  => true, //render map on page load?
 			'map_icon_width' 	   => false,
-			'map_icon_height'	   => false
+			'map_icon_height'	   => false,
+			'icon_url'    		   => GMW()->default_icons['location_icon_url'],
+			'icon_size'    		   => GMW()->default_icons['location_icon_size'],
+			'clusters_path'		   => 'https://raw.githubusercontent.com/googlemaps/js-marker-clusterer/gh-pages/images/m',
+			'map_provider'		   => GMW()->maps_provider
 		);
+
+		// deprecated variable.
+		if ( isset( $map_args['render_map'] ) ) {
+			$map_args['render_on_page_load'] = $map_args['render_map'];
+			unset( $map_args['render_map'] );
+		}
 
 		// merge default with incoming map args
 		$map_args = array_merge( $default_map_args, $map_args );
 
 		// default map options
 		$default_map_options = array(
+			'defaultCenter'	   		 => '40.758895,-73.985131', // belongs to GMW.
+			'layersUrl'		 		 => 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', // for leaflet
+			'layersAttribution'  	 => '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors', // for leaflet
 			'backgroundColor' 		 => '#f7f5e8',			
 			'disableDefaultUI' 		 => false,
 			'disableDoubleClickZoom' => false,
@@ -274,7 +292,7 @@ class GMW_Maps_API {
 			'mapTypeControlOptions'	 => true,
 			'mapTypeId'				 => 'ROADMAP',
 			'maxZoom'		 		 => null,
-			'minZoom'		 		 => null,
+			'minZoom'		 		 => 1,
 			'zoom'				 	 => 13,
 			'noClear'				 => false,
 			'rotateControl'		     => true,
@@ -296,21 +314,19 @@ class GMW_Maps_API {
 			'lng'		 => false,
 			//'location'	 => false,
 			'address' 	 => false,
-			'map_icon'	 => 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+			'map_icon'	 => GMW()->default_icons['user_location_icon_url'],
+			'icon_size'  => GMW()->default_icons['user_location_icon_size'],
 			'iw_content' => null,
 			'iw_open'	 => false
 		);
 
 		// if user position exists, merge it with default
 		if ( ! empty( $user_location['lat'] ) ) {
-
 			$user_location = array_merge( $default_user_location, $user_location );
-		
 		} else {
-
 			$user_location = $default_user_location;
 		}
-		
+
 		// no need to pass the results in the form as well
 		// since we already have locations data in the locations object
 		if ( ! empty( $form ) ) {
@@ -319,47 +335,53 @@ class GMW_Maps_API {
 
 		// push the map args into the global array of maps
 		$map_element = array(
-			'settings'		=> $map_args,
+			'settings'      => $map_args,
 			'map_options'   => $map_options,
-			'locations'		=> $locations,
+			'locations'     => $locations,
 			'user_location' => $user_location,
-			'form'			=> $form 
+			'form'          => $form,
 		);
 
 		// allow plugins modify the map args
 		$map_element = apply_filters( 'gmw_map_element', $map_element, $form );
 		$map_element = apply_filters( "gmw_map_element_{$map_id}", $map_element, $form );
-		
+
 		// enable maps
 		self::$map_enabled = true;
 
+		// Look for map providers
+		if ( ! in_array( $map_element['settings']['map_provider'], self::$map_providers ) ) {
+			self::$map_providers[] = $map_element['settings']['map_provider'];
+		}
+
 		// enable Markers Clusterer library
-		if ( $map_element['settings']['group_markers'] == 'markers_clusterer' ) {	
+		if ( 'markers_clusterer' == $map_element['settings']['group_markers'] ) {
 			self::$markers_clusterer = true;
 		}
 
 		// enable Markers Spiderfier library
-		if ( $map_element['settings']['group_markers'] == 'markers_spiderfier' ) {	
+		if ( 'markers_spiderfier' == $map_element['settings']['group_markers'] ) {
 			self::$markers_spiderfier = true;
 		}
 
 		// enable infobox js file if needed
-		if ( $map_element['settings']['info_window_type'] == 'infobox' ) {
+		if ( 'infobox' == $map_element['settings']['info_window_type'] ) {
 			self::$infobox = true;
 		}
 
 		// enable infobox js file if needed
-		if ( $map_element['settings']['info_window_type'] == 'infobubble' ) {
+		if ( 'infobubble' == $map_element['settings']['info_window_type'] ) {
 			self::$infobubble = true;
 		}
 
 		// enable jQuery ui draggable for popup info-windows
 		//if ( $map_args['info_window_ajax'] && $map_args['draggable_window'] ) {
-		if ( $map_element['settings']['info_window_type'] == 'popup' ) {
+		if ( 'popup' == $map_element['settings']['info_window_type'] ) {
 			self::$draggable_window = true;
 		}
 
-		if ( $map_element['settings']['render_map'] ) {
+		// Only maps that need to be rendered on page load go into the global.
+		if ( $map_element['settings']['render_on_page_load'] ) {
 			self::$map_elements[$map_id] = $map_element;
 		}
 
@@ -408,7 +430,7 @@ class GMW_Maps_API {
 		$default_args = array(
 			'prefix'    	  => '',
 			'type'   	  	  => 'standard',
-	        'url'    		  => '#',
+	        'url'             => '#',
 	        'title'  		  => '',
 	        'image_url' 	  => '',
 	        'image'			  => '',
@@ -675,7 +697,7 @@ class GMW_Maps_API {
 	 * @param  [type]  $args     [description]
 	 * @param  boolean $location [description]
 	 * @param  array   $gmw      [description]
-	 * 
+	 *
 	 * @return [type]            [description]
 	 */
 	public static function get_directions_link( $args = array() ) {
@@ -704,7 +726,7 @@ class GMW_Maps_API {
 		$units 		 = $args['units'] == 'imperial' ? 'ptm' : 'ptk';
 		$link  		 = esc_url( "http://maps.google.com/maps?f=d&hl={$language}&region={$region}&doflg={$units}&saddr={$from_latlng}&daddr={$to_latlng}&ie=UTF8&z=12" );
 		$label 		 = esc_html( $args['label'] );
-		
+
 		return "<a class=\"gmw-get-directions\" title=\"{$label}\" href=\"{$link}\" target=\"_blank\">{$label}</a>";
 	}
 
@@ -716,12 +738,12 @@ class GMW_Maps_API {
 	 * the filter in the function.
 	 *
 	 * $defaults = array(
-	 *		'handle'    => '', // required
-	 *		'src'       => '', // required
-	 *		'deps'      => array( 'gmw-map' ),
-	 *		'ver'       => GMW_VERSION,
-	 *		'in_footer' => true
-	 *	);
+	 *      'handle'    => '', // required
+	 *      'src'       => '', // required
+	 *      'deps'      => array( 'gmw-map' ),
+	 *      'ver'       => GMW_VERSION,
+	 *      'in_footer' => true
+	 * );
      *
 	 * @param  [type] $scripts [description]
 	 * @return [type]          [description]
@@ -736,7 +758,7 @@ class GMW_Maps_API {
 			'src'       => '',
 			'deps'      => array( 'gmw-map' ),
 			'ver'       => GMW_VERSION,
-			'in_footer' => true
+            'in_footer' => true
 		);
 
 		foreach ( $map_scripts as $args ) {
@@ -747,8 +769,7 @@ class GMW_Maps_API {
 				continue;
 			}
 
-			if ( ! wp_script_is( $args['handle'], 'enqueued' ) ) {
-				
+			if ( ! wp_script_is( $args['handle'], 'enqueued' ) ) {	
 				wp_enqueue_script( $args['handle'], $args['src'], $args['deps'], $args['ver'], $args['in_footer'] );
 			}
 		}
@@ -760,47 +781,24 @@ class GMW_Maps_API {
    	 * @return [type] [description]
    	 */
 	public static function enqueue_scripts() {
-	
+
 		// trigger map and related script
 		if ( self::$map_enabled ) {
-			
+
 			do_action( 'gmw_map_options' );
 
 			// load main JavaScript and Google APIs if not already loaded
-			if ( ! wp_script_is( 'gmw', 'enqueued') ) {
+			if ( ! wp_script_is( 'gmw', 'enqueued' ) ) {
 				wp_enqueue_script( 'gmw' );
 			}
 
-			// Load marker clusterer library - to be used with premium features
-			if ( self::$markers_clusterer && ! wp_script_is( 'gmw-marker-clusterer', 'enqueued' )  ) {	
-				
-				wp_enqueue_script( 'gmw-marker-clusterer', GMW_URL . '/assets/lib/marker-clusterer/markerclusterer.min.js', array( 'gmw-map' ), GMW_VERSION, true );
+			if ( 'google_maps' == GMW()->maps_provider ) {
 
-				$cluster_image = apply_filters( 'gmw_clusters_folder' , is_ssl() ? 'https' : 'http' .'://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclustererplus/images/m' );
-				wp_localize_script( 'gmw-marker-clusterer', 'clusterImage', $cluster_image );
-			}
+				self::google_maps_scripts();
 
-			// load marker spiderfier library - to be used with premium features
-			if ( self::$markers_spiderfier && ! wp_script_is( 'gmw-marker-spiderfier', 'enqueued' )  ) {	
-				wp_enqueue_script( 'gmw-marker-spiderfier', GMW_URL . '/assets/lib/marker-spiderfier/markerspiderfier.min.js', array( 'gmw-map' ), GMW_VERSION, true );
-			}
+			} else {
 
-			// load infobox js 
-			if ( self::$infobox && ! wp_script_is( 'gmw-infobox', 'enqueued' ) ) {
-
-				//$infobox_close_btn = $protocol.'://www.google.com/intl/en_us/mapfiles/close.gif';
-				//wp_localize_script( 'gmw-infobox', 'closeButton', $infobox_close_btn );
-
-				wp_enqueue_script( 'gmw-infobox', GMW_URL . '/assets/lib/infobox/infobox.min.js', array( 'gmw-map' ), GMW_VERSION, true );
-			}
-
-			// load infobox js 
-			if ( self::$infobubble && ! wp_script_is( 'gmw-infobubble', 'enqueued' ) ) {
-
-				//$infobox_close_btn = $protocol.'://www.google.com/intl/en_us/mapfiles/close.gif';
-				//wp_localize_script( 'gmw-infobox', 'closeButton', $infobox_close_btn );
-
-				wp_enqueue_script( 'gmw-infobubble', GMW_URL . '/assets/lib/infobubble/infobubble.min.js', array( 'gmw-map' ), GMW_VERSION, true );
+				do_action( 'gmw_enqueue_maps_provider_scripts' );
 			}
 
 			//load jQuery ui draggable for popup info-windows
@@ -808,20 +806,19 @@ class GMW_Maps_API {
 				wp_enqueue_script( 'jquery-ui-draggable' );
 			}
 
-			do_action( 'gmw_before_map_triggered', GMW_Maps_API::$map_elements );
+			do_action( 'gmw_before_map_triggered', self::$map_elements );
 
 			//pass the mapVarss to JS
-			wp_localize_script( 'gmw-map', 'gmwMapObjects', GMW_Maps_API::$map_elements );
-			
+			wp_localize_script( 'gmw-map', 'gmwMapObjects', self::$map_elements );
+
 			//enqueue the map script
 			if ( ! wp_script_is( 'gmw-map', 'enqueued' ) ) {
-				wp_enqueue_script( 'gmw-map' ); 
+				wp_enqueue_script( 'gmw-map' );
 			}
 
 			self::load_custom_map_scripts( $scripts = array() );
 
 			do_action( 'gmw_map_api_enqueue_script' );
-
 		}
 
 		// modify the autocomplete global
@@ -835,7 +832,40 @@ class GMW_Maps_API {
 			wp_enqueue_script( 'gmw-get-directions', GMW_URL . '/assets/js/gmw.directions.min.js', array( 'gmw' ), GMW_VERSION, true );
 		}
 	}
+
+	/**
+	 * Enqueue Google Maps scripts.
+	 *
+	 * @return [type] [description]
+	 *
+	 * @since 3.1
+	 */
+	public static function google_maps_scripts() {
+
+		// Marker Clusterer.
+		if ( self::$markers_clusterer && ! wp_script_is( 'gmw-marker-cluster', 'enqueued' )  ) {
+
+			wp_enqueue_script( 'gmw-marker-cluster', GMW_URL . '/assets/lib/google/markercluster/google.markercluster.min.js', array(), GMW_VERSION, true );
+
+			$cluster_image = apply_filters( 'gmw_clusters_folder' , is_ssl() ? 'https' : 'http' .'://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclustererplus/images/m' );
+			wp_localize_script( 'gmw-marker-cluster', 'clusterImage', $cluster_image );
+		}
+
+		// Marker spiderfiers.
+		if ( self::$markers_spiderfier && ! wp_script_is( 'gmw-marker-spiderfier', 'enqueued' )  ) {
+			wp_enqueue_script( 'gmw-marker-spiderfier', GMW_URL . '/assets/lib/google/markerspiderfier/google.markerspiderfier.min.js', array(), GMW_VERSION, true );
+		}
+
+		// Infobox.
+		if ( self::$infobox && ! wp_script_is( 'gmw-infobox', 'enqueued' ) ) {
+			wp_enqueue_script( 'gmw-infobox', GMW_URL . '/assets/lib/google/infobox/infobox.min.js', array(), GMW_VERSION, true );
+		}
+
+		// Infobubble.
+		if ( self::$infobubble && ! wp_script_is( 'gmw-infobubble', 'enqueued' ) ) {
+			wp_enqueue_script( 'gmw-infobubble', GMW_URL . '/assets/lib/google/infobubble/infobubble.min.js', array(), GMW_VERSION, true );
+		}
+	}
 }
 //fire the enqueue_script in the footer
 add_action( 'wp_footer', array( 'GMW_Maps_API', 'enqueue_scripts' ) );
-endif;
