@@ -400,6 +400,7 @@ class GMW_Form_Settings_Helper {
     	if ( empty( $value ) ) {
     		$value = array(
     			'enabled' => '',
+    			'usage'   => 'post_content',
     			'count'   => '10',
     			'link'    => 'read more...'
     		);
@@ -479,6 +480,7 @@ class GMW_Form_Settings_Helper {
     public static function validate_excerpt( $output ) {
 
         $output['enabled'] = ! empty( $output['enabled'] ) ? 1 : '';
+        $output['usage']   = ( $output['usage'] == 'post_content' || $output['usage'] == 'post_excerpt' ) ? $output['usage'] : 'post_content';
         $output['count']   = isset( $output['count'] ) ? preg_replace( '/[^0-9]/', '', $output['count'] ) : '';
         $output['link']    = isset( $output['link'] ) ? sanitize_text_field( $output['link'] ) : '';
 
