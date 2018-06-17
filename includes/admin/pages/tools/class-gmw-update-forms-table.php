@@ -261,7 +261,7 @@ class GMW_Update_Forms_Table {
 			}
 
 			// global maps
-			if ( $addon == 'global_maps' || in_array( $slug, [ 'gmaps_groups', 'gmaps_posts', 'gmaps_friends', 'gmaps_users' ] ) ) {
+			if ( $addon == 'global_maps' || in_array( $slug, array( 'gmaps_groups', 'gmaps_posts', 'gmaps_friends', 'gmaps_users' ) ) ) {
 				
 				//$addon = 'global_maps';
 		
