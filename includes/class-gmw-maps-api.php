@@ -758,7 +758,7 @@ class GMW_Maps_API {
 			'src'       => '',
 			'deps'      => array( 'gmw-map' ),
 			'ver'       => GMW_VERSION,
-            'in_footer' => true
+			'in_footer' => true,
 		);
 
 		foreach ( $map_scripts as $args ) {
@@ -816,7 +816,7 @@ class GMW_Maps_API {
 				wp_enqueue_script( 'gmw-map' );
 			}
 
-			self::load_custom_map_scripts( $scripts = array() );
+			self::load_custom_map_scripts( array() );
 
 			do_action( 'gmw_map_api_enqueue_script' );
 		}
@@ -843,16 +843,16 @@ class GMW_Maps_API {
 	public static function google_maps_scripts() {
 
 		// Marker Clusterer.
-		if ( self::$markers_clusterer && ! wp_script_is( 'gmw-marker-cluster', 'enqueued' )  ) {
+		if ( self::$markers_clusterer && ! wp_script_is( 'gmw-marker-cluster', 'enqueued' ) ) {
 
 			wp_enqueue_script( 'gmw-marker-cluster', GMW_URL . '/assets/lib/google/markercluster/google.markercluster.min.js', array(), GMW_VERSION, true );
 
-			$cluster_image = apply_filters( 'gmw_clusters_folder' , is_ssl() ? 'https' : 'http' .'://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclustererplus/images/m' );
+			$cluster_image = apply_filters( 'gmw_clusters_folder', 'https://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclustererplus/images/m' );
 			wp_localize_script( 'gmw-marker-cluster', 'clusterImage', $cluster_image );
 		}
 
 		// Marker spiderfiers.
-		if ( self::$markers_spiderfier && ! wp_script_is( 'gmw-marker-spiderfier', 'enqueued' )  ) {
+		if ( self::$markers_spiderfier && ! wp_script_is( 'gmw-marker-spiderfier', 'enqueued' ) ) {
 			wp_enqueue_script( 'gmw-marker-spiderfier', GMW_URL . '/assets/lib/google/markerspiderfier/google.markerspiderfier.min.js', array(), GMW_VERSION, true );
 		}
 
