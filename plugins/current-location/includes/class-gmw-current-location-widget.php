@@ -160,8 +160,8 @@ class GMW_Current_Location_Widget extends GMW_Widget {
 				'description' => __( 'When enabled, the map will zoom in/out using the mouse scroll wheel.', 'geo-my-wp' ),
 			),
 			'ajax_update'               => array(
-				'type'        => 'checkbox',
-				'default'     => 1,
+				'type'        => 'hidden',
+				'default'     => 0,
 				'label'       => __( 'Update via ajax', 'geo-my-wp' ),
 				'description' => __( 'Check this checkbox to update the location form via AJAX instead of page load.', 'geo-my-wp' ),
 			),
