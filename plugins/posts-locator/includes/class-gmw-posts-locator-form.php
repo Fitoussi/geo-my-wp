@@ -19,7 +19,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 	 *
 	 * @var array
 	 */
-	public $db_fields = array(
+	/*public $db_fields = array(
 		'ID as location_id',
 		'object_type',
 		'object_id',
@@ -35,7 +35,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 		'address',
 		'formatted_address',
 		'map_icon',
-	);
+	); */
 
 	/**
 	 * Permalink hook
