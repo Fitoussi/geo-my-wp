@@ -128,13 +128,13 @@ class GMW_Sweetdate_Geolcation_Addon extends GMW_Addon {
 
 		// admin settings
 		if ( is_admin() ) {
-			include( 'includes/admin/class-gmw-sweet-date-admin-settings.php' );
+			include_once( 'includes/admin/class-gmw-sweet-date-admin-settings.php' );
 			new GMW_Sweet_Date_Admin_Settings;
 		}
 
 		// include members query only on members page
-		if ( bp_current_component() == 'members' && gmw_get_option( 'sweet_date', 'enabled', '' ) != '' ) {
-			include( 'includes/class-gmw-sweet-date-geolocation.php' );
+		if ( 'members' == bp_current_component() && '' != gmw_get_option( 'sweet_date', 'enabled', '' ) ) {
+			include_once( 'includes/class-gmw-sweet-date-geolocation.php' );
 			new GMW_Sweet_Date_Geolocation;
 		}
 	}
