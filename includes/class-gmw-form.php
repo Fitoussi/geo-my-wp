@@ -517,7 +517,7 @@ class GMW_Form {
 
 		$map_options = array(
 			'zoom'      => $this->form['results_map']['zoom_level'],
-			'mapTypeId' => $this->form['results_map']['map_type'],
+			'mapTypeId' => isset( $this->form['results_map']['map_type'] ) ? $this->form['results_map']['map_type'] : 'ROADMAP',
 		);
 
 		$user_position = array(
