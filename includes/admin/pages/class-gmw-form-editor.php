@@ -436,7 +436,7 @@ class GMW_Form_Editor {
 				),
 				'priority' => 40,
 			),
-			array(
+			'results_map' => array(
 				'slug'     => 'results_map',
 				'label'    => __( 'Map', 'geo-my-wp' ),
 				'fields'   => array(
@@ -459,21 +459,6 @@ class GMW_Form_Editor {
 						'desc'        => __( 'Enter the map\'s height in pixels or percentage ( ex. 100% or 200px ).', 'geo-my-wp' ),
 						'attributes'  => array(),
 						'priority'    => 20,
-					),
-					'map_type'   => array(
-						'name'       => 'map_type',
-						'type'       => 'select',
-						'default'    => 'ROADMAP',
-						'label'      => __( 'Map type', 'geo-my-wp' ),
-						'desc'       => __( 'Select the map type.', 'geo-my-wp' ),
-						'options'    => array(
-							'ROADMAP'   => __( 'ROADMAP', 'geo-my-wp' ),
-							'SATELLITE' => __( 'SATELLITE', 'geo-my-wp' ),
-							'HYBRID'    => __( 'HYBRID', 'geo-my-wp' ),
-							'TERRAIN'   => __( 'TERRAIN', 'geo-my-wp' ),
-						),
-						'attributes' => '',
-						'priority'   => 30,
 					),
 					'zoom_level' => array(
 						'name'       => 'zoom_level',
@@ -541,6 +526,25 @@ class GMW_Form_Editor {
 				'priority' => 50,
 			),
 		);
+	
+		if ( 'google_maps' == GMW()->maps_provider && isset( $groups['results_map'] ) ) {
+
+			$groups['results_map']['fields']['map_type'] = array(
+				'name'       => 'map_type',
+				'type'       => 'select',
+				'default'    => 'ROADMAP',
+				'label'      => __( 'Map type', 'geo-my-wp' ),
+				'desc'       => __( 'Select the map type.', 'geo-my-wp' ),
+				'options'    => array(
+					'ROADMAP'   => __( 'ROADMAP', 'geo-my-wp' ),
+					'SATELLITE' => __( 'SATELLITE', 'geo-my-wp' ),
+					'HYBRID'    => __( 'HYBRID', 'geo-my-wp' ),
+					'TERRAIN'   => __( 'TERRAIN', 'geo-my-wp' ),
+				),
+				'attributes' => '',
+				'priority'   => 30,
+			);
+		}
 
 		$temp_array = array();
 
