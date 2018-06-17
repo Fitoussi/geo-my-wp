@@ -520,6 +520,7 @@ class GMW_Sweet_Date_Geolocation {
 			'info_window_ajax'     => false,
 			'info_window_template' => 'default',
 			'group_markers'        => 'markers_clusterer',
+			'render_on_page_load'  => false
 		);
 
 		$map_options = array(
@@ -531,7 +532,8 @@ class GMW_Sweet_Date_Geolocation {
 			'lat'        => $this->form_data['lat'],
 			'lng'        => $this->form_data['lng'],
 			'address'    => $this->form_data['address'],
-			'map_icon'   => 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+			'map_icon'   => GMW()->default_icons['user_location_icon_url'],
+			'icon_size'  => GMW()->default_icons['user_location_icon_size'],
 			'iw_content' => __( 'You are here', 'geo-my-wp' ),
 			'iw_open'    => false,
 		);
@@ -554,13 +556,6 @@ class GMW_Sweet_Date_Geolocation {
 			} else {
 				GMW_Maps['sdate_geo'].update( mapArgs.locations, mapArgs.user_location );
 			}
-			/*
-			var mapArgs = <?php echo $map_args; ?>;
-			// generate map when ajax is triggered
-			GMW_Maps[$this->prefix] = new GMW_Map( mapArgs.settings, mapArgs.map_options, {} );
-			// initiate it
-			GMW_Maps[$this->prefix].render( mapArgs.locations, mapArgs.user_location );
-			*/
 		});
 		</script>
 		<?php
@@ -644,6 +639,7 @@ class GMW_Sweet_Date_Geolocation {
 				'lat'                 => $member->lat,
 				'lng'                 => $member->lng,
 				'map_icon'            => 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=' . $member->location_count . '|FF776B|000000',
+				'icon_size'           => GMW()->default_icons['location_icon_size'],
 				'info_window_content' => $info_window,
 			), $member, $this
 		);
