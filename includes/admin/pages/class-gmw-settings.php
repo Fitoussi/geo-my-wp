@@ -45,6 +45,12 @@ class GMW_Settings {
 					'results_page'         => '',
 					'auto_locate'          => 1,
 				),
+				'api_providers' => array(
+					'maps_provider'              => 'google_maps',
+					'geocoding_provider'         => 'google_maps',
+					'google_maps_server_api_key' => gmw_get_option( 'general_settings', 'google_api', '' ),
+					'nominatim_email'	         => get_bloginfo('admin_email'),
+				)
 			)
 		);
 
@@ -76,9 +82,18 @@ class GMW_Settings {
 	 */
 	public function settings_groups() {
 
+		// API providers settings.
+		$api_providers = apply_filters( 'gmw_admin_settings_api_providers_options', array(
+			'maps' => array(
+				'google_maps' => 'Google Maps',
+				'leaflet'     => 'LeafLet',
+			),
+			'geocoding' => array()
+		) );
+
 		return apply_filters(
 			'gmw_admin_settings_groups', array(
-				array(
+				'general_settings' => array(
 					'slug'     => 'general_settings',
 					'label'    => __( 'General Settings', 'geo-my-wp' ),
 					'icon'     => 'cog',
@@ -93,7 +108,7 @@ class GMW_Settings {
 							'attributes' => array(),
 							'priority'   => 10,
 						),
-						'google_maps_api_usage' => array(
+						/*'google_maps_api_usage' => array(
 							'name'       => 'google_maps_api_usage',
 							'type'       => 'select',
 							'default'    => 'enabled',
@@ -107,36 +122,26 @@ class GMW_Settings {
 								'disabled' => __( 'Disable completely', 'geo-my-wp' ),
 							),
 							'priority'   => 20,
-						),
-						'google_api'            => array(
-							'name'        => 'google_api',
-							'type'        => 'text',
-							'default'     => '',
-							'placeholder' => __( 'Enter your google api key', 'geo-my-wp' ),
-							'label'       => __( 'Google Maps API V3 Key', 'geo-my-wp' ),
-							'desc'        => sprintf( __( 'Google Maps API key is required for GEO my WP to work properly. Google Maps API key is free and can be generated <a href="%1$s" target="_blank">here</a>. <a href="%2$s" target="_blank">Here</a> you can learn how to properly generate and setup your Maps API key.', 'geo-my-wp' ), 'https://code.google.com/apis/console/', 'http://docs.gravitygeolocation.com/article/101-create-google-map-api-key' ),
-							'attributes'  => array( 'size' => '50' ),
-							'priority'    => 30,
-						),
+						),*/
 						'country_code'          => array(
 							'name'        => 'country_code',
 							'type'        => 'text',
 							'default'     => '',
 							'placeholder' => 'ex. US',
-							'label'       => __( 'Country Code', 'geo-my-wp' ),
+							'label'       => __( 'Default Region', 'geo-my-wp' ),
 							'desc'        => sprintf( __( 'Enter the country code that will be used as the default with Google Maps API. The country code controls the default region when geocoding an address and when using other services provided by Google Maps API. List of countries code can be found <a href="%s" target="_blank">here</a>.', 'geo-my-wp' ), 'http://geomywp.com/country-code/' ),
 							'attributes'  => array( 'size' => '5' ),
-							'priority'    => 50,
+							'priority'    => 20,
 						),
 						'language_code'         => array(
 							'name'        => 'language_code',
 							'type'        => 'text',
 							'default'     => '',
 							'placeholder' => 'ex. EN',
-							'label'       => __( 'Google API Language', 'geo-my-wp' ),
+							'label'       => __( 'Default Language', 'geo-my-wp' ),
 							'desc'        => sprintf( __( 'Set the language to be used with Google Places address auto-complete and with Google Maps API. The language codes can be found <a href="%s" target="_blank">here</a>.', 'geo-my-wp' ), 'https://sites.google.com/site/tomihasa/google-language-codes' ),
 							'attributes'  => array( 'size' => '5' ),
-							'priority'    => 60,
+							'priority'    => 30,
 						),
 						'auto_locate'           => array(
 							'name'       => 'auto_locate',
@@ -146,7 +151,7 @@ class GMW_Settings {
 							'cb_label'   => __( 'Enable', 'geo-my-wp' ),
 							'desc'       => __( "GEO my WP will try to retrive the visitor's current location when once first visits the website. If a location was found, it will be saved via cookies and will be used with some of GEO my WP features; such as dynamically displaying results nearby the visitor.", 'geo-my-wp' ),
 							'attributes' => array(),
-							'priority'   => 70,
+							'priority'   => 40,
 						),
 						'results_page'          => array(
 							'name'       => 'results_page',
@@ -156,10 +161,82 @@ class GMW_Settings {
 							'desc'       => __( 'The page you select here displays the search results ( of any of your forms ) when using the "GMW Search Form" widget. The plugin will first check if a results page was set in the form settings, and if so, the results will be displayed in that page. Otherwise, if no results page was set in the form settings, the results will be displayed in the page you select here. To use this feature, select the results page from the dropdown menu and paste the shortcode <code>[gmw form="results"]</code> to the content area of this page.', 'GMW' ),
 							'options'    => $this->get_pages(),
 							'attributes' => array(),
-							'priority'   => 80,
+							'priority'   => 50,
 						),
 					),
 					'priority' => 3,
+				),
+
+				'api_providers' => array(
+					'slug'     => 'api_providers',
+					'label'    => __( 'Maps & Geocoders', 'geo-my-wp' ),
+					'icon'     => 'cog',
+					'fields'   => array(
+						'maps_provider' => array(
+							'name'       => 'maps_provider',
+							'type'       => 'select',
+							'default'    => 'google_maps',
+							'label'      => __( 'Maps Provider', 'geo-my-wp' ),
+							'desc'       => __( 'Select the maps provider that you would like to use.', 'geo-my-wp' ),
+							'attributes' => array(),
+							'options'    => $api_providers['maps'],
+							'priority'   => 10,
+						),
+						'google_maps_options' => array(
+				            'name'          => 'google_maps_options',
+				            'type'          => 'fields_group',
+				            'label'         => __( 'Google Maps API', 'geo-my-wp' ),
+				            'desc'          => __( 'Setup your Google Maps API.' , 'geo-my-wp' ),
+				            'fields'        => array(
+				                'google_maps_server_api_key'  => array(
+				                    'name'          => 'google_maps_server_api_key',
+				                    'type'          => 'text',
+				                    'default'       => '',
+				                    'label'         => __( 'Google Maps API key', 'geo-my-wp' ),
+				                    'placeholder'   => __( 'Google Maps API key', 'geo-my-wp' ),
+				                    'desc'        	=> sprintf( __( 'Google Maps API key is required. See <a href="%1$s" target="_blank">this tutorial</a> to learn how to generate and setup your Google Maps API key.', 'geo-my-wp' ), 'http://docs.gravitygeolocation.com/article/101-create-google-map-api-key' ),
+									'attributes'  => array( 'size' => '50' ),
+									'priority'    => 5,
+				                ),
+				                'google_maps_api_china'  => array(
+				                    'name'          => 'google_maps_api_china',
+				                    'type'          => 'checkbox',
+				                    'default'       => '',
+				                    'label'         => __( 'Google Maps API For China', 'geo-my-wp' ),
+				                    'cb_label'		=> __( 'Enabled', 'geo-my-wp' ),
+				                    'desc'        	=> __( 'Check this checkbox if your server is located in China and Google Maps features are not working on your site.', 'geo-my-wp' ),
+									'attributes'  => array(),
+									'priority'    => 10,
+				                ),
+				            ),
+				            'attributes' => '',
+				            'optionsbox' => 1,  
+				            'priority'   => 30
+				        ),
+
+				        'nominatim_options' => array(
+				            'name'          => 'nominatim_options',
+				            'type'          => 'fields_group',
+				            'label'         => __( 'Nominatim ( OpenStreetMaps )', 'geo-my-wp' ),
+				            'desc'          => __( 'Setup Nominatim options' , 'geo-my-wp' ),
+				            'fields'        => array(
+				                'nominatim_email'  => array(
+				                    'name'          => 'nominatim_email',
+				                    'type'          => 'text',
+				                    'default'       => '',
+				                    'placeholder'   => __( 'Enter email address', 'geo-my-wp' ),
+				                    'label'         => __( 'Valid email address', 'geo-my-wp' ),
+				                    'desc'        	=> sprintf( __( 'Nominatim is a geocoding provider for OpenStreetMaps. The provider requires a valid email address to use its services. See this <a href="%1$s" target="_blank">this page</a> to learn about. ', 'geo-my-wp' ), 'http://docs.gravitygeolocation.com/article/101-create-google-map-api-key' ),
+									'attributes'  => array( 'size' => '50' ),
+									'priority'    => 5,
+				                )
+				            ),
+				            'attributes' => '',
+				            'optionsbox' => 1,  
+				            'priority'   => 40
+				        )
+					),
+					'priority' => 5,
 				),
 			)
 		);
@@ -630,7 +707,6 @@ class GMW_Settings {
 
 		$this->init_settings();
 		$settings = get_option( 'gmw_options' );
-
 		?>
 		<div id="gmw-settings-page" class="wrap gmw-admin-page">
 
@@ -781,9 +857,51 @@ class GMW_Settings {
                 <div class="update-button-wrapper bottom">
                     <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'geo-my-wp'); ?>" />
                 </div>
-
             </form>
         </div>
+        <script type="text/javascript">
+        	
+        	jQuery( document ).ready( function( $ ) {
+        		
+        		function gmw_api_providers_setting_changer() {
+
+        			$( '.gmw-tab-panel.api_providers' ).find( 'table tr' ).not( '#api_providers-maps_provider-tr, #api_providers-geocoding_provider-tr').hide();
+
+        			var mapProvider = $( '#setting-api_providers-maps_provider' ).val();
+        			if ( mapProvider == 'leaflet' ) {
+        				mapProvider = 'nominatim';
+        			}
+        			
+	        		$( '#api_providers-' + mapProvider + '_options-tr' ).show();
+
+	        		//var geocodeProvider = $( '#setting-api_providers-geocoding_provider' ).val();
+	        		//$( '#api_providers-' + geocodeProvider + '_options-tr' ).show();
+	        	}
+  
+        		gmw_api_providers_setting_changer();
+
+    			$( '#setting-api_providers-maps_provider, #setting-api_providers-geocoding_provider' ).on( 'change', function() {
+        			gmw_api_providers_setting_changer();
+        		} ); 
+
+        		/*function gmw_api_providers_setting_changer() {
+
+        			$( '.gmw-tab-panel.api_providers' ).find( 'table tr' ).not( '#api_providers-maps_provider-tr, #api_providers-geocoding_provider-tr').hide();
+
+        			var mapProvider = $( '#setting-api_providers-maps_provider' ).val();
+	        		$( '#api_providers-' + mapProvider + '_options-tr' ).show();
+
+	        		var geocodeProvider = $( '#setting-api_providers-geocoding_provider' ).val();
+	        		$( '#api_providers-' + geocodeProvider + '_options-tr' ).show();
+	        	}
+  
+        		gmw_api_providers_setting_changer();
+
+    			$( '#setting-api_providers-maps_provider, #setting-api_providers-geocoding_provider' ).on( 'change', function() {
+        			gmw_api_providers_setting_changer();
+        		} ); */
+        	});
+        </script>
 		<?php
 		// load chosen
 		if ( ! wp_script_is( 'chosen', 'enqueued' ) ) {
