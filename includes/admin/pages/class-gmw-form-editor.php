@@ -526,7 +526,7 @@ class GMW_Form_Editor {
 				'priority' => 50,
 			),
 		);
-	
+
 		if ( 'google_maps' == GMW()->maps_provider && isset( $groups['results_map'] ) ) {
 
 			$groups['results_map']['fields']['map_type'] = array(
@@ -730,7 +730,7 @@ class GMW_Form_Editor {
 						</tr>
 
 					<?php } else { ?>
-	
+
 					<tr>
 						<td class="gmw-form-usage-desc">
 							<p><?php _e( 'Display the complete form ( search form, map, and search results ).', 'geo-my-wp' ); ?></p>
