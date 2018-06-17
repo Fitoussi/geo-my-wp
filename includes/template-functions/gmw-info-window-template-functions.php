@@ -201,13 +201,20 @@ if ( gmw_is_addon_active( 'posts_locator' ) ) {
      */
     function gmw_info_window_post_excerpt( $post, $gmw = array() ) {
 
-        if ( ! $gmw['info_window']['excerpt']['use'] || empty( $post->post_content ) ) {
-            return;
-        }
+	    if ( empty( $gmw['info_window']['excerpt']['enabled'] ) ) {
+	        return;
+	    }
+
+	    // verify usage value
+	    $usage = isset( $gmw['info_window']['excerpt']['usage'] ) ? $gmw['info_window']['excerpt']['usage'] : 'post_content';
+	      
+	    if ( empty( $post->$usage ) )  {
+	    	return;
+		}
 
         $args = array(
             'id'                => $gmw['ID'], 
-            'content'           => $post->post_content,
+            'content'           => $post->$usage,
             'words_count'       => $gmw['info_window']['excerpt']['count'],
             'link'              => get_the_permalink( $post->ID ),
             'link_text'         => $gmw['info_window']['excerpt']['link'],
