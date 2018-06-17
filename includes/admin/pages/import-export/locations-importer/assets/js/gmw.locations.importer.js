@@ -89,7 +89,7 @@ jQuery( document ).ready( function( $ ) {
             // do ajax importing
             GMW_Import_Locations.importer = $.ajax({
                 type     : 'POST',
-                url      : gmwAjaxUrl,
+                url      : gmwVars.ajaxUrl,
                 dataType : 'json',
                 data     : {
                     action            : 'gmw_locations_importer',
@@ -163,7 +163,7 @@ jQuery( document ).ready( function( $ ) {
 
                         $.ajax( {
                             type     : 'POST',
-                            url      : gmwAjaxUrl,
+                            url      : gmwVars.ajaxUrl,
                             dataType : 'json',
                             data     : {
                                 action            : 'gmw_locations_importer_done',
