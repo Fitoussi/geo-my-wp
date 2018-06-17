@@ -89,10 +89,10 @@ jQuery( document ).ready( function( $ ) {
 	 * @param  {[type]} results [description]
 	 * @return {[type]}         [description]
 	 */
-	function gmw_sdate_geo_geocoder_sucess( results ) {
+	function gmw_sdate_geo_geocoder_sucess( result, response ) {
 
-		var lat = results[0].geometry.location.lat().toFixed(6);
-		var lng = results[0].geometry.location.lng().toFixed(6);
+		var lat = result.latitude;
+		var lng = result.longitude;
 
 		GMW.set_cookie( 'gmw_sdate_geo_lat', lat, 1 );	
 		GMW.set_cookie( 'gmw_sdate_geo_lng', lng, 1 );
@@ -245,3 +245,58 @@ jQuery( document ).ready( function( $ ) {
 		GMW.set_cookie( 'gmw_sdate_geo_lng', '', 1 );
 	});
 });
+
+// Add Google Marker Cluster
+if ( gmwVars.mapsProvider === 'google_maps' ) { 
+
+	GMW.add_filter( 'gmw_map_init', function( map ) {
+
+		map.markerGroupingTypes.markers_clusterer = {
+
+			'init' : function( mapObject ) {
+
+				// initialize markers clusterer if needed and if exists
+			    if ( typeof MarkerClusterer === 'function' ) {
+			    	
+			    	// init new clusters object
+					mapObject.clusters = new MarkerClusterer( 
+						mapObject.map, 
+						mapObject.markers,
+						{
+							imagePath    : mapObject.clustersPath,
+							clusterClass : mapObject.prefix + '-cluster cluster',
+							maxZoom 	 : 15 
+						}
+					);
+				} 
+			},
+
+			'clear' : function( mapObject ) {
+
+				// initialize markers clusterer if needed and if exists
+			    if ( typeof MarkerClusterer === 'function' ) {
+
+			    	// remove existing clusters
+			    	if ( mapObject.clusters != false ) {		
+			    		mapObject.clusters.clearMarkers();
+			    	}
+				} 
+			},
+
+			'addMarker' : function( marker, mapObject ) {
+
+				mapObject.clusters.addMarker( marker );	
+			},
+
+			'markerClick' : function( marker, mapObject ) {
+
+				google.maps.event.addListener( marker, 'click', function() {
+
+					mapObject.markerClick( this );
+				});	
+			}
+		}
+
+		return map;
+	} );
+}
