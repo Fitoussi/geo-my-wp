@@ -158,7 +158,7 @@ var GMW_Extensions = {
         jQuery.ajax( {
             type     : 'POST',
             dataType : 'json',  
-            url      : gmwAjaxUrl,
+            url      : gmwVars.ajaxUrl,
             data     : { 
                 action         : 'gmw_extensions_updater',
                 updater_action : actionButton.attr( 'data-action' ),
@@ -255,7 +255,7 @@ var GMW_Extensions = {
         jQuery.ajax( {
             type     : 'GET',
             dataType : 'json',  
-            url      : gmwAjaxUrl,
+            url      : gmwVars.ajaxUrl,
             data     : { 
                 action     : 'gmw_' + licenseData.action,
                 gmw_action : licenseData.action,
@@ -404,7 +404,7 @@ var GMW_Extensions = {
         jQuery.ajax( {
             type     : 'POST',
             dataType : 'json',  
-            url      : gmwAjaxUrl,
+            url      : gmwVars.ajaxUrl,
             data     : { 
                 action   : 'gmw_license_key_actions',
                 data     : license_data,
