@@ -297,7 +297,7 @@ if ( gmwVars.mapsProvider === 'google_maps' ) {
 					mapObject.markerClick( this );
 				});	
 			}
-		}
+		};
 
 		return map;
 	} );
