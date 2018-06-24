@@ -182,6 +182,16 @@ class GMW_Settings {
 							'options'    => $api_providers['maps'],
 							'priority'   => 10,
 						),
+						'geocoding_provider' => array(
+							'name'       => 'geocoding_provider',
+							'type'       => 'hidden',
+							'default'    => 'google_maps',
+							'label'      => __( 'Maps Provider', 'geo-my-wp' ),
+							'desc'       => __( 'Select the maps provider that you would like to use.', 'geo-my-wp' ),
+							'attributes' => array(),
+							'options'    => $api_providers['maps'],
+							'priority'   => 10,
+						),
 						'google_maps_options' => array(
 				            'name'          => 'google_maps_options',
 				            'type'          => 'fields_group',
@@ -213,7 +223,6 @@ class GMW_Settings {
 				            'optionsbox' => 1,  
 				            'priority'   => 30
 				        ),
-
 				        'nominatim_options' => array(
 				            'name'          => 'nominatim_options',
 				            'type'          => 'fields_group',
@@ -678,6 +687,18 @@ class GMW_Settings {
 				<?php
 				break;
 
+			case 'hidden':
+				?>
+				<input 
+					type="hidden" 
+					id="<?php echo $attr_id; ?>" 
+					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> regular-text password" name="<?php echo $attr_name; ?>" 
+					value="<?php echo sanitize_text_field( esc_attr( $value ) ); ?>" 
+					<?php echo implode( ' ', $attributes ); ?> 
+				/>
+				<?php
+			break;
+
 			case '':
 			case 'input':
 			case 'text':
@@ -868,12 +889,16 @@ class GMW_Settings {
         			$( '.gmw-tab-panel.api_providers' ).find( 'table tr' ).not( '#api_providers-maps_provider-tr, #api_providers-geocoding_provider-tr').hide();
 
         			var mapProvider = $( '#setting-api_providers-maps_provider' ).val();
+        			
         			if ( mapProvider == 'leaflet' ) {
         				mapProvider = 'nominatim';
         			}
         			
 	        		$( '#api_providers-' + mapProvider + '_options-tr' ).show();
 
+	        		if ( jQuery( '#setting-api_providers-geocoding_provider' ).attr( 'type' ) == 'hidden' ) {
+	        			jQuery( '#setting-api_providers-geocoding_provider' ).val( mapProvider );
+	        		}
 	        		//var geocodeProvider = $( '#setting-api_providers-geocoding_provider' ).val();
 	        		//$( '#api_providers-' + geocodeProvider + '_options-tr' ).show();
 	        	}
