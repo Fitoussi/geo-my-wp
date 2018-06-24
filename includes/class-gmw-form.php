@@ -525,7 +525,7 @@ class GMW_Form {
 			'lng'        => $this->form['lng'],
 			'address'    => $this->form['org_address'],
 			'map_icon'   => GMW()->default_icons['user_location_icon_url'],
-			'icon_size'  => GMW()->default_icons['user_location_icon_size'],
+			'icon_size'  => null,
 			'iw_content' => __( 'Your location', 'geo-my-wp' ),
 			'iw_open'    => ! empty( $this->form['results_map']['yl_icon'] ) ? true : false,
 		);
@@ -851,8 +851,9 @@ class GMW_Form {
 			$icon_size = array( 21, 34 );
 
 		} else {
+
 			$map_icon  = GMW()->default_icons['location_icon_url'];
-			$icon_size = GMW()->default_icons['location_icon_size'];
+			$icon_size = null;
 		}
 
 		$args = apply_filters(
