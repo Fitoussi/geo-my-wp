@@ -1,7 +1,14 @@
+/**
+ * GEO my WP functions.
+ * 
+ * @type {Object}
+ */
 var GMW = {
 
     //GMW options
-    options : gmwSettings,
+    options : gmwVars.settings,
+
+    geocode_provider : gmwVars.geocodingProvider || 'google_maps',
 
     // hooks holder
     hooks : { action: {}, filter: {} },
@@ -49,6 +56,20 @@ var GMW = {
         },
     },
 
+    current_location_fields : [
+		'lat',
+		'lng',
+		'address',
+		'formatted_address',
+		'street',
+		'city',
+		'region_name',
+		'region_code',
+		'postcode',
+		'country_name',
+		'country_code'
+	],
+
     /**
      * Run on page load
      * 
@@ -71,7 +92,7 @@ var GMW = {
         }
 
         // check if we need to autolocate the user on page load
-        if ( navigator.geolocation && GMW.options.general_settings.auto_locate == 1 && GMW.get_cookie( 'gmw_autolocate' ) != 1 ) {
+        if ( navigator.geolocation && GMW.options.general.auto_locate == 1 && GMW.get_cookie( 'gmw_autolocate' ) != 1 ) {
 
             //set cookie to prevent future autolocation for one day
             GMW.set_cookie( 'gmw_autolocate', 1, 1 );
@@ -80,12 +101,17 @@ var GMW = {
             GMW.auto_locator( 'page_locator', GMW.page_locator_success, false );
         }
 
-        // Enable address autocomplete on address fields
-        jQuery( 'input.gmw-address-autocomplete' ).each( function() {
-            if ( jQuery( this ).is( '[id]' ) ) {
-                GMW.address_autocomplete( jQuery( this ).attr( 'id' ), jQuery( this ).data() );
-            }
-        });
+        // dont not enable autocomplete if google is not defined.
+        // This check should be imporved.
+        if ( typeof google !== 'undefined' ) {
+
+	        // Enable address autocomplete on address fields
+	        jQuery( 'input.gmw-address-autocomplete' ).each( function() {
+	            if ( jQuery( this ).is( '[id]' ) ) {
+	                GMW.address_autocomplete( jQuery( this ).attr( 'id' ), jQuery( this ).data() );
+	            }
+	        });
+	    }
 
         if ( typeof jQuery.ui !== 'undefined' && jQuery.ui.draggable ) {
             GMW.draggable_element();
@@ -278,7 +304,6 @@ var GMW = {
      * @param {[type]} exdays [description]
      */
     set_cookie : function( name, value, exdays ) {
-
         var exdate = new Date();
         exdate.setTime( exdate.getTime() + ( exdays * 24 * 60 * 60 * 1000 ) );
         var cooki = escape( encodeURIComponent( value ) ) + ( ( exdays == null ) ? "" : "; expires=" + exdate.toUTCString() );
@@ -292,7 +317,6 @@ var GMW = {
      * @return {[type]}      [description]
      */
     get_cookie : function( name ) {
-
         var results = document.cookie.match( '(^|;) ?' + name + '=([^;]*)(;|$)' );
         return results ? decodeURIComponent( results[2]) : null;
     },
@@ -304,7 +328,8 @@ var GMW = {
      * @return {[type]}      [description]
      */
     delete_cookie : function( name ) {
-    	jQuery.cookie( name, '', { path: '/' } );
+    	//jQuery.cookie( name, '', { path: '/' } );
+    	document.cookie = encodeURIComponent( name ) + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     	//document.cookie = encodeURIComponent( name ) + '=; expires=Thu, 01-Jan-70 00:00:01 GMT;';
         //document.cookie = encodeURIComponent( name ) + "=deleted; expires=" + new Date(0).toUTCString();
     },
@@ -353,41 +378,53 @@ var GMW = {
      */
     geocoder : function( location, success, failed ) {
 
-        // get region from settings
-        countryCode = ( GMW.options.general_settings.country_code != undefined ) ? GMW.options.general_settings.country_code : 'us';
-
-        // get geocoder data
-        // If reverse geocoding 
-        if ( typeof location === 'object' ) {
-
-            data = { 
-                'latLng' : new google.maps.LatLng( location[0], location[1] ), 
-                'region' : countryCode 
-            };
-
-        // otherwise, if geocoding an address
-        } else {
-            data = { 
-                'address' : location, 
-                'region'  : countryCode 
-            };
-        }
-
-        // init google geocoder
-        geocoder = new google.maps.Geocoder();
+    	// get region from settings
+        var region   = typeof GMW.options.general.country_code !== 'undefined' ? GMW.options.general.country_code : 'us',
+        	language = typeof GMW.options.general.language_code !== 'undefined' ? GMW.options.general.language_code : 'en',
+			geocoder = new GMW_Geocoder( GMW.geocode_provider ),
+        	funcName = typeof location === 'object' ? 'reverseGeocode' : 'geocode',
+	        params   = { 
+	            'q' 	   : location,
+	            'region'   : region,
+	            'language' : language
+	        };
 
         // run geocoder
-        geocoder.geocode( data, function( results, status ) {
-
+        geocoder[funcName]( params, function( response, status ) {
             // on success
-            if ( status == google.maps.GeocoderStatus.OK ) {
-
-                return ( success != undefined ) ? success( results ) : GMW.geocoder_success( results );
-
+            if ( status == 'OK' ) {
+                return ( typeof success !== 'undefined' ) ? success( response.result, response ) : GMW.geocoder_success( response.result, response );
             // on failed      
             } else {
+                return ( typeof failed !== 'undefined' ) ? failed( status, response ) : GMW.geocoder_failed( status, response );
+            }
+        });
+    },
 
-                return ( failed != undefined ) ? failed( status ) : GMW.geocoder_failed( status );
+    /**
+     * New function replaces the "geocoder" function above.
+     *
+     * You can feed more data into this function.
+     * 
+     * @type {[type]}
+     */
+    geocode : function( provider, type, options, success, failed ) {
+
+    	var geocoder = new GMW_Geocoder( provider );
+
+    	if ( type == 'reverse' ) {
+    		type = 'reverseGeocode';
+    	}
+
+    	// run geocoder
+        geocoder[type]( options, function( response, status ) {
+
+            // on success
+            if ( status == 'OK' ) {
+                return ( typeof success !== 'undefined' ) ? success( response ) : GMW.geocoder_success( response );
+            // on failed      
+            } else {
+                return ( typeof failed !== 'undefined' ) ? failed( status, response ) : GMW.geocoder_failed( status, response );
             }
         });
     },
@@ -405,7 +442,7 @@ var GMW = {
      * @return {[type]} [description]
      */
     geocoder_failed : function( status ) {
-        alert( "We could not find the address you entered for the following reason: " + status );
+        alert( 'We could not find the address you entered for the following reason: ' + status );
     },
 
     /**
@@ -477,158 +514,27 @@ var GMW = {
      * 
      * @return {[type]}         [description]
      */
-    save_location_fields : function( results ) {
+    save_location_fields : function( result ) {
         
-        // current location form
-        var cl_form   = jQuery( 'form#gmw-current-location-hidden-form' );
-        var latitude  = results[0].geometry.location.lat().toFixed(6);
-        var longitude = results[0].geometry.location.lng().toFixed(6);
-
-        // address fields holder
-        address_fields = {
-            'street_number'     : '',
-            'street_name'       : '',
-            'street'            : '',
-            'premise'           : '',
-            'neighborhood'      : '',
-            'city'              : '',
-            'region_code'       : '',
-            'region_name'       : '',
-            'country'           : '',
-            'postcode'          : '',
-            'country_code'      : '',
-            'country_name'      : '',
-            'address'           : results[0].formatted_address,
-            'formatted_address' : results[0].formatted_address,
-            'lat'               : latitude,
-            'lng'               : longitude
-        };
+        var cl_form = jQuery( 'form#gmw-current-location-hidden-form' );
         
-        // set location cookies
-        GMW.set_cookie( 'gmw_ul_lat', latitude, 7 );
-        cl_form.find( 'input#gmw_cl_lat' ).val( latitude );
+        GMW.do_action( 'gmw_save_location_fields', result );
 
-        GMW.set_cookie( 'gmw_ul_lng', longitude, 7 );
-        cl_form.find( 'input#gmw_cl_lng' ).val( longitude );
+        // save location in current location form and cookies.
+        for ( fieldName in result ) {
+        	
+        	// we only want some fields to save in cookies.
+        	if ( jQuery.inArray( fieldName, GMW.current_location_fields ) !== -1 ) {
+        		GMW.set_cookie( 'gmw_ul_'. fieldName, result[fieldName], 7 );
+        	}
+        
+        	cl_form.find( 'input#gmw_cl_' + fieldName ).val( result[fieldName] );
 
-        GMW.set_cookie( 'gmw_ul_address', results[0].formatted_address, 7 );
-        cl_form.find( 'input#gmw_cl_address' ).val( results[0].formatted_address );
-
-        GMW.set_cookie( 'gmw_ul_formatted_address', results[0].formatted_address, 7 );
-        cl_form.find( 'input#gmw_cl_formatted_address' ).val( results[0].formatted_address );
-
-        address = results[0].address_components;
-
-        // hook custom functions
-        GMW.do_action( 'gmw_save_location_fields', results );
-                
-        //check for each of the address components and if exist save it in a cookie
-        for ( var x in address ) {
-
-            // street number
-            if ( address[x].types == 'street_number' && address[x].long_name != undefined ) {
-                
-                address_fields.street_number = address[x].long_name;
-
-                cl_form.find( 'input#gmw_cl_street_number' ).val( address_fields.street_number );
-            } 
-
-            // street name and street
-            if ( address[x].types == 'route' && address[x].long_name != undefined ) {  
-
-                 //save street name in variable
-                address_fields.street_name = address[x].long_name;
-
-                cl_form.find( 'input#gmw_cl_street_name' ).val( address_fields.street_name );
-
-                //combine the street number and street name into one street field
-                if ( address_fields.street_number != '' ) {
-                    address_fields.street = address_fields.street_number + ' ' + address_fields.street_name;
-                } else {
-                    address_fields.street = address_fields.street_name;
-                }
-
-                // save street field in cookie
-                GMW.set_cookie( 'gmw_ul_street', address_fields.street, 7 );
-
-                cl_form.find( 'input#gmw_cl_street' ).val( address_fields.street );
-            }
-
-            // apt/suit number
-            if ( address[x].types == 'subpremise' && address[x].long_name != undefined ) {
-
-                address_fields.premise = address[x].long_name;
-
-                cl_form.find( 'input#gmw_cl_premise' ).val( address[x].long_name );
-            }
-            
-            // neighborhood
-             if ( address[x].types == 'neighborhood,political' && address[x].long_name != undefined ) {
-
-                address_fields.neighborhood = address[x].long_name;
-
-                cl_form.find( 'input#gmw_cl_neighborhood' ).val( address[x].long_name );
-            }
-            
-            // city
-            if( address[x].types == 'locality,political' && address[x].long_name != undefined ) {
-
-                address_fields.city = address[x].long_name;
-
-                GMW.set_cookie( 'gmw_ul_city', address[x].long_name, 7 );
-
-                cl_form.find( 'input#gmw_cl_city' ).val( address[x].long_name );
-            }
-            
-            // region code and name
-            if ( address[x].types == 'administrative_area_level_1,political' ) {
-
-                address_fields.region_name = address[x].long_name;
-                address_fields.region_code = address[x].short_name;
-
-                GMW.set_cookie( 'gmw_ul_region_name', address[x].long_name, 7 );
-                GMW.set_cookie( 'gmw_ul_region_code', address[x].short_name, 7 );
-
-                cl_form.find( 'input#gmw_cl_region_code' ).val( address[x].short_name );
-                cl_form.find( 'input#gmw_cl_region_name' ).val( address[x].long_name );
-            }  
-            
-            // county
-            if ( address[x].types == 'administrative_area_level_2,political' && address[x].long_name != undefined ) {
-
-                address_fields.county = address[x].long_name;
-
-                cl_form.find( 'input#gmw_cl_county' ).val( address[x].long_name );
-            }
-
-            // postal code
-            if ( address[x].types == 'postal_code' && address[x].long_name != undefined ) {
-
-                address_fields.postcode = address[x].long_name;
-
-                GMW.set_cookie( 'gmw_ul_postcode', address[x].short_name, 7 );
-
-                cl_form.find( 'input#gmw_cl_postcode' ).val( address[x].long_name );
-            }
-            
-            // country code and name
-            if ( address[x].types == 'country,political' ) {
-
-                address_fields.country_name = address[x].long_name;
-                address_fields.country_code = address[x].short_name;
-
-                GMW.set_cookie( 'gmw_ul_country_name', address[x].long_name, 7 );
-                GMW.set_cookie( 'gmw_ul_country_code', address[x].short_name, 7 );
-
-                cl_form.find( 'input#gmw_cl_country_code' ).val( address[x].short_name );
-                cl_form.find( 'input#gmw_cl_country_name' ).val( address[x].long_name );
-            } 
-
-            // hook custom functions
-            GMW.do_action( 'gmw_save_location_field', address[x], results );
+        	// hook custom functions
+            GMW.do_action( 'gmw_save_location_field', result[fieldName], result );
         }
 
-        return address_fields;
+        return result;
     },
 
     /**
@@ -811,22 +717,13 @@ var GMW = {
         form.find( 'input.gmw-paged' ).val( '1' );
    		
    		// modify the address before geocoding takes place.
-   		addressField = GMW.apply_filters( 'gmw_address_pre_geocoding', addressField, GMW );
+   		addressField = GMW.apply_filters( 'gmw_search_form_address_pre_geocoding', addressField, GMW );
 
-        // generate the address value from a single address field
-        //if ( addressField.hasClass( 'gmw-full-address' ) ) {
-            
-        //    address = form.find( 'input.gmw-address' ).val();
-        
-        // otherwise, get from from multiple fields
-        //} else {
-
-            // get the address field/s value.
-            address = addressField.map( function() {
-               return jQuery( this ).val();
-            }).get().join( ' ' );           
-        //}
-
+        // get the address field/s value.
+        address = addressField.map( function() {
+           return jQuery( this ).val();
+        }).get().join( ' ' );           
+  
         // if address field is empty.
         if ( ! jQuery.trim( address ).length ) {
 
@@ -861,7 +758,7 @@ var GMW = {
         }
 
         // When Client-side geocoder is enabled
-        if ( typeof clientSideGeocoder == 'undefined' || clientSideGeocoder == 1 ) {
+        //if ( typeof clientSideGeocoder == 'undefined' || clientSideGeocoder == 1 ) {
         	
             // check if hidden coords exists. if so no need to geocode the address again and we can submit the form with the information we already have.
             if ( form.find( 'input.gmw-lat' ).val() != '' && form.find( 'input.gmw-lng' ).val() != '' ) {            
@@ -876,13 +773,13 @@ var GMW = {
             GMW.geocoder( address, GMW.form_geocoder_success, GMW.geocoder_failed );
 
         // Otherwise, no geocoding needed. Submit the form!
-        } else {    
+        /*} else {    
 
             GMW.vars.form_submission.submit = true;
             GMW.vars.form_submission.form.submit(); 
 
             return false;    
-        }
+        }*/
     },
 
     /**
@@ -894,24 +791,25 @@ var GMW = {
      * 
      * @return {[type]}         [description]
      */
-    form_geocoder_success : function( results ) {
+    form_geocoder_success : function( result ) {
 
         var form = GMW.vars.form_submission.form;
-        var ac   = results[0].address_components;
+        //var ac   = results[0].address_components;
 
         // if only country entered set its value in hidden fields
-        if ( ac.length == 1 && ac[0].types[0] == 'country' ) {
-            form.find( '.gmw-country' ).val( ac[0].short_name ).prop( 'disabled', false );
+        if ( result.level == 'country' ) {
+            
+            form.find( '.gmw-country' ).val( result.country_code ).prop( 'disabled', false );
 
         // otherwise, if only state entered.
-        } else if ( ac.length == 2 && ac[0].types[0] == 'administrative_area_level_1' ) {
-            form.find( '.gmw-state' ).val( ac[0].long_name ).prop( 'disabled', false );
-            form.find( '.gmw-country' ).val( ac[1].short_name ).prop( 'disabled', false );
-        }
+        } else if ( result.level == 'region' ) {
+            form.find( '.gmw-state' ).val( result.region_name ).prop( 'disabled', false );
+            form.find( '.gmw-country' ).val( result.country_code ).prop( 'disabled', false );
+        } 
 
         // add coordinates to hidden fields
-        form.find( '.gmw-lat' ).val( results[0].geometry.location.lat().toFixed(6) );
-        form.find( '.gmw-lng' ).val( results[0].geometry.location.lng().toFixed(6) );
+        form.find( '.gmw-lat' ).val( parseFloat( result.lat ).toFixed(6) );
+        form.find( '.gmw-lng' ).val( parseFloat( result.lng ).toFixed(6) );
 
         // submit the form
         setTimeout(function() {
@@ -991,7 +889,7 @@ var GMW = {
      * 
      * @return {[type]}                [description]
      */
-    locator_button_success : function( address_fields, results ) {
+    locator_button_success : function( result ) {
 
         var form         = GMW.vars.locator_button.form;
         var addressField = form.find( 'input.gmw-address' );
@@ -1000,21 +898,21 @@ var GMW = {
         jQuery( 'form.gmw-form' ).find( 'input[type="text"], .gmw-submit' ).removeAttr( 'disabled' );
 
         // add coords value to hidden fields
-        form.find( 'input.gmw-lat' ).val( results[0].geometry.location.lat().toFixed(6) );
-        form.find( 'input.gmw-lng' ).val( results[0].geometry.location.lng().toFixed(6) );
+        form.find( 'input.gmw-lat' ).val( parseFloat( result.lat ).toFixed(6) );
+        form.find( 'input.gmw-lng' ).val( parseFloat( result.lng ).toFixed(6) );
 
         //dynamically fill-out the address fields of the form
         if ( addressField.hasClass( 'gmw-full-address' ) ) {
             
-            addressField.val( address_fields.formatted_address );
+            addressField.val( result.formatted_address );
         
         } else {        
 
-            form.find( '.gmw-address.street' ).val( address_fields.street );
-            form.find( '.gmw-address.city' ).val( address_fields.city );
-            form.find( '.gmw-address.state' ).val( address_fields.region_name );
-            form.find( '.gmw-address.zipcode' ).val( address_fields.postcode );
-            form.find( '.gmw-address.country' ).val( address_fields.country_code );
+            form.find( '.gmw-address.street' ).val( result.street );
+            form.find( '.gmw-address.city' ).val( result.city );
+            form.find( '.gmw-address.state' ).val( result.region_name );
+            form.find( '.gmw-address.zipcode' ).val( result.postcode );
+            form.find( '.gmw-address.country' ).val( result.country_code );
         }
        
         // if form locator set to auto submit form. 
@@ -1229,13 +1127,32 @@ var GMW = {
                 target.addClass( 'gmw-toggle-element' ).css( data.animation, options[data.animation] );
             }
         });
-    }
+    },
+
+    /**
+     * Get object value using string as key.
+     * 
+     * @param  {[type]} result [description]
+     * @param  {[type]} field  [description]
+     * @return {[type]}        [description]
+     */
+    get_field_by_string : function( result, field ) {
+
+	    field = field.replace( /\[(\w+)\]/g, '.$1' );
+	    field = field.replace( /^\./, '' );           
+	    var a = field.split('.');
+	    
+	    for ( var i = 0, n = a.length; i < n; ++i ) {
+	        
+	        var k = a[i];
+	        
+	        if ( k in result ) {
+	            result = result[k];
+	        } else {
+	            return '';
+	        }
+	    }
+
+	    return result !== 'undefined' ? result : '';
+	},
 };
-
-jQuery( document ).ready( function( $ ) {
-
-    // load this part in front-end only
-    if ( gmwIsAdmin == false ) {
-        GMW.init(); 
-    }
-});
