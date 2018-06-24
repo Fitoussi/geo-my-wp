@@ -934,6 +934,10 @@ body.wp-admin.admin-bar #gmw-edit-form-page #form-wrapper #gmw-form-cover {
 	//margin-bottom: 5px;
 }
 
+.gmw-tab-panel table tbody tr.hidden {
+	display: none;
+}
+
 .gmw-tab-panel table tbody tr td.gmw-form-feature-settings {
 	border-bottom: 1px solid #e7e7e7;
 	padding: 20px;
