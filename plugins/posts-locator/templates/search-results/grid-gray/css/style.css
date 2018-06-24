@@ -8,20 +8,9 @@ div.gmw-results-wrapper.grid-gray select {
 	max-width: 150px;
 }
 
-div.gmw-results-wrapper.grid-gray .pagination-per-page-wrapper {
-	clear: both;
-	font-size: 12px;
-	background: #F9F9F9;
-	padding: 7px 15px;
-	min-height: 25px;
-	border-bottom: 1px solid #ddd;
-	margin-bottom: 1px;
-	margin-bottom:3px;
-}
+div.gmw-results-wrapper.grid-gray .pagination-per-page-wrapper {}
 
-div.gmw-results-wrapper.grid-gray .pagination-per-page-wrapper.bottom {
-	border-top: 1px solid #ddd;
-}
+div.gmw-results-wrapper.grid-gray .pagination-per-page-wrapper.bottom {}
 
 /* pagination */
 
@@ -348,11 +337,6 @@ div.gmw-results-wrapper.grid-gray div.gmw-no-results-wrapper p {
 		float:none;
 		padding-top:10px
 	}
-	
-	div.gmw-results-wrapper.grid-gray .results-count-wrapper {
-		text-align:center;
-	}
-	
 }
 
 @media (max-width:520px) {

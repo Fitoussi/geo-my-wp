@@ -9,24 +9,12 @@ div.gmw-results-wrapper.gray select {
 }
 
 div.gmw-results-wrapper.gray .pagination-per-page-wrapper {
-	clear: both;
-	font-size: 12px;
-	background: #F9F9F9;
-	padding: 7px 15px;
-	min-height: 25px;
-	border-bottom: 1px solid #ddd;
-	margin-bottom: 1px;
-	margin-bottom:3px;
 }
 
 /* pagination */
 
 div.gmw-results-wrapper.gray ul.gmw-pagination {
 	float: right;
-	text-align: center;
-	margin:0px;
-	list-style:none;
-	padding:0px;
 }
 
 div.gmw-results-wrapper.gray select.gmw-orderby-dropdown {

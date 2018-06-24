@@ -37,20 +37,9 @@
 }
 
 /* pagination */
-.gmw-pt-pagination-wrapper {
-	font-size: 12px;
-	background: #F9F9F9;
-	padding: 8px 0px;
-	display: inline-block;
-	width:100%;
-	min-height: 25px;
-	margin: 3px 0px
-}
+.gmw-pt-pagination-wrapper {}
 
-.gmw-pt-bottom-pagination-wrapper {
-	border-bottom:1px solid #ddd;
-	border-top:1px solid #ddd;
-}
+.gmw-pt-bottom-pagination-wrapper {}
 
 ul.gmw-pagination {
 	float: right;

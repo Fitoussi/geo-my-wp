@@ -18,24 +18,11 @@ div.gmw-results-wrapper.purple select {
 	max-width: 150px;
 }
 
-div.gmw-results-wrapper.purple .pagination-per-page-wrapper {
-	clear: both;
-	font-size: 12px;
-	background: #F9F9F9;
-	padding: 7px 15px;
-	min-height: 25px;
-	border-bottom: 1px solid #ddd;
-	margin-bottom: 1px;
-	margin-bottom:3px;
-}
+div.gmw-results-wrapper.purple .pagination-per-page-wrapper {}
 
 /* pagination */
 div.gmw-results-wrapper.purple ul.gmw-pagination {
 	float: right;
-	text-align: center;
-	margin:0px;
-	list-style:none;
-	padding:0px;
 }
 
 div.gmw-results-wrapper.purple select.gmw-orderby-dropdown {

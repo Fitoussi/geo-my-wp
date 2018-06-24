@@ -4,65 +4,14 @@ div.gmw-results-wrapper.grid-gray select.gmw-fl-per-page-dropdown {
 	width: initial;
 }
 
-div.gmw-results-wrapper.grid-gray .results-count-wrapper {
-	background: #fdfdfd;
-	padding: 8px 15px;
-	border-bottom: 1px solid #ddd;
-	border-top: 1px solid #ddd;
-}
-
-div.gmw-results-wrapper.grid-gray .results-count-wrapper p {
-	margin: 0px;
-	font-size: 13px;
-	color: #444;
-}
-
 /* pagination */
 
-div.gmw-results-wrapper.grid-gray .pagination-per-page-wrapper {
-	clear: both;
-	font-size: 12px;
-	padding: 5px 15px;
-	min-height: 25px;
-	border-bottom: 1px solid #ddd;
-	margin-bottom: 3px;
-	display: inline-block;
-	width: 100%;
-	-webkit-box-sizing: border-box; 
-	-moz-box-sizing: border-box;    
-	box-sizing: border-box;
-	padding: 10px 0px;
-	background: #f8f8f8;
-	padding: 10px;
-}
+div.gmw-results-wrapper.grid-gray .pagination-per-page-wrapper {}
 
-div.gmw-results-wrapper.grid-gray .pagination-per-page-wrapper.bottom {
-	border-top: 1px solid #ddd;
-}
+div.gmw-results-wrapper.grid-gray .pagination-per-page-wrapper.bottom {}
 
-div.gmw-results-wrapper.grid-gray .pagination-wrapper {
-	float: right;
-}
-	
 div.gmw-results-wrapper.grid-gray ul.gmw-pagination {
-	margin: 0px;
-}
-
-div.gmw-results-wrapper.grid-gray ul.gmw-pagination li  {
-	margin: 0 0 0 3px;
-}
-
-div.gmw-results-wrapper.grid-gray ul.gmw-pagination li a, 
-div.gmw-results-wrapper.grid-gray ul.gmw-pagination li span {
-	background-color: #fff;
-	color: #1B5A64;
-}
-
-div.gmw-results-wrapper.grid-gray ul.gmw-pagination li a:hover, 
-div.gmw-results-wrapper.grid-gray ul.gmw-pagination li span,
-div.gmw-results-wrapper.grid-gray ul.gmw-pagination li span.current {
-	background-color: rgba(168, 242, 211, 0.76);
-	border: 1px solid #ddd;
+	float: right;
 }
 
 /* list of results */
@@ -344,12 +293,7 @@ div.gmw-results-wrapper.grid-gray ul.members-list-wrapper li.single-member .addr
 	     width: 100%;
 	     max-width: 100%;
 	}
-	
-	div.gmw-results-wrapper.grid-gray .pagination-wrapper {
-		float: none;
-		margin-top: 10px;	
-	}
-	
+		
 	div.gmw-results-wrapper.grid-gray ul.gmw-pagination {
 		float: none;
 		width: 100%;
@@ -362,12 +306,7 @@ div.gmw-results-wrapper.grid-gray ul.members-list-wrapper li.single-member .addr
 		width: 100%;
 		float: none;
 		padding-top: 10px
-	}
-	
-	div.gmw-results-wrapper.grid-gray .results-count-wrapper {
-		text-align: center;
-	}
-	
+	}	
 }
 
 @media (max-width: 520px) {

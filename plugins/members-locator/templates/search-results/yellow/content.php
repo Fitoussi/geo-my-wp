@@ -32,17 +32,14 @@
 
 			<?php do_action( 'gmw_search_results_start', $gmw ); ?>
 			
-			<div class="results-count-wrapper">
+			<div class="gmw-results-message results-count-wrapper">
 				<span><?php gmw_results_message( $gmw ); ?></span>
 				<?php do_action( 'gmw_search_results_after_results_message', $gmw ); ?>
 			</div>
 						
 			<div class="pagination-per-page-wrapper top">
 				<?php gmw_per_page( $gmw ); ?>
-			
-				<div class="pagination-wrapper">
-					<?php gmw_pagination( $gmw ); ?>
-				</div>
+				<?php gmw_pagination( $gmw ); ?>
 			</div>
 			
 			<?php gmw_results_map( $gmw ); ?>

@@ -40,7 +40,7 @@
 			
 			<?php do_action( 'gmw_search_results_before_top_pagination', $gmw ); ?>
 			
-			<div class="gmw-pt-pagination-wrapper gmw-pt-top-pagination-wrapper">
+			<div class="pagination-per-page-wrapper top gmw-pt-pagination-wrapper gmw-pt-top-pagination-wrapper">
 				<?php gmw_per_page( $gmw ); ?>
 				<?php gmw_pagination( $gmw ); ?>
 			</div> 
@@ -121,7 +121,7 @@
 			
 			<?php do_action( 'gmw_search_results_before_bottom_pagination', $gmw ); ?>
 			
-		    <div class="gmw-pt-pagination-wrapper gmw-pt-bottom-pagination-wrapper">  
+		    <div class="pagination-per-page-wrapper bottom gmw-pt-pagination-wrapper gmw-pt-bottom-pagination-wrapper">  
 		        <?php gmw_per_page( $gmw ); ?>
 		        <?php gmw_pagination( $gmw ); ?>
 		    </div> 

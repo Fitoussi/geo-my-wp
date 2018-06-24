@@ -8,58 +8,14 @@ div.gmw-results-wrapper.yellow select {
 	max-width: 150px;
 }
 
-div.gmw-results-wrapper.yellow .results-count-wrapper {
-	background: #fdfdfd;
-	padding: 8px 15px;
-	border-bottom: 1px solid #ddd;
-	border-top: 1px solid #ddd;
-}
-
-div.gmw-results-wrapper.yellow .results-count-wrapper p {
-	margin: 0px;
-	font-size: 13px;
-	color: #444;
-}
-
-div.gmw-results-wrapper.yellow .pagination-per-page-wrapper {
-	clear: both;
-	font-size: 12px;
-	background: #F9F9F9;
-	padding: 5px 15px;
-	min-height: 25px;
-	border-bottom: 1px solid #ddd;
-	margin-bottom: 1px;
-	margin-bottom: 3px;
-}
-
-div.gmw-results-wrapper.yellow .pagination-wrapper {
-	float: right;
-	text-align: center;	
-	line-height: 30px;
-}
+div.gmw-results-wrapper.yellow .pagination-per-page-wrapper {}
 
 /* pagination */
 
 div.gmw-results-wrapper.yellow ul.gmw-pagination {
 	float: right;
-	margin: 0px;
 }
-
-div.gmw-results-wrapper.yellow ul.gmw-pagination li {
-	margin: 0 1.5px;
-}
-
-div.gmw-results-wrapper.yellow ul.gmw-pagination li a, 
-div.gmw-results-wrapper.yellow ul.gmw-pagination li span {
-	background-color: lightyellow;	
-}
-
-div.gmw-results-wrapper.yellow ul.gmw-pagination li a:hover, 
-div.gmw-results-wrapper.yellow	 ul.gmw-pagination li span {
-	background: #E8E979;
-	border: 1px solid #ddd;
-}
-
+	
 /* members list */
 div.gmw-results-wrapper.yellow ul.members-list-wrapper {
 	background: lightyellow;
@@ -168,14 +124,7 @@ div.gmw-results-wrapper.yellow ul.members-list-wrapper li .location-wrapper {
 		width: 100%;
 		max-width: 100%;
 	}
-	
-	div.gmw-results-wrapper.yellow .pagination-wrapper {
-		float: none;
-		width: 100%;
-		margin-top: 10px;
-		display: inline-block;
-	}
-	
+		
 	div.gmw-results-wrapper.yellow ul.members-list-wrapper li .info-left-wrapper, div.gmw-results-wrapper.yellow ul.members-list-wrapper li .info-right-wrapper {
 		width: 100%;
 		margin-bottom: 10px;
