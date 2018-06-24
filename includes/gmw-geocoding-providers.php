@@ -33,7 +33,7 @@ class GMW_Google_Maps_Geocoder extends GMW_Geocoder {
 
 		$params = array(
 			$location  => $this->location,
-			'region'   => $options['regions'],
+			'region'   => $options['region'],
 			'language' => $options['language'],
 			'key'      => gmw_get_option( 'api_providers', 'google_maps_server_api_key', '' )
 		);
@@ -51,7 +51,6 @@ class GMW_Google_Maps_Geocoder extends GMW_Geocoder {
 		$china = gmw_get_option( 'api_providers', 'google_maps_api_china', '' );
 		$url   = empty( $china ) ? $this->geocode_url : 'https://maps.google.cn/maps/api/geocode/json';
 
-		echo $url;
 		return apply_filters(
 			'gmw_google_maps_api_geocoder_url', array(
 				'url_base' => $url . '?',
