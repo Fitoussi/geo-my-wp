@@ -151,7 +151,9 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 				}
 				add_filter( 'gmw_single_location_widget_objects', 'gmw_fl_single_location_widget_object', 10 );
 
-			} else {
+			}
+
+			if ( ! IS_ADMIN || defined( 'DOING_AJAX' ) ) {
 				include( 'includes/class-gmw-single-member-location.php' );
 			}
 		}
