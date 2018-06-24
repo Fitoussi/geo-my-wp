@@ -1,25 +1,11 @@
-jQuery( document ).ready( function( $ ) {
+/**
+ * Current location extension.
+ * 
+ * @type {Object}.
+ */
+if ( jQuery( '.gmw-current-location-wrapper' ).length ) {
 
-	/**
-	 * Current location add-on
-	 * 
-	 * @type {Object}
-	 */
 	var GMW_Current_Location = {
-
-		location_fields : [
-			'lat',
-			'lng',
-			'address',
-			'formatted_address',
-			'street',
-			'city',
-			'region_name',
-			'region_code',
-			'postcode',
-			'country_name',
-			'country_code'
-		],
 
 	    // alert messages
 	    messages : {
@@ -144,9 +130,11 @@ jQuery( document ).ready( function( $ ) {
 	    delete_location : function( element ) {
 
 	    	// delete current location cookies
-	    	jQuery.each( GMW_Current_Location.location_fields, function( index, field ) {
+	    	jQuery.each( GMW.current_location_fields, function( index, field ) {
 	    		GMW.delete_cookie( 'gmw_ul_' + field );
 	    	});
+
+	    	GMW.delete_cookie( 'gmw_autolocate' );
 
 	    	jQuery( '.gmw-cl-address .address-holder' ).html( '' );
 	    	jQuery( '.gmw-cl-element.gmw-cl-address-wrapper' ).slideUp();
@@ -164,7 +152,7 @@ jQuery( document ).ready( function( $ ) {
 
 	        GMW_Current_Location.ajax = jQuery.ajax({
 	            type     : 'POST',
-	            url      : gmwAjaxUrl,
+	            url      : gmwVars.ajaxUrl,
 	            dataType : 'json',
 	            data     : {
 	                action      : 'gmw_update_current_location',
@@ -174,15 +162,16 @@ jQuery( document ).ready( function( $ ) {
 
 	            // on save success
 	            success : function( response ) {
-	     
+	     	
 	            	// look for map object and if exists update it based on the new current location
-	               if ( typeof GMW_Maps != 'undefined' && typeof GMW_Maps[GMW_Current_Location.object_id] != 'undefined' ) {
+	               	if ( typeof GMW_Maps != 'undefined' && typeof GMW_Maps[GMW_Current_Location.object_id] != 'undefined' ) {
 
-	                	var map_id 		 = GMW_Current_Location.object_id;
-	                	var new_position = new google.maps.LatLng( response.lat, response.lng );
+	               		var mapId        = GMW_Current_Location.object_id;
+	               		var gmwMap       = GMW_Maps[mapId];
+	                	var new_position = gmwMap.latLng( response.lat, response.lng );
 	                	
-	                	GMW_Maps[map_id].user_marker.setPosition( new_position );
- 						GMW_Maps[map_id].map.panTo( new_position );
+	                	gmwMap.setMarkerPosition( gmwMap.user_marker, new_position, gmwMap );
+						gmwMap.map.panTo( new_position );
 	                }
 
 	                newAddress = jQuery( '#gmw-cl-address-input-' + GMW_Current_Location.object_id ).val();
@@ -286,6 +275,10 @@ jQuery( document ).ready( function( $ ) {
 	        }, 3000 );                       
 	    },
 	};
+}
 
-   GMW_Current_Location.init(); 
+jQuery( document ).ready( function( $ ) {
+	if ( $( '.gmw-current-location-wrapper' ).length ) {
+   		GMW_Current_Location.init();
+   	}
 });
