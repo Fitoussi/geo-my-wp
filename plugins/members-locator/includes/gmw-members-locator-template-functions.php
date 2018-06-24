@@ -308,7 +308,7 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 					if ( $posts ) {
 						foreach ( $posts->posts as $post ) {
 							$selected = ( $post->ID == $value ) ? "selected='selected'" : '';
-							echo '<option ' . $selected . ' value="' . $post->ID . '">' . $post->post_title . '</option>';
+							$output .= '<option ' . $selected . ' value="' . $post->ID . '">' . $post->post_title . '</option>';
 						}
 					}
 
