@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Google Maps Geocoder ( OpenStreetMaps ).
  *
  * @since 3.1.
- * 
+ *
  * @author Eyal Fitoussi.
  */
 class GMW_Google_Maps_Geocoder extends GMW_Geocoder {
@@ -18,35 +18,35 @@ class GMW_Google_Maps_Geocoder extends GMW_Geocoder {
 
 	// API geocoder URL
 	public $geocode_url = 'https://maps.googleapis.com/maps/api/geocode/json';
- 
- 	// API reverse geocoding URL.
+
+	// API reverse geocoding URL.
 	public $reverse_geocode_url = 'https://maps.googleapis.com/maps/api/geocode/json';
 
 	/**
 	 * Get endpoint parameters.
-	 * 
+	 *
 	 * @return [type] [description]
 	 */
 	public function get_endpoint_params( $options ) {
 
-		$location = ( $this->type == 'reverse_geocode' ) ? 'latlng' : 'address';
+		$location = ( 'reverse_geocode' == $this->type ) ? 'latlng' : 'address';
 
 		$params = array(
 			$location  => $this->location,
 			'region'   => $options['region'],
 			'language' => $options['language'],
-			'key'      => gmw_get_option( 'api_providers', 'google_maps_server_api_key', '' )
+			'key'      => gmw_get_option( 'api_providers', 'google_maps_server_api_key', '' ),
 		);
-		
+
 		return $params;
 	}
 
 	/**
 	 * Get endpoint URL.
-	 * 
+	 *
 	 * @return [type] [description]
 	 */
-	public function get_endpoint_url( ) {
+	public function get_endpoint_url() {
 
 		$china = gmw_get_option( 'api_providers', 'google_maps_api_china', '' );
 		$url   = empty( $china ) ? $this->geocode_url : 'https://maps.google.cn/maps/api/geocode/json';
@@ -55,7 +55,7 @@ class GMW_Google_Maps_Geocoder extends GMW_Geocoder {
 			'gmw_google_maps_api_geocoder_url', array(
 				'url_base' => $url . '?',
 				'url_data' => http_build_query(
-					apply_filters( 'gmw_google_maps_api_geocoder_args', $this->params ), 
+					apply_filters( 'gmw_google_maps_api_geocoder_args', $this->params ),
 					'', '&amp;'
 				),
 			)
@@ -64,7 +64,7 @@ class GMW_Google_Maps_Geocoder extends GMW_Geocoder {
 
 	/**
 	 * Get result data.
-	 * 
+	 *
 	 * @param  [type] $geocoded_data [description]
 	 * @return [type]                [description]
 	 */
@@ -74,21 +74,21 @@ class GMW_Google_Maps_Geocoder extends GMW_Geocoder {
 		if ( 'OK' != $geocoded_data->status ) {
 			return array(
 				'geocoded' => false,
-				'result'   => $geocoded_data->status
+				'result'   => $geocoded_data->status,
 			);
-		
-		// Otherwise, return location data.
+
+			// Otherwise, return location data.
 		} else {
 			return array(
 				'geocoded' => true,
-				'result'   => $this->get_location_fields( $geocoded_data, $this->location_fields )
+				'result'   => $this->get_location_fields( $geocoded_data, $this->location_fields ),
 			);
 		}
-	}	
+	}
 
 	/**
 	 * Collect location fields.
-	 * 
+	 *
 	 * @param  array  $geocoded_data [description]
 	 * @param  array  $location      [description]
 	 * @return [type]                [description]
@@ -178,7 +178,7 @@ class GMW_Google_Maps_Geocoder extends GMW_Geocoder {
 
 	/**
 	 * Return error message.
-	 * 
+	 *
 	 * @param  [type] $status [description]
 	 * @return [type]         [description]
 	 */
@@ -212,7 +212,7 @@ class GMW_Google_Maps_Geocoder extends GMW_Geocoder {
  * Nominatim Geocoder ( OpenStreetMaps ).
  *
  * @since 3.1.
- * 
+ *
  * @author Eyal Fitoussi.
  */
 class GMW_Nominatim_Geocoder extends GMW_Geocoder {
@@ -228,27 +228,27 @@ class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 
 	/**
 	 * Get endpoint parameters.
-	 * 
+	 *
 	 * @return [type] [description]
 	 */
 	public function get_endpoint_params( $options ) {
 
 		$params = array(
-			'format'		  => 'json',
-			'email'    		  => gmw_get_option( 'api_providers', 'nominatim_email', '' ),
-			'region'   		  => $options['region'],
+			'format'          => 'json',
+			'email'           => gmw_get_option( 'api_providers', 'nominatim_email', '' ),
+			'region'          => $options['region'],
 			'accept-language' => $options['language'],
 			'addressdetails'  => 1,
-			'zoom'			  => 18,
-			'limit'			  => 10
+			'zoom'            => 18,
+			'limit'           => 10,
 		);
 
-		if ( $this->type == 'reverse_geocode' ) {
-			
+		if ( 'reverse_geocode' == $this->type ) {
+
 			$coords        = explode( ',', $this->location );
 			$params['lat'] = $coords[0];
 			$params['lon'] = $coords[1];
-		
+
 		} else {
 			$params['q'] = urldecode( $this->location );
 		}
@@ -258,7 +258,7 @@ class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 
 	/**
 	 * Return geocoding data.
-	 * 
+	 *
 	 * @param  [type] $geocoded_data [description]
 	 * @return [type]                [description]
 	 */
@@ -267,19 +267,19 @@ class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 		if ( ! empty( $geocoded_data->error ) ) {
 			return array(
 				'geocoded' => false,
-				'result'   => $geocoded_data->error
+				'result'   => $geocoded_data->error,
 			);
 		} else {
 			return array(
 				'geocoded' => true,
-				'result'   => $this->get_location_fields( $geocoded_data, $this->location_fields )
+				'result'   => $this->get_location_fields( $geocoded_data, $this->location_fields ),
 			);
 		}
 	}
 
 	/**
 	 * Look for location based on country code.
-	 * 
+	 *
 	 * @param  [type] $geocoded_data [description]
 	 * @return [type]                [description]
 	 */
@@ -292,7 +292,7 @@ class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 
 			// Look for results based on country code, and abort once found.
 			if ( ! empty( $location_details->address->country_code ) && $this->params['region'] == $location_details->address->country_code ) {
-				
+
 				$location = $location_details;
 
 				break;
@@ -310,7 +310,7 @@ class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 
 	/**
 	 * Collect Location Fields.
-	 * 
+	 *
 	 * @param  array  $geocoded_data [description]
 	 * @param  array  $location      [description]
 	 * @return [type]                [description]
@@ -319,38 +319,38 @@ class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 
 		$location_data = array();
 
-		// If multiple location returned, we will look for the 
+		// If multiple location returned, we will look for the
 		// result with the default country code.
 		if ( is_array( $geocoded_data ) ) {
 
 			if ( count( $geocoded_data ) == 1 ) {
-				$geocoded_data = $geocoded_data[0];	
+				$geocoded_data = $geocoded_data[0];
 			} else {
 				$geocoded_data = $this->get_location_by_region( $geocoded_data );
-			}	
+			}
 		}
-		
-		foreach( $geocoded_data as $field_name => $field_value ) {
+
+		foreach ( $geocoded_data as $field_name => $field_value ) {
 
 			if ( 'display_name' == $field_name ) {
 				$location['formatted_address'] = sanitize_text_field( $field_value );
-			} 
+			}
 
 			if ( 'lat' == $field_name ) {
 				$location['lat']      = sanitize_text_field( $field_value );
 				$location['latitude'] = $location['lat'];
-			} 
+			}
 
 			if ( 'lon' == $field_name ) {
 				$location['lng']       = sanitize_text_field( $field_value );
 				$location['longitude'] = $location['lng'];
-			} 
+			}
 
 			if ( 'place_id' == $field_name ) {
 				$location['place_id'] = sanitize_text_field( $field_value );
-			} 
+			}
 		}
-	
+
 		$address_componenets = $geocoded_data->address;
 
 		// loop through address fields and collect data
@@ -358,12 +358,12 @@ class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 
 			if ( 'house_number' == $field_name ) {
 				$location['street_number'] = sanitize_text_field( $field_value );
-			} 
+			}
 
 			if ( 'road' == $field_name ) {
 				$location['street_name'] = sanitize_text_field( $field_value );
-				$location['street'] = $location['street_number'] . ' ' . $location['street_name'];
-			} 
+				$location['street']      = $location['street_number'] . ' ' . $location['street_name'];
+			}
 
 			if ( 'city' == $field_name ) {
 				$location['city'] = sanitize_text_field( $field_value );
@@ -371,7 +371,7 @@ class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 
 			if ( 'county' == $field_name ) {
 				$location['county'] = sanitize_text_field( $field_value );
-			} 
+			}
 
 			if ( 'state' == $field_name ) {
 				$location['region_name'] = sanitize_text_field( $field_value );
@@ -387,7 +387,7 @@ class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 
 			if ( 'country_code' == $field_name ) {
 				$location['country_code'] = sanitize_text_field( $field_value );
-			}	
+			}
 		}
 
 		// Look for City in different address field.
@@ -395,12 +395,12 @@ class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 
 			$location['city'] = $address_componenets->city;
 
-		} else if ( isset( $address_componenets->town ) ) {
+		} elseif ( isset( $address_componenets->town ) ) {
 
 			$location['town'] = $address_componenets->town;
 
-		} else if ( isset( $address_componenets->suburb ) ) {
-	
+		} elseif ( isset( $address_componenets->suburb ) ) {
+
 			$location['city'] = $address_componenets->suburbs;
 		}
 
