@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @version 1.0
  * @author Eyal Fitoussi
  */
-class GMW_Current_location {
+class GMW_Current_Location {
 
 	/**
 	 * @since 1.0
@@ -31,8 +31,8 @@ class GMW_Current_location {
 		'guest_greeting'            => 'Hello, guest!',
 		'map_height'                => '200px',
 		'map_width'                 => '200px',
-		'map_icon_url'				=> '',
-		'map_icon_size'				=> '',
+		'map_icon_url'              => '',
+		'map_icon_size'             => '',
 		'map_type'                  => 'ROADMAP',
 		'zoom_level'                => 8,
 		'scrollwheel_zoom'          => 1,
@@ -141,7 +141,7 @@ class GMW_Current_location {
 			if ( ! empty( $this->args['address_fields'] ) ) {
 
 				// if showing full address
-				if ( $this->args['address_fields'] == 'address' ) {
+				if ( 'address' == $this->args['address_fields'] ) {
 
 					$this->user_position['address'] = ! empty( $this->current_location->formatted_address ) ? $this->current_location->formatted_address : '';
 
