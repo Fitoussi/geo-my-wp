@@ -131,6 +131,8 @@ span.gmw-resize-map-toggle.gmw-icon-resize-small {
 	margin: 4px 2px 2px 4px;
 	max-height: 50px;
 	height: 100%;
+	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;    
 	box-sizing: border-box;
 }
 
@@ -279,6 +281,8 @@ ul.gmw-geocoder-suggested-results li {
 
 	span.select2-selection ul li.select2-search--inline {
 		margin: 0;
+		-webkit-box-sizing: border-box; 
+		-moz-box-sizing: border-box;    
 		box-sizing: border-box;
 	}
 
@@ -453,6 +457,8 @@ ul.gmw-geocoder-suggested-results li {
 		box-shadow: inset 0 1px 1px #f0f0f0;
 		border-radius: 4px;
 		border: 1px solid #D3D3D3;
+		-webkit-box-sizing: border-box; 
+		-moz-box-sizing: border-box;    
 		box-sizing: border-box;
 		max-width: 100%;
 	}
@@ -650,16 +656,46 @@ ul.gmw-geocoder-suggested-results li {
 	select.gmw-orderby-dropdown {
 		float: right;
 	}
-	
+
+	div.gmw-results-wrapper .pagination-per-page-wrapper,
+	div.gmw-results-wrapper .gmw-pt-pagination-wrapper {
+		clear: both;
+		font-size: 12px;
+		background: #F9F9F9;
+		padding: 0 15px;
+		-webkit-box-sizing: border-box; 
+		-moz-box-sizing: border-box;    
+		box-sizing: border-box;
+		display: table;
+    	width: 100%;
+		min-height: 0;
+		margin: 0;
+	}
+
+	div.gmw-results-wrapper.gray .pagination-per-page-wrapper,
+	div.gmw-results-wrapper.grid-gray .pagination-per-page-wrapper,
+	div.gmw-results-wrapper.yellow .pagination-per-page-wrapper,
+	div.gmw-results-wrapper.default .pagination-per-page-wrapper,
+	div.gmw-results-wrapper.blue .pagination-per-page-wrapper,
+	div.gmw-results-wrapper.red .pagination-per-page-wrapper {
+		padding: 0 15px !important;
+		min-height: 0 !important;
+		border-bottom: 0 !important;
+		margin-bottom: 0px !important;
+	}
+
 	/********** Results count ***************/
 
 	div.gmw-results-message {
 		background: #fdfdfd;
-		padding: 7px 15px;
+		padding: 4px 15px 6px;
+    	line-height: 24px;
+    	border-top: 1px solid #ddd;
 		border-bottom: 1px solid #ddd;
-		border-top: 1px solid #ddd;
 		display: inline-block;
 		width: 100%;
+		-webkit-box-sizing: border-box; 
+		-moz-box-sizing: border-box;    
 		box-sizing: border-box;
 	}
 
@@ -671,11 +707,21 @@ ul.gmw-geocoder-suggested-results li {
 
 	/********** Pagination Start **************/
 
-	.gmw-results-wrapper .gmw-pagination {
+	.gmw-results-wrapper ul.gmw-pagination {
 		text-align: center;
-		margin: 5px 0px;
+		margin: 10px 0px;
 		list-style: none;
 		padding: 0px;
+	}
+	
+	div.gmw-results-wrapper.grid-gray ul.gmw-pagination,
+	div.gmw-results-wrapper.gray ul.gmw-pagination,
+	div.gmw-results-wrapper.purple ul.gmw-pagination,
+	div.gmw-results-wrapper.yellow ul.gmw-pagination,
+	div.gmw-results-wrapper.default ul.gmw-pagination,
+	div.gmw-results-wrapper.red ul.gmw-pagination,
+	div.gmw-results-wrapper.blue ul.gmw-pagination {
+		margin: 10px 0px !important;
 	}
 
 	.gmw-results-wrapper .gmw-pagination li {
@@ -744,6 +790,8 @@ ul.gmw-geocoder-suggested-results li {
 		margin: 0px;
 		padding: 0px;
 		line-height: 0px;
+		-webkit-box-sizing: border-box; 
+		-moz-box-sizing: border-box;    
 		box-sizing: border-box;
 	}
 
@@ -774,6 +822,8 @@ ul.gmw-geocoder-suggested-results li {
 		margin: 0px;
 		padding: 0px;
 		line-height: 0px;
+		-webkit-box-sizing: border-box; 
+		-moz-box-sizing: border-box;    
 		box-sizing: border-box;
 		margin-right: 5px;
 	}
@@ -809,6 +859,7 @@ ul.gmw-geocoder-suggested-results li {
 		border: 1px solid #ccc;
 		height: 30px;
 		font-size: 12px;
+		margin: 10px 0;
 		-webkit-box-sizing: border-box;
 		-moz-box-sizing: border-box;
 		box-sizing: border-box;
@@ -1009,6 +1060,8 @@ ul.gmw-geocoder-suggested-results li {
 		//width: 100% !important;
 		max-width: 100% !important;
 		padding: 2px 0 0 0;
+		-webkit-box-sizing: border-box; 
+		-moz-box-sizing: border-box;    
 		box-sizing: border-box;
 		display: inline-table;
 		color: #444;
@@ -1024,6 +1077,8 @@ ul.gmw-geocoder-suggested-results li {
 
 	.gmw-info-window {
 		padding-bottom: 5px;
+		-webkit-box-sizing: border-box; 
+		-moz-box-sizing: border-box;    
 		box-sizing: border-box;
 	}
 	.gmw-info-window.standard {
@@ -1123,6 +1178,8 @@ ul.gmw-geocoder-suggested-results li {
 		left: 40%;
 		overflow: hidden;
 		padding: 0 20px 20px;
+		-webkit-box-sizing: border-box; 
+		-moz-box-sizing: border-box;    
 		box-sizing: border-box;
 		border-radius: 5px;
 		border: 1px solid #f1f1f1;
@@ -1137,6 +1194,8 @@ ul.gmw-geocoder-suggested-results li {
 	div.gmw-info-window.popup .buttons-wrapper {
 		text-align: center;
 		padding: 8px 0;
+		-webkit-box-sizing: border-box; 
+		-moz-box-sizing: border-box;    
 		box-sizing: border-box;
 		display: inline-block;
 		width: 100%;
@@ -1183,6 +1242,8 @@ ul.gmw-geocoder-suggested-results li {
 		text-align: center;
 		padding: 0;
 		overflow-x: scroll;
+		-webkit-box-sizing: border-box; 
+		-moz-box-sizing: border-box;    
 		box-sizing: border-box;
 	}
 
@@ -2638,8 +2699,9 @@ div.gmw-current-location-wrapper div.gmw-cl-form-wrapper p.gmw-current-location-
 	.leaflet-zoom-box {
 		width: 0;
 		height: 0;
-		-moz-box-sizing: border-box;
-		     box-sizing: border-box;
+		-webkit-box-sizing: border-box; 
+		-moz-box-sizing: border-box;    
+		box-sizing: border-box;
 		z-index: 800;
 		}
 	/* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */
@@ -2987,9 +3049,9 @@ div.gmw-current-location-wrapper div.gmw-cl-form-wrapper p.gmw-current-location-
 		font-size: 11px;
 		white-space: nowrap;
 		overflow: hidden;
-		-moz-box-sizing: border-box;
-		     box-sizing: border-box;
-
+		-webkit-box-sizing: border-box; 
+		-moz-box-sizing: border-box;    
+		box-sizing: border-box;
 		background: #fff;
 		background: rgba(255, 255, 255, 0.5);
 		}
