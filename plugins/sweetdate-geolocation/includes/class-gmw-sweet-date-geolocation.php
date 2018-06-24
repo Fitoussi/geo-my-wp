@@ -126,7 +126,7 @@ class GMW_Sweet_Date_Geolocation {
 
 			$this->form_data['lng'] = sanitize_text_field( $_REQUEST['lng'] );
 
-		} elseif ( isset( $_COOKIE[ 'gmw_' . $this->prefix . '_lng' ] ) && $_COOKIE[ 'gmw_' . $this->prefix . '_lng' ] != 'undefined' ) {
+		} elseif ( isset( $_COOKIE[ 'gmw_' . $this->prefix . '_lng' ] ) && 'undefined' != $_COOKIE[ 'gmw_' . $this->prefix . '_lng' ] ) {
 
 			$this->form_data['lng'] = urldecode( $_COOKIE[ 'gmw_' . $this->prefix . '_lng' ] );
 		}
