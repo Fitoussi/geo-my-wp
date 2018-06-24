@@ -64,6 +64,20 @@ class GEO_MY_WP {
 	public $ajax_url = false;
 
 	/**
+	 * Default Maps provider.
+	 * 
+	 * @var string
+	 */
+	public $maps_provider = 'google_maps';
+
+	/**
+	 * Default Geocoding Provider.
+	 * 
+	 * @var string
+	 */
+	public $geocoding_provider = 'google_maps';
+
+	/**
 	 * Enable disable internal caching system.
 	 *
 	 * @var boolean
@@ -161,6 +175,18 @@ class GEO_MY_WP {
 	public $current_form = array();
 
 	/**
+	 * Default icon URL and size.
+	 *
+	 * @var array
+	 */
+	public $default_icons = array(
+		'location_icon_url'       => 'https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2_hdpi.png',
+		'location_icon_size'      => array( 22, 35 ),
+		'user_location_icon_url'  => 'https://unpkg.com/leaflet@1.3.1/dist/images/marker-icon.png',
+		'user_location_icon_size' => array( 22, 35 ),
+	);
+
+	/**
 	 * GEO my WP instance.
 	 *
 	 * @var GEO my WP.
@@ -253,7 +279,6 @@ class GEO_MY_WP {
 		define( 'GMW_IMAGES', GMW_URL . '/assets/images' );
 		define( 'GMW_FILE', __FILE__ );
 		define( 'GMW_BASENAME', plugin_basename( GMW_FILE ) );
-		//define( 'GMW_DOING_AJAX', defined( 'DOING_AJAX' ) );
 	}
 
 	/**
@@ -346,6 +371,14 @@ class GEO_MY_WP {
 		$this->addons_status = $addons_status;
 		$this->ajax_url      = admin_url( 'admin-ajax.php', is_ssl() ? 'admin' : 'http' );
 		$this->is_mobile     = ( function_exists( 'wp_is_mobile' ) && wp_is_mobile() ) ? true : false;
+		$this->maps_provider = $this->options['api_providers']['maps_provider'];
+
+		// look for geocoding provider in settings.	
+		if ( ! empty( $this->options['api_providers']['geocoding_provider'] ) ) {
+			$this->geocoding_provider = $this->options['api_providers']['geocoding_provider'];
+		} elseif ( 'google_maps' != $this->maps_provider ) {
+			$this->geocoding_provider = 'nominatim';
+		}
 	}
 
 	/**
@@ -377,6 +410,8 @@ class GEO_MY_WP {
 		include( 'includes/template-functions/gmw-search-results-template-functions.php' );
 		include( 'includes/class-gmw-form.php' );
 		include( 'includes/gmw-shortcodes.php' );
+		include_once( 'includes/class-gmw-geocoder.php' );
+		include_once( 'includes/gmw-geocoding-providers.php' );
 
 		// load core add-ons.
 		self::$instance->load_core_addons();
