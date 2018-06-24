@@ -4,10 +4,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'GMW_Single_Location' ) ) {
-	return;
-}
-
 /**
  * GMW_Single_Member_Location Class
  *
@@ -45,8 +41,10 @@ class GMW_Single_BP_Member_Location extends GMW_Single_Location {
 
 	/**
 	 * @since 2.6.1
+	 * 
 	 * Public $item_info
-	 * Oget the post location information from database
+	 * 
+	 * Get the member location information from database
 	 */
 	public function location_data() {
 
