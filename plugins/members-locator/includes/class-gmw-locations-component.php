@@ -146,4 +146,3 @@ class GMW_Members_Locator_Component extends BP_Component {
 		parent::setup_admin_bar( $wp_admin_nav );
 	}
 }
-
