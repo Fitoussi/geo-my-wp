@@ -111,8 +111,6 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 			include_once( 'includes/admin/class-gmw-posts-locator-form-editor.php' );
 			include_once( 'includes/admin/class-gmw-posts-locator-admin-settings.php' );
 			include_once( 'includes/admin/class-gmw-posts-locator-screens.php' );
-
-			//include( 'includes/admin/class-gmw-post-location-form.php' );
 		}
 
 		// include template functions.
@@ -139,7 +137,9 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 				}
 				add_filter( 'gmw_single_location_widget_objects', 'gmw_pt_single_location_widget_object', 5 );
 
-			} else {
+			}
+
+			if ( ! IS_ADMIN || defined( 'DOING_AJAX' ) ) {
 				include_once( 'includes/class-gmw-single-post-location.php' );
 			}
 		}
