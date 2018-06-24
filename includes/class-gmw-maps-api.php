@@ -165,7 +165,7 @@ class GMW_Maps_API {
 			'map_width'      => '100%',
 			'map_height'     => '350px',
 			'expand_on_load' => false,
-			'init_visible'   => false
+			'init_visible'   => false,
 		);
 
 		// merge defaults with incoming args
@@ -262,7 +262,7 @@ class GMW_Maps_API {
 		);
 
 		// if Google maps is the provider, we don't need icon size by default.
-		// Google already uses the default size of an icon. 
+		// Google already uses the default size of an icon.
 		// With LeafLet ( and perhaps other providers ) it is different and we need to provide the icon size.
 		$default_map_args['icon_size'] = 'google_maps' == GMW()->maps_provider ? null : GMW()->default_icons['location_icon_size'];
 
@@ -341,7 +341,7 @@ class GMW_Maps_API {
 			'user_location' => $user_location,
 			'form'          => $form,
 		);
- 
+
 		// allow plugins modify the map args
 		$map_element = apply_filters( 'gmw_map_element', $map_element, $form );
 		$map_element = apply_filters( "gmw_map_element_{$map_id}", $map_element, $form );
