@@ -13,116 +13,116 @@ if ( ! IS_ADMIN ) {
 			trigger_error( 'GMW class is deprecated since GEO my WP version 3.0. Use GMW_Form instead.', E_USER_NOTICE );
 		}
 	}
+}
 
-	function gmw_get_draggable_handle( $gmw = array(), $info = array() , $draggable = '', $handle = true, $icon = 'gmw-icon-target', $containment = 'window' ) {
-						
-		$args = array( 
-			'icon'   	  => 'gmw-icon-menu',
-			'target' 	  => 'gmw-popup-info-window',
-			'containment' => 'window'
-		);
+function gmw_get_draggable_handle( $gmw = array(), $info = array() , $draggable = '', $handle = true, $icon = 'gmw-icon-target', $containment = 'window' ) {
+					
+	$args = array( 
+		'icon'   	  => 'gmw-icon-menu',
+		'target' 	  => 'gmw-popup-info-window',
+		'containment' => 'window'
+	);
 
-		_deprecated_function( 'gmw_get_draggable_handle', '3.0', 'gmw_get_element_dragging_handle' );
-		return gmw_get_element_dragging_handle( $args );
-	}
+	_deprecated_function( 'gmw_get_draggable_handle', '3.0', 'gmw_get_element_dragging_handle' );
+	return gmw_get_element_dragging_handle( $args );
+}
 
-	function gmw_get_xprofile_fields( $gmw = array() ) {
-		_deprecated_function( 'gmw_get_xprofile_fields', '3.0', 'gmw_get_search_form_xprofile_fields' );
-		return gmw_get_search_form_xprofile_fields( $gmw );
-	}
+function gmw_get_xprofile_fields( $gmw = array() ) {
+	_deprecated_function( 'gmw_get_xprofile_fields', '3.0', 'gmw_get_search_form_xprofile_fields' );
+	return gmw_get_search_form_xprofile_fields( $gmw );
+}
 
-	function gmw_fl_xprofile_fields( $gmw = array() ) {
-		_deprecated_function( 'gmw_fl_xprofile_fields', '3.0', 'gmw_search_form_xprofile_fields' );
-		echo gmw_get_search_form_xprofile_fields( $gmw );
-	}
+function gmw_fl_xprofile_fields( $gmw = array() ) {
+	_deprecated_function( 'gmw_fl_xprofile_fields', '3.0', 'gmw_search_form_xprofile_fields' );
+	echo gmw_get_search_form_xprofile_fields( $gmw );
+}
+
+function gmw_get_keywords_field( $gmw = array() ) {
+	_deprecated_function( 'gmw_get_keywords_field', '3.0', 'gmw_get_search_form_keywords_field' );
+	return gmw_get_search_form_keywords_field( $gmw );
+}
+
+function gmw_keywords_field( $gmw = array() ) {
+	_deprecated_function( 'gmw_keywords_field', '3.0', 'gmw_search_form_keywords_field' );
+	echo gmw_get_search_form_keywords_field( $gmw );
+}
+
+function gmw_get_search_form_radius_values( $gmw = array() ) {
+	_deprecated_function( 'gmw_get_search_form_radius_values', '3.0', 'gmw_get_search_form_radius' );
+	return gmw_get_search_form_radius( $gmw );
+}
+
+function gmw_multiple_address_fields( $output, $gmw ) {
+	_deprecated_function( 'gmw_multiple_address_fields', '3.0', 'gmw_search_form_address_fields' );
+	return gmw_get_search_form_address_fields( $output, $gmw );
+}
+
+function gmw_search_form_radius_values( $gmw = array() ) {
+	_deprecated_function( 'gmw_search_form_radius_values', '3.0', 'gmw_search_form_radius' );
+	return gmw_search_form_radius( $gmw );
+}
+
+function gmw_search_form_locator_icon( $gmw=array(), $class=false ) {
+	_deprecated_function( 'gmw_search_form_locator_icon', '3.0', 'gmw_search_form_locator_button' );
+	return gmw_search_form_locator_button( $gmw, $class );
+}
+
+function gmw_form_set_labels( $form = array() ) {
+	_deprecated_function( 'gmw_form_set_labels', '3.0', 'There is no replacement for this function at this moment.' );
+	return;
+}
+
+function gmw_get_form_submit_fields( $gmw = array(), $label = 'submit' ) {
+	_deprecated_function( 'gmw_get_form_submit_fields', '3.0', 'gmw_get_search_form_submission_fields' );
+	gmw_get_search_form_submit_button( $gmw, $label );
+}
+
+function gmw_form_submit_fields( $gmw = array(), $label = 'submit' ) {
+	_deprecated_function( 'gmw_form_submit_fields', '3.0', 'gmw_search_form_submit_button' );
+	gmw_search_form_submit_button( $gmw, $label );
+}
+
+function gmw_fl_get_bp_groups( $gmw, $usage, $groups, $name ) {
+	_deprecated_function( 'gmw_fl_get_bp_groups', '3.0', 'gmw_get_search_form_bp_groups_filter' );
+
+	$args = array(
+		'id' 	=> $gmw['ID'],
+		'usage' => $usage
+	);
 	
-	function gmw_get_keywords_field( $gmw = array() ) {
-		_deprecated_function( 'gmw_get_keywords_field', '3.0', 'gmw_get_search_form_keywords_field' );
-		return gmw_get_search_form_keywords_field( $gmw );
-	}
+	return gmw_get_search_form_bp_groups_filter( $args, $groups );
+}
 
-	function gmw_keywords_field( $gmw = array() ) {
-		_deprecated_function( 'gmw_keywords_field', '3.0', 'gmw_search_form_keywords_field' );
-		echo gmw_get_search_form_keywords_field( $gmw );
-	}
+function search_form_radius_field( $gmw ) {
 
-	function gmw_get_search_form_radius_values( $gmw = array() ) {
-		_deprecated_function( 'gmw_get_search_form_radius_values', '3.0', 'gmw_get_search_form_radius' );
-		return gmw_get_search_form_radius( $gmw );
-	}
+    _deprecated_function( 'search_form_radius_field', '3.0', 'gmw_get_search_form_radius_slider' );
+	echo gmw_get_search_form_radius_slider( $gmw );
+}
+	
+function gmaps_search_form_taxonomies( $gmw = array(), $tag='div', $class='' ) {
 
-	function gmw_multiple_address_fields( $output, $gmw ) {
-		_deprecated_function( 'gmw_multiple_address_fields', '3.0', 'gmw_search_form_address_fields' );
-		return gmw_get_search_form_address_fields( $output, $gmw );
-	}
+	_deprecated_function( 'gmaps_search_form_taxonomies', '2.2', 'gmw_search_form_taxonomies' );
+	return gmw_search_form_taxonomies( $gmw );
+}
 
-	function gmw_search_form_radius_values( $gmw = array() ) {
-		_deprecated_function( 'gmw_search_form_radius_values', '3.0', 'gmw_search_form_radius' );
-		return gmw_search_form_radius( $gmw );
-	}
+function gmw_pt_form_get_post_types_dropdown( $gmw, $title=false, $class=false, $label=false ) {
+	_deprecated_function( 'gmw_pt_form_get_post_types_dropdown', '3.0', 'gmw_get_search_form_post_types' );
+	return gmw_get_search_form_post_types( $gmw );
+}
 
-	function gmw_search_form_locator_icon( $gmw=array(), $class=false ) {
-		_deprecated_function( 'gmw_search_form_locator_icon', '3.0', 'gmw_search_form_locator_button' );
-		return gmw_search_form_locator_button( $gmw, $class );
-	}
+function gmw_pt_form_post_types_dropdown( $gmw, $title=false, $class=false, $label=false ) {
+	_deprecated_function( 'gmw_pt_form_post_types_dropdown', '3.0', 'gmw_search_form_post_types' );
+	gmw_search_form_post_types( $gmw );
+}
 
-	function gmw_form_set_labels( $form = array() ) {
-		_deprecated_function( 'gmw_form_set_labels', '3.0', 'There is no replacement for this function at this moment.' );
-		return;
-	}
+function gmw_pt_get_form_taxonomies( $gmw, $tag = 'div', $class = false ) {
+	_deprecated_function( 'gmw_pt_get_form_taxonomies', '3.0', 'gmw_get_search_form_taxonomies' );
+	return gmw_get_search_form_taxonomies( $gmw, $tag = 'div' );
+}
 
-	function gmw_get_form_submit_fields( $gmw = array(), $label = 'submit' ) {
-		_deprecated_function( 'gmw_get_form_submit_fields', '3.0', 'gmw_get_search_form_submission_fields' );
-		gmw_get_search_form_submit_button( $gmw, $label );
-	}
-
-	function gmw_form_submit_fields( $gmw = array(), $label = 'submit' ) {
-		_deprecated_function( 'gmw_form_submit_fields', '3.0', 'gmw_search_form_submit_button' );
-		gmw_search_form_submit_button( $gmw, $label );
-	}
-
-	function gmw_fl_get_bp_groups( $gmw, $usage, $groups, $name ) {
-		_deprecated_function( 'gmw_fl_get_bp_groups', '3.0', 'gmw_get_search_form_bp_groups_filter' );
-
-		$args = array(
-			'id' 	=> $gmw['ID'],
-			'usage' => $usage
-		);
-		
-		return gmw_get_search_form_bp_groups_filter( $args, $groups );
-	}
-
-	function search_form_radius_field( $gmw ) {
-
-	    _deprecated_function( 'search_form_radius_field', '3.0', 'gmw_get_search_form_radius_slider' );
-		echo gmw_get_search_form_radius_slider( $gmw );
-	}
-		
-	function gmaps_search_form_taxonomies( $gmw = array(), $tag='div', $class='' ) {
-
-		_deprecated_function( 'gmaps_search_form_taxonomies', '2.2', 'gmw_search_form_taxonomies' );
-		return gmw_search_form_taxonomies( $gmw );
-	}
-
-	function gmw_pt_form_get_post_types_dropdown( $gmw, $title=false, $class=false, $label=false ) {
-		_deprecated_function( 'gmw_pt_form_get_post_types_dropdown', '3.0', 'gmw_get_search_form_post_types' );
-		return gmw_get_search_form_post_types( $gmw );
-	}
-
-	function gmw_pt_form_post_types_dropdown( $gmw, $title=false, $class=false, $label=false ) {
-		_deprecated_function( 'gmw_pt_form_post_types_dropdown', '3.0', 'gmw_search_form_post_types' );
-		gmw_search_form_post_types( $gmw );
-	}
-
-	function gmw_pt_get_form_taxonomies( $gmw, $tag = 'div', $class = false ) {
-		_deprecated_function( 'gmw_pt_get_form_taxonomies', '3.0', 'gmw_get_search_form_taxonomies' );
-		return gmw_get_search_form_taxonomies( $gmw, $tag = 'div' );
-	}
-
-	function gmw_pt_form_taxonomies( $gmw, $tag = 'div', $class = false ) {
-		_deprecated_function( 'gmw_pt_form_taxonomies', '3.0', 'gmw_search_form_taxonomies' );
-		gmw_search_form_taxonomies( $gmw, $tag = 'div' );
-	}
+function gmw_pt_form_taxonomies( $gmw, $tag = 'div', $class = false ) {
+	_deprecated_function( 'gmw_pt_form_taxonomies', '3.0', 'gmw_search_form_taxonomies' );
+	gmw_search_form_taxonomies( $gmw, $tag = 'div' );
 }
 
 /*function GMW() {
