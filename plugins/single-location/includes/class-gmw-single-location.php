@@ -38,9 +38,11 @@ class GMW_Single_Location {
 		'zoom_level'           => 13,
 		'scrollwheel_map_zoom' => 1,
 		'expand_map_on_load'   => 0,
-		'object_map_icon'      => 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
-		'object_info_window'   => 'title,address,distance',
-		'user_map_icon'        => 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
+		'map_icon_url'		   => '',
+		'map_icon_size'		   => '',
+		'info_window'   	   => 'title,address,distance',
+		'user_map_icon_url'    => '',
+		'user_map_icon_size'   => '',
 		'user_info_window'     => 'Your Location',
 		'no_location_message'  => 0,
 		'is_widget'            => 0,
@@ -144,16 +146,37 @@ class GMW_Single_Location {
 
 		if ( isset( $atts['item_map_icon'] ) ) {
 
-			$atts['object_map_icon'] = $atts['item_map_icon'];
+			$atts['map_icon_url'] = $atts['item_map_icon'];
 
 			unset( $atts['item_map_icon'] );
 		}
 
+		if ( isset( $atts['object_map_icon'] ) ) {
+
+			$atts['map_icon_url'] = $atts['object_map_icon'];
+
+			unset( $atts['object_map_icon'] );
+		}
+
 		if ( isset( $atts['item_info_window'] ) ) {
 
-			$atts['object_info_window'] = $atts['item_info_window'];
+			$atts['info_window'] = $atts['item_info_window'];
 
 			unset( $atts['item_info_window'] );
+		}
+
+		if ( isset( $atts['object_info_window'] ) ) {
+
+			$atts['info_window'] = $atts['object_info_window'];
+
+			unset( $atts['object_info_window'] );
+		}
+
+		if ( isset( $atts['user_map_icon'] ) ) {
+
+			$atts['user_map_icon_url'] = $atts['user_map_icon'];
+
+			unset( $atts['user_map_icon'] );
 		}
 
 		// extend the default args
@@ -164,6 +187,38 @@ class GMW_Single_Location {
 
 		// set random element id if not exists
 		$this->args['element_id'] = ! empty( $this->args['element_id'] ) ? $this->args['element_id'] : rand( 100, 549 );
+
+		// If icon size provided, make it an array.
+		if ( ! empty( $this->args['map_icon_size'] ) ) {
+			$this->args['map_icon_size'] = explode( ',', $this->args['map_icon_size'] );
+		}
+
+		// Default icon URL and size.
+		if ( '' == $this->args['map_icon_url'] ) {
+
+			$this->args['map_icon_url'] = GMW()->default_icons['location_icon_url'];
+
+			// use default icon size if no size provided
+			if ( '' == $this->args['map_icon_size'] ) {
+				$this->args['map_icon_size'] = GMW()->default_icons['location_icon_size'];
+			}
+		}
+
+		// If icon size provided, make it an array.
+		if ( ! empty( $this->args['user_map_icon_size'] ) ) {
+			$this->args['user_map_icon_size'] = explode( ',', $this->args['user_map_icon_size'] );
+		}
+
+		// Default icon URL and size.
+		if ( '' == $this->args['user_map_icon_url'] ) {
+
+			$this->args['user_map_icon_url'] = GMW()->default_icons['user_location_icon_url'];
+
+			// use default icon size if no size provided
+			if ( '' == $this->args['user_map_icon_size'] ) {
+				$this->args['user_map_icon_size'] = GMW()->default_icons['user_location_icon_size'];
+			}
+		}
 
 		// get elements to display
 		$this->elements_value = explode( ',', str_replace( ' ', '', $this->args['elements'] ) );
@@ -379,9 +434,6 @@ class GMW_Single_Location {
 			return ! empty( $this->args['no_location_message'] ) ? $this->no_location_message() : false;
 		}
 
-		// location map icon
-		$post_map_icon = ! empty( $this->args['object_map_icon'] ) ? $this->args['object_map_icon'] : false;
-
 		// map args
 		$map_args = array(
 			'map_id'         => $this->args['element_id'],
@@ -403,7 +455,8 @@ class GMW_Single_Location {
 				'lat'                 => $this->location_data->lat,
 				'lng'                 => $this->location_data->lng,
 				'info_window_content' => $this->info_window_content(),
-				'map_icon'            => apply_filters( 'gmw_sl_post_map_icon', $post_map_icon, $this->args, $this->location_data, $this->user_position ),
+				'map_icon'            => apply_filters( 'gmw_sl_post_map_icon', $this->args['map_icon_url'], $this->args, $this->location_data, $this->user_position ),
+				'icon_size'           => $this->args['map_icon_size'],
 			),
 		);
 
@@ -420,7 +473,8 @@ class GMW_Single_Location {
 			'lat'        => $this->user_position['lat'],
 			'lng'        => $this->user_position['lng'],
 			'address'    => $this->user_position['address'],
-			'map_icon'   => $this->args['user_map_icon'],
+			'map_icon'   => $this->args['user_map_icon_url'],
+			'icon_size'  => $this->args['user_map_icon_size'],
 			'iw_content' => ! empty( $this->args['user_info_window'] ) ? $this->args['user_info_window'] : null,
 		);
 
@@ -542,12 +596,12 @@ class GMW_Single_Location {
 	 */
 	public function info_window_content() {
 
-		if ( empty( $this->args['object_info_window'] ) ) {
+		if ( empty( $this->args['info_window'] ) ) {
 			return false;
 		}
 
 		// get info window elements
-		$iw_elements_array = explode( ',', $this->args['object_info_window'] );
+		$iw_elements_array = explode( ',', $this->args['info_window'] );
 
 		$iw_elements = array();
 
