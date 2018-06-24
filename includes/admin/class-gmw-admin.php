@@ -45,18 +45,18 @@ class GMW_Admin {
 		do_action( 'gmw_pre_admin_include_pages' );
 
 		// admin functions
-		include( 'gmw-admin-functions.php' );
-		include( 'class-gmw-tracking.php' );
-		include( 'updater/class-gmw-license.php' ); 
-		include( 'class-gmw-form-settings-helper.php' );
+		include_once( 'gmw-admin-functions.php' );
+		include_once( 'class-gmw-tracking.php' );
+		include_once( 'updater/class-gmw-license.php' ); 
+		include_once( 'class-gmw-form-settings-helper.php' );
 
 		// admin pages
-		include( 'pages/class-gmw-extensions.php' );
-		include( 'pages/class-gmw-settings.php' );
-		include( 'pages/class-gmw-forms-page.php' );
-		include( 'pages/class-gmw-form-editor.php' );
-		include( 'pages/tools/class-gmw-tools.php' );
-		include( 'pages/import-export/class-gmw-import-export-page.php' );
+		include_once( 'pages/class-gmw-extensions.php' );
+		include_once( 'pages/class-gmw-settings.php' );
+		include_once( 'pages/class-gmw-forms-page.php' );
+		include_once( 'pages/class-gmw-form-editor.php' );
+		include_once( 'pages/tools/class-gmw-tools.php' );
+		include_once( 'pages/import-export/class-gmw-import-export-page.php' );
 				
 		//set pages
 		$this->addons_page   = new GMW_Extensions();
