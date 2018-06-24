@@ -256,13 +256,15 @@ class GMW_Maps_API {
 			'draggable_window'     => 1,
 			'hide_no_locations'    => true,
 			'render_on_page_load'  => true, //render map on page load?
-			'map_icon_width'       => false,
-			'map_icon_height'      => false,
 			'icon_url'             => GMW()->default_icons['location_icon_url'],
-			'icon_size'            => GMW()->default_icons['location_icon_size'],
 			'clusters_path'        => 'https://raw.githubusercontent.com/googlemaps/js-marker-clusterer/gh-pages/images/m',
 			'map_provider'         => GMW()->maps_provider,
 		);
+
+		// if Google maps is the provider, we don't need icon size by default.
+		// Google already uses the default size of an icon. 
+		// With LeafLet ( and perhaps other providers ) it is different and we need to provide the icon size.
+		$default_map_args['icon_size'] = 'google_maps' == GMW()->maps_provider ? null : GMW()->default_icons['location_icon_size'];
 
 		// deprecated variable.
 		if ( isset( $map_args['render_map'] ) ) {
@@ -313,7 +315,7 @@ class GMW_Maps_API {
 			'lng'        => false,
 			'address'    => false,
 			'map_icon'   => GMW()->default_icons['user_location_icon_url'],
-			'icon_size'  => GMW()->default_icons['user_location_icon_size'],
+			'icon_size'  => 'google_maps' == GMW()->maps_provider ? null : GMW()->default_icons['user_location_icon_size'],
 			'iw_content' => null,
 			'iw_open'    => false,
 		);
@@ -339,7 +341,7 @@ class GMW_Maps_API {
 			'user_location' => $user_location,
 			'form'          => $form,
 		);
-
+ 
 		// allow plugins modify the map args
 		$map_element = apply_filters( 'gmw_map_element', $map_element, $form );
 		$map_element = apply_filters( "gmw_map_element_{$map_id}", $map_element, $form );
