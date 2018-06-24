@@ -5,78 +5,78 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'GMW_Addon' ) ) {
-    return;
+	return;
 }
 
 /**
  * Current Location addon class
- * 
+ *
  */
 class GMW_Single_Location_Addon extends GMW_Addon {
-    
-    // slug
-    public $slug = "single_location";
 
-    // add-on's name
-    public $name = "Single Location";
+	// slug
+	public $slug = 'single_location';
 
-    // prefix
-    public $prefix = "sl";
+	// add-on's name
+	public $name = 'Single Location';
 
-    // version
-    public $version = GMW_VERSION;
-    
-    // author
-    public $author = "Eyal Fitoussi";
+	// prefix
+	public $prefix = 'sl';
 
-    // path
-    public $full_path = __FILE__;
-    
-    // description
-    public $description = "Display location of certain component ( post, member... ) via shortcode and widget.";
+	// version
+	public $version = GMW_VERSION;
 
-    // core add-on
-    public $is_core = true;
+	// author
+	public $author = 'Eyal Fitoussi';
 
-    private static $instance = null;
+	// path
+	public $full_path = __FILE__;
 
-    /**
-     * Create new instance 
-     * 
-     * @return [type] [description]
-     */
-    public static function get_instance() {
+	// description
+	public $description = 'Display location of certain component ( post, member... ) via shortcode and widget.';
 
-        if ( self::$instance == null ) {
-            self::$instance = new self;
-        }
+	// core add-on
+	public $is_core = true;
 
-        return self::$instance;
-    }
-    
-    /**
-     * Init widgets
-     * 
-     * @return [type] [description]
-     */
-    function init_widgets() {
-        include_once( 'includes/class-gmw-single-location-widget.php' );
-    }
-    
-    /**
-     * Include files
-     * 
-     * @return [type] [description]
-     */
-    public function pre_init() {  
-        
-        parent::pre_init();
+	private static $instance = null;
 
-        //include classes files
-        if ( ! IS_ADMIN || defined( 'DOING_AJAX' ) ) {
-            include_once( 'includes/class-gmw-single-location.php' );
-            include_once( 'includes/gmw-single-location-shortcode.php' );  
-        }
-    }
+	/**
+	 * Create new instance
+	 *
+	 * @return [type] [description]
+	 */
+	public static function get_instance() {
+
+		if ( self::$instance == null ) {
+			self::$instance = new self;
+		}
+
+		return self::$instance;
+	}
+
+	/**
+	 * Init widgets
+	 *
+	 * @return [type] [description]
+	 */
+	function init_widgets() {
+		include_once( 'includes/class-gmw-single-location-widget.php' );
+	}
+
+	/**
+	 * Include files
+	 *
+	 * @return [type] [description]
+	 */
+	public function pre_init() {
+
+		parent::pre_init();
+
+		//include classes files
+		if ( ! IS_ADMIN || defined( 'DOING_AJAX' ) ) {
+			include_once( 'includes/class-gmw-single-location.php' );
+			include_once( 'includes/gmw-single-location-shortcode.php' );
+		}
+	}
 }
 GMW_Addon::register( 'GMW_Single_Location_Addon' );

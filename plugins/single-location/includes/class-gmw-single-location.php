@@ -38,9 +38,9 @@ class GMW_Single_Location {
 		'zoom_level'           => 13,
 		'scrollwheel_map_zoom' => 1,
 		'expand_map_on_load'   => 0,
-		'map_icon_url'		   => '',
-		'map_icon_size'		   => '',
-		'info_window'   	   => 'title,address,distance',
+		'map_icon_url'         => '',
+		'map_icon_size'        => '',
+		'info_window'          => 'title,address,distance',
 		'user_map_icon_url'    => '',
 		'user_map_icon_size'   => '',
 		'user_info_window'     => 'Your Location',
@@ -359,7 +359,7 @@ class GMW_Single_Location {
 		}
 
 		// get the full address
-		if ( empty( $this->args['address_fields'] ) || $this->args['address_fields'] == 'address' ) {
+		if ( empty( $this->args['address_fields'] ) || 'address' == $this->args['address_fields'] ) {
 			$address = ! empty( $this->location_data->formatted_address ) ? $this->location_data->formatted_address : $this->location_data->address;
 
 			// Otherwise, get specific address fields

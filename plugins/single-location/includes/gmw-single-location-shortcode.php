@@ -6,20 +6,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * GMW Single Location shortcode
- * 
+ *
  * @version 1.0
- * 
+ *
  * @author Eyal Fitoussi
  */
 function gmw_single_location_shortcode( $atts = array() ) {
-	
+
 	if ( empty( $atts ) ) {
-		
+
 		$atts = array(
-			'object' => 'post'
+			'object' => 'post',
 		);
-	
-	// item_type replaced with object_type - remove in the future
+
+		// item_type replaced with object_type - remove in the future
 	} elseif ( empty( $atts['object'] ) ) {
 
 		if ( ! empty( $atts['object_type'] ) ) {
@@ -40,11 +40,11 @@ function gmw_single_location_shortcode( $atts = array() ) {
 
 	// check if standard class of the single object exists
 	if ( class_exists( "GMW_Single_{$atts['object']}_Location" ) ) {
-		
+
 		$class_name = "GMW_Single_{$atts['object']}_Location";
 
-	// otherwise, can use the filter for custom class
-	} else if ( ! class_exists( $class_name = apply_filters( 'gmw_single_'.$atts['object'].'_location_class', '' ) ) ) {
+		// otherwise, can use the filter for custom class
+	} elseif ( ! class_exists( $class_name = apply_filters( 'gmw_single_' . $atts['object'] . '_location_class', '' ) ) ) {
 		return;
 	}
 
