@@ -1,8 +1,621 @@
-// global maps object 
+/**
+ * Custom Map Providers functions.
+ * 
+ * @type {Object}
+ */
+var GMW_Map_Providers = {};
+
+// Load Google Maps features only if needed.
+if ( gmwVars.mapsProvider == 'google_maps' ) {
+
+	GMW_Map_Providers.google_maps = {
+
+		// Set bounds
+		latLngBounds : function( mapObject ) {
+			return new google.maps.LatLngBounds();
+		},
+
+		// Clear marker from the map.
+		clearMarker : function( marker, mapObject ) {
+			marker.setMap( null );
+		},
+
+		polyline : function( options, mapObject ) {
+			return new google.maps.Polyline( options );
+		},
+
+		// Clear polyline from the map.
+		clearPolyline : function( polyline, mapObject ) {
+			polyline.setMap( null );
+		},
+
+		// Generate latLng position.
+		latLng : function( lat, lng, mapObject ) {
+			return new google.maps.LatLng( lat, lng );
+		},
+
+		// Add marker to the map.
+		addMarker : function( marker, mapObject ) {
+			marker.setMap( mapObject.map );
+		},
+
+		// Generate user's info-window.
+		renderUserInfoWindow : function( marker, content, mapObject ) {
+			
+			var self = mapObject;
+
+			self.userInfoWindow = new google.maps.InfoWindow( {
+				content   : content,
+				maxHeight : '15px'
+			} );
+
+			google.maps.event.addListener( marker, 'click', function() {
+		    	//self.marker_click( self.userMarker );
+		    	// open window
+				self.userInfoWindow.open( 
+					self.map, 
+					marker
+				);
+		    });  
+
+		    if ( self.userLocation.iw_open == true ) {
+
+				setTimeout( function() { 
+					self.userInfoWindow.open( 
+						self.map, 
+						self.userMarker 
+					);	
+				}, 500 );
+			}
+		},
+
+		// Rezise map to fit its wrapping element.
+		resizeMap : function( map, mapObject ) {
+			google.maps.event.trigger( map, 'resize' );
+		},
+
+		// Set map center.
+		setCenter : function( center, mapObject ) {
+			mapObject.map.setCenter( center );
+		},
+				
+		// Get element position.
+		getPosition : function( element, mapObject ) {
+			return element.getPosition();
+		},
+
+		// Map options
+		getMapOptions : function( mapObject ) {
+			
+			var options = {};
+
+			options.center = new google.maps.LatLng( mapObject.options.defaultCenter[0], mapObject.options.defaultCenter[1] );
+
+			// map type
+			options.mapTypeId 			  = google.maps.MapTypeId[mapObject.options.mapTypeId];
+			options.mapTypeControlOptions = {
+			    style    : google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+			    position : google.maps.ControlPosition.TOP_CENTER
+			};
+
+		    options.zoomControlOptions = {
+		      	position : google.maps.ControlPosition.RIGHT_CENTER
+		    };
+
+			options.streetViewControlOptions = {
+			    position : google.maps.ControlPosition.RIGHT_CENTER
+			};
+
+			return options;
+		},
+
+		// Render map.
+		Map : function( element, options, mapObject ) {
+			return new google.maps.Map( 
+				document.getElementById( mapObject.mapElement ),
+				options
+			);
+		},
+
+		/**
+		 * Execute function after map loaded.
+		 * 
+		 * @return {[type]} [description]
+		 */
+		mapLoaded : function( mapObject ) {
+			
+			var self = mapObject;
+
+			// after map was generated
+			google.maps.event.addListenerOnce( self.map, 'idle', function() {	
+				
+				// fadeout the map loader
+				jQuery( '#gmw-map-loader-' + self.id ).fadeOut( 1000 );
+				self.wrapElement.find( '.gmw-map-cover' ).fadeOut( 500 );
+				
+				// create map expand toggle if needed
+				// temporary disabled. It seems that Google added this feature to his API
+				if ( self.options.resizeMapControl && jQuery( '#gmw-resize-map-toggle-' + self.id ).length != 0 ) {
+
+					// generate resize map button.
+					var resizeMapControl = document.getElementById( 'gmw-resize-map-toggle-' + self.id );
+					resizeMapControl.style.position = 'absolute';	
+					self.map.controls[google.maps.ControlPosition.TOP_RIGHT].push( resizeMapControl );			
+					resizeMapControl.style.display = 'block';
+					
+					// geenrate full screen toggle.
+					self.fullScreenToggle();
+				}
+
+				// close any open info-window when clicking the map.
+				google.maps.event.addListener( self.map, 'click', function( event ) {
+				    self.closeInfoWindow();
+				});
+
+				google.maps.event.addDomListener( self.map ,'zoom_changed', function( event ) {
+					//self.closeInfoWindow();
+				});
+
+				// generate user marker		
+				self.renderUserMarker();
+
+				// generate new markers
+				self.renderMarkers( self.locations, false );
+			});
+		},
+
+		/**
+		 * Render a single marker
+		 * 
+		 * @param  {[type]} options [description]
+		 * @return {[type]}         [description]
+		 */
+		renderMarker : function( options, location, mapObject ) {
+
+			var self = mapObject,
+				icon = {
+					url : options.icon || self.iconUrl
+				};
+
+			// Scale icon size when provided per icon.
+			if ( location.icon_size ) {
+
+				icon.scaledSize = new google.maps.Size( location.icon_size[0], location.icon_size[1] );
+
+			// When need to scale all icons based on same size.
+			// That is if icon size provided or when using the default red icon.
+			} else if ( self.iconSize || icon.url == 'https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2_hdpi.png' ) {
+
+				// first we check if scaled size already provided in global.
+				// We do this to prevent scalling each icon to the same size.
+				// Just to save even a bit on perfoarmance, spacially when having many icons.
+				if ( ! self.iconScaledSize ) {
+					
+					// set icon size in global		
+					if ( self.iconSize ) {
+						self.iconScaledSize = new google.maps.Size( self.iconSize[0], self.iconSize[1] );
+					} else {
+						self.iconScaledSize = new google.maps.Size( 22, 35 );
+					}	
+				}
+
+				// get icon size from global.
+				icon.scaledSize = self.iconScaledSize;
+			}
+		
+			var marker_options = {
+				position 	: options.position,
+				icon     	: icon,
+				map      	: self.map,
+				animation   : null,
+				location_id : options.id,
+				iw_content  : options.content
+			};
+
+			// modify marker options.
+			marker_options = GMW.apply_filters( 'gmw_generate_marker_options', marker_options, options.id, self );
+
+			// generate marker
+			return new google.maps.Marker( marker_options );
+		},
+
+		setMarkerPosition : function( marker, position, map ) {
+			marker.setPosition( postion );
+		},
+
+		/**
+		 * Move marker.
+		 *
+		 * Sligtly move markers that are on the same exact position.
+		 * 
+		 * @return {[type]} [description]
+		 */
+		moveMarker : function( markerPosition ) {
+
+			var self = this;
+
+		    // do the math     
+		    var a = 360.0 / self.locations.length;
+		   
+		    var newLat = markerPosition.lat() + - 0.000025 * Math.cos( ( + a * i ) / 180 * Math.PI );  //x
+		    var newLng = markerPosition.lng() + - 0.000025 * Math.sin( ( + a * i )  / 180 * Math.PI );  //Y
+		    
+		    var newPosition = self.latLng( newLat, newLng ); //cfunc
+
+		    // draw a line between the original location 
+		    // to the new location of the marker after it moves
+		    self.polylines.push( new google.maps.Polyline( {
+			    path : [
+			        markerPosition, 
+			        newPosition
+			    ],
+			    strokeColor   : "#FF0000",
+			    strokeOpacity : 1.0,
+			    strokeWeight  : 2,
+			    map 		  : self.map
+			} ) );
+
+			return newPosition;
+		},
+
+		markerGroupingTypes : {
+
+			'standard' : {
+
+				'init' : function( mapObject ) {},
+
+				'addMarker' : function( marker, mapObject ) {
+
+					marker.setMap( mapObject.map );
+				},
+
+				'markerClick' : function( marker, mapObject ) {
+
+					google.maps.event.addListener( marker, 'click', function() {
+						
+						mapObject.markerClick( this );
+					});
+				},
+			},
+		},
+
+		infoWindowTypes : {
+
+			'standard' : {
+
+				'open' : function( marker, mapObject ) {
+
+					var self = mapObject;
+
+					// verify iw content
+					if ( marker.iw_content ) {
+						
+						// info window opsions. Can be modified with the filter.
+						var info_window_options = GMW.apply_filters( 'gmw_standard_info_window_options', {
+							content  : '<div class="gmw-info-window standard map-' + self.id + ' ' + self.prefix + '">' + marker.iw_content + '</div>',
+							maxWidth : 200,
+							minWidth: 200
+						}, self );
+
+						// generate new window
+						self.activeInfoWindow = new google.maps.InfoWindow( info_window_options );
+					
+						// open window
+						self.activeInfoWindow.open( 
+							self.map, 
+							marker 
+						);
+					}
+				},
+
+				'close' : function( mapObject ) {
+
+					if ( mapObject.activeInfoWindow ) {
+						mapObject.activeInfoWindow.close();
+						mapObject.activeInfoWindow = null;
+					}
+				}
+			}
+		}
+	};
+}
+
+if ( gmwVars.mapsProvider == 'leaflet' ) {
+
+	/**
+	 * leaftlet mapping provider.
+	 * 
+	 * @return {[type]} [description]
+	 */
+	GMW_Map_Providers.leaflet = {
+
+		// Set bounds
+		latLngBounds : function( mapObject ) {
+			return L.latLngBounds();
+		},
+
+		// Clear marker from the map.
+		clearMarker : function( marker, mapObject ) {
+			marker.remove();
+		},
+
+		polyline : function( options, mapObject ) {
+			return L.polygon( options.path, { color : options.strokeColor } ).addTo( mapObject );
+		},
+
+		// Clear polyline from the map.
+		clearPolyline : function( polyline, mapObject ) {
+			mapObject.map.removeLayer( polyline );
+		},
+
+		// Generate latLng position.
+		latLng : function( lat, lng, mapObject ) {
+			return L.latLng( lat, lng );
+		},
+
+		// Add marker to the map.
+		addMarker : function( marker, mapObject ) {
+			marker.addTo( mapObject.map );
+		},
+
+		// Generate user's info-window.
+		renderUserInfoWindow : function( marker, content, mapObject ) {
+			
+			marker.bindPopup( content );
+
+			// Open info-window on page load.
+			if ( mapObject.userLocation.iw_open == true ) {
+
+				setTimeout( function() { 
+					marker.openPopup();	
+				}, 500 );
+			}
+		},
+
+		// Rezise map to fit its wrapping element.
+		resizeMap : function( map, mapObject ) {
+			map.invalidateSize();
+		},
+
+		// Set map center.
+		setCenter : function( center, mapObject ) {
+			mapObject.map.setView( center );
+		},
+				
+		// Get element position.
+		getPosition : function( element, mapObject ) {
+			return element.getLatLng();
+		},
+
+		// Map options
+		getMapOptions : function( mapObject ) {
+			
+			var options = {};
+
+			// clusters default options.
+			options.markerClustersOptions = {
+				spiderfyOnMaxZoom		   : true,
+				showCoverageOnHover		   : true,
+				zoomToBoundsOnClick		   : true,
+				removeOutsideVisibleBounds : true,
+				animate 				   : true
+			};
+
+			// Spiderfier options.
+			options.markerSpiderfierOptions = {
+				keepSpiderfied 		   : true,
+				nearbyDistance 		   : 20,
+				circleSpiralSwitchover : 9,
+				legWeight 			   : 1.5
+			};
+
+			options.maxZoom 	    = 18;
+			options.scrollWheelZoom = mapObject.options.scrollwheel;
+
+			return options;
+		},
+
+		/**
+		 * Move marker.
+		 *
+		 * Sligtly move markers that are on the same exact position.
+		 * 
+		 * @return {[type]} [description]
+		 */
+		moveMarker : function( markerPosition ) {
+
+			var self = this;
+
+		    // do the math     
+		    var a = 360.0 / self.locations.length;
+		   
+		    var newLat = markerPosition.lat + - 0.000050 * Math.cos( ( + a * i ) / 180 * Math.PI );  //x
+		    var newLng = markerPosition.lng + - 0.000050 * Math.sin( ( + a * i )  / 180 * Math.PI );  //Y
+		    
+		    var newPosition = self.latLng( newLat, newLng ); //cfunc
+
+		    self.polylines.push( L.polygon( [ newPosition, markerPosition ], { color : "#FF0000" } ).addTo( self.map ) );
+
+			return newPosition;
+		},
+
+		// Render map.
+		Map : function( element, options, mapObject ) {
+			return L.map( element, options );
+		},
+
+		/**
+		 * Execute function after map loaded.
+		 * 
+		 * @return {[type]} [description]
+		 */
+		mapLoaded : function( mapObject ) {
+			
+			var self = mapObject;
+
+			// after map was generated
+			self.map.on( 'load', function() {
+
+				// fadeout the map loader
+				jQuery( '#gmw-map-loader-' + self.id ).fadeOut( 1000 );
+				self.wrapElement.find( '.gmw-map-cover' ).fadeOut( 500 );
+				
+				// create map expand toggle if needed
+				// temporary disabled. It seems that Google added this feature to its API
+				if ( self.options.resizeMapControl && jQuery( '#gmw-resize-map-toggle-' + self.id ).length != 0 ) {
+
+					// generate resize toggle
+					jQuery( '#gmw-resize-map-toggle-' + self.id ).detach().appendTo( jQuery( '#' + self.mapElement ).find( '.leaflet-top.leaflet-right' ) ).addClass( 'leaflet-control leaflet-bar' ).show();
+					
+					self.fullScreenToggle();
+				}
+
+				// Close info-window when clicking on the map.
+				self.map.on( 'click dblclick,', function( event ) {
+				    self.closeInfoWindow();
+				});
+
+				// generate user marker		
+				self.renderUserMarker();
+
+				// generate new markers
+				self.renderMarkers( self.locations, false );
+			});
+
+			// Set the map and zoom control position.
+			self.map.setView( self.options.defaultCenter );
+
+			if ( typeof( self.map.zoomControl ) !== 'undefined' ) {
+				self.map.zoomControl.setPosition( 'bottomright' );
+			}
+
+			// Load layers.
+			L.tileLayer( self.options.layersUrl, {
+			    attribution: self.options.layersAttribution
+			}).addTo( self.map );
+		},
+
+		/**
+		 * Render a single marker
+		 * 
+		 * @param  {[type]} options [description]
+		 * @return {[type]}         [description]
+		 */
+		renderMarker : function( options, location, mapObject ) {
+
+			var self 	 	= mapObject,
+				iconUrl  	= options.icon || self.iconUrl, // icon URL
+				iconSize 	= location.icon_size || self.iconSize || [ 22, 35 ], // get icon size.
+				// icon options
+				iconOptions = {
+				    iconUrl		 : iconUrl,
+				    iconSize 	 : iconSize,
+				    iconAnchor	 : [ iconSize[0] / 2, iconSize[1] ], // caaculate anchor based on icon size
+				    popupAnchor	 : [ 1, -iconSize[1] ], // 
+				    //shadowUrl: 'my-icon-shadow.png',
+				    //shadowSize	 : [68, 95],
+				    //shadowAnchor : [22, 94]
+				},
+				// Marker options.
+				marker_options = {
+					iconOptions : iconOptions,
+				    position 	: options.position,
+					location_id : options.id,
+					iw_content  : options.content
+				};
+
+			// Modify marker options.
+			marker_options = GMW.apply_filters( 'gmw_generate_marker_options', marker_options, options.id, options, this );
+
+			// generate Icon
+			marker_options.icon = L.icon( marker_options.iconOptions );
+			
+			// Generate marker.	
+			return L.marker( [ options.position.lat, options.position.lng ], marker_options );
+		},
+
+		setMarkerPosition : function( marker, position, map ) {
+			marker.setLatLng( position );
+		},
+
+		markerGroupingTypes : {
+
+			'standard' : {
+
+				// no need to initiate.
+				'init' : function( mapObject ) {},
+
+				// add marker to the map.
+				'addMarker' : function( marker, mapObject ) {
+					marker.addTo( mapObject.map ); 
+				},
+
+				// Open info window on click.
+				'markerClick' : function( marker, mapObject ) {
+					
+					marker.on( 'click', function() {
+
+						mapObject.markerClick( this );
+					});
+				},
+
+				// No group to clear.
+				'clear' : function() {}
+			}
+		},
+
+		// Standard info-window action.
+		infoWindowTypes : {
+
+			'standard' : {
+
+				// Open info-window.
+				'open' : function( marker, mapObject ) {
+
+					var self = mapObject;
+
+					// verify iw content
+					if ( marker.options.iw_content ) {
+						
+						// info window opsions. Can be modified with the filter.
+						var info_window_options = GMW.apply_filters( 'gmw_standard_info_window_options', {
+							content  : '<div class="gmw-info-window standard map-' + self.id + ' ' + self.prefix + '">' + marker.options.iw_content + '</div>',
+							maxWidth : 200,
+							minWidth : 200
+						}, self );
+
+						// generate new window
+						self.activeInfoWindow = L.popup( info_window_options ).setContent( info_window_options.content );
+						
+						// Bind popup to marker. We also unbind previous info-window before binding a new one.
+						marker.unbindPopup().bindPopup( self.activeInfoWindow ).openPopup();
+					}
+				},
+
+				// Close info-window.
+				'close' : function( mapObject ) {
+					if ( mapObject.activeInfoWindow ) {
+						mapObject.activeInfoWindow = null;
+					}
+				}
+			}
+		}
+	};
+}
+
+/**
+ * Maps object.
+ *
+ * This object hold all the maps that need to load on page load.
+ * 
+ * @type {Object}
+ */
 var GMW_Maps = {};
 
 /**
- * Map generator function
+ * Base Map generator.
+ *
+ * Can be extended to work with different map providers.
  * 
  * @param {[type]} map_id [description]
  * @param {[type]} vars  [description]
@@ -31,6 +644,13 @@ var GMW_Map = function( options, map_options, form ) {
 	this.settings = options;
 
 	/**
+	 * map provider.
+	 * 
+	 * @type {[type]}
+	 */
+	this.provider = options.map_provider || 'leaflet';
+
+	/**
 	 * GMW form being processed
 	 * @type {[type]}
 	 */
@@ -41,14 +661,14 @@ var GMW_Map = function( options, map_options, form ) {
 	 * 
 	 * @type {String}
 	 */
-	this.wrap_element = jQuery( '#gmw-map-wrapper-' + this.id );
+	this.wrapElement = jQuery( '#gmw-map-wrapper-' + this.id );
 
 	/**
 	 * Map's DIV element 
 	 * 
 	 * @type {[type]}
 	 */
-	this.map_element = 'gmw-map-' + this.id;
+	this.mapElement = 'gmw-map-' + this.id;
 
 	/**
 	 * Map options
@@ -59,7 +679,7 @@ var GMW_Map = function( options, map_options, form ) {
 		zoom      : 8,
 		mapTypeId : 'ROADMAP'
 	};
-
+	
 	/**
 	 * Map object
 	 * 
@@ -79,7 +699,7 @@ var GMW_Map = function( options, map_options, form ) {
 	 * 
 	 * @type {Array}
 	 */
-	this.previous_locations = [];
+	this.previousLocations = [];
 
 	/**
 	 * Map markers array
@@ -93,83 +713,83 @@ var GMW_Map = function( options, map_options, form ) {
 	 * 
 	 * @type {google}
 	 */
-	this.icon_scaled_size = options.map_icon_width && options.map_icon_height ? new google.maps.Size( parseInt( options.map_icon_width ), parseInt( options.map_icon_height ) ) : null;
+	//this.icon_scaled_size = options.map_icon_width && options.map_icon_height ? [ parseInt( options.map_icon_width ), parseInt( options.map_icon_height ) ] : null;
 
 	/**
 	 * Hide map if no locations found
 	 * 
 	 * @type {Boolean}
 	 */
-	this.hide_no_locations = options.hide_no_locations || false;
+	this.hideMapWithoutLocations = options.hide_no_locations || false;
 
 	/**
 	 * Location info-window
 	 * 
 	 * @type {Boolean}
 	 */
-	this.active_info_window = null;
+	this.activeInfoWindow = null;
 
 	/**
 	 * User location data
 	 * 
 	 * @type {Boolean}
 	 */
-	this.user_location = false;
+	this.userLocation = false;
 
 	/**
 	 * User position
 	 * 
 	 * @type {Boolean}
 	 */
-	this.user_position = false;
+	this.userPosition = false;
 	
 	/**
 	 * User's location info window
 	 * 
 	 * @type {Boolean}
 	 */
-	this.user_info_window = false;
+	this.userInfoWindow = false;
 
 	/**
 	 * Markers clusterer PATH
 	 * @type {String}
 	 */
-	this.clusters_path = options.clusters_path || this.default_cluster_path;
+	this.clustersPath = options.clustersPath || 'https://raw.githubusercontent.com/googlemaps/js-marker-clusterer/gh-pages/images/m';
 
 	/**
 	 * Marker grouping type
 	 * 
 	 * @type {String}
 	 */
-	this.grouping_type = options.group_markers || 'standard';
+	this.markerGrouping = options.group_markers || 'standard';
 
 	/**
 	 * Info window type
 	 * 
 	 * @type {String}
 	 */
-	this.info_window_type = options.info_window_type || 'standard';
+	this.infoWindow = options.info_window_type || 'standard';
 
 	/**
 	 * IW Ajax Content
 	 * 
 	 * @type {[type]}
 	 */
-	this.info_window_ajax = options.info_window_ajax || false;
+	this.infoWindowAjax = options.info_window_ajax || false;
 
 	/**
 	 * IW Ajax Content
 	 * 
 	 * @type {[type]}
 	 */
-	this.info_window_template = options.info_window_template || 'default';
+	this.infoWindowTemplate = options.info_window_template || 'default';
 			
 	/**
 	 * User location map marker
 	 * 
 	 * @type {Boolean}
 	 */
-	this.user_marker = false;
+	this.userMarker = false;
 
 	/**
 	 * markers Clusters 
@@ -188,7 +808,7 @@ var GMW_Map = function( options, map_options, form ) {
 	 * Current marker - the marker clicked
 	 * @type {[type]}
 	 */
-	this.active_marker = null;
+	this.activeMarker = null;
 	
 	/**
 	 * Polylines holder
@@ -201,243 +821,311 @@ var GMW_Map = function( options, map_options, form ) {
 	 * 
 	 * @type {Boolean}
 	 */
-	this.auto_zoom_level = false;
+	this.autoZoomLevel = false;
 
 	/**
 	 * Custom zoom position
 	 * 
 	 * @type {Boolean}
 	 */
-	this.zoom_position = options.zoom_position || false;
+	this.zoomPosition = options.zoom_position || false;
+
+	/**
+	 * Default icons URL.
+	 * 
+	 * @type {String}
+	 */
+	this.iconUrl = options.icon_url || 'https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2_hdpi.png';
+
+	/**
+	 * Default icons size.
+	 * 
+	 * @type {Array}
+	 */
+	this.iconSize = options.icon_size || null;
+
+	/**
+	 * user icons size.
+	 * 
+	 * @type {Array}
+	 */
+	this.userIconSize = options.icon_size || null;
+
+	/**
+	 * If showing directions on the map.
+	 * 
+	 * @type {[type]}
+	 */
+	this.directions = null;
+
+	/**
+	 * Array hold coords to check if locations exist on the same exact location.
+	 * 
+	 * @type {Array}
+	 */
+	this.coordsCollector = [];
+
+	this.moveMarkerEnabled = false;
 
 	this.init();
-	/**
-	 * Init function
-	 * 
-	 * @return void
-	 */
-	/*this.init = function( locations, user_data ) {
- 		
-		var self = this;
-
-		if ( typeof locations !== 'undefined' ) {
-			self.locations = locations;
-		}
-
-		if ( typeof user_data !== 'undefined' ) {
-			self.user_location = user_data;
-		}
-
-		GMW.do_action( 'gmw_map_init', self.id, self );
-
-		// Generate new map if not already exists	
-		if ( self.map == false ) {
-			
-			self.render( self.locations, self.user_location );
-
-		// otherwise, update existing map
-		} else {
-			
-			self.update( self.locations, self.user_location );
-		}
-	};*/
-};
-
-GMW_Map.prototype.default_cluster_path = 'https://raw.githubusercontent.com/googlemaps/js-marker-clusterer/gh-pages/images/m';
-	
-GMW_Map.prototype.init = function() {
-	GMW.do_action( 'gmw_map_init', this );
 };
 
 /**
- * Render the map
+ * Collection of grouping types functions.
+ *
+ * This object holds the different function of each grouping types.
+ * @type {Object}
+ */
+GMW_Map.prototype.markerGroupingTypes = {};
+
+/**
+ * Collection of info-window types functions.
+ *
+ * This object holds the different function of the different info-window types.
+ * @type {Object}
+ */
+GMW_Map.prototype.infoWindowTypes = {};
+
+/**
+ * Initialize.
  * 
  * @return {[type]} [description]
  */
-GMW_Map.prototype.render = function( locations, user_location ) {
-	
-	//console.log( 'render map' );
+GMW_Map.prototype.init = function() {
 
 	var self = this;
 
+	// Abort if map provided was not found.
+	if ( typeof( GMW_Map_Providers[self.provider] ) === 'undefined' ) {
+		return console.log( 'The map provider ' + self.provider + ' not exists.' );
+	}
+
+	// Extend the selected provider.
+	jQuery.extend( self, GMW_Map_Providers[self.provider] );
+
+	self = GMW.apply_filters( 'gmw_map_init', self );
+	
+	// Verify Marker Grouping functions. Otherwise, use standard.
+	if ( typeof( self.markerGroupingTypes[self.markerGrouping] ) === 'undefined' ) {
+
+		console.log( self.markerGrouping + ' marker grouping function was not found. "Standard" will be used instead' );
+
+		self.markerGrouping = 'standard';
+	}
+
+	// Verify info-window functions. Otherwise, use standard.
+	if ( typeof( self.infoWindowTypes[self.infoWindow] ) === 'undefined' ) {
+
+		console.log( self.infoWindow + ' info-window function was not found. "Standard" will be used instead' );
+		
+		self.infoWindow = 'standard';
+	}
+
+	// enable marker movement.
+	if ( self.provider == 'google_maps' ) {
+
+		if ( self.markerGrouping == 'standard' || self.markerGrouping == 'markers_clusterer' ) {	
+			self.moveMarkersEnabled = true;
+		}
+		
+	} else if ( self.provider == 'leaflet' && self.markerGrouping == 'standard' ) {
+		self.moveMarkersEnabled = true; 
+	}
+};
+
+/**
+ * Center and zoom map.
+ * 
+ * @return {[type]} [description]
+ */
+GMW_Map.prototype.centerMap = function() {
+
+	var self = this;
+
+	// If custom zoom point provided, use it.
+	if ( self.zoomPosition != false && ! self.autoZoomLevel ) {
+
+		// get position
+		var latLng = self.latLng( 
+			self.zoomPosition.lat, 
+			self.zoomPosition.lng,
+			self 
+		);
+
+		self.map.setZoom( parseInt( self.options.zoom ) );
+		self.map.panTo( latLng );
+
+	// zoom out map when a single marker exists on the map.
+	} else if ( self.locations.length == 1 && self.userPosition == false ) {
+
+		if ( self.autoZoomLevel ) {
+			self.map.setZoom( 13 );
+		} else {
+			self.map.setZoom( parseInt( self.options.zoom ) );
+		}
+
+		self.map.panTo( self.getPosition( self.markers[0], self ) );
+
+	} else if ( ! self.autoZoomLevel && self.userPosition != false ) {
+
+		self.map.setZoom( parseInt( self.options.zoom ) );
+		self.map.panTo( self.userPosition );
+
+	} else if ( self.autoZoomLevel || self.userPosition == false  ) { 
+		
+		self.map.fitBounds( self.bounds );
+	}
+};
+
+/**
+ * Full screen map toggle.
+ * 
+ * @param  {[type]} button [description]
+ * @return {[type]}        [description]
+ */
+GMW_Map.prototype.fullScreenToggle = function( button ) {
+
+	var self = this;
+
+	// enable toggle "on click" function. 
+	jQuery( '#gmw-resize-map-toggle-' + self.id ).on( 'click', function() {
+	
+		// get the current map center
+		var mapCenter = self.map.getCenter();
+
+		// replace map wrapper class to expended.
+		self.wrapElement.toggleClass( 'gmw-expanded-map' );
+
+		// disable HTML/body scroll when map is full screen.
+		if ( self.wrapElement.hasClass( 'gmw-expanded-map' ) ) {
+			jQuery( 'body, html' ).addClass( 'gmw-scroll-disabled' ); 
+		} else {
+			jQuery( 'body, html' ).removeClass( 'gmw-scroll-disabled' );
+		}
+		
+		// replace the toggle icon         		
+		jQuery( this ).toggleClass( 'gmw-icon-resize-full' ).toggleClass( 'gmw-icon-resize-small' );
+		
+		// we wait a short moment to allow the map element to resize
+		// before resizing and centering the map.
+		setTimeout( function() { 	
+
+			// resize map to fit the new element size.
+			self.resizeMap( self.map, self );
+
+			// recenter map
+			self.setCenter( mapCenter, self );
+
+		}, 100 );            		
+	}); 
+};
+
+/**
+ * Render the map for the first time.
+ * 
+ * @return {[type]} [description]
+ */
+GMW_Map.prototype.render = function( locations, userLocation ) {
+	
+	var self = this;
+
 	// abort if map element not exist
-	if ( ! jQuery( '#' + self.map_element ).length ) {
+	if ( ! jQuery( '#' + self.mapElement ).length ) {
 		return;
 	}
 
-	self.locations = locations || self.locations;
-
-	self.user_location = user_location || self.user_location;
-
-	self.bounds = new google.maps.LatLngBounds();
+	// get some values.
+	self.locations 	  = locations || self.locations;
+	self.userLocation = userLocation || self.userLocation;
+	self.bounds 	  = self.latLngBounds( self );
 
 	// set auto zoom level
 	if ( self.options.zoom == 'auto' ) {
-
-		self.auto_zoom_level = true;
+		self.autoZoomLevel = true;
 		self.options.zoom 	 = 13;
-	
 	// otherwise specifiy the zoom level
 	} else {
-
-		self.auto_zoom_level = false;
-		self.options.zoom = parseInt( self.options.zoom );
+		self.autoZoomLevel = false;
+		self.options.zoom    = parseInt( self.options.zoom );
 	}
 
-	//self.options.styles = ;
+	// generate default center for the map.
+	self.options.defaultCenter = typeof self.options.defaultCenter !== 'undefined' ? self.options.defaultCenter.split(',') : [ 40.758895, -73.985131 ];
 
-	// map center
-	//if ( self.user_location != false && self.user_location['lat'] != false && self.user_location['lng'] != false
-	//self.options['center'] = new google.maps.LatLng( user_position['lat'], user_position['lng'] );
-	self.options.center = new google.maps.LatLng( '40.758895', '-73.985131' );
+	self.options = jQuery.extend( {}, self.options, self.getMapOptions( self ) );
 
-	// map type
-	self.options.mapTypeId 			   = google.maps.MapTypeId[self.options.mapTypeId];
-	self.options.mapTypeControlOptions = {
-	    style    : google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-	    position : google.maps.ControlPosition.TOP_CENTER
-	};
-
-    self.options.zoomControlOptions = {
-      	position : google.maps.ControlPosition.RIGHT_CENTER
-    };
-
-	self.options.streetViewControlOptions = {
-	    position : google.maps.ControlPosition.RIGHT_CENTER
-	};
+	// modify the map options.
+	self.options = GMW.apply_filters( 'gmw_map_options', self.options, self );
 	
 	var slideFunction;
 
 	// abort if not locations found and we don't want to show the map
 	// we still render it but keep it hidden
-	if ( self.locations.length == 0 && self.hide_no_locations ) {
+	if ( self.locations.length == 0 && self.hideMapWithoutLocations ) {
 		slideFunction = 'slideUp';
 	} else {
 		slideFunction = 'slideDown';
 	}
 
 	// generate the map element
-	self.wrap_element[slideFunction]( 'fast', function() {
+	self.wrapElement[slideFunction]( 'fast', function() {
 		
-		self.map = new google.maps.Map( 
-			document.getElementById( self.map_element ),
-			self.options
-		);
+		// generate the map
+		self.map = self.Map( self.mapElement, self.options, self );
 
-		// after map was generated
-		google.maps.event.addListenerOnce( self.map, 'idle', function() {	
-			
-			// fadeout the map loader
-			jQuery( '#gmw-map-loader-' + self.id ).fadeOut( 1000 );
-			self.wrap_element.find( '.gmw-map-cover' ).fadeOut( 500 );
-			
-			// create map expand toggle if needed
-			// temporary disabled. It seems that Google added this feature to his API
-			if ( self.options.resizeMapControl && jQuery( '#gmw-resize-map-toggle-' + self.id ).length != 0 ) {
-
-				// generate resize toggle
-				var resizeMapControl = document.getElementById( 'gmw-resize-map-toggle-' + self.id );
-				resizeMapControl.style.position = 'absolute';	
-				self.map.controls[google.maps.ControlPosition.TOP_RIGHT].push( resizeMapControl );			
-				resizeMapControl.style.display = 'block';
-			
-				// resize map on click event	
-		    	jQuery( '#gmw-resize-map-toggle-' + self.id ).on( 'click', function() {
-		 	
-		 			// get the current map center
-		    		var mapCenter = self.map.getCenter();
-
-		    		// replace map wrapper class to expended
-		    		self.wrap_element.toggleClass( 'gmw-expanded-map' );
-
-		    		if ( self.wrap_element.hasClass( 'gmw-expanded-map' ) ) {
-		    			jQuery( 'body, html' ).addClass( 'gmw-scroll-disabled' ); 
-		    		} else {
-		    			jQuery( 'body, html' ).removeClass( 'gmw-scroll-disabled' );
-		    		}
-		    		
-		    		// replace the toggle icon         		
-		    		jQuery( this ).toggleClass( 'gmw-icon-resize-full' ).toggleClass( 'gmw-icon-resize-small' );
-		    		
-		    		// we wait a short moment to allow the wrapper element to resize
-		    		setTimeout( function() { 	
-
-		    			// resize map		    		
-		    			google.maps.event.trigger( self.map, 'resize' );
-
-		    			// recenter map
-		    			self.map.setCenter( mapCenter );		
-
-					}, 100 );            		
-		    	});
-			}
-
-			google.maps.event.addListener( self.map, 'click', function( event ) {
-			    self.close_info_window();
-			});
-
-			google.maps.event.addDomListener( self.map ,'zoom_changed', function( event ) {
-				self.close_info_window();
-			});
-
-			// generate user marker		
-			self.render_user_marker();
-
-			// generate new markers
-			self.render_markers( self.locations, false );
-		});
+		// functions after map done loading.
+		self.mapLoaded( self );
 	});
 };
 
 /**
- * Update existing map
+ * Update an existing map.
  * 
  * @param  {[type]} mapVars [description]
  * @return {[type]}         [description]
  */
-GMW_Map.prototype.update = function( locations, user_location, append_previous ) {
+GMW_Map.prototype.update = function( locations, userLocation, append_previous ) {
 	
 	var self = this;
 
-	self.locations = locations || self.locations;
+	// set locations.
+	self.locations 	  = locations || self.locations;
+	self.userLocation = userLocation || self.userLocation;
 
-	self.user_location = user_location || self.user_location;
-
-	// abort if not locations found and we don't want to show the map
-	if ( self.locations.length == 0 && self.hide_no_locations ) {
-
-		this.wrap_element.slideUp();
-		
+	// abort if not locations found and we don't want to show the map.
+	if ( self.locations.length == 0 && self.hideMapWithoutLocations ) {
+		this.wrapElement.slideUp();
 		return;
 	}
 
-	// if map does not exist, render it.
+	// if map does not exist, render it first.
 	if ( self.map === false ) {
-		
-		self.render( self.locations, self.user_location );
-		
+		self.render( self.locations, self.userLocation );
 		return;
 	}
 
-	self.bounds = new google.maps.LatLngBounds();
+	// generate new bounds.
+	self.bounds = self.latLngBounds();
 
-	// close info window if open
-	self.close_info_window();
+	// close info-window if one is open.
+	self.closeInfoWindow();
 
 	// make sure map is not hidden
-	self.wrap_element.slideDown( 'fast', function() {
+	self.wrapElement.slideDown( 'fast', function() {
 
-		google.maps.event.trigger( self.map, 'resize' );
+		self.resizeMap( self.map, self );
 
-		// clear existing markers
+		// clear existing markers.
 		self.clear();
 
-		self.clear_user_marker();
+		// clear user marker.
+		self.clearUserMarker();
 
-		self.render_user_marker();
+		// generate new user marker.
+		self.renderUserMarker();
 
-		// generate new markers
-		self.render_markers( self.locations, append_previous );
+		// generate new markers.
+		self.renderMarkers( self.locations, append_previous );
 	});
 };
 
@@ -453,384 +1141,153 @@ GMW_Map.prototype.clear = function() {
 	// loop through existing markers
 	for ( var i = 0; i < self.markers.length + 1 ; i++ ) {
 
+		// clear markers.
 		if ( i < self.markers.length ) {
-
-			//if ( typeof self.markers[i] !== 'undefined' ) {
 			
 			// verify marker
 			if ( self.markers[i] ) {
 
 				// clear marker
-				self.markers[i].setMap( null );	
+				self.clearMarker( self.markers[i], self );
 			}
-			//}
 			
-		// proceed when done
+		// proceed when done removing all marker.
 		} else {
 
-			this.clear_polylines();
+			// clear polylines.
+			this.clearPolylines();
 
 			// generate new markers array.
 			self.markers = [];
 			
+			// clear coords collector.
+			self.coordsCollector = [];
+
 			// clear group markers
-			this.markers_grouping_clear();
+			this.clearMarkersGrouping();
 		}
 	}
 };
 
 /**
- * Remove polyline from the map
+ * Remove polyline from the map.
  * 
  * @return {[type]} [description]
  */
-GMW_Map.prototype.clear_polylines = function() {
+GMW_Map.prototype.clearPolylines = function() {
 
-	for ( var i = 0; i < this.polylines.length + 1 ; i++ ) {
+	var self = this;
+
+	for ( var i = 0; i < self.polylines.length + 1 ; i++ ) {
 
  		//remove each plyline from the map
  		if ( i < this.polylines.length ) {
- 			
- 			this.polylines[i].setMap( null );	
+ 	
+ 			self.clearPolyline( self.polylines[i], self );
 
  		//generate new polyline array
  		} else {
  			
- 			this.polylines = [];
+ 			self.polylines = [];
  		}            
  	}
 };
 
 /**
- * Initilize markers grouping. 
- * 
- * markers clusters, spiderfier and can be extended
- * 
- * @return {[type]} [description]
- */
-GMW_Map.prototype.markers_grouping_init = function() {
-	
-	// temporary, for older versions
-	if ( this.grouping_type == 'normal' ) {
-		this.grouping_type = 'standard';
-	}
-
-	// hook custom functions if needed
-	GMW.do_action( 'gmw_markers_grouping_init', this.grouping_type, this );
-
-	// generate the grouping function
-	var functionName = this.grouping_type + '_grouping_init';
-
-	// verify grouping function
-	if ( typeof this[functionName] === 'function' ) {
-
-		// run marker grouping
-		this[functionName]();
-	
-	// otherwise show error message
-	} else {
-
-		console.log( 'The function ' + functionName + ' not exists.' );
-	}
-};
-
-/**
- * Clear markers grouping. 
- * 
- * markers clusters, spiderfier and can be extended
- * 
- * @return {[type]} [description]
- */
-GMW_Map.prototype.markers_grouping_clear = function() {
-	
-	// hook custom functions if needed
-	GMW.do_action( 'gmw_markers_grouping_clear', this.grouping_type, this );
-
-	// generate the grouping function
-	var functionName = this.grouping_type + '_grouping_clear';
-
-	// verify grouping function
-	if ( typeof this[functionName] === 'function' ) {
-
-		// run marker grouping
-		this[functionName]();
-	
-	// otherwise show error message
-	} else {
-
-		console.log( 'The function ' + functionName + ' not exists.' );
-	}
-};
-
-/**
- * Standard grouping functions holder
+ * Generate the user/visitor marker.
  *
- * since there is no normal grouping we do nothing here. 
- * 
- * this is just a function holder. 
- * 
- * @return void
- * 
- */
-GMW_Map.prototype.standard_grouping_init = function() {};
-GMW_Map.prototype.standard_grouping_clear = function() {};
-
-/**
- * Markers Clusterer grouping init
- *  
- * @param  {[type]} group_markers [description]
- * @param  {[type]} mapObject     [description]
- * @return {[type]}               [description]
- */
-GMW_Map.prototype.markers_clusterer_grouping_init = function() {
-
-	// initialize markers clusterer if needed and if exists
-    if ( typeof MarkerClusterer === 'function' ) {
-    	
-    	// init new clusters object
-		this.clusters = new MarkerClusterer( 
-			this.map, 
-			this.markers,
-			{
-				imagePath    : this.clusters_path,
-				clusterClass : this.prefix + '-cluster cluster',
-				maxZoom 	 : 15 
-			}
-		);
-	} 
-};
-
-/**
- * Markers Clusterer grouping clear
- *  
- * @param  {[type]} group_markers [description]
- * @param  {[type]} mapObject     [description]
- * @return {[type]}               [description]
- */
-GMW_Map.prototype.markers_clusterer_grouping_clear = function() {
-
-	// initialize markers clusterer if needed and if exists
-    if ( typeof MarkerClusterer === 'function' ) {
-
-    	// remove existing clusters
-    	if ( this.clusters != false ) {		
-    		this.clusters.clearMarkers();
-    	}
-	} 
-};
-
-/**
- * Markers Clusterer grouping
- *  
- * @param  {[type]} group_markers [description]
- * @param  {[type]} mapObject     [description]
- * @return {[type]}               [description]
- */
-/*
-GMW_Map.prototype.grouping_type_markers_clusterer = function() {
-
-	// initialize markers clusterer if needed and if exists
-    if ( typeof MarkerClusterer === 'function' ) {
-
-    	// remove existing clusters
-    	if ( this.clusters != false ) {		
-    		this.clusters.clearMarkers();
-    	}
-    	
-    	//create new clusters object
-		this.clusters = new MarkerClusterer( 
-			this.map, 
-			this.markers,
-			{
-				imagePath    : this.clusters_path,
-				clusterClass : this.prefix + '-cluster cluster',
-				maxZoom 	 : 15 
-			}
-		);
-	} 
-}
-*/
-/**
- * Move marker
+ * Create the user's location marker and info window.
  * 
  * @return {[type]} [description]
  */
-GMW_Map.prototype.move_marker = function( marker_position ) {
-
-    // do the math     
-    var a = 360.0 / this.locations.length;
-   
-    var newLat = marker_position.lat() + - 0.000025 * Math.cos( ( + a * i ) / 180 * Math.PI );  //x
-    var newLng = marker_position.lng() + - 0.000025 * Math.sin( ( + a * i )  / 180 * Math.PI );  //Y
-    
-    var newPosition = new google.maps.LatLng( newLat, newLng );
-
-    // draw a line between the original location 
-    // to the new location of the marker after it moves
-    this.polylines.push( new google.maps.Polyline( {
-	    path : [
-	        marker_position, 
-	        newPosition
-	    ],
-	    strokeColor   : "#FF0000",
-	    strokeOpacity : 1.0,
-	    strokeWeight  : 2,
-	    map 		  : this.map
-	} ) );
-
-	return newPosition;
-};
-
-/**
- * Render a single marker
- * 
- * @param  {[type]} options [description]
- * @return {[type]}         [description]
- */
-GMW_Map.prototype.render_marker = function( options ) {
-
-	// map icon
-	var icon = options.icon;
-
-	// in case _default.png pass without a URL
-	if ( icon == '_default.png' || icon == null ) {
-		icon = '';
-	}
-
-	// if passing custom icon size we need to scale it
-	if ( this.icon_scaled_size != false && icon != '' ) {
-		icon = {
-			url 	   : icon,
-			scaledSize : this.icon_scaled_size,
-		};
-	}
-
-	var marker_options = {
-		position 	: options.position,
-		icon     	: icon,
-		map      	: this.map,
-		animation   : null,
-		location_id : options.id,
-		iw_content  : options.content
-	};
-
-	marker_options = GMW.apply_filters( 'gmw_generate_marker_options', marker_options, options.id, this );
-
-	// generate marker
-	return new google.maps.Marker( marker_options );
-};
-
-/**
- * User position
- *
- * Create the user's marker and info window
- * 
- * @return {[type]} [description]
- */
-GMW_Map.prototype.render_user_marker = function() {
+GMW_Map.prototype.renderUserMarker = function() {
 
 	var self = this;
 
 	// generate new user location marker
-	if ( self.user_location != false && self.user_location.lat != false && self.user_location.lng != false && self.user_location.map_icon != '0' && self.user_location.map_icon != '' ) {
+	if ( self.userLocation != false && self.userLocation.lat != 'null' && self.userLocation.lng != 'null' && self.userLocation.lat != false && self.userLocation.lng != false && self.userLocation.map_icon != '0' && self.userLocation.map_icon != '' ) {
 
 		// generate user's position
-		self.user_position = new google.maps.LatLng( 
-			self.user_location.lat, 
-			self.user_location.lng 
+		self.userPosition = self.latLng( 
+			self.userLocation.lat, 
+			self.userLocation.lng,
+			self
 		);
 		
 		// append user position to bounds
-		self.bounds.extend( self.user_position );
+		self.bounds.extend( self.userPosition );
 		
+		if ( typeof self.userLocation.map_icon === 'undefined' || '' == self.userLocation.map_icon ) {
+			self.userLocation.map_icon = 'https://unpkg.com/leaflet@1.3.1/dist/images/marker-icon.png';
+		}
+
 		// generate marker
 		var markerOptions = {
-			position : self.user_position,
-			icon     : self.user_location.map_icon,
-			id   	 : 'user_marker',
-			content  : ''
+			position 	 : self.userPosition,
+			icon     	 : self.userLocation.map_icon,
+			id   	 	 : 'user_marker',
+			content  	 : ''
 		};
 		
 		// generate marker
-		self.user_marker = self.render_marker( markerOptions );
+		self.userMarker = self.renderMarker( markerOptions, self.userLocation, self );
+
+		self.addMarker( self.userMarker, self );
 
 		// generate info-window if content exists
-		if ( self.user_location.iw_content != false && self.user_location.iw_content != null ) {
+		if ( self.userLocation.iw_content != false && self.userLocation.iw_content != null ) {
 
-			self.user_marker.iw_content = '<span class="title">' + self.user_location.iw_content + '</span>';
-			
-			// generate new window
-			self.user_info_window = new google.maps.InfoWindow( {
-				content   : '<div class="gmw-info-window user-marker map-' + this.id + ' ' + this.prefix + '">' + self.user_marker.iw_content + '</div>',
-				maxHeight : '15px'
-			} );
-			
-			google.maps.event.addListener( self.user_marker, 'click', function() {
-		    	//self.marker_click( self.user_marker );
-		    	// open window
-				self.user_info_window.open( 
-					self.map, 
-					self.user_marker 
-				);
-		    });    
-		      
-		    // open info window on map load
-			if ( self.user_location.iw_open == true ) {
-
-				setTimeout( function() { 
-					self.user_info_window.open( 
-						self.map, 
-						self.user_marker 
-					);
-				    //self.marker_click( self.user_marker );	
-				}, 500 );
-			}
+			var content = '<div class="gmw-info-window user-marker map-' + self.id + ' ' + self.prefix + '"><span class="title">' + self.userLocation.iw_content + '</span></div>';
+							
+			self.renderUserInfoWindow( self.userMarker, content, self );
 		}
 	}	
 };
 
 /**
- * Remove user marker 
+ * Remove user marker from the map.
  * 
  * @return {[type]} [description]
  */
-GMW_Map.prototype.clear_user_marker = function() {
+GMW_Map.prototype.clearUserMarker = function() {
+
+	var self = this;
 
 	// remove existing user marker
-	if ( this.user_marker != false ) {
-		this.user_marker.setMap( null );
-		this.user_marker = false;
-		this.user_position = false;
+	if ( self.userMarker != false ) {
+		self.clearMarker( self.userMarker, self );
+		self.userMarker   = false;
+		self.userPosition = false;
 	}
 };
 
 /**
- * Generate markers
+ * Generate markers.
  * 
  * @return {[type]} [description]
  */
-GMW_Map.prototype.render_markers = function( locations, append_previous ) {
+GMW_Map.prototype.renderMarkers = function( locations, append_previous ) {
 
 	var self = this;
 
 	// hook custom functions if needed
 	GMW.do_action( 'gmw_map_pre_render_markers', locations, this );
 
-	// init grouping
-	self.markers_grouping_init();
+	// init marker grouping
+	self.initMarkersGrouping();
 
 	self.locations = locations;
 
 	// get previous location if appending locations.
-	if ( ! append_previous || self.previous_locations.length == 0 ) {
+	if ( ! append_previous || self.previousLocations.length == 0 ) {
 
-		self.previous_locations = self.locations;
+		self.previousLocations = self.locations;
 
 	} else {
 
-		temLoc = jQuery.merge( self.locations, self.previous_locations );
+		temLoc = jQuery.merge( self.locations, self.previousLocations );
 
-		self.previous_locations = self.locations;
+		self.previousLocations = self.locations;
 
 		self.locations = temLoc;
 	}
@@ -838,8 +1295,8 @@ GMW_Map.prototype.render_markers = function( locations, append_previous ) {
 	var locations_count = self.locations.length;
 
 	// abort if no locations found and we don't want to show the map
-	if ( locations_count == 0 && self.hide_no_locations ) {
-		this.wrap_element.slideUp();
+	if ( locations_count == 0 && self.hideMapWithoutLocations ) {
+		this.wrapElement.slideUp();
 	}
 
 	// loop through locations
@@ -852,126 +1309,153 @@ GMW_Map.prototype.render_markers = function( locations, append_previous ) {
 			if ( self.locations[i].lat == undefined || self.locations[i].lng == undefined || self.locations[i].lat == '0.000000' || self.locations[i].lng == '0.000000' ) {
 				continue;
 			}
-	
+
 			// generate the marker position
-			var marker_position = new google.maps.LatLng( 
+			var markerPosition = self.latLng( 
 				self.locations[i].lat, 
-				self.locations[i].lng 
+				self.locations[i].lng,
+				self 
 			);
 			
 			// only if not using markers spiderfeir and if marker with the same location already exists
-			// if so, we will move it a bit
- 			if ( self.grouping_type != 'markers_spiderfier' && self.bounds.contains( marker_position ) ) {
- 				marker_position = self.move_marker( marker_position );
-	        }
+			// if so, we will move it a bit.
+			if ( self.moveMarkersEnabled ) {
 
-			// append location into bounds
-			self.bounds.extend( marker_position );
+				var markerCoords = self.locations[i].lat + self.locations[i].lng;
 
-		    // generate marker
+	 			if ( jQuery.inArray( markerCoords, self.coordsCollector ) != -1 ) {
+	 				markerPosition = self.moveMarker( markerPosition );
+		        } else {
+		        	self.coordsCollector.push( markerCoords );
+		        }
+		    }
+
+			// append location into bounds.
+			self.bounds.extend( markerPosition );
+
+			if ( typeof self.locations[i].map_icon === 'undefined' || '' == self.locations[i].map_icon ) {
+				self.userLocation.map_icon = 'https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2_hdpi.png';
+			}
+
+		    // default marker options.
 			var markerOptions = {
-				position : marker_position,
-				icon     : self.locations[i].map_icon,
-				id       : i,
-				content  : self.locations[i].info_window_content
+				position 	 : markerPosition,
+				icon     	 : self.locations[i].map_icon,
+				id       	 : i,
+				content      : self.locations[i].info_window_content
 			};
 
 			// generate marker
-			self.markers[i] = self.render_marker( markerOptions );
+			self.markers[i] = self.renderMarker( markerOptions, self.locations[i], self );
 
-			// add marker to cluster
-			if ( self.grouping_type == 'markers_clusterer' && typeof MarkerClusterer === 'function' ) {	
+			// add the marker to the map.
+			self.markerGroupingTypes[self.markerGrouping].addMarker( self.markers[i], self );
 
-				// add marker to cluster object
-				self.clusters.addMarker( self.markers[i] );	
+			// add marker to grouping
+			self.markerGroupingTypes[self.markerGrouping].markerClick( self.markers[i], self );
 
-				// init marker click event
-				google.maps.event.addListener( self.markers[i], 'click', function() {
-					self.marker_click( this );
-				});	
-			
-			// add marker to spiderfier
-			} else if ( self.grouping_type == 'markers_spiderfier' && typeof OverlappingMarkerSpiderfier === 'function' ) {	
-
-				// add marker into spiderfier object
-				self.spiderfiers.addMarker( self.markers[i] );
-
-				// place marker on the map
-				self.markers[i].setMap( self.map );	
-
-				google.maps.event.addListener( self.markers[i], 'spider_click', function() {
-					self.marker_click( this );
-				});
-	
-			// if no grouping
-			} else {		
-
-				self.markers[i].setMap( self.map );
-
-				// init marker click event
-				google.maps.event.addListener( self.markers[i], 'click', function() {
-					self.marker_click( this );
-				});
-			}
-
-			// hook custom functions if needed
+			// hook custom functions if needed.
 			GMW.do_action( 'gmw_map_markers_loop_single_marker', self.markers[i], self );
 
-		// Continue when done generating the markers.
+		// proceed when done generating the markers.
 		} else {
 			
 			// hook custom functions if needed
 			GMW.do_action( 'gmw_map_after_render_markers', locations, this );
 
-			// center map only if locations or user location exist
-			if ( locations_count > 0 || self.user_marker != false ) {
-				self.center_map();
+			// center map only if locations or user location exist.
+			if ( locations_count > 0 || self.userMarker != false ) {
+				self.centerMap();
 			}
 		}
 	} 
 };
 
 /**
- * center and zoom map
+ * Initiate grouping type.
  * 
  * @return {[type]} [description]
  */
-GMW_Map.prototype.center_map = function() {
+GMW_Map.prototype.initMarkersGrouping = function() {
+	
+	var self = this;
+
+	// temporary, to support older versions of GMW.
+	if ( self.markerGrouping == 'normal' ) {
+		self.markerGrouping = 'standard';
+	}
+
+	// hook custom functions if needed
+	GMW.do_action( 'gmw_markers_grouping_init', self.markerGrouping, self );
+
+	// run marker grouping
+	self.markerGroupingTypes[self.markerGrouping]['init']( self );
+};
+
+/**
+ * Clear markers grouping. 
+ * 
+ * @return {[type]} [description]
+ */
+GMW_Map.prototype.clearMarkersGrouping = function() {
+	
+	var self = this;
+
+	// temporary, to support older versions of GMW.
+	if ( self.markerGrouping == 'normal' ) {
+		self.markerGrouping = 'standard';
+	}
+
+	// hook custom functions if needed
+	GMW.do_action( 'gmw_markers_grouping_clear', self.markerGrouping, self );
+
+	// verify that the function exists for the type of info-window
+	if ( typeof self.markerGroupingTypes[self.markerGrouping]['clear'] !== 'undefined' ) {
+
+		// run marker grouping
+		self.markerGroupingTypes[self.markerGrouping]['clear']( self );
+	}
+};
+
+/**
+ * Open info-window main function.
+ * 
+ * @param  {[type]} marker [description]
+ * @return {[type]}        [description]
+ */
+GMW_Map.prototype.openInfoWindow = function( marker ) {
 
 	var self = this;
 
-	// custom zoom point
-	if ( self.zoom_position != false && ! self.auto_zoom_level ) {
+	// we already do this in clickMarker function.
+	// We do it again here in case a custum marker grouping function
+	// passes the markerClick function.
+	self.activeMarker = marker;
 
-		// get position
-		var latLng = new google.maps.LatLng( 
-			self.zoom_position.lat, 
-			self.zoom_position.lng 
-		);
+	// do somethign before the info-window opens.
+	GMW.do_action( 'gmw_map_pre_open_info_window', marker, self );
+	
+	// close any open info-window.
+	self.closeInfoWindow();
 
-		self.map.setZoom( parseInt( self.options.zoom ) );
-		self.map.panTo( latLng );
+	// open info-window
+	self.infoWindowTypes[self.infoWindow].open( marker, self );
+};
 
-	// zoom map when a single marker exists on the map
-	} else if ( self.locations.length == 1 && self.user_position == false ) {
+/**
+ * Close info-window main function.
+ * 
+ * @return {[type]} [description]
+ */
+GMW_Map.prototype.closeInfoWindow = function() {
 
-		if ( self.auto_zoom_level ) {
-			self.map.setZoom( 13 );
-		} else {
-			self.map.setZoom( parseInt( self.options.zoom ) );
-		}
+	var self = this;
+	
+	// hook custom functions if needed.
+	GMW.do_action( 'gmw_map_pre_close_info_window', self.infoWindow, self );
 
-		self.map.panTo( self.markers[0].getPosition() );
-
-	} else if ( ! self.auto_zoom_level && self.user_position != false ) {
-
-		self.map.setZoom( parseInt( self.options.zoom ) );
-		self.map.panTo( self.user_position );
-
-	} else if ( self.auto_zoom_level || self.user_position == false  ) { 
-		
-		self.map.fitBounds( self.bounds );
-	}
+	// run marker grouping
+	self.infoWindowTypes[self.infoWindow].close( self );
 };
 
 /**
@@ -981,108 +1465,86 @@ GMW_Map.prototype.center_map = function() {
  * 
  * @return {[type]}        [description]
  */
-GMW_Map.prototype.marker_click = function( marker ) {
+GMW_Map.prototype.markerClick = function( marker ) {
 
-	GMW.do_action( 'gmw_map_marker_click', marker, this );
+	var self = this;
 
-	this.active_marker = marker;
+	GMW.do_action( 'gmw_map_marker_click', marker, self );
 
-	// Clear directions if set on the map 
-	if ( typeof directionsDisplay !== 'undefined' ) {
-		directionsDisplay.setMap( null );
-	}
-	
-	// close any open info window
-	this.close_info_window();
+	self.activeMarker = marker;
 
-	// generate info box
-	var functionName = this.info_window_type + '_info_window_init';
-
-	// verify marker click function
-	if ( typeof this[functionName] === 'function' ) {
-
-		// execute marker click event
-		this[functionName]( marker );
-	
-	// show an error if function is missing
-	} else {
-
-		console.log( 'The function ' + functionName + ' not exists.' );
-	}
+	self.openInfoWindow( marker );
 };
 
 /**
- * Close info window main function
+ * Get info-window template name.
+ * 
+ * @param  {[type]} template [description]
+ * @return {[type]}          [description]
+ */
+GMW_Map.prototype.getIwTemplateName = function( template ) {
+
+	if ( template.indexOf( 'custom_' ) > -1 ) {
+		template = template.replace( 'custom_', '' ) + ' custom';
+	}
+	
+	return template;
+}
+
+/**
+ * below is a list of functions that need to be created 
+ *
+ * for each map provider.
+ */
+// Set bounds
+//GMW_Map.prototype.latLngBounds = function( mapObject ) {};
+
+// Clear marker from the map.
+//GMW_Map.prototype.clearMarker = function( marker, mapObject ) {};
+
+// Clear polyline from the map.
+//GMW_Map.prototype.clearPolyline = function( polyline, mapObject ) {};
+
+// Generate latLng position.
+//GMW_Map.prototype.latLng = function( lat, lng, mapObject ) {};
+
+// Add marker to the map.
+//GMW_Map.prototype.addMarker = function( marker, mapObject ) {};
+
+// Generate user's info-window.
+//GMW_Map.prototype.renderUserInfoWindow = function( marker, content, mapObject ) {};
+
+// Rezise map to fit its wrapping element.
+//GMW_Map.prototype.resizeMap = function( map, mapObject ) {};
+
+// Set map center.
+//GMW_Map.prototype.setCenter = function( center, mapObject ) {};
+				
+// Get element position.
+//GMW_Map.prototype.getPosition = function( element, mapObject ) {};
+
+// Map options
+//GMW_Map.prototype.getMapOptions = function( mapObject ) {};
+
+// Render map.
+//GMW_Map.prototype.Map = function( element, options, mapObject ) {};
+
+//Execute function after map loaded.
+//GMW_Map.prototype.mapLoaded = function( mapObject ) {};
+
+//Render a single marker
+//GMW_Map.prototype.renderMarker = function( options, location, mapObject ) {};
+
+//GMW_Map.prototype.setMarkerPosition = function( marker, position, map ) {};
+
+/**
+ * Move marker.
+ *
+ * Sligtly move markers that are on the same exact position.
  * 
  * @return {[type]} [description]
  */
-GMW_Map.prototype.close_info_window = function() {
-
-	// hook custom functions if needed
-	GMW.do_action( 'gmw_map_close_info_window', this.info_window_type, this );
-
-	// generate the grouping function
-	var functionName = this.info_window_type + '_info_window_close';
-
-	// verify grouping function
-	if ( typeof this[functionName] === 'function' ) {
-
-		// run marker grouping
-		this[functionName]();
-	
-	// otherwise show error message
-	} else {
-
-		console.log( 'The function ' + functionName + ' not exists.' );
-	}
-};
-
-/**
- * Close info window standard
- * 
- * @return {[type]} [description]
- */
-GMW_Map.prototype.standard_info_window_close = function() {
-
-	// close info window if open
-	if ( this.active_info_window ) {
-		this.active_info_window.close();
-		this.active_info_window = null;
-	}
-};
-
-/**
- * Standard info window 
- * 
- * @param  {[type]} marker    [description]
- * @param  {[type]} iw_type   [description]
- * @param  {[type]} mapObject [description]
- * @return {[type]}           [description]
- */
-GMW_Map.prototype.standard_info_window_init = function( marker ) {
-
-	self = this;
-
-	// verify iw content
-	if ( marker.iw_content ) {
-		
-		// info window opsions. Can be modified with the filter.
-		var info_window_options = GMW.apply_filters( 'gmw_standard_info_window_options', {
-			content  : '<div class="gmw-info-window standard map-' + self.id + ' ' + self.prefix + '">' + marker.iw_content + '</div>',
-			maxWidth : 200,
-			minWidth: 200
-		}, self );
-
-		// generate new window
-		self.active_info_window = new google.maps.InfoWindow( info_window_options );
-	
-		// open window
-		self.active_info_window.open( 
-			self.map, 
-			marker 
-		);
-	}
-};
+//GMW_Map.prototype.moveMarker = function( markerPosition ) {};
 
 /**
  * On document ready generate all maps exists in the global maps holder
@@ -1099,10 +1561,8 @@ jQuery( document ).ready( function($){
 	// loop through and generate all maps
 	jQuery.each( gmwMapObjects, function( map_id, vars ) {	
 
-		if ( vars.settings.render_map ) {
+		if ( vars.settings.render_on_page_load ) {
 			
-			//console.log( 'render map dynamically' );
-
 			// generate new map
 			GMW_Maps[map_id] = new GMW_Map( vars.settings, vars.map_options, vars.form );
 			// initiate it
