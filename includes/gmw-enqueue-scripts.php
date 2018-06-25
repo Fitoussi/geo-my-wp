@@ -101,6 +101,7 @@ function gmw_enqueue_scripts() {
 		),
 		'mapsProvider'      => $maps_provider,
 		'geocodingProvider' => $geocode_provider,
+		'defaultIcons'		=> GMW()->default_icons,
 		'isAdmin'           => IS_ADMIN,
 		'ajaxUrl'           => GMW()->ajax_url,
 	);
