@@ -182,7 +182,7 @@ class GEO_MY_WP {
 	public $default_icons = array(
 		'location_icon_url'       => 'https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2_hdpi.png',
 		'location_icon_size'      => array( 22, 35 ),
-		'user_location_icon_url'  => 'https://unpkg.com/leaflet@1.3.1/dist/images/marker-icon.png',
+		'user_location_icon_url'  => 'https://unpkg.com/leaflet@1.3.1/dist/images/marker-icon-2x.png',
 		'user_location_icon_size' => array( 22, 35 ),
 	);
 
@@ -372,6 +372,9 @@ class GEO_MY_WP {
 		$this->ajax_url      = admin_url( 'admin-ajax.php', is_ssl() ? 'admin' : 'http' );
 		$this->is_mobile     = ( function_exists( 'wp_is_mobile' ) && wp_is_mobile() ) ? true : false;
 		$this->maps_provider = $this->options['api_providers']['maps_provider'];
+
+		//$this->default_icons['location_icon_url']      = GMW_IMAGES . '/spotlight-hdpi.png';
+		//$this->default_icons['user_location_icon_url'] = GMW_IMAGES . '/marker-icon-2x.png';
 
 		// look for geocoding provider in settings.	
 		if ( ! empty( $this->options['api_providers']['geocoding_provider'] ) ) {
