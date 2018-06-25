@@ -170,7 +170,7 @@ class GMW_Settings {
 				'api_providers' => array(
 					'slug'     => 'api_providers',
 					'label'    => __( 'Maps & Geocoders', 'geo-my-wp' ),
-					'icon'     => 'cog',
+					'icon'     => 'map-o',
 					'fields'   => array(
 						'maps_provider' => array(
 							'name'       => 'maps_provider',
@@ -227,7 +227,7 @@ class GMW_Settings {
 				            'name'          => 'nominatim_options',
 				            'type'          => 'fields_group',
 				            'label'         => __( 'Nominatim ( OpenStreetMaps )', 'geo-my-wp' ),
-				            'desc'          => __( 'Setup Nominatim options' , 'geo-my-wp' ),
+				            'desc'          => __( 'Setup Nominatim options.' , 'geo-my-wp' ),
 				            'fields'        => array(
 				                'nominatim_email'  => array(
 				                    'name'          => 'nominatim_email',
@@ -235,7 +235,7 @@ class GMW_Settings {
 				                    'default'       => '',
 				                    'placeholder'   => __( 'Enter email address', 'geo-my-wp' ),
 				                    'label'         => __( 'Valid email address', 'geo-my-wp' ),
-				                    'desc'        	=> sprintf( __( 'Nominatim is a geocoding provider for OpenStreetMaps. The provider requires a valid email address to use its services. See this <a href="%1$s" target="_blank">this page</a> to learn about. ', 'geo-my-wp' ), 'http://docs.gravitygeolocation.com/article/101-create-google-map-api-key' ),
+				                    'desc'        	=> sprintf( __( 'Nominatim is a geocoding provider for OpenStreetMaps. The provider requires a valid email address to use its services. See this <a href="%1$s" target="_blank">this page</a> to learn more about this service. Also see the Nominatim <a href="%2$s" target="_blank">usage policy</a>.', 'geo-my-wp' ), 'https://wiki.openstreetmap.org/wiki/Nominatim', 'https://operations.osmfoundation.org/policies/nominatim/' ),
 									'attributes'  => array( 'size' => '50' ),
 									'priority'    => 5,
 				                )
