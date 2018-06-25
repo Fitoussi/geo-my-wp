@@ -194,16 +194,27 @@ class GMW_Form_Settings_Helper {
 					<?php _e( 'Locator Button', 'geo-my-wp' ); ?>
 				</label>	
 			</div>
+			
+			<?php 
+			$disabled = '';
+			$warning  = '';
 
+			if ( 'google_maps' != GMW()->maps_provider ) {
+				$disabled = 'disabled="disabled"';
+				$warning  = ' <em style="color:red;font-size:11px;">Availabe with Google Maps provider only</em>.';
+			}
+			?>
 			<div class="single-option autocomplete">	
 					<label>
 					<input 
 						type="checkbox" 
 						value="1" 
 						name="<?php echo $name_attr.'[address_autocomplete]'; ?>" 
+						<?php echo $disabled; ?>
 						<?php echo ! empty( $value['address_autocomplete'] ) ? 'checked="checked"' : ''; ?>
 					/>
 					<?php _e( 'Address Autocomplete', 'geo-my-wp' ); ?>
+					<?php echo $warning; ?>
 				</label>
 			</div>
 
