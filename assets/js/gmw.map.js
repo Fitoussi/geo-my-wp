@@ -845,11 +845,11 @@ var GMW_Map = function( options, map_options, form ) {
 	this.iconSize = options.icon_size || null;
 
 	/**
-	 * user icons size.
+	 * User default icons size.
 	 * 
 	 * @type {Array}
 	 */
-	this.userIconSize = options.icon_size || null;
+	this.userIconSize = gmwVars.defaultIcons.user_location_icon_size;
 
 	/**
 	 * If showing directions on the map.
@@ -1218,7 +1218,11 @@ GMW_Map.prototype.renderUserMarker = function() {
 		self.bounds.extend( self.userPosition );
 		
 		if ( typeof self.userLocation.map_icon === 'undefined' || '' == self.userLocation.map_icon ) {
-			self.userLocation.map_icon = 'https://unpkg.com/leaflet@1.3.1/dist/images/marker-icon.png';
+			self.userLocation.map_icon = 'https://unpkg.com/leaflet@1.3.1/dist/images/marker-icon-2x.png';
+		}
+
+		if ( ! self.userLocation.icon_size && self.userLocation.map_icon == 'https://unpkg.com/leaflet@1.3.1/dist/images/marker-icon-2x.png' ) {
+			self.userLocation.icon_size = self.userIconSize;
 		}
 
 		// generate marker
