@@ -132,11 +132,15 @@ class GMW_Current_Location_Widget extends GMW_Widget {
 			),
 			'map_marker'                => array(
 				'type'        => 'text',
-				'default'     => 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+				'default'     => GMW()->default_icons['user_location_icon_url'],
 				'label'       => __( 'Map marker icon', 'geo-my-wp' ),
 				'description' => __( 'Link to the image that you want to use as the map marker.', 'geo-my-wp' ),
 			),
-			'map_type'                  => array(
+		);
+
+		if ( 'google_maps' == GMW()->maps_provider ) {
+
+			$this->settings['map_type'] = array(
 				'type'    => 'select',
 				'default' => '',
 				'label'   => __( 'Map type', 'geo-my-wp' ),
@@ -146,31 +150,35 @@ class GMW_Current_Location_Widget extends GMW_Widget {
 					'HYBRID'    => __( 'HYBRID', 'geo-my-wp' ),
 					'TERRAIN'   => __( 'TERRAIN', 'geo-my-wp' ),
 				),
-			),
-			'zoom_level'                => array(
-				'type'    => 'select',
-				'default' => 13,
-				'label'   => __( 'Zoom level', 'geo-my-wp' ),
-				'options' => $zoom_options,
-			),
-			'scrollwheel_zoom'          => array(
-				'type'        => 'checkbox',
-				'default'     => 0,
-				'label'       => __( 'Mouse wheel zoom', 'geo-my-wp' ),
-				'description' => __( 'When enabled, the map will zoom in/out using the mouse scroll wheel.', 'geo-my-wp' ),
-			),
-			'ajax_update'               => array(
-				'type'        => 'hidden',
-				'default'     => 0,
-				'label'       => __( 'Update via ajax', 'geo-my-wp' ),
-				'description' => __( 'Check this checkbox to update the location form via AJAX instead of page load.', 'geo-my-wp' ),
-			),
-			'loading_message'           => array(
-				'type'        => 'text',
-				'default'     => 'Retrieving your current location...',
-				'label'       => __( 'Loading message', 'geo-my-wp' ),
-				'description' => __( 'Enter a message to display while retrieving the user\'s location. Leave blank to omit.', 'geo-my-wp' ),
-			),
+			);
+		}
+
+		$this->settings['zoom_level'] = array(
+			'type'    => 'select',
+			'default' => 13,
+			'label'   => __( 'Zoom level', 'geo-my-wp' ),
+			'options' => $zoom_options,
+		);
+
+		$this->settings['scrollwheel_zoom'] = array(
+			'type'        => 'checkbox',
+			'default'     => 0,
+			'label'       => __( 'Mouse wheel zoom', 'geo-my-wp' ),
+			'description' => __( 'When enabled, the map will zoom in/out using the mouse scroll wheel.', 'geo-my-wp' ),
+		);
+
+		$this->settings['ajax_update'] = array(
+			'type'        => 'hidden',
+			'default'     => 0,
+			'label'       => __( 'Update via ajax', 'geo-my-wp' ),
+			'description' => __( 'Check this checkbox to update the location form via AJAX instead of page load.', 'geo-my-wp' ),
+		);
+
+		$this->settings['loading_message'] = array(
+			'type'        => 'text',
+			'default'     => 'Retrieving your current location...',
+			'label'       => __( 'Loading message', 'geo-my-wp' ),
+			'description' => __( 'Enter a message to display while retrieving the user\'s location. Leave blank to omit.', 'geo-my-wp' ),
 		);
 
 		$this->register();
