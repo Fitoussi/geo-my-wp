@@ -135,7 +135,11 @@ class GMW_Single_Location_Widget extends GMW_Widget {
 				'label'       => __( 'Map height', 'geo-my-wp' ),
 				'description' => __( 'Set the map height in pixels or percentage ( ex. 250px or 100% ).', 'geo-my-wp' ),
 			),
-			'map_type'            => array(
+		);
+
+		if ( 'google_maps' == GMW()->maps_provider ) {
+
+			$this->settings['map_type'] = array(
 				'type'    => 'select',
 				'default' => '',
 				'label'   => __( 'Map type', 'geo-my-wp' ),
@@ -145,49 +149,56 @@ class GMW_Single_Location_Widget extends GMW_Widget {
 					'HYBRID'    => __( 'HYBRID', 'geo-my-wp' ),
 					'TERRAIN'   => __( 'TERRAIN', 'geo-my-wp' ),
 				),
-			),
-			'zoom_level'          => array(
-				'type'    => 'select',
-				'default' => '',
-				'label'   => __( 'Zoom level', 'geo-my-wp' ),
-				'options' => $zoom_options,
-			),
-			'scrollwheel'         => array(
-				'type'        => 'checkbox',
-				'default'     => 0,
-				'label'       => __( 'Mouse wheel zoom', 'geo-my-wp' ),
-				'description' => __( 'When enabled, the map will zoom in/out using the mouse scroll wheel.', 'geo-my-wp' ),
-			),
-			'object_map_icon'     => array(
-				'type'        => 'text',
-				'default'     => 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
-				'label'       => __( 'Object map icon', 'geo-my-wp' ),
-				'description' => __( 'Link to the image that you want to use as the map icon that marks the object location on the map.', 'geo-my-wp' ),
-			),
-			'object_info_window'  => array(
-				'type'        => 'text',
-				'default'     => 'distance,title,address',
-				'label'       => __( 'Object info window elements', 'geo-my-wp' ),
-				'description' => __( 'Enter the elements that you would like to display in the map info window of the object, in the order that you want to display them, comma saperated. Leave blank to disable the info-window. The elements available are distance, title, address.', 'geo-my-wp' ),
-			),
-			'user_map_icon'       => array(
-				'type'        => 'text',
-				'default'     => 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
-				'label'       => __( 'User location map icon', 'geo-my-wp' ),
-				'description' => __( 'Link to the image that you would like to use as the map marker that marks the user\'s location on the map. Leave blank to disable.', 'geo-my-wp' ),
-			),
-			'user_info_window'    => array(
-				'type'        => 'text',
-				'default'     => __( 'Your Location', 'geo-my-wp' ),
-				'label'       => __( 'User location info window', 'geo-my-wp' ),
-				'description' => __( 'Enter the content that you would like to display in the user location info-window. Leave the blank to disable.', 'geo-my-wp' ),
-			),
-			'no_location_message' => array(
-				'type'        => 'text',
-				'default'     => __( 'No location found', 'geo-my-wp' ),
-				'label'       => __( 'No location message', 'geo-my-wp' ),
-				'description' => __( 'The message that you would like to display if no location exists for the item being displayed. Leave blank for no message.', 'geo-my-wp' ),
-			),
+			);
+		}
+
+		$this->settings['zoom_level'] = array(
+			'type'    => 'select',
+			'default' => '',
+			'label'   => __( 'Zoom level', 'geo-my-wp' ),
+			'options' => $zoom_options,
+		);
+
+		$this->settings['scrollwheel'] = array(
+			'type'        => 'checkbox',
+			'default'     => 0,
+			'label'       => __( 'Mouse wheel zoom', 'geo-my-wp' ),
+			'description' => __( 'When enabled, the map will zoom in/out using the mouse scroll wheel.', 'geo-my-wp' ),
+		);
+
+		$this->settings['object_map_icon'] = array(
+			'type'        => 'text',
+			'default'     => GMW()->default_icons['location_icon_url'],
+			'label'       => __( 'Object map icon', 'geo-my-wp' ),
+			'description' => __( 'Link to the image that you want to use as the map icon that marks the object location on the map.', 'geo-my-wp' ),
+		);
+
+		$this->settings['object_info_window'] = array(
+			'type'        => 'text',
+			'default'     => 'distance,title,address',
+			'label'       => __( 'Object info window elements', 'geo-my-wp' ),
+			'description' => __( 'Enter the elements that you would like to display in the map info window of the object, in the order that you want to display them, comma saperated. Leave blank to disable the info-window. The elements available are distance, title, address.', 'geo-my-wp' ),
+		);
+
+		$this->settings['user_map_icon'] = array(
+			'type'        => 'text',
+			'default'     => GMW()->default_icons['user_location_icon_url'],
+			'label'       => __( 'User location map icon', 'geo-my-wp' ),
+			'description' => __( 'Link to the image that you would like to use as the map marker that marks the user\'s location on the map. Leave blank to disable.', 'geo-my-wp' ),
+		);
+
+		$this->settings['user_info_window'] = array(
+			'type'        => 'text',
+			'default'     => __( 'Your Location', 'geo-my-wp' ),
+			'label'       => __( 'User location info window', 'geo-my-wp' ),
+			'description' => __( 'Enter the content that you would like to display in the user location info-window. Leave the blank to disable.', 'geo-my-wp' ),
+		);
+
+		$this->settings['no_location_message'] = array(
+			'type'        => 'text',
+			'default'     => __( 'No location found', 'geo-my-wp' ),
+			'label'       => __( 'No location message', 'geo-my-wp' ),
+			'description' => __( 'The message that you would like to display if no location exists for the item being displayed. Leave blank for no message.', 'geo-my-wp' ),
 		);
 
 		$this->register();
