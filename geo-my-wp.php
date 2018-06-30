@@ -97,21 +97,21 @@ class GEO_MY_WP {
 	 * @var array
 	 */
 	public $required_versions = array(
-		'bp_groups_locator'                => '1.6',
-		'groups_locator'                   => '1.6', // old slug.
-		'bp_members_directory_geolocation' => '1.5',
-		'geo_members_directory'            => '1.5', // old slug.
-		'bp_xprofile_geolocation'          => '1.5',
-		'xprofile_fields'                  => '1.5', // old slug.
-		'exclude_locations'                => '1.3',
-		'exclude_members'                  => '1.3', // old slug.
-		'gmw_kleo_geolocation'             => '1.4',
-		'nearby_locations'                 => '1.3',
-		'nearby_posts'                     => '1.3', // old slug.
-		'premium_settings'                 => '2.0',
-		'global_maps'                      => '2.2',
-		'users_locator'                    => '1.3',
-		'wp_users_geo-location'            => '1.3', // old slug.
+		'bp_groups_locator'                => '1.6.1',
+		'groups_locator'                   => '1.6.1', // old slug.
+		'bp_members_directory_geolocation' => '1.5.1',
+		'geo_members_directory'            => '1.5.1', // old slug.
+		'bp_xprofile_geolocation'          => '1.5.1',
+		'xprofile_fields'                  => '1.5.1', // old slug.
+		'exclude_locations'                => '1.3.1',
+		'exclude_members'                  => '1.3.1', // old slug.
+		'gmw_kleo_geolocation'             => '1.4.1',
+		'nearby_locations'                 => '1.3.1',
+		'nearby_posts'                     => '1.3.1', // old slug.
+		'premium_settings'                 => '2.1',
+		'global_maps'                      => '2.3',
+		'users_locator'                    => '1.3.2',
+		'wp_users_geo-location'            => '1.3.2', // old slug.
 	);
 
 	/**
@@ -175,16 +175,21 @@ class GEO_MY_WP {
 	public $current_form = array();
 
 	/**
-	 * Default icon URL and size.
+	 * Default icons URL and size.
 	 *
 	 * @var array
 	 */
-	public $default_icons = array(
-		'location_icon_url'       => 'https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2_hdpi.png',
-		'location_icon_size'      => array( 22, 35 ),
-		'user_location_icon_url'  => 'https://unpkg.com/leaflet@1.3.1/dist/images/marker-icon-2x.png',
-		'user_location_icon_size' => array( 22, 35 ),
-	);
+	public function set_default_icons() {
+		$this->default_icons = array(
+			'shadow_icon_url'         => 'https://unpkg.com/leaflet@1.3.1/dist/images/marker-shadow.png',
+			//'location_icon_url'     => 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+			'location_icon_url'       => GMW_IMAGES . '/marker-icon-red-2x.png',
+			'location_icon_size'      => array( 25, 41 ),
+			//'user_location_icon_url'=> 'https://unpkg.com/leaflet@1.3.1/dist/images/marker-icon-2x.png',
+			'user_location_icon_url'  => GMW_IMAGES . '/marker-icon-blue-2x.png',
+			'user_location_icon_size' => array( 25, 41 ),
+		);
+	}
 
 	/**
 	 * GEO my WP instance.
@@ -373,10 +378,10 @@ class GEO_MY_WP {
 		$this->is_mobile     = ( function_exists( 'wp_is_mobile' ) && wp_is_mobile() ) ? true : false;
 		$this->maps_provider = $this->options['api_providers']['maps_provider'];
 
-		//$this->default_icons['location_icon_url']      = GMW_IMAGES . '/spotlight-hdpi.png';
-		//$this->default_icons['user_location_icon_url'] = GMW_IMAGES . '/marker-icon-2x.png';
+		// set default icons.
+		$this->set_default_icons();
 
-		// look for geocoding provider in settings.	
+		// verify geocoding provider.	
 		if ( ! empty( $this->options['api_providers']['geocoding_provider'] ) ) {
 			$this->geocoding_provider = $this->options['api_providers']['geocoding_provider'];
 		} elseif ( 'google_maps' != $this->maps_provider ) {
