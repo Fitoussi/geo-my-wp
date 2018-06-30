@@ -55,12 +55,12 @@ function gmw_post_location_form( $args = array() ) {
 	$location_form->display_form();
 }
 
-	/**
-	 * Generate the post location form using shortcode
-	 *
-	 * @param  array  $atts [description]
-	 * @return [type]       [description]
-	 */
+/**
+ * Generate the post location form using shortcode
+ *
+ * @param  array  $atts [description]
+ * @return [type]       [description]
+ */
 function gmw_post_location_form_shortcode( $atts = array() ) {
 
 	if ( empty( $atts ) ) {
@@ -75,7 +75,7 @@ function gmw_post_location_form_shortcode( $atts = array() ) {
 
 	return $content;
 }
-	add_shortcode( 'gmw_post_location_form', 'gmw_post_location_form_shortcode' );
+add_shortcode( 'gmw_post_location_form', 'gmw_post_location_form_shortcode' );
 
 /**
  * Get terms function using GEO my WP internal cache
@@ -261,10 +261,12 @@ function gmw_get_post_address( $args = array() ) {
 		$args['post_id'] = $post->ID;
 	}
 
-	$fields = explode( ',', $args['fields'] );
+	if ( is_string( $args['fields'] ) ) {
+		$args['fields'] = explode( ',', $args['fields'] );
+	}
 
 	// get post address fields
-	return gmw_get_address_fields( 'post', $args['post_id'], $fields, $args['separator'] );
+	return gmw_get_address_fields( 'post', $args['post_id'], $args['fields'], $args['separator'] );
 }
 add_shortcode( 'gmw_post_address', 'gmw_get_post_address' );
 
@@ -309,9 +311,7 @@ function gmw_post_address( $args = array() ) {
 add_shortcode( 'gmw_post_location_meta', 'gmw_get_post_location_meta_values' ); */
 
 /**
- * gmw_location_fields shortcode
- *
- * Disply either location or location fields of a specific post.
+ * Get post address or location meta fields.
  *
  * @since 3.0.2
  *
@@ -342,23 +342,11 @@ function gmw_get_post_location_fields( $atts ) {
 		$args['post_id'] = $post->ID;
 	}
 
-	// When we know for sure that we need location meta fields.
-	if ( ! empty( $args['location_meta'] ) ) {
-
-		return gmw_get_location_meta_values( 'post', $args['post_id'], $args['fields'], $args['separator'] );
-
-	} else {
-
-		// try to get location field.
-		$field = gmw_get_address_fields( 'post', $args['post_id'], $args['fields'], $args['separator'] );
-
-		// if location field was not found, try location meta.
-		if ( empty( $field ) ) {
-			$field = gmw_get_location_meta_values( 'post', $args['post_id'], $args['fields'], $args['separator'] );
-		}
-
-		return $field;
+	if ( is_string( $args['fields'] ) ) {
+		$args['fields'] = explode( ',', $args['fields'] );
 	}
+
+	return gmw_get_location_fields( 'post', $args['post_id'], $args['fields'], $args['separator'], $args['location_meta'] );
 }
 add_shortcode( 'gmw_post_location_fields', 'gmw_get_post_location_fields' );
 
