@@ -264,7 +264,7 @@ class GMW_Maps_API {
 		// if Google maps is the provider, we don't need icon size by default.
 		// Google already uses the default size of an icon.
 		// With LeafLet ( and perhaps other providers ) it is different and we need to provide the icon size.
-		$default_map_args['icon_size'] = 'google_maps' == GMW()->maps_provider ? null : GMW()->default_icons['location_icon_size'];
+		$default_map_args['icon_size'] = ( 'google_maps' == GMW()->maps_provider ) ? null : GMW()->default_icons['location_icon_size'];
 
 		// deprecated variable.
 		if ( isset( $map_args['render_map'] ) ) {
@@ -274,6 +274,11 @@ class GMW_Maps_API {
 
 		// merge default with incoming map args
 		$map_args = array_merge( $default_map_args, $map_args );
+
+		// make sure icon size is an array.
+		if ( ! empty( $map_args['icon_size'] ) && ! is_array( $map_args['icon_size'] ) ) {
+			$map_args['icon_size'] = explode( ',', $map_args['icon_size'] );
+		}
 
 		// default map options
 		$default_map_options = array(
@@ -325,6 +330,11 @@ class GMW_Maps_API {
 			$user_location = array_merge( $default_user_location, $user_location );
 		} else {
 			$user_location = $default_user_location;
+		}
+
+		// make sure icon size is an array.
+		if ( ! empty( $user_location['icon_size'] ) && ! is_array( $user_location['icon_size'] ) ) {
+			$user_location['icon_size'] = explode( ',', $user_location['icon_size'] );
 		}
 
 		// no need to pass the results in the form as well
