@@ -79,8 +79,6 @@ function gmw_get_blog_id( $object = '' ) {
 	}
 }
 
-
-
 /**
  * Get specific form data
  * 
