@@ -184,7 +184,7 @@ if ( gmwVars.mapsProvider == 'google_maps' ) {
 
 			// When need to scale all icons based on same size.
 			// That is if icon size provided or when using the default red icon.
-			} else if ( self.iconSize || icon.url == 'https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2_hdpi.png' ) {
+			} else if ( self.iconSize || icon.url == gmwVars.defaultIcons.location_icon_url ) {
 
 				// first we check if scaled size already provided in global.
 				// We do this to prevent scalling each icon to the same size.
@@ -195,7 +195,7 @@ if ( gmwVars.mapsProvider == 'google_maps' ) {
 					if ( self.iconSize ) {
 						self.iconScaledSize = new google.maps.Size( self.iconSize[0], self.iconSize[1] );
 					} else {
-						self.iconScaledSize = new google.maps.Size( 22, 35 );
+						self.iconScaledSize = new google.maps.Size( gmwVars.defaultIcons.location_icon_size[0], gmwVars.defaultIcons.location_icon_size[1] );
 					}	
 				}
 
@@ -249,9 +249,9 @@ if ( gmwVars.mapsProvider == 'google_maps' ) {
 			        markerPosition, 
 			        newPosition
 			    ],
-			    strokeColor   : "#FF0000",
+			    strokeColor   : "#999999",
 			    strokeOpacity : 1.0,
-			    strokeWeight  : 2,
+			    strokeWeight  : 1,
 			    map 		  : self.map
 			} ) );
 
@@ -434,7 +434,7 @@ if ( gmwVars.mapsProvider == 'leaflet' ) {
 		    
 		    var newPosition = self.latLng( newLat, newLng ); //cfunc
 
-		    self.polylines.push( L.polygon( [ newPosition, markerPosition ], { color : "#FF0000" } ).addTo( self.map ) );
+		    self.polylines.push( L.polygon( [ newPosition, markerPosition ], { 'color' : '#999999', 'wight' : '1' } ).addTo( self.map ) );
 
 			return newPosition;
 		},
@@ -505,7 +505,7 @@ if ( gmwVars.mapsProvider == 'leaflet' ) {
 
 			var self 	 	= mapObject,
 				iconUrl  	= options.icon || self.iconUrl, // icon URL
-				iconSize 	= location.icon_size || self.iconSize || [ 22, 35 ], // get icon size.
+				iconSize 	= location.icon_size || self.iconSize || [ 25, 41 ], // get icon size.
 				// icon options
 				iconOptions = {
 				    iconUrl		 : iconUrl,
@@ -835,7 +835,7 @@ var GMW_Map = function( options, map_options, form ) {
 	 * 
 	 * @type {String}
 	 */
-	this.iconUrl = options.icon_url || 'https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2_hdpi.png';
+	this.iconUrl = options.icon_url || gmwVars.defaultIcons.location_icon_url;
 
 	/**
 	 * Default icons size.
@@ -1218,10 +1218,10 @@ GMW_Map.prototype.renderUserMarker = function() {
 		self.bounds.extend( self.userPosition );
 		
 		if ( typeof self.userLocation.map_icon === 'undefined' || '' == self.userLocation.map_icon ) {
-			self.userLocation.map_icon = 'https://unpkg.com/leaflet@1.3.1/dist/images/marker-icon-2x.png';
+			self.userLocation.map_icon = gmwVars.defaultIcons.user_location_icon_url;
 		}
 
-		if ( ! self.userLocation.icon_size && self.userLocation.map_icon == 'https://unpkg.com/leaflet@1.3.1/dist/images/marker-icon-2x.png' ) {
+		if ( ! self.userLocation.icon_size && self.userLocation.map_icon == gmwVars.defaultIcons.user_location_icon_url ) {
 			self.userLocation.icon_size = self.userIconSize;
 		}
 
@@ -1338,7 +1338,7 @@ GMW_Map.prototype.renderMarkers = function( locations, append_previous ) {
 			self.bounds.extend( markerPosition );
 
 			if ( typeof self.locations[i].map_icon === 'undefined' || '' == self.locations[i].map_icon ) {
-				self.userLocation.map_icon = 'https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2_hdpi.png';
+				self.userLocation.map_icon = gmwVars.defaultIcons.location_icon_url;
 			}
 
 		    // default marker options.
