@@ -11,7 +11,7 @@ var GMW_Location_Form_Map_Providers = {
 		},
 
 		getPosition : function( element ) {
-			return element.getPostion();
+			return element.getPosition();
 		},
 
 		setMarkerPosition : function( marker, latLng ) {
@@ -465,10 +465,9 @@ var GMW_Location_Form = {
 	    		setTimeout( function(){  
 		    		// resize map
 		    		this_form.resizeMap( this_form.map );
-		    
-		    		// center map on marker
-		    		this_form.setCenter( this_form.getPosition( this_form.map_marker ) );
 
+		    		// center map on marker
+		    		this_form.setCenter( this_form.getPosition( this_form.map_marker ), this_form.map );
 		    	}, 100 );
 	    	}
 	    });
@@ -960,7 +959,7 @@ var GMW_Location_Form = {
 		jQuery( '.group_address.place_id' ).val( result.place_id );
 
 		// do something custom with the location data
-		GMW.do_action( 'gmw_lf_geocoded_location_data', result, this_form, response );
+		GMW.do_action( 'gmw_lf_geocoded_location_data', result, response, this_form );
 
 		// update map based of new coords
 		if ( this_form.map_enabled && jQuery( '#gmw-lf-map' ).length ) {
