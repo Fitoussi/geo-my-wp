@@ -1087,10 +1087,15 @@ GMW_Map.prototype.render = function( locations, userLocation ) {
 GMW_Map.prototype.update = function( locations, userLocation, append_previous ) {
 	
 	var self = this;
-
+	var icon
 	// set locations.
 	self.locations 	  = locations || self.locations;
 	self.userLocation = userLocation || self.userLocation;
+	
+	/*if ( userLocation ) {
+		self.userLocation.lat = userLocation.lat;
+		self.userLocation.lng = userLocation.lng;
+	}*/
 
 	// abort if not locations found and we don't want to show the map.
 	if ( self.locations.length == 0 && self.hideMapWithoutLocations ) {
