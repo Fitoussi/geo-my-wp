@@ -22,7 +22,7 @@ class GMW_Posts_Locator_Screens {
 		global $pagenow;
 
 		// load page only on new and edit post pages.
-		if ( empty( $pagenow ) || ! in_array( $pagenow, array( 'post-new.php', 'post.php' ) ) ) {
+		if ( empty( $pagenow ) || ! in_array( $pagenow, array( 'post-new.php', 'post.php', 'edit.php' ) ) ) {
 			return;
 		}
 
@@ -34,17 +34,23 @@ class GMW_Posts_Locator_Screens {
 				continue;
 			}
 
-			add_action( "add_meta_boxes_{$post_type}", array( $this, 'add_meta_box' ), 10 );
-			add_filter( "manage_{$post_type}_posts_columns", array( $this, 'add_address_column' ) );
-			add_action( "manage_{$post_type}_posts_custom_column", array( $this, 'address_column_content' ), 10, 2 );
+			if ( 'edit.php' == $pagenow ) {
+				add_filter( "manage_{$post_type}_posts_columns", array( $this, 'add_address_column' ) );
+				add_action( "manage_{$post_type}_posts_custom_column", array( $this, 'address_column_content' ), 10, 2 );
+			}
 
-			// filters fires when location updated.
-			add_filter( 'gmw_lf_post_location_args_before_location_updated', array( $this, 'get_post_title' ) );
-			add_filter( 'gmw_lf_post_location_meta_before_location_updated', array( $this, 'verify_location_meta' ), 10, 3 );
+			if ( in_array( $pagenow, array( 'post-new.php', 'post.php' ) ) ) {
 
-			// these action fire functions responsible for a fix where posts status wont change from pending to publish.
-			//add_action( 'gmw_lf_before_post_location_updated', array( $this, 'post_status_publish_fix' ) );
-			$this->post_status_publish_fix();
+				add_action( "add_meta_boxes_{$post_type}", array( $this, 'add_meta_box' ), 10 );
+
+				// filters fires when location updated.
+				add_filter( 'gmw_lf_post_location_args_before_location_updated', array( $this, 'get_post_title' ) );
+				add_filter( 'gmw_lf_post_location_meta_before_location_updated', array( $this, 'verify_location_meta' ), 10, 3 );
+
+				// these action fire functions responsible for a fix where posts status wont change from pending to publish.
+				//add_action( 'gmw_lf_before_post_location_updated', array( $this, 'post_status_publish_fix' ) );
+				$this->post_status_publish_fix();
+			}
 		}
 	}
 
