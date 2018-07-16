@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function gmw_search_results_address( $object, $gmw = array() ) {
 
-    if ( ! isset( $gmw['search_results']['address_fields'] ) ) {
+    if ( empty( $gmw['search_results']['address_fields'] ) ) {
         $fields = array( 'formatted_address' );
     } else {
         $fields = $gmw['search_results']['address_fields'];
@@ -149,7 +149,7 @@ function gmw_search_results_directions_link( $object, $gmw = array() ) {
         'lng' => $gmw['lng']
     );
 
-    echo '<div class="gmw-directions-link">'.gmw_get_directions_link( $object, $from_coords ).'</div>';
+    echo '<span class="gmw-directions-link">'.gmw_get_directions_link( $object, $from_coords ).'</span>';
 }
 
 /**
