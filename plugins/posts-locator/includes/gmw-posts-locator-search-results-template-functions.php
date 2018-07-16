@@ -1,31 +1,82 @@
 <?php
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+	exit;
+}
+
+/**
+ * Generate tax_query args for taxonomy terms query.
+ *
+ * To be used with posts locator WP_Query.
+ *
+ * @since 3.1
+ *
+ * @param  array  $tax_args [description]
+ * @param  [type] $gmw      [description]
+ * @return [type]           [description]
+ */
+function gmw_pt_get_tax_query_args( $tax_args = array(), $gmw ) {
+
+	$tax_value = false;
+	$output    = array( 'relation' => 'AND' );
+
+	foreach ( $tax_args as $taxonomy => $values ) {
+
+		if ( array_filter( $values ) ) {
+			$output[] = array(
+				'taxonomy' => $taxonomy,
+				'field'    => 'id',
+				'terms'    => $values,
+				'operator' => 'IN',
+			);
+		}
+
+		// extend the taxonomy query
+		$output = apply_filters( 'gmw_' . $gmw['prefix'] . '_query_taxonomy', $output, $taxonomy, $values, $gmw );
+	}
+
+	// verify that there is at least one query to performe
+	if ( empty( $output[0] ) ) {
+		$output = array();
+	}
+
+	return $output;
 }
 
 /**
  * Display featured image in search results
- * 
+ *
  * @param  [type] $post [description]
  * @param  array  $gmw  [description]
  * @return [type]       [description]
  */
 function gmw_search_results_featured_image( $post, $gmw = array() ) {
 
-    if ( ! $gmw['search_results']['image']['enabled'] || ! has_post_thumbnail() ) { 
+    if ( ! $gmw['search_results']['image']['enabled'] ) { 
         return;
     }
-    ?>                                    
-    <div class="post-thumbnail">
-        <?php 
-            the_post_thumbnail( array( 
-                $gmw['search_results']['image']['width'], 
-                $gmw['search_results']['image']['height'] 
-            ) ); 
-        ?>
-    </div>
-    <?php
+    if ( has_post_thumbnail() ) {
+	    ?>                                    
+	    <div class="post-thumbnail">
+	        <?php 
+	            the_post_thumbnail( array( 
+	                $gmw['search_results']['image']['width'], 
+	                $gmw['search_results']['image']['height'] 
+	            ) ); 
+	        ?>
+	    </div>
+	    <?php
+	} else {
+		?>
+		<div class="post-thumbnail no-image">
+			<img 
+				src="<?php echo GMW_IMAGES . '/no-image.jpg'; ?>" 
+				width="<?php echo esc_attr( $gmw['search_results']['image']['width'] ); ?>"
+				height="<?php echo esc_attr( $gmw['search_results']['image']['height'] ); ?>"
+			/>
+		</div>
+		<?php
+	}
 }
 
 /**
