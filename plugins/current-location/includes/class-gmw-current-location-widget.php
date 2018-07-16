@@ -85,14 +85,14 @@ class GMW_Current_Location_Widget extends GMW_Widget {
 				'default'     => array( 'address' ),
 				'label'       => __( 'Address fields', 'geo-my-wp' ),
 				'options'     => array(
-					'address'      => __( 'Address', 'geo-my-wp' ),
+					'address'      => __( 'Full Address', 'geo-my-wp' ),
 					'street'       => __( 'Street', 'geo-my-wp' ),
 					'city'         => __( 'City', 'geo-my-wp' ),
 					'region_code'  => __( 'State', 'geo-my-wp' ),
 					'postcode'     => __( 'Postcode', 'geo-my-wp' ),
 					'country_code' => __( 'Country', 'geo-my-wp' ),
 				),
-				'description' => __( 'Choose the address fields that you would like to display.', 'geo-my-wp' ),
+				'description' => __( 'Choose the address fields that you would like to display. Check the Full Address checkbox to display the full address ( when provided ), or check any of the address fields to display only specific fields.', 'geo-my-wp' ),
 			),
 			'address_label'             => array(
 				'type'        => 'text',
