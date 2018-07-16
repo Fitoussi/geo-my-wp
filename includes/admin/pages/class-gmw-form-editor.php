@@ -526,23 +526,25 @@ class GMW_Form_Editor {
 				'priority' => 50,
 			),
 		);
+		
+		$groups['results_map']['fields']['map_type'] = array(
+			'name'       => 'map_type',
+			'type'       => 'hidden',
+			'default'    => 'ROADMAP',
+			'label'      => __( 'Map type', 'geo-my-wp' ),
+			'desc'       => __( 'Select the map type.', 'geo-my-wp' ),
+			'attributes' => '',
+			'priority'   => 30,
+		);
 
 		if ( 'google_maps' == GMW()->maps_provider && isset( $groups['results_map'] ) ) {
 
-			$groups['results_map']['fields']['map_type'] = array(
-				'name'       => 'map_type',
-				'type'       => 'select',
-				'default'    => 'ROADMAP',
-				'label'      => __( 'Map type', 'geo-my-wp' ),
-				'desc'       => __( 'Select the map type.', 'geo-my-wp' ),
-				'options'    => array(
-					'ROADMAP'   => __( 'ROADMAP', 'geo-my-wp' ),
-					'SATELLITE' => __( 'SATELLITE', 'geo-my-wp' ),
-					'HYBRID'    => __( 'HYBRID', 'geo-my-wp' ),
-					'TERRAIN'   => __( 'TERRAIN', 'geo-my-wp' ),
-				),
-				'attributes' => '',
-				'priority'   => 30,
+			$groups['results_map']['fields']['map_type']['type']    = 'select';
+			$groups['results_map']['fields']['map_type']['options'] = array(
+				'ROADMAP'   => __( 'ROADMAP', 'geo-my-wp' ),
+				'SATELLITE' => __( 'SATELLITE', 'geo-my-wp' ),
+				'HYBRID'    => __( 'HYBRID', 'geo-my-wp' ),
+				'TERRAIN'   => __( 'TERRAIN', 'geo-my-wp' ),
 			);
 		}
 
@@ -1188,12 +1190,12 @@ class GMW_Form_Editor {
 									<?php 
 									do_action( 'form_editor_tab_start', $tab, $section, $this->form['ID'], $this->form );
 									
-				                    foreach ( $section as $sec => $option ) {             
+				                    foreach ( $section as $sec => $option ) {          
 				                        ?>
 				                        <tr 
 				                        	valign="top" 
 				                        	id="<?php echo esc_attr( $tab ); ?>-<?php echo esc_attr( $option['name'] ); ?>-tr" 
-				                        	class="gmw-item-sort gmw-form-field-wrapper <?php echo ! empty( $option['class'] ) ? esc_attr( $option['class'] ) : ''; ?> <?php echo esc_attr( $tab ); ?>"
+				                        	class="gmw-item-sort gmw-form-field-wrapper <?php echo ! empty( $option['class'] ) ? esc_attr( $option['class'] ) : ''; ?> <?php echo esc_attr( $tab ); ?> <?php echo ! empty( $option['type'] ) ? esc_attr($option['type'] ) : ''; ?>"
 				                        >
 				                        	<td class="gmw-form-feature-desc">      		
 				                        		<?php if ( isset( $option['label'] ) ) { ?>
@@ -1414,6 +1416,7 @@ class GMW_Form_Editor {
 			// text field
 			case "''":
 			case 'text':
+			case 'hidden';
 			case 'password':
 				if ( ! empty( $value ) ) {
 					$this_value = $value;
