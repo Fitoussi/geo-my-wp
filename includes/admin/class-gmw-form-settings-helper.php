@@ -53,7 +53,7 @@ class GMW_Form_Settings_Helper {
      * @param unknown_type $tax_slug
      * @param unknown_type $options
      */
-    public static function get_taxonomy_terms( $taxonomy = 'category', $values = array(), $sort_groups = false ) {
+    public static function get_taxonomy_terms( $taxonomy = 'category', $values = array(), $sort_groups = false, $field = 'term_id' ) {
         
         if ( ! is_array( $values ) ) {
             $values = explode( ',', $values );
@@ -67,11 +67,15 @@ class GMW_Form_Settings_Helper {
 
         if ( ! $sort_groups ) {
 
+        	if ( 'term_taxonomy_id' != $field ) {
+        		$field = 'term_id';
+        	}
+        	
             $current_tax = $terms[0]->taxonomy;
                     
             foreach ( $terms as $term ) {   
-                $selected = ( ! empty( $values ) && in_array( $term->term_id, $values ) ) ? 'selected="selected"' : '';
-                echo '<option value="'.$term->term_id.'" '.$selected.' >'.$term->name.'</option>';
+                $selected = ( ! empty( $values ) && in_array( $term->$field, $values ) ) ? 'selected="selected"' : '';
+                echo '<option value="'.$term->$field.'" '.$selected.' >'.$term->name.'</option>';
             }
 
         } else {
