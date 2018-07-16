@@ -15,10 +15,10 @@ if ( ! function_exists( 'gmw_search_results_bp_avatar' ) ) {
 	function gmw_search_results_bp_avatar( $object_type, $gmw = array() ) {
 
 		if ( ! $gmw['search_results']['image']['enabled'] ) {
-				return;
+			return;
 		}
 
-		$object_type = ( 'bp_groups_locator' == $gmw['slug'] ) ? 'group' : 'member';
+		$object_type = ( 'bp_groups_locator' == $gmw['component'] ) ? 'group' : 'member';
 
 		$permalink_function = 'bp_' . $object_type . '_permalink';
 		$avatar_function    = 'bp_' . $object_type . '_avatar';
@@ -227,32 +227,32 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 					);
 				}
 
-				$output .= '<label for="' . $fid . '">' . __( 'Age Range (min - max)', 'geo-my-wp' ) . '</label>';
+				$output .= '<label class="gmw-field-label" for="' . $fid . '">' . __( 'Age Range (min - max)', 'geo-my-wp' ) . '</label>';
 				$output .= '<input type="number" name="xf[' . $field_id . '][min]" id="' . $fid . '_min" class="' . $field_class . ' range-min" value="' . $value['min'] . '" placeholder="' . __( 'Min', 'geo-my-wp' ) . '" />';
 				$output .= '<input type="number" name="xf[' . $field_id . '][max]" id="' . $fid . '_max" class="' . $field_class . ' range-max" value="' . $value['max'] . '" placeholder="' . __( 'Max', 'geo-my-wp' ) . '" />';
 				break;
 
 			// textbox field
 			case 'textbox':
-				$output .= '<label for="' . $fid . '">' . $label . '</label>';
-				$output .= '<input type="text" name="xf[' . $field_id . ']" id="' . $fid . '" class="' . $field_class . '" value="' . $value . '" />';
+				$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
+				$output .= '<input type="text" name="xf[' . $field_id . ']" id="' . $fid . '" class="' . $field_class . '" value="' . $value . '" placeholder=" ' . $label . '" />';
 				break;
 
 			// number field
 			case 'number':
-				$output .= '<label for="' . $fid . '">' . $label . '</label>';
-				$output .= '<input type="number" name="xf[' . $field_id . ']" id="' . $fid . '" value="' . $value . '" />';
+				$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
+				$output .= '<input type="number" name="xf[' . $field_id . ']" id="' . $fid . '" value="' . $value . '" placeholder=" ' . $label . '" />';
 				break;
 
 			// textarea
 			case 'textarea':
-				$output .= '<label for="' . $fid . '">' . $label . '</label>';
+				$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
 				$output .= '<textarea rows="5" cols="40" name="xf[' . $field_id . ']" id="' . $fid . '" class="' . $field_class . '">' . $value . '</textarea>';
 				break;
 
 			// selectbox
 			case 'selectbox':
-				$output .= '<label for="' . $fid . '">' . $label . '</label>';
+				$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
 				$output .= '<select name="xf[' . $field_id . ']" id="' . $fid . '" class="' . $field_class . '">';
 
 				// all option
@@ -296,7 +296,7 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 						)
 					);
 
-					$output .= '<label for="' . $fid . '">' . $label . '</label>';
+					$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
 					$output .= '<select name="xf[' . $field_id . ']" id="' . $fid . '" class="' . $field_class . '">';
 
 					$option_all = apply_filters( 'gmw_fl_xprofile_form_dropdown_option_all', __( ' -- All -- ', 'geo-my-wp' ), $field_id, $field_data );
@@ -321,7 +321,7 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 			case 'multiselectbox':
 			case 'multiselect_custom_post_type':
 			case 'multiselect_custom_taxonomy':
-				$output .= '<label for="' . $fid . '">' . $label . '</label>';
+				$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
 				$output .= '<select name="xf[' . $field_id . '][]" id="' . $fid . '" class="' . $field_class . '" multiple="multiple">';
 
 				// get options
@@ -414,7 +414,7 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 
 					if ( $terms ) {
 
-						$output .= '<label for="' . $fid . '">' . $label . '</label>';
+						$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
 						$output .= '<select name="xf[' . $field_id . '][]" id="' . $fid . '" class="' . $field_class . '" multiple="multiple">';
 
 						foreach ( $terms as $term ) {
