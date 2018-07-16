@@ -242,12 +242,9 @@ function gmw_update_location( $object_type = '', $object_id = 0, $location = arr
         }
     }
 
-    // include geocoder file
-    include_once( GMW_PATH . '/includes/gmw-geocoder.php' );
-
     if ( ! function_exists( 'gmw_geocoder' ) ) {
 
-    	trigger_error( 'Geocoder class not exists.', E_USER_NOTICE );
+    	trigger_error( 'Geocoder function not exists.', E_USER_NOTICE );
 
     	return false;
     }
