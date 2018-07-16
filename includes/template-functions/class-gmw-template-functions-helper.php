@@ -340,7 +340,7 @@ class GMW_Template_Functions_Helper {
  
             $selected = $selected_value == $value ? 'selected="selected"' : '';
                  
-            $output .= '<option value="'.$option.'" '.$selected.'>'.esc_html( $label ).'</option>';
+            $output .= '<option value="'.trim( $option ).'" '.$selected.'>'.esc_html( $label ).'</option>';
         }
  
         $output .= '</select>';
@@ -363,6 +363,7 @@ class GMW_Template_Functions_Helper {
             'page'     		   		=> 1,
             'per_page' 		   		=> 1,
             'results_count'    		=> 1,
+            'results_count_only'    => 0,
             'total_count'      		=> 1,
             'form_submitted'   		=> false,
             'address'		   		=> '',
@@ -379,7 +380,7 @@ class GMW_Template_Functions_Helper {
 		$from_count = intval( ( $page - 1 ) * $per_page ) + 1;
 		$to_count   = ( $from_count + ( $per_page - 1 ) > $total_count ) ? $total_count : $from_count + ( $per_page - 1 );
 		$units      = $units == 'imperial' ? 'mi' : 'km';
-		$output = '';
+		$output     = '';
 
 		if ( ! empty( $count_message ) ) {
 
