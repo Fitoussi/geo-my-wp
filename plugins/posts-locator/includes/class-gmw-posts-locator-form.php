@@ -80,46 +80,6 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 	}
 
 	/**
-	 * Query taxonomies on form submission
-	 *
-	 * @param  [type] $tax_args [description]
-	 * @param  [type] $gmw      [description]
-	 * @return [type]           [description]
-	 */
-	public function query_taxonomies() {
-
-		// query taxonomies if submitted in form
-		if ( empty( $this->form['form_values']['tax'] ) ) {
-			return false;
-		}
-
-		$tax_value = false;
-		$output    = array( 'relation' => 'AND' );
-
-		foreach ( $this->form['form_values']['tax'] as $taxonomy => $values ) {
-
-			if ( array_filter( $values ) ) {
-				$output[] = array(
-					'taxonomy' => $taxonomy,
-					'field'    => 'id',
-					'terms'    => $values,
-					'operator' => 'IN',
-				);
-			}
-
-			// extend the taxonomy query
-			$output = apply_filters( 'gmw_pt_query_taxonomy', $output, $taxonomy, $values, $this->form );
-		}
-
-		// verify that there is at least one query to performe
-		if ( empty( $output[0] ) ) {
-			$output = false;
-		}
-
-		return $output;
-	}
-
-	/**
 	 * Modify wp_query clauses to search by distance
 	 * @param $clauses
 	 * @return $clauses
@@ -291,7 +251,8 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 
 		// tax query can be disable if a custom query is needed.
 		if ( apply_filters( 'gmw_enable_taxonomy_search_query', true, $this->form, $this ) ) {
-			$tax_args = $this->query_taxonomies();
+			
+			$tax_args = ! empty( $this->form['form_values']['tax'] ) ? gmw_pt_get_tax_query_args( $this->form['form_values']['tax'], $this->form ) : array();
 		} else {
 			$tax_args = array();
 		}
@@ -329,7 +290,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 
 		// look for query in cache
 		if ( ! $internal_cache || false === ( $this->query = get_transient( $query_args_hash ) ) ) {
-			//if ( 1 == 1 ) {
+		//if ( 1 == 1 ) {
 			//print_r( 'WP posts query done' );
 
 			//add filters to wp_query to do radius calculation and get locations detail into results
