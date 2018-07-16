@@ -322,6 +322,14 @@ if ( class_exists( 'buddypress' ) && ( gmw_is_addon_active( 'members_locator' ) 
             return;
         }
 
-        echo gmw_get_member_xprofile_fields( $member->ID, $total_fields );
+        if ( is_object( $member ) ) {
+        	$user_id = $member->id;
+        } else if ( is_int( $member ) ) {
+        	$user_id = $member;
+        } else {
+        	return false;
+        }
+
+        echo gmw_get_member_xprofile_fields( $user_id, $total_fields );
     }   
 }
