@@ -182,6 +182,8 @@ function gmw_get_user_location_data( $user_id = 0, $output = OBJECT, $cache = tr
 			'users.user_nicename',
 			'users.display_name',
 			'users.user_email',
+			'users.user_registered',
+			'users.user_status',
 		);
 	}
 
