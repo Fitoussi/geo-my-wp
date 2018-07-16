@@ -91,15 +91,14 @@ class GMW_Widget extends WP_Widget {
 
 		foreach ( $this->settings as $key => $setting ) {
 
+			if ( empty( $new_instance[ $key ] ) ) {
+				$new_instance[ $key ] = $setting['default'];
+			}
+
 			if ( ! is_array( $new_instance[ $key ] ) ) {
 				$instance[ $key ] = sanitize_text_field( $new_instance[ $key ] );
 			} else {
-				if ( ! empty( $new_instance[ $key ] ) ) {
-					$instance[ $key ] = array_map( 'sanitize_text_field', $new_instance[ $key ] );
-				} else {
-					$new_instance[ $key ] = $setting['default'];
-				}
-				
+				$instance[ $key ] = array_map( 'sanitize_text_field', $new_instance[ $key ] );
 			}
 		}
 
