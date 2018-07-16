@@ -410,6 +410,11 @@ class GMW_Current_Location {
 
 		$output = implode( '', $elements );
 
+		// enqueue main script if not loaded already.
+		if ( ! wp_script_is( 'gmw', 'enqueued' ) ) {
+			wp_enqueue_script( 'gmw' );
+		}
+
 		// display the element
 		return apply_filters( 'gmw_cl_display_output', $output, $elements, $this->args, $this->user_position, get_current_user_id() );
 	}
