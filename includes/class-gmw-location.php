@@ -792,7 +792,7 @@ class GMW_Location {
 		$db_fields = apply_filters( "gmw_get_{$args['object_type']}_locations_db_fields", $db_fields, $gmw );
 
 		// for cache key
-		$args['db_fields'] = $db_fields;
+		//$args['db_fields'] = $db_fields;
 
 		$count  = 0;
 		$output = '';
@@ -827,10 +827,16 @@ class GMW_Location {
 			}
 		}
 
-		$db_fields = $output;
-
+		$args['db_fields']       = $output;
 		$args['db_table']        = $db_table;
 		$args['address_filters'] = $address_filters;
+
+		$args = apply_filters( 'gmw_get_locations_query_args', $args, $gmw );
+		$args = apply_filters( "gmw_get_{$args['object_type']}_locations_query_args", $args, $gmw );
+
+		if ( ! empty( $gmw['prefix'] ) ) {
+			$args = apply_filters( "gmw_{$gmw['prefix']}_get_locations_query_args", $args, $gmw );
+		}
 
 		$internal_cache = GMW()->internal_cache;
 
@@ -847,7 +853,7 @@ class GMW_Location {
 			global $wpdb;
 
 			$clauses['select']          = 'SELECT';
-			$clauses['fields']          = $db_fields;
+			$clauses['fields']          = $args['db_fields'];
 			$clauses['distance']        = '';
 			$clauses['from']            = "FROM {$wpdb->base_prefix}{$db_table} gmw_locations";
 			$clauses['where']           = $wpdb->prepare( " WHERE gmw_locations.object_type = '%s' AND gmw_locations.parent = '0'", $args['object_type'] );
