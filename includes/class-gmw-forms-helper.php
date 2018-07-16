@@ -136,7 +136,7 @@ class GMW_Forms_Helper {
 			wp_cache_set( 'all_forms', $forms, 'gmw_forms' );
 		}
 
-		return ! empty( $forms ) ? $forms : false;
+		return ! empty( $forms ) ? $forms : array();
 	}
 
 	/**
