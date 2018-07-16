@@ -455,6 +455,10 @@ class GMW_Admin {
                             <?php
                                 $forms = gmw_get_forms();
                                 
+                                if ( empty( $forms ) || ! is_array( $forms ) ) {
+                                	$forms = array();
+                                }
+                                
                                 foreach( $forms as $form ) {
                                 	
                                 	$form['title'] = ! empty( $form['title'] ) ? $form['title'] : 'form_id_'.$form['ID'];
