@@ -458,7 +458,7 @@ ul.gmw-geocoder-suggested-results li {
 		font: inherit;
 		font-size: 13px;
 		border-radius: 0;
-		border: 1px solid #ccc;
+		border: 1px solid #e1e1e1;
 		-webkit-box-sizing: border-box; 
 		-moz-box-sizing: border-box;    
 		box-sizing: border-box;
@@ -469,6 +469,20 @@ ul.gmw-geocoder-suggested-results li {
 		-moz-hyphens: none !important;
 		hyphens: none !important;
 		width:100%;
+	}
+	
+	.gmw-form-wrapper .chosen-container-multi .chosen-choices {
+		border: 1px solid #e1e1e1;
+	}
+	
+	.gmw-form-wrapper .chosen-container-active .chosen-choices {
+		border: 1px solid #bbb;
+		-webkit-box-shadow: none;
+    	box-shadow: none;
+	}
+
+	.gmw-form-wrapper .chosen-container-multi .chosen-choices li.search-field input[type=text] {
+		margin: 1px 5px;
 	}
 
 	.gmw-form-wrapper input[type="text"],
@@ -895,7 +909,7 @@ ul.gmw-geocoder-suggested-results li {
 		background: #fdfdfd;
 		padding: 4px 15px 6px;
     	line-height: 24px;
-    	border-top: 1px solid #ddd;
+    	border-top: 1px solid #ededed;
 		border-bottom: 1px solid #ddd;
 		display: inline-block;
 		width: 100%;
