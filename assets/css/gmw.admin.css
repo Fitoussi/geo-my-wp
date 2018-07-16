@@ -1028,6 +1028,7 @@ body.wp-admin.admin-bar #gmw-edit-form-page #form-wrapper #gmw-form-cover {
 	font-size: 12px;
 	display: inline-block;
 	margin-bottom: 5px;
+	max-width: 100%;
 }
 
 .gmw-tab-panel .gmw-form-feature-desc .more-content span {
