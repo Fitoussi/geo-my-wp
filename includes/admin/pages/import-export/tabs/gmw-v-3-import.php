@@ -1,5 +1,12 @@
 <?php 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; 
+}
 
+/**
+ * Importer page.
+ */
 class GMW_V_3_Import_Page {
 
 	public function __construct() {
