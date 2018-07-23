@@ -810,19 +810,26 @@ body.wp-admin.admin-bar #gmw-edit-form-page #form-wrapper div#left-sidebar {
 	padding: 15px 12px 15px 16px;
 }
 
+#gmw-edit-form-page #form-wrapper ul.gmw-tabs-wrapper li a#premium-settings {
+	background: #0085ba;
+	color: white;
+}
+
 /** dark theme **/
 #gmw-edit-form-page #form-wrapper ul.gmw-tabs-wrapper li a {
 	color: #ccc;
 	border: 0;
 }
 
-#gmw-edit-form-page #form-wrapper ul.gmw-tabs-wrapper li a.active {
+#gmw-edit-form-page #form-wrapper ul.gmw-tabs-wrapper li a.active,
+#gmw-edit-form-page #form-wrapper ul.gmw-tabs-wrapper li a#premium-settings.active {
 	background: #fcfcfc;
 	position: relative;
 }
 
 /** dark theme  **/
-#gmw-edit-form-page #form-wrapper ul.gmw-tabs-wrapper li a.active {
+#gmw-edit-form-page #form-wrapper ul.gmw-tabs-wrapper li a.active,
+#gmw-edit-form-page #form-wrapper ul.gmw-tabs-wrapper li a#premium-settings.active {
 	color: #333;
 }
 
@@ -1108,6 +1115,14 @@ div.gmw-settings-panel.gmw-tab-panel.form-usage table thead tr th {
 	max-height: 35px;
 	width: auto;
 }
+
+#gmw-edit-form-page #settings-search_results.ajax_forms tr.search_results div.featured-image-options {
+	border: 0;
+}
+
+#gmw-edit-form-page #settings-search_results.ajax_forms tr.search_results div.featured-image-options .single-option {
+	display: none;
+}
 /*.gmw-tab-panel #locator-button-wrapper #locator-image-options-wrapper {
 	padding: 5px;
 }
@@ -1161,7 +1176,78 @@ div.gmw-settings-panel.gmw-tab-panel.form-usage table thead tr th {
 #gmw-edit-form-page .single-option.option-keywords_field_placeholder {
 	max-width: 50%;
 }	
+    
+    /***** Premium Settings tab *****/
 
+	#gmw-edit-form-page #premium-features-tab-inner {
+		padding: 30px 30px;
+		//max-width: 700px;
+		margin: 0 auto;
+		text-align: center;
+		width: 100%;
+		box-sizing: border-box;
+	}
+	
+	#gmw-edit-form-page #premium-features-tab-inner #support-note {
+		margin: 25px auto;
+		max-width: 700px;
+	}
+
+	#gmw-edit-form-page #premium-features-tab-inner #support-note h3 {
+		color: #008eba;
+	}
+
+	#gmw-edit-form-page #premium-features-tab-inner h2 {
+		font-size: 25px;
+	}
+
+	#gmw-edit-form-page #premium-features-tab-inner h3 {
+		line-height: 24px;
+		font-size: 16px;
+		min-height: 75px;
+		margin-top: 0;
+	}
+	
+	#gmw-edit-form-page #premium-features-tab-inner .addon-wrapper {
+		width: 49%;
+		display: inline-block;
+		text-align: center;
+		padding: 0 30px;
+		box-sizing: border-box;
+		vertical-align: top;
+	}
+
+	#gmw-edit-form-page #premium-features-tab-inner .addon-inner {
+		box-shadow: 0 0 8px #ccc;
+		-webkit-box-shadow: 0 0 8px #ccc;
+		-moz-box-shadow: 0 0 8px #ccc;
+		-o-box-shadow: 0 0 8px #ccc;
+		-webkit-transition: box-shadow .2s linear;
+		-moz-transition: box-shadow .2s linear;
+		-o-transition: box-shadow .2s linear;
+		-ms-transition: box-shadow .2s linear;
+		transition: box-shadow .2s linear;
+		max-width: 315px;
+		margin: 25px auto;
+	}
+	
+	#gmw-edit-form-page #premium-features-tab-inner .addon-inner a {
+		text-decoration: none;
+	}
+
+	#gmw-edit-form-page #premium-features-tab-inner .addon-inner h3 {
+		text-decoration: none;
+		margin: 0 0 10px;
+		letter-spacing: 0;
+		padding: 12px 15px 15px;
+		box-sizing: border-box;
+		text-shadow: none;
+		color: #666;
+		font-size: 1.1rem;
+		font-weight: 300;
+		line-height: 26px;
+		min-height: initial;
+	}
 /********** Form editor ends ******/
 
 /*** location section edit post page ***/
