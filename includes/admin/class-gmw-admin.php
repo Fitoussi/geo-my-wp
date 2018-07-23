@@ -395,15 +395,25 @@ class GMW_Admin {
             	var form_id = jQuery( '#gmw_form_id' ).val();
 
                 if ( form_id == "" ){
-                    
+
                     alert( '<?php _e( 'Please select a form', 'geo-my-wp' ) ?>' );
                     
                     return;
                 }
                 
-            	var form_name = jQuery("#gmw_form_id option[value='" + form_id + "']").text().replace(/[\[\]]/g, '');
-            	
-            	window.send_to_editor("[gmw "+ jQuery( '.gmw_form_type:checked' ).val() + "=\"" + form_id + "\" name=\"" + form_name + "\"]");
+            	var form_name = jQuery( "#gmw_form_id option[value='" + form_id + "']" ).text().replace(/[\[\]]/g, '');
+            	var addon     = jQuery( "#gmw_form_id option[value='" + form_id + "']" ).data( 'type' );
+            	var prefix    = 'gmw';
+            	var attribute = jQuery( ".gmw_form_type:checked" ).val();
+
+            	if ( addon == 'ajax_forms' ) {
+            		prefix = 'gmw_ajax_form';
+            	} else if ( addon == 'global_maps' ) {
+            		prefix    = 'gmw_global_map';
+            		attribute = 'form';
+            	}
+
+            	window.send_to_editor( '[' + prefix + ' ' + attribute + '="' + form_id + '" name="' + form_name + '"]' );
             }
         </script>
 
@@ -463,9 +473,7 @@ class GMW_Admin {
                                 	
                                 	$form['title'] = ! empty( $form['title'] ) ? $form['title'] : 'form_id_'.$form['ID'];
                                     ?>
-                                    <option value="<?php echo absint( $form['ID'] ); ?>">
-                                    	<?php echo esc_html( $form['title'] ); ?>	
-                                    </option>
+                                    <option value="<?php echo absint( $form['ID'] ); ?>" data-type="<?php echo $form['addon']; ?>"><?php echo esc_html( $form['title'] ); ?></option>
                                     <?php
                                 }
                             ?>
