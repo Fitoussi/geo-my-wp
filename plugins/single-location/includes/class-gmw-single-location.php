@@ -463,7 +463,7 @@ class GMW_Single_Location {
 		$map_options = array(
 			'mapTypeId'         => $this->args['map_type'],
 			'zoom'              => $this->args['zoom_level'],
-			'mapTypeControl'    => false,
+			'mapTypeControl'    => true,
 			'streetViewControl' => false,
 			'scrollwheel'       => ! empty( $this->args['scrollwheel_map_zoom'] ) ? true : false,
 			'panControl'        => false,
