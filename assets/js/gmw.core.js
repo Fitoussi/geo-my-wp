@@ -550,7 +550,7 @@ var GMW = {
         	
         	// we only want some fields to save in cookies.
         	if ( jQuery.inArray( fieldName, GMW.current_location_fields ) !== -1 ) {
-        		GMW.set_cookie( 'gmw_ul_'. fieldName, result[fieldName], 7 );
+        		GMW.set_cookie( 'gmw_ul_' + fieldName, result[fieldName], 7 );
         	}
         
         	cl_form.find( 'input#gmw_cl_' + fieldName ).val( result[fieldName] );
@@ -649,7 +649,13 @@ var GMW = {
 
         // submit current location hidden form
         setTimeout(function() {
-            jQuery( 'form#gmw-current-location-form' ).submit();             
+
+        	if ( jQuery( 'form.gmw-cl-form' ).length ) {
+        		jQuery( 'form.gmw-cl-form' )[0].submit();
+            	//jQuery( 'form#gmw-current-location-form' ).submit();             
+        	} else {
+        		window.location.reload();
+        	}
         }, 500); 
     },
 
@@ -2389,7 +2395,7 @@ if ( jQuery( '.gmw-current-location-wrapper' ).length ) {
 	    		GMW.delete_cookie( 'gmw_ul_' + field );
 	    	});
 
-	    	GMW.delete_cookie( 'gmw_autolocate' );
+	    	//GMW.delete_cookie( 'gmw_autolocate' );
 
 	    	jQuery( '.gmw-cl-address .address-holder' ).html( '' );
 	    	jQuery( '.gmw-cl-element.gmw-cl-address-wrapper' ).slideUp();
