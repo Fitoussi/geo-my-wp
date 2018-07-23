@@ -1201,7 +1201,7 @@ div.gmw-settings-panel.gmw-tab-panel.form-usage table thead tr th {
 		font-size: 25px;
 	}
 
-	#gmw-edit-form-page #premium-features-tab-inner h3 {
+	#gmw-edit-form-page #premium-features-tab-inner p.desc {
 		line-height: 24px;
 		font-size: 16px;
 		min-height: 75px;
