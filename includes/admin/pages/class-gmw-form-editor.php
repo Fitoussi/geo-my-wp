@@ -537,7 +537,7 @@ class GMW_Form_Editor {
 			'priority'   => 30,
 		);
 
-		if ( 'google_maps' == GMW()->maps_provider && isset( $groups['results_map'] ) ) {
+		if ( 'google_maps' === GMW()->maps_provider && isset( $groups['results_map'] ) ) {
 
 			$groups['results_map']['fields']['map_type']['type']    = 'select';
 			$groups['results_map']['fields']['map_type']['options'] = array(
@@ -709,14 +709,13 @@ class GMW_Form_Editor {
 			<table class="widefat gmw-form-usage-table">
 				<thead>
 					<tr>
-						<th scope="col" id="cb" class="manage-column" ><?php _e( 'Description', 'geo-my-wp' ); ?></th>
-						<th scope="col" id="cb" class="manage-column" ><?php _e( 'Post/Page Content', 'geo-my-wp' ); ?></th>
-						<th scope="col" id="cb" class="manage-column" ><?php _e( 'Tempalte file', 'geo-my-wp' ); ?></th>
+						<th scope="col" id="cb" class="manage-column" style="width: 33%;"><?php _e( 'Description', 'geo-my-wp' ); ?></th>
+						<th scope="col" id="cb" class="manage-column" style="width: 27%;"><?php _e( 'Post/Page Content', 'geo-my-wp' ); ?></th>
+						<th scope="col" id="cb" class="manage-column" style="width: 40%;"><?php _e( 'Tempalte file', 'geo-my-wp' ); ?></th>
 					</tr>
 				</thead>
 
 				<tbody>
-
 					<?php if ( 'global_maps' == $this->form['addon'] ) { ?>
 
 						<tr>
@@ -733,15 +732,17 @@ class GMW_Form_Editor {
 
 					<?php } else { ?>
 
+					<?php $scpx = ( 'ajax_forms' !== $this->form['addon'] ) ? 'gmw' : 'gmw_ajax_form'; ?>
+
 					<tr>
 						<td class="gmw-form-usage-desc">
 							<p><?php _e( 'Display the complete form ( search form, map, and search results ).', 'geo-my-wp' ); ?></p>
 						</td>
 						<td class="gmw-form-usage">
-							<p><code>[gmw form="<?php echo esc_attr( $this->form['ID'] ); ?>"]</code></p>
+							<p><code>[<?php echo $scpx; ?> form="<?php echo esc_attr( $this->form['ID'] ); ?>"]</code></p>
 						</td>
 						<td class="gmw-form-usage">
-							<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw form="' . esc_attr( $this->form['ID'] ) . '"]\' ); &#63;&#62;'; ?></code></p>
+							<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[ ' . $scpx .' form="' . esc_attr( $this->form['ID'] ) . '"]\' ); &#63;&#62;'; ?></code></p>
 						</td>                			
 					</tr>
 					<tr>
@@ -749,10 +750,10 @@ class GMW_Form_Editor {
 							<p><?php _e( 'Display the search form only.', 'geo-my-wp' ); ?></p>
 						</td>
 						<td class="gmw-form-usage">
-							<p><code>[gmw search_form="<?php echo esc_attr( $this->form['ID'] ); ?>"]</code></p>
+							<p><code>[<?php echo $scpx; ?> search_form="<?php echo esc_attr( $this->form['ID'] ); ?>"]</code></p>
 						</td>
 						<td class="gmw-form-usage">
-							<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw search_form="' . esc_attr( $this->form['ID'] ) . '"]\' ); &#63;&#62;'; ?></code></p>
+							<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[ ' . $scpx .' search_form="' . esc_attr( $this->form['ID'] ) . '"]\' ); &#63;&#62;'; ?></code></p>
 						</td>		
 					</tr>
 					<tr>
@@ -760,21 +761,10 @@ class GMW_Form_Editor {
 							<p><?php _e( 'Display the search results of this form only. Can be used to display the search results in a different page or when using the search form in a widget.', 'geo-my-wp' ); ?></p>
 						</td>            
 						<td class="gmw-form-usage">
-							<p><code>[gmw search_results="<?php echo esc_attr( $this->form['ID'] ); ?>"]</code></p>
+							<p><code>[<?php echo $scpx; ?> search_results="<?php echo esc_attr( $this->form['ID'] ); ?>"]</code></p>
 						</td>
 						<td class="gmw-form-usage">
-							<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw search_results="' . esc_attr( $this->form['ID'] ) . '"]\' ); &#63;&#62;'; ?></code></p>
-						</td>
-					</tr>
-					<tr>
-						<td class="gmw-form-usage-desc">
-							<p><?php _e( 'Display the search results of any form.', 'geo-my-wp' ); ?></p>
-						</td>
-						<td class="gmw-form-usage">
-							<p><code>[gmw form="results"]</code></p>
-						</td>
-						<td class="gmw-form-usage">
-							<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw form="results"]\' ); &#63;&#62;'; ?></code></p>
+							<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[ ' . $scpx .' search_results="' . esc_attr( $this->form['ID'] ) . '"]\' ); &#63;&#62;'; ?></code></p>
 						</td>
 					</tr>
 					<tr>
@@ -782,15 +772,71 @@ class GMW_Form_Editor {
 							<p><?php _e( 'Display the results map anywhere on a page. By default, the form you create will display the map above the list of results, but using this shortcode you can display the map anywhere else on the page. Notice that you need to set the "Display map" setting of the "Form Submission" tab to "Using shortcode". ', 'geo-my-wp' ); ?></p>
 						</td>
 						<td class="gmw-form-usage">
-							<p><code>[gmw map="<?php echo esc_attr( $this->form['ID'] ); ?>"]</code></p>
+							<p><code>[<?php echo $scpx; ?> map="<?php echo esc_attr( $this->form['ID'] ); ?>"]</code></p>
 						</td>
 						<td class="gmw-form-usage">
-							<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw map="' . esc_attr( $this->form['ID'] ) . '"]\' ); &#63;&#62;'; ?></code></p>
+							<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[ ' . $scpx .' map="' . esc_attr( $this->form['ID'] ) . '"]\' ); &#63;&#62;'; ?></code></p>
 						</td>    
+					</tr>
+					<tr>
+						<td class="gmw-form-usage-desc">
+							<p><?php _e( 'Display the search results of any form.', 'geo-my-wp' ); ?></p>
+						</td>
+						<td class="gmw-form-usage">
+							<p><code>[<?php echo $scpx; ?> form="results"]</code></p>
+						</td>
+						<td class="gmw-form-usage">
+							<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw form="results"]\' ); &#63;&#62;'; ?></code></p>
+						</td>
 					</tr>
 					<?php } ?>
 				</tbody>
 			</table>
+		</div>
+		<?php
+	}
+
+	public function premium_settings_tab() {
+		?>
+		<!-- form usage -->
+		<div class="gmw-settings-panel gmw-tab-panel premium-settings">
+			<div id="premium-features-tab-inner">
+
+				<h2>GEO my WP Premium Forms Features</h2>
+
+                <div style="margin-top: 20px;display: inline-block;">
+                    <div class="addon-wrapper" style="border-right: 1px solid #ddd;">
+                        <p class="desc">Want to extend your forms with premium features like keywords search, custom fields, custom map icons, AJAX-powered info-windows, Map Styles, and more?</p>
+
+                        <div class="addon-inner">
+                            <a href="https://geomywp.com/extensions/premium-settings/" target="_blank">
+                                <img src="https://geomywp.com/wp-content/uploads/addons-images/premium_settings.png">
+                                <h3 class="title">Premium Settings</h3>
+                            </a>
+                        </div>
+
+                        <p class="desc">Checkout the <a href="https://geomywp.com/extensions/premium-settings/" target="_blank">Premium Settings extension</a> page to learn about the premium features it provides.</p>
+                    </div>
+
+                    <div class="addon-wrapper">
+
+                        <p class="desc">Would you like to build AJAX powered search forms and provide a smoother experience for your users?</p>
+
+                        <div class="addon-inner">
+                            <a href="https://geomywp.com/extensions/ajax-forms/" target="_blank">
+                                <img src="https://geomywp.com/wp-content/uploads/addons-images/gmw_ajax_forms.png">        
+                                <h3 class="title">AJAX Forms</h2>
+                            </a>
+                        </div>
+
+                        <p class="desc">With the <a href="https://geomywp.com/extensions/ajax-forms/" target="_blank">AJAX Forms extension</a> you can use GEO my WP's forms builder to create AJAX powered forms. Forms are submitted and the results displayed dynamically, without reloading the page. Providing smoother experience for the users of your site.</p>
+                    </div>
+
+                    <div id="support-note"><p class="desc" style="color: green;">Remember that by purchasing GEO my WP's extensions you support the developer of GEO my WP and the future development of GEO my WP plugin and the extensions.</p></div>
+
+                    <div id="all-extensions-link"><a href="https://geomywp.com/extensions/" target="_blank"><h2>See all extensions</h2></a></div>
+                </div>
+			</div>
 		</div>
 		<?php
 	}
@@ -1156,6 +1202,13 @@ class GMW_Form_Editor {
 			                <li>
 			                	<a href="#" id="form-usage" class="gmw-nav-tab" data-name="form-usage"><?php _e( 'Form Usage', 'geo-my-wp' ); ?></a>
 			                </li>
+							
+							<?php if ( ! gmw_is_addon_active( 'premium_settings' ) ) { ?>
+				                <li>
+				                	<a href="#" id="premium-settings" class="gmw-nav-tab" data-name="premium-settings"><?php _e( 'Premium Settings', 'geo-my-wp' ); ?></a>
+				                </li>
+				            <?php } ?>
+
 			            </ul>
 			        </div>
 
@@ -1184,7 +1237,7 @@ class GMW_Form_Editor {
 			        		//sort fields by priority
 			        		uasort( $section, 'gmw_sort_by_priority' );
 			        		?>
-			                <div id="settings-<?php echo $tab; ?>" class="gmw-settings-panel gmw-tab-panel <?php echo $tab; ?>">
+			                <div id="settings-<?php echo $tab; ?>" class="gmw-settings-panel gmw-tab-panel <?php echo $tab; ?> <?php echo esc_attr( $this->form['component'] ) . ' ' . esc_attr( $this->form['slug'] ). ' ' . esc_attr( $this->form['addon'] ); ?>">
 			                    <table class="widefat">
 									<tbody>
 									<?php 
@@ -1263,6 +1316,12 @@ class GMW_Form_Editor {
 			            <?php } ?>
 
 			           	<?php $this->form_usage(); ?>
+				
+			           	<?php 
+			           		if ( ! gmw_is_addon_active( 'premium_settings' ) ) {
+			           			$this->premium_settings_tab(); 
+			           		}
+			           	?>
 					</div>
 		        </form>
 	        </div>
