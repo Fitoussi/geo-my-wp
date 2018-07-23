@@ -91,8 +91,8 @@ class GMW_Widget extends WP_Widget {
 
 		foreach ( $this->settings as $key => $setting ) {
 
-			if ( empty( $new_instance[ $key ] ) ) {
-				$new_instance[ $key ] = $setting['default'];
+			if ( ! isset( $new_instance[ $key ] ) ) {
+				$new_instance[ $key ] = ( 'checkbox' != $setting['type'] ) ? $setting['default'] : '';
 			}
 
 			if ( ! is_array( $new_instance[ $key ] ) ) {
