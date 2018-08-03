@@ -12,15 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function gmw_post_location_form( $args = array() ) {
 
-	if ( isset( $args['post_id'] ) ) {
+	if ( ! empty( $args['post_id'] ) ) {
 		$args['object_id'] = $args['post_id'];
-	} else {
-		$args['object_id'] = 0;
 	}
 
 	// default args
 	$defaults = array(
-		'object_id'      => $args['object_id'],
+		'object_id'      => 0,
 		'form_template'  => 'location-form-tabs-left',
 		'submit_enabled' => 1,
 		'stand_alone'    => 1,
@@ -33,12 +31,19 @@ function gmw_post_location_form( $args = array() ) {
 
 	if ( ! absint( $args['object_id'] ) ) {
 
-		global $post;
+		if ( IS_ADMIN && isset( $_GET['post'] ) && absint( $_GET['post'] ) ) {
 
-		if ( isset( $post->ID ) ) {
-			$args['object_id'] = $post->ID;
+			$args['object_id'] = $_GET['post'];
+
 		} else {
-			return;
+
+			global $post;
+
+			if ( isset( $post->ID ) ) {
+				$args['object_id'] = $post->ID;
+			} else {
+				return;
+			}
 		}
 	}
 
