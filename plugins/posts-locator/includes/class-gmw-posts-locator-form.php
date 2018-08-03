@@ -251,7 +251,6 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 
 		// tax query can be disable if a custom query is needed.
 		if ( apply_filters( 'gmw_enable_taxonomy_search_query', true, $this->form, $this ) ) {
-			
 			$tax_args = ! empty( $this->form['form_values']['tax'] ) ? gmw_pt_get_tax_query_args( $this->form['form_values']['tax'], $this->form ) : array();
 		} else {
 			$tax_args = array();
