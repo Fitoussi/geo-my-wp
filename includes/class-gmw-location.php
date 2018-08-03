@@ -859,7 +859,7 @@ class GMW_Location {
 			$clauses['where']           = $wpdb->prepare( " WHERE gmw_locations.object_type = '%s' AND gmw_locations.parent = '0'", $args['object_type'] );
 			$clauses['address_filters'] = '';
 			$clauses['having']          = '';
-			$clauses['orderby']         = '';
+			$clauses['orderby']         = 'ORDER BY gmw_locations.ID';
 			$clauses['limit']           = '';
 
 			if ( ! empty( $args['object__in'] ) ) {
@@ -956,8 +956,8 @@ class GMW_Location {
 				$clauses['orderby'] = 'ORDER BY distance ASC';
 			}
 
-			if ( '' != $args['orderby'] ) {
-				$clauses['orderby'] = $args['orderby'];
+			if ( '' !== $args['orderby'] && 'distance' !== $args['orderby'] ) {
+				$clauses['orderby'] = 'ORDER BY gmw_locations.' . $args['orderby'];
 			}
 
 			//wp_send_json( $clauses );
@@ -980,6 +980,7 @@ class GMW_Location {
 
 				$locations_data = array(
 					'objects_id'     => array(),
+					'featured_ids'   => array(),
 					'locations_data' => array(),
 				);
 
@@ -991,6 +992,11 @@ class GMW_Location {
 
 						// collect objects id into an array
 						$locations_data['objects_id'][] = $value->object_id;
+
+						if ( isset( $value->featured_location ) && $value->featured_location == 1 ) {
+							$locations_data['featured_ids'][] = $value->object_id;
+						}
+
 						// replace array keys with object id to be able to do some queries later
 						$locations_data['locations_data'][ $value->object_id ] = $value;
 					}
