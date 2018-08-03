@@ -310,7 +310,7 @@ class GMW_Location {
 			$location_id = isset( $saved_location->ID ) ? (int) $saved_location->ID : 0;
 
 			// verify location ID
-			if ( ! is_int( $location_id ) || 0 === $location_id ) {
+			if ( ! is_int( $location_id ) || 0 == $location_id ) {
 				return false;
 			}
 
