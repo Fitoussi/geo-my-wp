@@ -657,16 +657,135 @@ function gmw_get_linked_location_address( $location, $fields = array( 'formatted
 
 	$address = gmw_get_location_address( $location, $fields, $gmw );
 
-    if ( empty( $address ) ) {
-        return;
-    }
+	if ( empty( $address ) ) {
+		return;
+	}
 
 	return '<a href="https://maps.google.com/?q='.$address.'" target="_blank">'.$address.'</a>';
 }
 
 /**
+ * Check if is featured object.
+ *
+ * @param  [type] $object_type [description]
+ * @param  [type] $object_id   [description]
+ * @return [type]              [description]
+ */
+function gmw_is_featured_object( $object_type = 'post', $object_id = 0 ) {
+
+	$featured = false;
+
+	if ( 'post' === $object_type ) {
+
+		$featured = get_post_meta( $object_id, 'gmw_featured_object', true );
+
+	} elseif ( 'user' === $object_type ) {
+
+		$featured = get_user_meta( $object_id, 'gmw_featured_object', true );
+
+	} elseif ( 'bp_group' === $object_type ) {
+
+		$featured = groups_get_groupmeta( $object_id, 'gmw_featured_object', true );
+
+	} else {
+
+		$featured = apply_filters( 'gmw_is_featured_object', $featured, $object_type, $object_id );
+	}
+
+	return ! empty( $featured ) ? true : false;
+}
+
+/**
+ * Update featured object value.
+ *
+ * @param  string  $object_type [description]
+ * @param  integer $object_id   [description]
+ * @param  integer $value       [description]
+ * @return [type]               [description]
+ */
+function gmw_update_featured_object( $object_type = 'post', $object_id = 0, $value = 0 ) {
+
+	if ( 'post' === $object_type ) {
+
+		update_post_meta( $object_id, 'gmw_featured_object', $value );
+
+	} elseif ( 'user' === $object_type ) {
+
+		update_user_meta( $object_id, 'gmw_featured_object', $value );
+
+	} elseif ( 'bp_group' === $object_type ) {
+
+		groups_update_groupmeta( $object_id, 'gmw_featured_object', $value );
+
+	} else {
+		do_action( 'gmw_update_featured_object', $object_type, $object_id, $value );
+	}
+
+	// lets update featured location as well.
+	gmw_update_featured_location( $object_type, $object_id, $value );
+
+	return;
+}
+
+/**
+ * Check if featured location.
+ *
+ * @param  [type] $object_type [description]
+ * @param  [type] $object_id   [description]
+ * @return [type]              [description]
+ */
+function gmw_is_featured_location( $object_type, $object_id ) {
+
+	global $wpdb;
+
+	$featured = $wpdb->get_var(
+		$wpdb->prepare(
+			"SELECT `featured` 
+			FROM {$wpdb->prefix}gmw_locations 
+			WHERE object_type = %s
+			AND object_id = %d",
+			$object_type, $object_id
+		)
+	);
+
+	return ! empty( $featured ) ? true : false;
+}
+
+/**
+ * Update featured location value.
+ *
+ * @param  string  $object_type [description]
+ * @param  integer $object_id   [description]
+ * @param  integer $value       [description]
+ * @return [type]               [description]
+ */
+function gmw_update_featured_location( $object_type = 'post', $object_id = 0, $value = 0 ) {
+
+	global $wpdb;
+
+	// update location, if exists, with featured value.
+	$wpdb->update(
+		$wpdb->base_prefix . 'gmw_locations',
+		array(
+			'featured' => $value,
+		),
+		array(
+			'object_id'   => $object_id,
+			'object_type' => $object_type,
+		),
+		array(
+			'%d',
+			'%d',
+			'%s',
+		)
+	);
+
+	return;
+}
+
+/**
  * Output list of location meta fields
- * 
+ *
  * @param  boolean $location [description]
  * @param  array   $fields   [description]
  * @param  array   $labels   [description]
@@ -676,8 +795,8 @@ function gmw_get_location_meta_list( $location = false, $fields = array(), $labe
 
 	// check if $location is an object and contains location meta. This will usually be used in the loop
 	if ( is_object( $location ) ) {
-	   
-        // look for location meta in the object.
+
+		// look for location meta in the object.
         // It might generated during the loop.
 		if ( ! empty( $location->location_meta ) ) {
 
