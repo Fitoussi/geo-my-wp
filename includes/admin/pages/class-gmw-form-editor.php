@@ -1526,17 +1526,23 @@ class GMW_Form_Editor {
 
 				$option['type'] = ! empty( $option['type'] ) ? $option['type'] : 'text';
 
-				if ( $option['type'] == 'fields_group' && array_filter( $option['fields'] ) ) {
-				?>
-											
-					<?php
+				if ( 'fields_group' === $option['type'] && array_filter( $option['fields'] ) ) {
+
 					foreach ( $option['fields'] as $option ) {
+
+						if ( empty( $values[ $section_name ][ $option['name'] ] ) ) {
+							$values[ $section_name ][ $option['name'] ] = '';
+						}
+
 						$valid_input[ $section_name ][ $option['name'] ] = $this->validate_field( $values[ $section_name ][ $option['name'] ], $option, $this->form );
 					}
-					?>
-				
-				<?php
+
 				} else {
+
+					if ( empty( $values[ $section_name ][ $option['name'] ] ) ) {
+						$values[ $section_name ][ $option['name'] ] = '';
+					}
+
 					$valid_input[ $section_name ][ $option['name'] ] = $this->validate_field( $values[ $section_name ][ $option['name'] ], $option, $this->form );
 				}
 			}
