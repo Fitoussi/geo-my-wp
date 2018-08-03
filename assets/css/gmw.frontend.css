@@ -875,6 +875,12 @@ ul.gmw-geocoder-suggested-results li {
 	select.gmw-orderby-dropdown {
 		float: right;
 	}
+	
+	div.gmw-results-wrapper li.gmw-featured-location,
+	div.gmw-results-wrapper div.gmw-featured-location {
+		border-left: 5px solid #82c4e4;
+		box-sizing: border-box;
+	}
 
 	div.gmw-results-wrapper .pagination-per-page-wrapper,
 	div.gmw-results-wrapper .gmw-pt-pagination-wrapper {
@@ -2024,8 +2030,8 @@ div.gmw-current-location-wrapper div.gmw-cl-form-wrapper .gmw-cl-form-submit {
 }
 
 div.gmw-current-location-wrapper div.gmw-cl-form-wrapper a.gmw-cl-form-submit {
-	left:initial;
-	right:3px;
+	left: auto;
+	right: 3px;
 	text-decoration: none;
 }
 
