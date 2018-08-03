@@ -129,7 +129,7 @@ class GMW_Form {
 		'country_code',
 		'address',
 		'formatted_address',
-		'map_icon',
+		//'map_icon',
 	);
 
 	/**
@@ -795,6 +795,7 @@ class GMW_Form {
 		if ( ! empty( $locations ) ) {
 			$this->locations_data = $locations['locations_data'];
 			$this->objects_id     = $locations['objects_id'];
+			$this->featured_ids   = $locations['featured_ids'];
 		}
 
 		return $this->objects_id;
@@ -851,7 +852,8 @@ class GMW_Form {
 
 		} else {
 
-			$map_icon  = GMW()->default_icons['location_icon_url'];
+			$map_icon  = isset( $object->map_icon ) ? $object->map_icon : GMW()->default_icons['location_icon_url'];
+			//$map_icon  = GMW()->default_icons['location_icon_url'];
 			$icon_size = null;
 		}
 
@@ -933,7 +935,7 @@ class GMW_Form {
 		if ( isset( $object->location_id ) ) {
 
 			if ( $object->featured_location ) {
-				$object->location_class .= ' featured-location';
+				$object->location_class .= ' gmw-featured-location';
 			}
 
 			// append address to each permalink in the loop
