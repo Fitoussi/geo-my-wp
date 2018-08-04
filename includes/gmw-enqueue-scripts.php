@@ -97,7 +97,7 @@ function gmw_enqueue_scripts() {
 	$options = array(
 		'settings'          => array(
 			'general' 		=> $gmw_options['general_settings'],
-			'api'           => $gmw_options['api_providers'],
+			'api'           => isset( $gmw_options['api_providers'] ) ? $gmw_options['api_providers'] : array(),
 		),
 		'mapsProvider'      => $maps_provider,
 		'geocodingProvider' => $geocode_provider,
