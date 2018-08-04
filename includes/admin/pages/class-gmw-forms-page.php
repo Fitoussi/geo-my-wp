@@ -298,7 +298,7 @@ class GMW_Forms_Page {
                     $button['slug'] = $button['name'];
                     $button['name'] = $button['title'];
                 }
-
+                
                 $form_url = 'admin.php?page=gmw-forms&gmw_action=create_new_form&name='.str_replace( ' ', '+', $button['name'] ).'&addon='.$button['addon'].'&component='.$button['component'].'&object_type='.$button['object_type'].'&prefix='.$button['prefix'].'&slug='.$button['slug'];
 
                 $output  .= '<option value="'. esc_url( $form_url ).'">'.esc_html( $button['name'] ).'</option>';
