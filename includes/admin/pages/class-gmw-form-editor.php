@@ -802,7 +802,7 @@ class GMW_Form_Editor {
 		<div class="gmw-settings-panel gmw-tab-panel premium-settings">
 			<div id="premium-features-tab-inner">
 
-				<h2>GEO my WP Premium Forms Features</h2>
+				<h2>GEO my WP Premium Form Features</h2>
 
                 <div style="margin-top: 20px;display: inline-block;">
                     <div class="addon-wrapper" style="border-right: 1px solid #ddd;">
@@ -832,7 +832,7 @@ class GMW_Form_Editor {
                         <p class="desc">With the <a href="https://geomywp.com/extensions/ajax-forms/" target="_blank">AJAX Forms extension</a> you can use GEO my WP's forms builder to create AJAX powered forms. Forms are submitted and the results displayed dynamically, without reloading the page. Providing smoother experience for the users of your site.</p>
                     </div>
 
-                    <div id="support-note"><p class="desc" style="color: green;">Remember that by purchasing GEO my WP's extensions you support the developer of GEO my WP and the future development of GEO my WP plugin and the extensions.</p></div>
+                    <div id="support-note"><p class="desc" style="color: green;">Remember that by purchasing GEO my WP's extensions you also support the developer of GEO my WP and the future development of GEO my WP plugin and the extensions.</p></div>
 
                     <div id="all-extensions-link"><a href="https://geomywp.com/extensions/" target="_blank"><h2>See all extensions</h2></a></div>
                 </div>
