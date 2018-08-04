@@ -3,9 +3,9 @@ Contributors: ninjew, Eyal Fitoussi
 Donate link: http://geomywp.com/
 Tags: Geolocation, Directory, Store Locator, Geolocator, Geotagging, Geocode, Mapping, Proximity search, Zipcode, Geolocate posts, Address search, Distance, Google maps, Directions, Locations, Geo, Members locator, Geolocate members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
 Requires at least: 4.3
-Tested up to: 4.9.5
+Tested up to: 4.9.8
 Buddypress: 2.8
-Stable tag: 3.0.5
+Stable tag: 3.1
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -117,6 +117,41 @@ for detailed installation and setup guide see the [documentation](docs.geomywp.c
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 3.1 =
+
+* Version 3.1 is a major release. Read this post [GEO my WP 3.1](https://geomywp.com/geo-my-wp-3-1/) before updating.
+
+* Version 3.0 is a major release. If you are updating from a version earlier than 3.0, it is highly recommended that you read the posts [GEO my WP 3.0 Beta 7](https://geomywp.com/geo-my-wp-3-0-beta-7/) and [GEO my WP Upgrade Process](https://geomywp.com/geo-my-wp-3-0-upgrade-process/) before updating. You should also test this version on a staging environment before updating on your live site.
+
+* New: GEO my WP now support LeafLet and OpenStreetMaps.
+* New: Choose between LeafLet or Google Maps as the maps provider.
+* New: settings for maps providers in GEO my WP Settings page.
+* New: settings for LeafLet maps provider.
+* New: Geocoder class that can be extended to support multiple geocoding providers.
+* Fix: cannot publish a post when location is not provided.
+* Fix: add xprofile fields to $output instead of echoing it.
+* Fix: issue when ordering members locator results by newest or active.
+* Fix: Single Location extension doesn't load during AJAX calls.
+* Fix: Load deprecated function on both front and back end to prevent fatal errors.
+* Fix: JavaScript gmGetCookie() function error.
+* Fix: Excerpt not showing in info-window and search results.
+* Fix: enqueue the main script in Current Location file in case it was not already loaded.
+* Fix: prevent warnings when settings values do not exist in widgets.
+* Fix: current location cookies are not updated properly.
+* Tweak: Google Maps API key input box moved under the new Maps & Geocoder tab in the Settings page.
+* Tweak: add additional user fields to gmw_get_user_location_data() function.
+* Tweak: region_code and country_name fields added to the search queries.
+* Tweak: geocoder file is now included by default.
+* Tweak: New filters in get_locations_data() function.
+* Styling: Update per-page and pagination styling in GEO my WP search results template files.
+* Text: update address field option description in Current Location widget.
+* Enhancement: update core to support PHP v5.4+.
+* Enhancement: HTTP and client-side geocoders can be extended to use multiple providers.
+* Enhancement: follow coding standards.
+* Enhancement: update default map icons, which are now included in the images folder of the plugin instead of called remotely.
+* Enhancement: Directions function can now be extended to work with different providers.
+* Enhancement: [gmw_location_fields] shortcode and gmw_get_location_fields() function now support both address fields and location meta.
 
 = 3.0.5 =
 
