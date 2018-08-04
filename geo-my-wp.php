@@ -377,7 +377,7 @@ class GEO_MY_WP {
 		$this->addons_status = $addons_status;
 		$this->ajax_url      = admin_url( 'admin-ajax.php', is_ssl() ? 'admin' : 'http' );
 		$this->is_mobile     = ( function_exists( 'wp_is_mobile' ) && wp_is_mobile() ) ? true : false;
-		$this->maps_provider = $this->options['api_providers']['maps_provider'];
+		$this->maps_provider = ! empty( $this->options['api_providers']['maps_provider'] ) ? $this->options['api_providers']['maps_provider'] : 'google_maps';
 
 		// set default icons.
 		$this->set_default_icons();
