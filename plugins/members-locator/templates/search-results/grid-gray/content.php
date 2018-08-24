@@ -49,10 +49,7 @@
 
 			<ul class="members-list-wrapper">
 
-				<?php
-				while ( bp_members() ) :
-					bp_the_member();
-?>
+				<?php while ( bp_members() ) : bp_the_member(); ?>
 					
 					<?php $member = $members_template->member; ?>
 

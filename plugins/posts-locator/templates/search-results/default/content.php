@@ -51,7 +51,7 @@
 			
 			<?php do_action( 'gmw_search_results_before_loop', $gmw ); ?>
 			
-			<div class="gmw-posts-wrapper">
+			<ul class="gmw-posts-wrapper">
 				
 				<?php while ( $gmw_query->have_posts() ) : $gmw_query->the_post(); ?>
 					
@@ -117,7 +117,7 @@
 
 		        <?php endwhile; ?>
 
-		    </div>
+		    </ul>
 			
 			<?php do_action( 'gmw_search_results_before_bottom_pagination', $gmw ); ?>
 			
