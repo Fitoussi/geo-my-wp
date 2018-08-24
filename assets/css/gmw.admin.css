@@ -1,3 +1,20 @@
+div.pac-container {
+	z-index: 99999999999;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+	margin-top: -1px;
+}
+
+div.pac-container .pac-item {
+	line-height: 40px;
+	font-size: 12px;
+	font-weight: 100 !important;
+	font-family: initial;
+}
+
+div.pac-container span.pac-icon.pac-icon-marker {
+	margin: 10px 7px 0 8px;
+}
+
 div.gmw-menu-wrapper {
 	background-color: #f5f5f5;
 	border: 1px solid #dedede;
