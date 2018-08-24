@@ -317,7 +317,7 @@ class GMW_Extensions {
 
 					foreach ( $ext_data['required']['addons'] as $required_addon ) {
 
-						if ( $required_addon['slug'] == $extension['slug'] ) {
+						if ( isset( $extension['slug'] ) && $required_addon['slug'] == $extension['slug'] ) {
 
 							$dependends[ $ext_data['slug'] ] = '';
 
@@ -421,7 +421,7 @@ class GMW_Extensions {
 
 					foreach ( $ext_data['required']['addons'] as $required_addon ) {
 
-						if ( $required_addon['slug'] == $extension['slug'] ) {
+						if ( isset( $extension['slug'] ) && $required_addon['slug'] == $extension['slug'] ) {
 
 							$dependends[ $ext_data['slug'] ] = $required_addon['notice'];
 
