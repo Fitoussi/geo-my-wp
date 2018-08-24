@@ -139,8 +139,8 @@ function gmw_info_window_directions_link( $object, $gmw = array() ) {
     }   
 
     $from_coords = array(
-        'lat' => $gmw['lat'],
-        'lng' => $gmw['lng']
+        'lat' => isset( $gmw['lat'] ) ? $gmw['lat'] : '',
+        'lng' => isset( $gmw['lng'] ) ? $gmw['lng'] : '',
     );
 
     echo gmw_get_directions_link( $object, $from_coords );
