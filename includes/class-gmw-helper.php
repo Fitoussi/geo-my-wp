@@ -284,7 +284,7 @@ class GMW_Helper {
 			$output['stylesheet_uri']    = $plugin_url . "/templates/{$folder}{$template_name}/css/style.css";
 			$output['content_path']      = $plugin_dir . "/templates/{$folder}{$template_name}/{$file_name}";
 		}
-
+	
 		// include file if needed
 		if ( $include_template ) {
 
