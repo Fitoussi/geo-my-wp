@@ -441,8 +441,8 @@ function gmw_pt_thumbnail( $gmw, $post ) {
 
 
 function gmw_pt_get_taxonomies( $gmw, $post ) {
-	_deprecated_function( 'gmw_pt_get_taxonomies', '3.0', 'gmw_search_results_taxonomies_terms_list' );
-	gmw_search_results_taxonomies_terms_list( $post, $gmw );
+	_deprecated_function( 'gmw_pt_get_taxonomies', '3.0', 'gmw_get_post_taxonomies_terms_list' );
+	gmw_get_post_taxonomies_terms_list( $post, $gmw );
 }
 
 function gmw_pt_taxonomies( $gmw, $post ) {
