@@ -284,7 +284,7 @@ class GMW_Maps_API {
 		$default_map_options = array(
 			'defaultCenter'          => '40.758895,-73.985131', // belongs to GMW.
 			'layersUrl'              => 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', // for leaflet
-			'layersAttribution'      => '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors', // for leaflet
+			'layersAttribution'      => '&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors', // for leaflet
 			'backgroundColor'        => '#f7f5e8',
 			'disableDefaultUI'       => false,
 			'disableDoubleClickZoom' => false,
