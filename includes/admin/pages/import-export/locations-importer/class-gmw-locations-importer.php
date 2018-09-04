@@ -361,7 +361,7 @@ class GMW_Locations_Importer {
 
 			//check if location already exist GEO my WP locations table.
 			//if it does then no need to import again.
-			$existing_location = GMW_Location::get_locations( $this->object_type, $location->object_id );
+			$existing_location = gmw_get_locations( $this->object_type, $location->object_id );
 
 			// if location exists already and don't need to update it, skip it.
 			if ( ! empty( $existing_location ) ) {
