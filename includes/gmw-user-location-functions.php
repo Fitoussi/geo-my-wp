@@ -143,20 +143,54 @@ function gmw_get_user_location_meta( $user_id = 0, $meta_keys = array() ) {
 /**
  * get the user location data from database
  *
- * This function returns location data and user data such as user name, displya name , email...
+ * This function returns locations data and user data such as user name, displya name , email...
  *
  * The function also verify that the user exists in database. That is in case
  *
  * That the user was deleted but the location still exists in database.
  *
  * @since 3.0
- *
+ * 
  * @param  boolean $post_id user ID
  *
  * @return object  user data + location
+ *
+ * TODO : Cache for locations data. 
+ *
+ * When doing cache we need to make sure we delete cache data when user data
+ *
+ * is changed as well. Not only when location is modified.
  */
-function gmw_get_user_location_data( $user_id = 0, $output = OBJECT, $cache = true ) {
+function gmw_get_user_location_data( $args = array(), $output = OBJECT, $cache = true ) {
 
+	// verify variables when passing an array.
+	if ( is_array( $args ) ) {
+
+		if ( empty( $args['id'] ) ) {
+			
+			$id    = 0;
+			$field = 'object_id';
+
+		} else {
+
+			$id = $args['id'];
+
+			if ( empty( $args['field'] ) ) {
+				$field = 'object_id';
+			} else {
+				$field = $args['field'];
+			}
+		}
+
+	// when not in array, we will use the value
+	// as the user ID by deafult.
+	} else {
+
+		$id    = $args;
+		$field = 'object_id';
+	}
+
+	// the fields to output.
 	if ( empty( $fields ) ) {
 
 		$fields = array(
@@ -187,23 +221,27 @@ function gmw_get_user_location_data( $user_id = 0, $output = OBJECT, $cache = tr
 		);
 	}
 
-	$fields = implode( ',', apply_filters( 'gmw_get_user_location_data_fields', $fields, $user_id ) );
+	$fields = implode( ',', apply_filters( 'gmw_get_user_location_data_fields', $fields, $id, $args ) );
 
 	// if no specific user ID pass, look for logged in user object
-	if ( empty( $user_id ) ) {
+	if ( empty( $id ) ) {
 
 		// try to get user ID
-		$user_id = gmw_try_get_user_id();
+		$id = gmw_try_get_user_id();
 
 		// abort if no user ID
-		if ( empty( $user_id ) ) {
+		if ( empty( $id ) ) {
 			return;
 		}
 	}
 
-	$location = $cache ? wp_cache_get( $user_id, 'gmw_users_location_data' ) : false;
+	/*if ( 'location_id' === $field ) {
+		$location = $cache ? wp_cache_get( $id, 'gmw_location_data' ) : false;
+	} else {
+		$location = $cache ? wp_cache_get( $id, 'gmw_users_location_data' ) : false;
+	}*/
 
-	if ( false === $location ) {
+	//if ( false === $location ) {
 
 		global $wpdb;
 
@@ -213,38 +251,70 @@ function gmw_get_user_location_data( $user_id = 0, $output = OBJECT, $cache = tr
 		// Escape fields.
 		$fields = esc_sql( $fields );
 
-		// Get location from database.
-		$location = $wpdb->get_row(
-			$wpdb->prepare( "
+		// Get location by location ID, when specified.
+		if ( 'location_id' === $field ) {
+
+			// Get location from database.
+			$location_data = $wpdb->get_row(
+				$wpdb->prepare( "
+	                SELECT     $fields
+	                FROM       $gmw_table  gmw
+	                INNER JOIN $user_table users
+	                ON         gmw.object_id = users.ID
+	                WHERE      gmw.object_type = 'user'
+	                AND        gmw.ID = %d
+	            ", $id
+				),
+				OBJECT
+			);
+
+			//if ( ! empty( $location ) ) {
+			//	wp_cache_set( $location->ID, $location, 'gmw_location_data' );
+			//}
+
+		// otherwise, get locations by user ID.
+		} else {
+
+			$sql = $wpdb->prepare( "
                 SELECT     $fields
                 FROM       $gmw_table  gmw
                 INNER JOIN $user_table users
                 ON         gmw.object_id = users.ID
                 WHERE      gmw.object_type = 'user'
                 AND        gmw.object_id = %d
-            ", $user_id
-			),
-			OBJECT
-		);
+            ", $id
+			);
 
-		// save to cache if location found
-		if ( ! empty( $location ) ) {
-			wp_cache_set( $user_id, $location, 'gmw_users_location_data' );
-			wp_cache_set( $location->ID, $location, 'gmw_location_data' );
+			// Get all user's locations.
+			if ( $field === 'all' ) {
+				$location_data = $wpdb->get_results( $sql, OBJECT );
+
+			// get a single location.
+			} else {
+				$location_data = $wpdb->get_row( $sql, OBJECT );
+			}
+
+			// save to cache if location found
+			/*if ( ! empty( $location ) ) {
+				wp_cache_set( $user_id, $location, 'gmw_users_location_data' );
+				wp_cache_set( $location->ID, $location, 'gmw_location_data' );
+			}*/
 		}
-	}
+	//}
 
 	// if no location found
-	if ( empty( $location ) ) {
+	if ( empty( $location_data ) ) {
 		return null;
 	}
 
-	// convert to array if needed
-	if ( ARRAY_A == $output || ARRAY_N == $output ) {
-		$location = gmw_to_array( $location, $output );
+	// convert to array if needed. Only when single location returned.
+	if ( $field !== 'all' ) {
+		if ( ARRAY_A == $output || ARRAY_N == $output ) {
+			$location_data = gmw_to_array( $location_data, $output );
+		}
 	}
 
-	return $location;
+	return $location_data;
 }
 
 /**
