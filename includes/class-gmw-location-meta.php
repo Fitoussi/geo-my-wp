@@ -433,7 +433,7 @@ class GMW_Location_Meta {
 	public static function get_by_object( $object_type = '', $object_id = 0, $meta_key = '' ) {
 
 		// get the location data based on the object type and object ID
-		$location = GMW_Location::get( $object_type, $object_id );
+		$location = GMW_Location::get_by_object( $object_type, $object_id );
 
 		// verify location
 		if ( empty( $location ) ) {
@@ -544,7 +544,7 @@ class GMW_Location_Meta {
 	public static function delete_by_object( $object_type = '', $object_id = 0, $meta_key = '' ) {
 
 		// get the location data based on the object type and object ID
-		$location = GMW_Location::get( $object_type, $object_id );
+		$location = GMW_Location::get_by_object( $object_type, $object_id );
 
 		// verify location
 		if ( empty( $location ) ) {
