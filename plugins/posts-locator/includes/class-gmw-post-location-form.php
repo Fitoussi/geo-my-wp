@@ -94,7 +94,7 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
 					'default'     => '',
 					'placeholder' => '',
 					'attributes'  => '',
-					'priority'    => 1,
+					'priority'    => 5,
 					'meta_key'    => 'phone',
 				),
 				'fax'     => array(
@@ -106,7 +106,7 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
 					'default'     => '',
 					'placeholder' => '',
 					'attributes'  => '',
-					'priority'    => 2,
+					'priority'    => 10,
 					'meta_key'    => 'fax',
 				),
 				'email'   => array(
@@ -118,7 +118,7 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
 					'default'     => '',
 					'placeholder' => '',
 					'attributes'  => '',
-					'priority'    => 3,
+					'priority'    => 15,
 					'meta_key'    => 'email',
 				),
 				'website' => array(
@@ -130,7 +130,7 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
 					'default'     => '',
 					'placeholder' => '',
 					'attributes'  => '',
-					'priority'    => 4,
+					'priority'    => 20,
 					'meta_key'    => 'website',
 				),
 			),
@@ -149,7 +149,7 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
 					'default'     => '',
 					'placeholder' => '',
 					'attributes'  => '',
-					'priority'    => 1,
+					'priority'    => 5,
 				),
 			),
 		);
