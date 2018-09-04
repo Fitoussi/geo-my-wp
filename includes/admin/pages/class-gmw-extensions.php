@@ -802,7 +802,7 @@ class GMW_Extensions {
 
 											<?php } else { ?>
 
-												<a href="<?php echo esc_url( $extension['addon_page'] ); ?>" class="button-secondary button get-extension" target="_blank" title="<?php _e( 'Get Extension', 'geo-my-wp' ); ?>">
+												<a href="<?php echo esc_url( $extension['addon_page'] ); ?>" class="button-secondary button get-extension" target="_blank">
 													<?php _e( 'Get Extension', 'geo-my-wp' ); ?>    
 												</a>
 											<?php } ?>
