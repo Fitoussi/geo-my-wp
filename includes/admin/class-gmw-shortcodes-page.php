@@ -230,7 +230,7 @@ class GMW_Shortcodes_page {
                 <div class="gmw-tabs-wrapper gmw-shortcodes-page-nav-tabs">
                		<?php
                  	foreach ( $this->shortcodes as $key => $options ) {
-                    	echo '<span><a href="#settings-' . sanitize_title( $key ) . '" title="' . esc_html( $options['name'] ) . '"  class="gmw-nav-tab">' . esc_html( $options['name'] ) . '</a></span>';
+                    	echo '<span><a href="#settings-' . sanitize_title( $key ) . '" class="gmw-nav-tab">' . esc_html( $options['name'] ) . '</a></span>';
                		}
                     ?>
 				</div>
