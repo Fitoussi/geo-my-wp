@@ -287,6 +287,10 @@ div.pac-container span.pac-icon.pac-icon-marker {
 }
 /********** map ********/
 
+div.gmw-map {
+	z-index: 1;
+}
+
 div.gmw-map img {
 	max-width: initial !important;
 }
@@ -411,6 +415,32 @@ span.gmw-resize-map-toggle.gmw-icon-resize-small {
 }
 
 /********** end map ********/
+
+/********** Messages *******/
+
+.gmw-message-box {
+	padding: 5px 15px 5px 10px;
+	color: #fff;
+	clear: both;
+	display: inline-table;
+	font-size: 13px;
+	margin: 0 5px 0 0;
+	border-radius: 3px;
+	border-left: 3px solid;
+}
+
+.gmw-message-box.gmw-error-message {
+	color: #a94442;
+	background-color: #f2dede;
+	border-color: #ebccd1;
+}
+
+.gmw-message-box.gmw-success-message {
+	display: inline-table;
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #82b77b
+}
 
 /********** Geocoder Suggestions **********/
 
@@ -862,6 +892,10 @@ ul.gmw-geocoder-suggested-results li {
 
 		div.gmw-xprofile-field-wrapper.field_date input:last-child {
 			float: right;
+		}
+
+		div.gmw-xprofile-field-wrapper.field_type_multiselectbox select {
+		    min-height: 110px;
 		}
 
 	/****** End Members Locator  *******/
