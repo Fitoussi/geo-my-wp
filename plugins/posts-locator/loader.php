@@ -104,6 +104,7 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 		parent::pre_init();
 
 		include( 'includes/gmw-posts-locator-functions.php' );
+		include( 'includes/gmw-posts-locator-shortcodes.php' );
 
 		// include admin files
 		if ( IS_ADMIN ) {
@@ -117,6 +118,7 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 		include_once( 'includes/gmw-posts-locator-search-form-template-functions.php' );
 		include_once( 'includes/gmw-posts-locator-search-results-template-functions.php' );
 		include_once( 'includes/class-gmw-posts-locator-form.php' );
+		include_once( 'includes/class-gmw-post-location-form.php' );
 
 		// load single location post
 		if ( gmw_is_addon_active( 'single_location' ) ) {
