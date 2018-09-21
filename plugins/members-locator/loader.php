@@ -133,6 +133,9 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 		include( 'includes/gmw-members-locator-template-functions.php' );
 		include( 'includes/class-gmw-members-locator-form.php' );
 
+		// init the location tab.
+		add_action( 'bp_setup_nav', array( 'GMW_Members_Locator_Addon', 'init_location_tab' ), 20 );
+
 		// load single member location.
 		if ( gmw_is_addon_active( 'single_location' ) ) {
 
@@ -157,6 +160,15 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 				include( 'includes/class-gmw-single-member-location.php' );
 			}
 		}
+	}
+
+	/**
+	 * Init the location tab.
+	 * 
+	 * @return [type] [description]
+	 */
+	public static function init_location_tab() {
+		$location_tab = new GMW_Members_Locator_Location_Tab;
 	}
 }
 GMW_Addon::register( 'GMW_Members_Locator_Addon' );
