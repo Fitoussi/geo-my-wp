@@ -15,6 +15,34 @@ div.pac-container span.pac-icon.pac-icon-marker {
 	margin: 10px 7px 0 8px;
 }
 
+/********** Messages *******/
+
+.gmw-message-box {
+	padding: 5px 15px 5px 10px;
+	color: #fff;
+	clear: both;
+	display: inline-table;
+	font-size: 13px;
+	margin: 0 5px 0 0;
+	border-radius: 3px;
+	border-left: 3px solid;
+}
+
+.gmw-message-box.gmw-error-message {
+	color: #a94442;
+	background-color: #f2dede;
+	border-color: #ebccd1;
+}
+
+.gmw-message-box.gmw-success-message {
+	display: inline-table;
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #82b77b
+}
+
+/******************************/
+
 div.gmw-menu-wrapper {
 	background-color: #f5f5f5;
 	border: 1px solid #dedede;
