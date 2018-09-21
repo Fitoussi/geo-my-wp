@@ -341,8 +341,8 @@ class GMW_Search_Form_Helper {
 		$url_px   = gmw_get_url_prefix();
 		$lat 	  = ! empty( $_GET[$url_px.'lat'] ) ? esc_attr( urldecode( $_GET[$url_px.'lat'] ) ) : '';
 		$lng      = ! empty( $_GET[$url_px.'lng'] ) ? esc_attr( urldecode( $_GET[$url_px.'lng'] ) ) : '';
-		$state    = ! empty( $_GET['state'] ) 	   ? esc_attr( urldecode( $_GET['state'] ) ) : false;
-		$country  = ! empty( $_GET['country'] ) 	   ? esc_attr( urldecode( $_GET['country'] ) ) : false;
+		$state    = ! empty( $_GET['state'] ) 	    ? esc_attr( urldecode( $_GET['state'] ) ) : false;
+		$country  = ! empty( $_GET['country'] ) 	? esc_attr( urldecode( $_GET['country'] ) ) : false;
 
 		// generate fields
 	    $output  = "<div id=\"gmw-submission-fields-{$id}\" class=\"gmw-submission-fields\" data-form_id=\"{$id}\" style=\"display:none\">";
