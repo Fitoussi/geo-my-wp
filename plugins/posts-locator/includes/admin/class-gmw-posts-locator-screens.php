@@ -5,9 +5,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * GMW_Post_Types_Screens class
+ * 
+ * GMW_Post_Types_Screens class.
  *
- * Class responsible for displaying GEO my WP Post Types related featured.
+ * - Generate the location form in the Edit Post page.
+ * - Show location details in "All posts" page.
  *
  * @since 3.0
  *
@@ -42,7 +44,7 @@ class GMW_Posts_Locator_Screens {
 			if ( in_array( $pagenow, array( 'post-new.php', 'post.php' ) ) ) {
 
 				add_action( "add_meta_boxes_{$post_type}", array( $this, 'add_meta_box' ), 10 );
-
+				
 				// filters fires when location updated.
 				add_filter( 'gmw_lf_post_location_args_before_location_updated', array( $this, 'get_post_title' ) );
 				add_filter( 'gmw_lf_post_location_meta_before_location_updated', array( $this, 'verify_location_meta' ), 10, 3 );
@@ -116,7 +118,7 @@ class GMW_Posts_Locator_Screens {
 			", array( $post_id )
 		) ); */
 
-		$location = gmw_get_location( 'post', $post_id );
+		$location = gmw_get_post_location( $post_id );
 
 		if ( empty( $location ) ) {
 			echo '<i class="gmw-icon-cancel-circled" style="color:red;margin-right:1px;font-size: 12px"></i>' . __( 'No location found', 'GMW' );
@@ -153,28 +155,33 @@ class GMW_Posts_Locator_Screens {
 	 */
 	public function add_meta_box( $post ) {
 
-		add_meta_box(
-			'gmw-location-meta-box', apply_filters( 'gmw_pt_mb_title', __( 'Location', 'geo-my-wp' ) ), array( $this, 'display_meta_box' ), $post->post_type, 'advanced', 'high'
-		);
+		$args = apply_filters( 'gmw_pt_location_meta_box_args', array(
+			'id'       => 'gmw-location-meta-box', 
+			'label'    => apply_filters( 'gmw_pt_mb_title', __( 'Location', 'geo-my-wp' ) ), 
+			'function' => array( $this, 'display_meta_box' ), 
+			'page'     => $post->post_type, 
+			'context'  => 'advanced', 
+			'priority' => 'high'
+		), $post, $this );
+
+		add_meta_box( $args['id'], $args['label'], $args['function'], $args['page'], $args['context'], $args['priority'] );
+
+		do_action( 'gmw_pt_admin_add_location_meta_box', $post, $this );
 
 		// add hidden field that responsible for a fix where posts status wont change from pending to publish.
 		add_action( 'admin_footer', array( $this, 'add_hidden_status_field' ) );
 	}
 
 	/**
-	 * Generate the location form
-	 *
-	 * @param  object $post the post being displayed
-	 *
+	 * Get location form args.
+	 * 
+	 * @param  [type] $post [description]
 	 * @return [type]       [description]
 	 */
-	function display_meta_box( $post ) {
-
-		// expand button
-		echo '<i type="button" id="gmw-location-section-resize" class="gmw-icon-resize-full" title="Expand full screen" style="display: block" onclick="jQuery( this ).closest( \'#gmw-location-meta-box\' ).find( \'.inside\' ).toggleClass( \'fullscreen\' );"></i>';
+	public static function get_location_form_args( $post ) {
 
 		// form args
-		$form_args = apply_filters(
+		return apply_filters(
 			'gmw_edit_post_location_form_args', array(
 				'object_id'          => $post->ID,
 				'form_template'      => 'location-form-tabs-left',
@@ -190,8 +197,24 @@ class GMW_Posts_Locator_Screens {
 				'map_lng'            => gmw_get_option( 'post_types_settings', 'edit_post_page_map_longitude', '-74.013486' ),
 				'location_mandatory' => gmw_get_option( 'post_types_settings', 'location_mandatory', 0 ),
 				'location_required'  => gmw_get_option( 'post_types_settings', 'location_mandatory', 0 ),
-			)
+			), $post
 		);
+	}
+
+	/**
+	 * Generate the location form
+	 *
+	 * @param  object $post the post being displayed
+	 *
+	 * @return [type]       [description]
+	 */
+	public function display_meta_box( $post ) {
+
+		// expand button
+		echo '<i type="button" id="gmw-location-section-resize" class="gmw-icon-resize-full" title="Expand full screen" style="display: block" onclick="jQuery( this ).closest( \'#gmw-location-meta-box\' ).find( \'.inside\' ).toggleClass( \'fullscreen\' );"></i>';
+
+		// form args
+		$form_args = self::get_location_form_args( $post );
 
 		do_action( 'gmw_edit_post_page_before_location_form', $post );
 
@@ -237,6 +260,7 @@ class GMW_Posts_Locator_Screens {
 			foreach ( $location_meta['days_hours'] as $value ) {
 
 				foreach ( $value as $dh ) {
+					
 					$dh = trim( $dh );
 
 					// stop the loop in the first value we find. No need to continue.
