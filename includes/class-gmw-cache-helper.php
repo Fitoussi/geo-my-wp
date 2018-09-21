@@ -20,6 +20,7 @@ class GMW_Cache_Helper {
 
 		add_action( 'gmw_save_location', array( __CLASS__, 'flush_locations_cache' ), 99, 2 );
 		add_action( 'gmw_location_deleted', array( __CLASS__, 'flush_locations_cache' ), 99, 2 );
+		add_action( 'gmw_featured_location_updated', array( __CLASS__, 'flush_cache_by_object' ), 99 );
 		add_action( 'save_post', array( __CLASS__, 'flush_post_query_cache' ), 99, 2 );
 		add_action( 'set_object_terms', array( __CLASS__, 'set_term' ), 10, 4 );
 		add_action( 'edited_term', array( __CLASS__, 'edited_term' ), 10, 3 );
@@ -52,6 +53,18 @@ class GMW_Cache_Helper {
 	public static function flush_locations_cache( $location_id, $location_data ) {
 		self::get_transient_version( 'gmw_get_object_' . $location_data->object_type . '_locations', true );
 		self::get_transient_version( 'gmw_get_object_' . $location_data->object_type . '_query', true );
+	}
+
+	/**
+	 * Flush locations and query cache by object id
+	 *
+	 * @param  [type] $location_id   [description]
+	 * @param  [type] $location_data [description]
+	 * @return [type]                [description]
+	 */
+	public static function flush_cache_by_object( $object_type ) {
+		self::get_transient_version( 'gmw_get_object_' . $object_type . '_locations', true );
+		self::get_transient_version( 'gmw_get_object_' . $object_type . '_query', true );
 	}
 
 	/**
