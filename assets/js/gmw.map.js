@@ -204,19 +204,29 @@ if ( gmwVars.mapsProvider == 'google_maps' ) {
 			}
 		
 			var marker_options = {
-				position 	: options.position,
-				icon     	: icon,
-				map      	: self.map,
-				animation   : null,
-				location_id : options.id,
-				iw_content  : options.content
+				position 	 : options.position,
+				icon     	 : icon,
+				map      	 : self.map,
+				animation    : null,
+				location_id  : options.id, //deprecated. use gmwData.markerCount instead.
+				iw_content   : options.content // //deprecated. use gmwData.iwContent instead.
+			};
+
+			var gmwData = {
+				markerCount : options.id,
+				locationID  : location.location_id || 0,
+				iwContent   : options.content
 			};
 
 			// modify marker options.
 			marker_options = GMW.apply_filters( 'gmw_generate_marker_options', marker_options, options.id, self );
 
+			var marker = new google.maps.Marker( marker_options );
+
+			marker.gmwData = gmwData;
+
 			// generate marker
-			return new google.maps.Marker( marker_options );
+			return marker;
 		},
 
 		setMarkerPosition : function( marker, position, map ) {
@@ -288,11 +298,11 @@ if ( gmwVars.mapsProvider == 'google_maps' ) {
 					var self = mapObject;
 
 					// verify iw content
-					if ( marker.iw_content ) {
-						
+					if ( marker.gmwData.iwContent ) {
+			
 						// info window opsions. Can be modified with the filter.
 						var info_window_options = GMW.apply_filters( 'gmw_standard_info_window_options', {
-							content  : '<div class="gmw-info-window standard map-' + self.id + ' ' + self.prefix + '">' + marker.iw_content + '</div>',
+							content  : '<div class="gmw-info-window standard map-' + self.id + ' ' + self.prefix + '">' + marker.gmwData.iwContent + '</div>',
 							maxWidth : 200,
 							minWidth: 200
 						}, self );
@@ -518,10 +528,16 @@ if ( gmwVars.mapsProvider == 'leaflet' ) {
 				},
 				// Marker options.
 				marker_options = {
-					iconOptions : iconOptions,
-				    position 	: options.position,
-					location_id : options.id,
-					iw_content  : options.content
+					iconOptions  : iconOptions,
+				    position 	 : options.position,
+					location_id  : options.id, //deprecated. use gmwData.markerCount instead.
+					iw_content   : options.content // deprecated. use gmwData.iwContent instead.
+				},
+
+				gmwData = {
+					markerCount : options.id,
+					locationID  : location.location_id || 0,
+					iwContent   : options.content
 				};
 
 			// Modify marker options.
@@ -530,8 +546,12 @@ if ( gmwVars.mapsProvider == 'leaflet' ) {
 			// generate Icon
 			marker_options.icon = L.icon( marker_options.iconOptions );
 			
+			var marker = L.marker( [ options.position.lat, options.position.lng ], marker_options );
+
+			marker.gmwData = gmwData;
+
 			// Generate marker.	
-			return L.marker( [ options.position.lat, options.position.lng ], marker_options );
+			return marker;
 		},
 
 		setMarkerPosition : function( marker, position, map ) {
@@ -575,11 +595,11 @@ if ( gmwVars.mapsProvider == 'leaflet' ) {
 					var self = mapObject;
 
 					// verify iw content
-					if ( marker.options.iw_content ) {
+					if ( marker.gmwData.iwContent ) {
 						
 						// info window opsions. Can be modified with the filter.
 						var info_window_options = GMW.apply_filters( 'gmw_standard_info_window_options', {
-							content  : '<div class="gmw-info-window standard map-' + self.id + ' ' + self.prefix + '">' + marker.options.iw_content + '</div>',
+							content  : '<div class="gmw-info-window standard map-' + self.id + ' ' + self.prefix + '">' + marker.gmwData.iwContent + '</div>',
 							maxWidth : 200,
 							minWidth : 200
 						}, self );
