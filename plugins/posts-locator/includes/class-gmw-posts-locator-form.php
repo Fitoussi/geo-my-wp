@@ -123,6 +123,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 
 		// add the location db fields to the query
 		$clauses['fields'] .= ", {$db_fields}";
+		$clauses['having']  = '';
 
 		// get address filters query
 		$address_filters = GMW_Location::query_address_fields( $this->get_address_filters(), $this->form );
@@ -173,6 +174,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 			if ( 'distance' == $this->form['query_args']['orderby'] ) {
 				$clauses['orderby'] = 'distance, post_title';
 			}
+
 		} else {
 
 			//if showing posts without location
@@ -181,7 +183,6 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 				// left join the location table into the query to display posts with no location as well
 				$clauses['join']  .= " LEFT JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON $wpdb->posts.ID = gmw_locations.object_id ";
 				$clauses['where'] .= " {$address_filters} ";
-				$clauses['where'] .= " AND gmw_locations.object_type = 'post'";
 
 			} else {
 
@@ -194,22 +195,15 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 		// modify the clauses
 		$clauses = apply_filters( 'gmw_pt_location_query_clauses', $clauses, $this->form );
 
-		if ( ! empty( $clauses['having'] ) ) {
-
-			if ( empty( $clauses['groupby'] ) ) {
-				$clauses['groupby'] = $wpdb->prefix . 'posts.ID';
-			}
-
-			$clauses['groupby'] .= ' ' . $clauses['having'];
-
-			unset( $clauses['having'] );
-
-		} else {
-
-			if ( empty( $clauses['groupby'] ) ) {
-				$clauses['groupby'] = $wpdb->prefix . 'posts.ID';
-			}
+		// make sure we have groupby to only pull posts one time.
+		if ( empty( $clauses['groupby'] ) ) {
+			$clauses['groupby'] = $wpdb->prefix . 'posts.ID';
 		}
+
+		// add having clause.
+		$clauses['groupby'] .= ' ' . $clauses['having'];			
+		
+		unset( $clauses['having'] );
 
 		return $clauses;
 	}
