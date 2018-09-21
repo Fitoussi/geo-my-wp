@@ -1086,7 +1086,7 @@ class GMW_Form {
 	 * @return void
 	 */
 	public function output() {
-
+		
 		// do something before the output
 		do_action( 'gmw_shortcode_start', $this->form );
 		do_action( "gmw_{$this->form['prefix']}_shortcode_start", $this->form );
