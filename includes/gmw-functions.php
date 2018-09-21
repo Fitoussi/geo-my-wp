@@ -108,6 +108,18 @@ function gmw_get_object_types() {
 }
 
 /**
+ * Verify if input is a proper numeric ID.
+ * 
+ * @param  integer $id [description]
+ * @return boolean.
+ *
+ * @since 3.2
+ */
+function gmw_verify_id( $id = 0 ) {
+	return GMW_Location::verify_id( $id );
+} 
+
+/**
  * Check if add-on is active
  * 
  * @param  string $addon slug/name of the addon
@@ -1039,7 +1051,7 @@ function gmw_enqueue_form_styles( $args = array( 'form_id' => 0, 'pages' => arra
  * @return [type] [description]
  */
 function gmw_ajax_info_window_init() {
-
+	
 	// we used to pass the form object via the map_args and return it 
 	// via info_window ajax. This seems unessacery so we now pass the form ID
 	// only and get the form using a function.
@@ -1047,7 +1059,7 @@ function gmw_ajax_info_window_init() {
 	// additional data generated to the form during the search query process.
 	//$gmw = $_POST['form']; 
 	$location = is_object( $_POST['location'] ) ? $_POST['location'] : ( object ) $_POST['location'];
-    $gmw 	  = gmw_get_form( $_POST['form_id'] );
+    $gmw 	  = ! empty( $_POST['form'] ) ? $_POST['form'] : gmw_get_form( $_POST['form_id'] );
 
     // include info-window template functions
     include_once( GMW_PATH .'/includes/template-functions/gmw-info-window-template-functions.php' );
