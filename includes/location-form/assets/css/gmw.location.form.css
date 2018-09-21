@@ -9,7 +9,7 @@ div#gmw-location-form-wrapper {
 	background: #FFF;
 	color: #323232;
 	border-radius: 4px;
-	box-shadow: 1px 1px 3px #eee;
+	//box-shadow: 1px 1px 3px #eee;
 }
 
 form#gmw-location-form {
@@ -284,6 +284,7 @@ div#gmw-location-form-wrapper .gmw-lf-field-wrapper .map-wrapper {
 
 div#gmw-location-form-wrapper .gmw-lf-form-actions .gmw-lf-field.button {
 	margin-right: 5px;
+	margin-bottom: 10px;
 }
 
 div#gmw-location-form-wrapper .gmw-lf-form-actions .gmw-lf-field.button#gmw-lf-delete-location {
