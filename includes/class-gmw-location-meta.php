@@ -266,7 +266,9 @@ class GMW_Location_Meta {
 	 *
 	 * @param   int     $location_id the ID of the corresponding location
 	 * @param   array   $metadata    location metadata in meta_key => meta value pairs
-	 * @param   mixed   $meta_value  can also update single meta by passing single meta_data and meta_value
+	 * @param   mixed   $meta_value  can also update single meta by passing a single meta key as a string
+	 * 
+	 * to the metadata argument.
 	 * 
 	 * @return  array   array of updated/created metadata IDs
 	 *
@@ -315,7 +317,11 @@ class GMW_Location_Meta {
 	 * Get location meta by location ID.
 	 * 
 	 * @param  integer 			$location_id location ID
-	 * @param  string || array  $meta_keys   single meta key as a string or array of keys
+	 * 
+	 * @param  string || array  $meta_keys   single meta key as a string or multiple keys 
+	 * 
+	 * as array or comma separated string.
+	 * 
 	 * @param  boolean $cache   
 	 * 
 	 * @return string || array
@@ -340,12 +346,21 @@ class GMW_Location_Meta {
 			return $location_metas;
 		}
 
-		// if a single meta key passed as string.
+		// if a string passed as key/s
 		if ( is_string( $meta_keys ) ) {
 
-			$meta_key = sanitize_key( $meta_keys );
+			// if a single meta key passed as string ( which means without commas )
+			if ( strpos( $meta_keys, ',' ) === false ) {
 
-			return ! empty( $location_metas[$meta_key] ) ? $location_metas[$meta_key] : false;
+				$meta_key = sanitize_key( $meta_keys );
+
+				return ! empty( $location_metas[$meta_key] ) ? $location_metas[$meta_key] : false;
+			}
+
+			// otherwise, if commas provided in the string,
+			// that means that we have multiple meta keys
+			// So we convert the string into array.
+			$meta_keys = explode( ',', $meta_keys );
 		}
 
 		// if multiple meta keys passed as an array
