@@ -489,6 +489,18 @@ class GMW_Settings {
 						}
 						break;
 
+					case 'number':
+						
+						if ( ! empty( $values[ $section_name ][ $option['name'] ] ) ) {
+							$num_value = sanitize_text_field( $values[ $section_name ][ $option['name'] ] );;
+						} else {
+							$num_value = isset( $option['default'] ) ? sanitize_text_field( $option['default'] ) : '';
+						}
+
+						$valid_value = preg_replace( '/[^0-9]/', '', $num_value );
+						
+					break;
+
 					case 'text':
 					case 'password':
 						if ( ! empty( $values[ $section_name ][ $option['name'] ] ) ) {
@@ -693,6 +705,20 @@ class GMW_Settings {
 					type="hidden" 
 					id="<?php echo $attr_id; ?>" 
 					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> regular-text password" name="<?php echo $attr_name; ?>" 
+					value="<?php echo sanitize_text_field( esc_attr( $value ) ); ?>" 
+					<?php echo implode( ' ', $attributes ); ?> 
+				/>
+				<?php
+			break;
+
+			// number
+			case 'number':
+				?>
+				<input 
+					type="number" 
+					id="<?php echo $attr_id; ?>" 
+					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> regular-text text" 
+					name="<?php echo $attr_name; ?>" 
 					value="<?php echo sanitize_text_field( esc_attr( $value ) ); ?>" 
 					<?php echo implode( ' ', $attributes ); ?> 
 				/>
