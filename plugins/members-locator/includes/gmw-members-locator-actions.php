@@ -29,22 +29,22 @@ function gmw_fl_filter_location_activity( $where, $args ) {
 add_filter( 'bp_activity_get_where_conditions', 'gmw_fl_filter_location_activity', 50, 2 );
 
 /**
- * Get the member name to save as location title before location is saved
+ * Use the member name as the location title if no title provided.
  *
  * @param  [type] $location [description]
  * @return [type]           [description]
  */
-function gmw_fl_get_member_name( $location ) {
+function gmw_fl_get_member_name( $args ) {
 
-	$name = bp_core_get_username( $location['object_id'] );
-
-	if ( ! empty( $name ) ) {
-		$location['title'] = sanitize_text_field( stripslashes( $name ) );
+	// we do this only if title is empty.
+	if ( empty( $args['title'] ) ) {
+		$name          = bp_core_get_username( $args['object_id'] );
+		$args['title'] = sanitize_text_field( stripslashes( $name ) );
 	}
 
-	return $location;
+	return $args;
 }
-add_filter( 'gmw_lf_user_location_args_before_location_updated', 'gmw_fl_get_member_name' );
+add_filter( 'gmw_lf_user_location_args_before_location_updated', 'gmw_fl_get_member_name', 15 );
 
 /**
  * Add location item to dropdown menu filter
