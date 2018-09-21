@@ -44,6 +44,45 @@ function gmw_pt_get_tax_query_args( $tax_args = array(), $gmw ) {
 }
 
 /**
+ * Get posts' featured image.
+ *
+ * @param  object $post the post object.
+ * @param  array  $gmw  gmw form.
+ * 
+ * @return HTML element.
+ */
+function gmw_get_post_featured_image( $post, $gmw = array() ) {
+
+	 $output  = '';  
+
+    if ( has_post_thumbnail() ) {
+           
+           echo get_the_post_thumbnail( $post, array( 
+	                $gmw['search_results']['image']['width'], 
+	                $gmw['search_results']['image']['height'] 
+	            ) );            
+	    $output .= '<div class="post-thumbnail">';
+		$output .= get_the_post_thumbnail( array( 
+	                $gmw['search_results']['image']['width'], 
+	                $gmw['search_results']['image']['height'] 
+	            ) ); 
+	    $output .= '</div>';
+	 
+	} else {
+
+		$output .= '<div class="post-thumbnail no-image">';
+		$output .= '<img ';
+		$output .= 'src="' . GMW_IMAGES . '/no-image.jpg" ';
+		$output .= 'width=" ' . esc_attr( $gmw['search_results']['image']['width'] ) . '" ';
+		$output .= 'height=" ' . esc_attr( $gmw['search_results']['image']['height'] ) .'" ';
+		$output .= '/>';
+		$output .= '</div>';
+	}
+
+	return apply_filters( 'gmw_pt_post_feature_image', $output, $post, $gmw );
+}
+
+/**
  * Display featured image in search results
  *
  * @param  [type] $post [description]
@@ -52,31 +91,11 @@ function gmw_pt_get_tax_query_args( $tax_args = array(), $gmw ) {
  */
 function gmw_search_results_featured_image( $post, $gmw = array() ) {
 
-    if ( ! $gmw['search_results']['image']['enabled'] ) { 
+	if ( ! $gmw['search_results']['image']['enabled'] ) { 
         return;
     }
-    if ( has_post_thumbnail() ) {
-	    ?>                                    
-	    <div class="post-thumbnail">
-	        <?php 
-	            the_post_thumbnail( array( 
-	                $gmw['search_results']['image']['width'], 
-	                $gmw['search_results']['image']['height'] 
-	            ) ); 
-	        ?>
-	    </div>
-	    <?php
-	} else {
-		?>
-		<div class="post-thumbnail no-image">
-			<img 
-				src="<?php echo GMW_IMAGES . '/no-image.jpg'; ?>" 
-				width="<?php echo esc_attr( $gmw['search_results']['image']['width'] ); ?>"
-				height="<?php echo esc_attr( $gmw['search_results']['image']['height'] ); ?>"
-			/>
-		</div>
-		<?php
-	}
+
+	echo gmw_get_post_featured_image( $post, $gmw );
 }
 
 /**
