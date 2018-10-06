@@ -122,6 +122,13 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 
 		parent::pre_init();
 
+		// clear internal cache when friendship status changes.
+		if ( GMW()->internal_cache ) {
+			foreach ( array( 'post_delete', 'accepted', 'requested', 'rejected', 'withdrawn' ) as $action ) {
+				add_action( 'friends_friendship_' . $action, array( $this, 'flush_user_cache' ) );
+			}
+		}
+		
 		if ( IS_ADMIN ) {
 			include( 'includes/admin/class-gmw-members-locator-form-editor.php' );
 		}
@@ -160,6 +167,15 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 				include( 'includes/class-gmw-single-member-location.php' );
 			}
 		}
+	}
+
+	/**
+	 * Clear internal cache.
+	 * 
+	 * @return [type] [description]
+	 */
+	public function flush_user_cache() {
+		GMW_Cache_Helper::flush_cache_by_object( 'user' );
 	}
 
 	/**
