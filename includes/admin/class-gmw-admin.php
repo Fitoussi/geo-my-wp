@@ -73,11 +73,6 @@ class GMW_Admin {
 		$this->tools_page 		  = new GMW_Tools();
 		$this->import_export_page = new GMW_Import_Export_Page();
 		//$this->shortcodes_page 	= new GMW_Shortcodes_page();
-
-		// Setup/welcome
-		if ( ! empty( $_GET['page'] ) && $_GET['page'] == 'gmw-welcome' ) {
-			//include_once( 'class-gmw-welcome-page.php' );
-		}
 		
 		add_filter( 'plugin_action_links_' . GMW_BASENAME, array( $this, 'gmw_action_links' ), 10, 2 );
 	}
