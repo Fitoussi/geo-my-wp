@@ -594,7 +594,6 @@ class GMW_Addon {
 			 * In this case we will update the status in database.
 			 *
 			 */
-
 			if ( ! isset( GMW()->addons_status[ $this->slug ] ) || $this->status != GMW()->addons_status[ $this->slug ] || ! $this->verify_saved_addon_data( $this->slug ) ) {
 
 				/**
@@ -758,6 +757,26 @@ class GMW_Addon {
 			'status'  => true,
 			'details' => false,
 		);
+		
+		$licenses_data = GMW()->licenses_data;
+
+		// extensions disabled by the admin are not allowed.
+		if ( ! empty( $this->license_name ) && ! empty( $licenses_data[ $this->license_name ] ) && isset( $licenses_data[ $this->license_name ]['status'] ) && 'disabled' ===  $licenses_data[ $this->license_name ]['status'] ) {
+
+			$verified['details'] = array(
+				'error'            => 'license_disabled_by_admin',
+				'required_version' => '',
+				'notice'           => $details['notice'] = sprintf(
+					__( 'GEO my WP %1$s extension is disabled due to an issue with the license key. Contact support for more information.', 'geo-my-wp' ),
+					$this->name
+				),
+			);
+
+			// display admin notice
+			add_action( 'admin_notices', array( $this, 'verify_activation_notice' ) );
+
+			$verified['status'] = false;
+		}
 
 		// verify GEO my WP min version
 		if ( ! $this->is_core && version_compare( GMW_VERSION, $this->gmw_min_version, '<' ) ) {
@@ -774,7 +793,7 @@ class GMW_Addon {
 			);
 
 			// display admin notice
-			add_action( 'admin_notices', array( $this, 'min_version_notice' ) );
+			add_action( 'admin_notices', array( $this, 'verify_activation_notice' ) );
 
 			$verified['status'] = false;
 		}
@@ -793,7 +812,7 @@ class GMW_Addon {
 			);
 
 			// display admin notice
-			add_action( 'admin_notices', array( $this, 'min_version_notice' ) );
+			add_action( 'admin_notices', array( $this, 'verify_activation_notice' ) );
 
 			$verified['status'] = false;
 		}
@@ -958,10 +977,10 @@ class GMW_Addon {
 	 *
 	 * @return [type] [description]
 	 */
-	public function min_version_notice() {
+	public function verify_activation_notice() {
 		?>
 		<div class="error">
-			<p><?php echo esc_attr( $this->status_details['notice'] ); ?></p>
+			<p><?php echo esc_html( $this->status_details['notice'] ); ?></p>
 		</div>  
 		<?php
 	}
