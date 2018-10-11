@@ -26,84 +26,81 @@ class GMW_Single_BP_Member_Location extends GMW_Single_Location {
 	protected $args = array(
 		'elements'            => 'name,address,map,distance,directions_link',
 		'object'              => 'member',
+		'object_type'         => 'user',
 		'prefix'              => 'fl',
 		'item_info_window'    => 'name,address,distance',
 		'show_in_single_post' => 1,
 		'no_location_message' => '',
 	);
 
+	/**
+	 * [__construct description]
+	 * 
+	 * @param array $atts [description]
+	 */
 	public function __construct( $atts = array() ) {
 
 		$this->args['no_location_message'] = __( 'The member has not added a location yet.', 'geo-my-wp' );
+
+		if ( is_single() && empty( $atts['show_in_single_post'] ) ) {
+			$atts['no_location_message'] = false;
+		}
 
 		parent::__construct( $atts );
 	}
 
 	/**
-	 * @since 2.6.1
+	 * Try to get user ID if missing.
 	 * 
-	 * Public $item_info
-	 * 
-	 * Get the member location information from database
+	 * @return [type] [description]
 	 */
-	public function location_data() {
+	public function get_object_id() {
 
-		// disable no location message
-		if ( is_single() && empty( $this->args['show_in_single_post'] ) ) {
-			$this->args['no_location_message'] = false;
-		}
+		global $members_template;
 
-		// check if passing user ID
-		if ( empty( $this->args['object_id'] ) ) {
+		// look for BP displayed user ID
+		if ( bp_is_user() ) {
 
-			global $members_template;
+			global $bp;
 
-			// look for BP displayed user ID
-			if ( bp_is_user() ) {
+			return $bp->displayed_user->id;
 
-				global $bp;
+			// look form member ID in members loop
+		} elseif ( ! empty( $members_template->member->ID ) ) {
 
-				$this->args['object_id'] = $bp->displayed_user->id;
+			return $members_template->member->ID;
 
-				// look form member ID in members loop
-			} elseif ( ! empty( $members_template->member->ID ) ) {
+			// if in single post page look for post author
+		} elseif ( is_single() && ! empty( $this->args['show_in_single_post'] ) ) {
 
-				$this->args['object_id'] = $members_template->member->ID;
+			global $post;
 
-				// if in single post page look for post author
-			} elseif ( is_single() && ! empty( $this->args['show_in_single_post'] ) ) {
+			if ( ! empty( $post->post_author ) ) {
 
-				global $post;
+				return $post->post_author;
 
-				if ( ! empty( $post->post_author ) ) {
-
-					$this->args['object_id'] = $post->post_author;
-
-				} else {
-
-					return false;
-				}
 			} else {
 
-				return  false;
+				return false;
 			}
-		}
 
-		// get user location data
-		return gmw_get_user_location_data( $this->args['object_id'] );
+		} else {
+
+			return false;
+		}
 	}
 
 	/**
-	 * Get member's name
+	 * Get member's name.
 	 *
 	 * @return [type] [description]
 	 */
 	public function name() {
-		return apply_filters( 'gmw_sl_title', '<h3 class="gmw-sl-title member-name gmw-sl-element">' . bp_core_get_userlink( $this->args['object_id'] ) . '</h3>', $this->location_data, $this->args, $this->user_position );
+		return apply_filters( 'gmw_sl_title', '<h3 class="gmw-sl-title member-name gmw-sl-element">' . bp_core_get_userlink( $this->args['object_id'] ) . '</h3>', $this->location_data, $this->args, $this->user_position, $this );
 	}
 
 	/**
-	 * Use title for the name
+	 * Use title for the name.
 	 *
 	 * @return [type] [description]
 	 */
