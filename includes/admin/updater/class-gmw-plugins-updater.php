@@ -203,7 +203,7 @@ class GMW_Premium_Plugin_Updater {
 
             if ( empty( $version_info->download_link ) ) {
                 printf(
-                    __( 'There is a new version of %1$s available. %2$sView version %3$s details%4$s.', 'easy-digital-downloads' ),
+                    __( 'There is a new version of %1$s available. %2$sView version %3$s details%4$s.', 'geo-my-wp' ),
                     esc_html( $version_info->name ),
                     '<a target="_blank" class="thickbox" href="' . esc_url( $changelog_link ) . '">',
                     esc_html( $version_info->new_version ),
@@ -211,7 +211,7 @@ class GMW_Premium_Plugin_Updater {
                 );
             } else {
                 printf(
-                    __( 'There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s.', 'easy-digital-downloads' ),
+                    __( 'There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s.', 'geo-my-wp' ),
                     esc_html( $version_info->name ),
                     '<a target="_blank" class="thickbox" href="' . esc_url( $changelog_link ) . '">',
                     esc_html( $version_info->new_version ),
