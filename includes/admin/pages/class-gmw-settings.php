@@ -46,10 +46,11 @@ class GMW_Settings {
 					'auto_locate'          => 1,
 				),
 				'api_providers' => array(
-					'maps_provider'              => 'google_maps',
-					'geocoding_provider'         => 'google_maps',
-					'google_maps_server_api_key' => gmw_get_option( 'general_settings', 'google_api', '' ),
-					'nominatim_email'	         => get_bloginfo('admin_email'),
+					'maps_provider'                   => 'google_maps',
+					'geocoding_provider'              => 'google_maps',
+					'google_maps_client_side_api_key' => '',
+					'google_maps_server_side_api_key' => '',
+					'nominatim_email'	              => get_bloginfo('admin_email'),
 				)
 			)
 		);
@@ -196,17 +197,27 @@ class GMW_Settings {
 				            'name'          => 'google_maps_options',
 				            'type'          => 'fields_group',
 				            'label'         => __( 'Google Maps API', 'geo-my-wp' ),
-				            'desc'          => __( 'Setup your Google Maps API.' , 'geo-my-wp' ),
+				            'desc'          => __( 'Setup your Google Maps API. Note that GEO my WP now requires 2 Google Maps API keys; a client-side and server-side keys.' , 'geo-my-wp' ),
 				            'fields'        => array(
-				                'google_maps_server_api_key'  => array(
-				                    'name'          => 'google_maps_server_api_key',
+				            	'google_maps_client_side_api_key'  => array(
+				                    'name'          => 'google_maps_client_side_api_key',
+				                    'type'          => 'text',
+				                    'default'       => '',
+				                    'label'         => __( 'Google Maps Client-side API key', 'geo-my-wp' ),
+				                    'placeholder'   => __( 'Google Maps Client-side API key', 'geo-my-wp' ),
+				                    'desc'        	=> sprintf( __( 'This API key is responsible for displaying maps, directions, address autocomplete, and client-side geocoding when using the location form. See <a href="%1$s" target="_blank">this tutorial</a> to learn how to generate and setup your Google Maps API key.', 'geo-my-wp' ), 'http://docs.gravitygeolocation.com/article/101-create-google-map-api-key' ),
+									'attributes'  => array( 'size' => '50' ),
+									'priority'    => 5,
+				                ),
+				                'google_maps_server_side_api_key'  => array(
+				                    'name'          => 'google_maps_server_side_api_key',
 				                    'type'          => 'text',
 				                    'default'       => '',
 				                    'label'         => __( 'Google Maps API key', 'geo-my-wp' ),
 				                    'placeholder'   => __( 'Google Maps API key', 'geo-my-wp' ),
-				                    'desc'        	=> sprintf( __( 'Google Maps API key is required. See <a href="%1$s" target="_blank">this tutorial</a> to learn how to generate and setup your Google Maps API key.', 'geo-my-wp' ), 'http://docs.gravitygeolocation.com/article/101-create-google-map-api-key' ),
+				                    'desc'        	=> sprintf( __( 'This API key is responsible for server side geocoding. That is when the geocoder function is triggered via page load ( rather than AJAX ). See <a href="%1$s" target="_blank">this tutorial</a> to learn how to generate and setup your Google Maps API key.', 'geo-my-wp' ), 'http://docs.gravitygeolocation.com/article/101-create-google-map-api-key' ),
 									'attributes'  => array( 'size' => '50' ),
-									'priority'    => 5,
+									'priority'    => 10,
 				                ),
 				                'google_maps_api_china'  => array(
 				                    'name'          => 'google_maps_api_china',
@@ -216,7 +227,7 @@ class GMW_Settings {
 				                    'cb_label'		=> __( 'Enabled', 'geo-my-wp' ),
 				                    'desc'        	=> __( 'Check this checkbox if your server is located in China and Google Maps features are not working on your site.', 'geo-my-wp' ),
 									'attributes'  => array(),
-									'priority'    => 10,
+									'priority'    => 15,
 				                ),
 				            ),
 				            'attributes' => '',
