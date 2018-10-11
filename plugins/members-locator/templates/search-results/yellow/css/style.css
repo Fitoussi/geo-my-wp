@@ -25,14 +25,14 @@ div.gmw-results-wrapper.yellow ul.members-list-wrapper {
 	margin: 3px 0 0 0;
 }
 
-div.gmw-results-wrapper.yellow ul.members-list-wrapper li {
+div.gmw-results-wrapper.yellow ul.members-list-wrapper li.single-member {
 	margin: 0px;
 	padding: 15px;
 	border-bottom: 5px solid #e1e1e1
 	
 }
 
-div.gmw-results-wrapper.yellow ul.members-list-wrapper li:nth-child(even) {
+div.gmw-results-wrapper.yellow ul.members-list-wrapper li.single-member:nth-child(even) {
 	background: white;
 }
 
