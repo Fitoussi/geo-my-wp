@@ -164,8 +164,7 @@ class GMW_Geocoder {
 			'gmw_geocoder_endpoint_url', array(
 				'url_base' => $this->$url_type . '?',
 				'url_data' => http_build_query(
-					apply_filters( 'gmw_geocoder_endpoint_params', $this->params ), 
-					'', '&'
+					apply_filters( 'gmw_geocoder_endpoint_params', $this->params )
 				),
 			)
 		);
@@ -219,7 +218,6 @@ class GMW_Geocoder {
 			// Get endpoint URL.
 			$url = implode( '', $this->get_endpoint_url() );
 
-			// try geocoding
 			$result = wp_remote_get( $url );
 
 			// abort if remote connection failed.
