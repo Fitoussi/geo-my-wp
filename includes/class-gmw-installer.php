@@ -299,6 +299,17 @@ class GMW_Installer {
 
 		global $wpdb;
 
+		$options = get_option( 'gmw_options' );
+
+		// Move map API key to new setting field.
+		if ( empty( $options['api_providers']['google_maps_client_side_api_key'] ) && ! empty( $options['api_providers']['google_maps_server_api_key'] ) ) {
+			$options['api_providers']['google_maps_client_side_api_key'] = $options['api_providers']['google_maps_server_api_key'];
+
+			unset( $options['api_providers']['google_maps_server_api_key'] );
+
+			update_option( 'gmw_options', $options );
+		}
+
 		// Get column data.
 		$column = $wpdb->get_results( "DESCRIBE {$wpdb->base_prefix}gmw_locationmeta meta_key" );
 
