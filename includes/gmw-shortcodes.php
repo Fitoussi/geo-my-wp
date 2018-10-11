@@ -173,17 +173,27 @@ function gmw_get_address_fields_shortcode( $args ) {
 	//default shortcode attributes
 	$attr = shortcode_atts(
 		array(
+			'location_id' => 0,
 			'object_type' => '',
-			'object_id'   => '',
+			'object_id'   => 0,
 			'fields'      => 'formatted_address',
 			'separator'   => ', ',
-		), $args
+			'output'      => 'string',
+		), $args, 'gmw_get_address_fields'
 	);
 
-	$fields = ! empty( $attr['fields'] ) ? explode( ',', $attr['fields'] ) : array( 'formatted_address' );
-
-	$location = gmw_get_address_fields( $attr['object_type'], $attr['object_id'], $fields, $attr['separator'] );
+	$location = gmw_get_address_fields( $attr );
 
 	return $location;
 }
 add_shortcode( 'gmw_address_fields', 'gmw_get_address_fields_shortcode' );
+//add_shortcode( 'gmw_location_address_fields', 'gmw_get_address_fields_shortcode' );
+
+/**
+ * GME get location fields shortcode.
+ *
+ * @uses gmw_get_location_fields();
+ * 
+ * @function in includes/gmw-location-functions.php
+ */
+add_shortcode( 'gmw_location_fields', 'gmw_get_location_fields' );
