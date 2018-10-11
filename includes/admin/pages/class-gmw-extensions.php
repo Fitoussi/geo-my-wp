@@ -176,7 +176,9 @@ class GMW_Extensions {
 			wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 		}
 
+		// delete extensions and license key transient to retrive new data.
 		delete_transient( 'gmw_extensions_feed' );
+		//delete_transient( 'gmw_verify_license_keys' );
 
 		//reload the page to prevent resubmission
 		wp_safe_redirect(
@@ -489,7 +491,7 @@ class GMW_Extensions {
 			$form_data['basename'],
 			$form_data['item_name'],
 			$form_data['license_name'],
-			$form_data['license_id']
+			$form_data['item_id']
 		);
 
 		$form = $license_input->get_license_key_element();
