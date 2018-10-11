@@ -424,7 +424,7 @@ function gmw_is_license_valid( $addon ) {
 /**
  * GMW Cheack Licenses
  * 
- * Do check of licenses every 72 hours to varify that thier status is correct
+ * Do check of licenses every 24 hours to varify that thier status is correct
  * 
  * @since  2.5
  * @author Eyal Fitoussi
@@ -728,6 +728,7 @@ function gmw_license_update_notices() {
 		'expired' 				=> sprintf( __( 'Your license has expired. <a href="%s" target="_blank">Renew your license</a> to receive updates and support.', 'geo-my-wp' ), 'https://geomywp.com/your-account/' ),
 		'revoked' 				=> sprintf( __( 'Your license has been disabled. Contact <a href="%s" target="_blank">support</a> for more information.', 'geo-my-wp' ), 'https://geomywp.com/support/#extension-support' ),
 		'missing'				=> sprintf( __( 'Something wrong with the license key you entered. <a href="%s" target="_blank">Verify your key</a> and try again.', 'geo-my-wp' ), 'https://geomywp.com/your-account/' ),
+		'disabled'				=> sprintf( __( 'You license key was disabled by the provider. <a href="%s" target="_blank">Contact support</a> for more information', 'geo-my-wp' ), 'https://geomywp.com/support/' ),
 		'invalid'				=> __( 'Your license is not active for this URL.', 'geo-my-wp' ),
 		'site_inactive'			=> __( 'Your license is not active for this URL.', 'geo-my-wp' ),
 		'invalid_item_id'		=> __( 'The license key you entered does not belong to this extension.', 'geo-my-wp' ),
