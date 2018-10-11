@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Google Maps Geocoder ( OpenStreetMaps ).
+ * Google Maps Geocoder.
  *
  * @since 3.1.
  *
@@ -35,7 +35,7 @@ class GMW_Google_Maps_Geocoder extends GMW_Geocoder {
 			$location  => $this->location,
 			'region'   => $options['region'],
 			'language' => $options['language'],
-			'key'      => gmw_get_option( 'api_providers', 'google_maps_server_api_key', '' ),
+			'key'      => trim( gmw_get_option( 'api_providers', 'google_maps_server_side_api_key', '' ) ),
 		);
 
 		return $params;
@@ -55,8 +55,7 @@ class GMW_Google_Maps_Geocoder extends GMW_Geocoder {
 			'gmw_google_maps_api_geocoder_url', array(
 				'url_base' => $url . '?',
 				'url_data' => http_build_query(
-					apply_filters( 'gmw_google_maps_api_geocoder_args', $this->params ),
-					'', '&amp;'
+					apply_filters( 'gmw_google_maps_api_geocoder_args', $this->params )
 				),
 			)
 		);
