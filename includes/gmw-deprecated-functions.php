@@ -292,17 +292,21 @@ function gmw_get_post_info( $args = array(), $from_shortcode = false ) {
 
 	$output = '';
 
-	$post_id   = ! empty( $args['post_id'] ) ? $args['post_id'] : 0;
-   	$fields    = ! empty( $args['info'] )    ? $args['info']    : 'formatted_address';
-    $separator = ! empty( $args['divider'] ) ? $args['divider'] : ', ';
-  
+	$args = array(
+		'object_id'   => ! empty( $args['post_id'] ) ? $args['post_id'] : 0,
+		'object_type' => 'post',
+   		'fields'      => ! empty( $args['info'] )    ? $args['info']    : 'formatted_address',
+    	'separator'   => ! empty( $args['divider'] ) ? $args['divider'] : ', ',
+    	'output'      => 'string',
+    );
+  	
 	// try to get address fields
-	$output = gmw_get_address_fields( 'post', $post_id, $fields, $separator );
+	$output = gmw_get_address_fields( $args );
 
 	// if no address fields found, maybe this is location meta
 	if ( empty( $output ) ) {
 
-		$output = gmw_get_location_meta_values( 'post', $post_id, $fields, $separator );
+		$output = gmw_get_location_meta_values( array( 'object_type' => 'post', 'object_id' => $args['post_id'] ), $args['fields'], $args['separator'] );
 	}
 
 	return $output;
@@ -412,7 +416,7 @@ function gmw_pt_update_location( $args = array(), $force_refresh = false ) {
 			$user_id = 1;
 		}
 
-		gmw_update_post_location( $post_id, $address, $user_id, $force_refresh );
+		gmw_update_post_location( $post_id, $address, '', $user_id, $force_refresh );
 
 		if ( ! empty( $args['additional_info'] ) ) {
 			gmw_update_post_location_meta( $post_id, $args['additional_info'] );
