@@ -131,8 +131,6 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 		// when address provided, and not filtering based on address fields, we will do proximity search
 		if ( '' == $address_filters && ! empty( $this->form['lat'] ) && ! empty( $this->form['lng'] ) ) {
 
-			$this->form['is_proximity_query'] = true;
-
 			// generate some radius/units data
 			if ( in_array( $this->form['units_array']['units'], array( 'imperial', 3959, 'miles' ) ) ) {
 				$earth_radius = 3959;
@@ -151,34 +149,37 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 			// the query instead of running multiple prepares.
 			$lat      = esc_sql( $this->form['lat'] );
 			$lng      = esc_sql( $this->form['lng'] );
-			$distance = esc_sql( $this->form['radius'] );
+			$distance = ! empty( $this->form['radius'] ) ? esc_sql( $this->form['radius'] ) : '';
 
 			$clauses['fields'] .= ", ROUND( {$earth_radius} * acos( cos( radians( {$lat} ) ) * cos( radians( gmw_locations.latitude ) ) * cos( radians( gmw_locations.longitude ) - radians( {$lng} ) ) + sin( radians( {$lat} ) ) * sin( radians( gmw_locations.latitude ) ) ),1 ) AS distance";
 
 			$clauses['join'] .= " INNER JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON $wpdb->posts.ID = gmw_locations.object_id ";
 
-			// calculate the between point
-			$bet_lat1 = $lat - ( $distance / $degree );
-			$bet_lat2 = $lat + ( $distance / $degree );
-			$bet_lng1 = $lng - ( $distance / ( $degree * cos( deg2rad( $lat ) ) ) );
-			$bet_lng2 = $lng + ( $distance / ( $degree * cos( deg2rad( $lat ) ) ) );
+			if ( ! empty( $distance ) ) {
 
-			$clauses['where'] .= " AND gmw_locations.object_type = 'post'";
-			$clauses['where'] .= " AND gmw_locations.latitude BETWEEN {$bet_lat1} AND {$bet_lat2}";
-			$clauses['where'] .= " AND gmw_locations.longitude BETWEEN {$bet_lng1} AND {$bet_lng2} ";
+				// calculate the between point
+				$bet_lat1 = $lat - ( $distance / $degree );
+				$bet_lat2 = $lat + ( $distance / $degree );
+				$bet_lng1 = $lng - ( $distance / ( $degree * cos( deg2rad( $lat ) ) ) );
+				$bet_lng2 = $lng + ( $distance / ( $degree * cos( deg2rad( $lat ) ) ) );
 
-			// filter locations based on the distance
-			$clauses['having'] = "HAVING distance <= {$distance} OR distance IS NULL";
+				$clauses['where'] .= " AND gmw_locations.object_type = 'post'";
+				$clauses['where'] .= " AND gmw_locations.latitude BETWEEN {$bet_lat1} AND {$bet_lat2}";
+				$clauses['where'] .= " AND gmw_locations.longitude BETWEEN {$bet_lng1} AND {$bet_lng2} ";
 
-			// order by distance then title ( when posts have the same exact location )
-			if ( 'distance' == $this->form['query_args']['orderby'] ) {
-				$clauses['orderby'] = 'distance, post_title';
+				// filter locations based on the distance
+				$clauses['having'] = "HAVING distance <= {$distance} OR distance IS NULL";
+
+				// order by distance then title ( when posts have the same exact location )
+				if ( 'distance' == $this->form['query_args']['orderby'] ) {
+					$clauses['orderby'] = 'distance, post_title';
+				}
 			}
 
 		} else {
 
 			//if showing posts without location
-			if ( $this->enable_objects_without_location ) {
+			if ( $this->form['query_args']['gmw_args']['showing_objects_without_location'] ) {
 
 				// left join the location table into the query to display posts with no location as well
 				$clauses['join']  .= " LEFT JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON $wpdb->posts.ID = gmw_locations.object_id ";
@@ -283,8 +284,6 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 
 		// look for query in cache
 		if ( ! $internal_cache || false === ( $this->query = get_transient( $query_args_hash ) ) ) {
-		//if ( 1 == 1 ) {
-			//print_r( 'WP posts query done' );
 
 			//add filters to wp_query to do radius calculation and get locations detail into results
 			add_filter( 'posts_clauses', array( $this, 'query_clauses' ) );
