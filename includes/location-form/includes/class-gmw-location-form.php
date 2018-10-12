@@ -19,7 +19,7 @@ class GMW_Location_Form {
 	 *
 	 * @var string
 	 */
-	public $slug = false;
+	public $slug = '';
 
 	/**
 	 * Object type
@@ -101,9 +101,11 @@ class GMW_Location_Form {
 	 * Default arguments
 	 */
 	private $default_args = array(
-		//'slug'					=> '',
-		//'object_type' 			=> 'post',					  // Object type being used in this form.
+		'slug'					    => '',
+		'object_type' 			    => '',					      // Object type being used in this form.
 		'object_id'                 => 0,                         // Object ID.
+		'location_id'				=> 0,
+		'new_location'				=> 0,
 		'user_id'                   => 0,                         // User ID of the user updating the location.
 		//'exclude_tabs'			=> '',						  // array of tabs to exclude from the location form. Otherwise set to 0 if no need to exclude.
 		'exclude_fields_groups'     => '',                        // array of fields groups to exclude from the location form.
@@ -116,6 +118,7 @@ class GMW_Location_Form {
 		'stand_alone'               => 1,                         // Wrap the location form within <form> element. That is if the location form is a stand alone and not within another form.
 		'form_element'              => '#gmw-location-form',      // form wrapper element. If the location form is within another form the main form element should be used in here.
 		'form_template'             => 'location-form-tabs-left', // Form template name.
+		//'floating_form'				=> 0,
 		'submit_enabled'            => 1,                         // Show "Submit" button within the location form. That can be used when the location form is a stand alone. If the location form is within another form then the submit button of that form should be used.
 		'preserve_submitted_values' => 0,                         // when form submitted via page load, populate the form with the submitted values.
 		'address_autocomplete'      => 1,                         // Enabled / disable Google Address autocomplete
@@ -157,7 +160,7 @@ class GMW_Location_Form {
 	 *
 	 * @param array $args [description]
 	 */
-	function __construct( $args = array() ) {
+	public function __construct( $args = array() ) {
 
 		// extend the default args
 		$defaults = array_merge( $this->default_args, $this->ext_defaults );
@@ -167,8 +170,19 @@ class GMW_Location_Form {
 
 		$this->args = wp_parse_args( $args, $defaults );
 
+		if ( ! empty( $this->args['slug'] ) ) {
+			$this->slug = $this->args['slug'];
+		} else {
+			$this->args['slug'] = $this->slug;
+		}
+
 		// filter the location form args
 		$this->args = apply_filters( 'gmw_location_form_args', $this->args, $this->object_type, $this->slug );
+
+		// verify object type.
+		if ( empty( $this->object_type ) && ! empty( $this->args['object_type'] ) ) {
+			$this->object_type = $this->args['object_type'];
+		}
 
 		// allow boolean attributes accespt 1/yes/true as true value.
 		foreach ( $this->boolean_items as $boolean_item ) {
@@ -226,9 +240,9 @@ class GMW_Location_Form {
 
 		if ( $this->args['preserve_submitted_values'] && ! $this->args['ajax_enabled'] && ! empty( $_POST['gmw_action'] ) && 'update_lf_location' == $_POST['gmw_action'] && ! empty( $_POST['gmw_lf_slug'] ) && $_POST['gmw_lf_slug'] == $this->slug ) {
 
-			$this->saved_location = (object) $_POST['gmw_location_form'];
+			$this->saved_location = ( object ) $_POST['gmw_location_form'];
 
-		} else {
+		} else if ( empty( $this->args['new_location'] ) ) {
 
 			// get location from database if exist
 			$this->saved_location = $this->get_saved_location();
@@ -236,13 +250,18 @@ class GMW_Location_Form {
 
 		$this->saved_location = apply_filters( 'gmw_location_form_default_location', $this->saved_location, $this->args, $this );
 
-		// Make sure default location is an object, rather than array.
-		if ( is_array( $this->saved_location ) ) {
-			$this->saved_location = (object) $this->saved_location;
+		if ( ! empty( $this->saved_location ) ) {
+		
+			// Make sure default location is an object, rather than array.
+			if ( is_array( $this->saved_location ) ) {
+				$this->saved_location = ( object ) $this->saved_location;
+			}
+
+			$this->location_id = $this->saved_location->ID;
 		}
 
 		// get existing location ID
-		$this->location_id = ! empty( $this->saved_location ) ? absint( $this->saved_location->ID ) : 0;
+		//$this->location_id = ! empty( $this->saved_location ) ? absint( $this->saved_location->ID ) : 0;
 
 		// get the user's current position
 		$this->user_location = gmw_get_user_current_location();
@@ -273,6 +292,11 @@ class GMW_Location_Form {
 		add_action( 'admin_footer', array( $this, 'enqueue_scripts' ), 10 );
 	}
 
+	/**
+	 * Enqueue scripts.
+	 * 
+	 * @return [type] [description]
+	 */
 	public function enqueue_scripts() {
 
 		if ( ! wp_script_is( 'gmw-location-form', 'enqueued' ) ) {
@@ -343,8 +367,16 @@ class GMW_Location_Form {
 	 */
 	protected function get_saved_location() {
 
-		$location = gmw_get_location( $this->object_type, $this->args['object_id'] );
-
+		// get location by specif location ID if provided.
+		if ( ! empty( $this->args['location_id'] ) ) {
+			
+			$location = gmw_get_location( $this->args['location_id'] );
+		
+		// otherwise, get the default location via object type - object ID.
+		} else {
+			$location = gmw_get_location_by_object( $this->object_type, $this->args['object_id'] );
+		}
+		
 		return ! empty( $location ) ? $location : false;
 	}
 
@@ -483,6 +515,19 @@ class GMW_Location_Form {
 				'location'    => array(
 					'label'  => __( 'Find Your Location', 'geo-my-wp' ),
 					'fields' => array(
+						'title'	   => array(
+							'name'        => 'title',
+							'label'       => __( 'Location Name', 'geo-my-wp' ),
+							'type'        => 'hidden',
+							'default'     => '',
+							'id'          => 'gmw-lf-title',
+							'class'       => '',
+							'placeholder' => __( 'Location name.', 'geo-my-wp' ),
+							'desc'        => '',
+							'attributes'  => array( 'style' => 'width:100%' ),
+							'priority'    => 5,
+							'required'    => false,
+						),
 						'address' => array(
 							'name'        => 'address',
 							'label'       => __( 'Address', 'geo-my-wp' ),
@@ -493,7 +538,7 @@ class GMW_Location_Form {
 							'placeholder' => __( 'Enter an address...', 'geo-my-wp' ),
 							'desc'        => __( 'Type an address to see suggested results.', 'geo-my-wp' ),
 							'attributes'  => array( 'style' => 'width:100%' ),
-							'priority'    => 5,
+							'priority'    => 10,
 							'required'    => false,
 						),
 						'map'     => array(
@@ -506,7 +551,7 @@ class GMW_Location_Form {
 							'placeholder' => '',
 							'desc'        => __( 'Drag the marker to your position on the map..', 'geo-my-wp' ),
 							'attributes'  => array( 'style' => 'height:210px;width:100%' ),
-							'priority'    => 10,
+							'priority'    => 15,
 							'required'    => false,
 						),
 					),
@@ -851,15 +896,25 @@ class GMW_Location_Form {
 	 *
 	 * @return display the location field
 	 */
-	public function display_form_field( $fields_group, $slug ) {
+	public function display_form_field( $fields_group = '', $slug = false ) {
 
-		// field must have slug
-		if ( empty( $slug ) ) {
+		// get the field value when in a group
+		if ( ! empty( $slug ) ) {
+				
+			if ( empty( $this->fields[ $fields_group ]['fields'][ $slug ] ) ) {
+				return;
+			}
+
+			$field = $this->fields[ $fields_group ]['fields'][ $slug ];
+
+		// otherwise, maybe a stand alone field, without a group.
+		} else if ( ! empty( $this->fields[ $fields_group ] ) ) {
+
+			$field = $this->fields[ $fields_group ];
+			
+		} else {
 			return;
 		}
-
-		// get the field value
-		$field = $this->fields[ $fields_group ]['fields'][ $slug ];
 
 		// make sure name_attr exists otherwise create one
 		$field_name = ! empty( $field['name'] ) ? $field['name'] : 'gmw_lf_' . $slug;
@@ -1043,8 +1098,20 @@ class GMW_Location_Form {
 
 		$gmw_location_form = $this;
 
+		do_action( 'gmw_before_location_form_wrapper', $gmw_location_form );
+
+		//$floating = ( ! empty( $this->args['floating_form'] ) ) ? true : false;
+
+		//if ( $floating ) {
+		//	echo '<div class="gmw-location-form-floating-holder" style="display:none">';
+		//}
+
 		// form wrapper
 		echo '<div id="gmw-location-form-wrapper" class="gmw-location-form-wrapper ' . esc_attr( $gmw_location_form->args['form_template'] ) . '">';
+
+		//if ( $floating ) {
+		//	echo '<span class="gmw-icon-cancel gmw-location-form-close-button"></span>';
+		//}
 
 		do_action( 'gmw_before_location_form', $gmw_location_form );
 
@@ -1064,6 +1131,12 @@ class GMW_Location_Form {
 		}
 
 		echo '</div>';
+
+		//if ( $floating ) {
+		//	echo '</div>';
+		//}
+
+		do_action( 'gmw_after_location_form_wrapper', $gmw_location_form );
 	}
 
 	/**
@@ -1170,15 +1243,19 @@ class GMW_Location_Form {
 		if ( empty( $location['latitude'] ) || empty( $location['longitude'] ) ) {
 			return;
 		}
-
+		
 		// get the object type
 		$location['object_type'] = ! empty( $object_type ) ? $object_type : $location['object_type'];
 
 		// get the object ID
 		$location['object_id'] = ! empty( $object_id ) ? $object_id : $location['object_id'];
 
+		$location['title'] = ! empty( $form_values['title'] ) ? $form_values['title'] : '';
+
+		$location['featured'] = ! empty( $form_values['featured'] ) ? 1 : 0;
+
 		// get the location ID if exists
-		//$location_id = ! empty( $location['ID'] ) ? $location['ID'] : 0;
+		$location_id = ! empty( $location['ID'] ) ? $location['ID'] : 0;
 
 		// location meta
 		$location_meta = ! empty( $location['location_meta'] ) ? $location['location_meta'] : array();
@@ -1187,13 +1264,14 @@ class GMW_Location_Form {
 		$location['map_icon'] = ! empty( $location['map_icon'] ) ? $location['map_icon'] : '_default.png';
 
 		$location_args = array(
+			'ID'				=> $location_id,
 			'object_type'       => $location['object_type'],
 			'object_id'         => (int) $location['object_id'],
 			'user_id'           => (int) $location['user_id'],
 			'parent'            => 0,
 			'status'            => 1,
-			'featured'          => 0,
-			'title'             => ! empty( $location['title'] ) ? $location['title'] : '',
+			'featured'          => $location['featured'],
+			'title'             => $location['title'],
 			'latitude'          => $location['latitude'],
 			'longitude'         => $location['longitude'],
 			'street_number'     => $location['street_number'],
@@ -1223,7 +1301,8 @@ class GMW_Location_Form {
 		do_action( 'gmw_lf_before_' . $location['object_type'] . '_location_updated', $location, $location_args, $form_values );
 
 		// save location
-		$location['ID'] = gmw_update_location_data( $location_args );
+		//$location['ID'] = gmw_update_location_data( $location_args );
+		$location['ID'] = gmw_insert_location( $location_args );
 
 		// filter location meta before updating
 		$location_meta = apply_filters( 'gmw_lf_location_meta_before_location_updated', $location_meta, $location, $form_values );
@@ -1305,7 +1384,7 @@ class GMW_Location_Form {
 		do_action( 'gmw_lf_before_location_deleted', $location, $form_values );
 		do_action( 'gmw_lf_before_' . $location['object_type'] . '_location_deleted', $location, $form_values );
 
-		$location_id = GMW_Location::delete_by_id( $location['ID'], true );
+		$location_id = gmw_delete_location( $location['ID'], true );
 
 		// do something after location deleted
 		do_action( 'gmw_lf_after_location_deleted', $location, $form_values );
