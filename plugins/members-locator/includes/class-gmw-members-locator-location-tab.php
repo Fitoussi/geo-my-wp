@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * GMW_Members_Locator_Location_Tab class
+ * GGMW Members Locator Location Tab class
  *
  * Generate the member location tab
  *
@@ -18,14 +18,41 @@ class GMW_Members_Locator_Location_Tab {
 	 *
 	 * @var string
 	 */
-	public $slug = 'location';
+	public $args = array();
+
+	/**
+	 * Generate tag args.
+	 * 
+	 * @return [type] [description]
+	 */
+	public function get_args() {
+
+		return array(
+			'slug'                           => 'location',
+			'name'                           => __( 'Location', 'geo-my-wp' ),
+			'nav_menu_label'                 => __( 'Location', 'geo-my-wp' ),
+			'nav_submenu_label'              => __( 'Update location', 'geo-my-wp' ),
+			'screen_function'                => array( $this, 'screen_display' ),
+			'loggedin_user_screen_function'  => array( $this, 'loggedin_user_screen' ),
+			'displayed_user_screen_function' => array( $this, 'displayed_user_screen' ),
+		);
+	}
 
 	/**
 	 * [__construct description]
 	 */
 	public function __construct() {
-		add_filter( 'bp_members_admin_nav', array( $this, 'adminbar_nav' ), 20 );
-		add_action( 'bp_setup_nav', array( $this, 'location_tab' ), 20 );
+
+		// modify the main args
+		$this->args = apply_filters( 'gmw_fl_location_tab_args', $this->get_args() );
+
+		// generate the location tab.
+		$this->location_tab();
+
+		// admin navs.
+		add_filter( 'bp_members_admin_nav', array( $this, 'adminbar_nav' ), 25 );
+
+		// move nav menu position.
 		add_action( 'wp_footer', array( $this, 'move_location_navbar' ) );
 	}
 
@@ -35,54 +62,33 @@ class GMW_Members_Locator_Location_Tab {
 	 * @param  [type] $wp_admin_nav [description]
 	 * @return [type]               [description]
 	 */
-	public function adminbar_nav( $wp_admin_nav ) {
+	public function adminbar_nav( $wp_admin_navs = array() ) {
 
 		if ( is_user_logged_in() ) {
 
 			// Setup the logged in user variables
-			$location_link = trailingslashit( bp_loggedin_user_domain() . $this->slug );
+			$location_link = trailingslashit( bp_loggedin_user_domain() . $this->args['slug'] );
 
 			// Add location tab
-			$wp_admin_nav[] = apply_filters(
+			$wp_admin_navs[] = apply_filters(
 				'gmw_fl_setup_admin_bar', array(
 					'parent' => 'my-account-buddypress',
-					'id'     => 'my-account-gmw-' . $this->slug,
-					'title'  => __( 'Location', 'geo-my-wp' ),
+					'id'     => 'my-account-gmw-' . $this->args['slug'],
+					'title'  => $this->args['nav_menu_label'],
 					'href'   => $location_link,
 				)
 			);
 
 			// add submenu tab
-			$wp_admin_nav[] = array(
-				'parent' => 'my-account-gmw-' . $this->slug,
-				'id'     => 'my-account-gmw-update-' . $this->slug,
-				'title'  => __( 'Update Location', 'geo-my-wp' ),
+			$wp_admin_navs[] = array(
+				'parent' => 'my-account-gmw-' . $this->args['slug'],
+				'id'     => 'my-account-gmw-update-' . $this->args['slug'],
+				'title'  => $this->args['nav_submenu_label'],
 				'href'   => $location_link,
 			);
 		}
 
-		return $wp_admin_nav;
-	}
-
-	/**
-	 * Workaround to move the Location navbar link
-	 *
-	 * below the "Profile" link. I couldn't find a way to do it using the
-	 *
-	 * filters provided.
-	 *
-	 * @return [type] [description]
-	 */
-	public function move_location_navbar() {
-		?>
-		<script type="text/javascript">
-			jQuery( document ).ready( function($) {
-				$( '#wp-admin-bar-my-account-gmw-location' ).each( function() { 
-					$( this ).insertAfter( $( this ).next() ); 
-				});
-			});
-		</script>
-		<?php
+		return $wp_admin_navs;
 	}
 
 	/**
@@ -95,11 +101,11 @@ class GMW_Members_Locator_Location_Tab {
 		bp_core_new_nav_item(
 			apply_filters(
 				'gmw_fl_setup_nav', array(
-					'name'                => __( 'Location', 'geo-my-wp' ),
-					'slug'                => $this->slug,
-					'screen_function'     => array( $this, 'screen_display' ),
+					'name'                => $this->args['name'],
+					'slug'                => $this->args['slug'],
+					'screen_function'     => $this->args['screen_function'],
 					'position'            => 20,
-					'default_subnav_slug' => $this->slug,
+					'default_subnav_slug' => $this->args['slug'],
 				), buddypress()->displayed_user
 			)
 		);
@@ -112,9 +118,9 @@ class GMW_Members_Locator_Location_Tab {
 	 */
 	public function screen_display() {
 
-		$who = ( bp_is_my_profile() && ! apply_filters( 'gmw_fl_disable_logged_in_location_tab_form', false ) ) ? 'loggedin_user' : 'displayed_user';
+		$screen_function = ( bp_is_my_profile() && ! apply_filters( 'gmw_fl_disable_logged_in_location_tab_form', false ) ) ? $this->args['loggedin_user_screen_function'] : $this->args['displayed_user_screen_function'];
 
-		add_action( 'bp_template_content', array( $this, $who . '_screen' ) );
+		add_action( 'bp_template_content', $screen_function );
 
 		bp_core_load_template( apply_filters( 'gmw_location_my_screen_functions', 'members/single/plugins' ) );
 	}
@@ -125,7 +131,7 @@ class GMW_Members_Locator_Location_Tab {
 	 * @return [type] [description]
 	 */
 	public function loggedin_user_screen() {
-		gmw_member_location_form();
+		return gmw_member_location_form();
 	}
 
 	/**
@@ -152,5 +158,28 @@ class GMW_Members_Locator_Location_Tab {
 
 		echo '</div>';
 	}
+
+	/**
+	 * Workaround to move the Location navbar link
+	 *
+	 * below the "Profile" link. I couldn't find a way to do it using the
+	 *
+	 * filters provided.
+	 *
+	 * @return [type] [description]
+	 */
+	public function move_location_navbar() {
+		?>
+		<script type="text/javascript">
+			jQuery( document ).ready( function($) {
+
+				var slug = "<?php echo $this->args['slug']; ?>";
+
+				$( '#wp-admin-bar-my-account-gmw-' + slug ).each( function() { 
+					$( this ).insertAfter( $( this ).next() ); 
+				});
+			});
+		</script>
+		<?php
+	}
 }
-new GMW_Members_Locator_Location_Tab;
