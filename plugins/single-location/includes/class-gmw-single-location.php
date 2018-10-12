@@ -26,6 +26,7 @@ class GMW_Single_Location {
 	protected $defaults = array(
 		'element_id'           => 0,
 		'object'               => 'post', // replaced item_type
+		'object_type'          => '',
 		'object_id'            => 0, // replaced item_id
 		'elements'             => 0,
 		'address_fields'       => 'address',
@@ -50,8 +51,10 @@ class GMW_Single_Location {
 	);
 
 	/**
-	 * @since 2.6.1
+	 * @since 2.6.1.
+	 * 
 	 * Public $args
+	 * 
 	 * Array for child class to extends the main array above
 	 */
 	protected $args = array();
@@ -66,8 +69,23 @@ class GMW_Single_Location {
 	public $location_data;
 
 	/**
-	 * @since 2.6.1
+	 * Hold the object data ( post, user, group ... ).
+	 * 
+	 * @var [type]
+	 */
+	public $object_data;
+
+	/**
+	 * Holds the location meta data.
+	 *
+	 */
+	public $location_meta = false;
+
+	/**
+	 * @since 2.6.1.
+	 * 
 	 * Public $user_position
+	 * 
 	 * array contains the current user position if exists
 	 */
 	public $user_position = array(
@@ -79,23 +97,58 @@ class GMW_Single_Location {
 
 	/**
 	 * @since 2.6.1
+	 * 
 	 * Public $this->elements
+	 * 
 	 * array contains the elements to be output
 	 */
 	public $elements = array();
 
 	/**
+	 * Try to get object ID when missing.
+	 * 
+	 * @return [type] [description]
+	 */
+	public function get_object_id() {
+		return 0;
+	}
+
+	/**
+	 * Get location data.
+	 * 
+	 * @return [type] [description]
+	 */
+	public function location_data() {
+
+		//check if provided object ID.
+		if ( empty( $this->args['object_type'] ) || empty( $this->args['object_id'] ) ) {
+			return;
+		}
+		
+		// get the location data
+		$location = gmw_get_location_by_object( $this->args['object_type'], $this->args['object_id'] );
+		
+		return $location;
+	}
+
+	/**
+	 * Get the object data ( post, member, user... ).
+	 * 
+	 * @return [type] [description]
+	 */
+	public function get_object_data() {
+		return false;
+	}
+
+	/**
 	 * @since 2.6.1
+	 * 
 	 * @access public
+	 * 
 	 * display the title of an item
 	 */
 	public function title() {}
 
-	/**
-	 * location meta
-	 *
-	 */
-	public $location_meta = false;
 
 	/**
 	 * Verify that the object exists before getting the location
@@ -109,8 +162,9 @@ class GMW_Single_Location {
 	}
 
 	/**
-	 * Constaruct
-	 * @param unknown_type $args
+	 * [__construct description]
+	 * 
+	 * @param array $atts [description]
 	 */
 	public function __construct( $atts = array() ) {
 
@@ -188,6 +242,11 @@ class GMW_Single_Location {
 		// set random element id if not exists
 		$this->args['element_id'] = ! empty( $this->args['element_id'] ) ? $this->args['element_id'] : rand( 100, 549 );
 
+		// in case object_type is missing.
+		if ( empty( $this->args['object_type'] ) ) {
+			$this->args['object_type'] = $this->args['object'];
+		}
+
 		// If icon size provided, make it an array.
 		if ( ! empty( $this->args['map_icon_size'] ) ) {
 			$this->args['map_icon_size'] = explode( ',', $this->args['map_icon_size'] );
@@ -253,13 +312,20 @@ class GMW_Single_Location {
 			return;
 		}
 
-		// get the item information
+		if ( empty( $this->args['object_id'] ) ) {
+			$this->args['object_id'] = $this->get_object_id();
+		}
+
+		// get the locaiton data
 		$this->location_data = $this->location_data();
 
 		// abort if no location found and no need to show message
 		if ( empty( $this->location_data ) && empty( $this->args['no_location_message'] ) ) {
 			return;
 		}
+
+		// get the object data.
+		$this->object_data = $this->get_object_data();
 
 		// generate the elements array
 		$this->elements['element_wrap_start'] = '<div id="gmw-single-location-wrapper-' . esc_attr( $this->args['element_id'] ) . '" class="gmw-single-location-wrapper gmw-sl-wrapper ' . esc_attr( $this->args['object'] ) . ' gmw-single-' . esc_attr( $this->args['object'] ) . '-sc-wrapper">';
@@ -338,7 +404,7 @@ class GMW_Single_Location {
 				'directions'      => __( 'Directions', 'geo-my-wp' ),
 				'from'            => __( 'From:', 'geo-my-wp' ),
 				'show_directions' => __( 'Show directions', 'geo-my-wp' ),
-			), $this->args, $this->location_data
+			), $this->args, $this->location_data, $this
 		);
 	}
 
@@ -383,7 +449,7 @@ class GMW_Single_Location {
 
 		$output = '<div class="gmw-sl-address gmw-sl-element"><i class="gmw-location-icon gmw-icon-location"></i><span class="address">' . esc_attr( stripslashes( $address ) ) . '</span></div>';
 
-		return apply_filters( 'gmw_sl_address', $output, $address, $this->args, $this->location_data, $this->user_position );
+		return apply_filters( 'gmw_sl_address', $output, $address, $this->args, $this->location_data, $this->user_position, $this );
 	}
 
 	/**
@@ -419,7 +485,7 @@ class GMW_Single_Location {
 		$output .= '<span class="label">' . esc_attr( $this->labels['distance'] ) . '</span> ';
 		$output .= '<span>' . $distance . ' ' . $units . '</span></div>';
 
-		return apply_filters( 'gmw_sl_distance', $output, $distance, $units, $this->args, $this->location_data, $this->user_position );
+		return apply_filters( 'gmw_sl_distance', $output, $distance, $units, $this->args, $this->location_data, $this->user_position, $this );
 	}
 
 	/**
@@ -455,7 +521,7 @@ class GMW_Single_Location {
 				'lat'                 => $this->location_data->lat,
 				'lng'                 => $this->location_data->lng,
 				'info_window_content' => $this->info_window_content(),
-				'map_icon'            => apply_filters( 'gmw_sl_post_map_icon', $this->args['map_icon_url'], $this->args, $this->location_data, $this->user_position ),
+				'map_icon'            => apply_filters( 'gmw_sl_post_map_icon', $this->args['map_icon_url'], $this->args, $this->location_data, $this->user_position, $this ),
 				'icon_size'           => $this->args['map_icon_size'],
 			),
 		);
@@ -515,7 +581,7 @@ class GMW_Single_Location {
 		$output .= '</div>';
 		$output .= '</div>';
 
-		return apply_filters( 'gmw_sl_directions', $output, $this->args, $this->location_data, $this->user_position );
+		return apply_filters( 'gmw_sl_directions', $output, $this->args, $this->location_data, $this->user_position, $this );
 	}
 
 	/**
@@ -546,9 +612,9 @@ class GMW_Single_Location {
 		$output .= gmw_get_directions_form( $args );
 
 		// for older versions
-		$output = apply_filters( 'gmw_sl_live_directions', $output, $this->args, $this->location_data, $this->user_position );
+		$output = apply_filters( 'gmw_sl_live_directions', $output, $this->args, $this->location_data, $this->user_position, $this );
 
-		return apply_filters( 'gmw_sl_directions_form', $output, $this->args, $this->location_data, $this->user_position );
+		return apply_filters( 'gmw_sl_directions_form', $output, $this->args, $this->location_data, $this->user_position, $this );
 	}
 
 	/**
@@ -561,7 +627,7 @@ class GMW_Single_Location {
 
 		$output = gmw_get_directions_panel( $this->args['element_id'] );
 
-		return apply_filters( 'gmw_sl_directions_panel', $output, $this->args, $this->location_data, $this->user_position );
+		return apply_filters( 'gmw_sl_directions_panel', $output, $this->args, $this->location_data, $this->user_position, $this );
 	}
 
 	/**
@@ -584,9 +650,9 @@ class GMW_Single_Location {
 		$output .= '</div>';
 
 		// for older version - to be removed
-		$output = apply_filters( 'gmw_sl_additional_info', $output, $this->args, $this->location_data, $this->user_position );
+		$output = apply_filters( 'gmw_sl_additional_info', $output, $this->args, $this->location_data, $this->user_position, $this );
 
-		return apply_filters( 'gmw_sl_location_meta', $output, $this->args, $this->location_data, $this->user_position );
+		return apply_filters( 'gmw_sl_location_meta', $output, $this->args, $this->location_data, $this->user_position, $this );
 	}
 
 	/**
@@ -626,7 +692,7 @@ class GMW_Single_Location {
 			$iw_elements['location_meta'] = ! empty( $this->location_meta ) ? $this->location_meta : $this->location_meta();
 		}
 
-		$output = apply_filters( 'gmw_sl_object_info_window', $iw_elements, $this->args, $this->location_data, $this->user_position );
+		$output = apply_filters( 'gmw_sl_object_info_window', $iw_elements, $this->args, $this->location_data, $this->user_position, $this );
 
 		return implode( ' ', $output );
 	}
@@ -638,7 +704,7 @@ class GMW_Single_Location {
 	 */
 	public function no_location_message() {
 
-		return apply_filters( 'gmw_sl_no_location_message', '<h3 class="no-location">' . esc_attr( $this->args['no_location_message'] ) . '</h3>', $this->location_data, $this->args, $this->user_position );
+		return apply_filters( 'gmw_sl_no_location_message', '<h3 class="no-location">' . esc_attr( $this->args['no_location_message'] ) . '</h3>', $this->location_data, $this->args, $this->user_position, $this );
 	}
 
 	/**
@@ -672,6 +738,6 @@ class GMW_Single_Location {
 
 		$output = implode( '', $this->elements );
 
-		return apply_filters( 'gmw_sl_display_output', $output, $this->elements, $this->args, $this->location_data, $this->user_position );
+		return apply_filters( 'gmw_sl_display_output', $output, $this->elements, $this->args, $this->location_data, $this->user_position, $this );
 	}
 }
