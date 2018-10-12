@@ -5,17 +5,44 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Get location object based on object type and object ID
+ * Get a location object.
+ *
+ * Accepts either a location ID integer or an array of object type and object ID as the first argument 
  * 
  * @Since 3.0
  * 
- * @param  string $object_type the type of object we are looking for ( post, user...)
- * @param  int $object_id      object ID ( post ID, user ID... ).
+ * @param  mixed  integer || array  $args ( int ) location ID || ( array ) array( 'object_type' => '', 'object_id' => 0 )
+ * @param  constant  $output    OBJECT || ARRAY_A || ARRAY_N
+ * @param  boolean   $cache     look for location in cache?
+ *                                       
+ * @return object  the complete location object.
  * 
- * @return object              complete location data.
  */
-function gmw_get_location( $object_type = '', $object_id = 0, $output = OBJECT, $cache = true ) {
-	return GMW_Location::get( $object_type, $object_id, $output, $cache );
+function gmw_get_location( $args = 0, $output = OBJECT, $cache = true ) {
+
+	// when specific location ID provided.
+	if ( gmw_verify_id( $args ) ) {
+
+		return GMW_Location::get( $args, $output, $cache );
+
+		// when array of object type and object ID.
+	} else if ( is_array( $args ) ) {
+
+		$object_type = ! empty( $args['object_type'] ) ? $args['object_type'] : '';
+		$object_id   = ! empty( $args['object_id'] ) ? $args['object_id'] : 0;
+
+		return GMW_Location::get_by_object( $object_type, $object_id, $output, $cache );
+
+	// deprecated way of passing arguments. Use one of the methods above first argument instead.
+	} else if ( is_string( $args ) && gmw_verify_id( $output ) ) {
+
+		trigger_error( 'You are using a deprecated way of passing arguments to the gmw_get_location() function. Do not pass object type and object ID as the first and second arguments. Instead, pass the location ID or an array of object_type and object_id key/values as the first argument.', E_USER_NOTICE );
+
+		return GMW_Location::get_by_object( $args, $output, $cache );
+
+	} else {
+		return;
+	}
 }
 
 /**
@@ -24,45 +51,140 @@ function gmw_get_location( $object_type = '', $object_id = 0, $output = OBJECT, 
  * @since 3.0
  * 
  * @param  integer   $location_id the location ID
- * @param  string    $fields      location fields comma separated	
  * @param  constant  $output      OBJECT | ARRAY_A | ARRAY_N
  * @param  boolean   $cache       look for location in cache first
+ *
+ * @uses gmw_get_location();
  * 
- * @return [type]               [description]
+ * @return object              the complete location object
  */
 function gmw_get_location_by_id( $location_id = 0, $output = OBJECT, $cache = true ) {
-	return GMW_Location::get_by_id( $location_id, $output, $cache );
+	return gmw_get_location( $location_id, $output, $cache );
 }
 
 /**
- * Get location ID
- *
- * @since 3.0
- *        
- * @param  string  $object_type object type ( post, user... )
- * @param  int     $object_id object ID ( post ID, user ID.... )
- * @param  boolean $cache $cache       look for location in cache first
+ * Get a location by object type and object ID pair.
  * 
- * @return int location ID
+ * @Since 3.2
+ * 
+ * @param  string    $object_type  the type of object we are looking for ( post, user...)
+ * @param  int       $object_id    object ID ( post ID, user ID... )
+ * @param  constant  $output       OBJECT | ARRAY_A | ARRAY_N
+ * @param  boolean   $cache        look for location in cache first
+ * 
+ * @return object              complete location data.
+ */
+function gmw_get_location_by_object( $object_type = '', $object_id = 0, $output = OBJECT, $cache = true ) {
+	return GMW_Location::get_by_object( $object_type, $object_id, $output, $cache );
+}
+
+/**
+ * Get the location ID by object type and object ID.
+ * 
+ * @Since 3.0
+ * 
+ * @param  string    $object_type  the type of object we are looking for ( post, user...)
+ * @param  int       $object_id    object ID ( post ID, user ID... )
+ * @param  boolean   $cache        look for location ID in cache first?
+ * 
+ * @return int - location ID
+ * 
  */
 function gmw_get_location_id( $object_type = 'post', $object_id = 0, $cache = true ) {
 
-	$location = gmw_get_location( $object_type, $object_id, OBJECT, $cache );
+	$location = gmw_get_location_by_object( $object_type, $object_id, OBJECT, $cache );
     
-	return ! empty( $location->ID ) ? $location->ID : false;
+	return ! empty( $location->ID ) ? ( int ) $location->ID : false;
+}
+
+/**
+ * Get all locations of an object based on object type and object ID.
+ *
+ * When multiple location per object exist.
+ * 
+ * @Since 3.2
+ * 
+ * @param  string    $object_type  the type of object we are looking for ( post, user...)
+ * @param  int       $object_id    object ID ( post ID, user ID... )
+ * @param  constant  $output       OBJECT | ARRAY_A | ARRAY_N the output of each location in the array
+ * @param  boolean   $cache        look for location in cache first?
+ * 
+ * @return array           	array of locations.
+ */
+function gmw_get_locations( $object_type = '', $object_id = 0, $output = OBJECT, $cache = true ) {
+	return GMW_Location::get_locations_by_object( $object_type, $object_id, $output, $cache );
+}
+
+/**
+ * Delete a location.
+ *
+ * First argument accepts either an integer as a location ID 
+ * 
+ * to delete a specific location ( mostly to be used when multiple locations per object exist )
+ * 
+ * or an array of object_type and object_id to delete the default location of an object.
+ * 
+ * @Since 3.0
+ * 
+ * @param mixed   int as location ID || array of object_type and object_id.
+ * @param boolean delete location meta as well?
+ * 
+ * @return integer              ID of the deleted location.
+ * 
+ */
+function gmw_delete_location( $args = 0, $delete_meta = true ) {
+
+	// when location ID provided.
+	if ( gmw_verify_id( $args ) ) {
+
+		return GMW_Location::delete( $args, $delete_meta );
+
+		// when array of object type and object ID.
+	} else if ( is_array( $args ) ) {
+
+		$object_type = ! empty( $args['object_type'] ) ? $args['object_type'] : '';
+		$object_id   = ! empty( $args['object_id'] ) ? $args['object_id'] : 0;
+
+		return gmw_delete_location_by_object( $object_type, $object_id, $delete_meta );
+
+		// deprecated way of passing arguments. Use the methods above.
+	} else if ( is_string( $args ) && gmw_verify_id( $delete_meta ) ) {
+
+		trigger_error( 'You are using a deprecated way of passing arguments to the gmw_delete_location() function. Do not pass object type and object ID as the first and second arguments. Instead, pass the location ID or an array of object_type and object_id key/values as the first argument.', E_USER_NOTICE );
+
+		return gmw_delete_location_by_object( $args, $delete_meta, true );
+
+	} else {
+		return false;
+	}
+}
+
+/**
+ * Delete location by object.
+ *
+ * Delete the default location of an object.
+ * 
+ * @param  string  $object_type  the type of object we are looking for ( post, user...)
+ * @param  int     $object_id    object ID ( post ID, user ID... )
+ * @param  boolean $delete_meta  location meta as well?
+ * 
+ * @return integer              ID of the deleted location.
+ */
+function gmw_delete_location_by_object( $object_type = '', $object_id = 0, $delete_meta = true ) {
+	return GMW_Location::delete_by_object( $object_type, $object_id, $delete_meta );
 }
 
 /**
  * Get location meta by location ID.
  * 
  * @param  integer 			$location_id location ID
- * @param  string || array  $meta_keys   single meta key as a sting or array of keys
+ * @param  string || array  $meta_keys   single meta key as a sting, mutiple keys as string comma separated, or array of keys
  * @param  boolean 			$cache   
  * 
  * @return string || array
  * 
  */
-function gmw_get_location_meta( $location_id = 0, $meta_keys = array(), $cache = true ) {
+function gmw_get_location_meta( $location_id = 0, $meta_keys = '', $cache = true ) {
 	return GMW_Location_Meta::get( $location_id, $meta_keys, $cache );
 }
 
@@ -95,30 +217,20 @@ function gmw_update_location_meta( $location_id = 0, $meta_key = '' , $meta_valu
 }
 
 /**
- * Create / Update multiple location metas
+ * Create / Update single or multiple location metas.
  * 
  * @param  integer $location_id 
- * @param  array   $metadata    location metadata in meta_key => meta value pairs
- * @param  mixed   $meta_value  can also update single meta by passing single meta_data and meta_vale
+ * @param  array   $metadata    location metadata in meta_key => meta value pairs.
+ * @param  mixed   $meta_value  can also update a single location meta by passing the meta_key as 
+ * 
+ * a string to the metadata argument and the meta_value as the third argument,.
  *
  * @since 3.0 
  * 
  * @return int meta ID
  */
-function gmw_update_location_metas( $location_id = 0, $metadata = array() , $meta_value = '' ) {
+function gmw_update_location_metas( $location_id = 0, $metadata = array(), $meta_value = '' ) {
     return GMW_Location_Meta::update_metas( $location_id, $metadata, $meta_value );
-}
-
-/**
- * Delete location by object type and object ID
- * 
- * @param  string  $object_type [description]
- * @param  integer $object_id   [description]
- * @param  string  $meta_key    [description]
- * @return [type]               [description]
- */
-function gmw_delete_location( $object_type = '', $object_id = 0, $delete_meta = false ) {
-    return GMW_Location::delete( $object_type, $object_id, $delete_meta );
 }
 
 /**
@@ -147,7 +259,22 @@ function gmw_delete_location_meta_by_object( $object_type = '', $object_id = 0, 
 }
 
 /**
- * Update location data by passing an array with the complete location data.
+ * Insert new location by passing a complete location data exept for location ID ( ID argument ).
+ * 
+ * @param  array  $location_data location data
+ * 
+ * @return integer                new location ID
+ */
+function gmw_insert_location( $location_data = array() ) {
+    return GMW_Location::insert( $location_data );
+}
+
+/**
+ * Update / create location data by passing an array with the complete location data.
+ *
+ * If location does not exist and location ID ( ID argument ) was not provided,
+ * 
+ * The function will create a new location based on object type and object ID.
  * 
  * @param  array  $location_data complete location data
  * 
@@ -158,18 +285,51 @@ function gmw_update_location_data( $location_data = array() ) {
 }
 
 /**
- * Update location using object type, object ID and an address or coordinates.
+ * Set location status.
+ * 
+ * @param  integer $location_id 
+ * @param  integer $status      1 to activate location || 0 to deactivate location
+ * 
+ * @return [type]               [description]
+ */
+function gmw_set_location_status( $location_id = 0, $status = 1 ) {
+	GMW_Location::set_status( $location_id, $status );
+}
+
+/**
+ * Update or create a location.
  *
- * The function will geocode the address, or reverse geocode coords, and save it in the locations table in DB
+ * You can update a specific location by providing a location ID 
+ * 
+ * ( mostly used when multiple locations per object exist ), 
+ * 
+ * or update/create the default location of an object by passing object type and object ID. 
+ *
+ * The function can geocode a single or multiple address fields, 
+ * 
+ * or reverse geocode coordinates, and save it in the locations table in DB.
  *
  * @since 3.0
  * 
  * @author Eyal Fitoussi
  * 
- * @param  string           $object_type   string ( post, user, comment.... )
- * @param  integer          $object_id     int ( post ID, user ID, comment ID... )
- * @param  string || array  $location      to pass an address it can be either a string or an array of address field for example:
+ * @param  array  $args = array(
+ *     'location_id'   => 0, // ( int ) pass specific location ID when updating a specific location. 
+ *                              Otherwise, the plugin will get the default location based on object type and object ID.
+ *     'object_type'   => '' // ( string ) required if location ID was not provided.
+ *     'object_id'     => 0, // ( int ) required if location ID was not provided.
+ *     'location_name' => '' // ( string )location name. this is optional and not being used by default.
+ *     'user_id'       => 0, // the user whom the location belongs to. Logged in user will be used by default if not provided.
+ * );
  * 
+ * @param  mixed  $location string || array - to pass an address it can be either a string or an array of address field 
+ * 
+ * or pass array of coordinartes. See examples below:
+ *
+ * // Single address field as a string 
+ * $location = '285 Fulton St New York, NY 10007 USA';
+ *
+ * // Multiple address fields as an array
  * $location = array(
  *      'street'    => 285 Fulton St,
  *      'apt'       => '',
@@ -179,35 +339,92 @@ function gmw_update_location_data( $location_data = array() ) {
  *      'country'   => 'USA'
  * );
  *
- * or pass a set of coordinates via an array of lat,lng. Ex 
- *
+ * // Coordinates as an array.
  * $location = array( 
  *     'lat' => 26.1345,
  *     'lng' => -80.4362
  * );
  * 
- * @param  integer $user_id      the user whom the location belongs to. By default it will belong to the user who creates/update the location ( logged in user ).
- * @param  boolean $force_refresh false to use geocoded address in cache || true to force address geocoding
+ * @param  boolean $force_refresh false to use the cached geocoded location || true to force new location geocoding
+ *
+ * @param $dep_user_id       deprecated.
+ * @param $dep_force_refresh deprecated.
  * 
  * @return int location ID
  */
-function gmw_update_location( $object_type = '', $object_id = 0, $location = array(), $user_id = 0, $force_refresh = false ) {
+function gmw_update_location( $args = array(), $location = array(), $force_refresh = array(), $dep_user_id = 0, $dep_force_refresh = false ) {
     
-    // abort if data is missing
-    if ( empty( $object_type ) || empty( $object_id ) || empty( $location ) ) {
-        return;
-    }
+    // abort if missing arguments or location.
+	if ( empty( $args ) || empty( $location ) ) {
+		return;
+	}
 
-    if ( empty( $user_id ) ) {
-    	$user_id = get_current_user_id();
-    }
- 
-    $geo_address = $location;
-    $type        = 'address_single';
+    // deprecated way of passing arguments. It is here for backward compatibilty.
+    if ( is_string( $args ) && gmw_verify_id( $location ) ) {
+
+		trigger_error( 'You are using a deprecated way of passing arguments to the gmw_update_location() function. Do not pass object type and object ID as first and second arguments. Instead, use an array as the first argument.', E_USER_NOTICE );
+
+		$args = array(
+			'location_id'   => 0,
+			'object_type'   => $args,
+			'object_id'     => $location,
+			'location_name' => '',
+			'user_id'       => $dep_user_id,
+		);
+
+		$location      = $force_refresh;
+		$force_refresh = $dep_force_refresh;
+
+	// new way of passing data via an array
+	} else if ( is_array( $args ) ) {
+
+		$args = wp_parse_args( $args, array(
+			'location_id'   => 0,
+			'object_type'   => '',
+			'object_id'     => 0,
+			'location_name' => '',
+			'user_id'       => 0,
+		) );	
+	
+	} else {
+
+		return;
+	}
+
+	// if specific location ID provided we will try to udpate this location.
+	if ( ! empty( $args['location_id'] ) ) {
+
+		$location_id    = $args['location_id'];
+		$saved_location = gmw_get_location( $location_id );
+
+		// abort if location does not exist.
+		if ( empty( $saved_location ) ) {
+			return false;
+		}
+		
+		$object_type   = $saved_location->object_type;
+		$object_id     = $saved_location->object_id;
+
+	} else if ( ! empty( $args['object_type'] ) && ! empty( $args['object_id'] ) ) {
+
+		$location_id = 0;
+		$object_type = $args['object_type'];
+		$object_id   = $args['object_id'];
+	
+	} else {
+	
+		return;
+	}
+
+	$location_name = $args['location_name'];
+	$user_id       = ! empty( $args['user_id'] ) ? $args['user_id'] : get_current_user_id();
+    $geo_address   = $location;
+    $type          = 'address_single';
 
     // if location is an array
     if ( is_array( $location ) ) {
-        
+        	
+        // check if coordinates provided.
         if ( ! empty( $location['lat'] ) && ! empty( $location['lng'] ) ) {
 
             $type = 'coords';
@@ -217,6 +434,7 @@ function gmw_update_location( $object_type = '', $object_id = 0, $location = arr
                 $location['lng']
             );
 
+        // otherwise, it should be multiple address fields.
         } else {
 
             $type = 'address_multiple';
@@ -231,8 +449,7 @@ function gmw_update_location( $object_type = '', $object_id = 0, $location = arr
             );
           
             // Parse incoming $args into an array and merge it with $defaults
-            $location = wp_parse_args( $location, $defaults );
-
+            $location    = wp_parse_args( $location, $defaults );
             $geo_address = $location;
 
             // remove apt from address field to be able to geocode it properly
@@ -242,6 +459,7 @@ function gmw_update_location( $object_type = '', $object_id = 0, $location = arr
         }
     }
 
+    // verify that geocoder function exists.
     if ( ! function_exists( 'gmw_geocoder' ) ) {
 
     	trigger_error( 'Geocoder function not exists.', E_USER_NOTICE );
@@ -251,7 +469,7 @@ function gmw_update_location( $object_type = '', $object_id = 0, $location = arr
 
     //geocode the location
     $geocoded_data = gmw_geocoder( $geo_address, $force_refresh );
-
+    
     // abort if geocode failed
     if ( isset( $geocoded_data['error'] ) ) {
         
@@ -263,8 +481,7 @@ function gmw_update_location( $object_type = '', $object_id = 0, $location = arr
     $latitude  = $geocoded_data['latitude'];
     $longitude = $geocoded_data['longitude'];
 
-    // if multiple address field passed through array 
-    // get the original address field entered
+    // if multiple address field provided preserve their values.
     if ( $type == 'address_multiple' ) {
  
         $street       = ! empty( $location['street'] ) ? sanitize_text_field( $location['street'] ) : $geocoded_data['street']; 
@@ -295,9 +512,11 @@ function gmw_update_location( $object_type = '', $object_id = 0, $location = arr
 
     // collect location data into array
     $location_data = array(
+    	'ID'                => $location_id,
         'object_type'       => $object_type,
         'object_id'         => $object_id,
         'user_id'			=> $user_id,
+        'title'             => $location_name,
         'latitude'          => $latitude,
         'longitude'         => $longitude,
         'street_number'     => $geocoded_data['street_number'],
@@ -325,22 +544,76 @@ function gmw_update_location( $object_type = '', $object_id = 0, $location = arr
     return gmw_update_location_data( $location_data );
 }
 
+function gmw_get_location_address_fields( $args = array() ) {
+	return gmw_get_address_fields( $args );
+}
+
 /**
- * Get specific location address fields
- *
- * @since 3.0
- *        
- * @param  string  $object_type object_type object type ( post, user... )
- * @param  boolean $object_id   object ID ( post ID, user ID.... )
- * @param  array   $fields      array of address fields to retrive
- * @param  string  $separator   character to be used as separator between fields
+ * Get specific address fields of a location.
  * 
- * @return string
+ * @Since 3.0
+ * 
+ * @param  array    $args      object type or location ID. 
+ * @param  integer  $object_id object ID ( post ID, user ID... ). Use when first argument is object type.
+ * @param  array    $fields    the address fields to output.
+ * @param  string   $separator separator to be used between the different address fields.
+ * 
+ * @return string 	the address fields of a location.
  */
-function gmw_get_address_fields( $object_type = false, $object_id = 0, $fields = array( 'formatted_address' ), $separator = ', ' ) {
+function gmw_get_address_fields( $args = array(), $dep_object_id = 0, $dep_fields = array( 'formatted_address' ), $dep_separator = ', ' ) {
+
+	$location = array();
+
+	if ( is_array( $args ) ) {
+		
+		$args = wp_parse_args( $args, array(
+			'location_id' => 0,
+			'object_type' => '',
+			'object_id'   => 0,
+			'fields'      => 'formatted_address',
+			'separator'   => ', ',
+			'output'	  => 'string',
+		) );
+
+		$args = apply_filters( 'gmw_get_address_fields_args', $args );
+
+		// get location by location ID
+		if ( ! empty( $args['location_id'] ) ) {
+
+			// get location data
+    		$location = gmw_get_location( $args['location_id'] );
+		
+		} else {
+
+			$location = gmw_get_location_by_object( $args['object_type'], $args['object_id'] );
+		} 
+
+		$fields      = $args['fields'];
+		$separator   = $args['separator'];
+		$output_type = $args['output'];
+
+	// deprecated way of passing args. use an array as first argument.
+	} else if ( is_string( $args ) && gmw_verify_id( $dep_object_id ) ) {
+
+		trigger_error( 'You are using a deprecated way of passing arguments to the gmw_get_address_fields() function. Do not pass object type and object ID as first and second arguments. Instead, use an array as the first argument.', E_USER_NOTICE );
+
+		$location    = gmw_get_location_by_object( $args, $dep_object_id );
+		$fields      = $dep_fields;
+		$separator   = $dep_separator;
+		$output_type = 'string';
+
+	} else {
+
+		return false;
+	}
+
+	if ( empty( $location ) ) {
+		return false;
+	}
 
 	// all address fields
-    $all_fields = array( 
+    $all_fields = array(
+    	'title',
 		'latitude',
 		'longitude',
 		'street_number',
@@ -350,11 +623,9 @@ function gmw_get_address_fields( $object_type = false, $object_id = 0, $fields =
 		'neighborhood',
 		'city',
 		'county',
-		'state',
 		'region_name',
 		'region_code',
 		'postcode',
-		'country',
 		'country_name',
 		'country_code',
 		'address',
@@ -370,93 +641,117 @@ function gmw_get_address_fields( $object_type = false, $object_id = 0, $fields =
     	$fields = explode( ',', $fields );
     }
 
-    // for backward compatibility
-    if ( in_array( 'lat', $fields ) ) {
-    	$fields[] = 'latitude';
-    }
-
-    // for backward compatibility
-    if ( in_array( 'lng', $fields ) ) {
-    	$fields[] = 'longitude';
-    }
-
-    // for backward compatibility
-    if ( in_array( 'zipcode', $fields ) ) {
-    	$fields[] = 'postcode';
-    }
-
+    // if showing all fields.
     if ( empty( $fields ) || $fields[0] == '*' ) {
-    	$fields = $all_fields;
+    	
+    	$output = array_intersect_key( ( array ) $location, array_flip( $all_fields ) );
+    
+    	// when showing specific fields.
     } else {
-		$fields = array_intersect( array_map( 'trim', $fields ), $all_fields );
+		
+    	$output = array();
+
+		// loop trough fields and get the specified address fields
+	    foreach ( $fields as $field ) {
+
+	    	// check old field names for backward compatibilty
+	    	if ( 'country' === $field ) {
+	    		$field = 'country_name';
+	    	}
+
+	    	if ( 'state' === $field ) {
+	    		$field = 'region_name';
+	    	}
+
+	    	if ( 'zipcode' === $field ) {
+	    		$field = 'postcode';
+	    	}
+
+	    	if ( 'lng' === $field ) {
+	    		$field = 'longitude';
+	    	}
+
+	    	if ( 'lat' === $field ) {
+	    		$field = 'latitude';
+	    	}
+
+	    	// verify that field is allowed and exists in the location.
+	    	if ( in_array( $field, $all_fields ) && isset( $location->$field ) ) {
+	    		$output[$field] = $location->$field;
+	    	}
+	    }
 	}
 
-	// get location data
-    $location = gmw_get_location( $object_type, $object_id );
+	// array
+	if ( 'array' === $output_type ) {
+		
+		return $output;
 
-    $fields_count = count( $fields );
-    $count 		  = 1;
-    $output 	  = '';
+		// object
+	} else if ( 'object' === $output_type ) {
+		
+		return ( object ) $output;
+		
+		// string.
+	} else {
 
-    // loop trough fields and get the specified address fields
-    foreach ( $fields as $field ) {
-
-    	if ( $field == 'country' ) {
-    		$field = 'country_name';
-    	}
-
-    	if ( $field == 'state' ) {
-    		$field = 'region_name';
-    	}
-
-    	if ( isset( $location->$field ) ) {
-    		$output .= $location->$field;
-    		if ( $count != $fields_count ) {	
-    			$output .= $separator;
-    		}
-    	}
-
-    	$count++;
-    }
-
-	return $output;
+		return implode( $separator, $output );
+	}
 }
 
 /**
- * Get location meta values based on object type and object ID.
+ * Get location meta values.
  *
  * Can retrive a single or multiple values, and use a separator between.
  *
  * @since 3.0.2
  *        
- * @param  string  $object_type object_type object type ( post, user... )
- * @param  boolean $object_id   object ID ( post ID, user ID.... )
- * @param  array   $fields      array of meta_keys to retrive thier values
- * @param  string  $separator   character to be used as separator between fields
+ * @param  mixed  $args       int as location ID || array of object_type and object ID.
+ * @param  array  $meta_keys  array of meta_keys to retrive.
+ * @param  string $separator  characters to be used as separator between fields.  
+ * @param  string $dep_sep    deprecated separator argument.
  * 
  * @return string
  * 
  */
-function gmw_get_location_meta_values( $object_type = false, $object_id = 0, $meta_keys = array( '' ), $separator = ', ' ) {
+function gmw_get_location_meta_values( $args = 0, $meta_keys = '', $separator = ', ', $dep_sep = ', ' ) {
 
-    if ( empty( $meta_keys ) ) {
-        return;
-    }
+    // get location meta by location ID
+    if ( gmw_verify_id( $args ) ) {
 
-    // we must pass an array for multiple fields
-    if ( is_string( $meta_keys ) ) {
-        $meta_keys = explode( ',', $meta_keys );
-    }
+    	$output = gmw_get_location_meta( $args, $meta_keys );
 
-    // get location data
-    $output = gmw_get_location_meta_by_object( $object_type, $object_id, $meta_keys );
+    	// get location meta by object type object ID
+    } else if ( is_array( $args ) ) {
+
+		$object_type = ! empty( $args['object_type'] ) ? $args['object_type'] : '';
+		$object_id   = ! empty( $args['object_id'] ) ? $args['object_id'] : 0;
+
+    	// get location data
+    	$output = gmw_get_location_meta_by_object( $object_type, $object_id, $meta_keys );
+
+    	// deprecated way of passing args. Use one of the methods above.
+	} else if ( is_string( $args ) && gmw_verify_id( $meta_keys ) ) {
+
+		trigger_error( 'You are using a deprecated way of passing arguments to the gmw_get_location_meta_values() function. Do not pass object type and object ID as first and second arguments. Instead, pass location ID or array of object type and object ID as the first argument.', E_USER_NOTICE );
+
+		$object_type = $args;
+		$object_id   = $meta_keys;
+		$meta_keys   = $separator;
+		$separator   = $dep_sep;
+
+		$output = gmw_get_location_meta_by_object( $object_type, $object_id, $meta_keys );
+
+	} else {
+		return;
+	}
 
     // abort if no metas found
     if ( empty( $output ) ) {
         return;
     }
 
-    if ( ! empty( $separator ) ) {
+    if ( is_array( $output ) && ! empty( $separator ) ) {
         return implode( $output, $separator );
     }
 
@@ -464,117 +759,129 @@ function gmw_get_location_meta_values( $object_type = false, $object_id = 0, $me
 }
 
 /**
- * Get location fields - address fields or location meta.
- *
+ * Get specific location or location meta fields
+ * 
  * @since 3.0.2
  *        
- * @param  string  $object_type object_type object type ( post, user... )
- * @param  boolean $object_id   object ID ( post ID, user ID.... )
- * @param  array   $fields      array of address fields to retrive
- * @param  string  $separator   character to be used as separator between fields
+ * @param  array $args = array(
+ *     'location_id'   => 0,      // ( int ) if getting meta of a specific location 
+ *                                   ( when multiple location per object exist ).
+ *     'object_type'   => 'post', // ( sting ) requried if location ID is not provided.
+ *     'object_id'     => 0,      // ( int ) requried if location ID is not provided.
+ *     'fields'        => 'formatted_address', // location or location meta field as array or comma separated  
+ *     'separator'     => ' ',    // characters to separate between the different fields.
+ *     'location_meta' => 0,      // set to true if the field are location meta instead of location.
+ * );
  * 
  * @return string
  * 
  */
-function gmw_get_location_fields( $object_type = false, $object_id = 0, $fields = array( 'formatted_address' ), $separator = ', ', $location_meta = 0 ) {
+function gmw_get_location_fields( $args = array(), $dep_object_id = 0, $dep_fields = array( 'formatted_address' ), $dep_separator = ', ', $dep_location_meta = 0 ) {
+
+	// deprecated way for passing arguments.
+	if ( is_string( $args ) && gmw_verify_id( $dep_object_id ) ) {
+
+		//trigger_error( 'You are using a deprecated way of passing arguments to the gmw_get_location_fields() function. Do not pass object type and object ID as first and second arguments. Instead, pass all arguments in an array as the first argument.', E_USER_NOTICE );
+
+		$args = array(
+			'location_id'   => 0,
+			'object_type'   => $args,
+			'object_id'     => $dep_object_id,
+			'fields'        => $dep_fields,
+			'separator'     => $dep_separator,
+			'location_meta' => $dep_location_meta,
+		);
+
+	// abort if args is empty.
+	} else if ( ! is_array( $args ) || empty( $args ) ) {	
+		return false;
+	}
+	
+	$args = wp_parse_args( $args, array(
+    	'location_id'   => 0,
+        'object_type'   => 'post',
+        'object_id'     => 0,
+        'fields'        => 'formatted_address',       
+        'separator'     => ' ',
+        'location_meta' => 0,
+    ) );
+
+	// modify the args.
+	$args = apply_filters( 'gmw_get_location_fields_args', $args );
 
 	// When we know for sure that we need location meta fields.
-	if ( ! empty( $location_meta ) ) {
+	if ( ! empty( $args['location_meta'] ) || ( $output = gmw_get_address_fields( $args ) ) == false ) {
 
-		return gmw_get_location_meta_values( $object_type, $object_id, $fields, $separator );
+		if ( ! empty( $args['location_id'] ) ) {
+			
+			$loc_args = ( int ) $args['location_id'];
 
-	} else {
+		} else {
+
+			$loc_args = array(
+				'object_type' => $args['object_type'],
+				'object_id'   => ( int ) $args['object_id']
+			);
+		}
+
+		$output = gmw_get_location_meta_values( $loc_args, $args['fields'], $args['separator'] );
+	} 
+
+	return $output;
+
+	/*else {
+
+		$loc_args = array(
+			'location_id' => 0,
+			'object_type' => '',
+			'object_id'   => 0,
+			'fields'      => $fields,
+			'separator'   => $separator,
+			'output'	  => 'string',
+		);
+
+		if ( ! is_array( $args ) ) {
+			$loc_args['location_id'] = $args;
+		} else {
+			$loc_args['object_type'] = ! empty( $args['object_type'] ) ? $args['object_type'] : '';
+			$loc_args['object_id']   = ! empty( $args['object_id'] ) ? $args['object_id'] : 0;
+		}
 
 		// try to get location field.
-		$output = gmw_get_address_fields( $object_type, $object_id, $fields, $separator );
+		$output = gmw_get_address_fields( $loc_args );
 
 		// if location field was not found, try location meta.
 		if ( empty( $output ) ) {
-			$output = gmw_get_location_meta_values( $object_type, $object_id, $fields, $separator );
+			$output = gmw_get_location_meta_values( $args, $fields, $separator );
 		}
 
 		return $output;
-	}
+	}*/
 }
 
 /**
- * gmw_location_fields shortcode
+ * Location fields shortcode
  *
  * Disply location fields or location meta.
  *
  * @since 3.0.2
+ *
+ * DEPRECATED.
  * 
  * @param  [type] $atts [description]
  * @return [type]       [description]
  */
-function gmw_get_location_fields_shortcode( $atts ) {
-
-    //default shortcode attributes
-    $args = shortcode_atts( array(
-        'object_type'   => 'post',
-        'object_id'     => 0,
-        'location_meta' => 0,
-        'fields'        => '',
-        'separator'     => ' ',
-    ), $atts );
-
-    return gmw_get_location_fields( $args['object_type'], $args['object_id'], $args['fields'], $args['separator'], $args['location_meta'] );
-}
-add_shortcode( 'gmw_location_fields', 'gmw_get_location_fields_shortcode' );
-
-/**
- * Get specific address fields as an array.
- * 
- * @param  string  $object_type [description]
- * @param  integer $object_id   [description]
- * @param  array   $fields      [description]
- * @return [type]               [description]
- */
-function gmw_get_location_address_fields( $object_type = 'post', $object_id = 0, $fields = array() ) {
-
-    $location = gmw_get_location( $object_type, $object_id );
-
-    if ( ! $location ) {
-        return false;
-    }
-
-    if ( ! is_array( $fields ) ) {
-        $fields = explode( ',',$fields );
-    }
-
-    if ( empty( $fields ) ) {
-
-        $fields = array( 
-            'lat',
-            'lng',
-            'latitude', 
-            'longitude', 
-            'street_number', 
-            'street_name',
-            'street',
-            'premise',
-            'neighborhood',
-            'city',
-            'county',
-            'region_name',
-            'region_code',
-            'postcode',
-            'country_name',
-            'country_code',
-            'address',
-            'formatted_address'
-        );
-    }
-
-    $output = array();
-
-    return ( object ) array_intersect_key( ( array ) $location, array_flip( $fields ) );
+function gmw_get_location_fields_shortcode( $args ) {
+    return gmw_get_location_fields( $args );
 }
 
 /**
- * get the address of an object ( post, user... )
+ * get the address of an object 
+ *
+ * Usually will be used in the search results.
  * 
- * @param  object || integer $location object or location ID
+ * @param  mixed  $location location object or location ID
+ * @param  mixed  $fields   address field as array or comma separated string.
  * @param  array  $gmw  	the form being used if in the search results
  * 
  * @return string       address
@@ -597,18 +904,18 @@ function gmw_get_location_address( $location, $fields = array( 'formatted_addres
 		return;
 	}
 
-	// if location is ID rather than object
-	if ( is_int( $location ) ) {
+	// if location is ID rather than object get the location.
+	if ( gmw_verify_id( $location ) ) {
 		
 		// get location by ID
-		$location = gmw_get_location_by_id( $location );
-	
-	// otherwise, abort if location is not an object
+		$location = gmw_get_location( $location );
+		
+		// otherwise, abort if location is not an object
 	} elseif ( ! is_object( $location ) ) {
 		$location = false;
 	}
 
-	// abort if no location
+	// abort if location not exists.
 	if ( empty( $location ) ) {
 		return false;
 	}
@@ -617,6 +924,10 @@ function gmw_get_location_address( $location, $fields = array( 'formatted_addres
     
 	// loop trough fields and get the specified address fields
     foreach ( $fields as $field ) {
+
+    	if ( $field == 'zipcode' ) {
+    		$field = 'postcode';
+    	}
 
     	if ( $field == 'country' ) {
     		$field = 'country_name';
@@ -639,7 +950,7 @@ function gmw_get_location_address( $location, $fields = array( 'formatted_addres
 	   $output = apply_filters( "gmw_{$location->object_type}_location_address", $output, $location, $fields, $gmw );
     }
 
-	return ! empty( $output ) ? stripslashes( esc_attr( $output ) ) : '';
+	return ! empty( $output ) ? stripslashes( esc_html( $output ) ) : '';
 }
 
 	function gmw_location_address( $location, $fields = array(), $gmw = array() ) {
@@ -647,14 +958,19 @@ function gmw_get_location_address( $location, $fields = array( 'formatted_addres
 	}
 
 /**
- * Return the address of a location as a link to google maps
+ * Generate the address of a location as a link to google maps.
+ *
+ * Usually will be used in the search results.
  * 
- * @param  [type] $location [description]
- * @param  array  $gmw      [description]
- * @return [type]           [description]
+ * @param  mixed  $location location object or location ID
+ * @param  mixed  $fields   address field as array or comma separated string.
+ * @param  array  $gmw  	the form being used if in the search results
+ * 
+ * @return string       address
  */
 function gmw_get_linked_location_address( $location, $fields = array( 'formatted_address' ), $gmw = array() ) {
 
+	// get the address.
 	$address = gmw_get_location_address( $location, $fields, $gmw );
 
 	if ( empty( $address ) ) {
@@ -764,7 +1080,7 @@ function gmw_update_featured_location( $object_type = 'post', $object_id = 0, $v
 	global $wpdb;
 
 	// update location, if exists, with featured value.
-	$wpdb->update(
+	$updated = $wpdb->update(
 		$wpdb->base_prefix . 'gmw_locations',
 		array(
 			'featured' => $value,
@@ -780,16 +1096,23 @@ function gmw_update_featured_location( $object_type = 'post', $object_id = 0, $v
 		)
 	);
 
+	if ( $updated ) {
+		do_action( 'gmw_featured_location_updated', $object_type, $object_id, $value );
+	}
+
 	return;
 }
 
 /**
  * Output list of location meta fields
  *
- * @param  boolean $location [description]
- * @param  array   $fields   [description]
- * @param  array   $labels   [description]
- * @return [type]            [description]
+ * Will usually be used in the results.
+ *
+ * @param  mixed   $location can be location object or location ID
+ * @param  array   $fields   array of fields
+ * @param  array   $labels   array of label for each field
+ * 
+ * @return HTML elements
  */
 function gmw_get_location_meta_list( $location = false, $fields = array(), $labels = array() ) {
 
@@ -922,19 +1245,21 @@ function gmw_get_location_meta_list( $location = false, $fields = array(), $labe
 
 /**
  * Get directions link
+ *
+ * Usually will be used in the results.
  * 
- * @param  object $location    location object
+ * @param  object $location    location object or location ID
  * @param  array  $from_coords array of coords array( lat,lng )
- * @param  string $label       default "get directions"
+ * @param  string $label       link label - default "get directions"
  * 
- * @return [type]              [description]
+ * @return HTML element        link to Google Maps.
  */
 function gmw_get_directions_link( $location, $from_coords = array(), $label = '' ) {
 
     // if location ID pass get the location data
     if ( is_int( $location ) ) {
         
-        $location = gmw_get_location_by_id( $location );
+        $location = gmw_get_location( $location );
     
     // abort if not ID or object data
     } elseif ( ! is_object( $location ) ) {
