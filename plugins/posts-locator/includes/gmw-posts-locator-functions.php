@@ -5,85 +5,37 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Generate the post location form
+ * Check if post exists.
  *
- * @param  array  $args [description]
- * @return [type]       [description]
+ * @param  integer $post_id The ID of the post to check for.
+ *
+ * @return boolean
  */
-function gmw_post_location_form( $args = array() ) {
+function gmw_is_post_exists( $post_id = 0 ) {
 
-	if ( ! empty( $args['post_id'] ) ) {
-		$args['object_id'] = $args['post_id'];
+	if ( empty( $post_id ) ) {
+		return false;
 	}
 
-	// default args
-	$defaults = array(
-		'object_id'      => 0,
-		'form_template'  => 'location-form-tabs-left',
-		'submit_enabled' => 1,
-		'stand_alone'    => 1,
-		'ajax_enabled'   => 1,
-		'auto_confirm'   => 1,
+	global $wpdb;
+
+	// check if post exists
+	$post_id = $wpdb->get_var(
+		$wpdb->prepare(
+			"
+            SELECT ID 
+            FROM $wpdb->posts 
+            WHERE ID = %d",
+			$post_id
+		)
 	);
 
-	$args = wp_parse_args( $args, $defaults );
-	$args = apply_filters( 'gmw_post_location_form_args', $args );
-
-	if ( ! absint( $args['object_id'] ) ) {
-
-		if ( IS_ADMIN && isset( $_GET['post'] ) && absint( $_GET['post'] ) ) {
-
-			$args['object_id'] = $_GET['post'];
-
-		} else {
-
-			global $post;
-
-			if ( isset( $post->ID ) ) {
-				$args['object_id'] = $post->ID;
-			} else {
-				return;
-			}
-		}
-	}
-
-	include( 'class-gmw-post-location-form.php' );
-
-	if ( ! class_exists( 'GMW_Post_Location_Form' ) ) {
-		return;
-	}
-
-	// generate new location form
-	$location_form = new GMW_Post_Location_Form( $args );
-
-	// display the location form
-	$location_form->display_form();
+	// abort if post not exists
+	return ! empty( $post_id ) ? true : false;
 }
 
 /**
- * Generate the post location form using shortcode
- *
- * @param  array  $atts [description]
- * @return [type]       [description]
- */
-function gmw_post_location_form_shortcode( $atts = array() ) {
-
-	if ( empty( $atts ) ) {
-		$atts = array();
-	}
-
-	ob_start();
-
-	gmw_post_location_form( $atts );
-
-	$content = ob_get_clean();
-
-	return $content;
-}
-add_shortcode( 'gmw_post_location_form', 'gmw_post_location_form_shortcode' );
-
-/**
- * Get terms function using GEO my WP internal cache
+ * Get terms function using GEO my WP internal cache.
  *
  * @since 3.0
  *
@@ -124,15 +76,16 @@ function gmw_get_terms( $taxonomy = 'category', $args = array() ) {
 }
 
 /**
- * GMW get_the_terms function using internal cache
+ * GMW get_the_terms function using internal cache.
  *
- * get terms attached to a post
+ * get terms attached to a post.
  *
  * @since 3.0
  *
- * @param  integer $post_id  [description]
- * @param  [type]  $taxonomy [description]
- * @return [type]            [description]
+ * @param  integer $post_id  The post ID
+ * @param  string  $taxonomy The taxonomy to retrive
+ * 
+ * @return array             array of terms
  */
 function gmw_get_the_terms( $post_id = 0, $taxonomy ) {
 
@@ -165,304 +118,11 @@ function gmw_get_the_terms( $post_id = 0, $taxonomy ) {
 }
 
 /**
- * Check if post exists
- *
- * @param  integer $post_id [description]
- *
- * @return [type]           [description]
- */
-function gmw_is_post_exists( $post_id = 0 ) {
-
-	if ( empty( $post_id ) ) {
-		return false;
-	}
-
-	global $wpdb;
-
-	// check if post exists
-	$post_id = $wpdb->get_var(
-		$wpdb->prepare(
-			"
-            SELECT ID 
-            FROM $wpdb->posts 
-            WHERE ID = %d",
-			$post_id
-		)
-	);
-
-	// abort if post not exists
-	if ( empty( $post_id ) ) {
-
-		return false;
-
-	} else {
-
-		return true;
-	}
-}
-
-/**
- * get the post location from database
- *
- * @since 3.0
- *
- * @param  boolean $post_id [description]
- * @return [type]           [description]
- */
-function gmw_get_post_location( $post_id = 0 ) {
-
-	// if no specific post ID pass, look for displayed post object
-	if ( empty( $post_id ) ) {
-
-		global $post;
-
-		if ( ! empty( $post ) ) {
-			$post_id = $post->ID;
-		} else {
-			return;
-		}
-	}
-
-	// get post location from database
-	return gmw_get_location( 'post', $post_id );
-}
-
-/**
- * Get specific or all post address fields
- *
- * @since 3.0
- *
- * @param  array  $args [description]
- * @return [type]       [description]
- */
-function gmw_get_post_address( $args = array() ) {
-
-	// to support older versions. should be removed in the future
-	if ( empty( $args['fields'] ) && ! empty( $args['info'] ) ) {
-
-		trigger_error( 'The "info" shortcode attribute of the shortcode [gmw_post_address] is deprecated since GEO my WP version 3.0. Please use the shortcode attribute "fields" instead.', E_USER_NOTICE );
-
-		$args['fields'] = $args['info'];
-	}
-
-	//default shortcode attributes
-	$args = shortcode_atts(
-		array(
-			'post_id'   => 0,
-			'fields'    => 'formatted_address',
-			'separator' => ', ',
-		), $args
-	);
-
-	// if no specific post ID pass, look for displayed post object
-	if ( empty( $args['post_id'] ) ) {
-
-		global $post;
-
-		if ( empty( $post ) ) {
-			return;
-		}
-
-		$args['post_id'] = $post->ID;
-	}
-
-	if ( is_string( $args['fields'] ) ) {
-		$args['fields'] = explode( ',', $args['fields'] );
-	}
-
-	// get post address fields
-	return gmw_get_address_fields( 'post', $args['post_id'], $args['fields'], $args['separator'] );
-}
-add_shortcode( 'gmw_post_address', 'gmw_get_post_address' );
-
-function gmw_post_address( $args = array() ) {
-	echo gmw_get_post_address( $args );
-}
-
-/**
- * Output post location meta using shortcode
- *
- * @param  [type] $atts [description]
- * @return [type]       [description]
- *
- * @since 3.0.2
- *
- */
-/*function gmw_get_post_location_meta_values( $atts ) {
-
-	//default shortcode attributes
-	extract(
-		shortcode_atts( array(
-			'post_id'   => 0,
-			'meta_keys' => '',
-			'separator' => ' '
-		), $atts )
-	);
-
-	// verify post ID
-	if ( empty( $post_id ) ) {
-
-		global $post;
-
-		if ( empty( $post ) ) {
-			return;
-		}
-
-		$post_id = $post->ID;
-	}
-
-	return gmw_get_location_meta_values( 'post', $post_id, $meta_keys, $separator );
-}
-add_shortcode( 'gmw_post_location_meta', 'gmw_get_post_location_meta_values' ); */
-
-/**
- * Get post address or location meta fields.
- *
- * @since 3.0.2
- *
- * @param  [type] $atts [description]
- * @return [type]       [description]
- */
-function gmw_get_post_location_fields( $atts ) {
-
-	//default shortcode attributes
-	$args = shortcode_atts(
-		array(
-			'post_id'       => 0,
-			'location_meta' => 0,
-			'fields'        => '',
-			'separator'     => ' ',
-		), $atts
-	);
-
-	// verify post ID
-	if ( empty( $args['post_id'] ) ) {
-
-		global $post;
-
-		if ( empty( $post ) ) {
-			return;
-		}
-
-		$args['post_id'] = $post->ID;
-	}
-
-	if ( is_string( $args['fields'] ) ) {
-		$args['fields'] = explode( ',', $args['fields'] );
-	}
-
-	return gmw_get_location_fields( 'post', $args['post_id'], $args['fields'], $args['separator'], $args['location_meta'] );
-}
-add_shortcode( 'gmw_post_location_fields', 'gmw_get_post_location_fields' );
-
-/**
- * get post location data from database
- *
- * This function returns location data and post data such as post title, content, author...
- *
- * The function also verify that the post exists in database. That is in case
- *
- * That the post was deleted but the location still exists in database.
- *
- * @since 3.0
- *
- * @param  int $post_id
- *
- * @return object post data + location data
- */
-function gmw_get_post_location_data( $post_id = 0, $output = OBJECT, $cache = true ) {
-
-	if ( empty( $fields ) ) {
-
-		$fields = array(
-			'gmw.ID',
-			'gmw.latitude',
-			'gmw.longitude',
-			'gmw.latitude as lat',
-			'gmw.longitude as lng',
-			'gmw.address',
-			'gmw.formatted_address',
-			'gmw.street_number',
-			'gmw.street_name',
-			'gmw.street',
-			'gmw.city',
-			'gmw.region_code',
-			'gmw.region_name',
-			'gmw.postcode',
-			'gmw.country_code',
-			'gmw.country_name',
-			'featured',
-			'posts.ID as post_id',
-			'posts.post_title',
-			'posts.post_type',
-			'posts.post_author',
-			'posts.post_content',
-		);
-	}
-
-	$fields = implode( ',', apply_filters( 'gmw_get_post_location_data_fields', $fields, $post_id ) );
-
-	// if no specific user ID pass, look for logged in user object
-	if ( empty( $post_id ) ) {
-
-		global $post;
-
-		// try to get global post ID
-		if ( empty( $post->ID ) ) {
-			return;
-		}
-
-		$post_id = $post->ID;
-	}
-
-	$location = $cache ? wp_cache_get( $post_id, 'gmw_posts_location_data' ) : false;
-
-	if ( false === $location ) {
-
-		global $wpdb;
-
-		$gmw_table   = $wpdb->base_prefix . 'gmw_locations';
-		$posts_table = $wpdb->prefix . 'posts';
-
-		$location = $wpdb->get_row(
-			$wpdb->prepare(
-				"
-                SELECT     $fields
-                FROM       $gmw_table  gmw
-                INNER JOIN $posts_table posts
-                ON         gmw.object_id = posts.ID
-                WHERE      gmw.object_type = 'post'
-                AND        gmw.object_id = %d
-            ", $post_id
-			),
-			OBJECT
-		);
-
-		// save to cache if location found
-		if ( ! empty( $location ) ) {
-			wp_cache_set( $post_id, $location, 'gmw_posts_location_data' );
-			wp_cache_set( $location->ID, $location, 'gmw_location_data' );
-		}
-	}
-
-	// if no location found
-	if ( empty( $location ) ) {
-		return null;
-	}
-
-	// convert to array if needed
-	if ( ARRAY_A == $output || ARRAY_N == $output ) {
-		$location = gmw_to_array( $location, $output );
-	}
-
-	return $location;
-}
-
-/**
  * Get post taxonomies terms list
  *
  * @param  [type] $post [description]
  * @param  array  $args [description]
+ * 
  * @return [type]       [description]
  */
 function gmw_get_post_taxonomies_terms_list( $post, $args = array() ) {
@@ -518,48 +178,394 @@ function gmw_get_post_taxonomies_terms_list( $post, $args = array() ) {
 }
 
 /**
- * Delete post location
+ * Generate the post location form.
  *
- * @since 3.0
+ * @see GMW_Location_Form class for list of argument.
  *
- * @param  [type] $post_id [description]
- * @return [type]          [description]
+ * @param  array  $args [description]
+ * @return [type]       [description]
  */
-function gmw_delete_post_location( $post_id = false, $delete_meta = false ) {
+function gmw_post_location_form( $args = array() ) {
 
-	if ( empty( $post_id ) ) {
+	if ( ! empty( $args['post_id'] ) ) {
+		$args['object_id'] = $args['post_id'];
+	}
+
+	// default args
+	$defaults = array(
+		'object_id'      => 0,
+		'form_template'  => 'location-form-tabs-left',
+		'submit_enabled' => 1,
+		'stand_alone'    => 1,
+		'ajax_enabled'   => 1,
+		'auto_confirm'   => 1,
+	);
+
+	$args = wp_parse_args( $args, $defaults );
+	$args = apply_filters( 'gmw_post_location_form_args', $args );
+
+	if ( ! absint( $args['object_id'] ) ) {
+
+		if ( IS_ADMIN && isset( $_GET['post'] ) && absint( $_GET['post'] ) ) {
+
+			$args['object_id'] = $_GET['post'];
+
+		} else {
+
+			global $post;
+
+			if ( isset( $post->ID ) ) {
+				$args['object_id'] = $post->ID;
+			} else {
+				return;
+			}
+		}
+	}
+
+	include_once( 'class-gmw-post-location-form.php' );
+
+	if ( ! class_exists( 'GMW_Post_Location_Form' ) ) {
 		return;
 	}
 
-	gmw_delete_location( 'post', $post_id, $delete_meta );
+	// generate new location form
+	$location_form = new GMW_Post_Location_Form( $args );
+
+	// display the location form
+	$location_form->display_form();
 }
 
 /**
- * Change post location status
+ * Get the location of a post.
  *
  * @since 3.0
  *
+ * @param  integer $id  post ID to retrive the default location of a specific post. Or location ID
+ * 
+ * to retrive a specific location.
+ * 
+ * @param  boolean $by_location_id  when set to true the first argument has to be a location ID.
+ * 
+ * @return object  complete location object
+ * 
+ */
+function gmw_get_post_location( $id = 0, $by_location_id = false ) {
+
+	if ( $by_location_id ) {
+		return gmw_get_location( $id );
+	}
+
+	// if no specific post ID pass, look for displayed post object
+	if ( empty( $id ) ) {
+
+		global $post;
+
+		if ( ! empty( $post ) ) {
+
+			$id = $post->ID;
+		
+		} else {
+			return;
+		}
+	}
+
+	// get post location from database
+	return gmw_get_location_by_object( 'post', $id );
+}
+
+/**
+ * Get all locations of a post.
+ *
+ * @since 3.2
+ * 
  * @param  integer $post_id [description]
- * @param  integer $status  [description]
+ * 
+ * @return object of locations.
+ */
+function gmw_get_post_locations( $post_id = 0 ) {
+
+	// if no specific post ID pass, look for displayed post object
+	if ( empty( $post_id ) ) {
+
+		global $post;
+
+		if ( ! empty( $post ) ) {
+
+			$post_id = $post->ID;
+		
+		} else {
+			return;
+		}
+	}
+
+	// get post location from database
+	return GMW_Location::get_locations_by_object( 'post', $post_id );
+}
+
+/**
+ * Get the post location meta from database.
+ *
+ * This function is to be used with location metas. 
+ *
+ * @since 3.0
+ * 
+ * @param  integer $post_id the post ID.
+ *
+ * @param  mixed $meta_keys string of a single or array of multiple meta keys to retrive their values.
+ * 
  * @return [type]           [description]
  */
-function gmw_post_location_status( $post_id = 0, $status = 1 ) {
+function gmw_get_post_location_meta( $post_id = false, $meta_keys = array() ) {
 
-	$status = ( 1 == $status ) ? 1 : 0;
+    // if no specific post ID pass, look for displayed post object
+    if ( empty( $post_id ) ) {
+        
+        global $post;
+
+        if ( ! empty( $post ) ) {
+
+            $post_id = $post->ID;
+        
+        } else{
+            return;
+        }
+    }
+
+    //Pass the object type. object ID and array of location meta keys
+    return gmw_get_location_meta_by_object( 'post', $post_id, $meta_keys );
+}
+
+/**
+ * get post locations data from database.
+ *
+ * The function returns locations data combined with posts data, such as post title, content, author...
+ *
+ * The function also verify that the post exists in database. That's in case
+ *
+ * That the post was deleted but the location still exists in database.
+ *
+ * @since 3.0
+ *
+ * @param integer $id - post ID by default. Can be location ID when second argument set to true.
+ * 
+ * @param boolean $by_location_id - sert to true when first argument is location ID.
+ *
+ * @return object post data + location data
+ */
+function gmw_get_post_location_data( $id = 0, $by_location_id = false ) {
+
+	$fields = implode( ',', apply_filters( 'gmw_get_post_location_data_fields', array(
+		'gmw.ID',
+		'gmw.latitude',
+		'gmw.longitude',
+		'gmw.latitude as lat',
+		'gmw.longitude as lng',
+		'gmw.address',
+		'gmw.formatted_address',
+		'gmw.street_number',
+		'gmw.street_name',
+		'gmw.street',
+		'gmw.city',
+		'gmw.region_code',
+		'gmw.region_name',
+		'gmw.postcode',
+		'gmw.country_code',
+		'gmw.country_name',
+		'featured',
+		'posts.ID as post_id',
+		'posts.post_title',
+		'posts.post_type',
+		'posts.post_author',
+		'posts.post_content',
+	), $id, $by_location_id ) );
+
+	if ( empty( $id ) ) {
+
+		global $post;
+
+		// try to get global post ID
+		if ( empty( $post->ID ) ) {
+			return;
+		}
+
+		$id             = $post->ID;
+		$by_location_id = false;
+	}
+
+	$id = ( int ) $id;
 
 	global $wpdb;
 
-	$wpdb->query(
-		$wpdb->prepare(
-			"
-            UPDATE {$wpdb->base_prefix}gmw_locations 
-            SET   `status`      = $status 
-            WHERE `object_type` = 'post' 
-            AND   `blog_id`     = %d
-            AND   `object_id`   = %d",
-			array( gmw_get_blog_id(), $post_id )
-		)
+	$gmw_table   = $wpdb->base_prefix . 'gmw_locations';
+	$posts_table = $wpdb->prefix . 'posts';
+
+	if ( ! $by_location_id ) {
+
+		$sql = $wpdb->prepare( "
+            SELECT     $fields
+            FROM       $gmw_table  gmw
+            INNER JOIN $posts_table posts
+            ON         gmw.object_id   = posts.ID
+            WHERE      gmw.object_type = 'post'
+            AND        gmw.object_id   = %d
+        ", $id
+		);
+
+	} else {
+
+		$sql = $wpdb->prepare( "
+            SELECT     $fields
+            FROM       $gmw_table  gmw
+            INNER JOIN $posts_table posts
+            ON         gmw.object_id = posts.ID
+            WHERE      gmw.object_type = 'post'
+            AND        gmw.ID = %d
+        ", $id
+       	);
+	}
+
+	$location_data = $wpdb->get_row( $sql, OBJECT );	
+
+	return ! empty( $location_data ) ? $location_data : false;
+}
+
+/**
+ * get post locations data from database.
+ *
+ * The function returns all the locations of a specific post and the post object.
+ *
+ * @since 3.2
+ *
+ * @param integer $post_id
+ *
+ * @return array(
+ *     'locations' => array of all the post's locations,
+ *     'post'      => the post object  
+ * );
+ */
+function gmw_get_post_locations_data( $post_id = 0 ) {
+
+	if ( empty( $post_id ) ) {
+
+		global $post;
+
+		// try to get global post ID
+		if ( empty( $post->ID ) ) {
+			return;
+		}
+
+		$post_id = $post->ID;
+	}
+
+	$post = get_post( $post_id );
+
+	if ( empty( $post ) ) {
+		return false;
+	}
+
+	$locations = GMW_Location::get_locations_by_object( 'post', $post_id );
+
+	return empty( $locations ) ? false : array(
+		'locations' => $locations,
+		'post'      => $post,
+
 	);
+}
+
+/**
+ * Get specific or all post address fields
+ *
+ * @since 3.0
+ *
+ * @param  array $args array( 
+ *     'location_id' => 0, 					 // when getting a specifc location by its ID.
+ *     'post_id'     => 0,                   // When getting the default location of a post using the post ID.
+ *     'fields'      => 'formatted_address', // address fields comma separated
+ *     'separator'   => ', ',                // Separator between fields.
+ *     'output'	     => 'string'             // output type ( object, array or string ).
+ * );
+ * 
+ * @return Mixed object || array || string 
+ * 
+ */
+function gmw_get_post_address( $args = array() ) {
+
+	// to support older versions. should be removed in the future
+	/*if ( empty( $args['fields'] ) && ! empty( $args['info'] ) ) {
+
+		trigger_error( 'The "info" shortcode attribute of the shortcode [gmw_post_address] is deprecated since GEO my WP version 3.0. Please use the shortcode attribute "fields" instead.', E_USER_NOTICE );
+
+		$args['fields'] = $args['info'];
+	}*/
+
+	// if no specific post ID provided, look for current post ID
+	if ( empty( $args['location_id'] ) ) {
+		
+		$args['object_type'] = 'post';
+	 	
+	 	if ( empty( $args['post_id'] ) ) {
+
+			global $post;
+
+			if ( empty( $post ) ) {
+				return;
+			}
+
+			$args['object_id'] = $post->ID;
+		
+		} else {
+		
+			$args['object_id'] = $args['post_id'];
+		}
+	}
+
+	// get post address fields
+	return gmw_get_address_fields( $args );
+}
+
+function gmw_post_address( $args = array() ) {
+	echo gmw_get_post_address( $args );
+}
+
+/**
+ * Get location or location meta fields of a post.
+ *
+ * @since 3.0.2
+ *
+ * @param  array $args array( 
+ *     'location_id'   => 0, 				   // when getting a specifc location by its ID.
+ *     'post_id'       => 0,                   // When getting the default location of a post using the post ID.
+ *     'fields'        => 'formatted_address', // location or meta fields, comma separated.
+ *     'separator'     => ', ',                // Separator between fields.
+ *     'location_meta' => 0                    // Set to 1 when the fields argument is location meta.
+ * );
+ * 
+ * @return Mixed object || array || string 
+ * 
+ */
+function gmw_get_post_location_fields( $args = array() ) {
+
+	if ( empty( $args['location_id'] ) ) {
+		
+		$args['object_type'] = 'post';
+	 	
+	 	if ( ! empty( $args['post_id'] ) ) {
+
+	 		$args['object_id'] = $args['post_id'];
+	 	
+	 	} else {
+
+			global $post;
+
+			if ( empty( $post ) ) {
+				return;
+			}
+
+			$args['object_id'] = $post->ID;
+		}
+	}
+
+	return gmw_get_location_fields( $args );
 }
 
 /**
@@ -590,19 +596,35 @@ function gmw_post_location_status( $post_id = 0, $status = 1 ) {
  *     'lng' => -80.4362
  * );
  *
- * @param  integer $user_id      the user whom the location belongs to. By default it will belong to the user who creates/update the post location ( logged in user ).
+ * @param  string  $location_name name of the location ( optional )
+ * 
+ * @param  integer $user_id       the user whom the location belongs to. By default it belongs 
+ *                                to the user who creates/update the post location ( logged in user ).
+ * 
  * @param  boolean $force_refresh false to use geocoded address in cache || true to force address geocoding
  *
  * @return int location ID
  */
-function gmw_update_post_location( $post_id = 0, $location = array(), $user_id = 0, $force_refresh = false ) {
+function gmw_update_post_location( $post_id = 0, $location = array(), $location_name = '', $user_id = 0, $force_refresh = false ) {
 
 	if ( ! gmw_is_post_exists( $post_id ) ) {
 		return;
 	}
 
+	if ( ! is_integer( $user_id ) && is_integer( $location_name ) ) {
+		$user_id       = $location_name;
+		$location_name = '';
+	}
+
+	$args = array(
+		'object_type'   => 'post',
+		'object_id'     => $post_id,
+		'location_name' => is_string( $location_name ) ? $location_name :'',
+		'user_id'       => $user_id,
+	);
+
 	// update post location
-	return gmw_update_location( 'post', $post_id, $location, $user_id, $force_refresh );
+	return gmw_update_location( $args, $location, $force_refresh );
 }
 
 /**
@@ -632,6 +654,51 @@ function gmw_update_post_location_meta( $post_id = 0, $metadata = array(), $meta
 	}
 
 	gmw_update_location_metas( $location_id, $metadata, $meta_value );
+}
+
+/**
+ * Delete post location
+ *
+ * @since 3.0
+ *
+ * @param  [type] $post_id [description]
+ * @return [type]          [description]
+ */
+function gmw_delete_post_location( $post_id = false, $delete_meta = false ) {
+
+	if ( empty( $post_id ) ) {
+		return;
+	}
+
+	gmw_delete_location_by_object( 'post', $post_id, $delete_meta );
+}
+
+/**
+ * Change post location status
+ *
+ * @since 3.0
+ *
+ * @param  integer $post_id [description]
+ * @param  integer $status  [description]
+ * @return [type]           [description]
+ */
+function gmw_post_location_status( $post_id = 0, $status = 1 ) {
+
+	$status = ( 1 == $status ) ? 1 : 0;
+
+	global $wpdb;
+
+	$wpdb->query(
+		$wpdb->prepare(
+			"
+            UPDATE {$wpdb->base_prefix}gmw_locations 
+            SET   `status`      = $status 
+            WHERE `object_type` = 'post' 
+            AND   `blog_id`     = %d
+            AND   `object_id`   = %d",
+			array( gmw_get_blog_id(), $post_id )
+		)
+	);
 }
 
 /**
@@ -667,7 +734,6 @@ add_action( 'wp_trash_post', 'gmw_trash_post_location' );
  */
 function gmw_after_delete_post( $post_id ) {
 
-	gmw_delete_location( 'post', $post_id, true );
+	gmw_delete_post_location( $post_id, true );
 }
 add_action( 'after_delete_post', 'gmw_after_delete_post' );
-
