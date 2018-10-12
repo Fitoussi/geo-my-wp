@@ -29,6 +29,7 @@ class GMW_Location {
 	 * @var array
 	 */
 	public static $format = array(
+		'%d',
 		'%s',
 		'%d',
 		'%d',
@@ -89,6 +90,7 @@ class GMW_Location {
 		}
 
 		return array(
+			'ID'				=> 0,
 			'object_type'       => '',
 			'object_id'         => 0,
 			'blog_id'           => gmw_get_blog_id(),
@@ -129,7 +131,7 @@ class GMW_Location {
 	 *
 	 * @since 3.0
 	 */
-	public static function verify_id( $id ) {
+	public static function verify_id( $id = 0 ) {
 
 		// verify location ID
 		if ( ! is_numeric( $id ) ) {
@@ -143,216 +145,6 @@ class GMW_Location {
 		}
 
 		return $id;
-	}
-
-	/**
-	 * Try to get locations data.
-	 *
-	 * The function will try to get the locations data based on global variables
-	 *
-	 * in case that the object data ( object_type or object_id ) cannot be verified.
-	 *
-	 * @since 3.0
-	 *
-	 * @param boolean $parent true to get only prent location false to get all locations
-	 *
-	 * @return location object or empty if no locaiton was found
-	 *
-	 * @since 3.0
-	 */
-	private static function try_get_locations( $parent = false, $output = OBJECT, $cache = true ) {
-
-		// get common globals
-		global $post, $comment, $user;
-
-		$location = $found = false;
-
-		// check for post ID and try to get the location if found
-		if ( ! empty( $post->ID ) ) {
-
-			$object_type = 'post';
-			$object_id   = $post->ID;
-			$found       = true;
-
-			// otherwise look for user ID
-		} elseif ( ! empty( $user->ID ) ) {
-
-			$object_type = 'user';
-			$object_id   = $user->ID;
-			$found       = true;
-
-			// Otherwise, maybe comment ID
-		} elseif ( ! empty( $comment->comment_ID ) ) {
-
-			$object_type = 'comment';
-			$object_id   = $comment->comment_ID;
-			$found       = true;
-		}
-
-		// if object type and object ID were found, get the location from database
-		if ( $found ) {
-			$location = $parent == true ? self::get( $object_type, $object_id, $output, $cache ) : self::get_locations( $object_type, $object_id, $output, $cache );
-		}
-
-		return $location;
-	}
-
-	/**
-	 * Deprecated - use update() instead
-	 *
-	 * @return [type] [description]
-	 */
-	public static function update_location( $args ) {
-		self::update( $args );
-	}
-
-	/**
-	 * Save location - Save location to gmw_locations database table.
-	 *
-	 * To save a location you need to pass an array of location data which includes the location
-	 *
-	 * fields and the object data.
-	 *
-	 * See the default_values array above for the location fields you need to pass.
-	 *
-	 * @param  array $args array of location fields and data.
-	 *
-	 * @return int location ID
-	 *
-	 * @since 3.0
-	 */
-	public static function update( $args ) {
-
-		// verify object ID
-		if ( ! self::verify_id( $args['object_id'] ) ) {
-
-			trigger_error( 'Trying to update a location using invalid object ID.', E_USER_NOTICE );
-
-			return false;
-		}
-
-		// verify valid coordinates
-		if ( ! is_numeric( $args['latitude'] ) || ! is_numeric( $args['longitude'] ) ) {
-
-			trigger_error( 'Trying to update a location using invalid coordinates.', E_USER_NOTICE );
-
-			return false;
-		}
-
-		// parse location args with default location args
-		$location_data = wp_parse_args( $args, self::default_values() );
-
-		// verify country code
-		if ( empty( $location_data['country_code'] ) || strlen( $location_data['country_code'] ) != 2 ) {
-
-			if ( empty( $location_data['country_name'] ) ) {
-
-				$location_data['country_code'] = '';
-
-			} else {
-
-				// get list of countries code. We will use it to make sure that the only the country code passes to the column.
-				$countries = gmw_get_countries_list_array();
-
-				// look for the country code based on the country name
-				$country_code = array_search( ucwords( $location_data['country_name'] ), $countries );
-
-				// get the country code from the list
-				$location_data['country_code'] = ! empty( $country_code ) ? $country_code : '';
-			}
-		}
-
-		// verify user ID
-		if ( ! self::verify_id( $location_data['user_id'] ) ) {
-
-			trigger_error( 'Trying to update a location using invalid user ID.', E_USER_NOTICE );
-
-			return false;
-		}
-
-		// check for existing location
-		$saved_location = self::get( $location_data['object_type'], $location_data['object_id'] );
-
-		global $wpdb;
-
-		$table = self::get_table();
-
-		// modify the new location args before saving
-		$location_data = apply_filters( 'gmw_pre_save_location_data', $location_data, $saved_location );
-		$location_data = apply_filters( "gmw_pre_save_{$location_data['object_type']}_location_data", $location_data, $saved_location );
-
-		// do some custom functions before saving location
-		do_action( 'gmw_pre_save_location', $location_data, $saved_location );
-		do_action( "gmw_pre_save_{$location_data['object_type']}_location", $location_data, $saved_location );
-
-		// insert new location if not already exists in database
-		if ( ! $saved_location ) {
-
-			// udpate the current data - time
-			$location_data['created'] = current_time( 'mysql' );
-
-			// insert new location to database
-			$wpdb->insert( $table, $location_data, self::$format );
-
-			// get the new location ID
-			$location_id = $wpdb->insert_id;
-
-			$updated = false;
-
-			// otherwise, update existing location
-		} else {
-
-			// modify the new location args before saving
-			do_action( 'gmw_pre_update_location', $location_data, $saved_location );
-			do_action( "gmw_pre_update_{$location_data['object_type']}_location", $location_data, $saved_location );
-
-			// get existing location ID
-			$location_id = isset( $saved_location->ID ) ? (int) $saved_location->ID : 0;
-
-			// verify location ID
-			if ( ! is_int( $location_id ) || 0 == $location_id ) {
-				return false;
-			}
-
-			// Keep created time as its original time
-			$location_data['created'] = $saved_location->created;
-
-			// updated time based on current time
-			$location_data['updated'] = current_time( 'mysql' );
-
-			// update location
-			$wpdb->update(
-				$table,
-				$location_data,
-				array( 'ID' => $location_id ),
-				self::$format,
-				array( '%d' )
-			);
-
-			$updated = true;
-
-			do_action( 'gmw_location_updated', $location_data );
-			do_action( "gmw_{$location_data['object_type']}_location_updated", $location_data );
-		}
-
-		// append Location ID to location data array
-		$location_data = array( 'ID' => $location_id ) + $location_data;
-
-		// make it into an object
-		$location_data = (object) $location_data;
-
-		// do some custom functions once location saved
-		do_action( 'gmw_save_location', $location_id, $location_data, $updated );
-		do_action( "gmw_save_{$location_data->object_type}_location", $location_id, $location_data, $updated );
-
-		// set updated location in cache
-		//wp_cache_set( $location_id, $location_data, 'gmw_locations' );
-		wp_cache_set( $location_data->object_type . '_' . $location_data->object_id, $location_data, 'gmw_location' );
-		wp_cache_set( $location_id, $location_data, 'gmw_location' );
-
-		wp_cache_delete( $location_data->object_type . '_' . $location_data->object_id, 'gmw_locations' );
-
-		return $location_id;
 	}
 
 	/**
@@ -427,6 +219,281 @@ class GMW_Location {
 	}
 
 	/**
+	 * Try to get locations data.
+	 *
+	 * The function will try to get the locations data based on global variables
+	 *
+	 * in case that the object data ( object_type or object_id ) cannot be verified.
+	 *
+	 * @since 3.0
+	 *
+	 * @param boolean $parent true to get only prent location false to get all locations
+	 *
+	 * @return location object or empty if no locaiton was found
+	 *
+	 * @since 3.0
+	 */
+	private static function try_get_locations( $parent = false, $output = OBJECT, $cache = true ) {
+
+		// get common globals
+		global $post, $comment, $user;
+
+		$location = $found = false;
+
+		// check for post ID and try to get the location if found
+		if ( ! empty( $post->ID ) ) {
+
+			$object_type = 'post';
+			$object_id   = $post->ID;
+			$found       = true;
+
+			// otherwise look for user ID
+		} elseif ( ! empty( $user->ID ) ) {
+
+			$object_type = 'user';
+			$object_id   = $user->ID;
+			$found       = true;
+
+			// Otherwise, maybe comment ID
+		} elseif ( ! empty( $comment->comment_ID ) ) {
+
+			$object_type = 'comment';
+			$object_id   = $comment->comment_ID;
+			$found       = true;
+		}
+
+		// if object type and object ID were found, get the location from database
+		if ( $found ) {
+			$location = $parent == true ? self::get_by_object( $object_type, $object_id, $output, $cache ) : self::get_locations( $object_type, $object_id, $output, $cache );
+		}
+
+		return $location;
+	}
+
+	/**
+	 * Inset location - Create new or update an existing location in gmw_locations database table.
+	 *
+	 * To save a location you need to pass an array of location data which includes the location
+	 *
+	 * fields and the object data.
+	 *
+	 * When the location ID is provided in the array ( ID argument ) the location will be updated.
+	 *
+	 * Otherwise, a new location will be created.
+	 *
+	 * See the default_values array above for the location fields you need to pass.
+	 *
+	 * @param array $args array of location fields and data.
+	 *
+	 * @return int location ID
+	 *
+	 * @since 3.0
+	 */
+	public static function insert( $args ) {
+
+		// verify object ID
+		if ( ! self::verify_id( $args['object_id'] ) ) {
+
+			trigger_error( 'Trying to update a location using invalid object ID.', E_USER_NOTICE );
+
+			return false;
+		}
+
+		// verify valid coordinates
+		if ( ! is_numeric( $args['latitude'] ) || ! is_numeric( $args['longitude'] ) ) {
+
+			trigger_error( 'Trying to update a location using invalid coordinates.', E_USER_NOTICE );
+
+			return false;
+		}
+
+		// parse location args with default location args
+		$location_data = wp_parse_args( $args, self::default_values() );
+		
+		// verify country code
+		if ( empty( $location_data['country_code'] ) || strlen( $location_data['country_code'] ) != 2 ) {
+
+			if ( empty( $location_data['country_name'] ) ) {
+
+				$location_data['country_code'] = '';
+
+			} else {
+
+				// get list of countries code. We will use it to make sure that the only the country code passes to the column.
+				$countries = gmw_get_countries_list_array();
+
+				// look for the country code based on the country name
+				$country_code = array_search( ucwords( $location_data['country_name'] ), $countries );
+
+				// get the country code from the list
+				$location_data['country_code'] = ! empty( $country_code ) ? $country_code : '';
+			}
+		}
+
+		// verify user ID
+		if ( ! self::verify_id( $location_data['user_id'] ) ) {
+
+			trigger_error( 'Trying to update a location using invalid user ID.', E_USER_NOTICE );
+
+			return false;
+		}
+
+		$location_id    = 0;
+		$update         = false;
+		$saved_location = false;
+
+		// If location ID provided, we will look for and update that location.
+		if ( ! empty( $location_data['ID'] ) ) {
+
+			$update         = true;
+			$location_id    = ( int ) $location_data['ID'];
+
+			// Look for the existing location.
+			$saved_location = self::get_by_id( $location_data['ID'] );
+
+			// Abort if location was not found.
+			if ( empty( $saved_location ) ) {
+
+				trigger_error( 'Trying to update a location using invalid location ID.', E_USER_NOTICE );
+
+				return 0;
+			}
+
+		} else {
+
+			$saved_location = self::get_by_object( $location_data['object_type'], $location_data['object_id'] );
+		}
+
+		global $wpdb;
+
+		$table = self::get_table();
+
+		// modify the new location args before saving
+		$location_data = apply_filters( 'gmw_pre_save_location_data', $location_data, $saved_location );
+		$location_data = apply_filters( "gmw_pre_save_{$location_data['object_type']}_location_data", $location_data, $saved_location );
+
+		// do some custom functions before saving location
+		do_action( 'gmw_pre_save_location', $location_data, $saved_location );
+		do_action( "gmw_pre_save_{$location_data['object_type']}_location", $location_data, $saved_location );
+
+		// update existing location
+		if ( $update ) {
+
+			// modify the new location args before saving
+			do_action( 'gmw_pre_update_location', $location_data, $saved_location );
+			do_action( "gmw_pre_update_{$location_data['object_type']}_location", $location_data, $saved_location );
+
+			// verify location ID
+			if ( ! is_int( $location_id ) || 0 === $location_id ) {
+				return false;
+			}
+
+			// if no location name provided look for the saved name to preserve it.
+			if ( empty( $location_data['title'] ) && ! empty( $saved_location->title ) ) {
+				$location_data['title'] = $saved_location->title;
+			}
+
+			// Keep created time as its original time
+			$location_data['created'] = $saved_location->created;
+
+			// updated time based on current time
+			$location_data['updated'] = current_time( 'mysql' );
+
+			// update location
+			$wpdb->update(
+				$table,
+				$location_data,
+				array( 'ID' => $location_id ),
+				self::$format,
+				array( '%d' )
+			);
+
+			$updated = true;
+
+			do_action( 'gmw_location_updated', $location_data );
+			do_action( "gmw_{$location_data['object_type']}_location_updated", $location_data );
+
+			// Create new location.
+		} else {
+
+			// update the current data - time
+			$location_data['created'] = current_time( 'mysql' );
+
+			// insert new location to database
+			$wpdb->insert( $table, $location_data, self::$format );
+
+			// get the new location ID
+			$location_id = $wpdb->insert_id;
+
+			$updated = false;
+
+			// append Location ID to location data array
+			$location_data = array( 'ID' => $location_id ) + $location_data;
+		}
+
+		// make it into an object
+		$location_data = ( object ) $location_data;
+
+		// do some custom functions once location saved
+		do_action( 'gmw_save_location', $location_id, $location_data, $updated );
+		do_action( "gmw_save_{$location_data->object_type}_location", $location_id, $location_data, $updated );
+
+		// set updated location in cache
+		//wp_cache_set( $location_id, $location_data, 'gmw_locations' );
+		//wp_cache_set( $location_data->object_type . '_' . $location_data->object_id, $location_data, 'gmw_location' );
+		wp_cache_set( $location_id, $location_data, 'gmw_location' );
+
+		wp_cache_delete( $location_data->object_type . '_' . $location_data->object_id, 'gmw_locations' );
+
+		return $location_id;
+	}
+
+	/**
+	 * Update an existing location.
+	 *
+	 * When location ID is provided, it will be used to update the location.
+	 *
+	 * Otherwise, a default location will be retrived based on object type and object ID.
+	 * 
+	 * @param  [type] $args [description]
+	 * @return [type]       [description]
+	 */
+	public static function update( $args ) {
+
+		if ( empty( $args['ID'] ) ) {
+			
+			$saved_location = self::get_by_object( $args['object_type'], $args['object_id'] );
+
+			if ( ! empty( $saved_location ) ) {
+				$args = array( 'ID' => $saved_location->ID ) + $args;
+			}
+		}
+
+		return self::insert( $args );
+	}
+
+	/**
+	 * Deprecated - use update() instead
+	 *
+	 * @return [type] [description]
+	 */
+	public static function update_location( $args ) {
+		return self::update( $args );
+	}
+
+	/**
+	 * Deprecated. Function self::get() now gets the location by ID.
+	 * 
+	 * @param  integer $location_id [description]
+	 * @param  [type]  $output      [description]
+	 * @param  boolean $cache       [description]
+	 * @return [type]               [description]
+	 */
+	public static function get_by_id( $location_id = 0, $output = OBJECT, $cache = true ) {
+		return self::get( $location_id, $output, $cache );
+	}
+
+	/**
 	 * Get location from database by location ID.
 	 *
 	 * @param  integer  $location_id location ID
@@ -435,9 +502,9 @@ class GMW_Location {
 	 *
 	 * @return object || Array return the location data
 	 *
-	 * @since 3.0
+	 * @since 3.2
 	 */
-	public static function get_by_id( $location_id = 0, $output = OBJECT, $cache = true ) {
+	public static function get( $location_id = 0, $output = OBJECT, $cache = true ) {
 
 		// verify location ID
 		if ( ! self::verify_id( $location_id ) ) {
@@ -476,6 +543,9 @@ class GMW_Location {
 			return null;
 		}
 
+		// make sure ID in integer.
+		$location->ID = ( int ) $location->ID;
+
 		// conver to array if needed
 		if ( ARRAY_A == $output || ARRAY_N == $output ) {
 			$location = gmw_to_array( $location, $output );
@@ -496,9 +566,9 @@ class GMW_Location {
 	 *
 	 * @return object || Array return the location data
 	 *
-	 * @since 3.0
+	 * @since 3.2
 	 */
-	public static function get( $object_type = '', $object_id = 0, $output = OBJECT, $cache = true ) {
+	public static function get_by_object( $object_type = '', $object_id = 0, $output = OBJECT, $cache = true ) {
 
 		// verify object type and object ID. If any of them empty use try_get_location function
 		if ( empty( $object_type ) || empty( $object_id ) ) {
@@ -562,12 +632,32 @@ class GMW_Location {
 			return null;
 		}
 
+		// make sure ID in integer.
+		$location->ID = ( int ) $location->ID;
+
 		// convert to array if needed
 		if ( ARRAY_A == $output || ARRAY_N == $output ) {
 			$location = gmw_to_array( $location, $output );
 		}
 
 		return $location;
+	}
+
+	/**
+	 * This function used to get all locations by object.
+	 *
+	 * Instead use the new self::get_locations_by_object() function.
+	 *
+	 * We will leave this function for the future for more of a general uses.
+	 * 
+	 * @param  string  $object_type [description]
+	 * @param  integer $object_id   [description]
+	 * @param  [type]  $output      [description]
+	 * @param  boolean $cache       [description]
+	 * @return [type]               [description]
+	 */
+	public static function get_locations( $object_type = '', $object_id = 0, $output = OBJECT, $cache = true ) {
+		return self::get_locations_by_object( $object_type, $object_id, $output, $cache );
 	}
 
 	/**
@@ -580,9 +670,9 @@ class GMW_Location {
 	 *
 	 * @return array of locations data.
 	 *
-	 * since 3.0
+	 * since 3.2
 	 */
-	public static function get_locations( $object_type = '', $object_id = 0, $output = OBJECT, $cache = true ) {
+	public static function get_locations_by_object( $object_type = '', $object_id = 0, $output = OBJECT, $cache = true ) {
 
 		// try to get location if object type/ID do not exist
 		if ( empty( $object_type ) || empty( $object_id ) ) {
@@ -601,17 +691,17 @@ class GMW_Location {
 		// verify object ID
 		if ( ! is_numeric( $object_id ) || ! absint( $object_id ) ) {
 
-			trigger_error( 'Trying to get a location using invalid object ID.', E_USER_NOTICE );
+			trigger_error( 'Trying to get a locations using invalid object ID.', E_USER_NOTICE );
 
 			return false;
 		}
 
 		$object_id = absint( $object_id );
 
-		// look for locations in cache if needed
+		// look for locations in cache
 		$locations = $cache ? wp_cache_get( $object_type . '_' . $object_id, 'gmw_locations' ) : false;
 
-		// if no location found in cache get it from database
+		// if no locations found in cache get it from database
 		if ( false === $locations ) {
 
 			global $wpdb;
@@ -641,7 +731,7 @@ class GMW_Location {
 
 		// if no location found
 		if ( empty( $locations ) ) {
-			return null;
+			return array();
 		}
 
 		$locations = maybe_unserialize( $locations );
@@ -1015,7 +1105,122 @@ class GMW_Location {
 	}
 
 	/**
-	 * Delete location using object type - ID pair
+	 * Change post location status
+	 *
+	 * @since 3.0
+	 *
+	 * @param  integer $post_id [description]
+	 * @param  integer $status  [description]
+	 * @return [type]           [description]
+	 */
+	public static function set_status( $location_id = 0, $status = 1 ) {
+
+		$status      = self::verify_id( $status );
+		$location_id = self::verify_id( $location_id );
+
+		if ( ! $location_id ) {
+			return false;
+		}
+
+		//$status = 1 == $status ? 1 : 0;
+
+		global $wpdb;
+
+		return $wpdb->query(
+			$wpdb->prepare(
+				"
+	            UPDATE {$wpdb->base_prefix}gmw_locations 
+	            SET   `status`      = %s 
+	            WHERE `ID`          = %s",
+				array( $status, $location_id )
+			)
+		);
+	}
+
+	/**
+	 * Delete location using location ID. 
+	 *
+	 * Deprecated - use self::delete() instaed.
+	 *
+	 * The location data and all associated location meta will be deleted.
+	 *
+	 * @param  integer $location_id the location ID
+	 *
+	 * @return boolean  true if deleted false if failed
+	 *
+	 * @since 3.0
+	 */
+	public static function delete_by_id( $location_id = 0, $delete_meta = true ) {
+		return self::delete( $location_id, $delete_meta );
+	}
+
+	/**
+	 * Delete location using location ID or location object.
+	 *
+	 * The location data and all associated location meta will be deleted
+	 *
+	 * @param  integer||object $location the location ID || location object 
+	 *
+	 * @return boolean  true if deleted false if failed
+	 *
+	 * @since 3.2
+	 */
+	public static function delete( $location = 0, $delete_meta = true ) {
+
+		// if location is not an object
+		if ( ! is_object( $location ) ) {
+
+			// verify location ID
+			if ( ! self::verify_id( $location ) ) {
+				return false;
+			}
+
+			// get location to make sure it exists
+			// this will get the parent location
+			$location = self::get( $location );
+		}
+
+		// abort if no location found
+		if ( empty( $location ) ) {
+			return false;
+		}
+
+		do_action( 'gmw_before_location_deleted', $location->ID, $location );
+		do_action( 'gmw_before_' . $location->object_type . '_location_deleted', $location->ID, $location );
+
+		global $wpdb;
+
+		// delete location from database
+		$table   = self::get_table();
+		$deleted = $wpdb->delete(
+			$table,
+			array( 'ID' => $location->ID ),
+			array( '%d' )
+		);
+
+		// abort if failed to delete
+		if ( empty( $deleted ) ) {
+			return false;
+		}
+
+		do_action( 'gmw_location_deleted', $location->ID, $location );
+		do_action( 'gmw_' . $location->object_type . '_location_deleted', $location->ID, $location );
+
+		// clear locations from cache
+		wp_cache_delete( $location->object_type . '_' . $location->object_id, 'gmw_location' );
+		wp_cache_delete( $location->ID, 'gmw_location' );
+		wp_cache_delete( $location->object_type . '_' . $location->object_id, 'gmw_locations' );
+
+		// delete the location metadata associated with this location if needed
+		if (  true == $delete_meta ) {
+			GMW_Location_Meta::delete_all( $location->ID );
+		}
+
+		return $location->ID;
+	}
+
+	/**
+	 * Delete location using object type and object ID pair
 	 *
 	 * The parent location data and all associated location meta will be deleted.
 	 *
@@ -1024,10 +1229,10 @@ class GMW_Location {
 	 *
 	 * @return boolean true for deleted false for failed
 	 *
-	 * @since 3.0
+	 * @since 3.2
 	 *
 	 */
-	public static function delete( $object_type = '', $object_id = 0, $delete_meta = false ) {
+	public static function delete_by_object( $object_type = '', $object_id = 0, $delete_meta = true ) {
 
 		// verify data
 		if ( empty( $object_type ) || empty( $object_id ) ) {
@@ -1054,45 +1259,31 @@ class GMW_Location {
 
 		// get location to make sure it exists
 		// this will get the parent location
-		$location = self::get( $object_type, $object_id );
+		$location = self::get_by_object( $object_type, $object_id );
 
 		// abort if no location found
 		if ( empty( $location ) ) {
 			return false;
 		}
 
-		do_action( 'gmw_before_location_deleted', $location->ID, $location );
-		do_action( 'gmw_before_' . $object_type . '_location_deleted', $location->ID, $location );
+		return self::delete( $location, $delete_meta );
+	}
 
-		global $wpdb;
-
-		// delete location from database
-		$table   = self::get_table();
-		$deleted = $wpdb->delete(
-			$table,
-			array( 'ID' => $location->ID ),
-			array( '%d' )
-		);
-
-		// abort if failed to delete
-		if ( empty( $deleted ) ) {
-			return false;
-		}
-
-		do_action( 'gmw_location_deleted', $location->ID, $location );
-		do_action( 'gmw_' . $object_type . '_location_deleted', $location->ID, $location );
-
-		// clear locations from cache
-		wp_cache_delete( $object_type . '_' . $object_id, 'gmw_location' );
-		wp_cache_delete( $location->ID, 'gmw_location' );
-		wp_cache_delete( $object_type . '_' . $object_id, 'gmw_locations' );
-
-		// delete the location metadata associated with this location if needed
-		if (  true == $delete_meta ) {
-			GMW_Location_Meta::delete_all( $location->ID );
-		}
-
-		return $location->ID;
+	/**
+	 * This function used to delete all locations by object.
+	 *
+	 * Instead, use the new self::delete_locations_by_object() function.
+	 *
+	 * We will leave this function for the future for more of a general uses.
+	 * 
+	 * @param  string  $object_type [description]
+	 * @param  integer $object_id   [description]
+	 * @param  [type]  $output      [description]
+	 * @param  boolean $cache       [description]
+	 * @return [type]               [description]
+	 */
+	public static function delete_locations( $object_type = '', $object_id = 0, $delete_meta = true ) {
+		return self::delete_locations_by_object( $object_type, $object_id, $delete_meta );
 	}
 
 	/**
@@ -1108,7 +1299,7 @@ class GMW_Location {
 	 *
 	 * @since 3.0
 	 */
-	public static function delete_locations( $object_type = '', $object_id = 0, $delete_meta = false ) {
+	public static function delete_locations_by_object( $object_type = '', $object_id = 0, $delete_meta = true ) {
 
 		// verify data
 		if ( empty( $object_type ) || empty( $object_id ) ) {
@@ -1168,28 +1359,5 @@ class GMW_Location {
 		}
 
 		return $deleted;
-	}
-
-	/**
-	 * Delete location using location ID
-	 *
-	 * The location data and all associated location meta will be deleted
-	 *
-	 * @param  integer $location_id the location ID
-	 *
-	 * @return boolean  true if deleted false if failed
-	 *
-	 * @since 3.0
-	 */
-	public static function delete_by_id( $location_id = 0, $delete_meta = false ) {
-
-		// check if location exists
-		$location = self::get_by_id( $location_id );
-
-		if ( empty( $location ) ) {
-			return false;
-		}
-
-		return self::delete( $location->object_type, $location->object_id, $delete_meta );
 	}
 }
