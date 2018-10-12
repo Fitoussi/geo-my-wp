@@ -180,7 +180,7 @@ if ( gmwVars.mapsProvider == 'google_maps' ) {
 			// Scale icon size when provided per icon.
 			if ( location.icon_size ) {
 
-				icon.scaledSize = new google.maps.Size( location.icon_size[0], location.icon_size[1] );
+				icon.scaledSize = new google.maps.Size( parseInt( location.icon_size[0] ), parseInt( location.icon_size[1] ) );
 
 			// When need to scale all icons based on same size.
 			// That is if icon size provided or when using the default red icon.
@@ -193,16 +193,16 @@ if ( gmwVars.mapsProvider == 'google_maps' ) {
 					
 					// set icon size in global		
 					if ( self.iconSize ) {
-						self.iconScaledSize = new google.maps.Size( self.iconSize[0], self.iconSize[1] );
+						self.iconScaledSize = new google.maps.Size( parseInt( self.iconSize[0] ), parseInt( self.iconSize[1] ) );
 					} else {
-						self.iconScaledSize = new google.maps.Size( gmwVars.defaultIcons.location_icon_size[0], gmwVars.defaultIcons.location_icon_size[1] );
+						self.iconScaledSize = new google.maps.Size( parseInt( gmwVars.defaultIcons.location_icon_size[0] ), parseInt( gmwVars.defaultIcons.location_icon_size[1] ) );
 					}	
 				}
 
 				// get icon size from global.
 				icon.scaledSize = self.iconScaledSize;
 			}
-		
+
 			var marker_options = {
 				position 	 : options.position,
 				icon     	 : icon,
@@ -1107,7 +1107,8 @@ GMW_Map.prototype.render = function( locations, userLocation ) {
 GMW_Map.prototype.update = function( locations, userLocation, append_previous ) {
 	
 	var self = this;
-	var icon
+	var icon;
+	
 	// set locations.
 	self.locations 	  = locations || self.locations;
 	self.userLocation = userLocation || self.userLocation;
@@ -1518,7 +1519,7 @@ GMW_Map.prototype.getIwTemplateName = function( template ) {
 	}
 	
 	return template;
-}
+};
 
 /**
  * below is a list of functions that need to be created 
