@@ -253,7 +253,7 @@ function gmw_get_excerpt( $args = array(), $gmw = false ) {
     }
 
 /**
- * Display hours of operation 
+ * Display hours of operation.
  * 
  * @param  [type] $object [description]
  * 
@@ -261,17 +261,23 @@ function gmw_get_excerpt( $args = array(), $gmw = false ) {
  *
  * @since 3.0
  */
-function gmw_get_hours_of_operation( $object ) {
+function gmw_get_hours_of_operation( $location = 0, $object_id = 0 ) {
 
-    // if location ID
-    if ( is_int( $object ) ) {
+    // if location ID provided
+    if ( is_int( $location ) ) {
+
+        $days_hours = gmw_get_location_meta( $location, 'days_hours' );
     
-        $days_hours = gmw_get_location_meta( $object, 'days_hours' );
-    
-    } elseif ( is_object( $object ) && ! empty( $object->object_type ) && ! empty( $object->object_id ) ) {
+    // if location object provided
+    } elseif ( is_object( $location ) && ! empty( $location->object_type ) && ! empty( $location->object_id ) ) {
         
-        $days_hours = gmw_get_location_meta_by_object( $object->object_type, $object->object_id, 'days_hours' );
+        $days_hours = gmw_get_location_meta_by_object( $location->object_type, $location->object_id, 'days_hours' );
     
+    // if object type and object ID provided
+    } elseif ( is_string( $location ) && ! empty( $object_id ) ) {
+
+    	$days_hours = gmw_get_location_meta_by_object( $location, $object_id, 'days_hours' );
+
     } else {
         return;
     }
@@ -306,6 +312,6 @@ function gmw_get_hours_of_operation( $object ) {
     return $output;
 }
 
-    function gmw_hours_of_operation( $location ) {
-        echo gmw_get_hours_of_operation( $location );
+    function gmw_hours_of_operation( $location = 0, $object_id = 0 ) {
+        echo gmw_get_hours_of_operation( $location, $object_id );
     }
