@@ -49,7 +49,7 @@ function gmw_try_get_user_id() {
 }
 
 /**
- * Check if user exists
+ * Check if user exists.
  *
  * This is in case that the user was deleted but the location
  *
@@ -89,14 +89,24 @@ function gmw_is_user_exists( $user_id = 0 ) {
 }
 
 /**
- * get the user location from database
+ * Get the location of a user.
  *
  * @since 3.0
  *
- * @param  boolean $post_id [description]
- * @return [type]           [description]
+ * @param  integer $id  user ID to retrive the default location of a specific user. Or location ID
+ * 
+ * to retrive a specific location.
+ * 
+ * @param  boolean $by_location_id  when set to true the first argument has to be a location ID.
+ * 
+ * @return object  complete location object
+ * 
  */
-function gmw_get_user_location( $user_id = 0 ) {
+function gmw_get_user_location( $user_id = 0, $by_location_id = false ) {
+
+	if ( $by_location_id ) {
+		return gmw_get_location( $id );
+	}
 
 	// if no specific user ID pass, look for logged in user object
 	if ( empty( $user_id ) ) {
@@ -111,15 +121,45 @@ function gmw_get_user_location( $user_id = 0 ) {
 	}
 
 	// get user location from database
-	return gmw_get_location( 'user', $user_id );
+	return gmw_get_location_by_object( 'user', $user_id );
 }
 
 /**
- * get the user location meta from database
+ * Get all locations of a user.
+ *
+ * @since 3.2
+ * 
+ * @param  integer $post_id [description]
+ * 
+ * @return object of locations.
+ */
+function gmw_get_user_locations( $user_id = 0 ) {
+
+	// if no specific user ID pass, look for logged in user object
+	if ( empty( $user_id ) ) {
+
+		// try to get user ID
+		$user_id = gmw_try_get_user_id();
+
+		// abort if no user ID
+		if ( empty( $user_id ) ) {
+			return false;
+		}
+	}
+
+	// get user's locations from database
+	return GMW_Location::get_locations_by_object( 'user', $user_id );
+}
+
+/**
+ * Get user's location meta from database.
  *
  * @since 3.0
  *
- * @param  boolean $post_id [description]
+ * @param  integer $user_id the user ID.
+ *
+ * @param  mixed $meta_keys string of a single or array of multiple meta keys to retrive their values.
+ * 
  * @return [type]           [description]
  */
 function gmw_get_user_location_meta( $user_id = 0, $meta_keys = array() ) {
@@ -143,7 +183,7 @@ function gmw_get_user_location_meta( $user_id = 0, $meta_keys = array() ) {
 /**
  * get the user location data from database
  *
- * This function returns locations data and user data such as user name, displya name , email...
+ * This function returns locations data and user data such as user name, displya name, email...
  *
  * The function also verify that the user exists in database. That is in case
  *
@@ -151,7 +191,7 @@ function gmw_get_user_location_meta( $user_id = 0, $meta_keys = array() ) {
  *
  * @since 3.0
  * 
- * @param  boolean $post_id user ID
+ * @param  boolean $user_id user ID
  *
  * @return object  user data + location
  *
@@ -161,69 +201,35 @@ function gmw_get_user_location_meta( $user_id = 0, $meta_keys = array() ) {
  *
  * is changed as well. Not only when location is modified.
  */
-function gmw_get_user_location_data( $args = array(), $output = OBJECT, $cache = true ) {
+function gmw_get_user_location_data( $id = 0, $by_location_id = false ) {
 
-	// verify variables when passing an array.
-	if ( is_array( $args ) ) {
+	$fields = implode( ',', apply_filters( 'gmw_get_user_location_data_fields', array(
+		'gmw.ID',
+		'gmw.latitude',
+		'gmw.longitude',
+		'gmw.latitude as lat',
+		'gmw.longitude as lng',
+		'gmw.address',
+		'gmw.formatted_address',
+		'gmw.street_number',
+		'gmw.street_name',
+		'gmw.street',
+		'gmw.city',
+		'gmw.region_code',
+		'gmw.region_name',
+		'gmw.postcode',
+		'gmw.country_code',
+		'gmw.country_name',
+		'featured',
+		'users.ID as user_id',
+		'users.user_login',
+		'users.user_nicename',
+		'users.display_name',
+		'users.user_email',
+		'users.user_registered',
+		'users.user_status',
+	), $id, $by_location_id ) );
 
-		if ( empty( $args['id'] ) ) {
-			
-			$id    = 0;
-			$field = 'object_id';
-
-		} else {
-
-			$id = $args['id'];
-
-			if ( empty( $args['field'] ) ) {
-				$field = 'object_id';
-			} else {
-				$field = $args['field'];
-			}
-		}
-
-	// when not in array, we will use the value
-	// as the user ID by deafult.
-	} else {
-
-		$id    = $args;
-		$field = 'object_id';
-	}
-
-	// the fields to output.
-	if ( empty( $fields ) ) {
-
-		$fields = array(
-			'gmw.ID',
-			'gmw.latitude',
-			'gmw.longitude',
-			'gmw.latitude as lat',
-			'gmw.longitude as lng',
-			'gmw.address',
-			'gmw.formatted_address',
-			'gmw.street_number',
-			'gmw.street_name',
-			'gmw.street',
-			'gmw.city',
-			'gmw.region_code',
-			'gmw.region_name',
-			'gmw.postcode',
-			'gmw.country_code',
-			'gmw.country_name',
-			'featured',
-			'users.ID as user_id',
-			'users.user_login',
-			'users.user_nicename',
-			'users.display_name',
-			'users.user_email',
-			'users.user_registered',
-			'users.user_status',
-		);
-	}
-
-	$fields = implode( ',', apply_filters( 'gmw_get_user_location_data_fields', $fields, $id, $args ) );
-
-	// if no specific user ID pass, look for logged in user object
 	if ( empty( $id ) ) {
 
 		// try to get user ID
@@ -233,194 +239,154 @@ function gmw_get_user_location_data( $args = array(), $output = OBJECT, $cache =
 		if ( empty( $id ) ) {
 			return;
 		}
+
+		$by_location_id = false;
 	}
-
-	/*if ( 'location_id' === $field ) {
-		$location = $cache ? wp_cache_get( $id, 'gmw_location_data' ) : false;
-	} else {
-		$location = $cache ? wp_cache_get( $id, 'gmw_users_location_data' ) : false;
-	}*/
-
-	//if ( false === $location ) {
-
-		global $wpdb;
-
-		$gmw_table  = $wpdb->base_prefix . 'gmw_locations';
-		$user_table = $wpdb->base_prefix . 'users';
-
-		// Escape fields.
-		$fields = esc_sql( $fields );
-
-		// Get location by location ID, when specified.
-		if ( 'location_id' === $field ) {
-
-			// Get location from database.
-			$location_data = $wpdb->get_row(
-				$wpdb->prepare( "
-	                SELECT     $fields
-	                FROM       $gmw_table  gmw
-	                INNER JOIN $user_table users
-	                ON         gmw.object_id = users.ID
-	                WHERE      gmw.object_type = 'user'
-	                AND        gmw.ID = %d
-	            ", $id
-				),
-				OBJECT
-			);
-
-			//if ( ! empty( $location ) ) {
-			//	wp_cache_set( $location->ID, $location, 'gmw_location_data' );
-			//}
-
-		// otherwise, get locations by user ID.
-		} else {
-
-			$sql = $wpdb->prepare( "
-                SELECT     $fields
-                FROM       $gmw_table  gmw
-                INNER JOIN $user_table users
-                ON         gmw.object_id = users.ID
-                WHERE      gmw.object_type = 'user'
-                AND        gmw.object_id = %d
-            ", $id
-			);
-
-			// Get all user's locations.
-			if ( $field === 'all' ) {
-				$location_data = $wpdb->get_results( $sql, OBJECT );
-
-			// get a single location.
-			} else {
-				$location_data = $wpdb->get_row( $sql, OBJECT );
-			}
-
-			// save to cache if location found
-			/*if ( ! empty( $location ) ) {
-				wp_cache_set( $user_id, $location, 'gmw_users_location_data' );
-				wp_cache_set( $location->ID, $location, 'gmw_location_data' );
-			}*/
-		}
-	//}
-
-	// if no location found
-	if ( empty( $location_data ) ) {
-		return null;
-	}
-
-	// convert to array if needed. Only when single location returned.
-	if ( $field !== 'all' ) {
-		if ( ARRAY_A == $output || ARRAY_N == $output ) {
-			$location_data = gmw_to_array( $location_data, $output );
-		}
-	}
-
-	return $location_data;
-}
-
-/**
- * Delete user location
- *
- * @since 3.0
- *
- * @param  [type] $post_id [description]
- * @return [type]          [description]
- */
-function gmw_delete_user_location( $user_id = 0, $delete_meta = true ) {
-
-	if ( empty( $user_id ) ) {
-		return;
-	}
-
-	do_action( 'gmw_before_user_location_deleted', $user_id );
-
-	gmw_delete_location( 'user', $user_id, $delete_meta );
-
-	do_action( 'gmw_after_user_location_deleted', $user_id );
-}
-
-/**
- * Delete user from GEO my WP database when user deleted from WordPress
- *
- * @since 3.0
- *
- * @param  int $user_id user ID
- * @return [type]          [description]
- */
-function gmw_delete_user_location_action( $user_id ) {
-	gmw_delete_user_location( $user_id, true );
-}
-add_action( 'delete_user', 'gmw_delete_user_location_action' );
-
-/**
- * Change user location status
- *
- * @since 3.0
- *
- * @param  integer $post_id [description]
- * @param  integer $status  [description]
- * @return [type]           [description]
- */
-function gmw_user_location_status( $user_id = 0, $status = 1 ) {
-
-	$status = ( 1 == $status ) ? 1 : 0;
 
 	global $wpdb;
 
-	$wpdb->query(
-		$wpdb->prepare( "
-            UPDATE {$wpdb->prefix}gmw_locations 
-			SET   `status`      = $status 
-            WHERE `object_type` = 'user' 
-            AND   `object_id`   = %d",
-			array( $user_id )
-		)
+	$gmw_table   = $wpdb->base_prefix . 'gmw_locations';
+	$users_table = $wpdb->base_prefix . 'users';
+
+	if ( ! $by_location_id ) {
+
+		$sql = $wpdb->prepare( "
+            SELECT     $fields
+            FROM       $gmw_table  gmw
+            INNER JOIN $users_table users
+            ON         gmw.object_id   = users.ID
+            WHERE      gmw.object_type = 'user'
+            AND        gmw.object_id   = %d
+        ", $id
+		);
+
+	} else {
+
+		$sql = $wpdb->prepare( "
+            SELECT     $fields
+            FROM       $gmw_table  gmw
+            INNER JOIN $users_table users
+            ON         gmw.object_id = users.ID
+            WHERE      gmw.object_type = 'user'
+            AND        gmw.ID = %d
+        ", $id
+       	);
+	}
+
+	$location_data = $wpdb->get_row( $sql, OBJECT );	
+
+	return ! empty( $location_data ) ? $location_data : false;
+}
+
+/**
+ * Get user data and user locations data from database.
+ *
+ * The function returns all the locations of a specific user and the user object.
+ *
+ * @since 3.2
+ *
+ * @param integer $post_id
+ *
+ * @return array(
+ *     'locations' => array of all the user's locations,
+ *     'user'      => the user object  
+ * );
+ */
+function gmw_get_user_locations_data( $user_id = 0 ) {
+
+	if ( empty( $user_id ) ) {
+
+		// try to get user ID
+		$user_id = gmw_try_get_user_id();
+
+		// abort if no user ID
+		if ( empty( $user_id ) ) {
+			return;
+		}
+	}
+
+	$user = get_userdata( $user_id );
+
+	if ( empty( $user ) ) {
+		return false;
+	}
+
+	$locations = GMW_Location::get_locations_by_object( 'user', $user_id );
+
+	return empty( $locations ) ? false : array(
+		'locations' => $locations,
+		'user'      => $user,
 	);
 }
 
 /**
- * Get a specific or all user address fields
+ * Get specific user address fields
  *
  * @since 3.0
  *
- * @param  array  $args [description]
- * @return [type]       [description]
+ * @param  array $args array( 
+ *     'location_id' => 0, 					 // when getting a specifc location by its ID.
+ *     'user_id'     => 0,                   // When getting the default location of a user using the user ID.
+ *     'fields'      => 'formatted_address', // address fields comma separated
+ *     'separator'   => ', ',                // Separator between fields.
+ *     'output'	     => 'string'             // output type ( object, array or string ).
+ * );
+ * 
+ * @return Mixed object || array || string 
+ * 
  */
 function gmw_get_user_address( $args = array() ) {
 
 	// to support older versions. should be removed in the future
-	if ( empty( $args['fields'] ) && ! empty( $args['info'] ) ) {
+	/*if ( empty( $args['fields'] ) && ! empty( $args['info'] ) ) {
 
 		trigger_error( 'The "info" shortcode attribute of the shortcode [gmw_member_address] is deprecated since GEO my WP version 3.0. Please use the shortcode attribute "fields" instead.', E_USER_NOTICE );
 
 		$args['fields'] = $args['info'];
-	}
-
-	//default shortcode attributes
-	$attr = shortcode_atts(
-		array(
-			'user_id'   => 0,
-			'fields'    => 'formatted_address',
-			'separator' => ', ',
-		), $args
-	);
+	}*/
 
 	// if no specific user ID pass, look for logged in user ID
-	if ( empty( $attr['user_id'] ) ) {
-
-		// try to get user ID
-		$attr['user_id'] = gmw_try_get_user_id();
+	if ( empty( $args['location_id'] ) ) {
+		$args['object_type'] = 'user';
+	 	$args['object_id']   = ! empty( $args['user_id'] ) ? $args['user_id'] : gmw_try_get_user_id();
 	}
 
-	$fields = explode( ',', $attr['fields'] );
-
-	// get post address fields
-	return gmw_get_address_fields( 'user', $attr['user_id'], $fields, $attr['separator'] );
+	// get user address fields
+	return gmw_get_address_fields( $args );
 }
 add_shortcode( 'gmw_user_address', 'gmw_get_user_address' );
 
 function gmw_user_address( $args = array() ) {
 	echo gmw_get_user_address( $args );
 }
+
+/**
+ * Get location or location meta fields of a user.
+ *
+ * @since 3.0.2
+ *
+ * @param  array $args array( 
+ *     'location_id'   => 0, 				   // when getting a specifc location by its ID.
+ *     'user_id'       => 0,                   // When getting the default location of a user using the user ID.
+ *     'fields'        => 'formatted_address', // location or meta fields, comma separated.
+ *     'separator'     => ', ',                // Separator between fields.
+ *     'location_meta' => 0                    // Set to 1 when the fields argument is location meta.
+ *     'output'	 	   => 'string'	 		   // object || array || string
+ * );
+ * 
+ * @return Mixed object || array || string 
+ * 
+ */
+function gmw_get_user_location_fields( $args = array() ) {
+
+	if ( empty( $args['location_id'] ) ) {
+		$args['object_type'] = 'user';
+	 	$args['object_id']   = ! empty( $args['user_id'] ) ? $args['user_id'] : gmw_try_get_user_id();
+	}
+
+	return gmw_get_location_fields( $args );
+}
+add_shortcode( 'gmw_user_location_fields', 'gmw_get_user_location_fields' );
 
 /**
  * Update user location.
@@ -449,18 +415,27 @@ function gmw_user_address( $args = array() ) {
  *     'lat' => 26.1345,
  *     'lng' => -80.4362
  * );
- *
+ * 
+ * @param  string  $location_name name of the location ( optional )
+ * 
  * @param  boolean $force_refresh false to use geocoded address in cache || true to force address geocoding
  *
  * @return int location ID
  */
-function gmw_update_user_location( $user_id = 0, $location = array(), $force_refresh = false ) {
+function gmw_update_user_location( $user_id = 0, $location = array(), $location_name = '', $force_refresh = false ) {
 
 	if ( ! gmw_is_user_exists( $user_id ) ) {
 		return;
 	}
 
-	return gmw_update_location( 'user', $user_id, $location, $user_id, $force_refresh );
+	$args = array(
+		'object_type'   => 'user',
+		'object_id'     => $user_id,
+		'location_name' => $location_name,
+		'user_id'       => $user_id,
+	);
+
+	return gmw_update_location( $args, $location, $force_refresh );
 }
 
 /**
@@ -490,4 +465,64 @@ function gmw_update_user_location_meta( $user_id = 0, $metadata = array(), $meta
 	}
 
 	gmw_update_location_metas( $location_id, $metadata, $meta_value );
+}
+
+/**
+ * Delete user location
+ *
+ * @since 3.0
+ *
+ * @param  [type] $user_id [description]
+ * @return [type]          [description]
+ */
+function gmw_delete_user_location( $user_id = 0, $delete_meta = true ) {
+
+	if ( empty( $user_id ) ) {
+		return;
+	}
+
+	do_action( 'gmw_before_user_location_deleted', $user_id );
+
+	gmw_delete_location_by_object( 'user', $user_id, $delete_meta );
+
+	do_action( 'gmw_after_user_location_deleted', $user_id );
+}
+
+/**
+ * Delete user from GEO my WP database when user deleted from WordPress
+ *
+ * @since 3.0
+ *
+ * @param  int $user_id user ID
+ * @return [type]          [description]
+ */
+function gmw_delete_user_location_action( $user_id ) {
+	gmw_delete_user_location( $user_id, true );
+}
+add_action( 'delete_user', 'gmw_delete_user_location_action' );
+
+/**
+ * Change user location status
+ *
+ * @since 3.0
+ *
+ * @param  integer $user_id [description]
+ * @param  integer $status  [description]
+ * @return [type]           [description]
+ */
+function gmw_user_location_status( $user_id = 0, $status = 1 ) {
+
+	$status = ( 1 == $status ) ? 1 : 0;
+
+	global $wpdb;
+
+	$wpdb->query(
+		$wpdb->prepare( "
+            UPDATE {$wpdb->prefix}gmw_locations 
+			SET   `status`      = $status 
+            WHERE `object_type` = 'user' 
+            AND   `object_id`   = %d",
+			array( $user_id )
+		)
+	);
 }
