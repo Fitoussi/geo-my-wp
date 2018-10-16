@@ -160,14 +160,36 @@ class GMW_Geocoder {
 
 		$url_type = $this->type . '_url';
 
-		return apply_filters(
-			'gmw_geocoder_endpoint_url', array(
-				'url_base' => $this->$url_type . '?',
-				'url_data' => http_build_query(
-					apply_filters( 'gmw_geocoder_endpoint_params', $this->params )
-				),
-			)
+		// can modify the URL params.
+		$args = apply_filters( 'gmw_geocoder_endpoint_args',
+			array(
+				'url_base'   => $this->$url_type . '?',
+				'url_params' => $this->params
+			), $this		
 		);
+
+		// deprecated. Will be removed in the future.
+		$args = apply_filters( 'gmw_geocoder_endpoint_url', $args, $this );
+
+		// url encode params values.
+		$params = array_map( 'rawurlencode', $args['url_params'] );
+		$url    = $args['url_base'];
+	
+		/** 
+		 * if region exists, lets place it at the beggining of the array.
+		 *
+		 * We do this tp prevnt the &region renders as ®ion and break the URL.
+		 *
+		 * This solution should work until we find a less hacky one.
+		 */
+		if ( array_key_exists( 'region', $params ) ) {
+
+			$url .= 'region=' . $params['region'] .'&';
+
+			unset( $params['region'] );
+		}
+
+		return $url . http_build_query( $params );
 	}
 
 	/**
@@ -211,14 +233,13 @@ class GMW_Geocoder {
 		// look for geocoded location in cache
 		$address_hash    = md5( $this->location );
 		$location_output = get_transient( 'gmw_geocoded_' . $address_hash );
+		$location_output = apply_filters( 'gmw_transient_location_output', $location_output, $address_hash );
 
 		// if no location found in cache or if forced referesh try to geocode
 		if ( true == $force_refresh || false === $location_output ) {
 
-			// Get endpoint URL.
-			$url = implode( '', $this->get_endpoint_url() );
-
-			$result = wp_remote_get( $url );
+			// get data from the provider.
+			$result = wp_remote_get( $this->get_endpoint_url() );
 
 			// abort if remote connection failed.
 			if ( is_wp_error( $result ) ) {
@@ -261,7 +282,7 @@ class GMW_Geocoder {
 						}
 
 						// hook after geocoding
-						do_action( 'gmw_geocoded_location', $response['result'], $response );
+						do_action( 'gmw_geocoded_location', $response['result'], $response, $address_hash );
 
 						// cache location for 3 months
 						set_transient( 'gmw_geocoded_' . $address_hash, $response['result'], 365 * DAY_IN_SECONDS );
@@ -293,7 +314,7 @@ class GMW_Geocoder {
 			}
 		}
 
-		return $location_output;
+		return apply_filters( 'gmw_geocoded_location_output', $location_output, $response, $address_hash );
 	}
 
 	/**
