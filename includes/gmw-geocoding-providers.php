@@ -49,16 +49,18 @@ class GMW_Google_Maps_Geocoder extends GMW_Geocoder {
 	public function get_endpoint_url() {
 
 		$china = gmw_get_option( 'api_providers', 'google_maps_api_china', '' );
-		$url   = empty( $china ) ? $this->geocode_url : 'https://maps.google.cn/maps/api/geocode/json';
 
-		return apply_filters(
-			'gmw_google_maps_api_geocoder_url', array(
-				'url_base' => $url . '?',
-				'url_data' => http_build_query(
-					apply_filters( 'gmw_google_maps_api_geocoder_args', $this->params )
-				),
-			)
-		);
+		if ( '' !== $china ) {
+			$this->geocode_url = 'https://maps.google.cn/maps/api/geocode/json';
+		}
+
+		// deprecated filer.
+		$this->params = apply_filters( 'gmw_google_maps_api_geocoder_args', $this->params );
+
+		// url encode params values.
+		$this->params = array_map( 'urlencode', $this->params );
+		
+		return parent::get_endpoint_url();
 	}
 
 	/**
