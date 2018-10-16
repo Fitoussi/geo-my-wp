@@ -387,7 +387,12 @@ class GMW_Maps_API {
 		// enable jQuery ui draggable for popup info-windows
 		//if ( $map_args['info_window_ajax'] && $map_args['draggable_window'] ) {
 		if ( 'popup' == $map_element['settings']['info_window_type'] ) {
+			
 			self::$draggable_window = true;
+
+			if ( ! empty( $form['info_window']['ajax_enabled'] ) && ! empty( $form['info_window']['directions_system'] ) ) {
+				self::$directions = true;
+			}
 		}
 
 		// Only maps that need to be rendered on page load go into the global.
@@ -532,7 +537,6 @@ class GMW_Maps_API {
 
 		// modify the directions argumentes
 		$args = apply_filters( 'gmw_directions_form_args', $args, $defaults );
-
 		$args = wp_parse_args( $args, $defaults );
 
 		// check for origin in args. If not exists check for user's current position as origin
@@ -695,9 +699,13 @@ class GMW_Maps_API {
 	 */
 	public static function get_directions_system( $args = array() ) {
 
-		$output  = "<div id=\"gmw-directions-wrapper-{$id}\" class=\"gmw-directions-wrapper\">";
+		if ( empty( $args['element_id'] ) ) {
+			$args['element_id'] = rand( 100, 549 );
+		}
+		
+		$output  = "<div id=\"gmw-directions-wrapper-{$args['element_id']}\" class=\"gmw-directions-wrapper\">";
 		$output .= self::get_directions_form( $args );
-		$output .= self::get_directions_panel( $args['element_id'] = 0 );
+		$output .= self::get_directions_panel( $args['element_id'] );
 		$output .= '</div>';
 
 		return $output;
