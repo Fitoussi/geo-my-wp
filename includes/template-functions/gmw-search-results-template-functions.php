@@ -157,10 +157,15 @@ function gmw_search_results_directions_link( $object, $gmw = array() ) {
  * @param  [type] $gmw [description]
  * @return [type]      [description]
  */
-function gmw_search_results_directions_system( $gmw ) {
+function gmw_search_results_directions_system( $object, $gmw = array() ) {
 
-    $args = array( 'id' => absint( $gmw['ID'] ) );
-    
+    $args = array( 
+    	'element_id'  => absint( $gmw['ID'] ),
+    	'origin'      => ! empty( $gmw['form_values']['address'] ) ? implode( ' ', $gmw['form_values']['address'] ) : '',
+    	'destination' => ! empty( $object->address ) ? $object->address : '',
+    	'units'       => ! empty( $gmw['form_values']['units'] ) ? $gmw['form_values']['units'] : ''
+    );
+    	
     echo gmw_get_directions_system( $args );
 }
 
