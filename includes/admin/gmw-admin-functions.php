@@ -6,11 +6,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Update addon_data
- * 
+ *
  * @param  [type] $addon [description]
  * @return [type]        [description]
  */
-/*function gmw_update_addon_data( $addon ) {
+/*
+function gmw_update_addon_data( $addon ) {
 
 	if ( empty( $addon ) ) {
 		return;
@@ -43,51 +44,54 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @author Eyal Fitoussi
  */
 function gmw_output_admin_notices() {
-		
-	//check if notice exist
+
+	// check if notice exist
 	if ( empty( $_GET['gmw_notice'] ) && empty( $_POST['gmw_notice'] ) ) {
 		return;
 	}
-	
-	$gmw_messages = apply_filters( 'gmw_admin_notices_messages', array( 
-		'posts_db_table_updated'   => __( 'GEO my WP posts locations db table successfully updated.', 'geo-my-wp' ),
-		'members_db_table_updated' => __( 'GEO my WP members locations db table successfully updated.', 'geo-my-wp' ),
-		'tracking_allowed'		   => __( 'Thank you for helping us improve GEO my WP.', 'geo-my-wp' )
-	) );
-	
+
+	$gmw_messages = apply_filters(
+		'gmw_admin_notices_messages',
+		array(
+			'posts_db_table_updated'   => __( 'GEO my WP posts locations db table successfully updated.', 'geo-my-wp' ),
+			'members_db_table_updated' => __( 'GEO my WP members locations db table successfully updated.', 'geo-my-wp' ),
+			'tracking_allowed'         => __( 'Thank you for helping us improve GEO my WP.', 'geo-my-wp' ),
+		)
+	);
+
 	$notice_type   = isset( $_GET['gmw_notice'] ) ? $_GET['gmw_notice'] : $_POST['gmw_notice'];
 	$notice_status = isset( $_GET['gmw_notice_status'] ) ? $_GET['gmw_notice_status'] : $_POST['gmw_notice_status'];
-	
+
 	$allowed = array(
-		'a'  => array( 
+		'a'  => array(
 			'title' => array(),
-			'href'  => array()
+			'href'  => array(),
 		),
 		'p'  => array(),
-		'em' => array()
+		'em' => array(),
 	);
 	?>
-    <div class="<?php echo $notice_status;?>">
-    	<p><?php echo isset( $gmw_messages[$notice_type] ) ? wp_kses( $gmw_messages[$notice_type], $allowed ) : ''; ?></p>
-    </div>
+	<div class="<?php echo $notice_status; ?>">
+		<p><?php echo isset( $gmw_messages[ $notice_type ] ) ? wp_kses( $gmw_messages[ $notice_type ], $allowed ) : ''; ?></p>
+	</div>
 	<?php
-	    	 		
+
 }
 add_action( 'admin_notices', 'gmw_output_admin_notices' );
 
 /**
  * Generate link to update plugins page
- * 
+ *
  * @param  [type] $basename [description]
  * @return [type]           [description]
  */
 function gmw_get_update_addon_link( $basename ) {
-    return '<a href="'.admin_url( 'plugins.php' ).'#'.esc_attr( strtolower( preg_replace('/[-]+/i', '-', str_replace( ' ', '-', $basename ) ) ) ).'" title="Plugins Page" style="color:white;text-decoration: underline"><i class="fa fa-refresh"></i>  Update now</a>';
+	return '<a href="' . admin_url( 'plugins.php' ) . '#' . esc_attr( strtolower( preg_replace( '/[-]+/i', '-', str_replace( ' ', '-', $basename ) ) ) ) . '" title="Plugins Page" style="color:white;text-decoration: underline"><i class="fa fa-refresh"></i>  Update now</a>';
 }
 
 /**
  * Insert location into wp_places_locator table. Table will be updated with data only if location doesnt exist
- * 
+ *
  * @since 2.5
  * @author Eyal Fitoussi
  * @param unknown_type $location
@@ -99,10 +103,10 @@ function gmw_insert_pt_location_to_db( $location ) {
 
 	//check if location already exist in database
 	$check_location = $wpdb->get_col( "SELECT `post_id` FROM `{$wpdb->prefix}places_locator` WHERE `post_id` = {$location['post_id']}", 0 );
-	
+
 	//insert location only if not already exist
 	if ( empty( $check_location ) ) {
-		
+
 		$data = $wpdb->query( $wpdb->prepare(
 			"INSERT INTO `{$wpdb->prefix}places_locator`
 			( `post_id`, `feature`, `post_status`, `post_type`, `post_title`, `lat`,
@@ -133,7 +137,7 @@ function gmw_insert_pt_location_to_db( $location ) {
 				$location['website'],
 				$location['map_icon']
 		) ));
-		
+
 		return $data;
 	} else {
 		return false;
@@ -142,7 +146,7 @@ function gmw_insert_pt_location_to_db( $location ) {
 */
 
 /**
- * replace location in wp_places_locator table. If not exist, data will be insert into table. 
+ * replace location in wp_places_locator table. If not exist, data will be insert into table.
  * Otherwise if exists the old data will be replaced with the new one.
  *
  * @since 2.5
@@ -154,7 +158,7 @@ function gmw_replace_pt_location_in_db( $location ) {
 
 	global $wpdb;
 
-	$wpdb->replace( $wpdb->prefix . 'places_locator', 
+	$wpdb->replace( $wpdb->prefix . 'places_locator',
 		array(
 			'post_id'           => $location['post_id'],
 			'feature'           => $location['feature'],
@@ -178,7 +182,7 @@ function gmw_replace_pt_location_in_db( $location ) {
 			'phone'             => $location['phone'],
 			'fax'               => $location['fax'],
 			'email'             => $location['email'],
-			'website'           => $location['website'],			
+			'website'           => $location['website'],
 			'map_icon'          => $location['map_icon'],
 		)
 	);
@@ -187,22 +191,24 @@ function gmw_replace_pt_location_in_db( $location ) {
 
 function gmw_get_post_types_array() {
 
-    $output = array();
-    
-    foreach ( get_post_types() as $post ) {
-        $output[$post] = get_post_type_object( $post )->labels->name . ' ( '.$post.' )';
-    }
+	$output = array();
 
-    return $output;
+	foreach ( get_post_types() as $post ) {
+		$output[ $post ] = get_post_type_object( $post )->labels->name . ' ( ' . $post . ' )';
+	}
+
+	return $output;
 }
 
 /**
  * GEO my WP top credits
+ *
  * @return [type] [description]
  */
 function gmw_admin_helpful_buttons() {
-	
-	if ( ! empty( $_GET['page'] ) && $_GET['page'] != 'gmw-forms' ) { ?>
+
+	if ( ! empty( $_GET['page'] ) && $_GET['page'] != 'gmw-forms' ) {
+		?>
 		<span style="font-size:14px;margin-right:5px;"> - <?php echo sprintf( __( 'GEO my WP developed by %s', 'geo-my-wp' ), 'Eyal Fitoussi' ); ?></span>
 		<a class="button action gmw-donate" title="Donate to GEO my WP" href="https://www.paypal.me/fitoussi" target="_blank"><i style="color:red;margin-right:4px;" class="gmw-icon-heart"></i><?php _e( 'Donate', 'geo-my-wp' ); ?></a>
 	<?php } ?>
