@@ -74,8 +74,17 @@ class GMW_Form_Settings_Helper {
             $current_tax = $terms[0]->taxonomy;
                     
             foreach ( $terms as $term ) {   
+
                 $selected = ( ! empty( $values ) && in_array( $term->$field, $values ) ) ? 'selected="selected"' : '';
-                echo '<option value="'.$term->$field.'" '.$selected.' >'.$term->name.'</option>';
+                
+                $term_id = esc_attr( $term->$field );
+     			$label   = esc_attr( $term->name );
+
+     			if ( IS_ADMIN ) {
+     				$label .= ' ( ID ' . $term_id . ' )';
+     			}
+
+                echo '<option value="' . $term_id . '" ' . $selected.' >' . $label . '</option>';
             }
 
         } else {
@@ -94,10 +103,17 @@ class GMW_Form_Settings_Helper {
                     
                     echo '</optgroup>';
                     $current_tax = $term->taxonomy;
-                    echo '<optgroup label="'.$term->taxonomy.'">';
+                    echo '<optgroup label="'. esc_attr( $term->taxonomy ).'">';
                 }
                 
-                echo '<option value="'.$term->term_taxonomy_id.'" '.$selected.' >'.$term->slug.'</option>';
+                $term_id = esc_attr( $term->term_taxonomy_id );
+     			$label   = esc_attr( $term->slug );
+
+     			if ( IS_ADMIN ) {
+     				$label .= ' ( ID ' . $term_id . ' )';
+     			}
+
+                echo '<option value="' . $term_id . '" ' . $selected . ' >' . $label . '</option>';
             }
         }
     }
