@@ -36,28 +36,15 @@ class GMW_Single_Post_Location extends GMW_Single_Location {
 	);
 
 	/**
-	 * @since 2.6.1
+	 * Trt and get post ID if missing.
 	 * 
-	 * Public $location_data
-	 * 
-	 * get the post location information from database
+	 * @return [type] [description]
 	 */
-	public function location_data() {
-	
-		//check if user entered post id
-		if ( empty( $this->args['object_id'] ) ) {
-	
-			$this->args['object_id'] = get_queried_object_id();
-	
-			if ( empty( $this->args['object_id'] ) ) {
-				return;
-			}
-		}
-		
-		// get the post's location data
-		$location_data = gmw_get_post_location_data( $this->args['object_id'] );
-		
-		return $location_data;
+	public function get_object_id() {
+
+		$object_id = get_queried_object_id();
+
+		return ! empty( $object_id  ) ? $object_id : false;
 	}
 		
 	/**
@@ -66,10 +53,11 @@ class GMW_Single_Post_Location extends GMW_Single_Location {
 	 * @return [type] [description]
 	 */
 	public function title() {
-		$title     = ! empty( $this->location_data->post_title ) ? $this->location_data->post_title : get_the_title( $this->args['object_id'] ) ;
+
+		$title     = get_the_title( $this->args['object_id'] );
 		$permalink = get_the_permalink( $this->args['object_id'] );
 		
-		return apply_filters( 'gmw_sl_title', "<h3 class=\"gmw-sl-title post-title gmw-sl-element\"><a href=\"{$permalink}\" title=\"{$title}\"'>{$title}</a></h3>", $this->location_data, $this->args, $this->user_position );
+		return apply_filters( 'gmw_sl_title', "<h3 class=\"gmw-sl-title post-title gmw-sl-element\"><a href=\"{$permalink}\" title=\"{$title}\"'>{$title}</a></h3>", $this->location_data, $this->args, $this->user_position, $this );
 	}
 }
 
