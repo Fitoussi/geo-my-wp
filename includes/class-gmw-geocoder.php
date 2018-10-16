@@ -171,8 +171,8 @@ class GMW_Geocoder {
 		// deprecated. Will be removed in the future.
 		$args = apply_filters( 'gmw_geocoder_endpoint_url', $args, $this );
 
-		// url encode params values.
-		$params = array_map( 'rawurlencode', $args['url_params'] );
+		// remove any extra spaces from parameters.
+		$params = array_map( 'trim', $args['url_params'] );
 		$url    = $args['url_base'];
 	
 		/** 
