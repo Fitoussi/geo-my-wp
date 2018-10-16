@@ -152,14 +152,26 @@ function gmw_info_window_directions_link( $object, $gmw = array() ) {
  * @param  [type] $gmw [description]
  * @return [type]      [description]
  */
-function gmw_info_window_directions_system( $gmw ) {
+function gmw_info_window_directions_system( $object, $gmw = array() ) {
+
+	// to support custom templates that have $gmw as first
+	// argument and do no have $object.
+	if ( empty( $gmw ) ) {
+		$gmw    = $object;
+		$object = new stdClass();
+	}
 
     if ( ! $gmw['info_window']['directions_system'] ){
         return;
     }
 
-    $args = array( 'id' => absint( $gmw['ID'] ) );
-    
+    $args = array( 
+    	'element_id'  => absint( $gmw['ID'] ),
+    	'origin'      => ! empty( $gmw['form_values']['address'] ) ? implode( ' ', $gmw['form_values']['address'] ) : '',
+    	'destination' => ! empty( $object->address ) ? $object->address : '',
+    	'units'       => ! empty( $gmw['form_values']['units'] ) ? $gmw['form_values']['units'] : ''
+    );
+    	
     echo gmw_get_directions_system( $args );
 }
 
