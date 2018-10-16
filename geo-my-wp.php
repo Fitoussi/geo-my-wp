@@ -3,7 +3,7 @@
  * Plugin Name: GEO my WP
  * Plugin URI: http://www.geomywp.com
  * Description: GEO my WP is an adavanced geolocation, mapping, and proximity search plugin. Geotag post types and BuddyPress members, and create advanced, proximity search forms to search and find locations based on address, radius, categories and more.
- * Version: 3.1
+ * Version: 3.1.0.1
  * Author: Eyal Fitoussi
  * Author URI: http://www.geomywp.com
  * Requires at least: 4.5
@@ -30,7 +30,7 @@ class GEO_MY_WP {
 	 *
 	 * @var string
 	 */
-	public $version = '3.1';
+	public $version = '3.1.0.1';
 
 	/**
 	 * GEO my WP & Extensions options.
@@ -169,6 +169,15 @@ class GEO_MY_WP {
 	public $addons = array();
 
 	/**
+	 * Licenses data.
+	 *
+	 * Needed in admin only.
+	 *
+	 * @var array
+	 */
+	public $licenses_data = array();
+
+	/**
 	 * Current Form being loaded.
 	 *
 	 * @var array
@@ -183,10 +192,10 @@ class GEO_MY_WP {
 	public function set_default_icons() {
 		$this->default_icons = array(
 			'shadow_icon_url'         => 'https://unpkg.com/leaflet@1.3.1/dist/images/marker-shadow.png',
-			//'location_icon_url'     => 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+			// 'location_icon_url'     => 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
 			'location_icon_url'       => GMW_IMAGES . '/marker-icon-red-2x.png',
 			'location_icon_size'      => array( 25, 41 ),
-			//'user_location_icon_url'=> 'https://unpkg.com/leaflet@1.3.1/dist/images/marker-icon-2x.png',
+			// 'user_location_icon_url'=> 'https://unpkg.com/leaflet@1.3.1/dist/images/marker-icon-2x.png',
 			'user_location_icon_url'  => GMW_IMAGES . '/marker-icon-blue-2x.png',
 			'user_location_icon_size' => array( 25, 41 ),
 		);
@@ -215,7 +224,7 @@ class GEO_MY_WP {
 
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof GEO_my_WP ) ) {
 
-			self::$instance = new GEO_my_WP;
+			self::$instance = new GEO_my_WP();
 			self::$instance->constants();
 
 			// run plugin installer once GEO my WP activated.
@@ -313,7 +322,7 @@ class GEO_MY_WP {
 	 */
 	public function install() {
 
-		include( 'includes/class-gmw-installer.php' );
+		include 'includes/class-gmw-installer.php';
 
 		GMW_Installer::init();
 
@@ -328,7 +337,7 @@ class GEO_MY_WP {
 		// check if version changed.
 		if ( version_compare( GMW_VERSION, get_option( 'gmw_version' ), '>' ) ) {
 
-			include( 'includes/class-gmw-installer.php' );
+			include 'includes/class-gmw-installer.php';
 
 			GMW_Installer::init();
 
@@ -348,6 +357,10 @@ class GEO_MY_WP {
 		$gmw_options   = get_option( 'gmw_options' );
 		$this->options = $gmw_options;
 		$addons_status = get_option( 'gmw_addons_status' );
+
+		if ( IS_ADMIN ) {
+			$this->licenses_data = get_option( 'gmw_license_data' );
+		}
 
 		if ( empty( $addons_status ) ) {
 			$addons_status = array();
@@ -382,10 +395,10 @@ class GEO_MY_WP {
 		// set default icons.
 		$this->set_default_icons();
 
-		// verify geocoding provider.	
+		// verify geocoding provider.
 		if ( ! empty( $this->options['api_providers']['geocoding_provider'] ) ) {
 			$this->geocoding_provider = $this->options['api_providers']['geocoding_provider'];
-		} elseif ( 'google_maps' != $this->maps_provider ) {
+		} elseif ( 'google_maps' !== $this->maps_provider ) {
 			$this->geocoding_provider = 'nominatim';
 		}
 	}
@@ -398,36 +411,36 @@ class GEO_MY_WP {
 	public function includes() {
 
 		// include files.
-		include( 'includes/class-gmw-cache-helper.php' );
-		include( 'includes/class-gmw-helper.php' );
-		include( 'includes/class-gmw-forms-helper.php' );
-		include( 'includes/gmw-functions.php' );
-		include( 'includes/class-gmw-addon.php' );
-		include( 'includes/class-gmw-location-meta.php' );
-		include( 'includes/class-gmw-location.php' );
-		include( 'includes/gmw-location-functions.php' );
-		include( 'includes/gmw-user-location-functions.php' );
-		include( 'includes/class-gmw-maps-api.php' );
-		include( 'includes/gmw-deprecated-functions.php' );
-		include( 'includes/class-gmw-cron.php' );
-		include( 'includes/gmw-enqueue-scripts.php' );
-		include( 'includes/location-form/includes/class-gmw-location-form.php' );
-		include( 'includes/template-functions/class-gmw-search-form-helper.php' );
-		include( 'includes/template-functions/class-gmw-template-functions-helper.php' );
-		include( 'includes/template-functions/gmw-template-functions.php' );
-		include( 'includes/template-functions/gmw-search-form-template-functions.php' );
-		include( 'includes/template-functions/gmw-search-results-template-functions.php' );
-		include( 'includes/class-gmw-form.php' );
-		include( 'includes/gmw-shortcodes.php' );
-		include_once( 'includes/class-gmw-geocoder.php' );
-		include_once( 'includes/gmw-geocoding-providers.php' );
+		include 'includes/class-gmw-cache-helper.php';
+		include 'includes/class-gmw-helper.php';
+		include 'includes/class-gmw-forms-helper.php';
+		include 'includes/gmw-functions.php';
+		include 'includes/class-gmw-addon.php';
+		include 'includes/class-gmw-location-meta.php';
+		include 'includes/class-gmw-location.php';
+		include 'includes/gmw-location-functions.php';
+		include 'includes/gmw-user-location-functions.php';
+		include 'includes/class-gmw-maps-api.php';
+		include 'includes/gmw-deprecated-functions.php';
+		include 'includes/class-gmw-cron.php';
+		include 'includes/gmw-enqueue-scripts.php';
+		include 'includes/location-form/includes/class-gmw-location-form.php';
+		include 'includes/template-functions/class-gmw-search-form-helper.php';
+		include 'includes/template-functions/class-gmw-template-functions-helper.php';
+		include 'includes/template-functions/gmw-template-functions.php';
+		include 'includes/template-functions/gmw-search-form-template-functions.php';
+		include 'includes/template-functions/gmw-search-results-template-functions.php';
+		include 'includes/class-gmw-form.php';
+		include 'includes/gmw-shortcodes.php';
+		include_once 'includes/class-gmw-geocoder.php';
+		include_once 'includes/gmw-geocoding-providers.php';
 
 		// load core add-ons.
 		self::$instance->load_core_addons();
 
-		//include admin files.
+		// include admin files.
 		if ( IS_ADMIN ) {
-			include( GMW_PATH . '/includes/admin/class-gmw-admin.php' );
+			include GMW_PATH . '/includes/admin/class-gmw-admin.php';
 		}
 	}
 
@@ -451,8 +464,8 @@ class GEO_MY_WP {
 	 */
 	public function widgets_init() {
 
-		include( 'includes/class-gmw-widget.php' );
-		include( 'includes/widgets/class-gmw-search-form-widget.php' );
+		include 'includes/class-gmw-widget.php';
+		include 'includes/widgets/class-gmw-search-form-widget.php';
 	}
 
 	/**
@@ -470,11 +483,11 @@ class GEO_MY_WP {
 	 * Include core add-ons.
 	 */
 	private function load_core_addons() {
-		include( GMW_PLUGINS_PATH . '/single-location/loader.php' );
-		include( GMW_PLUGINS_PATH . '/posts-locator/loader.php' );
-		include( GMW_PLUGINS_PATH . '/members-locator/loader.php' );
-		include( GMW_PLUGINS_PATH . '/current-location/loader.php' );
-		include( GMW_PLUGINS_PATH . '/sweetdate-geolocation/loader.php' );
+		include GMW_PLUGINS_PATH . '/single-location/loader.php';
+		include GMW_PLUGINS_PATH . '/posts-locator/loader.php';
+		include GMW_PLUGINS_PATH . '/members-locator/loader.php';
+		include GMW_PLUGINS_PATH . '/current-location/loader.php';
+		include GMW_PLUGINS_PATH . '/sweetdate-geolocation/loader.php';
 	}
 
 	/**
