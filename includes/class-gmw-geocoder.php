@@ -334,6 +334,19 @@ class GMW_Geocoder {
 	 * @return [type]         [description]
 	 */
 	public function failed( $status, $data ) {
+			
+		// generate warning showing the error message when geocoder fails.
+		if ( 'ZERO_RESULTS' !== $status ) {
+
+			$message = $status;
+
+			if ( ! empty( $data->error_message ) ) {
+				$message .= ' - ' . $data->error_message;
+			}
+
+			trigger_error( 'GEO my WP geocoder failed. Error : ' . $message, E_USER_NOTICE );
+		}
+
 		return array(
 			'error'	=> $status,
 			'data'  => $data
