@@ -985,6 +985,39 @@ function gmw_ps_pt_read_more_link( $post, $label, $class ) {
 	return;
 }
 
+function gmw_insert_pt_location_to_db( $location ) {
+
+	return gmw_replace_pt_location_in_db( $location, true );
+}
+
+function gmw_replace_pt_location_in_db( $location, $insert = false ) {
+
+	$function_name = $insert ? 'gmw_insert_pt_location_to_db' : 'gmw_replace_pt_location_in_db';
+
+	_deprecated_function( $function_name, '3.0', 'gmw_update_location_data' );
+
+	$location_data = array(
+		'object_type'       => 'post',
+		'object_id'         => $location['post_id'],
+		'title'             => $location['post_title'],
+		'latitude'          => $location['lat'],
+		'longitude'         => $location['long'],
+		'street_number'     => $location['street_number'],
+		'street_name'       => $location['street_name'],
+		'street'            => $location['street'],
+		'premise'           => $location['apt'],
+		'city'              => $location['city'],
+		'region_code'       => $location['state'],
+		'region_name'       => $location['state_long'],
+		'postcode'          => $location['zipcode'],
+		'country_code'      => $location['country'],
+		'country_name'      => $location['country_long'],
+		'address'           => $location['address'],
+		'formatted_address' => $location['formatted_address'],
+	);
+
+	return gmw_update_location_data( $location_data );
+}
 
 /**
  * Deprecated current location functions
