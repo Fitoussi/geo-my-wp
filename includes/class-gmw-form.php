@@ -885,7 +885,8 @@ class GMW_Form {
 	public function the_location( $object_id, $object ) {
 
 		// setup class tag
-		$object->location_class = 'single-' . $this->form['object_type'];
+		$object->location_class  = 'single-' . $this->form['object_type'];
+		$object->location_class .= ' gmw-single-item gmw-single-' . $this->form['object_type'] . ' gmw-object-' . $object->object_id . ' gmw-location-' . $object->location_id;
 
 		// check if this is first location in the loop
 		if ( empty( $this->form['location_count'] ) ) {
