@@ -169,7 +169,7 @@ class GMW_Members_Locator_Form extends GMW_Form {
 			if ( $this->enable_objects_without_location ) {
 
 				// left join the location table into the query to display posts with no location as well
-				$join   = "LEFT JOIN {$tjoin}";
+				$join   = "LEFT JOIN {$tjoin} AND gmw_locations.object_type = 'user' ";
 				$where .= " {$address_filters}";
 
 			} else {

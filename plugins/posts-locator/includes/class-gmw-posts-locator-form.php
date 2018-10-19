@@ -182,7 +182,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 			if ( $this->form['query_args']['gmw_args']['showing_objects_without_location'] ) {
 
 				// left join the location table into the query to display posts with no location as well
-				$clauses['join']  .= " LEFT JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON $wpdb->posts.ID = gmw_locations.object_id ";
+				$clauses['join']  .= " LEFT JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON $wpdb->posts.ID = gmw_locations.object_id AND gmw_locations.object_type = 'post' ";
 				$clauses['where'] .= " {$address_filters} ";
 
 			} else {
