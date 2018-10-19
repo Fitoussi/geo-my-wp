@@ -215,7 +215,9 @@ if ( gmwVars.mapsProvider == 'google_maps' ) {
 			var gmwData = {
 				markerCount : options.id,
 				locationID  : location.location_id || 0,
-				iwContent   : options.content
+				iwContent   : options.content,
+				objcetType  : location.object_type || '',
+				objectId    : location.object_id || 0
 			};
 
 			// modify marker options.
@@ -537,7 +539,9 @@ if ( gmwVars.mapsProvider == 'leaflet' ) {
 				gmwData = {
 					markerCount : options.id,
 					locationID  : location.location_id || 0,
-					iwContent   : options.content
+					iwContent   : options.content,
+					objcetType  : location.object_type || '',
+					objectId    : location.object_id || 0
 				};
 
 			// Modify marker options.
@@ -1385,7 +1389,7 @@ GMW_Map.prototype.renderMarkers = function( locations, append_previous ) {
 			self.markerGroupingTypes[self.markerGrouping].markerClick( self.markers[i], self );
 
 			// hook custom functions if needed.
-			GMW.do_action( 'gmw_map_markers_loop_single_marker', self.markers[i], self );
+			GMW.do_action( 'gmw_map_markers_loop_single_marker', self.markers[i], self.locations[i], self );
 
 		// proceed when done generating the markers.
 		} else {
