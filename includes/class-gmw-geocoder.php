@@ -234,6 +234,7 @@ class GMW_Geocoder {
 		$address_hash    = md5( $this->location );
 		$location_output = get_transient( 'gmw_geocoded_' . $address_hash );
 		$location_output = apply_filters( 'gmw_transient_location_output', $location_output, $address_hash );
+		$response        = array();
 
 		// if no location found in cache or if forced referesh try to geocode
 		if ( true == $force_refresh || false === $location_output ) {
