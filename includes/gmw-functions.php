@@ -286,6 +286,20 @@ function gmw_update_addon_data( $addon = array() ) {
 }
 
 /**
+ * Generate warning or error message.
+ *
+ * @since 3.2
+ *
+ * @param  string $message the message.
+ * @param  [type] $type    error type.
+ *
+ * @return error log message.
+ */
+function gmw_trigger_error( $message = '', $type = E_USER_NOTICE ) {
+	trigger_error( esc_html( $message ), $type );
+}
+
+/**
  * Get URL prefix
  * 
  * @return [type] [description]
