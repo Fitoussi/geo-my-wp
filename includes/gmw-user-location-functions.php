@@ -102,26 +102,26 @@ function gmw_is_user_exists( $user_id = 0 ) {
  * @return object  complete location object
  * 
  */
-function gmw_get_user_location( $user_id = 0, $by_location_id = false ) {
+function gmw_get_user_location( $id = 0, $by_location_id = false ) {
 
 	if ( $by_location_id ) {
 		return gmw_get_location( $id );
 	}
 
 	// if no specific user ID pass, look for logged in user object
-	if ( empty( $user_id ) ) {
+	if ( empty( $id ) ) {
 
 		// try to get user ID
-		$user_id = gmw_try_get_user_id();
+		$id = gmw_try_get_user_id();
 
 		// abort if no user ID
-		if ( empty( $user_id ) ) {
+		if ( empty( $id ) ) {
 			return false;
 		}
 	}
 
 	// get user location from database
-	return gmw_get_location_by_object( 'user', $user_id );
+	return gmw_get_location_by_object( 'user', $id );
 }
 
 /**
