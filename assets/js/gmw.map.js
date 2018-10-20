@@ -1485,6 +1485,10 @@ GMW_Map.prototype.closeInfoWindow = function() {
 
 	var self = this;
 	
+	if ( typeof self.userInfoWindow.close === 'function' ) {
+		self.userInfoWindow.close();
+	}
+
 	// hook custom functions if needed.
 	GMW.do_action( 'gmw_map_pre_close_info_window', self.infoWindow, self );
 
