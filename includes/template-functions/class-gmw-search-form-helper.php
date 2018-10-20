@@ -188,24 +188,26 @@ class GMW_Search_Form_Helper {
 
 		$id      = absint( $args['id'] );
 		$options = explode( ',', $args['options'] );
-		$default_value = ! empty( $args['default_value'] ) ? esc_attr( $args['default_value'] ) : end( $options );
+		$default_value = ! empty( $args['default_value'] ) ? $args['default_value'] : end( $options );
 		
 		$output = '';
 
 		if ( count( $options ) > 1 ) {
 		    
 	        $output .= '<select id="gmw-distance-'.$id.'" class="gmw-form-field distance '.esc_attr( $args['class'] ).'" name="'.esc_attr( $args['name_tag'] ).'">';
-	        $output .= 	'<option value="'.$default_value.'">'.esc_attr( $args['label'] ).'</option>';
+	        $output .= 	'<option value="' . esc_attr( $default_value ) . '">' . esc_attr( $args['label'] ) . '</option>';
 
 	        foreach ( $options as $option ) {
-	      
+	      	
+	      		 $option = trim( $option );
+
 	        	if ( ! is_numeric( $option ) ) {
 	        		continue;
 	        	}
 
 	            $selected = ( isset( $_GET[$url_px.'distance'] ) && $_GET[$url_px.'distance'] == $option ) ? 'selected="selected"' : '';
 
-	            $output .= '<option value="'.$option.'" '.$selected.'>'.$option.'</option>';
+	            $output .= '<option value="'. esc_attr( $option ).'" '.$selected.'>'.$option.'</option>';
 	        }
 	        $output .= '</select>';
 
