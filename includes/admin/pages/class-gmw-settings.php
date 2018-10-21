@@ -1,5 +1,4 @@
 <?php
-// Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -17,7 +16,7 @@ class GMW_Settings {
 	 */
 	public function __construct() {
 
-		if ( ( empty( $_GET['page'] ) || 'gmw-settings' != $_GET['page'] ) && ( empty( $_POST['option_page'] ) || 'gmw_options' != $_POST['option_page'] ) ) {
+		if ( ( empty( $_GET['page'] ) || 'gmw-settings' !== $_GET['page'] ) && ( empty( $_POST['option_page'] ) || 'gmw_options' !== $_POST['option_page'] ) ) {
 			return;
 		}
 
@@ -28,13 +27,12 @@ class GMW_Settings {
 
 	/**
 	 * Setup default settings values
-	 *
-	 * @return [type] [description]
 	 */
 	public function setup_defaults() {
 
 		$defaults = apply_filters(
-			'gmw_admin_settings_setup_defaults', array(
+			'gmw_admin_settings_setup_defaults',
+			array(
 				'general_settings' => array(
 					'allow_tracking'       => '',
 					'google_map_api_usage' => 'enabled',
@@ -45,13 +43,13 @@ class GMW_Settings {
 					'results_page'         => '',
 					'auto_locate'          => 1,
 				),
-				'api_providers' => array(
+				'api_providers'    => array(
 					'maps_provider'                   => 'google_maps',
 					'geocoding_provider'              => 'google_maps',
 					'google_maps_client_side_api_key' => '',
 					'google_maps_server_side_api_key' => '',
-					'nominatim_email'	              => get_bloginfo('admin_email'),
-				)
+					'nominatim_email'                 => get_bloginfo( 'admin_email' ),
+				),
 			)
 		);
 
@@ -84,22 +82,26 @@ class GMW_Settings {
 	public function settings_groups() {
 
 		// API providers settings.
-		$api_providers = apply_filters( 'gmw_admin_settings_api_providers_options', array(
-			'maps' => array(
-				'google_maps' => 'Google Maps',
-				'leaflet'     => 'LeafLet',
-			),
-			'geocoding' => array()
-		) );
+		$api_providers = apply_filters(
+			'gmw_admin_settings_api_providers_options',
+			array(
+				'maps'      => array(
+					'google_maps' => 'Google Maps',
+					'leaflet'     => 'LeafLet',
+				),
+				'geocoding' => array(),
+			)
+		);
 
 		return apply_filters(
-			'gmw_admin_settings_groups', array(
+			'gmw_admin_settings_groups',
+			array(
 				'general_settings' => array(
 					'slug'     => 'general_settings',
 					'label'    => __( 'General Settings', 'geo-my-wp' ),
 					'icon'     => 'cog',
 					'fields'   => array(
-						'allow_tracking'        => array(
+						'allow_tracking' => array(
 							'name'       => 'allow_tracking',
 							'type'       => 'checkbox',
 							'default'    => '',
@@ -109,7 +111,8 @@ class GMW_Settings {
 							'attributes' => array(),
 							'priority'   => 10,
 						),
-						/*'google_maps_api_usage' => array(
+						/**
+						'google_maps_api_usage' => array(
 							'name'       => 'google_maps_api_usage',
 							'type'       => 'select',
 							'default'    => 'enabled',
@@ -123,28 +126,37 @@ class GMW_Settings {
 								'disabled' => __( 'Disable completely', 'geo-my-wp' ),
 							),
 							'priority'   => 20,
-						),*/
-						'country_code'          => array(
+						),
+						*/
+						'country_code'   => array(
 							'name'        => 'country_code',
 							'type'        => 'text',
 							'default'     => '',
 							'placeholder' => 'ex. US',
 							'label'       => __( 'Default Region', 'geo-my-wp' ),
-							'desc'        => sprintf( __( 'Enter the country code that will be used as the default with Google Maps API. The country code controls the default region when geocoding an address and when using other services provided by Google Maps API. List of countries code can be found <a href="%s" target="_blank">here</a>.', 'geo-my-wp' ), 'http://geomywp.com/country-code/' ),
+							'desc'        => sprintf(
+								/* translators: %s: link */
+								__( 'Enter the country code that will be used as the default with Google Maps API. The country code controls the default region when geocoding an address and when using other services provided by Google Maps API. List of countries code can be found <a href="%s" target="_blank">here</a>.', 'geo-my-wp' ),
+								'http://geomywp.com/country-code/'
+							),
 							'attributes'  => array( 'size' => '5' ),
 							'priority'    => 20,
 						),
-						'language_code'         => array(
+						'language_code'  => array(
 							'name'        => 'language_code',
 							'type'        => 'text',
 							'default'     => '',
 							'placeholder' => 'ex. EN',
 							'label'       => __( 'Default Language', 'geo-my-wp' ),
-							'desc'        => sprintf( __( 'Set the language to be used with Google Places address auto-complete and with Google Maps API. The language codes can be found <a href="%s" target="_blank">here</a>.', 'geo-my-wp' ), 'https://sites.google.com/site/tomihasa/google-language-codes' ),
+							'desc'        => sprintf(
+								/* translators: %s: link */
+								__( 'Set the language to be used with Google Places address auto-complete and with Google Maps API. The language codes can be found <a href="%s" target="_blank">here</a>.', 'geo-my-wp' ),
+								'https://sites.google.com/site/tomihasa/google-language-codes'
+							),
 							'attributes'  => array( 'size' => '5' ),
 							'priority'    => 30,
 						),
-						'auto_locate'           => array(
+						'auto_locate'    => array(
 							'name'       => 'auto_locate',
 							'type'       => 'checkbox',
 							'default'    => '',
@@ -154,7 +166,7 @@ class GMW_Settings {
 							'attributes' => array(),
 							'priority'   => 40,
 						),
-						'results_page'          => array(
+						'results_page'   => array(
 							'name'       => 'results_page',
 							'type'       => 'select',
 							'default'    => '0',
@@ -168,12 +180,12 @@ class GMW_Settings {
 					'priority' => 3,
 				),
 
-				'api_providers' => array(
+				'api_providers'    => array(
 					'slug'     => 'api_providers',
 					'label'    => __( 'Maps & Geocoders', 'geo-my-wp' ),
 					'icon'     => 'map-o',
 					'fields'   => array(
-						'maps_provider' => array(
+						'maps_provider'       => array(
 							'name'       => 'maps_provider',
 							'type'       => 'select',
 							'default'    => 'google_maps',
@@ -183,7 +195,7 @@ class GMW_Settings {
 							'options'    => $api_providers['maps'],
 							'priority'   => 10,
 						),
-						'geocoding_provider' => array(
+						'geocoding_provider'  => array(
 							'name'       => 'geocoding_provider',
 							'type'       => 'hidden',
 							'default'    => 'google_maps',
@@ -194,66 +206,75 @@ class GMW_Settings {
 							'priority'   => 10,
 						),
 						'google_maps_options' => array(
-				            'name'          => 'google_maps_options',
-				            'type'          => 'fields_group',
-				            'label'         => __( 'Google Maps API', 'geo-my-wp' ),
-				            'desc'          => sprintf( __( 'Enter your Google Maps API keys ( See <a href="%1$s" target="_blank">this tutorial</a> ) . Note that GEO my WP now requires 2 Google Maps API keys; a client-side and server-side keys.', 'geo-my-wp' ), 'https://docs.gravitygeolocation.com/article/134-how-to-create-browser-and-server-google-maps-api-keys' ),
-				            'fields'        => array(
-				            	'google_maps_client_side_api_key'  => array(
-				                    'name'          => 'google_maps_client_side_api_key',
-				                    'type'          => 'text',
-				                    'default'       => '',
-				                    'label'         => __( 'Google Maps Client-side API key', 'geo-my-wp' ),
-				                    'placeholder'   => __( 'Client-side API key', 'geo-my-wp' ),
-				                    'desc'        	=> __( 'This API key is responsible for displaying maps, directions, address autocomplete, and client-side geocoding when using the location form.', 'geo-my-wp' ),
+							'name'       => 'google_maps_options',
+							'type'       => 'fields_group',
+							'label'      => __( 'Google Maps API', 'geo-my-wp' ),
+							'desc'       => sprintf(
+								/* translators: %s: link. */
+								__( 'Enter your Google Maps API keys ( See <a href="%s" target="_blank">this tutorial</a> ). Note that GEO my WP now requires 2 Google Maps API keys; a client-side and server-side keys.', 'geo-my-wp' ),
+								'https://docs.gravitygeolocation.com/article/134-how-to-create-browser-and-server-google-maps-api-keys'
+							),
+							'fields'     => array(
+								'google_maps_client_side_api_key' => array(
+									'name'        => 'google_maps_client_side_api_key',
+									'type'        => 'text',
+									'default'     => '',
+									'label'       => __( 'Google Maps Client-side API key', 'geo-my-wp' ),
+									'placeholder' => __( 'Client-side API key', 'geo-my-wp' ),
+									'desc'        => __( 'This API key is responsible for displaying maps, directions, address autocomplete, and client-side geocoding when using the location form.', 'geo-my-wp' ),
 									'priority'    => 5,
-				                ),
-				                'google_maps_server_side_api_key'  => array(
-				                    'name'          => 'google_maps_server_side_api_key',
-				                    'type'          => 'text',
-				                    'default'       => '',
-				                    'label'         => __( 'Google Maps Server API key', 'geo-my-wp' ),
-				                    'placeholder'   => __( 'Server API key', 'geo-my-wp' ),
-				                    'desc'        	=> __( 'This API key is responsible for server side geocoding. Without this key some of GEO my WP functions will not work properly.', 'geo-my-wp' ),
+								),
+								'google_maps_server_side_api_key' => array(
+									'name'        => 'google_maps_server_side_api_key',
+									'type'        => 'text',
+									'default'     => '',
+									'label'       => __( 'Google Maps Server API key', 'geo-my-wp' ),
+									'placeholder' => __( 'Server API key', 'geo-my-wp' ),
+									'desc'        => __( 'This API key is responsible for server side geocoding. Without this key some of GEO my WP functions will not work properly.', 'geo-my-wp' ),
 									'attributes'  => array( 'size' => '50' ),
 									'priority'    => 10,
-				                ),
-				                'google_maps_api_china'  => array(
-				                    'name'          => 'google_maps_api_china',
-				                    'type'          => 'checkbox',
-				                    'default'       => '',
-				                    'label'         => __( 'Google Maps API For China', 'geo-my-wp' ),
-				                    'cb_label'		=> __( 'Enabled', 'geo-my-wp' ),
-				                    'desc'        	=> __( 'Check this checkbox if your server is located in China and Google Maps features are not working on your site.', 'geo-my-wp' ),
-									'attributes'  => array(),
-									'priority'    => 15,
-				                ),
-				            ),
-				            'attributes' => '',
-				            'optionsbox' => 1,  
-				            'priority'   => 30
-				        ),
-				        'nominatim_options' => array(
-				            'name'          => 'nominatim_options',
-				            'type'          => 'fields_group',
-				            'label'         => __( 'Nominatim ( OpenStreetMaps )', 'geo-my-wp' ),
-				            'desc'          => __( 'Setup Nominatim options.' , 'geo-my-wp' ),
-				            'fields'        => array(
-				                'nominatim_email'  => array(
-				                    'name'          => 'nominatim_email',
-				                    'type'          => 'text',
-				                    'default'       => '',
-				                    'placeholder'   => __( 'Enter email address', 'geo-my-wp' ),
-				                    'label'         => __( 'Valid email address', 'geo-my-wp' ),
-				                    'desc'        	=> sprintf( __( 'Nominatim is a geocoding provider for OpenStreetMaps. The provider requires a valid email address to use its services. See this <a href="%1$s" target="_blank">this page</a> to learn more about this service. Also see the Nominatim <a href="%2$s" target="_blank">usage policy</a>.', 'geo-my-wp' ), 'https://wiki.openstreetmap.org/wiki/Nominatim', 'https://operations.osmfoundation.org/policies/nominatim/' ),
+								),
+								'google_maps_api_china' => array(
+									'name'       => 'google_maps_api_china',
+									'type'       => 'checkbox',
+									'default'    => '',
+									'label'      => __( 'Google Maps API For China', 'geo-my-wp' ),
+									'cb_label'   => __( 'Enabled', 'geo-my-wp' ),
+									'desc'       => __( 'Check this checkbox if your server is located in China and Google Maps features are not working on your site.', 'geo-my-wp' ),
+									'attributes' => array(),
+									'priority'   => 15,
+								),
+							),
+							'attributes' => '',
+							'optionsbox' => 1,
+							'priority'   => 30,
+						),
+						'nominatim_options'   => array(
+							'name'       => 'nominatim_options',
+							'type'       => 'fields_group',
+							'label'      => __( 'Nominatim ( OpenStreetMaps )', 'geo-my-wp' ),
+							'desc'       => __( 'Setup Nominatim options.', 'geo-my-wp' ),
+							'fields'     => array(
+								'nominatim_email' => array(
+									'name'        => 'nominatim_email',
+									'type'        => 'text',
+									'default'     => '',
+									'placeholder' => __( 'Enter email address', 'geo-my-wp' ),
+									'label'       => __( 'Valid email address', 'geo-my-wp' ),
+									'desc'        => sprintf(
+										/* translators: %1$s: link, %2$s: link. */
+										__( 'Nominatim is a geocoding provider for OpenStreetMaps. The provider requires a valid email address to use its services. See this <a href="%1$s" target="_blank">this page</a> to learn more about this service. Also see the Nominatim <a href="%2$s" target="_blank">usage policy</a>.', 'geo-my-wp' ),
+										'https://wiki.openstreetmap.org/wiki/Nominatim',
+										'https://operations.osmfoundation.org/policies/nominatim/'
+									),
 									'attributes'  => array( 'size' => '50' ),
 									'priority'    => 5,
-				                )
-				            ),
-				            'attributes' => '',
-				            'optionsbox' => 1,  
-				            'priority'   => 40
-				        )
+								),
+							),
+							'attributes' => '',
+							'optionsbox' => 1,
+							'priority'   => 40,
+						),
 					),
 					'priority' => 5,
 				),
@@ -270,62 +291,61 @@ class GMW_Settings {
 
 		$settings = array();
 
-		// loop through settings groups
+		// loop through settings groups.
 		foreach ( $this->settings_groups as $key => $group ) {
 
-			// verify groups slug
+			// verify groups slug.
 			if ( empty( $group['slug'] ) ) {
 				continue;
 			}
 
-			// Generate the group if does not exsist
+			// Generate the group if does not exsist.
 			if ( ! isset( $settings[ $group['slug'] ] ) ) {
 
 				$settings[ $group['slug'] ] = $group['fields'];
 
-				// otehrwise, merge the fields of the existing group
-				// with the current group.
+				// otehrwise, merge the fields of the existing group with the current group.
 			} else {
 
 				$settings[ $group['slug'] ] = array_merge_recursive( $settings[ $group['slug'] ], $group['fields'] );
 
-				// remove the duplicate group/tab
+				// remove the duplicate group/tab.
 				unset( $this->settings_groups[ $key ] );
 			}
 
-			// allow filtering the specific group
+			// allow filtering the specific group.
 			$settings[ $group['slug'] ] = apply_filters( 'gmw_' . $group['slug'] . '_admin_settings', $settings[ $group['slug'] ], $settings );
 		}
 
-		// filter all settings groups
+		// filter all settings groups.
 		$settings = apply_filters( 'gmw_admin_settings', $settings );
 
 		return $settings;
 	}
 
 	/**
-	 * init_settings function.
+	 * Init_settings function.
 	 *
 	 * @access protected
 	 * @return void
 	 */
 	protected function init_settings() {
 
-		// generate default values
+		// generate default values.
 		$this->setup_defaults();
 
-		// get settings groups
+		// get settings groups.
 		$this->settings_groups = $this->settings_groups();
 
-		// get settings
+		// get settings.
 		$this->settings = $this->settings();
 
-		// backward capability for settings before settings groups were created
+		// backward capability for settings before settings groups were created.
 		foreach ( $this->settings as $key => $section ) {
 
 			if ( ! empty( $section[0] ) && ! empty( $section[1] ) && is_string( $section[0] ) ) {
 
-				trigger_error( 'Using deprecated method for registering GMW settings and settings groups.', E_USER_NOTICE );
+				gmw_trigger_error( 'Using deprecated method for registering GMW settings and settings groups.' );
 
 				$this->settings_groups[] = array(
 					'slug'     => $key,
@@ -338,19 +358,19 @@ class GMW_Settings {
 			}
 		}
 
-		// backward capability for replacing std with default
+		// backward capability for replacing std with default.
 		foreach ( $this->settings as $key => $section ) {
 
 			foreach ( $section as $sec_key => $sec_value ) {
 
-				// skip hidden field
+				// skip hidden field.
 				if ( empty( $sec_value ) ) {
 					continue;
 				}
 
 				if ( isset( $sec_value['std'] ) && ! isset( $sec_value['default'] ) ) {
 
-					trigger_error( '"std" attribute is no longer supported in GMW settings and was replaced with "default" in version 3.0.', E_USER_NOTICE );
+					gmw_trigger_error( '"std" attribute is no longer supported in GMW settings and was replaced with "default" in version 3.0.' );
 
 					$this->settings[ $key ][ $sec_key ]['default'] = ! empty( $sec_value['std'] ) ? $sec_value['std'] : '';
 
@@ -376,18 +396,18 @@ class GMW_Settings {
 	}
 
 	/**
-	 * register_settings function.
+	 * Register_settings function.
 	 *
 	 * @access public
 	 * @return void
 	 */
 	public function register_settings() {
 
-		if ( empty( $_POST['option_page'] ) || $_POST['option_page'] != $this->settings_group ) {
+		if ( empty( $_POST['option_page'] ) || $_POST['option_page'] !== $this->settings_group ) {
 			return;
 		}
 
-		if ( empty( $_POST['action'] ) || 'update' != $_POST['action'] ) {
+		if ( empty( $_POST['action'] ) || 'update' !== $_POST['action'] ) {
 			return;
 		}
 
@@ -396,15 +416,17 @@ class GMW_Settings {
 
 	/**
 	 * Validate inputs
-	 * @param  [type] $values [description]
-	 * @return [type]         [description]
+	 *
+	 * @param  array $values original values.
+	 *
+	 * @return array         validated values.
 	 */
-	function validate( $values ) {
+	public function validate( $values ) {
 
 		$this->init_settings();
 
-		//get the submitted values into the valid_input array
-		//then below we run validation through the valid_input
+		// get the submitted values into the valid_input array
+		// then below we run validation through the valid_input.
 		$valid_input = $values;
 
 		foreach ( $this->settings as $section_name => $section ) {
@@ -435,10 +457,10 @@ class GMW_Settings {
 
 						} else {
 
-							foreach ( $option['options'] as $keyVal => $name ) {
+							foreach ( $option['options'] as $key_val => $name ) {
 
-								if ( ! empty( $values[ $section_name ][ $option['name'] ][ $keyVal ] ) ) {
-									$valid_input[ $section_name ][ $option['name'] ][ $keyVal ] = 1;
+								if ( ! empty( $values[ $section_name ][ $option['name'] ][ $key_val ] ) ) {
+									$valid_input[ $section_name ][ $option['name'] ][ $key_val ] = 1;
 								}
 							}
 						}
@@ -453,11 +475,11 @@ class GMW_Settings {
 
 							$valid_input[ $section_name ][ $option['name'] ] = array();
 
-							foreach ( $option['options'] as $keyVal => $name ) {
+							foreach ( $option['options'] as $key_val => $name ) {
 
-								if ( in_array( $keyVal, $values[ $section_name ][ $option['name'] ] ) ) {
+								if ( in_array( $key_val, $values[ $section_name ][ $option['name'] ] ) ) {
 
-									$valid_input[ $section_name ][ $option['name'] ][] = $keyVal;
+									$valid_input[ $section_name ][ $option['name'] ][] = $key_val;
 								}
 							}
 						}
@@ -472,11 +494,11 @@ class GMW_Settings {
 
 							$valid_input[ $section_name ][ $option['name'] ] = array();
 
-							foreach ( $option['options'] as $keyVal => $name ) {
+							foreach ( $option['options'] as $key_val => $name ) {
 
-								if ( in_array( $keyVal, $values[ $section_name ][ $option['name'] ] ) ) {
+								if ( in_array( $key_val, $values[ $section_name ][ $option['name'] ] ) ) {
 
-									$valid_input[ $section_name ][ $option['name'] ][] = $keyVal;
+									$valid_input[ $section_name ][ $option['name'] ][] = $key_val;
 								}
 							}
 						}
@@ -500,16 +522,16 @@ class GMW_Settings {
 						break;
 
 					case 'number':
-						
 						if ( ! empty( $values[ $section_name ][ $option['name'] ] ) ) {
-							$num_value = sanitize_text_field( $values[ $section_name ][ $option['name'] ] );;
+							$num_value = sanitize_text_field( $values[ $section_name ][ $option['name'] ] );
+
 						} else {
 							$num_value = isset( $option['default'] ) ? sanitize_text_field( $option['default'] ) : '';
 						}
 
 						$valid_value = preg_replace( '/[^0-9]/', '', $num_value );
-						
-					break;
+
+						break;
 
 					case 'text':
 					case 'password':
@@ -529,37 +551,37 @@ class GMW_Settings {
 	/**
 	 * Get form fields
 	 *
-	 * @param  [type] $option  [description]
-	 * @param  [type] $tab     [description]
-	 * @param  [type] $section [description]
-	 * @return [type]          [description]
+	 * @param  array  $settings form settings.
+	 * @param  array  $option   field options.
+	 * @param  string $tab      tab name.
+	 * @param  array  $section  settings section.
 	 */
 	public function get_form_field( $settings, $option, $tab, $section ) {
 
 		$option['default']  = isset( $option['default'] ) ? $option['default'] : '';
 		$option['name']     = esc_attr( $option['name'] );
-		$option['cb_label'] = isset( $option['cb_label'] ) ? $option['cb_label'] : '';
+		$option['cb_label'] = isset( $option['cb_label'] ) ? esc_attr( $option['cb_label'] ) : '';
 		$value              = ! empty( $settings[ $tab ][ $option['name'] ] ) ? $settings[ $tab ][ $option['name'] ] : $option['default'];
-		$attr_id            = esc_attr( 'setting-' . $tab . '-' . $option['name'] );
+		$attr_id            = 'setting-' . $tab . '-' . $option['name'];
 		$placeholder        = ! empty( $option['placeholder'] ) ? 'placeholder="' . esc_attr( $option['placeholder'] ) . '"' : '';
-		$attr_name          = esc_attr( 'gmw_options[' . $tab . '][' . $option['name'] . ']' );
+		$attr_name          = 'gmw_options[' . $tab . '][' . $option['name'] . ']';
 		$attributes         = array();
 
 		if ( ! isset( $option['type'] ) ) {
 			$option['type'] = 'text';
 		}
 
-		//attributes
+		// attributes.
 		if ( ! empty( $option['attributes'] ) && is_array( $option['attributes'] ) ) {
 			foreach ( $option['attributes'] as $attribute_name => $attribute_value ) {
 				$attributes[] = esc_attr( $attribute_name ) . '="' . esc_attr( $attribute_value ) . '"';
 			}
 		}
 
-		//display settings fields
+		// display settings fields.
 		switch ( $option['type'] ) {
 
-			//create custom function
+			// create custom function.
 			case 'function':
 				$function   = ! empty( $option['function'] ) ? $option['function'] : $option['name'];
 				$name_attr  = 'gmw_options[' . $tab . '][' . $option['name'] . ']';
@@ -573,29 +595,29 @@ class GMW_Settings {
 				?>
 				<label>
 					<input 
-						type="checkbox" 
-						id="<?php echo $attr_id; ?>" 
+						type="checkbox"
+						id="<?php echo esc_attr( $attr_id ); ?>"
 						class="setting-<?php echo esc_attr( $option['name'] ); ?> checkbox" 
-						name="<?php echo $attr_name; ?>" 
+						name="<?php echo esc_attr( $attr_name ); ?>"
 						value="1" 
-						<?php echo implode( ' ', $attributes ); ?> 
+						<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?>
 						<?php checked( '1', $value ); ?> 
 					/> 
-					<?php echo $option['cb_label']; ?>
+					<?php echo $option['cb_label']; // WPCS: XSS ok. ?>
 				</label>
 				<?php
 				break;
 
 			case 'multicheckbox':
-				foreach ( $option['options'] as $keyVal => $name ) {
+				foreach ( $option['options'] as $key_val => $name ) {
 
-					$value = ! empty( $value[ $keyVal ] ) ? $value[ $keyVal ] : $option['default'];
+					$value = ! empty( $value[ $key_val ] ) ? $value[ $key_val ] : $option['default'];
 					?>
 					<label>
 						<input 
 							type="checkbox" 
-							id="<?php echo $attr_id . '-' . esc_attr( $keyVal ); ?>" class="setting-<?php echo $option['name']; ?> checkbox multicheckbox"
-							name="<?php echo $attr_name . '[' . esc_attr( $keyVal ) . ']'; ?>" 
+							id="<?php echo esc_attr( $attr_id . '-' . $key_val ); ?>" class="setting-<?php echo esc_attr( $option['name'] ); ?> checkbox multicheckbox"
+							name="<?php echo esc_attr( $attr_name . '[' . $key_val . ']' ); ?>"
 							value="1" <?php checked( '1', $value ); ?> 
 						/> 
 						<?php echo esc_html( $name ); ?>
@@ -607,18 +629,18 @@ class GMW_Settings {
 			case 'multicheckboxvalues':
 				$option['default'] = is_array( $option['default'] ) ? $option['default'] : array();
 
-				foreach ( $option['options'] as $keyVal => $name ) {
+				foreach ( $option['options'] as $key_val => $name ) {
 
-					$checked = in_array( $keyVal, $value ) ? 'checked="checked"' : '';
+					$checked = in_array( $key_val, $value ) ? 'checked="checked"' : '';
 					?>
 					<label>
 						<input 
 							type="checkbox" 
-							id="<?php echo $attr_id . '-' . esc_attr( $keyVal ); ?>" 
+							id="<?php echo esc_attr( $attr_id . '-' . $key_val ); ?>" 
 							class="setting-<?php echo esc_attr( $option['name'] ); ?> checkbox multicheckboxvalues" 
-							name="<?php echo $attr_name . '[]'; ?>" 
-							value="<?php echo esc_attr( $keyVal ); ?>" 
-							<?php echo $checked; ?> 
+							name="<?php echo esc_attr( $attr_name ) . '[]'; ?>" 
+							value="<?php echo esc_attr( $key_val ); ?>" 
+							<?php echo $checked; // WPCS: XSS ok. ?> 
 						/> 
 						<?php echo esc_html( $name ); ?>
 					</label>
@@ -629,29 +651,30 @@ class GMW_Settings {
 			case 'textarea':
 				?>
 				<textarea 
-					id="<?php echo $attr_id; ?>" 
+					id="<?php echo esc_attr( $attr_id ); ?>" 
 					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> textarea large-text" 
 					cols="50" 
 					rows="3" 
-					name="<?php echo $attr_name; ?>" 
-					<?php echo implode( ' ', $attributes ); ?> 
-					<?php echo $placeholder; ?>><?php echo esc_textarea( $value ); ?></textarea>
+					name="<?php echo esc_attr( $attr_name ); ?>" 
+					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?> 
+					<?php echo $placeholder; // WPCS: XSS ok. ?>><?php echo esc_textarea( $value ); ?></textarea>
 				<?php
 				break;
 
 			case 'radio':
 				$rc = 1;
-				foreach ( $option['options'] as $keyVal => $name ) {
-					$checked = ( $rc == 1 ) ? 'checked="checked"' : checked( $value, $keyVal, false );
+				foreach ( $option['options'] as $key_val => $name ) {
+
+					$checked = ( 1 === $rc ) ? 'checked="checked"' : checked( $value, $key_val, false );
 					?>
 					<label>
 						<input 
 							type="radio" 
-							id="<?php $attr_id; ?>" 
+							id="<?php esc_attr( $attr_id ); ?>" 
 							class="setting-<?php echo esc_attr( $option['name'] ); ?>" 
-							name="<?php echo $attr_name; ?>" 
-							value="<?php echo esc_attr( $keyVal ); ?>"
-							<?php echo $checked; ?> 
+							name="<?php echo esc_attr( $attr_name ); ?>" 
+							value="<?php echo esc_attr( $key_val ); ?>"
+							<?php echo $checked; // WPCS: XSS ok. ?> 
 						/>
 						<?php echo esc_attr( $name ); ?>
 					</label>
@@ -664,13 +687,13 @@ class GMW_Settings {
 			case 'select':
 				?>
 				<select 
-					id="<?php echo $attr_id; ?>" 
+					id="<?php echo esc_attr( $attr_id ); ?>"
 					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> select" 
-					name="<?php echo $attr_name; ?>" 
-					<?php echo implode( ' ', $attributes ); ?>
+					name="<?php echo esc_attr( $attr_name ); ?>" 
+					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?>
 				>
-					<?php foreach ( $option['options'] as $keyVal => $name ) { ?>
-						<?php echo '<option value="' . esc_attr( $keyVal ) . '" ' . selected( $value, $keyVal, false ) . '>' . esc_html( $name ) . '</option>'; ?>
+					<?php foreach ( $option['options'] as $key_val => $name ) { ?>
+						<?php echo '<option value="' . esc_attr( $key_val ) . '" ' . selected( $value, $key_val, false ) . '>' . esc_html( $name ) . '</option>'; ?>
 					<?php } ?>
 				</select>
 				<?php
@@ -679,16 +702,15 @@ class GMW_Settings {
 			case 'multiselect':
 				?>
 				<select 
-					id="<?php echo $attr_id; ?>" 
+					id="<?php echo esc_attr( $attr_id ); ?>" 
 					multiple 
 					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> select" 
-					name="<?php echo $attr_name; ?>[]" 
-					<?php echo implode( ' ', $attributes ); ?>
-				>
+					name="<?php echo esc_attr( $attr_name ); ?>[]" 
+					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?>>
 					<?php
-					foreach ( $option['options'] as $keyVal => $name ) {
-						$selected = ( is_array( $value ) && in_array( $keyVal, $value ) ) ? 'selected="selected"' : '';
-						echo '<option value="' . esc_attr( $keyVal ) . '" ' . $selected . '>' . esc_html( $name ) . '</option>';
+					foreach ( $option['options'] as $key_val => $name ) {
+						$selected = ( is_array( $value ) && in_array( $key_val, $value ) ) ? 'selected="selected"' : '';
+						echo '<option value="' . esc_attr( $key_val ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $name ) . '</option>';
 					}
 					?>
 				</select>
@@ -700,40 +722,40 @@ class GMW_Settings {
 				?>
 				<input 
 					type="password" 
-					id="<?php echo $attr_id; ?>" 
-					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> regular-text password" name="<?php echo $attr_name; ?>" 
-					value="<?php echo sanitize_text_field( esc_attr( $value ) ); ?>" 
-					<?php echo implode( ' ', $attributes ); ?> 
-					<?php echo $placeholder; ?> 
+					id="<?php echo esc_attr( $attr_id ); ?>" 
+					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> regular-text password" name="<?php echo esc_attr( $attr_name ); ?>" 
+					value="<?php echo esc_attr( sanitize_text_field( $value ) ); ?>"
+					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?> 
+					<?php echo $placeholder; // WPCS: XSS ok. ?> 
 				/>
 				<?php
 				break;
 
 			case 'hidden':
 				?>
-				<input 
-					type="hidden" 
-					id="<?php echo $attr_id; ?>" 
-					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> regular-text password" name="<?php echo $attr_name; ?>" 
-					value="<?php echo sanitize_text_field( esc_attr( $value ) ); ?>" 
-					<?php echo implode( ' ', $attributes ); ?> 
+				<input
+					type="hidden"
+					id="<?php echo esc_attr( $attr_id ); ?>"
+					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> regular-text password" name="<?php echo esc_attr( $attr_name ); ?>"
+					value="<?php echo esc_attr( sanitize_text_field( $value ) ); ?>"
+					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?> 
 				/>
 				<?php
-			break;
+				break;
 
-			// number
+			// number.
 			case 'number':
 				?>
 				<input 
-					type="number" 
-					id="<?php echo $attr_id; ?>" 
-					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> regular-text text" 
-					name="<?php echo $attr_name; ?>" 
-					value="<?php echo sanitize_text_field( esc_attr( $value ) ); ?>" 
-					<?php echo implode( ' ', $attributes ); ?> 
+					type="number"
+					id="<?php echo esc_attr( $attr_id ); ?>"
+					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> regular-text text"
+					name="<?php echo esc_attr( $attr_name ); ?>"
+					value="<?php echo esc_attr( sanitize_text_field( $value ) ); ?>"
+					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?> 
 				/>
 				<?php
-			break;
+				break;
 
 			case '':
 			case 'input':
@@ -742,12 +764,12 @@ class GMW_Settings {
 				?>
 				<input 
 					type="text" 
-					id="<?php echo $attr_id; ?>" 
+					id="<?php echo esc_attr( $attr_id ); ?>"
 					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> regular-text text" 
-					name="<?php echo $attr_name; ?>" 
-					value="<?php echo sanitize_text_field( esc_attr( $value ) ); ?>" 
-					<?php echo implode( ' ', $attributes ); ?> 
-					<?php echo $placeholder; ?> 
+					name="<?php echo esc_attr( $attr_name ); ?>"
+					value="<?php echo esc_attr( sanitize_text_field( $value ) ); ?>" 
+					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?> 
+					<?php echo $placeholder; // WPCS: XSS ok. ?> 
 				/>
 				<?php
 				break;
@@ -755,9 +777,10 @@ class GMW_Settings {
 	}
 
 	/**
-	 * display settings
+	 * Display settings.
 	 *
 	 * @access public
+	 *
 	 * @return void
 	 */
 	public function output() {
@@ -767,204 +790,214 @@ class GMW_Settings {
 		?>
 		<div id="gmw-settings-page" class="wrap gmw-admin-page">
 
-            <h2>
-                <i class="gmw-icon-cog-alt"></i>
-                <?php echo _e( 'GEO my WP Settings', 'geo-my-wp' ); ?>
-                <?php gmw_admin_helpful_buttons(); ?>
-            </h2>
-            <div class="clear"></div>
-            <form method="post" action="options.php" class="gmw-settings-form">
-                <?php settings_fields( $this->settings_group ); ?>
+			<h2>
+				<i class="gmw-icon-cog-alt"></i>
+				<?php echo _e( 'GEO my WP Settings', 'geo-my-wp' ); ?>
+				<?php gmw_admin_helpful_buttons(); ?>
+			</h2>
+			<div class="clear"></div>
+			<form method="post" action="options.php" class="gmw-settings-form">
+				<?php settings_fields( $this->settings_group ); ?>
 
-                <?php
-                if ( ! empty( $_GET[ 'settings-updated' ] ) ) {
-                    
-                    flush_rewrite_rules();
+				<?php
+				if ( ! empty( $_GET['settings-updated'] ) ) {
 
-                    echo '<div class="updated fade gmw-settings-updated"><p>' . __( 'Settings successfully saved!', 'geo-my-wp' ) . '</p></div>';
-                }
-                ?>
-                <div class="update-button-wrapper top">
-                    <input type="submit" class="button-primary" value="<?php _e( 'Save Changes', 'geo-my-wp' ); ?>" />
-                </div>
+					flush_rewrite_rules();
 
-                <div class="gmw-settings-wrapper gmw-left-tabs-menu-wrapper">
-                    
-                    <ul class="gmw-tabs-wrapper">
-                        
-                        <?php uasort( $this->settings_groups, 'gmw_sort_by_priority' ); ?>
-                        
-                        <?php foreach ( $this->settings_groups as $tab ) { ?>
+					echo '<div class="updated fade gmw-settings-updated"><p>' . __( 'Settings successfully saved!', 'geo-my-wp' ) . '</p></div>';
+				}
+				?>
+				<div class="update-button-wrapper top">
+					<input type="submit" class="button-primary" value="<?php _e( 'Save Changes', 'geo-my-wp' ); ?>" />
+				</div>
 
-                            <?php 
-                            // for previous versions
-                            if ( ! empty( $tab['id']) ) {
-                                $tab['slug'] = $tab['id'];
-                            } ?>
-                            <li>
-                                <a href="#" 
-                                    id="<?php echo sanitize_title( $tab['slug'] ); ?>" 
-                                    title="<?php echo esc_attr( $tab['label'] ); ?>" 
-                                    class="gmw-nav-tab" 
-                                    data-name="<?php echo sanitize_title( $tab['slug'] ); ?>"
-                                >
-                                <i class="<?php if ( ! empty( $tab['icon'] ) ) echo 'gmw-icon-'.esc_attr( $tab['icon'] );?>"></i>
-                                <span><?php echo esc_attr( $tab['label'] ); ?></span>
-                            </a>
-                        <?php } ?>
-                    </ul>
+				<div class="gmw-settings-wrapper gmw-left-tabs-menu-wrapper">
 
-                    <div class="gmw-panels-wrapper">
-                             
-                        <?php foreach ( $this->settings as $tab => $section ) { ?>
+					<ul class="gmw-tabs-wrapper">
 
-                            <?php uasort( $section, 'gmw_sort_by_priority' ); ?>
+						<?php uasort( $this->settings_groups, 'gmw_sort_by_priority' ); ?>
 
-                            <div class="gmw-tab-panel <?php echo sanitize_title( $tab ); ?>">
-                                <table class="widefat">
-                                    <tbody>
-                                        
-                                        <?php
-                                        foreach ( $section as $option ) {
-                                            // section tab
-                                            if ( $option['type'] == 'tab_section' ) {
-                                                ?>
-                                                <tr valign="top" class="gmw-tab-section">
-                                                    <td><?php echo esc_html( $option['title'] ); ?></td>
-                                                    <td></td>    
-                                                </tr>
-                                                <?php
-                                                continue;
-                                            }
+						<?php foreach ( $this->settings_groups as $tab ) { ?>
 
-                                            $option['type'] = ! empty( $option['type'] ) ? $option['type'] : '';  
-                                            $class          = ! empty( $option[ 'class' ] ) ? $option[ 'class' ].' '.$option['name'].' '.$option['type'] : $option['name'].' '. $option['type'].' '.$tab;
-                                            ?>
-                                            <tr 
-                                                valign="top" 
-                                                id="<?php echo esc_attr( $tab ); ?>-<?php echo esc_attr( $option['name'] ); ?>-tr" 
-                                                class="feature-<?php echo esc_attr( $class ); ?>"
-                                            >
-                                                
-                                                <td class="gmw-form-feature-desc">              
-                                                    <?php if ( isset( $option['label'] ) ) { ?>
-                                                        <label for="setting-<?php echo esc_attr( $option['name'] ); ?>">
-                                                            <?php echo esc_html( $option['label'] ); ?> 
-                                                        </label>                    
-                                                    <?php } ?>
+							<?php
+							// for previous versions.
+							if ( ! empty( $tab['id'] ) ) {
+								$tab['slug'] = $tab['id'];
+							}
+							?>
+							<li>
+								<a href="#" 
+									id="<?php echo esc_attr( sanitize_title( $tab['slug'] ) ); ?>" 
+									title="<?php echo esc_attr( $tab['label'] ); ?>" 
+									class="gmw-nav-tab" 
+									data-name="<?php echo esc_attr( sanitize_title( $tab['slug'] ) ); ?>"
+								>
+								<?php if ( ! empty( $tab['icon'] ) ) { ?>
+									<i class="gmw-icon-<?php echo esc_attr( $tab['icon'] ); ?>"></i>
+								<?php } ?>
 
-                                                    <?php if ( isset( $option['desc'] ) ) { ?>
-                                                        <div class="gmw-form-feature-desc-content"> 
-                                                            <em class="description"><?php echo $option['desc']; ?></em>
-                                                        </div>
-                                                    <?php } ?>
-                                                </td>
-                                                                                           
-                                                <td class="gmw-form-feature-settings <?php echo ! empty( $option['type'] ) ? esc_attr($option['type'] ) : ''; ?>">  
-                                                <?php if ( $option['type'] == 'fields_group' && array_filter( $option['fields'] ) ) { ?>
-                                                        
-                                                    <?php $ob_class = ! empty( $option['optionsbox'] ) ? 'gmw-options-box' : ''; ?>
+								<span><?php echo esc_attr( $tab['label'] ); ?></span>
+							</a>
+						<?php } ?>
+					</ul>
 
-                                                    <div class="<?php echo $ob_class; ?> <?php if ( isset( $option['name'] ) ) echo 'fields-group-'.esc_attr( $option['name'] ); ?>">                                                       
-                                                            <?php foreach ( $option['fields'] as $option ) { ?>
+					<div class="gmw-panels-wrapper">
 
-                                                                <div class="single-option option-<?php echo esc_attr( $option['name'] );?> <?php echo esc_attr( $option['type'] ); ?>">
-                                                                    <?php /*if ( $option['type'] == 'checkbox' ) { ?>
+						<?php foreach ( $this->settings as $tab => $section ) { ?>
 
-                                                                        <?php $this->get_form_field( $settings, $option, $tab, $section ); ?>
-                                                                                
-                                                                        <?php if ( ! empty( $option['desc'] ) ) { ?>
-                                                                            <p class="description"><?php echo $option['desc']; ?></p>
-                                                                        <?php } ?>
+							<?php uasort( $section, 'gmw_sort_by_priority' ); ?>
 
-                                                                    <?php } else { */?>
-                                        
-                                                                        <?php if ( ! empty( $option['label'] ) ) { ?>
-                                                                            <label for="setting-<?php echo esc_attr( $option['name'] ); ?>">
-                                                                                <?php echo esc_html( $option['label'] ); ?> 
-                                                                            </label>                    
-                                                                        <?php } ?>
-                                                                        
-                                                                        <div class="option-content">
-                                                                            <?php $this->get_form_field( $settings, $option, $tab, $section ); ?>
-                                                                            
-                                                                            <?php if ( isset( $option['desc'] ) ) { ?>
-                                                                                <p class="description"><?php echo $option['desc']; ?></p>
-                                                                            <?php } ?>
-                                                                        </div>
-                                                                    <?php //} ?>
-                                                                </div>
-                                                            <?php } ?>
-                                                        </div>
-                                                    </div>
-                                                <?php } else { 
-                                                    $this->get_form_field( $settings, $option, $tab, $section );
-                                                }
-                                                ?>
-                                            </td>
-                                        </tr>
-                                        <?php } ?> 
-                                    </tbody>
-                                </table>
-                            </div>
-                        <?php } ?>
-                    </div>
-                </div> <!-- menu wrapper -->
+							<div class="gmw-tab-panel <?php echo esc_attr( sanitize_title( $tab ) ); ?>">
+								<table class="widefat">
+									<tbody>
 
-                <div class="update-button-wrapper bottom">
-                    <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'geo-my-wp'); ?>" />
-                </div>
-            </form>
-        </div>
-        <script type="text/javascript">
-        	
-        	jQuery( document ).ready( function( $ ) {
-        		
-        		function gmw_api_providers_setting_changer() {
+										<?php
+										foreach ( $section as $option ) {
+											// section tab.
+											if ( 'tab_section' === $option['type'] ) {
+												?>
+												<tr valign="top" class="gmw-tab-section">
+													<td><?php echo esc_html( $option['title'] ); ?></td>
+													<td></td>    
+												</tr>
+												<?php
+												continue;
+											}
 
-        			$( '.gmw-tab-panel.api_providers' ).find( 'table tr' ).not( '#api_providers-maps_provider-tr, #api_providers-geocoding_provider-tr').hide();
+											$option['type'] = ! empty( $option['type'] ) ? $option['type'] : '';
+											$class          = ! empty( $option['class'] ) ? $option['class'] . ' ' . $option['name'] . ' ' . $option['type'] : $option['name'] . ' ' . $option['type'] . ' ' . $tab;
+											?>
+											<tr 
+												valign="top" 
+												id="<?php echo esc_attr( $tab ); ?>-<?php echo esc_attr( $option['name'] ); ?>-tr" 
+												class="feature-<?php echo esc_attr( $class ); ?>"
+											>
 
-        			var mapProvider = $( '#setting-api_providers-maps_provider' ).val();
-        			
-        			if ( mapProvider == 'leaflet' ) {
-        				mapProvider = 'nominatim';
-        			}
-        			
-	        		$( '#api_providers-' + mapProvider + '_options-tr' ).show();
+												<td class="gmw-form-feature-desc">              
+													<?php if ( isset( $option['label'] ) ) { ?>
+														<label for="setting-<?php echo esc_attr( $option['name'] ); ?>">
+															<?php echo esc_html( $option['label'] ); ?> 
+														</label>                    
+													<?php } ?>
 
-	        		if ( jQuery( '#setting-api_providers-geocoding_provider' ).attr( 'type' ) == 'hidden' ) {
-	        			jQuery( '#setting-api_providers-geocoding_provider' ).val( mapProvider );
-	        		}
-	        		//var geocodeProvider = $( '#setting-api_providers-geocoding_provider' ).val();
-	        		//$( '#api_providers-' + geocodeProvider + '_options-tr' ).show();
-	        	}
-  
-        		gmw_api_providers_setting_changer();
+													<?php if ( isset( $option['desc'] ) ) { ?>
+														<div class="gmw-form-feature-desc-content"> 
+															<em class="description"><?php echo esc_attr( $option['desc'] ); ?></em>
+														</div>
+													<?php } ?>
+												</td>
+																						   
+												<td class="gmw-form-feature-settings <?php echo ! empty( $option['type'] ) ? esc_attr( $option['type'] ) : ''; ?>">  
+												<?php if ( 'fields_group' === $option['type'] && array_filter( $option['fields'] ) ) { ?>
 
-    			$( '#setting-api_providers-maps_provider, #setting-api_providers-geocoding_provider' ).on( 'change', function() {
-        			gmw_api_providers_setting_changer();
-        		} ); 
+													<?php $ob_class = ! empty( $option['optionsbox'] ) ? 'gmw-options-box' : ''; ?>
 
-        		/*function gmw_api_providers_setting_changer() {
+													<div class="<?php echo $ob_class; // WPCS: XSS ok. ?> <?php
+													if ( isset( $option['name'] ) ) {
+														echo 'fields-group-' . esc_attr( $option['name'] );}
+													?>
+													">                                                       
+															<?php foreach ( $option['fields'] as $option ) { ?>
 
-        			$( '.gmw-tab-panel.api_providers' ).find( 'table tr' ).not( '#api_providers-maps_provider-tr, #api_providers-geocoding_provider-tr').hide();
+																<div class="single-option option-<?php echo esc_attr( $option['name'] ); ?> <?php echo esc_attr( $option['type'] ); ?>">
+																	<?php
+																	/**
+																	If ( $option['type'] == 'checkbox' ) { ?>
 
-        			var mapProvider = $( '#setting-api_providers-maps_provider' ).val();
-	        		$( '#api_providers-' + mapProvider + '_options-tr' ).show();
+																		<?php $this->get_form_field( $settings, $option, $tab, $section ); ?>
 
-	        		var geocodeProvider = $( '#setting-api_providers-geocoding_provider' ).val();
-	        		$( '#api_providers-' + geocodeProvider + '_options-tr' ).show();
-	        	}
-  
-        		gmw_api_providers_setting_changer();
+																		<?php if ( ! empty( $option['desc'] ) ) { ?>
+																			<p class="description"><?php echo $option['desc']; ?></p>
+																		<?php } ?>
 
-    			$( '#setting-api_providers-maps_provider, #setting-api_providers-geocoding_provider' ).on( 'change', function() {
-        			gmw_api_providers_setting_changer();
-        		} ); */
-        	});
-        </script>
+																	<?php } else { */
+																	?>
+
+																	<?php if ( ! empty( $option['label'] ) ) { ?>
+																		<label for="setting-<?php echo esc_attr( $option['name'] ); ?>">
+																			<?php echo esc_html( $option['label'] ); ?> 
+																		</label>                    
+																	<?php } ?>
+
+																	<div class="option-content">
+																		<?php $this->get_form_field( $settings, $option, $tab, $section ); ?>
+
+																		<?php if ( isset( $option['desc'] ) ) { ?>
+																			<p class="description"><?php echo esc_attr( $option['desc'] ); ?></p>
+																		<?php } ?>
+																	</div>
+
+																</div>
+															<?php } ?>
+														</div>
+													</div>
+												<?php } else { ?>
+													<?php $this->get_form_field( $settings, $option, $tab, $section ); ?>
+												<?php } ?>
+											</td>
+										</tr>
+										<?php } ?> 
+									</tbody>
+								</table>
+							</div>
+						<?php } ?>
+					</div>
+				</div> <!-- menu wrapper -->
+
+				<div class="update-button-wrapper bottom">
+					<input type="submit" class="button-primary" value="<?php _e( 'Save Changes', 'geo-my-wp' ); ?>" />
+				</div>
+			</form>
+		</div>
+		<script type="text/javascript">
+
+			jQuery( document ).ready( function( $ ) {
+
+				function gmw_api_providers_setting_changer() {
+
+					$( '.gmw-tab-panel.api_providers' ).find( 'table tr' ).not( '#api_providers-maps_provider-tr, #api_providers-geocoding_provider-tr').hide();
+
+					var mapProvider = $( '#setting-api_providers-maps_provider' ).val();
+
+					if ( mapProvider == 'leaflet' ) {
+						mapProvider = 'nominatim';
+					}
+
+					$( '#api_providers-' + mapProvider + '_options-tr' ).show();
+
+					if ( jQuery( '#setting-api_providers-geocoding_provider' ).attr( 'type' ) == 'hidden' ) {
+						jQuery( '#setting-api_providers-geocoding_provider' ).val( mapProvider );
+					}
+					//var geocodeProvider = $( '#setting-api_providers-geocoding_provider' ).val();
+					//$( '#api_providers-' + geocodeProvider + '_options-tr' ).show();
+				}
+
+				gmw_api_providers_setting_changer();
+
+				$( '#setting-api_providers-maps_provider, #setting-api_providers-geocoding_provider' ).on( 'change', function() {
+					gmw_api_providers_setting_changer();
+				} ); 
+
+				/*function gmw_api_providers_setting_changer() {
+
+					$( '.gmw-tab-panel.api_providers' ).find( 'table tr' ).not( '#api_providers-maps_provider-tr, #api_providers-geocoding_provider-tr').hide();
+
+					var mapProvider = $( '#setting-api_providers-maps_provider' ).val();
+					$( '#api_providers-' + mapProvider + '_options-tr' ).show();
+
+					var geocodeProvider = $( '#setting-api_providers-geocoding_provider' ).val();
+					$( '#api_providers-' + geocodeProvider + '_options-tr' ).show();
+				}
+
+				gmw_api_providers_setting_changer();
+
+				$( '#setting-api_providers-maps_provider, #setting-api_providers-geocoding_provider' ).on( 'change', function() {
+					gmw_api_providers_setting_changer();
+				} ); */
+			});
+		</script>
 		<?php
-		// load chosen
+		// load chosen.
 		if ( ! wp_script_is( 'chosen', 'enqueued' ) ) {
 			wp_enqueue_script( 'chosen' );
 			wp_enqueue_style( 'chosen' );
