@@ -2,8 +2,8 @@
 /**
  * Plugin Name: GEO my WP
  * Plugin URI: http://www.geomywp.com
- * Description: GEO my WP is an adavanced geolocation, mapping, and proximity search plugin. Geotag post types and BuddyPress members, and create advanced, proximity search forms to search and find locations based on address, radius, categories and more.
- * Version: 3.1.0.1
+ * Description: GEO my WP is an adavanced geolocation, mapping, and proximity search plugin. Geotag post types and BuddyPress members, and create advanced, proximity search forms to search and find locations based on address, radius,categories and more.
+ * Version: 3.2-beta1
  * Author: Eyal Fitoussi
  * Author URI: http://www.geomywp.com
  * Requires at least: 4.5
@@ -13,6 +13,8 @@
  * Domain Path: /languages
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ *
+ * @package geo-my-wp
  */
 
 // Exit if accessed directly.
@@ -30,7 +32,7 @@ class GEO_MY_WP {
 	 *
 	 * @var string
 	 */
-	public $version = '3.1.0.1';
+	public $version = '3.2';
 
 	/**
 	 * GEO my WP & Extensions options.
@@ -97,9 +99,9 @@ class GEO_MY_WP {
 	 * @var array
 	 */
 	public $required_versions = array(
-		'ajax_forms'                       => '1.0',
-		'bp_groups_locator'                => '1.6.1',
-		'groups_locator'                   => '1.6.1', // old slug.
+		'ajax_forms'                       => '1.1',
+		'bp_groups_locator'                => '1.7',
+		'groups_locator'                   => '1.7', // old slug.
 		'bp_members_directory_geolocation' => '1.5.1',
 		'geo_members_directory'            => '1.5.1', // old slug.
 		'bp_xprofile_geolocation'          => '1.5.1',
@@ -109,9 +111,9 @@ class GEO_MY_WP {
 		'gmw_kleo_geolocation'             => '1.4.1',
 		'nearby_locations'                 => '1.3.1',
 		'nearby_posts'                     => '1.3.1', // old slug.
-		'premium_settings'                 => '2.1',
-		'global_maps'                      => '2.3',
-		'users_locator'                    => '1.3.2',
+		'premium_settings'                 => '2.2',
+		'global_maps'                      => '2.4',
+		'users_locator'                    => '1.4',
 		'wp_users_geo-location'            => '1.3.2', // old slug.
 	);
 
@@ -192,10 +194,10 @@ class GEO_MY_WP {
 	public function set_default_icons() {
 		$this->default_icons = array(
 			'shadow_icon_url'         => 'https://unpkg.com/leaflet@1.3.1/dist/images/marker-shadow.png',
-			// 'location_icon_url'     => 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+			/** 'location_icon_url'     => 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png', */
 			'location_icon_url'       => GMW_IMAGES . '/marker-icon-red-2x.png',
 			'location_icon_size'      => array( 25, 41 ),
-			// 'user_location_icon_url'=> 'https://unpkg.com/leaflet@1.3.1/dist/images/marker-icon-2x.png',
+			/** 'user_location_icon_url'=> 'https://unpkg.com/leaflet@1.3.1/dist/images/marker-icon-2x.png', */
 			'user_location_icon_url'  => GMW_IMAGES . '/marker-icon-blue-2x.png',
 			'user_location_icon_size' => array( 25, 41 ),
 		);
