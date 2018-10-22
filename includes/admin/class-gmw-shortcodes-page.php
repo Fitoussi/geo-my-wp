@@ -69,7 +69,7 @@ class GMW_Shortcodes_page {
     					),
     			),
     			'current_location' => array(
-    					'name'		  	=> __( 'Curren Location', 'geo-my-wp' ),
+    					'name'		  	=> __( 'Current Location', 'geo-my-wp' ),
     					'basic_usage' 	=> '[gmw_current_location]',
     					'template_usage'=> '&#60;&#63;php echo do_shortcode(\'[gmw_current_location]\'); &#63;&#62;',
     					'desc'        	=> __( "The shortcode will display a link which once clicked will open a popup window that will allow the user to get his current location.", 'geo-my-wp' ).
