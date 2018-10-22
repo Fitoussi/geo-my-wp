@@ -122,7 +122,7 @@ class GMW_Form_Editor {
 						'type'       => 'checkbox',
 						'default'    => '',
 						'label'      => __( "Visitor's Current Location Filter", 'GMW' ),
-						'desc'       => __( "GEO my WP will first check for the visitor's current location on page load. And If exists, the locations will be displayed based on that. Notice that the address filter below will be ingnored if the visitor's location exists.", 'geo-my-wp' ),
+						'desc'       => __( "GEO my WP will first check for the visitor's current location on page load. And If exists, the locations will be displayed based on that. Notice that the address filter below will be ignored if the visitor's location exists.", 'geo-my-wp' ),
 						'cb_label'   => __( 'Enable', 'geo-my-wp' ),
 						'attributes' => '',
 						'priority'   => 20,
@@ -216,7 +216,7 @@ class GMW_Form_Editor {
 						'type'     => 'select',
 						'default'  => '',
 						'label'    => __( 'Display Map', 'geo-my-wp' ),
-						'desc'     => __( 'Disable the map completly, display it above the list of result, or display it anywhere on the page using the shortcode <code>[gmw map=\"form ID\"]</code>.', 'geo-my-wp' ),
+						'desc'     => __( 'Disable the map completely, display it above the list of result, or display it anywhere on the page using the shortcode <code>[gmw map=\"form ID\"]</code>.', 'geo-my-wp' ),
 						'options'  => array(
 							''          => __( 'Disable map', 'geo-my-wp' ),
 							'results'   => __( 'Above the list of result', 'geo-my-wp' ),
@@ -257,7 +257,7 @@ class GMW_Form_Editor {
 						'default'    => '',
 						'label'      => __( 'Address Field', 'geo-my-wp' ),
 						'cb_label'   => '',
-						'desc'       => __( '<ul><li>- Label - enter a lable that you would like to use or leave blank for no label.</li><li>- Placeholder - enter a placeholder that you would like to use or leave blank for no placeholder.</li><li>Mandatory - check to make the field mandatory</li><li>- Address autocomplete - check to enable Google address autocomplete feature.</li><li>- Locator button - check to display a locator button inside the address field.</li><li>-Locator submit - check to dynaimcally submit the form when the address was found using the locator button.</li></ul>', 'geo-my-wp' ),
+						'desc'       => __( '<ul><li>- Label - enter a lable that you would like to use or leave blank for no label.</li><li>- Placeholder - enter a placeholder that you would like to use or leave blank for no placeholder.</li><li>Mandatory - check to make the field mandatory</li><li>- Address autocomplete - check to enable Google address autocomplete feature.</li><li>- Locator button - check to display a locator button inside the address field.</li><li>-Locator submit - check to dynamically submit the form when the address was found using the locator button.</li></ul>', 'geo-my-wp' ),
 						'attributes' => array(),
 						'priority'   => 20,
 					),
@@ -265,7 +265,7 @@ class GMW_Form_Editor {
 						'name'       => 'locator_button',
 						'type'       => 'fields_group',
 						'label'      => __( 'Locator Button', 'geo-my-wp' ),
-						'desc'       => __( '<p>Using the locator button the visitor can dynamically retrive his current location.</p><p>- Select "disabled" to disable the locator button.</p><p>- Select "Image" and select an image that will be used as the locator button.</p><p>- Select "Text" and enter any text that you would like to use as the locator button.</p><p>- Check the "Auto form Submission" text box to dynamically submit the search form once the visitors locator was found.</p>', 'geo-my-wp' ),
+						'desc'       => __( '<p>Using the locator button the visitor can dynamically retrieve his current location.</p><p>- Select "disabled" to disable the locator button.</p><p>- Select "Image" and select an image that will be used as the locator button.</p><p>- Select "Text" and enter any text that you would like to use as the locator button.</p><p>- Check the "Auto form Submission" text box to dynamically submit the search form once the visitors locator was found.</p>', 'geo-my-wp' ),
 						'fields'     => array(
 							array(
 								'name'       => 'locator',
@@ -366,7 +366,7 @@ class GMW_Form_Editor {
 						'type'       => 'select',
 						'default'    => '',
 						'label'      => __( 'Display Map', 'geo-my-wp' ),
-						'desc'       => __( 'Select if to disable the map completly, display it above the list of result, or display it anywhere on the page using the shortcode <code>[gmw map="form ID"]</code>.', 'geo-my-wp' ),
+						'desc'       => __( 'Select if to disable the map completely, display it above the list of result, or display it anywhere on the page using the shortcode <code>[gmw map="form ID"]</code>.', 'geo-my-wp' ),
 						'options'    => array(
 							''          => __( 'Disable map', 'geo-my-wp' ),
 							'results'   => __( 'Above the list of result', 'geo-my-wp' ),
