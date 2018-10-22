@@ -93,9 +93,9 @@ function gmw_is_user_exists( $user_id = 0 ) {
  *
  * @since 3.0
  *
- * @param  integer $id  user ID to retrieve the default location of a specific user. Or location ID
+ * @param  integer $id  user ID to retrive the default location of a specific user. Or location ID
  * 
- * to retrieve a specific location.
+ * to retrive a specific location.
  * 
  * @param  boolean $by_location_id  when set to true the first argument has to be a location ID.
  * 
@@ -158,7 +158,7 @@ function gmw_get_user_locations( $user_id = 0 ) {
  *
  * @param  integer $user_id the user ID.
  *
- * @param  mixed $meta_keys string of a single or array of multiple meta keys to retrieve their values.
+ * @param  mixed $meta_keys string of a single or array of multiple meta keys to retrive their values.
  * 
  * @return [type]           [description]
  */

@@ -559,7 +559,7 @@ class GMW_Addon {
 		 *
 		 * in the fron-end. The data is collected when activating/deactivating plugins.
 		 *
-		 * if the data does not exists in option, it will be then retrieved using the below in the front-end as well.
+		 * if the data does not exists in option, it will be then retrived using the below in the front-end as well.
 		 *
 		 */
 		if ( IS_ADMIN || ! isset( GMW()->addons[ $this->slug ] ) || empty( GMW()->addons[ $this->slug ]['status'] ) ) {

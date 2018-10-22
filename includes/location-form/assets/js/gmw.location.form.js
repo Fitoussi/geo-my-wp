@@ -823,7 +823,7 @@ var GMW_Location_Form = {
 	 *
 	 * When user clicks the current location icon the browser will
 	 *
-	 * try to retrieve his current position.
+	 * try to retrive his current position.
 	 * 
 	 * @return void
 	 */
@@ -1069,7 +1069,7 @@ var GMW_Location_Form = {
 	},
 
 	/**
-	 * Retrieve the address fields from address component
+	 * Retrive the address fields from address component
 	 * 
 	 * @param  {[type]} location  [description]
 	 * @param  {[type]} save_data [description]

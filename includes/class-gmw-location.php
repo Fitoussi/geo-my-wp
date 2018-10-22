@@ -453,7 +453,7 @@ class GMW_Location {
 	 *
 	 * When location ID is provided, it will be used to update the location.
 	 *
-	 * Otherwise, a default location will be retrieved based on object type and object ID.
+	 * Otherwise, a default location will be retrived based on object type and object ID.
 	 * 
 	 * @param  [type] $args [description]
 	 * @return [type]       [description]
@@ -907,7 +907,7 @@ class GMW_Location {
 				// for backward compatibility, we also need to have "lat" and "lng"
 				// in the location object and that is what we did in the line above.
 				// The lat and lng field are too involve and need to carfully change it.
-				// eventually we want to completely move to using latitude and longitude.
+				// eventually we want to completly move to using latitude and longitude.
 				if ( 'latitude' == $field[0] || 'longitude' == $field[0] ) {
 					$output .= ",gmw_locations.{$field[0]}";
 				}

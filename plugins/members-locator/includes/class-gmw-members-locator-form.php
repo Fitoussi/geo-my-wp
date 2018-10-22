@@ -217,7 +217,7 @@ class GMW_Members_Locator_Form extends GMW_Form {
 			/**
 			 * Here we build a fake query to return back to the SQL function of the BuddyPress query.
 			 *
-			 * Since we already retrieved the users data using our custom query
+			 * Since we already retrived the users data using our custom query
 			 *
 			 * We dont need BuddyPress to run another query to get the users id.
 			 *
