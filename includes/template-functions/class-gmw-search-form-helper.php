@@ -501,7 +501,7 @@ class GMW_Search_Form_Helper {
 			$groups = $groups['groups'];
 
 			/**
-			 * Simpler method to retrieve the list of groups
+			 * Simpler method to retrive the list of groups
 			 */
 		} else {
 

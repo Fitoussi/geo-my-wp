@@ -109,7 +109,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 				// for backward compatibility, we also need to have "lat" and "lng"
 				// in the location object and that is what we did in the line above.
 				// The lat and lng field are too involve and need to carfully change it.
-				// eventually we want to completely move to using latitude and longitude.
+				// eventually we want to completly move to using latitude and longitude.
 				if ( 'latitude' == $field[0] || 'longitude' == $field[0] ) {
 					$db_fields .= ",gmw_locations.{$field[0]}";
 				}

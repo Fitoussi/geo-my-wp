@@ -189,7 +189,7 @@ function gmw_get_location_meta( $location_id = 0, $meta_keys = '', $cache = true
  *
  * @param  string  $object_type object_type object type ( post, user... )
  * @param  integer $object_id   object ID ( post ID, user ID.... )
- * @param  array   $meta_keys   string of a single or array of multiple meta keys to retrieve their values
+ * @param  array   $meta_keys   string of a single or array of multiple meta keys to retrive their values
  *
  * @return [type]  string || array of values
  */
@@ -704,12 +704,12 @@ function gmw_get_address_fields( $args = array(), $dep_object_id = 0, $dep_field
 /**
  * Get location meta values.
  *
- * Can retrieve a single or multiple values, and use a separator between.
+ * Can retrive a single or multiple values, and use a separator between.
  *
  * @since 3.0.2
  *
  * @param  mixed  $args       int as location ID || array of object_type and object ID.
- * @param  array  $meta_keys  array of meta_keys to retrieve.
+ * @param  array  $meta_keys  array of meta_keys to retrive.
  * @param  string $separator  characters to be used as separator between fields.
  * @param  string $dep_sep    deprecated separator argument.
  *

@@ -162,7 +162,7 @@ class GMW_Settings {
 							'default'    => '',
 							'label'      => __( 'Auto Locator', 'geo-my-wp' ),
 							'cb_label'   => __( 'Enable', 'geo-my-wp' ),
-							'desc'       => __( "GEO my WP will try to retrieve the visitor's current location when once first visits the website. If a location was found, it will be saved via cookies and will be used with some of GEO my WP features; such as dynamically displaying results nearby the visitor.", 'geo-my-wp' ),
+							'desc'       => __( "GEO my WP will try to retrive the visitor's current location when once first visits the website. If a location was found, it will be saved via cookies and will be used with some of GEO my WP features; such as dynamically displaying results nearby the visitor.", 'geo-my-wp' ),
 							'attributes' => array(),
 							'priority'   => 40,
 						),

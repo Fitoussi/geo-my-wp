@@ -796,8 +796,8 @@ class GMW_Location_Form {
 
 						// when excluding the main address field ( with the autocomplete )
 						// we actually only hide it. At the moment the field is too invlove with the JavaSctipt
-						// and the other field that things might break if we completely remove it.
-						// The field being completely removed only when excluding the entire Location tab.
+						// and the other field that things might break if we completly remove it.
+						// The field being completly removed only when excluding the entire Location tab.
 						// Which is done in via the JavaScript file
 						if ( in_array( $exclude_field, array( 'address', 'delete_location', 'message', 'loader' ) ) ) {
 							$this->fields[ $fields_group ]['fields'][ $exclude_field ]['attributes'] = array( 'disabled' => 'disabled' );
