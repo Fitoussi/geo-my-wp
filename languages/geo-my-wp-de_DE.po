@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GEO my WP v2.4.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-21 12:48-1000\n"
-"PO-Revision-Date: 2018-10-21 12:50-1000\n"
+"POT-Creation-Date: 2018-10-21 14:09-1000\n"
+"PO-Revision-Date: 2018-10-21 14:09-1000\n"
 "Last-Translator: Eyal Fitoussi <fitoussi_eyal@hotmail.com>\n"
 "Language-Team: Eyal Fitoussi <info@geomywp.com>\n"
 "Language: de_DE\n"
@@ -847,7 +847,7 @@ msgstr ""
 msgid ""
 "GEO my WP will first check for the visitor's current location on page load. "
 "And If exists, the locations will be displayed based on that. Notice that "
-"the address filter below will be ingnored if the visitor's location exists."
+"the address filter below will be ignored if the visitor's location exists."
 msgstr ""
 
 #: includes/admin/pages/class-gmw-form-editor.php:134
@@ -991,7 +991,7 @@ msgstr "Zeige den Standort"
 
 #: includes/admin/pages/class-gmw-form-editor.php:219
 msgid ""
-"Disable the map completly, display it above the list of result, or display "
+"Disable the map completely, display it above the list of result, or display "
 "it anywhere on the page using the shortcode <code>[gmw map=\\\"form ID\\\"]</"
 "code>."
 msgstr ""
@@ -1070,13 +1070,13 @@ msgid ""
 "make the field mandatory</li><li>- Address autocomplete - check to enable "
 "Google address autocomplete feature.</li><li>- Locator button - check to "
 "display a locator button inside the address field.</li><li>-Locator submit - "
-"check to dynaimcally submit the form when the address was found using the "
+"check to dynamically submit the form when the address was found using the "
 "locator button.</li></ul>"
 msgstr ""
 
 #: includes/admin/pages/class-gmw-form-editor.php:268
 msgid ""
-"<p>Using the locator button the visitor can dynamically retrive his current "
+"<p>Using the locator button the visitor can dynamically retrieve his current "
 "location.</p><p>- Select \"disabled\" to disable the locator button.</p><p>- "
 "Select \"Image\" and select an image that will be used as the locator button."
 "</p><p>- Select \"Text\" and enter any text that you would like to use as "
@@ -1162,9 +1162,9 @@ msgstr ""
 
 #: includes/admin/pages/class-gmw-form-editor.php:369
 msgid ""
-"Select if to disable the map completly, display it above the list of result, "
-"or display it anywhere on the page using the shortcode <code>[gmw map=\"form "
-"ID\"]</code>."
+"Select if to disable the map completely, display it above the list of "
+"result, or display it anywhere on the page using the shortcode <code>[gmw "
+"map=\"form ID\"]</code>."
 msgstr ""
 
 # @ GMW
@@ -1584,10 +1584,10 @@ msgstr "Automatische Lokalisierung"
 
 #: includes/admin/pages/class-gmw-settings.php:165
 msgid ""
-"GEO my WP will try to retrive the visitor's current location when once first "
-"visits the website. If a location was found, it will be saved via cookies "
-"and will be used with some of GEO my WP features; such as dynamically "
-"displaying results nearby the visitor."
+"GEO my WP will try to retrieve the visitor's current location when once "
+"first visits the website. If a location was found, it will be saved via "
+"cookies and will be used with some of GEO my WP features; such as "
+"dynamically displaying results nearby the visitor."
 msgstr ""
 
 #: includes/admin/pages/class-gmw-settings.php:174
