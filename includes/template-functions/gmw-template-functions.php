@@ -234,7 +234,7 @@ function gmw_get_excerpt( $args = array(), $gmw = false ) {
     // temporary, to support older search results template files
     if ( is_object( $args ) && ! empty( $gmw ) ) {
 
-        trigger_error( 'Do not use gmw_get_excerpt nor gmw_excerpt functions directly to retrive the post excerpt in the search results template file. Use gmw_search_results_post_excerpt functions instead. Since GEO my WP 3.0.' , E_USER_NOTICE );
+        trigger_error( 'Do not use gmw_get_excerpt nor gmw_excerpt functions directly to retrieve the post excerpt in the search results template file. Use gmw_search_results_post_excerpt functions instead. Since GEO my WP 3.0.' , E_USER_NOTICE );
 
         echo gmw_search_results_post_excerpt( $args, $gmw );
 

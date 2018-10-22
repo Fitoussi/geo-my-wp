@@ -83,7 +83,7 @@ function gmw_get_terms( $taxonomy = 'category', $args = array() ) {
  * @since 3.0
  *
  * @param  integer $post_id  The post ID
- * @param  string  $taxonomy The taxonomy to retrive
+ * @param  string  $taxonomy The taxonomy to retrieve
  * 
  * @return array             array of terms
  */
@@ -240,9 +240,9 @@ function gmw_post_location_form( $args = array() ) {
  *
  * @since 3.0
  *
- * @param  integer $id  post ID to retrive the default location of a specific post. Or location ID
+ * @param  integer $id  post ID to retrieve the default location of a specific post. Or location ID
  * 
- * to retrive a specific location.
+ * to retrieve a specific location.
  * 
  * @param  boolean $by_location_id  when set to true the first argument has to be a location ID.
  * 
@@ -311,7 +311,7 @@ function gmw_get_post_locations( $post_id = 0 ) {
  * 
  * @param  integer $post_id the post ID.
  *
- * @param  mixed $meta_keys string of a single or array of multiple meta keys to retrive their values.
+ * @param  mixed $meta_keys string of a single or array of multiple meta keys to retrieve their values.
  * 
  * @return [type]           [description]
  */

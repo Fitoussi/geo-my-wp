@@ -176,7 +176,7 @@ class GMW_Extensions {
 			wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 		}
 
-		// delete extensions and license key transient to retrive new data.
+		// delete extensions and license key transient to retrieve new data.
 		delete_transient( 'gmw_extensions_feed' );
 		//delete_transient( 'gmw_verify_license_keys' );
 
