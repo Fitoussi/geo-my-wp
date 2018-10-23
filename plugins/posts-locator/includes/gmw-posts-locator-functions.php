@@ -577,8 +577,8 @@ function gmw_get_post_location_fields( $args = array() ) {
  *
  * @author Eyal Fitoussi
  *
- * @param  integer          $post_id  int ( post ID, user ID, comment ID... )
- * @param  string || array  $location to pass an address it can be either a string or an array of address field for example:
+ * @param  integer         $post_id  int ( post ID, user ID, comment ID... ).
+ * @param  string || array $location to pass an address it can be either a string or an array of address field for example:
  *
  * $location = array(
  *      'street'    => 285 Fulton St,
@@ -594,36 +594,35 @@ function gmw_get_post_location_fields( $args = array() ) {
  * $location = array(
  *     'lat' => 26.1345,
  *     'lng' => -80.4362
- * );
+ * );.
  *
- * @param  string  $location_name name of the location ( optional )
- * 
- * @param  integer $user_id       the user whom the location belongs to. By default it belongs 
- *                                to the user who creates/update the post location ( logged in user ).
- * 
- * @param  boolean $force_refresh false to use geocoded address in cache || true to force address geocoding
+ * @param  integer         $user_id the user whom the location belongs to. By default it belongs to the user who creates/update the post location ( logged in user ).
+ *
+ * @param  string          $location_name name of the location ( optional ).
+ *
+ * @param  boolean         $force_refresh false to use geocoded address in cache || true to force address geocoding.
  *
  * @return int location ID
  */
-function gmw_update_post_location( $post_id = 0, $location = array(), $location_name = '', $user_id = 0, $force_refresh = false ) {
+function gmw_update_post_location( $post_id = 0, $location = array(), $user_id = 0, $location_name = '', $force_refresh = false ) {
 
 	if ( ! gmw_is_post_exists( $post_id ) ) {
 		return;
 	}
 
-	if ( ! is_integer( $user_id ) && is_integer( $location_name ) ) {
-		$user_id       = $location_name;
+	if ( ! is_string( $location_name ) ) {
+		$force_refresh = $location_name;
 		$location_name = '';
 	}
 
 	$args = array(
 		'object_type'   => 'post',
 		'object_id'     => $post_id,
-		'location_name' => is_string( $location_name ) ? $location_name :'',
+		'location_name' => is_string( $location_name ) ? $location_name : '',
 		'user_id'       => $user_id,
 	);
 
-	// update post location
+	// update post location.
 	return gmw_update_location( $args, $location, $force_refresh );
 }
 
