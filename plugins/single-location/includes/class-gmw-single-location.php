@@ -46,8 +46,8 @@ class GMW_Single_Location {
 		'user_map_icon_size'   => '',
 		'user_info_window'     => 'Your Location',
 		'no_location_message'  => 0,
-		'is_widget'            => 0,
-		'widget_title'         => 0,
+		//'is_widget'            => 0,
+		//'widget_title'         => 0,
 	);
 
 	/**
@@ -331,9 +331,9 @@ class GMW_Single_Location {
 		$this->elements['element_wrap_start'] = '<div id="gmw-single-location-wrapper-' . esc_attr( $this->args['element_id'] ) . '" class="gmw-single-location-wrapper gmw-sl-wrapper ' . esc_attr( $this->args['object'] ) . ' gmw-single-' . esc_attr( $this->args['object'] ) . '-sc-wrapper">';
 
 		// check if this is widget and we use widget title
-		if ( $this->args['is_widget'] && ! empty( $this->args['widget_title'] ) ) {
+		/** If ( $this->args['is_widget'] && ! empty( $this->args['widget_title'] ) ) {
 			$this->elements['widget_title'] = true;
-		}
+		} */
 
 		// if no location found
 		if ( empty( $this->location_data ) ) {
@@ -721,9 +721,9 @@ class GMW_Single_Location {
 			return;
 		}
 
-		if ( ! empty( $this->elements['widget_title'] ) ) {
-			$this->elements['widget_title'] = html_entity_decode( $this->args['widget_title'] );
-		}
+		//if ( ! empty( $this->elements['widget_title'] ) ) {
+		//	$this->elements['widget_title'] = html_entity_decode( $this->args['widget_title'] );
+		//}
 
 		// loop through and generate the elements
 		foreach ( $this->elements as $element => $value ) {
