@@ -723,27 +723,23 @@ class GMW_Maps_API {
 
 		$defaults = array(
 			'id'       => 0,
-			'to_lat'   => false,
-			'to_lat'   => false,
-			'from_lat' => false,
-			'from_lng' => false,
+			'from_lat' => '',
+			'from_lng' => '',
+			'to_lat'   => '',
+			'to_lng'   => '',
 			'units'    => 'imperial',
 			'label'    => __( 'Get directions', 'geo-my-wp' ),
+			'language' => gmw_get_option( 'general_settings', 'language_code', 'EN' ),
+			'region'   => gmw_get_option( 'general_settings', 'country_code', 'US' ),
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 		$args = apply_filters( 'gmw_get_directions_link_args', $args );
 
-		if ( ! $args['to_lat'] || ! $args['to_lng'] ) {
-			return;
-		}
-
-		$language    = gmw_get_option( 'general_settings', 'langugae_code', 'EN' );
-		$region      = gmw_get_option( 'general_settings', 'country_code', 'US' );
-		$to_latlng   = "{$args['to_lat']},{$args['to_lng']}";
-		$from_latlng = ( ! empty( $args['from_lat'] ) && ! empty( $args['from_lng'] ) ) ? "{$args['from_lat']},{$args['from_lng']}" : '';
-		$units       = ( 'imperial' == $args['units'] ) ? 'ptm' : 'ptk';
-		$link        = esc_url( "http://maps.google.com/maps?f=d&hl={$language}&region={$region}&doflg={$units}&saddr={$from_latlng}&daddr={$to_latlng}&ie=UTF8&z=12" );
+		$from_latlng = ( empty( $args['from_lat'] ) || empty( $args['from_lng'] ) ) ? '' : "{$args['from_lat']},{$args['from_lng']}";
+		$to_latlng   = ( empty( $args['to_lat'] ) || empty( $args['to_lng'] ) ) ? '' : "{$args['to_lat']},{$args['to_lng']}";
+		$units       = 'imperial' === $args['units'] ? 'ptm' : 'ptk';
+		$link        = esc_url( "http://maps.google.com/maps?f=d&hl={$args['language']}&region={$args['region']}&doflg={$units}&saddr={$from_latlng}&daddr={$to_latlng}&ie=UTF8&z=12" );
 		$label       = esc_html( $args['label'] );
 
 		return "<a class=\"gmw-get-directions\" title=\"{$label}\" href=\"{$link}\" target=\"_blank\">{$label}</a>";
