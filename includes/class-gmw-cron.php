@@ -1,5 +1,4 @@
 <?php
-// Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -7,8 +6,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * GMW_Cron class.
  *
- * @author This class was originally written by Pippin Williamson for Easy Digital Downloads plugin 
- * 
+ * @author This class was originally written by Pippin Williamson for Easy Digital Downloads plugin
+ *
  * and modifyed to work with GEO my WP. Thank you!
  *
  * @since 3.0
@@ -19,8 +18,8 @@ class GMW_Cron {
 	 * Run GMW_Cron
 	 */
 	public function __construct() {
-		add_filter( 'cron_schedules', array( $this, 'add_schedules'   ) );
-		add_action( 'wp', 			  array( $this, 'schedule_events' ) );
+		add_filter( 'cron_schedules', array( $this, 'add_schedules' ) );
+		add_action( 'wp', array( $this, 'schedule_events' ) );
 	}
 
 	/**
@@ -28,17 +27,16 @@ class GMW_Cron {
 	 *
 	 * @since 3.0
 	 *
-	 * @param array $schedules
-	 * 
+	 * @param array $schedules default schedules.
+	 *
 	 * @return array
-	 * 
 	 */
 	public function add_schedules( $schedules = array() ) {
-		
+
 		// Adds once weekly to the existing schedules.
 		$schedules['weekly'] = array(
 			'interval' => 604800,
-			'display'  => __( 'Once Weekly', 'geo-my-wp' )
+			'display'  => __( 'Once Weekly', 'geo-my-wp' ),
 		);
 
 		return $schedules;
@@ -96,4 +94,4 @@ class GMW_Cron {
 		}
 	}
 }
-$gmw_cron = new gmw_Cron;
+$gmw_cron = new gmw_Cron();
