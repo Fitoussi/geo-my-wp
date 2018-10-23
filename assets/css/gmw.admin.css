@@ -523,11 +523,14 @@ div.gmw-tracking-notice.update-nag em {
 }
 
 .gmw-widget-wrapper .gmw-message-box {
-	padding:8px 8px;
-	background: rgba(173, 216, 230, 0.33);
+	padding: 8px;
+	background: rgba(173,216,230,.33);
 	box-sizing: border-box;
-	border:1px solid rgba(173, 216, 230, 0.63);
+	border: 1px solid rgba(173,216,230,.63);
 	border-radius: 5px;
+	color: rgba(58, 72, 77, 1);
+	margin-top: 15px;
+	margin-bottom: 5px;
 }
 
 input.chosen-search-input.default {
