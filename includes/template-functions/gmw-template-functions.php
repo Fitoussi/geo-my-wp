@@ -1,317 +1,389 @@
 <?php
-// Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+	exit;
+}
+
+/**
+ * Get the search results message
+ *
+ * @param  [type] $gmw gmw form.
+ *
+ * @return [type]      [description]
+ */
+function gmw_get_results_message( $gmw ) {
+	return ! empty( $gmw['results_message'] ) ? esc_html( $gmw['results_message'] ) : '';
 }
 
 /**
  * Display the search results message
- * 
- * @param  [type] $gmw [description]
- * @return [type]      [description]
+ *
+ * @param  [type] $gmw gmw form.
  */
-function gmw_get_results_message( $gmw )  {
-    return ! empty( $gmw['results_message'] ) ? esc_html( $gmw['results_message'] ) : '';
+function gmw_results_message( $gmw ) {
+	echo gmw_get_results_message( $gmw ); // WPCS: XSS ok.
 }
 
-    function gmw_results_message( $gmw ) {
-        echo gmw_get_results_message( $gmw );
-    }
-
 /**
- * No results message
- * 
- * @param  array  $gmw [description]
- * @return [type]      [description]
+ * Get no results message
+ *
+ * @param  array $gmw gmw form.
+ *
+ * @return HTLM element.
  */
 function gmw_get_no_results_message( $gmw = array() ) {
 
-    // allowed characters can be filtered
-    $allowed = array(
-        'a' => array(
-            'href'  => array(),
-            'title' => array(),
-            'alt'   => array()
-        ),
-        'br'     => array(),
-        'em'     => array(),
-        'strong' => array(),
-        'p'      => array()
-    );
+	// allowed characters can be filtered.
+	$allowed = array(
+		'a'      => array(
+			'href'  => array(),
+			'title' => array(),
+			'alt'   => array(),
+		),
+		'br'     => array(),
+		'em'     => array(),
+		'strong' => array(),
+		'p'      => array(),
+	);
 
-    $message = isset( $gmw['no_results_message'] ) ? $gmw['no_results_message'] : '';
-    
-    // filter the no results message
-    $message = apply_filters( 'gmw_no_results_message', $message, $gmw );
+	$message = isset( $gmw['no_results_message'] ) ? $gmw['no_results_message'] : '';
 
-    return wp_kses( $message, $allowed );
+	// filter the no results message.
+	$message = apply_filters( 'gmw_no_results_message', $message, $gmw );
+
+	return wp_kses( $message, $allowed );
 }
-    function gmw_no_results_message( $gmw = array() ) {
-        echo gmw_get_no_results_message( $gmw );
-    }
+
+/**
+ * Output no results message
+ *
+ * @param  array $gmw gmw form.
+ */
+function gmw_no_results_message( $gmw = array() ) {
+	echo gmw_get_no_results_message( $gmw ); // WPCS: XSS ok.
+}
 
 /**
  * Generate map in search results
- * 
+ *
  * @version 1.0
- * 
+ *
  * @author Eyal Fitoussi
+ *
+ * @param array   $gmw gmw form.
+ *
+ * @param boolean $init_visible show on page load?.
+ *
+ * @param boolean $implode impload the element?.
  */
 function gmw_get_results_map( $gmw, $init_visible = true, $implode = true ) {
-    
-    $args = array( 
-        'map_id'         => $gmw['ID'],
-        'prefix'         => $gmw['prefix'],
-        'map_type'       => $gmw['addon'],
-        'map_width'      => $gmw['results_map']['map_width'],
-        'map_height'     => $gmw['results_map']['map_height'],
-        'expand_on_load' => ! empty( $gmw['results_map']['expand_on_load'] ) ? true : false,
-        'init_visible'   => $init_visible
-    );
 
-    return GMW_Maps_API::get_map_element( $args, $implode );
+	$args = array(
+		'map_id'         => $gmw['ID'],
+		'prefix'         => $gmw['prefix'],
+		'map_type'       => $gmw['addon'],
+		'map_width'      => $gmw['results_map']['map_width'],
+		'map_height'     => $gmw['results_map']['map_height'],
+		'expand_on_load' => ! empty( $gmw['results_map']['expand_on_load'] ) ? true : false,
+		'init_visible'   => $init_visible,
+	);
+
+	return GMW_Maps_API::get_map_element( $args, $implode );
 }
-    
-    /**
-     * Output map in search results template file
-     * 
-     * @param  [type]  $gmw        [description]
-     * @return [type]              [description]
-     */
-    function gmw_results_map( $gmw, $init_visible = true ) {
-        
-        if ( $gmw['map_usage'] != 'results' ) {
-            return;
-        }
-
-        //if ( ! $in_results && $gmw['map_usage'] != 'shortcode' ) {
-        //    return;
-        //}
-            
-        do_action( "gmw_before_map",                  $gmw );
-        do_action( "gmw_{$gmw['prefix']}_before_map", $gmw );
-        
-        echo gmw_get_results_map( $gmw, $init_visible );
-      
-        do_action( "gmw_after_map",                  $gmw );
-        do_action( "gmw_{$gmw['prefix']}_after_map", $gmw );
-    }
-
-    /**
-     * Output map in shortcode
-     * 
-     * @param  [type]  $gmw        [description]
-     * @param  boolean $in_results [description]
-     * @return [type]              [description]
-     */
-    function gmw_shortcode_map( $gmw ) {
-        
-        if ( $gmw['map_usage'] != 'shortcode' ) {
-            return;
-        }
-            
-        do_action( "gmw_before_shortcode_map", $gmw );
-        
-        echo gmw_get_results_map( $gmw );
-      
-        do_action( "gmw_after_shortcode_map", $gmw );
-    }
 
 /**
- * GMW Pagination function
+ * Output map in search results template file
+ *
+ * @param array   $gmw gmw form.
+ * @param boolean $init_visible show on page load?.
+ */
+function gmw_results_map( $gmw, $init_visible = true ) {
+
+	if ( 'results' !== $gmw['map_usage'] ) {
+		return;
+	}
+
+	do_action( 'gmw_before_map', $gmw );
+	do_action( "gmw_{$gmw['prefix']}_before_map", $gmw );
+
+	echo gmw_get_results_map( $gmw, $init_visible ); // WPCS: XSS ok.
+
+	do_action( 'gmw_after_map', $gmw );
+	do_action( "gmw_{$gmw['prefix']}_after_map", $gmw );
+}
+
+/**
+ * Output map in shortcode
+ *
+ * @param array $gmw gmw form.
+ */
+function gmw_shortcode_map( $gmw ) {
+
+	if ( 'shortcode' !== $gmw['map_usage'] ) {
+		return;
+	}
+
+	do_action( 'gmw_before_shortcode_map', $gmw );
+
+	echo gmw_get_results_map( $gmw ); // WPCS: XSS ok.
+
+	do_action( 'gmw_after_shortcode_map', $gmw );
+}
+
+/**
+ * Get pagination
  *
  * This function uses the WordPress function paginate_links();
- * 
+ *
  * @version 1.0
- * 
+ *
+ * @param array $gmw gmw form.
+ *
  * @author Eyal Fitoussi
  */
 function gmw_get_pagination( $gmw = array() ) {
 
-    // pagination arguments. 
-    $args = array(
-        'id'                 => $gmw['ID'],
-        'total'              => $gmw['max_pages'],
-        'prev_text'          => __( 'Prev', 'geo-my-wp' ),
-        'next_text'          => __( 'Next', 'geo-my-wp' ),
-        'page_name'          => $gmw['paged_name']
-    );
+	// pagination arguments.
+	$args = array(
+		'id'        => $gmw['ID'],
+		'total'     => $gmw['max_pages'],
+		'prev_text' => __( 'Prev', 'geo-my-wp' ),
+		'next_text' => __( 'Next', 'geo-my-wp' ),
+		'page_name' => $gmw['paged_name'],
+	);
 
-    return GMW_Template_Functions_Helper::get_pagination( $args );  
+	return GMW_Template_Functions_Helper::get_pagination( $args );
 }
 
-    function gmw_pagination( $gmw = array() ) {
-        echo gmw_get_pagination( $gmw );
-    }
+/**
+ * Output pagination
+ *
+ * This function uses the WordPress function paginate_links();
+ *
+ * @version 1.0
+ *
+ * @param array $gmw gmw form.
+ *
+ * @author Eyal Fitoussi
+ */
+function gmw_pagination( $gmw = array() ) {
+	echo gmw_get_pagination( $gmw ); // WPCS: XSS ok.
+}
 
 /**
- * GMW Pagination function for ajax forms
- * 
+ * Get pagination function for ajax forms
+ *
  * @version 3.0
- * 
+ *
+ * @param array $gmw gmw form.
+ *
  * @author Eyal Fitoussi
  */
 function gmw_get_ajax_pagination( $gmw = array() ) {
 
-    // pagination arguments. 
-    $args = array(
-        'id'                 => $gmw['ID'],
-        'total'              => $gmw['max_pages'],
-        'prev_text'          => __( 'Prev', 'geo-my-wp' ),
-        'next_text'          => __( 'Next', 'geo-my-wp' ),
-        'current'            => $gmw['paged']
-    );
+	// pagination arguments.
+	$args = array(
+		'id'        => $gmw['ID'],
+		'total'     => $gmw['max_pages'],
+		'prev_text' => __( 'Prev', 'geo-my-wp' ),
+		'next_text' => __( 'Next', 'geo-my-wp' ),
+		'current'   => $gmw['paged'],
+	);
 
-    return GMW_Template_Functions_Helper::get_ajax_pagination( $args );
+	return GMW_Template_Functions_Helper::get_ajax_pagination( $args );
 }
 
-    function gmw_ajax_pagination( $gmw = array() ) {
-        echo gmw_get_ajax_pagination( $gmw );
-    }
+/**
+ * Output AJAX pagination
+ *
+ * Pagination function for ajax forms.
+ *
+ * @version 3.0
+ *
+ * @param array $gmw gmw form.
+ *
+ * @author Eyal Fitoussi
+ */
+function gmw_ajax_pagination( $gmw = array() ) {
+	echo gmw_get_ajax_pagination( $gmw ); // WPCS: XSS ok.
+}
 
 /**
- * Display per page dropdown in search results 
- * 
+ * Get per page dropdown in search results
+ *
  * @since 1.0
- * 
+ *
+ * @param array $gmw gmw form.
+ *
  * @author Eyal Fitoussi
  */
 function gmw_get_per_page( $gmw = array() ) {
-    
-    $args = array(
-        'id'            => $gmw['ID'],
-        'label'         => __( 'Per page', 'geo-my-wp' ),
-        'per_page'      => $gmw['page_load_action'] ? explode( ",", $gmw['page_load_results']['per_page'] ) : explode( ",", $gmw['search_results']['per_page'] ),
-        'paged'         => $gmw['paged'],
-        'total_results' => $gmw['total_results'],
-        'page_name'     => $gmw['paged_name'],
-        'submitted'     => $gmw['submitted']            
-    );
 
-    return GMW_Template_Functions_Helper::get_per_page( $args );
+	$args = array(
+		'id'            => $gmw['ID'],
+		'label'         => __( 'Per page', 'geo-my-wp' ),
+		'per_page'      => $gmw['page_load_action'] ? explode( ',', $gmw['page_load_results']['per_page'] ) : explode( ',', $gmw['search_results']['per_page'] ),
+		'paged'         => $gmw['paged'],
+		'total_results' => $gmw['total_results'],
+		'page_name'     => $gmw['paged_name'],
+		'submitted'     => $gmw['submitted'],
+	);
+
+	return GMW_Template_Functions_Helper::get_per_page( $args );
 }
-    
-    function gmw_per_page( $gmw = array() ) {
-        echo gmw_get_per_page( $gmw );
-    }
+
+/**
+ * Display per page dropdown in search results
+ *
+ * @since 1.0
+ *
+ * @param array $gmw gmw form.
+ *
+ * @author Eyal Fitoussi
+ */
+function gmw_per_page( $gmw = array() ) {
+	echo gmw_get_per_page( $gmw ); // WPCS: XSS ok.
+}
 
 /**
  * Get the distance to location
- * 
- * @param  object $object the item object
- * 
+ *
+ * @param  object $object the item object.
+ *
  * @return string distance + units
  */
 function gmw_get_distance_to_location( $object = array() ) {
-    
-    if ( empty( $object->distance ) ) {
-        return false;
-    }
-    
-    $distance = $object->distance . ' ' . $object->units;
-    $distance = apply_filters( 'gmw_distance_to_location', $distance, $object );
-    
-    return esc_attr( $distance );
+
+	if ( empty( $object->distance ) ) {
+		return false;
+	}
+
+	$distance = $object->distance . ' ' . $object->units;
+	$distance = apply_filters( 'gmw_distance_to_location', $distance, $object );
+
+	return esc_attr( $distance );
 }
 
-    function gmw_distance_to_location( $object = array() ) {
-        echo gmw_get_distance_to_location( $object );
-    }
+/**
+ * Output the distance to location
+ *
+ * @param  object $object the item object.
+ */
+function gmw_distance_to_location( $object = array() ) {
+	echo gmw_get_distance_to_location( $object ); // WPCS: XSS ok.
+}
 
 /**
- * Display excerpt
+ * Get excerpt
  *
- * Display specific number of words and add a read more link to 
+ * Display specific number of words and add a read more link to
  * a content.
- * 
- * @param unknown_type $post
- * @param unknown_type $gmw
- * 
- * @param unknown_type $count
+ *
+ * @param array $args array of args.
+ * @param array $gmw  gmw form.
+ *
+ * @return excerpt.
  */
 function gmw_get_excerpt( $args = array(), $gmw = false ) {
 
-    // temporary, to support older search results template files
-    if ( is_object( $args ) && ! empty( $gmw ) ) {
+	// temporary, to support older search results template files.
+	if ( is_object( $args ) && ! empty( $gmw ) ) {
 
-        trigger_error( 'Do not use gmw_get_excerpt nor gmw_excerpt functions directly to retrieve the post excerpt in the search results template file. Use gmw_search_results_post_excerpt functions instead. Since GEO my WP 3.0.' , E_USER_NOTICE );
+		gmw_trigger_error( 'Do not use gmw_get_excerpt nor gmw_excerpt functions directly to retrieve the post excerpt in the search results template file. Use gmw_search_results_post_excerpt functions instead. Since GEO my WP 3.0.' );
 
-        echo gmw_search_results_post_excerpt( $args, $gmw );
+		echo gmw_search_results_post_excerpt( $args, $gmw ); // WPCS: XSS ok.
 
-        return;
-    }
+		return;
+	}
 
-    if ( empty( $args['content'] ) ) {
-        return;
-    }
+	if ( empty( $args['content'] ) ) {
+		return;
+	}
 
-    return GMW_Template_Functions_Helper::get_excerpt( $args );
+	return GMW_Template_Functions_Helper::get_excerpt( $args );
 }
 
-    function gmw_excerpt( $args = array(), $gmw = false ) {
-        echo gmw_get_excerpt( $args, $gmw );
-    }
+/**
+ * Output excerpt
+ *
+ * Display specific number of words and add a read more link to
+ * a content.
+ *
+ * @param array $args array of args.
+ * @param array $gmw  gmw form.
+ */
+function gmw_excerpt( $args = array(), $gmw = false ) {
+	echo gmw_get_excerpt( $args, $gmw ); // WPCS: XSS ok.
+}
 
 /**
- * Display hours of operation.
- * 
- * @param  [type] $object [description]
- * 
- * @return [type]         [description]
+ * Get hours of operation.
+ *
+ * @param object  $location  location object..
+ *
+ * @param integer $object_id object ID.
  *
  * @since 3.0
  */
 function gmw_get_hours_of_operation( $location = 0, $object_id = 0 ) {
 
-    // if location ID provided
-    if ( is_int( $location ) ) {
+	// if location ID provided.
+	if ( is_int( $location ) ) {
 
-        $days_hours = gmw_get_location_meta( $location, 'days_hours' );
-    
-    // if location object provided
-    } elseif ( is_object( $location ) && ! empty( $location->object_type ) && ! empty( $location->object_id ) ) {
-        
-        $days_hours = gmw_get_location_meta_by_object( $location->object_type, $location->object_id, 'days_hours' );
-    
-    // if object type and object ID provided
-    } elseif ( is_string( $location ) && ! empty( $object_id ) ) {
+		$days_hours = gmw_get_location_meta( $location, 'days_hours' );
 
-    	$days_hours = gmw_get_location_meta_by_object( $location, $object_id, 'days_hours' );
+		// if location object provided.
+	} elseif ( is_object( $location ) && ! empty( $location->object_type ) && ! empty( $location->object_id ) ) {
 
-    } else {
-        return;
-    }
-    
-    $output = '';
-    $data   = '';
-    $count  = 0;
+		$days_hours = gmw_get_location_meta_by_object( $location->object_type, $location->object_id, 'days_hours' );
 
-    if ( ! empty( $days_hours ) && is_array( $days_hours ) ) {
+		// if object type and object ID provided.
+	} elseif ( is_string( $location ) && ! empty( $object_id ) ) {
 
-        foreach ( $days_hours as $day ) {
+		$days_hours = gmw_get_location_meta_by_object( $location, $object_id, 'days_hours' );
 
-            if ( array_filter( $day ) ) {
+	} else {
+		return;
+	}
 
-                $days = esc_attr( $day['days'] );
+	$output = '';
+	$data   = '';
+	$count  = 0;
 
-                $count++;
-                $data .= '<li class="day '.$days.'"><span class="days">'.$days.': </span><span class="hours">'.esc_attr( $day['hours'] ).'</span></li>';
-            }
-        }
-    }
+	if ( ! empty( $days_hours ) && is_array( $days_hours ) ) {
 
-    if ( $count == 0 ) {
-        return false;
-    }
+		foreach ( $days_hours as $day ) {
 
-    $output = '';
-    $output .= '<ul class="gmw-hours-of-operation">';
-    $output .= $data;
-    $output .= '</ul>';
-    
-    return $output;
+			if ( array_filter( $day ) ) {
+
+				$days = esc_attr( $day['days'] );
+
+				$count++;
+				$data .= '<li class="day ' . $days . '"><span class="days">' . $days . ': </span><span class="hours">' . esc_attr( $day['hours'] ) . '</span></li>';
+			}
+		}
+	}
+
+	if ( 0 === $count ) {
+		return false;
+	}
+
+	$output  = '';
+	$output .= '<ul class="gmw-hours-of-operation">';
+	$output .= $data;
+	$output .= '</ul>';
+
+	return $output;
 }
 
-    function gmw_hours_of_operation( $location = 0, $object_id = 0 ) {
-        echo gmw_get_hours_of_operation( $location, $object_id );
-    }
+/**
+ * Display hours of operation.
+ *
+ * @param object  $location  location object..
+ *
+ * @param integer $object_id object ID.
+ *
+ * @since 3.0
+ */
+function gmw_hours_of_operation( $location = 0, $object_id = 0 ) {
+	echo gmw_get_hours_of_operation( $location, $object_id ); // WPCS: XSS ok.
+}
