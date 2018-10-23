@@ -26,10 +26,10 @@ function gmw_import_export_location_tables_tab() {
 
 					<div class="inside">
 						<p>
-						   <?php _e( "Export/Import of the locations and locationmeta tables on this page should be used for backup purposes only.", "GMW" ); ?>
+						   <?php _e( "Export/Import of the locations and locationmeta tables on this page should be used for backup purposes only.", "geo-my-wp" ); ?>
 						</p>	
 						<p>
-						   <?php _e( "Transferring the data of the locations and locationmeta tables between different sites using a CSV file can only be done when the locations and their object ID are matching on both the original and the target site.", "GMW" ); ?>
+						   <?php _e( "Transferring the data of the locations and locationmeta tables between different sites using a CSV file can only be done when the locations and their object ID are matching on both the original and the target site.", 'geo-my-wp' ); ?>
 						</p>
 					</div>
 				</div>
@@ -91,7 +91,7 @@ function gmw_import_export_location_tables_tab() {
 					<div class="inside">
 							
 						<p>
-							<?php _e( "Select the type of data that you would like to import using the radio button and choose the CSV file that you would like to import.", "GMW" ); ?>
+							<?php _e( "Select the type of data that you would like to import using the radio button and choose the CSV file that you would like to import.", "geo-my-wp" ); ?>
 						</p>
 					
 						<form method="post" enctype="multipart/form-data" action="<?php echo admin_url( 'admin.php?page=gmw-import-export&tab=location_tables' ); ?>">

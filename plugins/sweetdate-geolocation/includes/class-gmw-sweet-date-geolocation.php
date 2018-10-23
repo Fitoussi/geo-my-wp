@@ -220,7 +220,7 @@ class GMW_Sweet_Date_Geolocation {
 				),
 				'address'               => __( 'Address', 'geo-my-wp' ),
 				'get_directions'        => __( 'Get directions', 'geo-my-wp' ),
-				'address_error_message' => __( 'Sorry, we could not find the address you entered. Please try a different address.', 'GMW' ),
+				'address_error_message' => __( 'Sorry, we could not find the address you entered. Please try a different address.', 'geo-my-wp' ),
 				'resize_map'            => __( 'resize map', 'geo-my-wp' ),
 			)
 		);

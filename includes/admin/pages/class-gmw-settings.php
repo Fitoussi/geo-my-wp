@@ -171,7 +171,7 @@ class GMW_Settings {
 							'type'       => 'select',
 							'default'    => '0',
 							'label'      => __( 'Results Page', 'geo-my-wp' ),
-							'desc'       => __( 'The page you select here displays the search results ( of any of your forms ) when using the "GMW Search Form" widget. The plugin will first check if a results page was set in the form settings, and if so, the results will be displayed in that page. Otherwise, if no results page was set in the form settings, the results will be displayed in the page you select here. To use this feature, select the results page from the dropdown menu and paste the shortcode <code>[gmw form="results"]</code> to the content area of this page.', 'GMW' ),
+							'desc'       => __( 'The page you select here displays the search results ( of any of your forms ) when using the "GMW Search Form" widget. The plugin will first check if a results page was set in the form settings, and if so, the results will be displayed in that page. Otherwise, if no results page was set in the form settings, the results will be displayed in the page you select here. To use this feature, select the results page from the dropdown menu and paste the shortcode <code>[gmw form="results"]</code> to the content area of this page.', 'geo-my-wp' ),
 							'options'    => $this->get_pages(),
 							'attributes' => array(),
 							'priority'   => 50,

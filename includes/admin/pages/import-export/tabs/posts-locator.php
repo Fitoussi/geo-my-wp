@@ -58,14 +58,14 @@ function gmw_output_import_export_tab() {
 
 						<div class="inside">
 							<p>
-								<?php _e( "The forms below will help you in the process of exporting the post types locations created on this site and importing them into a different site.", "GMW" ); ?><br />
-								<?php printf( __( "The export/import forms below need to be used together with the native <a href=\"%s\" target=\"blank\"> WordPress export system*</a> and <a href=\"%s\" target\"_blank\">WordPress importer*</a> for a complete process.", "GMW" ), admin_url( 'export.php' ), admin_url( 'import.php' ) ); ?><br />
+								<?php _e( "The forms below will help you in the process of exporting the post types locations created on this site and importing them into a different site.", 'geo-my-wp' ); ?><br />
+								<?php printf( __( "The export/import forms below need to be used together with the native <a href=\"%s\" target=\"blank\"> WordPress export system*</a> and <a href=\"%s\" target\"_blank\">WordPress importer*</a> for a complete process.", 'geo-my-wp' ), admin_url( 'export.php' ), admin_url( 'import.php' ) ); ?><br />
 							</p>
 							<p class="description">	
-								<?php _e( "*You can use other plugins ( other than the WordPress native plugins mentioned above ) to export/import your WordPress posts. However, the plugins you chose to use must export and import the custom fields of these posts in order to import/export the locations.", "GMW" ); ?>
+								<?php _e( "*You can use other plugins ( other than the WordPress native plugins mentioned above ) to export/import your WordPress posts. However, the plugins you chose to use must export and import the custom fields of these posts in order to import/export the locations.", 'geo-my-wp' ); ?>
 							</p>
 							<p>
-								<?php _e( "Please follow the steps of each form below for a complete process of exporting and importing your post types locations.", "GMW"); ?><br />				
+								<?php _e( "Please follow the steps of each form below for a complete process of exporting and importing your post types locations.", 'geo-my-wp'); ?><br />				
 							</p>
 						</div>
 					</div>
@@ -82,14 +82,14 @@ function gmw_output_import_export_tab() {
 					<div class="postbox ">
 			
 						<h3 class="hndle">
-							<span><?php _e( "Export Posts Types Locations To GEO my WP post_meta", "GMW" ); ?></span>
+							<span><?php _e( "Export Posts Types Locations To GEO my WP post_meta", 'geo-my-wp' ); ?></span>
 						</h3>
 
 						<div class="inside">
 							<ol>	
 								<?php global $wpdb; ?> 
 								<li>
-									<?php printf( __( "Click on the \"Export\" button below. By doing so the plugin will duplicate each post type location created on this site from GEO my WP's custom table ( %splaces_locator ) into a custom field of the post it belongs to.", "GMW" ), $wpdb->prefix ); ?>
+									<?php printf( __( "Click on the \"Export\" button below. By doing so the plugin will duplicate each post type location created on this site from GEO my WP's custom table ( %splaces_locator ) into a custom field of the post it belongs to.", 'geo-my-wp' ), $wpdb->prefix ); ?>
 									<form method="post" enctype="multipart/form-data" action="<?php echo admin_url( 'admin.php?page=gmw-tools&tab=import_export' ); ?>">
 										<p>
 											<input type="hidden" name="gmw_action" value="pt_locations_post_meta_export" />
@@ -98,7 +98,7 @@ function gmw_output_import_export_tab() {
 										</p>
 									</form>
 								</li>
-								<li><?php printf( __( "The next step will be to export your posts using the native <a href=\"%s\" target=\"blank\"> WordPress export system</a>.", "GMW"), admin_url( 'export.php' ) ); ?></li>
+								<li><?php printf( __( "The next step will be to export your posts using the native <a href=\"%s\" target=\"blank\"> WordPress export system</a>.", 'geo-my-wp'), admin_url( 'export.php' ) ); ?></li>
 							</ol>
 					</div>
 					</div>
@@ -115,14 +115,14 @@ function gmw_output_import_export_tab() {
 					<div class="postbox ">
 			
 						<h3 class="hndle">
-							<span><?php _e( "Import Posts Types Locations From GEO my WP post_meta", "GMW" ); ?></span>
+							<span><?php _e( "Import Posts Types Locations From GEO my WP post_meta", 'geo-my-wp' ); ?></span>
 						</h3>
 
 						<div class="inside">
 							<ol>
-								<li><?php _e( "Before importing your locations into this site make sure you used the \"Export\" form above on the original site in order to export your locations.", "GMW" ); ?></li>
-								<li><?php printf( __( "Import your posts using <a href=\"%s\" target\"_blank\">WordPress importer</a>. After done so come back to this page to complete step 3.", "GMW" ), admin_url( 'import.php' ) ); ?></li>
-								<li><?php printf( __( "Click on the \"Import\" button. By doing so the plugin will duplicate each post type location from the custom field of the post it belongs to into GEO my WP's custom table in database ( %splaces_locator ).", "GMW" ), $wpdb->prefix ); ?></li>
+								<li><?php _e( "Before importing your locations into this site make sure you used the \"Export\" form above on the original site in order to export your locations.", 'geo-my-wp' ); ?></li>
+								<li><?php printf( __( "Import your posts using <a href=\"%s\" target\"_blank\">WordPress importer</a>. After done so come back to this page to complete step 3.", 'geo-my-wp' ), admin_url( 'import.php' ) ); ?></li>
+								<li><?php printf( __( "Click on the \"Import\" button. By doing so the plugin will duplicate each post type location from the custom field of the post it belongs to into GEO my WP's custom table in database ( %splaces_locator ).", 'geo-my-wp' ), $wpdb->prefix ); ?></li>
 							</ol>
 			
 							<?php 
@@ -139,8 +139,8 @@ function gmw_output_import_export_tab() {
 								<p>
 									<input type="hidden" name="gmw_action" value="pt_locations_post_meta_import" />
 									<?php wp_nonce_field( 'gmw_pt_locations_post_meta_import_nonce', 'gmw_pt_locations_post_meta_import_nonce' ); ?>
-									<input type="submit" class="button-secondary" value="<?php _e( "Import", "GMW" ); ?>" <?php if ( !$check_pm_locations ) echo 'disabled="disabled"'; ?>/>
-									<?php echo ( $check_pm_locations ) ? '<em style="color:green">'.__( 'Locations are avalible for import.', "GMW" ).'</em>' :  '<em style="color:red">'.__( 'No locations are avalible for import.', "GMW" ) .'</em>'; ?>
+									<input type="submit" class="button-secondary" value="<?php _e( "Import", 'geo-my-wp' ); ?>" <?php if ( !$check_pm_locations ) echo 'disabled="disabled"'; ?>/>
+									<?php echo ( $check_pm_locations ) ? '<em style="color:green">'.__( 'Locations are avalible for import.', 'geo-my-wp' ).'</em>' :  '<em style="color:red">'.__( 'No locations are avalible for import.', 'geo-my-wp' ) .'</em>'; ?>
 								</p>
 							</form>
 						</div>
@@ -270,7 +270,7 @@ function gmw_output_import_export_tab() {
 									if ( empty( $saved_fields['latitude'] ) ||  empty( $saved_fields['longitude'] ) ) {
 										
 										?>
-											<p style="color:red"><?php _e( '*You must set the latitude and longitude fields before you can import locations.' ); ?>
+											<p style="color:red"><?php _e( '*You must set the latitude and longitude fields before you can import locations.', 'geo-my-wp' ); ?>
 											</p>
 											<input type="submit" class="button-primary" value="<?php _e( 'Import', 'geo-my-wp' ); ?>" disabled />
 										<?php

@@ -121,7 +121,7 @@ class GMW_Form_Editor {
 						'name'       => 'user_location',
 						'type'       => 'checkbox',
 						'default'    => '',
-						'label'      => __( "Visitor's Current Location Filter", 'GMW' ),
+						'label'      => __( "Visitor's Current Location Filter", 'geo-my-wp' ),
 						'desc'       => __( "GEO my WP will first check for the visitor's current location on page load. And If exists, the locations will be displayed based on that. Notice that the address filter below will be ignored if the visitor's location exists.", 'geo-my-wp' ),
 						'cb_label'   => __( 'Enable', 'geo-my-wp' ),
 						'attributes' => '',

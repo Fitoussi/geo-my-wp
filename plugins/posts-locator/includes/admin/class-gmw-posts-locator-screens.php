@@ -121,7 +121,7 @@ class GMW_Posts_Locator_Screens {
 		$location = gmw_get_post_location( $post_id );
 
 		if ( empty( $location ) ) {
-			echo '<i class="gmw-icon-cancel-circled" style="color:red;margin-right:1px;font-size: 12px"></i>' . __( 'No location found', 'GMW' );
+			echo '<i class="gmw-icon-cancel-circled" style="color:red;margin-right:1px;font-size: 12px"></i>' . __( 'No location found', 'geo-my-wp' );
 			return;
 		}
 
