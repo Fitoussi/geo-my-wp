@@ -1,5 +1,4 @@
 <?php
-// Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -51,29 +50,29 @@ class GMW_Single_Location_Widget extends GMW_Widget {
 		}
 
 		$this->settings = array(
-			'widget_title'        => array(
+			'widget_title'   => array(
 				'type'        => 'text',
 				'default'     => __( 'Single location', 'geo-my-wp' ),
 				'label'       => __( 'Widget title', 'geo-my-wp' ),
 				'description' => __( 'Enter a title for the widget or leave blank to omit.', 'geo-my-wp' ),
 			),
-			'element_id'          => array(
+			'element_id'     => array(
 				'type'        => 'number',
 				'step'        => 1,
 				'min'         => 1,
 				'max'         => '',
-				'default'     => rand( 100, 549 ),
+				'default'     => wp_rand( 100, 549 ),
 				'label'       => __( 'Element ID', 'geo-my-wp' ),
 				'description' => __( 'Use the element ID to assign a unique ID to this shortcode. The unique ID can be useful for styling purposes as well when using the hooks provided by the shortcode when custom modifications required.', 'geo-my-wp' ),
 			),
-			'object'              => array(
+			'object'         => array(
 				'type'        => 'select',
 				'default'     => '',
 				'label'       => __( 'Object', 'geo-my-wp' ),
 				'options'     => apply_filters( 'gmw_single_location_widget_objects', array() ),
 				'description' => __( 'Select the object that you would like to display.', 'geo-my-wp' ),
 			),
-			'object_id'           => array(
+			'object_id'      => array(
 				'type'        => 'number',
 				'step'        => 1,
 				'min'         => '',
@@ -82,19 +81,20 @@ class GMW_Single_Location_Widget extends GMW_Widget {
 				'label'       => __( 'Object ID', 'geo-my-wp' ),
 				'description' => __( 'Item ID is the ID of the item that you want to display. For example, if you want to show the location of a specific post, the item ID will be the post ID of that post. Same goes for member ID and so on. Enter 0 if you want the item to be displayed based on the single item page or based on the item being displayed inside a loop.', 'geo-my-wp' ),
 			),
-			/*'show_in_single_post' => array(
+			/**
+			'show_in_single_post' => array(
 				'type'        => 'checkbox',
 				'default'     => 0,
 				'label'       => __( 'Show in single post page', 'geo-my-wp' ),
 				'description' => __( 'Show the post author location when viewing a single post page. The author must have his location added via GEO my WP ( using Members Locator add-on and the item ID above needs to be set to 0.', 'geo-my-wp' ),
 			),*/
-			'elements'            => array(
+			'elements'       => array(
 				'type'        => 'text',
 				'default'     => 'title,distance,map,address,directions_form,directions_panel',
 				'label'       => __( 'Elements', 'geo-my-wp' ),
 				'description' => __( 'Enter the elements that you would like to display, and in the order that you want to display them, comma separated. The available elements are title, distance, map, address, directions_link, directions_form, directions_panel and location_meta ( when availabe for the object ).', 'geo-my-wp' ),
 			),
-			'address_fields'      => array(
+			'address_fields' => array(
 				'type'        => 'multicheckbox',
 				'default'     => array( 'address' ),
 				'label'       => __( 'Address fields', 'geo-my-wp' ),
@@ -108,13 +108,13 @@ class GMW_Single_Location_Widget extends GMW_Widget {
 				),
 				'description' => __( 'Choose the address fields that you would like to display.', 'geo-my-wp' ),
 			),
-			'location_meta'       => array(
+			'location_meta'  => array(
 				'type'        => 'text',
 				'default'     => '',
 				'label'       => __( 'Location meta', 'geo-my-wp' ),
 				'description' => __( 'Enter the location meta that you would like to display, comma separated. Ex. Phone,fax,email,website.', 'geo-my-wp' ),
 			),
-			'units'               => array(
+			'units'          => array(
 				'type'    => 'select',
 				'default' => '',
 				'label'   => __( 'Distance units', 'geo-my-wp' ),
@@ -123,13 +123,13 @@ class GMW_Single_Location_Widget extends GMW_Widget {
 					'metric'   => __( 'Kilometers', 'geo-my-wp' ),
 				),
 			),
-			'map_width'           => array(
+			'map_width'      => array(
 				'type'        => 'text',
 				'default'     => '100%',
 				'label'       => __( 'Map width', 'geo-my-wp' ),
 				'description' => __( 'Set the map width in pixels or percentage ( ex. 250px or 100% ).', 'geo-my-wp' ),
 			),
-			'map_height'          => array(
+			'map_height'     => array(
 				'type'        => 'text',
 				'default'     => '250px',
 				'label'       => __( 'Map height', 'geo-my-wp' ),
@@ -137,7 +137,7 @@ class GMW_Single_Location_Widget extends GMW_Widget {
 			),
 		);
 
-		if ( 'google_maps' == GMW()->maps_provider ) {
+		if ( 'google_maps' === GMW()->maps_provider ) {
 
 			$this->settings['map_type'] = array(
 				'type'    => 'select',
@@ -208,21 +208,35 @@ class GMW_Single_Location_Widget extends GMW_Widget {
 	 * Echoes the widget content.
 	 *
 	 * @see WP_Widget
-	 * @param array $args
-	 * @param array $instance
+	 *
+	 * @param array $args     array of args.
+	 *
+	 * @param array $instance array of values.
 	 */
 	public function widget( $args, $instance ) {
 
-		extract( $args );
+		ob_start();
 
-		echo $before_widget;
+		$title = apply_filters( 'widget_title', $instance['widget_title'], $instance, $this->id_base );
+		$title = ! empty( $title ) ? esc_html( $title ) : '';
+
+		echo $args['before_widget']; // WPCS: XSS ok.
+
+		if ( $title ) {
+			echo $args['before_title'] . $title . $args['after_title']; // WPCS: XSS ok.
+		}
 
 		$instance['address_fields'] = ! empty( $instance['address_fields'] ) ? implode( ',', $instance['address_fields'] ) : 'city,country';
-		$instance['widget_title']   = ! empty( $instance['widget_title'] ) ? htmlentities( $args['before_title'] . $instance['widget_title'] . $args['after_title'], ENT_QUOTES ) : 0;
 
-		echo gmw_single_location_shortcode( $instance );
+		/** $instance['widget_title']   = ! empty( $instance['widget_title'] ) ? htmlentities( $args['before_title'] . $instance['widget_title'] . $args['after_title'], ENT_QUOTES ) : 0; */
 
-		echo $after_widget;
+		echo gmw_single_location_shortcode( $instance ); // WPCS: XSS ok.
+
+		echo $args['after_widget']; // WPCS: XSS ok.
+
+		$content = ob_get_clean();
+
+		echo $content; // WPCS: XSS ok.
 	}
 }
 register_widget( 'GMW_Single_Location_Widget' );
