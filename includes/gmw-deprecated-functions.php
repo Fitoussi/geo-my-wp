@@ -416,7 +416,7 @@ function gmw_pt_update_location( $args = array(), $force_refresh = false ) {
 			$user_id = 1;
 		}
 
-		gmw_update_post_location( $post_id, $address, '', $user_id, $force_refresh );
+		gmw_update_post_location( $post_id, $address, $user_id, '', $force_refresh );
 
 		if ( ! empty( $args['additional_info'] ) ) {
 			gmw_update_post_location_meta( $post_id, $args['additional_info'] );
