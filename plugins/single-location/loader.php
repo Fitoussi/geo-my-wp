@@ -1,5 +1,4 @@
 <?php
-// Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -10,34 +9,70 @@ if ( ! class_exists( 'GMW_Addon' ) ) {
 
 /**
  * Current Location addon class
- *
  */
 class GMW_Single_Location_Addon extends GMW_Addon {
 
-	// slug
+	/**
+	 * Slug
+	 *
+	 * @var string
+	 */
 	public $slug = 'single_location';
 
-	// add-on's name
+	/**
+	 * Name
+	 *
+	 * @var string
+	 */
 	public $name = 'Single Location';
 
-	// prefix
+	/**
+	 * Prefix
+	 *
+	 * @var string
+	 */
 	public $prefix = 'sl';
 
-	// version
+	/**
+	 * Version
+	 *
+	 * @var string
+	 */
 	public $version = GMW_VERSION;
 
-	// author
+	/**
+	 * Author
+	 *
+	 * @var string
+	 */
 	public $author = 'Eyal Fitoussi';
 
-	// path
+	/**
+	 * Path
+	 *
+	 * @var string
+	 */
 	public $full_path = __FILE__;
 
-	// description
+	/**
+	 * Description
+	 *
+	 * @var string
+	 */
 	public $description = 'Display location of certain component ( post, member... ) via shortcode and widget.';
 
-	// core add-on
+	/**
+	 * Is core addon?
+	 *
+	 * @var string
+	 */
 	public $is_core = true;
 
+	/**
+	 * Instance of Single Locaiton.
+	 *
+	 * @var string
+	 */
 	private static $instance = null;
 
 	/**
@@ -47,8 +82,8 @@ class GMW_Single_Location_Addon extends GMW_Addon {
 	 */
 	public static function get_instance() {
 
-		if ( self::$instance == null ) {
-			self::$instance = new self;
+		if ( null === self::$instance ) {
+			self::$instance = new self();
 		}
 
 		return self::$instance;
@@ -56,26 +91,22 @@ class GMW_Single_Location_Addon extends GMW_Addon {
 
 	/**
 	 * Init widgets
-	 *
-	 * @return [type] [description]
 	 */
-	function init_widgets() {
-		include_once( 'includes/class-gmw-single-location-widget.php' );
+	public function init_widgets() {
+		include_once 'includes/class-gmw-single-location-widget.php';
 	}
 
 	/**
 	 * Include files
-	 *
-	 * @return [type] [description]
 	 */
 	public function pre_init() {
 
 		parent::pre_init();
 
-		//include classes files
+		// include classes files.
 		if ( ! IS_ADMIN || defined( 'DOING_AJAX' ) ) {
-			include_once( 'includes/class-gmw-single-location.php' );
-			include_once( 'includes/gmw-single-location-shortcode.php' );
+			include_once 'includes/class-gmw-single-location.php';
+			include_once 'includes/gmw-single-location-shortcode.php';
 		}
 	}
 }

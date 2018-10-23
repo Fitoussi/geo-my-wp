@@ -1,11 +1,9 @@
 <?php
-
-// Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-//abort if register add-on class is not found
+// abort if register add-on class is not found.
 if ( ! class_exists( 'GMW_Addon' ) ) {
 	return;
 }
@@ -15,40 +13,88 @@ if ( ! class_exists( 'GMW_Addon' ) ) {
  */
 class GMW_Posts_Locator_Addon extends GMW_Addon {
 
-	// slug
+	/**
+	 * Slug
+	 *
+	 * @var string
+	 */
 	public $slug = 'posts_locator';
 
-	// add-on's name
+	/**
+	 * Name
+	 *
+	 * @var string
+	 */
 	public $name = 'Posts Locator';
 
-	// prefix
+	/**
+	 * Prefix
+	 *
+	 * @var string
+	 */
 	public $prefix = 'pt';
 
-	// version
+	/**
+	 * Version
+	 *
+	 * @var string
+	 */
 	public $version = GMW_VERSION;
 
-	// author
+	/**
+	 * Author
+	 *
+	 * @var string
+	 */
 	public $author = 'Eyal Fitoussi';
 
-	// description
+	/**
+	 * Description
+	 *
+	 * @var string
+	 */
 	public $description = 'Provides geolocation for WordPress post types.';
 
-	// object
+	/**
+	 * Object
+	 *
+	 * @var string
+	 */
 	public $object = 'post';
 
-	// database object type
+	/**
+	 * Object type
+	 *
+	 * @var string
+	 */
 	public $object_type = 'post';
 
-	// db table prefix
+	/**
+	 * Prefix
+	 *
+	 * @var string
+	 */
 	public $global_db = false;
 
-	// Plugin use template files
+	/**
+	 * Templates folder
+	 *
+	 * @var string
+	 */
 	public $templates_folder = 'posts-locator';
 
-	// path
+	/**
+	 * Path
+	 *
+	 * @var string
+	 */
 	public $full_path = __FILE__;
 
-	// core add-on
+	/**
+	 * Is core add-on?
+	 *
+	 * @var string
+	 */
 	public $is_core = true;
 
 	/**
@@ -79,6 +125,11 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 		);
 	}
 
+	/**
+	 * Instance of Posts Locator.
+	 *
+	 * @var null
+	 */
 	private static $instance = null;
 
 	/**
@@ -88,8 +139,8 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 	 */
 	public static function get_instance() {
 
-		if ( null == self::$instance ) {
-			self::$instance = new self;
+		if ( null === self::$instance ) {
+			self::$instance = new self();
 		}
 
 		return self::$instance;
@@ -97,30 +148,31 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 
 	/**
 	 * [pre_init description]
+	 *
 	 * @return [type] [description]
 	 */
 	public function pre_init() {
 
 		parent::pre_init();
 
-		include( 'includes/gmw-posts-locator-functions.php' );
-		include( 'includes/gmw-posts-locator-shortcodes.php' );
+		include 'includes/gmw-posts-locator-functions.php';
+		include 'includes/gmw-posts-locator-shortcodes.php';
 
-		// include admin files
+		// include admin files.
 		if ( IS_ADMIN ) {
 
-			include_once( 'includes/admin/class-gmw-posts-locator-form-editor.php' );
-			include_once( 'includes/admin/class-gmw-posts-locator-admin-settings.php' );
-			include_once( 'includes/admin/class-gmw-posts-locator-screens.php' );
+			include_once 'includes/admin/class-gmw-posts-locator-form-editor.php';
+			include_once 'includes/admin/class-gmw-posts-locator-admin-settings.php';
+			include_once 'includes/admin/class-gmw-posts-locator-screens.php';
 		}
 
 		// include template functions.
-		include_once( 'includes/gmw-posts-locator-search-form-template-functions.php' );
-		include_once( 'includes/gmw-posts-locator-search-results-template-functions.php' );
-		include_once( 'includes/class-gmw-posts-locator-form.php' );
-		include_once( 'includes/class-gmw-post-location-form.php' );
+		include_once 'includes/gmw-posts-locator-search-form-template-functions.php';
+		include_once 'includes/gmw-posts-locator-search-results-template-functions.php';
+		include_once 'includes/class-gmw-posts-locator-form.php';
+		include_once 'includes/class-gmw-post-location-form.php';
 
-		// load single location post
+		// load single location post.
 		if ( gmw_is_addon_active( 'single_location' ) ) {
 
 			if ( IS_ADMIN ) {
@@ -128,8 +180,9 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 				/**
 				 * Add post object to objects dropdown in single location widget
 				 *
-				 * @param  [type] $args [description]
-				 * @return [type]       [description]
+				 * @param  array $args array of args.
+				 *
+				 * @return array       array of new args.
 				 */
 				function gmw_pt_single_location_widget_object( $args ) {
 
@@ -142,7 +195,7 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 			}
 
 			if ( ! IS_ADMIN || defined( 'DOING_AJAX' ) ) {
-				include_once( 'includes/class-gmw-single-post-location.php' );
+				include_once 'includes/class-gmw-single-post-location.php';
 			}
 		}
 	}
