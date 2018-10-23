@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GEO my WP v2.4.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-21 14:09-1000\n"
-"PO-Revision-Date: 2018-10-21 14:09-1000\n"
+"POT-Creation-Date: 2018-10-22 16:49-1000\n"
+"PO-Revision-Date: 2018-10-22 16:49-1000\n"
 "Last-Translator: Eyal Fitoussi <fitoussi_eyal@hotmail.com>\n"
 "Language-Team: Eyal Fitoussi <info@geomywp.com>\n"
 "Language: de_DE\n"
@@ -2563,33 +2563,33 @@ msgid ""
 "information."
 msgstr ""
 
-#: includes/class-gmw-cron.php:41
+#: includes/class-gmw-cron.php:39
 msgid "Once Weekly"
 msgstr ""
 
-#: includes/class-gmw-form.php:194
+#: includes/class-gmw-form.php:195
 #: includes/template-functions/class-gmw-template-functions-helper.php:372
 msgid "Showing {from_count} - {to_count} of {total_results} locations"
 msgstr ""
 
-#: includes/class-gmw-form.php:195
+#: includes/class-gmw-form.php:196
 #: includes/template-functions/class-gmw-template-functions-helper.php:374
 #: plugins/members-locator/includes/class-gmw-members-locator-form.php:33
 msgid " within {radius}{units} from {address}"
 msgstr ""
 
 #. translators: %s replaced with form type
-#: includes/class-gmw-form.php:301
+#: includes/class-gmw-form.php:302
 #, php-format
 msgid "%s is invalid form type."
 msgstr ""
 
-#: includes/class-gmw-form.php:532
+#: includes/class-gmw-form.php:533
 msgid "Your location"
 msgstr ""
 
 # @ GMW
-#: includes/class-gmw-form.php:1098
+#: includes/class-gmw-form.php:1099
 #, fuzzy
 msgid "No results found"
 msgstr "Ergebnisse"
@@ -3135,16 +3135,16 @@ msgstr ""
 # @ GMW
 #: includes/template-functions/class-gmw-template-functions-helper.php:99
 #: includes/template-functions/class-gmw-template-functions-helper.php:157
-#: includes/template-functions/gmw-template-functions.php:135
-#: includes/template-functions/gmw-template-functions.php:160
+#: includes/template-functions/gmw-template-functions.php:149
+#: includes/template-functions/gmw-template-functions.php:187
 msgid "Prev"
 msgstr "Vor"
 
 # @ GMW
 #: includes/template-functions/class-gmw-template-functions-helper.php:100
 #: includes/template-functions/class-gmw-template-functions-helper.php:158
-#: includes/template-functions/gmw-template-functions.php:136
-#: includes/template-functions/gmw-template-functions.php:161
+#: includes/template-functions/gmw-template-functions.php:150
+#: includes/template-functions/gmw-template-functions.php:188
 msgid "Next"
 msgstr "Weiter"
 
@@ -3163,14 +3163,14 @@ msgstr ""
 
 # @ GMW
 #: includes/template-functions/gmw-info-window-template-functions.php:83
-#: includes/template-functions/gmw-search-results-template-functions.php:89
+#: includes/template-functions/gmw-search-results-template-functions.php:83
 #: plugins/posts-locator/includes/class-gmw-post-location-form.php:86
 #, fuzzy
 msgid "Contact Information"
 msgstr "Zusätzliche Informationen"
 
 #: includes/template-functions/gmw-info-window-template-functions.php:118
-#: includes/template-functions/gmw-search-results-template-functions.php:124
+#: includes/template-functions/gmw-search-results-template-functions.php:117
 msgid "Hours of operation"
 msgstr ""
 
@@ -3180,7 +3180,7 @@ msgstr ""
 msgid "Within"
 msgstr "innerhalb"
 
-#: includes/template-functions/gmw-template-functions.php:183
+#: includes/template-functions/gmw-template-functions.php:223
 msgid "Per page"
 msgstr ""
 
