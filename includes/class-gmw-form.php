@@ -1,7 +1,16 @@
 <?php
-// Exit if accessed directly
+/**
+ * GEO my WP Form class.
+ *
+ * Generates the proximity search forms.
+ *
+ * This class should be extended for different object types.
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -285,12 +294,14 @@ class GMW_Form {
 
 		$this->form = $form;
 
-		// get current form element ( form, map, results... )
+		/**
+		 * Get current form element ( form, map, results... )
 		// $this->form['current_element'] = key( $attr );
 		// set form="results" as search results element
 		// if ( isset( $attr['form'] ) && $attr['form'] == 'results' ) {
 		// $this->form['current_element'] = 'search_results';
 		// }
+		*/
 
 		// verify that the form element is lagit.
 		if ( ! in_array( $this->form['current_element'], $this->allowed_form_elements, true ) ) {
@@ -338,17 +349,15 @@ class GMW_Form {
 		$this->form['paged_name']       = $page_name;
 		$this->form['paged']            = get_query_var( $page_name ) ? get_query_var( $page_name ) : 1;
 		$this->form['per_page']         = -1;
-		// $this->form['labels']          = gmw_get_labels( $this->form );
-		// $this->form['user_marker']   = 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png';
-		$this->form['has_locations'] = false;
-		$this->form['results']       = array();
-		$this->form['results_count'] = 0;
-		$this->form['total_results'] = 0;
-		$this->form['max_pages']     = 0;
-		$this->form['in_widget']     = ! empty( $this->form['params']['widget'] ) ? true : false;
+		$this->form['has_locations']    = false;
+		$this->form['results']          = array();
+		$this->form['results_count']    = 0;
+		$this->form['total_results']    = 0;
+		$this->form['max_pages']        = 0;
+		$this->form['in_widget']        = ! empty( $this->form['params']['widget'] ) ? true : false;
 
 		// check if form submitted.
-		if ( isset( $_GET[ $this->url_px . 'form' ] ) ) {
+		if ( isset( $_GET[ $this->url_px . 'form' ] ) ) { // WPCS: CSRF ok.
 
 			$this->form['submitted']    = true;
 			$this->form['form_values']  = $this->get_form_values();
@@ -361,10 +370,9 @@ class GMW_Form {
 
 			$this->form['page_load_action'] = true;
 			$this->form['form_values']      = $this->get_form_values();
-			// $this->form['display_map']        = $gmw['form_submission']['display_map'] = $this->form['page_load_results']['display_map'];
-			$this->form['map_enabled']  = '' === $this->form['page_load_results']['display_map'] ? false : true;
-			$this->form['map_usage']    = $this->form['page_load_results']['display_map'];
-			$this->form['display_list'] = $this->form['page_load_results']['display_results'];
+			$this->form['map_enabled']      = '' === $this->form['page_load_results']['display_map'] ? false : true;
+			$this->form['map_usage']        = $this->form['page_load_results']['display_map'];
+			$this->form['display_list']     = $this->form['page_load_results']['display_results'];
 		}
 
 		// for older version. to prevent PHP warnings.
@@ -390,7 +398,8 @@ class GMW_Form {
 	 * @return [type] [description]
 	 */
 	public function get_form_values() {
-		return gmw_get_form_values( $this->url_px, $_SERVER['QUERY_STRING'] );
+		$qs = isset( $_SERVER['QUERY_STRING'] ) ? wp_unslash( $_SERVER['QUERY_STRING'] ) : ''; // WPCS: CSRF ok, sanitization ok.
+		return gmw_get_form_values( $this->url_px, wp_unslash( $qs ) );
 	}
 
 	/**
@@ -714,7 +723,7 @@ class GMW_Form {
 
 			} else {
 
-				// append it to page load results as well to easier add it to query cache args
+				// append it to page load results as well to easier add it to query cache args.
 				$this->form['lat']                      = $this->form['location']['lat'];
 				$this->form['lng']                      = $this->form['location']['lng'];
 				$this->form['page_load_results']['lat'] = $this->form['location']['lat'];
@@ -762,12 +771,12 @@ class GMW_Form {
 		if ( apply_filters( 'gmw_search_within_boundaries', true, $this->form ) && $this->form['submitted'] ) {
 
 			// if searching state boundaries.
-			if ( isset( $this->form['form_values']['state'] ) && '' != $this->form['form_values']['state'] ) {
+			if ( isset( $this->form['form_values']['state'] ) && '' !== $this->form['form_values']['state'] ) {
 				$address_filters['region_name'] = $this->form['form_values']['state'];
 			}
 
 			// When searchin boundaries of a country.
-			if ( isset( $this->form['form_values']['country'] ) && '' != $this->form['form_values']['country'] ) {
+			if ( isset( $this->form['form_values']['country'] ) && '' !== $this->form['form_values']['country'] ) {
 				$address_filters['country_code'] = $this->form['form_values']['country'];
 			}
 		}
@@ -919,15 +928,19 @@ class GMW_Form {
 		if ( empty( $this->form['location_count'] ) ) {
 
 			// temporary fix for page load results when setting per page to -1.
-			if ( -1 == $this->form['get_per_page'] ) {
+			if ( -1 === $this->form['get_per_page'] ) {
 				$this->form['get_per_page'] = 1;
 			}
 
 			// count loop to be able to set the last location at the end of this function.
-			$this->form['loop_count'] = 1;
+			$this->form['loop_count']     = 1;
+			$this->form['location_count'] = 1;
 
-			// start counting the locations.
-			(int) $this->form['location_count'] = ( 1 == $this->form['paged'] ) ? 1 : ( $this->form['get_per_page'] * ( $this->form['paged'] - 1 ) ) + 1;
+			if ( 1 !== absint( $this->form['paged'] ) ) {
+				$this->form['location_count'] = ( $this->form['get_per_page'] * ( $this->form['paged'] - 1 ) ) + 1;
+			}
+
+			$this->form['location_count'] = (int) $this->form['location_count'];
 
 			$object = apply_filters( 'gmw_form_the_location_first', $object, $this->form, $this );
 
@@ -973,17 +986,19 @@ class GMW_Form {
 			// if map enabled, collect some data to pass to the map script.
 			if ( $this->form['map_enabled'] ) {
 
+				/**
 				// $info_window = false;
 				// allow disabling info window data. If using AJAX for example.
 				// if ( apply_filters( 'gmw_form_get_info_window_content', true, $this->form, $this ) ) {
 				// $info_window = gmw_get_info_window_content( $object, $this->get_info_window_args( $object ), $this->form );
 				// }
+				*/
 				$this->map_locations[] = $this->get_map_location( $object, false );
 			}
 		}
 
 		// check if last location in the loop.
-		if ( $this->form['loop_count'] == $this->form['results_count'] ) {
+		if ( absint( $this->form['loop_count'] ) === absint( $this->form['results_count'] ) ) {
 
 			$object->location_class .= ' last-location';
 

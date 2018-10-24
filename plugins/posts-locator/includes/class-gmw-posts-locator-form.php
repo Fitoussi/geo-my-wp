@@ -1,4 +1,12 @@
 <?php
+/**
+ * GEO my WP Posts Locator Class.
+ *
+ * The class queries posts based on location.
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -9,13 +17,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 class GMW_Posts_Locator_Form extends GMW_Form {
 
 	/**
-	 * gmw_location database fields that will be
+	 * Gmw_location database fields that will be
 	 *
-	 * added to the posts query.
+	 * Added to the posts query.
 	 *
 	 * @var array
 	 */
-	/*public $db_fields = array(
+	/**
+	Public $db_fields = array(
 		'ID as location_id',
 		'object_type',
 		'object_id',
@@ -43,20 +52,22 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 	/**
 	 * Info window data
 	 *
-	 * @param  [type] $location [description]
-	 * @return [type]           [description]
+	 * @param  object $post the post object.
+	 *
+	 * @return array of arg
 	 */
 	public function get_info_window_args( $post ) {
 
 		if ( isset( $this->form['info_window']['image'] ) ) {
 
-			if ( '' == $this->form['info_window']['image']['enabled'] ) {
+			if ( '' === $this->form['info_window']['image']['enabled'] ) {
 
 				$image = false;
 
 			} else {
 				$image = get_the_post_thumbnail(
-					$post->ID, array(
+					$post->ID,
+					array(
 						$this->form['info_window']['image']['width'],
 						$this->form['info_window']['image']['height'],
 					)
@@ -77,15 +88,17 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 
 	/**
 	 * Modify wp_query clauses to search by distance
-	 * @param $clauses
-	 * @return $clauses
+	 *
+	 * @param array $clauses query clauses.
+	 *
+	 * @return modified $clauses
 	 */
 	public function query_clauses( $clauses ) {
 
 		$count     = 0;
 		$db_fields = '';
 
-		// generate the db fields
+		// generate the db fields.
 		foreach ( $this->db_fields as $field ) {
 
 			if ( $count > 0 ) {
@@ -106,7 +119,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 				// in the location object and that is what we did in the line above.
 				// The lat and lng field are too involve and need to carfully change it.
 				// eventually we want to completely move to using latitude and longitude.
-				if ( 'latitude' == $field[0] || 'longitude' == $field[0] ) {
+				if ( 'latitude' === $field[0] || 'longitude' === $field[0] ) {
 					$db_fields .= ",gmw_locations.{$field[0]}";
 				}
 			} else {
@@ -117,18 +130,18 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 
 		global $wpdb;
 
-		// add the location db fields to the query
+		// add the location db fields to the query.
 		$clauses['fields'] .= ", {$db_fields}";
 		$clauses['having']  = '';
 
-		// get address filters query
+		// get address filters query.
 		$address_filters = GMW_Location::query_address_fields( $this->get_address_filters(), $this->form );
 
-		// when address provided, and not filtering based on address fields, we will do proximity search
-		if ( '' == $address_filters && ! empty( $this->form['lat'] ) && ! empty( $this->form['lng'] ) ) {
+		// when address provided, and not filtering based on address fields, we will do proximity search.
+		if ( '' === $address_filters && ! empty( $this->form['lat'] ) && ! empty( $this->form['lng'] ) ) {
 
-			// generate some radius/units data
-			if ( in_array( $this->form['units_array']['units'], array( 'imperial', 3959, 'miles' ) ) ) {
+			// generate some radius/units data.
+			if ( in_array( $this->form['units_array']['units'], array( 'imperial', 3959, 'miles', '3959' ), true ) ) {
 				$earth_radius = 3959;
 				$units        = 'mi';
 				$degree       = 69.0;
@@ -138,7 +151,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 				$degree       = 111.045;
 			}
 
-			// add units to locations data
+			// add units to locations data.
 			$clauses['fields'] .= ", '{$units}' AS units";
 
 			// since these values are repeatable, we escape them previous
@@ -153,7 +166,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 
 			if ( ! empty( $distance ) ) {
 
-				// calculate the between point
+				// calculate the between point.
 				$bet_lat1 = $lat - ( $distance / $degree );
 				$bet_lat2 = $lat + ( $distance / $degree );
 				$bet_lng1 = $lng - ( $distance / ( $degree * cos( deg2rad( $lat ) ) ) );
@@ -163,21 +176,20 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 				$clauses['where'] .= " AND gmw_locations.latitude BETWEEN {$bet_lat1} AND {$bet_lat2}";
 				$clauses['where'] .= " AND gmw_locations.longitude BETWEEN {$bet_lng1} AND {$bet_lng2} ";
 
-				// filter locations based on the distance
+				// filter locations based on the distance.
 				$clauses['having'] = "HAVING distance <= {$distance} OR distance IS NULL";
 
-				// order by distance then title ( when posts have the same exact location )
-				if ( 'distance' == $this->form['query_args']['orderby'] ) {
+				// order by distance then title ( when posts have the same exact location ).
+				if ( 'distance' === $this->form['query_args']['orderby'] ) {
 					$clauses['orderby'] = 'distance, post_title';
 				}
 			}
-
 		} else {
 
-			//if showing posts without location
+			// if showing posts without location.
 			if ( $this->form['query_args']['gmw_args']['showing_objects_without_location'] ) {
 
-				// left join the location table into the query to display posts with no location as well
+				// left join the location table into the query to display posts with no location as well.
 				$clauses['join']  .= " LEFT JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON $wpdb->posts.ID = gmw_locations.object_id AND gmw_locations.object_type = 'post' ";
 				$clauses['where'] .= " {$address_filters} ";
 
@@ -189,7 +201,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 			}
 		}
 
-		// modify the clauses
+		// modify the clauses.
 		$clauses = apply_filters( 'gmw_pt_location_query_clauses', $clauses, $this->form );
 
 		// make sure we have groupby to only pull posts one time.
@@ -198,8 +210,8 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 		}
 
 		// add having clause.
-		$clauses['groupby'] .= ' ' . $clauses['having'];			
-		
+		$clauses['groupby'] .= ' ' . $clauses['having'];
+
 		unset( $clauses['having'] );
 
 		return $clauses;
@@ -212,12 +224,12 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 	 */
 	public function search_query() {
 
-		// get the post types from page load settings
+		// get the post types from page load settings.
 		if ( $this->form['page_load_action'] ) {
 
 			$post_types = ! empty( $this->form['page_load_results']['post_types'] ) ? $this->form['page_load_results']['post_types'] : 'post';
 
-			// when set to 1 means that we need to show all post types
+			// when set to 1 means that we need to show all post types.
 		} elseif ( ! empty( $this->form['form_values']['post'] ) && array_filter( $this->form['form_values']['post'] ) ) {
 
 			$post_types = $this->form['form_values']['post'];
@@ -226,17 +238,6 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 
 			$post_types = ! empty( $this->form['search_form']['post_types'] ) ? $this->form['search_form']['post_types'] : 'post';
 		}
-
-		// get query args for cache
-		// This is now happening eariler in the GMW_Form class
-		/*if ( $this->form['page_load_action'] ) {
-
-			$gmw_query_args = $this->form['page_load_results'];
-
-		} elseif ( $this->form['submitted'] ) {
-
-			$gmw_query_args = $this->form['form_values'];
-		}*/
 
 		$this->query_cache_args['show_non_located'] = $this->enable_objects_without_location;
 
@@ -249,47 +250,52 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 
 		$meta_args = false;
 
-		if ( empty( $this->form['get_per_page'] ) || -1 == $this->form['get_per_page'] ) {
+		if ( empty( $this->form['get_per_page'] ) || -1 === $this->form['get_per_page'] ) {
 			$this->form['get_per_page'] = -1;
 		}
 
-		//query args
+		// query args.
 		$this->form['query_args'] = apply_filters(
-			'gmw_pt_search_query_args', array(
+			'gmw_pt_search_query_args',
+			array(
 				'post_type'           => $post_types,
 				'post_status'         => array( 'publish' ),
-				'tax_query'           => apply_filters( 'gmw_pt_tax_query', $tax_args, $this->form ),
+				'tax_query'           => apply_filters( 'gmw_pt_tax_query', $tax_args, $this->form ), // WPCS: slow query ok.
 				'posts_per_page'      => $this->form['get_per_page'],
 				'paged'               => $this->form['paged'],
-				'meta_query'          => apply_filters( 'gmw_pt_meta_query', $meta_args, $this->form ),
+				'meta_query'          => apply_filters( 'gmw_pt_meta_query', $meta_args, $this->form ), // WPCS: slow query ok.
 				'ignore_sticky_posts' => 1,
 				'orderby'             => 'distance',
 				'gmw_args'            => $this->query_cache_args,
-			), $this->form, $this
+			),
+			$this->form,
+			$this
 		);
 
 		$this->form     = apply_filters( 'gmw_pt_form_before_posts_query', $this->form, $this );
 		$internal_cache = GMW()->internal_cache;
+		$this->query    = false;
 
 		if ( $internal_cache ) {
 
-			// cache key
+			// cache key.
 			$hash            = md5( wp_json_encode( $this->form['query_args'] ) );
 			$query_args_hash = 'gmw' . $hash . GMW_Cache_Helper::get_transient_version( 'gmw_get_object_post_query' );
+			$this->query     = get_transient( $query_args_hash );
 		}
 
-		// look for query in cache
-		if ( ! $internal_cache || false === ( $this->query = get_transient( $query_args_hash ) ) ) {
+		// look for query in cache.
+		if ( ! $internal_cache || empty( $this->query ) ) {
 
-			//add filters to wp_query to do radius calculation and get locations detail into results
+			// add filters to wp_query to do radius calculation and get locations detail into results.
 			add_filter( 'posts_clauses', array( $this, 'query_clauses' ) );
 
-			// posts query
+			// posts query.
 			$this->query = new WP_Query( $this->form['query_args'] );
 
 			remove_filter( 'posts_clauses', array( $this, 'query_clauses' ) );
 
-			// set new query in transient
+			// set new query in transient.
 			if ( $internal_cache ) {
 
 				/**
@@ -299,6 +305,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 				 * it is not being pulled back properly when GEO my WP trying to use it.
 				 * It shows an error "unserialize(): Error at offset " and the value returns blank.
 				 * As a temporary work around, we remove the [request] value, which contains the long numbers, from the WP_Query and save it in the transien without it.
+				 *
 				 * @var [type]
 				 */
 				unset( $this->query->request );
@@ -307,10 +314,10 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 			}
 		}
 
-		//Modify the form after the search query
+		// Modify the form after the search query.
 		$this->form = apply_filters( 'gmw_pt_form_after_posts_query', $this->form, $this );
 
-		// make sure posts exist
+		// make sure posts exist.
 		if ( empty( $this->query->posts ) ) {
 			return false;
 		}
@@ -341,7 +348,9 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 	}
 
 	/**
-	 * generate the location data.
+	 * Generate the location data.
+	 *
+	 * @param object $post post object.
 	 */
 	public function the_post( $post ) {
 
@@ -353,12 +362,11 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 	/**
 	 * Remove the_post action hook when form completed
 	 *
-	 * @param  [type] $form [description]
-	 * @return [type]       [description]
+	 * @param  [type] $form gmw form.
 	 */
 	public function remove_the_post( $form ) {
 
-		if ( $this->form['ID'] == $form['ID'] ) {
+		if ( absint( $this->form['ID'] ) === absint( $form['ID'] ) ) {
 			remove_action( 'the_post', array( $this, 'the_post' ), 5 );
 		}
 	}
