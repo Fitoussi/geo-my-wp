@@ -1,10 +1,6 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
-if ( ! class_exists( 'GMW_Form_Init' ) ) {
-	return;
+	exit; // Exit if accessed directly.
 }
 
 /**
