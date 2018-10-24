@@ -399,6 +399,9 @@ class GMW_Location {
 			// updated time based on current time
 			$location_data['updated'] = current_time( 'mysql' );
 
+			// make sure that there are no extra columns
+			$location_data = array_intersect_key( $location_data, self::default_values() );
+
 			// update location
 			$wpdb->update(
 				$table,
@@ -418,6 +421,9 @@ class GMW_Location {
 
 			// update the current data - time
 			$location_data['created'] = current_time( 'mysql' );
+
+			// make sure that there are no extra columns
+			$location_data = array_intersect_key( $location_data, self::default_values() );
 
 			// insert new location to database
 			$wpdb->insert( $table, $location_data, self::$format );
