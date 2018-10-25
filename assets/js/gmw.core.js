@@ -19,6 +19,15 @@
  */
 var GMW_Maps = {};
 
+/**
+ * Deprecated object.
+ *
+ * It is here to prevent errors with custom functions that still uses this.
+ *
+ * @type {Object}
+ */
+var gmwMapOptions = {};
+
 /************************************************/
 /************ GMW General functions *************/
 /************************************************/
