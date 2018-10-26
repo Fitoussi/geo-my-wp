@@ -1,7 +1,12 @@
 <?php
-// Exit if accessed directly
+/**
+ * Main Geocoder class.
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -17,53 +22,53 @@ class GMW_Geocoder {
 
 	/**
 	 * Provider.
-	 * 
+	 *
 	 * @var string
 	 */
 	public $provider = 'nominatim';
 
 	/**
 	 * Geocoding URL.
-	 * 
+	 *
 	 * @var string
 	 */
 	public $geocode_url = 'https://nominatim.openstreetmap.org/search';
 
 	/**
 	 * Reverse geocoding URL.
-	 * 
+	 *
 	 * @var string
 	 */
 	public $reverse_geocode_url = 'https://nominatim.openstreetmap.org/reverse';
 
 	/**
 	 * Geocoding type.
-	 * 
+	 *
 	 * @var string
 	 */
 	public $type = 'geocode';
 
 	/**
-	 * address or coords to geocode.
-	 * 
+	 * Address or coords to geocode.
+	 *
 	 * @var string
 	 */
 	public $location = '';
 
 	/**
 	 * Endpoint parameters.
-	 *  
+	 *
 	 * @var array
 	 */
 	public $params = array();
 
 	/**
 	 * Default location fields to return.
-	 * 
+	 *
 	 * @var array
 	 */
 	public $location_fields = array(
-		'street_number' 	=> '',
+		'street_number'     => '',
 		'street_name'       => '',
 		'street'            => '',
 		'premise'           => '',
@@ -77,8 +82,8 @@ class GMW_Geocoder {
 		'country_code'      => '',
 		'address'           => '',
 		'formatted_address' => '',
-		'lat'               => '', // to support older versions
-		'lng'               => '', // to support older versions
+		'lat'               => '', // to support older versions.
+		'lng'               => '', // to support older versions.
 		'latitude'          => '',
 		'longitude'         => '',
 		'place_id'          => '',
@@ -86,23 +91,24 @@ class GMW_Geocoder {
 
 	/**
 	 * [__construct description]
-	 * @param string $provider [description]
+	 *
+	 * @param string $provider geocoding provider.
 	 */
 	public function __construct( $provider = 'nominatim' ) {
 
 		$this->provider = $provider;
 		$this->params   = array(
 			'region'   => gmw_get_option( 'general_settings', 'country_code', 'us' ),
-			'language' => gmw_get_option( 'general_settings', 'language_code', 'en' )
+			'language' => gmw_get_option( 'general_settings', 'language_code', 'en' ),
 		);
 	}
 
 	/**
 	 * Get endpoint parameters.
 	 *
-	 * Options to pass to the geocoder.
-	 * 
-	 * @return [type] [description]
+	 * @param array $options options to pass to the geocoder.
+	 *
+	 * @return options.
 	 */
 	public function get_endpoint_params( $options ) {
 		return $options;
@@ -110,14 +116,22 @@ class GMW_Geocoder {
 
 	/**
 	 * Prepare address for the geocoder. Remove unwanted characters.
-	 * 
-	 * @param  [type] $raw_data [description]
+	 *
+	 * @param  string $raw_data string.
+	 *
 	 * @return [type]           [description]
 	 */
 	public function parse_raw_data( $raw_data ) {
 
 		// Clean up address from invalid characters.
-		$invalid_chars = array( " " => "+", "," => "", "?" => "", "&" => "", "=" => "" , "#" => "" );
+		$invalid_chars = array(
+			' ' => '+',
+			',' => '',
+			'?' => '',
+			'&' => '',
+			'=' => '',
+			'#' => '',
+		);
 
 		return trim( strtolower( str_replace( array_keys( $invalid_chars ), array_values( $invalid_chars ), $raw_data ) ) );
 	}
@@ -126,25 +140,26 @@ class GMW_Geocoder {
 	 * Check if the location provided is address or coordiantes.
 	 *
 	 * We need to know if to geocode or reverse geocoder.
-	 * 
-	 * @param  string $raw_data [description]
+	 *
+	 * @param  mixed $raw_data string of address || array of coords.
+	 *
 	 * @return [type]           [description]
 	 */
 	public function verify_data( $raw_data = '' ) {
 
 		$raw_data = apply_filters( 'gmw_geocoder_raw_data', $raw_data );
 
-		// if data is array, then it should be coordinates
+		// if data is array, then it should be coordinates.
 		if ( is_array( $raw_data ) ) {
 
-			// convert to lat,lng comma separated
+			// convert to lat,lng comma separated.
 			$location   = implode( ',', $raw_data );
 			$this->type = 'reverse_geocode';
 
-		// if not array, then it should be an address
+			// if not array, then it should be an address.
 		} else {
-			
-			$location 	= $this->parse_raw_data( $raw_data );
+
+			$location   = $this->parse_raw_data( $raw_data );
 			$this->type = 'geocode';
 		}
 
@@ -153,19 +168,21 @@ class GMW_Geocoder {
 
 	/**
 	 * Get endpoint URL.
-	 * 
+	 *
 	 * @return [type] [description]
 	 */
-	public function get_endpoint_url( ) {
+	public function get_endpoint_url() {
 
 		$url_type = $this->type . '_url';
 
 		// can modify the URL params.
-		$args = apply_filters( 'gmw_geocoder_endpoint_args',
+		$args = apply_filters(
+			'gmw_geocoder_endpoint_args',
 			array(
 				'url_base'   => $this->$url_type . '?',
-				'url_params' => $this->params
-			), $this		
+				'url_params' => $this->params,
+			),
+			$this
 		);
 
 		// deprecated. Will be removed in the future.
@@ -174,9 +191,9 @@ class GMW_Geocoder {
 		// remove any extra spaces from parameters.
 		$params = array_map( 'trim', $args['url_params'] );
 		$url    = $args['url_base'];
-	
-		/** 
-		 * if region exists, lets place it at the beggining of the array.
+
+		/**
+		 * If region exists, lets place it at the beggining of the array.
 		 *
 		 * We do this tp prevnt the &region renders as ®ion and break the URL.
 		 *
@@ -184,7 +201,7 @@ class GMW_Geocoder {
 		 */
 		if ( array_key_exists( 'region', $params ) ) {
 
-			$url .= 'region=' . $params['region'] .'&';
+			$url .= 'region=' . $params['region'] . '&';
 
 			unset( $params['region'] );
 		}
@@ -194,8 +211,9 @@ class GMW_Geocoder {
 
 	/**
 	 * Get the geolocation data using a child class.
-	 * 
-	 * @param  [type] $geocoded_data [description]
+	 *
+	 * @param  array $geocoded_data the geocoded data.
+	 *
 	 * @return [type]                [description]
 	 */
 	public function get_data( $geocoded_data ) {
@@ -203,10 +221,14 @@ class GMW_Geocoder {
 	}
 
 	/**
-	 * Geocode.
-	 * 
-	 * @param  [type]  $raw_data      [description]
-	 * @param  boolean $force_refresh [description]
+	 * Geocode function.
+	 *
+	 * @param  mixed   $raw_data       string of address || array of coords.
+	 *
+	 * @param  array   $options       geocoder options.
+	 *
+	 * @param  boolean $force_refresh [description].
+	 *
 	 * @return [type]                 [description]
 	 */
 	public function geocode( $raw_data = '', $options = array(), $force_refresh = false ) {
@@ -230,14 +252,14 @@ class GMW_Geocoder {
 			$this->params = array_merge( $this->params, $options );
 		}
 
-		// look for geocoded location in cache
+		// look for geocoded location in cache.
 		$address_hash    = md5( $this->location );
 		$location_output = get_transient( 'gmw_geocoded_' . $address_hash );
 		$location_output = apply_filters( 'gmw_transient_location_output', $location_output, $address_hash );
 		$response        = array();
 
-		// if no location found in cache or if forced referesh try to geocode
-		if ( true == $force_refresh || false === $location_output ) {
+		// if no location found in cache or if forced referesh try to geocode.
+		if ( true === $force_refresh || false === $location_output ) {
 
 			// get data from the provider.
 			$result = wp_remote_get( $this->get_endpoint_url() );
@@ -259,33 +281,33 @@ class GMW_Geocoder {
 			}
 
 			// if response successful.
-			if ( 200 == wp_remote_retrieve_response_code( $result ) ) {
+			if ( 200 === wp_remote_retrieve_response_code( $result ) ) {
 
 				// decode the data.
 				$geocoded_data = json_decode( $geocoded_data );
-			
+
 				// if geocoding success.
 				if ( ! empty( $geocoded_data ) ) {
 
 					// get geocoded data. Return either location fields or error message.
 					$response = $this->get_data( $geocoded_data );
-					
+
 					$response['data'] = $geocoded_data;
-			
+
 					// If location was found.
 					if ( $response['geocoded'] ) {
 
 						// add missing address field.
-						if ( 'reverse_geocode' == $this->type ) {
-							$response['result']['address'] = $response['result']['formatted_address']; 
+						if ( 'reverse_geocode' === $this->type ) {
+							$response['result']['address'] = $response['result']['formatted_address'];
 						} else {
 							$response['result']['address'] = $this->location;
 						}
 
-						// hook after geocoding
+						// hook after geocoding.
 						do_action( 'gmw_geocoded_location', $response['result'], $response, $address_hash );
 
-						// cache location for 3 months
+						// cache location.
 						set_transient( 'gmw_geocoded_' . $address_hash, $response['result'], 365 * DAY_IN_SECONDS );
 
 						// we need to pass the output via $location_output.
@@ -293,20 +315,19 @@ class GMW_Geocoder {
 
 						// can run custom function on sucess.
 						$this->success( $location_output, $response );
-					
-					// return error message.
+
+						// return error message.
 					} else {
 						return $this->failed( $response['result'], $geocoded_data );
 					}
 
-				// If geocode failed display errors.
+					// If geocode failed display errors.
 				} else {
 
 					$status = __( 'Location data was not found.', 'geo-my-wp' );
 
 					return $this->failed( $status, $geocoded_data );
 				}
-
 			} else {
 
 				$status = __( 'Unable to contact the API service or failed geocoding.', 'geo-my-wp' );
@@ -322,20 +343,24 @@ class GMW_Geocoder {
 	 * Success call back function.
 	 *
 	 * Can be used in class child.
-	 * 
-	 * @param  [type] $location_output [description]
-	 * @param  [type] $response        [description]
-	 * @return [type]                  [description]
+	 *
+	 * @param  [type] $location_output [description].
+	 *
+	 * @param  [type] $response        [description].
 	 */
 	public function success( $location_output, $response ) {}
 
 	/**
-	 * [get_error_message description]
-	 * @param  [type] $status [description]
+	 * Location failed function.
+	 *
+	 * @param  string $status error message.
+	 *
+	 * @param  array  $data   geocoder data.
+	 *
 	 * @return [type]         [description]
 	 */
 	public function failed( $status, $data ) {
-			
+
 		// generate warning showing the error message when geocoder fails.
 		if ( 'ZERO_RESULTS' !== $status ) {
 
@@ -345,12 +370,12 @@ class GMW_Geocoder {
 				$message .= ' - ' . $data->error_message;
 			}
 
-			trigger_error( 'GEO my WP geocoder failed. Error : ' . $message, E_USER_NOTICE );
+			gmw_trigger_error( 'GEO my WP geocoder failed. Error : ' . $message );
 		}
 
 		return array(
-			'error'	=> $status,
-			'data'  => $data
+			'error' => $status,
+			'data'  => $data,
 		);
 	}
 }
@@ -363,27 +388,26 @@ class GMW_Geocoder {
  *
  * @author Eyal Fitoussi
  *
- * @param  string||array  $raw_data can be address as a string or coords as of array( 'latitude','longitude' )
- * @param  boolean $force_refresh true to ignore data saved in cache
+ * @param  string||array $raw_data can be address as a string or coords as of array( 'latitude','longitude' ).
+ *
+ * @param  boolean       $force_refresh true to ignore data saved in cache.
  *
  * @return array geocoded data.
- *
  */
 function gmw_geocoder( $raw_data = '', $force_refresh = false ) {
 
-	// get provider
-	$provider   = GMW()->geocoding_provider;
-	
-	// Generate class name.
-	$class_name = 'GMW_'.$provider.'_Geocoder';
+	// get provider.
+	$provider = GMW()->geocoding_provider;
 
-	// verify that provider geocoding exists.
-	// Otherwise, use Nominatim as default.s
-	if ( ! class_exists( 'GMW_'.$provider.'_Geocoder' ) ) {
+	// Generate class name.
+	$class_name = 'GMW_' . $provider . '_Geocoder';
+
+	// verify that provider geocoding exists. Otherwise, use Nominatim as default.
+	if ( ! class_exists( 'GMW_' . $provider . '_Geocoder' ) ) {
 		$class_name = 'GMW_Nominatim_Geoocoder';
 	}
 
-	$geocoder = new $class_name( $provider  );
+	$geocoder = new $class_name( $provider );
 
 	return $geocoder->geocode( $raw_data, array(), $force_refresh );
 }
