@@ -1,11 +1,11 @@
 === GEO my Wordpress ===
 Contributors: ninjew, Eyal Fitoussi
 Donate link: http://geomywp.com/
-Tags: Geolocation, Directory, Store Locator, Geolocator, Geotagging, Geocode, Mapping, Proximity search, Zipcode, Geolocate posts, Address search, Distance, Google maps, Directions, Locations, Geo, Members locator, Geolocate members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
+Tags: Geolocation, Directory, Google Maps, OpenStreetMaps, Store Locator, Geolocator, Geotagging, Geocode, Mapping, Proximity search, Zipcode, Geolocate posts, Address search, Distance, Google maps, Directions, Locations, Geo, Members locator, Geolocate members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
 Requires at least: 4.3
 Tested up to: 4.9.8
 Buddypress: 2.8
-Stable tag: 3.1
+Stable tag: 3.2
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -16,7 +16,7 @@ Advanced geolocation, mapping, and proximity search plugin. Geotag post types an
 
 Welcome to the ultimate geolocation, mapping, and proximity search solution for Wordpress.
 
-Using GEO my WP plugin, and the powerful features of Google Maps API, you can easily geotag any of your post types, BuddyPress members and other components. Create unlimited advanced, proximity search forms to search and find any of the geotagged components of your site. 
+Using GEO my WP plugin, and the powerful features of Google Maps API or OpenStreetMaps, you can easily geotag any of your post types, BuddyPress members and other components. Create unlimited advanced, proximity search forms to search and find any of the geotagged components of your site. 
 
 With GEO my WP, creating a real estate, events, directory, classifieds, social networking and any other type of location based website is a simple task.
 
@@ -33,7 +33,7 @@ Check out the [live demo](demo.geomywp.com).
 * Mashup Maps
 * Single Location widget and shortcode
 * Current Location Shortcode and Widget
-* Powered By Google Maps API
+* Can be used with Google Maps API or OpenStreetMaps and LeafLet
 * Theme Flexibility
 * Developer Friendly
 
@@ -54,6 +54,9 @@ Create unlimited mashup maps to display the location of your post types, BuddyPr
 
 = Powered By Google Maps API = 
 GEO my WP takes full advantage of the powerful features of Google Maps API. Allows for simple and accurate geolocation using Google maps, address autocomplete, auto-locator and more.
+
+= LeafLet and OpenStreetMaps = 
+Out of the box GEO my WP also supports LeafLet and OpenStreetMaps, which you can use instead of Google Maps.
 
 = Single Location widget and shortcode =
 Display map and location details of a single component, such as post or Buddypress member, any where on a page using shortcode or widget. 
@@ -117,6 +120,35 @@ for detailed installation and setup guide see the [documentation](docs.geomywp.c
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 3.2 = 
+
+* Version 3.1 was a major release. Read this post [GEO my WP 3.1](https://geomywp.com/geo-my-wp-3-1/) before updating.
+
+* Version 3.0 was a major release. If you are updating from a version earlier than 3.0, it is highly recommended that you read the posts [GEO my WP 3.0 Beta 7](https://geomywp.com/geo-my-wp-3-0-beta-7/) and [GEO my WP Upgrade Process](https://geomywp.com/geo-my-wp-3-0-upgrade-process/) before updating. You should also test this version on a staging environment before updating on your live site.
+
+* New: New setting input field for Google Maps Server API key. GEO my WP now requires 2 API keys. Please visit GEO my WP's Settings page in the dashboard of your site after the update.
+* New: show debug message when geocoder fails.
+* Improvement: improve the Members Locator proximity search query. The plugin now modifies the BuddyPress members' query directly instead of running a separate location query in addition to the members' query. This should improve performance and make it easier to modify the query.
+* Improvement: Geocoder classes were improved and work better with the new server key.
+* Tweak: improve the location form. New arguments added.
+* Tweak: Many location functions were modified to retrieve data based on specific location ID. This can be used when an object has multiple locations.
+* Tweak:  load the member location tab using the bp_setup_nav hook to make it possible to modify it using plugins.
+* Tweak: close user's location info-window when a new window opens.
+* Tweak: set region and language in default args to make it possible to modify it.
+* Filter: ‘gmw_geocoder_endpoint_args’ to modify the geocoder endpoint args.
+* Filter: ‘gmw_geocoded_location_output’ to modify the geocoder location output.
+* Fix: parseint() icons size to prevent error with info-windows.
+* Fix: directions system doesn't work.
+* Fix: some search queries get locations that belong different object type.
+* Fix: clear user query cache when friendship status changes to allow friendship status to update in GEO my WP results.
+* Fix: default language in Google map direction link.
+* Fix: issue with the default coordinates of the directions link.
+* Fix: wrong text domain in some places.
+* Fix: Spelling.
+* Fix: trim radius values in dropdown to prevent extra spaces.
+* Japanese translation by Shinsaku IKEDA ( Thank you ).
+* Various improvements, new functions, bugs fix, filters, and deprecated functions.
 
 = 3.1 =
 
