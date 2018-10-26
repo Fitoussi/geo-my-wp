@@ -114,7 +114,7 @@ class GEO_MY_WP {
 		'premium_settings'                 => '2.2',
 		'global_maps'                      => '2.4',
 		'users_locator'                    => '1.4',
-		'wp_users_geo-location'            => '1.3.2', // old slug.
+		'wp_users_geo-location'            => '1.4', // old slug.
 	);
 
 	/**
@@ -256,7 +256,7 @@ class GEO_MY_WP {
 	 * @return void
 	 */
 	public function __clone() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' eh?!', 'geo-my-wp' ), '3.0' );
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' eh?!', 'geo-my-wp' ), '3.0' ); // WPCS: XSS ok.
 	}
 
 	/**
@@ -267,7 +267,7 @@ class GEO_MY_WP {
 	 * @return void
 	 */
 	public function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' eh?!', 'geo-my-wp' ), '3.0' );
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' eh?!', 'geo-my-wp' ), '3.0' ); // WPCS: XSS ok.
 	}
 
 	/**
