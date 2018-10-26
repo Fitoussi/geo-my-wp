@@ -134,6 +134,12 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 		$clauses['fields'] .= ", {$db_fields}";
 		$clauses['having']  = '';
 
+		// In multisite we need to check for the blog ID.
+		if ( is_multisite() ) {
+			$blog_id           = absint( $wpdb->blogid );
+			$clauses['where'] .= "AND gmw_locations.blog_id = {$blog_id} ";
+		}
+
 		// get address filters query.
 		$address_filters = GMW_Location::query_address_fields( $this->get_address_filters(), $this->form );
 
