@@ -42,7 +42,7 @@ class GMW_License {
 	
 	private $api_url = 'https://geomywp.com';
 
-	private $plugins_page_license_enabled = false;
+	private $plugins_page_license_enabled;
 
 	/**
 	 * Class constructor
@@ -66,24 +66,35 @@ class GMW_License {
 		$this->author         = $_author;
 		$this->api_url        = is_null( $_api_url ) ? $this->api_url : $_api_url;
 
-		//action links
-		add_filter( 'plugin_action_links_' . plugin_basename( $this->file ) , array( $this, 'extension_action_links' ), 10 );
-
-		// license key input in plugins page is disabled by default
-		if ( apply_filters( 'gmw_plugins_page_license_key_enabled', true ) ) {
-
-			$this->plugins_page_license_enabled = true;
-
-			add_action( 'after_plugin_row_' . plugin_basename( $this->file ), array( $this, 'license_key_element' ), 10 );
-		}
+		add_action( 'admin_init', array( $this, 'plugins_page_actions' ) );
 
 		// Setup hooks
 		$this->includes();
 		$this->auto_updater();	
 	}
-		
+
 	/**
-	 * add gmw add-ons action links in plugins page
+	 * Enable/disable license key in plugin's page.
+	 * 
+	 * @return [type] [description]
+	 */
+	public function plugins_page_actions() {
+
+		$this->plugins_page_license_enabled = apply_filters( 'gmw_plugins_page_license_key_enabled', true );
+
+		//action links
+		add_filter( 'plugin_action_links_' . plugin_basename( $this->file ) , array( $this, 'extension_action_links' ), 10 );
+
+		// license key input in plugins page is disabled by default
+		if ( $this->plugins_page_license_enabled ) {
+
+			add_action( 'after_plugin_row_' . plugin_basename( $this->file ), array( $this, 'license_key_element' ), 10 );
+		}
+	}	
+
+	/**
+	 * add gmw add-ons action links in plugins page.
+	 *
 	 * @param  $links
 	 * @return $links
 	 */
