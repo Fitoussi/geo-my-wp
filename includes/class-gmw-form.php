@@ -141,7 +141,6 @@ class GMW_Form {
 		'country_code',
 		'address',
 		'formatted_address',
-		'map_icon',
 	);
 
 	/**
@@ -387,6 +386,8 @@ class GMW_Form {
 
 		$this->enable_objects_without_location = apply_filters( 'gmw_form_enable_objects_without_location', $this->enable_objects_without_location, $this->form );
 
+		$this->db_fields = apply_filters( 'gmw_form_db_fields', $this->db_fields, $this->form );
+
 		// can modify form values.
 		$this->form = apply_filters( 'gmw_default_form_values', $this->form );
 		$this->form = apply_filters( "gmw_{$this->form['prefix']}_default_form_values", $this->form );
@@ -582,6 +583,7 @@ class GMW_Form {
 				return;
 			}
 
+			$this->query_cache_args['db_fields']                        = $this->db_fields;
 			$this->query_cache_args['showing_objects_without_location'] = $this->enable_objects_without_location;
 
 			do_action( 'gmw_form_before_search_query', $this->form, $this );
