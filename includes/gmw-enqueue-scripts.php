@@ -152,10 +152,10 @@ function gmw_enqueue_scripts() {
 
 		// register chosen scripts/style in back-end
 		if ( ! wp_style_is( 'chosen', 'registered' ) ) {
-			wp_register_style( 'chosen', GMW_URL . '/assets/lib/chosen/chosen.min.css', array(), GMW_VERSION );
+			wp_register_style( 'chosen', GMW_URL . '/assets/lib/chosen/chosen.min.css', array(), '1.8.7' );
 		}
 		if ( ! wp_script_is( 'chosen', 'registered' ) ) {
-			wp_register_script( 'chosen', GMW_URL . '/assets/lib/chosen/chosen.jquery.min.js', array( 'jquery' ), GMW_VERSION, true );
+			wp_register_script( 'chosen', GMW_URL . '/assets/lib/chosen/chosen.jquery.min.js', array( 'jquery' ), '1.8.7', true );
 		}
 	}
 }
