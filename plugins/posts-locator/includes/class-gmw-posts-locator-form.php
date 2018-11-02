@@ -135,7 +135,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 		$clauses['having']  = '';
 
 		// In multisite we need to check for the blog ID.
-		if ( is_multisite() ) {
+		if ( is_multisite() && ! empty( $wpdb->blogid ) ) {
 			$blog_id           = absint( $wpdb->blogid );
 			$clauses['where'] .= "AND gmw_locations.blog_id = {$blog_id} ";
 		}
