@@ -599,7 +599,7 @@ var GMW_Location_Form = {
 	    	var activeTab = jQuery( this ).data( 'name' );
 
 	    	// show the clicked tab and hide the rest
-	    	jQuery( '#' + activeTab + '-tab-panel' ).show().siblings( 'id*="-tab-panel"]' ).hide();
+	    	jQuery( '#' + activeTab + '-tab-panel' ).show().siblings( '[id*="-tab-panel"]' ).hide();
 
 	    	// activate / deactivates tabs
 	    	jQuery( this ).parent( 'li' ).addClass( 'active' ).siblings().removeClass( 'active' );
