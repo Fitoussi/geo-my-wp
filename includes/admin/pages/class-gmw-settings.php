@@ -1,4 +1,10 @@
 <?php
+/**
+ * GEO my WP Admin Settings class.
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -16,7 +22,7 @@ class GMW_Settings {
 	 */
 	public function __construct() {
 
-		if ( ( empty( $_GET['page'] ) || 'gmw-settings' !== $_GET['page'] ) && ( empty( $_POST['option_page'] ) || 'gmw_options' !== $_POST['option_page'] ) ) {
+		if ( ( empty( $_GET['page'] ) || 'gmw-settings' !== $_GET['page'] ) && ( empty( $_POST['option_page'] ) || 'gmw_options' !== $_POST['option_page'] ) ) { // WPCS: CSRF ok.
 			return;
 		}
 
@@ -230,7 +236,12 @@ class GMW_Settings {
 									'default'     => '',
 									'label'       => __( 'Google Maps Server API key', 'geo-my-wp' ),
 									'placeholder' => __( 'Server API key', 'geo-my-wp' ),
-									'desc'        => __( 'This API key is responsible for server side geocoding. Without this key some of GEO my WP functions will not work properly.', 'geo-my-wp' ),
+									'desc'        => sprintf(
+										/* translators: %1$s: oen <a> tag, %2$s: close </a> tag. */
+										__( 'This API key is responsible for server side geocoding. Without this key some of GEO my WP functions will not work properly. After generating and entering your server API key, you can test it %1$shere%2$s.', 'geo-my-wp' ),
+										'<a href="http://localhost/gmw-dev/wp-admin/admin.php?page=gmw-tools&tab=api_testing" target="_blank">',
+										'</a>'
+									),
 									'attributes'  => array( 'size' => '50' ),
 									'priority'    => 10,
 								),
@@ -403,11 +414,11 @@ class GMW_Settings {
 	 */
 	public function register_settings() {
 
-		if ( empty( $_POST['option_page'] ) || $_POST['option_page'] !== $this->settings_group ) {
+		if ( empty( $_POST['option_page'] ) || $_POST['option_page'] !== $this->settings_group ) { // WPCS: CSRF ok.
 			return;
 		}
 
-		if ( empty( $_POST['action'] ) || 'update' !== $_POST['action'] ) {
+		if ( empty( $_POST['action'] ) || 'update' !== $_POST['action'] ) { // WPCS: CSRF ok.
 			return;
 		}
 
@@ -792,7 +803,7 @@ class GMW_Settings {
 
 			<h2>
 				<i class="gmw-icon-cog-alt"></i>
-				<?php echo _e( 'GEO my WP Settings', 'geo-my-wp' ); ?>
+				<?php esc_attr_e( 'GEO my WP Settings', 'geo-my-wp' ); ?>
 				<?php gmw_admin_helpful_buttons(); ?>
 			</h2>
 			<div class="clear"></div>
@@ -800,15 +811,15 @@ class GMW_Settings {
 				<?php settings_fields( $this->settings_group ); ?>
 
 				<?php
-				if ( ! empty( $_GET['settings-updated'] ) ) {
+				if ( ! empty( $_GET['settings-updated'] ) ) { // WPCS: CSRF ok.
 
 					flush_rewrite_rules();
 
-					echo '<div class="updated fade gmw-settings-updated"><p>' . __( 'Settings successfully saved!', 'geo-my-wp' ) . '</p></div>';
+					echo '<div class="updated fade gmw-settings-updated"><p>' . esc_attr__( 'Settings successfully saved!', 'geo-my-wp' ) . '</p></div>';
 				}
 				?>
 				<div class="update-button-wrapper top">
-					<input type="submit" class="button-primary" value="<?php _e( 'Save Changes', 'geo-my-wp' ); ?>" />
+					<input type="submit" class="button-primary" value="<?php esc_attr_e( 'Save Changes', 'geo-my-wp' ); ?>" />
 				</div>
 
 				<div class="gmw-settings-wrapper gmw-left-tabs-menu-wrapper">
@@ -882,7 +893,20 @@ class GMW_Settings {
 
 													<?php if ( isset( $option['desc'] ) ) { ?>
 														<div class="gmw-form-feature-desc-content"> 
-															<em class="description"><?php echo esc_attr( $option['desc'] ); ?></em>
+															<em class="description">
+																<?php
+																	echo wp_kses(
+																		$option['desc'],
+																		array(
+																			'a' => array(
+																				'href'   => array(),
+																				'title'  => array(),
+																				'target' => array(),
+																			),
+																		)
+																	);
+																?>
+															</em>
 														</div>
 													<?php } ?>
 												</td>
@@ -923,7 +947,20 @@ class GMW_Settings {
 																		<?php $this->get_form_field( $settings, $option, $tab, $section ); ?>
 
 																		<?php if ( isset( $option['desc'] ) ) { ?>
-																			<p class="description"><?php echo esc_attr( $option['desc'] ); ?></p>
+																			<p class="description">
+																				<?php
+																					echo wp_kses(
+																						$option['desc'],
+																						array(
+																							'a' => array(
+																								'href'   => array(),
+																								'title'  => array(),
+																								'target' => array(),
+																							),
+																						)
+																					);
+																				?>
+																				</p>
 																		<?php } ?>
 																	</div>
 
@@ -945,7 +982,7 @@ class GMW_Settings {
 				</div> <!-- menu wrapper -->
 
 				<div class="update-button-wrapper bottom">
-					<input type="submit" class="button-primary" value="<?php _e( 'Save Changes', 'geo-my-wp' ); ?>" />
+					<input type="submit" class="button-primary" value="<?php esc_attr_e( 'Save Changes', 'geo-my-wp' ); ?>" />
 				</div>
 			</form>
 		</div>
