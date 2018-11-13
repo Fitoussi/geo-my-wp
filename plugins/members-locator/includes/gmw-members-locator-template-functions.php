@@ -275,52 +275,8 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 
 				break;
 
-			// field belong to Buddypress Xprofile Custom Fields Type plugin
-			case 'select_custom_post_type':
-				$options = $field_data->get_children();
-
-				// get the post type need to filter
-				$post_type_selected = $options[0]->name;
-
-				if ( $options ) {
-
-					$post_type_selected = $options[0]->name;
-
-					// Get posts of custom post type selected.
-					$posts = new WP_Query(
-						array(
-							'posts_per_page' => -1,
-							'post_type'      => $post_type_selected,
-							'orderby'        => 'title',
-							'order'          => 'ASC',
-						)
-					);
-
-					$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
-					$output .= '<select name="xf[' . $field_id . ']" id="' . $fid . '" class="' . $field_class . '">';
-
-					$option_all = apply_filters( 'gmw_fl_xprofile_form_dropdown_option_all', __( ' -- All -- ', 'geo-my-wp' ), $field_id, $field_data );
-
-					if ( ! empty( $option_all ) ) {
-						$output .= '<option value="">' . esc_attr( $option_all ) . '</option>';
-					}
-
-					if ( $posts ) {
-						foreach ( $posts->posts as $post ) {
-							$selected = ( $post->ID == $value ) ? "selected='selected'" : '';
-							$output .= '<option ' . $selected . ' value="' . $post->ID . '">' . $post->post_title . '</option>';
-						}
-					}
-
-					$output .= '</select>';
-				}
-
-				break;
-
 			// multiselect box
-			case 'multiselectbox':
-			case 'multiselect_custom_post_type':
-			case 'multiselect_custom_taxonomy':
+			case 'multiselectbox' :
 				$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
 				$output .= '<select name="xf[' . $field_id . '][]" id="' . $fid . '" class="' . $field_class . '" multiple="multiple">';
 
@@ -377,13 +333,67 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 				break;
 
 			/**
-			 * Make multiselect_custom_taxonomy field type compatible with
+			 * Make taxnommt and post types field typea compatible with
 			 * GEO my WP.
 			 *
 			 * Buddypress Xprofile Custom Fields Type plugin
 			 *
 			 * @author Miguel López <miguel@donmik.com>
 			 */
+			case 'select_custom_taxonomy':
+				$name_of_allow_new_tags = 'allow_new_tags';
+
+				if ( class_exists( 'Bxcft_Field_Type_MultiSelectCustomTaxonomy' ) ) {
+					$name_of_allow_new_tags = Bxcft_Field_Type_MultiSelectCustomTaxonomy::ALLOW_NEW_TAGS;
+				}
+
+				$options = $field_data->get_children();
+
+				$taxonomy_selected = false;
+
+				foreach ( $options as $option ) {
+
+					if ( $name_of_allow_new_tags !== $option->name && taxonomy_exists( $option->name ) ) {
+
+						$taxonomy_selected = $option->name;
+
+						break;
+					}
+				}
+
+				if ( $taxonomy_selected ) {
+
+					$terms = get_terms(
+						$taxonomy_selected,
+						array( 'hide_empty' => false )
+					);
+
+					if ( $terms ) {
+
+						$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
+						$output .= '<select name="xf[' . $field_id . ']" id="' . $fid . '" class="' . $field_class . '">';
+
+						$option_all = apply_filters( 'gmw_fl_xprofile_form_dropdown_option_all', __( ' -- All -- ', 'geo-my-wp' ), $field_id, $field_data );
+
+						if ( ! empty( $option_all ) ) {
+							$output .= '<option value="">' . esc_attr( $option_all ) . '</option>';
+						}
+
+						foreach ( $terms as $term ) {
+
+							$selected = ( ! empty( $value ) && $term->term_id === $value ) ? "selected='selected'" : '';
+							$output  .= sprintf(
+								'<option value="%s"%s>%s</option>',
+								$term->term_id, $selected, $term->name
+							);
+						}
+
+						$output .= '</select>';
+					}
+				}
+
+				break;
+
 			case 'multiselect_custom_taxonomy':
 				$name_of_allow_new_tags = 'allow_new_tags';
 
@@ -428,6 +438,85 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 
 						$output .= '</select>';
 					}
+				}
+
+				break;
+
+			// field belong to Buddypress Xprofile Custom Fields Type plugin
+			case 'select_custom_post_type':
+
+				$options = $field_data->get_children();
+
+				// get the post type need to filter
+				$post_type_selected = $options[0]->name;
+
+				if ( $options ) {
+
+					$post_type_selected = $options[0]->name;
+
+					// Get posts of custom post type selected.
+					$posts = new WP_Query(
+						array(
+							'posts_per_page' => -1,
+							'post_type'      => $post_type_selected,
+							'orderby'        => 'title',
+							'order'          => 'ASC',
+						)
+					);
+
+					$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
+					$output .= '<select name="xf[' . $field_id . ']" id="' . $fid . '" class="' . $field_class . '">';
+
+					$option_all = apply_filters( 'gmw_fl_xprofile_form_dropdown_option_all', __( ' -- All -- ', 'geo-my-wp' ), $field_id, $field_data );
+
+					if ( ! empty( $option_all ) ) {
+						$output .= '<option value="">' . esc_attr( $option_all ) . '</option>';
+					}
+
+					if ( $posts ) {
+						foreach ( $posts->posts as $post ) {
+							$selected = ( $post->ID == $value ) ? "selected='selected'" : '';
+							$output .= '<option ' . $selected . ' value="' . $post->ID . '">' . $post->post_title . '</option>';
+						}
+					}
+
+					$output .= '</select>';
+				}
+
+				break;
+
+			case 'multiselect_custom_post_type' :
+
+				$options = $field_data->get_children();
+
+				// get the post type need to filter
+				$post_type_selected = $options[0]->name;
+
+				if ( $options ) {
+
+					$post_type_selected = $options[0]->name;
+
+					// Get posts of custom post type selected.
+					$posts = new WP_Query(
+						array(
+							'posts_per_page' => -1,
+							'post_type'      => $post_type_selected,
+							'orderby'        => 'title',
+							'order'          => 'ASC',
+						)
+					);
+
+					$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
+					$output .= '<select name="xf[' . $field_id . '][]" id="' . $fid . '" class="' . $field_class . '" multiple="multiple">';
+
+					if ( $posts ) {
+						foreach ( $posts->posts as $post ) {
+							$selected = ( ! empty( $value ) && in_array( $post->ID, $value ) ) ? "selected='selected'" : '';
+							$output  .= '<option ' . $selected . ' value="' . $post->ID . '">' . $post->post_title . '</option>';
+						}
+					}
+
+					$output .= '</select>';
 				}
 
 				break;
@@ -500,6 +589,8 @@ function gmw_query_xprofile_fields( $fields_values = array(), $gmw = array() ) {
 
 			case 'selectbox':
 			case 'radio':
+			case 'select_custom_post_type':
+			case 'select_custom_taxonomy':
 				$value = str_replace( '&', '&amp;', $value );
 				$sql  .= $wpdb->prepare( 'AND value = %s', $value );
 
@@ -507,6 +598,8 @@ function gmw_query_xprofile_fields( $fields_values = array(), $gmw = array() ) {
 
 			case 'multiselectbox':
 			case 'checkbox':
+			case 'multiselect_custom_post_type':
+			case 'multiselect_custom_taxonomy':
 				$values = $value;
 				$like   = array();
 
