@@ -94,9 +94,9 @@ class GMW_Geocoder {
 	 *
 	 * @param string $provider geocoding provider.
 	 */
-	public function __construct( $provider = 'nominatim' ) {
+	public function __construct( $provider = '' ) {
 
-		$this->provider = $provider;
+		$this->provider = ! empty( $provider ) ? $provider : $this->provider;
 		$this->params   = array(
 			'region'   => gmw_get_option( 'general_settings', 'country_code', 'us' ),
 			'language' => gmw_get_option( 'general_settings', 'language_code', 'en' ),
@@ -146,6 +146,10 @@ class GMW_Geocoder {
 	 * @return [type]           [description]
 	 */
 	public function verify_data( $raw_data = '' ) {
+
+		if ( empty( $raw_data ) && ! empty( $this->location ) ) {
+			$raw_data = $this->location;
+		}
 
 		$raw_data = apply_filters( 'gmw_geocoder_raw_data', $raw_data );
 
@@ -301,7 +305,7 @@ class GMW_Geocoder {
 						if ( 'reverse_geocode' === $this->type ) {
 							$response['result']['address'] = $response['result']['formatted_address'];
 						} else {
-							$response['result']['address'] = $this->location;
+							$response['result']['address'] = sanitize_text_field( urldecode( $this->location ) );
 						}
 
 						// hook after geocoding.
