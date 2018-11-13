@@ -1,16 +1,21 @@
 <?php
-// Exit if accessed directly
+/**
+ * Members Locator template functions.
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 if ( ! function_exists( 'gmw_search_results_bp_avatar' ) ) {
+
 	/**
 	 * Display featured image in search results
 	 *
-	 * @param  [type] $post [description]
-	 * @param  array  $gmw  [description]
-	 * @return [type]       [description]
+	 * @param  string $object_type group || member.
+	 * @param  array  $gmw         gmw form.
 	 */
 	function gmw_search_results_bp_avatar( $object_type, $gmw = array() ) {
 
@@ -18,7 +23,7 @@ if ( ! function_exists( 'gmw_search_results_bp_avatar' ) ) {
 			return;
 		}
 
-		$object_type = ( 'bp_groups_locator' == $gmw['component'] ) ? 'group' : 'member';
+		$object_type = ( 'bp_groups_locator' === $gmw['component'] ) ? 'group' : 'member';
 
 		$permalink_function = 'bp_' . $object_type . '_permalink';
 		$avatar_function    = 'bp_' . $object_type . '_avatar';
@@ -41,25 +46,23 @@ if ( ! function_exists( 'gmw_search_results_bp_avatar' ) ) {
 /**
  * Search form BP member types filter
  *
- * @param  array $gmw [description]
- * @return [type]      [description]
+ * @param  array $gmw gmw form.
  */
 function gmw_search_form_bp_member_types( $gmw = array() ) {
 
 	if ( empty( $gmw['search_form']['member_types_filter'] ) ) {
 		return;
 	}
-	
+
 	$settings = $gmw['search_form']['member_types_filter'];
 
-	if ( ! isset( $settings['usage'] ) || $settings['usage'] == 'disabled' || $settings['usage'] == 'pre_defined' ) {
+	if ( ! isset( $settings['usage'] ) || 'disabled' === $settings['usage'] || 'pre_defined' === $settings['usage'] ) {
 		return;
 	}
 
 	$url_px = gmw_get_url_prefix();
 
-	// can be used with premium features to pass specific
-	// member types via array
+	// Can be used with premium features to pass specific member types via array.
 	if ( empty( $settings['member_types'] ) ) {
 
 		$member_types = array();
@@ -82,13 +85,13 @@ function gmw_search_form_bp_member_types( $gmw = array() ) {
 
 	$output = '';
 
-	if ( $args['usage'] != 'pre_defined' ) {
+	if ( 'pre_defined' !== $args['usage'] ) {
 
 		$output .= '<div class="gmw-form-field-wrapper gmw-bp-member-types-wrapper gmw-bp-member-type-' . esc_attr( $args['usage'] ) . '">';
 
 		if ( ! empty( $settings['label'] ) ) {
 
-			$tag = ( $args['usage'] == 'checkboxes' ) ? 'span' : 'label';
+			$tag = ( 'checkboxes' === $args['usage'] ) ? 'span' : 'label';
 
 			$output .= '<' . $tag . ' class="gmw-field-label">' . esc_attr( $settings['label'] ) . '</' . $tag . '>';
 		}
@@ -100,14 +103,13 @@ function gmw_search_form_bp_member_types( $gmw = array() ) {
 		$output .= $element;
 	}
 
-	echo $output;
+	echo $output; // WPCS: XSS ok.
 }
 
 /**
  * Search form BP Groups filter
  *
- * @param  array $gmw [description]
- * @return [type]      [description]
+ * @param  array $gmw gmw form.
  */
 function gmw_search_form_bp_groups_filter( $gmw = array() ) {
 
@@ -115,32 +117,32 @@ function gmw_search_form_bp_groups_filter( $gmw = array() ) {
 		return;
 	}
 
-	// abort if no need to display the groups filter
-	if ( ! isset( $gmw['search_form']['bp_groups']['usage'] ) || $gmw['search_form']['bp_groups']['usage'] == 'pre_defined' ) {
+	// abort if no need to display the groups filter.
+	if ( ! isset( $gmw['search_form']['bp_groups']['usage'] ) || 'pre_defined' === $gmw['search_form']['bp_groups']['usage'] ) {
 		return;
 	}
 
 	$settings = $gmw['search_form']['bp_groups'];
 
-	// set args
+	// set args.
 	$args = array(
 		'id'               => $gmw['ID'],
 		'usage'            => isset( $settings['usage'] ) ? $settings['usage'] : 'dropdown',
 		'show_options_all' => isset( $settings['show_options_all'] ) ? $settings['show_options_all'] : __( 'Search Groups', 'gmw-premium-settings' ),
 	);
 
-	// get the filter element
+	// get the filter element.
 	$element = GMW_Search_Form_Helper::bp_groups_filter( $args, $settings['groups'] );
 
 	$output = '';
 
-	if ( $args['usage'] != 'pre_defined' ) {
+	if ( 'pre_defined' !== $args['usage'] ) {
 
 		$output .= '<div class="gmw-form-field-wrapper gmw-bp-groups-wrapper gmw-bp-groups-' . esc_attr( $args['usage'] ) . '">';
 
 		if ( ! empty( $settings['label'] ) ) {
 
-			$tag = ( $args['usage'] == 'checkboxes' ) ? 'span' : 'label';
+			$tag = ( 'checkboxes' === $args['usage'] ) ? 'span' : 'label';
 
 			$output .= '<' . $tag . ' class="gmw-field-label">' . esc_attr( $settings['label'] ) . '</' . $tag . '>';
 		}
@@ -152,7 +154,7 @@ function gmw_search_form_bp_groups_filter( $gmw = array() ) {
 		$output .= $element;
 	}
 
-	echo $output;
+	echo $output; // WPCS: XSS ok.
 }
 
 /**
@@ -160,19 +162,21 @@ function gmw_search_form_bp_groups_filter( $gmw = array() ) {
  *
  * @version 1.0
  *
+ * @param array $gmw gmw form.
+ *
  * @author Eyal Fitoussi
  */
 function gmw_get_search_form_xprofile_fields( $gmw ) {
 
-	// Look for profile fields in form settings
+	// Look for profile fields in form settings.
 	$total_fields = ! empty( $gmw['search_form']['xprofile_fields']['fields'] ) ? $gmw['search_form']['xprofile_fields']['fields'] : array();
 
-	// look for date profile field in form settings
+	// look for date profile field in form settings.
 	if ( ! empty( $gmw['search_form']['xprofile_fields']['date_field'] ) ) {
 		array_unshift( $total_fields, $gmw['search_form']['xprofile_fields']['date_field'] );
 	}
 
-	// abort if no profile fields were chosen
+	// abort if no profile fields were chosen.
 	if ( empty( $total_fields ) ) {
 		return;
 	}
@@ -191,33 +195,33 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 		$field_class = 'gmw-xprofile-field';
 		$field_data  = new BP_XProfile_Field( $field_id );
 
-		// field label can be modified
+		// field label can be modified.
 		$label = apply_filters( 'gmw_fl_xprofile_form_field_label', $field_data->name, $field_id, $field_data );
 		$label = esc_html( $label );
 		$value = '';
 
-		// get the submitted value if form submitted
+		// get the submitted value if form submitted.
 		if ( isset( $values[ $field_id ] ) ) {
 
 			$value = $values[ $field_id ];
 
-			// otherwise set default values
+			// otherwise set default values.
 		} elseif ( empty( $gmw['submitted'] ) ) {
 
 			$value = apply_filters( 'gmw_fl_xprofile_form_default_value', '', $field_id, $field_data );
 		}
 
-		if ( $value != '' ) {
+		if ( '' !== $value ) {
 			$value = is_array( $value ) ? array_map( 'esc_attr', $value ) : esc_attr( stripslashes( $value ) );
 		}
 
-		// field wrapper
+		// field wrapper.
 		$output .= '<div class="gmw-form-field-wrapper gmw-xprofile-field-wrapper editfield field_type_' . esc_attr( $field_data->type ) . ' field_' . $field_id . ' field_' . sanitize_title( $field_data->name ) . '">';
 
-		// display field
+		// display field.
 		switch ( $field_data->type ) {
 
-			// date field
+			// date field.
 			case 'datebox':
 			case 'birthdate':
 				if ( ! is_array( $value ) ) {
@@ -232,81 +236,81 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 				$output .= '<input type="number" name="xf[' . $field_id . '][max]" id="' . $fid . '_max" class="' . $field_class . ' range-max" value="' . $value['max'] . '" placeholder="' . __( 'Max', 'geo-my-wp' ) . '" />';
 				break;
 
-			// textbox field
+			// textbox field.
 			case 'textbox':
 				$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
 				$output .= '<input type="text" name="xf[' . $field_id . ']" id="' . $fid . '" class="' . $field_class . '" value="' . $value . '" placeholder=" ' . $label . '" />';
 				break;
 
-			// number field
+			// number field.
 			case 'number':
 				$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
 				$output .= '<input type="number" name="xf[' . $field_id . ']" id="' . $fid . '" value="' . $value . '" placeholder=" ' . $label . '" />';
 				break;
 
-			// textarea
+			// textarea.
 			case 'textarea':
 				$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
 				$output .= '<textarea rows="5" cols="40" name="xf[' . $field_id . ']" id="' . $fid . '" class="' . $field_class . '">' . $value . '</textarea>';
 				break;
 
-			// selectbox
+			// selectbox.
 			case 'selectbox':
 				$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
 				$output .= '<select name="xf[' . $field_id . ']" id="' . $fid . '" class="' . $field_class . '">';
 
-				// all option
+				// all option.
 				$option_all = apply_filters( 'gmw_fl_xprofile_form_dropdown_option_all', __( ' -- All -- ', 'geo-my-wp' ), $field_id, $field_data );
 
 				if ( ! empty( $option_all ) ) {
 					$output .= '<option value="">' . esc_attr( $option_all ) . '</option>';
 				}
 
-				// get options
+				// get options.
 				$children = $field_data->get_children();
 
 				foreach ( $children as $child ) {
 					$option   = trim( $child->name );
-					$selected = ( $option == $value ) ? "selected='selected'" : '';
-					$output  .= '<option ' . $selected . ' value="' . $option . '">' . __( $option, 'geo-my-wp' ) . '</option>';
+					$selected = ( $option === $value ) ? "selected='selected'" : '';
+					$output  .= '<option ' . $selected . ' value="' . $option . '">' . esc_attr( $option ) . '</option>';
 				}
 
 				$output .= '</select>';
 
 				break;
 
-			// multiselect box
-			case 'multiselectbox' :
+			// multiselect box.
+			case 'multiselectbox':
 				$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
 				$output .= '<select name="xf[' . $field_id . '][]" id="' . $fid . '" class="' . $field_class . '" multiple="multiple">';
 
-				// get options
+				// get options.
 				$children = $field_data->get_children();
 
 				foreach ( $children as $child ) {
 					$option   = trim( $child->name );
-					$selected = ( ! empty( $value ) && in_array( $option, $value ) ) ? "selected='selected'" : '';
+					$selected = ( ! empty( $value ) && in_array( $option, $value, true ) ) ? "selected='selected'" : '';
 
-					$output .= '<option ' . $selected . ' value="' . $option . '">' . __( $option, 'geo-my-wp' ) . '</option>';
+					$output .= '<option ' . $selected . ' value="' . $option . '">' . esc_attr( $option ) . '</option>';
 				}
 
 				$output .= '</select>';
 
 				break;
 
-			// radio buttons
+			// radio buttons.
 			case 'radio':
 				$output .= '<div class="radio">';
 				$output .= '<span class="label gmw-field-label">' . $label . '</span>';
 
-				// get options
+				// get options.
 				$children = $field_data->get_children();
 
 				foreach ( $children as $child ) {
 					$option  = trim( $child->name );
-					$checked = ( $child->name == $value ) ? "checked='checked'" : '';
+					$checked = ( $child->name === $value ) ? "checked='checked'" : '';
 
-					$output .= '<label><input ' . $checked . ' type="radio" name="xf[' . $field_id . ']" value="' . $option . '" />' . __( $option, 'geo-my-wp' ) . '</label>';
+					$output .= '<label><input ' . $checked . ' type="radio" name="xf[' . $field_id . ']" value="' . $option . '" />' . eac_attr( $option ) . '</label>';
 				}
 
 				$output .= '<a href="#" onclick="event.preventDefault();jQuery(this).closest(\'div\').find(\'input\').prop(\'checked\', false);">' . __( 'Clear', 'buddypress' ) . '</a><br/>';
@@ -314,19 +318,19 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 
 				break;
 
-			// checkboxes
+			// checkboxes.
 			case 'checkbox':
 				$output .= '<div class="checkbox">';
 				$output .= '<span class="label gmw-field-label">' . $label . '</span>';
 
-				// get options
+				// get options.
 				$children = $field_data->get_children();
 
 				foreach ( $children as $child ) {
 					$option  = trim( $child->name );
-					$checked = ( ! empty( $value ) && in_array( $option, $value ) ) ? "checked='checked'" : '';
+					$checked = ( ! empty( $value ) && in_array( $option, $value, true ) ) ? "checked='checked'" : '';
 
-					$output .= '<label><input ' . $checked . ' type="checkbox" name="xf[' . $field_id . '][]" value="' . $option . '" />' . $option . '</label>';
+					$output .= '<label><input ' . $checked . ' type="checkbox" name="xf[' . $field_id . '][]" value="' . $option . '" />' . esc_attr( $option ) . '</label>';
 				}
 				$output .= '</div>';
 
@@ -384,7 +388,9 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 							$selected = ( ! empty( $value ) && $term->term_id === $value ) ? "selected='selected'" : '';
 							$output  .= sprintf(
 								'<option value="%s"%s>%s</option>',
-								$term->term_id, $selected, $term->name
+								$term->term_id,
+								$selected,
+								$term->name
 							);
 						}
 
@@ -429,10 +435,12 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 
 						foreach ( $terms as $term ) {
 
-							$selected = ( ! empty( $value ) && in_array( $term->term_id, $value ) ) ? "selected='selected'" : '';
+							$selected = ( ! empty( $value ) && in_array( $term->term_id, absint( $value ), true ) ) ? "selected='selected'" : '';
 							$output  .= sprintf(
 								'<option value="%s"%s>%s</option>',
-								$term->term_id, $selected, $term->name
+								$term->term_id,
+								$selected,
+								$term->name
 							);
 						}
 
@@ -442,12 +450,11 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 
 				break;
 
-			// field belong to Buddypress Xprofile Custom Fields Type plugin
+			// field belong to Buddypress Xprofile Custom Fields Type plugin.
 			case 'select_custom_post_type':
-
 				$options = $field_data->get_children();
 
-				// get the post type need to filter
+				// get the post type need to filter.
 				$post_type_selected = $options[0]->name;
 
 				if ( $options ) {
@@ -475,8 +482,8 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 
 					if ( $posts ) {
 						foreach ( $posts->posts as $post ) {
-							$selected = ( $post->ID == $value ) ? "selected='selected'" : '';
-							$output .= '<option ' . $selected . ' value="' . $post->ID . '">' . $post->post_title . '</option>';
+							$selected = ( absint( $value ) === $post->ID ) ? "selected='selected'" : '';
+							$output  .= '<option ' . $selected . ' value="' . $post->ID . '">' . $post->post_title . '</option>';
 						}
 					}
 
@@ -485,11 +492,10 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 
 				break;
 
-			case 'multiselect_custom_post_type' :
-
+			case 'multiselect_custom_post_type':
 				$options = $field_data->get_children();
 
-				// get the post type need to filter
+				// get the post type need to filter.
 				$post_type_selected = $options[0]->name;
 
 				if ( $options ) {
@@ -511,7 +517,7 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 
 					if ( $posts ) {
 						foreach ( $posts->posts as $post ) {
-							$selected = ( ! empty( $value ) && in_array( $post->ID, $value ) ) ? "selected='selected'" : '';
+							$selected = ( ! empty( $value ) && in_array( $post->ID, absint( $value ), true ) ) ? "selected='selected'" : '';
 							$output  .= '<option ' . $selected . ' value="' . $post->ID . '">' . $post->post_title . '</option>';
 						}
 					}
@@ -534,18 +540,27 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 	return $output;
 }
 
+/**
+ * Display xprofile fields filters in search form.
+ *
+ * @param  array $gmw gmw forms.
+ */
 function gmw_search_form_xprofile_fields( $gmw ) {
-	echo gmw_get_search_form_xprofile_fields( $gmw );
+	echo gmw_get_search_form_xprofile_fields( $gmw ); // WPCS: XSS ok.
 }
 
 /**
  * Query xprofile fields
  *
- * Note $formValues might come from URL. It needs to be sanitized before being used
+ * Note $form_values might come from URL. It needs to be sanitized before being used
  *
  * @version 1.0
  *
  * @author Eyal Fitoussi
+ *
+ * @param array $fields_values form values.
+ *
+ * @param array $gmw gmw form.
  *
  * @author Some of the code in this function was inspired by the code written by Andrea Taranti the creator of BP Profile Search - Thank you
  */
@@ -561,10 +576,16 @@ function gmw_query_xprofile_fields( $fields_values = array(), $gmw = array() ) {
 			continue;
 		}
 
-		// get the field data
+		// get the field data.
 		$field_data = new BP_XProfile_Field( $field_id );
 
-		$sql = $wpdb->prepare( "SELECT `user_id` FROM {$bp->profile->table_name_data} WHERE `field_id` = %d ", $field_id );
+		$sql = $wpdb->prepare(
+			"
+			SELECT `user_id`
+			FROM {$bp->profile->table_name_data} 
+			WHERE `field_id` = %d ",
+			$field_id
+		); // WPCS: unprepared SQL ok.
 
 		switch ( $field_data->type ) {
 
@@ -638,20 +659,20 @@ function gmw_query_xprofile_fields( $fields_values = array(), $gmw = array() ) {
 				$ymin  = $year - $max - 1;
 				$ymax  = $year - $min;
 
-				if ( $max !== '' ) {
+				if ( '' !== $max ) {
 					$sql .= $wpdb->prepare( ' AND DATE(value) > %s', "$ymin-$month-$day" );
 				}
-				if ( $min !== '' ) {
+				if ( '' !== $min ) {
 					$sql .= $wpdb->prepare( ' AND DATE(value) <= %s', "$ymax-$month-$day" );
 				}
 
 				break;
 		}
 
-		$results  = $wpdb->get_col( $sql, 0 );
+		$results  = $wpdb->get_col( $sql, 0 ); // WPCS: db call ok, cache ok, unprepared SQL ok.
 		$users_id = empty( $users_id ) ? $results : array_intersect( $users_id, $results );
 
-		// abort if no users found for this fields
+		// abort if no users found for this fields.
 		if ( empty( $users_id ) ) {
 			return -1;
 		}
@@ -661,9 +682,14 @@ function gmw_query_xprofile_fields( $fields_values = array(), $gmw = array() ) {
 }
 
 /**
- * GMW FL search results function - xprofile fields
+ * Display Xprofile Fields in search results.
  *
  * @version 1.0
+ *
+ * @param integer $member_id member ID.
+ *
+ * @param array   $fields    array of xfields to display.
+ *
  * @author Eyal Fitoussi
  */
 function gmw_get_member_xprofile_fields( $member_id = 0, $fields = array() ) {
@@ -683,8 +709,9 @@ function gmw_get_member_xprofile_fields( $member_id = 0, $fields = array() ) {
 			continue;
 		}
 
-		if ( $field_data->type == 'datebox' ) {
-			$age              = intval( date( 'Y', time() - strtotime( $field_value ) ) ) - 1970;
+		if ( 'datebox' === $field_data->type ) {
+			$age = intval( date( 'Y', time() - strtotime( $field_value ) ) ) - 1970;
+			// translators: %s for age.
 			$field_value      = sprintf( __( ' %s Years old', 'geo-my-wp' ), $age );
 			$field_data->name = __( 'Age', 'geo-my-wp' );
 		}
@@ -697,5 +724,5 @@ function gmw_get_member_xprofile_fields( $member_id = 0, $fields = array() ) {
 		$output .= '</li>';
 	}
 
-	return $output == '' ? false : '<ul class="gmw-xprofile-fields">' . $output . '</ul>';
+	return '' === $output ? false : '<ul class="gmw-xprofile-fields">' . $output . '</ul>';
 }
