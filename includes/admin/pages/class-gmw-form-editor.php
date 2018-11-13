@@ -1259,7 +1259,20 @@ class GMW_Form_Editor {
 
 			                            		<?php if ( isset( $option['desc'] ) ) { ?>
 				                            		<div class="gmw-form-feature-desc-content">	
-				                            			<em class="description"><?php echo $option['desc']; ?></em>
+				                            			<em class="description">
+				                            				<?php
+																echo wp_kses(
+																	$option['desc'],
+																	array(
+																		'a' => array(
+																			'href'   => array(),
+																			'title'  => array(),
+																			'target' => array(),
+																		),
+																	)
+																);
+															?>
+				                            			</em>
 				                            		</div>
 				                            	<?php } ?>
 			                            	</td>
@@ -1293,7 +1306,20 @@ class GMW_Form_Editor {
 									                        				<?php $this->get_form_field( $option, $tab, $section, $this->form ); ?>
 									                        				
 									                        				<?php if ( isset( $option['desc'] ) ) { ?>
-											                            		<p class="description"><?php echo $option['desc']; ?></p>
+											                            		<p class="description">
+											                            			<?php
+																						echo wp_kses(
+																							$option['desc'],
+																							array(
+																								'a' => array(
+																									'href'   => array(),
+																									'title'  => array(),
+																									'target' => array(),
+																								),
+																							)
+																						);
+																					?>
+											                            		</p>
 											                            	<?php } ?>
 											                           	</div>
 										                           	<?php //} ?>
