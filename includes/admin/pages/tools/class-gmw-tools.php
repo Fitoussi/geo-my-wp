@@ -4,20 +4,22 @@
  *
  * @since 2.5
  * @Author Eyal Fitoussi
+ *
+ * @package geo-my-wp
  */
 
-// Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
-// include files in tools page only
-if ( empty( $_GET['page'] ) || $_GET['page'] != 'gmw-tools' ) {
+// include files in tools page only.
+if ( empty( $_GET['page'] ) || 'gmw-tools' !== $_GET['page'] ) { // WPCS: CSRF ok.
 	return;
 }
 
-require 'tabs/reset-gmw.php';
-require 'tabs/system-info.php';
+require_once 'tabs/reset-gmw.php';
+require_once 'tabs/system-info.php';
+require_once 'tabs/api-testing.php';
 
 /**
  * GMW Tools page
@@ -26,21 +28,22 @@ require 'tabs/system-info.php';
  */
 class GMW_Tools {
 
+	/**
+	 * [__construct description]
+	 */
 	public function __construct() {}
 
 	/**
 	 * Display Tools page
-	 *
-	 * @return [type] [description]
 	 */
 	public function output() {
 
-		$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'system_info';
+		$active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'system_info'; // WPCS: CSRF ok.
 		?>
 		<div id="gmw-tools-page" class="wrap gmw-admin-page">
 			<h2 class="gmw-wrap-top-h2">   
 				<i class="gmw-icon-wrench"></i>
-				<?php _e( 'Tools', 'geo-my-wp' ); ?>
+				<?php esc_attr_e( 'Tools', 'geo-my-wp' ); ?>
 				<?php gmw_admin_helpful_buttons(); ?>
 			</h2>
 			<div class="clear"></div>
@@ -50,14 +53,14 @@ class GMW_Tools {
 
 					$tab_url = admin_url( 'admin.php?page=gmw-tools&tab=' . $tab_id );
 
-					$active = $active_tab == $tab_id ? ' nav-tab-active' : '';
+					$active = $active_tab === $tab_id ? ' nav-tab-active' : '';
 
-					echo '<a href="' . esc_url( $tab_url ) . '" title="' . esc_attr( $tab_name ) . '" class="nav-tab' . $active . '">' . esc_attr( $tab_name ) . '</a>';
+					echo '<a href="' . esc_url( $tab_url ) . '" title="' . esc_attr( $tab_name ) . '" class="nav-tab' . $active . '">' . esc_attr( $tab_name ) . '</a>'; // WPCS: XSS ok.
 				}
 				?>
 			</h2>
 			<div class="content metabox-holder">
-				<div id="gmw-<?php echo $active_tab; ?>-tab-content" class="gmw-tools-tab-content">
+				<div id="gmw-<?php echo esc_attr( $active_tab ); ?>-tab-content" class="gmw-tools-tab-content">
 					<?php do_action( 'gmw_tools_' . $active_tab . '_tab' ); ?>
 				</div>
 			</div>
@@ -75,6 +78,7 @@ class GMW_Tools {
 
 		$tabs                = array();
 		$tabs['system_info'] = __( 'System Info', 'geo-my-wp' );
+		$tabs['api_testing'] = __( 'API Testing', 'geo-my-wp' );
 		$tabs['reset_gmw']   = __( 'Uninstall GEO my WP', 'geo-my-wp' );
 
 		return apply_filters( 'gmw_tools_tabs', $tabs );
