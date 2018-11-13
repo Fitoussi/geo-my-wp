@@ -121,7 +121,7 @@ class GMW_Posts_Locations_Importer_V3 extends GMW_Locations_Importer {
 	 * records to import per batch
 	 * @var integer
 	 */
-	protected $records_per_batch = 20;
+	protected $records_per_batch = 100;
 
 	/**
 	 * Message
@@ -231,7 +231,7 @@ class GMW_Users_Locations_Importer_V3 extends GMW_Locations_Importer {
 	 * records to import per batch
 	 * @var integer
 	 */
-	protected $records_per_batch = 20;
+	protected $records_per_batch = 100;
 
 	/**
 	 * Message
