@@ -1,7 +1,12 @@
 <?php
-// Exit if accessed directly
+/**
+ * Geocoding service providers.
+ *
+ * @package geo-my-wp.
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -13,23 +18,37 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class GMW_Google_Maps_Geocoder extends GMW_Geocoder {
 
-	// Provider.
+	/**
+	 * Provider.
+	 *
+	 * @var string
+	 */
 	public $provider = 'google_maps';
 
-	// API geocoder URL
+	/**
+	 * Geocode API URL.
+	 *
+	 * @var string
+	 */
 	public $geocode_url = 'https://maps.googleapis.com/maps/api/geocode/json';
 
-	// API reverse geocoding URL.
+	/**
+	 * Reverse geocode API URl.
+	 *
+	 * @var string
+	 */
 	public $reverse_geocode_url = 'https://maps.googleapis.com/maps/api/geocode/json';
 
 	/**
 	 * Get endpoint parameters.
 	 *
+	 * @param array $options geocoder options.
+	 *
 	 * @return [type] [description]
 	 */
 	public function get_endpoint_params( $options ) {
 
-		$location = ( 'reverse_geocode' == $this->type ) ? 'latlng' : 'address';
+		$location = ( 'reverse_geocode' === $this->type ) ? 'latlng' : 'address';
 
 		$params = array(
 			$location  => $this->location,
@@ -58,21 +77,22 @@ class GMW_Google_Maps_Geocoder extends GMW_Geocoder {
 		$this->params = apply_filters( 'gmw_google_maps_api_geocoder_args', $this->params );
 
 		// url encode params values.
-		$this->params = array_map( 'urlencode', $this->params );
-		
+		/** $this->params = array_map( 'urlencode', $this->params ); */
+
 		return parent::get_endpoint_url();
 	}
 
 	/**
 	 * Get result data.
 	 *
-	 * @param  [type] $geocoded_data [description]
+	 * @param  object $geocoded_data geocolocation data.
+	 *
 	 * @return [type]                [description]
 	 */
 	public function get_data( $geocoded_data ) {
 
 		// if failed geocoding return error message.
-		if ( 'OK' != $geocoded_data->status ) {
+		if ( 'OK' !== $geocoded_data->status ) {
 			return array(
 				'geocoded' => false,
 				'result'   => $geocoded_data->status,
@@ -90,13 +110,15 @@ class GMW_Google_Maps_Geocoder extends GMW_Geocoder {
 	/**
 	 * Collect location fields.
 	 *
-	 * @param  array  $geocoded_data [description]
-	 * @param  array  $location      [description]
+	 * @param  object $geocoded_data geolocation data.
+	 *
+	 * @param  array  $location      $location data.
+	 *
 	 * @return [type]                [description]
 	 */
 	public function get_location_fields( $geocoded_data = array(), $location = array() ) {
 
-		// default values
+		// default values.
 		$location['formatted_address'] = sanitize_text_field( $geocoded_data->results[0]->formatted_address );
 		$location['lat']               = sanitize_text_field( $geocoded_data->results[0]->geometry->location->lat );
 		$location['lng']               = sanitize_text_field( $geocoded_data->results[0]->geometry->location->lng );
@@ -106,22 +128,23 @@ class GMW_Google_Maps_Geocoder extends GMW_Geocoder {
 
 		$address_componenets = $geocoded_data->results[0]->address_components;
 
-		// loop through address fields and collect data
+		// loop through address fields and collect data.
 		foreach ( $address_componenets as $geocoded_data ) {
 
 			switch ( $geocoded_data->types[0] ) {
 
-				// street number
+				// street number.
 				case 'street_number':
-					$location['street_number'] = $location['street'] = sanitize_text_field( $geocoded_data->long_name );
+					$location['street_number'] = sanitize_text_field( $geocoded_data->long_name );
+					$location['street']        = sanitize_text_field( $geocoded_data->long_name );
 					break;
 
-				// street name and street
+				// street name and street.
 				case 'route':
-					// street name
+					// street name.
 					$location['street_name'] = sanitize_text_field( $geocoded_data->long_name );
 
-					// street ( number + name )
+					// street ( number + name ).
 					if ( ! empty( $location['street_number'] ) ) {
 
 						$location['street'] = $location['street_number'] . ' ' . $location['street_name'];
@@ -132,41 +155,41 @@ class GMW_Google_Maps_Geocoder extends GMW_Geocoder {
 					}
 					break;
 
-				// premise
+				// premise.
 				case 'subpremise':
 					$location['premise'] = sanitize_text_field( $geocoded_data->long_name );
 					break;
 
-				// neigborhood
+				// neigborhood.
 				case 'neighborhood':
 					$location['neighborhood'] = sanitize_text_field( $geocoded_data->long_name );
 					break;
 
-				// city
+				// city.
 				case 'sublocality_level_1':
 				case 'locality':
 				case 'postal_town':
 					$location['city'] = sanitize_text_field( $geocoded_data->long_name );
 					break;
 
-				// county
+				// county.
 				case 'administrative_area_level_2':
 				case 'political':
 					$location['county'] = sanitize_text_field( $geocoded_data->long_name );
 					break;
 
-				// region / state
+				// region / state.
 				case 'administrative_area_level_1':
 					$location['region_code'] = sanitize_text_field( $geocoded_data->short_name );
 					$location['region_name'] = sanitize_text_field( $geocoded_data->long_name );
 					break;
 
-				// postal code
+				// postal code.
 				case 'postal_code':
 					$location['postcode'] = sanitize_text_field( $geocoded_data->long_name );
 					break;
 
-				// country
+				// country.
 				case 'country':
 					$location['country_code'] = sanitize_text_field( $geocoded_data->short_name );
 					$location['country_name'] = sanitize_text_field( $geocoded_data->long_name );
@@ -180,7 +203,8 @@ class GMW_Google_Maps_Geocoder extends GMW_Geocoder {
 	/**
 	 * Return error message.
 	 *
-	 * @param  [type] $status [description]
+	 * @param  string $status status code.
+	 *
 	 * @return [type]         [description]
 	 */
 	public function get_error_message( $status ) {
@@ -218,17 +242,31 @@ class GMW_Google_Maps_Geocoder extends GMW_Geocoder {
  */
 class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 
-	// Provider.
+	/**
+	 * Provider.
+	 *
+	 * @var string
+	 */
 	public $provider = 'nominatim';
 
-	// API geocoding URL.
+	/**
+	 * Geoocde URL.
+	 *
+	 * @var string
+	 */
 	public $geocode_url = 'https://nominatim.openstreetmap.org/search';
 
-	// API reverse geocoding URL.
+	/**
+	 * Reverse geocode URL.
+	 *
+	 * @var string
+	 */
 	public $reverse_geocode_url = 'https://nominatim.openstreetmap.org/reverse';
 
 	/**
 	 * Get endpoint parameters.
+	 *
+	 * @param array $options geocoder options.
 	 *
 	 * @return [type] [description]
 	 */
@@ -244,7 +282,7 @@ class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 			'limit'           => 10,
 		);
 
-		if ( 'reverse_geocode' == $this->type ) {
+		if ( 'reverse_geocode' === $this->type ) {
 
 			$coords        = explode( ',', $this->location );
 			$params['lat'] = $coords[0];
@@ -260,7 +298,8 @@ class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 	/**
 	 * Return geocoding data.
 	 *
-	 * @param  [type] $geocoded_data [description]
+	 * @param  object $geocoded_data geocoder data.
+	 *
 	 * @return [type]                [description]
 	 */
 	public function get_data( $geocoded_data ) {
@@ -281,7 +320,8 @@ class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 	/**
 	 * Look for location based on country code.
 	 *
-	 * @param  [type] $geocoded_data [description]
+	 * @param  object $geocoded_data geocoder data.
+	 *
 	 * @return [type]                [description]
 	 */
 	public function get_location_by_region( $geocoded_data ) {
@@ -292,7 +332,7 @@ class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 		foreach ( $geocoded_data as $location_details ) {
 
 			// Look for results based on country code, and abort once found.
-			if ( ! empty( $location_details->address->country_code ) && $this->params['region'] == $location_details->address->country_code ) {
+			if ( ! empty( $location_details->address->country_code ) && $this->params['region'] === $location_details->address->country_code ) {
 
 				$location = $location_details;
 
@@ -312,8 +352,10 @@ class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 	/**
 	 * Collect Location Fields.
 	 *
-	 * @param  array  $geocoded_data [description]
-	 * @param  array  $location      [description]
+	 * @param  array $geocoded_data geocoder data.
+	 *
+	 * @param  array $location      location data.
+	 *
 	 * @return [type]                [description]
 	 */
 	public function get_location_fields( $geocoded_data = array(), $location = array() ) {
@@ -324,7 +366,7 @@ class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 		// result with the default country code.
 		if ( is_array( $geocoded_data ) ) {
 
-			if ( count( $geocoded_data ) == 1 ) {
+			if ( 1 === count( $geocoded_data ) ) {
 				$geocoded_data = $geocoded_data[0];
 			} else {
 				$geocoded_data = $this->get_location_by_region( $geocoded_data );
@@ -333,60 +375,60 @@ class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 
 		foreach ( $geocoded_data as $field_name => $field_value ) {
 
-			if ( 'display_name' == $field_name ) {
+			if ( 'display_name' === $field_name ) {
 				$location['formatted_address'] = sanitize_text_field( $field_value );
 			}
 
-			if ( 'lat' == $field_name ) {
+			if ( 'lat' === $field_name ) {
 				$location['lat']      = sanitize_text_field( $field_value );
 				$location['latitude'] = $location['lat'];
 			}
 
-			if ( 'lon' == $field_name ) {
+			if ( 'lon' === $field_name ) {
 				$location['lng']       = sanitize_text_field( $field_value );
 				$location['longitude'] = $location['lng'];
 			}
 
-			if ( 'place_id' == $field_name ) {
+			if ( 'place_id' === $field_name ) {
 				$location['place_id'] = sanitize_text_field( $field_value );
 			}
 		}
 
 		$address_componenets = $geocoded_data->address;
 
-		// loop through address fields and collect data
+		// loop through address fields and collect data.
 		foreach ( $address_componenets as $field_name => $field_value ) {
 
-			if ( 'house_number' == $field_name ) {
+			if ( 'house_number' === $field_name ) {
 				$location['street_number'] = sanitize_text_field( $field_value );
 			}
 
-			if ( 'road' == $field_name ) {
+			if ( 'road' === $field_name ) {
 				$location['street_name'] = sanitize_text_field( $field_value );
 				$location['street']      = $location['street_number'] . ' ' . $location['street_name'];
 			}
 
-			if ( 'city' == $field_name ) {
+			if ( 'city' === $field_name ) {
 				$location['city'] = sanitize_text_field( $field_value );
 			}
 
-			if ( 'county' == $field_name ) {
+			if ( 'county' === $field_name ) {
 				$location['county'] = sanitize_text_field( $field_value );
 			}
 
-			if ( 'state' == $field_name ) {
+			if ( 'state' === $field_name ) {
 				$location['region_name'] = sanitize_text_field( $field_value );
 			}
 
-			if ( 'postcode' == $field_name ) {
+			if ( 'postcode' === $field_name ) {
 				$location['postcode'] = sanitize_text_field( $field_value );
 			}
 
-			if ( 'country' == $field_name ) {
+			if ( 'country' === $field_name ) {
 				$location['country_name'] = sanitize_text_field( $field_value );
 			}
 
-			if ( 'country_code' == $field_name ) {
+			if ( 'country_code' === $field_name ) {
 				$location['country_code'] = sanitize_text_field( $field_value );
 			}
 		}
