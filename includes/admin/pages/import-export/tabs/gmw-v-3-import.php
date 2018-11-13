@@ -97,7 +97,7 @@ class GMW_V_3_Import_Page {
 						<div class="postbox ">
 
 							<h3 class="hndle">
-								<span><?php esv_attr_e( 'Import Users/Members Locations', 'geo-my-wp' ); ?></span>
+								<span><?php esc_attr_e( 'Import Users/Members Locations', 'geo-my-wp' ); ?></span>
 							</h3>
 
 							<div class="inside">
@@ -138,7 +138,7 @@ class GMW_Posts_Locations_Importer_V3 extends GMW_Locations_Importer {
 	 *
 	 * @var integer
 	 */
-	protected $records_per_batch = 100;
+	protected $records_per_batch = 50;
 
 	/**
 	 * Message
@@ -264,7 +264,7 @@ class GMW_Users_Locations_Importer_V3 extends GMW_Locations_Importer {
 	 *
 	 * @var integer
 	 */
-	protected $records_per_batch = 100;
+	protected $records_per_batch = 50;
 
 	/**
 	 * Message
