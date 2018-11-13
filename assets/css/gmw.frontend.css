@@ -894,7 +894,9 @@ ul.gmw-geocoder-suggested-results li {
 			float: right;
 		}
 
-		div.gmw-xprofile-field-wrapper.field_type_multiselectbox select {
+		div.gmw-xprofile-field-wrapper.field_type_multiselectbox select,
+		div.gmw-xprofile-field-wrapper.field_type_multiselect_custom_post_type select,
+		div.gmw-xprofile-field-wrapper.field_type_multiselect_custom_taxonomy select {
 		    min-height: 110px;
 		}
 
@@ -2491,18 +2493,21 @@ label.gmw-sdate-geo-address-label i.gmw-locator-button {
 /*************************************************/
 /************* Component containers **************/
 /*************************************************/
-
+/*
 .ui-widget {
-	font-family: Verdana, Arial, sans-serif /*{ffDefault}*/;
-	font-size: 1.1em /*{fsDefault}*/;
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 1.1em;
 }
 
 .ui-widget .ui-widget {
 	
 }
 
-.ui-widget input,.ui-widget select,.ui-widget textarea,.ui-widget button {
-	font-family: Verdana, Arial, sans-serif /*{ffDefault}*/;
+.ui-widget input,
+.ui-widget select,
+.ui-widget textarea,
+.ui-widget button {
+	font-family: Verdana, Arial, sans-serif;
 	font-size: 1em;
 }
 
@@ -2513,7 +2518,7 @@ label.gmw-sdate-geo-address-label i.gmw-locator-button {
 }
 
 .ui-widget-content a {
-	color: #222222 /*{fcContent}*/;
+	color: #222222;
 }
 
 .ui-widget-header {
@@ -2525,19 +2530,24 @@ label.gmw-sdate-geo-address-label i.gmw-locator-button {
 }
 
 .ui-widget-header a {
-	color: #222222 /*{fcHeader}*/;
+	color: #222222;
 }
-
+*/
 /* Interaction states
 ----------------------------------*/
-.ui-state-default,.ui-widget-content .ui-state-default,.ui-widget-header .ui-state-default {
+/*
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default {
 	border: 1px solid #d3d3d3;
 	background: #e6e6e6;
 	font-weight: normal;
 	color: #555555;
 }
 
-.ui-state-default a,.ui-state-default a:link,.ui-state-default a:visited {
+.ui-state-default a,
+.ui-state-default a:link,
+.ui-state-default a:visited {
 	color: #555555;
 	text-decoration: none;
 }
@@ -2554,12 +2564,14 @@ label.gmw-sdate-geo-address-label i.gmw-locator-button {
 	color: #212121;
 }
 
-.ui-state-hover a,.ui-state-hover a:hover {
+.ui-state-hover a,
+.ui-state-hover a:hover {
 	color: #212121;
 	text-decoration: none;
 }
 
-.ui-state-active,.ui-widget-content .ui-state-active,
+.ui-state-active,
+.ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
 	border: 1px solid #aaaaaa;
 	background: #ffffff;
@@ -2567,7 +2579,9 @@ label.gmw-sdate-geo-address-label i.gmw-locator-button {
 	color: #212121;
 }
 
-.ui-state-active a,.ui-state-active a:link,.ui-state-active a:visited {
+.ui-state-active a,
+.ui-state-active a:link,
+.ui-state-active a:visited {
 	color: #212121;
 	text-decoration: none;
 }
@@ -2575,7 +2589,7 @@ label.gmw-sdate-geo-address-label i.gmw-locator-button {
 .ui-widget :active {
 	outline: none;
 }
-
+*/
 /********** End Component containers **********/
 
 #gmw-locator-success-message {
