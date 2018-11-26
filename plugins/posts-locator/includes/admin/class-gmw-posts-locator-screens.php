@@ -297,7 +297,7 @@ class GMW_Posts_Locator_Screens {
 
 					$( 'form[name="post"]' ).append( '<input type="hidden" value="" name="gmw_post_published" id="gmw_post_published" />' );
 
-					$( 'form[name="post"]' ).find( 'input#publish[type="submit"][value="Publish"]' ).on( 'click', function() {
+					$( 'form[name="post"]' ).find( 'input#publish[type="submit"][id="publish"]' ).on( 'click', function() {
 						$( '#gmw_post_published' ).val( '1' );
 					});
 				}
