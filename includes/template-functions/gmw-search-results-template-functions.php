@@ -19,7 +19,7 @@ function gmw_search_results_address( $object, $gmw = array() ) {
 
 	$output = gmw_get_location_address( $object, $fields, $gmw );
 
-	if ( false !== $output ) {
+	if ( ! empty( $output ) ) {
 		echo '<i class="gmw-icon-location-thin"></i>' . $output; // WPCS: XSS ok.
 	}
 }
