@@ -199,7 +199,7 @@ class GMW_Geocoder {
 		/**
 		 * If region exists, lets place it at the beggining of the array.
 		 *
-		 * We do this tp prevnt the &region renders as ®ion and break the URL.
+		 * We do this to prevnt the &region renders as ®ion and break the URL.
 		 *
 		 * This solution should work until we find a less hacky one.
 		 */
