@@ -133,6 +133,7 @@ class GMW_Form {
 		'street_name',
 		'street_number',
 		'street',
+		'premise',
 		'city',
 		'region_name',
 		'region_code',
