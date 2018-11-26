@@ -935,7 +935,19 @@ function gmw_get_location_address( $location, $fields = array( 'formatted_addres
 		$output = apply_filters( "gmw_{$location->object_type}_location_address", $output, $location, $fields, $gmw );
 	}
 
-	return ! empty( $output ) ? stripslashes( esc_html( $output ) ) : '';
+	// abort if no address found.
+	if ( empty( $output ) ) {
+		return '';
+	}
+
+	// To enable HTML in the address pass an array with the allowed attributes.
+	$allowed_html = apply_filters( 'gmw_get_location_address_allowed_html', false );
+
+	if ( empty( $allowed_html ) ) {
+		return stripslashes( esc_html( $output ) );
+	} else {
+		return stripslashes( wp_kses( $output, $allowed_html ) );
+	}
 }
 
 /**
