@@ -564,6 +564,8 @@ function gmw_get_units_array( $units = 'imperial' ) {
  * @param  [type] $end_lng   longitude of end point.
  * @param  string $units     m for miles k for kilometers.
  *
+ * @since 3.0
+ *
  * @return [type]            [description]
  */
 function gmw_calculate_distance( $start_lat, $start_lng, $end_lat, $end_lng, $units = 'k' ) {
