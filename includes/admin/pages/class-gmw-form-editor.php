@@ -1269,6 +1269,7 @@ class GMW_Form_Editor {
 																			'title'  => array(),
 																			'target' => array(),
 																		),
+																		'code' => array(),
 																	)
 																);
 															?>
@@ -1316,6 +1317,7 @@ class GMW_Form_Editor {
 																									'title'  => array(),
 																									'target' => array(),
 																								),
+																								'code' => array(),
 																							)
 																						);
 																					?>

@@ -903,6 +903,7 @@ class GMW_Settings {
 																				'title'  => array(),
 																				'target' => array(),
 																			),
+																			'code' => array(),
 																		)
 																	);
 																?>
@@ -957,6 +958,7 @@ class GMW_Settings {
 																								'title'  => array(),
 																								'target' => array(),
 																							),
+																							'code' => array(),
 																						)
 																					);
 																				?>
