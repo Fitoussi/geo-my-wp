@@ -1,18 +1,22 @@
 <?php
-// Exit if accessed directly
+/**
+ * Posts Locator Screen functions.
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
- * 
+ *
  * GMW_Post_Types_Screens class.
  *
  * - Generate the location form in the Edit Post page.
  * - Show location details in "All posts" page.
  *
  * @since 3.0
- *
  */
 class GMW_Posts_Locator_Screens {
 
@@ -24,33 +28,33 @@ class GMW_Posts_Locator_Screens {
 		global $pagenow;
 
 		// load page only on new and edit post pages.
-		if ( empty( $pagenow ) || ! in_array( $pagenow, array( 'post-new.php', 'post.php', 'edit.php' ) ) ) {
+		if ( empty( $pagenow ) || ! in_array( $pagenow, array( 'post-new.php', 'post.php', 'edit.php' ), true ) ) {
 			return;
 		}
 
-		// apply features only for the chosen post types
+		// apply features only for the chosen post types.
 		foreach ( gmw_get_option( 'post_types_settings', 'post_types', array() ) as $post_type ) {
 
-			// no need to show in resumes or job_listings post types
-			if ( 'job_listing' == $post_type || 'resume' == $post_type ) {
+			// no need to show in resumes or job_listings post types.
+			if ( 'job_listing' === $post_type || 'resume' === $post_type ) {
 				continue;
 			}
 
-			if ( 'edit.php' == $pagenow ) {
+			if ( 'edit.php' === $pagenow ) {
 				add_filter( "manage_{$post_type}_posts_columns", array( $this, 'add_address_column' ) );
 				add_action( "manage_{$post_type}_posts_custom_column", array( $this, 'address_column_content' ), 10, 2 );
 			}
 
-			if ( in_array( $pagenow, array( 'post-new.php', 'post.php' ) ) ) {
+			if ( in_array( $pagenow, array( 'post-new.php', 'post.php' ), true ) ) {
 
 				add_action( "add_meta_boxes_{$post_type}", array( $this, 'add_meta_box' ), 10 );
-				
+
 				// filters fires when location updated.
 				add_filter( 'gmw_lf_post_location_args_before_location_updated', array( $this, 'get_post_title' ) );
 				add_filter( 'gmw_lf_post_location_meta_before_location_updated', array( $this, 'verify_location_meta' ), 10, 3 );
 
 				// these action fire functions responsible for a fix where posts status wont change from pending to publish.
-				//add_action( 'gmw_lf_before_post_location_updated', array( $this, 'post_status_publish_fix' ) );
+				// add_action( 'gmw_lf_before_post_location_updated', array( $this, 'post_status_publish_fix' ) );.
 				$this->post_status_publish_fix();
 			}
 		}
@@ -59,7 +63,7 @@ class GMW_Posts_Locator_Screens {
 	/**
 	 * Add "address" column to manager posts page
 	 *
-	 * @param  array $columns columns
+	 * @param array $columns columns.
 	 *
 	 * @return columns
 	 */
@@ -68,15 +72,15 @@ class GMW_Posts_Locator_Screens {
 		$new_columns = array();
 		$no_col      = true;
 
-		// append "address" column depends on the table arrangemnt
+		// append "address" column depends on the table arrangemnt.
 		foreach ( $columns as $key => $column ) {
 
-			if ( array_key_exists( 'comments', $columns ) && 'comments' == $key ) {
+			if ( array_key_exists( 'comments', $columns ) && 'comments' === $key ) {
 
 				$new_columns['gmw_address'] = '<i class="gmw-icon-location"></i>' . __( 'Location', 'geo-my-wp' );
 				$no_col                     = false;
 
-			} elseif ( ! array_key_exists( 'comments', $columns ) && array_key_exists( 'date', $columns ) && 'date' == $key ) {
+			} elseif ( ! array_key_exists( 'comments', $columns ) && array_key_exists( 'date', $columns ) && 'date' === $key ) {
 
 				$new_columns['gmw_address'] = '<i class="gmw-icon-location"></i>' . __( 'Location', 'geo-my-wp' ) . '</i>';
 				$no_col                     = false;
@@ -94,75 +98,82 @@ class GMW_Posts_Locator_Screens {
 	/**
 	 * Add content to custom column
 	 *
-	 * @param  array $column  existing columns
-	 * @param  int   $post_id psot ID
+	 * @param  array $column  existing columns.
+	 * @param  int   $post_id psot ID.
 	 *
 	 * @return void
-	 *
 	 */
 	public function address_column_content( $column, $post_id ) {
 
-		// abort if not "Address column"
-		if ( 'gmw_address' != $column ) {
+		// abort if not "Address column".
+		if ( 'gmw_address' !== $column ) {
 			return;
 		}
 
 		global $wpdb;
 
-		$address_ok = false;
-
-		/*$location = $wpdb->get_row( $wpdb->prepare("
+		/**
+		$location = $wpdb->get_row( $wpdb->prepare("
 			SELECT formatted_address, address FROM {$wpdb->prefix}gmw_locations
 			WHERE `object_type` = 'post'
 			AND   `object_id`   = %d
 			", array( $post_id )
-		) ); */
+		) );.*/
+
+		$address_ok = false;
 
 		$location = gmw_get_post_location( $post_id );
 
 		if ( empty( $location ) ) {
-			echo '<i class="gmw-icon-cancel-circled" style="color:red;margin-right:1px;font-size: 12px"></i>' . __( 'No location found', 'geo-my-wp' );
+			echo '<i class="gmw-icon-cancel-circled" style="color:red;margin-right:1px;font-size: 12px"></i>' . esc_html__( 'No location found', 'geo-my-wp' );
 			return;
 		}
 
-		// first look for formatted address
+		// first look for formatted address.
 		if ( ! empty( $location->formatted_address ) ) {
 
 			$address_ok = true;
 			$address    = $location->formatted_address;
 
-			// otherwise for entered address
+			// otherwise for entered address.
 		} elseif ( ! empty( $location->address ) ) {
 
 			$address_ok = true;
 			$address    = $location->address;
 
-			// if no address was found show an error message
+			// if no address was found show an error message.
 		} else {
 			$address = __( 'Location found but the address is missing', 'GMW' );
 		}
 
 		$address = esc_attr( $address );
 
-		// create link to address
-		$address = ( true == $address_ok ) ? '<a href="http://maps.google.com/?q=' . $address . '" target="_blank" title="location">' . $address . '</a>' : '<span style="color:red">' . $address . '</span>';
-		echo '<i class="gmw-icon-ok-circled" style="color: green;margin-right: 1px;font-size: 12px;" style="color:green"></i>' . $address;
+		// create link to address.
+		$address = ( true === $address_ok ) ? '<a href="http://maps.google.com/?q=' . $address . '" target="_blank" title="location">' . $address . '</a>' : '<span style="color:red">' . $address . '</span>';
+		echo '<i class="gmw-icon-ok-circled" style="color: green;margin-right: 1px;font-size: 12px;" style="color:green"></i>' . $address; // WPSC: XSS ok.
 
 	}
 
 	/**
-	 * add meta boxes
+	 * Add location meta box
+	 *
+	 * @param object $post the post object.
 	 */
 	public function add_meta_box( $post ) {
 
-		$args = apply_filters( 'gmw_pt_location_meta_box_args', array(
-			'id'       => 'gmw-location-meta-box', 
-			'label'    => apply_filters( 'gmw_pt_mb_title', __( 'Location', 'geo-my-wp' ) ), 
-			'function' => array( $this, 'display_meta_box' ), 
-			'page'     => $post->post_type, 
-			'context'  => 'advanced', 
-			'priority' => 'high'
-		), $post, $this );
+		$args = apply_filters(
+			'gmw_pt_location_meta_box_args',
+			array(
+				'id'       => 'gmw-location-meta-box',
+				'label'    => apply_filters( 'gmw_pt_mb_title', __( 'Location', 'geo-my-wp' ) ),
+				'function' => array( $this, 'display_meta_box' ),
+				'page'     => $post->post_type,
+				'context'  => 'advanced',
+				'priority' => 'high',
+			),
+			$post,
+			$this
+		);
 
 		add_meta_box( $args['id'], $args['label'], $args['function'], $args['page'], $args['context'], $args['priority'] );
 
@@ -174,15 +185,17 @@ class GMW_Posts_Locator_Screens {
 
 	/**
 	 * Get location form args.
-	 * 
-	 * @param  [type] $post [description]
+	 *
+	 * @param  object $post the post object.
+	 *
 	 * @return [type]       [description]
 	 */
 	public static function get_location_form_args( $post ) {
 
-		// form args
+		// form args.
 		return apply_filters(
-			'gmw_edit_post_location_form_args', array(
+			'gmw_edit_post_location_form_args',
+			array(
 				'object_id'          => $post->ID,
 				'form_template'      => 'location-form-tabs-left',
 				'submit_enabled'     => 0,
@@ -197,28 +210,27 @@ class GMW_Posts_Locator_Screens {
 				'map_lng'            => gmw_get_option( 'post_types_settings', 'edit_post_page_map_longitude', '-74.013486' ),
 				'location_mandatory' => gmw_get_option( 'post_types_settings', 'location_mandatory', 0 ),
 				'location_required'  => gmw_get_option( 'post_types_settings', 'location_mandatory', 0 ),
-			), $post
+			),
+			$post
 		);
 	}
 
 	/**
 	 * Generate the location form
 	 *
-	 * @param  object $post the post being displayed
-	 *
-	 * @return [type]       [description]
+	 * @param  object $post the post being displayed.
 	 */
 	public function display_meta_box( $post ) {
 
-		// expand button
+		// expand button.
 		echo '<i type="button" id="gmw-location-section-resize" class="gmw-icon-resize-full" title="Expand full screen" style="display: block" onclick="jQuery( this ).closest( \'#gmw-location-meta-box\' ).find( \'.inside\' ).toggleClass( \'fullscreen\' );"></i>';
 
-		// form args
+		// form args.
 		$form_args = self::get_location_form_args( $post );
 
 		do_action( 'gmw_edit_post_page_before_location_form', $post );
 
-		// generate the form
+		// generate the form.
 		gmw_post_location_form( $form_args );
 
 		do_action( 'gmw_edit_post_page_after_location_form', $post );
@@ -227,7 +239,8 @@ class GMW_Posts_Locator_Screens {
 	/**
 	 * Get the post title to save as location title before location saved
 	 *
-	 * @param  [type] $location [description]
+	 * @param  object $location the location object.
+	 *
 	 * @return [type]           [description]
 	 */
 	public function get_post_title( $location ) {
@@ -244,11 +257,13 @@ class GMW_Posts_Locator_Screens {
 	/**
 	 * Verify opening hours location meta before saving
 	 *
-	 * @param  [type] $location_meta [description]
-	 * @param  [type] $location      [description]
-	 * @param  [type] $form_values   [description]
-	 * @return [type]                [description]
+	 * @param  array  $location_meta location meta.
 	 *
+	 * @param  object $location      the location object.
+	 *
+	 * @param  array  $form_values   the form values.
+	 *
+	 * @return [type]                [description]
 	 */
 	public function verify_location_meta( $location_meta, $location, $form_values ) {
 
@@ -256,19 +271,16 @@ class GMW_Posts_Locator_Screens {
 
 			$check = 0;
 
-			// loop through and check if values exist in days/hours
+			// loop through and check if values exist in days/hours.
 			foreach ( $location_meta['days_hours'] as $value ) {
 
 				foreach ( $value as $dh ) {
-					
+
 					$dh = trim( $dh );
 
 					// stop the loop in the first value we find. No need to continue.
 					if ( ! empty( $dh ) ) {
-
 						return $location_meta;
-
-						break;
 					}
 				}
 			}
@@ -316,15 +328,13 @@ class GMW_Posts_Locator_Screens {
 	 *
 	 * the original form submission ( event.preventDefault ) to allows to verify the location. Then
 	 *
-	 * the script will submit the form agaain.
-	 *
-	 * @return [type] [description]
+	 * the script will submit the form again.
 	 */
 	public function post_status_publish_fix() {
 
-		if ( ! empty( $_POST['post_status'] ) && 'publish' != $_POST['post_status'] && ! empty( $_POST['gmw_post_published'] ) ) {
+		if ( ! empty( $_POST['post_status'] ) && 'publish' !== $_POST['post_status'] && ! empty( $_POST['gmw_post_published'] ) ) { // WPCS: CSRF ok.
 			$_POST['post_status'] = 'publish';
 		}
 	}
 }
-new GMW_Posts_Locator_Screens;
+new GMW_Posts_Locator_Screens();
