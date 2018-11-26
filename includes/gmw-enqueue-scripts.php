@@ -28,9 +28,9 @@ function gmw_register_google_maps_api() {
 					'url_data' => http_build_query(
 						apply_filters(
 							'gmw_google_maps_api_args', array(
+								'region'    => gmw_get_option( 'general_settings', 'country_code', 'us' ),
 								'libraries' => 'google_maps' == GMW()->maps_provider ? 'places' : '',
 								'key'       => trim( gmw_get_option( 'api_providers', 'google_maps_client_side_api_key', '' ) ),
-								'region'    => gmw_get_option( 'general_settings', 'country_code', 'us' ),
 								'language'  => gmw_get_option( 'general_settings', 'language_code', 'en' ),
 							)
 						)
