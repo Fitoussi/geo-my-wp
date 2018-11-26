@@ -985,7 +985,7 @@ var GMW = {
      */
     rangeslider : function() {
         jQuery( 'form' ).find( 'input.gmw-range-slider' ).on( 'input change', function() {
-            jQuery( this ).next( 'span' ).find( 'output' ).html( jQuery( this ).val() );
+            jQuery( this ).prev( 'span, label' ).find( 'output' ).html( jQuery( this ).val() );
         });
     },
 
