@@ -67,7 +67,7 @@ var GMW_Location_Form_Map_Providers = {
 					jQuery( '#gmw_lf_address, #gmw_lf_formatted_address' ).val( address );
 
 					var fields = GMW_Geocoders.google_maps.getLocationFields( place );
-					
+
 					// add the address to the list of fields.
 					fields.address = address;
 
@@ -1109,6 +1109,8 @@ var GMW_Location_Form = {
 		// update map based of new coords
 		if ( this_form.map_enabled && jQuery( '#gmw-lf-map' ).length && ! this_form.map_updated ) {
 			this_form.update_map( result.lat, result.lng );
+		} else if ( this_form.map_updated ) {
+			this_form.map_updated = false;
 		}
 
 		//mark location as confirmed
