@@ -385,13 +385,13 @@ class GMW_Form {
 		}
 		/* End deprecated */
 
-		$this->enable_objects_without_location = apply_filters( 'gmw_form_enable_objects_without_location', $this->enable_objects_without_location, $this->form );
+		$this->enable_objects_without_location = apply_filters( 'gmw_form_enable_objects_without_location', $this->enable_objects_without_location, $this->form, $this );
 
-		$this->db_fields = apply_filters( 'gmw_form_db_fields', $this->db_fields, $this->form );
+		$this->db_fields = apply_filters( 'gmw_form_db_fields', $this->db_fields, $this->form, $this );
 
 		// can modify form values.
-		$this->form = apply_filters( 'gmw_default_form_values', $this->form );
-		$this->form = apply_filters( "gmw_{$this->form['prefix']}_default_form_values", $this->form );
+		$this->form = apply_filters( 'gmw_default_form_values', $this->form, $this );
+		$this->form = apply_filters( "gmw_{$this->form['prefix']}_default_form_values", $this->form, $this );
 	}
 
 	/**
@@ -443,7 +443,7 @@ class GMW_Form {
 	public function search_form() {
 
 		// enable/disable form filter.
-		if ( apply_filters( "gmw_{$this->form['ID']}_disable_search_form", false ) ) {
+		if ( apply_filters( "gmw_{$this->form['ID']}_disable_search_form", false, $this ) ) {
 			return;
 		}
 
@@ -511,7 +511,7 @@ class GMW_Form {
 	public function map_element() {
 
 		// disable map dynamically.
-		if ( ! apply_filters( 'gmw_trigger_map', true, $this->form ) ) {
+		if ( ! apply_filters( 'gmw_trigger_map', true, $this->form, $this ) ) {
 			return;
 		}
 
@@ -667,8 +667,8 @@ class GMW_Form {
 		}
 
 		// filter the form values before running search query.
-		$this->form = apply_filters( 'gmw_form_submitted_before_results', $this->form );
-		$this->form = apply_filters( "gmw_{$this->form['prefix']}_form_submitted_before_results", $this->form );
+		$this->form = apply_filters( 'gmw_form_submitted_before_results', $this->form, $this );
+		$this->form = apply_filters( "gmw_{$this->form['prefix']}_form_submitted_before_results", $this->form, $this );
 	}
 
 	/**
@@ -735,8 +735,8 @@ class GMW_Form {
 		}
 
 		// filter the form value before query.
-		$this->form = apply_filters( 'gmw_page_load_results_before_results', $this->form );
-		$this->form = apply_filters( "gmw_{$this->form['prefix']}_page_load_results_before_results", $this->form );
+		$this->form = apply_filters( 'gmw_page_load_results_before_results', $this->form, $this );
+		$this->form = apply_filters( "gmw_{$this->form['prefix']}_page_load_results_before_results", $this->form, $this );
 	}
 
 	/**
@@ -771,7 +771,7 @@ class GMW_Form {
 		}
 
 		// if searching within state or country only is enabled.
-		if ( apply_filters( 'gmw_search_within_boundaries', true, $this->form ) && $this->form['submitted'] ) {
+		if ( apply_filters( 'gmw_search_within_boundaries', true, $this->form, $this ) && $this->form['submitted'] ) {
 
 			// if searching state boundaries.
 			if ( isset( $this->form['form_values']['state'] ) && '' !== $this->form['form_values']['state'] ) {
@@ -903,7 +903,7 @@ class GMW_Form {
 			$this
 		);
 
-		return apply_filters( 'gmw_' . $this->form['prefix'] . '_form_map_location_args', $args, $object, $this->form );
+		return apply_filters( 'gmw_' . $this->form['prefix'] . '_form_map_location_args', $args, $object, $this->form, $this );
 	}
 
 	/**
@@ -1128,8 +1128,8 @@ class GMW_Form {
 	public function output() {
 
 		// do something before the output.
-		do_action( 'gmw_shortcode_start', $this->form );
-		do_action( "gmw_{$this->form['prefix']}_shortcode_start", $this->form );
+		do_action( 'gmw_shortcode_start', $this->form, $this );
+		do_action( "gmw_{$this->form['prefix']}_shortcode_start", $this->form, $this );
 
 		// if using the "elements" shortcode attribute to display the form.
 		if ( 'form' === $this->form['current_element'] && ! empty( $this->form['elements'] ) ) {
@@ -1195,7 +1195,7 @@ class GMW_Form {
 		}
 
 		// do something after the output.
-		do_action( 'gmw_shortcode_end', $this->form );
-		do_action( "gmw_{$this->form['prefix']}_shortcode_end", $this->form );
+		do_action( 'gmw_shortcode_end', $this->form, $this );
+		do_action( "gmw_{$this->form['prefix']}_shortcode_end", $this->form, $this );
 	}
 }
