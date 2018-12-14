@@ -1,7 +1,14 @@
 <?php
-// Exit if accessed directly
+/**
+ * GEO my WP Maps API.
+ *
+ * @author Eyal Fitoussi
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -34,12 +41,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 3.0
  *
  * @author Eyal Fitoussi
- *
  */
 class GMW_Maps_API {
 
 	/**
 	 * Array of maps that need to be generated on the page
+	 *
 	 * @var array
 	 */
 	public static $map_elements = array();
@@ -53,48 +60,56 @@ class GMW_Maps_API {
 
 	/**
 	 * Collection of address fields that need to have address autocomplete triggered
+	 *
 	 * @var array
 	 */
 	private static $address_autocomplete = array();
 
 	/**
 	 * Marker Clusterer script trigger
+	 *
 	 * @var boolean
 	 */
 	private static $markers_clusterer = false;
 
 	/**
 	 * Marker Spiderfier script trigger
+	 *
 	 * @var boolean
 	 */
 	private static $markers_spiderfier = false;
 
 	/**
-	 * infobox script trigger
+	 * Infobox script trigger
+	 *
 	 * @var boolean
 	 */
 	private static $infobox = false;
 
 	/**
-	 * infobox script trigger
+	 * Infobubble script trigger
+	 *
 	 * @var boolean
 	 */
 	private static $infobubble = false;
 
 	/**
 	 * Get directions script trigger
+	 *
 	 * @var boolean
 	 */
 	private static $directions = false;
 
 	/**
 	 * Popup draggable window script trigger
+	 *
 	 * @var boolean
 	 */
 	private static $draggable_window = false;
 
 	/**
-	 * map enabler
+	 * Map enabler
+	 *
 	 * @var boolean
 	 */
 	private static $map_enabled = false;
@@ -115,49 +130,50 @@ class GMW_Maps_API {
 	 * You can use this function when you have all the aruments needed for
 	 * both get_map_args() and get_map_elements() at the same time.
 	 *
-	 * @param  array  $map_args      map arguments
-	 * @param  array  $map_options   map_options ( https://developers.google.com/maps/documentation/javascript/reference#MapOptions )
-	 * @param  array  $locations     object locations ( posts, users... )
-	 * @param  array  $user_position user position
-	 * @param  array  $form          GEO my WP form if exists
+	 * @param  array $map_args      map arguments.
+	 * @param  array $map_options   map_options ( https://developers.google.com/maps/documentation/javascript/reference#MapOptions ).
+	 * @param  array $locations     object locations ( posts, users... ).
+	 * @param  array $user_position user position.
+	 * @param  array $form          GEO my WP form if exists.
 	 *
-	 * @return void
+	 * @return Map element
 	 */
 	public static function get_map( $map_args = array(), $map_options = array(), $locations = array(), $user_position = array(), $form = array() ) {
 
-		// generate map args
+		// generate map args.
 		self::get_map_args( $map_args, $map_options, $locations, $user_position, $form );
 
-		// generate map element
+		// generate map element.
 		return self::get_map_element( $map_args );
 	}
 
 	/**
-	 * Generate the HTML map element on the page
+	 * Generate the HTML map element on the page.
 	 *
 	 * @Since 3.0
 	 *
 	 * @author Eyal Fitoussi
 	 *
-	 * @param  array $args map args to define the map features
+	 * @param  array   $args map args to define the map features
 	 *
-	 * array(
-	 *   'map_id'         => '',      // the ID of the map
-	 *   'map_type'       => 'na',    // Map type ( posts_locator, members_locator... )
-	 *   'prefix'         => '',      // map prefix
-	 *   'map_width'      => '100%',  // map width in pixels or percentage
-	 *   'map_height'     => '350px', // map height in pixels or percentage
-	 *   'expand_on_load' => false,   // display map full screen when it first loads
-	 *   'form'           => false,   // GMW form if exists
-	 *   'init_visible'   => false
-	 * );
+	 *   array   $args array(
+	 *     'map_id'         => '',      // the ID of the map
+	 *     'map_type'       => 'na',    // Map type ( posts_locator, members_locator... )
+	 *     'prefix'         => '',      // map prefix
+	 *     'map_width'      => '100%',  // map width in pixels or percentage
+	 *     'map_height'     => '350px', // map height in pixels or percentage
+	 *     'expand_on_load' => false,   // display map full screen when it first loads
+	 *     'form'           => false,   // GMW form if exists
+	 *     'init_visible'   => false
+	 *   );.
+	 *
+	 * @param boolean $implode implode the map output?.
 	 *
 	 * @return HTML element of map
-	 *
 	 */
 	public static function get_map_element( $args, $implode = true ) {
 
-		// default map args
+		// default map args.
 		$default_args = array(
 			'map_id'         => '',
 			'map_type'       => 'na',
@@ -168,14 +184,14 @@ class GMW_Maps_API {
 			'init_visible'   => false,
 		);
 
-		// merge defaults with incoming args
+		// merge defaults with incoming args.
 		$args = array_merge( $default_args, $args );
 
-		// modify the map args
+		// modify the map args.
 		$args = apply_filters( 'gmw_map_output_args', $args );
 		$args = apply_filters( "gmw_map_output_args_{$args['map_id']}", $args );
 
-		// if expend map on load
+		// if expend map on load.
 		if ( $args['expand_on_load'] ) {
 			$expanded = 'gmw-expanded-map';
 			$trigger  = 'gmw-icon-resize-small';
@@ -192,7 +208,7 @@ class GMW_Maps_API {
 		$map_title  = esc_html( __( 'Resize map', 'geo-my-wp' ) );
 		$display    = ( $args['init_visible'] || $args['expand_on_load'] ) ? '' : 'display:none;';
 
-		// generate the map element
+		// generate the map element.
 		$output['wrap']   = "<div id=\"gmw-map-wrapper-{$map_id}\" class=\"gmw-map-wrapper {$prefix} {$map_type} {$expanded}\" style=\"{$display}width:{$map_width};height:{$map_height};\">";
 		$output['toggle'] = "<span id=\"gmw-resize-map-toggle-{$map_id}\" class=\"gmw-resize-map-toggle {$trigger}\" style=\"display:none;\" title=\"{$map_title}\"></span>";
 		$output['map']    = "<div id=\"gmw-map-{$map_id}\" class=\"gmw-map {$prefix} {$map_type}\" style=\"width:100%; height:100%\" data-map_id=\"{$map_id}\" data-prefix=\"{$prefix}\" data-map_type=\"{$map_type}\"></div>";
@@ -200,7 +216,7 @@ class GMW_Maps_API {
 		$output['loader'] = "<i id=\"gmw-map-loader-{$map_id}\" class=\"gmw-map-loader gmw-icon-spin-light animate-spin\"></i>";
 		$output['/wrap']  = '</div>';
 
-		// modify the map element
+		// modify the map element.
 		$output = apply_filters( 'gmw_map_output', $output, $args );
 		$output = apply_filters( "gmw_map_output_{$args['map_id']}", $output, $args );
 
@@ -208,42 +224,36 @@ class GMW_Maps_API {
 	}
 
 	/**
-	 *
 	 * Create new map args
 	 *
 	 * Pass the desired arguments to generate a map. Each element created here will be added
+	 *
 	 * to the $map_elements array of maps.
 	 *
 	 * most of the map options can be defined here.
 	 *
-	 * More information about google maps options can be found here
+	 * More information about google maps options can be found in
+	 *
 	 * https://developers.google.com/maps/documentation/javascript/reference#MapOptions.
 	 *
-	 * @Since 3.0
+	 * @param  array $map_args      general map element arguments ( see default arguments in the function ).
 	 *
-	 * @author Eyal Fitoussi
+	 * @param  array $map_options   the map options.
 	 *
-	 * @param  string  map_id           map/form ID
-	 * @param  string  map_type         usually slug if attached to an addon ( ex. posts_locator ).
-	 * @param  string  prefix           usually addon prefix if attached to an addon ( ex. pt ).
-	 * @param  string  info_window_type - default to "standard". Premium extension might provide additional types
-	 * @param  boolean info_window_ajax - true || false will be used with premium extension to load IW content via AJAX
-	 * @param  string  info_window_template - default to "default". To be used when AJAX enabled
-	 * @param  string  group_markers - default to "standard". clusters, spiderfie and other can be provided via extensions.
-	 * @param  boolean hide_no_locations - true || false to show or hide map if no locations found.
-	 * @param  boolean render_on_page_load - true || false if to render map on page load.
+	 * @param  array $locations     array of locations to output on the map.
 	 *
+	 * @param  array $user_location user location arguments.
 	 *
+	 * @param  array $form          GMW form when available.
 	 *
 	 * return array map arguments
-	 *
 	 */
 	public static function get_map_args( $map_args = array(), $map_options = array(), $locations = array(), $user_location = array(), $form = array() ) {
 
-		// randomize map ID if doesn't exists
-		$map_id = ! empty( $map_args['map_id'] ) ? $map_args['map_id'] : rand( 100, 1000 );
+		// randomize map ID if doesn't exists.
+		$map_id = ! empty( $map_args['map_id'] ) ? $map_args['map_id'] : wp_rand( 100, 1000 );
 
-		// default map args
+		// default map args.
 		$default_map_args = array(
 			'map_id'               => $map_id,
 			'map_type'             => 'na',
@@ -255,7 +265,7 @@ class GMW_Maps_API {
 			'group_markers'        => 'standard',
 			'draggable_window'     => 1,
 			'hide_no_locations'    => true,
-			'render_on_page_load'  => true, //render map on page load?
+			'render_on_page_load'  => true, // render map on page load?
 			'icon_url'             => GMW()->default_icons['location_icon_url'],
 			'clusters_path'        => 'https://raw.githubusercontent.com/googlemaps/js-marker-clusterer/gh-pages/images/m',
 			'map_provider'         => GMW()->maps_provider,
@@ -264,7 +274,7 @@ class GMW_Maps_API {
 		// if Google maps is the provider, we don't need icon size by default.
 		// Google already uses the default size of an icon.
 		// With LeafLet ( and perhaps other providers ) it is different and we need to provide the icon size.
-		$default_map_args['icon_size'] = ( 'google_maps' == GMW()->maps_provider ) ? null : GMW()->default_icons['location_icon_size'];
+		$default_map_args['icon_size'] = ( 'google_maps' === GMW()->maps_provider ) ? null : GMW()->default_icons['location_icon_size'];
 
 		// deprecated variable.
 		if ( isset( $map_args['render_map'] ) ) {
@@ -272,7 +282,7 @@ class GMW_Maps_API {
 			unset( $map_args['render_map'] );
 		}
 
-		// merge default with incoming map args
+		// merge default with incoming map args.
 		$map_args = array_merge( $default_map_args, $map_args );
 
 		// make sure icon size is an array.
@@ -280,11 +290,11 @@ class GMW_Maps_API {
 			$map_args['icon_size'] = explode( ',', $map_args['icon_size'] );
 		}
 
-		// default map options
+		// default map options.
 		$default_map_options = array(
 			'defaultCenter'          => '40.758895,-73.985131', // belongs to GMW.
-			'layersUrl'              => 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', // for leaflet
-			'layersAttribution'      => '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors', // for leaflet
+			'layersUrl'              => 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', // for leaflet.
+			'layersAttribution'      => '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors', // for leaflet.
 			'backgroundColor'        => '#f7f5e8',
 			'disableDefaultUI'       => false,
 			'disableDoubleClickZoom' => false,
@@ -314,18 +324,18 @@ class GMW_Maps_API {
 
 		$map_options = array_merge( $default_map_options, $map_options );
 
-		// default user position
+		// default user position.
 		$default_user_location = array(
 			'lat'        => false,
 			'lng'        => false,
 			'address'    => false,
 			'map_icon'   => GMW()->default_icons['user_location_icon_url'],
-			'icon_size'  => 'google_maps' == GMW()->maps_provider ? null : GMW()->default_icons['user_location_icon_size'],
+			'icon_size'  => 'google_maps' === GMW()->maps_provider ? null : GMW()->default_icons['user_location_icon_size'],
 			'iw_content' => null,
 			'iw_open'    => false,
 		);
 
-		// if user position exists, merge it with default
+		// if user position exists, merge it with default.
 		if ( ! empty( $user_location['lat'] ) ) {
 			$user_location = array_merge( $default_user_location, $user_location );
 		} else {
@@ -338,12 +348,12 @@ class GMW_Maps_API {
 		}
 
 		// no need to pass the results in the form as well
-		// since we already have locations data in the locations object
+		// since we already have locations data in the locations object.
 		if ( ! empty( $form ) ) {
 			$form['results'] = array();
 		}
 
-		// push the map args into the global array of maps
+		// push the map args into the global array of maps.
 		$map_element = array(
 			'settings'      => $map_args,
 			'map_options'   => $map_options,
@@ -352,42 +362,42 @@ class GMW_Maps_API {
 			'form'          => $form,
 		);
 
-		// allow plugins modify the map args
+		// allow plugins modify the map args.
 		$map_element = apply_filters( 'gmw_map_element', $map_element, $form );
 		$map_element = apply_filters( "gmw_map_element_{$map_id}", $map_element, $form );
 
-		// enable maps
+		// enable maps.
 		self::$map_enabled = true;
 
-		// Look for map providers
+		// Look for map providers.
 		if ( ! in_array( $map_element['settings']['map_provider'], self::$map_providers ) ) {
 			self::$map_providers[] = $map_element['settings']['map_provider'];
 		}
 
-		// enable Markers Clusterer library
-		if ( 'markers_clusterer' == $map_element['settings']['group_markers'] ) {
+		// enable Markers Clusterer library.
+		if ( 'markers_clusterer' === $map_element['settings']['group_markers'] ) {
 			self::$markers_clusterer = true;
 		}
 
-		// enable Markers Spiderfier library
-		if ( 'markers_spiderfier' == $map_element['settings']['group_markers'] ) {
+		// enable Markers Spiderfier library.
+		if ( 'markers_spiderfier' === $map_element['settings']['group_markers'] ) {
 			self::$markers_spiderfier = true;
 		}
 
-		// enable infobox js file if needed
-		if ( 'infobox' == $map_element['settings']['info_window_type'] ) {
+		// enable infobox js file if needed.
+		if ( 'infobox' === $map_element['settings']['info_window_type'] ) {
 			self::$infobox = true;
 		}
 
-		// enable infobox js file if needed
-		if ( 'infobubble' == $map_element['settings']['info_window_type'] ) {
+		// enable infobox js file if needed.
+		if ( 'infobubble' === $map_element['settings']['info_window_type'] ) {
 			self::$infobubble = true;
 		}
 
 		// enable jQuery ui draggable for popup info-windows
-		//if ( $map_args['info_window_ajax'] && $map_args['draggable_window'] ) {
-		if ( 'popup' == $map_element['settings']['info_window_type'] ) {
-			
+		// if ( $map_args['info_window_ajax'] && $map_args['draggable_window'] ) {.
+		if ( 'popup' === $map_element['settings']['info_window_type'] ) {
+
 			self::$draggable_window = true;
 
 			if ( ! empty( $form['info_window']['ajax_enabled'] ) && ! empty( $form['info_window']['directions_system'] ) ) {
@@ -407,23 +417,21 @@ class GMW_Maps_API {
 	 * Collection of fields that will have address_autocomplete triggered.
 	 *
 	 * Use this function to pass the desired fields for address autocomplete.
-	 * @param  array  $ac_fields [description]
 	 *
-	 * @return [type]            [description]
+	 * @param  array $ac_fields [description].
 	 */
 	public static function google_places_address_autocomplete( $ac_fields = array() ) {
 
 		if ( ! empty( $ac_fields ) ) {
 			self::$address_autocomplete = array_merge( self::$address_autocomplete, $ac_fields );
 		}
-
-		return;
 	}
 
 	/**
 	 * Generate content for the info-window
 	 *
 	 * @param  object $location location object.
+	 *
 	 * @param  array  $args     arguments define the content of the info window
 	 *    array(
 	 *      'prefix'          => '',         // addon/object prefix
@@ -436,8 +444,10 @@ class GMW_Maps_API {
 	 *      'directions_link' => true,       // 1 to show 0 to hide directions link
 	 *      'distance'        => true,       // 1 to show 0 to hide the distance
 	 *      'location_meta'   => ''          // list of location meta as array or comma separated.
-	 *    );
-	 * @param  array  $gmw      [description]
+	 *    );.
+	 *
+	 * @param  array  $gmw      GMW Form.
+	 *
 	 * @return [type]           [description]
 	 */
 	public static function get_info_window_content( $location, $args = array(), $gmw = array() ) {
@@ -458,8 +468,8 @@ class GMW_Maps_API {
 		$args = apply_filters( 'gmw_info_window_args', $args, $location, $gmw );
 		$args = wp_parse_args( $args, $default_args );
 
-		// object URL
-		if ( '#' != $args['url'] ) {
+		// object URL.
+		if ( '#' !== $args['url'] ) {
 			$args['url'] = esc_url( $args['url'] );
 		}
 
@@ -467,36 +477,36 @@ class GMW_Maps_API {
 
 		$output['wrap'] = '<div class="gmw-info-window-inner ' . esc_attr( $args['type'] ) . '" data-location_id="' . absint( $location->location_id ) . '" data-object="' . esc_attr( $location->object_type ) . '" data-prefix="' . esc_attr( $args['prefix'] ) . '">';
 
-		// Look for image
-		if ( '' != $args['image_url'] || '' != $args['image'] ) {
-			if ( '' != $args['image_url'] ) {
+		// Look for image.
+		if ( '' !== $args['image_url'] || '' !== $args['image'] ) {
+			if ( '' !== $args['image_url'] ) {
 				$output['image'] = '<a class="image" href="' . $args['url'] . '"><img tag="' . esc_attr( $args['title'] ) . '" src="' . esc_html( $args['image_url'] ) . '" /></a>';
 			} else {
 				$output['image'] = '<a class="image" href="' . $args['url'] . '">' . $args['image'] . '</a>';
 			}
 		}
 
-		// title
-		if ( '' != $args['title'] ) {
+		// title.
+		if ( '' !== $args['title'] ) {
 			$output['title'] = '<a class="title" href="' . $args['url'] . '">' . esc_attr( $args['title'] ) . '</a>';
 		}
 
-		// address
+		// address.
 		if ( ! empty( $args['address_fields'] ) ) {
 			$output['address'] = '<span class="address gmw-icon-location">' . gmw_get_location_address( $location, $args['address_fields'], $gmw ) . '</span>';
 		}
 
-		// distance
+		// distance.
 		if ( $args['distance'] && isset( $location->distance ) ) {
 			$output['distance'] = '<span class="distance">' . esc_attr( $location->distance ) . ' ' . $location->units . '</span>';
 		}
 
-		// directions link
+		// directions link.
 		if ( $args['directions_link'] ) {
 			$output['directions'] = gmw_get_directions_link( $location, $gmw );
 		}
 
-		// location meta
+		// location meta.
 		if ( ! empty( $args['location_meta'] ) && apply_filters( 'gmw_enable_info_window_location_meta', true ) ) {
 
 			$location_meta = is_array( $args['location_meta'] ) ? $args['location_meta'] : explode( ',', $args['location_meta'] );
@@ -506,26 +516,25 @@ class GMW_Maps_API {
 
 		$output['/wrap'] = '</div>';
 
-		// modify the output
+		// modify the output.
 		$output = apply_filters( 'gmw_info_window_content', $output, $location, $args, $gmw );
 
-		if ( '' != $args['prefix'] ) {
+		if ( '' !== $args['prefix'] ) {
 			$output = apply_filters( "gmw_{$args['prefix']}_info_window_content", $output, $location, $args, $gmw );
 		}
 
-		// output content
+		// output content.
 		return implode( ' ', $output );
 	}
 
 	/**
-	* Generate get directions form.
-	*
-	* @param unknown_type $info - $post, $member...
-	* @param unknown_type $gmw
-	*/
+	 * Generate get directions form.
+	 *
+	 * @param array $args form arguments.
+	 */
 	public static function get_directions_form( $args = array() ) {
 
-		// default args
+		// default args.
 		$defaults = array(
 			'element_id'           => '',
 			'origin'               => '',
@@ -535,11 +544,11 @@ class GMW_Maps_API {
 			'address_autocomplete' => 1,
 		);
 
-		// modify the directions argumentes
+		// modify the directions argumentes.
 		$args = apply_filters( 'gmw_directions_form_args', $args, $defaults );
 		$args = wp_parse_args( $args, $defaults );
 
-		// check for origin in args. If not exists check for user's current position as origin
+		// check for origin in args. If not exists check for user's current position as origin.
 		if ( empty( $args['origin'] ) ) {
 
 			$user_location = gmw_get_user_current_location();
@@ -553,20 +562,20 @@ class GMW_Maps_API {
 		if ( empty( $args['destination'] ) ) {
 
 			// check for address in URL to be used as destination.
-			// usually on single object page when navigated from the loop
-			if ( ! empty( $_GET['address'] ) ) {
+			// usually on single object page when navigated from the loop.
+			if ( ! empty( $_GET['address'] ) ) { // WPCS: CSRF ok.
 
-				$args['destination'] = urldecode( $_GET['address'] );
+				$args['destination'] = urldecode( $_GET['address'] ); // WPCS: CSRF ok, sanitization ok.
 
 			} else {
 
-				// look for $gmw_locaiton global. This usually present in the loop
+				// look for $gmw_locaiton global. This usually present in the loop.
 				global $gmw_location;
 
-				// check for address
+				// check for address.
 				if ( ! empty( $gmw_location ) && ( ! empty( $gmw_location->formatted_address ) || ! empty( $gmw_location->address ) ) ) {
 
-					// default destination address will be the address in the loop
+					// default destination address will be the address in the loop.
 					$args['destination'] = ! empty( $gmw_location->formatted_address ) ? $gmw_location->formatted_address : $gmw_location->address;
 
 					if ( empty( $args['element_id'] ) ) {
@@ -576,11 +585,12 @@ class GMW_Maps_API {
 			}
 		}
 
-		$args['element_id'] = ! empty( $args['element_id'] ) ? absint( $args['element_id'] ) : rand( 100, 549 );
+		$args['element_id'] = ! empty( $args['element_id'] ) ? absint( $args['element_id'] ) : wp_rand( 100, 549 );
 
-		// labels
+		// labels.
 		$labels = apply_filters(
-			'gmw_get_directions_form_labels', array(
+			'gmw_get_directions_form_labels',
+			array(
 				'origin'           => __( 'Origin', 'geo-my-wp' ),
 				'destination'      => __( 'Destination', 'geo-my-wp' ),
 				'directions_label' => __( 'Directions', 'geo-my-wp' ),
@@ -595,7 +605,8 @@ class GMW_Maps_API {
 				'avoid_label'      => __( 'Avoid', 'geo-my-wp' ),
 				'avoid_hw'         => __( 'highways', 'geo-my-wp' ),
 				'avoid_tolls'      => __( 'Tolls', 'geo-my-wp' ),
-			), $args
+			),
+			$args
 		);
 
 		$id           = esc_attr( $args['element_id'] );
@@ -607,7 +618,7 @@ class GMW_Maps_API {
 		$output  = "<div id=\"gmw-directions-form-wrapper-{$id}\" class=\"gmw-directions-form-wrapper\">";
 		$output .= "<form id=\"get-directions-form-{$id}\">";
 
-		// travel mode
+		// travel mode.
 		$output .= "<ul id=\"travel-mode-options-{$id}\" class=\"get-directions-options travel-mode-options\">";
 		$output .= "<li><a href=\"#\" id=\"DRIVING\" class=\"travel-mode-trigger active\"><i class=\"gmw-icon-cab\" title=\"{$labels['driving']}\"></i></a></li>";
 		$output .= "<li><a href=\"#\" id=\"WALKING\" class=\"travel-mode-trigger\"><i class=\"gmw-icon-person\" title=\"{$labels['walking']}\"></i></a></li>";
@@ -615,7 +626,7 @@ class GMW_Maps_API {
 		$output .= "<li><a href=\"#\" id=\"TRANSIT\" class=\"travel-mode-trigger\"><i class=\"gmw-icon-bus\" title=\"{$labels['transit']}\"></i></a></li>";
 		$output .= '</ul>';
 
-		// address fields
+		// address fields.
 		$output .= '<div class="address-fields-wrapper">';
 		$output .= '<div class="address-field-wrapper origin-field-wrapper">';
 		$output .= "<label for=\"origin-field-{$id}\">{$labels['from']}</label>";
@@ -629,17 +640,17 @@ class GMW_Maps_API {
 		$output .= '</div>';
 		$output .= '</div>';
 
-		// default to miles
-		if ( 'imperial' == $args['units'] ) {
+		// default to miles.
+		if ( 'imperial' === $args['units'] ) {
 
 			$output .= "<input style=\"display:none;\" type=\"radio\" id=\"unit-system-imperial-trigger-{$id}\" name=\"unit_system_trigger\" class=\"unit-system-trigger\" value=\"IMPERIAL\" checked=\"checked\" />";
 
-			// default to kilometers
-		} elseif ( 'metric' == $args['units'] ) {
+			// default to kilometers.
+		} elseif ( 'metric' === $args['units'] ) {
 
 			$output .= "<input style=\"display:none;\" type=\"radio\" id=\"unit-system-metric-trigger-{$id}\" name=\"unit_system_trigger\" class=\"unit-system-trigger\" value=\"METRIC\" checked=\"checked\" />";
 
-			// show both for the user to choose from
+			// show both for the user to choose from.
 		} else {
 
 			$output .= "<div id=\"unit-system-options-{$id}\" class=\"get-directions-options unit-system-options\">";
@@ -674,7 +685,7 @@ class GMW_Maps_API {
 		$output .= '</form>';
 		$output .= '</div>';
 
-		// set directions to true to enqueue its script
+		// set directions to true to enqueue its script.
 		self::$directions = true;
 
 		return $output;
@@ -683,26 +694,28 @@ class GMW_Maps_API {
 	/**
 	 * Placeholder for the directions results
 	 *
-	 * @param  [type] $id [description]
+	 * @param  integer $id element ID.
+	 *
 	 * @return [type]     [description]
 	 */
 	public static function get_directions_panel( $id ) {
-		$id = ! empty( $id ) ? absint( $id ) : rand( 100, 549 );
+		$id = ! empty( $id ) ? absint( $id ) : wp_rand( 100, 549 );
 		return '<div id="gmw-directions-panel-wrapper-' . $id . '" class="gmw-directions-panel-wrapper"></div>';
 	}
 
 	/**
 	 * Generate both get direction form and panel
 	 *
-	 * @param  array  $args [description]
+	 * @param  array $args directions system arguments.
+	 *
 	 * @return [type]       [description]
 	 */
 	public static function get_directions_system( $args = array() ) {
 
 		if ( empty( $args['element_id'] ) ) {
-			$args['element_id'] = rand( 100, 549 );
+			$args['element_id'] = wp_rand( 100, 549 );
 		}
-		
+
 		$output  = "<div id=\"gmw-directions-wrapper-{$args['element_id']}\" class=\"gmw-directions-wrapper\">";
 		$output .= self::get_directions_form( $args );
 		$output .= self::get_directions_panel( $args['element_id'] );
@@ -713,9 +726,8 @@ class GMW_Maps_API {
 
 	/**
 	 * Generate directions link
-	 * @param  [type]  $args     [description]
-	 * @param  boolean $location [description]
-	 * @param  array   $gmw      [description]
+	 *
+	 * @param [type] $args [description].
 	 *
 	 * @return [type]            [description]
 	 */
@@ -748,7 +760,7 @@ class GMW_Maps_API {
 	/**
 	 * Load custom scripts that will load when ever the main map script is loaded
 	 *
-	 * to load a script you need to pass the data as an array via the function or
+	 * To load a script you need to pass the data as an array via the function or
 	 *
 	 * the filter in the function.
 	 *
@@ -760,12 +772,11 @@ class GMW_Maps_API {
 	 *      'in_footer' => true
 	 * );
 	 *
-	 * @param  [type] $scripts [description]
-	 * @return [type]          [description]
+	 * @param  [type] $scripts [description].
 	 */
 	public static function load_custom_map_scripts( $scripts = array() ) {
 
-		// add custom scripts data
+		// add custom scripts data.
 		$map_scripts = apply_filters( 'gmw_enqueue_map_scripts', $scripts );
 
 		$defaults = array(
@@ -835,17 +846,17 @@ class GMW_Maps_API {
 	 */
 	public static function enqueue_scripts() {
 
-		// trigger map and related script
+		// trigger map and related script.
 		if ( self::$map_enabled ) {
 
 			do_action( 'gmw_map_options' );
 
-			// load main JavaScript and Google APIs if not already loaded
+			// load main JavaScript and Google APIs if not already loaded.
 			if ( ! wp_script_is( 'gmw', 'enqueued' ) ) {
 				wp_enqueue_script( 'gmw' );
 			}
 
-			if ( 'google_maps' == GMW()->maps_provider ) {
+			if ( 'google_maps' === GMW()->maps_provider ) {
 
 				self::google_maps_scripts();
 
@@ -854,17 +865,17 @@ class GMW_Maps_API {
 				do_action( 'gmw_enqueue_maps_provider_scripts' );
 			}
 
-			//load jQuery ui draggable for popup info-windows
+			// load jQuery ui draggable for popup info-windows.
 			if ( self::$draggable_window && ! wp_script_is( 'jquery-ui-draggable', 'enqueued' ) ) {
 				wp_enqueue_script( 'jquery-ui-draggable' );
 			}
 
 			do_action( 'gmw_before_map_triggered', self::$map_elements );
 
-			//pass the mapVarss to JS
+			// pass the mapVarss to JS.
 			wp_localize_script( 'gmw-map', 'gmwMapObjects', self::$map_elements );
 
-			//enqueue the map script
+			// enqueue the map script.
 			if ( ! wp_script_is( 'gmw-map', 'enqueued' ) ) {
 				wp_enqueue_script( 'gmw-map' );
 			}
@@ -874,13 +885,13 @@ class GMW_Maps_API {
 			do_action( 'gmw_map_api_enqueue_script' );
 		}
 
-		// modify the autocomplete global
+		// modify the autocomplete global.
 		self::$address_autocomplete = apply_filters( 'gmw_google_places_address_autocomplete_fields', self::$address_autocomplete );
 
-		// trigger address autocomplete
+		// trigger address autocomplete.
 		wp_localize_script( 'gmw', 'gmwAutocompleteFields', self::$address_autocomplete );
 
-		// load live directions js file
+		// load live directions js file.
 		if ( self::$directions && ! wp_script_is( 'gmw-get-directions', 'enqueued' ) ) {
 			wp_enqueue_script( 'gmw-get-directions', GMW_URL . '/assets/js/gmw.directions.min.js', array( 'gmw' ), GMW_VERSION, true );
 		}
@@ -888,8 +899,6 @@ class GMW_Maps_API {
 
 	/**
 	 * Enqueue Google Maps scripts.
-	 *
-	 * @return [type] [description]
 	 *
 	 * @since 3.1
 	 */
@@ -920,5 +929,5 @@ class GMW_Maps_API {
 		}
 	}
 }
-//fire the enqueue_script in the footer
+// fire the enqueue_script in the footer.
 add_action( 'wp_footer', array( 'GMW_Maps_API', 'enqueue_scripts' ) );
