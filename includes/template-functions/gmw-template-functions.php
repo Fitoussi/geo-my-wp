@@ -260,7 +260,7 @@ function gmw_get_distance_to_location( $object = array() ) {
 	$distance = $object->distance . ' ' . $object->units;
 	$distance = apply_filters( 'gmw_distance_to_location', $distance, $object );
 
-	return esc_attr( $distance );
+	return esc_html( $distance );
 }
 
 /**
