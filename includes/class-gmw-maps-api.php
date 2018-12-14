@@ -791,9 +791,47 @@ class GMW_Maps_API {
 	}
 
 	/**
-	 * Enqueue the JavaScript elements required for the map and only when needed
+	 * Manually load scripts.
 	 *
-	 * @return [type] [description]
+	 * By default, GEO my WP loads the map script and libraries when the form shortcode renders.
+	 *
+	 * That's to prevent the scripts from loading when not needed.
+	 *
+	 * However, in some cases an eariler loading of the script might be required. For exammple,
+	 *
+	 * if the form shortcode loads via AJAX. In such cases, this functon can be used to load the scripts
+	 *
+	 * on page load.
+	 *
+	 * When using the function the map scripts loads by default. Additional libraries can be loaded using
+	 *
+	 * the $scripts variable.
+	 *
+	 * @param array $scripts the script to load. Script availabe are markers_clusterer, markers_spiderfier, infobox, and infobubble.
+	 *
+	 * @author Eyal Fitoussi.
+	 *
+	 * @since 3.2.0
+	 */
+	public static function load_scripts( $scripts = array( 'markers_clusterer', 'markers_spiderfier', 'infobox', 'infobubble' ) ) {
+
+		self::$map_enabled = true;
+
+		if ( ! empty( $scripts ) ) {
+
+			foreach ( $scripts as $script ) {
+
+				if ( property_exists( 'GMW_Maps_API', $script ) ) {
+					self::${$script} = true;
+				}
+			}
+		}
+
+		self::enqueue_scripts();
+	}
+
+	/**
+	 * Enqueue the JavaScript elements required for the map and only when needed
 	 */
 	public static function enqueue_scripts() {
 
