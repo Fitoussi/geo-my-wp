@@ -1,6 +1,16 @@
 <?php
+/**
+ * GEO my WP template functions.
+ *
+ * Generates the proximity search forms.
+ *
+ * This class should be extended for different object types.
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
