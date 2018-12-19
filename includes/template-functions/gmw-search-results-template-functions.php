@@ -32,7 +32,7 @@ function gmw_search_results_address( $object, $gmw = array() ) {
  */
 function gmw_search_results_linked_address( $object, $gmw = array() ) {
 
-	if ( ! isset( $gmw['search_results']['address_fields'] ) ) {
+	if ( empty( $gmw['search_results']['address_fields'] ) ) {
 		$fields = array( 'formatted_address' );
 	} else {
 		$fields = $gmw['search_results']['address_fields'];
@@ -40,7 +40,7 @@ function gmw_search_results_linked_address( $object, $gmw = array() ) {
 
 	$output = gmw_get_linked_location_address( $object, $fields, $gmw );
 
-	if ( false !== $output ) {
+	if ( ! empty( $output ) ) {
 		echo '<i class="gmw-icon-location-thin"></i>' . $output; // WPCS: XSS ok.
 	}
 }
