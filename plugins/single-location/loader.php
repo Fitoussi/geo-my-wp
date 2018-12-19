@@ -69,6 +69,13 @@ class GMW_Single_Location_Addon extends GMW_Addon {
 	public $is_core = true;
 
 	/**
+	 * Docs page.
+	 *
+	 * @var string
+	 */
+	public $docs_page = 'https://docs.geomywp.com/category/47-single-location';
+
+	/**
 	 * Instance of Single Locaiton.
 	 *
 	 * @var string

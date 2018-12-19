@@ -98,6 +98,13 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 	public $is_core = true;
 
 	/**
+	 * Docs page.
+	 *
+	 * @var string
+	 */
+	public $docs_page = 'https://docs.geomywp.com/category/45-posts-locator';
+
+	/**
 	 * Settings groups
 	 *
 	 * @return [type] [description]

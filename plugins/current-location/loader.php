@@ -35,6 +35,13 @@ class GMW_Current_Location_Addon extends GMW_Addon {
 	// core add-on
 	public $is_core = true;
 
+	/**
+	 * Docs page.
+	 *
+	 * @var string
+	 */
+	public $docs_page = 'https://docs.geomywp.com/category/48-current-location';
+
 	private static $instance = null;
 
 	/**

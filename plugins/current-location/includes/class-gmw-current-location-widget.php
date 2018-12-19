@@ -30,7 +30,7 @@ class GMW_Current_Location_Widget extends GMW_Widget {
 	 *
 	 * @var string
 	 */
-	public $help_link = 'http://docs.geomywp.com/current-location-widget/';
+	public $help_link = 'https://docs.geomywp.com/article/171-current-location-widget/';
 
 	/**
 	 * Constructor.

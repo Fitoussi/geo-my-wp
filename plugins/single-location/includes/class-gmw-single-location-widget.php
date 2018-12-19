@@ -29,7 +29,7 @@ class GMW_Single_Location_Widget extends GMW_Widget {
 	 *
 	 * @var string
 	 */
-	public $help_link = 'http://docs.geomywp.com/single-location-widget/';
+	public $help_link = 'https://docs.geomywp.com/article/162-single-location-widget/';
 
 	/**
 	 * Constructor.
