@@ -1,20 +1,27 @@
 <?php
-// Exit if accessed directly.
+/**
+ * GEO my WP - admin functions.
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Processes all GMW admin notices
+ * Processes all GMW admin notices.
+ *
  * Notice type pass via $_GET['gmw_notice'] and notice status via $_GET['gmw_notice_stastus']
  *
  * @since 2.5
+ *
  * @author Eyal Fitoussi
  */
 function gmw_output_admin_notices() {
 
 	// check if notice exist.
-	if ( empty( $_GET['gmw_notice'] ) && empty( $_POST['gmw_notice'] ) ) {
+	if ( empty( $_GET['gmw_notice'] ) && empty( $_POST['gmw_notice'] ) ) { // WPCS: CSRF ok.
 		return;
 	}
 
@@ -27,8 +34,8 @@ function gmw_output_admin_notices() {
 		)
 	);
 
-	$notice_type   = isset( $_GET['gmw_notice'] ) ? $_GET['gmw_notice'] : $_POST['gmw_notice'];
-	$notice_status = isset( $_GET['gmw_notice_status'] ) ? $_GET['gmw_notice_status'] : $_POST['gmw_notice_status'];
+	$notice_type   = isset( $_GET['gmw_notice'] ) ? $_GET['gmw_notice'] : $_POST['gmw_notice']; // WPCS: CSRF ok, sanitization ok.
+	$notice_status = isset( $_GET['gmw_notice_status'] ) ? $_GET['gmw_notice_status'] : $_POST['gmw_notice_status']; // WPCS: CSRF ok, sanitization ok.
 
 	$notice_type   = sanitize_text_field( wp_unslash( $notice_type ) );
 	$notice_status = sanitize_text_field( wp_unslash( $notice_status ) );
@@ -82,21 +89,106 @@ function gmw_get_post_types_array() {
  */
 function gmw_admin_helpful_buttons() {
 
-	if ( ! empty( $_GET['page'] ) && $_GET['page'] != 'gmw-forms' ) {
+	if ( ! empty( $_GET['page'] ) && 'gmw-forms' !== $_GET['page'] ) { // WPCS: CSRF ok.
 		?>
-		<span style="font-size:14px;margin-right:5px;"> - <?php echo sprintf( __( 'GEO my WP developed by %s', 'geo-my-wp' ), 'Eyal Fitoussi' ); ?></span>
-		<a class="button action gmw-donate" title="Donate" href="https://www.paypal.me/fitoussi" target="_blank"><i style="color:red;margin-right:4px;" class="gmw-icon-heart"></i><?php _e( 'Donate', 'geo-my-wp' ); ?></a>
+		<span style="font-size:14px;margin-right:5px;"> - 
+			<?php
+			echo sprintf(
+				/* translators: %s: developer's name. */
+				esc_html__( 'GEO my WP developed by %s', 'geo-my-wp' ),
+				'Eyal Fitoussi'
+			);
+			?>
+		</span>
+		<a 
+			class="button action gmw-donate" 
+			title="Donate" href="https://www.paypal.me/fitoussi" 
+			target="_blank">
+			<i style="color:red;margin-right:4px;" class="gmw-icon-heart"></i>
+			<?php esc_html_e( 'Donate', 'geo-my-wp' ); ?>
+		</a>
+
 	<?php } ?>
+
 	<span class="gmw-helpful-links-wrapper">
-		<a class="button action" title="Official Website" href="https://geomywp.com" target="_blank"><i class="dashicons dashicons-welcome-view-site" style="font-size:18px;margin-top:4px"></i>GEOmyWP.com</a>
-		<a class="button action" title="Extensions" href="https://geomywp.com/extensions" target="_blank" style="color:green"><i class="gmw-icon-puzzle"></i>Extensions</a>
-		<a class="button action" title="Demo" href="http://demo.geomywp.com" target="_blank"><i class="gmw-icon-monitor"></i><?php _e( 'Demo', 'geo-my-wp' ); ?></a>
-		<a class="button action" title="documentation" href="https://docs.geomywp.com" target="_blank"><i class="gmw-icon-doc-text"></i><?php _e( 'Docs', 'geo-my-wp' ); ?></a>
-		<a class="button action" title="support" href="https://geomywp.com/support" target="_blank"><i class="gmw-icon-lifebuoy"></i><?php _e( 'Support', 'geo-my-wp' ); ?></a>
-		<a class="button action" title="GEO my WP on GitHub" href="https://github.com/Fitoussi/GEO-my-WP" target="_blank"><i class="gmw-icon-github"></i>GitHub</a>
-		<a class="button action" title="Show your support" href="https://wordpress.org/support/view/plugin-reviews/geo-my-wp?filter=5" target="_blank"><i style="color:orange" class="gmw-icon-star"></i><?php _e( 'Love', 'geo-my-wp' ); ?></a>
-		<a class="button action" title="GEO my WP on Facebook" href="https://www.facebook.com/geomywp" target="_blank"><i style="color:blue;font-size: 16px" class="gmw-icon-facebook-squared"></i><?php _e( 'Like', 'geo-my-wp' ); ?></a>
-		<a class="button action" title="GEO my WP on Twitter" href="https://twitter.com/GEOmyWP" target="_blank"><i style="color:lightblue;font-size: 16px;" class="gmw-icon-twitter"></i><?php _e( 'Follow', 'geo-my-wp' ); ?></a>
+		<a 
+			class="button action" 
+			title="Official Website" 
+			href="https://geomywp.com" 
+			target="_blank">
+			<i class="dashicons dashicons-welcome-view-site" style="font-size:18px;margin-top:4px"></i>GEOmyWP.com
+		</a>
+
+		<a 
+			class="button action" 
+			title="Extensions" 
+			href="https://geomywp.com/extensions" 
+			target="_blank" 
+			style="color:green">
+			<i class="gmw-icon-puzzle"></i>Extensions
+		</a>
+
+		<a 
+			class="button action" 
+			title="Demo" 
+			href="http://demo.geomywp.com" 
+			target="_blank">
+			<i class="gmw-icon-monitor"></i>
+			<?php esc_html_e( 'Demo', 'geo-my-wp' ); ?>
+		</a>
+
+		<a 
+			class="button action" 
+			title="documentation" 
+			href="https://docs.geomywp.com" 
+			target="_blank">
+			<i class="gmw-icon-doc-text"></i>
+			<?php esc_html_e( 'Docs', 'geo-my-wp' ); ?>
+		</a>
+
+		<a 
+			class="button action" 
+			title="support" 
+			href="https://geomywp.com/support" 
+			target="_blank">
+			<i class="gmw-icon-lifebuoy"></i>
+			<?php esc_html_e( 'Support', 'geo-my-wp' ); ?>
+		</a>
+
+		<a 
+			class="button action" 
+			title="GEO my WP on GitHub" 
+			href="https://github.com/Fitoussi/GEO-my-WP" 
+			target="_blank">
+			<i class="gmw-icon-github"></i>GitHub
+		</a>
+
+		<a 
+			class="button action" 
+			title="Show your support" 
+			href="https://wordpress.org/support/view/plugin-reviews/geo-my-wp?filter=5" 
+			target="_blank">
+			<i style="color:orange" class="gmw-icon-star"></i>
+			<?php esc_html_e( 'Love', 'geo-my-wp' ); ?>
+		</a>
+
+		<a 
+			class="button action" 
+			title="GEO my WP on Facebook" 
+			href="https://www.facebook.com/geomywp" 
+			target="_blank">
+			<i style="color:blue;font-size: 16px" class="gmw-icon-facebook-squared"></i>
+			<?php esc_html_e( 'Like', 'geo-my-wp' ); ?>
+		</a>
+
+		<a 
+			class="button action" 
+			title="GEO my WP on Twitter" 
+			href="https://twitter.com/GEOmyWP" 
+			target="_blank">
+			<i style="color:lightblue;font-size: 16px;" class="gmw-icon-twitter"></i>
+			<?php esc_html_e( 'Follow', 'geo-my-wp' ); ?>
+		</a>
 		<?php do_action( 'gmw_admin_helpful_buttons' ); ?>
 	</span>
 	<?php
