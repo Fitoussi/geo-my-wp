@@ -153,12 +153,14 @@ class GMW_Addon {
 
 	/**
 	 * Link to support page/site. Will show in Extensions page.
+	 *
 	 * @var string
 	 */
 	public $support_page = '';
 
 	/**
 	 * Link to documentaion page/site. Will show in Extensions page.
+	 *
 	 * @var string
 	 */
 	public $docs_page = '';
@@ -172,6 +174,7 @@ class GMW_Addon {
 
 	/**
 	 * Full path the the plugin. Usually will be __FILE__
+	 *
 	 * @var string
 	 */
 	public $full_path = __FILE__;
