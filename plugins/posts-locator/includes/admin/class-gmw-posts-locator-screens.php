@@ -47,7 +47,8 @@ class GMW_Posts_Locator_Screens {
 
 			if ( in_array( $pagenow, array( 'post-new.php', 'post.php' ), true ) ) {
 
-				add_action( "add_meta_boxes_{$post_type}", array( $this, 'add_meta_box' ), 10 );
+				add_action( 'enqueue_block_editor_assets', array( $this, 'block_editor_location_form_compatibility' ), 5 );
+				add_action( 'add_meta_boxes_' . $post_type, array( $this, 'add_meta_box' ), 10 );
 
 				// filters fires when location updated.
 				add_filter( 'gmw_lf_post_location_args_before_location_updated', array( $this, 'get_post_title' ) );
@@ -175,12 +176,49 @@ class GMW_Posts_Locator_Screens {
 			$this
 		);
 
-		add_meta_box( $args['id'], $args['label'], $args['function'], $args['page'], $args['context'], $args['priority'] );
+		add_meta_box(
+			$args['id'],
+			$args['label'],
+			$args['function'],
+			$args['page'],
+			$args['context'],
+			$args['priority'],
+			array(
+				'__block_editor_compatible_meta_box' => true,
+			)
+		);
 
 		do_action( 'gmw_pt_admin_add_location_meta_box', $post, $this );
 
 		// add hidden field that responsible for a fix where posts status wont change from pending to publish.
 		add_action( 'admin_footer', array( $this, 'add_hidden_status_field' ) );
+	}
+
+	/**
+	 * Make location form compatible with block editor page.
+	 *
+	 * Use this function to execute the filter that modified the location form args.
+	 */
+	public function block_editor_location_form_compatibility() {
+		add_filter( 'gmw_edit_post_location_form_args', array( $this, 'modify_location_form_args' ), 5 );
+	}
+
+	/**
+	 * Modify the location form args.
+	 *
+	 * When block editor is enable, we need to modify the form_element argument of the location form.
+	 *
+	 * @param  array $args location form args.
+	 *
+	 * @since 3.2
+	 *
+	 * @return [type]       [description]
+	 */
+	public function modify_location_form_args( $args ) {
+
+		$args['form_element'] = '.edit-post-layout__metaboxes form';
+
+		return $args;
 	}
 
 	/**
