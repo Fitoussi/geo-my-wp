@@ -88,11 +88,11 @@ function gmw_admin_helpful_buttons() {
 		<a class="button action gmw-donate" title="Donate" href="https://www.paypal.me/fitoussi" target="_blank"><i style="color:red;margin-right:4px;" class="gmw-icon-heart"></i><?php _e( 'Donate', 'geo-my-wp' ); ?></a>
 	<?php } ?>
 	<span class="gmw-helpful-links-wrapper">
-		<a class="button action" title="Official Website" href="http://geomywp.com" target="_blank"><i class="dashicons dashicons-welcome-view-site" style="font-size:18px;margin-top:4px"></i>GEOmyWP.com</a>
-		<a class="button action" title="Extensions" href="http://geomywp.com/extensions" target="_blank" style="color:green"><i class="gmw-icon-puzzle"></i>Extensions</a>
+		<a class="button action" title="Official Website" href="https://geomywp.com" target="_blank"><i class="dashicons dashicons-welcome-view-site" style="font-size:18px;margin-top:4px"></i>GEOmyWP.com</a>
+		<a class="button action" title="Extensions" href="https://geomywp.com/extensions" target="_blank" style="color:green"><i class="gmw-icon-puzzle"></i>Extensions</a>
 		<a class="button action" title="Demo" href="http://demo.geomywp.com" target="_blank"><i class="gmw-icon-monitor"></i><?php _e( 'Demo', 'geo-my-wp' ); ?></a>
-		<a class="button action" title="documentation" href="http://docs.geomywp.com" target="_blank"><i class="gmw-icon-doc-text"></i><?php _e( 'Docs', 'geo-my-wp' ); ?></a>
-		<a class="button action" title="support" href="http://geomywp.com/support" target="_blank"><i class="gmw-icon-lifebuoy"></i><?php _e( 'Support', 'geo-my-wp' ); ?></a>
+		<a class="button action" title="documentation" href="https://docs.geomywp.com" target="_blank"><i class="gmw-icon-doc-text"></i><?php _e( 'Docs', 'geo-my-wp' ); ?></a>
+		<a class="button action" title="support" href="https://geomywp.com/support" target="_blank"><i class="gmw-icon-lifebuoy"></i><?php _e( 'Support', 'geo-my-wp' ); ?></a>
 		<a class="button action" title="GEO my WP on GitHub" href="https://github.com/Fitoussi/GEO-my-WP" target="_blank"><i class="gmw-icon-github"></i>GitHub</a>
 		<a class="button action" title="Show your support" href="https://wordpress.org/support/view/plugin-reviews/geo-my-wp?filter=5" target="_blank"><i style="color:orange" class="gmw-icon-star"></i><?php _e( 'Love', 'geo-my-wp' ); ?></a>
 		<a class="button action" title="GEO my WP on Facebook" href="https://www.facebook.com/geomywp" target="_blank"><i style="color:blue;font-size: 16px" class="gmw-icon-facebook-squared"></i><?php _e( 'Like', 'geo-my-wp' ); ?></a>
