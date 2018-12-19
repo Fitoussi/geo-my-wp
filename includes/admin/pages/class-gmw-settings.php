@@ -142,7 +142,7 @@ class GMW_Settings {
 							'label'       => __( 'Default Region', 'geo-my-wp' ),
 							'desc'        => sprintf(
 								/* translators: %s: link */
-								__( 'Enter the country code that will be used as the default with Google Maps API. The country code controls the default region when geocoding an address and when using other services provided by Google Maps API. List of countries code can be found <a href="%s" target="_blank">here</a>.', 'geo-my-wp' ),
+								__( 'Enter the country code that will be used as the default with the API providers. The country code controls the default region when geocoding an address and when using other services provided by the API providers. List of countries code can be found <a href="%s" target="_blank">here</a>.', 'geo-my-wp' ),
 								'http://geomywp.com/country-code/'
 							),
 							'attributes'  => array( 'size' => '5' ),
@@ -156,7 +156,7 @@ class GMW_Settings {
 							'label'       => __( 'Default Language', 'geo-my-wp' ),
 							'desc'        => sprintf(
 								/* translators: %s: link */
-								__( 'Set the language to be used with Google Places address auto-complete and with Google Maps API. The language codes can be found <a href="%s" target="_blank">here</a>.', 'geo-my-wp' ),
+								__( 'Set the default language to be used with the API providers. The language codes can be found <a href="%s" target="_blank">here</a>.', 'geo-my-wp' ),
 								'https://sites.google.com/site/tomihasa/google-language-codes'
 							),
 							'attributes'  => array( 'size' => '5' ),
@@ -168,7 +168,7 @@ class GMW_Settings {
 							'default'    => '',
 							'label'      => __( 'Auto Locator', 'geo-my-wp' ),
 							'cb_label'   => __( 'Enable', 'geo-my-wp' ),
-							'desc'       => __( "GEO my WP will try to retrieve the visitor's current location when once first visits the website. If a location was found, it will be saved via cookies and will be used with some of GEO my WP features; such as dynamically displaying results nearby the visitor.", 'geo-my-wp' ),
+							'desc'       => __( "GEO my WP will try to retrieve the visitor's current location when first visits the website. If a location was found, it will be saved via cookies and will be used with some of GEO my WP features; such as dynamically displaying results nearby the visitor.", 'geo-my-wp' ),
 							'attributes' => array(),
 							'priority'   => 40,
 						),
@@ -177,7 +177,7 @@ class GMW_Settings {
 							'type'       => 'select',
 							'default'    => '0',
 							'label'      => __( 'Results Page', 'geo-my-wp' ),
-							'desc'       => __( 'The page you select here displays the search results ( of any of your forms ) when using the "GMW Search Form" widget. The plugin will first check if a results page was set in the form settings, and if so, the results will be displayed in that page. Otherwise, if no results page was set in the form settings, the results will be displayed in the page you select here. To use this feature, select the results page from the dropdown menu and paste the shortcode <code>[gmw form="results"]</code> to the content area of this page.', 'geo-my-wp' ),
+							'desc'       => __( 'The page you select here displays the search results ( of any of your forms ) when using the "GMW Search Form" widget. The plugin will first check if a results page was set in the form settings, and if so, the results will be displayed on that page. Otherwise, if no results page was set in the form settings, the results will be displayed on the page you select here. To use this feature, select the results page from the dropdown menu and paste the shortcode <code>[gmw form="results"]</code> to the content area of the page that you selected.', 'geo-my-wp' ),
 							'options'    => $this->get_pages(),
 							'attributes' => array(),
 							'priority'   => 50,
@@ -218,7 +218,7 @@ class GMW_Settings {
 							'desc'       => sprintf(
 								/* translators: %s: link. */
 								__( 'Enter your Google Maps API keys ( See <a href="%s" target="_blank">this tutorial</a> ). Note that GEO my WP now requires 2 Google Maps API keys; a client-side and server-side keys.', 'geo-my-wp' ),
-								'https://docs.gravitygeolocation.com/article/134-how-to-create-browser-and-server-google-maps-api-keys'
+								'https://docs.geomywp.com/article/141-generate-and-setup-google-maps-api-keys'
 							),
 							'fields'     => array(
 								'google_maps_client_side_api_key' => array(
