@@ -448,7 +448,7 @@ class GMW_Location {
 		//wp_cache_set( $location_id, $location_data, 'gmw_locations' );
 		//wp_cache_set( $location_data->object_type . '_' . $location_data->object_id, $location_data, 'gmw_location' );
 		wp_cache_set( $location_id, $location_data, 'gmw_location' );
-
+		wp_cache_set( $location_data->object_type . '_' . $location_data->object_id, $location_data, 'gmw_location' );
 		wp_cache_delete( $location_data->object_type . '_' . $location_data->object_id, 'gmw_locations' );
 
 		return $location_id;
