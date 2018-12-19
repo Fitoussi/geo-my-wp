@@ -1370,7 +1370,7 @@ class GMW_Location_Form {
 		parse_str( $_POST['formValues'], $form_values );
 
 		// get the location values
-		$location = $form_values['gmw_location_form'];
+		$location = ! empty( $form_values['gmw_location_form'] ) ? $form_values['gmw_location_form'] : array();
 
 		// get the location ID if exists
 		$location['ID'] = ! empty( $location['ID'] ) ? $location['ID'] : 0;
