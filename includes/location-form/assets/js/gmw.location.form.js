@@ -747,7 +747,7 @@ var GMW_Location_Form = {
 	fields_changed : function() {
 
 		jQuery( '.gmw-lf-field.address-field, .gmw-lf-field.group_address, .gmw-lf-field.group_coordinates' ).on( 'change input', function( e ) {
-		
+
 			if ( jQuery( this ).hasClass( 'address-field' ) ) {
 
 				this_form.fields_changed_status = 1;
@@ -862,6 +862,8 @@ var GMW_Location_Form = {
 				
   		jQuery( '#gmw-lf-locator-button' ).removeClass( 'animate-spin' );
 
+  		this_form.location_changed();
+  		
     	// geocode coordinates
   		this_form.reverse_geocode( position.coords.latitude, position.coords.longitude, false );  		
 	},
