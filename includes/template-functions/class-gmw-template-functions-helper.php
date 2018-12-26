@@ -460,7 +460,7 @@ class GMW_Template_Functions_Helper {
 
 			$location_message = str_replace(
 				array( '{radius}', '{units}', '{address}' ),
-				array( $args['radius'], $units, $arg['address'] ),
+				array( $args['radius'], $units, $args['address'] ),
 				$args['location_message']
 			);
 
