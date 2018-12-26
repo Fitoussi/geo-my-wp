@@ -39,8 +39,8 @@ class GMW_Template_Functions_Helper {
 		}
 
 		$content = $args['content'];
-		
-		// trim number of words
+
+		// trim number of words.
 		if ( ! empty( $args['words_count'] ) ) {
 
 			// generate read more link
@@ -49,10 +49,21 @@ class GMW_Template_Functions_Helper {
 			} else {
 				$more_link = '';
 			}
-			
-			$content = wp_trim_words( $content, $args['words_count'], $more_link );
-		}	
-		
+
+			$content = wp_trim_words( $content, $args['words_count'], false );
+
+		} else {
+			$more_link = false;
+		}
+
+		// modify the content before the "More" link is added.
+		$content = apply_filters( 'gmw_search_results_excerpt_content', $content, $args, $more_link );
+
+		// Append the more link to the content.
+		if ( ! empty( $more_link ) ) {
+			$content .= $more_link;
+		}
+
 		// disable shortcodes in excerpt
 		if ( ! $args['enable_shortcodes'] ) {
 			
