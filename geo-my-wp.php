@@ -99,22 +99,22 @@ class GEO_MY_WP {
 	 * @var array
 	 */
 	public $required_versions = array(
-		'ajax_forms'                       => '1.1',
-		'bp_groups_locator'                => '1.7',
-		'groups_locator'                   => '1.7', // old slug.
-		'bp_members_directory_geolocation' => '1.5.1',
-		'geo_members_directory'            => '1.5.1', // old slug.
-		'bp_xprofile_geolocation'          => '1.5.1',
-		'xprofile_fields'                  => '1.5.1', // old slug.
-		'exclude_locations'                => '1.3.1',
-		'exclude_members'                  => '1.3.1', // old slug.
-		'gmw_kleo_geolocation'             => '1.4.1',
-		'nearby_locations'                 => '1.3.1',
-		'nearby_posts'                     => '1.3.1', // old slug.
+		'ajax_forms'                       => '1.1.1',
+		'bp_groups_locator'                => '1.7.1',
+		'groups_locator'                   => '1.7.1', // old slug.
+		'bp_members_directory_geolocation' => '1.5.2',
+		'geo_members_directory'            => '1.5.2', // old slug.
+		'bp_xprofile_geolocation'          => '1.5.2',
+		'xprofile_fields'                  => '1.5.2', // old slug.
+		'exclude_locations'                => '1.3.2',
+		'exclude_members'                  => '1.3.2', // old slug.
+		'gmw_kleo_geolocation'             => '1.4.2',
+		'nearby_locations'                 => '1.4',
+		'nearby_posts'                     => '1.4', // old slug.
 		'premium_settings'                 => '2.2',
-		'global_maps'                      => '2.4',
-		'users_locator'                    => '1.4',
-		'wp_users_geo-location'            => '1.4', // old slug.
+		'global_maps'                      => '2.4.1',
+		'users_locator'                    => '1.4.1',
+		'wp_users_geo-location'            => '1.4.1', // old slug.
 	);
 
 	/**
