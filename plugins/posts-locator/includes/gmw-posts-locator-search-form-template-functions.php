@@ -189,66 +189,70 @@ function gmw_get_search_form_post_types( $args = array(), $post_types = array( '
     return GMW_Search_Form_Helper::options_selector_builder( $args, $options );
 }
     
-    /**
-     * Output post types filter in search form
-     * 
-     * @param  array  $gmw [description]
-     * @return [type]      [description]
-     */
-    function gmw_search_form_post_types( $gmw = array() ) {
-        
-        if ( isset( $gmw['search_form']['post_types_settings'] ) ) {
+/**
+ * Output post types filter in search form
+ * 
+ * @param  array  $gmw [description]
+ * @return [type]      [description]
+ */
+function gmw_search_form_post_types( $gmw = array() ) {
+    
+    if ( isset( $gmw['search_form']['post_types_settings'] ) ) {
 
-            $settings = $gmw['search_form']['post_types_settings'];
+        $settings = $gmw['search_form']['post_types_settings'];
 
-        // for different cases like Global Maps
-        } elseif ( isset( $gmw['search_form']['post_types_usage'] ) ) {
+    // for different cases like Global Maps
+    } elseif ( isset( $gmw['search_form']['post_types_usage'] ) ) {
 
-            $settings = array(
-                'usage' => $gmw['search_form']['post_types_usage']
-            );
-        
-        } else {
-
-            $settings = array();
-        }
-
-        $args = array(
-            'id'               => $gmw['ID'],
-            'usage'            => isset( $settings['usage'] ) ? $settings['usage'] : 'dropdown',
-            'show_options_all' => isset( $settings['show_options_all'] ) ? $settings['show_options_all'] : __( 'Search site', 'geo-my-wp' ),
+        $settings = array(
+            'usage' => $gmw['search_form']['post_types_usage']
         );
+    
+    } else {
 
-        $element = gmw_get_search_form_post_types( $args, $gmw['search_form']['post_types'] );
-
-        // if a single post type we make it a hidden field
-        if ( count( $gmw['search_form']['post_types'] ) == 1 ) {      
-            $args['usage'] = 'hidden';
-        }
-        
-        $output = '';
-
-        // if multiple post types selected we wrap it within a div
-        if ( $args['usage'] != 'pre_defined' && $args['usage'] != 'hidden' ) {
-
-            $output .= '<div class="gmw-form-field-wrapper gmw-post-types-wrapper gmw-post-types-'.esc_attr( $args['usage'] ).'">';
-
-            if ( ! empty( $settings['label'] ) ) {
-
-                $tag = ( $args['usage'] == 'checkboxes' ) ? 'span' : 'label';
-
-                $output .= '<'.$tag.' class="gmw-field-label">'.esc_attr( $settings['label'] ).'</'.$tag.'>';
-            }
-
-            $output .= $element;
-            $output .= '</div>';
-        
-        } else {
-            $output .= $element;
-        }
-
-        echo $output;
+        $settings = array();
     }
+
+    $args = array(
+        'id'               => $gmw['ID'],
+        'usage'            => isset( $settings['usage'] ) ? $settings['usage'] : 'dropdown',
+        'show_options_all' => isset( $settings['show_options_all'] ) ? $settings['show_options_all'] : __( 'Search site', 'geo-my-wp' ),
+    );
+
+    $element = gmw_get_search_form_post_types( $args, $gmw['search_form']['post_types'] );
+
+    // if a single post type we make it a hidden field
+    if ( count( $gmw['search_form']['post_types'] ) == 1 ) {      
+        $args['usage'] = 'hidden';
+    }
+    
+    $output = '';
+
+    // if multiple post types selected we wrap it within a div
+    if ( $args['usage'] != 'pre_defined' && $args['usage'] != 'hidden' ) {
+
+        $output .= '<div class="gmw-form-field-wrapper gmw-post-types-wrapper gmw-post-types-'.esc_attr( $args['usage'] ).'">';
+
+        if ( ! empty( $settings['label'] ) ) {
+
+            $tag = ( $args['usage'] == 'checkboxes' ) ? 'span' : 'label';
+
+            $output .= '<'.$tag.' class="gmw-field-label">'.esc_attr( $settings['label'] ).'</'.$tag.'>';
+        }
+
+        $output .= $element;
+        $output .= '</div>';
+    
+    } else {
+        $output .= $element;
+    }
+
+    do_action( 'gmw_before_search_form_post_types', $gmw );
+
+    echo $output;
+
+    do_action( 'gmw_after_search_form_post_types', $gmw );
+}
 
 /**
  * Display taxonomies in fron-end search form
@@ -273,7 +277,7 @@ function gmw_get_search_form_taxonomies( $gmw ) {
         return;
     }
 
-    $output = '';
+    $output = '<div class="gmw-search-form-taxonomies gmw-search-form-multiple-fields-wrapper">';
 
     // Loop through and generate taxonomies
     foreach ( $gmw['search_form']['taxonomies'][$post_type] as $taxonomy => $args ) {
@@ -329,10 +333,17 @@ function gmw_get_search_form_taxonomies( $gmw ) {
         $output .= '</div>';  
     }
 
+    $output .= '</div>';
+
     return $output;
 }
 
-	function gmw_search_form_taxonomies( $gmw, $tag='div' ) {
-		echo gmw_get_search_form_taxonomies( $gmw, $tag );
-	}
+function gmw_search_form_taxonomies( $gmw = array(), $tag = 'div' ) {
+
+	do_action( 'gmw_before_search_form_taxonomies', $gmw );
+
+	echo gmw_get_search_form_taxonomies( $gmw, $tag );
+
+	do_action( 'gmw_after_search_form_taxonomies', $gmw );
+}
 	
