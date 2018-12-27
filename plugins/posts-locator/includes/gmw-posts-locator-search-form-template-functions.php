@@ -1,7 +1,12 @@
 <?php
-// Exit if accessed directly
+/**
+ * GEO my WP Posts Locator search form helper.
+ *
+ * @package gwo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -9,341 +14,353 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class GMW_PT_Search_Form_Helper {
 
-    /**
-     * Generate a single search form taxonomy
-     * 
-     * @param  array  $args [description]
-     * @param  array  $gmw  [description]
-     * @return [type]       [description]
-     */
-    public static function get_taxonomy( $args = array(), $gmw = array() ) {
+	/**
+	 * Generate a single search form taxonomy
+	 *
+	 * @param  array $args [description].
+	 *
+	 * @param  array $gmw  [description].
+	 *
+	 * @return [type]       [description]
+	 */
+	public static function get_taxonomy( $args = array(), $gmw = array() ) {
 
-        $defaults = array(
-            'id'                  => 0,
-            'taxonomy'            => 'category',
-            'usage'               => 'dropdown',
-            'show_options_all'    => true,
-            'orderby'             => 'id',
-            'order'               => 'ASC',
-            'include'             => '',
-            'exclude'             => '',
-            'show_count'          => 0,
-            'hide_empty'          => 1,
-            'category_icons'      => 0,
-            'multiple_selections' => 0
-        );
+		$defaults = array(
+			'id'                  => 0,
+			'taxonomy'            => 'category',
+			'usage'               => 'dropdown',
+			'show_options_all'    => true,
+			'orderby'             => 'id',
+			'order'               => 'ASC',
+			'include'             => '',
+			'exclude'             => '',
+			'show_count'          => 0,
+			'hide_empty'          => 1,
+			'category_icons'      => 0,
+			'multiple_selections' => 0,
+		);
 
-        $args         = wp_parse_args( $args, $defaults );
-        $url_px       = gmw_get_url_prefix();
-        $id           = absint( $args['id'] );
-        $tax_name     = $args['taxonomy'];
-        $taxonomy     = get_taxonomy( $tax_name );
-        $hierarchical = is_taxonomy_hierarchical( $tax_name ) ? true : false;
-        $options_all  = 0;
-        $placeholder  = 0;
+		$args         = wp_parse_args( $args, $defaults );
+		$url_px       = gmw_get_url_prefix();
+		$id           = absint( $args['id'] );
+		$tax_name     = $args['taxonomy'];
+		$taxonomy     = get_taxonomy( $tax_name );
+		$hierarchical = is_taxonomy_hierarchical( $tax_name ) ? true : false;
+		$options_all  = 0;
+		$placeholder  = 0;
 
-        if ( ! empty( $args['show_options_all'] ) ) {
-            
-            if ( $args['show_options_all'] == '' ) {
+		if ( ! empty( $args['show_options_all'] ) ) {
 
-                $options_all = 0;
-                $placeholder = 0;
-            
-            } elseif ( is_string( $args['show_options_all'] ) ) {
+			if ( empty( $args['show_options_all'] ) ) {
 
-                $options_all = $args['show_options_all'];
-                $placeholder = $args['show_options_all'];
+				$options_all = 0;
+				$placeholder = 0;
 
-            } else {
+			} elseif ( is_string( $args['show_options_all'] ) ) {
 
-                $options_all = sprintf( __( 'All %s', 'geo-my-wp' ), $taxonomy->labels->name );
-                $placeholder = sprintf( __( 'Select %s', 'geo-my-wp' ), $taxonomy->labels->name );
-            }
-        } 
+				$options_all = $args['show_options_all'];
+				$placeholder = $args['show_options_all'];
 
-        //set taxonomy args
-        $tax_args = apply_filters( 'gmw_search_form_'.$args['usage'].'_taxonomy_args', array(
-            'taxonomy'            => $tax_name,
-            'orderby'             => $args['orderby'],
-            'order'               => $args['order'],
-            'hide_empty'          => $args['hide_empty'],
-            'include'             => $args['include'],
-            'exclude'             => $args['exclude'],
-            'exclude_tree'        => '',
-            'number'              => 0,
-            'hierarchical'        => $hierarchical, 
-            'child_of'            => 0,
-            'pad_counts'          => 1, 
-            'selected'            => ! empty( $_GET['tax'][$tax_name] ) ? $_GET['tax'][$tax_name] : '',
-            'depth'               => $hierarchical ? 0 : -1,
-            'category_icons'      => $args['category_icons'],
-            'gmw_form_id'         => $id,
-            'show_option_all'     => $options_all,
-            'show_count'          => $args['show_count'] == 1 ? 1 : 0,
-            'usage'               => $args['usage'],
-            'multiple_selections' => $args['multiple_selections'],
-            'placeholder'         => $placeholder,
-            'no_results_text'     => __( 'No results match', 'geo-my-wp' ),
-        ), $taxonomy, $gmw );
+			} else {
 
-        // deprected hook. Will be removed in the future.
-        apply_filters( 'gmw_pt_'.$args['usage'].'_taxonomy_args', $tax_args, $gmw, $taxonomy, $tax_name, $args );
-            
-        //set terms_hash args. only args that control the output of the terms should be here.
-        // This will be used with the cache helper
-        $terms_args = array(
-            'taxonomy'     => $tax_args['taxonomy'],
-            'orderby'      => $tax_args['orderby'],
-            'order'        => $tax_args['order'],
-            'hide_empty'   => $tax_args['hide_empty'],
-            'exclude'      => $tax_args['exclude'],
-            'exclude_tree' => $tax_args['exclude_tree'],
-            'include'      => $tax_args['include'],
-            'hierarchical' => $tax_args['hierarchical'], 
-            'child_of'     => $tax_args['child_of']
-        );
+				$options_all = 'All ' . esc_html( $taxonomy->labels->name );
+				$placeholder = 'Select ' . esc_html( $taxonomy->labels->name );
+			}
+		}
 
-        // include GMW_Post_Category_Walker file
-        if ( ! class_exists( 'GMW_Post_Category_Walker' ) ) {
-            include_once( GMW_PT_PATH . '/includes/class-gmw-post-category-walker.php' );
-        }
-            
-        $output = '';
+		// set taxonomy args.
+		$tax_args = apply_filters(
+			'gmw_search_form_' . $args['usage'] . '_taxonomy_args',
+			array(
+				'taxonomy'            => $tax_name,
+				'orderby'             => $args['orderby'],
+				'order'               => $args['order'],
+				'hide_empty'          => $args['hide_empty'],
+				'include'             => $args['include'],
+				'exclude'             => $args['exclude'],
+				'exclude_tree'        => '',
+				'number'              => 0,
+				'hierarchical'        => $hierarchical,
+				'child_of'            => 0,
+				'pad_counts'          => 1,
+				'selected'            => ! empty( $_GET['tax'][ $tax_name ] ) ? $_GET['tax'][ $tax_name ] : '', // WPCS: CSRF ok, sanitization ok. $_GET['tax'][ $tax_name ] is an array and should be sanitized in the walker class.
+				'depth'               => $hierarchical ? 0 : -1,
+				'category_icons'      => $args['category_icons'],
+				'gmw_form_id'         => $id,
+				'show_option_all'     => $options_all,
+				'show_count'          => 1 == $args['show_count'] ? 1 : 0,
+				'usage'               => $args['usage'],
+				'multiple_selections' => $args['multiple_selections'],
+				'placeholder'         => $placeholder,
+				'no_results_text'     => __( 'No results match', 'geo-my-wp' ),
+			),
+			$taxonomy,
+			$gmw
+		);
 
-        // if dropdown style taxonomies
-        if ( $args['usage'] == 'dropdown' ) {
+		// deprected hook. Will be removed in the future.
+		apply_filters( 'gmw_pt_' . $args['usage'] . '_taxonomy_args', $tax_args, $gmw, $taxonomy, $tax_name, $args );
 
-            // select tag
-            $output .= "<select name=\"tax[{$tax_name}][]\" id=\"{$tax_name}-taxonomy-{$id}\" class=\"gmw-form-field gmw-taxonomy {$tax_name}\">";
+		// set terms_hash args. only args that control the output of the terms should be here.
+		// This will be used with the cache helper.
+		$terms_args = array(
+			'taxonomy'     => $tax_args['taxonomy'],
+			'orderby'      => $tax_args['orderby'],
+			'order'        => $tax_args['order'],
+			'hide_empty'   => $tax_args['hide_empty'],
+			'exclude'      => $tax_args['exclude'],
+			'exclude_tree' => $tax_args['exclude_tree'],
+			'include'      => $tax_args['include'],
+			'hierarchical' => $tax_args['hierarchical'],
+			'child_of'     => $tax_args['child_of'],
+		);
 
-            if ( ! empty( $tax_args['show_option_all'] ) ) {
-                $output .= '<option value="" selected="selected">'.esc_attr( $tax_args['show_option_all'] ).'</option>';
-            }
+		// include GMW_Post_Category_Walker file.
+		if ( ! class_exists( 'GMW_Post_Category_Walker' ) ) {
+			include_once GMW_PT_PATH . '/includes/class-gmw-post-category-walker.php';
+		}
 
-            // get the taxonomies terms
-            $terms = gmw_get_terms( $tax_name, $terms_args );
+		$output = '';
 
-            // new category walker
-            $walker = new GMW_Post_Category_Walker;
+		// if dropdown style taxonomies.
+		if ( 'dropdown' === $args['usage'] ) {
 
-            // run the category walker
-            $output .= $walker->walk( $terms, $tax_args['depth'], $tax_args );
+			// select tag.
+			$output .= "<select name=\"tax[{$tax_name}][]\" id=\"{$tax_name}-taxonomy-{$id}\" class=\"gmw-form-field gmw-taxonomy {$tax_name}\">";
 
-            // closing select tag
-            $output .= '</select>';
+			if ( ! empty( $tax_args['show_option_all'] ) ) {
+				$output .= '<option value="" selected="selected">' . esc_attr( $tax_args['show_option_all'] ) . '</option>';
+			}
 
-        // Filter to generate your custom style
-        } else {
-            $output = apply_filters( 'gmw_generate_'.$args['usage'].'_taxonomy', $output, $tax_args, $taxonomy );
-        } 
+			// get the taxonomies terms.
+			$terms = gmw_get_terms( $tax_name, $terms_args );
 
-        return $output;
-    } 
+			// new category walker.
+			$walker = new GMW_Post_Category_Walker();
+
+			// run the category walker.
+			$output .= $walker->walk( $terms, $tax_args['depth'], $tax_args );
+
+			// closing select tag.
+			$output .= '</select>';
+
+			// Filter to generate your custom style.
+		} else {
+			$output = apply_filters( 'gmw_generate_' . $args['usage'] . '_taxonomy', $output, $tax_args, $taxonomy );
+		}
+
+		return $output;
+	}
 }
 
 /**
  * Get search form post types field element
- * 
- * @param  [type] $gmw [description]
+ *
+ * @param array $args array of arguments.
+ *
+ * @param array $post_types array of post types to use.
+ *
  * @return [type]      [description]
  */
 function gmw_get_search_form_post_types( $args = array(), $post_types = array( 'post' ) ) {
 
-    $url_px = gmw_get_url_prefix();
-    
-    $defaults = array(
-        'id'               => 0,
-        'usage'            => 'dropdown',
-        'id_tag'           => '',
-        'class_tag'        => '',
-        'object'           => 'post-types',
-        'show_options_all' => __( 'Search site', 'geo-my-wp' ),
-        'name_tag'         => $url_px.'post'
-    );
+	$url_px = gmw_get_url_prefix();
 
-    $args = wp_parse_args( $args, $defaults );
+	$defaults = array(
+		'id'               => 0,
+		'usage'            => 'dropdown',
+		'id_tag'           => '',
+		'class_tag'        => '',
+		'object'           => 'post-types',
+		'show_options_all' => __( 'Search site', 'geo-my-wp' ),
+		'name_tag'         => $url_px . 'post',
+	);
 
-    if ( $args['id_tag'] == '' ) {
-        $args['id_tag'] = 'gmw-posts-type-'.$args['id'];
-    }
-    
-    // if a single post type we make it a hidden field
-    if ( count( $post_types ) == 1 ) {      
-        $args['usage'] = 'hidden';
-    }
-    
-    $options = array();
+	$args = wp_parse_args( $args, $defaults );
 
-     if ( empty( $post_types ) ) {
-        $post_types = array( 'post' );
-    }
+	if ( empty( $args['id_tag'] ) ) {
+		$args['id_tag'] = 'gmw-posts-type-' . $args['id'];
+	}
 
-    foreach( $post_types as $post_type ) {
-        
-        if ( ( $post_object = get_post_type_object( $post_type ) ) != false ) {
-            $options[$post_type] = $post_object->labels->name;
-        }
-    }
+	// if a single post type we make it a hidden field.
+	if ( 1 === count( $post_types ) ) {
+		$args['usage'] = 'hidden';
+	}
 
-    // generate new post types selector
-    return GMW_Search_Form_Helper::options_selector_builder( $args, $options );
+	$options = array();
+
+	if ( empty( $post_types ) ) {
+		$post_types = array( 'post' );
+	}
+
+	foreach ( $post_types as $post_type ) {
+
+		if ( ( $post_object = get_post_type_object( $post_type ) ) != false ) {
+			$options[ $post_type ] = $post_object->labels->name;
+		}
+	}
+
+	// generate new post types selector.
+	return GMW_Search_Form_Helper::options_selector_builder( $args, $options );
 }
-    
+
 /**
  * Output post types filter in search form
- * 
- * @param  array  $gmw [description]
- * @return [type]      [description]
+ *
+ * @param  array $gmw gmw form.
  */
 function gmw_search_form_post_types( $gmw = array() ) {
-    
-    if ( isset( $gmw['search_form']['post_types_settings'] ) ) {
 
-        $settings = $gmw['search_form']['post_types_settings'];
+	if ( isset( $gmw['search_form']['post_types_settings'] ) ) {
 
-    // for different cases like Global Maps
-    } elseif ( isset( $gmw['search_form']['post_types_usage'] ) ) {
+		$settings = $gmw['search_form']['post_types_settings'];
 
-        $settings = array(
-            'usage' => $gmw['search_form']['post_types_usage']
-        );
-    
-    } else {
+		// for different cases like Global Maps.
+	} elseif ( isset( $gmw['search_form']['post_types_usage'] ) ) {
 
-        $settings = array();
-    }
+		$settings = array(
+			'usage' => $gmw['search_form']['post_types_usage'],
+		);
 
-    $args = array(
-        'id'               => $gmw['ID'],
-        'usage'            => isset( $settings['usage'] ) ? $settings['usage'] : 'dropdown',
-        'show_options_all' => isset( $settings['show_options_all'] ) ? $settings['show_options_all'] : __( 'Search site', 'geo-my-wp' ),
-    );
+	} else {
 
-    $element = gmw_get_search_form_post_types( $args, $gmw['search_form']['post_types'] );
+		$settings = array();
+	}
 
-    // if a single post type we make it a hidden field
-    if ( count( $gmw['search_form']['post_types'] ) == 1 ) {      
-        $args['usage'] = 'hidden';
-    }
-    
-    $output = '';
+	$args = array(
+		'id'               => $gmw['ID'],
+		'usage'            => isset( $settings['usage'] ) ? $settings['usage'] : 'dropdown',
+		'show_options_all' => isset( $settings['show_options_all'] ) ? $settings['show_options_all'] : __( 'Search site', 'geo-my-wp' ),
+	);
 
-    // if multiple post types selected we wrap it within a div
-    if ( $args['usage'] != 'pre_defined' && $args['usage'] != 'hidden' ) {
+	$element = gmw_get_search_form_post_types( $args, $gmw['search_form']['post_types'] );
 
-        $output .= '<div class="gmw-form-field-wrapper gmw-post-types-wrapper gmw-post-types-'.esc_attr( $args['usage'] ).'">';
+	// if a single post type we make it a hidden field.
+	if ( 1 === count( $gmw['search_form']['post_types'] ) ) {
+		$args['usage'] = 'hidden';
+	}
 
-        if ( ! empty( $settings['label'] ) ) {
+	$output = '';
 
-            $tag = ( $args['usage'] == 'checkboxes' ) ? 'span' : 'label';
+	// if multiple post types selected we wrap it within a div.
+	if ( 'pre_defined' !== $args['usage'] && 'hidden' !== $args['usage'] ) {
 
-            $output .= '<'.$tag.' class="gmw-field-label">'.esc_attr( $settings['label'] ).'</'.$tag.'>';
-        }
+		$output .= '<div class="gmw-form-field-wrapper gmw-post-types-wrapper gmw-post-types-' . esc_attr( $args['usage'] ) . '">';
 
-        $output .= $element;
-        $output .= '</div>';
-    
-    } else {
-        $output .= $element;
-    }
+		if ( ! empty( $settings['label'] ) ) {
 
-    do_action( 'gmw_before_search_form_post_types', $gmw );
+			$tag = ( 'checkboxes' === $args['usage'] ) ? 'span' : 'label';
 
-    echo $output;
+			$output .= '<' . $tag . ' class="gmw-field-label">' . esc_attr( $settings['label'] ) . '</' . $tag . '>';
+		}
 
-    do_action( 'gmw_after_search_form_post_types', $gmw );
+		$output .= $element;
+		$output .= '</div>';
+
+	} else {
+		$output .= $element;
+	}
+
+	do_action( 'gmw_before_search_form_post_types', $gmw );
+
+	echo $output; // WPCS: XSS ok.
+
+	do_action( 'gmw_after_search_form_post_types', $gmw );
 }
 
 /**
  * Display taxonomies in fron-end search form
- *     
- * @param  array  $gmw   the form being displayed
- * @param  string $tag   taxonomies wrapper element tag
- * @param  string $class deprecated
- * 
- * @return 
+ *
+ * @param array $gmw the form being displayed.
  */
 function gmw_get_search_form_taxonomies( $gmw ) {
 
-    // abort if multiple post types were set.
-    if ( empty( $gmw['search_form']['post_types'] ) || count( $gmw['search_form']['post_types'] ) != 1 ) {
-        return;   
-    }
+	// abort if multiple post types were set.
+	if ( empty( $gmw['search_form']['post_types'] ) || count( $gmw['search_form']['post_types'] ) != 1 ) {
+		return;
+	}
 
-    $post_type = $gmw['search_form']['post_types'][0];
+	$post_type = $gmw['search_form']['post_types'][0];
 
-    // abort if no taxonomies were set for the selected post type.
-    if ( empty( $gmw['search_form']['taxonomies'] ) || empty( $gmw['search_form']['taxonomies'][$post_type] ) ) {
-        return;
-    }
+	// abort if no taxonomies were set for the selected post type.
+	if ( empty( $gmw['search_form']['taxonomies'] ) || empty( $gmw['search_form']['taxonomies'][ $post_type ] ) ) {
+		return;
+	}
 
-    $output = '<div class="gmw-search-form-taxonomies gmw-search-form-multiple-fields-wrapper">';
+	$output = '<div class="gmw-search-form-taxonomies gmw-search-form-multiple-fields-wrapper">';
 
-    // Loop through and generate taxonomies
-    foreach ( $gmw['search_form']['taxonomies'][$post_type] as $taxonomy => $args ) {
+	// Loop through and generate taxonomies.
+	foreach ( $gmw['search_form']['taxonomies'][ $post_type ] as $taxonomy => $args ) {
 
-        $usage = $args['style'];
+		$usage = $args['style'];
 
-        // abort if set as pre_defined or disabled
-        if ( empty( $usage ) || in_array( $usage, array( 'pre_defined', 'disabled', 'na' ) ) ) {
-            continue;
-        }
-        
-        $taxonomy = esc_attr( $taxonomy );   
+		// abort if set as pre_defined or disabled.
+		if ( empty( $usage ) || in_array( $usage, array( 'pre_defined', 'disabled', 'na' ) ) ) {
+			continue;
+		}
 
-        // support older versions of the plugin.
-        // To be removed in the future
-        if ( $usage == 'check' ) {
-            $usage = 'checkbox';
-        } elseif ( $usage == 'drop' ) {
-            $usage = 'dropdown';
-        }
+		$taxonomy = esc_attr( $taxonomy );
 
-        $tax_args = array(
-            'id'                  => $gmw['ID'],
-            'taxonomy'            => $taxonomy,
-            'usage'               => $usage,
-            'show_options_all'    => isset( $args['show_options_all'] ) ? $args['show_options_all'] : true,
-            'orderby'             => ! empty( $args['orderby'] ) ? $args['orderby'] : 'id',
-            'order'               => ! empty( $args['order'] )   ? $args['order']   : 'ASC',
-            'include'             => ! empty( $args['include'] ) ? $args['include'] : '',
-            'exclude'             => ! empty( $args['exclude'] ) ? $args['exclude'] : '',
-            'show_count'          => isset( $args['show_count'] ) ? 1 : 0,
-            'hide_empty'          => isset( $args['hide_empty'] ) ? 1 : 0,
-            'category_icons'      => isset( $args['cat_icons'] ) ? 1 : 0,
-            'multiple_selections' => isset( $args['multiple_selections'] ) ? 1 : 0,
-        );
-        
-        $tax_element = GMW_PT_Search_Form_Helper::get_taxonomy( $tax_args, $gmw );
+		// support older versions of the plugin.
+		// To be removed in the future.
+		if ( 'check' === $usage ) {
+			$usage = 'checkbox';
+		} elseif ( 'drop' === $usage ) {
+			$usage = 'dropdown';
+		}
 
-        if ( empty( $tax_element ) ) {
-            continue;
-        }
+		$tax_args = array(
+			'id'                  => $gmw['ID'],
+			'taxonomy'            => $taxonomy,
+			'usage'               => $usage,
+			'show_options_all'    => isset( $args['show_options_all'] ) ? $args['show_options_all'] : true,
+			'orderby'             => ! empty( $args['orderby'] ) ? $args['orderby'] : 'id',
+			'order'               => ! empty( $args['order'] ) ? $args['order'] : 'ASC',
+			'include'             => ! empty( $args['include'] ) ? $args['include'] : '',
+			'exclude'             => ! empty( $args['exclude'] ) ? $args['exclude'] : '',
+			'show_count'          => isset( $args['show_count'] ) ? 1 : 0,
+			'hide_empty'          => isset( $args['hide_empty'] ) ? 1 : 0,
+			'category_icons'      => isset( $args['cat_icons'] ) ? 1 : 0,
+			'multiple_selections' => isset( $args['multiple_selections'] ) ? 1 : 0,
+		);
 
-        $output .= "<div id=\"{$taxonomy}-taxonomy-wrapper\" class=\"gmw-form-field-wrapper gmw-single-taxonomy-wrapper gmw-{$usage}-taxonomy-wrapper\">";
+		$tax_element = GMW_PT_Search_Form_Helper::get_taxonomy( $tax_args, $gmw );
 
-        // if showing label    
-        if ( ! empty( $args['label'] ) ) {
-            $output .= '<label class="gmw-field-label" for="'.$taxonomy.'-taxonomy">'.esc_attr( $args['label'] ).'</label>';
-        }
+		if ( empty( $tax_element ) ) {
+			continue;
+		}
 
-        $output .= $tax_element;
+		$output .= "<div id=\"{$taxonomy}-taxonomy-wrapper\" class=\"gmw-form-field-wrapper gmw-single-taxonomy-wrapper gmw-{$usage}-taxonomy-wrapper\">";
 
-        // taxonomy wrapper end
-        $output .= '</div>';  
-    }
+		// if showing label.
+		if ( ! empty( $args['label'] ) ) {
+			$output .= '<label class="gmw-field-label" for="' . $taxonomy . '-taxonomy">' . esc_attr( $args['label'] ) . '</label>';
+		}
 
-    $output .= '</div>';
+		$output .= $tax_element;
 
-    return $output;
+		// taxonomy wrapper end.
+		$output .= '</div>';
+	}
+
+	$output .= '</div>';
+
+	return $output;
 }
 
+/**
+ * Output Taxonomies fields.
+ *
+ * @param  array  $gmw gmw form.
+ *
+ * @param  string $tag field tag type.
+ */
 function gmw_search_form_taxonomies( $gmw = array(), $tag = 'div' ) {
 
 	do_action( 'gmw_before_search_form_taxonomies', $gmw );
 
-	echo gmw_get_search_form_taxonomies( $gmw, $tag );
+	echo gmw_get_search_form_taxonomies( $gmw, $tag ); // WPCS: XSS ok.
 
 	do_action( 'gmw_after_search_form_taxonomies', $gmw );
 }
-	
+
