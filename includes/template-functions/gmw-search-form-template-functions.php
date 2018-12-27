@@ -37,9 +37,14 @@ function gmw_get_search_form_submit_button( $gmw = array(), $label = '' ) {
 	return $output;
 }
 
-	function gmw_search_form_submit_button( $gmw = array(), $label = '' ) {
-		echo gmw_get_search_form_submit_button( $gmw, $label );
-	}
+function gmw_search_form_submit_button( $gmw = array(), $label = '' ) {
+
+	do_action( 'gmw_before_search_form_submit_button', $gmw );
+
+	echo gmw_get_search_form_submit_button( $gmw, $label );
+
+	do_action( 'gmw_after_search_form_submit_button', $gmw );
+}
 
 /**
  * GMW get address field
@@ -76,9 +81,14 @@ function gmw_get_search_form_address_field( $gmw ) {
 	return apply_filters( 'gmw_search_form_address_field', $output, $gmw );
 }
 
-	function gmw_search_form_address_field( $gmw, $id=false, $class=false ) {
-		echo gmw_get_search_form_address_field( $gmw );
-	}
+function gmw_search_form_address_field( $gmw = array(), $id = 0, $class = false ) {
+
+	do_action( 'gmw_before_search_form_address_field', $gmw );
+
+	echo gmw_get_search_form_address_field( $gmw );
+
+	do_action( 'gmw_after_search_form_address_field', $gmw );
+}
 
 /**
  * Get locator button
@@ -109,10 +119,14 @@ function gmw_get_search_form_locator_button( $gmw ) {
 	return $output;
 }
 
-	function gmw_search_form_locator_button( $gmw, $class = false ) {
-		echo gmw_get_search_form_locator_button( $gmw );
-	}
+function gmw_search_form_locator_button( $gmw = array(), $class = false ) {
 
+	do_action( 'gmw_before_search_form_locator_button', $gmw );
+
+	echo gmw_get_search_form_locator_button( $gmw );
+
+	do_action( 'gmw_after_search_form_locator_button', $gmw );
+}
 
 /**
  * Search form radius field
@@ -145,9 +159,14 @@ function gmw_get_search_form_radius( $gmw ) {
 	return apply_filters( 'gmw_radius_dropdown_output', $output, $gmw );
 }
 
-	function gmw_search_form_radius( $gmw ) {
-		echo gmw_get_search_form_radius( $gmw );
-	}
+function gmw_search_form_radius( $gmw ) {
+
+	do_action( 'gmw_before_search_form_radius', $gmw );
+
+	echo gmw_get_search_form_radius( $gmw );
+
+	do_action( 'gmw_after_search_form_radius', $gmw );
+}
 
 /**
  * GMW Search form units 
@@ -182,6 +201,12 @@ function gmw_get_search_form_units( $gmw ) {
 
 	return $output;
 }
-	function gmw_search_form_units( $gmw, $class=false ) {
-		echo gmw_get_search_form_units( $gmw );
-	}
+
+function gmw_search_form_units( $gmw = array(), $class = false ) {
+
+	do_action( 'gmw_before_search_form_units', $gmw );
+
+	echo gmw_get_search_form_units( $gmw );
+
+	do_action( 'gmw_after_search_form_units', $gmw );
+}
