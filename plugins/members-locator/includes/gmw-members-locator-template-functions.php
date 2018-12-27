@@ -103,7 +103,11 @@ function gmw_search_form_bp_member_types( $gmw = array() ) {
 		$output .= $element;
 	}
 
+	do_action( 'gmw_before_search_form_bp_member_types', $gmw );
+
 	echo $output; // WPCS: XSS ok.
+
+	do_action( 'gmw_after_search_form_bp_member_types', $gmw );
 }
 
 /**
@@ -154,7 +158,11 @@ function gmw_search_form_bp_groups_filter( $gmw = array() ) {
 		$output .= $element;
 	}
 
+	do_action( 'gmw_before_search_form_bp_groups_filter', $gmw );
+
 	echo $output; // WPCS: XSS ok.
+
+	do_action( 'gmw_after_search_form_bp_groups_filter', $gmw );
 }
 
 /**
@@ -182,7 +190,7 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 	}
 
 	$output  = '';
-	$output .= '<div id="gmw-search-form-xprofile-fields-' . esc_attr( $gmw['ID'] ) . '" class="gmw-search-form-xprofile-fields gmw-fl-form-xprofile-fields">';
+	$output .= '<div id="gmw-search-form-xprofile-fields-' . esc_attr( $gmw['ID'] ) . '" class="gmw-search-form-xprofile-fields gmw-fl-form-xprofile-fields gmw-search-form-multiple-fields-wrapper">';
 
 	$total_fields = apply_filters( 'gmw_fl_form_xprofile_field_before_displayed', $total_fields, $gmw );
 
@@ -546,7 +554,12 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
  * @param  array $gmw gmw forms.
  */
 function gmw_search_form_xprofile_fields( $gmw ) {
+
+	do_action( 'gmw_before_search_form_xprofile_fields', $gmw );
+
 	echo gmw_get_search_form_xprofile_fields( $gmw ); // WPCS: XSS ok.
+
+	do_action( 'gmw_after_search_form_xprofile_fields', $gmw );
 }
 
 /**
