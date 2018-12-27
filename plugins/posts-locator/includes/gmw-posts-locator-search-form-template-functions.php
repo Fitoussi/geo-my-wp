@@ -195,7 +195,9 @@ function gmw_get_search_form_post_types( $args = array(), $post_types = array( '
 
 	foreach ( $post_types as $post_type ) {
 
-		if ( ( $post_object = get_post_type_object( $post_type ) ) != false ) {
+		$post_object = get_post_type_object( $post_type );
+
+		if ( ! empty( $post_object ) ) {
 			$options[ $post_type ] = $post_object->labels->name;
 		}
 	}
@@ -276,7 +278,7 @@ function gmw_search_form_post_types( $gmw = array() ) {
 function gmw_get_search_form_taxonomies( $gmw ) {
 
 	// abort if multiple post types were set.
-	if ( empty( $gmw['search_form']['post_types'] ) || count( $gmw['search_form']['post_types'] ) != 1 ) {
+	if ( empty( $gmw['search_form']['post_types'] ) || 1 !== count( $gmw['search_form']['post_types'] ) ) {
 		return;
 	}
 
@@ -295,7 +297,7 @@ function gmw_get_search_form_taxonomies( $gmw ) {
 		$usage = $args['style'];
 
 		// abort if set as pre_defined or disabled.
-		if ( empty( $usage ) || in_array( $usage, array( 'pre_defined', 'disabled', 'na' ) ) ) {
+		if ( empty( $usage ) || in_array( $usage, array( 'pre_defined', 'disabled', 'na' ), true ) ) {
 			continue;
 		}
 
