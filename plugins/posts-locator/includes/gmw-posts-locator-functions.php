@@ -637,6 +637,11 @@ function gmw_update_post_location( $post_id = 0, $location = array(), $user_id =
 		$location_name = '';
 	}
 
+	// Get post title if location name was not provided.
+	if ( empty( $location_name ) && ! empty( $post_id ) ) {
+		$location_name = get_the_title( $post_id );
+	}
+
 	$args = array(
 		'object_type'   => 'post',
 		'object_id'     => $post_id,
