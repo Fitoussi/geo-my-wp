@@ -450,7 +450,11 @@ function gmw_update_location( $args = array(), $location = array(), $force_refre
 			// remove apt from address field to be able to geocode it properly.
 			unset( $geo_address['apt'] );
 
+			// generate the address into a single line.
 			$geo_address = implode( ' ', $geo_address );
+
+			// remove some extra blank spaces which can mess up the geocoding.
+			$geo_address = str_replace( '  ', ' ', $geo_address );
 		}
 	}
 
@@ -512,8 +516,8 @@ function gmw_update_location( $args = array(), $location = array(), $force_refre
 		'object_id'         => $object_id,
 		'user_id'           => $user_id,
 		'title'             => $location_name,
-		'latitude'          => $latitude,
-		'longitude'         => $longitude,
+		'latitude'          => (float) $latitude,
+		'longitude'         => (float) $longitude,
 		'street_number'     => $geocoded_data['street_number'],
 		'street_name'       => $geocoded_data['street_name'],
 		'street'            => $street,
