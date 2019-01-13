@@ -1,9 +1,9 @@
 === GEO my Wordpress ===
 Contributors: ninjew, Eyal Fitoussi
-Donate link: http://geomywp.com/
+Donate link: https://www.paypal.me/fitoussi
 Tags: Geolocation, Directory, Google Maps, OpenStreetMaps, Store Locator, Geolocator, Geotagging, Geocode, Mapping, Proximity search, Zipcode, Geolocate posts, Address search, Distance, Google maps, Directions, Locations, Geo, Members locator, Geolocate members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
 Requires at least: 4.3
-Tested up to: 4.9.8
+Tested up to: 5.0.3
 Buddypress: 2.8
 Stable tag: 3.2
 Requires PHP: 5.4
@@ -123,12 +123,19 @@ for detailed installation and setup guide see the [documentation](docs.geomywp.c
 
 = 3.2 = 
 
+* Version 3.2 is a major release. Backing up your site and/or testing this version on a staging enviroment first is recomended.
+
 * Version 3.1 was a major release. Read this post [GEO my WP 3.1](https://geomywp.com/geo-my-wp-3-1/) before updating.
 
 * Version 3.0 was a major release. If you are updating from a version earlier than 3.0, it is highly recommended that you read the posts [GEO my WP 3.0 Beta 7](https://geomywp.com/geo-my-wp-3-0-beta-7/) and [GEO my WP Upgrade Process](https://geomywp.com/geo-my-wp-3-0-upgrade-process/) before updating. You should also test this version on a staging environment before updating on your live site.
 
-* New: New setting input field for Google Maps Server API key. GEO my WP now requires 2 API keys. Please visit GEO my WP's Settings page in the dashboard of your site after the update.
+* New: GEO my WP now requires 2 Google Maps API keys ( when using Google Maps as the maps provider ); A server and a browser API keys. Please read the post [GEO my WP 3.2](https://geomywp.com/geo-my-wp-3-2/) for more details regarding the Server API key and how to generate it.
+* New: New setting input field for Google Maps Server API key. Please visit GEO my WP's Settings page in the dashboard of your site after the update.
+* New: a testing tool for Google Maps Server API added to the Tools page. The tool will test if the Google Maps Server API key is working properly.
 * New: show debug message when geocoder fails.
+* New: API Testing tab added to tools page.
+* New: function GMW_Maps_API::load_scripts() to load the map scripts manually on page load, without the need of the search form or search results to load first.
+* Update: update chosen library to v1.8.7.
 * Improvement: improve the Members Locator proximity search query. The plugin now modifies the BuddyPress members' query directly instead of running a separate location query in addition to the members' query. This should improve performance and make it easier to modify the query.
 * Improvement: Geocoder classes were improved and work better with the new server key.
 * Tweak: improve the location form. New arguments added.
@@ -136,17 +143,41 @@ for detailed installation and setup guide see the [documentation](docs.geomywp.c
 * Tweak:  load the member location tab using the bp_setup_nav hook to make it possible to modify it using plugins.
 * Tweak: close user's location info-window when a new window opens.
 * Tweak: set region and language in default args to make it possible to modify it.
+* Tweak: verify that blog ID exists before using it in the query to prevent warning messages.
+* Tweak: apply min-height to multi-select box type Xprofile Fields.
+* Tweak: allow HTML tags in admin and form settings description.
+* Tweak: Make sure coordinates are in float formate before saving to the database.
+* Tweak: save the post title as location name if none provided.
+* Tweak: add premise DB column to the search queries.
+* Tweak: update dashboard links to the new documentation site.
 * Filter: ‘gmw_geocoder_endpoint_args’ to modify the geocoder endpoint args.
 * Filter: ‘gmw_geocoded_location_output’ to modify the geocoder location output.
+* Filter: ‘gmw_form_db_fields’ filter to modify the db_fields of a search query.
+* Hooks: new filter 'gmw_get_location_address_allowed_html' to allow HTML in the address output.
+* Hooks: new filter to modify the content of the gmw excerpt function before the more link is added to it.
+* Hooks: new action hooks before and after form fields.
 * Fix: parseint() icons size to prevent error with info-windows.
 * Fix: directions system doesn't work.
 * Fix: some search queries get locations that belong different object type.
 * Fix: clear user query cache when friendship status changes to allow friendship status to update in GEO my WP results.
+* Fix: remove extra spaces from the address field before it is being geocoded to prevent geocoding issues.
 * Fix: default language in Google map direction link.
 * Fix: issue with the default coordinates of the directions link.
 * Fix: wrong text domain in some places.
 * Fix: Spelling.
 * Fix: trim radius values in dropdown to prevent extra spaces.
+* Fix: location form tabs don't work/switch properly.
+* Fix: remove some Interaction states and other jQuery styling which are no longer needed and cause for conflicts.
+* Fix: Issue with Buddypress Xprofile Custom Fields Type plugin's fields.
+* Fix: issue with the temporary fix for the post status issue.
+* Fix: use empty() instead of false to verify the address in the search results and prevent it from returning blank.
+* Fix: move the 'region' argument to the beginning of google maps URL to prevent the '®ion' rendering issue which results in failed geocoding.
+* Fix: Location form map won't update when changing the address or coordinates if the map marker was previously dragged.
+* Fix: linked address does not work properly.
+* Fix: Verify that the location form values exist when the form first loads to prevent error messages.
+* Fix: location is not being verified when retrieved using the locator button of the location form.
+* Fix: update location in the cache when location updated.
+* Fix: misspelled variable.
 * Japanese translation by Shinsaku IKEDA ( Thank you ).
 * Various improvements, new functions, bugs fix, filters, and deprecated functions.
 
