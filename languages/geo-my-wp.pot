@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: GEO my WP\n"
-"POT-Creation-Date: 2018-10-22 16:49-1000\n"
+"POT-Creation-Date: 2019-01-12 21:31-1000\n"
 "PO-Revision-Date: 2018-03-05 13:18-1000\n"
 "Last-Translator: Eyal Fitoussi <fitoussi_eyal@hotmail.com>\n"
 "Language-Team: Eyal Fitoussi <fitoussi_eyal@hotmail.com>\n"
@@ -30,7 +30,7 @@ msgstr ""
 #: includes/admin/pages/class-gmw-extensions.php:380
 #: includes/admin/pages/class-gmw-extensions.php:390
 #: includes/admin/pages/class-gmw-extensions.php:475
-#: includes/admin/pages/class-gmw-form-editor.php:1629
+#: includes/admin/pages/class-gmw-form-editor.php:1657
 #: includes/admin/pages/class-gmw-forms-page.php:236
 #: includes/admin/pages/import-export/tabs/forms.php:165
 #: includes/admin/pages/import-export/tabs/forms.php:170
@@ -46,9 +46,11 @@ msgstr ""
 #: includes/admin/pages/import-export/tabs/location-tables.php:189
 #: includes/admin/pages/import-export/tabs/posts-locator.php:349
 #: includes/admin/pages/import-export/tabs/posts-locator.php:354
+#: includes/admin/pages/tools/tabs/api-testing.php:137
+#: includes/admin/pages/tools/tabs/api-testing.php:142
 #: includes/admin/pages/tools/tabs/reset-gmw.php:217
 #: includes/admin/pages/tools/tabs/reset-gmw.php:223
-#: includes/admin/updater/class-gmw-license.php:696
+#: includes/admin/updater/class-gmw-license.php:808
 msgid "Cheatin' eh?!"
 msgstr ""
 
@@ -75,13 +77,13 @@ msgstr ""
 #: includes/admin/pages/import-export/tabs/gmw-data.php:46
 #: includes/admin/pages/import-export/tabs/gmw-data.php:110
 #: includes/admin/pages/tools/tabs/reset-gmw.php:58
-#: includes/admin/updater/class-gmw-license.php:92
+#: includes/admin/updater/class-gmw-license.php:156
 msgid "Settings"
 msgstr ""
 
 #: includes/admin/class-gmw-admin.php:117
 #: includes/admin/class-gmw-admin.php:139
-#: includes/admin/updater/class-gmw-license.php:113
+#: includes/admin/updater/class-gmw-license.php:177
 msgid "Extensions"
 msgstr ""
 
@@ -91,7 +93,7 @@ msgid "GEO my WP Extensions"
 msgstr ""
 
 #: includes/admin/class-gmw-admin.php:148
-#: includes/admin/pages/class-gmw-settings.php:795
+#: includes/admin/pages/class-gmw-settings.php:806
 msgid "GEO my WP Settings"
 msgstr ""
 
@@ -120,7 +122,7 @@ msgid "GEO my WP Tools"
 msgstr ""
 
 #: includes/admin/class-gmw-admin.php:181
-#: includes/admin/pages/tools/class-gmw-tools.php:44
+#: includes/admin/pages/tools/class-gmw-tools.php:46
 msgid "Tools"
 msgstr ""
 
@@ -224,8 +226,8 @@ msgstr ""
 #: includes/admin/pages/class-gmw-form-editor.php:210
 #: includes/admin/pages/class-gmw-form-editor.php:360
 #: includes/admin/pages/class-gmw-form-editor.php:431
-#: includes/admin/pages/class-gmw-settings.php:109
-#: includes/admin/pages/class-gmw-settings.php:164
+#: includes/admin/pages/class-gmw-settings.php:115
+#: includes/admin/pages/class-gmw-settings.php:170
 #: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:141
 #: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:121
 #: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:143
@@ -552,49 +554,50 @@ msgstr ""
 msgid "Do not allow tracking"
 msgstr ""
 
-#: includes/admin/gmw-admin-functions.php:24
+#: includes/admin/gmw-admin-functions.php:31
 msgid "GEO my WP posts locations db table successfully updated."
 msgstr ""
 
-#: includes/admin/gmw-admin-functions.php:25
+#: includes/admin/gmw-admin-functions.php:32
 msgid "GEO my WP members locations db table successfully updated."
 msgstr ""
 
-#: includes/admin/gmw-admin-functions.php:26
+#: includes/admin/gmw-admin-functions.php:33
 msgid "Thank you for helping us improve GEO my WP."
 msgstr ""
 
-#: includes/admin/gmw-admin-functions.php:87
+#. translators: %s: developer's name.
+#: includes/admin/gmw-admin-functions.php:98
 #, php-format
 msgid "GEO my WP developed by %s"
 msgstr ""
 
-#: includes/admin/gmw-admin-functions.php:88
+#: includes/admin/gmw-admin-functions.php:108
 msgid "Donate"
 msgstr ""
 
-#: includes/admin/gmw-admin-functions.php:93
+#: includes/admin/gmw-admin-functions.php:137
 msgid "Demo"
 msgstr ""
 
-#: includes/admin/gmw-admin-functions.php:94
+#: includes/admin/gmw-admin-functions.php:146
 msgid "Docs"
 msgstr ""
 
-#: includes/admin/gmw-admin-functions.php:95
+#: includes/admin/gmw-admin-functions.php:155
 #: includes/admin/pages/class-gmw-extensions.php:839
 msgid "Support"
 msgstr ""
 
-#: includes/admin/gmw-admin-functions.php:97
+#: includes/admin/gmw-admin-functions.php:172
 msgid "Love"
 msgstr ""
 
-#: includes/admin/gmw-admin-functions.php:98
+#: includes/admin/gmw-admin-functions.php:181
 msgid "Like"
 msgstr ""
 
-#: includes/admin/gmw-admin-functions.php:99
+#: includes/admin/gmw-admin-functions.php:190
 msgid "Follow"
 msgstr ""
 
@@ -633,7 +636,7 @@ msgstr ""
 #: includes/admin/pages/class-gmw-extensions.php:274
 #: includes/admin/pages/class-gmw-extensions.php:381
 #: includes/admin/pages/class-gmw-extensions.php:476
-#: includes/admin/pages/class-gmw-form-editor.php:1604
+#: includes/admin/pages/class-gmw-form-editor.php:1632
 #: includes/admin/pages/import-export/class-gmw-export.php:182
 #: includes/admin/pages/import-export/gmw-csv-import.php:22
 #: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:552
@@ -848,11 +851,11 @@ msgstr ""
 
 #: includes/admin/pages/class-gmw-form-editor.php:157
 #: includes/admin/pages/class-gmw-form-editor.php:331
-#: includes/class-gmw-maps-api.php:593
+#: includes/class-gmw-maps-api.php:603
 #: includes/template-functions/class-gmw-search-form-helper.php:191
 #: includes/template-functions/class-gmw-search-form-helper.php:248
-#: includes/template-functions/gmw-search-form-template-functions.php:131
-#: includes/template-functions/gmw-search-form-template-functions.php:167
+#: includes/template-functions/gmw-search-form-template-functions.php:174
+#: includes/template-functions/gmw-search-form-template-functions.php:220
 #: plugins/single-location/includes/class-gmw-single-location-widget.php:122
 #: plugins/sweetdate-geolocation/includes/admin/class-gmw-sweet-date-admin-settings.php:128
 #: plugins/sweetdate-geolocation/includes/class-gmw-sweet-date-geolocation.php:210
@@ -861,10 +864,10 @@ msgstr ""
 
 #: includes/admin/pages/class-gmw-form-editor.php:158
 #: includes/admin/pages/class-gmw-form-editor.php:332
-#: includes/class-gmw-maps-api.php:594
+#: includes/class-gmw-maps-api.php:604
 #: includes/template-functions/class-gmw-search-form-helper.php:249
-#: includes/template-functions/gmw-search-form-template-functions.php:131
-#: includes/template-functions/gmw-search-form-template-functions.php:168
+#: includes/template-functions/gmw-search-form-template-functions.php:174
+#: includes/template-functions/gmw-search-form-template-functions.php:221
 #: plugins/single-location/includes/class-gmw-single-location-widget.php:123
 #: plugins/sweetdate-geolocation/includes/admin/class-gmw-sweet-date-admin-settings.php:129
 #: plugins/sweetdate-geolocation/includes/class-gmw-sweet-date-geolocation.php:211
@@ -1074,7 +1077,7 @@ msgid "Form Submission"
 msgstr ""
 
 #: includes/admin/pages/class-gmw-form-editor.php:348
-#: includes/admin/pages/class-gmw-settings.php:173
+#: includes/admin/pages/class-gmw-settings.php:179
 msgid "Results Page"
 msgstr ""
 
@@ -1190,7 +1193,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/pages/class-gmw-form-editor.php:470
-#: plugins/single-location/includes/class-gmw-single-location-widget.php:46
+#: plugins/single-location/includes/class-gmw-single-location-widget.php:45
 msgid "Auto Zoom"
 msgstr ""
 
@@ -1317,8 +1320,8 @@ msgid "Duplicate Form"
 msgstr ""
 
 #: includes/admin/pages/class-gmw-form-editor.php:1163
-#: includes/admin/pages/class-gmw-settings.php:811
-#: includes/admin/pages/class-gmw-settings.php:948
+#: includes/admin/pages/class-gmw-settings.php:822
+#: includes/admin/pages/class-gmw-settings.php:987
 msgid "Save Changes"
 msgstr ""
 
@@ -1342,7 +1345,7 @@ msgstr ""
 msgid "Updating form..."
 msgstr ""
 
-#: includes/admin/pages/class-gmw-form-editor.php:1603
+#: includes/admin/pages/class-gmw-form-editor.php:1631
 msgid "Failed saving data in database."
 msgstr ""
 
@@ -1444,90 +1447,89 @@ msgstr ""
 msgid "No forms found."
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:101
+#: includes/admin/pages/class-gmw-settings.php:107
 msgid "General Settings"
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:108
+#: includes/admin/pages/class-gmw-settings.php:114
 msgid "Plugin Usage Tracking"
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:110
+#: includes/admin/pages/class-gmw-settings.php:116
 msgid ""
 "Check this checkbox to allow GEO my WP track the plugin usage on your site."
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:136
+#: includes/admin/pages/class-gmw-settings.php:142
 msgid "Default Region"
 msgstr ""
 
 #. translators: %s: link
-#: includes/admin/pages/class-gmw-settings.php:139
+#: includes/admin/pages/class-gmw-settings.php:145
 #, php-format
 msgid ""
-"Enter the country code that will be used as the default with Google Maps "
-"API. The country code controls the default region when geocoding an address "
-"and when using other services provided by Google Maps API. List of countries "
-"code can be found <a href=\"%s\" target=\"_blank\">here</a>."
+"Enter the country code that will be used as the default with the API "
+"providers. The country code controls the default region when geocoding an "
+"address and when using other services provided by the API providers. List of "
+"countries code can be found <a href=\"%s\" target=\"_blank\">here</a>."
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:150
+#: includes/admin/pages/class-gmw-settings.php:156
 msgid "Default Language"
 msgstr ""
 
 #. translators: %s: link
-#: includes/admin/pages/class-gmw-settings.php:153
+#: includes/admin/pages/class-gmw-settings.php:159
 #, php-format
 msgid ""
-"Set the language to be used with Google Places address auto-complete and "
-"with Google Maps API. The language codes can be found <a href=\"%s\" target="
-"\"_blank\">here</a>."
+"Set the default language to be used with the API providers. The language "
+"codes can be found <a href=\"%s\" target=\"_blank\">here</a>."
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:163
+#: includes/admin/pages/class-gmw-settings.php:169
 msgid "Auto Locator"
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:165
+#: includes/admin/pages/class-gmw-settings.php:171
 msgid ""
-"GEO my WP will try to retrieve the visitor's current location when once "
-"first visits the website. If a location was found, it will be saved via "
-"cookies and will be used with some of GEO my WP features; such as "
-"dynamically displaying results nearby the visitor."
+"GEO my WP will try to retrieve the visitor's current location when first "
+"visits the website. If a location was found, it will be saved via cookies "
+"and will be used with some of GEO my WP features; such as dynamically "
+"displaying results nearby the visitor."
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:174
+#: includes/admin/pages/class-gmw-settings.php:180
 msgid ""
 "The page you select here displays the search results ( of any of your "
 "forms ) when using the \"GMW Search Form\" widget. The plugin will first "
 "check if a results page was set in the form settings, and if so, the results "
-"will be displayed in that page. Otherwise, if no results page was set in the "
-"form settings, the results will be displayed in the page you select here. To "
+"will be displayed on that page. Otherwise, if no results page was set in the "
+"form settings, the results will be displayed on the page you select here. To "
 "use this feature, select the results page from the dropdown menu and paste "
-"the shortcode <code>[gmw form=\"results\"]</code> to the content area of "
-"this page."
+"the shortcode <code>[gmw form=\"results\"]</code> to the content area of the "
+"page that you selected."
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:185
+#: includes/admin/pages/class-gmw-settings.php:191
 msgid "Maps & Geocoders"
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:192
-#: includes/admin/pages/class-gmw-settings.php:202
+#: includes/admin/pages/class-gmw-settings.php:198
+#: includes/admin/pages/class-gmw-settings.php:208
 msgid "Maps Provider"
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:193
-#: includes/admin/pages/class-gmw-settings.php:203
+#: includes/admin/pages/class-gmw-settings.php:199
+#: includes/admin/pages/class-gmw-settings.php:209
 msgid "Select the maps provider that you would like to use."
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:211
+#: includes/admin/pages/class-gmw-settings.php:217
 msgid "Google Maps API"
 msgstr ""
 
 #. translators: %s: link.
-#: includes/admin/pages/class-gmw-settings.php:214
+#: includes/admin/pages/class-gmw-settings.php:220
 #, php-format
 msgid ""
 "Enter your Google Maps API keys ( See <a href=\"%s\" target=\"_blank\">this "
@@ -1535,39 +1537,42 @@ msgid ""
 "client-side and server-side keys."
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:222
+#: includes/admin/pages/class-gmw-settings.php:228
 msgid "Google Maps Client-side API key"
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:223
+#: includes/admin/pages/class-gmw-settings.php:229
 msgid "Client-side API key"
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:224
+#: includes/admin/pages/class-gmw-settings.php:230
 msgid ""
 "This API key is responsible for displaying maps, directions, address "
 "autocomplete, and client-side geocoding when using the location form."
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:231
+#: includes/admin/pages/class-gmw-settings.php:237
 msgid "Google Maps Server API key"
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:232
+#: includes/admin/pages/class-gmw-settings.php:238
 msgid "Server API key"
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:233
+#. translators: %1$s: oen <a> tag, %2$s: close </a> tag.
+#: includes/admin/pages/class-gmw-settings.php:241
+#, php-format
 msgid ""
 "This API key is responsible for server side geocoding. Without this key some "
-"of GEO my WP functions will not work properly."
+"of GEO my WP functions will not work properly. After generating and entering "
+"your server API key, you can test it %1$shere%2$s."
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:241
+#: includes/admin/pages/class-gmw-settings.php:252
 msgid "Google Maps API For China"
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:242
+#: includes/admin/pages/class-gmw-settings.php:253
 #: includes/admin/pages/tools/class-gmw-system-info.php:115
 #: includes/admin/pages/tools/class-gmw-system-info.php:123
 #: plugins/sweetdate-geolocation/includes/admin/class-gmw-sweet-date-admin-settings.php:180
@@ -1576,30 +1581,30 @@ msgstr ""
 msgid "Enabled"
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:243
+#: includes/admin/pages/class-gmw-settings.php:254
 msgid ""
 "Check this checkbox if your server is located in China and Google Maps "
 "features are not working on your site."
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:255
+#: includes/admin/pages/class-gmw-settings.php:266
 msgid "Nominatim ( OpenStreetMaps )"
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:256
+#: includes/admin/pages/class-gmw-settings.php:267
 msgid "Setup Nominatim options."
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:262
+#: includes/admin/pages/class-gmw-settings.php:273
 msgid "Enter email address"
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:263
+#: includes/admin/pages/class-gmw-settings.php:274
 msgid "Valid email address"
 msgstr ""
 
 #. translators: %1$s: link, %2$s: link.
-#: includes/admin/pages/class-gmw-settings.php:266
+#: includes/admin/pages/class-gmw-settings.php:277
 #, php-format
 msgid ""
 "Nominatim is a geocoding provider for OpenStreetMaps. The provider requires "
@@ -1608,7 +1613,7 @@ msgid ""
 "Nominatim <a href=\"%2$s\" target=\"_blank\">usage policy</a>."
 msgstr ""
 
-#: includes/admin/pages/class-gmw-settings.php:807
+#: includes/admin/pages/class-gmw-settings.php:818
 msgid "Settings successfully saved!"
 msgstr ""
 
@@ -1633,7 +1638,7 @@ msgid "Location Tables"
 msgstr ""
 
 #: includes/admin/pages/import-export/class-gmw-import-export-page.php:120
-#: plugins/posts-locator/loader.php:62
+#: plugins/posts-locator/loader.php:115
 msgid "Posts Locator"
 msgstr ""
 
@@ -1818,15 +1823,15 @@ msgid ""
 "You must check at least on checkbox of an item that you would like to import"
 msgstr ""
 
-#: includes/admin/pages/import-export/tabs/gmw-v-3-import.php:35
+#: includes/admin/pages/import-export/tabs/gmw-v-3-import.php:50
 msgid "GEO my WP v3.0 Importer"
 msgstr ""
 
-#: includes/admin/pages/import-export/tabs/gmw-v-3-import.php:55
+#: includes/admin/pages/import-export/tabs/gmw-v-3-import.php:73
 msgid "Import Post Types Locations"
 msgstr ""
 
-#: includes/admin/pages/import-export/tabs/gmw-v-3-import.php:84
+#: includes/admin/pages/import-export/tabs/gmw-v-3-import.php:100
 msgid "Import Users/Members Locations"
 msgstr ""
 
@@ -2215,12 +2220,24 @@ msgstr ""
 msgid "Highlight Data"
 msgstr ""
 
-#: includes/admin/pages/tools/class-gmw-tools.php:79
+#: includes/admin/pages/tools/class-gmw-tools.php:80
 msgid "System Info"
 msgstr ""
 
-#: includes/admin/pages/tools/class-gmw-tools.php:80
+#: includes/admin/pages/tools/class-gmw-tools.php:81
+msgid "API Testing"
+msgstr ""
+
+#: includes/admin/pages/tools/class-gmw-tools.php:82
 msgid "Uninstall GEO my WP"
+msgstr ""
+
+#: includes/admin/pages/tools/tabs/api-testing.php:40
+msgid "Google Maps Server API Key Test"
+msgstr ""
+
+#: includes/admin/pages/tools/tabs/api-testing.php:54
+msgid "Test server key"
 msgstr ""
 
 #: includes/admin/pages/tools/tabs/reset-gmw.php:37
@@ -2305,109 +2322,109 @@ msgid ""
 "You must check at least one checkbox of an item that you'd like to clear."
 msgstr ""
 
-#: includes/admin/updater/class-gmw-license.php:100
-#: includes/admin/updater/class-gmw-license.php:281
+#: includes/admin/updater/class-gmw-license.php:164
+#: includes/admin/updater/class-gmw-license.php:380
 msgid "Activate License"
 msgstr ""
 
-#: includes/admin/updater/class-gmw-license.php:106
-#: includes/admin/updater/class-gmw-license.php:265
+#: includes/admin/updater/class-gmw-license.php:170
+#: includes/admin/updater/class-gmw-license.php:364
 msgid "Deactivate License"
 msgstr ""
 
-#: includes/admin/updater/class-gmw-license.php:295
+#: includes/admin/updater/class-gmw-license.php:399
 msgid "License key"
 msgstr ""
 
-#: includes/admin/updater/class-gmw-license.php:300
+#: includes/admin/updater/class-gmw-license.php:404
 msgid "License: "
 msgstr ""
 
-#: includes/admin/updater/class-gmw-license.php:723
+#: includes/admin/updater/class-gmw-license.php:837
 msgid "Activate your license key to receive support and updates."
 msgstr ""
 
-#: includes/admin/updater/class-gmw-license.php:724
-#: includes/admin/updater/class-gmw-license.php:726
+#: includes/admin/updater/class-gmw-license.php:838
+#: includes/admin/updater/class-gmw-license.php:840
 msgid "License activated. Thank you for your support!"
 msgstr ""
 
-#: includes/admin/updater/class-gmw-license.php:725
+#: includes/admin/updater/class-gmw-license.php:839
 msgid "License deactivated."
 msgstr ""
 
-#: includes/admin/updater/class-gmw-license.php:727
+#: includes/admin/updater/class-gmw-license.php:841
 msgid "No license key entered."
 msgstr ""
 
-#: includes/admin/updater/class-gmw-license.php:728
+#: includes/admin/updater/class-gmw-license.php:842
 #, php-format
 msgid ""
 "Your license has expired. <a href=\"%s\" target=\"_blank\">Renew your "
 "license</a> to receive updates and support."
 msgstr ""
 
-#: includes/admin/updater/class-gmw-license.php:729
+#: includes/admin/updater/class-gmw-license.php:843
 #, php-format
 msgid ""
 "Your license has been disabled. Contact <a href=\"%s\" target=\"_blank"
 "\">support</a> for more information."
 msgstr ""
 
-#: includes/admin/updater/class-gmw-license.php:730
+#: includes/admin/updater/class-gmw-license.php:844
 #, php-format
 msgid ""
 "Something wrong with the license key you entered. <a href=\"%s\" target="
 "\"_blank\">Verify your key</a> and try again."
 msgstr ""
 
-#: includes/admin/updater/class-gmw-license.php:731
+#: includes/admin/updater/class-gmw-license.php:845
 #, php-format
 msgid ""
 "You license key was disabled by the provider. <a href=\"%s\" target=\"_blank"
 "\">Contact support</a> for more information"
 msgstr ""
 
-#: includes/admin/updater/class-gmw-license.php:732
-#: includes/admin/updater/class-gmw-license.php:733
+#: includes/admin/updater/class-gmw-license.php:846
+#: includes/admin/updater/class-gmw-license.php:847
 msgid "Your license is not active for this URL."
 msgstr ""
 
-#: includes/admin/updater/class-gmw-license.php:734
+#: includes/admin/updater/class-gmw-license.php:848
 msgid "The license key you entered does not belong to this extension."
 msgstr ""
 
-#: includes/admin/updater/class-gmw-license.php:735
+#: includes/admin/updater/class-gmw-license.php:849
 msgid ""
 "An error occurred while trying to activate your license. ERROR "
 "item_name_mismatch"
 msgstr ""
 
-#: includes/admin/updater/class-gmw-license.php:736
+#: includes/admin/updater/class-gmw-license.php:850
 #, php-format
 msgid ""
 "Your license key has reached its activation limit. <a %s>Manage licenses</a>."
 msgstr ""
 
-#: includes/admin/updater/class-gmw-license.php:738
+#: includes/admin/updater/class-gmw-license.php:852
 #, php-format
 msgid "Lost or forgot your license key? <a %s >Retrieve it here.</a>"
 msgstr ""
 
-#: includes/admin/updater/class-gmw-license.php:739
+#: includes/admin/updater/class-gmw-license.php:853
 #, php-format
 msgid ""
 "Your license for %s plugin could not be activated. See error message below."
 msgstr ""
 
-#: includes/admin/updater/class-gmw-license.php:740
+#: includes/admin/updater/class-gmw-license.php:854
 #, php-format
 msgid ""
 "An error occurred. Try again or contact <a href=\"%s\" target=\"_blank"
 "\">support</a>."
 msgstr ""
 
-#: includes/admin/updater/class-gmw-license.php:741
+#: includes/admin/updater/class-gmw-license.php:855
 #, php-format
 msgid ""
 "Connection to remote server failed. Try again or contact <a href=\"%s\" "
@@ -2431,25 +2448,25 @@ msgstr ""
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: includes/class-gmw-addon.php:770
+#: includes/class-gmw-addon.php:773
 #, php-format
 msgid ""
 "GEO my WP %1$s extension is disabled due to an issue with the license key. "
 "Contact support for more information."
 msgstr ""
 
-#: includes/class-gmw-addon.php:788
+#: includes/class-gmw-addon.php:791
 #, php-format
 msgid ""
 "%1$s extension version %2$s requires GEO my WP plugin version %3$s or higher."
 msgstr ""
 
-#: includes/class-gmw-addon.php:808
+#: includes/class-gmw-addon.php:811
 #, php-format
 msgid "%1$s extension requires an update to version %2$s."
 msgstr ""
 
-#: includes/class-gmw-addon.php:946
+#: includes/class-gmw-addon.php:949
 #, php-format
 msgid ""
 "%1$s extension requires additional %2$s. Contact support form more "
@@ -2460,102 +2477,102 @@ msgstr ""
 msgid "Once Weekly"
 msgstr ""
 
-#: includes/class-gmw-form.php:195
-#: includes/template-functions/class-gmw-template-functions-helper.php:372
+#: includes/class-gmw-form.php:204
+#: includes/template-functions/class-gmw-template-functions-helper.php:416
 msgid "Showing {from_count} - {to_count} of {total_results} locations"
 msgstr ""
 
-#: includes/class-gmw-form.php:196
-#: includes/template-functions/class-gmw-template-functions-helper.php:374
-#: plugins/members-locator/includes/class-gmw-members-locator-form.php:33
+#: includes/class-gmw-form.php:205
+#: includes/template-functions/class-gmw-template-functions-helper.php:418
+#: plugins/members-locator/includes/class-gmw-members-locator-form.php:28
 msgid " within {radius}{units} from {address}"
 msgstr ""
 
 #. translators: %s replaced with form type
-#: includes/class-gmw-form.php:302
+#: includes/class-gmw-form.php:313
 #, php-format
 msgid "%s is invalid form type."
 msgstr ""
 
-#: includes/class-gmw-form.php:533
+#: includes/class-gmw-form.php:544
 msgid "Your location"
 msgstr ""
 
-#: includes/class-gmw-form.php:1099
+#: includes/class-gmw-form.php:1117
 msgid "No results found"
 msgstr ""
 
-#: includes/class-gmw-geocoder.php:220
+#: includes/class-gmw-geocoder.php:246
 msgid "Location is missing."
 msgstr ""
 
-#: includes/class-gmw-geocoder.php:256
+#: includes/class-gmw-geocoder.php:282
 msgid "Geocoding failed"
 msgstr ""
 
-#: includes/class-gmw-geocoder.php:305
+#: includes/class-gmw-geocoder.php:331
 msgid "Location data was not found."
 msgstr ""
 
-#: includes/class-gmw-geocoder.php:312
+#: includes/class-gmw-geocoder.php:337
 msgid "Unable to contact the API service or failed geocoding."
 msgstr ""
 
-#: includes/class-gmw-maps-api.php:192
+#: includes/class-gmw-maps-api.php:208
 msgid "Resize map"
 msgstr ""
 
-#: includes/class-gmw-maps-api.php:584
+#: includes/class-gmw-maps-api.php:594
 msgid "Origin"
 msgstr ""
 
-#: includes/class-gmw-maps-api.php:585
+#: includes/class-gmw-maps-api.php:595
 msgid "Destination"
 msgstr ""
 
-#: includes/class-gmw-maps-api.php:586
-#: plugins/single-location/includes/class-gmw-single-location.php:404
+#: includes/class-gmw-maps-api.php:596
+#: plugins/single-location/includes/class-gmw-single-location.php:417
 msgid "Directions"
 msgstr ""
 
-#: includes/class-gmw-maps-api.php:587
-#: plugins/single-location/includes/class-gmw-single-location.php:405
+#: includes/class-gmw-maps-api.php:597
+#: plugins/single-location/includes/class-gmw-single-location.php:418
 msgid "From:"
 msgstr ""
 
-#: includes/class-gmw-maps-api.php:588
+#: includes/class-gmw-maps-api.php:598
 msgid "To:"
 msgstr ""
 
-#: includes/class-gmw-maps-api.php:589
+#: includes/class-gmw-maps-api.php:599
 msgid "Driving"
 msgstr ""
 
-#: includes/class-gmw-maps-api.php:590
+#: includes/class-gmw-maps-api.php:600
 msgid "Walking"
 msgstr ""
 
-#: includes/class-gmw-maps-api.php:591
+#: includes/class-gmw-maps-api.php:601
 msgid "Bicycling"
 msgstr ""
 
-#: includes/class-gmw-maps-api.php:592
+#: includes/class-gmw-maps-api.php:602
 msgid "Transit"
 msgstr ""
 
-#: includes/class-gmw-maps-api.php:595
+#: includes/class-gmw-maps-api.php:605
 msgid "Avoid"
 msgstr ""
 
-#: includes/class-gmw-maps-api.php:596
+#: includes/class-gmw-maps-api.php:606
 msgid "highways"
 msgstr ""
 
-#: includes/class-gmw-maps-api.php:597
+#: includes/class-gmw-maps-api.php:607
 msgid "Tolls"
 msgstr ""
 
-#: includes/class-gmw-maps-api.php:731
+#: includes/class-gmw-maps-api.php:743
 #: plugins/sweetdate-geolocation/includes/class-gmw-sweet-date-geolocation.php:222
 msgid "Get directions"
 msgstr ""
@@ -2760,24 +2777,24 @@ msgstr ""
 msgid " has not added a location yet"
 msgstr ""
 
-#: includes/gmw-geocoding-providers.php:191
+#: includes/gmw-geocoding-providers.php:215
 msgid "The data entered could not be geocoded."
 msgstr ""
 
-#: includes/gmw-geocoding-providers.php:196
+#: includes/gmw-geocoding-providers.php:220
 msgid "Invalid request. Did you enter an address?"
 msgstr ""
 
-#: includes/gmw-geocoding-providers.php:201
-#: includes/gmw-geocoding-providers.php:206
+#: includes/gmw-geocoding-providers.php:225
+#: includes/gmw-geocoding-providers.php:230
 msgid "Something went wrong while retrieving your location."
 msgstr ""
 
-#: includes/gmw-shortcodes.php:40
+#: includes/gmw-shortcodes.php:42
 msgid "Invalid or missing form type."
 msgstr ""
 
-#: includes/gmw-shortcodes.php:88
+#: includes/gmw-shortcodes.php:91
 msgid "Form does not exist."
 msgstr ""
 
@@ -2794,7 +2811,7 @@ msgid "Location confirmed"
 msgstr ""
 
 #: includes/location-form/includes/class-gmw-location-form.php:343
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:124
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:129
 #: plugins/single-location/includes/class-gmw-single-location-widget.php:199
 msgid "No location found"
 msgstr ""
@@ -2854,10 +2871,10 @@ msgstr ""
 #: plugins/members-locator/includes/class-gmw-locations-component.php:132
 #: plugins/members-locator/includes/class-gmw-members-locator-location-tab.php:32
 #: plugins/members-locator/includes/class-gmw-members-locator-location-tab.php:33
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:76
 #: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:81
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:88
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:160
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:86
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:93
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:169
 msgid "Location"
 msgstr ""
 
@@ -2953,12 +2970,12 @@ msgid "locator button"
 msgstr ""
 
 #: includes/template-functions/class-gmw-search-form-helper.php:332
-#: includes/template-functions/gmw-search-form-template-functions.php:27
+#: includes/template-functions/gmw-search-form-template-functions.php:33
 msgid "Submit"
 msgstr ""
 
 #: includes/template-functions/class-gmw-search-form-helper.php:404
-#: plugins/members-locator/includes/gmw-members-locator-template-functions.php:78
+#: plugins/members-locator/includes/gmw-members-locator-template-functions.php:81
 msgid "Search member types"
 msgstr ""
 
@@ -2966,33 +2983,33 @@ msgstr ""
 msgid "Search groups"
 msgstr ""
 
-#: includes/template-functions/class-gmw-template-functions-helper.php:29
+#: includes/template-functions/class-gmw-template-functions-helper.php:35
 msgid "read more..."
 msgstr ""
 
-#: includes/template-functions/class-gmw-template-functions-helper.php:99
-#: includes/template-functions/class-gmw-template-functions-helper.php:157
-#: includes/template-functions/gmw-template-functions.php:149
-#: includes/template-functions/gmw-template-functions.php:187
+#: includes/template-functions/class-gmw-template-functions-helper.php:125
+#: includes/template-functions/class-gmw-template-functions-helper.php:184
+#: includes/template-functions/gmw-template-functions.php:159
+#: includes/template-functions/gmw-template-functions.php:197
 msgid "Prev"
 msgstr ""
 
-#: includes/template-functions/class-gmw-template-functions-helper.php:100
-#: includes/template-functions/class-gmw-template-functions-helper.php:158
-#: includes/template-functions/gmw-template-functions.php:150
-#: includes/template-functions/gmw-template-functions.php:188
+#: includes/template-functions/class-gmw-template-functions-helper.php:126
+#: includes/template-functions/class-gmw-template-functions-helper.php:185
+#: includes/template-functions/gmw-template-functions.php:160
+#: includes/template-functions/gmw-template-functions.php:198
 msgid "Next"
 msgstr ""
 
-#: includes/template-functions/class-gmw-template-functions-helper.php:228
+#: includes/template-functions/class-gmw-template-functions-helper.php:258
 msgid "per page"
 msgstr ""
 
-#: includes/template-functions/class-gmw-template-functions-helper.php:307
+#: includes/template-functions/class-gmw-template-functions-helper.php:345
 msgid "Default order"
 msgstr ""
 
-#: includes/template-functions/class-gmw-template-functions-helper.php:373
+#: includes/template-functions/class-gmw-template-functions-helper.php:417
 msgid "1 location found"
 msgstr ""
 
@@ -3007,31 +3024,31 @@ msgstr ""
 msgid "Hours of operation"
 msgstr ""
 
-#: includes/template-functions/gmw-search-form-template-functions.php:129
+#: includes/template-functions/gmw-search-form-template-functions.php:172
 msgid "Within"
 msgstr ""
 
-#: includes/template-functions/gmw-template-functions.php:223
+#: includes/template-functions/gmw-template-functions.php:233
 msgid "Per page"
 msgstr ""
 
-#: includes/widgets/class-gmw-search-form-widget.php:35
+#: includes/widgets/class-gmw-search-form-widget.php:33
 msgid "Display GEO my WP search form."
 msgstr ""
 
-#: includes/widgets/class-gmw-search-form-widget.php:36
+#: includes/widgets/class-gmw-search-form-widget.php:34
 msgid "GEO my WP Search Form"
 msgstr ""
 
-#: includes/widgets/class-gmw-search-form-widget.php:61
+#: includes/widgets/class-gmw-search-form-widget.php:62
 msgid "Search Locations"
 msgstr ""
 
-#: includes/widgets/class-gmw-search-form-widget.php:62
+#: includes/widgets/class-gmw-search-form-widget.php:63
 msgid "Title"
 msgstr ""
 
-#: includes/widgets/class-gmw-search-form-widget.php:67
+#: includes/widgets/class-gmw-search-form-widget.php:68
 msgid "Form"
 msgstr ""
 
@@ -3044,22 +3061,22 @@ msgid "GEO my WP Current Location"
 msgstr ""
 
 #: plugins/current-location/includes/class-gmw-current-location-widget.php:53
-#: plugins/single-location/includes/class-gmw-single-location-widget.php:57
+#: plugins/single-location/includes/class-gmw-single-location-widget.php:56
 msgid "Widget title"
 msgstr ""
 
 #: plugins/current-location/includes/class-gmw-current-location-widget.php:54
-#: plugins/single-location/includes/class-gmw-single-location-widget.php:58
+#: plugins/single-location/includes/class-gmw-single-location-widget.php:57
 msgid "Enter a title for the widget or leave blank to omit."
 msgstr ""
 
 #: plugins/current-location/includes/class-gmw-current-location-widget.php:62
-#: plugins/single-location/includes/class-gmw-single-location-widget.php:66
+#: plugins/single-location/includes/class-gmw-single-location-widget.php:65
 msgid "Element ID"
 msgstr ""
 
 #: plugins/current-location/includes/class-gmw-current-location-widget.php:63
-#: plugins/single-location/includes/class-gmw-single-location-widget.php:67
+#: plugins/single-location/includes/class-gmw-single-location-widget.php:66
 msgid ""
 "Use the element ID to assign a unique ID to this shortcode. The unique ID "
 "can be useful for styling purposes as well when using the hooks provided by "
@@ -3230,7 +3247,7 @@ msgstr ""
 msgid "Update Location"
 msgstr ""
 
-#: plugins/members-locator/includes/class-gmw-members-locator-form.php:32
+#: plugins/members-locator/includes/class-gmw-members-locator-form.php:27
 msgid "Viewing {from_count} - {to_count} of {total_results} members"
 msgstr ""
 
@@ -3256,37 +3273,39 @@ msgstr ""
 msgid "%s updated new location"
 msgstr ""
 
-#: plugins/members-locator/includes/gmw-members-locator-template-functions.php:129
+#: plugins/members-locator/includes/gmw-members-locator-template-functions.php:135
 msgid "Search Groups"
 msgstr ""
 
-#: plugins/members-locator/includes/gmw-members-locator-template-functions.php:230
+#: plugins/members-locator/includes/gmw-members-locator-template-functions.php:242
 msgid "Age Range (min - max)"
 msgstr ""
 
-#: plugins/members-locator/includes/gmw-members-locator-template-functions.php:231
+#: plugins/members-locator/includes/gmw-members-locator-template-functions.php:243
 msgid "Min"
 msgstr ""
 
-#: plugins/members-locator/includes/gmw-members-locator-template-functions.php:232
+#: plugins/members-locator/includes/gmw-members-locator-template-functions.php:244
 msgid "Max"
 msgstr ""
 
-#: plugins/members-locator/includes/gmw-members-locator-template-functions.php:259
-#: plugins/members-locator/includes/gmw-members-locator-template-functions.php:302
+#: plugins/members-locator/includes/gmw-members-locator-template-functions.php:271
+#: plugins/members-locator/includes/gmw-members-locator-template-functions.php:388
+#: plugins/members-locator/includes/gmw-members-locator-template-functions.php:485
 msgid " -- All -- "
 msgstr ""
 
-#: plugins/members-locator/includes/gmw-members-locator-template-functions.php:356
+#: plugins/members-locator/includes/gmw-members-locator-template-functions.php:324
 msgid "Clear"
 msgstr ""
 
-#: plugins/members-locator/includes/gmw-members-locator-template-functions.php:595
+#. translators: %s for age.
+#: plugins/members-locator/includes/gmw-members-locator-template-functions.php:728
 #, php-format
 msgid " %s Years old"
 msgstr ""
 
-#: plugins/members-locator/includes/gmw-members-locator-template-functions.php:596
+#: plugins/members-locator/includes/gmw-members-locator-template-functions.php:729
 msgid "Age"
 msgstr ""
 
@@ -3439,7 +3458,7 @@ msgid ""
 "post in the list of results."
 msgstr ""
 
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:142
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:147
 msgid "Location found but the address is missing"
 msgstr ""
 
@@ -3474,54 +3493,44 @@ msgstr ""
 msgid "Hours"
 msgstr ""
 
-#: plugins/posts-locator/includes/gmw-posts-locator-search-form-template-functions.php:59
-#, php-format
-msgid "All %s"
-msgstr ""
-
-#: plugins/posts-locator/includes/gmw-posts-locator-search-form-template-functions.php:60
-#, php-format
-msgid "Select %s"
-msgstr ""
-
-#: plugins/posts-locator/includes/gmw-posts-locator-search-form-template-functions.php:86
+#: plugins/posts-locator/includes/gmw-posts-locator-search-form-template-functions.php:95
 msgid "No results match"
 msgstr ""
 
-#: plugins/posts-locator/includes/gmw-posts-locator-search-form-template-functions.php:160
-#: plugins/posts-locator/includes/gmw-posts-locator-search-form-template-functions.php:219
+#: plugins/posts-locator/includes/gmw-posts-locator-search-form-template-functions.php:175
+#: plugins/posts-locator/includes/gmw-posts-locator-search-form-template-functions.php:235
 msgid "Search site"
 msgstr ""
 
-#: plugins/posts-locator/loader.php:136
+#: plugins/posts-locator/loader.php:196
 msgid "Post"
 msgstr ""
 
-#: plugins/single-location/includes/class-gmw-single-location-widget.php:40
+#: plugins/single-location/includes/class-gmw-single-location-widget.php:39
 msgid "Display the location of a single object ( Post, BP member... )."
 msgstr ""
 
-#: plugins/single-location/includes/class-gmw-single-location-widget.php:41
+#: plugins/single-location/includes/class-gmw-single-location-widget.php:40
 msgid "GEO my WP Single Location"
 msgstr ""
 
-#: plugins/single-location/includes/class-gmw-single-location-widget.php:56
+#: plugins/single-location/includes/class-gmw-single-location-widget.php:55
 msgid "Single location"
 msgstr ""
 
-#: plugins/single-location/includes/class-gmw-single-location-widget.php:72
+#: plugins/single-location/includes/class-gmw-single-location-widget.php:71
 msgid "Object"
 msgstr ""
 
-#: plugins/single-location/includes/class-gmw-single-location-widget.php:74
+#: plugins/single-location/includes/class-gmw-single-location-widget.php:73
 msgid "Select the object that you would like to display."
 msgstr ""
 
-#: plugins/single-location/includes/class-gmw-single-location-widget.php:82
+#: plugins/single-location/includes/class-gmw-single-location-widget.php:81
 msgid "Object ID"
 msgstr ""
 
-#: plugins/single-location/includes/class-gmw-single-location-widget.php:83
+#: plugins/single-location/includes/class-gmw-single-location-widget.php:82
 msgid ""
 "Item ID is the ID of the item that you want to display. For example, if you "
 "want to show the location of a specific post, the item ID will be the post "
@@ -3604,11 +3613,11 @@ msgid ""
 "item being displayed. Leave blank for no message."
 msgstr ""
 
-#: plugins/single-location/includes/class-gmw-single-location.php:403
+#: plugins/single-location/includes/class-gmw-single-location.php:416
 msgid "Distance: "
 msgstr ""
 
-#: plugins/single-location/includes/class-gmw-single-location.php:406
+#: plugins/single-location/includes/class-gmw-single-location.php:419
 msgid "Show directions"
 msgstr ""
 
