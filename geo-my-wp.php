@@ -108,11 +108,11 @@ class GEO_MY_WP {
 		'xprofile_fields'                  => '1.5.2', // old slug.
 		'exclude_locations'                => '1.3.2',
 		'exclude_members'                  => '1.3.2', // old slug.
+		'global_maps'                      => '2.4.1',
 		'gmw_kleo_geolocation'             => '1.4.2',
 		'nearby_locations'                 => '1.4',
 		'nearby_posts'                     => '1.4', // old slug.
-		'premium_settings'                 => '2.2',
-		'global_maps'                      => '2.4.1',
+		'premium_settings'                 => '2.2.1',
 		'users_locator'                    => '1.4.1',
 		'wp_users_geo-location'            => '1.4.1', // old slug.
 	);
