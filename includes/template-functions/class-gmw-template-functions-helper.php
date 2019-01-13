@@ -342,7 +342,7 @@ class GMW_Template_Functions_Helper {
 			'id_attr'      => '',
 			'class'        => '',
 			'name'         => $url_px . 'orderby',
-			'label'        => __( 'Default order', 'gmw-premium-settings' ),
+			'label'        => __( 'Default order', 'geo-my-wp' ),
 			'default'      => 'distance',
 			'submitted'    => 0,
 			'ajax_enabled' => false,
