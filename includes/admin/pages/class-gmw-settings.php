@@ -239,7 +239,7 @@ class GMW_Settings {
 									'desc'        => sprintf(
 										/* translators: %1$s: oen <a> tag, %2$s: close </a> tag. */
 										__( 'This API key is responsible for server side geocoding. Without this key some of GEO my WP functions will not work properly. After generating and entering your server API key, you can test it %1$shere%2$s.', 'geo-my-wp' ),
-										'<a href="http://localhost/gmw-dev/wp-admin/admin.php?page=gmw-tools&tab=api_testing" target="_blank">',
+										'<a href=" ' . admin_url( 'admin.php?page=gmw-tools&tab=api_testing' ) . ' ">',
 										'</a>'
 									),
 									'attributes'  => array( 'size' => '50' ),
