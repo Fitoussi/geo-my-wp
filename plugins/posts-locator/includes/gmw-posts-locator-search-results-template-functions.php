@@ -56,13 +56,9 @@ function gmw_get_post_featured_image( $post, $gmw = array() ) {
 	 $output  = '';  
 
     if ( has_post_thumbnail() ) {
-           
-           echo get_the_post_thumbnail( $post, array( 
-	                $gmw['search_results']['image']['width'], 
-	                $gmw['search_results']['image']['height'] 
-	            ) );            
+        
 	    $output .= '<div class="post-thumbnail">';
-		$output .= get_the_post_thumbnail( array( 
+		$output .= get_the_post_thumbnail( $post, array( 
 	                $gmw['search_results']['image']['width'], 
 	                $gmw['search_results']['image']['height'] 
 	            ) ); 
