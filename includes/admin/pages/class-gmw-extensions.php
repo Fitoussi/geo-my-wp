@@ -586,6 +586,14 @@ class GMW_Extensions {
 
 		// move the core add-ons to the beggining of the array
 		$extensions_data = $core_extensions + $extensions_data;
+
+		// Use this filter to exclude extensions from the Extensions page.
+		$exclude_extensions = apply_filters( 'gmw_extensions_page_exclude_extensions', array(), $extensions_data );
+
+		foreach ( $exclude_extensions as $exclude ) {
+			unset( $extensions_data[ $exclude ] );
+		}
+
 		?>
 		<!-- Extensions page wrapper -->
 		<div id="gmw-extensions-page" class="wrap gmw-admin-page">
