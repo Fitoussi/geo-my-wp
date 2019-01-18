@@ -32,9 +32,9 @@ class GMW_Premium_Plugin_Updater {
         
         if ( class_exists( 'GEO_my_WP') ) {
             
-            $updater = get_option( 'gmw_updater_disabled' );
-        
-            if ( ! empty( $updater ) ) {
+            $updater = get_option( 'gmw_extensions_updater' );
+        	
+            if ( empty( $updater ) ) {
                 return;
             }
         }
