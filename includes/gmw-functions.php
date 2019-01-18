@@ -352,15 +352,15 @@ function gmw_update_addon_data( $addon = array() ) {
 function gmw_trigger_error( $message = '', $type = E_USER_NOTICE ) {
 
 	// get debugging data.
-	$debug = debug_backtrace();
-	$message = esc_html__( $message );
+	$debug   = debug_backtrace();
+	$message = esc_html( $message );
 
 	// verify that debuggin data exist to generate custom error message.
 	if ( ! empty( $debug[0] ) ) {
 
 		$debug = $debug[0];
-		$file  = ! empty( $debug['file'] ) ? esc_html__( $debug['file'] ) : 'file name is missing';
-		$line  = ! empty( $debug['line'] ) ? esc_html__( $debug['line'] ) : 'line nunmber is missing';
+		$file  = ! empty( $debug['file'] ) ? esc_html( $debug['file'] ) : 'file name is missing';
+		$line  = ! empty( $debug['line'] ) ? esc_html( $debug['line'] ) : 'line nunmber is missing';
 
 		// generate full error message.
 		$full_message = "{$message} In <b>{$file}</b> on line <b>{$line}</b>";
@@ -369,31 +369,27 @@ function gmw_trigger_error( $message = '', $type = E_USER_NOTICE ) {
 		switch ( $type ) {
 
 			case E_USER_ERROR:
-				echo "<br><b>Fatal error:</b> {$full_message}<br />\n";
-				exit(1);
+				echo "<br><b>Fatal error:</b> {$full_message}<br />\n"; // WPCS: XSS ok.
+				exit( 1 );
 			break;
 
 			case E_USER_WARNING:
-				echo "<br><b>Warning:</b> {$full_message}<br />\n";
-			break;
+				echo "<br><b>Warning:</b> {$full_message}<br />\n"; // WPCS: XSS ok.
+				break;
 
 			case E_USER_NOTICE:
-				echo "<br><b>Notice:</b> {$full_message}<br />\n";
-			break;
+				echo "<br><b>Notice:</b> {$full_message}<br />\n"; // WPCS: XSS ok.
+				break;
 
 			default:
-				echo "<br><b>Unknown error type:</b> {$full_message}<br />\n";
-			break;
+				echo "<br><b>Unknown error type:</b> {$full_message}<br />\n"; // WPCS: XSS ok.
+				break;
 		}
 
-	// otherwise, use built in function.
+		// otherwise, use built in function.
 	} else {
-		trigger_error( $message, $type );
+		trigger_error( $message, $type ); // WPCS: XSS ok.
 	}
-	//echo error_handler( esc_html( $message ), $debug['file'], $debug['line'] );
-
-	//echo 'Notice:' . esc_html( $message );
-	//trigger_error( esc_html( $message ), $type );
 }
 
 /**
