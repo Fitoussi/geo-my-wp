@@ -318,7 +318,7 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 					$option  = trim( $child->name );
 					$checked = ( $child->name === $value ) ? "checked='checked'" : '';
 
-					$output .= '<label><input ' . $checked . ' type="radio" name="xf[' . $field_id . ']" value="' . $option . '" />' . eac_attr( $option ) . '</label>';
+					$output .= '<label><input ' . $checked . ' type="radio" name="xf[' . $field_id . ']" value="' . $option . '" />' . esc_attr( $option ) . '</label>';
 				}
 
 				$output .= '<a href="#" onclick="event.preventDefault();jQuery(this).closest(\'div\').find(\'input\').prop(\'checked\', false);">' . __( 'Clear', 'buddypress' ) . '</a><br/>';
