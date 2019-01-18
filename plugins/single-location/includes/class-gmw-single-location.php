@@ -1,6 +1,12 @@
 <?php
+/**
+ * GEO my WP Single Location class.
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -198,11 +204,20 @@ class GMW_Single_Location {
 		}
 
 		// additional_info replaced by location_meta - remove in the future.
-		if ( empty( $atts['location_meta'] ) && ! empty( $atts['additional_info'] ) ) {
+		/*if ( empty( $atts['location_meta'] ) && ! empty( $atts['additional_info'] ) ) {
 
 			$atts['location_meta'] = $atts['additional_info'];
 
 			gmw_trigger_error( '[gmw_single_location] shortcode attribute additional_info is deprecated since version 3.0. Use location_meta instead.', E_USER_NOTICE );
+
+			unset( $atts['additional_info'] );
+		}*/
+
+		if ( ! empty( $atts['additional_info'] ) ) {
+
+			//$atts['location_meta'] = $atts['additional_info'];
+
+			//gmw_trigger_error( '[gmw_single_location] shortcode attribute additional_info is deprecated since version 3.0. Use location_meta instead.', E_USER_NOTICE );
 
 			unset( $atts['additional_info'] );
 		}
