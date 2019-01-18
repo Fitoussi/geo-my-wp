@@ -990,6 +990,11 @@ function gmw_insert_pt_location_to_db( $location ) {
 	return gmw_replace_pt_location_in_db( $location, true );
 }
 
+function gmw_ps_gmapsul_set_map_icons_via_query( $clauses, $gmw ) {
+	_deprecated_function( 'gmw_ps_gmapsul_set_map_icons_via_query', '2.2.2', 'gmw_ps_ul_set_map_icons_via_query' );
+	return gmw_ps_ul_set_map_icons_via_query( $clauses, $gmw );
+}
+
 function gmw_replace_pt_location_in_db( $location, $insert = false ) {
 
 	$function_name = $insert ? 'gmw_insert_pt_location_to_db' : 'gmw_replace_pt_location_in_db';
