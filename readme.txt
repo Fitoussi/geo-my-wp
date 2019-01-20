@@ -127,8 +127,8 @@ for detailed installation and setup guide see the [documentation](docs.geomywp.c
 
 * Fix: link to API testing page.
 * Fix: post featured image doesn't work properly.
-* Fix: use gmw_trigger_error() function does not show the file name and line number of the actualy error.
-* Fix: fatal error caused by misspelled function name.
+* Fix: use gmw_trigger_error() function does not show the file name and line number of the actual error.
+* Fix: fatal error caused by a misspelled function name.
 * Fix: GEO my WP won't check for new updates. Wrong DB option was being used to check if the updater is enabled.
 * Filter: filter to exclude specific extensions from GEO my WP Extensions page.
 * Enhancement: WordPress coding standards.
