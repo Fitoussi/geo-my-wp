@@ -866,18 +866,19 @@ if ( ! class_exists( 'GMW_License' ) ) :
 	function gmw_display_license_update_notice() {
 
 		// check if updating license key.
-		if ( empty( $_GET['gmw_license_status_notice'] ) ) {
+		if ( empty( $_GET['gmw_license_status_notice'] ) ) { // WPCS: CSRF ok.
 			return;
 		}
 
-		$messages = gmw_license_update_notices();
-		$message  = ! empty( $messages[ $_GET['gmw_license_status_notice'] ] ) ? $messages[ $_GET['gmw_license_status_notice'] ] : $messages['default'];
-		$allow    = array( 'a' => array( 'href' => array() ) );
-		$message  = wp_kses( $message, $allow );
+		$messages      = gmw_license_update_notices();
+		$message       = sanitize_text_field( wp_unslash( $messages[ $_GET['gmw_license_status_notice'] ] ) ); // WPCS: CSRF ok.
+		$allow         = array( 'a' => array( 'href' => array() ) );
+		$message       = wp_kses( $message, $allow );
+		$notice_status = ! empty( $_GET['gmw_notice_status'] ) ? sanitize_text_field( wp_unslash( $_GET['gmw_notice_status'] ) ) : ''; // WPCS: CSRF ok.
 		?>
-		<div class="<?php echo $_GET['gmw_notice_status']; ?>">
+		<div class="<?php echo $notice_status; // WPCS: XSS ok. ?>">
 			<p>
-				<?php echo $message; ?>
+				<?php echo $message; // WPCS: XSS ok. ?>
 			</p>
 		</div>
 		<?php
