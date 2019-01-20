@@ -262,8 +262,6 @@ if ( ! class_exists( 'GMW_Premium_Plugin_Updater' ) ) :
 				// build a plugin list row, with update notification.
 				$wp_list_table = _get_list_table( 'WP_Plugins_List_Table' );
 
-				// <tr class="plugin-update-tr"><td colspan="' . $wp_list_table->get_column_count() . '" class="plugin-update colspanchange">
-
 				echo '<tr class="plugin-update-tr" id="' . $this->slug . '-update" data-slug="' . $this->slug . '" data-plugin="' . $this->slug . '/' . $file . '">'; // WPCS: XSS ok.
 				echo '<td colspan="3" class="plugin-update colspanchange">';
 				echo '<div class="update-message notice inline notice-warning notice-alt">';
@@ -272,14 +270,16 @@ if ( ! class_exists( 'GMW_Premium_Plugin_Updater' ) ) :
 
 				if ( empty( $version_info->download_link ) ) {
 					printf(
+						/* translators: %1$s: plugin's name, %2$s: open <a> tag, %3$s version number, %4$s: close </a> tag. */
 						__( 'There is a new version of %1$s available. %2$sView version %3$s details%4$s.', 'geo-my-wp' ),
 						esc_html( $version_info->name ),
 						'<a target="_blank" class="thickbox" href="' . esc_url( $changelog_link ) . '">',
 						esc_html( $version_info->new_version ),
 						'</a>'
-					);
+					); // WPCS: XSS ok.
 				} else {
 					printf(
+						/* translators: %1$s: plugin's name, %2$s: open <a> tag, %3$s version number, %4$s: close </a> tag. */
 						__( 'There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s.', 'geo-my-wp' ),
 						esc_html( $version_info->name ),
 						'<a target="_blank" class="thickbox" href="' . esc_url( $changelog_link ) . '">',
@@ -287,7 +287,7 @@ if ( ! class_exists( 'GMW_Premium_Plugin_Updater' ) ) :
 						'</a>',
 						'<a href="' . esc_url( wp_nonce_url( self_admin_url( 'update.php?action=upgrade-plugin&plugin=' ) . $this->name, 'upgrade-plugin_' . $this->name ) ) . '">',
 						'</a>'
-					);
+					); // WPCS: XSS ok.
 				}
 
 				do_action( "in_plugin_update_message-{$file}", $plugin, $version_info );
@@ -484,7 +484,7 @@ if ( ! class_exists( 'GMW_Premium_Plugin_Updater' ) ) :
 
 			$data         = $gmw_plugin_data[ $_REQUEST['slug'] ]; // WPCS: CSRF ok, sanitization ok.
 			$beta         = ! empty( $data['beta'] ) ? true : false;
-			$cache_key    = md5( 'gmw_plugin_' . sanitize_key( $_REQUEST['plugin'] ) . '_' . $beta . '_version_info' );
+			$cache_key    = md5( 'gmw_plugin_' . sanitize_key( $_REQUEST['plugin'] ) . '_' . $beta . '_version_info' ); // WPCS: CSRF ok.
 			$version_info = $this->get_cached_version_info( $cache_key );
 
 			if ( false === $version_info ) {
