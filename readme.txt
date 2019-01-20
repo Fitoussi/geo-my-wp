@@ -5,7 +5,7 @@ Tags: Geolocation, Directory, Google Maps, OpenStreetMaps, Store Locator, Geoloc
 Requires at least: 4.3
 Tested up to: 5.0.3
 Buddypress: 2.8
-Stable tag: 3.2
+Stable tag: 3.2.0.1
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -121,9 +121,21 @@ for detailed installation and setup guide see the [documentation](docs.geomywp.c
 
 == Changelog ==
 
+= 3.2.0.1 = 
+
+* Note that version 3.2 was a major release. If you are updating from an earlier version, then backing up your site and/or testing this version on a staging enviroment first is recomended. See the changelog of version 3.2 for more details before updating.
+
+* Fix: link to API testing page.
+* Fix: post featured image doesn't work properly.
+* Fix: use gmw_trigger_error() function does not show the file name and line number of the actualy error.
+* Fix: fatal error caused by misspelled function name.
+* Fix: GEO my WP won't check for new updates. Wrong DB option was being used to check if the updater is enabled.
+* Filter: filter to exclude specific extensions from GEO my WP Extensions page.
+* Enhancement: WordPress coding standards.
+
 = 3.2 = 
 
-* Version 3.2 is a major release. Backing up your site and/or testing this version on a staging enviroment first is recomended.
+* Version 3.2 is a major release. Backing up your site and/or testing this version on a staging enviroment first is recomended. Please see [GEO my WP 3.2](https://geomywp.com/geo-my-wp-3-2/) for more details.
 
 * Version 3.1 was a major release. Read this post [GEO my WP 3.1](https://geomywp.com/geo-my-wp-3-1/) before updating.
 
