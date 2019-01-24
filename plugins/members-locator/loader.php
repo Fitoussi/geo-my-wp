@@ -122,13 +122,8 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 
 		parent::pre_init();
 
-		// clear internal cache when friendship status changes.
-		if ( GMW()->internal_cache ) {
-			foreach ( array( 'post_delete', 'accepted', 'requested', 'rejected', 'withdrawn' ) as $action ) {
-				add_action( 'friends_friendship_' . $action, array( $this, 'flush_user_cache' ) );
-			}
-		}
-		
+		add_action( 'bp_init', array( $this, 'bp_init_functions' ) );
+
 		if ( IS_ADMIN ) {
 			include( 'includes/admin/class-gmw-members-locator-form-editor.php' );
 		}
@@ -170,9 +165,30 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 	}
 
 	/**
+	 * Custom functions on bp_init
+	 */
+	public function bp_init_functions() {
+
+		// Handle members cache.
+		if ( GMW()->internal_cache ) {
+
+			// clear internal cache when friendship status changes.
+			foreach ( array( 'post_delete', 'accepted', 'requested', 'rejected', 'withdrawn' ) as $action ) {
+				add_action( 'friends_friendship_' . $action, array( $this, 'flush_user_cache' ) );
+			}
+
+			// // clear internal cache when updating settings and profile fields
+			add_action( 'xprofile_data_after_save', array( $this, 'flush_user_cache' ) );
+			add_action( 'xprofile_data_after_delete', array( $this, 'flush_user_cache' ) );
+
+			// clear internal cache when changing privacy ( BuddyPress Profile Visibility Manager plugin ).
+			if ( bp_is_settings_component() && is_user_logged_in() && ! empty( $_POST['bppv_save_submit'] ) ) {
+				$this->flush_user_cache();
+			}
+		}
+	}
+	/**
 	 * Clear internal cache.
-	 * 
-	 * @return [type] [description]
 	 */
 	public function flush_user_cache() {
 		GMW_Cache_Helper::flush_cache_by_object( 'user' );
