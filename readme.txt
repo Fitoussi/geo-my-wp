@@ -124,7 +124,7 @@ for detailed installation and setup guide see the [documentation](docs.geomywp.c
 = 3.2.0.1 = 
 
 * Note that version 3.2 was a major release. If you are updating from an earlier version, then backing up your site and/or testing this version on a staging enviroment first is recomended. See the changelog of version 3.2 for more details before updating.
-
+* --------------------------------
 * Fix: link to API testing page.
 * Fix: post featured image doesn't work properly.
 * Fix: use gmw_trigger_error() function does not show the file name and line number of the actual error.
@@ -140,7 +140,7 @@ for detailed installation and setup guide see the [documentation](docs.geomywp.c
 * Version 3.1 was a major release. Read this post [GEO my WP 3.1](https://geomywp.com/geo-my-wp-3-1/) before updating.
 
 * Version 3.0 was a major release. If you are updating from a version earlier than 3.0, it is highly recommended that you read the posts [GEO my WP 3.0 Beta 7](https://geomywp.com/geo-my-wp-3-0-beta-7/) and [GEO my WP Upgrade Process](https://geomywp.com/geo-my-wp-3-0-upgrade-process/) before updating. You should also test this version on a staging environment before updating on your live site.
-
+* --------------------------------
 * New: GEO my WP now requires 2 Google Maps API keys ( when using Google Maps as the maps provider ); A server and a browser API keys. Please read the post [GEO my WP 3.2](https://geomywp.com/geo-my-wp-3-2/) for more details regarding the Server API key and how to generate it.
 * New: New setting input field for Google Maps Server API key. Please visit GEO my WP's Settings page in the dashboard of your site after the update.
 * New: a testing tool for Google Maps Server API added to the Tools page. The tool will test if the Google Maps Server API key is working properly.
@@ -162,9 +162,9 @@ for detailed installation and setup guide see the [documentation](docs.geomywp.c
 * Tweak: save the post title as location name if none provided.
 * Tweak: add premise DB column to the search queries.
 * Tweak: update dashboard links to the new documentation site.
-* Filter: ‘gmw_geocoder_endpoint_args’ to modify the geocoder endpoint args.
-* Filter: ‘gmw_geocoded_location_output’ to modify the geocoder location output.
-* Filter: ‘gmw_form_db_fields’ filter to modify the db_fields of a search query.
+* Filter: ëgmw_geocoder_endpoint_argsí to modify the geocoder endpoint args.
+* Filter: ëgmw_geocoded_location_outputí to modify the geocoder location output.
+* Filter: ëgmw_form_db_fieldsí filter to modify the db_fields of a search query.
 * Hooks: new filter 'gmw_get_location_address_allowed_html' to allow HTML in the address output.
 * Hooks: new filter to modify the content of the gmw excerpt function before the more link is added to it.
 * Hooks: new action hooks before and after form fields.
@@ -183,7 +183,7 @@ for detailed installation and setup guide see the [documentation](docs.geomywp.c
 * Fix: Issue with Buddypress Xprofile Custom Fields Type plugin's fields.
 * Fix: issue with the temporary fix for the post status issue.
 * Fix: use empty() instead of false to verify the address in the search results and prevent it from returning blank.
-* Fix: move the 'region' argument to the beginning of google maps URL to prevent the '®ion' rendering issue which results in failed geocoding.
+* Fix: move the 'region' argument to the beginning of google maps URL to prevent the 'Æion' rendering issue which results in failed geocoding.
 * Fix: Location form map won't update when changing the address or coordinates if the map marker was previously dragged.
 * Fix: linked address does not work properly.
 * Fix: Verify that the location form values exist when the form first loads to prevent error messages.
@@ -198,7 +198,7 @@ for detailed installation and setup guide see the [documentation](docs.geomywp.c
 * Version 3.1 is a major release. Read this post [GEO my WP 3.1](https://geomywp.com/geo-my-wp-3-1/) before updating.
 
 * Version 3.0 is a major release. If you are updating from a version earlier than 3.0, it is highly recommended that you read the posts [GEO my WP 3.0 Beta 7](https://geomywp.com/geo-my-wp-3-0-beta-7/) and [GEO my WP Upgrade Process](https://geomywp.com/geo-my-wp-3-0-upgrade-process/) before updating. You should also test this version on a staging environment before updating on your live site.
-
+* --------------------------------
 * New: GEO my WP now support LeafLet and OpenStreetMaps.
 * New: Choose between LeafLet or Google Maps as the maps provider.
 * New: settings for maps providers in GEO my WP Settings page.
@@ -235,7 +235,7 @@ for detailed installation and setup guide see the [documentation](docs.geomywp.c
 * Fix: Location section in Edit Post page error. JS error caused by missing $ in ready() function.
 * Fix: delete_cookie function JS error.
 * New: clear location button for Current Location widget/shortcode.
-* Filter: new JS filter ‘gmw_search_form_address_pre_geocoding’ to modify the address before it is geocoded.
+* Filter: new JS filter ëgmw_search_form_address_pre_geocodingí to modify the address before it is geocoded.
 * Tweak: Use include_once instead of include for some files to prevent errors.
 * Tweak: Use array() instead of [] to support PHP 5.3.x.
 Enhancement: order posts by distance then by post title. When posts have the same exact location, they will then be ordered by the post title.
@@ -286,28 +286,28 @@ Enhancement: order posts by distance then by post title. When posts have the sam
 * Fix: results do not show on page load when using the search_results shortcode.
 * Fix: pass results page permalink to the deprecated variable to support custom search form template files that were created previously to Geo my WP 3.0.
 * Fix: [gmw_post_info] deprecated shortcode doesn't display location meta. Use [gmw_location_fields] instead.
-* Fix: days & hours deprecated function won’t display data.
+* Fix: days & hours deprecated function wonít display data.
 * Fix: added days & hours location meta to the v3 importer.
 * Fix: In Sweet-date Geolocation load search query hook just before the members' loop, to be able to override sweet-date search query.
-* Fix: Sweet-date Geolocation order by distance doesn’t work properly.
+* Fix: Sweet-date Geolocation order by distance doesnít work properly.
 * Fix: change meta_key in the location_meta table from varchar(255) to varchar(191) to prevent errors in some environments.
 * Fix: internal cache rand() number too big on some OS and results in fatal error.
 * Fix: Update text domain in some files.
 * Fix: Users v3 importer error when street_number and street_name columns are missing from the database table.
 * Fix: v3 importer generate Javascript error that prevents the importer from working.
-* Fix: Replace wp_doing_ajax function with defined( ‘DOING_AJAX’ ) to support earlier version of Wordpress.
+* Fix: Replace wp_doing_ajax function with defined( ëDOING_AJAXí ) to support earlier version of Wordpress.
 * Fix: Various typos.
 * Function: gmw_get_location_meta_values() to output specific location meta fields based on object type and object ID.
 * Shortcode: [gmw_location_fields] to output specific address or location meta fields.
 * New gmw_get_post_location_fields() function and [gmw_post_location_fields] shortcode, to output specific address or location meta fields of a pots.
 * Enhancement: Choose between post_content and post_excerpt to use as an excerpt in search results.
-* Tweak: Use the “the_content” filter in excerpt by default. This Can be changed to use ‘wpautop’, using a filter, if there is a conflict.
+* Tweak: Use the ìthe_contentî filter in excerpt by default. This Can be changed to use ëwpautopí, using a filter, if there is a conflict.
 * Tweak: Load some deprecated functions in front*end only to prevent errors in the back*end.
 * Tweak: Remove Members Locator tab on Import/export page. It is not being used at the moment.
 * Styling: Adjust form editor width.
 * Filter: new filter 'gmw_search_forms_submit_button_args' to modify submit button args.
-* Filter: new Javascript action hook - ’gmw_map_markers_loop_single_marker’.
-* Filter: new Javascript filter - ‘gmw_standard_info_window_options’
+* Filter: new Javascript action hook - ígmw_map_markers_loop_single_markerí.
+* Filter: new Javascript filter - ëgmw_standard_info_window_optionsí
 * New: option to select the post content or post excerpt as the excerpt in the list of results.
 
 = 3.0.1 =
@@ -417,7 +417,7 @@ Version 3.0 is a major release. It is highly recommended that you read [this pos
 - Improved structure of search forms and search results Stylesheet
 - Added missing space when displaying taxonomies in search results
 - Improve "Gray" search forms and results template files.
-- New, responsive search form and results templates: Purple for "Posts Locator" and "Yellow" for "Members locator”.
+- New, responsive search form and results templates: Purple for "Posts Locator" and "Yellow" for "Members locatorî.
 
 = 2.4.1 = 
 
