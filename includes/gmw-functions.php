@@ -358,6 +358,11 @@ function gmw_trigger_error( $message = '', $type = E_USER_NOTICE ) {
 	// verify that debuggin data exist to generate custom error message.
 	if ( ! empty( $debug[0] ) ) {
 
+		// show errors only if debug is set to true.
+		if ( WP_DEBUG !== true && WP_DEBUG !== 'true' ) {
+			return;
+		}
+
 		$debug = $debug[0];
 		$file  = ! empty( $debug['file'] ) ? esc_html( $debug['file'] ) : 'file name is missing';
 		$line  = ! empty( $debug['line'] ) ? esc_html( $debug['line'] ) : 'line nunmber is missing';
