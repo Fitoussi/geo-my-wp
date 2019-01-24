@@ -384,7 +384,7 @@ class GMW_Members_Locator_Form extends GMW_Form {
 
 		if ( ! $internal_cache || empty( $members_template ) ) {
 
-			// filtet the members query.
+			// filter the members query.
 			// Use high priority to allow other plugins to use this filter before GEO my WP does.
 			add_action( 'bp_user_query_uid_clauses', array( $this, 'modify_members_query_clauses' ), 500, 2 );
 			add_filter( 'bp_core_get_users', array( $this, 'append_location_data_to_results' ), 30 );
