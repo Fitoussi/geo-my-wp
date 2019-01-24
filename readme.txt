@@ -5,7 +5,7 @@ Tags: Geolocation, Directory, Google Maps, OpenStreetMaps, Store Locator, Geoloc
 Requires at least: 4.3
 Tested up to: 5.0.3
 Buddypress: 2.8
-Stable tag: 3.2.0.1
+Stable tag: 3.2.0.2
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,16 @@ for detailed installation and setup guide see the [documentation](docs.geomywp.c
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 3.2.0.2 = 
+
+* Note that version 3.2 was a major release. If you are updating from an earlier version, then backing up your site and/or testing this version on a staging enviroment first is recomended. See the changelog of version 3.2 for more details before updating.
+* --------------------------------
+* Fix: enable GEO my WP debugging only when WP_DEBUG is set too true.
+* Fix: verify that member data exists during members query to prevent error messages.
+* Fix: use a higher hook priority for the 'modify_members_query_clauses' function to allow other plugins to modify the members' query clauses before GEO my WP search query does.
+* Fix: clear GEO my WP's internal cache when a member updates his profile page or his visibility settings ( using BuddyPress Profile Visibility Manager plugin ).
+* Enhancement: Wordpress coding standards.
 
 = 3.2.0.1 = 
 
