@@ -275,8 +275,10 @@ class GMW_Members_Locator_Form extends GMW_Form {
 		// merge users data with locations data.
 		foreach( $this->locations as $location ) {
 
-			foreach ( $users[$location->id] as $key => $value ) {
-				$location->$key = $value;
+			if ( ! empty( $users[$location->id] ) ) {
+				foreach ( $users[$location->id] as $key => $value ) {
+					$location->$key = $value;
+				}
 			}
 
 			$temp[] = $location;
@@ -366,13 +368,14 @@ class GMW_Members_Locator_Form extends GMW_Form {
 		if ( ! $internal_cache || false === ( $members_template = get_transient( $query_args_hash ) ) ) {
 
 			// filtet the members query.
-			add_action( 'bp_user_query_uid_clauses', array( $this, 'modify_members_query_clauses' ), 30, 2 );
+			// Use high priority to allow other plugins to use this filter before GEO my WP does.
+			add_action( 'bp_user_query_uid_clauses', array( $this, 'modify_members_query_clauses' ), 500, 2 );
 			add_filter( 'bp_core_get_users',         array( $this, 'append_location_data_to_results' ), 30 );
-			
+
 			// query members.
 			$results = bp_has_members( $this->form['query_args'] ) ? true : false;
 
-			remove_action( 'bp_user_query_uid_clauses', array( $this, 'modify_members_query_clauses' ), 30, 2 );
+			remove_action( 'bp_user_query_uid_clauses', array( $this, 'modify_members_query_clauses' ), 500, 2 );
 			remove_filter( 'bp_core_get_users',         array( $this, 'append_location_data_to_results' ), 30 );
 
 			// set new query in transient
