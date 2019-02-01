@@ -58,23 +58,17 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 	 */
 	public function get_info_window_args( $post ) {
 
-		if ( isset( $this->form['info_window']['image'] ) ) {
+		if ( empty( $this->form['info_window']['image']['enabled'] ) ) {
 
-			if ( '' === $this->form['info_window']['image']['enabled'] ) {
+			$image = false;
 
-				$image = false;
-
-			} else {
-				$image = get_the_post_thumbnail(
-					$post->ID,
-					array(
-						$this->form['info_window']['image']['width'],
-						$this->form['info_window']['image']['height'],
-					)
-				);
-			}
 		} else {
-			$image = get_the_post_thumbnail( $post->ID, array( 200, 200 ) );
+			$image = gmw_get_post_featured_image(
+				$post,
+				$this->form,
+				array(),
+				array( 'class' => 'skip-lazy' )
+			);
 		}
 
 		return array(
@@ -375,5 +369,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 		if ( absint( $this->form['ID'] ) === absint( $form['ID'] ) ) {
 			remove_action( 'the_post', array( $this, 'the_post' ), 5 );
 		}
+
+		wp_reset_postdata();
 	}
 }
