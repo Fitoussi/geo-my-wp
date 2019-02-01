@@ -551,11 +551,15 @@ class GMW_Single_Location {
 
 		$locations = array(
 			0 => array(
+				'ID'                  => $this->location_data->object_id,
+				'location_id'         => $this->location_data->ID,
+				'object_id'           => $this->location_data->object_id,
+				'object_type'         => $this->location_data->object_type,
 				'lat'                 => $this->location_data->lat,
 				'lng'                 => $this->location_data->lng,
-				'info_window_content' => $this->info_window_content(),
 				'map_icon'            => apply_filters( 'gmw_sl_post_map_icon', $this->args['map_icon_url'], $this->args, $this->location_data, $this->user_position, $this ),
 				'icon_size'           => $this->args['map_icon_size'],
+				'info_window_content' => $this->info_window_content(),
 			),
 		);
 
