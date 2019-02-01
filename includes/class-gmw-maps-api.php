@@ -478,12 +478,12 @@ class GMW_Maps_API {
 		$output['wrap'] = '<div class="gmw-info-window-inner ' . esc_attr( $args['type'] ) . '" data-location_id="' . absint( $location->location_id ) . '" data-object="' . esc_attr( $location->object_type ) . '" data-prefix="' . esc_attr( $args['prefix'] ) . '">';
 
 		// Look for image.
-		if ( '' !== $args['image_url'] || '' !== $args['image'] ) {
-			if ( '' !== $args['image_url'] ) {
-				$output['image'] = '<a class="image" href="' . $args['url'] . '"><img tag="' . esc_attr( $args['title'] ) . '" src="' . esc_html( $args['image_url'] ) . '" /></a>';
-			} else {
-				$output['image'] = '<a class="image" href="' . $args['url'] . '">' . $args['image'] . '</a>';
-			}
+		if ( ! empty( $args['image_url'] ) ) {
+
+			$output['image'] = '<a class="image" href="' . $args['url'] . '"><img class="skip-lazy gmw-image" tag="' . esc_attr( $args['title'] ) . '" src="' . esc_html( $args['image_url'] ) . '" /></a>';
+
+		} elseif ( ! empty( $args['image'] ) ) {
+			$output['image'] = '<a class="image" href="' . $args['url'] . '">' . $args['image'] . '</a>';
 		}
 
 		// title.
