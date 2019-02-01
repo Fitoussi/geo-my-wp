@@ -51,41 +51,84 @@ function gmw_pt_get_tax_query_args( $tax_args = array(), $gmw ) {
 }
 
 /**
- * Get posts' featured image.
+ * Get posts featured image.
  *
- * @param  object $post the post object.
- * @param  array  $gmw  gmw form.
+ * @param  object|integer $post the post object or post ID.
+ *
+ * @param  array          $gmw  gmw form.
+ *
+ * @param  array|string   $size image size in pixels. Will override the size provided in $gmw if any.
+ *
+ * @param  array          $attr image attributes.
  *
  * @return HTML element.
  */
-function gmw_get_post_featured_image( $post, $gmw = array() ) {
+function gmw_get_post_featured_image( $post = 0, $gmw = array(), $size = '', $attr = array() ) {
 
 	$output = '';
 
+	// If image size was not provided we are going to use
+	// the size from the form settings if exists.
+	if ( empty( $size ) ) {
+
+		$size = 'post-thumbnail';
+
+		// If form provide image size.
+		if ( ! empty( $gmw['search_results']['image']['width'] ) && ! empty( $gmw['search_results']['image']['height'] ) ) {
+
+			$size = array(
+				$gmw['search_results']['image']['width'],
+				$gmw['search_results']['image']['height'],
+			);
+		}
+	}
+
+	// Make sure the class gmw-image is added to all images.
+	if ( isset( $attr['class'] ) ) {
+		$attr['class'] .= ' gmw-image';
+	} else {
+		$attr['class'] = 'gmw-image';
+	}
+
+	// filter the image args.
+	$args = apply_filters(
+		'gmw_pt_post_featured_image_args',
+		array(
+			'size' => $size,
+			'attr' => $attr,
+		),
+		$post,
+		$gmw
+	);
+
+	// Look for post thumbnail.
 	if ( has_post_thumbnail() ) {
 
 		$output .= '<div class="post-thumbnail">';
 		$output .= get_the_post_thumbnail(
 			$post,
-			array(
-				$gmw['search_results']['image']['width'],
-				$gmw['search_results']['image']['height'],
-			)
+			$args['size'],
+			$args['attr']
 		);
 		$output .= '</div>';
 
+		// Otherise, use the default "No image".
 	} else {
 
+		if ( ! is_array( $args['size'] ) ) {
+			$args['size'] = array( 200, 200 );
+		}
+
 		$output .= '<div class="post-thumbnail no-image">';
-		$output .= '<img ';
+		$output .= '<img class="gmw-image"';
 		$output .= 'src="' . GMW_IMAGES . '/no-image.jpg" ';
-		$output .= 'width=" ' . esc_attr( $gmw['search_results']['image']['width'] ) . '" ';
-		$output .= 'height=" ' . esc_attr( $gmw['search_results']['image']['height'] ) . '" ';
+		$output .= 'width=" ' . esc_attr( $args['size'][0] ) . '" ';
+		$output .= 'height=" ' . esc_attr( $args['size'][1] ) . '" ';
 		$output .= '/>';
 		$output .= '</div>';
 	}
 
-	return apply_filters( 'gmw_pt_post_feature_image', $output, $post, $gmw );
+	return apply_filters( 'gmw_pt_post_feature_image', $output, $post, $gmw, $size, $attr );
 }
 
 /**
