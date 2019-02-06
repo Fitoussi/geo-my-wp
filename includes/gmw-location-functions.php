@@ -1,6 +1,25 @@
 <?php
+/**
+ * GEO my WP - location functions.
+ *
+ * The class queries posts based on location.
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
+}
+
+/**
+ * Check if location exists in database.
+ *
+ * @param  integer $location_id location ID.
+ *
+ * @return boolean
+ */
+function gmw_is_location_exists( $location_id = 0 ) {
+	return GMW_Location::exists( $location_id );
 }
 
 /**
@@ -34,7 +53,7 @@ function gmw_get_location( $args = 0, $output = OBJECT, $cache = true ) {
 		// deprecated way of passing arguments. Use one of the methods above first argument instead.
 	} elseif ( is_string( $args ) && gmw_verify_id( $output ) ) {
 
-		//gmw_trigger_error( 'You are using a deprecated way of passing arguments to the gmw_get_location() function. Do not pass object type and object ID as the first and second arguments. Instead, pass the location ID or an array of object_type and object_id key/values as the first argument.' );
+		/** gmw_trigger_error( 'You are using a deprecated way of passing arguments to the gmw_get_location() function. Do not pass object type and object ID as the first and second arguments. Instead, pass the location ID or an array of object_type and object_id key/values as the first argument.' ); */
 
 		return GMW_Location::get_by_object( $args, $output, $cache );
 
