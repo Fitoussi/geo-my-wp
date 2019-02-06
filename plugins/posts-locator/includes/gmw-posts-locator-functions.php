@@ -99,7 +99,7 @@ function gmw_get_the_terms( $post_id = 0, $taxonomy ) {
 
 	// Cache is disabled for this function for now. It fills up the database pretty quickly.
 	// look for cache helper class.
-	/*if ( class_exists( 'GMW_Cache_Helper' ) && GMW()->internal_cache ) {
+	/** if ( class_exists( 'GMW_Cache_Helper' ) && GMW()->internal_cache ) {
 
 		// check for terms in transient.
 		$hash  = md5( wp_json_encode( array( $post_id, $taxonomy ) ) );
