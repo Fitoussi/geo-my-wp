@@ -295,20 +295,27 @@ if ( ! class_exists( 'GMW_License' ) ) :
 		 *
 		 * @var array
 		 */
-		public $item_ids = array(
-			'xprofile_fields'             => 670,
-			'formidable_geolocation'      => 54725,
-			'global_maps'                 => 2602,
-			'gravity_forms_geo_fields'    => 2273,
-			'bp_groups_locator'           => 4647,
-			'gmw_kleo_geolocation'        => 42902,
-			'nearby_posts'                => 7991,
-			'premium_settings'            => 668,
-			'geo_job_manager'             => 5417,
-			'wp_users_geo-location'       => 11188,
-			'resume_manager_geo-location' => 8547,
-			'geo_members_directory'       => 2347,
-			'exclude_members'             => 800,
+		public static $item_ids = array(
+			'ajax_forms'                       => 147860,
+			'bp_groups_locator'                => 4647,
+			'groups_locator'                   => 4647, // old slug.
+			'bp_members_directory_geolocation' => 2347,
+			'geo_members_directory'            => 2347, // old slug.
+			'bp_xprofile_geolocation'          => 670,
+			'xprofile_fields'                  => 670, // old slug.
+			'exclude_locations'                => 800,
+			'exclude_members'                  => 800, // old slug.
+			'global_maps'                      => 2602,
+			'gmw_kleo_geolocation'             => 42902,
+			'nearby_locations'                 => 7991,
+			'nearby_posts'                     => 7991, // old slug.
+			'premium_settings'                 => 668,
+			'users_locator'                    => 11188,
+			'wp_users_geo-location'            => 11188, // old slug.
+			'formidable_geolocation'           => 54725,
+			'gravity_forms_geo_fields'         => 2273,
+			'geo_job_manager'                  => 5417,
+			'resume_manager_geo-location'      => 8547,
 		);
 
 		/**
@@ -331,7 +338,7 @@ if ( ! class_exists( 'GMW_License' ) ) :
 			$this->messages       = gmw_license_update_notices();
 
 			// if item ID missing get it from the array of items id.
-			if ( empty( $this->item_id ) && ! empty( $this->item_ids[ $license_name ] ) ) {
+			if ( empty( $this->item_id ) && ! empty( self::$item_ids[ $license_name ] ) ) {
 				$this->item_id = $this->item_ids[ $license_name ];
 			}
 		}
@@ -544,7 +551,7 @@ if ( ! class_exists( 'GMW_License' ) ) :
 		}
 
 		// set new transient.
-		set_transient( 'gmw_verify_license_keys', true, DAY_IN_SECONDS );
+		set_transient( 'gmw_verify_license_keys', true, DAY_IN_SECONDS * 3 );
 
 		// get license keys.
 		$license_keys = get_option( 'gmw_license_data' );
@@ -556,8 +563,19 @@ if ( ! class_exists( 'GMW_License' ) ) :
 		// loop through and check all license keys.
 		foreach ( $license_keys as $license_name => $values ) {
 
-			// key addon data.
-			$addon_data     = gmw_get_addon_data( $license_name );
+			// If GEO my WP exists, use its function.
+			if ( function_exists( 'gmw_get_addon_data' ) ) {
+
+				$addon_data = gmw_get_addon_data( $license_name );
+				$item_id    = ! empty( $addon_data['item_id'] ) ? absint( $addon_data['item_id'] ) : '';
+				$item_name  = ! empty( $addon_data['item_name'] ) ? urlencode( $addon_data['item_name'] ) : '';
+
+				// Otherwise, for stand alone plugins.
+			} else {
+				$item_id   = ! empty( GMW_License_Key::$item_ids[ $license_name ] ) ? absint( GMW_License_Key::$item_ids[ $license_name ] ) : '';
+				$item_name = $license_name;
+			}
+
 			$license_key    = trim( $values['key'] );
 			$license_status = $values['status'];
 
@@ -566,9 +584,9 @@ if ( ! class_exists( 'GMW_License' ) ) :
 				$api_params = array(
 					'edd_action' => 'check_license',
 					'license'    => $license_key,
-					'item_id'    => ! empty( $addon_data['item_id'] ) ? absint( $addon_data['item_id'] ) : '',
+					'item_id'    => $item_id,
 					'url'        => home_url(),
-					'item_name'  => ! empty( $addon_data['item_name'] ) ? urlencode( $addon_data['item_name'] ) : '',
+					'item_name'  => $item_name,
 				);
 
 				// Call the custom API.
