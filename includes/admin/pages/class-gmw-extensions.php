@@ -772,7 +772,7 @@ class GMW_Extensions {
 						/* if ( ! empty( $extension['is_core'] ) && $extension['status'] != 'active' ) { ?>
 							<div class="gmw-extension-ribbon-wrapper"><div class="gmw-extension-ribbon free"><?php _e( 'Free Add-on', 'geo-my-wp' ); ?></div></div>
 						<?php } */
-?>
+						?>
 						<!-- New add-on -->
 						<?php if ( ! $extension['installed'] && ! empty( $extension['new_addon'] ) ) { ?>                        
 							<div class="gmw-extension-ribbon-wrapper"><div class="gmw-extension-ribbon blue"><?php _e( 'New Add-on', 'geo-my-wp' ); ?></div></div>   
