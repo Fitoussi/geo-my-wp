@@ -581,14 +581,23 @@ class GMW_Extensions {
 			}
 		}
 
-		// sort add-ons by name
+		// sort add-ons by name.
 		array_multisort( $names, SORT_ASC, $extensions_data );
 
-		// move the core add-ons to the beggining of the array
+		// move the core add-ons to the beggining of the array.
 		$extensions_data = $core_extensions + $extensions_data;
 
+		// extensions to exclude.
+		$excluded_extensions = array(
+			'formidable_geolocation',
+			'geo_job_manager',
+			'resume_manager_geo-location',
+			'job_manager_geolocation_bundle',
+			'gravity_forms_geo_fields',
+		);
+
 		// Use this filter to exclude extensions from the Extensions page.
-		$exclude_extensions = apply_filters( 'gmw_extensions_page_exclude_extensions', array(), $extensions_data );
+		$exclude_extensions = apply_filters( 'gmw_extensions_page_exclude_extensions', $excluded_extensions, $extensions_data );
 
 		foreach ( $exclude_extensions as $exclude ) {
 			unset( $extensions_data[ $exclude ] );
