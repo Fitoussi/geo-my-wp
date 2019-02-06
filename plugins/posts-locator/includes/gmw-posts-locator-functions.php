@@ -71,7 +71,7 @@ function gmw_get_terms( $taxonomy = 'category', $args = array() ) {
 			$terms = get_terms( $taxonomy, $args );
 
 			// save terms in transient.
-			set_transient( $hash, $terms, MONTH_IN_SECONDS );
+			set_transient( $hash, $terms, DAY_IN_SECONDS * 7 );
 		}
 	} else {
 
@@ -97,8 +97,9 @@ function gmw_get_the_terms( $post_id = 0, $taxonomy ) {
 
 	$terms = false;
 
+	// Cache is disabled for this function for now. It fills up the database pretty quickly.
 	// look for cache helper class.
-	if ( class_exists( 'GMW_Cache_Helper' ) && GMW()->internal_cache ) {
+	/*if ( class_exists( 'GMW_Cache_Helper' ) && GMW()->internal_cache ) {
 
 		// check for terms in transient.
 		$hash  = md5( wp_json_encode( array( $post_id, $taxonomy ) ) );
@@ -112,12 +113,14 @@ function gmw_get_the_terms( $post_id = 0, $taxonomy ) {
 			$terms = get_the_terms( $post_id, $taxonomy );
 
 			// save terms in transient.
-			set_transient( $hash, $terms, MONTH_IN_SECONDS );
+			set_transient( $hash, $terms, DAY_IN_SECONDS * 7 );
 		}
 	} else {
 
 		$terms = get_the_terms( $post_id, $taxonomy );
-	}
+	}*/
+
+	$terms = get_the_terms( $post_id, $taxonomy );
 
 	return $terms;
 }
