@@ -311,8 +311,11 @@ class GMW_Geocoder {
 						// hook after geocoding.
 						do_action( 'gmw_geocoded_location', $response['result'], $response, $address_hash );
 
+						// Modify cache expiration time.
+						$expiration = apply_filters( 'gmw_geocoder_transient_expiration', DAY_IN_SECONDS * 7 );
+
 						// cache location.
-						set_transient( 'gmw_geocoded_' . $address_hash, $response['result'], 365 * DAY_IN_SECONDS );
+						set_transient( 'gmw_geocoded_' . $address_hash, $response['result'], $expiration );
 
 						// we need to pass the output via $location_output.
 						$location_output = $response['result'];
