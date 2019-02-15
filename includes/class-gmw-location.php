@@ -56,9 +56,19 @@ class GMW_Location {
 		'%s',
 		'%s',
 		'%s',
+		//'%f',
 		'%s',
 		'%s',
 	);
+
+	/**
+	 * Get the default format which can be modified via filter.
+	 *
+	 * @return [type] [description]
+	 */
+	public static function get_format() {
+		return apply_filters( 'gmw_locations_table_default_format', self::$format );
+	}
 
 	/**
 	 * Get locations table
@@ -89,36 +99,40 @@ class GMW_Location {
 			$user_id = 1;
 		}
 
-		return array(
-			'ID'				=> 0,
-			'object_type'       => '',
-			'object_id'         => 0,
-			'blog_id'           => gmw_get_blog_id(),
-			'user_id'           => $user_id,
-			'status'            => 1,
-			'parent'            => 0,
-			'featured'          => 0,
-			'title'             => '',
-			'latitude'          => 0.000000,
-			'longitude'         => 0.000000,
-			'street_number'     => '',
-			'street_name'       => '',
-			'street'            => '',
-			'premise'           => '',
-			'neighborhood'      => '',
-			'city'              => '',
-			'county'            => '',
-			'region_name'       => '',
-			'region_code'       => '',
-			'postcode'          => '',
-			'country_name'      => '',
-			'country_code'      => '',
-			'address'           => '',
-			'formatted_address' => '',
-			'place_id'          => '',
-			'map_icon'          => '_default.png',
-			'created'           => '0000-00-00 00:00:00',
-			'updated'           => '0000-00-00 00:00:00',
+		return apply_filters(
+			'gmw_locations_table_default_values',
+			array(
+				'ID'                => 0,
+				'object_type'       => '',
+				'object_id'         => 0,
+				'blog_id'           => gmw_get_blog_id(),
+				'user_id'           => $user_id,
+				'status'            => 1,
+				'parent'            => 0,
+				'featured'          => 0,
+				'title'             => '',
+				'latitude'          => 0.000000,
+				'longitude'         => 0.000000,
+				'street_number'     => '',
+				'street_name'       => '',
+				'street'            => '',
+				'premise'           => '',
+				'neighborhood'      => '',
+				'city'              => '',
+				'county'            => '',
+				'region_name'       => '',
+				'region_code'       => '',
+				'postcode'          => '',
+				'country_name'      => '',
+				'country_code'      => '',
+				'address'           => '',
+				'formatted_address' => '',
+				'place_id'          => '',
+				'map_icon'          => '_default.png',
+				//'radius'			=> 0.0,
+				'created'           => current_time( 'mysql' ),
+				'updated'           => current_time( 'mysql' ),
+			)
 		);
 	}
 
@@ -309,7 +323,7 @@ class GMW_Location {
 
 		// parse location args with default location args
 		$location_data = wp_parse_args( $args, self::default_values() );
-		
+
 		// verify country code
 		if ( empty( $location_data['country_code'] ) || strlen( $location_data['country_code'] ) != 2 ) {
 
@@ -407,7 +421,7 @@ class GMW_Location {
 				$table,
 				$location_data,
 				array( 'ID' => $location_id ),
-				self::$format,
+				self::get_format(),
 				array( '%d' )
 			);
 
@@ -426,7 +440,7 @@ class GMW_Location {
 			$location_data = array_intersect_key( $location_data, self::default_values() );
 
 			// insert new location to database
-			$wpdb->insert( $table, $location_data, self::$format );
+			$wpdb->insert( $table, $location_data, self::get_format() );
 
 			// get the new location ID
 			$location_id = $wpdb->insert_id;
