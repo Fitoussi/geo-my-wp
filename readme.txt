@@ -135,9 +135,9 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 * Tweak: pass additional data to the map location.
 * Function: gmw_is_location_exists( $id ) to check if location exists using location ID.
 * Tweak: 'gmw_verify_license_keys' transient expiration is now 3 days instead of 1 day.
-* Tweak: when verifying licenses, modify the function that get the add-on data so it could be used with stand alone plugin without getting a fatal error of gmw_get_addon_data() when GEO my WP is not installed.
-* Tweak: save geocoded data in transient for 7 days only instead of 365 to reduce transients.
-* Tweak: exclude non GEO my WP extensions from the Extensions page.
+* Tweak: when verifying licenses, modify the function that gets the add-on data so it could be used with a stand-alone plugin without getting a fatal error of gmw_get_addon_data() when GEO my WP is not installed.
+* Tweak: save geocoded data in a transient for 7 days only instead of 365 to reduce transients.
+* Tweak: exclude non-GEO my WP extensions from the Extensions page.
 * Tweak: reduce cache expiration.
 * Tweak: disable internal cache for gmw_get_the_terms() to reduce transients.
 * Tweak: remove the 'post_title' from the orderly to improve the SQL query.
