@@ -215,13 +215,18 @@ class GMW_Installer {
 				address varchar( 255 ) NOT NULL default '',
 				formatted_address VARCHAR( 255 ) NOT NULL,
 				place_id VARCHAR( 255 ) NOT NULL,
-				map_icon VARCHAR(50) NOT NULL ,
-				created DATETIME NOT NULL default '0000-00-00 00:00:00',
-				updated DATETIME NOT NULL default '0000-00-00 00:00:00',
+				map_icon VARCHAR(50) NOT NULL,
+				/*radius NUMERIC( 6,1 ) NOT NULL,*/
+				created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				PRIMARY KEY ID (ID),
 				KEY coordinates (latitude,longitude),
 				KEY latitude (latitude),
 				KEY longitude (longitude),
+				KEY object_type (object_type),
+				KEY object_id (object_id),
+				KEY blog_id (blog_id),
+				KEY user_id (user_id),
 				KEY city (city),
 				KEY region (region_name),
 				KEY postcode (postcode),
@@ -310,12 +315,56 @@ class GMW_Installer {
 			update_option( 'gmw_options', $options );
 		}
 
-		// Get column data.
+		// Modify location meta key type.
 		$column = $wpdb->get_results( "DESCRIBE {$wpdb->base_prefix}gmw_locationmeta meta_key" );
 
-		// Modify column data.
 		if ( ! empty( $column ) && 'varchar(255)' == $column[0]->Type ) {
-			$wpdb->get_results( "ALTER TABLE {$wpdb->base_prefix}gmw_locationmeta MODIFY meta_key varchar(191)" );
+			$wpdb->query( "ALTER TABLE {$wpdb->base_prefix}gmw_locationmeta MODIFY meta_key varchar(191)" );
+		}
+
+		// locations table name
+		$locations_table = $wpdb->base_prefix . 'gmw_locations';
+
+		// check if table already exists
+		$table_exists = $wpdb->get_results( "SHOW TABLES LIKE '{$locations_table}'", ARRAY_A );
+
+		// Do tasks if table exists
+		if ( count( $table_exists ) !== 0 ) {
+
+			// Modify the default value of date columns if needed.
+			$column = $wpdb->get_results( "DESCRIBE {$locations_table} created" );
+
+			if ( $column[0]->Default === '0000-00-00 00:00:00' )  {
+				$wpdb->query( "
+					ALTER TABLE {$locations_table}
+					MODIFY created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+					MODIFY updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"
+				);
+			}
+
+			// create new radius column if not exists.
+			$column = $wpdb->get_results( "SHOW COLUMNS FROM {$locations_table} LIKE 'radius'" ); // WPCS: db call ok, cache ok.
+
+			if ( ! empty( $column ) ) {
+				$wpdb->query( "ALTER TABLE {$locations_table} CHANGE COLUMN `radius` `lRadius` NUMERIC( 6,1 ) NOT NULL" ); // WPCS: db call ok, cache ok.
+			}
+
+			/*if ( empty( $column ) ) {
+				$wpdb->query( "ALTER TABLE {$locations_table} ADD COLUMN radius NUMERIC( 6,1 ) NOT NULL AFTER map_icon" ); // WPCS: db call ok, cache ok.
+			}*/
+
+			// Add indexes if not exist.
+			$index = $wpdb->get_results( "SHOW INDEX FROM {$locations_table} WHERE Key_name = 'object_type'" );
+
+			if ( empty( $index ) ) {
+				$wpdb->query( "
+					ALTER TABLE {$locations_table}
+					ADD INDEX object_type ( object_type ),
+					ADD INDEX object_id ( object_id ),
+					ADD INDEX blog_id ( blog_id ),
+					ADD INDEX user_id ( user_id )"
+				);
+			}
 		}
 	}
 
