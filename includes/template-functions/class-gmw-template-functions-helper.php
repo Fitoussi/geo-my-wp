@@ -114,8 +114,8 @@ class GMW_Template_Functions_Helper {
 
 		$defaults = array(
 			'id'                 => 0,
-			'base'               => '',
-			'format'             => '',
+			//'base'               => '',
+			//'format'             => '',
 			'total'              => '1',
 			'current'            => '',
 			'show_all'           => false,
@@ -126,21 +126,24 @@ class GMW_Template_Functions_Helper {
 			'next_text'          => __( 'Next', 'geo-my-wp' ),
 			'type'               => 'array',
 			'add_args'           => false,
-			'add_fragment'       => '',
-			'before_page_number' => '',
-			'after_page_number'  => '',
+			//'add_fragment'       => '',
+			//'before_page_number' => '',
+			//'after_page_number'  => '',
 			'page_name'          => 'page',
 		);
 
+		// is front or single page? we treat pagination differently.
+		if ( is_front_page() || is_single() ) {
+			$page_name = 'page'; 
+		} else {
+			$page_name        = $args['page_name'];
+			$defaults['base'] = add_query_arg( $page_name, '%#%' );
+		}
+		
 		$args = wp_parse_args( $args, $defaults );
 		$args = apply_filters( 'gmw_get_pagination_args', $args );
 
-		$page_name     = is_front_page() ? 'page' : $args['page_name'];
 		$args['total'] = ceil( $args['total'] );
-
-		if ( '' === $args['base'] ) {
-			$args['base'] = add_query_arg( $page_name, '%#%' );
-		}
 
 		if ( '' === $args['current'] ) {
 			$args['current'] = max( 1, get_query_var( $page_name ) );
@@ -270,7 +273,7 @@ class GMW_Template_Functions_Helper {
 		$id      = absint( $args['id'] );
 		$id_attr = '' !== $args['id_attr'] ? 'id="' . esc_attr( $args['id_attr'] ) . '"' : '';
 
-		$paged_name     = is_front_page() ? 'page' : esc_attr( $args['page_name'] );
+		$paged_name     = ( is_front_page() || is_single() ) ? 'page' : esc_attr( $args['page_name'] );
 		$selected_value = isset( $_GET[ $args['name'] ] ) ? sanitize_text_field( wp_unslash( $_GET[ $args['name'] ] ) ) : reset( $args['per_page'] ); // WPCS: CSRF ok.
 
 		$output = '';
