@@ -7,7 +7,7 @@
  * Author: Eyal Fitoussi
  * Author URI: http://www.geomywp.com
  * Requires at least: 4.5
- * Tested up to: 5.0.3
+ * Tested up to: 5.1
  * Buddypress: 2.8 or higher
  * Text Domain: geo-my-wp
  * Domain Path: /languages
