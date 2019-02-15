@@ -9,6 +9,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
+	return;
+}
+
 /**
  * GMW main shortcode displaying the form elements
  *
