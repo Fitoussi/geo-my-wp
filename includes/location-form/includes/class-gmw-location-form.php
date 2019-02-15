@@ -1263,6 +1263,9 @@ class GMW_Location_Form {
 		// map icon if exists
 		$location['map_icon'] = ! empty( $location['map_icon'] ) ? $location['map_icon'] : '_default.png';
 
+		// radius if exists
+		//$location['radius'] = ! empty( $location['radius'] ) ? $location['radius'] : 0.0;
+
 		$location_args = array(
 			'ID'				=> $location_id,
 			'object_type'       => $location['object_type'],
@@ -1290,6 +1293,7 @@ class GMW_Location_Form {
 			'formatted_address' => $location['formatted_address'],
 			'place_id'          => $location['place_id'],
 			'map_icon'          => $location['map_icon'],
+			//'radius'            => $location['radius'],
 		);
 
 		// filter location args before updating location
