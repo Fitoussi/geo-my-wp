@@ -3,9 +3,9 @@ Contributors: ninjew, Eyal Fitoussi
 Donate link: https://www.paypal.me/fitoussi
 Tags: Geolocation, Directory, Google Maps, OpenStreetMaps, Store Locator, Geolocator, Geotagging, Geocode, Mapping, Proximity search, Zipcode, Geolocate posts, Address search, Distance, Google maps, Directions, Locations, Geo, Members locator, Geolocate members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
 Requires at least: 4.3
-Tested up to: 5.0.3
+Tested up to: 5.1
 BuddyPress: 2.8
-Stable tag: 3.2.0.2
+Stable tag: 3.2.1
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -22,7 +22,7 @@ With GEO my WP, creating a real estate, events, directory, classifieds, social n
 
 Visit [GEO my WP website](https://geomywp.com) form more information.
 
-Check out the [live demo](demo.geomywp.com).
+Check out the [live demo](https://demo.geomywp.com).
 
 == Key features of GEO my WP ==
 
@@ -89,7 +89,7 @@ Yes, GEO my WP is already a powerful plugin out of the box. However, together wi
 * Go to Plugins screen and find the newly uploaded Plugin in the list.
 * Click Activate Plugin to activate it.
 
-for detailed installation and setup guide see the [documentation](docs.geomywp.com).
+for detailed installation and setup guide see the [documentation](https://docs.geomywp.com).
 
 == Frequently Asked Questions ==
 
@@ -120,6 +120,31 @@ for detailed installation and setup guide see the [documentation](docs.geomywp.c
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 3.2.1 =
+
+* Note that version 3.2 was a major release. If you are updating from an earlier version, then backing up your site and/or testing this version on a staging environment first is recommended. See the changelog of version 3.2 for more details before updating.
+* --------------------------------
+* Compatible with WordPress 5.1
+* Fix: add wp_reset_postdata(); to reset GEO my WP queries and prevent issues such as post comments showing after the results.
+* Fix: pagination issue when form is on the front-page.
+* Enhancement: improve the gmw_get_post_featured_image() function.
+* Enhancement: add indexes to the locations table to improve search queries performance.
+* Tweak: add 'skip-lazy' class for info-window images to prevent conflict with image-lazy plugins.
+* Tweak: use gmw_get_post_featured_image() instead of get_the_post_thumbnail() function throughout the plugin.
+* Tweak: pass additional data to the map location.
+* Function: gmw_is_location_exists( $id ) to check if location exists using location ID.
+* Tweak: 'gmw_verify_license_keys' transient expiration is now 3 days instead of 1 day.
+* Tweak: when verifying licenses, modify the function that get the add-on data so it could be used with stand alone plugin without getting a fatal error of gmw_get_addon_data() when GEO my WP is not installed.
+* Tweak: save geocoded data in transient for 7 days only instead of 365 to reduce transients.
+* Tweak: exclude non GEO my WP extensions from the Extensions page.
+* Tweak: reduce cache expiration.
+* Tweak: disable internal cache for gmw_get_the_terms() to reduce transients.
+* Tweak: remove the 'post_title' from the orderly to improve the SQL query.
+* Tweak: remove where clause of coordinates to improve the SQL query.
+* Tweak: use the current time in the ‘created’ and ‘updated’ columns of the default locations table values.
+* Function: GMW_Location::get_format() function to get the format of the table instead of using static variable.
+* Filter: ‘gmw_locations_table_default_format’ to modify the table format.
 
 = 3.2.0.2 = 
 
