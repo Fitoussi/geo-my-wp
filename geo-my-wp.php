@@ -3,7 +3,7 @@
  * Plugin Name: GEO my WP
  * Plugin URI: http://www.geomywp.com
  * Description: GEO my WP is an adavanced geolocation, mapping, and proximity search plugin. Geotag post types and BuddyPress members, and create advanced, proximity search forms to search and find locations based on address, radius,categories and more.
- * Version: 3.2.0.2
+ * Version: 3.2.1
  * Author: Eyal Fitoussi
  * Author URI: http://www.geomywp.com
  * Requires at least: 4.5
@@ -32,7 +32,7 @@ class GEO_MY_WP {
 	 *
 	 * @var string
 	 */
-	public $version = '3.2.0.2';
+	public $version = '3.2.1';
 
 	/**
 	 * GEO my WP & Extensions options.
@@ -91,7 +91,7 @@ class GEO_MY_WP {
 	 *
 	 * @var boolean
 	 */
-	public $internal_cache_expiration = MONTH_IN_SECONDS;
+	public $internal_cache_expiration = DAY_IN_SECONDS;
 
 	/**
 	 * Minimum versions required for this version of GEO my WP.
@@ -115,6 +115,7 @@ class GEO_MY_WP {
 		'premium_settings'                 => '2.2.1',
 		'users_locator'                    => '1.4.1',
 		'wp_users_geo-location'            => '1.4.1', // old slug.
+		//'per_location_radius'              => '1.1', // old slug.
 	);
 
 	/**
