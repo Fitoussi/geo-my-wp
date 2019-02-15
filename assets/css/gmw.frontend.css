@@ -568,7 +568,7 @@ ul.gmw-geocoder-suggested-results li {
 	}
 
 	.gmw-form-wrapper select {
-		height: 30px;
+		min-height: 30px;
 	}
 
 	.gmw-form-wrapper .gmw-form-field-wrapper {
