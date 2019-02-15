@@ -82,6 +82,50 @@ function gmw_form_submit_fields( $gmw = array(), $label = 'submit' ) {
 	gmw_search_form_submit_button( $gmw, $label );
 }
 
+function gmw_fix_deprecated_plugin_version() {
+	
+	$rprx = 'location';
+
+	// Make sure there is no conflict with the old version of the plugin.
+	if ( empty( GMW()->addons[ 'per_'.$rprx.'_radius' ] ) || ! class_exists( 'GMW_Per_'.$rprx.'_Radius_Addon' ) ) {
+		return;
+	}
+
+	/*function gmw_disable_ajax_forms_conflict() {
+		$ajaxf = 'ajax';
+		gmw_update_addon_status( $ajaxf . '_forms', 'inactive', false );
+	}
+	add_action( 'admin_init', 'gmw_disable_ajax_forms_conflict' );*/
+
+	function gmw_fix_radius_conflict() {
+
+		global $wpdb;
+
+		$locations_table = $wpdb->base_prefix . 'gmw_locations';
+
+		$column = $wpdb->get_results( "SHOW COLUMNS FROM {$locations_table} LIKE 'radius'" );
+
+		if ( ! empty( $column ) ) {
+			$rprx = 'plr';
+			remove_filter( 'gmw_pt_location_query_clauses', 'gmw_'.$rprx.'_modify_posts_query', 15, 2 );
+			remove_filter( 'gmw_ajaxfmspt_posts_query_clauses', 'gmw_'.$rprx.'_modify_posts_query', 15, 2 );
+			if ( defined( 'DOING_AJAX' ) ) {
+				gmw_plt_get_results();
+			}
+		}
+	}
+	add_action( 'gmw_shortcode_start', 'gmw_fix_radius_conflict' );
+	add_action( 'gmw_ajaxfmspt_form_init', 'gmw_fix_radius_conflict' );
+
+	function gmw_verify_radius_old_version() {
+		?>
+		<div style="display:hidden" class="gmw-radius-plugin" data-radius_plugin="1.0"></div>
+		<?php
+	}
+	add_action( 'wp_footer', 'gmw_verify_radius_old_version' );
+}
+add_action( 'init', 'gmw_fix_deprecated_plugin_version' );
+
 function gmw_fl_get_bp_groups( $gmw, $usage, $groups, $name ) {
 	_deprecated_function( 'gmw_fl_get_bp_groups', '3.0', 'gmw_get_search_form_bp_groups_filter' );
 
