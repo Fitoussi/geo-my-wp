@@ -20,7 +20,7 @@ if ( empty( $_GET['page'] ) || 'gmw-tools' !== $_GET['page'] ) { // WPCS: CSRF o
 require_once 'tabs/reset-gmw.php';
 require_once 'tabs/system-info.php';
 require_once 'tabs/api-testing.php';
-require_once 'tabs/cache.php';
+//require_once 'tabs/cache.php';
 
 /**
  * GMW Tools page
@@ -80,7 +80,7 @@ class GMW_Tools {
 		$tabs                   = array();
 		$tabs['system_info']    = __( 'System Info', 'geo-my-wp' );
 		$tabs['api_testing']    = __( 'API Testing', 'geo-my-wp' );
-		$tabs['internal_cache'] = __( 'Cache', 'geo-my-wp' );
+		//$tabs['internal_cache'] = __( 'Cache', 'geo-my-wp' );
 		$tabs['reset_gmw']      = __( 'Uninstall GEO my WP', 'geo-my-wp' );
 
 		return apply_filters( 'gmw_tools_tabs', $tabs );
