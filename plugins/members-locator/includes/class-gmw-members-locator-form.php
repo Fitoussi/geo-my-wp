@@ -162,8 +162,8 @@ class GMW_Members_Locator_Form extends GMW_Form {
 				$bet_lng2 = $lng + ( $distance / ( $degree * cos( deg2rad( $lat ) ) ) );
 
 				$where .= " AND gmw_locations.object_type = 'user' ";
-				$where .= "AND gmw_locations.latitude BETWEEN {$bet_lat1} AND {$bet_lat2}";
-				$where .= "AND gmw_locations.longitude BETWEEN {$bet_lng1} AND {$bet_lng2} ";
+				$where .= " AND gmw_locations.latitude BETWEEN {$bet_lat1} AND {$bet_lat2}";
+				$where .= " AND gmw_locations.longitude BETWEEN {$bet_lng1} AND {$bet_lng2} ";
 
 				// filter locations based on the distance.
 				$having = "Having distance <= {$distance} OR distance IS NULL";
