@@ -174,14 +174,14 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 
 				$clauses['where'] .= " AND gmw_locations.object_type = 'post'";
 				$clauses['where'] .= " AND gmw_locations.latitude BETWEEN {$bet_lat1} AND {$bet_lat2}";
-				$clauses['where'] .= " AND gmw_locations.longitude BETWEEN {$bet_lng1} AND {$bet_lng2} ";
+				//$clauses['where'] .= " AND gmw_locations.longitude BETWEEN {$bet_lng1} AND {$bet_lng2} ";
 
 				// filter locations based on the distance.
 				$clauses['having'] = "HAVING distance <= {$distance} OR distance IS NULL";
 
-				// order by distance then title ( when posts have the same exact location ).
+				// order by distance
 				if ( 'distance' === $this->form['query_args']['orderby'] ) {
-					$clauses['orderby'] = 'distance, post_title';
+					$clauses['orderby'] = 'distance';
 				}
 			}
 		} else {
