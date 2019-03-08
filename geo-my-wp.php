@@ -111,11 +111,11 @@ class GEO_MY_WP {
 		'global_maps'                      => '2.4.1',
 		'gmw_kleo_geolocation'             => '1.4.2',
 		'nearby_locations'                 => '1.4',
-		'nearby_posts'                     => '1.4', // old slug.
+		'nearby_posts'                     => '1.4',   // old slug.
 		'premium_settings'                 => '2.2.1',
 		'users_locator'                    => '1.4.1',
 		'wp_users_geo-location'            => '1.4.1', // old slug.
-		//'per_location_radius'              => '1.1', // old slug.
+		'per_location_radius'              => '1.0',
 	);
 
 	/**
@@ -489,6 +489,7 @@ class GEO_MY_WP {
 		include GMW_PLUGINS_PATH . '/single-location/loader.php';
 		include GMW_PLUGINS_PATH . '/posts-locator/loader.php';
 		include GMW_PLUGINS_PATH . '/members-locator/loader.php';
+		include GMW_PLUGINS_PATH . '/bp-profile-search-geolocation/loader.php';
 		include GMW_PLUGINS_PATH . '/current-location/loader.php';
 		include GMW_PLUGINS_PATH . '/sweetdate-geolocation/loader.php';
 	}
