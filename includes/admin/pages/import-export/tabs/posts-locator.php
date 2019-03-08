@@ -386,6 +386,11 @@ class GMW_Post_Custom_Fields_Importer extends GMW_Locations_Importer {
 	 */
 	protected $records_per_batch = 15;
 
+	/**
+	 * Form Message.
+	 *
+	 * @var string
+	 */
 	public $form_message = '';
 
 	/**
