@@ -503,7 +503,13 @@ class GMW_Maps_API {
 
 		// directions link.
 		if ( $args['directions_link'] ) {
-			$output['directions'] = gmw_get_directions_link( $location, $gmw );
+
+			$from_coords = array(
+				'lat' => isset( $gmw['lat'] ) ? $gmw['lat'] : '',
+				'lng' => isset( $gmw['lng'] ) ? $gmw['lng'] : '',
+			);
+
+			$output['directions'] = gmw_get_directions_link( $location, $from_coords );
 		}
 
 		// location meta.
@@ -734,27 +740,36 @@ class GMW_Maps_API {
 	public static function get_directions_link( $args = array() ) {
 
 		$defaults = array(
-			'id'       => 0,
-			'from_lat' => '',
-			'from_lng' => '',
-			'to_lat'   => '',
-			'to_lng'   => '',
-			'units'    => 'imperial',
-			'label'    => __( 'Get directions', 'geo-my-wp' ),
-			'language' => gmw_get_option( 'general_settings', 'language_code', 'EN' ),
-			'region'   => gmw_get_option( 'general_settings', 'country_code', 'US' ),
+			'id'        => 0,
+			'from_lat'  => '',
+			'from_lng'  => '',
+			'to_lat'    => '',
+			'to_lng'    => '',
+			'units'     => 'imperial',
+			'label'     => __( 'Get directions', 'geo-my-wp' ),
+			'language'  => gmw_get_option( 'general_settings', 'language_code', 'EN' ),
+			'region'    => gmw_get_option( 'general_settings', 'country_code', 'US' ),
+			'link_only' => false,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 		$args = apply_filters( 'gmw_get_directions_link_args', $args );
 
-		$from_latlng = ( empty( $args['from_lat'] ) || empty( $args['from_lng'] ) ) ? '' : "{$args['from_lat']},{$args['from_lng']}";
-		$to_latlng   = ( empty( $args['to_lat'] ) || empty( $args['to_lng'] ) ) ? '' : "{$args['to_lat']},{$args['to_lng']}";
-		$units       = 'imperial' === $args['units'] ? 'ptm' : 'ptk';
-		$link        = esc_url( "http://maps.google.com/maps?f=d&hl={$args['language']}&region={$args['region']}&doflg={$units}&saddr={$from_latlng}&daddr={$to_latlng}&ie=UTF8&z=12" );
-		$label       = esc_html( $args['label'] );
+		$args['from_latlng'] = ( empty( $args['from_lat'] ) || empty( $args['from_lng'] ) ) ? '' : "{$args['from_lat']},{$args['from_lng']}";
+		$args['to_latlng']   = ( empty( $args['to_lat'] ) || empty( $args['to_lng'] ) ) ? '' : "{$args['to_lat']},{$args['to_lng']}";
+		$args['units_type']  = 'imperial' === $args['units'] ? 'ptm' : 'ptk';
+		$args['link']        = esc_url( "http://maps.google.com/maps?f=d&hl={$args['language']}&region={$args['region']}&doflg={$args['units_type']}&saddr={$args['from_latlng']}&daddr={$args['to_latlng']}&ie=UTF8&z=12" );
 
-		return "<a class=\"gmw-get-directions\" title=\"{$label}\" href=\"{$link}\" target=\"_blank\">{$label}</a>";
+		// retrun Google Maps link only.
+		if ( $args['link_only'] ) {
+			return $args['link'];
+		}
+
+		$args['label'] = esc_html( $args['label'] );
+
+		$output = "<a class=\"gmw-get-directions\" title=\"{$args['label']}\" href=\"{$args['link']}\" target=\"_blank\">{$args['label']}</a>";
+
+		return apply_filters( 'gmw_get_directions_link_output', $output, $args );
 	}
 
 	/**
