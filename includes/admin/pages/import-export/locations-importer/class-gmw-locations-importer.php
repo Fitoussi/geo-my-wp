@@ -112,7 +112,21 @@ class GMW_Locations_Importer {
 	/**
 	 * [__construct description]
 	 */
-	public function __construct() {}
+	public function __construct() {
+
+		// Allow modiying some form arguments.
+		$form_args = apply_filters( 'gmw_importer_args', array(
+			'form_message'         => $this->form_message,
+			'update_locations'     => $this->update_locations,
+			'records_per_batch'    => $this->records_per_batch,
+			'location_meta_fields' => $this->location_meta_fields,
+		), $this );
+
+		$this->form_message         = $form_args['form_message'];
+		$this->update_locations     = $form_args['update_locations'];
+		$this->records_per_batch    = $form_args['records_per_batch'];
+		$this->location_meta_fields = $form_args['location_meta_fields'];
+	}
 
 	/**
 	 * Importer form
@@ -451,6 +465,7 @@ class GMW_Locations_Importer {
 			if ( empty( $location_id ) ) {
 				
 				$this->location_failed( $location, $location_args );
+
 				continue;
 			}
 
