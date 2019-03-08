@@ -889,7 +889,7 @@ function gmw_get_location_fields_shortcode( $args ) {
  * Usually will be used in the search results.
  *
  * @param  mixed $location location object or location ID.
- * @param  mixed $fields   address field as array or comma separated string.
+ * @param  mixed $fields   address fields as array or comma separated string.
  * @param  array $gmw      the form being used if in the search results.
  *
  * @return string       address
@@ -903,6 +903,8 @@ function gmw_get_location_address( $location, $fields = array( 'formatted_addres
 
 		gmw_trigger_error( 'Since GEO my WP 3.0 gmw_get_location_address function excepts an additional $fields argument. You need to modify the arguments pass to the function. gmw_get_location_address( $location, $fields, $gmw ).' );
 	}
+
+	$fields = apply_filters( 'gmw_get_location_address_fields', $fields, $location, $gmw );
 
 	if ( ! is_array( $fields ) ) {
 		$fields = explode( ',', $fields );
@@ -1325,6 +1327,11 @@ function gmw_get_directions_link( $location, $from_coords = array(), $label = ''
 
 		$args['from_lat'] = $from_coords[0];
 		$args['from_lng'] = $from_coords[1];
+
+	} elseif ( ! empty( $from_coords['lat'] ) && ! empty( $from_coords['lng'] ) ) {
+
+		$args['from_lat'] = $from_coords['lat'];
+		$args['from_lng'] = $from_coords['lng'];
 
 	} else {
 
