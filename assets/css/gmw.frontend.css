@@ -2505,6 +2505,114 @@ div.gmw-sl-directions-link-wrapper div.trigger-wrapper {
 /********** Single Location Add-on ends **********/
 
 /*************************************************/
+/******** BP Profile Search Geolocation **********/
+/*************************************************/
+
+[id^="gmw_location_ph"] {
+	display: none;
+}
+
+.gmw-bpsgeo-location-fields-inner {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	flex-wrap: wrap
+}
+
+.gmw-bpsgeo-location-field-wrap {
+	float: left;
+	padding: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	margin-left: 2%;
+	-webkit-box-flex: 1;
+	-moz-box-flex: 1;
+	-webkit-flex: 1;
+	-ms-flex: 1;
+	flex: 1;
+	flex-grow: 1
+}
+
+.gmw-bpsgeo-address-field-wrap {
+	position: relative;
+	margin-left: 0;
+}
+
+.gmw-bpsgeo-address-field-wrap input.gmw-bpsgeo-address-field {
+	width: 100%;
+	box-sizing: border-box;
+	padding-right: 25px;
+}
+
+.gmw-bpsgeo-address-field-wrap i.gmw-bpsgeo-locator-button {
+	position: absolute;
+	right: 0;
+	padding: 8px 5px;
+	cursor: pointer;
+	top: 0;
+}
+
+.gmw-bpsgeo-distance-field-wrap {
+	text-align: right;
+	max-width: 20%;
+	min-width: 70px;
+}
+
+.gmw-bpsgeo-units-field-wrap {
+	text-align: right;
+	max-width: 15%;
+	min-width: 60px;
+}
+
+.gmw-bpsgeo-units-field-wrap select,
+.gmw-bpsgeo-distance-field-wrap select {
+	width: 100%;
+}
+
+.widget_bps_widget .gmw-bpsgeo-address-field-wrap {
+	flex: none;
+	width: 100%;
+}
+
+.widget_bps_widget .gmw-bpsgeo-distance-field-wrap {
+	max-width: initial;
+	margin-top: 20px;
+	margin-left: 0;
+}
+
+.widget_bps_widget .gmw-bpsgeo-units-field-wrap {
+	max-width: initial;
+	margin-top: 20px;
+}
+
+@media (max-width:800px) {
+
+	.gmw-bpsgeo-address-field-wrap {
+		flex: none;
+		width: 100%;
+	}
+
+	.gmw-bpsgeo-distance-field-wrap {
+		max-width: initial;
+		margin-top: 20px;
+		margin-left: 0;
+	}
+
+	.gmw-bpsgeo-units-field-wrap {
+		max-width: initial;
+		margin-top: 20px;
+	}
+}
+
+/******** BP Profile Search Geolocation end **********/
+
+/*************************************************/
 /**************** Sweet-date Start ***************/
 /*************************************************/
 
