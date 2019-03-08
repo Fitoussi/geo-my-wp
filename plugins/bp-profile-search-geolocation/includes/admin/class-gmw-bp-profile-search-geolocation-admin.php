@@ -198,7 +198,7 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 			echo '</div>';
 		}
 
-		$label       = __( 'manage options', 'GEO my WP' );
+		$label       = __( 'manage options', 'geo-my-wp' );
 		$warning     = __( 'You can only have one location field per form.', 'geo-my-wp' );
 		$loc_enabled = '0';
 		$loc_element = '';

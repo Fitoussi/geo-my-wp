@@ -36,7 +36,7 @@ class GMW_BP_Profile_Search_Geolocation_Addon extends GMW_Addon {
 	 *
 	 * @var string
 	 */
-	public $name = 'Buddypress Profile Search Geolocation';
+	public $name = 'BuddyPress Profile Search Geolocation';
 
 	/**
 	 * Prefix
@@ -79,13 +79,6 @@ class GMW_BP_Profile_Search_Geolocation_Addon extends GMW_Addon {
 	 * @var string
 	 */
 	public $description = 'Geolocation integration with BP Profile Search plguin.';
-
-	/**
-	 * Extension's page.
-	 *
-	 * @var string
-	 */
-	public $addon_page = 'https://geomywp.com/extensions/buddypress-profile-search-geolocation';
 
 	/**
 	 * Support page.
