@@ -1,5 +1,13 @@
 <?php
-// Exit if accessed directly
+/**
+ * GEO my WP BP Members Locator actions.
+ *
+ * @author Eyal Fitoussi
+ *
+ * @package gmw-my-wp
+ */
+
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -7,13 +15,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Filter activity by location
  *
- * @param  [type] $where [description]
- * @param  [type] $args  [description]
+ * @param  [type] $where [description].
+ *
+ * @param  [type] $args  [description].
+ *
  * @return [type]        [description]
  */
 function gmw_fl_filter_location_activity( $where, $args ) {
 
-	if ( isset( $_COOKIE['bp-activity-filter'] ) && $_COOKIE['bp-activity-filter'] == 'gmw_member_location_updated' ) {
+	if ( isset( $_COOKIE['bp-activity-filter'] ) && 'gmw_member_location_updated' === $_COOKIE['bp-activity-filter'] ) {
 
 		if ( ! isset( $where['filter_sql'] ) ) {
 
@@ -31,7 +41,8 @@ add_filter( 'bp_activity_get_where_conditions', 'gmw_fl_filter_location_activity
 /**
  * Use the member name as the location title if no title provided.
  *
- * @param  [type] $location [description]
+ * @param  array $args arguments.
+ *
  * @return [type]           [description]
  */
 function gmw_fl_get_member_name( $args ) {
@@ -48,13 +59,11 @@ add_filter( 'gmw_lf_user_location_args_before_location_updated', 'gmw_fl_get_mem
 
 /**
  * Add location item to dropdown menu filter
- *
- * @return [type] [description]
  */
 function gmw_fl_location_filter_options() {
-?>
-	<option value="gmw_member_location_updated"><?php _e( 'Member Location', 'geo-my-wp' ); ?></option>
-<?php
+	?>
+	<option value="gmw_member_location_updated"><?php esc_html_e( 'Member Location', 'geo-my-wp' ); ?></option>
+	<?php
 }
 add_action( 'bp_activity_filter_options', 'gmw_fl_location_filter_options', 10 );
 add_action( 'bp_member_activity_filter_options', 'gmw_fl_location_filter_options', 10 );
@@ -66,7 +75,7 @@ add_action( 'bp_member_activity_filter_options', 'gmw_fl_location_filter_options
  */
 function gmw_members_locator_activity_actions() {
 
-	// abort if activity is not active
+	// abort if activity is not active.
 	if ( ! bp_is_active( 'activity' ) ) {
 		return false;
 	}
@@ -82,22 +91,23 @@ add_action( 'bp_register_activity_actions', 'gmw_members_locator_activity_action
  *
  * @since 3.0
  *
- * @param  object $location   updated location
- * @param  array  $form_values location form values
+ * @param  object $user_location  updated location.
+ *
+ * @param  array  $form_values    location form values.
  *
  * @return mixed
  */
 function gmw_after_member_location_updated( $user_location, $form_values ) {
 
-	// proceed only if BP member Location updated
-	if ( empty( $form_values['gmw_lf_slug'] ) || $form_values['gmw_lf_slug'] != 'members_locator' ) {
+	// proceed only if BP member Location updated.
+	if ( empty( $form_values['gmw_lf_slug'] ) || 'members_locator' !== $form_values['gmw_lf_slug'] ) {
 		return;
 	}
 
-	// verify User ID
+	// verify User ID.
 	if ( empty( $form_values['gmw_location_form']['object_id'] ) ) {
 
-		trigger_error( 'Invalid user ID.', E_USER_NOTICE );
+		gmw_trigger_error( 'Invalid user ID.' );
 
 		return;
 
@@ -107,15 +117,15 @@ function gmw_after_member_location_updated( $user_location, $form_values ) {
 	}
 
 	// hook from previous versions of GEO my WP
-	// do something after location updated
+	// do something after location updated.
 	do_action( 'gmw_fl_after_location_saved', $user_id, $user_location, $form_values );
 
-	// filter allows to disable activity update
+	// filter allows to disable activity update.
 	if ( ! apply_filters( 'gmw_fl_disable_location_activity_update', false ) ) {
 
-		include_once( 'gmw-members-locator-activity.php' );
+		include_once 'gmw-members-locator-activity.php';
 
-		// update activity
+		// update activity.
 		if ( function_exists( 'gmw_record_member_location_activity' ) ) {
 			gmw_record_member_location_activity( $user_id, $user_location );
 		}
