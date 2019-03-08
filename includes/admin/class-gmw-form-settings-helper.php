@@ -35,7 +35,186 @@ class GMW_Form_Settings_Helper {
         }
 
         return $output;
-    }
+	}
+
+    public static function get_form_field( $field = array(), $name_attr = '', $value = '' ) {
+
+		$default_value = isset( $field['default'] ) ? $field['default'] : '';
+		$field_name    = esc_attr( $field['name'] );
+		$id_attr       = 'gmw-form-field-' . $field_name;
+		$field_type    = isset( $field['type'] ) ? esc_attr( $field['type'] ) : 'text';
+		$placeholder   = ! empty( $field['placeholder'] ) ? 'placeholder="' . esc_attr( $field['placeholder'] ) . '"' : '';
+		$name_attr     = ! empty( $name_attr ) ? esc_attr( $name_attr . '[' . $field_name . ']' ) : $field_name;
+		$attributes    = array();
+
+		// attributes.
+		if ( ! empty( $field['attributes'] ) && is_array( $field['attributes'] ) ) {
+			foreach ( $field['attributes'] as $attribute_name => $attribute_value ) {
+				$attributes[] = esc_attr( $attribute_name ) . '="' . esc_attr( $attribute_value ) . '"';
+			}
+		}
+
+		$output = '';
+
+		switch ( $field_type ) {
+
+			case '':
+			case 'input':
+			case 'text':
+			default:
+
+				$output .= '<input type="text" id="' . $id_attr .'" class="gmw-form-field regular-text text" name="' . $name_attr . '" value="' . esc_attr( sanitize_text_field( $value ) ) . '" ' . implode( ' ', $attributes ) . ' ' . $placeholder . ' />';
+
+				break;
+
+			case 'checkbox':
+
+				$output .= '<label>';
+				$output .= '<input type="checkbox" id="' . $id_attr. '" class="gmw-form-field checkbox"';
+				$output .= ' name="' . $name_attr .'" value="1"';
+				$output .= ' ' . implode( ' ', $attributes );
+				$output .= ' ' . checked( '1', $value, false ) .' />';
+				$output .= isset( $field['cb_label'] ) ? esc_attr( $field['cb_label'] ) : '';
+				$output .= '</label>';
+
+				break;
+
+			case 'multicheckbox':
+
+				foreach ( $field['options'] as $key_val => $name ) {
+
+					$key_val = esc_attr( $key_val );
+					$value   = ! empty( $value[ $key_val ] ) ? $value[ $key_val ] : $default_value;
+					$output .= '<label>';
+					$output .= '<input type="checkbox" id="' . $id_attr . '-' . $key_val . '" class="gmw-form-field ' . $field_name .' checkbox multicheckbox" name="' . $name_attr . '[' . $key_val . ']" value="1" ' . checked( '1', $value ) . '/>';
+					$output .= esc_html( $name );
+					$output .= '</label>';
+
+				}
+				break;
+
+			case 'multicheckboxvalues':
+				$default_value = is_array( $default_value ) ? $default_value : array();
+
+				foreach ( $field['options'] as $key_val => $name ) {
+
+					$key_val = esc_attr( $key_val );
+					$checked = in_array( $key_val, $value ) ? 'checked="checked"' : '';
+
+					$output .= '<label>';
+					$output .= '<input type="checkbox" id="' . $id_attr . '-' . $key_val . '"';
+					$output .= ' class="gmw-form-field ' . $field_name . ' checkbox multicheckboxvalues"';
+					$output .= ' name="' . $name_attr . '[]"';
+					$output .= ' value="' . $key_val . '"';
+					$output .= $checked;
+					$output .= ' />';
+					$output .= esc_html( $name );
+					$output .= '</label>';
+
+				}
+				break;
+
+			case 'textarea':
+
+				$output .= '<textarea id="' . $id_attr .'"'; 
+				$output .= ' class="gmw-form-field textarea large-text"';
+				$output .= ' cols="50" rows="3" name="' . $name_attr .'"'; 
+				$output .= implode( ' ', $attributes );
+				$output .= ' ' . $placeholder . '>';
+				$output .= esc_textarea( $value );
+				$output .= '</textarea>';
+
+				break;
+
+			case 'radio':
+
+				$rc = 1;
+				foreach ( $field['options'] as $key_val => $name ) {
+
+					$checked = ( 1 === $rc ) ? 'checked="checked"' : checked( $value, $key_val, false );
+
+					$output .= '<label>';
+					$output .= '<input type="radio" id="' . $id_attr .'"';
+					$output .= ' class="gmw-form-field ' . $field_name .' radio"';
+					$output .= ' name="' . $name_attr .'"';
+					$output .= ' value="' . esc_attr( $key_val ) . '"';
+					$output .= ' ' . $checked;
+					$output .= ' />';
+					$output .= esc_attr( $name );
+					$output .= '</label>';
+					$output .= '&nbsp;&nbsp;';
+
+					$rc++;
+				}
+				break;
+
+			case 'select':
+
+				$output .= '<select id="' . $id_attr . '" class="gmw-form-field select"';
+				$output .= ' name="' . $name_attr . '"';
+				$output .= ' ' . implode( ' ', $attributes );
+				$output .= '>';
+
+				foreach ( $field['options'] as $key_val => $name ) {
+					$output .= '<option value="' . esc_attr( $key_val ) . '" ' . selected( $value, $key_val, false ) . '>' . esc_html( $name ) . '</option>';
+				}
+				$output .= '</select>';
+
+				break;
+
+			case 'multiselect':
+
+				$output .= '<select id="' . $id_attr . '" multiple';
+				$output .= ' class="gmw-form-field multiselect regular-text"';
+				$output .= ' name="' . $name_attr . '[]"';
+				$output .= ' ' . implode( ' ', $attributes );
+				$output .= '>';
+
+				foreach ( $field['options'] as $key_val => $name ) {
+					$selected = ( is_array( $value ) && in_array( $key_val, $value ) ) ? 'selected="selected"' : '';
+					$output .= '<option value="' . esc_attr( $key_val ) . '" ' . $selected . '>' . esc_html( $name ) . '</option>';
+				}
+
+				$output .= '</select>';
+
+				break;
+
+			case 'password':
+
+				$output .= '<input type="password" id="' . $id_attr .'"';
+				$output .= ' class="gmw-form-field regular-text password" name="' . $name_attr . '"';
+				$output .= ' value="' . esc_attr( sanitize_text_field( $value ) ) .'"';
+				$output .= ' ' . implode( ' ', $attributes );
+				$output .= ' ' . $placeholder;
+				$output .= '/>';
+
+				break;
+
+			case 'hidden':
+
+				$output .= '<input type="hidden" id="' . $id_attr .'"';
+				$output .= ' class="gmw-form-field hidden" name="' . $name_attr .'"';
+				$output .= ' value="' . esc_attr( sanitize_text_field( $value ) ) . '"';
+				$output .= ' ' . implode( ' ', $attributes );
+				$output .= ' />';
+
+				break;
+
+			// number.
+			case 'number':
+
+				$output .= '<input type="number" id="' . $id_attr .'"';
+				$output .= ' class="gmw-form-field number"';
+				$output .= ' name="' . $name_attr . '"';
+				$output .= ' value="' . esc_attr( sanitize_text_field( $value ) ). '"';
+				$output .= ' ' . implode( ' ', $attributes );
+				$output .= ' />';
+
+				break;
+		}
+
+		return $output;
+	}
 
     /**
      * Taxonomy group sorting 
