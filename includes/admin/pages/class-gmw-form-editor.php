@@ -1585,7 +1585,7 @@ class GMW_Form_Editor {
 	/**
 	 * Update form via AJAX
 	 *
-	 * Run the form values through validations and udpate the form in database
+	 * Run the form values through validations and update the form in database
 	 *
 	 * @return void
 	 */
@@ -1611,7 +1611,7 @@ class GMW_Form_Editor {
 		unset( $valid_input['title'] );
 		unset( $valid_input['slug'] );
 
-		// udpate form in database
+		// update form in database
 		if ( $wpdb->update(
 
 			$wpdb->prefix . 'gmw_forms',
@@ -1646,7 +1646,7 @@ class GMW_Form_Editor {
 	/**
 	 * Update form via page load
 	 *
-	 * Run the form values through validations and udpate the form in database
+	 * Run the form values through validations and update the form in database
 	 *
 	 * @return void
 	 */
@@ -1662,7 +1662,7 @@ class GMW_Form_Editor {
 
 		global $wpdb;
 
-		// udpate form in database
+		// update form in database
 		if ( $wpdb->update(
 
 			$wpdb->prefix . 'gmw_forms',

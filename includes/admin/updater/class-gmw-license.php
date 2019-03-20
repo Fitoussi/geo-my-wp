@@ -613,7 +613,7 @@ if ( ! class_exists( 'GMW_License' ) ) :
 			}
 		}
 
-		// udpate new data to database.
+		// update new data to database.
 		update_option( 'gmw_license_data', $license_keys );
 
 	}

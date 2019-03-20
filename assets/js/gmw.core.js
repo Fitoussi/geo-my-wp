@@ -2483,7 +2483,7 @@ if ( jQuery( '.gmw-current-location-wrapper' ).length ) {
 	    	// allow a few seconds for the location fields to populate in the hidden form
 	        setTimeout( function() {
 
-	        	// udpate via ajax
+	        	// update via ajax
 	        	if ( jQuery( '#gmw-cl-form-wrapper-' + GMW_Current_Location.object_id ).data( 'ajax_enabled' ) == 1 ) {
 
 					GMW_Current_Location.save_location();  
