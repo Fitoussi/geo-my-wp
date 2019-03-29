@@ -214,7 +214,7 @@ function gmw_output_import_export_tab() {
 					        		'region_name' 		=> __( 'State Name ( ex. Florida )', 'geo-my-wp' ),
 					        		'region_code' 		=> __( 'State Code ( ex. FL )', 'geo-my-wp' ),
 					        		'postcode' 			=> __( 'zipcode', 'geo-my-wp' ),
-					        		'country_name' 		=> __( 'Country Name ( ex. UNited States )', 'geo-my-wp' ),
+					        		'country_name' 		=> __( 'Country Name ( ex. United States )', 'geo-my-wp' ),
 					        		'country_code' 		=> __( 'Country Code ( ex. US )', 'geo-my-wp' ),
 					        		'address' 			=> __( 'Address ( address field the way the user enteres )', 'geo-my-wp' ),
 					        		'formatted_address' => __( 'Formatted Address ( formatted address returned from Google after geocoding )', 'geo-my-wp' ),
