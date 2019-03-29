@@ -1134,7 +1134,7 @@ var GMW_Location_Form = {
 	  		latVal = lngVal = '';
 
 	  		// make sure coords exist in form
-	  		if ( typeof this_form.coords_fields != false && this_form.coords_fields.length ) {
+	  		if ( typeof this_form.coords_fields != false && jQuery( '#' + this_form.coords_fields.latitude.id ).length ) {
 		  		latVal = jQuery( '#' + this_form.coords_fields.latitude.id ).val();
 		  		lngVal = jQuery( '#' + this_form.coords_fields.longitude.id ).val();
 		  	}
