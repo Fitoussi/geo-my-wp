@@ -30,7 +30,7 @@
 <?php global $members_template; ?>
 
 <!--  Main results wrapper -->
-<div class="gmw-results-wrapper grid-gray gmw-fl-grid-gray-results-wrapper <?php echo esc_attr( $gmw['prefix'] ); ?>" data-id="<?php absint( $gmw['ID'] ); ?>" data-prefix="<?php echo esc_attr( $gmw['prefix'] ); ?>">
+<div class="gmw-results-wrapper grid-gray gmw-fl-grid-gray-results-wrapper <?php echo esc_attr( $gmw['prefix'] ); ?>" data-id="<?php echo absint( $gmw['ID'] ); ?>" data-prefix="<?php echo esc_attr( $gmw['prefix'] ); ?>">
 
 	<?php if ( $gmw_form->has_locations() ) : ?>
 
