@@ -173,8 +173,17 @@ class GMW_BP_Profile_Search_Geolocation_Addon extends GMW_Addon {
 			include_once 'includes/admin/class-gmw-bp-profile-search-geolocation-admin.php';
 		}
 
+		//add_filter( 'bp_get_template_stack', array( $this, 'template_stack' ), 30 );
+
 		include_once 'includes/class-gmw-bp-profile-search-geolocation.php';
 	}
+
+	/*public function template_stack( $stack ) {
+
+		$stack[] = dirname(__FILE__) . '/templates/bps-fields';
+
+		return $stack;
+	}*/
 
 	/**
 	 * Enqueue/register scripts

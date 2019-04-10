@@ -1,25 +1,12 @@
 jQuery( document ).ready( function($) {
 	
-    // Inject the location fields into the BP Profile Search forms.
-	jQuery( '.gmw-bpsgeo-location-fields-wrap' ).each( function( e ) {
-
-		var form_id = jQuery( this ).data( 'form_id' );
-		var form    = jQuery( this ).parent().find( 'form[id*="' + form_id + '"]' );
-		var phField = form.find( 'input#gmw_location_ph_contains' ).closest( 'div' );
-			
-		jQuery( this ).detach().insertAfter( phField ).show();
-
-		phField.remove();
-		form.find( '[id^="gmw_location_ph"]' ).remove();
-	});
-
 	/**
 	 * Clear coords when address changes
 	 * 
 	 * @return {[type]} [description]
 	 */
 	jQuery( '.gmw-bpsgeo-address-field' ).on( 'change', function( event ) {
-		jQuery( this ).closest( '.gmw-bpsgeo-location-fields-wrap' ).find( '.gmw-bpsgeo-lat, .gmw-bpsgeo-lng' ).val( '' );
+		jQuery( this ).closest( '.gmw-bpsgeo-location-fields-inner' ).find( '.gmw-bpsgeo-lat, .gmw-bpsgeo-lng' ).val( '' );
 	});
 
 	/**

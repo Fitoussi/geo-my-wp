@@ -74,7 +74,7 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 					'default'     => '10,25,50,100,200',
 					'label'       => __( 'Radius', 'geo-my-wp' ),
 					'placeholder' => __( 'Enter radius values', 'geo-my-wp' ),
-					'desc'        => __( 'Enter a single numeric value to be used as the default, or multiple values, comma separated, that will be displayed as a dropdown select box in the search form.', 'geo-my-wp' ),
+					'desc'        => __( 'Enter a single numeric value to be used as the default or multiple values comma separated that will be displayed as a dropdown select box in the search form.', 'geo-my-wp' ),
 					'attributes'  => array(),
 					'priority'    => 40,
 				),
@@ -83,7 +83,7 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 					'type'       => 'select',
 					'default'    => '3959',
 					'label'      => __( 'Distance Units', 'geo-my-wp' ),
-					'desc'       => __( 'Select miles, kilometers, or both to display a dropdown menu in the search form.', 'geo-my-wp' ),
+					'desc'       => __( 'Select miles or kilometers as the default units value or select "Both" to display a units dropdown menu filter in the search form.', 'geo-my-wp' ),
 					'options'    => array(
 						'both'     => __( 'Both', 'geo-my-wp' ),
 						'imperial' => __( 'Miles', 'geo-my-wp' ),
@@ -106,7 +106,6 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 	 * [__construct description]
 	 */
 	public function __construct() {
-
 		add_action( 'add_meta_boxes', array( $this, 'add_options_meta_box' ) );
 	}
 
@@ -146,13 +145,13 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 				display: block;
 			}
 
-			.gmw-bpsgeo-placeholder-field-option {
-				border: 0;
-				padding-top: 5px;
-			}
-
 			.gmw-bpsgeo-location-field-option p {
 				font-weight: bold;
+			}
+
+			.gmw-bpsgeo-location-field-option.gmw-bpsgeo-placeholder-field-option {
+				border: 0;
+				padding-top: 5px;
 			}
 
 			#gmw_bpsgeo_location_options .desc {
@@ -206,7 +205,7 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 
 		foreach ( $bps_options['field_code'] as $key => $code ) {
 
-			if ( 'gmw_location_ph' === $code ) {
+			if ( 'gmw_bpsgeo_location' === $code ) {
 
 				$loc_enabled = '1';
 				$field_id    = esc_attr( $key );
@@ -221,11 +220,11 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 				// Prevent from creating multiple location fields.
 				jQuery( '#field_box' ).on( 'change', 'select.bps_col2', function( event ) {
 
-					if ( $( this ).val() == 'gmw_location_ph' ) {
+					if ( $( this ).val() == 'gmw_bpsgeo_location' ) {
 
-						if ( $( '#field_box' ).find( 'select.bps_col2 option:selected[value="gmw_location_ph"]' ).length > 1 ) {
+						if ( $( '#field_box' ).find( 'select.bps_col2 option:selected[value="gmw_bpsgeo_location"]' ).length > 1 ) {
 
-							jQuery( this ).find( 'optgroup:not([label="GEO my WP Location"] ) option:first' ).prop( 'selected', true );
+							jQuery( this ).find( 'optgroup:not([label="GEO my WP"] ) option:first' ).prop( 'selected', true );
 
 							alert( '<?php echo $warning; // WPCS: XSS ok. ?>' );							
 						}
@@ -237,12 +236,11 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 				}
 
 				var fieldId   = '<?php echo $field_id; // WPCS: XSS ok. ?>';
-				var fieldBox  = jQuery( '#bps_fields_box .inside #field_box <?php echo $loc_element; // WPCS: XSS ok. ?>' );
-				var trigger   = jQuery( '<span id="field_mode' + fieldId + '" class="gmw-bpsgeo-options-trigger-wrap bps_col5"><a class=" gmw-icon-cog gmw-bpsgeo-location-options-trigger"><?php echo $label; // WPCS: XSS ok. ?></a></span><input type="hidden" name="bps_options[field_mode][<?php echo $field_id; // WPCS: XSS ok. ?>]" value="distance"/>' );
-				var nameField = jQuery( '<input type="hidden" id="field_name' + fieldId + '" class="bps_col2" name="bps_options[field_name][' + fieldId + ']" value="gmw_location_ph"/>' );
+				var fieldBox  = jQuery( '#bps_fields_box .inside #field_box <?php echo $loc_element; // WPCS: XSS ok. ?>' ).find( '.bps_col5' );
+				var trigger   = jQuery( '<span id="field_mode' + fieldId + '" class="bps_col5 gmw-bpsgeo-options-trigger-wrap"><a class=" gmw-icon-cog gmw-bpsgeo-location-options-trigger"><?php echo $label; // WPCS: XSS ok. ?></a></span>' );
 
-				// replace original mode box.
-				fieldBox.find( '.bps_col5' ).replaceWith( trigger );
+				fieldBox.hide();
+				trigger.insertAfter( fieldBox );
 
 				// Scroll to location options box and show it if it is hidden.
 				jQuery( '#field_box' ).on( 'click', '.gmw-bpsgeo-location-options-trigger', function( event ) {
