@@ -217,8 +217,8 @@ class GMW_Installer {
 				place_id VARCHAR( 255 ) NOT NULL,
 				map_icon VARCHAR(50) NOT NULL,
 				/*radius NUMERIC( 6,1 ) NOT NULL,*/
-				created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-				updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+				updated DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 				PRIMARY KEY ID (ID),
 				KEY coordinates (latitude,longitude),
 				KEY latitude (latitude),
@@ -334,11 +334,11 @@ class GMW_Installer {
 			// Modify the default value of date columns if needed.
 			$column = $wpdb->get_results( "DESCRIBE {$locations_table} created" );
 
-			if ( $column[0]->Default === '0000-00-00 00:00:00' )  {
+			if ( $column[0]->Default === CURRENT_TIMESTAMP )  {
 				$wpdb->query( "
 					ALTER TABLE {$locations_table}
-					MODIFY created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-					MODIFY updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"
+					MODIFY created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+					MODIFY updated DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'"
 				);
 			}
 
