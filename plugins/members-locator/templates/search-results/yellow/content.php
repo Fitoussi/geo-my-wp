@@ -46,7 +46,7 @@
 
 			<?php do_action( 'bp_before_directory_members_list' ); ?>
 				
-			<ul class="members-list-wrapper">
+			<ul id="members-list" class="members-list-wrapper">
 
 				<?php while ( bp_members() ) : bp_the_member(); ?>
 					

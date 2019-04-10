@@ -52,7 +52,7 @@
 
 			<?php do_action( 'gmw_search_results_before_loop', $gmw ); ?>
 
-			<ul class="members-list-wrapper">
+			<ul id="members-list" class="members-list-wrapper">
 
 				<?php
 				while ( bp_members() ) :
