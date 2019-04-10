@@ -230,6 +230,21 @@ class GMW_Posts_Locator_Screens {
 	 */
 	public static function get_location_form_args( $post ) {
 
+		/**
+		 * This is a temporary solution for an issue with the $post object.
+		 *
+		 * In some occations the $post object might belong to a different post
+		 *
+		 * of a different post type than the post that is currently being edited.
+		 *
+		 * I am not certain if this issue cause by the theme that generates the different post types
+		 *
+		 * or by GEO my WP.
+		 */
+		if ( ! empty( $_GET['post'] ) && absint( $_GET['post'] ) && $_GET['post'] !== $post->ID ) {
+			$post = get_post( $_GET['post'] ); // WPCS: CSRF ok, sanitization ok.
+		}
+
 		// form args.
 		return apply_filters(
 			'gmw_edit_post_location_form_args',
