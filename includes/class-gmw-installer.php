@@ -216,7 +216,7 @@ class GMW_Installer {
 				formatted_address VARCHAR( 255 ) NOT NULL,
 				place_id VARCHAR( 255 ) NOT NULL,
 				map_icon VARCHAR(50) NOT NULL,
-				/*radius NUMERIC( 6,1 ) NOT NULL,*/
+				radius NUMERIC( 6,1 ) NOT NULL,
 				created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 				updated DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 				PRIMARY KEY ID (ID),
@@ -334,7 +334,7 @@ class GMW_Installer {
 			// Modify the default value of date columns if needed.
 			$column = $wpdb->get_results( "DESCRIBE {$locations_table} created" );
 
-			if ( $column[0]->Default === CURRENT_TIMESTAMP )  {
+			if ( $column[0]->Default === 'CURRENT_TIMESTAMP' )  {
 				$wpdb->query( "
 					ALTER TABLE {$locations_table}
 					MODIFY created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -342,16 +342,13 @@ class GMW_Installer {
 				);
 			}
 
-			// create new radius column if not exists.
+			// look for the radius colummn.
 			$column = $wpdb->get_results( "SHOW COLUMNS FROM {$locations_table} LIKE 'radius'" ); // WPCS: db call ok, cache ok.
 
-			if ( ! empty( $column ) ) {
-				$wpdb->query( "ALTER TABLE {$locations_table} CHANGE COLUMN `radius` `lRadius` NUMERIC( 6,1 ) NOT NULL" ); // WPCS: db call ok, cache ok.
-			}
-
-			/*if ( empty( $column ) ) {
+			// create new radius column if not exists.
+			if ( empty( $column ) ) {
 				$wpdb->query( "ALTER TABLE {$locations_table} ADD COLUMN radius NUMERIC( 6,1 ) NOT NULL AFTER map_icon" ); // WPCS: db call ok, cache ok.
-			}*/
+			}
 
 			// Add indexes if not exist.
 			$index = $wpdb->get_results( "SHOW INDEX FROM {$locations_table} WHERE Key_name = 'object_type'" );
