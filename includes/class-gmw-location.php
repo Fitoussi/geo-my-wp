@@ -56,7 +56,7 @@ class GMW_Location {
 		'%s',
 		'%s',
 		'%s',
-		//'%f',
+		'%f',
 		'%s',
 		'%s',
 	);
@@ -87,7 +87,7 @@ class GMW_Location {
 	}
 
 	/**
-	 * default locations database table values
+	 * Default locations database table values.
 	 *
 	 * @return array
 	 */
@@ -129,7 +129,7 @@ class GMW_Location {
 				'formatted_address' => '',
 				'place_id'          => '',
 				'map_icon'          => '_default.png',
-				//'radius'			=> 0.0,
+				'radius'            => 0.0,
 				'created'           => current_time( 'mysql' ),
 				'updated'           => current_time( 'mysql' ),
 			)
@@ -139,7 +139,7 @@ class GMW_Location {
 	/**
 	 * Helper to verify an ID.
 	 *
-	 * @param numeric $id ID as numeric values
+	 * @param numeric $id ID as numeric values.
 	 *
 	 * @return absint
 	 *
@@ -147,7 +147,7 @@ class GMW_Location {
 	 */
 	public static function verify_id( $id = 0 ) {
 
-		// verify location ID
+		// verify location ID.
 		if ( ! is_numeric( $id ) ) {
 			return false;
 		}
