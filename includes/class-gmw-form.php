@@ -584,6 +584,7 @@ class GMW_Form {
 				return;
 			}
 
+			$this->query_cache_args['user_loggedin']                    = ( function_exists( 'is_user_logged_in' ) && is_user_logged_in() ) ? 1 : 0;
 			$this->query_cache_args['db_fields']                        = $this->db_fields;
 			$this->query_cache_args['showing_objects_without_location'] = $this->enable_objects_without_location;
 
