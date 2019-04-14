@@ -1,7 +1,16 @@
 <?php
+/**
+ * GEO my WP Location form class.
+ *
+ * This class generates the location form of GEO my WP
+ *
+ * @author Eyal Fitoussi
+ *
+ * @package geo-my-wp
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 /**
