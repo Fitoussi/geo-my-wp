@@ -59,7 +59,7 @@ class GMW_Template_Functions_Helper {
 			/**
 			 * We can add the more link to the excerpt using the 3rd argument
 			 *
-			 * Of this function. However, we don't don't to this to allow
+			 * Of this function. However, we don't do this to allow
 			 *
 			 * modifying the content using the filter below before the more link is added to it
 			 */
@@ -113,33 +113,33 @@ class GMW_Template_Functions_Helper {
 	public static function get_pagination( $args = array() ) {
 
 		$defaults = array(
-			'id'                 => 0,
-			//'base'               => '',
-			//'format'             => '',
-			'total'              => '1',
-			'current'            => '',
-			'show_all'           => false,
-			'end_size'           => 1,
-			'mid_size'           => 2,
-			'prev_next'          => true,
-			'prev_text'          => __( 'Prev', 'geo-my-wp' ),
-			'next_text'          => __( 'Next', 'geo-my-wp' ),
-			'type'               => 'array',
-			'add_args'           => false,
-			//'add_fragment'       => '',
-			//'before_page_number' => '',
-			//'after_page_number'  => '',
-			'page_name'          => 'page',
+			'id'        => 0,
+			// 'base'               => '',
+			// 'format'             => '',
+			'total'     => '1',
+			'current'   => '',
+			'show_all'  => false,
+			'end_size'  => 1,
+			'mid_size'  => 2,
+			'prev_next' => true,
+			'prev_text' => __( 'Prev', 'geo-my-wp' ),
+			'next_text' => __( 'Next', 'geo-my-wp' ),
+			'type'      => 'array',
+			'add_args'  => false,
+			// 'add_fragment'       => '',
+			// 'before_page_number' => '',
+			// 'after_page_number'  => '',
+			'page_name' => 'page',
 		);
 
 		// is front or single page? we treat pagination differently.
 		if ( is_front_page() || is_single() ) {
-			$page_name = 'page'; 
+			$page_name = 'page';
 		} else {
 			$page_name        = $args['page_name'];
 			$defaults['base'] = add_query_arg( $page_name, '%#%' );
 		}
-		
+
 		$args = wp_parse_args( $args, $defaults );
 		$args = apply_filters( 'gmw_get_pagination_args', $args );
 
