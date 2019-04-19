@@ -99,7 +99,7 @@ class GMW_PT_Search_Form_Helper {
 		);
 
 		// deprected hook. Will be removed in the future.
-		apply_filters( 'gmw_pt_' . $args['usage'] . '_taxonomy_args', $tax_args, $gmw, $taxonomy, $tax_name, $args );
+		$tax_args = apply_filters( 'gmw_pt_' . $args['usage'] . '_taxonomy_args', $tax_args, $gmw, $taxonomy, $tax_name, $args );
 
 		// set terms_hash args. only args that control the output of the terms should be here.
 		// This will be used with the cache helper.
