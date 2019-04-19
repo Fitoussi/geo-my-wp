@@ -456,7 +456,7 @@ class GMW_Single_Location {
 		}
 
 		// get the full address.
-		if ( empty( $this->args['address_fields'] ) || 'address' === $this->args['address_fields'] ) {
+		/*if ( empty( $this->args['address_fields'] ) || 'address' === $this->args['address_fields'] ) {
 
 			$address = ! empty( $this->location_data->formatted_address ) ? $this->location_data->formatted_address : $this->location_data->address;
 
@@ -477,7 +477,9 @@ class GMW_Single_Location {
 			}
 
 			$address = implode( ' ', $address_array );
-		}
+		}*/
+
+		$address = gmw_get_location_address( $this->location_data, $this->args['address_fields'], $this->args );
 
 		$output = '<div class="gmw-sl-address gmw-sl-element"><i class="gmw-location-icon gmw-icon-location"></i><span class="address">' . esc_attr( stripslashes( $address ) ) . '</span></div>';
 
