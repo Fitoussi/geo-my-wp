@@ -109,6 +109,7 @@ class GMW_Posts_Locator_Form_Editor {
                 'email'     => __( 'Email', 'geo-my-wp' ),
                 'website'   => __( 'Website', 'geo-my-wp' ),
             ),
+            //'options'       => GMW_Form_Settings_Helper::get_location_meta(),
             'attributes'    => '',
             'priority'      => 36   
         );
