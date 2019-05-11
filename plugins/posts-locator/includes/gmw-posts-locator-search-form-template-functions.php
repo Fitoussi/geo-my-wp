@@ -289,7 +289,7 @@ function gmw_get_search_form_taxonomies( $gmw ) {
 		return;
 	}
 
-	$output = '<div class="gmw-search-form-taxonomies gmw-search-form-multiple-fields-wrapper">';
+	$output = '';
 
 	// Loop through and generate taxonomies.
 	foreach ( $gmw['search_form']['taxonomies'][ $post_type ] as $taxonomy => $args ) {
@@ -345,24 +345,31 @@ function gmw_get_search_form_taxonomies( $gmw ) {
 		$output .= '</div>';
 	}
 
-	$output .= '</div>';
-
 	return $output;
 }
 
 /**
  * Output Taxonomies fields.
  *
- * @param  array  $gmw gmw form.
+ * @param  array   $gmw     gmw form.
  *
- * @param  string $tag field tag type.
+ * @param  boolean $wrapper generate wrapping element?.
  */
-function gmw_search_form_taxonomies( $gmw = array(), $tag = 'div' ) {
+function gmw_search_form_taxonomies( $gmw = array(), $wrapper = true ) {
 
 	do_action( 'gmw_before_search_form_taxonomies', $gmw );
 
-	echo gmw_get_search_form_taxonomies( $gmw, $tag ); // WPCS: XSS ok.
+	$wrapper = apply_filters( 'gmw_search_form_taxonomies_wrapper_element', $wrapper, $gmw );
+
+	if ( $wrapper ) {
+		echo '<div class="gmw-search-form-taxonomies gmw-search-form-multiple-fields-wrapper">';
+	}
+
+	echo gmw_get_search_form_taxonomies( $gmw ); // WPCS: XSS ok.
+
+	if ( $wrapper ) {
+		echo '</div>';
+	}
 
 	do_action( 'gmw_after_search_form_taxonomies', $gmw );
 }
-
