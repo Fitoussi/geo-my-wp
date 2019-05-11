@@ -574,7 +574,7 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 		 * @param  [type] $data [description].
 		 */
 		public function import_done( $data ) {
-			add_action( 'gmw_locations_importer_done', $data );
+			do_action( 'gmw_locations_importer_done', $data );
 		}
 	}
 
