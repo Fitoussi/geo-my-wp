@@ -1,12 +1,18 @@
 <?php
-// Exit if accessed directly
+/**
+ * GEO my WP helper class.
+ *
+ * @author Eyal Fitoussi
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
  * GMW_Helper class
- *
  */
 class GMW_Helper {
 
@@ -22,7 +28,7 @@ class GMW_Helper {
 	 */
 	public static function get_user_current_location() {
 
-		// abort if user's location does not exist in cookies
+		// abort if user's location does not exist in cookies.
 		if ( empty( $_COOKIE['gmw_ul_lat'] ) || empty( $_COOKIE['gmw_ul_lng'] ) ) {
 			return false;
 		}
@@ -101,23 +107,23 @@ class GMW_Helper {
 		$templates_folder = $component_data['templates_folder'];
 
 		// get plugin's template folders path
-		// if no based addon provided
-		if ( '' == $addon || $addon == $component ) {
+		// if no based addon provided.
+		if ( '' === $addon || $addon == $component ) {
 
 			$addon_data = false;
 			$path       = $component_data['plugin_dir'] . '/templates/' . $folder;
 
-			// with based addon
+			// with based addon.
 		} else {
 
 			$addon_data = gmw_get_addon_data( $addon );
 			$path       = $addon_data['plugin_dir'] . '/plugins/' . $templates_folder . '/templates/' . $folder;
 		}
 
-		// if this is info-window templates
+		// if this is info-window templates.
 		$path .= 'info-window' == $folder_name ? $iw_type . '/*' : '*';
 
-		// get templates from plugin's folder
+		// get templates from plugin's folder.
 		foreach ( glob( $path, GLOB_ONLYDIR ) as $dir ) {
 			$themes[ basename( $dir ) ] = basename( $dir );
 		}
@@ -139,12 +145,12 @@ class GMW_Helper {
 			$template_custom_path = TEMPLATEPATH . '/geo-my-wp/' . $templates_folder . '/' . $folder . '*';
 		}
 
-		// look for custom templates in child theme or custom path. If not found check in parent theme
+		// look for custom templates in child theme or custom path. If not found check in parent theme.
 		if ( ( $custom_templates = glob( $custom_path, GLOB_ONLYDIR ) ) == false ) {
 			$custom_templates = glob( $template_custom_path, GLOB_ONLYDIR );
 		};
 
-		// append custom templates from theme/child theme folder if found
+		// append custom templates from theme/child theme folder if found.
 		if ( ! empty( $custom_templates ) ) {
 			foreach ( $custom_templates as $dir ) {
 				$themes[ 'custom_' . basename( $dir ) ] = 'Custom: ' . basename( $dir );
@@ -185,12 +191,12 @@ class GMW_Helper {
 
 		extract( $args );
 
-		// get addon data
+		// get addon data.
 		$component_data = gmw_get_addon_data( $component );
 
 		$output = array();
 
-		if ( 'info-window' == $folder_name ) {
+		if ( 'info-window' === $folder_name ) {
 
 			$folder_handle = $folder_name . '-' . $iw_type . '-';
 			$folder        = $folder_name . '/' . $iw_type . '/';
@@ -204,13 +210,14 @@ class GMW_Helper {
 
 			} else {
 
-				$folder = $folder_handle = '';
+				$folder        = '';
+				$folder_handle = '';
 			}
 		}
 
-		$prefix_handle = ( '' == $addon || $addon == $component ) ? $component_data['prefix'] : $addon . '-' . $component_data['prefix'];
+		$prefix_handle = ( '' === $addon || $addon == $component ) ? $component_data['prefix'] : $addon . '-' . $component_data['prefix'];
 
-		// Get custom template and css from child/theme folder
+		// Get custom template and css from child/theme folder.
 		if ( strpos( $template_name, 'custom_' ) !== false ) {
 
 			$template_name    = str_replace( 'custom_', '', $template_name );
@@ -226,7 +233,7 @@ class GMW_Helper {
 
 			$custom_path_uri = apply_filters( 'gmw_get_template_path_uri', $custom_path_uri, $component, $folder_name, $iw_type, $template_name, $addon );
 
-			if ( '' != $addon && $addon != $component ) {
+			if ( '' !== $addon && $addon != $component ) {
 
 				$addon_data = gmw_get_addon_data( $addon );
 
@@ -255,20 +262,20 @@ class GMW_Helper {
 
 			} else {
 
-				if ( 'search-forms' == $folder_name ) {
+				if ( 'search-forms' === $folder_name ) {
 
 					$output['content_path'] .= 'search-form.php';
 
-				} elseif ( 'search-results' == $folder_name ) {
+				} elseif ( 'search-results' === $folder_name ) {
 
 					$output['content_path'] .= 'results.php';
 				}
 			}
 
-			// load template files from plugin's folder
+			// load template files from plugin's folder.
 		} else {
 
-			if ( '' == $addon || $addon == $component ) {
+			if ( '' === $addon || $addon == $component ) {
 
 				$plugin_url = $component_data['plugin_url'];
 				$plugin_dir = $component_data['plugin_dir'];
@@ -284,18 +291,18 @@ class GMW_Helper {
 			$output['stylesheet_uri']    = $plugin_url . "/templates/{$folder}{$template_name}/css/style.css";
 			$output['content_path']      = $plugin_dir . "/templates/{$folder}{$template_name}/{$file_name}";
 		}
-	
-		// include file if needed
+
+		// include file if needed.
 		if ( $include_template ) {
 
-			// enqueue stylesheet if not already enqueued
+			// enqueue stylesheet if not already enqueued.
 			if ( ! wp_style_is( $output['stylesheet_handle'], 'enqueued' ) ) {
 				wp_enqueue_style( $output['stylesheet_handle'], $output['stylesheet_uri'] );
 			}
 
-			include( $output['content_path'] );
+			include $output['content_path'];
 
-			// otherwise return
+			// otherwise return.
 		} else {
 			return $output;
 		}
