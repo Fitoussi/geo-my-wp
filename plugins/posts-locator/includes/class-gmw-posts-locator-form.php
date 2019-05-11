@@ -179,8 +179,22 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 				// filter locations based on the distance.
 				$clauses['having'] = "HAVING distance <= {$distance} OR distance IS NULL";
 
-				// order by distance
-				if ( 'distance' === $this->form['query_args']['orderby'] ) {
+				// Remove extra spaces.
+				$this->form['query_args']['orderby'] = trim( $this->form['query_args']['orderby'] );
+
+				// If there is another order-by parameter before the distance append the distance to the orderby clause.
+				if ( false !== strpos( $this->form['query_args']['orderby'], ' distance' ) ) {
+
+					$clauses['orderby'] .= ', distance ASC';
+
+					// If there is another order-by parameter after the distance, prepend the distance first in the orderby clause.
+				} elseif ( false !== strpos( $this->form['query_args']['orderby'], 'distance ' ) ) {
+
+					$clauses['orderby'] = 'distance ASC, ' . $clauses['orderby'];
+
+					// Otherise, we order by the distance only.
+				} elseif ( 'distance' === $this->form['query_args']['orderby'] ) {
+
 					$clauses['orderby'] = 'distance';
 				}
 			}
