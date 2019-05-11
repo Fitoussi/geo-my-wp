@@ -1,4 +1,12 @@
 <?php
+/**
+ * GEO my WP Search Form Widget Class.
+ *
+ * @author Eyal Fitoussi
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
