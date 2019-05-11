@@ -104,7 +104,12 @@ class GMW_Search_Form_Helper {
 		);
 
 		$args = wp_parse_args( $args, $defaults );
+
+		// Deprecated - misspelled.
 		$args = apply_filters( 'gmw_search_forms_keywords_args', $args );
+
+		// new filter.
+		$args = apply_filters( 'gmw_search_form_keywords_field_args', $args );
 
 		$value = ! empty( $_GET[ $url_px . 'keywords' ] ) ? sanitize_text_field( wp_unslash( $_GET[ $url_px . 'keywords' ] ) ) : '';
 
@@ -139,7 +144,12 @@ class GMW_Search_Form_Helper {
 		);
 
 		$args = wp_parse_args( $args, $defaults );
+
+		// Deprecated - misspelled.
 		$args = apply_filters( 'gmw_search_forms_address_args', $args );
+
+		// New filter.
+		$args = apply_filters( 'gmw_search_form_address_field_args', $args );
 
 		$mandatory    = $args['mandatory'] ? 'mandatory' : '';
 		$placeholder  = isset( $args['placeholder'] ) ? esc_attr( $args['placeholder'] ) : '';
@@ -195,7 +205,12 @@ class GMW_Search_Form_Helper {
 		);
 
 		$args = wp_parse_args( $args, $defaults );
+
+		// Deprecated - misspelled.
 		$args = apply_filters( 'gmw_search_forms_radius_args', $args );
+
+		// New filter.
+		$args = apply_filters( 'gmw_search_form_radius_field_args', $args );
 
 		$id            = absint( $args['id'] );
 		$options       = explode( ',', $args['options'] );
@@ -250,7 +265,12 @@ class GMW_Search_Form_Helper {
 		);
 
 		$args = wp_parse_args( $args, $defaults );
+
+		// Deprecated - misspelled.
 		$args = apply_filters( 'gmw_search_forms_units_args', $args );
+
+		// New filter.
+		$args = apply_filters( 'gmw_search_form_units_field_args', $args );
 
 		$url_px = gmw_get_url_prefix();
 		$url_px = esc_attr( $url_px );
@@ -291,7 +311,12 @@ class GMW_Search_Form_Helper {
 		);
 
 		$args = wp_parse_args( $args, $defaults );
+
+		// Deprecated - misspelled.
 		$args = apply_filters( 'gmw_search_forms_locator_button_args', $args );
+
+		// New filter.
+		$args = apply_filters( 'gmw_search_form_locator_button_args', $args );
 
 		$id    = absint( $args['id'] );
 		$usage = esc_attr( $args['usage'] );
@@ -333,7 +358,12 @@ class GMW_Search_Form_Helper {
 		);
 
 		$args = wp_parse_args( $args, $defaults );
+
+		// Deprecated - misspelled.
 		$args = apply_filters( 'gmw_search_forms_submit_button_args', $args );
+
+		// New filter.
+		$args = apply_filters( 'gmw_search_form_submit_button_args', $args );
 
 		$id = ! empty( $args['id'] ) ? 'gmw-submit-' . absint( $args['id'] ) : 'gmw-submit';
 
