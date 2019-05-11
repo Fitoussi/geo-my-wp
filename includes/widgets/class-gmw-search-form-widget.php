@@ -46,6 +46,10 @@ class GMW_Search_Form_Widget extends GMW_Widget {
 
 		foreach ( $forms as $form ) {
 
+			if ( empty( $form['ID'] ) ) {
+				continue;
+			}
+
 			$form_id = absint( $form['ID'] );
 
 			if ( ! empty( $form_id ) && in_array( $form['slug'], $allowed_forms, true ) ) {
