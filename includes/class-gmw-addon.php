@@ -1089,7 +1089,8 @@ class GMW_Addon {
 				$this->version,
 				$this->author,
 				$this->api_url,
-				$this->item_id
+				$this->item_id,
+				'gmw_action_links'
 			);
 		}
 	}
