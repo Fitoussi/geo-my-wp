@@ -57,6 +57,7 @@ class GMW_Locations_Table_Export extends GMW_Export {
 			'formatted_address' => 'formatted_address',
 			'place_id'			=> 'place_id',
 			'map_icon'			=> 'map_icon',
+			'radius'			=> 'radius',
 			'created'       	=> 'created',
 			'updated'       	=> 'updated'
 		);
