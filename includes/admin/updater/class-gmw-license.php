@@ -108,7 +108,7 @@ if ( ! class_exists( 'GMW_License' ) ) :
 		 *
 		 * @param integer $_item_id      item ID.
 		 */
-		public function __construct( $_file, $_item_name, $_license_name, $_version, $_author = 'Eyal Fitoussi', $_api_url = null, $_item_id = null ) {
+		public function __construct( $_file, $_item_name, $_license_name, $_version, $_author = 'Eyal Fitoussi', $_api_url = null, $_item_id = null, $_action_links = array() ) {
 
 			$this->file           = $_file;
 			$this->license_name   = $_license_name;
@@ -119,6 +119,7 @@ if ( ! class_exists( 'GMW_License' ) ) :
 			$this->version        = $_version;
 			$this->author         = $_author;
 			$this->api_url        = is_null( $_api_url ) ? $this->api_url : $_api_url;
+			$this->action_links   = $_action_links;
 
 			// run action.
 			add_action( 'admin_init', array( $this, 'plugins_page_actions' ) );
@@ -153,31 +154,54 @@ if ( ! class_exists( 'GMW_License' ) ) :
 		 */
 		public function extension_action_links( $links ) {
 
-			$links['settings'] = '<a href="' . admin_url( 'admin.php?page=gmw-settings' ) . '">' . __( 'Settings', 'geo-my-wp' ) . '</a>';
-
-			if ( ! $this->plugins_page_license_enabled ) {
-
-				// if license is not activated display the "Activate License" message.
-				if ( empty( $this->license_key ) || 'valid' !== $this->license_status ) {
-
-					$action = 'active_license';
-					$text   = __( 'Activate License', 'geo-my-wp' );
-					$color  = 'red';
-
-				} else {
-
-					$action = 'deactive_license';
-					$text   = __( 'Deactivate License', 'geo-my-wp' );
-					$color  = 'green';
-				}
-
-				$links[ $action ] = '<a style="color:' . $color . '" href="' . admin_url( 'admin.php?page=gmw-extensions' ) . '">' . $text . '</a>';
-
-			} else {
-				$links['extensions'] = '<a href="' . admin_url( 'admin.php?page=gmw-extensions' ) . '">' . __( 'Extensions', 'geo-my-wp' ) . '</a>';
+			if ( empty( $this->action_links ) ) {
+				return $links;
 			}
 
-			return $links;
+			if ( is_array( $this->action_links ) ) {
+
+				foreach ( $this->action_links as $key => $action_link ) {
+
+					$target = ! empty( $action_link['new_page'] ) ? 'target="_blank"' : '';
+
+					$links[ sanitize_key( $key ) ] = '<a href="' . $action_link['link'] . '" ' . $target . '>' . esc_attr( $action_link['label'] ) . '</a>';
+				}
+
+				return $links;
+
+			} elseif ( 'gmw_action_links' === $this->action_links ) {
+
+				$links['settings'] = '<a href="' . admin_url( 'admin.php?page=gmw-settings' ) . '">' . __( 'Settings', 'geo-my-wp' ) . '</a>';
+
+				if ( ! $this->plugins_page_license_enabled ) {
+
+					// if license is not activated display the "Activate License" message.
+					if ( empty( $this->license_key ) || 'valid' !== $this->license_status ) {
+
+						$action = 'active_license';
+						$text   = __( 'Activate License', 'geo-my-wp' );
+						$color  = 'red';
+
+					} else {
+
+						$action = 'deactive_license';
+						$text   = __( 'Deactivate License', 'geo-my-wp' );
+						$color  = 'green';
+					}
+
+					$links[ $action ] = '<a style="color:' . $color . '" href="' . admin_url( 'admin.php?page=gmw-extensions' ) . '">' . $text . '</a>';
+
+				} else {
+					$links['extensions'] = '<a href="' . admin_url( 'admin.php?page=gmw-extensions' ) . '">' . __( 'Extensions', 'geo-my-wp' ) . '</a>';
+				}
+
+				$links['docs'] = '<a href="https://docs.geomywp.com/" target="_blank">Documentation</a>';
+
+				return $links;
+			}
+
+			return $link;
+
 		}
 
 		/**
