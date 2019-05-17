@@ -491,6 +491,9 @@ function gmw_update_location( $args = array(), $location = array(), $force_refre
 	// abort if geocode failed.
 	if ( isset( $geocoded_data['error'] ) ) {
 
+		// Deprecated due to typo. Will be removed in the future.
+		do_action( 'gmw_udpate_location_failed', $geocoded_data, $object_type, $object_id, $location );
+
 		do_action( 'gmw_update_location_failed', $geocoded_data, $object_type, $object_id, $location );
 
 		return;
