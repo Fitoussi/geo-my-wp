@@ -405,7 +405,7 @@ function gmw_update_location( $args = array(), $location = array(), $force_refre
 		return;
 	}
 
-	// if specific location ID provided we will try to udpate this location.
+	// if specific location ID provided we will try to update this location.
 	if ( ! empty( $args['location_id'] ) ) {
 
 		$location_id    = $args['location_id'];
@@ -491,7 +491,7 @@ function gmw_update_location( $args = array(), $location = array(), $force_refre
 	// abort if geocode failed.
 	if ( isset( $geocoded_data['error'] ) ) {
 
-		do_action( 'gmw_udpate_location_failed', $geocoded_data, $object_type, $object_id, $location );
+		do_action( 'gmw_update_location_failed', $geocoded_data, $object_type, $object_id, $location );
 
 		return;
 	}

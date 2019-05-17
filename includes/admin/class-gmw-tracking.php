@@ -117,7 +117,7 @@ class GMW_Tracking {
 		// set true in admin settings global
 		$gmw_options['general_settings']['allow_tracking'] = '1';
 
-		// udpate admin settings
+		// update admin settings
 		update_option( 'gmw_options', $gmw_options );
 
 		// send data
@@ -307,7 +307,7 @@ class GMW_Tracking {
 			'user-agent'  => 'GMW/' . GMW_VERSION . '; ' . get_bloginfo( 'url' )
 		) );
 
-		// udpate the sent time
+		// update the sent time
 		update_option( 'gmw_tracking_last_send', time() );
 	}
 }
