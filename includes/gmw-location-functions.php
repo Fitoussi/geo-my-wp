@@ -45,7 +45,7 @@ function gmw_get_location( $args = 0, $output = OBJECT, $cache = true ) {
 		// when array of object type and object ID.
 	} elseif ( is_array( $args ) ) {
 
-		$object_type = ! empty( $args['object_type'] ) ? $args['object_type'] : '';
+		$object_type = ! empty( $args['object_type'] ) ? $args['object_type'] : 'post';
 		$object_id   = ! empty( $args['object_id'] ) ? $args['object_id'] : 0;
 
 		return GMW_Location::get_by_object( $object_type, $object_id, $output, $cache );
