@@ -139,6 +139,14 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 		?>
 		<style type="text/css">
 
+			#gmw_bpsgeo_location_options .inside {
+				padding: 0;
+			}
+
+			.gmw-bpsgeo-fields-wrapper {
+				padding: 0 12px 12px;
+			}
+
 			.gmw-bpsgeo-location-field-option {
 				border-top: 1px solid #efefef;
 				padding: 15px 0 20px;
@@ -174,11 +182,28 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 			.gmw-bpsgeo-options-trigger-wrap a {
 				color: #333;
 			}
+
+			.gmw-bpsgeo-additional-features-box {
+				padding: 5px 20px 10px;
+				box-sizing: border-box;
+				color: white;
+				margin-bottom: 15px;
+				background: #fff9dc;
+				color: #555;
+				border-top: 8px solid #ffe669;
+				margin-bottom: 0;
+			}
+
+			.gmw-bpsgeo-additional-features-box p {
+				font-size: 14px;
+			}
 		</style>
 
 		<?php
 
 		$settings = $this->get_settings( $post->id, $bps_options );
+
+		echo '<div class="gmw-bpsgeo-fields-wrapper">';
 
 		foreach ( $settings as $field ) {
 
@@ -196,6 +221,14 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 
 			echo '</div>';
 		}
+
+		echo '</div>';
+		?>
+		<div class="gmw-bpsgeo-additional-features-box">
+			<p><?php printf( __( 'Need additional features to display Google Map, the distance, diretions link, and more? Check out the <a href="%s" target="_blank">BuddyPress Members Directory Geolocation extension</a>.', 'geo-my-wp' ), 'https://geomywp.com/extensions/buddypress-members-directory-geolocation/' ); ?></p>
+		</div>
+
+		<?php
 
 		$label       = __( 'manage options', 'geo-my-wp' );
 		$warning     = __( 'You can only have one location field per form.', 'geo-my-wp' );
