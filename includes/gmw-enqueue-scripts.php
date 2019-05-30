@@ -95,15 +95,16 @@ function gmw_enqueue_scripts() {
 
 	// Variables to localize as JavaScript.
 	$options = apply_filters( 'gmw_localize_options', array(
-		'settings'          => array(
-			'general' 		=> $gmw_options['general_settings'],
-			'api'           => isset( $gmw_options['api_providers'] ) ? $gmw_options['api_providers'] : array(),
+		'settings'            => array(
+			'general' 		  => $gmw_options['general_settings'],
+			'api'             => isset( $gmw_options['api_providers'] ) ? $gmw_options['api_providers'] : array(),
 		),
 		'mapsProvider'      => $maps_provider,
 		'geocodingProvider' => $geocode_provider,
 		'defaultIcons'		=> GMW()->default_icons,
 		'isAdmin'           => IS_ADMIN,
 		'ajaxUrl'           => GMW()->ajax_url,
+		'locatorAlerts'     => apply_filters( 'gmw_auto_locator_alerts_enabled', true ) ? '1' : '0',
 	), $gmw_options );
 
 	wp_localize_script( 'gmw', 'gmwVars', $options );
