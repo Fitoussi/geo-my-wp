@@ -1,7 +1,7 @@
 === GEO my Wordpress ===
 Contributors: ninjew, Eyal Fitoussi
 Donate link: https://www.paypal.me/fitoussi
-Tags: Geolocation, Directory, Google Maps, OpenStreetMaps, Store Locator, Geolocator, Geotagging, Geocode, Mapping, Proximity search, Zipcode, Geolocate posts, Address search, Distance, Google maps, Directions, Locations, Geo, Members locator, Geolocate members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
+Tags: Geolocation, Directory, Store Locator, Google Maps, OpenStreetMaps, LeafLet, Geotagging, Geocode, Mapping, Proximity search, Zipcode, Geotag posts, Address search, Distance, Directions, Locations, Geo, Members locator, Geotag members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
 Requires at least: 4.3
 Tested up to: 5.3
 BuddyPress: 2.8
@@ -16,7 +16,7 @@ Advanced geolocation, mapping, and proximity search plugin. Geotag post types an
 
 Welcome to the ultimate geolocation, mapping, and proximity search solution for Wordpress.
 
-Using GEO my WP plugin, and the powerful features of Google Maps API or OpenStreetMaps, you can easily geotag any of your post types, BuddyPress members and other components. Create unlimited advanced, proximity search forms to search and find any of the geotagged components of your site. 
+Using GEO my WP plugin, and the powerful features of Google Maps API and OpenStreetMaps, you can easily geotag any of your post types, BuddyPress members and other components. Create unlimited advanced, proximity search forms to search and find any of the geotagged components of your site. 
 
 With GEO my WP, creating a real estate, events, directory, classifieds, social networking and any other type of location-based website is a simple task.
 
