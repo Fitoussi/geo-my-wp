@@ -3,9 +3,9 @@ Contributors: ninjew, Eyal Fitoussi
 Donate link: https://www.paypal.me/fitoussi
 Tags: Geolocation, Directory, Google Maps, OpenStreetMaps, Store Locator, Geolocator, Geotagging, Geocode, Mapping, Proximity search, Zipcode, Geolocate posts, Address search, Distance, Google maps, Directions, Locations, Geo, Members locator, Geolocate members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
 Requires at least: 4.3
-Tested up to: 5.1
+Tested up to: 5.3
 BuddyPress: 2.8
-Stable tag: 3.2.1
+Stable tag: 3.3
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,35 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 3.3 =
+
+* Note that version 3.2 was a major release. If you are updating from an earlier version, then backing up your site and/or testing this version on a staging environment first is recommended. See the changelog of version 3.2 for more details before updating.
+* --------------------------------
+*
+* New: Integration with BP Profile Search plugin ( Thanks to @Andrea Tarantini for great help with this feature ). A new BP Profile Search Geolocation core extension was added to the Extensions page of GEO my WP in the dashboard.
+* New: static function GMW_Form_Settings_Helper::get_form_field() to generate a form field.
+* Fix: get directions link does not work properly. Pass set of coordinates instead of gmw form object to the gmw_get_directions_link() function.
+* Fix: The map of GEO my WP Location form is partially loaded in new block editor of WordPress when the location section is hidden by default.
+* Fix: filter typo. Use 'gmw_update_location_failed' instead of 'gmw_udpate_location_failed'. ( thanks to @themylogin ).
+* Fix: geocoding of coordinates doesn't work properly when changing the value of the coordinates in the location form. The location form will geocode the address field instead of the coordinates.
+* Fix: form ID value is missing from the data-id attribute of the search results template files due to missing each.
+* Fix: issue with DB not being generated on MYSQL older than 5.6 because of CURRENT_TIMESTAMP.
+* Fix: a workaround to fix an issue with some themes where incorrect $post object passes to the location form on the Edit Post page of the admin.
+* Fix: deprecated filter 'gmw_pt_' . $args['usage'] . '_taxonomy_args doesn't return the modified value.
+* Fix: incorrectly using add_action instead of do_action with the 'gmw_locations_importer_done' action.
+* Tweak: modify the Members Locator search form xProfile fields feature to work with the new BP xProfile Custom Field Types by BuddyDev. The xProfile Custom Field Type plugin by @donmik is deprecated and is no longer supported.
+* Tweak: modify the order-by distance clause to accept multiple order-by items in the query.
+* Tweak: correct misspelled filters. deprecate all filters that begins with 'gmw_search_forms' and replace with 'gmw_search_form'. Old filters are still there but will be removed in the future.
+* Tweak: new 'link_only' argument added to the function get_directions_link() to return the Google Maps link only.
+* Tweak: add user login status to GEO my WP cache args.
+* Tweak: add 'radius' column to the locations DB table to be used with future extensions.
+* Tweak: modify the search form taxonomy function. Move the wrapping element from the function 'gmw_get_search_form_taxonomies()' to the function 'gmw_search_form_taxonomies()' to have more control over the styling when needed.
+* Tweak: new $wrapper argument added to the gmw_search_form_taxonomies() function to allow disabling the taxonomies main wrapper DIV element.
+* Filter: 'gmw_get_directions_link_output' to modify the get_directions link output.
+* Filter: 'gmw_get_location_address_fields' to modify the address field before output.
+* Filter: 'gmw_importer_args' to modify some of the arguments of GEO my WP importer.
+* Filter: 'gmw_auto_locator_alerts_enabled' to display auto locator failed messages in console instead of alert messages.
 
 = 3.2.1 =
 
