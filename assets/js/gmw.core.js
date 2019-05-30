@@ -634,8 +634,14 @@ var GMW = {
         // otherwise, get done with the function.
         } else {
 
-            // alert error message
-            alert( status );
+        	if ( typeof gmwVars.locatorAlerts !== 'undefined' && gmwVars.locatorAlerts == 1 ) {
+	            
+	            // alert error message
+	            alert( status );
+
+	        } else {
+	        	console.log( status );
+	        }
 
             GMW.vars.auto_locator.status  = false;
             GMW.vars.auto_locator.type    = false;
@@ -979,8 +985,16 @@ var GMW = {
      */
     locator_button_failed : function( status ) {
 
-        // alert failed message
-        alert( 'Geocoder failed due to: ' + status );
+    	var message = 'Geocoder failed due to: ' + status;
+
+    	if ( typeof gmwVars.locatorAlerts !== 'undefined' && gmwVars.locatorAlerts == 1 ) {
+	            
+            // alert error message
+            alert( message );
+
+        } else {
+        	console.log( message );
+        }
 
         GMW.locator_button_done();
     },
