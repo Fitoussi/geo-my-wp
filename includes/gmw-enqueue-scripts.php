@@ -1,13 +1,18 @@
 <?php
-// Block direct requests
+/**
+ * GEO my WP Enqueue Scripts
+ *
+ * @author Eyal Fitoussi
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Block direct requests.
 }
 
 /**
  * Register Google Maps API.
- *
- * @return [type] [description]
  *
  * @since 3.1
  */
@@ -20,22 +25,25 @@ function gmw_register_google_maps_api() {
 			$china = gmw_get_option( 'api_providers', 'google_maps_api_china', '' );
 			$url   = empty( $china ) ? '://maps.googleapis.com/maps/api/js?' : '://maps.google.cn/maps/api/js?';
 
-			// Generate Google API url. elements can be modified via filters
+			// Generate Google API url. elements can be modified via filters.
 			$google_url = apply_filters(
-				'gmw_google_maps_api_url', array(
+				'gmw_google_maps_api_url',
+				array(
 					'protocol' => 'https',
 					'url_base' => $url,
 					'url_data' => http_build_query(
 						apply_filters(
-							'gmw_google_maps_api_args', array(
+							'gmw_google_maps_api_args',
+							array(
 								'region'    => gmw_get_option( 'general_settings', 'country_code', 'us' ),
-								'libraries' => 'google_maps' == GMW()->maps_provider ? 'places' : '',
+								'libraries' => 'google_maps' === GMW()->maps_provider ? 'places' : '',
 								'key'       => trim( gmw_get_option( 'api_providers', 'google_maps_client_side_api_key', '' ) ),
 								'language'  => gmw_get_option( 'general_settings', 'language_code', 'en' ),
 							)
 						)
 					),
-				), gmw_get_options_group()
+				),
+				gmw_get_options_group()
 			);
 
 			wp_register_script( 'google-maps', implode( '', $google_url ), array(), GMW_VERSION, true );
@@ -47,7 +55,6 @@ function gmw_register_google_maps_api() {
  * GMW enqueue scripts and styles
  *
  * Note, some additional script / styles enqueue in class-gmw-maps-api.php file.
- * @return [type] [description]
  */
 function gmw_enqueue_scripts() {
 
@@ -58,15 +65,17 @@ function gmw_enqueue_scripts() {
 	$map_scripts      = array( 'jquery', 'gmw' );
 	$lf_scripts       = array( 'jquery', 'gmw' );
 
-	// load maps provider
-	if ( 'google_maps' == $maps_provider ) {
+	// load maps provider.
+	if ( 'google_maps' === $maps_provider ) {
 
 		$main_scripts[] = 'google-maps';
 		gmw_register_google_maps_api();
 
-	} else if ( 'leaflet' == $maps_provider ) {
+	} elseif ( 'leaflet' === $maps_provider ) {
 
-		$map_scripts[] = $lf_scripts[] = 'leaflet';
+		$map_scripts[] = 'leaflet';
+		$lf_scripts[]  = 'leaflet';
+
 		wp_register_script( 'leaflet', GMW_URL . '/assets/lib/leaflet/leaflet.bundle.min.js', array(), GMW_VERSION, true );
 
 	} else {
@@ -74,38 +83,41 @@ function gmw_enqueue_scripts() {
 	}
 
 	// load geocoding providers.
-	if ( 'google_maps' == $geocode_provider ) {
+	if ( 'google_maps' === $geocode_provider ) {
 
 		// Load geocoding provider only if other than Google Maps.
 		// Otherwise, no need to load Google Maps again as it is already loaded as map provider.
-		if ( 'google_maps' != $maps_provider ) {
+		if ( 'google_maps' !== $maps_provider ) {
 			$main_scripts[] = 'google-maps';
 			gmw_register_google_maps_api();
 		};
 
-	// Load custom geocoding provider.
+		// Load custom geocoding provider.
 	} else {
 		do_action( 'gmw_register_geocoding_provider_' . $geocode_provider );
 	}
 
-	//$main_scripts = apply_filters( 'gmw_main_script_dependencies', $main_scripts );
-
+	// $main_scripts = apply_filters( 'gmw_main_script_dependencies', $main_scripts );
 	// register gmw script
 	wp_register_script( 'gmw', GMW_URL . '/assets/js/gmw.core.min.js', $main_scripts, GMW_VERSION, true );
 
 	// Variables to localize as JavaScript.
-	$options = apply_filters( 'gmw_localize_options', array(
-		'settings'            => array(
-			'general' 		  => $gmw_options['general_settings'],
-			'api'             => isset( $gmw_options['api_providers'] ) ? $gmw_options['api_providers'] : array(),
+	$options = apply_filters(
+		'gmw_localize_options',
+		array(
+			'settings'          => array(
+				'general' => $gmw_options['general_settings'],
+				'api'     => isset( $gmw_options['api_providers'] ) ? $gmw_options['api_providers'] : array(),
+			),
+			'mapsProvider'      => $maps_provider,
+			'geocodingProvider' => $geocode_provider,
+			'defaultIcons'      => GMW()->default_icons,
+			'isAdmin'           => IS_ADMIN,
+			'ajaxUrl'           => GMW()->ajax_url,
+			'locatorAlerts'     => apply_filters( 'gmw_auto_locator_alerts_enabled', true ) ? '1' : '0',
 		),
-		'mapsProvider'      => $maps_provider,
-		'geocodingProvider' => $geocode_provider,
-		'defaultIcons'		=> GMW()->default_icons,
-		'isAdmin'           => IS_ADMIN,
-		'ajaxUrl'           => GMW()->ajax_url,
-		'locatorAlerts'     => apply_filters( 'gmw_auto_locator_alerts_enabled', true ) ? '1' : '0',
-	), $gmw_options );
+		$gmw_options
+	);
 
 	wp_localize_script( 'gmw', 'gmwVars', $options );
 
@@ -116,42 +128,42 @@ function gmw_enqueue_scripts() {
 	wp_register_style( 'gmw-location-form', GMW_URL . '/includes/location-form/assets/css/gmw.location.form.min.css', array(), GMW_VERSION );
 	wp_register_script( 'gmw-location-form', GMW_URL . '/includes/location-form/assets/js/gmw.location.form.min.js', $lf_scripts, GMW_VERSION, true );
 
-	// register in front-end only
+	// register in front-end only.
 	if ( ! IS_ADMIN ) {
 
-		// include GMW main stylesheet
+		// include GMW main stylesheet.
 		wp_enqueue_style( 'gmw-frontend', GMW_URL . '/assets/css/gmw.frontend.min.css', array(), GMW_VERSION );
 
 		// Map script.
 		wp_register_script( 'gmw-map', GMW_URL . '/assets/js/gmw.map.min.js', $map_scripts, GMW_VERSION, true );
 
-		// load styles in head
+		// load styles in head.
 		$form_styles = apply_filters( 'gmw_load_form_styles_in_head', array() );
 
-		// load form stylesheets early
+		// load form stylesheets early.
 		if ( ! empty( $form_styles ) ) {
 			foreach ( $form_styles as $form_style ) {
 				gmw_enqueue_form_styles( $form_style );
 			}
 		}
 
-	//register scripts/styles in admin only
+		// register scripts/styles in admin only.
 	} else {
 
 		// fonts file in admin only. In front-end it is combined with front-end stylesheet.
 		wp_enqueue_style( 'gmw-fonts', GMW_URL . '/assets/css/gmw.font.min.css', array(), GMW_VERSION );
 		wp_enqueue_style( 'gmw-admin', GMW_URL . '/assets/css/gmw.admin.min.css', array(), GMW_VERSION );
 
-		// enqueue on GMW admin pages only
-		if ( ! empty( $_GET['page'] ) && strpos( $_GET['page'], 'gmw' ) !== false ) {
+		// enqueue on GMW admin pages only.
+		if ( ! empty( $_GET['page'] ) && strpos( $_GET['page'], 'gmw' ) !== false ) { // WPCS: CSRF ok, sanitization ok.
 			wp_enqueue_script( 'gmw-admin', GMW_URL . '/assets/js/gmw.admin.min.js', array( 'jquery', 'gmw' ), GMW_VERSION, true );
 		}
 
-		// register locations importer
-		wp_register_script( 'gmw-locations-importer', GMW_URL . '/includes/admin/pages/import-export/locations-importer/assets/js/gmw.locations.importer.min.js', array( 'jquery' ), GMW_VERSION );
+		// register locations importer.
+		wp_register_script( 'gmw-locations-importer', GMW_URL . '/includes/admin/pages/import-export/locations-importer/assets/js/gmw.locations.importer.min.js', array( 'jquery' ), GMW_VERSION, true );
 		wp_register_style( 'gmw-locations-importer', GMW_URL . '/includes/admin/pages/import-export/locations-importer/assets/css/gmw.locations.importer.min.css', array(), GMW_VERSION );
 
-		// register chosen scripts/style in back-end
+		// register chosen scripts/style in back-end.
 		if ( ! wp_style_is( 'chosen', 'registered' ) ) {
 			wp_register_style( 'chosen', GMW_URL . '/assets/lib/chosen/chosen.min.css', array(), '1.8.7' );
 		}
