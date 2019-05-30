@@ -451,7 +451,11 @@ var GMW_Location_Form = {
 
 		// render map.
 		if ( this_form.map_enabled && jQuery( '#gmw-lf-map' ).length ) {
-			this_form.renderMap();
+
+			// Render the map with a short delay to prevent issues if it is inside a hidden element.
+			setTimeout( function(){
+				this_form.renderMap();
+			}, 300 );
 		}
 
 		// init locator button.
@@ -461,6 +465,20 @@ var GMW_Location_Form = {
 			jQuery( '.gmw-lf-locator-button' ).remove();
 		}
 
+		// Resize map when the location box of the edit post page is made visible.
+		if ( jQuery( 'body.wp-admin #gmw-location-meta-box .gmw-lf-field-wrapper.gmw-lf-map' ).length ) {
+
+			jQuery( '#gmw-location-meta-box .hndle' ).on( 'click', function() {
+
+				setTimeout( function(){  
+		    		// resize map
+		    		this_form.resizeMap( this_form.map );
+
+		    		// center map on marker
+		    		this_form.setCenter( this_form.getPosition( this_form.map_marker ), this_form.map );
+		    	}, 200 );
+			});
+		}
 		//if ( this_form.vars.stand_alone ) {
 
 
