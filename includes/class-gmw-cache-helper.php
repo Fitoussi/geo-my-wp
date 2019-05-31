@@ -1,7 +1,14 @@
 <?php
-// Exit if accessed directly
+/**
+ * GEO my WP internal cache system.
+ *
+ * @author Eyal Fitoussi. Inspired by the work done by Mike Jolley on WP Job Manager plugin.
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -13,8 +20,6 @@ class GMW_Cache_Helper {
 
 	/**
 	 * Init.
-	 *
-	 * @return [type] [description]
 	 */
 	public static function init() {
 
@@ -46,9 +51,9 @@ class GMW_Cache_Helper {
 	/**
 	 * Flush locations and query cache when saving or deleting a location
 	 *
-	 * @param  [type] $location_id   [description]
-	 * @param  [type] $location_data [description]
-	 * @return [type]                [description]
+	 * @param  int    $location_id   location ID.
+	 *
+	 * @param  object $location_data location object.
 	 */
 	public static function flush_locations_cache( $location_id, $location_data ) {
 		self::get_transient_version( 'gmw_get_object_' . $location_data->object_type . '_locations', true );
@@ -58,9 +63,7 @@ class GMW_Cache_Helper {
 	/**
 	 * Flush locations and query cache by object id
 	 *
-	 * @param  [type] $location_id   [description]
-	 * @param  [type] $location_data [description]
-	 * @return [type]                [description]
+	 * @param  string $object_type object type.
 	 */
 	public static function flush_cache_by_object( $object_type ) {
 		self::get_transient_version( 'gmw_get_object_' . $object_type . '_locations', true );
@@ -70,9 +73,9 @@ class GMW_Cache_Helper {
 	/**
 	 * Flush post query cache when updating a post
 	 *
-	 * @param  [type] $post_id [description]
-	 * @param  [type] $post    [description]
-	 * @return [type]          [description]
+	 * @param  int    $post_id post ID.
+	 *
+	 * @param  object $post    post object.
 	 */
 	public static function flush_post_query_cache( $post_id, $post ) {
 		self::get_transient_version( 'gmw_get_object_post_query', true );
@@ -80,6 +83,14 @@ class GMW_Cache_Helper {
 
 	/**
 	 * When any post has a term set
+	 *
+	 * @param int    $object_id object ID.
+	 *
+	 * @param array  $terms tax terms.
+	 *
+	 * @param int    $tt_ids term taxonomy ID.
+	 *
+	 * @param string $taxonomy tax name.
 	 */
 	public static function set_term( $object_id = '', $terms = '', $tt_ids = '', $taxonomy = '' ) {
 		self::get_transient_version( 'gmw_get_' . sanitize_text_field( $taxonomy ) . '_terms', true );
@@ -88,6 +99,12 @@ class GMW_Cache_Helper {
 
 	/**
 	 * When any term is edited
+	 *
+	 * @param int    $term_id term ID.
+	 *
+	 * @param int    $tt_id term taxonomy ID.
+	 *
+	 * @param string $taxonomy tax name.
 	 */
 	public static function edited_term( $term_id = '', $tt_id = '', $taxonomy = '' ) {
 		self::get_transient_version( 'gmw_get_' . sanitize_text_field( $taxonomy ) . '_terms', true );
@@ -107,8 +124,10 @@ class GMW_Cache_Helper {
 	 * to append a unique string (based on a random number ) to each transient. When transients
 	 * are invalidated, the transient version will increment and data will be regenerated.
 	 *
-	 * @param  string  $group   Name for the group of transients we need to invalidate
-	 * @param  boolean $refresh true to force a new version
+	 * @param  string  $group   Name for the group of transients we need to invalidate.
+	 *
+	 * @param  boolean $refresh true to force a new version.
+	 *
 	 * @return string transient version based on time(), 10 digits
 	 */
 	public static function get_transient_version( $group, $refresh = false ) {
@@ -120,10 +139,9 @@ class GMW_Cache_Helper {
 
 			self::delete_version_transients( $transient_value );
 
-			//set_transient( $transient_name, $transient_value = time() );
-
-			// 2147483647 largest value can be used as random on some OS
-			$rnd = rand( 0, 2147483647 );
+			// set_transient( $transient_name, $transient_value = time() );
+			// 2147483647 largest value can be used as random on some OS.
+			$rnd = wp_rand( 0, 2147483647 );
 
 			set_transient( $transient_name, $transient_value = $rnd );
 		}
@@ -134,7 +152,11 @@ class GMW_Cache_Helper {
 	/**
 	 * When the transient version increases, this is used to remove all past transients to avoid filling the DB.
 	 *
-	 * Note; this only works on transients appended with the transient version, and when object caching is not being used.
+	 * Note: this only works on transients appended with the transient version,
+	 *
+	 * and when object caching is not being used.
+	 *
+	 * @param string $version transient version.
 	 */
 	private static function delete_version_transients( $version ) {
 
@@ -146,9 +168,10 @@ class GMW_Cache_Helper {
 				$wpdb->prepare(
 					"
 					DELETE FROM {$wpdb->options} 
-					WHERE option_name LIKE %s;", '\_transient\_%' . $version
+					WHERE option_name LIKE %s;",
+					'\_transient\_%' . $version
 				)
-			);
+			); // WPCS: db call ok, cache ok.
 		}
 	}
 
@@ -174,7 +197,7 @@ class GMW_Cache_Helper {
 					$wpdb->esc_like( '_transient_timeout_gmw' ) . '%',
 					time()
 				)
-			);
+			); // WPCS: db call ok, cache ok, unprepared sql ok.
 		}
 	}
 }
