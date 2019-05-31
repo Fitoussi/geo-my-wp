@@ -82,6 +82,7 @@ class GMW_Cache_Helper {
 	 * When any post has a term set
 	 */
 	public static function set_term( $object_id = '', $terms = '', $tt_ids = '', $taxonomy = '' ) {
+		self::get_transient_version( 'gmw_get_' . sanitize_text_field( $taxonomy ) . '_terms', true );
 		self::get_transient_version( 'gmw_get_the_' . sanitize_text_field( $taxonomy ) . '_terms', true );
 	}
 
