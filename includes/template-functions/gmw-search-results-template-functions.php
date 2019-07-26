@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function gmw_search_results_address( $object, $gmw = array() ) {
 
-	if ( empty( $gmw['search_results']['address_fields'] ) ) {
+	if ( empty( $gmw['search_results']['address_fields'][0] ) || 'address' === $gmw['search_results']['address_fields'][0] ) {
 		$fields = array( 'formatted_address' );
 	} else {
 		$fields = $gmw['search_results']['address_fields'];
@@ -73,7 +73,7 @@ function gmw_search_results_location_meta( $object, $gmw = array(), $label = tru
 
 	$data = gmw_get_location_meta_list( $object, $gmw['search_results']['location_meta'] );
 
-	if ( false === $data ) {
+	if ( empty( $data ) ) {
 		return;
 	}
 
