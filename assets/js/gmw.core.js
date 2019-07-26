@@ -111,7 +111,8 @@ var GMW = {
      */
     init : function() {
 
-        GMW.add_action( 'gmw_init' );
+        //GMW.add_action( 'gmw_init' );
+        GMW.do_action( 'gmw_init' );
 
         // hide all map loaders
         //jQuery( 'div.gmw-map-wrapper' ).find( 'i.gmw-map-loader' ).fadeOut( 1500 );  
@@ -2425,6 +2426,8 @@ if ( jQuery( '.gmw-current-location-wrapper' ).length ) {
 	        jQuery( '.gmw-map-wrapper.current_location' ).fadeOut();
 	        jQuery( '.gmw-cl-form-trigger, .gmw-cl-clear-location-trigger' ).slideUp();
 	        jQuery( '.gmw-cl-form' ).slideDown();
+
+	        GMW.do_action( 'gmw_cl_after_location_deleted', element );
 	    },
 
 	    /**
