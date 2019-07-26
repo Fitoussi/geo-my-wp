@@ -1204,9 +1204,10 @@ function gmw_get_location_meta_list( $location = false, $fields = array(), $labe
 		return;
 	}
 
-	$count  = 0;
-	$output = '';
-	$labels = apply_filters( 'gmw_get_location_meta_list_labels', $labels, $fields, $location );
+	$count         = 0;
+	$output        = '';
+	$labels        = apply_filters( 'gmw_get_location_meta_list_labels', $labels, $fields, $location );
+	$location_meta = apply_filters( 'gmw_location_meta_list_field_before_output', $location_meta, $location );
 
 	// loop through fields.
 	foreach ( $location_meta as $field => $value ) {
