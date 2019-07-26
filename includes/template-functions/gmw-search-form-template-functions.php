@@ -91,7 +91,7 @@ function gmw_get_search_form_address_field( $gmw ) {
 
 	$output .= '</div>';
 
-	return apply_filters( 'gmw_search_form_address_field', $output, $gmw );
+	return apply_filters( 'gmw_search_form_address_field', $output, $gmw, $args );
 }
 
 /**
