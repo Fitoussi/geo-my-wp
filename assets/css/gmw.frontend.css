@@ -1311,11 +1311,12 @@ div.gmw-info-window .iw-close-button {
 	cursor: pointer;
 }
 
-div.gmw-info-window.user-marker {
+div.gm-style-iw div.gmw-info-window.user-marker {
 	min-width: initial;
 	min-height: initial;
 	padding: 0;
 	font-size: 13px;
+	padding: 8px 15px 10px;
 }
 
 /***** Standard *****/
