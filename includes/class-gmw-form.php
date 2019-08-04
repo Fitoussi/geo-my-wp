@@ -134,6 +134,7 @@ class GMW_Form {
 		'street_number',
 		'street',
 		'premise',
+		'neighborhood',
 		'city',
 		'region_name',
 		'region_code',
@@ -339,7 +340,8 @@ class GMW_Form {
 		$this->form['form_values']      = array();
 		$this->form['lat']              = false;
 		$this->form['lng']              = false;
-		$this->form['org_address']      = false;
+		$this->form['address']          = false;
+		$this->form['org_address']      = false; // deprecated, use "address" instead.
 		$this->form['get_per_page']     = false;
 		$this->form['units_array']      = false;
 		$this->form['radius']           = false;
@@ -355,6 +357,7 @@ class GMW_Form {
 		$this->form['total_results']    = 0;
 		$this->form['max_pages']        = 0;
 		$this->form['in_widget']        = ! empty( $this->form['params']['widget'] ) ? true : false;
+		$this->form['modify_permalink'] = 0;
 
 		// check if form submitted.
 		if ( isset( $_GET[ $this->url_px . 'form' ] ) ) { // WPCS: CSRF ok.
@@ -538,7 +541,7 @@ class GMW_Form {
 		$user_position = array(
 			'lat'        => $this->form['lat'],
 			'lng'        => $this->form['lng'],
-			'address'    => $this->form['org_address'],
+			'address'    => $this->form['address'],
 			'map_icon'   => GMW()->default_icons['user_location_icon_url'],
 			'icon_size'  => null,
 			'iw_content' => __( 'Your location', 'geo-my-wp' ),
@@ -632,7 +635,8 @@ class GMW_Form {
 		$form_values = $this->form['form_values'];
 
 		$this->form['radius']       = isset( $form_values['distance'] ) ? $form_values['distance'] : 500;
-		$this->form['org_address']  = ( isset( $form_values['address'] ) && array_filter( $form_values['address'] ) ) ? implode( ' ', $form_values['address'] ) : '';
+		$this->form['address']      = ( isset( $form_values['address'] ) && array_filter( $form_values['address'] ) ) ? implode( ' ', $form_values['address'] ) : '';
+		$this->form['org_address']  = $this->form['address'];
 		$per_page                   = isset( $this->form['search_results']['per_page'] ) ? current( explode( ',', $this->form['search_results']['per_page'] ) ) : -1;
 		$this->form['get_per_page'] = isset( $form_values['per_page'] ) ? $form_values['per_page'] : $per_page;
 		$this->form['units']        = isset( $form_values['units'] ) ? $form_values['units'] : 'imperial';
@@ -645,13 +649,13 @@ class GMW_Form {
 			$this->form['lng'] = $form_values['lng'];
 
 			// Otherwise look for an address to geocode.
-		} elseif ( ! empty( $this->form['org_address'] ) ) {
+		} elseif ( ! empty( $this->form['address'] ) ) {
 
 			// include geocoder.
 			include_once GMW_PATH . '/includes/gmw-geocoder.php';
 
 			if ( function_exists( 'gmw_geocoder' ) ) {
-				$this->geocoded_location = gmw_geocoder( $this->form['org_address'] );
+				$this->geocoded_location = gmw_geocoder( $this->form['address'] );
 				$this->form['location']  = $this->geocoded_location;
 			}
 
@@ -686,6 +690,7 @@ class GMW_Form {
 	public function page_load_results() {
 
 		$page_load_options          = $this->form['page_load_results'];
+		$this->form['address']      = '';
 		$this->form['org_address']  = '';
 		$this->form['get_per_page'] = ! empty( $form_values['per_page'] ) ? $form_values['per_page'] : current( explode( ',', $page_load_options['per_page'] ) );
 		$this->form['radius']       = ! empty( $page_load_options['radius'] ) ? $page_load_options['radius'] : 200;
@@ -698,7 +703,7 @@ class GMW_Form {
 		if ( ! empty( $page_load_options['user_location'] ) && ! empty( $user_location ) ) {
 
 			// get user's current location.
-			$this->form['org_address'] = $user_location->address;
+			$this->form['address'] = $user_location->address;
 
 			// append it to page load results as well to easier add it to query cache args.
 			$this->form['lat']                      = $user_location->lat;
@@ -710,14 +715,14 @@ class GMW_Form {
 		} elseif ( ! empty( $page_load_options['address_filter'] ) ) {
 
 			// get the addres value.
-			$this->form['org_address'] = sanitize_text_field( $page_load_options['address_filter'] );
+			$this->form['address'] = sanitize_text_field( $page_load_options['address_filter'] );
 
 			// include the geocoder.
 			include GMW_PATH . '/includes/gmw-geocoder.php';
 
 			// try to geocode the address.
 			if ( function_exists( 'gmw_geocoder' ) ) {
-				$this->form['location'] = gmw_geocoder( $this->form['org_address'] );
+				$this->form['location'] = gmw_geocoder( $this->form['address'] );
 			}
 
 			// if geocode was unsuccessful return error message.
@@ -839,13 +844,13 @@ class GMW_Form {
 	public function append_address_to_permalink( $url ) {
 
 		// abort if no address.
-		if ( empty( $this->form['org_address'] ) ) {
+		if ( empty( $this->form['address'] ) ) {
 			return $url;
 		}
 
 		// get the permalink args.
 		$url_args = array(
-			'address' => str_replace( ' ', '+', $this->form['org_address'] ),
+			'address' => str_replace( ' ', '+', $this->form['address'] ),
 			'lat'     => $this->form['lat'],
 			'lng'     => $this->form['lng'],
 		);
@@ -1091,7 +1096,7 @@ class GMW_Form {
 			'results_count'    => $this->form['results_count'],
 			'total_count'      => $this->form['total_results'],
 			'form_submitted'   => $this->form['submitted'],
-			'address'          => $this->form['org_address'],
+			'address'          => $this->form['address'],
 			'radius'           => $this->form['radius'],
 			'units'            => $this->form['units'],
 			'count_message'    => $message['count_message'],
