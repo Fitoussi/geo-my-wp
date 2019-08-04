@@ -1,7 +1,14 @@
 <?php
+/**
+ * GMW Search Results Template functions.
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
+
 
 /**
  * Display address fields in search results
@@ -216,3 +223,56 @@ function gmw_get_search_results_orderby_filter( $gmw = array(), $args = false ) 
 function gmw_search_results_orderby_filter( $gmw = array() ) {
 	echo gmw_get_search_results_orderby_filter( $gmw ); // WPCS: XSS ok.
 }
+
+/**
+ * Get the location permalink in the search results.
+ *
+ * Modify the pemalink and append it with some location data.
+ *
+ * @since 3.3.1
+ *
+ * @author Eyal Fitoussi
+ *
+ * @param  string $url    original permalink.
+ * @param  object $object location object.
+ * @param  array  $gmw    gmw form.
+ *
+ * @return string         modified permalink.
+ */
+function gmw_get_search_results_permalink( $url, $object, $gmw ) {
+
+	// abort if no address.
+	if ( empty( $gmw['address'] ) || empty( $gmw['modify_permalink'] ) ) {
+		return $url;
+	}
+
+	// get the permalink args.
+	$url_args = array(
+		'address' => str_replace( ' ', '+', $gmw['address'] ),
+		'lat'     => $gmw['lat'],
+		'lng'     => $gmw['lng'],
+	);
+
+	if ( ! empty( $object->distance ) ) {
+		$url_args['distance'] = $object->distance . $object->units;
+	}
+
+	// append the address to the permalink.
+	return esc_url( apply_filters( "gmw_{$gmw['prefix']}_get_location_permalink", $url . '?' . http_build_query( $url_args ), $url, $url_args, $object, $gmw ) );
+}
+
+/**
+ * Display the location permalink in the search results.
+ *
+ * @since 3.3.1
+ *
+ * @author Eyal Fitoussi
+ *
+ * @param  string $url    original permalink.
+ * @param  object $object location object.
+ * @param  array  $gmw    gmw form.
+ */
+function gmw_search_results_permalink( $url, $object, $gmw ) {
+	echo gmw_get_search_results_permalink( $url, $object, $gmw ); // WPCS: XSS ok.
+}
+
