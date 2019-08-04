@@ -38,7 +38,7 @@ class GMW_Single_Location {
 		'address_fields'       => 'address',
 		'additional_info'      => '', // deprecated - replaced with location_meta.
 		'location_meta'        => '',
-		'units'                => 'metric',
+		'units'                => 'imperial',
 		'map_height'           => '250px',
 		'map_width'            => '250px',
 		'map_type'             => 'ROADMAP',
