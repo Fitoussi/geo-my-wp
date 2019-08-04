@@ -499,6 +499,10 @@ function gmw_get_form_values( $prefix = '', $query_string = '' ) {
 		}
 	}
 
+	if ( ! empty( $output['sortby'] ) ) {
+		$output['orderby'] = $output['sortby'];
+	}
+
 	return $output;
 }
 
@@ -612,7 +616,7 @@ function gmw_get_units_array( $units = 'imperial' ) {
  *
  * @return [type]            [description]
  */
-function gmw_calculate_distance( $start_lat, $start_lng, $end_lat, $end_lng, $units = 'k' ) {
+function gmw_calculate_distance( $start_lat, $start_lng, $end_lat, $end_lng, $units = 'm' ) {
 
 	$rad      = M_PI / 180;
 	$radius   = in_array( $units, array( 'k', 'metric', 'kilometers', 'K', 'kilometer' ), true ) ? 6371 : 3959;
