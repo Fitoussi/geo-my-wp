@@ -1380,12 +1380,14 @@ var GMW_Geocoders = {
 					fields.premise = ac[x].long_name;
 				}
 				
-				 if ( ac[x].types == 'neighborhood,political' && ac[x].long_name != undefined ) {
+				if ( ac[x].types == 'neighborhood,political' && ac[x].long_name != undefined ) {
 				 	fields.neighborhood = ac[x].long_name;
 				}
 	 
-		        if( ac[x].types == 'locality,political' && ac[x].long_name != undefined ) {
+		        if ( ac[x].types == 'locality,political' && ac[x].long_name != undefined ) {
 		        	fields.city = ac[x].long_name;
+				} else if ( ac[x].types == 'postal_town' && ac[x].long_name != undefined ) {
+					fields.city = ac[x].long_name;
 				}
 		        
 		        if ( ac[x].types == 'administrative_area_level_1,political' ) {
