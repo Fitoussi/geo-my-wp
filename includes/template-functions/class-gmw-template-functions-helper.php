@@ -344,7 +344,7 @@ class GMW_Template_Functions_Helper {
 			'id'           => 0,
 			'id_attr'      => '',
 			'class'        => '',
-			'name'         => $url_px . 'sortby',
+			'name'         => ! empty( $args['ajax_enabled'] ) ? $url_px . 'orderby' : $url_px . 'sortby',
 			'label'        => __( 'Default order', 'geo-my-wp' ),
 			'default'      => 'distance',
 			'submitted'    => 0,
