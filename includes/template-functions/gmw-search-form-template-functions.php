@@ -70,7 +70,29 @@ function gmw_search_form_submit_button( $gmw = array(), $label = '' ) {
  */
 function gmw_get_search_form_address_field( $gmw ) {
 
-	$settings = $gmw['search_form']['address_field'];
+	$settings   = $gmw['search_form']['address_field'];
+	$pl_options = $gmw['page_load_results'];
+	$value      = '';
+
+	// When in page load, add the address to the address field by default.
+	if ( ! empty( $gmw['page_load_action'] ) && ! empty( $pl_options['enabled'] ) ) {
+
+		// When using the user's current location.
+		if ( ! empty( $pl_options['user_location'] ) ) {
+
+			$user_location = gmw_get_user_current_location();
+
+			if ( ! empty( $user_location ) ) {
+				$value = $user_location->address;
+			}
+
+			// When address filter is set.
+		} elseif ( ! empty( $pl_options['address_filter'] ) ) {
+
+			// get the addres value.
+			$value = sanitize_text_field( $pl_options['address_filter'] );
+		}
+	}
 
 	$args = array(
 		'id'                   => absint( $gmw['ID'] ),
@@ -79,6 +101,7 @@ function gmw_get_search_form_address_field( $gmw ) {
 		'address_autocomplete' => ! empty( $settings['address_autocomplete'] ) ? 1 : 0,
 		'locator_button'       => ! empty( $settings['locator'] ) ? 1 : 0,
 		'locator_submit'       => ! empty( $settings['locator_submit'] ) ? 1 : 0,
+		'value'                => $value,
 	);
 
 	$output = '<div class="gmw-form-field-wrapper gmw-address-field-wrapper">';
