@@ -360,7 +360,7 @@ class GMW_Form {
 		$this->form['modify_permalink'] = 0;
 
 		// check if form submitted.
-		if ( isset( $_GET[ $this->url_px . 'form' ] ) ) { // WPCS: CSRF ok.
+		if ( isset( $_GET[ $this->url_px . 'form' ] ) && isset( $_GET[ $this->url_px . 'action' ] ) && 'fs' === $_GET[ $this->url_px . 'action' ] ) { // WPCS: CSRF ok.
 
 			$this->form['submitted']    = true;
 			$this->form['form_values']  = $this->get_form_values();
@@ -688,6 +688,9 @@ class GMW_Form {
 	 * @return [type] [description]
 	 */
 	public function page_load_results() {
+
+		// get form values.
+		$form_values = $this->form['form_values'];
 
 		$page_load_options          = $this->form['page_load_results'];
 		$this->form['address']      = '';
