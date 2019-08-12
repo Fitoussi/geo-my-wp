@@ -63,8 +63,8 @@ class GMW_PT_Search_Form_Helper {
 
 			} else {
 
-				$options_all = 'All ' . esc_html( $taxonomy->labels->name );
-				$placeholder = 'Select ' . esc_html( $taxonomy->labels->name );
+				$options_all = sprintf( __( 'All %s', 'geo-my-wp' ), esc_html( $taxonomy->labels->name ) );
+				$placeholder = sprintf( __( 'Select %s', 'geo-my-wp' ), esc_html( $taxonomy->labels->name ) );
 			}
 		}
 
