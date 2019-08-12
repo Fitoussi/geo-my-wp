@@ -404,6 +404,7 @@ class GMW_Search_Form_Helper {
 		$output .= "<input type=\"hidden\" id=\"gmw-lat-{$id}\" class=\"gmw-lat\" name=\"{$url_px}lat\" value=\"{$lat}\"/>";
 		$output .= "<input type=\"hidden\" id=\"gmw-lng-{$id}\" class=\"gmw-lng\" name=\"{$url_px}lng\" value=\"{$lng}\"/>";
 		$output .= "<input type=\"hidden\" id=\"gmw-form-id-{$id}\" class=\"gmw-form-id\" name=\"{$url_px}form\" value=\"{$id}\" />";
+		$output .= "<input type=\"hidden\" id=\"gmw-action-{$id}\" class=\"gmw-action\" name=\"{$url_px}action\" value=\"fs\"/>";
 
 		$disabled = ! $state ? 'disabled="disabled"' : '';
 		$output  .= "<input type=\"hidden\" id=\"gmw-state-{$id}\" class=\"gmw-state\" name=\"state\" value=\"{$state}\" {$disabled}/>";
