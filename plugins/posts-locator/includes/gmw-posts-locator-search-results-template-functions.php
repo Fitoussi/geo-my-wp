@@ -203,5 +203,5 @@ function gmw_search_results_post_excerpt( $post, $gmw = array() ) {
 		'the_content_filter' => 1,
 	);
 
-	echo '<div class="excerpt">' . GMW_Template_Functions_Helper::get_excerpt( $args ) . '</div>'; // WPCS: XSS ok.
+	echo '<div class="gmw-excerpt excerpt">' . GMW_Template_Functions_Helper::get_excerpt( $args ) . '</div>'; // WPCS: XSS ok.
 }
