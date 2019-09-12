@@ -76,7 +76,7 @@ function gmw_enqueue_scripts() {
 		$map_scripts[] = 'leaflet';
 		$lf_scripts[]  = 'leaflet';
 
-		wp_register_script( 'leaflet', GMW_URL . '/assets/lib/leaflet/leaflet.bundle.min.js', array(), GMW_VERSION, true );
+		wp_register_script( 'leaflet', GMW_URL . '/assets/lib/leaflet/leaflet.min.js', array(), '1.5.1', true );
 
 	} else {
 		do_action( 'gmw_register_maps_provider_' . $maps_provider );
