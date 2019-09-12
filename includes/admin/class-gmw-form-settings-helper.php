@@ -507,7 +507,7 @@ class GMW_Form_Settings_Helper {
 			<label>
 				<input 
 					type="checkbox" 
-					onclick="jQuery( '.featured-image-options' ).slideToggle();" 
+					onclick="jQuery( this ).closest( 'td' ).find( '.featured-image-options' ).slideToggle();" 
 					name="<?php echo $name_attr . '[enabled]'; // WPCS: XSS ok. ?>" 
 					value="1" 
 					<?php checked( '1', $value['enabled'] ); ?> 
