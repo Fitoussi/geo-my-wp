@@ -734,61 +734,64 @@ class GMW_Form_Editor {
 
 					<?php $scpx = ( 'ajax_forms' !== $this->form['addon'] ) ? 'gmw' : 'gmw_ajax_form'; ?>
 
-					<tr>
-						<td class="gmw-form-usage-desc">
-							<p><?php _e( 'Display the complete form ( search form, map, and search results ).', 'geo-my-wp' ); ?></p>
-						</td>
-						<td class="gmw-form-usage">
-							<p><code>[<?php echo $scpx; ?> form="<?php echo esc_attr( $this->form['ID'] ); ?>"]</code></p>
-						</td>
-						<td class="gmw-form-usage">
-							<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[ ' . $scpx .' form="' . esc_attr( $this->form['ID'] ) . '"]\' ); &#63;&#62;'; ?></code></p>
-						</td>                			
-					</tr>
-					<tr>
-						<td class="gmw-form-usage-desc">
-							<p><?php _e( 'Display the search form only.', 'geo-my-wp' ); ?></p>
-						</td>
-						<td class="gmw-form-usage">
-							<p><code>[<?php echo $scpx; ?> search_form="<?php echo esc_attr( $this->form['ID'] ); ?>"]</code></p>
-						</td>
-						<td class="gmw-form-usage">
-							<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[ ' . $scpx .' search_form="' . esc_attr( $this->form['ID'] ) . '"]\' ); &#63;&#62;'; ?></code></p>
-						</td>		
-					</tr>
-					<tr>
-						<td class="gmw-form-usage-desc">
-							<p><?php _e( 'Display the search results of this form only. Can be used to display the search results in a different page or when using the search form in a widget.', 'geo-my-wp' ); ?></p>
-						</td>            
-						<td class="gmw-form-usage">
-							<p><code>[<?php echo $scpx; ?> search_results="<?php echo esc_attr( $this->form['ID'] ); ?>"]</code></p>
-						</td>
-						<td class="gmw-form-usage">
-							<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[ ' . $scpx .' search_results="' . esc_attr( $this->form['ID'] ) . '"]\' ); &#63;&#62;'; ?></code></p>
-						</td>
-					</tr>
-					<tr>
-						<td class="gmw-form-usage-desc">
-							<p><?php _e( 'Display the results map anywhere on a page. By default, the form you create will display the map above the list of results, but using this shortcode you can display the map anywhere else on the page. Notice that you need to set the "Display map" setting of the "Form Submission" tab to "Using shortcode". ', 'geo-my-wp' ); ?></p>
-						</td>
-						<td class="gmw-form-usage">
-							<p><code>[<?php echo $scpx; ?> map="<?php echo esc_attr( $this->form['ID'] ); ?>"]</code></p>
-						</td>
-						<td class="gmw-form-usage">
-							<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[ ' . $scpx .' map="' . esc_attr( $this->form['ID'] ) . '"]\' ); &#63;&#62;'; ?></code></p>
-						</td>    
-					</tr>
-					<tr>
-						<td class="gmw-form-usage-desc">
-							<p><?php _e( 'Display the search results of any form.', 'geo-my-wp' ); ?></p>
-						</td>
-						<td class="gmw-form-usage">
-							<p><code>[<?php echo $scpx; ?> form="results"]</code></p>
-						</td>
-						<td class="gmw-form-usage">
-							<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw form="results"]\' ); &#63;&#62;'; ?></code></p>
-						</td>
-					</tr>
+						<tr>
+							<td class="gmw-form-usage-desc">
+								<p><?php _e( 'Display the complete form ( search form, map, and search results ).', 'geo-my-wp' ); ?></p>
+							</td>
+							<td class="gmw-form-usage">
+								<p><code>[<?php echo $scpx; ?> form="<?php echo esc_attr( $this->form['ID'] ); ?>"]</code></p>
+							</td>
+							<td class="gmw-form-usage">
+								<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[ ' . $scpx .' form="' . esc_attr( $this->form['ID'] ) . '"]\' ); &#63;&#62;'; ?></code></p>
+							</td>                			
+						</tr>
+						<tr>
+							<td class="gmw-form-usage-desc">
+								<p><?php _e( 'Display the search form only.', 'geo-my-wp' ); ?></p>
+							</td>
+							<td class="gmw-form-usage">
+								<p><code>[<?php echo $scpx; ?> search_form="<?php echo esc_attr( $this->form['ID'] ); ?>"]</code></p>
+							</td>
+							<td class="gmw-form-usage">
+								<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[ ' . $scpx .' search_form="' . esc_attr( $this->form['ID'] ) . '"]\' ); &#63;&#62;'; ?></code></p>
+							</td>		
+						</tr>
+						<tr>
+							<td class="gmw-form-usage-desc">
+								<p><?php _e( 'Display the search results of this form only. Can be used to display the search results in a different page or when using the search form in a widget.', 'geo-my-wp' ); ?></p>
+							</td>            
+							<td class="gmw-form-usage">
+								<p><code>[<?php echo $scpx; ?> search_results="<?php echo esc_attr( $this->form['ID'] ); ?>"]</code></p>
+							</td>
+							<td class="gmw-form-usage">
+								<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[ ' . $scpx .' search_results="' . esc_attr( $this->form['ID'] ) . '"]\' ); &#63;&#62;'; ?></code></p>
+							</td>
+						</tr>
+						<tr>
+							<td class="gmw-form-usage-desc">
+								<p><?php _e( 'Display the results map anywhere on a page. By default, the form you create will display the map above the list of results, but using this shortcode you can display the map anywhere else on the page. Notice that you need to set the "Display map" setting of the "Form Submission" tab to "Using shortcode". ', 'geo-my-wp' ); ?></p>
+							</td>
+							<td class="gmw-form-usage">
+								<p><code>[<?php echo $scpx; ?> map="<?php echo esc_attr( $this->form['ID'] ); ?>"]</code></p>
+							</td>
+							<td class="gmw-form-usage">
+								<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[ ' . $scpx .' map="' . esc_attr( $this->form['ID'] ) . '"]\' ); &#63;&#62;'; ?></code></p>
+							</td>    
+						</tr>
+
+						<?php if ( 'ajax_forms' !== $this->form['addon'] ) { ?>
+							<tr>
+								<td class="gmw-form-usage-desc">
+									<p><?php _e( 'Display the search results of any form.', 'geo-my-wp' ); ?></p>
+								</td>
+								<td class="gmw-form-usage">
+									<p><code>[<?php echo $scpx; ?> form="results"]</code></p>
+								</td>
+								<td class="gmw-form-usage">
+									<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw form="results"]\' ); &#63;&#62;'; ?></code></p>
+								</td>
+							</tr>
+						<?php } ?>
 					<?php } ?>
 				</tbody>
 			</table>
