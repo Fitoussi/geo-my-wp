@@ -456,6 +456,7 @@ class GMW_Maps_API {
 			'prefix'          => '',
 			'type'            => 'standard',
 			'url'             => '#',
+			'open_new_tab'    => 0,
 			'title'           => '',
 			'image_url'       => '',
 			'image'           => '',
@@ -488,7 +489,14 @@ class GMW_Maps_API {
 
 		// title.
 		if ( '' !== $args['title'] ) {
-			$output['title'] = '<a class="title" href="' . $args['url'] . '">' . esc_attr( $args['title'] ) . '</a>';
+
+			$target = '';
+
+			if ( ! empty( $args['open_new_tab'] ) ) {
+				$target = 'target="_blank"';
+			}
+
+			$output['title'] = '<a class="title" href="' . $args['url'] . '" ' . $target . '>' . esc_attr( $args['title'] ) . '</a>';
 		}
 
 		// address.
@@ -875,6 +883,10 @@ class GMW_Maps_API {
 
 				self::google_maps_scripts();
 
+			} elseif ( 'leaflet' === GMW()->maps_provider ) {
+
+				self::leaflet_map_scripts();
+
 			} else {
 
 				do_action( 'gmw_enqueue_maps_provider_scripts' );
@@ -942,6 +954,28 @@ class GMW_Maps_API {
 		if ( self::$infobubble && ! wp_script_is( 'gmw-infobubble', 'enqueued' ) ) {
 			wp_enqueue_script( 'gmw-infobubble', GMW_URL . '/assets/lib/google/infobubble/infobubble.min.js', array(), GMW_VERSION, true );
 		}
+
+		do_action( 'gmw_enqueue_google_maps_provider_scripts' );
+	}
+
+	/**
+	 * Enqueue Google Maps scripts.
+	 *
+	 * @since 3.1
+	 */
+	public static function leaflet_map_scripts() {
+
+		// Marker Clusterer.
+		if ( self::$markers_clusterer && ! wp_script_is( 'gmw-marker-cluster', 'enqueued' ) ) {
+			wp_enqueue_script( 'gmw-marker-cluster', GMW_URL . '/assets/lib/leaflet/markercluster/leaflet.markercluster.min.js', array( 'leaflet' ), '1.4.1', true );
+		}
+
+		// Marker spiderfiers.
+		if ( self::$markers_spiderfier && ! wp_script_is( 'gmw-marker-spiderfier', 'enqueued' ) ) {
+			wp_enqueue_script( 'gmw-marker-spiderfier', GMW_URL . '/assets/lib/leaflet/markerspiderfier/leaflet.markerspiderfier.min.js', array( 'leaflet' ), '0.2.6', true );
+		}
+
+		do_action( 'gmw_enqueue_leaflet_maps_provider_scripts' );
 	}
 }
 // fire the enqueue_script in the footer.
