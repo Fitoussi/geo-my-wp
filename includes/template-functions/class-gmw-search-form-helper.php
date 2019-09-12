@@ -151,7 +151,14 @@ class GMW_Search_Form_Helper {
 		// New filter.
 		$args = apply_filters( 'gmw_search_form_address_field_args', $args );
 
-		$mandatory    = $args['mandatory'] ? 'mandatory' : '';
+		if ( ! empty( $args['mandatory'] ) ) {
+			$required  = 'required';
+			$mandatory = 'mandatory';
+		} else {
+			$required  = '';
+			$mandatory = '';
+		}
+
 		$placeholder  = isset( $args['placeholder'] ) ? esc_attr( $args['placeholder'] ) : '';
 		$autocomplete = $args['address_autocomplete'] ? 'gmw-address-autocomplete' : '';
 
@@ -172,7 +179,7 @@ class GMW_Search_Form_Helper {
 		$id      = esc_attr( $args['id'] );
 		$id_attr = '' !== $args['id_attr'] ? $args['id_attr'] : 'gmw-address-field-' . $id;
 
-		$output = '<input type="text" name="' . esc_attr( $args['name_attr'] ) . '" id="' . esc_attr( $id_attr ) . '" class="gmw-form-field gmw-address gmw-full-address ' . $mandatory . ' ' . $autocomplete . ' ' . esc_attr( $args['class_attr'] ) . '" value="' . esc_attr( $value ) . '" placeholder="' . $placeholder . '" autocorrect="off" autocapitalize="off" spellcheck="false" />';
+		$output = '<input type="text" name="' . esc_attr( $args['name_attr'] ) . '" id="' . esc_attr( $id_attr ) . '" class="gmw-form-field gmw-address gmw-full-address ' . $mandatory . ' ' . $autocomplete . ' ' . esc_attr( $args['class_attr'] ) . '" value="' . esc_attr( $value ) . '" placeholder="' . $placeholder . '" autocorrect="off" autocapitalize="off" spellcheck="false" ' . $required . ' />';
 
 		// if the locator button in within the address field.
 		if ( $args['locator_button'] ) {
