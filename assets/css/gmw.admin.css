@@ -1165,11 +1165,11 @@ div.gmw-settings-panel.gmw-tab-panel.form-usage table thead tr th {
 }
 
 #gmw-edit-form-page #settings-search_results.ajax_forms tr.search_results div.featured-image-options {
-	border: 0;
+	//border: 0;
 }
 
 #gmw-edit-form-page #settings-search_results.ajax_forms tr.search_results div.featured-image-options .single-option {
-	display: none;
+	//display: none;
 }
 /*.gmw-tab-panel #locator-button-wrapper #locator-image-options-wrapper {
 	padding: 5px;
