@@ -45,9 +45,13 @@ function gmw_get_no_results_message( $gmw = array() ) {
 	// allowed characters can be filtered.
 	$allowed = array(
 		'a'      => array(
-			'href'  => array(),
-			'title' => array(),
-			'alt'   => array(),
+			'href'          => array(),
+			'title'         => array(),
+			'alt'           => array(),
+			'class'         => array(),
+			'id'            => array(),
+			'data-id'       => array(),
+			'data-distance' => array(),
 		),
 		'br'     => array(),
 		'em'     => array(),
