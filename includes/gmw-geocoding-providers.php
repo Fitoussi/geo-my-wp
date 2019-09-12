@@ -444,7 +444,7 @@ class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 
 		} elseif ( isset( $address_componenets->suburb ) ) {
 
-			$location['city'] = $address_componenets->suburbs;
+			$location['city'] = $address_componenets->suburb;
 		}
 
 		return $location;
