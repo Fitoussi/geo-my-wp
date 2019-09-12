@@ -1361,6 +1361,10 @@ div.gmw-settings-panel.gmw-tab-panel.form-usage table thead tr th {
 	font-family: Roboto, Arial, sans-serif;
 }
 
+.gmw-license-key-row .gmw-license-wrapper.valid {
+	display: none;
+}
+
 /******** Extensions Page *********/
 
 #gmw-extensions-filter {
