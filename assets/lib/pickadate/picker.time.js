@@ -1,5 +1,5 @@
 /*!
- * Time picker for pickadate.js v3.5.6
+ * Time picker for pickadate.js v3.6.4
  * http://amsul.github.io/pickadate.js/time.htm
  */
 
@@ -976,6 +976,9 @@ TimePicker.defaults = (function( prefix ) {
         // Picker close behavior
         closeOnSelect: true,
         closeOnClear: true,
+
+        // Update input value on select/clear
+        updateInput: true,
 
         // Classes
         klass: {
