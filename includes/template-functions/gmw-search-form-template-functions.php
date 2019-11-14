@@ -83,7 +83,7 @@ function gmw_get_search_form_address_field( $gmw ) {
 			$user_location = gmw_get_user_current_location();
 
 			if ( ! empty( $user_location ) ) {
-				$value = $user_location->address;
+				$value = ! empty( $user_location->address ) ? $user_location->address : $user_location->formatted_address;
 			}
 
 			// When address filter is set.
