@@ -229,6 +229,10 @@ function gmw_output_import_export_tab() {
 									'formatted_address' => __( 'Formatted Address ( formatted address returned from Google after geocoding )', 'geo-my-wp' ),
 									'place_id'          => __( 'Google Place ID', 'geo-my-wp' ),
 									'map_icon'          => __( 'Map Icon', 'geo-my-wp' ),
+									'phone'             => __( 'Phone', 'geo-my-wp' ),
+									'fax'               => __( 'Fax', 'geo-my-wp' ),
+									'email'             => __( 'email', 'geo-my-wp' ),
+									'website'           => __( 'website', 'geo-my-wp' ),
 								);
 								?>
 
@@ -256,7 +260,7 @@ function gmw_output_import_export_tab() {
 												<?php foreach ( $cFields as $cField ) { ?>
 
 													<?php $selected = ( ! empty( $saved_fields[ $name ] ) && $saved_fields[ $name ] == $cField ) ? 'selected="selected"' : ''; ?>
-													   <option <?php echo $selected; ?> value="<?php echo esc_attr( $cField ); ?>"><?php echo esc_attr( $cField ); ?></option>
+													<option <?php echo $selected; ?> value="<?php echo esc_attr( $cField ); ?>"><?php echo esc_attr( $cField ); ?></option>
 
 												<?php } ?>
 
@@ -288,7 +292,7 @@ function gmw_output_import_export_tab() {
 									$cf_importer = new GMW_Post_Custom_Fields_Importer();
 									$cf_importer->output();
 								}
-								?>	  
+								?>
 							</p>
 						</div>
 					</div>
@@ -406,6 +410,18 @@ class GMW_Post_Custom_Fields_Importer extends GMW_Locations_Importer {
 	 * @var string
 	 */
 	public $form_message = '';
+
+	/**
+	 * Location meta fields.
+	 *
+	 * @var array
+	 */
+	protected $location_meta_fields = array(
+		'phone'   => 'phone',
+		'fax'     => 'fax',
+		'email'   => 'email',
+		'website' => 'website',
+	);
 
 	/**
 	 * Get location to import
@@ -567,7 +583,7 @@ class GMW_Map_Press_Importer extends GMW_Locations_Importer {
 		foreach ( $results as $location ) {
 
 			$post_id  = $location->postid;
-			$location = unserialize( $location->obj );
+			$location = maybe_unserialize( $location->obj );
 
 			if ( ! empty( $location->pois ) && ! empty( $location->center['lat'] ) && ! empty( $location->center['lng'] ) ) {
 
