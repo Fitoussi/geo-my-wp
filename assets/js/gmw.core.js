@@ -551,8 +551,9 @@ var GMW = {
      */
     save_location_fields : function( result ) {
         
-        var cl_form = jQuery( 'form#gmw-current-location-hidden-form' );
-        
+        var cl_form      = jQuery( 'form#gmw-current-location-hidden-form' );
+        var addressField = '';
+
         GMW.do_action( 'gmw_save_location_fields', result );
 
         // save location in current location form and cookies.
@@ -560,6 +561,15 @@ var GMW = {
         	
         	// we only want some fields to save in cookies.
         	if ( jQuery.inArray( fieldName, GMW.current_location_fields ) !== -1 ) {
+
+        		if ( fieldName == 'address' ) {
+
+        			addressField = result[fieldName];
+
+        		} else if ( fieldName == 'formatted_address' && addressField == '' ) {
+        			GMW.set_cookie( 'gmw_ul_address', result[fieldName], 7 );
+        		}
+
         		GMW.set_cookie( 'gmw_ul_' + fieldName, result[fieldName], 7 );
         	}
         
