@@ -401,10 +401,23 @@ class GMW_Single_Location {
 				// Otherwise check for user location in cookies.
 			} elseif ( ! empty( $_COOKIE['gmw_ul_lat'] ) && ! empty( $_COOKIE['gmw_ul_lng'] ) ) {
 
-				$this->user_position['exists']  = true;
-				$this->user_position['lat']     = urldecode( wp_unslash( $_COOKIE['gmw_ul_lat'] ) ); // WPCS: sanitization ok.
-				$this->user_position['lng']     = urldecode( wp_unslash( $_COOKIE['gmw_ul_lng'] ) ); // WPCS: sanitization ok.
-				$this->user_position['address'] = ! empty( $_COOKIE['gmw_ul_address'] ) ? urldecode( wp_unslash( $_COOKIE['gmw_ul_address'] ) ) : ''; // WPCS: sanitization ok.
+				$this->user_position['exists'] = true;
+				$this->user_position['lat']    = urldecode( wp_unslash( $_COOKIE['gmw_ul_lat'] ) ); // WPCS: sanitization ok.
+				$this->user_position['lng']    = urldecode( wp_unslash( $_COOKIE['gmw_ul_lng'] ) ); // WPCS: sanitization ok.
+
+				if ( ! empty( $_COOKIE['gmw_ul_address'] ) ) {
+
+					$this->user_position['address'] = urldecode( wp_unslash( $_COOKIE['gmw_ul_address'] ) ); // WPCS: sanitization ok.
+
+				} else if ( ! empty( $_COOKIE['gmw_ul_formatted_address'] ) ) { // WPCS: sanitization ok.
+
+					$this->user_position['address'] = urldecode( wp_unslash( $_COOKIE['gmw_ul_formatted_address'] ) ); // WPCS: sanitization ok.
+				} else {
+
+					$this->user_position['address'] = '';
+				}
+
+				//$this->user_position['address'] = ! empty( $_COOKIE['gmw_ul_address'] ) ? urldecode( wp_unslash( $_COOKIE['gmw_ul_address'] ) ) : ''; // WPCS: sanitization ok.
 			}
 
 			// generate elements.
