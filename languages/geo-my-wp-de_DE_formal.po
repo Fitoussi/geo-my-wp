@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GEO my WP v2.4.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-11 19:46-1000\n"
-"PO-Revision-Date: 2019-09-11 19:47-1000\n"
+"POT-Creation-Date: 2019-11-14 16:30-1000\n"
+"PO-Revision-Date: 2019-11-14 16:31-1000\n"
 "Last-Translator: Eyal Fitoussi <fitoussi_eyal@hotmail.com>\n"
 "Language-Team: Deutsch (Sie)\n"
 "Language: de\n"
@@ -43,8 +43,8 @@ msgstr ""
 #: includes/admin/pages/import-export/tabs/location-tables.php:146
 #: includes/admin/pages/import-export/tabs/location-tables.php:184
 #: includes/admin/pages/import-export/tabs/location-tables.php:189
-#: includes/admin/pages/import-export/tabs/posts-locator.php:349
-#: includes/admin/pages/import-export/tabs/posts-locator.php:354
+#: includes/admin/pages/import-export/tabs/posts-locator.php:362
+#: includes/admin/pages/import-export/tabs/posts-locator.php:367
 #: includes/admin/pages/tools/tabs/reset-gmw.php:217
 #: includes/admin/pages/tools/tabs/reset-gmw.php:223
 #: includes/admin/updater/class-gmw-license.php:861
@@ -327,7 +327,6 @@ msgstr "Datumsfeld als Filter \"Altersbereich\" auswählen."
 # @ GMW
 #: includes/admin/class-gmw-form-settings-helper.php:845
 #: includes/admin/class-gmw-shortcodes-page.php:302
-#: includes/admin/pages/import-export/tabs/posts-locator.php:244
 #: includes/gmw-deprecated-functions.php:1704
 #: includes/gmw-deprecated-functions.php:1710
 #: includes/gmw-deprecated-functions.php:1716
@@ -1979,7 +1978,7 @@ msgstr "Alle Formulare"
 
 #: includes/admin/pages/import-export/tabs/forms.php:84
 #: includes/admin/pages/import-export/tabs/gmw-data.php:68
-#: includes/admin/pages/import-export/tabs/posts-locator.php:97
+#: includes/admin/pages/import-export/tabs/posts-locator.php:101
 msgid "Export"
 msgstr "Exportieren"
 
@@ -2000,8 +1999,7 @@ msgstr ""
 #: includes/admin/pages/import-export/tabs/forms.php:133
 #: includes/admin/pages/import-export/tabs/gmw-data.php:123
 #: includes/admin/pages/import-export/tabs/location-tables.php:111
-#: includes/admin/pages/import-export/tabs/posts-locator.php:142
-#: includes/admin/pages/import-export/tabs/posts-locator.php:275
+#: includes/admin/pages/import-export/tabs/posts-locator.php:149
 msgid "Import"
 msgstr "Importieren"
 
@@ -2168,20 +2166,20 @@ msgstr "GMW_Locationmeta_Table_Export Klasse kann nicht gefunden werden."
 msgid "gmw_csv_import function not exist."
 msgstr "Die Funktion gmw_csv_import existiert nicht."
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:27
+#: includes/admin/pages/import-export/tabs/posts-locator.php:31
 msgid "Post Custom Fields"
 msgstr "Benutzerdefinierte Felder"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:31
+#: includes/admin/pages/import-export/tabs/posts-locator.php:35
 msgid "MapPress Plugin"
 msgstr "MapPress Plugin"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:56
+#: includes/admin/pages/import-export/tabs/posts-locator.php:60
 msgid "Export/Import Posts Types Locations using GEO my WP post_meta"
 msgstr ""
 "Export/Import von Beiträgen Typen von Standorten mit GEO my WP post_meta"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:61
+#: includes/admin/pages/import-export/tabs/posts-locator.php:65
 msgid ""
 "The forms below will help you in the process of exporting the post types "
 "locations created on this site and importing them into a different site."
@@ -2189,19 +2187,15 @@ msgstr ""
 "Die folgenden Formulare helfen Ihnen beim Export der auf dieser Website "
 "erstellten Post-Typen-Positionen und beim Import in eine andere Website."
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:62
+#: includes/admin/pages/import-export/tabs/posts-locator.php:66
 #, php-format
 msgid ""
 "The export/import forms below need to be used together with the native <a "
-"href=\"%s\" target=\"blank\"> WordPress export system*</a> and <a href=\"%s"
-"\" target\"_blank\">WordPress importer*</a> for a complete process."
+"href=\"%1$s\" target=\"blank\"> WordPress export system*</a> and <a href="
+"\"%2$s\" target\"_blank\">WordPress importer*</a> for a complete process."
 msgstr ""
-"Die folgenden Export/Importformulare müssen zusammen mit dem nativen <a href="
-"\"%s\" target=\"blank\"> WordPress-Exportsystem*</a> und <a href=\"%s\" "
-"target\"_blank\">WordPress importer*</a> für einen kompletten Prozess "
-"verwendet werden."
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:65
+#: includes/admin/pages/import-export/tabs/posts-locator.php:69
 msgid ""
 "*You can use other plugins ( other than the WordPress native plugins "
 "mentioned above ) to export/import your WordPress posts. However, the "
@@ -2214,7 +2208,7 @@ msgstr ""
 "dieser Beiträge exportieren und importieren, um die Orte zu importieren/"
 "exportieren."
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:68
+#: includes/admin/pages/import-export/tabs/posts-locator.php:72
 msgid ""
 "Please follow the steps of each form below for a complete process of "
 "exporting and importing your post types locations."
@@ -2223,11 +2217,11 @@ msgstr ""
 "vollständigen Prozess des Exports und Imports Ihrer Posttypen-Standorte zu "
 "erhalten."
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:85
+#: includes/admin/pages/import-export/tabs/posts-locator.php:89
 msgid "Export Posts Types Locations To GEO my WP post_meta"
 msgstr "Export von Beitragstypen-Standorte nach GEO my WP post_meta"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:92
+#: includes/admin/pages/import-export/tabs/posts-locator.php:96
 #, php-format
 msgid ""
 "Click on the \"Export\" button below. By doing so the plugin will duplicate "
@@ -2239,7 +2233,7 @@ msgstr ""
 "benutzerdefinierten Tabelle ( %splaces_locator) von GEO my WP in ein "
 "benutzerdefiniertes Feld des Posts, zu dem es gehört."
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:101
+#: includes/admin/pages/import-export/tabs/posts-locator.php:105
 #, php-format
 msgid ""
 "The next step will be to export your posts using the native <a href=\"%s\" "
@@ -2248,20 +2242,7 @@ msgstr ""
 "Der nächste Schritt wird sein, Ihre Beiträge mit dem nativen <a href=\"%s\" "
 "target=\"blank\"> WordPress-Exportsystem</a> zu exportieren."
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:118
-msgid "Import Posts Types Locations From GEO my WP post_meta"
-msgstr "Importieren von Beitragstypen-Standorte aus GEO my WP post_meta"
-
-#: includes/admin/pages/import-export/tabs/posts-locator.php:123
-msgid ""
-"Before importing your locations into this site make sure you used the "
-"\"Export\" form above on the original site in order to export your locations."
-msgstr ""
-"Bevor Sie Ihre Standorte in diese Website importieren, stellen Sie sicher, "
-"dass Sie das Formular \"Export\" oben auf der ursprünglichen Website "
-"verwendet haben, um Ihre Standorte zu exportieren."
-
-#: includes/admin/pages/import-export/tabs/posts-locator.php:124
+#: includes/admin/pages/import-export/tabs/posts-locator.php:128
 #, php-format
 msgid ""
 "Import your posts using <a href=\"%s\" target\"_blank\">WordPress importer</"
@@ -2271,7 +2252,7 @@ msgstr ""
 "Importer</a>. Kehren Sie danach zu dieser Seite zurück, um Schritt 3 "
 "abzuschließen."
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:125
+#: includes/admin/pages/import-export/tabs/posts-locator.php:129
 #, php-format
 msgid ""
 "Click on the \"Import\" button. By doing so the plugin will duplicate each "
@@ -2283,79 +2264,44 @@ msgstr ""
 "Posts, zu dem es gehört, in die benutzerdefinierte Tabelle in der Datenbank "
 "von GEO my WP ( %splaces_locator)."
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:143
+#: includes/admin/pages/import-export/tabs/posts-locator.php:151
 msgid "Locations are avalible for import."
 msgstr "Es stehen Standorte für den Import zur Verfügung."
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:143
+#: includes/admin/pages/import-export/tabs/posts-locator.php:151
 msgid "No locations are avalible for import."
 msgstr "Es sind keine Standorte für den Import verfügbar."
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:165
-msgid "Post Custom Fields Importer"
-msgstr "Importer für benutzerdefinierte Felder"
-
-#: includes/admin/pages/import-export/tabs/posts-locator.php:170
-msgid ""
-"Use this form to import locations from specific custom fields into GEO my "
-"WP. This is useful when importing locations created by another plugin and "
-"its location data is saved in custom fields."
-msgstr ""
-"Verwenden Sie dieses Formular, um Standorte aus bestimmten "
-"benutzerdefinierten Feldern in GEO my WP zu importieren. Dies ist nützlich, "
-"wenn Sie Orte importieren, die von einem anderen Plugin erstellt wurden, und "
-"seine Standortdaten in benutzerdefinierten Feldern gespeichert werden."
-
-#: includes/admin/pages/import-export/tabs/posts-locator.php:173
-msgid ""
-"Before you can import locations you need to set the location custom fields. "
-"To do so, Click \"Set custom field\" to set each of GEO my WP's location "
-"fields."
-msgstr ""
-"Bevor Sie Orte importieren können, müssen Sie die benutzerdefinierten Felder "
-"für den Standort festlegen. Klicken Sie dazu auf \"Benutzerdefiniertes Feld "
-"einstellen\", um jedes der GEO-Standortfelder meines WPs einzustellen."
-
-#: includes/admin/pages/import-export/tabs/posts-locator.php:177
-msgid ""
-"*Note that only the latitude and longitude fields are mandatory. However, to "
-"take full advantage of GEO my WP features it is recomended to provide as "
-"many fields as possible."
-msgstr ""
-"*Beachten Sie, dass nur die Felder Breitengrad und Längengrad obligatorisch "
-"sind. Um die Vorteile von GEO my WP voll auszuschöpfen, wird jedoch "
-"empfohlen, so viele Felder wie möglich anzugeben."
-
-#: includes/admin/pages/import-export/tabs/posts-locator.php:205
+#: includes/admin/pages/import-export/tabs/posts-locator.php:214
 msgid "Latitude ( mandatory )"
 msgstr "Breitengrad (obligatorisch)"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:206
+#: includes/admin/pages/import-export/tabs/posts-locator.php:215
 msgid "Longitude ( mandatory )"
 msgstr "Längengrad (obligatorisch)"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:207
+#: includes/admin/pages/import-export/tabs/posts-locator.php:216
 msgid "Street Number"
 msgstr "Strassennummer"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:208
+#: includes/admin/pages/import-export/tabs/posts-locator.php:217
 msgid "Street Name"
 msgstr "Strassenname"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:209
+#: includes/admin/pages/import-export/tabs/posts-locator.php:218
 msgid "Street ( number + name )"
 msgstr "Strasse (Nummer & Name)"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:210
+#: includes/admin/pages/import-export/tabs/posts-locator.php:219
 msgid "Apt / Premise"
 msgstr "Appartement / Räumlichkeit"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:211
+#: includes/admin/pages/import-export/tabs/posts-locator.php:220
 msgid "Neighborhood"
 msgstr "Nachbarschaft"
 
 # @ GMW
-#: includes/admin/pages/import-export/tabs/posts-locator.php:212
+#: includes/admin/pages/import-export/tabs/posts-locator.php:221
 #: includes/gmw-deprecated-functions.php:1469
 #: includes/location-form/includes/class-gmw-location-form.php:609
 #: plugins/current-location/includes/class-gmw-current-location-widget.php:90
@@ -2363,60 +2309,72 @@ msgstr "Nachbarschaft"
 msgid "City"
 msgstr "Stadt"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:213
+#: includes/admin/pages/import-export/tabs/posts-locator.php:222
 msgid "County"
 msgstr "Landkreis"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:214
+#: includes/admin/pages/import-export/tabs/posts-locator.php:223
 msgid "State Name ( ex. Florida )"
 msgstr "Staatsname (z.B. Florida)"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:215
+#: includes/admin/pages/import-export/tabs/posts-locator.php:224
 msgid "State Code ( ex. FL )"
 msgstr "State Code (z.B. FL)"
 
 # @ GMW
-#: includes/admin/pages/import-export/tabs/posts-locator.php:216
+#: includes/admin/pages/import-export/tabs/posts-locator.php:225
 msgid "zipcode"
 msgstr "Postleitzahl"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:217
+#: includes/admin/pages/import-export/tabs/posts-locator.php:226
 msgid "Country Name ( ex. United States )"
 msgstr ""
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:218
+#: includes/admin/pages/import-export/tabs/posts-locator.php:227
 msgid "Country Code ( ex. US )"
 msgstr "Ländercode (z.B. US)"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:219
+#: includes/admin/pages/import-export/tabs/posts-locator.php:228
 msgid "Address ( address field the way the user enteres )"
 msgstr "Adresse ( Adressfeld, wie der Benutzer es eingibt)"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:220
+#: includes/admin/pages/import-export/tabs/posts-locator.php:229
 msgid ""
 "Formatted Address ( formatted address returned from Google after geocoding )"
 msgstr ""
 "Formatierte Adresse ( formatierte Adresse, die von Google nach der "
 "Geokodierung zurückgegeben wird)"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:221
+#: includes/admin/pages/import-export/tabs/posts-locator.php:230
 msgid "Google Place ID"
 msgstr "Google Place ID"
 
 # @ GMW
-#: includes/admin/pages/import-export/tabs/posts-locator.php:222
+#: includes/admin/pages/import-export/tabs/posts-locator.php:231
 msgid "Map Icon"
 msgstr "Standort-Icon"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:228
-msgid "Set Custom Fields"
-msgstr "Benutzerdefinierte Felder festlegen"
+# @ GMW
+#: includes/admin/pages/import-export/tabs/posts-locator.php:232
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:107
+msgid "Phone"
+msgstr "Telefon"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:264
-msgid "Save Fields"
-msgstr "Felder speichern"
+# @ GMW
+#: includes/admin/pages/import-export/tabs/posts-locator.php:233
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:108
+msgid "Fax"
+msgstr "Fax"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:273
+#: includes/admin/pages/import-export/tabs/posts-locator.php:234
+msgid "email"
+msgstr ""
+
+#: includes/admin/pages/import-export/tabs/posts-locator.php:235
+msgid "website"
+msgstr ""
+
+#: includes/admin/pages/import-export/tabs/posts-locator.php:286
 msgid ""
 "*You must set the latitude and longitude fields before you can import "
 "locations."
@@ -2424,27 +2382,7 @@ msgstr ""
 "*Sie müssen die Felder Breitengrad und Längengrad einstellen, bevor Sie "
 "Standorte importieren können."
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:303
-msgid "MapPress Importer"
-msgstr "MapPress Importer"
-
-#: includes/admin/pages/import-export/tabs/posts-locator.php:308
-msgid "Use this form to import locations from MapPress plugin."
-msgstr ""
-"Verwenden Sie dieses Formular, um Standorte aus dem MapPress-Plugin zu "
-"importieren."
-
-#: includes/admin/pages/import-export/tabs/posts-locator.php:311
-msgid ""
-"*Note, since the current version of GEO my WP supports only single location "
-"per post, this importer imports only the first location created by MapPress "
-"from each post."
-msgstr ""
-"*Beachten Sie, dass seit der aktuellen Version von GEO my WP nur noch einen "
-"einzigen Standort pro Beitrag unterstützt, dieser Importer importiert nur "
-"den ersten von MapPress erstellten Standort von jedem Beitrag."
-
-#: includes/admin/pages/import-export/tabs/posts-locator.php:511
+#: includes/admin/pages/import-export/tabs/posts-locator.php:548
 #, php-format
 msgid "%s database table cannot be found."
 msgstr "%s Datenbanktabelle kann nicht gefunden werden."
@@ -2902,12 +2840,12 @@ msgstr "Zielort"
 
 # @ GMW
 #: includes/class-gmw-maps-api.php:610
-#: plugins/single-location/includes/class-gmw-single-location.php:432
+#: plugins/single-location/includes/class-gmw-single-location.php:445
 msgid "Directions"
 msgstr "Routenplaner"
 
 #: includes/class-gmw-maps-api.php:611
-#: plugins/single-location/includes/class-gmw-single-location.php:433
+#: plugins/single-location/includes/class-gmw-single-location.php:446
 msgid "From:"
 msgstr "Von:"
 
@@ -3962,16 +3900,6 @@ msgid ""
 msgstr ""
 
 # @ GMW
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:107
-msgid "Phone"
-msgstr "Telefon"
-
-# @ GMW
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:108
-msgid "Fax"
-msgstr "Fax"
-
-# @ GMW
 #: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:109
 msgid "Email"
 msgstr "E-Mail"
@@ -4206,11 +4134,11 @@ msgstr ""
 "erhalten."
 
 # @ GMW
-#: plugins/single-location/includes/class-gmw-single-location.php:431
+#: plugins/single-location/includes/class-gmw-single-location.php:444
 msgid "Distance: "
 msgstr "Entfernung:"
 
-#: plugins/single-location/includes/class-gmw-single-location.php:434
+#: plugins/single-location/includes/class-gmw-single-location.php:447
 msgid "Show directions"
 msgstr "Wegbeschreibung anzeigen"
 
@@ -4359,6 +4287,85 @@ msgid ""
 msgstr ""
 "Die Sweet Date Geolocation-Erweiterung erfordert die Members Locator "
 "Kernerweiterung."
+
+#~ msgid ""
+#~ "The export/import forms below need to be used together with the native <a "
+#~ "href=\"%s\" target=\"blank\"> WordPress export system*</a> and <a href="
+#~ "\"%s\" target\"_blank\">WordPress importer*</a> for a complete process."
+#~ msgstr ""
+#~ "Die folgenden Export/Importformulare müssen zusammen mit dem nativen <a "
+#~ "href=\"%s\" target=\"blank\"> WordPress-Exportsystem*</a> und <a href=\"%s"
+#~ "\" target\"_blank\">WordPress importer*</a> für einen kompletten Prozess "
+#~ "verwendet werden."
+
+#~ msgid "Import Posts Types Locations From GEO my WP post_meta"
+#~ msgstr "Importieren von Beitragstypen-Standorte aus GEO my WP post_meta"
+
+#~ msgid ""
+#~ "Before importing your locations into this site make sure you used the "
+#~ "\"Export\" form above on the original site in order to export your "
+#~ "locations."
+#~ msgstr ""
+#~ "Bevor Sie Ihre Standorte in diese Website importieren, stellen Sie "
+#~ "sicher, dass Sie das Formular \"Export\" oben auf der ursprünglichen "
+#~ "Website verwendet haben, um Ihre Standorte zu exportieren."
+
+#~ msgid "Post Custom Fields Importer"
+#~ msgstr "Importer für benutzerdefinierte Felder"
+
+#~ msgid ""
+#~ "Use this form to import locations from specific custom fields into GEO my "
+#~ "WP. This is useful when importing locations created by another plugin and "
+#~ "its location data is saved in custom fields."
+#~ msgstr ""
+#~ "Verwenden Sie dieses Formular, um Standorte aus bestimmten "
+#~ "benutzerdefinierten Feldern in GEO my WP zu importieren. Dies ist "
+#~ "nützlich, wenn Sie Orte importieren, die von einem anderen Plugin "
+#~ "erstellt wurden, und seine Standortdaten in benutzerdefinierten Feldern "
+#~ "gespeichert werden."
+
+#~ msgid ""
+#~ "Before you can import locations you need to set the location custom "
+#~ "fields. To do so, Click \"Set custom field\" to set each of GEO my WP's "
+#~ "location fields."
+#~ msgstr ""
+#~ "Bevor Sie Orte importieren können, müssen Sie die benutzerdefinierten "
+#~ "Felder für den Standort festlegen. Klicken Sie dazu auf "
+#~ "\"Benutzerdefiniertes Feld einstellen\", um jedes der GEO-Standortfelder "
+#~ "meines WPs einzustellen."
+
+#~ msgid ""
+#~ "*Note that only the latitude and longitude fields are mandatory. However, "
+#~ "to take full advantage of GEO my WP features it is recomended to provide "
+#~ "as many fields as possible."
+#~ msgstr ""
+#~ "*Beachten Sie, dass nur die Felder Breitengrad und Längengrad "
+#~ "obligatorisch sind. Um die Vorteile von GEO my WP voll auszuschöpfen, "
+#~ "wird jedoch empfohlen, so viele Felder wie möglich anzugeben."
+
+#~ msgid "Set Custom Fields"
+#~ msgstr "Benutzerdefinierte Felder festlegen"
+
+#~ msgid "Save Fields"
+#~ msgstr "Felder speichern"
+
+#~ msgid "MapPress Importer"
+#~ msgstr "MapPress Importer"
+
+#~ msgid "Use this form to import locations from MapPress plugin."
+#~ msgstr ""
+#~ "Verwenden Sie dieses Formular, um Standorte aus dem MapPress-Plugin zu "
+#~ "importieren."
+
+#~ msgid ""
+#~ "*Note, since the current version of GEO my WP supports only single "
+#~ "location per post, this importer imports only the first location created "
+#~ "by MapPress from each post."
+#~ msgstr ""
+#~ "*Beachten Sie, dass seit der aktuellen Version von GEO my WP nur noch "
+#~ "einen einzigen Standort pro Beitrag unterstützt, dieser Importer "
+#~ "importiert nur den ersten von MapPress erstellten Standort von jedem "
+#~ "Beitrag."
 
 #~ msgid "Placeholder"
 #~ msgstr "Platzhalter"

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GEO my WP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-11 19:48-1000\n"
-"PO-Revision-Date: 2019-09-11 19:48-1000\n"
+"POT-Creation-Date: 2019-11-14 16:32-1000\n"
+"PO-Revision-Date: 2019-11-14 16:32-1000\n"
 "Last-Translator: Eyal Fitoussi <fitoussi_eyal@hotmail.com>\n"
 "Language-Team: 日本語\n"
 "Language: ja\n"
@@ -45,8 +45,8 @@ msgstr ""
 #: includes/admin/pages/import-export/tabs/location-tables.php:146
 #: includes/admin/pages/import-export/tabs/location-tables.php:184
 #: includes/admin/pages/import-export/tabs/location-tables.php:189
-#: includes/admin/pages/import-export/tabs/posts-locator.php:349
-#: includes/admin/pages/import-export/tabs/posts-locator.php:354
+#: includes/admin/pages/import-export/tabs/posts-locator.php:362
+#: includes/admin/pages/import-export/tabs/posts-locator.php:367
 #: includes/admin/pages/tools/tabs/api-testing.php:137
 #: includes/admin/pages/tools/tabs/api-testing.php:142
 #: includes/admin/pages/tools/tabs/cache.php:150
@@ -355,7 +355,7 @@ msgstr "日付フィールドを「年齢」フィルタとして選択"
 
 #: includes/admin/class-gmw-form-settings-helper.php:845
 #: includes/admin/class-gmw-shortcodes-page.php:302
-#: includes/admin/pages/import-export/tabs/posts-locator.php:244
+#: includes/admin/pages/import-export/tabs/posts-locator.php:257
 #: includes/gmw-deprecated-functions.php:1704
 #: includes/gmw-deprecated-functions.php:1710
 #: includes/gmw-deprecated-functions.php:1716
@@ -1824,8 +1824,8 @@ msgstr "ファイルの列と、データベーステーブルが一致しませ
 #: includes/admin/pages/import-export/tabs/forms.php:133
 #: includes/admin/pages/import-export/tabs/gmw-data.php:123
 #: includes/admin/pages/import-export/tabs/location-tables.php:111
-#: includes/admin/pages/import-export/tabs/posts-locator.php:142
-#: includes/admin/pages/import-export/tabs/posts-locator.php:275
+#: includes/admin/pages/import-export/tabs/posts-locator.php:149
+#: includes/admin/pages/import-export/tabs/posts-locator.php:288
 msgid "Import"
 msgstr "インポート"
 
@@ -1899,7 +1899,7 @@ msgstr "全てのフォーム"
 
 #: includes/admin/pages/import-export/tabs/forms.php:84
 #: includes/admin/pages/import-export/tabs/gmw-data.php:68
-#: includes/admin/pages/import-export/tabs/posts-locator.php:97
+#: includes/admin/pages/import-export/tabs/posts-locator.php:101
 msgid "Export"
 msgstr "エクスポート"
 
@@ -2072,19 +2072,19 @@ msgstr "GMW_Locationmeta_Table_Export クラスは、見つかりません。"
 msgid "gmw_csv_import function not exist."
 msgstr "gmw_csv_import 機能は存在しません。"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:27
+#: includes/admin/pages/import-export/tabs/posts-locator.php:31
 msgid "Post Custom Fields"
 msgstr "投稿カスタムフィールド"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:31
+#: includes/admin/pages/import-export/tabs/posts-locator.php:35
 msgid "MapPress Plugin"
 msgstr "MapPress プラグイン"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:56
+#: includes/admin/pages/import-export/tabs/posts-locator.php:60
 msgid "Export/Import Posts Types Locations using GEO my WP post_meta"
 msgstr "GEO my WP post_meta を使って、投稿タイプの位置情報をエクスポート"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:61
+#: includes/admin/pages/import-export/tabs/posts-locator.php:65
 msgid ""
 "The forms below will help you in the process of exporting the post types "
 "locations created on this site and importing them into a different site."
@@ -2092,18 +2092,15 @@ msgstr ""
 "以下のフォームは、本サイトで作成された投稿タイプの位置をエクスポートし、別の"
 "サイトにインポートする際に役立ちます。"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:62
+#: includes/admin/pages/import-export/tabs/posts-locator.php:66
 #, php-format
 msgid ""
 "The export/import forms below need to be used together with the native <a "
-"href=\"%s\" target=\"blank\"> WordPress export system*</a> and <a href=\"%s"
-"\" target\"_blank\">WordPress importer*</a> for a complete process."
+"href=\"%1$s\" target=\"blank\"> WordPress export system*</a> and <a href="
+"\"%2$s\" target\"_blank\">WordPress importer*</a> for a complete process."
 msgstr ""
-"以下のエクスポート・インポートフォームは、ネイティブの<a href=\"%s\" target="
-"\"blank\"> WordPress エクスポートシステム*</a> や <a href=\"%s\" target"
-"\"_blank\">WordPress インポーター*</a>をご利用下さい。"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:65
+#: includes/admin/pages/import-export/tabs/posts-locator.php:69
 msgid ""
 "*You can use other plugins ( other than the WordPress native plugins "
 "mentioned above ) to export/import your WordPress posts. However, the "
@@ -2115,7 +2112,7 @@ msgstr ""
 "るプラグインが、位置をインポート / エクスポートするために、これらの投稿のカス"
 "タムフィールドをエクスポート / インポートできる必要があります。"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:68
+#: includes/admin/pages/import-export/tabs/posts-locator.php:72
 msgid ""
 "Please follow the steps of each form below for a complete process of "
 "exporting and importing your post types locations."
@@ -2123,11 +2120,11 @@ msgstr ""
 "投稿タイプの位置をエクスポート・インポートするには、以下の各フォームの手順に"
 "従ってください。"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:85
+#: includes/admin/pages/import-export/tabs/posts-locator.php:89
 msgid "Export Posts Types Locations To GEO my WP post_meta"
 msgstr "投稿タイプの位置情報を、GEO my WP post_meta にエクスポート"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:92
+#: includes/admin/pages/import-export/tabs/posts-locator.php:96
 #, php-format
 msgid ""
 "Click on the \"Export\" button below. By doing so the plugin will duplicate "
@@ -2138,7 +2135,7 @@ msgstr ""
 "GEO my WPのカスタムテーブル（％splaces_locator）から本サイトで作成された各投"
 "稿タイプの位置を、その投稿の属するカスタムフィールドに複製します。"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:101
+#: includes/admin/pages/import-export/tabs/posts-locator.php:105
 #, php-format
 msgid ""
 "The next step will be to export your posts using the native <a href=\"%s\" "
@@ -2147,11 +2144,11 @@ msgstr ""
 "次のステップは、<a href=\"%s\" target=\"blank\"> WordPress エクスポートシステ"
 "ム</a>を使用して、投稿をエクスポートして下さい。"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:118
+#: includes/admin/pages/import-export/tabs/posts-locator.php:122
 msgid "Import Posts Types Locations From GEO my WP post_meta"
 msgstr "GEO my WP post_metaから、投稿タイプ 位置をインポート"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:123
+#: includes/admin/pages/import-export/tabs/posts-locator.php:127
 msgid ""
 "Before importing your locations into this site make sure you used the "
 "\"Export\" form above on the original site in order to export your locations."
@@ -2159,7 +2156,7 @@ msgstr ""
 "このサイトに位置をインポートする前に、元のサイトで上記の「エクスポート」"
 "フォームを使用して、位置をエクスポートしてください。"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:124
+#: includes/admin/pages/import-export/tabs/posts-locator.php:128
 #, php-format
 msgid ""
 "Import your posts using <a href=\"%s\" target\"_blank\">WordPress importer</"
@@ -2168,7 +2165,7 @@ msgstr ""
 "<a href=\"%s\" target\"_blank\">WordPress インポーター</a>を使って投稿をイン"
 "ポートして下さい。その後、このページに戻りステップ3を完了させて下さい。"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:125
+#: includes/admin/pages/import-export/tabs/posts-locator.php:129
 #, php-format
 msgid ""
 "Click on the \"Import\" button. By doing so the plugin will duplicate each "
@@ -2179,19 +2176,19 @@ msgstr ""
 "カスタムフィールドから各投稿タイプの位置を、GEO my WPのカスタムテーブル"
 "（％splaces_locator）に複製します。"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:143
+#: includes/admin/pages/import-export/tabs/posts-locator.php:151
 msgid "Locations are avalible for import."
 msgstr "位置 は、インポートできます。"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:143
+#: includes/admin/pages/import-export/tabs/posts-locator.php:151
 msgid "No locations are avalible for import."
 msgstr "インポートできる位置は見つかりません。"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:165
+#: includes/admin/pages/import-export/tabs/posts-locator.php:173
 msgid "Post Custom Fields Importer"
 msgstr "投稿カスタムフィールド インポーター"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:170
+#: includes/admin/pages/import-export/tabs/posts-locator.php:178
 msgid ""
 "Use this form to import locations from specific custom fields into GEO my "
 "WP. This is useful when importing locations created by another plugin and "
@@ -2201,7 +2198,7 @@ msgstr ""
 "フォームをお使い下さい。別のプラグインで作成した位置をインポートし、その位置"
 "のデータをカスタムフィールドに保存する場合に便利です。"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:173
+#: includes/admin/pages/import-export/tabs/posts-locator.php:181
 msgid ""
 "Before you can import locations you need to set the location custom fields. "
 "To do so, Click \"Set custom field\" to set each of GEO my WP's location "
@@ -2211,45 +2208,42 @@ msgstr ""
 "実行するには、「カスタムフィールドを設定」をクリックして、各GEO my WPの位置"
 "フィールドを設定して下さい。"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:177
+#: includes/admin/pages/import-export/tabs/posts-locator.php:185
 msgid ""
-"*Note that only the latitude and longitude fields are mandatory. However, to "
-"take full advantage of GEO my WP features it is recomended to provide as "
+"* Note that only the latitude and longitude fields are mandatory. However, "
+"to take full advantage of GEO my WP features it is recomended to provide as "
 "many fields as possible."
 msgstr ""
-"*緯度と経度のフィールドのみ必須であることにご注意下さい。 但しGEO my WPの機能"
-"を最大限に活用するためには、可能な限り多くのフィールドを提供することを推奨し"
-"ます。"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:205
+#: includes/admin/pages/import-export/tabs/posts-locator.php:214
 msgid "Latitude ( mandatory )"
 msgstr "緯度（必須）"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:206
+#: includes/admin/pages/import-export/tabs/posts-locator.php:215
 msgid "Longitude ( mandatory )"
 msgstr "経度（必須）"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:207
+#: includes/admin/pages/import-export/tabs/posts-locator.php:216
 msgid "Street Number"
 msgstr "通り番号"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:208
+#: includes/admin/pages/import-export/tabs/posts-locator.php:217
 msgid "Street Name"
 msgstr "通り名"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:209
+#: includes/admin/pages/import-export/tabs/posts-locator.php:218
 msgid "Street ( number + name )"
 msgstr "通り（番号＋名前）"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:210
+#: includes/admin/pages/import-export/tabs/posts-locator.php:219
 msgid "Apt / Premise"
 msgstr "番号（建物内）"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:211
+#: includes/admin/pages/import-export/tabs/posts-locator.php:220
 msgid "Neighborhood"
 msgstr "近所"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:212
+#: includes/admin/pages/import-export/tabs/posts-locator.php:221
 #: includes/gmw-deprecated-functions.php:1469
 #: includes/location-form/includes/class-gmw-location-form.php:609
 #: plugins/current-location/includes/class-gmw-current-location-widget.php:90
@@ -2257,72 +2251,90 @@ msgstr "近所"
 msgid "City"
 msgstr "市"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:213
+#: includes/admin/pages/import-export/tabs/posts-locator.php:222
 msgid "County"
 msgstr "国"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:214
+#: includes/admin/pages/import-export/tabs/posts-locator.php:223
 msgid "State Name ( ex. Florida )"
 msgstr "州名（都道府県名）"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:215
+#: includes/admin/pages/import-export/tabs/posts-locator.php:224
 msgid "State Code ( ex. FL )"
 msgstr "州コード（例：FL）"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:216
+#: includes/admin/pages/import-export/tabs/posts-locator.php:225
 msgid "zipcode"
 msgstr "郵便番号"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:217
+#: includes/admin/pages/import-export/tabs/posts-locator.php:226
 msgid "Country Name ( ex. United States )"
 msgstr ""
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:218
+#: includes/admin/pages/import-export/tabs/posts-locator.php:227
 msgid "Country Code ( ex. US )"
 msgstr "国コード（例：JP）"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:219
+#: includes/admin/pages/import-export/tabs/posts-locator.php:228
 msgid "Address ( address field the way the user enteres )"
 msgstr "住所（ユーザが入力する住所欄）"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:220
+#: includes/admin/pages/import-export/tabs/posts-locator.php:229
 msgid ""
 "Formatted Address ( formatted address returned from Google after geocoding )"
 msgstr "書式化れた住所（ジオコーディング後に、Googleからの書式化された住所）"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:221
+#: includes/admin/pages/import-export/tabs/posts-locator.php:230
 msgid "Google Place ID"
 msgstr "Google Place ID"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:222
+#: includes/admin/pages/import-export/tabs/posts-locator.php:231
 msgid "Map Icon"
 msgstr "マップ アイコン"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:228
+#: includes/admin/pages/import-export/tabs/posts-locator.php:232
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:107
+msgid "Phone"
+msgstr "電話"
+
+#: includes/admin/pages/import-export/tabs/posts-locator.php:233
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:108
+msgid "Fax"
+msgstr "Fax"
+
+#: includes/admin/pages/import-export/tabs/posts-locator.php:234
+msgid "email"
+msgstr ""
+
+#: includes/admin/pages/import-export/tabs/posts-locator.php:235
+msgid "website"
+msgstr ""
+
+#: includes/admin/pages/import-export/tabs/posts-locator.php:241
 msgid "Set Custom Fields"
 msgstr "カスタムフィールドを設定"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:264
+#: includes/admin/pages/import-export/tabs/posts-locator.php:277
 msgid "Save Fields"
 msgstr "フィールドを保存"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:273
+#: includes/admin/pages/import-export/tabs/posts-locator.php:286
 msgid ""
 "*You must set the latitude and longitude fields before you can import "
 "locations."
 msgstr ""
 "*位置をインポートする前に、緯度と経度のフィールドを設定する必要があります。"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:303
+#: includes/admin/pages/import-export/tabs/posts-locator.php:316
 msgid "MapPress Importer"
 msgstr "MapPress インポーター"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:308
+#: includes/admin/pages/import-export/tabs/posts-locator.php:321
 msgid "Use this form to import locations from MapPress plugin."
 msgstr ""
 "MapPressプラグインからの位置のインポートに、このフォームをお使い下さい。"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:311
+#: includes/admin/pages/import-export/tabs/posts-locator.php:324
 msgid ""
 "*Note, since the current version of GEO my WP supports only single location "
 "per post, this importer imports only the first location created by MapPress "
@@ -2332,7 +2344,7 @@ msgstr ""
 "ため、このインポーターは各投稿からMapPressで作成された最初の位置のみインポー"
 "トします。"
 
-#: includes/admin/pages/import-export/tabs/posts-locator.php:511
+#: includes/admin/pages/import-export/tabs/posts-locator.php:548
 #, php-format
 msgid "%s database table cannot be found."
 msgstr "%s データベーステーブルは、見つかりませんでした。"
@@ -2833,12 +2845,12 @@ msgid "Destination"
 msgstr "行先"
 
 #: includes/class-gmw-maps-api.php:610
-#: plugins/single-location/includes/class-gmw-single-location.php:432
+#: plugins/single-location/includes/class-gmw-single-location.php:445
 msgid "Directions"
 msgstr "道順"
 
 #: includes/class-gmw-maps-api.php:611
-#: plugins/single-location/includes/class-gmw-single-location.php:433
+#: plugins/single-location/includes/class-gmw-single-location.php:446
 msgid "From:"
 msgstr "差出人："
 
@@ -3875,14 +3887,6 @@ msgid ""
 "location in the list of results."
 msgstr "検索結果一覧の各位置に表示する位置メタフィールドを選択します。"
 
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:107
-msgid "Phone"
-msgstr "電話"
-
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:108
-msgid "Fax"
-msgstr "Fax"
-
 #: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:109
 msgid "Email"
 msgstr "メール"
@@ -4101,11 +4105,11 @@ msgstr ""
 "表示された項目の位置が存在しない場合に、表示するメッセージです。 メッセージが"
 "ない場合、空白のままにします。"
 
-#: plugins/single-location/includes/class-gmw-single-location.php:431
+#: plugins/single-location/includes/class-gmw-single-location.php:444
 msgid "Distance: "
 msgstr "距離："
 
-#: plugins/single-location/includes/class-gmw-single-location.php:434
+#: plugins/single-location/includes/class-gmw-single-location.php:447
 msgid "Show directions"
 msgstr "道順を表示"
 
@@ -4270,6 +4274,24 @@ msgstr ""
 #. Author of the plugin/theme
 msgid "Eyal Fitoussi"
 msgstr "Eyal Fitoussi"
+
+#~ msgid ""
+#~ "The export/import forms below need to be used together with the native <a "
+#~ "href=\"%s\" target=\"blank\"> WordPress export system*</a> and <a href="
+#~ "\"%s\" target\"_blank\">WordPress importer*</a> for a complete process."
+#~ msgstr ""
+#~ "以下のエクスポート・インポートフォームは、ネイティブの<a href=\"%s\" "
+#~ "target=\"blank\"> WordPress エクスポートシステム*</a> や <a href=\"%s\" "
+#~ "target\"_blank\">WordPress インポーター*</a>をご利用下さい。"
+
+#~ msgid ""
+#~ "*Note that only the latitude and longitude fields are mandatory. However, "
+#~ "to take full advantage of GEO my WP features it is recomended to provide "
+#~ "as many fields as possible."
+#~ msgstr ""
+#~ "*緯度と経度のフィールドのみ必須であることにご注意下さい。 但しGEO my WPの"
+#~ "機能を最大限に活用するためには、可能な限り多くのフィールドを提供することを"
+#~ "推奨します。"
 
 #~ msgid "%s out of %s locations were scanned."
 #~ msgstr "%s 件（%s 件中）の位置情報がスキャンされました。"
