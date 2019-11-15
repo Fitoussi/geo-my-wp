@@ -3,9 +3,9 @@ Contributors: ninjew, Eyal Fitoussi
 Donate link: https://www.paypal.me/fitoussi
 Tags: Geolocation, Directory, Store Locator, Google Maps, OpenStreetMaps, LeafLet, Geotagging, Geocode, Mapping, Proximity search, Zipcode, Geotag posts, Address search, Distance, Directions, Locations, Geo, Members locator, Geotag members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
 Requires at least: 4.3
-Tested up to: 5.3
+Tested up to: 5.3.1
 BuddyPress: 2.8
-Stable tag: 3.3
+Stable tag: 3.4
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,42 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 3.4 =
+
+* Note that version 3.2 was a major release. If you are updating from an earlier version, then backing up your site and/or testing this version on a staging environment first is recommended. See the changelog of version 3.2 for more details before updating.
+*
+* --------------------------------
+*
+* Translation: German Formal ( Thanks to Robert Schneider ).
+* Fix: accidentally used do_action instead of add_action.
+* Fix: use "sortby" instead of "orderby" as a URL parameter on search form submission to prevent conflict with other WordPress search queries.
+* Fix: clear object terms internal cache when updating post's taxonomy terms.
+* Fix: image width and height settings are missing from the form editor.
+* Fix: check for the formatted address value if the address value is missing from the user's current location data.
+* Fix: when displaying the user's current location in the address field of the Single Location, check for the formatted address value if the address value was not found.
+* Fix: when getting the User's current location on page load, pass the formatted address value into the address field so it won't be blank.
+* Typo: "suburb" typo in geocoder class.
+* Tweak: set the default unit system of the single location extension to imperial.
+* Tweak: Apply the user's current location or the "address field filter value" of the page load results into the address field of the search form when the form first loads.
+* Tweak: generate "action" URL parameter on form submission be able to detect when a form is submitted.
+* Tweak: when geocoding an address and city was not found in "locality" look in "postal_town" instead.
+* style: padding of the User's location info-window.
+* Tweak: load LeafLet, Marker Spiderfire, and Marker Clusters libraries separately, instead of in a single bundled file.
+* Tweak: allow passing HTML attributes to the "No Results Message".
+* Tweak: Use the HTML "required" attribute in the address field of the search form to verify if the field was left blank.
+* Tweak: hide license key box in the Plugins page by default when a license key is activated.
+* Tweak: new "Deactivate license" link to GEO my WP's add-ons in the plugin's page that will show the license key box on click.
+* Tweak: add location meta ( phone, fax, email, address ) to GEO my WP Post Custom Fields importer.
+* Update: Upgrade LeafLet library to version 1.5.1
+* Update: Upgrade LeafLet Marker Cluster library to version 1.4.1.
+* Update: date picker library.
+* Update premium extensions' min required version.
+* Function: 'gmw_get_search_results_permalink()' to use in the search results template file. Using this function it is possible to modify the permalink if needed.
+* Filter: new JS filter ‘gmw_cl_after_location_deleted’ triggers after the current location is deleted.
+* Filter: 'gmw_location_meta_list_field_before_output' to modify the location-meta list before output.
+* Style: update LeafLet and MarkerSpiderfire styling.
+* update language files.
 
 = 3.3 =
 
