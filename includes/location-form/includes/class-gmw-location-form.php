@@ -541,7 +541,7 @@ class GMW_Location_Form {
 							'default'     => '',
 							'id'          => 'gmw-lf-title',
 							'class'       => '',
-							'placeholder' => __( 'Location name.', 'geo-my-wp' ),
+							'placeholder' => __( 'Location name', 'geo-my-wp' ),
 							'desc'        => '',
 							'attributes'  => array( 'style' => 'width:100%' ),
 							'priority'    => 5,
