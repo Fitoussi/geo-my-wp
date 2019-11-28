@@ -52,12 +52,12 @@ class GMW_Single_Post_Location extends GMW_Single_Location {
 	 * 
 	 * @return [type] [description]
 	 */
-	public function title() {
+	public function title( $location ) {
 
 		$title     = get_the_title( $this->args['object_id'] );
 		$permalink = get_the_permalink( $this->args['object_id'] );
 		
-		return apply_filters( 'gmw_sl_title', "<h3 class=\"gmw-sl-title post-title gmw-sl-element\"><a href=\"{$permalink}\" title=\"{$title}\"'>{$title}</a></h3>", $this->location_data, $this->args, $this->user_position, $this );
+		return apply_filters( 'gmw_sl_title', "<h3 class=\"gmw-sl-title post-title gmw-sl-element\"><a href=\"{$permalink}\" title=\"{$title}\"'>{$title}</a></h3>", $location, $this->args, $this->user_position, $this );
 	}
 }
 
