@@ -221,7 +221,7 @@ if ( gmwVars.mapsProvider == 'google_maps' ) {
 			};
 
 			// modify marker options.
-			marker_options = GMW.apply_filters( 'gmw_generate_marker_options', marker_options, options.id, self );
+			marker_options = GMW.apply_filters( 'gmw_generate_marker_options', marker_options, options.id, self, location );
 
 			var marker = new google.maps.Marker( marker_options );
 
