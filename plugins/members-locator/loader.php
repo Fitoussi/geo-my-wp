@@ -203,7 +203,7 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 			}
 
 			if ( ! IS_ADMIN || defined( 'DOING_AJAX' ) ) {
-				include 'includes/class-gmw-single-member-location.php';
+				include 'includes/class-gmw-single-bp-member-location.php';
 			}
 		}
 	}
