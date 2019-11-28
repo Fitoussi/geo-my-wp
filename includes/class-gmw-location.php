@@ -731,7 +731,7 @@ class GMW_Location {
 			$locations = $wpdb->get_results(
 				$wpdb->prepare(
 					"
-					SELECT *
+					SELECT *, latitude as lat, longitude as lng
 		            FROM   $table
 		            WHERE  blog_id     = %d 
 		            AND    object_type = %s 
