@@ -2292,6 +2292,7 @@ ul.gmw-geocoder-suggested-results li {
 		margin-bottom: 15px;
 		border: 1px solid #e5e5e5;
 		border-radius: 3px;
+		display: inline-block;
 	}
 
 	div.gmw-single-location-wrapper a:link,
@@ -2381,6 +2382,22 @@ ul.gmw-geocoder-suggested-results li {
 		border-bottom: 0px;
 	}
 
+	div.gmw-sl-iw-wrapper h3.gmw-sl-title {
+		font-size: 16px;
+		text-align: center;
+		font-weight: 300;
+		margin-bottom: 10px;
+	}
+	
+	div.gmw-sl-iw-wrapper .gmw-sl-element {
+		padding: 5px 15px;
+	}
+
+	div.gmw-sl-iw-wrapper h3.gmw-sl-title a {
+		text-decoration: none;
+		border: 0;
+	}
+	
 	div.gmw-sl-iw-wrapper .gmw-sl-additional-info-wrapper ul {
 		list-style:none;
 		padding:0px;
