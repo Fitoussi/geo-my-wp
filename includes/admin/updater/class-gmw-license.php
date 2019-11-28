@@ -165,6 +165,33 @@ if ( ! class_exists( 'GMW_License' ) ) :
 					$target = ! empty( $action_link['new_page'] ) ? 'target="_blank"' : '';
 
 					$links[ sanitize_key( $key ) ] = '<a href="' . $action_link['link'] . '" ' . $target . '>' . esc_attr( $action_link['label'] ) . '</a>';
+
+					if ( ! $this->plugins_page_license_enabled ) {
+
+						// if license is not activated display the "Activate License" message.
+						if ( empty( $this->license_key ) || 'valid' !== $this->license_status ) {
+
+							$action = 'active_license';
+							$text   = __( 'Activate License', 'geo-my-wp' );
+							$color  = 'red';
+
+						} else {
+
+							$action = 'deactive_license';
+							$text   = __( 'Deactivate License', 'geo-my-wp' );
+							$color  = 'green';
+						}
+
+						$links[ $action ] = '<a style="color:' . $color . '" href="' . admin_url( 'admin.php?page=gmw-extensions' ) . '">' . $text . '</a>';
+
+					} else {
+
+						// if license is not activated display the "Activate License" message.
+						if ( ! empty( $this->license_key ) && 'valid' === $this->license_status ) {
+
+							$links['deactivate_license'] = '<a href="#" style="color:green" onclick="event.preventDefault();jQuery( this ).closest( \'.gmw-license-key-addon-wrapper\' ).next().find( \'.gmw-license-wrapper\' ).show();">' . __( 'Dectivate license', 'geo-my-wp' ) . '</a>';
+						}
+					}
 				}
 
 				return $links;
