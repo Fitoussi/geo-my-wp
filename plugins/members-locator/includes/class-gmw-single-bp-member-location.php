@@ -1,7 +1,12 @@
 <?php
-// Exit if accessed directly
+/**
+ * GEO my WP Single Member Location.
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -21,6 +26,9 @@ class GMW_Single_BP_Member_Location extends GMW_Single_Location {
 	 * Extends the default shortcode atts
 	 *
 	 * @since 2.6.1
+	 *
+	 * @var array
+	 *
 	 * Public $args
 	 */
 	protected $args = array(
@@ -35,8 +43,8 @@ class GMW_Single_BP_Member_Location extends GMW_Single_Location {
 
 	/**
 	 * [__construct description]
-	 * 
-	 * @param array $atts [description]
+	 *
+	 * @param array $atts shortcode attributes.
 	 */
 	public function __construct( $atts = array() ) {
 
@@ -51,26 +59,26 @@ class GMW_Single_BP_Member_Location extends GMW_Single_Location {
 
 	/**
 	 * Try to get user ID if missing.
-	 * 
+	 *
 	 * @return [type] [description]
 	 */
 	public function get_object_id() {
 
 		global $members_template;
 
-		// look for BP displayed user ID
+		// look for BP displayed user ID.
 		if ( bp_is_user() ) {
 
 			global $bp;
 
 			return $bp->displayed_user->id;
 
-			// look form member ID in members loop
+			// look form member ID in members loop.
 		} elseif ( ! empty( $members_template->member->ID ) ) {
 
 			return $members_template->member->ID;
 
-			// if in single post page look for post author
+			// if in single post page look for post author.
 		} elseif ( is_single() && ! empty( $this->args['show_in_single_post'] ) ) {
 
 			global $post;
@@ -83,7 +91,6 @@ class GMW_Single_BP_Member_Location extends GMW_Single_Location {
 
 				return false;
 			}
-
 		} else {
 
 			return false;
@@ -93,19 +100,23 @@ class GMW_Single_BP_Member_Location extends GMW_Single_Location {
 	/**
 	 * Get member's name.
 	 *
+	 * @param object $location location object.
+	 *
 	 * @return [type] [description]
 	 */
-	public function name() {
+	public function name( $location ) {
 		return apply_filters( 'gmw_sl_title', '<h3 class="gmw-sl-title member-name gmw-sl-element">' . bp_core_get_userlink( $this->args['object_id'] ) . '</h3>', $this->location_data, $this->args, $this->user_position, $this );
 	}
 
 	/**
 	 * Use title for the name.
 	 *
+	 * @param object $location location object.
+	 *
 	 * @return [type] [description]
 	 */
-	public function title() {
-		return $this->name();
+	public function title( $location ) {
+		return $this->name( $location );
 	}
 }
 
@@ -113,6 +124,8 @@ class GMW_Single_BP_Member_Location extends GMW_Single_Location {
  * GMW Single member location shortcode
  *
  * @version 2.0
+ *
+ * @param array $atts shortcode attribute.
  *
  * @author Eyal Fitoussi
  */
