@@ -72,8 +72,8 @@
 								<?php do_action( 'gmw_search_results_before_title', $gmw, $member ); ?>
 
 								<h2 class="user-name-wrapper">
-									<a href="<?php bp_member_permalink(); ?>">
-										<?php bp_member_name(); ?>		
+									<a href="<?php gmw_search_results_permalink( bp_member_permalink(), $member, $gmw ); ?>">
+										<?php gmw_search_results_title( bp_member_name(), $member, $gmw ); ?> 
 									</a>
 								</h2>    	
 								<?php gmw_search_results_distance( $member, $gmw ); ?>

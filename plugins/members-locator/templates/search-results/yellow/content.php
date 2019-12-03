@@ -18,9 +18,14 @@
  * it in the form editor. It will show in the "Search results" dropdown menu as "Custom: yellow".
  *
  * @param $gmw ( array ) the form being used
+ *
  * @param $members_template ( object ) buddypress members object
+ *
  * @param $members_template->member ( object ) each member in the loop
+ *
+ * @package  geo-my-wp
  */
+
 ?>
 <?php global $members_template; ?>
 
@@ -31,90 +36,96 @@
 		<div class="gmw-results">
 
 			<?php do_action( 'gmw_search_results_start', $gmw ); ?>
-			
+
 			<div class="gmw-results-message results-count-wrapper">
 				<span><?php gmw_results_message( $gmw ); ?></span>
 				<?php do_action( 'gmw_search_results_after_results_message', $gmw ); ?>
 			</div>
-						
+
 			<div class="pagination-per-page-wrapper top">
 				<?php gmw_per_page( $gmw ); ?>
 				<?php gmw_pagination( $gmw ); ?>
 			</div>
-			
+
 			<?php gmw_results_map( $gmw ); ?>
 
 			<?php do_action( 'bp_before_directory_members_list' ); ?>
-				
+
 			<ul id="members-list" class="members-list-wrapper">
 
-				<?php while ( bp_members() ) : bp_the_member(); ?>
-					
+				<?php
+				while ( bp_members() ) :
+					bp_the_member();
+					?>
+
 					<?php $member = $members_template->member; ?>
-					
+
 					<li id="single-member-<?php echo absint( $member->id ); ?>" class="single-member <?php echo esc_attr( $member->location_class ); ?>">
 
 						<?php do_action( 'gmw_search_results_loop_item_start', $gmw, $member ); ?>
-												
+
 						<div class="info-left-wrapper">
-							
+
 							<?php do_action( 'gmw_search_results_before_avatar', $gmw, $member ); ?>
-								
+
 							<?php gmw_search_results_bp_avatar( $member, $gmw ); ?>
-							
+
 							<?php do_action( 'gmw_search_results_before_title', $gmw, $member ); ?>
-							
+
 							<span class="user-name-wrapper">
-								
-								<span class="member-count"><?php echo $member->location_count; ?>)</span>
-								
-								<a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a>
+
+								<span class="member-count"><?php echo absint( $member->location_count ); ?>)</span>
+
+								<a href="<?php gmw_search_results_permalink( bp_member_permalink(), $member, $gmw ); ?>">
+									<?php gmw_search_results_title( bp_member_name(), $member, $gmw ); ?> 
+								</a>
+
 								<?php gmw_search_results_distance( $member, $gmw ); ?>
-							
+
 							</span>
-							
+
 							<?php if ( bp_get_member_latest_update() ) : ?>  
 
 								<div class="update"><?php bp_member_latest_update(); ?></div>
-							
+
 							<?php endif; ?>
-							
+
 							<span class="activity"><?php bp_member_last_active(); ?></span>
-									
+
 							<?php do_action( 'bp_directory_members_actions' ); ?>     
-							 
+
 							<div class="location-wrapper">
-								
+
 								<?php do_action( 'gmw_search_results_before_address', $gmw, $member ); ?>
-								
+
 								<div class="address">
 									<?php gmw_search_results_address( $member, $gmw ); ?>
 								</div>
-								
+
 								<?php do_action( 'gmw_search_results_before_get_directions', $gmw, $member ); ?>
-									
+
 								<?php gmw_search_results_directions_link( $member, $gmw ); ?>
 							</div>            
 						</div>
-														
+
 						<div class="info-right-wrapper">
 							<?php do_action( 'bp_directory_members_item' ); ?>
 							<?php do_action( 'gmw_fl_search_results_member_items', $gmw, $member ); ?>
 						</div>
-									
+
 						<?php do_action( 'gmw_search_results_loop_item_end', $gmw, $member ); ?>
 					</li>
 
 				<?php endwhile; ?>
 
 			</ul>
-					
+
 			<?php do_action( 'bp_after_directory_members_list' ); ?>
 
 			<?php bp_member_hidden_fields(); ?>
 
 			<div class="pagination-per-page-wrapper bottom">
-				
+
 				<?php gmw_per_page( $gmw ); ?>
 
 				<div class="pagination-wrapper">
@@ -126,11 +137,11 @@
 	<?php else : ?>
 
 		<div class="gmw-no-results">
-			
+
 			<?php do_action( 'gmw_no_results_start', $gmw ); ?>
 
 			<?php gmw_no_results_message( $gmw ); ?>
-			
+
 			<?php do_action( 'gmw_no_results_end', $gmw ); ?> 
 
 		</div>

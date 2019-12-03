@@ -18,9 +18,14 @@
  * it in the form editor. It will show in the "Search results" dropdown menu as "Custom: gsweetdate".
  *
  * @param $gmw ( array ) the form being used
+ *
  * @param $members_template ( object ) buddypress members object
+ *
  * @param $members_template->member ( object ) each member in the loop
+ *
+ * @package geo-my-wp
  */
+
 ?>	
 <?php global $members_template; ?>
 
@@ -55,7 +60,9 @@
 
 				<!-- members loop -->
 				<?php
-				while ( bp_members() ) : bp_the_member(); ?>
+				while ( bp_members() ) :
+					bp_the_member();
+					?>
 
 					<!-- do not remove this line -->
 					<?php $member = $members_template->member; ?>
@@ -69,7 +76,7 @@
 
 							<div class="avatar">
 
-								<a href="<?php bp_member_permalink(); ?>"><?php bp_member_avatar( 'type=full&width=94&height=94&class=' ); ?></a>
+								<a href="<?php gmw_search_results_permalink( bp_member_permalink(), $member, $gmw ); ?>"><?php bp_member_avatar( 'type=full&width=94&height=94&class=' ); ?></a>
 
 								<?php do_action( 'bp_members_inside_avatar' ); ?>
 

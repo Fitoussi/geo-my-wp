@@ -19,9 +19,14 @@
  * it in the form editor. It will show in the "Search results" dropdown menu labed with "Custom: ".
  *
  * @param $gmw  ( array ) the form being used
+ *
  * @param $gmw_form ( object ) the form object
+ *
  * @param $post ( object ) post object in the loop
+ *
+ * @package geo-my-wp
  */
+
 ?>
 <div class="gmw-results-wrapper gray gmw-pt-gray-results-wrapper <?php echo esc_attr( $gmw['prefix'] ); ?>" data-id="<?php echo absint( $gmw['ID'] ); ?>" data-prefix="<?php echo esc_attr( $gmw['prefix'] ); ?>">
 
@@ -49,7 +54,10 @@
 
 			<ul class="posts-list-wrapper">
 
-				<?php while ( $gmw_query->have_posts() ) : $gmw_query->the_post(); ?>
+				<?php
+				while ( $gmw_query->have_posts() ) :
+					$gmw_query->the_post();
+					?>
 
 					<?php global $post; ?>
 
