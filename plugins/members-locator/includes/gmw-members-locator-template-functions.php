@@ -631,7 +631,7 @@ function gmw_query_xprofile_fields( $fields_values = array(), $gmw = array() ) {
 			case 'datebox':
 			case 'birthdate':
 				if ( ! is_array( $value ) || ! array_filter( $value ) ) {
-					continue;
+					break;
 				}
 
 				$min = ! empty( $value['min'] ) ? $value['min'] : '1';
