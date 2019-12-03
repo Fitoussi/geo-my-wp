@@ -127,6 +127,7 @@ class GMW_Form {
 		'ID as location_id',
 		'object_type',
 		'object_id',
+		'title as location_name',
 		'user_id',
 		'latitude as lat',
 		'longitude as lng',
@@ -357,7 +358,7 @@ class GMW_Form {
 		$this->form['total_results']    = 0;
 		$this->form['max_pages']        = 0;
 		$this->form['in_widget']        = ! empty( $this->form['params']['widget'] ) ? true : false;
-		$this->form['modify_permalink'] = 0;
+		$this->form['modify_permalink'] = 1;
 
 		// check if form submitted.
 		if ( isset( $_GET[ $this->url_px . 'form' ] ) && isset( $_GET[ $this->url_px . 'action' ] ) && 'fs' === $_GET[ $this->url_px . 'action' ] ) { // WPCS: CSRF ok.
@@ -986,7 +987,7 @@ class GMW_Form {
 			}
 
 			// append address to each permalink in the loop.
-			if ( apply_filters( 'gmw_append_address_to_permalink', true, $object->object_type, $this ) && ! empty( $this->object_permalink_hook ) ) {
+			if ( apply_filters( 'gmw_append_address_to_permalink', false, $object->object_type, $this ) && ! empty( $this->object_permalink_hook ) ) {
 				add_filter( $this->object_permalink_hook, array( $this, 'append_address_to_permalink' ) );
 			}
 
