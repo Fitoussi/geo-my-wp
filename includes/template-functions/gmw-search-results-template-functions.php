@@ -225,6 +225,45 @@ function gmw_search_results_orderby_filter( $gmw = array() ) {
 }
 
 /**
+ * Get the location title in the search results.
+ *
+ * @since 3.4.1
+ *
+ * @author Eyal Fitoussi
+ *
+ * @param  string $title  original title.
+ * @param  object $object location object.
+ * @param  array  $gmw    gmw form.
+ *
+ * @return string         title.
+ */
+function gmw_get_search_results_title( $title, $object, $gmw ) {
+
+	if ( ! empty( $gmw['search_results']['show_location_name_in_title'] ) && ! empty( $object->location_name ) && $object->location_name !== $title ) {
+
+		$title .= ' - ' . esc_html( $object->location_name );
+	}
+
+	// append the address to the permalink.
+	return esc_html( apply_filters( "gmw_{$gmw['prefix']}_get_location_title", $title, $object, $gmw ) );
+}
+
+/**
+ * Display the location title in the search results.
+ *
+ * @since 3.4.1
+ *
+ * @author Eyal Fitoussi
+ *
+ * @param  string $title  title.
+ * @param  object $object location object.
+ * @param  array  $gmw    gmw form.
+ */
+function gmw_search_results_title( $title, $object, $gmw ) {
+	echo gmw_get_search_results_title( $title, $object, $gmw ); // WPCS: XSS ok.
+}
+
+/**
  * Get the location permalink in the search results.
  *
  * Modify the pemalink and append it with some location data.
@@ -248,6 +287,7 @@ function gmw_get_search_results_permalink( $url, $object, $gmw ) {
 
 	// get the permalink args.
 	$url_args = array(
+		'lid'     => $object->location_id,
 		'address' => str_replace( ' ', '+', $gmw['address'] ),
 		'lat'     => $gmw['lat'],
 		'lng'     => $gmw['lng'],
@@ -275,4 +315,3 @@ function gmw_get_search_results_permalink( $url, $object, $gmw ) {
 function gmw_search_results_permalink( $url, $object, $gmw ) {
 	echo gmw_get_search_results_permalink( $url, $object, $gmw ); // WPCS: XSS ok.
 }
-
