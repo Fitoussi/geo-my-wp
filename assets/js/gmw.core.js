@@ -773,14 +773,18 @@ var GMW = {
         // set the "paged" value to first page.
         form.find( 'input.gmw-paged' ).val( '1' );
    		
-   		// modify the address before geocoding takes place.
+   		// modify the addressfield before geocoding takes place.
+   		// deprecated - use gmw_search_form_address_value_pre_geocoding instead.
    		addressField = GMW.apply_filters( 'gmw_search_form_address_pre_geocoding', addressField, GMW );
 
         // get the address field/s value.
         address = addressField.map( function() {
            return jQuery( this ).val();
         }).get().join( ' ' );           
-  
+  		
+  		// modify the address before geocoding takes place.
+   		address = GMW.apply_filters( 'gmw_search_form_address_value_pre_geocoding', address.toString(), GMW );
+
         // if address field is empty.
         if ( ! jQuery.trim( address ).length ) {
 
@@ -1367,8 +1371,9 @@ var GMW_Geocoders = {
 						
 			var fields = {};
 			var ac     = result.address_components;
-			var pid    = typeof result.place_id !== undefined ? result.place_id : '';
+			var pid    = typeof result.place_id !== 'undefined' ? result.place_id : '';
 	    	
+	    	fields.place_id          = pid;
 	    	fields.formatted_address = result.formatted_address;
 	    	fields.lat = fields.latitude  = result.geometry.location.lat();
 	    	fields.lng = fields.longitude = result.geometry.location.lng();
