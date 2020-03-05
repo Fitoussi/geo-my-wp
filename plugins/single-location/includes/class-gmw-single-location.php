@@ -30,28 +30,29 @@ class GMW_Single_Location {
 	 * @since 2.6.1
 	 */
 	protected $defaults = array(
-		'element_id'           => 0,
-		'object'               => 'post', // replaced item_type.
-		'object_type'          => '',
-		'object_id'            => 0, // replaced item_id.
-		'elements'             => 0,
-		'address_fields'       => 'address',
-		'additional_info'      => '', // deprecated - replaced with location_meta.
-		'location_meta'        => '',
-		'units'                => 'imperial',
-		'map_height'           => '250px',
-		'map_width'            => '250px',
-		'map_type'             => 'ROADMAP',
-		'zoom_level'           => 13,
-		'scrollwheel_map_zoom' => 1,
-		'expand_map_on_load'   => 0,
-		'map_icon_url'         => '',
-		'map_icon_size'        => '',
-		'info_window'          => 'title,address,distance',
-		'user_map_icon_url'    => '',
-		'user_map_icon_size'   => '',
-		'user_info_window'     => 'Your Location',
-		'no_location_message'  => 0,
+		'element_id'            => 0,
+		'object'                => 'post', // replaced item_type.
+		'object_type'           => '',
+		'object_id'             => 0, // replaced item_id.
+		'elements'              => 0,
+		'address_fields'        => 'address',
+		'additional_info'       => '', // deprecated - replaced with location_meta.
+		'location_meta'         => '',
+		'units'                 => 'imperial',
+		'directions_form_units' => 'default',
+		'map_height'            => '250px',
+		'map_width'             => '250px',
+		'map_type'              => 'ROADMAP',
+		'zoom_level'            => 13,
+		'scrollwheel_map_zoom'  => 1,
+		'expand_map_on_load'    => 0,
+		'map_icon_url'          => '',
+		'map_icon_size'         => '',
+		'info_window'           => 'title,address,distance',
+		'user_map_icon_url'     => '',
+		'user_map_icon_size'    => '',
+		'user_info_window'      => 'Your Location',
+		'no_location_message'   => 0,
 		/** 'is_widget'            => 0,
 		// 'widget_title'         => 0, */
 	);
@@ -671,6 +672,7 @@ class GMW_Single_Location {
 			'element_id'  => $this->args['element_id'],
 			'origin'      => $this->user_position['address'],
 			'destination' => $location->address,
+			'units'       => $this->args['directions_form_units'],
 		);
 
 		$output  = '<div class="gmw-sl-directions-trigger-wrapper">';
