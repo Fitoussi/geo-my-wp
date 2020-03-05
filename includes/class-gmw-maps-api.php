@@ -553,7 +553,7 @@ class GMW_Maps_API {
 			'element_id'           => '',
 			'origin'               => '',
 			'destination'          => '',
-			'units'                => 'imperial',
+			'units'                => 'default',
 			'avoid'                => false,
 			'address_autocomplete' => 1,
 		);
@@ -665,7 +665,7 @@ class GMW_Maps_API {
 			$output .= "<input style=\"display:none;\" type=\"radio\" id=\"unit-system-metric-trigger-{$id}\" name=\"unit_system_trigger\" class=\"unit-system-trigger\" value=\"METRIC\" checked=\"checked\" />";
 
 			// show both for the user to choose from.
-		} else {
+		} elseif ( 'both' === $args['units'] ) {
 
 			$output .= "<div id=\"unit-system-options-{$id}\" class=\"get-directions-options unit-system-options\">";
 			$output .= "<label for=\"unit-system-imperial-trigger-{$id}\" class=\"active\">";
@@ -678,6 +678,10 @@ class GMW_Maps_API {
 			$output .= "<span>{$labels['units_km']}</span>";
 			$output .= '</label>';
 			$output .= '</div>';
+
+		} else {
+
+			$output .= '<input style="display:none;" type="radio" id="unit-system-imperial-trigger-' . $id . '" name="unit_system_trigger" class="unit-system-trigger" value="" checked="checked" />';
 		}
 
 		// "Avoid" options
