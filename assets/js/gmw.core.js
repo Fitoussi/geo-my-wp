@@ -1375,8 +1375,8 @@ var GMW_Geocoders = {
 	    	
 	    	fields.place_id          = pid;
 	    	fields.formatted_address = result.formatted_address;
-	    	fields.lat = fields.latitude  = result.geometry.location.lat();
-	    	fields.lng = fields.longitude = result.geometry.location.lng();
+	    	fields.lat               = fields.latitude  = result.geometry.location.lat();
+	    	fields.lng               = fields.longitude = result.geometry.location.lng();
 
 	    	// ac ( address_component ): complete location data object
 	    	// ac[x]: each location field in the address component
