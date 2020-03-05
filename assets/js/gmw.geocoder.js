@@ -130,11 +130,12 @@ var GMW_Geocoders = {
 						
 			var fields = {};
 			var ac     = result.address_components;
-			var pid    = typeof result.place_id !== undefined ? result.place_id : '';
+			var pid    = typeof result.place_id !== 'undefined' ? result.place_id : '';
 	    	
+	    	fields.place_id          = pid;
 	    	fields.formatted_address = result.formatted_address;
-	    	fields.lat = fields.latitude  = result.geometry.location.lat();
-	    	fields.lng = fields.longitude = result.geometry.location.lng();
+	    	fields.lat               = fields.latitude  = result.geometry.location.lat();
+	    	fields.lng               = fields.longitude = result.geometry.location.lng();
 
 	    	// ac ( address_component ): complete location data object
 	    	// ac[x]: each location field in the address component
@@ -153,12 +154,14 @@ var GMW_Geocoders = {
 					fields.premise = ac[x].long_name;
 				}
 				
-				 if ( ac[x].types == 'neighborhood,political' && ac[x].long_name != undefined ) {
+				if ( ac[x].types == 'neighborhood,political' && ac[x].long_name != undefined ) {
 				 	fields.neighborhood = ac[x].long_name;
 				}
 	 
-		        if( ac[x].types == 'locality,political' && ac[x].long_name != undefined ) {
+		        if ( ac[x].types == 'locality,political' && ac[x].long_name != undefined ) {
 		        	fields.city = ac[x].long_name;
+				} else if ( ac[x].types == 'postal_town' && ac[x].long_name != undefined ) {
+					fields.city = ac[x].long_name;
 				}
 		        
 		        if ( ac[x].types == 'administrative_area_level_1,political' ) {
