@@ -2,10 +2,10 @@
 Contributors: ninjew, Eyal Fitoussi
 Donate link: https://www.paypal.me/fitoussi
 Tags: Geolocation, Directory, Store Locator, Google Maps, OpenStreetMaps, LeafLet, Geotagging, Geocode, Mapping, Proximity search, Zipcode, Geotag posts, Address search, Distance, Directions, Locations, Geo, Members locator, Geotag members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
-Requires at least: 4.3
+Requires at least: 4.5
 Tested up to: 5.3.1
 BuddyPress: 2.8
-Stable tag: 3.4
+Stable tag: 3.4.1
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,31 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 3.4.1 =
+
+* Note that version 3.2 was a major release. If you are updating from an earlier version, then backing up your site and/or testing this version on a staging environment first is recommended. See the changelog of version 3.2 for more details before updating.
+*
+* --------------------------------
+* Fix: PHP warnings related to PHP 7.3.
+* Fix: license key input box of 3rd party extensions is hidden in Plugin's page and the "Deactivate license" link is missing.
+* Fix: Location form generates JS error when confirming an address and the Coordinates tab is excluded from the Location form.
+* Fix: default marker URL incorrect when using LeafLet.
+* Fix: Google place_id not being saved in the database when a place is added or updated.
+* Enhancement: driving directions units can now be set to 'default' which is the default behavior by Google Maps API. That means that the unit system will be set based on the starting address entered in the driving directions form.
+* Enhancement: new shortcode attribute 'directions_form_units' added to the Single Location Shortcode for setting the unit system of the live directions form.
+* Tweak: decrease zoom level of form editor in the dashboard.
+* Tweak: adjust title styling in the info window of the single location extension.
+* Tweak: new argument "location" to the JS filter 'gmw_generate_marker_options'.
+* Tweak: add "lat" and "lag" variables as coordinates in addition to "latitude" and "longitude" to the location object when using the GMW_Locaiton::get_locations_by_object() function. This is to support some older versions of the plugin.
+* Tweak: pass $location object to the GMW_Single_Post_Location::title() and GMW_Single_BP_Member_Location::title() methods.
+* Tweak: add the ‘tile’ column of the gmw_locations DB table as location_name to the DB fields of the locator form.
+* Tweak: use the functions gmw_search_results_permalink() and gmw_search_results_title() in the search results template files to generate the title and permalink.
+* Filter: JS filter ‘gmw_search_form_address_value_pre_geocoding’ to modify the address before geocoding takes place.
+* Function: gmw_get_search_results_title() to generate the title in the search results template file.
+* Deprecated: JS filter 'gmw_search_form_address_pre_geocoding'. Use 'gmw_search_form_address_value_pre_geocoding' instead.
+* WPCS
+* Additional minor bugs fix and improvements.
 
 = 3.4 =
 
