@@ -5,7 +5,7 @@ Tags: Geolocation, Directory, Store Locator, Google Maps, OpenStreetMaps, LeafLe
 Requires at least: 4.5
 Tested up to: 5.3.1
 BuddyPress: 2.8
-Stable tag: 3.4.1
+Stable tag: 3.5
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -121,7 +121,7 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 
 == Changelog ==
 
-= 3.4.1 =
+= 3.5 =
 
 * Note that version 3.2 was a major release. If you are updating from an earlier version, then backing up your site and/or testing this version on a staging environment first is recommended. See the changelog of version 3.2 for more details before updating.
 *
@@ -133,6 +133,9 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 * Fix: Google place_id not being saved in the database when a place is added or updated.
 * Enhancement: driving directions units can now be set to 'default' which is the default behavior by Google Maps API. That means that the unit system will be set based on the starting address entered in the driving directions form.
 * Enhancement: new shortcode attribute 'directions_form_units' added to the Single Location Shortcode for setting the unit system of the live directions form.
+* Tweak: Update styling related to horizontal search form templates.
+* Tweak: Tweak: add "gmw-field-label-enabled" class tag to the address field when label is enabled.
+* Tweak: update the minimum required extensions version.
 * Tweak: decrease zoom level of form editor in the dashboard.
 * Tweak: adjust title styling in the info window of the single location extension.
 * Tweak: new argument "location" to the JS filter 'gmw_generate_marker_options'.
@@ -681,7 +684,6 @@ Below are some of the major changes in this version:
 * Code improvement.
 * Better performance.
 * Various new settings
-
 
 = 1.3 =
 
