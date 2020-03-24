@@ -104,9 +104,17 @@ function gmw_get_search_form_address_field( $gmw ) {
 		'value'                => $value,
 	);
 
-	$output = '<div class="gmw-form-field-wrapper gmw-address-field-wrapper">';
+	$label_enabled = false;
+	$label_css     = '';
 
 	if ( ! empty( $settings['label'] ) ) {
+		$label_css     = 'gmw-field-label-enabled';
+		$label_enabled = true;
+	}
+
+	$output = '<div class="gmw-form-field-wrapper gmw-address-field-wrapper ' . $label_css . '">';
+
+	if ( $label_enabled ) {
 		$output .= '<label class="gmw-field-label" for="gmw-address-field-' . $args['id'] . '">' . esc_html( $settings['label'] ) . '</label>';
 	}
 
