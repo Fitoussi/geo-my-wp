@@ -58,7 +58,7 @@ div.gmw-form-wrapper.horizontal-gray.fl .gmw-address-field-wrapper label {
 	margin-right:3px;
 }
 
-div.gmw-form-wrapper.horizontal-gray.fl span.xfield-trigger {
+/*div.gmw-form-wrapper.horizontal-gray.fl span.xfield-trigger {
 	display: inline-block;
 	padding: 1px 6px;
 	border: 1px solid #ccc;
@@ -74,7 +74,7 @@ div.gmw-form-wrapper.horizontal-gray.fl span.xfield-trigger {
 	text-align: center;
 	vertical-align: top;
 	line-height: 18px;
-}
+}*/
 
 div.gmw-form-wrapper.horizontal-gray.fl .gmw-fl-form-xprofile-fields {
 	display:none;
