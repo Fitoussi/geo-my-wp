@@ -722,6 +722,13 @@ var GMW = {
             // run form submission
             GMW.form_submission( jQuery( this ), event );
         });
+
+        jQuery( '.gmw-xprofile-fields-form-trigger' ).on( 'click', function(e) {
+        	
+        	e.preventDefault();
+
+        	jQuery( this ).closest( 'form' ).find( '.gmw-search-form-xprofile-fields' ).slideToggle().toggleClass( 'xprofile-visible' );
+        });
     },
 
     /**
@@ -764,7 +771,7 @@ var GMW = {
         } 
 
         //var form         = form;
-        var addressField = form.find( 'input.gmw-address' );
+        var addressField = form.find( 'input.gmw-address, select.gmw-address' );
         var address      = '';
 
         // prevent form submission. We need to run some functions.
@@ -781,7 +788,8 @@ var GMW = {
         address = addressField.map( function() {
            return jQuery( this ).val();
         }).get().join( ' ' );           
-  		
+  			
+  		console.log( addressField )
   		// modify the address before geocoding takes place.
    		address = GMW.apply_filters( 'gmw_search_form_address_value_pre_geocoding', address.toString(), GMW );
 
