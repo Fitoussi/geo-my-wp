@@ -40,6 +40,8 @@ var GMW_Location_Form_Map_Providers = {
 				//modify autocomplete options
 				options = GMW.apply_filters( 'gmw_lf_address_autocomplete_options', {}, autocompleteId, this_form );
 			    
+			    options.fields = [ 'address_component', 'formatted_address', 'geometry' ];
+
 			    //init autocomplete
 			    var autocomplete = new google.maps.places.Autocomplete( input, options );
 			    

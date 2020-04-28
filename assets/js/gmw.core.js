@@ -504,6 +504,8 @@ var GMW = {
                 options.types = [fieldData.autocomplete_types];
             }
 
+            options.fields = [ 'address_component', 'formatted_address', 'geometry' ];
+
             //The plugins uses basic options of Google places API. 
             //You can use this filter to modify the autocomplete options
             //see this page https://developers.google.com/maps/documentation/javascript/places-autocomplete
