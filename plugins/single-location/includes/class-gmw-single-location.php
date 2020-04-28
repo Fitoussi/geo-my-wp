@@ -351,8 +351,14 @@ class GMW_Single_Location {
 		// get the object data.
 		$this->object_data = $this->get_object_data();
 
+		if ( strpos( $this->args['elements'], 'map' ) !== false && ! empty( $this->args['map_width'] ) && '100%' === $this->args['map_width'] ) {
+			$display = 'style="display:block"';
+		} else {
+			$display = 'style="display:inline-block"';
+		}
+
 		// generate the elements array.
-		$this->elements['element_wrap_start'] = '<div id="gmw-single-location-wrapper-' . esc_attr( $this->args['element_id'] ) . '" class="gmw-single-location-wrapper gmw-sl-wrapper ' . esc_attr( $this->args['object'] ) . ' gmw-single-' . esc_attr( $this->args['object'] ) . '-sc-wrapper">';
+		$this->elements['element_wrap_start'] = '<div id="gmw-single-location-wrapper-' . esc_attr( $this->args['element_id'] ) . '" class="gmw-single-location-wrapper gmw-sl-wrapper ' . esc_attr( $this->args['object'] ) . ' gmw-single-' . esc_attr( $this->args['object'] ) . '-sc-wrapper" ' . $display . '>';
 
 		/** Check if this is widget and we use widget title */
 		/** If ( $this->args['is_widget'] && ! empty( $this->args['widget_title'] ) ) {
