@@ -298,7 +298,7 @@ class GMW_Current_Location {
 
 		$this->args['element_id'] = esc_attr( $this->args['element_id'] );
 		$ajax_enabled             = esc_attr( $this->args['ajax_update'] );
-		$autocomplete             = ! empty( $this->args['address_autocomplete'] ) ? 'gmw-address-autocomplete' : '';
+		$autocomplete             = ( ! empty( $this->args['address_autocomplete'] ) && 'google_maps' === GMW()->geocoding_provider ) ? 'gmw-address-autocomplete' : '';
 
 		$output  = '';
 		$output .= '<div id="gmw-cl-form-wrapper-' . $this->args['element_id'] . '" data-ajax_enabled="' . $ajax_enabled . '" class="gmw-cl-element gmw-cl-form-wrapper" data-element-id="' . $this->args['element_id'] . '">';
@@ -408,6 +408,8 @@ class GMW_Current_Location {
 			$elements['map'] = $this->map();
 		}
 
+		$elements = apply_filters( 'gmw_cl_display_output_elements', $elements, $this->args, $this->user_position, get_current_user_id() );
+
 		$output = implode( '', $elements );
 
 		// enqueue main script if not loaded already.
@@ -465,7 +467,7 @@ class GMW_Current_Location {
 	 * @param  [type] $current_location [description]
 	 * @return [type]                   [description]
 	 */
-	public static function update_cookies( $current_location, $ajax = false ) {
+	public static function update_cookies( $current_location, $ajax = false, $redirect = true ) {
 
 		$address_fields = array(
 			'street',
@@ -483,41 +485,46 @@ class GMW_Current_Location {
 
 		$cache = (object) array();
 
-		// save location fields
+		// save location fields.
 		foreach ( $address_fields as $field ) {
 
-			// clear cookie
+			// clear cookie.
 			unset( $_COOKIE[ "gmw_ul_{$field}" ] );
 			setcookie( "gmw_ul_{$field}", '', time() - 300 );
 
-			// save new value if exists
+			// save new value if exists.
 			if ( ! empty( $current_location[ $field ] ) ) {
 
-				$cache->$field = $current_location[ $field ];
+				// Sanitize values.
+				$current_location[ $field ] = sanitize_text_field( stripslashes( $current_location[ $field ] ) );
+				$cache->$field              = $current_location[ $field ];
 
-				setcookie( "gmw_ul_{$field}", sanitize_text_field( stripslashes( $current_location[ $field ] ) ), strtotime( '+7 days' ), '/' );
+				setcookie( "gmw_ul_{$field}", $current_location[ $field ], strtotime( '+7 days' ), '/' );
 			} else {
 				$cache->$field = '';
 			}
 		}
 
-		// do something with the information
+		// do something with the information.
 		do_action( 'gmw_user_current_location_submitted', $current_location, get_current_user_id(), $ajax );
 
-		// save user location in cache
+		// save user location in cache.
 		wp_cache_set( 'gmw_user_current_location', $cache, '', 86400 );
 
 		if ( $ajax ) {
 
-			// done
+			// done.
 			return wp_send_json( ! empty( $current_location ) ? $current_location : array() );
 
 		} else {
 
-			//reload page to prevent form resubmission
-			wp_redirect( $_SERVER['REQUEST_URI'] );
+			if ( $redirect ) {
 
-			exit;
+				//reload page to prevent form resubmission.
+				wp_redirect( $_SERVER['REQUEST_URI'] );
+
+				exit;
+			}
 		}
 	}
 
