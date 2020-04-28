@@ -58,7 +58,7 @@ class GMW_Current_Location_Widget extends GMW_Widget {
 				'step'        => 1,
 				'min'         => 1,
 				'max'         => '',
-				'default'     => rand( 550, 1000 ),
+				'default'     => wp_rand( 550, 1000 ),
 				'label'       => __( 'Element ID', 'geo-my-wp' ),
 				'description' => __( 'Use the element ID to assign a unique ID to this shortcode. The unique ID can be useful for styling purposes as well when using the hooks provided by the shortcode when custom modifications required.', 'geo-my-wp' ),
 			),
@@ -104,7 +104,7 @@ class GMW_Current_Location_Widget extends GMW_Widget {
 				'type'        => 'checkbox',
 				'default'     => 1,
 				'label'       => __( 'Address autocomplete', 'geo-my-wp' ),
-				'description' => __( 'Enable live suggested results by Google address autocompelte while typing an address.', 'geo-my-wp' ),
+				'description' => __( 'Enable live suggested results by Google address autocompelte while typing an address. Note that this feature is only available with Google Maps API.', 'geo-my-wp' ),
 			),
 			'user_greeting'             => array(
 				'type'        => 'text',
