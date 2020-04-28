@@ -85,13 +85,15 @@
 
 								<?php gmw_search_results_bp_avatar( $member, $gmw ); ?>
 
-								<span class="activity">
-									<?php bp_member_last_active(); ?>
-								</span>
+								<?php if ( function_exists( 'bp_member_last_active' ) ) { ?>
+									<span class="activity">
+										<?php bp_member_last_active(); ?>
+									</span>
+								<?php } ?>
 
 								<?php do_action( 'bp_directory_members_actions' ); ?>
 
-								<?php if ( bp_get_member_latest_update() ) : ?>
+								<?php if ( function_exists( 'bp_get_member_latest_update' ) && bp_get_member_latest_update() ) : ?>
 									<div class="update"><?php bp_member_latest_update(); ?></div>
 								<?php endif; ?>
 
