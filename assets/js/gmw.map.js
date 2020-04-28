@@ -1097,6 +1097,9 @@ GMW_Map.prototype.render = function( locations, userLocation ) {
 		// generate the map
 		self.map = self.Map( self.mapElement, self.options, self );
 
+		// hook custom functions if needed
+		GMW.do_action( 'gmw_map_rendered', self.map, self );
+
 		// functions after map done loading.
 		self.mapLoaded( self );
 	});
