@@ -230,7 +230,9 @@ class GMW_Single_Location_Widget extends GMW_Widget {
 
 		/** $instance['widget_title']   = ! empty( $instance['widget_title'] ) ? htmlentities( $args['before_title'] . $instance['widget_title'] . $args['after_title'], ENT_QUOTES ) : 0; */
 
-		echo gmw_single_location_shortcode( $instance ); // WPCS: XSS ok.
+		if ( function_exists( 'gmw_single_location_shortcode' ) ) {
+			echo gmw_single_location_shortcode( $instance ); // WPCS: XSS ok.
+		}
 
 		echo $args['after_widget']; // WPCS: XSS ok.
 
