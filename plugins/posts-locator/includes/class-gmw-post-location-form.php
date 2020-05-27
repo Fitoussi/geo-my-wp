@@ -1,6 +1,11 @@
 <?php
+/**
+ * GMW Post Location form class.
+ *
+ * @package gmw-my-wp.
+ */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -15,7 +20,6 @@ if ( ! class_exists( 'GMW_Location_Form' ) ) {
  * Location form for Post types in "Edit post" page.
  *
  * @since 3.0
- *
  */
 class GMW_Post_Location_Form extends GMW_Location_Form {
 
@@ -34,14 +38,15 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
 	public $object_type = 'post';
 
 	/**
-	 * Run the form class
-	 * @param array $attr [description]
+	 * Run the form class.
+	 *
+	 * @param array $attr shortcode attributes.
 	 */
 	public function __construct( $attr = array() ) {
 
 		parent::__construct( $attr );
 
-		// add custom tab panels
+		// add custom tab panels.
 		add_action( 'gmw_lf_content_end', array( $this, 'create_tabs_panels' ) );
 	}
 
@@ -65,7 +70,7 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
 			'priority' => 25,
 		);
 
-		// filter tabs
+		// filter tabs.
 		$tabs = apply_filters( 'gmw_post_location_form_tabs', $tabs, $this );
 
 		return $tabs;
@@ -76,12 +81,12 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
 	 *
 	 * @return array
 	 */
-	function form_fields() {
+	public function form_fields() {
 
-		// retreive parent fields
+		// retreive parent fields.
 		$fields = parent::form_fields();
 
-		// contact meta fields
+		// contact meta fields.
 		$fields['contact_info'] = array(
 			'label'  => __( 'Contact Information', 'geo-my-wp' ),
 			'fields' => array(
@@ -136,7 +141,7 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
 			),
 		);
 
-		// days and hours
+		// days and hours.
 		$fields['days_hours'] = array(
 			'label'  => __( 'Days & Hours', 'geo-my-wp' ),
 			'fields' => array(
@@ -184,10 +189,10 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
 
 			<?php do_action( 'gmw_lf_post_days_hours_section_start', $this ); ?>
 
-			<h3><?php _e( 'Days & Hours', 'geo-my-wp' ); ?></h3>
+			<h3><?php esc_html_e( 'Days & Hours', 'geo-my-wp' ); ?></h3>
 
 			<?php
-				//get the location's days_hours from database
+				// get the location's days_hours from database.
 				$days_hours = gmw_get_location_meta( $this->location_id, 'days_hours' );
 
 			if ( empty( $days_hours ) ) {
@@ -200,14 +205,14 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
 
 					<tr>
 						<th style="width:30px">
-							<label for=""><?php _e( 'Days', 'geo-my-wp' ); ?></label>
+							<label for=""><?php esc_html_e( 'Days', 'geo-my-wp' ); ?></label>
 						</th>
 						<td style="width:150px">
 							<input type="text" class="gmw-lf-field group_days_hours" name="gmw_location_form[location_meta][days_hours][<?php echo $i; ?>][days]" id="gmw-pt-days-<?php echo $i; ?>" value="<?php if ( ! empty( $days_hours[$i]['days'] ) ) echo esc_attr( $days_hours[$i]['days'] ); ?>" />
 						</td>
 
 						<th style="width:30px">
-							<label for=""><?php _e( 'Hours', 'geo-my-wp' ); ?></label>
+							<label for=""><?php esc_html_e( 'Hours', 'geo-my-wp' ); ?></label>
 						</th>
 
 						<td>
