@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GEO my WP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-14 16:32-1000\n"
-"PO-Revision-Date: 2019-11-14 16:32-1000\n"
+"POT-Creation-Date: 2020-05-26 16:12-1000\n"
+"PO-Revision-Date: 2020-05-26 16:13-1000\n"
 "Last-Translator: Eyal Fitoussi <fitoussi_eyal@hotmail.com>\n"
 "Language-Team: 日本語\n"
 "Language: ja\n"
@@ -55,7 +55,7 @@ msgstr ""
 #: includes/admin/pages/tools/tabs/cache.php:199
 #: includes/admin/pages/tools/tabs/reset-gmw.php:217
 #: includes/admin/pages/tools/tabs/reset-gmw.php:223
-#: includes/admin/updater/class-gmw-license.php:861
+#: includes/admin/updater/class-gmw-license.php:888
 msgid "Cheatin' eh?!"
 msgstr "不正しようとしてますか？？"
 
@@ -91,13 +91,13 @@ msgstr ""
 #: includes/admin/pages/import-export/tabs/gmw-data.php:46
 #: includes/admin/pages/import-export/tabs/gmw-data.php:110
 #: includes/admin/pages/tools/tabs/reset-gmw.php:58
-#: includes/admin/updater/class-gmw-license.php:174
+#: includes/admin/updater/class-gmw-license.php:201
 msgid "Settings"
 msgstr "設定"
 
 #: includes/admin/class-gmw-admin.php:117
 #: includes/admin/class-gmw-admin.php:139
-#: includes/admin/updater/class-gmw-license.php:200
+#: includes/admin/updater/class-gmw-license.php:227
 msgid "Extensions"
 msgstr "エクステンション"
 
@@ -708,7 +708,7 @@ msgstr "サーバーからアドオンリストの取得に問題があります
 #: includes/location-form/includes/class-gmw-location-form.php:1174
 #: includes/location-form/includes/class-gmw-location-form.php:1203
 #: includes/location-form/includes/class-gmw-location-form.php:1391
-#: plugins/current-location/includes/class-gmw-current-location.php:554
+#: plugins/current-location/includes/class-gmw-current-location.php:561
 msgid "Error"
 msgstr "エラー"
 
@@ -819,7 +819,7 @@ msgid "Details"
 msgstr "詳細"
 
 #: includes/admin/pages/class-gmw-extensions.php:847
-#: includes/admin/updater/class-gmw-license.php:176
+#: includes/admin/updater/class-gmw-license.php:203
 msgid "Documentation"
 msgstr "マニュアル"
 
@@ -933,10 +933,10 @@ msgstr "距離単位を選択"
 #: includes/admin/pages/class-gmw-form-editor.php:157
 #: includes/admin/pages/class-gmw-form-editor.php:331
 #: includes/class-gmw-maps-api.php:617
-#: includes/template-functions/class-gmw-search-form-helper.php:208
-#: includes/template-functions/class-gmw-search-form-helper.php:270
-#: includes/template-functions/gmw-search-form-template-functions.php:197
-#: includes/template-functions/gmw-search-form-template-functions.php:243
+#: includes/template-functions/class-gmw-search-form-helper.php:214
+#: includes/template-functions/class-gmw-search-form-helper.php:276
+#: includes/template-functions/gmw-search-form-template-functions.php:208
+#: includes/template-functions/gmw-search-form-template-functions.php:254
 #: plugins/bp-profile-search-geolocation/includes/admin/class-gmw-bp-profile-search-geolocation-admin.php:89
 #: plugins/bp-profile-search-geolocation/includes/class-gmw-bp-profile-search-geolocation.php:343
 #: plugins/single-location/includes/class-gmw-single-location-widget.php:122
@@ -948,9 +948,9 @@ msgstr "マイル"
 #: includes/admin/pages/class-gmw-form-editor.php:158
 #: includes/admin/pages/class-gmw-form-editor.php:332
 #: includes/class-gmw-maps-api.php:618
-#: includes/template-functions/class-gmw-search-form-helper.php:271
-#: includes/template-functions/gmw-search-form-template-functions.php:197
-#: includes/template-functions/gmw-search-form-template-functions.php:244
+#: includes/template-functions/class-gmw-search-form-helper.php:277
+#: includes/template-functions/gmw-search-form-template-functions.php:208
+#: includes/template-functions/gmw-search-form-template-functions.php:255
 #: plugins/bp-profile-search-geolocation/includes/admin/class-gmw-bp-profile-search-geolocation-admin.php:90
 #: plugins/single-location/includes/class-gmw-single-location-widget.php:123
 #: plugins/sweetdate-geolocation/includes/admin/class-gmw-sweet-date-admin-settings.php:129
@@ -1866,7 +1866,7 @@ msgstr "%s はインポートに失敗しました。"
 #: includes/location-form/includes/class-gmw-location-form.php:1174
 #: includes/location-form/includes/class-gmw-location-form.php:1203
 #: includes/location-form/includes/class-gmw-location-form.php:1391
-#: plugins/current-location/includes/class-gmw-current-location.php:554
+#: plugins/current-location/includes/class-gmw-current-location.php:561
 msgid "Trying to cheat or something?"
 msgstr "不正な行為か何か試していますか？"
 
@@ -2601,46 +2601,49 @@ msgid ""
 msgstr ""
 "クリアするアイテムのチェックボックスを、1つ以上チェックする必要があります。"
 
-#: includes/admin/updater/class-gmw-license.php:184
-#: includes/admin/updater/class-gmw-license.php:422
+#: includes/admin/updater/class-gmw-license.php:175
+#: includes/admin/updater/class-gmw-license.php:211
+#: includes/admin/updater/class-gmw-license.php:449
 msgid "Activate License"
 msgstr "ライセンスの有効化"
 
-#: includes/admin/updater/class-gmw-license.php:190
-#: includes/admin/updater/class-gmw-license.php:406
+#: includes/admin/updater/class-gmw-license.php:181
+#: includes/admin/updater/class-gmw-license.php:217
+#: includes/admin/updater/class-gmw-license.php:433
 msgid "Deactivate License"
 msgstr "ライセンスを無効"
 
-#: includes/admin/updater/class-gmw-license.php:207
+#: includes/admin/updater/class-gmw-license.php:192
+#: includes/admin/updater/class-gmw-license.php:234
 msgid "Dectivate license"
 msgstr ""
 
-#: includes/admin/updater/class-gmw-license.php:441
+#: includes/admin/updater/class-gmw-license.php:468
 msgid "License key"
 msgstr "ライセンスキー"
 
-#: includes/admin/updater/class-gmw-license.php:446
+#: includes/admin/updater/class-gmw-license.php:473
 msgid "License: "
 msgstr "ライセンス："
 
-#: includes/admin/updater/class-gmw-license.php:890
+#: includes/admin/updater/class-gmw-license.php:917
 msgid "Activate your license key to receive support and updates."
 msgstr "サポート・更新するには、ライセンスキーを有効化して下さい。"
 
-#: includes/admin/updater/class-gmw-license.php:891
-#: includes/admin/updater/class-gmw-license.php:893
+#: includes/admin/updater/class-gmw-license.php:918
+#: includes/admin/updater/class-gmw-license.php:920
 msgid "License activated. Thank you for your support!"
 msgstr "ライセンスは、有効化されました。有難う御座います！"
 
-#: includes/admin/updater/class-gmw-license.php:892
+#: includes/admin/updater/class-gmw-license.php:919
 msgid "License deactivated."
 msgstr "ライセンスは、無効化されました。"
 
-#: includes/admin/updater/class-gmw-license.php:894
+#: includes/admin/updater/class-gmw-license.php:921
 msgid "No license key entered."
 msgstr "乱戦スキーは入力されていません。"
 
-#: includes/admin/updater/class-gmw-license.php:895
+#: includes/admin/updater/class-gmw-license.php:922
 #, php-format
 msgid ""
 "Your license has expired. <a href=\"%s\" target=\"_blank\">Renew your "
@@ -2650,7 +2653,7 @@ msgstr ""
 "\"_blank\">ライセンスを更新して、</a> 更新やサポートを受けれるようにして下さ"
 "い。"
 
-#: includes/admin/updater/class-gmw-license.php:896
+#: includes/admin/updater/class-gmw-license.php:923
 #, php-format
 msgid ""
 "Your license has been disabled. Contact <a href=\"%s\" target=\"_blank"
@@ -2659,7 +2662,7 @@ msgstr ""
 "あなたのライセンスは、無効となりました。さらなる情報は、<a href=\"%s\" "
 "target=\"_blank\">サポート</a> までご連絡下さい。（英語のみ）"
 
-#: includes/admin/updater/class-gmw-license.php:897
+#: includes/admin/updater/class-gmw-license.php:924
 #, php-format
 msgid ""
 "Something wrong with the license key you entered. <a href=\"%s\" target="
@@ -2668,7 +2671,7 @@ msgstr ""
 "入力したライセンスキーに問題があります。<a href=\"%s\" target=\"_blank\">キー"
 "を確認</a>して、もう一度お試しください。"
 
-#: includes/admin/updater/class-gmw-license.php:898
+#: includes/admin/updater/class-gmw-license.php:925
 #, php-format
 msgid ""
 "You license key was disabled by the provider. <a href=\"%s\" target=\"_blank"
@@ -2677,16 +2680,16 @@ msgstr ""
 "あなたのライセンスは、プロバイダーによって無効となっています。詳細は、<a "
 "href=\"%s\" target=\"_blank\">サポート</a>までご連絡下さい。"
 
-#: includes/admin/updater/class-gmw-license.php:899
-#: includes/admin/updater/class-gmw-license.php:900
+#: includes/admin/updater/class-gmw-license.php:926
+#: includes/admin/updater/class-gmw-license.php:927
 msgid "Your license is not active for this URL."
 msgstr "あなたのライセンスは、このURLでは有効になっていません。"
 
-#: includes/admin/updater/class-gmw-license.php:901
+#: includes/admin/updater/class-gmw-license.php:928
 msgid "The license key you entered does not belong to this extension."
 msgstr "入力したライセンスキーは、このエクステンションのものではありません。"
 
-#: includes/admin/updater/class-gmw-license.php:902
+#: includes/admin/updater/class-gmw-license.php:929
 msgid ""
 "An error occurred while trying to activate your license. ERROR "
 "item_name_mismatch"
@@ -2694,7 +2697,7 @@ msgstr ""
 "ライセンスのアクティベーション中にエラーが発生しました。 エラー："
 "item_name_mismatch"
 
-#: includes/admin/updater/class-gmw-license.php:903
+#: includes/admin/updater/class-gmw-license.php:930
 #, php-format
 msgid ""
 "Your license key has reached its activation limit. <a %s>Manage licenses</a>."
@@ -2702,12 +2705,12 @@ msgstr ""
 "あなたのライセンスは、有効化の上限に達しています。 <a %s>ライセンスを管理</"
 "a>."
 
-#: includes/admin/updater/class-gmw-license.php:905
+#: includes/admin/updater/class-gmw-license.php:932
 #, php-format
 msgid "Lost or forgot your license key? <a %s >Retrieve it here.</a>"
 msgstr "ライセンスキーをお忘れですか？ <a %s >ここで再取得できます。</a>"
 
-#: includes/admin/updater/class-gmw-license.php:906
+#: includes/admin/updater/class-gmw-license.php:933
 #, php-format
 msgid ""
 "Your license for %s plugin could not be activated. See error message below."
@@ -2715,7 +2718,7 @@ msgstr ""
 "%s プラグインのライセンスは、有効化できません。以下のエラーメッセージをご覧く"
 "ださい。"
 
-#: includes/admin/updater/class-gmw-license.php:907
+#: includes/admin/updater/class-gmw-license.php:934
 #, php-format
 msgid ""
 "An error occurred. Try again or contact <a href=\"%s\" target=\"_blank"
@@ -2724,7 +2727,7 @@ msgstr ""
 "エラーが発生しました。もう一度お試し頂くか、<a href=\"%s\" target=\"_blank\">"
 "サポート</a>へご連絡下さい。（英語のみ）"
 
-#: includes/admin/updater/class-gmw-license.php:908
+#: includes/admin/updater/class-gmw-license.php:935
 #, php-format
 msgid ""
 "Connection to remote server failed. Try again or contact <a href=\"%s\" "
@@ -2791,28 +2794,28 @@ msgstr ""
 msgid "Once Weekly"
 msgstr "週1回"
 
-#: includes/class-gmw-form.php:205
+#: includes/class-gmw-form.php:206
 #: includes/template-functions/class-gmw-template-functions-helper.php:419
 msgid "Showing {from_count} - {to_count} of {total_results} locations"
 msgstr "{total_results} 件中、{from_count} ～ {to_count} 件までの位置を表示"
 
-#: includes/class-gmw-form.php:206
+#: includes/class-gmw-form.php:207
 #: includes/template-functions/class-gmw-template-functions-helper.php:421
 #: plugins/members-locator/includes/class-gmw-members-locator-form.php:34
 msgid " within {radius}{units} from {address}"
 msgstr "{address}から 半径 {radius} {units} 以内 "
 
 #. translators: %s replaced with form type
-#: includes/class-gmw-form.php:314
+#: includes/class-gmw-form.php:315
 #, php-format
 msgid "%s is invalid form type."
 msgstr "%s は無効なフォームタイプです。"
 
-#: includes/class-gmw-form.php:547
+#: includes/class-gmw-form.php:548
 msgid "Your location"
 msgstr "あなたの位置"
 
-#: includes/class-gmw-form.php:1126
+#: includes/class-gmw-form.php:1127
 msgid "No results found"
 msgstr "何も見つかりませんでした。"
 
@@ -2845,12 +2848,12 @@ msgid "Destination"
 msgstr "行先"
 
 #: includes/class-gmw-maps-api.php:610
-#: plugins/single-location/includes/class-gmw-single-location.php:445
+#: plugins/single-location/includes/class-gmw-single-location.php:451
 msgid "Directions"
 msgstr "道順"
 
 #: includes/class-gmw-maps-api.php:611
-#: plugins/single-location/includes/class-gmw-single-location.php:446
+#: plugins/single-location/includes/class-gmw-single-location.php:452
 msgid "From:"
 msgstr "差出人："
 
@@ -2886,7 +2889,7 @@ msgstr "高速道路"
 msgid "Tolls"
 msgstr "有料道路"
 
-#: includes/class-gmw-maps-api.php:757
+#: includes/class-gmw-maps-api.php:761
 #: plugins/sweetdate-geolocation/includes/class-gmw-sweet-date-geolocation.php:222
 msgid "Get directions"
 msgstr "道順を見る"
@@ -3221,8 +3224,8 @@ msgid "Location Name"
 msgstr "位置名"
 
 #: includes/location-form/includes/class-gmw-location-form.php:544
-msgid "Location name."
-msgstr "位置名です。"
+msgid "Location name"
+msgstr ""
 
 #: includes/location-form/includes/class-gmw-location-form.php:557
 msgid "Enter an address..."
@@ -3275,33 +3278,33 @@ msgstr "位置を確認"
 msgid "Get your current position"
 msgstr "あなたの現在地を取得する"
 
-#: includes/template-functions/class-gmw-search-form-helper.php:101
+#: includes/template-functions/class-gmw-search-form-helper.php:107
 msgid "Enter keywords"
 msgstr "キーワードを入力"
 
-#: includes/template-functions/class-gmw-search-form-helper.php:136
+#: includes/template-functions/class-gmw-search-form-helper.php:142
 msgid "Enter address"
 msgstr "住所を入力"
 
-#: includes/template-functions/class-gmw-search-form-helper.php:317
+#: includes/template-functions/class-gmw-search-form-helper.php:323
 msgid "Get my current location"
 msgstr "現在地を取得する"
 
-#: includes/template-functions/class-gmw-search-form-helper.php:338
+#: includes/template-functions/class-gmw-search-form-helper.php:344
 msgid "locator button"
 msgstr "ロケーターボタン"
 
-#: includes/template-functions/class-gmw-search-form-helper.php:364
+#: includes/template-functions/class-gmw-search-form-helper.php:370
 #: includes/template-functions/gmw-search-form-template-functions.php:33
 msgid "Submit"
 msgstr "承認"
 
-#: includes/template-functions/class-gmw-search-form-helper.php:448
+#: includes/template-functions/class-gmw-search-form-helper.php:454
 #: plugins/members-locator/includes/gmw-members-locator-template-functions.php:81
 msgid "Search member types"
 msgstr "メンバータイプを検索"
 
-#: includes/template-functions/class-gmw-search-form-helper.php:502
+#: includes/template-functions/class-gmw-search-form-helper.php:508
 msgid "Search groups"
 msgstr "グループを検索"
 
@@ -3311,15 +3314,15 @@ msgstr "続きを読む…"
 
 #: includes/template-functions/class-gmw-template-functions-helper.php:125
 #: includes/template-functions/class-gmw-template-functions-helper.php:187
-#: includes/template-functions/gmw-template-functions.php:163
-#: includes/template-functions/gmw-template-functions.php:201
+#: includes/template-functions/gmw-template-functions.php:176
+#: includes/template-functions/gmw-template-functions.php:214
 msgid "Prev"
 msgstr "前"
 
 #: includes/template-functions/class-gmw-template-functions-helper.php:126
 #: includes/template-functions/class-gmw-template-functions-helper.php:188
-#: includes/template-functions/gmw-template-functions.php:164
-#: includes/template-functions/gmw-template-functions.php:202
+#: includes/template-functions/gmw-template-functions.php:177
+#: includes/template-functions/gmw-template-functions.php:215
 msgid "Next"
 msgstr "次"
 
@@ -3337,7 +3340,7 @@ msgstr "1件の位置が見つかりました。"
 
 #: includes/template-functions/gmw-info-window-template-functions.php:83
 #: includes/template-functions/gmw-search-results-template-functions.php:90
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:86
+#: plugins/posts-locator/includes/class-gmw-post-location-form.php:91
 msgid "Contact Information"
 msgstr "コンタクト情報"
 
@@ -3346,12 +3349,12 @@ msgstr "コンタクト情報"
 msgid "Hours of operation"
 msgstr "営業時間"
 
-#: includes/template-functions/gmw-search-form-template-functions.php:195
+#: includes/template-functions/gmw-search-form-template-functions.php:206
 #: plugins/bp-profile-search-geolocation/templates/bps-fields/members/bps-proximity-form-field.php:66
 msgid "Within"
 msgstr "内"
 
-#: includes/template-functions/gmw-template-functions.php:237
+#: includes/template-functions/gmw-template-functions.php:250
 msgid "Per page"
 msgstr "1ページあたり"
 
@@ -3597,9 +3600,8 @@ msgstr "住所 オートコンプリート"
 #: plugins/current-location/includes/class-gmw-current-location-widget.php:107
 msgid ""
 "Enable live suggested results by Google address autocompelte while typing an "
-"address."
+"address. Note that this feature is only available with Google Maps API."
 msgstr ""
-"住所を入力中に、Google 住所オートコンプリートによるライブ提案結果を有効"
 
 #: plugins/current-location/includes/class-gmw-current-location-widget.php:112
 msgid "User greeting message ( logged in users )"
@@ -3712,7 +3714,7 @@ msgstr "位置を更新"
 msgid "Viewing {from_count} - {to_count} of {total_results} members"
 msgstr "メンバー {total_results} の内、{from_count} ～ {to_count}　を見る"
 
-#: plugins/members-locator/includes/class-gmw-single-member-location.php:43
+#: plugins/members-locator/includes/class-gmw-single-bp-member-location.php:51
 msgid "The member has not added a location yet."
 msgstr "メンバーは、まだ位置を追加していません。"
 
@@ -3892,7 +3894,7 @@ msgid "Email"
 msgstr "メール"
 
 #: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:110
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:126
+#: plugins/posts-locator/includes/class-gmw-post-location-form.php:131
 msgid "Website"
 msgstr "Webサイト"
 
@@ -3924,34 +3926,34 @@ msgstr ""
 msgid "Location found but the address is missing"
 msgstr "位置 は見つかりましたが、住所がありません。"
 
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:58
+#: plugins/posts-locator/includes/class-gmw-post-location-form.php:63
 msgid "Contact"
 msgstr "コンタクト"
 
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:63
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:141
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:145
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:187
+#: plugins/posts-locator/includes/class-gmw-post-location-form.php:68
+#: plugins/posts-locator/includes/class-gmw-post-location-form.php:146
+#: plugins/posts-locator/includes/class-gmw-post-location-form.php:150
+#: plugins/posts-locator/includes/class-gmw-post-location-form.php:192
 msgid "Days & Hours"
 msgstr "曜日＆時間"
 
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:90
+#: plugins/posts-locator/includes/class-gmw-post-location-form.php:95
 msgid "Phone Number"
 msgstr "電話番号"
 
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:102
+#: plugins/posts-locator/includes/class-gmw-post-location-form.php:107
 msgid "Fax Number"
 msgstr "Fax番号"
 
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:114
+#: plugins/posts-locator/includes/class-gmw-post-location-form.php:119
 msgid "Email Address"
 msgstr "メールアドレス"
 
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:203
+#: plugins/posts-locator/includes/class-gmw-post-location-form.php:208
 msgid "Days"
 msgstr "日"
 
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:210
+#: plugins/posts-locator/includes/class-gmw-post-location-form.php:215
 msgid "Hours"
 msgstr "時間"
 
@@ -4105,11 +4107,11 @@ msgstr ""
 "表示された項目の位置が存在しない場合に、表示するメッセージです。 メッセージが"
 "ない場合、空白のままにします。"
 
-#: plugins/single-location/includes/class-gmw-single-location.php:444
+#: plugins/single-location/includes/class-gmw-single-location.php:450
 msgid "Distance: "
 msgstr "距離："
 
-#: plugins/single-location/includes/class-gmw-single-location.php:447
+#: plugins/single-location/includes/class-gmw-single-location.php:453
 msgid "Show directions"
 msgstr "道順を表示"
 
@@ -4274,6 +4276,15 @@ msgstr ""
 #. Author of the plugin/theme
 msgid "Eyal Fitoussi"
 msgstr "Eyal Fitoussi"
+
+#~ msgid "Location name."
+#~ msgstr "位置名です。"
+
+#~ msgid ""
+#~ "Enable live suggested results by Google address autocompelte while typing "
+#~ "an address."
+#~ msgstr ""
+#~ "住所を入力中に、Google 住所オートコンプリートによるライブ提案結果を有効"
 
 #~ msgid ""
 #~ "The export/import forms below need to be used together with the native <a "
