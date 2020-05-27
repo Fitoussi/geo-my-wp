@@ -75,22 +75,25 @@ function gmw_get_search_form_address_field( $gmw ) {
 	$value      = '';
 
 	// When in page load, add the address to the address field by default.
-	if ( ! empty( $gmw['page_load_action'] ) && ! empty( $pl_options['enabled'] ) ) {
+	if ( ! empty( $pl_options['enabled'] ) ) {
 
-		// When using the user's current location.
-		if ( ! empty( $pl_options['user_location'] ) ) {
+		if ( empty( $_GET['action'] ) || ( ! empty( $_GET['action'] ) && 'fs' === $_GET['action'] && ! empty( $_GET['form'] ) && absint( $gmw['ID'] ) !== absint( $_GET['form'] ) ) ) {
 
-			$user_location = gmw_get_user_current_location();
+			// When using the user's current location.
+			if ( ! empty( $pl_options['user_location'] ) ) {
 
-			if ( ! empty( $user_location ) ) {
-				$value = ! empty( $user_location->address ) ? $user_location->address : $user_location->formatted_address;
+				$user_location = gmw_get_user_current_location();
+
+				if ( ! empty( $user_location ) ) {
+					$value = ! empty( $user_location->address ) ? $user_location->address : $user_location->formatted_address;
+				}
+
+				// When address filter is set.
+			} elseif ( ! empty( $pl_options['address_filter'] ) ) {
+
+				// get the addres value.
+				$value = sanitize_text_field( $pl_options['address_filter'] );
 			}
-
-			// When address filter is set.
-		} elseif ( ! empty( $pl_options['address_filter'] ) ) {
-
-			// get the addres value.
-			$value = sanitize_text_field( $pl_options['address_filter'] );
 		}
 	}
 
