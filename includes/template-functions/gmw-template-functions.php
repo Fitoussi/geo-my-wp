@@ -21,7 +21,20 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return [type]      [description]
  */
 function gmw_get_results_message( $gmw ) {
-	return ! empty( $gmw['results_message'] ) ? esc_html( $gmw['results_message'] ) : '';
+
+	$allowed = array(
+		'a'    => array(
+			'title' => array(),
+			'href'  => array(),
+		),
+		'p'    => array(),
+		'em'   => array(),
+		'span' => array(
+			'class' => array(),
+		),
+	);
+
+	return ! empty( $gmw['results_message'] ) ? wp_kses( $gmw['results_message'], $allowed ) : '';
 }
 
 /**
