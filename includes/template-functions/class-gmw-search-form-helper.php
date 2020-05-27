@@ -1,5 +1,11 @@
 <?php
-// Exit if accessed directly
+/**
+ * GMW search form helper class.
+ *
+ * @package gmw-my-wp.
+ */
+
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -162,7 +168,7 @@ class GMW_Search_Form_Helper {
 		$placeholder  = isset( $args['placeholder'] ) ? esc_attr( $args['placeholder'] ) : '';
 		$autocomplete = $args['address_autocomplete'] ? 'gmw-address-autocomplete' : '';
 
-		if ( isset( $_GET[ $url_px . 'address' ] ) ) {
+		if ( isset( $_GET[ $url_px . 'address' ] ) && ! empty( $_GET[ $url_px . 'form' ] ) && absint( $args['id'] ) === absint( $_GET[ $url_px . 'form' ] ) ) {
 
 			$value = is_array( $_GET[ $url_px . 'address' ] ) ? implode( ' ', $_GET[ $url_px . 'address' ] ) : $_GET[ $url_px . 'address' ]; // WPCS: sanitization ok.
 
