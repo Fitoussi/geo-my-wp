@@ -292,6 +292,8 @@ class GMW_Helper {
 			$output['content_path']      = $plugin_dir . "/templates/{$folder}{$template_name}/{$file_name}";
 		}
 
+		$output = apply_filters( 'gmw_get_template_output', $output, $addon );
+
 		// include file if needed.
 		if ( $include_template ) {
 
