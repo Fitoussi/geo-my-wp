@@ -1,5 +1,11 @@
 <?php
-// Exit if accessed directly
+/**
+ * GEO my WP Current Location Widget.
+ *
+ * @package geo-my-wp
+ */
+
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -138,7 +144,7 @@ class GMW_Current_Location_Widget extends GMW_Widget {
 			),
 		);
 
-		if ( 'google_maps' == GMW()->maps_provider ) {
+		if ( 'google_maps' === GMW()->maps_provider ) {
 
 			$this->settings['map_type'] = array(
 				'type'    => 'select',
@@ -188,8 +194,10 @@ class GMW_Current_Location_Widget extends GMW_Widget {
 	 * Echoes the widget content.
 	 *
 	 * @see WP_Widget
-	 * @param array $args
-	 * @param array $instance
+	 *
+	 * @param array $args widget arguments.
+	 *
+	 * @param array $instance widget values.
 	 */
 	public function widget( $args, $instance ) {
 
@@ -200,9 +208,12 @@ class GMW_Current_Location_Widget extends GMW_Widget {
 		$instance['address_fields'] = ! empty( $instance['address_fields'] ) ? implode( ',', $instance['address_fields'] ) : 'city,country';
 		$instance['widget_title']   = ! empty( $instance['widget_title'] ) ? htmlentities( $args['before_title'] . $instance['widget_title'] . $args['after_title'], ENT_QUOTES ) : 0;
 
-		$current_location = new GMW_Current_Location( $instance );
+		if ( class_exists( 'GMW_Current_Location' ) ) {
 
-		echo $current_location->output();
+			$current_location = new GMW_Current_Location( $instance );
+
+			echo $current_location->output();
+		}
 
 		echo $after_widget;
 	}
