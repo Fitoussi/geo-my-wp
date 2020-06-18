@@ -745,6 +745,14 @@ class GMW_Maps_API {
 	/**
 	 * Generate directions link
 	 *
+	 * Mode can be one of the options below:
+	 *
+	 * h - Switches on "Avoid Highways" route finding mode.
+	 * t - Switches on "Avoid Tolls" route finding mode.
+	 * r - Switches on "Public Transit" - only works in some areas. Can also set date and time info described below.
+	 * w - Switches to walking directions - still in beta.
+	 * b - Switches to biking directions - only works in some areas and still in beta.
+	 *
 	 * @param [type] $args [description].
 	 *
 	 * @return [type]            [description]
@@ -762,15 +770,22 @@ class GMW_Maps_API {
 			'language'  => gmw_get_option( 'general_settings', 'language_code', 'EN' ),
 			'region'    => gmw_get_option( 'general_settings', 'country_code', 'US' ),
 			'link_only' => false,
+			'mode'      => '',
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 		$args = apply_filters( 'gmw_get_directions_link_args', $args );
+		$mode = '';
+
+		// Set mode.
+		if ( ! empty( $args['mode'] ) && in_array( $args['mode'], array( 'h', 't', 'r', 'w', 'b' ), true ) ) {
+			$mode = '&dirflg=' . $args['mode'];
+		}
 
 		$args['from_latlng'] = ( empty( $args['from_lat'] ) || empty( $args['from_lng'] ) ) ? '' : "{$args['from_lat']},{$args['from_lng']}";
 		$args['to_latlng']   = ( empty( $args['to_lat'] ) || empty( $args['to_lng'] ) ) ? '' : "{$args['to_lat']},{$args['to_lng']}";
 		$args['units_type']  = 'imperial' === $args['units'] ? 'ptm' : 'ptk';
-		$args['link']        = esc_url( "http://maps.google.com/maps?f=d&hl={$args['language']}&region={$args['region']}&doflg={$args['units_type']}&saddr={$args['from_latlng']}&daddr={$args['to_latlng']}&ie=UTF8&z=12" );
+		$args['link']        = esc_url( "http://maps.google.com/maps?f=d&hl={$args['language']}&region={$args['region']}&doflg={$args['units_type']}&saddr={$args['from_latlng']}&daddr={$args['to_latlng']}&ie=UTF8&z=12" . $mode );
 
 		// retrun Google Maps link only.
 		if ( $args['link_only'] ) {
