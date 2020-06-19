@@ -3,9 +3,9 @@ Contributors: ninjew, Eyal Fitoussi
 Donate link: https://www.paypal.me/fitoussi
 Tags: Geolocation, Directory, Store Locator, Google Maps, OpenStreetMaps, LeafLet, Geotagging, Geocode, Mapping, Proximity search, Zipcode, Geotag posts, Address search, Distance, Directions, Locations, Geo, Members locator, Geotag members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
 Requires at least: 4.5
-Tested up to: 5.3.1
+Tested up to: 5.4.2
 BuddyPress: 2.8
-Stable tag: 3.5
+Stable tag: 3.6
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,27 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 3.6 =
+
+* Note that version 3.2 was a major release. If you are updating from an earlier version, then backing up your site and/or testing this version on a staging environment first is recommended. See the changelog of version 3.2 for more details before updating.
+*
+* --------------------------------
+* Fix: Issue with the Single Location widget/Shortcode map size when is set to 100%.
+* Fix: verify that 'bp_get_member_latest_update' function exists before executing it to prevent PHP errors.
+* Fix: verify that the 'gmw_single_location_shortcode' function exists before executing it to prevent conflict with the Elementor plugin.
+* Fix: make sure the GMW_Current_Location class exists before executing it to prevent PHP errors.
+* Fix: issue with default value that is set in the form editor not passing to the address field of the search form on page load.
+* Fix: verify form submission when passing a default value to the address field.
+* Tweak: make the address in Single Location shortcode/widget links to Google Maps.
+* Tweak: add "mode" argument to the get_direction_link() function to set the travel mode.
+* Tweak: disable the address autocomplete feature if LeafLet is enabled.
+* Enchancment: modify the output fields of the address autocomplete feature to the basic fields to prevent additional charges of the Google Maps Atmosphere and Contact SKUs.
+* Hook: 'gmw_map_rendered' Javascript hook that executes after a map rendered.
+* Filter: 'gmw_cl_display_output_elements' to modify the Current Location elements array before being output.
+* Filter: gmw_get_template_output to modify the template files URL/PATH before deploying on the page.
+* Tweak: allow passing some HTML tags to the results message.
+* Security patches.
 
 = 3.5 =
 
