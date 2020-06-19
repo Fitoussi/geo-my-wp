@@ -135,7 +135,7 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 * Tweak: make the address in Single Location shortcode/widget links to Google Maps.
 * Tweak: add "mode" argument to the get_direction_link() function to set the travel mode.
 * Tweak: disable the address autocomplete feature if LeafLet is enabled.
-* Enchancment: modify the output fields of the address autocomplete feature to the basic fields to prevent additional charges of the Google Maps Atmosphere and Contact SKUs.
+* Enhancement: modify the output fields of the address autocomplete feature to the basic fields to prevent additional charges of the Google Maps Atmosphere and Contact SKUs.
 * Hook: 'gmw_map_rendered' Javascript hook that executes after a map rendered.
 * Filter: 'gmw_cl_display_output_elements' to modify the Current Location elements array before being output.
 * Filter: gmw_get_template_output to modify the template files URL/PATH before deploying on the page.
