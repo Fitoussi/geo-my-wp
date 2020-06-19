@@ -30,29 +30,30 @@ class GMW_Single_Location {
 	 * @since 2.6.1
 	 */
 	protected $defaults = array(
-		'element_id'            => 0,
-		'object'                => 'post', // replaced item_type.
-		'object_type'           => '',
-		'object_id'             => 0, // replaced item_id.
-		'elements'              => 0,
-		'address_fields'        => 'address',
-		'additional_info'       => '', // deprecated - replaced with location_meta.
-		'location_meta'         => '',
-		'units'                 => 'imperial',
-		'directions_form_units' => 'default',
-		'map_height'            => '250px',
-		'map_width'             => '250px',
-		'map_type'              => 'ROADMAP',
-		'zoom_level'            => 13,
-		'scrollwheel_map_zoom'  => 1,
-		'expand_map_on_load'    => 0,
-		'map_icon_url'          => '',
-		'map_icon_size'         => '',
-		'info_window'           => 'title,address,distance',
-		'user_map_icon_url'     => '',
-		'user_map_icon_size'    => '',
-		'user_info_window'      => 'Your Location',
-		'no_location_message'   => 0,
+		'element_id'             => 0,
+		'object'                 => 'post', // replaced item_type.
+		'object_type'            => '',
+		'object_id'              => 0, // replaced item_id.
+		'elements'               => 0,
+		'address_fields'         => 'address',
+		'additional_info'        => '', // deprecated - replaced with location_meta.
+		'location_meta'          => '',
+		'units'                  => 'imperial',
+		'directions_form_units'  => 'default',
+		'map_height'             => '250px',
+		'map_width'              => '250px',
+		'map_type'               => 'ROADMAP',
+		'zoom_level'             => 13,
+		'scrollwheel_map_zoom'   => 1,
+		'expand_map_on_load'     => 0,
+		'map_icon_url'           => '',
+		'map_icon_size'          => '',
+		'info_window'            => 'title,address,distance',
+		'user_map_icon_url'      => '',
+		'user_map_icon_size'     => '',
+		'user_info_window'       => 'Your Location',
+		'no_location_message'    => 0,
+		'disable_linked_address' => 0,
 		/** 'is_widget'            => 0,
 		// 'widget_title'         => 0, */
 	);
@@ -109,6 +110,11 @@ class GMW_Single_Location {
 		'address' => false,
 	);
 
+	/**
+	 * Map locations holder.
+	 *
+	 * @var array
+	 */
 	public $map_locations = array();
 
 	/**
@@ -159,6 +165,8 @@ class GMW_Single_Location {
 	 * Display the title of an item
 	 *
 	 * @since 2.6.1
+	 *
+	 * @param object $location object location.
 	 *
 	 * @access public
 	 */
@@ -415,7 +423,7 @@ class GMW_Single_Location {
 
 					$this->user_position['address'] = urldecode( wp_unslash( $_COOKIE['gmw_ul_address'] ) ); // WPCS: sanitization ok.
 
-				} else if ( ! empty( $_COOKIE['gmw_ul_formatted_address'] ) ) { // WPCS: sanitization ok.
+				} elseif ( ! empty( $_COOKIE['gmw_ul_formatted_address'] ) ) { // WPCS: sanitization ok, CSRF ok.
 
 					$this->user_position['address'] = urldecode( wp_unslash( $_COOKIE['gmw_ul_formatted_address'] ) ); // WPCS: sanitization ok.
 				} else {
@@ -479,6 +487,9 @@ class GMW_Single_Location {
 	 * Get address
 	 *
 	 * @since 2.6.1
+	 *
+	 * @param object $location object location.
+	 *
 	 * @access public
 	 *
 	 * The address of the displayed item
@@ -515,8 +526,15 @@ class GMW_Single_Location {
 		}*/
 
 		$address = gmw_get_location_address( $location, $this->args['address_fields'], $this->args );
+		$address = esc_attr( stripslashes( $address ) );
 
-		$output = '<div class="gmw-sl-address gmw-sl-element"><i class="gmw-location-icon gmw-icon-location"></i><span class="address">' . esc_attr( stripslashes( $address ) ) . '</span></div>';
+		if ( ! empty( $this->args['disable_linked_address'] ) ) {
+			$address_value = $address;
+		} else {
+			$address_value = '<a href="https://maps.google.com/?q=' . $address . '" target="_blank">' . $address . '</a>';
+		}
+
+		$output = '<div class="gmw-sl-address gmw-sl-element"><i class="gmw-location-icon gmw-icon-location"></i><span class="address">' . $address_value . '</span></div>';
 
 		return apply_filters( 'gmw_sl_address', $output, $address, $this->args, $location, $this->user_position, $this );
 	}
@@ -525,6 +543,9 @@ class GMW_Single_Location {
 	 * Show Distance
 	 *
 	 * @since 2.6.1
+	 *
+	 * @param object $location object location.
+	 *
 	 * @access public
 	 *
 	 * Get the distance betwwen the user's position to the item being displayed
@@ -560,7 +581,10 @@ class GMW_Single_Location {
 	/**
 	 * Map element
 	 *
+	 * @param object $location object location.
+	 *
 	 * @since 2.6.1
+	 *
 	 * @access public
 	 */
 	public function map( $location ) {
@@ -624,6 +648,8 @@ class GMW_Single_Location {
 	/**
 	 * Directions function
 	 *
+	 * @param object $location object location.
+	 *
 	 * @since 2.6.1
 	 *
 	 * @access public
@@ -662,7 +688,10 @@ class GMW_Single_Location {
 	/**
 	 * Live directions function
 	 *
+	 * @param object $location object location.
+	 *
 	 * @since 2.6.1
+	 *
 	 * @access public
 	 */
 	public function directions_form( $location ) {
@@ -696,7 +725,10 @@ class GMW_Single_Location {
 
 	/**
 	 * Live directions panel
-	 * Holder for the results of the live directions
+	 *
+	 * Holder for the results of the live directions.
+	 *
+	 * @param object $location object location.
 	 *
 	 * @since 2.6.1
 	 */
@@ -709,6 +741,8 @@ class GMW_Single_Location {
 
 	/**
 	 * Display location meta
+	 *
+	 * @param object $location object location.
 	 *
 	 * @since 3.0
 	 *
@@ -734,6 +768,8 @@ class GMW_Single_Location {
 
 	/**
 	 * Create the content of the info window
+	 *
+	 * @param object $location object location.
 	 *
 	 * @since 2.5
 	 */
@@ -783,6 +819,8 @@ class GMW_Single_Location {
 
 	/**
 	 * Display no location message
+	 *
+	 * @param object $location object location.
 	 *
 	 * @since 2.6.1
 	 *
