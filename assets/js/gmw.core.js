@@ -791,7 +791,6 @@ var GMW = {
            return jQuery( this ).val();
         }).get().join( ' ' );           
   			
-  		console.log( addressField )
   		// modify the address before geocoding takes place.
    		address = GMW.apply_filters( 'gmw_search_form_address_value_pre_geocoding', address.toString(), GMW );
 
