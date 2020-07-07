@@ -53,13 +53,13 @@ class GMW_Helper {
 
 			$location = (object) array();
 
-			$location->lat = urldecode( $_COOKIE[ $ulc_prefix . 'lat' ] );
-			$location->lng = urldecode( $_COOKIE[ $ulc_prefix . 'lng' ] );
+			$location->lat = urldecode( sanitize_text_field( wp_unslash( $_COOKIE[ $ulc_prefix . 'lat' ] ) ) );
+			$location->lng = urldecode( sanitize_text_field( wp_unslash( $_COOKIE[ $ulc_prefix . 'lng' ] ) ) );
 
 			foreach ( $fields as $field ) {
 
 				if ( ! empty( $_COOKIE[ $ulc_prefix . $field ] ) ) {
-					$location->$field = urldecode( $_COOKIE[ $ulc_prefix . $field ] );
+					$location->$field = urldecode( sanitize_text_field( wp_unslash( $_COOKIE[ $ulc_prefix . $field ] ) ) );
 				} else {
 					$location->$field = '';
 				}
