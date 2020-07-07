@@ -1151,14 +1151,16 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 				 
 				$location .= '<div class="gmw-cl-welcome-message">'.$hMessage.'</div>';
 			}
-			 
-			if ( !empty( $_COOKIE['gmw_ul_lat'] ) && !empty( $_COOKIE['gmw_ul_lng'] ) ) {
+			
+			$prefix = gmw_get_ulc_prefix();
+
+			if ( !empty( $_COOKIE[ $prefix . 'lat' ] ) && !empty( $_COOKIE[ $prefix . 'lng' ] ) ) {
 				 
 				$userAddress   = array();
 				 
 				foreach ( explode( ',', $display_by ) as $field ) {
-					if ( isset( $_COOKIE['gmw_ul_' . $field] ) ) {
-						$userAddress[] = urldecode($_COOKIE['gmw_ul_' . $field]);
+					if ( isset( $_COOKIE[ $prefix . $field ] ) ) {
+						$userAddress[] = urldecode($_COOKIE[ $prefix . $field ]);
 					}
 				}
 				 
@@ -1172,8 +1174,8 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 
 				if ( $map == 1 ) {
 					 
-					$latitude  = urldecode( $_COOKIE['gmw_ul_lat'] );
-					$longitude = urldecode( $_COOKIE['gmw_ul_lng'] );
+					$latitude  = urldecode( $_COOKIE[ $prefix . 'lat' ] );
+					$longitude = urldecode( $_COOKIE[ $prefix . 'lng' ] );
 					 
 					$location .= '';
 					$location .= '<div class="gmw-cl-map-wrapper" style="width:'.$map_width.'; height:'.$map_height.'">';
@@ -1625,7 +1627,9 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 	        	$location_title = '<h3>'. get_the_title($post_id) .'</h3>';
 	        } 
 
-	        $userLocationOk    = ( !empty( $_COOKIE['gmw_ul_lat'] ) && !empty( $_COOKIE['gmw_ul_lng'] ) ) ? true : false;
+	        $prefix = gmw_get_ulc_prefix();
+
+	        $userLocationOk    = ( !empty( $_COOKIE[ $prefix . 'lat' ] ) && !empty( $_COOKIE[ $prefix . 'lng' ] ) ) ? true : false;
 	        $distanceOK 	   = 0;
 	        $yLat			   = 0;
 	        $yLng			   = 0;
@@ -1634,8 +1638,8 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 	        if ( $distance == 1 && $userLocationOk ) {
 		        
 	        	$distanceOK 	= 1;
-	        	$yLat			= urldecode( $_COOKIE['gmw_ul_lat'] );
-	        	$yLng			= urldecode( $_COOKIE['gmw_ul_lng'] );
+	        	$yLat			= urldecode( $_COOKIE[ $prefix . 'lat' ] );
+	        	$yLng			= urldecode( $_COOKIE[ $prefix . 'lng' ] );
 	        	$unit  			= $distance_unit;
 		        $theta 			= $yLng - $post_info->lng;
 		        $distance_value = sin( deg2rad( $yLat  ) ) * sin( deg2rad($post_info->lat ) ) +  cos( deg2rad( $yLat ) ) * cos( deg2rad($post_info->lat) ) * cos( deg2rad( $theta ) );
@@ -1668,8 +1672,8 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 	        	$your_address = '';
 	        	if ( !empty( $_GET['address'] ) ) {
 	        		$your_address = sanitize_text_field( $_GET['address'] );
-	        	} elseif ( !empty( $_COOKIE['gmw_ul_address'] ) ) {
-	        		$your_address = urldecode( $_COOKIE['gmw_ul_address'] );
+	        	} elseif ( !empty( $_COOKIE[ $prefix . 'address' ] ) ) {
+	        		$your_address = urldecode( $_COOKIE[ $prefix . 'address' ] );
 	        	}
 	        		
 	        	$location_directions  = '';

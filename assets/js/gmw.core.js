@@ -569,10 +569,10 @@ var GMW = {
         			addressField = result[fieldName];
 
         		} else if ( fieldName == 'formatted_address' && addressField == '' ) {
-        			GMW.set_cookie( 'gmw_ul_address', result[fieldName], 7 );
+        			GMW.set_cookie( gmwVars.ulcPrefix + 'address', result[fieldName], 7 );
         		}
 
-        		GMW.set_cookie( 'gmw_ul_' + fieldName, result[fieldName], 7 );
+        		GMW.set_cookie( gmwVars.ulcPrefix + fieldName, result[fieldName], 7 );
         	}
         
         	cl_form.find( 'input#gmw_cl_' + fieldName ).val( result[fieldName] );
@@ -2442,7 +2442,7 @@ if ( jQuery( '.gmw-current-location-wrapper' ).length ) {
 
 	    	// delete current location cookies
 	    	jQuery.each( GMW.current_location_fields, function( index, field ) {
-	    		GMW.delete_cookie( 'gmw_ul_' + field );
+	    		GMW.delete_cookie( gmwVars.ulcPrefix + field );
 	    	});
 
 	    	//GMW.delete_cookie( 'gmw_autolocate' );

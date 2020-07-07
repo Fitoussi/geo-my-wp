@@ -17,10 +17,13 @@ function gmw_record_member_location_activity( $user_id, $user_location ) {
 		return false;
 	}
 
+	$ulc_prefix = gmw_get_ulc_prefix();
+
 	// get user link
 	$user_link = bp_core_get_userlink( $user_id );
+
 	// get user's current address if exists
-	$current_address = ! empty( $_COOKIE['gmw_ul_formatted_address'] ) ? '&daddr=' . str_replace( ' ', '+', urldecode( $_COOKIE['gmw_ul_formatted_address'] ) ) : '';
+	$current_address = ! empty( $_COOKIE[ $ulc_prefix . 'formatted_address' ] ) ? '&daddr=' . str_replace( ' ', '+', urldecode( $_COOKIE[ $ulc_prefix . 'formatted_address' ] ) ) : '';
 	// region and language
 	$region   = '&region=' . gmw_get_option( 'general_settings', 'country_code', 'us' );
 	$language = '&hl=' . gmw_get_option( 'general_settings', 'langauge_code', 'en' );

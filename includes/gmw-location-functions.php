@@ -1339,10 +1339,12 @@ function gmw_get_directions_link( $location, $from_coords = array(), $label = ''
 
 	} else {
 
-		if ( ! empty( $_COOKIE['gmw_ul_lat'] ) && ! empty( $_COOKIE['gmw_ul_lng'] ) ) {
+		$ulc_prefix = gmw_get_ulc_prefix();
 
-			$args['from_lat'] = urldecode( sanitize_text_field( wp_unslash( $_COOKIE['gmw_ul_lat'] ) ) );
-			$args['from_lng'] = urldecode( sanitize_text_field( wp_unslash( $_COOKIE['gmw_ul_lng'] ) ) );
+		if ( ! empty( $_COOKIE[ $ulc_prefix . 'lat' ] ) && ! empty( $_COOKIE[ $ulc_prefix . 'lng' ] ) ) {
+
+			$args['from_lat'] = urldecode( sanitize_text_field( wp_unslash( $_COOKIE[ $ulc_prefix . 'lat' ] ) ) );
+			$args['from_lng'] = urldecode( sanitize_text_field( wp_unslash( $_COOKIE[ $ulc_prefix . 'lng' ] ) ) );
 		}
 	}
 

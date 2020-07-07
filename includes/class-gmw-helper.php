@@ -28,8 +28,10 @@ class GMW_Helper {
 	 */
 	public static function get_user_current_location() {
 
+		$ulc_prefix = gmw_get_ulc_prefix();
+
 		// abort if user's location does not exist in cookies.
-		if ( empty( $_COOKIE['gmw_ul_lat'] ) || empty( $_COOKIE['gmw_ul_lng'] ) ) {
+		if ( empty( $_COOKIE[ $ulc_prefix . 'lat' ] ) || empty( $_COOKIE[ $ulc_prefix . 'lng' ] ) ) {
 			return false;
 		}
 
@@ -51,13 +53,13 @@ class GMW_Helper {
 
 			$location = (object) array();
 
-			$location->lat = urldecode( $_COOKIE['gmw_ul_lat'] );
-			$location->lng = urldecode( $_COOKIE['gmw_ul_lng'] );
+			$location->lat = urldecode( $_COOKIE[ $ulc_prefix . 'lat' ] );
+			$location->lng = urldecode( $_COOKIE[ $ulc_prefix . 'lng' ] );
 
 			foreach ( $fields as $field ) {
 
-				if ( ! empty( $_COOKIE[ 'gmw_ul_' . $field ] ) ) {
-					$location->$field = urldecode( $_COOKIE[ 'gmw_ul_' . $field ] );
+				if ( ! empty( $_COOKIE[ $ulc_prefix . $field ] ) ) {
+					$location->$field = urldecode( $_COOKIE[ $ulc_prefix . $field ] );
 				} else {
 					$location->$field = '';
 				}

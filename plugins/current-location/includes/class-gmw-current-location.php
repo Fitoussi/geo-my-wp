@@ -483,14 +483,18 @@ class GMW_Current_Location {
 			'lng',
 		);
 
-		$cache = (object) array();
+		$cache      = (object) array();
+		$ulc_prefix = gmw_get_ulc_prefix();
 
 		// save location fields.
 		foreach ( $address_fields as $field ) {
 
+			// Cookie field.
+			$cf = $ulc_prefix . $field;
+
 			// clear cookie.
-			unset( $_COOKIE[ "gmw_ul_{$field}" ] );
-			setcookie( "gmw_ul_{$field}", '', time() - 300 );
+			unset( $_COOKIE[ $cf ] );
+			setcookie( $cf, '', time() - 300 );
 
 			// save new value if exists.
 			if ( ! empty( $current_location[ $field ] ) ) {
@@ -499,7 +503,7 @@ class GMW_Current_Location {
 				$current_location[ $field ] = sanitize_text_field( stripslashes( $current_location[ $field ] ) );
 				$cache->$field              = $current_location[ $field ];
 
-				setcookie( "gmw_ul_{$field}", $current_location[ $field ], strtotime( '+7 days' ), '/' );
+				setcookie( $cf, $current_location[ $field ], strtotime( '+7 days' ), '/' );
 			} else {
 				$cache->$field = '';
 			}

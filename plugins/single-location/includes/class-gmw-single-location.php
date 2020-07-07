@@ -389,6 +389,7 @@ class GMW_Single_Location {
 
 			// get labels.
 			$this->labels = $this->labels();
+			$ulc_prefix   = gmw_get_ulc_prefix();
 
 			// check for last location in URL.
 			if ( ! empty( $_GET['lat'] ) && ! empty( $_GET['lng'] ) ) { // WPCS: CSRF ok.
@@ -413,25 +414,25 @@ class GMW_Single_Location {
 				$this->user_position['address'] = sanitize_text_field( wp_unslash( $address ) );
 
 				// Otherwise check for user location in cookies.
-			} elseif ( ! empty( $_COOKIE['gmw_ul_lat'] ) && ! empty( $_COOKIE['gmw_ul_lng'] ) ) {
+			} elseif ( ! empty( $_COOKIE[ $ulc_prefix . 'lat' ] ) && ! empty( $_COOKIE[ $ulc_prefix . 'lng' ] ) ) {
 
 				$this->user_position['exists'] = true;
-				$this->user_position['lat']    = urldecode( wp_unslash( $_COOKIE['gmw_ul_lat'] ) ); // WPCS: sanitization ok.
-				$this->user_position['lng']    = urldecode( wp_unslash( $_COOKIE['gmw_ul_lng'] ) ); // WPCS: sanitization ok.
+				$this->user_position['lat']    = urldecode( wp_unslash( $_COOKIE[ $ulc_prefix . 'lat' ] ) ); // WPCS: sanitization ok.
+				$this->user_position['lng']    = urldecode( wp_unslash( $_COOKIE[ $ulc_prefix . 'lng' ] ) ); // WPCS: sanitization ok.
 
-				if ( ! empty( $_COOKIE['gmw_ul_address'] ) ) {
+				if ( ! empty( $_COOKIE[ $ulc_prefix . 'address' ] ) ) {
 
-					$this->user_position['address'] = urldecode( wp_unslash( $_COOKIE['gmw_ul_address'] ) ); // WPCS: sanitization ok.
+					$this->user_position['address'] = urldecode( wp_unslash( $_COOKIE[ $ulc_prefix . 'address' ] ) ); // WPCS: sanitization ok.
 
-				} elseif ( ! empty( $_COOKIE['gmw_ul_formatted_address'] ) ) { // WPCS: sanitization ok, CSRF ok.
+				} elseif ( ! empty( $_COOKIE[ $ulc_prefix . 'formatted_address' ] ) ) { // WPCS: sanitization ok, CSRF ok.
 
-					$this->user_position['address'] = urldecode( wp_unslash( $_COOKIE['gmw_ul_formatted_address'] ) ); // WPCS: sanitization ok.
+					$this->user_position['address'] = urldecode( wp_unslash( $_COOKIE[ $ulc_prefix . 'formatted_address' ] ) ); // WPCS: sanitization ok.
 				} else {
 
 					$this->user_position['address'] = '';
 				}
 
-				//$this->user_position['address'] = ! empty( $_COOKIE['gmw_ul_address'] ) ? urldecode( wp_unslash( $_COOKIE['gmw_ul_address'] ) ) : ''; // WPCS: sanitization ok.
+				//$this->user_position['address'] = ! empty( $_COOKIE[ $ulc_prefix . 'address' ] ) ? urldecode( wp_unslash( $_COOKIE[ $ulc_prefix . 'address' ] ) ) : ''; // WPCS: sanitization ok.
 			}
 
 			// generate elements.
