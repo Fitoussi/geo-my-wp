@@ -13,10 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 class GMW_Current_Location {
 
 	/**
-	 * @since 1.0
-	 * Public $args
-	 * Array of Incoming arguments
+	 * Shortcode arguments/attributes.
 	 *
+	 * @param array $args shortcode attributes.
+	 *
+	 * @since 1.0
+	 *
+	 * Public $args
 	 */
 	protected $args = array(
 		'element_id'                => 0,
@@ -42,20 +45,20 @@ class GMW_Current_Location {
 	);
 
 	/**
+	 * Array for child class to extends default args above.
+	 *
 	 * @since 3.0
 	 *
 	 * Public $args
-	 *
-	 * Array for child class to extends default args above
 	 */
 	protected $ext_args = array();
 
 	/**
+	 * Array contains the current user position if exists.
+	 *
 	 * @since 2.6.1
 	 *
 	 * Public $user_position
-	 *
-	 * array contains the current user position if exists
 	 */
 	public $user_position = array(
 		'exists'  => false,
@@ -65,11 +68,11 @@ class GMW_Current_Location {
 	);
 
 	/**
+	 * Displayed name.
+	 *
 	 * @since 2.6.1
 	 *
 	 * Public $displayed_name
-	 *
-	 * Displayed name
 	 */
 	public $displayed_name;
 
@@ -94,19 +97,19 @@ class GMW_Current_Location {
 			unset( $atts['map_marker'] );
 		}
 
-		// extend the default args
+		// extend the default args.
 		$this->args = array_merge( $this->args, $this->ext_args );
 
-		// get the shortcode atts
+		// get the shortcode atts.
 		$this->args = shortcode_atts( $this->args, $atts, 'gmw_current_location' );
 
-		// set random element id if not provided
+		// set random element id if not provided.
 		$this->args['element_id'] = ! empty( $this->args['element_id'] ) ? $this->args['element_id'] : rand( 550, 1000 );
 
-		// elements to generate
+		// elements to generate.
 		$this->elements_value = explode( ',', $this->args['elements'] );
 
-		// check that we have at least one element to display
+		// check that we have at least one element to display.
 		if ( empty( $this->elements_value ) ) {
 			return;
 		}
@@ -117,11 +120,11 @@ class GMW_Current_Location {
 		}
 
 		// Default icon URL and size.
-		if ( '' == $this->args['map_icon_url'] ) {
+		if ( '' === $this->args['map_icon_url'] ) {
 
-			$this->args['map_icon_url']  = GMW()->default_icons['user_location_icon_url'];
+			$this->args['map_icon_url'] = GMW()->default_icons['user_location_icon_url'];
 
-			// use default icon size if no size provided
+			// use default icon size if no size provided.
 			if ( '' == $this->args['map_icon_size'] ) {
 				$this->args['map_icon_size'] = GMW()->default_icons['user_location_icon_size'];
 			}
@@ -129,7 +132,7 @@ class GMW_Current_Location {
 
 		$this->current_location = gmw_get_user_current_location();
 
-		// check for the user's current position in cookies
+		// check for the user's current position in cookies.
 		if ( ! empty( $this->current_location ) ) {
 
 			$this->user_position['exists']  = true;
@@ -137,15 +140,15 @@ class GMW_Current_Location {
 			$this->user_position['lng']     = $this->current_location->lng;
 			$this->user_position['address'] = false;
 
-			// generate address based on shortcode attributes
+			// generate address based on shortcode attributes.
 			if ( ! empty( $this->args['address_fields'] ) ) {
 
-				// if showing full address
-				if ( 'address' == $this->args['address_fields'] ) {
+				// if showing full address.
+				if ( 'address' === $this->args['address_fields'] ) {
 
 					$this->user_position['address'] = ! empty( $this->current_location->formatted_address ) ? $this->current_location->formatted_address : '';
 
-					// generate multiple address fields
+					// generate multiple address fields.
 				} else {
 
 					foreach ( explode( ',', $this->args['address_fields'] ) as $field ) {
@@ -166,24 +169,25 @@ class GMW_Current_Location {
 			}
 
 			// if user location not exists prevent ajax submission.
-			// This is temporary untill we can generate map using ajax
+			// This is temporary untill we can generate map using ajax.
 		} else {
 			$this->args['ajax_update'] = 0;
 		}
 
-		// enqueue script to localize the maps scripts in the footer
+		// enqueue script to localize the maps scripts in the footer.
 		add_action( 'wp_footer', array( $this, 'enqueue_scripts' ) );
 	}
 
 	/**
-	 * @since 2.6.1
-	 * @access public
+	 * Display the user name/guest.
 	 *
-	 * display the user name/guest
+	 * @since 2.6.1
+	 *
+	 * @access public
 	 */
 	public function displayed_name() {
 
-		// when user is logged in
+		// when user is logged in.
 		if ( is_user_logged_in() ) {
 
 			global $current_user, $wp_version;
@@ -194,12 +198,12 @@ class GMW_Current_Location {
 				wp_get_current_user();
 			}
 
-			//wp_get_current_user()
+			// wp_get_current_user().
 			$this->displayed_name = $this->args['user_greeting'] . ' ' . $current_user->display_name . '!';
 
 			$displayed = 'user';
 
-			// otherwise, refer to as a guest
+			// otherwise, refer to as a guest.
 		} else {
 
 			$current_user = false;
@@ -216,10 +220,11 @@ class GMW_Current_Location {
 	}
 
 	/**
-	 * @since 2.6.1
-	 * @access public
+	 * Display location with hyperlink trigger for the locaiton form.
 	 *
-	 * Display location with hyperlink trigger for the locaiton form
+	 * @since 2.6.1
+	 *
+	 * @access public
 	 */
 	public function address() {
 
@@ -241,10 +246,11 @@ class GMW_Current_Location {
 	}
 
 	/**
-	 * @since 2.6.1
-	 * @access public
-	 *
 	 * Create map element
+	 *
+	 * @since 2.6.1
+	 *
+	 * @access public
 	 */
 	public function map() {
 
@@ -252,7 +258,7 @@ class GMW_Current_Location {
 			return;
 		}
 
-		//map args
+		// map args.
 		$map_args = array(
 			'map_id'            => $this->args['element_id'],
 			'map_type'          => 'current_location',
@@ -264,7 +270,7 @@ class GMW_Current_Location {
 			'hide_no_locations' => false,
 		);
 
-		// map options
+		// map options.
 		$map_options = array(
 			'mapTypeId'         => $this->args['map_type'],
 			'scrollwheel'       => ! empty( $this->args['scrollwheel_zoom'] ) ? true : false,
@@ -274,7 +280,7 @@ class GMW_Current_Location {
 			'zoom'              => $this->args['zoom_level'],
 		);
 
-		// user position
+		// user position.
 		$user_position = array(
 			'lat'       => $this->user_position['lat'],
 			'lng'       => $this->user_position['lng'],
@@ -287,10 +293,11 @@ class GMW_Current_Location {
 	}
 
 	/**
-	 * @since 2.6.1
-	 * @access public
+	 * Pop-up form template.
 	 *
-	 * Pop-up form template
+	 * @since 2.6.1
+	 *
+	 * @access public
 	 */
 	public function form_template() {
 
@@ -341,23 +348,22 @@ class GMW_Current_Location {
 	}
 
 	/**
+	 * Enqueue the cl JavaScript file as well localize the maps object.
+	 *
 	 * @since 2.6.1
 	 *
 	 * @access public
-	 *
-	 * Enqueue the cl JavaScript file as well localize the maps object
-	 *
 	 */
 	public function enqueue_scripts() {
 
-		// load gmw main script and Google Maps API
+		// load gmw main script and Google Maps API.
 		if ( ! wp_script_is( 'gmw-current-location', 'enqueue' ) ) {
 
-			// generate hidden form only once
+			// generate hidden form only once.
 			echo self::current_location_fields();
 
-			// enqueue scripts
-			//wp_enqueue_script( 'gmw-current-location' );
+			// enqueue scripts.
+			// wp_enqueue_script( 'gmw-current-location' );.
 			wp_localize_script( 'gmw', 'gmw_cl_nonce', wp_create_nonce( 'gmw_current_location_nonce' ) );
 		}
 	}
@@ -371,10 +377,10 @@ class GMW_Current_Location {
 	 */
 	public function output() {
 
-		// get elements to display
+		// get elements to display.
 		$elements_value = explode( ',', $this->args['elements'] );
 
-		// check that we have at least one element to display
+		// check that we have at least one element to display.
 		if ( empty( $elements_value ) ) {
 			return;
 		}
@@ -383,7 +389,7 @@ class GMW_Current_Location {
 
 		$elements = array();
 
-		//build the elements array
+		// build the elements array.
 		$elements['element_wrap_start'] = '<div id="gmw-current-location-wrapper-' . esc_attr( $this->args['element_id'] ) . '" class="gmw-current-location-wrapper">';
 
 		foreach ( $elements_value as $value ) {
@@ -417,7 +423,7 @@ class GMW_Current_Location {
 			wp_enqueue_script( 'gmw' );
 		}
 
-		// display the element
+		// display the element.
 		return apply_filters( 'gmw_cl_display_output', $output, $elements, $this->args, $this->user_position, get_current_user_id() );
 	}
 
@@ -462,9 +468,10 @@ class GMW_Current_Location {
 	}
 
 	/**
-	 * Update current location in cookies
+	 * Update current location in cookies.
 	 *
-	 * @param  [type] $current_location [description]
+	 * @param  [type] $current_location [description].
+	 *
 	 * @return [type]                   [description]
 	 */
 	public static function update_cookies( $current_location, $ajax = false, $redirect = true ) {
@@ -524,7 +531,7 @@ class GMW_Current_Location {
 
 			if ( $redirect ) {
 
-				//reload page to prevent form resubmission.
+				// reload page to prevent form resubmission.
 				wp_redirect( $_SERVER['REQUEST_URI'] );
 
 				exit;
@@ -533,42 +540,41 @@ class GMW_Current_Location {
 	}
 
 	/**
-	 * update current location
+	 * Update current location.
 	 *
 	 * @return [type] [description]
 	 */
 	public static function page_load_update_location() {
 
-		// Abort if location not found or nonce not verified
+		// Abort if location not found or nonce not verified.
 		if ( empty( $_POST['gmw_cl_location'] ) || empty( $_POST['gmw_cl_nonce'] ) || ! wp_verify_nonce( $_POST['gmw_cl_nonce'], 'gmw_cl_nonce' ) ) {
-			//reload page to prevent form resubmission
+
+			// reload page to prevent form resubmission.
 			wp_redirect( $_SERVER['REQUEST_URI'] );
 
 			exit;
 		}
 
-		// update cookies
+		// Update cookies.
 		self::update_cookies( $_POST['gmw_cl_location'], false );
 	}
 
 	/**
 	 * Update Current Location Data.
-	 * 
-	 * @return [type] [description]
 	 */
 	public static function ajax_update_location() {
 
-		//verify AJAX nonce
+		// verify AJAX nonce.
 		if ( ! check_ajax_referer( 'gmw_current_location_nonce', 'security', false ) ) {
 
-			//abort if bad nonce
+			// abort if bad nonce.
 			wp_die( __( 'Trying to cheat or something?', 'geo-my-wp' ), __( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
 		}
 
-		//parse the form values
+		// parse the form values.
 		parse_str( $_POST['form_values'], $form_values );
 
-		// update cookies
+		// update cookies.
 		self::update_cookies( $form_values['gmw_cl_location'], true );
 	}
 }
