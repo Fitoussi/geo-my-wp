@@ -79,12 +79,12 @@ class GMW_Helper {
 	 *
 	 * @since 3.0
 	 *
-	 * @param  string $component   slug of the add-on/component the template file belongs to.
-	 * @param  string $folder_name folder name ( ex. search-results, search-forms... ). can also left blank if no inside any folder.
-	 * @param  string $iw_type     info-window type. Will be used when $folder_name is set to info-window
-	 * @param  string $addon       slug of the addon when different than the component's addon. Can be used when a single or multiple addons exist
-	 *                             inside a another base addon. In this case the the sub-addons
-	 *                             should be placed inside a "plugins" folder within the base add-on.
+	 * @param  array $args  array of arguments listed below.
+	 *
+	 * $component   slug of the add-on/component the template file belongs to.
+	 * $folder_name folder name ( ex. search-results, search-forms... ). can also left blank if no inside any folder.
+	 * $iw_type     info-window type. Will be used when $folder_name is set to info-window
+	 * $addon       slug of the addon when different than the component's addon. Can be used when a single or multiple addons exist inside a another base addon. In this case the the sub-addons should be placed inside a "plugins" folder within the base add-on.
 	 *
 	 * @return array  list of templates
 	 */
@@ -104,7 +104,7 @@ class GMW_Helper {
 		$themes = array();
 		$folder = ! empty( $folder_name ) ? $folder_name . '/' : '';
 
-		// addon data
+		// addon data.
 		$component_data   = gmw_get_addon_data( $component );
 		$templates_folder = $component_data['templates_folder'];
 
@@ -137,7 +137,7 @@ class GMW_Helper {
 			$templates_folder .= '/' . $addon_data['templates_folder'];
 		}
 
-		if ( 'info-window' == $folder_name ) {
+		if ( 'info-window' === $folder_name ) {
 
 			$custom_path          = $custom_path . '/' . $templates_folder . '/' . $folder . $iw_type . '/*';
 			$template_custom_path = TEMPLATEPATH . '/geo-my-wp/' . $templates_folder . '/' . $folder . $iw_type . '/*';
@@ -167,6 +167,8 @@ class GMW_Helper {
 	 *
 	 * @since 3.0
 	 *
+	 * @param array $args list of arguments listed below.
+	 *
 	 * array(
 	 *   $component     the slug of the add-on/component which the template file belongs to.
 	 *   $base_addon    when an addon/component exists inside another addon ( ex. Posts Locator inside global maps ), we pass the slug of the base addon.
@@ -175,7 +177,7 @@ class GMW_Helper {
 	 *   $template_name template folder name ( ex. default );
 	 * );
 	 *
-	 * @return
+	 * return $output.
 	 */
 	public static function get_template( $args = array() ) {
 
