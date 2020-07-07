@@ -407,6 +407,15 @@ function gmw_get_url_prefix() {
 }
 
 /**
+ * Get user Location prefix.
+ *
+ * @return [type] [description]
+ */
+function gmw_get_ulc_prefix() {
+	return GMW()->ulc_prefix;
+}
+
+/**
  * Get the user current location
  *
  * @return OBJECT of the user location
