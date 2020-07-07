@@ -163,6 +163,24 @@ var GMW = {
     },
 
     /**
+     * Auto locator the user on page load.
+     *
+     * @return {[type]} [description]
+     */
+    page_locator : function() {
+
+    	// check if we need to autolocate the user on page load
+        if ( navigator.geolocation && GMW.options.general.auto_locate == 1 && GMW.get_cookie( 'gmw_autolocate' ) != 1 ) {
+
+            //set cookie to prevent future autolocation for one day
+            GMW.set_cookie( 'gmw_autolocate', 1, 1 );
+
+            // run auto locator
+           	GMW.auto_locator( 'page_locator', GMW.page_locator_success, false );
+        }
+    },
+
+    /**
      * Create hooks system for JavaScript
      *
      * This code was developed by the develpers of Gravity Forms plugin and was modified to
