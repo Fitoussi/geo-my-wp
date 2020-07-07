@@ -126,15 +126,8 @@ var GMW = {
             GMW.form_functions();
         }
 
-        // check if we need to autolocate the user on page load
-        if ( navigator.geolocation && GMW.options.general.auto_locate == 1 && GMW.get_cookie( 'gmw_autolocate' ) != 1 ) {
-
-            //set cookie to prevent future autolocation for one day
-            GMW.set_cookie( 'gmw_autolocate', 1, 1 );
-
-            // run auto locator
-            GMW.auto_locator( 'page_locator', GMW.page_locator_success, false );
-        }
+        // Run page locator.
+        GMW.page_locator();
 
         // dont not enable autocomplete if google is not defined.
         // This check should be imporved.
