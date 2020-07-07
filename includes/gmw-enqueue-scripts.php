@@ -115,6 +115,7 @@ function gmw_enqueue_scripts() {
 			'isAdmin'           => IS_ADMIN,
 			'ajaxUrl'           => GMW()->ajax_url,
 			'locatorAlerts'     => apply_filters( 'gmw_auto_locator_alerts_enabled', true ) ? '1' : '0',
+			'ulcPrefix'         => gmw_get_ulc_prefix(),
 		),
 		$gmw_options
 	);
