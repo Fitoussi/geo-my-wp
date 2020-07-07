@@ -379,7 +379,7 @@ var GMW = {
     	//document.cookie = encodeURIComponent( name ) + '=; expires=Thu, 01-Jan-70 00:00:01 GMT;';
         //document.cookie = encodeURIComponent( name ) + "=deleted; expires=" + new Date(0).toUTCString();
     },
-
+ 
     /**
      * Get user's current position
      * 
