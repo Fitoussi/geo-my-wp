@@ -20,6 +20,8 @@ class GMW_Current_Location {
 	 * @since 1.0
 	 *
 	 * Public $args
+	 *
+	 * @var $args
 	 */
 	protected $args = array(
 		'element_id'                => 0,
@@ -50,6 +52,8 @@ class GMW_Current_Location {
 	 * @since 3.0
 	 *
 	 * Public $args
+	 *
+	 * @var $ext_args
 	 */
 	protected $ext_args = array();
 
@@ -59,6 +63,8 @@ class GMW_Current_Location {
 	 * @since 2.6.1
 	 *
 	 * Public $user_position
+	 *
+	 * @var $user_position
 	 */
 	public $user_position = array(
 		'exists'  => false,
@@ -73,8 +79,10 @@ class GMW_Current_Location {
 	 * @since 2.6.1
 	 *
 	 * Public $displayed_name
+	 *
+	 * @var $user_position
 	 */
-	public $displayed_name;
+	public $user_position;
 
 	/**
 	 * Current location status
@@ -87,6 +95,8 @@ class GMW_Current_Location {
 
 	/**
 	 * __constructor
+	 *
+	 * @param array $atts shortcode attributes.
 	 */
 	public function __construct( $atts = array() ) {
 
@@ -104,7 +114,7 @@ class GMW_Current_Location {
 		$this->args = shortcode_atts( $this->args, $atts, 'gmw_current_location' );
 
 		// set random element id if not provided.
-		$this->args['element_id'] = ! empty( $this->args['element_id'] ) ? $this->args['element_id'] : rand( 550, 1000 );
+		$this->args['element_id'] = ! empty( $this->args['element_id'] ) ? $this->args['element_id'] : wp_rand( 550, 1000 );
 
 		// elements to generate.
 		$this->elements_value = explode( ',', $this->args['elements'] );
@@ -125,7 +135,7 @@ class GMW_Current_Location {
 			$this->args['map_icon_url'] = GMW()->default_icons['user_location_icon_url'];
 
 			// use default icon size if no size provided.
-			if ( '' == $this->args['map_icon_size'] ) {
+			if ( '' === $this->args['map_icon_size'] ) {
 				$this->args['map_icon_size'] = GMW()->default_icons['user_location_icon_size'];
 			}
 		}
@@ -153,11 +163,11 @@ class GMW_Current_Location {
 
 					foreach ( explode( ',', $this->args['address_fields'] ) as $field ) {
 
-						if ( 'state' == $field ) {
+						if ( 'state' === $field ) {
 							$field = 'region_code';
 						}
 
-						if ( 'country' == $field ) {
+						if ( 'country' === $field ) {
 							$field = 'country_code';
 						}
 
@@ -360,7 +370,7 @@ class GMW_Current_Location {
 		if ( ! wp_script_is( 'gmw-current-location', 'enqueue' ) ) {
 
 			// generate hidden form only once.
-			echo self::current_location_fields();
+			echo self::current_location_fields(); // WPCS: XSS ok.
 
 			// enqueue scripts.
 			// wp_enqueue_script( 'gmw-current-location' );.
@@ -369,11 +379,11 @@ class GMW_Current_Location {
 	}
 
 	/**
+	 * Display all elements based on shortcode attributes.
+	 *
 	 * @since 2.6.1
 	 *
 	 * @access public
-	 *
-	 * Display all elements based on shortcode attributes
 	 */
 	public function output() {
 
@@ -470,9 +480,11 @@ class GMW_Current_Location {
 	/**
 	 * Update current location in cookies.
 	 *
-	 * @param  [type] $current_location [description].
+	 * @param  array   $current_location users current location.
+	 * @param  boolean $ajax             true || false for using ajax.
+	 * @param  boolean $redirect         true || false for redirecting.
 	 *
-	 * @return [type]                   [description]
+	 * @return [type]                    [description]
 	 */
 	public static function update_cookies( $current_location, $ajax = false, $redirect = true ) {
 
@@ -541,8 +553,6 @@ class GMW_Current_Location {
 
 	/**
 	 * Update current location.
-	 *
-	 * @return [type] [description]
 	 */
 	public static function page_load_update_location() {
 
