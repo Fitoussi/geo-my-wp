@@ -1,5 +1,11 @@
 <?php
-// Exit if accessed directly
+/**
+ * GEO my WP Current location class.
+ *
+ * @package geo-my-wp
+ */
+
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -208,7 +214,7 @@ class GMW_Current_Location {
 				wp_get_current_user();
 			}
 
-			// wp_get_current_user().
+			// wp_get_current_user function.
 			$this->displayed_name = $this->args['user_greeting'] . ' ' . $current_user->display_name . '!';
 
 			$displayed = 'user';
@@ -216,7 +222,7 @@ class GMW_Current_Location {
 			// otherwise, refer to as a guest.
 		} else {
 
-			$current_user = false;
+			$current_user = false; // WPCS: override global ok.
 
 			$this->displayed_name = $this->args['guest_greeting'];
 
@@ -566,7 +572,7 @@ class GMW_Current_Location {
 		}
 
 		// Update cookies.
-		self::update_cookies( $_POST['gmw_cl_location'], false );
+		self::update_cookies( $_POST['gmw_cl_location'], false ); // WPCS: CSRF ok, sanitization ok.
 	}
 
 	/**
