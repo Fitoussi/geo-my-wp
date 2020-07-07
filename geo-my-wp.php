@@ -52,6 +52,13 @@ class GEO_MY_WP {
 	public $url_prefix = '';
 
 	/**
+	 * Prefix for the user's location cookies.
+	 *
+	 * @var string
+	 */
+	public $ulc_prefix = 'gmw_ul_';
+
+	/**
 	 * Showing on mobile device?
 	 *
 	 * @var boolean
@@ -501,6 +508,7 @@ class GEO_MY_WP {
 
 		// run some filters.
 		$this->url_prefix                = esc_attr( apply_filters( 'gmw_form_url_prefix', $this->url_prefix ) );
+		$this->ulc_prefix                = esc_attr( apply_filters( 'gmw_user_location_cookie_prefix', $this->ulc_prefix ) );
 		$this->internal_cache            = apply_filters( 'gmw_internal_cache_enabled', $this->internal_cache );
 		$this->internal_cache_expiration = apply_filters( 'gmw_internal_cache_expiration', $this->internal_cache_expiration );
 	}
