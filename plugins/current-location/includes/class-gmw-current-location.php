@@ -88,7 +88,7 @@ class GMW_Current_Location {
 	 *
 	 * @var $user_position
 	 */
-	public $user_position;
+	public $displayed_name;
 
 	/**
 	 * Current location status
@@ -97,7 +97,7 @@ class GMW_Current_Location {
 	 *
 	 * @var boolean
 	 */
-	static $current_location_enabled = false;
+	static public $current_location_enabled = false;
 
 	/**
 	 * __constructor
