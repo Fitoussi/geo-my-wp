@@ -162,11 +162,13 @@ var GMW = {
      */
     page_locator : function() {
 
+    	var cookieName = ( gmwVars.ulcPrefix == 'gmw_ul_' ) ? 'gmw_autolocate' : gmwVars.ulcPrefix + 'autolocate';
+
     	// check if we need to autolocate the user on page load
-        if ( navigator.geolocation && GMW.options.general.auto_locate == 1 && GMW.get_cookie( 'gmw_autolocate' ) != 1 ) {
+        if ( navigator.geolocation && GMW.options.general.auto_locate == 1 && GMW.get_cookie( cookieName ) != 1 ) {
 
             //set cookie to prevent future autolocation for one day
-            GMW.set_cookie( 'gmw_autolocate', 1, 1 );
+            GMW.set_cookie( cookieName, 1, 1 );
 
             // run auto locator
            	GMW.auto_locator( 'page_locator', GMW.page_locator_success, false );
