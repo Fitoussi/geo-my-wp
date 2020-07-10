@@ -2569,6 +2569,8 @@ if ( jQuery( '.gmw-current-location-wrapper' ).length ) {
 	     */
 	    auto_locator_success : function( address_fields ) {
 
+	    	GMW.save_location_fields( address_fields );
+
 	        jQuery( '#gmw-cl-address-input-' + GMW_Current_Location.object_id ).val( address_fields.formatted_address );
 	        
 	        GMW_Current_Location.submit_location();
