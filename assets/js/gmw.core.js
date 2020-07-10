@@ -565,7 +565,7 @@ var GMW = {
      * @return {[type]}         [description]
      */
     save_location_fields : function( result ) {
-        
+
         var cl_form      = jQuery( 'form#gmw-current-location-hidden-form' );
         var addressField = '';
 
