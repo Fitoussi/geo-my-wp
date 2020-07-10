@@ -682,22 +682,27 @@ var GMW = {
      * @param  {[type]} results [description]
      * @return {[type]}         [description]
      */
-    page_locator_success : function( address_fields, results ) {
+    page_locator_success : function( results ) {
 
         GMW.vars.auto_locator.status   = false;
         GMW.vars.auto_locator.callback = false;
         GMW.vars.auto_locator.type     = false;
 
-        // submit current location hidden form
-        setTimeout(function() {
+        address_fields = GMW.save_location_fields( results );
 
-        	if ( jQuery( 'form.gmw-cl-form' ).length ) {
-        		jQuery( 'form.gmw-cl-form' )[0].submit();
-            	//jQuery( 'form#gmw-current-location-form' ).submit();             
-        	} else {
-        		window.location.reload();
-        	}
-        }, 500); 
+        if ( gmwVars.pageLocatorRefresh == true ) { 
+
+	        // submit current location hidden form
+	        setTimeout(function() {
+
+	        	if ( jQuery( 'form.gmw-cl-form' ).length ) {
+	        		jQuery( 'form.gmw-cl-form' )[0].submit();
+	            	jQuery( 'form#gmw-current-location-form' ).submit();             
+	        	} else {
+	        		window.location.reload();
+	        	}
+	        }, 500);
+	    }
     },
 
     /**
