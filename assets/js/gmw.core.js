@@ -2500,8 +2500,10 @@ if ( jQuery( '.gmw-current-location-wrapper' ).length ) {
 	               		var mapId        = GMW_Current_Location.object_id;
 	               		var gmwMap       = GMW_Maps[mapId];
 	                	var new_position = gmwMap.latLng( response.lat, response.lng );
+
+	                	jQuery( '.gmw-map-wrapper.current_location ' ).slideDown();
 	                	
-	                	gmwMap.setMarkerPosition( gmwMap.user_marker, new_position, gmwMap );
+	                	gmwMap.setMarkerPosition( gmwMap.userMarker, new_position, gmwMap );
 						gmwMap.map.panTo( new_position );
 	                }
 
@@ -2509,6 +2511,7 @@ if ( jQuery( '.gmw-current-location-wrapper' ).length ) {
 
 	                // change the address in the current location element
 	                jQuery( '.gmw-cl-address .address-holder' ).html( newAddress );
+	                jQuery( '.gmw-cl-element.gmw-cl-address-wrapper' ).slideDown();
 	            }
 
 	        // if failed
