@@ -156,26 +156,6 @@ var GMW = {
     },
 
     /**
-     * Auto locator the user on page load.
-     *
-     * @return {[type]} [description]
-     */
-    page_locator : function() {
-
-    	var cookieName = ( gmwVars.ulcPrefix == 'gmw_ul_' ) ? 'gmw_autolocate' : gmwVars.ulcPrefix + 'autolocate';
-
-    	// check if we need to autolocate the user on page load
-        if ( navigator.geolocation && GMW.options.general.auto_locate == 1 && GMW.get_cookie( cookieName ) != 1 ) {
-
-            //set cookie to prevent future autolocation for one day
-            GMW.set_cookie( cookieName, 1, 1 );
-
-            // run auto locator
-           	GMW.auto_locator( 'page_locator', GMW.page_locator_success, false );
-        }
-    },
-
-    /**
      * Create hooks system for JavaScript
      *
      * This code was developed by the develpers of Gravity Forms plugin and was modified to
@@ -491,6 +471,26 @@ var GMW = {
      */
     geocoder_failed : function( status ) {
         alert( 'We could not find the address you entered for the following reason: ' + status );
+    },
+
+    /**
+     * Auto locator the user on page load.
+     *
+     * @return {[type]} [description]
+     */
+    page_locator : function() {
+
+    	var cookieName = ( gmwVars.ulcPrefix == 'gmw_ul_' ) ? 'gmw_autolocate' : gmwVars.ulcPrefix + 'autolocate';
+
+    	// check if we need to autolocate the user on page load
+        if ( navigator.geolocation && GMW.options.general.auto_locate == 1 && GMW.get_cookie( cookieName ) != 1 ) {
+
+            //set cookie to prevent future autolocation for one day
+            GMW.set_cookie( cookieName, 1, 1 );
+
+            // run auto locator
+           	GMW.auto_locator( 'page_locator', GMW.page_locator_success, false );
+        }
     },
 
     /**
