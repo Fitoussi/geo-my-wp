@@ -232,7 +232,7 @@ if ( gmwVars.mapsProvider == 'google_maps' ) {
 		},
 
 		setMarkerPosition : function( marker, position, map ) {
-			marker.setPosition( postion );
+			marker.setPosition( position );
 		},
 
 		/**
