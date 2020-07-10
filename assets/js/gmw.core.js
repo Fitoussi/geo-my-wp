@@ -613,7 +613,7 @@ var GMW = {
         GMW.vars.auto_locator.failed  = failed;
         
         // run navigator
-        GMW.navigator( GMW.auto_locator_success, GMW.auto_locator_failed );
+        GMW.navigator( success, failed );
     },
 
     /**
