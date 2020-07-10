@@ -181,13 +181,19 @@ class GMW_Location_Form {
 		$defaults = array_merge( $this->default_args, $this->ext_defaults );
 
 		// get the shortcode atts.
-		// $this->args = shortcode_atts( $this->args, $atts, 'gmw_location_form' );
+		// $this->args = shortcode_atts( $this->args, $atts, 'gmw_location_form' );.
 		$this->args = wp_parse_args( $args, $defaults );
 
 		if ( ! empty( $this->args['slug'] ) ) {
 			$this->slug = $this->args['slug'];
 		} else {
 			$this->args['slug'] = $this->slug;
+		}
+
+		if ( ! empty( $this->args['object_type'] ) ) {
+			$this->slug = $this->args['object_type'];
+		} else {
+			$this->args['object_type'] = $this->object_type;
 		}
 
 		// filter the location form args.
