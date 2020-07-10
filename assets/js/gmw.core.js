@@ -354,7 +354,7 @@ var GMW = {
     set_cookie : function( name, value, exdays ) {
         var exdate = new Date();
         exdate.setTime( exdate.getTime() + ( exdays * 24 * 60 * 60 * 1000 ) );
-        var cooki = escape( encodeURIComponent( value ) ) + ( ( exdays == null ) ? "" : "; expires=" + exdate.toUTCString() );
+        var cooki = encodeURIComponent( value ) + ( ( exdays == null ) ? "" : "; expires=" + exdate.toUTCString() );
         document.cookie = name + "=" + cooki + "; path=/";
     },
 
