@@ -419,6 +419,7 @@ class GMW_Template_Functions_Helper {
 			'count_message'        => __( 'Showing {from_count} - {to_count} of {total_results} locations', 'geo-my-wp' ),
 			'single_count_message' => __( '1 location found', 'geo-my-wp' ),
 			'location_message'     => __( ' within {radius}{units} from {address}', 'geo-my-wp' ),
+			'all_results_message'  => __( 'Showing all {total_results} locations', 'geo-my-wp' ),
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -437,6 +438,10 @@ class GMW_Template_Functions_Helper {
 			if ( 1 === $args['results_count'] && 1 === $args['total_count'] ) {
 
 				$count_message = $args['single_count_message'];
+
+			} elseif ( $args['total_count'] === $args['results_count'] ) {
+
+				$count_message = str_replace( '{total_results}', $args['total_count'], $args['all_results_message'] );
 
 			} elseif ( $args['results_count'] > ! $args['total_count'] ) {
 
