@@ -778,7 +778,7 @@ var GMW_Map = function( options, map_options, form ) {
 	 * Markers clusterer PATH
 	 * @type {String}
 	 */
-	this.clustersPath = options.clustersPath || 'https://raw.githubusercontent.com/googlemaps/js-marker-clusterer/gh-pages/images/m';
+	this.clustersPath = options.clusters_path || 'https://raw.githubusercontent.com/googlemaps/js-marker-clusterer/gh-pages/images/m';
 
 	/**
 	 * Marker grouping type
