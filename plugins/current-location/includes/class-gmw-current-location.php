@@ -469,8 +469,7 @@ class GMW_Current_Location {
 			'lng',
 		);
 
-		$output = '<form id="gmw-current-location-hidden-form" method="post" style="display:none;">';
-
+		$output  = '<form id="gmw-current-location-hidden-form" method="post" style="display:none;">';
 		$output .= '<input type="hidden" id="gmw_cl_action" name="gmw_action" value="current_location_submit" />';
 
 		foreach ( $address_fields as $field ) {
