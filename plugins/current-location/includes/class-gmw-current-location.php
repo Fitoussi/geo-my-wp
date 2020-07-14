@@ -494,43 +494,47 @@ class GMW_Current_Location {
 	 */
 	public static function update_cookies( $current_location, $ajax = false, $redirect = true ) {
 
-		$address_fields = array(
-			'street',
-			'city',
-			'region_name',
-			'region_code',
-			'postcode',
-			'country_name',
-			'country_code',
-			'address',
-			'formatted_address',
-			'lat',
-			'lng',
-		);
+		// GEO my WP now saves the cookies via JS. This can be enable for backward compatibility in case that something goes wrong and cookies are not saved.
+		if ( apply_filters( 'gmw_cl_force_saving_cookies_via_page_load', false ) ) {
 
-		$cache      = (object) array();
-		$ulc_prefix = gmw_get_ulc_prefix();
+			$address_fields = array(
+				'street',
+				'city',
+				'region_name',
+				'region_code',
+				'postcode',
+				'country_name',
+				'country_code',
+				'address',
+				'formatted_address',
+				'lat',
+				'lng',
+			);
 
-		// save location fields.
-		foreach ( $address_fields as $field ) {
+			$cache      = (object) array();
+			$ulc_prefix = gmw_get_ulc_prefix();
 
-			// Cookie field.
-			$cf = $ulc_prefix . $field;
+			// save location fields.
+			foreach ( $address_fields as $field ) {
 
-			// clear cookie.
-			unset( $_COOKIE[ $cf ] );
-			setcookie( $cf, '', time() - 300 );
+				// Cookie field.
+				$cf = $ulc_prefix . $field;
 
-			// save new value if exists.
-			if ( ! empty( $current_location[ $field ] ) ) {
+				// clear cookie.
+				unset( $_COOKIE[ $cf ] );
+				setcookie( $cf, '', time() - 300 );
 
-				// Sanitize values.
-				$current_location[ $field ] = sanitize_text_field( stripslashes( $current_location[ $field ] ) );
-				$cache->$field              = $current_location[ $field ];
+				// save new value if exists.
+				if ( ! empty( $current_location[ $field ] ) ) {
 
-				setcookie( $cf, $current_location[ $field ], strtotime( '+7 days' ), '/' );
-			} else {
-				$cache->$field = '';
+					// Sanitize values.
+					$current_location[ $field ] = sanitize_text_field( stripslashes( $current_location[ $field ] ) );
+					$cache->$field              = $current_location[ $field ];
+
+					setcookie( $cf, $current_location[ $field ], strtotime( '+7 days' ), '/' );
+				} else {
+					$cache->$field = '';
+				}
 			}
 		}
 
