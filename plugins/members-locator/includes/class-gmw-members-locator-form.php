@@ -114,7 +114,7 @@ class GMW_Members_Locator_Form extends GMW_Form {
 		$fields = ', gmw_locations.' . implode( ', gmw_locations.', $this->db_fields );
 		$having = '';
 		$where  = '';
-		$tjoin  = "{$wpdb->base_prefix}gmw_locations gmw_locations ON u.{$column} = gmw_locations.object_id";
+		$tjoin  = "{$wpdb->base_prefix}gmw_locations gmw_locations ON u.{$column} = gmw_locations.object_id AND gmw_locations.object_type = 'user' ";
 		$join   = '';
 
 		// include specific users ID if returned from xprofile filters.
@@ -155,15 +155,17 @@ class GMW_Members_Locator_Form extends GMW_Form {
 
 			if ( ! empty( $distance ) ) {
 
-				// calculate the between point.
-				$bet_lat1 = $lat - ( $distance / $degree );
-				$bet_lat2 = $lat + ( $distance / $degree );
-				$bet_lng1 = $lng - ( $distance / ( $degree * cos( deg2rad( $lat ) ) ) );
-				$bet_lng2 = $lng + ( $distance / ( $degree * cos( deg2rad( $lat ) ) ) );
+				if ( ! apply_filters( 'gmw_disable_query_clause_between', false, 'gmw_fl' ) ) {
 
-				$where .= " AND gmw_locations.object_type = 'user' ";
-				$where .= " AND gmw_locations.latitude BETWEEN {$bet_lat1} AND {$bet_lat2}";
-				$where .= " AND gmw_locations.longitude BETWEEN {$bet_lng1} AND {$bet_lng2} ";
+					// calculate the between point.
+					$bet_lat1 = $lat - ( $distance / $degree );
+					$bet_lat2 = $lat + ( $distance / $degree );
+					$bet_lng1 = $lng - ( $distance / ( $degree * cos( deg2rad( $lat ) ) ) );
+					$bet_lng2 = $lng + ( $distance / ( $degree * cos( deg2rad( $lat ) ) ) );
+
+					$where .= " AND gmw_locations.latitude BETWEEN {$bet_lat1} AND {$bet_lat2}";
+					$where .= " AND gmw_locations.longitude BETWEEN {$bet_lng1} AND {$bet_lng2} ";
+				}
 
 				// filter locations based on the distance.
 				$having = "Having distance <= {$distance} OR distance IS NULL";
@@ -179,14 +181,13 @@ class GMW_Members_Locator_Form extends GMW_Form {
 			if ( $this->enable_objects_without_location ) {
 
 				// left join the location table into the query to display posts with no location as well.
-				$join   = "LEFT JOIN {$tjoin} AND gmw_locations.object_type = 'user' ";
+				$join   = "LEFT JOIN {$tjoin}";
 				$where .= " {$address_filters}";
 
 			} else {
 
 				$join   = "INNER JOIN {$tjoin}";
 				$where .= " {$address_filters} AND ( gmw_locations.latitude != 0.000000 && gmw_locations.longitude != 0.000000 )";
-				$where .= " AND gmw_locations.object_type = 'user'";
 			}
 		}
 
