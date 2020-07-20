@@ -124,9 +124,16 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 
 		global $wpdb;
 
+		$where_clause_filter = apply_filters( 'gmw_filter_object_type_in_where_clause', false, $this->form );
+
 		// add the location db fields to the query.
 		$clauses['fields'] .= ", {$db_fields}";
 		$clauses['having']  = '';
+		$tjoin              = "{$wpdb->base_prefix}gmw_locations gmw_locations ON $wpdb->posts.ID = gmw_locations.object_id ";
+
+		if ( ! $where_clause_filter ) {
+			$tjoin .= "AND gmw_locations.object_type = 'post' ";
+		}
 
 		// In multisite we need to check for the blog ID.
 		if ( is_multisite() && ! empty( $wpdb->blogid ) ) {
@@ -162,19 +169,25 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 
 			$clauses['fields'] .= ", ROUND( {$earth_radius} * acos( cos( radians( {$lat} ) ) * cos( radians( gmw_locations.latitude ) ) * cos( radians( gmw_locations.longitude ) - radians( {$lng} ) ) + sin( radians( {$lat} ) ) * sin( radians( gmw_locations.latitude ) ) ),1 ) AS distance";
 
-			$clauses['join'] .= " INNER JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON $wpdb->posts.ID = gmw_locations.object_id ";
+			$clauses['join'] .= "INNER JOIN {$tjoin}";
 
 			if ( ! empty( $distance ) ) {
 
-				// calculate the between point.
-				$bet_lat1 = $lat - ( $distance / $degree );
-				$bet_lat2 = $lat + ( $distance / $degree );
-				$bet_lng1 = $lng - ( $distance / ( $degree * cos( deg2rad( $lat ) ) ) );
-				$bet_lng2 = $lng + ( $distance / ( $degree * cos( deg2rad( $lat ) ) ) );
+				if ( ! apply_filters( 'gmw_disable_query_clause_between', false, 'gmw_pt' ) ) {
 
-				$clauses['where'] .= " AND gmw_locations.object_type = 'post'";
-				$clauses['where'] .= " AND gmw_locations.latitude BETWEEN {$bet_lat1} AND {$bet_lat2}";
-				//$clauses['where'] .= " AND gmw_locations.longitude BETWEEN {$bet_lng1} AND {$bet_lng2} ";
+					// calculate the between point.
+					$bet_lat1 = $lat - ( $distance / $degree );
+					$bet_lat2 = $lat + ( $distance / $degree );
+					$bet_lng1 = $lng - ( $distance / ( $degree * cos( deg2rad( $lat ) ) ) );
+					$bet_lng2 = $lng + ( $distance / ( $degree * cos( deg2rad( $lat ) ) ) );
+
+					$clauses['where'] .= " AND gmw_locations.latitude BETWEEN {$bet_lat1} AND {$bet_lat2}";
+					// $clauses['where'] .= " AND gmw_locations.longitude BETWEEN {$bet_lng1} AND {$bet_lng2} ";
+				}
+
+				if ( $where_clause_filter ) {
+					$clauses['where'] .= " AND gmw_locations.object_type = 'post'";
+				}
 
 				// filter locations based on the distance.
 				$clauses['having'] = "HAVING distance <= {$distance} OR distance IS NULL";
@@ -204,14 +217,17 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 			if ( $this->form['query_args']['gmw_args']['showing_objects_without_location'] ) {
 
 				// left join the location table into the query to display posts with no location as well.
-				$clauses['join']  .= " LEFT JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON $wpdb->posts.ID = gmw_locations.object_id AND gmw_locations.object_type = 'post' ";
+				$clauses['join']  .= " LEFT JOIN {$tjoin}";
 				$clauses['where'] .= " {$address_filters} ";
 
 			} else {
 
-				$clauses['join']  .= " INNER JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON $wpdb->posts.ID = gmw_locations.object_id ";
+				$clauses['join']  .= " INNER JOIN {$tjoin}";
 				$clauses['where'] .= " {$address_filters} AND ( gmw_locations.latitude != 0.000000 && gmw_locations.longitude != 0.000000 ) ";
-				$clauses['where'] .= " AND gmw_locations.object_type = 'post'";
+
+				if ( $where_clause_filter ) {
+					$clauses['where'] .= " AND gmw_locations.object_type = 'post'";
+				}
 			}
 		}
 
