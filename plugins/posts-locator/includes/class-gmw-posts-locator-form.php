@@ -145,7 +145,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 		$address_filters = GMW_Location::query_address_fields( $this->get_address_filters(), $this->form );
 
 		// when address provided, and not filtering based on address fields, we will do proximity search.
-		if ( '' === $address_filters && ! empty( $this->form['lat'] ) && ! empty( $this->form['lng'] ) ) {
+		if ( empty( $address_filters ) && ! empty( $this->form['lat'] ) && ! empty( $this->form['lng'] ) ) {
 
 			// generate some radius/units data.
 			if ( in_array( $this->form['units_array']['units'], array( 'imperial', 3959, 'miles', '3959' ), true ) ) {
