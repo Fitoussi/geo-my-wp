@@ -2534,6 +2534,7 @@ if ( jQuery( '.gmw-current-location-wrapper' ).length ) {
 	        	setTimeout( function() {
 
 		            jQuery( '.gmw-cl-respond-wrapper' ).slideUp();
+
 		            //jQuery( '#gmw-cl-message-' + GMW.current_location.id ).removeClass( 'error' ).html('');
 		            jQuery( '.gmw-cl-address-input' ).prop( 'readonly', false );
 		            jQuery( '.gmw-cl-form-submit' ).removeClass( 'gmw-icon-spin-light animate-spin' ).addClass( 'gmw-icon-search' );
@@ -2555,7 +2556,9 @@ if ( jQuery( '.gmw-current-location-wrapper' ).length ) {
 	        	// page load update
 	        	} else {
 
-	        		jQuery( '#gmw-current-location-hidden-form' ).submit();
+	        		setTimeout( function() {
+	        			jQuery( '#gmw-current-location-hidden-form' ).submit();
+	        		}, 500 );
 	        	}	             
 
 	        }, 3500 );    
