@@ -74,7 +74,7 @@ class GMW_Search_Form_Helper {
 
 			foreach ( $args['options'] as $value => $name ) {
 
-				$selected = ( isset( $_GET[ $args['name_tag'] ] ) && in_array( $value, $_GET[ $args['name_tag'] ], true ) ) ? 'selected="selected"' : ''; // WPCS: sanitization ok.
+				$selected = ( isset( $_GET[ $args['name_tag'] ] ) && in_array( $value, $_GET[ $args['name_tag'] ], true ) ) ? 'selected="selected"' : ''; // WPCS: sanitization ok, CSRF ok.
 
 				$output .= '<option value="' . esc_attr( $value ) . '" ' . $selected . '>' . esc_html( $name ) . '</option>';
 			}
@@ -117,7 +117,7 @@ class GMW_Search_Form_Helper {
 		// new filter.
 		$args = apply_filters( 'gmw_search_form_keywords_field_args', $args );
 
-		$value = ! empty( $_GET[ $url_px . 'keywords' ] ) ? sanitize_text_field( wp_unslash( $_GET[ $url_px . 'keywords' ] ) ) : '';
+		$value = ! empty( $_GET[ $url_px . 'keywords' ] ) ? sanitize_text_field( wp_unslash( $_GET[ $url_px . 'keywords' ] ) ) : ''; // WPCS: CSRF ok.
 
 		return '<input type="text" id="gmw-keywords-' . absint( $args['id'] ) . '" class="gmw-form-field keywords-field ' . esc_attr( $args['class'] ) . '" name="' . esc_attr( $args['name_tag'] ) . '" value="' . $value . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" />';
 	}
@@ -168,10 +168,9 @@ class GMW_Search_Form_Helper {
 		$placeholder  = isset( $args['placeholder'] ) ? esc_attr( $args['placeholder'] ) : '';
 		$autocomplete = $args['address_autocomplete'] ? 'gmw-address-autocomplete' : '';
 
-		if ( isset( $_GET[ $url_px . 'address' ] ) && ! empty( $_GET[ $url_px . 'form' ] ) && absint( $args['id'] ) === absint( $_GET[ $url_px . 'form' ] ) ) {
+		if ( isset( $_GET[ $url_px . 'address' ] ) && ! empty( $_GET[ $url_px . 'form' ] ) && absint( $args['id'] ) === absint( $_GET[ $url_px . 'form' ] ) ) { // WPCS: CSRF ok.
 
-			$value = is_array( $_GET[ $url_px . 'address' ] ) ? implode( ' ', $_GET[ $url_px . 'address' ] ) : $_GET[ $url_px . 'address' ]; // WPCS: sanitization ok.
-
+			$value = is_array( $_GET[ $url_px . 'address' ] ) ? implode( ' ', $_GET[ $url_px . 'address' ] ) : $_GET[ $url_px . 'address' ]; // WPCS: sanitization ok CSRF ok.
 			$value = sanitize_text_field( wp_unslash( $value ) );
 
 		} elseif ( '' !== $args['value'] ) {
@@ -245,7 +244,7 @@ class GMW_Search_Form_Helper {
 					continue;
 				}
 
-				$selected = ( isset( $_GET[ $url_px . 'distance' ] ) && $option === $_GET[ $url_px . 'distance' ] ) ? 'selected="selected"' : '';
+				$selected = ( isset( $_GET[ $url_px . 'distance' ] ) && $option === $_GET[ $url_px . 'distance' ] ) ? 'selected="selected"' : ''; // WPCS: CSRF ok.
 
 				$output .= '<option value="' . esc_attr( $option ) . '" ' . $selected . '>' . $option . '</option>';
 			}
@@ -291,7 +290,7 @@ class GMW_Search_Form_Helper {
 
 		if ( 'both' === $args['units'] ) {
 
-			$selected = ( isset( $_GET[ $url_px . 'units' ] ) && 'metric' === $_GET[ $url_px . 'units' ] ) ? 'selected="selected"' : '';
+			$selected = ( isset( $_GET[ $url_px . 'units' ] ) && 'metric' === $_GET[ $url_px . 'units' ] ) ? 'selected="selected"' : ''; // WPCS: CSRF ok.
 
 			$output  = '<select name="' . $url_px . 'units" id="gmw-units-' . $id . '" class="gmw-form-field units ' . esc_attr( $args['class'] ) . '">';
 			$output .= '<option value="imperial" selected="selected">' . esc_attr( $args['mi_label'] ) . '</option>';
@@ -398,10 +397,10 @@ class GMW_Search_Form_Helper {
 		$per_page = esc_attr( $per_page );
 		$url_px   = gmw_get_url_prefix();
 		$url_px   = esc_attr( $url_px );
-		$lat      = ! empty( $_GET[ $url_px . 'lat' ] ) ? sanitize_text_field( wp_unslash( $_GET[ $url_px . 'lat' ] ) ) : '';
-		$lng      = ! empty( $_GET[ $url_px . 'lng' ] ) ? sanitize_text_field( wp_unslash( $_GET[ $url_px . 'lng' ] ) ) : '';
-		$state    = ! empty( $_GET['state'] ) ? sanitize_text_field( wp_unslash( $_GET['state'] ) ) : false;
-		$country  = ! empty( $_GET['country'] ) ? sanitize_text_field( wp_unslash( $_GET['country'] ) ) : false;
+		$lat      = ! empty( $_GET[ $url_px . 'lat' ] ) ? sanitize_text_field( wp_unslash( $_GET[ $url_px . 'lat' ] ) ) : ''; // WPCS: CSRF ok.
+		$lng      = ! empty( $_GET[ $url_px . 'lng' ] ) ? sanitize_text_field( wp_unslash( $_GET[ $url_px . 'lng' ] ) ) : ''; // WPCS: CSRF ok.
+		$state    = ! empty( $_GET['state'] ) ? sanitize_text_field( wp_unslash( $_GET['state'] ) ) : false; // WPCS: CSRF ok.
+		$country  = ! empty( $_GET['country'] ) ? sanitize_text_field( wp_unslash( $_GET['country'] ) ) : false; // WPCS: CSRF ok.
 
 		// generate fields.
 		$output = "<div id=\"gmw-submission-fields-{$id}\" class=\"gmw-submission-fields\" data-form_id=\"{$id}\" style=\"display:none\">";
