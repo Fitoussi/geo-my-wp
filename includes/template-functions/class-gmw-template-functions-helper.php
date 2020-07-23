@@ -385,6 +385,8 @@ class GMW_Template_Functions_Helper {
 
 			$selected = $selected_value === $value ? 'selected="selected"' : '';
 
+			$label = apply_filters( 'gmw_get_orderby_filter_single_label', $label, $args, $options );
+
 			$output .= '<option value="' . trim( $option ) . '" ' . $selected . '>' . esc_html( $label ) . '</option>';
 		}
 
