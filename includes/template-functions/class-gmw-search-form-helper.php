@@ -423,7 +423,7 @@ class GMW_Search_Form_Helper {
 		$disabled = ! $country ? 'disabled="disabled"' : '';
 		$output  .= "<input type=\"hidden\" id=\"gmw-country-{$id}\" class=\"gmw-country\" name=\"country\" value=\"{$country}\" {$disabled}/>";
 
-		$output = apply_filters( 'gmw_submission_fields', $output );
+		$output = apply_filters( 'gmw_submission_fields', $output, $id, $_GET ); // WPCS: CSRF ok.
 
 		$output .= '</div>';
 
