@@ -122,7 +122,7 @@ var GMW = {
         }
 
         // run form functions only when a form is present on the page
-        if ( jQuery( 'div.gmw-form-wrapper, ul.gmw-form-wrapper' ).length ) {
+        if ( jQuery( 'div.gmw-form-wrapper, ul.gmw-form-wrapper, form.gmw-form' ).length ) {
             GMW.form_functions();
         }
 
