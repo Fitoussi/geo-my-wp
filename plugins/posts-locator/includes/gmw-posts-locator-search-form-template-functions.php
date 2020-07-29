@@ -120,10 +120,15 @@ class GMW_PT_Search_Form_Helper {
 			include_once GMW_PT_PATH . '/includes/class-gmw-post-category-walker.php';
 		}
 
-		$output = '';
+		$output       = '';
+		$wrap_element = apply_filters( 'gmw_search_form_enable_field_wrapping_element', false, 'taxonomy' );
 
 		// if dropdown style taxonomies.
 		if ( 'dropdown' === $args['usage'] ) {
+
+			if ( $wrap_element ) {
+				$output .= '<div class="gmw-form-field-input-wrapper">';
+			}
 
 			// select tag.
 			$output .= "<select name=\"tax[{$tax_name}][]\" id=\"{$tax_name}-taxonomy-{$id}\" class=\"gmw-form-field gmw-taxonomy {$tax_name}\">";
@@ -144,9 +149,22 @@ class GMW_PT_Search_Form_Helper {
 			// closing select tag.
 			$output .= '</select>';
 
+			if ( $wrap_element ) {
+				$output .= '</div>';
+			}
+
 			// Filter to generate your custom style.
 		} else {
-			$output = apply_filters( 'gmw_generate_' . $args['usage'] . '_taxonomy', $output, $tax_args, $taxonomy );
+
+			if ( $wrap_element ) {
+				$output .= '<div class="gmw-form-field-input-wrapper">';
+			}
+
+			$output .= apply_filters( 'gmw_generate_' . $args['usage'] . '_taxonomy', $output, $tax_args, $taxonomy );
+
+			if ( $wrap_element ) {
+				$output .= '</div>';
+			}
 		}
 
 		return $output;
