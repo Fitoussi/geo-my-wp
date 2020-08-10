@@ -695,7 +695,8 @@ function gmw_get_member_xprofile_fields( $member_id = 0, $fields = array() ) {
 		$field_data  = new BP_XProfile_Field( $field_id );
 		$field_value = xprofile_get_field_data( $field_id, $member_id );
 
-		if ( empty( $field_value ) ) {
+		// verify field.
+		if ( empty( $field_data->id ) || empty( $field_value ) ) {
 			continue;
 		}
 
