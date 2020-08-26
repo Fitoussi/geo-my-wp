@@ -104,9 +104,9 @@ if ( ! class_exists( 'GMW_Export' ) ) :
 			$cols = $this->get_csv_cols();
 			$i    = 1;
 
-			foreach( $cols as $col_id => $column ) {
+			foreach ( $cols as $col_id => $column ) {
 				echo '"' . addslashes( $column ) . '"';
-				echo $i == count( $cols ) ? '' : ',';
+				echo count( $cols ) === $i  ? '' : ',';
 				$i++;
 			}
 			echo "\r\n";
@@ -149,7 +149,7 @@ if ( ! class_exists( 'GMW_Export' ) ) :
 			$data = $this->get_data();
 			$cols = $this->get_csv_cols();
 
-			// Output each row
+			// Output each row.
 			foreach ( $data as $row ) {
 
 				$i = 1;
@@ -159,7 +159,7 @@ if ( ! class_exists( 'GMW_Export' ) ) :
 					// Make sure the column is valid.
 					if ( array_key_exists( $col_id, $cols ) ) {
 						echo '"' . addslashes( $column ) . '"';
-						echo $i == count( $cols ) ? '' : ',';
+						echo count( $cols ) === $i ? '' : ',';
 						$i++;
 					}
 				}
