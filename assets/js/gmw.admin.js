@@ -210,6 +210,43 @@ jQuery( document ).ready( function( jQuery ) {
 	            }                   
 	        } );
 
+	       	// Taxonomies sort and toggle.
+	       	// For Premium Settings and Global Maps extensions.
+			jQuery( '#search_form-taxonomies-tr .taxonomy-wrapper .taxonomy-header' ).off( 'click' ).on( 'click', function() {
+
+				var taxonomy = jQuery( this ).closest( '.taxonomy-wrapper' );
+				var taxId    = taxonomy.closest( 'div' ).attr( 'id' );
+
+				// hide all taxonomies
+				jQuery( '#search_form-taxonomies-tr .taxonomy-wrapper .taxonomy-settings:not( #' + taxId + ')' ).slideUp( 'fast' );
+				// show selected taxonomies group
+				taxonomy.find( '.taxonomy-settings:hidden' ).slideDown();
+			});
+
+			jQuery( '#search_form-taxonomies-tr' ).find( 'select.taxonomy-usage' ).change( function() {
+				jQuery( this ).closest( '.taxonomy-settings-table-wrapper' ).attr( 'data-type', jQuery( this ).val() );
+			});
+
+			if ( jQuery().sortable ) {
+				// sortable taxonomies
+				jQuery( "#taxonomies-wrapper" ).sortable({
+					items:'.taxonomy-wrapper',
+			        opacity: 0.5,
+			        cursor: 'move',
+			        axis: 'y',
+			        handle:'.gmw-taxonomy-sort-handle'
+			    });
+
+			    // sortable custom fields
+				jQuery( "#custom-fields-holder" ).sortable({
+					items:'.single-custom-field-wrapper',
+			        opacity: 0.5,
+			        cursor: 'move',
+			        axis: 'y',
+			        handle:'.custom-field-handle'
+			    });
+			}
+
 	        // on form submission
 	        jQuery( '.gmw-edit-form' ).on( 'submit', function( e ) {
 
