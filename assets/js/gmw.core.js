@@ -1103,31 +1103,40 @@ var GMW = {
 
         var date_fields = jQuery( '.gmw-date-field' );
         var time_fields = jQuery( '.gmw-time-field' );
+        var options     = {};
 
         if ( date_fields.length > 0 && typeof jQuery.fn.pickadate !== 'undefined') {
          
             date_fields.each( function() {
+                
                 var date_type = jQuery( this ).data( 'date_type' );
-                jQuery( this ).pickadate({
-                    //formatSubmit: 'yyyy/mm/dd',
-                    format : date_type || 'yyyy/mm/dd',
-                    //formatSubmit : 'yyyy/mm/dd',
-                    //hiddenName: true
-                });
+                    options   = GMW.apply_filters( 'gmw_date_custom_field_options', {
+	                	editable : true,
+	                    format   : date_type || 'yyyy/mm/dd',
+	                    //formatSubmit : 'yyyy/mm/dd',
+	                    //formatSubmit : 'yyyy/mm/dd',
+	                    //hiddenName   : true
+	                },
+	                jQuery( this )
+               	);
+                jQuery( this ).pickadate( options );
             });
         }
 
         if ( time_fields.length > 0 && typeof jQuery.fn.pickatime !== 'undefined') {
             
             time_fields.each( function() {
-                //var date_type = jQuery( this ).data( 'date_type' );
-                jQuery( this ).pickatime({
-                    interval: 1
-                    //formatSubmit: 'yyyy/mm/dd',
-                    //format : date_type || 'yyyy/mm/dd',
-                    //formatSubmit : 'yyyy/mm/dd',
-                    //hiddenName: true
-                });
+
+	        	options = GMW.apply_filters( 'gmw_time_custom_field_options', {
+	                	interval : 1
+	                    //formatSubmit : 'yyyy/mm/dd',
+	                    //format       : date_type || 'yyyy/mm/dd',
+	                    //formatSubmit : 'yyyy/mm/dd',
+	                    //hiddenName   : true
+	                },
+	                jQuery( this )
+	            );
+                jQuery( this ).pickatime( options );
             });
         }
     },
