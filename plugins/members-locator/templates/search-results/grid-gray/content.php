@@ -102,7 +102,7 @@
 								<?php gmw_search_results_directions_link( $member, $gmw ); ?>
 
 								<?php do_action( 'bp_directory_members_item' ); ?>
-
+								<?php do_action( 'gmw_fl_search_results_member_items', $gmw, $member ); ?>
 							</div>
 
 							<div class="bottom-wrapper">
