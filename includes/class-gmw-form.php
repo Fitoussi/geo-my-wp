@@ -162,7 +162,7 @@ class GMW_Form {
 	 *
 	 * @var string
 	 */
-	public $paged_name = 'page';
+	public $paged_name = 'paged';
 
 	/**
 	 * Show / hide location without location from search results
