@@ -254,6 +254,12 @@ div.gmw-results-wrapper.grid-gray ul.members-list-wrapper li.single-member .addr
 	font-size: 12px;
 }
 
+div.gmw-results-wrapper.grid-gray ul.members-list-wrapper li.single-member .gmw-xprofile-fields {
+	text-align: left;
+	margin: 20px 0;
+	padding: 0 10px;	
+}
+
 div.gmw-results-wrapper.grid-gray ul.members-list-wrapper li.single-member .address-wrapper .address a:link,
 div.gmw-results-wrapper.grid-gray ul.members-list-wrapper li.single-member .address-wrapper .address a:visited {
 	color: white;
