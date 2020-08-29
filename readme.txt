@@ -3,9 +3,9 @@ Contributors: ninjew, Eyal Fitoussi
 Donate link: https://www.paypal.me/fitoussi
 Tags: Geolocation, Directory, Store Locator, Google Maps, OpenStreetMaps, LeafLet, Geotagging, Geocode, Mapping, Proximity search, Zipcode, Geotag posts, Address search, Distance, Directions, Locations, Geo, Members locator, Geotag members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
 Requires at least: 4.5
-Tested up to: 5.4.2
+Tested up to: 5.5
 BuddyPress: 2.8
-Stable tag: 3.6
+Stable tag: 3.6.1
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,31 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 3.6.1 =
+
+* Note that version 3.2 was a major release. If you are updating from an earlier version, then backing up your site and/or testing this version on a staging environment first is recommended. See the changelog of version 3.2 for more details before updating.
+*
+* --------------------------------
+* Fix: pagination conflict with WordPress 5.5.
+* Fix: issue with CSV exported generates an extra blank column.
+* Fix: Xprofile Fields do not show in the Members Locator search results due to a missing action hook.
+* Fix: pass the correct success message when using the different auto locator options.
+* Fix: Double escaping of the value when using set_cookie() caused for wrong encoding.
+* Fix: PHP error. Replace duplicated public $user_position with public $displayed_name;
+* Tweak rename filter 'gmw_search_results_post_excerpt' to 'gmw_search_results_post_excerpt_output'.
+* Tweak: verify that a profile field exists before tempting to display it in the Members Locator search results.
+* Tweak: use the 'form.gmw-form' CSS class when initiating the form_submission JavaScript function to prevent issues when using a custom search form template file and the '.gmw-form-wrapper' class is missing.
+* Tweak: move the object_type filter of the search query from the WHERE to the JOIN clause.
+* Tweak: use the filter 'gmw_disable_query_clause_between' to disable the coordinates BETWEEN filter of the search query.
+* Tweak: do not save the user's current location into cookies on page load via PHP by default. This is now done via JS. This can be changed using the filter 'gmw_cl_force_saving_cookies_via_page_load' in case of an issue.
+* Tweak: pass 2 additional argument to the 'gmw_submission_fields' filter: $id which is the form ID and the global $_GET;
+* Tweak: generate a "Showing all locations" search results message when displaying all results in GEO my WP search form.
+* Filter: 'gmw_user_location_cookie_prefix' to modify the  prefix of the user location cookies (  default is 'gmw_ul_'  ).
+* Filter: new JavaScript filters 'gmw_date_custom_field_options' and 'gmw_time_custom_field_options' to modify the date and time picker field options of the custom fields filters.
+* Filter: use the filter 'gmw_search_form_enable_field_wrapping_element' to enable a wrapping element for each taxonomy element inside the search form.
+* Filter: 'gmw_get_orderby_filter_single_label' to modify the label of each label of the sort-by options.
+* Filter: 'gmw_search_results_post_excerpt_output' to modify the excerpt output.
 
 = 3.6 =
 
