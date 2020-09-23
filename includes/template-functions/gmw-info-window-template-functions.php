@@ -176,6 +176,78 @@ function gmw_info_window_directions_system( $object, $gmw = array() ) {
 }
 
 /**
+ * Get the location title in the info window.
+ *
+ * @since 3.6.2
+ *
+ * @author Eyal Fitoussi
+ *
+ * @param  string $title  original title.
+ * @param  object $object location object.
+ * @param  array  $gmw    gmw form.
+ *
+ * @return string         title.
+ */
+function gmw_get_info_window_title( $title, $object, $gmw ) {
+
+	if ( ! empty( $gmw['info_window']['show_location_name_in_title'] ) && ! empty( $object->location_name ) && $object->location_name !== $title ) {
+		$title .= ' - ' . esc_html( $object->location_name );
+	}
+
+	// append the address to the permalink.
+	return esc_html( apply_filters( "gmw_{$gmw['prefix']}_get_iw_location_title", $title, $object, $gmw ) );
+}
+
+/**
+ * Output the location title in the info window.
+ *
+ * @since 3.6.2
+ *
+ * @author Eyal Fitoussi
+ *
+ * @param  string $title  title.
+ * @param  object $object location object.
+ * @param  array  $gmw    gmw form.
+ */
+function gmw_info_window_title( $title, $object, $gmw ) {
+	echo gmw_get_info_window_title( $title, $object, $gmw ); // WPCS: XSS ok.
+}
+
+/**
+ * Get the location permalink in the info window.
+ *
+ * Modify the pemalink and append it with some location data.
+ *
+ * @since 3.6.2
+ *
+ * @author Eyal Fitoussi
+ *
+ * @param  string $url    original permalink.
+ * @param  object $object location object.
+ * @param  array  $gmw    gmw form.
+ *
+ * @return string         modified permalink.
+ */
+function gmw_get_info_window_permalink( $url, $object, $gmw ) {
+	return gmw_get_search_results_permalink( $url, $object, $gmw );
+}
+
+/**
+ * Display the location permalink in the info window.
+ *
+ * @since 3.6.2
+ *
+ * @author Eyal Fitoussi
+ *
+ * @param  string $url    original permalink.
+ * @param  object $object location object.
+ * @param  array  $gmw    gmw form.
+ */
+function gmw_info_window_permalink( $url, $object, $gmw ) {
+	echo gmw_get_info_window_permalink( $url, $object, $gmw ); // WPCS: XSS ok.
+}
+
+/**
  * Posts locator iw functions
  */
 if ( gmw_is_addon_active( 'posts_locator' ) ) {
