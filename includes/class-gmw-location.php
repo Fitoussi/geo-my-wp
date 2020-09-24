@@ -516,7 +516,7 @@ class GMW_Location {
 	/**
 	 * Get location from database by location ID.
 	 *
-	 * @param  integer  $location_id location ID
+	 * @param  integer  $location_id location ID.
 	 * @param  constant $output      OBJECT || ARRAY_A || ARRAY_N  the output type of the location data
 	 * @param  boolean  $cache       Look for location in cache
 	 *
@@ -543,7 +543,7 @@ class GMW_Location {
 			$location = $wpdb->get_row(
 				$wpdb->prepare(
 					"
-					SELECT *, latitude as lat, longitude as lng
+					SELECT *, latitude as lat, longitude as lng, title as location_name, featured as featured_location
 	            	FROM   $table
 	            	WHERE  ID = %d",
 					$location_id
@@ -627,7 +627,7 @@ class GMW_Location {
 			$location = $wpdb->get_row(
 				$wpdb->prepare(
 					"
-					SELECT *, latitude as lat, longitude as lng
+					SELECT *, latitude as lat, longitude as lng, title as location_name, featured as featured_location
 		            FROM   $table
 		            WHERE  blog_id     = %d 
 		            AND    object_type = %s 
@@ -731,7 +731,7 @@ class GMW_Location {
 			$locations = $wpdb->get_results(
 				$wpdb->prepare(
 					"
-					SELECT *, latitude as lat, longitude as lng
+					SELECT *, latitude as lat, longitude as lng, title as location_name, featured as featured_location
 		            FROM   $table
 		            WHERE  blog_id     = %d 
 		            AND    object_type = %s 
