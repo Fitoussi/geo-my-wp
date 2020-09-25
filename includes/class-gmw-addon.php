@@ -616,7 +616,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 					// activate addon when WordPress plugin activated
 					// register_activation_hook( $this->full_path, array( $this, 'activate_addon' ) );
 					// deactivate addon when WordPress plugin deactivated
-					// register_deactivation_hook( $this->full_path, array( $this, 'deactivate_addon' ) );
+					register_deactivation_hook( $this->full_path, array( $this, 'deactivate_addon' ) );
 					// run installer.
 					// check for add-ons data if missing, when probably first installed, or if plugin updated
 					$this->installer();
@@ -1002,10 +1002,10 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		 *
 		 * @return [type] [description]
 		 */
-		/*
+		
 		public function deactivate_addon() {
 			gmw_update_addon_status( $this->slug, 'inactive' );
-		}*/
+		}
 
 		/**
 		 * When plugin first installed or updated.
