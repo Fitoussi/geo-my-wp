@@ -87,7 +87,7 @@ class GMW_Locations_Table_Export extends GMW_Export {
 		global $wpdb;
 
 		$locations = $wpdb->get_results(
-			"SELECT * FROM {$wpdb->prefix}gmw_locations",
+			"SELECT * FROM {$wpdb->base_prefix}gmw_locations",
 			ARRAY_A
 		); // WPCS: cache ok, db call ok.
 
@@ -147,7 +147,7 @@ class GMW_Locationmeta_Table_Export extends GMW_Export {
 		global $wpdb;
 
 		$locationmeta = $wpdb->get_results(
-			"SELECT * FROM {$wpdb->prefix}gmw_locationmeta",
+			"SELECT * FROM {$wpdb->base_prefix}gmw_locationmeta",
 			ARRAY_A
 		); // WPCS: db call ok, cache ok.
 
