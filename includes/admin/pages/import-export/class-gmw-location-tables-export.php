@@ -126,8 +126,8 @@ class GMW_Locationmeta_Table_Export extends GMW_Export {
 		$cols = array(
 			'meta_id'     => 'meta_id',
 			'location_id' => 'location_id',
-			'meta_key'    => 'meta_key',
-			'meta_value'  => 'meta_value',
+			'meta_key'    => 'meta_key', // WPCS: slow query ok.
+			'meta_value'  => 'meta_value', // WPCS: slow query ok.
 		);
 
 		return $cols;
