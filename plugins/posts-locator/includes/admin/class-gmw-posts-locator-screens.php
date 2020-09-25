@@ -51,7 +51,7 @@ class GMW_Posts_Locator_Screens {
 				add_action( 'add_meta_boxes_' . $post_type, array( $this, 'add_meta_box' ), 10 );
 
 				// filters fires when location updated.
-				add_filter( 'gmw_lf_post_location_args_before_location_updated', array( $this, 'get_post_title' ) );
+				add_filter( 'gmw_lf_post_location_args_before_location_updated', array( $this, 'pre_location_update_tasks' ) );
 				add_filter( 'gmw_lf_post_location_meta_before_location_updated', array( $this, 'verify_location_meta' ), 10, 3 );
 
 				// these action fire functions responsible for a fix where posts status wont change from pending to publish.
@@ -290,18 +290,32 @@ class GMW_Posts_Locator_Screens {
 	}
 
 	/**
-	 * Get the post title to save as location title before location saved
+	 * Run some tasks before location is updated.
 	 *
 	 * @param  object $location the location object.
 	 *
 	 * @return [type]           [description]
 	 */
-	public function get_post_title( $location ) {
+	public function pre_location_update_tasks( $location ) {
 
 		$title = get_the_title( $location['object_id'] );
 
+		// Get post title if missing.
 		if ( ! empty( $title ) ) {
 			$location['title'] = $title;
+		}
+
+		// Try and get the location ID if does not already exist.
+		// This fix takes care of an issue with the Gutenberg editor which does not reload the page when the post is first created.
+		// Because of that, the location ID does not exist in the hidden fields of the location form
+		// and the plugin create a new location each time the post is updated after it was initialy creation and before the page was refreshed at least once.
+		if ( empty( $location['ID'] ) && ! empty( $_POST['post_ID'] ) ) { // WPCS CSRF ok.
+
+			$location_id = gmw_get_location_id( 'post', absint( $_POST['post_ID'] ) ); // WPCS: CSRF ok.
+
+			if ( ! empty( $location_id ) ) {
+				$location['ID'] = $location_id;
+			}
 		}
 
 		return $location;
