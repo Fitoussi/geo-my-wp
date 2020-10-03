@@ -233,6 +233,7 @@ function gmw_get_user_location_data( $id = 0, $by_location_id = false ) {
 				'gmw.country_code',
 				'gmw.country_name',
 				'featured',
+				'title as location_name',
 				'users.ID as user_id',
 				'users.user_login',
 				'users.user_nicename',
