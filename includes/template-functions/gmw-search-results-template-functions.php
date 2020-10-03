@@ -9,7 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-
 /**
  * Display address fields in search results
  *
@@ -239,8 +238,7 @@ function gmw_search_results_orderby_filter( $gmw = array() ) {
  */
 function gmw_get_search_results_title( $title, $object, $gmw ) {
 
-	if ( ! empty( $gmw['search_results']['show_location_name_in_title'] ) && ! empty( $object->location_name ) && $object->location_name !== $title ) {
-
+	if ( apply_filters( 'gmw_results_title_location_name_enabled', false ) && ! empty( $object->location_name ) && $object->location_name !== $title ) {
 		$title .= ' - ' . esc_html( $object->location_name );
 	}
 
