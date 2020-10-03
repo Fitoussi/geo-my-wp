@@ -1418,7 +1418,7 @@ ul.gmw-geocoder-suggested-results li {
 		margin: 0 auto;
 		//width: 100% !important;
 		max-width: 100% !important;
-		padding: 2px 0 0 0;
+		padding: 2px 1px 2px;
 		-webkit-box-sizing: border-box; 
 		-moz-box-sizing: border-box;    
 		box-sizing: border-box;
@@ -2349,19 +2349,20 @@ ul.gmw-geocoder-suggested-results li {
 
 	div.gmw-single-location-wrapper,
 	.widget div.gmw-single-location-wrapper {
-		padding: 15px;
-		background: #fff;
-		margin-bottom: 15px;
-		border: 1px solid #e5e5e5;
-		border-radius: 3px;
-		box-sizing: border-box;
+		display: inline-block;
+		background: white;
+		padding: 15px 25px;
+		border: 1px solid #e1e8ed;
+		border-radius: 4px;
+		margin-bottom: 16px;
 	}
 
 	div.gmw-single-location-wrapper a:link,
 	div.gmw-single-location-wrapper a:visited,
 	.widget div.gmw-single-location-wrapper a:link,
 	.widget div.gmw-single-location-wrapper a:visited {
-		//color: lightseagreen;
+		text-decoration: none;
+		border-bottom: none;
 	}
 
 	div.gmw-single-location-wrapper i[class*="gmw-icon-"],
@@ -2374,9 +2375,9 @@ ul.gmw-geocoder-suggested-results li {
 
 	div.gmw-single-location-wrapper h3.gmw-sl-title,
 	.widget div.gmw-single-location-wrapper h3.gmw-sl-title {
-		margin:1px 0px 10px;
-		padding:8px 10px;
-		border-bottom: 1px solid #ededed;	
+		margin: 1px 0 16px;
+		padding: 8px 0px;
+		border-bottom: 1px solid #e1e8ed;
 	}
 
 	div.gmw-single-location-wrapper h3.gmw-sl-title a,
@@ -2389,12 +2390,31 @@ ul.gmw-geocoder-suggested-results li {
 	div.gmw-single-location-wrapper .gmw-sl-directions-link-wrapper,
 	div.gmw-single-location-wrapper .gmw-sl-directions-trigger-wrapper,
 	div.gmw-single-location-wrapper .gmw-sl-additional-info-wrapper,
-	div.gmw-single-location-wrapper .gmw-get-directions-link-wrapper {
-		padding:5px 2px 6px;
-		border-bottom: 1px solid #ededed;
-		line-height: 20px;
-		margin-bottom: 10px;
+	div.gmw-single-location-wrapper .gmw-get-directions-link-wrapper,
+	div.gmw-single-location-wrapper .gmw-map-wrapper.single_location {
+		font-size: 14px;
+		display: table;
+		width: 100%;
+		line-height: 22px;
+		margin-bottom: 12px;
+	}
+
+	div.gmw-single-location-wrapper .gm-style .gm-style-iw {
+		max-height: 200px ! important;
+		overflow-y: scroll;
+	}
+
+	div.gmw-single-location-wrapper .gmw-info-window .gmw-sl-address,
+	div.gmw-single-location-wrapper .gmw-info-window .gmw-sl-distance,
+	div.gmw-single-location-wrapper .gmw-info-window .gmw-sl-directions-link-wrapper,
+	div.gmw-single-location-wrapper .gmw-info-window .gmw-sl-directions-trigger-wrapper,
+	div.gmw-single-location-wrapper .gmw-info-window .gmw-sl-additional-info-wrapper,
+	div.gmw-single-location-wrapper .gmw-info-window .gmw-get-directions-link-wrapper,
+	div.gmw-single-location-wrapper .gmw-info-window .gmw-map-wrapper.single_location {
 		font-size: 12px;
+		line-height: 18px;
+		margin-bottom: 0px;
+		text-align: center;
 	}
 
 	div.gmw-single-location-wrapper div.gmw-sl-address i.gmw-location-icon,
@@ -2437,7 +2457,8 @@ ul.gmw-geocoder-suggested-results li {
 	/***** info window  *****/
 
 	.gm-style-iw div:first-child div.gmw-sl-iw-wrapper {
-		//padding: 5px;
+		width: 100%;
+		box-sizing: border-box;
 	}
 
 	.gm-style-iw div.gmw-sl-iw-wrapper div {
