@@ -367,16 +367,25 @@ class GMW_Posts_Locator_Screens {
 	 * This way in the next function we can chnage the post status manually to publish.
 	 */
 	public function add_hidden_status_field() {
+
+		$pods_enabled = class_exists( 'PodsAdmin' ) ? true : false;
 		?>
 		<script type="text/javascript">
 
 			jQuery( 'document' ).ready( function( $ ) {
 
+				if ( <?php echo $pods_enabled; ?> == true ) {
+
+					GMW.add_filter( 'gmw_location_form_prevent_form_submission', function() {
+						return false;
+					});
+				}
+
 				if ( $( 'form[name="post"]' ).length ) {
 
 					$( 'form[name="post"]' ).append( '<input type="hidden" value="" name="gmw_post_published" id="gmw_post_published" />' );
 
-					$( 'form[name="post"]' ).find( 'input#publish[name="publish"][type="submit"][id="publish"]' ).on( 'click', function() {
+					$( 'form[name="post"]' ).find( 'input#publish[name="publish"][type="submit"][id="publish"], input#publish[name="save"][type="submit"][id="publish"]' ).on( 'click', function() {
 						$( '#gmw_post_published' ).val( '1' );
 					});
 				}
