@@ -54,6 +54,8 @@ class GMW_Single_Location {
 		'user_info_window'       => 'Your Location',
 		'no_location_message'    => 0,
 		'disable_linked_address' => 0,
+		'css_class'              => '',
+		'css_id'                 => '',
 		/** 'is_widget'            => 0,
 		// 'widget_title'         => 0, */
 	);
@@ -365,8 +367,11 @@ class GMW_Single_Location {
 			$display = 'style="display:inline-block"';
 		}
 
+		$css_class = esc_attr( 'gmw-single-location-wrapper gmw-sl-wrapper gmw-sl-single-' . $this->args['object'] . '-wrapper ' . $this->args['object'] . ' ' . $this->args['css_class'] );
+		$css_id    = ! empty( $this->args['css_id'] ) ? $this->args['css_id'] : 'gmw-single-location-wrapper-' . $this->args['element_id'];
+
 		// generate the elements array.
-		$this->elements['element_wrap_start'] = '<div id="gmw-single-location-wrapper-' . esc_attr( $this->args['element_id'] ) . '" class="gmw-single-location-wrapper gmw-sl-wrapper ' . esc_attr( $this->args['object'] ) . ' gmw-single-' . esc_attr( $this->args['object'] ) . '-sc-wrapper" ' . $display . '>';
+		$this->elements['element_wrap_start'] = '<div id="' . esc_attr( $css_id ) . '" class="' . $css_class . '" object_type="' . esc_attr( $this->args['object'] ) . '" object_id="' . esc_attr( $this->args['object_id'] ) . '" ' . $display . '>';
 
 		/** Check if this is widget and we use widget title */
 		/** If ( $this->args['is_widget'] && ! empty( $this->args['widget_title'] ) ) {
