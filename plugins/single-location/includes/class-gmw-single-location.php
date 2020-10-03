@@ -23,6 +23,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 class GMW_Single_Location {
 
 	/**
+	 * Add on being used.
+	 *
+	 * @var string
+	 */
+	protected $addon = '';
+
+	/**
 	 * Array of Incoming arguments
 	 *
 	 * @var array
@@ -760,10 +767,15 @@ class GMW_Single_Location {
 			return false;
 		}
 
-		$contact_info = explode( ',', $this->args['location_meta'] );
+		$contact_info  = explode( ',', $this->args['location_meta'] );
+		$location_meta = gmw_get_location_meta_list( $location->ID, $contact_info );
+
+		if ( empty( $location_meta ) ) {
+			return false;
+		}
 
 		$output  = '<div class="gmw-sl-location-metas gmw-sl-element gmw-sl-additional-info-wrapper">';
-		$output .= gmw_get_location_meta_list( $location->ID, $contact_info );
+		$output .= $location_meta;
 		$output .= '</div>';
 
 		// for older version - to be removed.
