@@ -575,7 +575,9 @@ var GMW_Location_Form = {
 
 			if ( ! this_form.proceed_submission ) {
 
-				event.preventDefault();
+				if ( true === GMW.apply_filters( 'gmw_location_form_prevent_form_submission', true, this_form ) ) {
+					event.preventDefault();
+				}
 
 				if ( this_form.vars.auto_confirm ) {
 
