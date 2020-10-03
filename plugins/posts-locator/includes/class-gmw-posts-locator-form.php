@@ -208,7 +208,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 					// Otherise, we order by the distance only.
 				} elseif ( 'distance' === $this->form['query_args']['orderby'] ) {
 
-					$clauses['orderby'] = 'distance';
+					$clauses['orderby'] = ! empty( $this->form['query_args']['order'] ) ? 'distance ' . $this->form['query_args']['order'] : 'distance';
 				}
 			}
 		} else {
