@@ -1,6 +1,12 @@
 <?php
+/**
+ * GEO my WP - Posts Locator Loader.
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 // abort if register add-on class is not found.
