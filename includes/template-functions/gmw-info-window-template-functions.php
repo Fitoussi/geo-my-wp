@@ -201,13 +201,7 @@ function gmw_info_window_directions_system( $object, $gmw = array() ) {
  * @return string         title.
  */
 function gmw_get_info_window_title( $title, $object, $gmw ) {
-
-	if ( ! empty( $gmw['info_window']['show_location_name_in_title'] ) && ! empty( $object->location_name ) && $object->location_name !== $title ) {
-		$title .= ' - ' . esc_html( $object->location_name );
-	}
-
-	// append the address to the permalink.
-	return esc_html( apply_filters( "gmw_{$gmw['prefix']}_get_iw_location_title", $title, $object, $gmw ) );
+	return gmw_get_search_results_title( $title, $object, $gmw );
 }
 
 /**
