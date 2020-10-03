@@ -258,10 +258,10 @@ function gmw_post_location_form( $args = array() ) {
  *
  * @return object  complete location object
  */
-function gmw_get_post_location( $id = 0, $by_location_id = false ) {
+function gmw_get_post_location( $id = 0, $by_location_id = false, $output = OBJECT, $cache = true ) {
 
 	if ( $by_location_id ) {
-		return gmw_get_location( $id );
+		return gmw_get_location( $id, $output, $cache );
 	}
 
 	// if no specific post ID pass, look for displayed post object.
@@ -279,7 +279,7 @@ function gmw_get_post_location( $id = 0, $by_location_id = false ) {
 	}
 
 	// get post location from database.
-	return gmw_get_location_by_object( 'post', $id );
+	return gmw_get_location_by_object( 'post', $id, $output, $cache );
 }
 
 /**
