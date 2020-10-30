@@ -64,6 +64,10 @@ class GMW_Members_Locator_Location_Tab {
 	 */
 	public function adminbar_nav( $wp_admin_navs = array() ) {
 
+		if ( empty( $wp_admin_navs ) && ! is_array( $wp_admin_navs ) ) {
+			$wp_admin_navs = array();
+		}
+
 		if ( is_user_logged_in() ) {
 
 			// Setup the logged in user variables
