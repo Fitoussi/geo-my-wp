@@ -3,9 +3,9 @@ Contributors: ninjew, Eyal Fitoussi
 Donate link: https://www.paypal.me/fitoussi
 Tags: Geolocation, Directory, Store Locator, Google Maps, OpenStreetMaps, LeafLet, Geotagging, Geocode, Mapping, Proximity search, Zipcode, Geotag posts, Address search, Distance, Directions, Locations, Geo, Members locator, Geotag members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
 Requires at least: 4.5
-Tested up to: 5.5
+Tested up to: 5.5.2
 BuddyPress: 2.8
-Stable tag: 3.6.1
+Stable tag: 3.6.2
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,33 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 3.6.2 =
+
+* Note that version 3.2 was a major release. If you are updating from an earlier version, then backing up your site and/or testing this version on a staging environment first is recommended. See the changelog of version 3.2 for more details before updating.
+*
+* --------------------------------
+* Fix: issue with multiple locations generated for a specific post when Gutenberg is enabled and updating the location of a newly created post multiple times before refreshing the page.
+* Fix: exporting the locations database tables on subsites of a multi-site generate empty tables.
+* Fix: CSS issue with Single Location map size.
+* Fix: a conflict between the Pods plugin and GEO My WP when using the Chrome browser.
+* Functions: new functions gmw_get_info_window_title() and gmw_get_info_window_permalink() to display the location name/title and permalink in the info-window.
+* Tweak: add the DB table column 'title' as 'location_name' and 'featured' as 'featured_location' when retrieving locations from the database.
+* Tweak: deactivate a premium extension when its plugin is deactivated from the Plugins page.
+* Tweak: add the "title" column as "location_name" from the gmw_locations database table to the search query of GEO my WP.
+* Tweak: use the gmw_get_search_results_title() function inside gmw_get_info_window_title().
+* Filter: 'gmw_results_title_location_name_enabled' to enable the location name in the search results title. This can be used when having multiple locations and location name exists.
+* Tweak: add the "order" search query argument to the posts locator search query when ordering by distance.
+* Tweak: pass additional arguments, $output for the output type ( OBJECT, ARRAY ) and $cache ( true or false ), to the function gmw_get_post_location();
+* Tweak: modify default map size of the single location add-on.
+* Tweak: new single location shortcode attributes css_class and css_id to pass CLASS and ID attributes.
+* Tweak: verify that location meta exists before attempting to output it in the single location shortcode.
+* Tweak: update single location styling.
+* Tweak: verify that variable is an array when generating the Location tab in the BP member profile page.
+* Tweak: Added New parseCSV library that will be used when importing CSV files.
+* Tweak: use the parseCSV library when importing CSV files.
+* Tweak: disable the daily_events and hourly_events Cron events.
+* WPCS
 
 = 3.6.1 =
 
