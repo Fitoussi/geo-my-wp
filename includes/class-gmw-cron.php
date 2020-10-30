@@ -51,8 +51,8 @@ class GMW_Cron {
 	 */
 	public function schedule_events() {
 		$this->weekly_events();
-		$this->daily_events();
-		$this->hourly_events();
+		//$this->daily_events();
+		//$this->hourly_events();
 	}
 
 	/**
