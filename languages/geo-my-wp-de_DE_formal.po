@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GEO my WP v2.4.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 11:55-1000\n"
-"PO-Revision-Date: 2020-10-02 11:56-1000\n"
+"POT-Creation-Date: 2020-10-29 15:49-1000\n"
+"PO-Revision-Date: 2020-10-29 15:49-1000\n"
 "Last-Translator: Eyal Fitoussi <fitoussi_eyal@hotmail.com>\n"
 "Language-Team: Deutsch (Sie)\n"
 "Language: de\n"
@@ -668,7 +668,6 @@ msgstr ""
 #: includes/admin/pages/class-gmw-extensions.php:476
 #: includes/admin/pages/class-gmw-form-editor.php:1635
 #: includes/admin/pages/import-export/class-gmw-export.php:184
-#: includes/admin/pages/import-export/gmw-csv-import.php:30
 #: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:592
 #: includes/admin/updater/class-gmw-plugins-updater.php:482
 #: includes/location-form/includes/class-gmw-location-form.php:1180
@@ -1886,28 +1885,9 @@ msgstr "Standorttabellen"
 
 # @ GMW
 #: includes/admin/pages/import-export/class-gmw-import-export-page.php:122
-#: plugins/posts-locator/loader.php:115
+#: plugins/posts-locator/loader.php:121
 msgid "Posts Locator"
 msgstr "Beitragssuche"
-
-#: includes/admin/pages/import-export/gmw-csv-import.php:30
-msgid "You do not have permission to import data."
-msgstr "Sie haben keine Berechtigung zum Importieren von Daten."
-
-#: includes/admin/pages/import-export/gmw-csv-import.php:34
-#: includes/admin/pages/import-export/tabs/forms.php:235
-#: includes/admin/pages/import-export/tabs/gmw-data.php:221
-#: includes/admin/pages/import-export/tabs/location-tables.php:199
-msgid "Please upload a file to import"
-msgstr "Bitte laden Sie eine Datei hoch, die Sie importieren möchten."
-
-#: includes/admin/pages/import-export/gmw-csv-import.php:38
-msgid "You did not provide a database table name."
-msgstr "Sie haben keinen Namen für die Datenbanktabelle angegeben."
-
-#: includes/admin/pages/import-export/gmw-csv-import.php:100
-msgid "Columns in file do not match the database table."
-msgstr "Spalten in der Datei stimmen nicht mit der Datenbanktabelle überein."
 
 #: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:188
 msgid "Searching for locations..."
@@ -2016,6 +1996,12 @@ msgstr "Die Funktion gmw_get_forms existiert nicht."
 #: includes/admin/pages/import-export/tabs/forms.php:182
 msgid "There are no forms to export."
 msgstr "Es gibt keine Formulare zum Exportieren."
+
+#: includes/admin/pages/import-export/tabs/forms.php:235
+#: includes/admin/pages/import-export/tabs/gmw-data.php:221
+#: includes/admin/pages/import-export/tabs/location-tables.php:199
+msgid "Please upload a file to import"
+msgstr "Bitte laden Sie eine Datei hoch, die Sie importieren möchten."
 
 #: includes/admin/pages/import-export/tabs/forms.php:296
 msgid "There were no forms to import."
@@ -3991,7 +3977,7 @@ msgstr "Keine Übereinstimmung der Ergebnisse"
 msgid "Search site"
 msgstr "Website durchsuchen"
 
-#: plugins/posts-locator/loader.php:196
+#: plugins/posts-locator/loader.php:202
 msgid "Post"
 msgstr "Beitrag"
 
@@ -4286,6 +4272,16 @@ msgid ""
 msgstr ""
 "Die Sweet Date Geolocation-Erweiterung erfordert die Members Locator "
 "Kernerweiterung."
+
+#~ msgid "You do not have permission to import data."
+#~ msgstr "Sie haben keine Berechtigung zum Importieren von Daten."
+
+#~ msgid "You did not provide a database table name."
+#~ msgstr "Sie haben keinen Namen für die Datenbanktabelle angegeben."
+
+#~ msgid "Columns in file do not match the database table."
+#~ msgstr ""
+#~ "Spalten in der Datei stimmen nicht mit der Datenbanktabelle überein."
 
 #~ msgid "Location name."
 #~ msgstr "Standortname."

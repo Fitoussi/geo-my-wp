@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: GEO my WP\n"
-"POT-Creation-Date: 2020-10-02 11:54-1000\n"
+"POT-Creation-Date: 2020-10-29 15:48-1000\n"
 "PO-Revision-Date: 2018-03-05 13:18-1000\n"
 "Last-Translator: Eyal Fitoussi <fitoussi_eyal@hotmail.com>\n"
 "Language-Team: Eyal Fitoussi <fitoussi_eyal@hotmail.com>\n"
@@ -1650,7 +1650,7 @@ msgid "Location Tables"
 msgstr ""
 
 #: includes/admin/pages/import-export/class-gmw-import-export-page.php:122
-#: plugins/posts-locator/loader.php:115
+#: plugins/posts-locator/loader.php:121
 msgid "Posts Locator"
 msgstr ""
 
@@ -1669,7 +1669,16 @@ msgstr ""
 msgid "You did not provide a database table name."
 msgstr ""
 
-#: includes/admin/pages/import-export/gmw-csv-import.php:100
+#: includes/admin/pages/import-export/gmw-csv-import.php:46
+msgid "The parseCSV class is missing."
+msgstr ""
+
+#: includes/admin/pages/import-export/gmw-csv-import.php:74
+#, php-format
+msgid "The database table %s is missing"
+msgstr ""
+
+#: includes/admin/pages/import-export/gmw-csv-import.php:80
 msgid "Columns in file do not match the database table."
 msgstr ""
 
@@ -3702,7 +3711,7 @@ msgstr ""
 msgid "Search site"
 msgstr ""
 
-#: plugins/posts-locator/loader.php:196
+#: plugins/posts-locator/loader.php:202
 msgid "Post"
 msgstr ""
 

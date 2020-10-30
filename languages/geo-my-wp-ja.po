@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GEO my WP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 11:55-1000\n"
-"PO-Revision-Date: 2020-10-02 11:55-1000\n"
+"POT-Creation-Date: 2020-10-29 15:48-1000\n"
+"PO-Revision-Date: 2020-10-29 15:48-1000\n"
 "Last-Translator: Eyal Fitoussi <fitoussi_eyal@hotmail.com>\n"
 "Language-Team: 日本語\n"
 "Language: ja\n"
@@ -1797,7 +1797,7 @@ msgid "Location Tables"
 msgstr "位置 テーブル"
 
 #: includes/admin/pages/import-export/class-gmw-import-export-page.php:122
-#: plugins/posts-locator/loader.php:115
+#: plugins/posts-locator/loader.php:121
 msgid "Posts Locator"
 msgstr "投稿 ロケーター"
 
@@ -1816,7 +1816,16 @@ msgstr "インポートファイルをアップロードして下さい。"
 msgid "You did not provide a database table name."
 msgstr "データベースのテーブル名が提供されていません。"
 
-#: includes/admin/pages/import-export/gmw-csv-import.php:100
+#: includes/admin/pages/import-export/gmw-csv-import.php:46
+msgid "The parseCSV class is missing."
+msgstr ""
+
+#: includes/admin/pages/import-export/gmw-csv-import.php:74
+#, php-format
+msgid "The database table %s is missing"
+msgstr ""
+
+#: includes/admin/pages/import-export/gmw-csv-import.php:80
 msgid "Columns in file do not match the database table."
 msgstr "ファイルの列と、データベーステーブルが一致しません。"
 
@@ -3982,7 +3991,7 @@ msgstr "一致する結果は、ありません。"
 msgid "Search site"
 msgstr "検索サイト"
 
-#: plugins/posts-locator/loader.php:196
+#: plugins/posts-locator/loader.php:202
 msgid "Post"
 msgstr "投稿"
 

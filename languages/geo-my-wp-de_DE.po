@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GEO my WP v2.4.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 11:55-1000\n"
-"PO-Revision-Date: 2020-10-02 11:55-1000\n"
+"POT-Creation-Date: 2020-10-29 15:49-1000\n"
+"PO-Revision-Date: 2020-10-29 15:49-1000\n"
 "Last-Translator: Eyal Fitoussi <fitoussi_eyal@hotmail.com>\n"
 "Language-Team: Eyal Fitoussi <info@geomywp.com>\n"
 "Language: de_DE\n"
@@ -591,7 +591,6 @@ msgstr ""
 #: includes/admin/pages/class-gmw-extensions.php:476
 #: includes/admin/pages/class-gmw-form-editor.php:1635
 #: includes/admin/pages/import-export/class-gmw-export.php:184
-#: includes/admin/pages/import-export/gmw-csv-import.php:30
 #: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:592
 #: includes/admin/updater/class-gmw-plugins-updater.php:482
 #: includes/location-form/includes/class-gmw-location-form.php:1180
@@ -1666,29 +1665,10 @@ msgstr ""
 
 # @ GMW
 #: includes/admin/pages/import-export/class-gmw-import-export-page.php:122
-#: plugins/posts-locator/loader.php:115
+#: plugins/posts-locator/loader.php:121
 #, fuzzy
 msgid "Posts Locator"
 msgstr "Beitragstyp"
-
-#: includes/admin/pages/import-export/gmw-csv-import.php:30
-msgid "You do not have permission to import data."
-msgstr ""
-
-#: includes/admin/pages/import-export/gmw-csv-import.php:34
-#: includes/admin/pages/import-export/tabs/forms.php:235
-#: includes/admin/pages/import-export/tabs/gmw-data.php:221
-#: includes/admin/pages/import-export/tabs/location-tables.php:199
-msgid "Please upload a file to import"
-msgstr ""
-
-#: includes/admin/pages/import-export/gmw-csv-import.php:38
-msgid "You did not provide a database table name."
-msgstr ""
-
-#: includes/admin/pages/import-export/gmw-csv-import.php:100
-msgid "Columns in file do not match the database table."
-msgstr ""
 
 #: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:188
 msgid "Searching for locations..."
@@ -1787,6 +1767,12 @@ msgstr ""
 
 #: includes/admin/pages/import-export/tabs/forms.php:182
 msgid "There are no forms to export."
+msgstr ""
+
+#: includes/admin/pages/import-export/tabs/forms.php:235
+#: includes/admin/pages/import-export/tabs/gmw-data.php:221
+#: includes/admin/pages/import-export/tabs/location-tables.php:199
+msgid "Please upload a file to import"
 msgstr ""
 
 #: includes/admin/pages/import-export/tabs/forms.php:296
@@ -3684,7 +3670,7 @@ msgstr ""
 msgid "Search site"
 msgstr ""
 
-#: plugins/posts-locator/loader.php:196
+#: plugins/posts-locator/loader.php:202
 msgid "Post"
 msgstr ""
 
