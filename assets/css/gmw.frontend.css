@@ -324,7 +324,7 @@ div.gmw-map img {
 div.gmw-map-wrapper {
 	position: relative;
 	background: #f7f5e8;
-	//display: inline-block;
+	display: block;
 }
 
 div.gmw-map-wrapper.gmw-map-frame {
@@ -2397,6 +2397,10 @@ ul.gmw-geocoder-suggested-results li {
 		width: 100%;
 		line-height: 22px;
 		margin-bottom: 12px;
+	}
+
+	div.gmw-single-location-wrapper .gmw-map-wrapper.single_location {
+		display: inline-block;
 	}
 
 	div.gmw-single-location-wrapper .gm-style .gm-style-iw {
