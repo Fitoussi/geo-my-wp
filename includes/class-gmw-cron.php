@@ -1,4 +1,12 @@
 <?php
+/**
+ * GEO my WP GMW_Cron class.
+ *
+ * Cron tasks.
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
