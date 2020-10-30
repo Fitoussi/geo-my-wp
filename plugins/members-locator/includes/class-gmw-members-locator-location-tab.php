@@ -1,5 +1,15 @@
 <?php
-// Exit if accessed directly
+/**
+ * GEO my WP - BP Memebr PRofile Page Location Tab
+ *
+ * Generates the proximity search forms.
+ *
+ * This class should be extended for different object types.
+ *
+ * @package geo-my-wp
+ */
+
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -22,7 +32,7 @@ class GMW_Members_Locator_Location_Tab {
 
 	/**
 	 * Generate tag args.
-	 * 
+	 *
 	 * @return [type] [description]
 	 */
 	public function get_args() {
@@ -43,7 +53,7 @@ class GMW_Members_Locator_Location_Tab {
 	 */
 	public function __construct() {
 
-		// modify the main args
+		// modify the main args.
 		$this->args = apply_filters( 'gmw_fl_location_tab_args', $this->get_args() );
 
 		// generate the location tab.
@@ -59,8 +69,9 @@ class GMW_Members_Locator_Location_Tab {
 	/**
 	 * Generate location tab in BP adminbar
 	 *
-	 * @param  [type] $wp_admin_nav [description]
-	 * @return [type]               [description]
+	 * @param  [type] $wp_admin_navs [description].
+	 *
+	 * @return [type]                [description]
 	 */
 	public function adminbar_nav( $wp_admin_navs = array() ) {
 
@@ -70,12 +81,13 @@ class GMW_Members_Locator_Location_Tab {
 
 		if ( is_user_logged_in() ) {
 
-			// Setup the logged in user variables
+			// Setup the logged in user variables.
 			$location_link = trailingslashit( bp_loggedin_user_domain() . $this->args['slug'] );
 
-			// Add location tab
+			// Add location tab.
 			$wp_admin_navs[] = apply_filters(
-				'gmw_fl_setup_admin_bar', array(
+				'gmw_fl_setup_admin_bar',
+				array(
 					'parent' => 'my-account-buddypress',
 					'id'     => 'my-account-gmw-' . $this->args['slug'],
 					'title'  => $this->args['nav_menu_label'],
@@ -83,7 +95,7 @@ class GMW_Members_Locator_Location_Tab {
 				)
 			);
 
-			// add submenu tab
+			// add submenu tab.
 			$wp_admin_navs[] = array(
 				'parent' => 'my-account-gmw-' . $this->args['slug'],
 				'id'     => 'my-account-gmw-update-' . $this->args['slug'],
@@ -97,28 +109,26 @@ class GMW_Members_Locator_Location_Tab {
 
 	/**
 	 * Generate the Location tab
-	 *
-	 * @return [type] [description]
 	 */
 	public function location_tab() {
 
 		bp_core_new_nav_item(
 			apply_filters(
-				'gmw_fl_setup_nav', array(
+				'gmw_fl_setup_nav',
+				array(
 					'name'                => $this->args['name'],
 					'slug'                => $this->args['slug'],
 					'screen_function'     => $this->args['screen_function'],
 					'position'            => 20,
 					'default_subnav_slug' => $this->args['slug'],
-				), buddypress()->displayed_user
+				),
+				buddypress()->displayed_user
 			)
 		);
 	}
 
 	/**
 	 * Location tab Screen functions
-	 *
-	 * @return [type] [description]
 	 */
 	public function screen_display() {
 
@@ -139,20 +149,18 @@ class GMW_Members_Locator_Location_Tab {
 	}
 
 	/**
-	 * Displayed user location tab contant
-	 *
-	 * @return [type] [description]
+	 * Displayed user location tab contant.
 	 */
 	public function displayed_user_screen() {
 
 		echo '<div class="location gmw">';
 
-		// Single Location add-on must be activated to display full location details
+		// Single Location add-on must be activated to display full location details.
 		if ( gmw_is_addon_active( 'single_location' ) ) {
 
 			$content = '[gmw_bp_member_location elements="address,map" address_fields="address" map_height="300px" map_width="100%" user_map_icon="0"]';
 
-			// otherwise, display only address field
+			// otherwise, display only address field.
 		} else {
 
 			$content = '<div id="gmw-ml-member-address"><i class="gmw-icon-location"></i>' . esc_attr( gmw_get_user_address() ) . '</div>';
@@ -166,11 +174,9 @@ class GMW_Members_Locator_Location_Tab {
 	/**
 	 * Workaround to move the Location navbar link
 	 *
-	 * below the "Profile" link. I couldn't find a way to do it using the
+	 * Below the "Profile" link. I couldn't find a way to do it using the
 	 *
 	 * filters provided.
-	 *
-	 * @return [type] [description]
 	 */
 	public function move_location_navbar() {
 		?>
