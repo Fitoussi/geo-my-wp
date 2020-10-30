@@ -27,52 +27,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 function gmw_csv_import( $file = false, $db_table = '' ) {
 
 	if ( ! (bool) apply_filters( 'gmw_csv_import_capability', current_user_can( 'manage_options' ) ) ) {
-		wp_die( __( 'You do not have permission to import data.', 'geo-my-wp' ), __( 'Error', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'You do not have permission to import data.', 'geo-my-wp' ), esc_html__( 'Error', 'geo-my-wp' ) );
 	}
 
 	if ( empty( $file ) ) {
-		wp_die( __( 'Please upload a file to import', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'Please upload a file to import', 'geo-my-wp' ) );
 	}
 
 	if ( empty( $db_table ) ) {
-		wp_die( __( 'You did not provide a database table name.', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'You did not provide a database table name.', 'geo-my-wp' ) );
 	}
 
-	$row     = 0;
-	$col     = 0;
-	$results = array();
-	$handle  = @fopen( $file, 'r' );
-	$page    = ! empty( $_GET['page'] ) ? $_GET['page'] : '';
-	$tab     = ! empty( $_GET['tab'] ) ? '&tab=' . $_GET['tab'] : '';
-
-	if ( $handle ) {
-
-		while ( ( $row = fgetcsv( $handle, 4096 ) ) !== false ) {
-
-			if ( empty( $fields ) ) {
-
-				$fields = $row;
-				$count  = count( $fields );
-				continue;
-			}
-
-			foreach ( $row as $k => $value ) {
-				if ( $k < $count ) {
-					$results[ $col ][ $fields[ $k ] ] = $value;
-				}
-			}
-
-			$col++;
-
-			unset( $row );
-		}
-
-		if ( ! feof( $handle ) ) {
-			echo 'Error: unexpected fgets() failn';
-		}
-
-		fclose( $handle );
+	if ( ! class_exists( 'parseCSV' ) ) {
+		require_once GMW_PATH . '/includes/libraries/parsecsv/parsecsv.lib.php';
 	}
+
+	if ( ! class_exists( 'parseCSV' ) ) {
+		wp_die( esc_html__( 'The parseCSV class is missing.', 'geo-my-wp' ) );
+	}
+
+	$csv = new parseCSV();
+	$csv->auto( $file );
+
+	$results = $csv->data;
+	$page    = ! empty( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : ''; // WPSC: CSRF ok.
+	$tab     = ! empty( $_GET['tab'] ) ? '&tab=' . sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : ''; // WPSC: CSRF ok.
 
 	// abort if not data to import.
 	if ( empty( $results ) ) {
@@ -91,13 +70,14 @@ function gmw_csv_import( $file = false, $db_table = '' ) {
 
 	// if form table not exists create it.
 	if ( 0 === count( $table_exists ) ) {
-		wp_die( __( "The database table {$table_name} not exist", 'geo-my-wp' ) );
+		/* Translators: %s : DB table name */
+		wp_die( sprintf( esc_html__( 'The database table %s is missing', 'geo-my-wp' ), $table_name ) );
 	}
 
 	$columns_count = $wpdb->query( "describe {$table_name}" ); // WPCS: db call ok, cache ok, unprepared SQL ok.
 
-	if ( $columns_count != count( $results[0] ) ) {
-		wp_die( __( 'Columns in file do not match the database table.', 'geo-my-wp' ) );
+	if ( absint( $columns_count ) !== count( $results[0] ) ) {
+		wp_die( esc_html__( 'Columns in file do not match the database table.', 'geo-my-wp' ) );
 	}
 
 	// update data in database.
