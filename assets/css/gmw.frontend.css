@@ -509,7 +509,7 @@ ul.gmw-geocoder-suggested-results li {
 	margin-left: 0;
 }
 
-@media ( max-width:800px ) {
+@media ( max-width: 800px ) {
 	.gmw-flexed-wrapper .gmw-flexed-item {
 		width: 100%;
 		-webkit-flex: none;
@@ -1109,6 +1109,16 @@ ul.gmw-geocoder-suggested-results li {
 	/****** End Members Locator  *******/
 
 /********** Search forms end **************/
+
+/*************************************************/
+/***************** New Section *******************/
+/**************** Multiple Locations *****************/
+/*************************************************/
+
+.gmw-ml-return-to-page-button-wrapper {
+	margin-bottom: 20px;
+}
+
 
 /*************************************************/
 /***************** New Section *******************/
@@ -2372,7 +2382,6 @@ ul.gmw-geocoder-suggested-results li {
 		color: #444;
 	}
 
-
 	div.gmw-single-location-wrapper h3.gmw-sl-title,
 	.widget div.gmw-single-location-wrapper h3.gmw-sl-title {
 		margin: 1px 0 16px;
@@ -2383,6 +2392,28 @@ ul.gmw-geocoder-suggested-results li {
 	div.gmw-single-location-wrapper h3.gmw-sl-title a,
 	.widget div.gmw-single-location-wrapper h3.gmw-sl-title a {
 		color:#333;	
+	}
+
+	div.gmw-single-location-wrapper .gmw-single-location-results-wrapper {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	div.gmw-single-location-wrapper .gmw-single-location-results-wrapper .gmw-sl-single-location-wrapper {
+		list-style: none;
+		border-top: 1px solid #efefef;
+		padding: 22px 0;
+	}
+
+	div.gmw-single-location-wrapper .gmw-single-location-results-wrapper .gmw-sl-single-location-wrapper:first-child {
+		border-top: 0;
+		
+	}
+
+	div.gmw-single-location-wrapper .gmw-single-location-results-wrapper .gmw-sl-single-location-wrapper h4 {
+		margin: 8px 0 14px;
+		font-size: 22px;
 	}
 
 	div.gmw-single-location-wrapper .gmw-sl-address,
