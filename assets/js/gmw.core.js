@@ -1577,8 +1577,8 @@ var GMW_Geocoders = {
 						
 						for ( var t in data ) {
 							
-							if ( typeof( data[t].address.country_code ) !== 'undefined' && data[t].address.country_code == options.region ) {
-								
+							if ( typeof( data[t].address.country_code ) !== 'undefined' && data[t].address.country_code.toLowerCase() == options.region.toLowerCase() ) {
+				
 								// if location found use it and break the loop.
 								self.geocodeSuccess( data[t], success_callback );
 

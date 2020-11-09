@@ -332,7 +332,7 @@ class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 		foreach ( $geocoded_data as $location_details ) {
 
 			// Look for results based on country code, and abort once found.
-			if ( ! empty( $location_details->address->country_code ) && $this->params['region'] === $location_details->address->country_code ) {
+			if ( ! empty( $location_details->address->country_code ) && strtolower( $this->params['region'] ) === strtolower( $location_details->address->country_code ) ) {
 
 				$location = $location_details;
 
