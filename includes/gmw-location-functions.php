@@ -1135,6 +1135,120 @@ function gmw_update_featured_location( $object_type = 'post', $object_id = 0, $v
 }
 
 /**
+ * Update parent location value.
+ *
+ * @param  integer $object_type object type.
+ *
+ * @param  integer $object_id   object id.
+ */
+function gmw_unset_object_parent_locations( $object_type = 'post', $object_id = 0 ) {
+
+	$object_id = absint( $object_id );
+
+	if ( empty( $object_id ) ) {
+
+		gmw_trigger_error( 'Object ID is missing when trying to unset parent locations' );
+
+		return false;
+	}
+
+	global $wpdb;
+
+	$updated = $wpdb->query(
+		$wpdb->prepare(
+			"
+            UPDATE {$wpdb->base_prefix}gmw_locations 
+            SET   `parent`      = '0' 
+            WHERE `object_type` = %s
+            AND   `object_id`   = %d",
+			array( $object_type, $object_id )
+		)
+	); // WPCS: db call ok, cache ok.
+
+	if ( $updated ) {
+		do_action( 'gmw_object_parent_locations_unset', $object_type, $object_id );
+	}
+
+	return $updated;
+}
+
+/**
+ * Update parent location value.
+ *
+ * @param  integer $location_id object type.
+ *
+ * @param  integer $value       value.
+ */
+function gmw_update_parent_location( $location_id = 0, $value = 1 ) {
+
+	$locations_id = absint( $location_id );
+	$value        = ! empty( absint( $value ) ) ? 1 : 0;
+
+	if ( empty( $location_id ) ) {
+
+		gmw_trigger_error( 'Location ID is missing when trying to update parent location' );
+
+		return false;
+	}
+
+	global $wpdb;
+
+	if ( empty( $value ) ) {
+
+	} else {
+
+		$location = gmw_get_location( $location_id );
+
+		gmw_unset_object_parent_locations( $location->object_type, $location->object_id );
+
+		// update location, if exists, with featured value.
+		$updated = $wpdb->update(
+			$wpdb->base_prefix . 'gmw_locations',
+			array(
+				'parent' => $value,
+			),
+			array(
+				'ID' => $location_id,
+			),
+			array(
+				'%d',
+				'%d',
+			)
+		); // WPCS: db call ok, cache ok.
+
+		if ( $updated ) {
+			do_action( 'gmw_parent_location_updated', $location_id, $value );
+		}
+
+		return $updated;
+	}
+
+}
+
+/**
+ * Check if parent location.
+ *
+ * @param  integer $location_id object type.
+ *
+ * @return [type]              [description]
+ */
+function gmw_is_parent_location( $location_id ) {
+
+	global $wpdb;
+
+	$parent = $wpdb->get_var(
+		$wpdb->prepare(
+			"SELECT `parent` 
+			FROM {$wpdb->prefix}gmw_locations 
+			WHERE ID = %s",
+			$location_id
+		)
+	); // WPCS: db call ok, cache ok.
+
+	return ! empty( $parent ) ? true : false;
+}
+
+/**
  * Get list of location meta fields
  *
  * Will usually be used in the results.
