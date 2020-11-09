@@ -368,13 +368,13 @@ class GMW_Posts_Locator_Screens {
 	 */
 	public function add_hidden_status_field() {
 
-		$pods_enabled = class_exists( 'PodsAdmin' ) ? true : false;
+		$pods_enabled = class_exists( 'PodsAdmin' ) ? 'true' : 'false';
 		?>
 		<script type="text/javascript">
 
 			jQuery( 'document' ).ready( function( $ ) {
 
-				if ( <?php echo $pods_enabled; ?> == true ) {
+				if ( '<?php echo $pods_enabled; ?>' == 'true' ) {
 
 					GMW.add_filter( 'gmw_location_form_prevent_form_submission', function() {
 						return false;
