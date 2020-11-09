@@ -359,6 +359,7 @@ class GMW_Form {
 		$this->form['max_pages']        = 0;
 		$this->form['in_widget']        = ! empty( $this->form['params']['widget'] ) ? true : false;
 		$this->form['modify_permalink'] = 1;
+		$this->form['address_filters']  = array();
 
 		// check if form submitted.
 		if ( isset( $_GET[ $this->url_px . 'form' ] ) && isset( $_GET[ $this->url_px . 'action' ] ) && 'fs' === $_GET[ $this->url_px . 'action' ] ) { // WPCS: CSRF ok.
@@ -758,25 +759,25 @@ class GMW_Form {
 	 */
 	public function get_address_filters() {
 
-		$address_filters = array();
+		$this->form['address_filters'] = array();
 
 		// if on page load results.
 		if ( $this->form['page_load_action'] ) {
 
 			if ( ! empty( $this->form['page_load_results']['city_filter'] ) ) {
-				$address_filters['city'] = $this->form['page_load_results']['city_filter'];
+				$this->form['address_filters']['city'] = $this->form['page_load_results']['city_filter'];
 			}
 
 			if ( ! empty( $this->form['page_load_results']['state_filter'] ) ) {
-				$address_filters['region_name'] = $this->form['page_load_results']['state_filter'];
+				$this->form['address_filters']['region_name'] = $this->form['page_load_results']['state_filter'];
 			}
 
 			if ( ! empty( $this->form['page_load_results']['zipcode_filter'] ) ) {
-				$address_filters['postcode'] = $this->form['page_load_results']['zipcode_filter'];
+				$this->form['address_filters']['postcode'] = $this->form['page_load_results']['zipcode_filter'];
 			}
 
 			if ( ! empty( $this->form['page_load_results']['country_filter'] ) ) {
-				$address_filters['country_code'] = $this->form['page_load_results']['country_filter'];
+				$this->form['address_filters']['country_code'] = $this->form['page_load_results']['country_filter'];
 			}
 		}
 
@@ -785,16 +786,16 @@ class GMW_Form {
 
 			// if searching state boundaries.
 			if ( isset( $this->form['form_values']['state'] ) && '' !== $this->form['form_values']['state'] ) {
-				$address_filters['region_name'] = $this->form['form_values']['state'];
+				$this->form['address_filters']['region_name'] = $this->form['form_values']['state'];
 			}
 
 			// When searchin boundaries of a country.
 			if ( isset( $this->form['form_values']['country'] ) && '' !== $this->form['form_values']['country'] ) {
-				$address_filters['country_code'] = $this->form['form_values']['country'];
+				$this->form['address_filters']['country_code'] = $this->form['form_values']['country'];
 			}
 		}
 
-		return $address_filters;
+		return $this->form['address_filters'];
 	}
 
 	/**
