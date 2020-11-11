@@ -867,18 +867,19 @@ class GMW_Location {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'object_type'       => 'post',
-				'lat'               => false,
-				'lng'               => false,
-				'radius'            => false,
-				'units'             => 'imperial',
-				'unique'            => '',
-				'count'             => '',
-				'offset'            => '',
-				'paged'             => 1,
-				'orderby'           => '',
-				'object__in'        => '',
-				'output_objects_id' => true,
+				'object_type'        => 'post',
+				'lat'                => false,
+				'lng'                => false,
+				'radius'             => false,
+				'units'              => 'imperial',
+				'unique'             => '',
+				'count'              => '',
+				'offset'             => '',
+				'paged'              => 1,
+				'orderby'            => '',
+				'object__in'         => '',
+				'output_objects_id'  => true,
+				'multiple_locations' => false,
 			)
 		);
 
