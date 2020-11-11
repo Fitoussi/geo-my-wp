@@ -631,17 +631,17 @@ class GMW_Location {
 				$wpdb->prepare(
 					"
 					SELECT *, latitude as lat, longitude as lng, title as location_name, featured as featured_location
-		            FROM   $table
-		            WHERE  blog_id     = %d 
-		            AND    object_type = %s 
-		            AND    object_id   = %d
-		            AND    parent      = 0",
+		            FROM     $table
+		            WHERE    blog_id     = %d 
+		            AND      object_type = %s 
+		            AND      object_id   = %d
+		            ORDER BY parent DESC, ID ASC",
 					$blog_id,
 					$object_type,
 					$object_id
 				),
 				OBJECT
-			);
+			); // WPCS: unprepared SQL ok, db call ok.
 
 			// save to cache if location found.
 			if ( ! empty( $location ) ) {
