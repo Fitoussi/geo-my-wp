@@ -961,13 +961,11 @@ class GMW_Location {
 
 		if ( $internal_cache ) {
 			// prepare for cache.
-			$hash            = md5( json_encode( $args ) );
+			$hash            = md5( wp_json_encode( $args ) );
 			$query_args_hash = 'gmw' . $hash . GMW_Cache_Helper::get_transient_version( 'gmw_get_object_' . $args['object_type'] . '_locations' );
 		}
 
 		if ( ! $internal_cache || false === ( $locations = get_transient( $query_args_hash ) ) ) {
-			//if ( 1 == 1 ) {
-			//print_r( 'locations query done' );
 
 			global $wpdb;
 
@@ -975,7 +973,7 @@ class GMW_Location {
 			$clauses['fields']          = $args['db_fields'];
 			$clauses['distance']        = '';
 			$clauses['from']            = "FROM {$wpdb->base_prefix}{$db_table} gmw_locations";
-			$clauses['where']           = $wpdb->prepare( " WHERE gmw_locations.object_type = '%s' AND gmw_locations.parent = '0'", $args['object_type'] );
+			$clauses['where']           = $wpdb->prepare( " WHERE gmw_locations.object_type = '%s'", $args['object_type'] );
 			$clauses['address_filters'] = '';
 			$clauses['having']          = '';
 			$clauses['orderby']         = 'ORDER BY gmw_locations.ID';
