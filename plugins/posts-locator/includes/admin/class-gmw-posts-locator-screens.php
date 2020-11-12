@@ -54,9 +54,16 @@ class GMW_Posts_Locator_Screens {
 				add_filter( 'gmw_lf_post_location_args_before_location_updated', array( $this, 'pre_location_update_tasks' ) );
 				add_filter( 'gmw_lf_post_location_meta_before_location_updated', array( $this, 'verify_location_meta' ), 10, 3 );
 
+				/**
+				 * NOTE: this function is currently disabled. It was originally added to be part of a workaround to an issue
+				 *
+				 * That was generated when the Location form was preventing the "Edit Post" page from its original submission.
+				 *
+				 * The method disable_prevent_form_submission() is now preventing the Location form from preventing the form submission of the "Edit Post" page.
+				*/
 				// these action fire functions responsible for a fix where posts status wont change from pending to publish.
-				// add_action( 'gmw_lf_before_post_location_updated', array( $this, 'post_status_publish_fix' ) );.
-				$this->post_status_publish_fix();
+				// add_action( 'gmw_lf_before_post_location_updated', array( $this, 'post_status_publish_fix' ) );
+				// $this->post_status_publish_fix();
 			}
 		}
 	}
@@ -190,8 +197,18 @@ class GMW_Posts_Locator_Screens {
 
 		do_action( 'gmw_pt_admin_add_location_meta_box', $post, $this );
 
+		/**
+		 * NOTE: this function is currently disabled. It was originally added to be part of a workaround to an issue
+		 *
+		 * That was generated when the Location form was preventing the "Edit Post" page from its original submission.
+		 *
+		 * The method disable_prevent_form_submission() is now preventing the Location form from preventing the form submission of the "Edit Post" page.
+		*/
 		// add hidden field that responsible for a fix where posts status wont change from pending to publish.
-		add_action( 'admin_footer', array( $this, 'add_hidden_status_field' ) );
+		// add_action( 'admin_footer', array( $this, 'add_hidden_status_field' ) );
+
+		// Prevent the Location form from preventing the "Edit Post" page submission when clicking its Publish/Update button.
+		add_action( 'admin_footer', array( $this, 'disable_prevent_form_submission' ) );
 	}
 
 	/**
@@ -362,11 +379,37 @@ class GMW_Posts_Locator_Screens {
 	}
 
 	/**
+	 * Prevent the Location form from preventing the original form submission of the Edit Post page.
+	 *
+	 * Preventing the form submission on that page causes conflicts on Chrome browser, and it seems that is not needed regardless.
+	 *
+	 * @since 3.6.5
+	 */
+	public function disable_prevent_form_submission() {
+		?>
+		<script type="text/javascript">
+
+			jQuery( 'document' ).ready( function( $ ) {
+				GMW.add_filter( 'gmw_location_form_prevent_form_submission', function() {
+					return false;
+				});
+			});
+		</script>
+		<?php
+	}
+
+	/**
 	 * Add hidden field to hold the value 1 when pressing the "Publish" button.
 	 *
 	 * This way in the next function we can chnage the post status manually to publish.
+	 *
+	 * NOTE: this function is currently disabled. It was originally added to be part of a workaround to an issue
+	 *
+	 * that was generated when the Location form was preventing the "Edit Post" page from its original submission.
+	 *
+	 * The method disable_prevent_form_submission() is now preventing the Location form from preventing the form submission of the "Edit Post" page.
 	 */
-	public function add_hidden_status_field() {
+	/*public function add_hidden_status_field() {
 
 		$pods_enabled = class_exists( 'PodsAdmin' ) ? 'true' : 'false';
 		?>
@@ -393,7 +436,7 @@ class GMW_Posts_Locator_Screens {
 
 		</script>
 		<?php
-	}
+	}*/
 
 	/**
 	 * Change the post status manually to publish when click on the publish button.
@@ -405,12 +448,19 @@ class GMW_Posts_Locator_Screens {
 	 * the original form submission ( event.preventDefault ) to allows to verify the location. Then
 	 *
 	 * the script will submit the form again.
+	 *
+	 * NOTE: this function is currently disabled. It was originally added to be part of a workaround to an issue
+	 *
+	 * that was generated when the Location form was preventing the "Edit Post" page from its original submission.
+	 *
+	 * The method disable_prevent_form_submission() is now preventing the Location form from preventing the form submission of the "Edit Post" page.
 	 */
+	/*
 	public function post_status_publish_fix() {
 
 		if ( ! empty( $_POST['post_status'] ) && 'publish' !== $_POST['post_status'] && ! empty( $_POST['gmw_post_published'] ) ) { // WPCS: CSRF ok.
 			$_POST['post_status'] = 'publish';
 		}
-	}
+	}*/
 }
 new GMW_Posts_Locator_Screens();
