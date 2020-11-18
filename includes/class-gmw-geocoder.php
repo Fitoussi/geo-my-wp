@@ -2,6 +2,8 @@
 /**
  * Main Geocoder class.
  *
+ * @author Eyal Fitoussi
+ *
  * @package geo-my-wp
  */
 

@@ -1,7 +1,14 @@
 <?php
-// Exit if accessed directly
+/**
+ * GEO my WP - GMW_Location class.
+ *
+ * @author Eyal Fitoussi
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -12,7 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 3.0
  *
  * @author Eyal Fitoussi
- *
  */
 class GMW_Location {
 
@@ -185,11 +191,11 @@ class GMW_Location {
 			$wpdb->prepare(
 				"
 				SELECT ID 
-				FROM   $table 
+                FROM   $table 
 				WHERE  ID = %d",
 				$location_id
 			)
-		);
+		); // WPCS: db call ok, cache ok, unprepared SQL ok.
 
 		return ! empty( $location_id ) ? true : false;
 	}
@@ -224,7 +230,7 @@ class GMW_Location {
 				WHERE  ID = %d",
 				$location_id
 			)
-		);
+		); // WPCS: db call ok, cache ok, unprepared SQL ok.
 
 		return $object_type;
 
@@ -239,11 +245,13 @@ class GMW_Location {
 	 *
 	 * @since 3.0
 	 *
-	 * @param boolean $parent true to get only prent location false to get all locations.
+	 * @param boolean  $parent true to get only prent location false to get all locations.
 	 *
-	 * @return location object or empty if no locaiton was found
+	 * @param constant $output output type - OBJECT | ARRAY.
 	 *
-	 * @since 3.0
+	 * @param boolean  $cache  get from cache - true | false.
+	 *
+	 * @return location object or empty if no locaiton was found.
 	 */
 	private static function try_get_locations( $parent = false, $output = OBJECT, $cache = true ) {
 
@@ -276,7 +284,7 @@ class GMW_Location {
 
 		// if object type and object ID were found, get the location from database.
 		if ( $found ) {
-			$location = $parent == true ? self::get_by_object( $object_type, $object_id, $output, $cache ) : self::get_locations( $object_type, $object_id, $output, $cache );
+			$location = ! empty( $parent ) ? self::get_by_object( $object_type, $object_id, $output, $cache ) : self::get_locations( $object_type, $object_id, $output, $cache );
 		}
 
 		return $location;
@@ -322,7 +330,7 @@ class GMW_Location {
 		// parse location args with default location args.
 		$location_data = wp_parse_args( $args, self::default_values() );
 
-		// verify country code
+		// verify country code.
 		if ( empty( $location_data['country_code'] ) || strlen( $location_data['country_code'] ) != 2 ) {
 
 			if ( empty( $location_data['country_name'] ) ) {
@@ -357,8 +365,8 @@ class GMW_Location {
 		// If location ID provided, we will look for and update that location.
 		if ( ! empty( $location_data['ID'] ) ) {
 
-			$update         = true;
-			$location_id    = ( int ) $location_data['ID'];
+			$update      = true;
+			$location_id = (int) $location_data['ID'];
 
 			// Look for the existing location.
 			$saved_location = self::get_by_id( $location_data['ID'] );
@@ -370,7 +378,6 @@ class GMW_Location {
 
 				return 0;
 			}
-
 		} else {
 
 			$saved_location = self::get_by_object( $location_data['object_type'], $location_data['object_id'] );
@@ -421,7 +428,7 @@ class GMW_Location {
 				array( 'ID' => $location_id ),
 				self::get_format(),
 				array( '%d' )
-			);
+			); // WPCS: db call ok, cache ok, unprepared SQL ok.
 
 			$updated = true;
 
@@ -438,7 +445,7 @@ class GMW_Location {
 			$location_data = array_intersect_key( $location_data, self::default_values() );
 
 			// insert new location to database.
-			$wpdb->insert( $table, $location_data, self::get_format() );
+			$wpdb->insert( $table, $location_data, self::get_format() ); // WPCS: db call ok, cache ok, unprepared SQL ok.
 
 			// get the new location ID.
 			$location_id = $wpdb->insert_id;
@@ -450,7 +457,7 @@ class GMW_Location {
 		}
 
 		// make it into an object.
-		$location_data = ( object ) $location_data;
+		$location_data = (object) $location_data;
 
 		// do some custom functions once location saved.
 		do_action( 'gmw_save_location', $location_id, $location_data, $updated );
@@ -491,6 +498,8 @@ class GMW_Location {
 
 	/**
 	 * Deprecated - use update() instead
+	 *
+	 * @param array $args array of lcoation arguments.
 	 *
 	 * @return [type] [description]
 	 */
@@ -549,7 +558,7 @@ class GMW_Location {
 					$location_id
 				),
 				OBJECT
-			);
+			); // WPCS: db call ok, cache ok, unprepared SQL ok.
 
 			// set location in cache if found.
 			if ( ! empty( $location ) ) {
@@ -744,7 +753,7 @@ class GMW_Location {
 					$object_id
 				),
 				OBJECT
-			);
+			); // WPCS: db call ok, cache ok, unprepared SQL ok.
 
 			// save to cache if location found.
 			if ( ! empty( $locations ) ) {
@@ -937,7 +946,7 @@ class GMW_Location {
 				// in the location object and that is what we did in the line above.
 				// The lat and lng field are too involve and need to carfully change it.
 				// eventually we want to completely move to using latitude and longitude.
-				if ( 'latitude' == $field[0] || 'longitude' == $field[0] ) {
+				if ( 'latitude' === $field[0] || 'longitude' === $field[0] ) {
 					$output .= ",gmw_locations.{$field[0]}";
 				}
 			} else {
@@ -1063,7 +1072,7 @@ class GMW_Location {
 			// query the locations.
 			$locations = $wpdb->get_results(
 				implode( ' ', apply_filters( 'gmw_get_locations_query_clauses', $clauses, $args, $gmw ) )
-			);
+			); // WPCS: db call ok, cache ok, unprepared SQL ok.
 
 			/**
 			 * Collect locations into an array of objects and locations data.
@@ -1141,19 +1150,21 @@ class GMW_Location {
 	            WHERE `ID`          = %s",
 				array( $status, $location_id )
 			)
-		);
+		); // WPCS: db call ok, cache ok, unprepared SQL ok.
 	}
 
 	/**
-	 * Delete location using location ID. 
+	 * Delete location using location ID.
 	 *
 	 * Deprecated - use self::delete() instaed.
 	 *
 	 * The location data and all associated location meta will be deleted.
 	 *
-	 * @param  integer $location_id the location ID
+	 * @param  integer $location_id the location ID.
 	 *
-	 * @return boolean  true if deleted false if failed
+	 * @param  boolean $delete_meta true or false if to delete the location meta belog to that location.
+	 *
+	 * @return boolean  true if deleted false if failed.
 	 *
 	 * @since 3.0
 	 */
@@ -1166,7 +1177,9 @@ class GMW_Location {
 	 *
 	 * The location data and all associated location meta will be deleted
 	 *
-	 * @param  integer||object $location the location ID || location object 
+	 * @param  integer||object $location the location ID || location object.
+	 *
+	 * @param  boolean         $delete_meta true or false if to delete the location meta belog to that location.
 	 *
 	 * @return boolean  true if deleted false if failed
 	 *
@@ -1203,7 +1216,7 @@ class GMW_Location {
 			$table,
 			array( 'ID' => $location->ID ),
 			array( '%d' )
-		);
+		); // WPCS: db call ok, cache ok, unprepared SQL ok.
 
 		// abort if failed to delete.
 		if ( empty( $deleted ) ) {
@@ -1219,7 +1232,7 @@ class GMW_Location {
 		wp_cache_delete( $location->object_type . '_' . $location->object_id, 'gmw_locations' );
 
 		// delete the location metadata associated with this location if needed.
-		if (  true == $delete_meta ) {
+		if ( true == $delete_meta ) {
 			GMW_Location_Meta::delete_all( $location->ID );
 		}
 
@@ -1232,7 +1245,10 @@ class GMW_Location {
 	 * The parent location data and all associated location meta will be deleted.
 	 *
 	 * @param  string  $object_type object type ( post, user... ).
+	 *
 	 * @param  integer $object_id   object id ( post iD, user ID... ).
+	 *
+	 * @param  boolean $delete_meta true or false if to delete the location meta belog to that location.
 	 *
 	 * @return boolean true for deleted false for failed
 	 *
@@ -1283,9 +1299,10 @@ class GMW_Location {
 	 * We will leave this function for the future for more of a general uses.
 	 *
 	 * @param  string  $object_type [description].
+	 *
 	 * @param  integer $object_id   [description].
-	 * @param  [type]  $output      [description].
-	 * @param  boolean $cache       [description].
+	 *
+	 * @param  [type]  $delete_meta [description].
 	 *
 	 * @return [type]               [description]
 	 */
@@ -1349,7 +1366,7 @@ class GMW_Location {
 				$object_type,
 				$object_id
 			)
-		);
+		); // WPCS: db call ok, cache ok, unprepared SQL ok.
 
 		// abort if failed to delete.
 		if ( empty( $deleted ) ) {
