@@ -123,14 +123,24 @@ class GMW_Geocoder {
 	 */
 	public function parse_raw_data( $raw_data ) {
 
-		// Clean up address from invalid characters.
-		$invalid_chars = array(
+		$characters = array(
 			' ' => '+',
-			',' => '',
 			'?' => '',
 			'&' => '',
 			'=' => '',
 			'#' => '',
+		);
+
+		if ( 'google_maps' === $this->provider ) {
+			$characters[','] = '';
+		}
+
+		// Clean up address from invalid characters.
+		$invalid_chars = apply_filters(
+			'gmw_geocoder_invalid_characters',
+			$characters,
+			$this,
+			$raw_data,
 		);
 
 		return trim( strtolower( str_replace( array_keys( $invalid_chars ), array_values( $invalid_chars ), $raw_data ) ) );
