@@ -1193,36 +1193,30 @@ function gmw_update_parent_location( $location_id = 0, $value = 1 ) {
 
 	global $wpdb;
 
-	if ( empty( $value ) ) {
+	$location = gmw_get_location( $location_id );
 
-	} else {
+	gmw_unset_object_parent_locations( $location->object_type, $location->object_id );
 
-		$location = gmw_get_location( $location_id );
+	// update location, if exists, with featured value.
+	$updated = $wpdb->update(
+		$wpdb->base_prefix . 'gmw_locations',
+		array(
+			'parent' => $value,
+		),
+		array(
+			'ID' => $location_id,
+		),
+		array(
+			'%d',
+			'%d',
+		)
+	); // WPCS: db call ok, cache ok.
 
-		gmw_unset_object_parent_locations( $location->object_type, $location->object_id );
-
-		// update location, if exists, with featured value.
-		$updated = $wpdb->update(
-			$wpdb->base_prefix . 'gmw_locations',
-			array(
-				'parent' => $value,
-			),
-			array(
-				'ID' => $location_id,
-			),
-			array(
-				'%d',
-				'%d',
-			)
-		); // WPCS: db call ok, cache ok.
-
-		if ( $updated ) {
-			do_action( 'gmw_parent_location_updated', $location_id, $value );
-		}
-
-		return $updated;
+	if ( $updated ) {
+		do_action( 'gmw_parent_location_updated', $location_id, $value );
 	}
 
+	return $updated;
 }
 
 /**
