@@ -395,6 +395,20 @@ class GMW_Location {
 		do_action( 'gmw_pre_save_location', $location_data, $saved_location );
 		do_action( "gmw_pre_save_{$location_data['object_type']}_location", $location_data, $saved_location );
 
+		// If the location is not set as parent, we will check if the same object has other another location that is set as a parent.
+		// If not, we will set this location as the parent one. We would like to have a parent location for each object.
+		if ( empty( $location_data['parent'] ) ) {
+
+			if ( ! empty( $location_data['object_type'] ) && ! empty( $location_data['object_id'] ) ) {
+
+				$parent_location = self::get_by_object( $location_data['object_type'], $location_data['object_id'], OBJECT, false );
+
+				if ( empty( $parent_location ) || empty( $parent_location->parent ) ) {
+					$location_data['parent'] = 1;
+				}
+			}
+		}
+
 		// update existing location.
 		if ( $update ) {
 
@@ -1221,6 +1235,29 @@ class GMW_Location {
 		// abort if failed to delete.
 		if ( empty( $deleted ) ) {
 			return false;
+		}
+
+		// When deleting a location, we check if there are other location for the same object ID.
+		// And if there are, we need to make sure that there is one set as the parent location.
+		if ( ! empty( $location->object_type ) && ! empty( $location->object_id ) ) {
+
+			$parent_location = self::get_by_object( $location->object_type, $location->object_id, OBJECT, false );
+
+			if ( ! empty( $parent_location ) && empty( $parent_location->parent ) ) {
+
+				$wpdb->update(
+					$wpdb->base_prefix . 'gmw_locations',
+					array(
+						'parent' => 1,
+					),
+					array(
+						'ID' => $parent_location->ID,
+					),
+					array(
+						'%d',
+					)
+				); // WPCS: db call ok, cache ok.
+			}
 		}
 
 		do_action( 'gmw_location_deleted', $location->ID, $location );
