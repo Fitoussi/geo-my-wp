@@ -75,7 +75,117 @@ class GMW_Admin {
 		//$this->shortcodes_page 	= new GMW_Shortcodes_page();
 		
 		add_filter( 'plugin_action_links_' . GMW_BASENAME, array( $this, 'gmw_action_links' ), 10, 2 );
+
+		/**
+		 * Registers all data exporters.
+		 *
+		 * @param array $exporters
+		 *
+		 * @return mixed
+		 */
+		add_filter( 'wp_privacy_personal_data_exporters', array( $this, 'register_user_data_exporters' ) );
+
 	}
+
+	public function register_user_data_exporters( $exporters ) {
+
+	    $exporters['geo_my_wp'] = array(
+	        'exporter_friendly_name' => __( 'GEO my WP Location Data', 'text-domain' ),
+	        'callback'               => array( $this, 'export_user_data' ),
+	    );
+	    return $exporters;
+	}
+
+	public function export_user_data( $email_address, $page = 1 ) {
+	
+	    $user         = get_user_by( 'email', $email_address );
+	    $export_items = array(
+    		'data' => array(),
+    		'done' => true,
+    	);
+
+	    if ( empty( $user ) || empty( $user->ID ) ) {
+	    	return $export_items;
+	    }
+	    
+	    global $wpdb, $blog_id;
+
+		$table   = $wpdb->base_prefix . 'gmw_locations';
+	    $number  = 200;
+	    $page    = (int) $page;
+	    $offset  = ( $page - 1 ) * $number;
+	    $group_labels = array(
+	    	'post'     => __( 'Posts Locations', 'geo-my-wp' ),
+	    	'user'     => __( 'User Locations', 'geo-my-wp' ),
+	    	'bp_group' => __( 'BuddyPress Groups Locations', 'geo-my-wp' ),
+	    );
+
+	    //get user's locations.
+	    $locations = $wpdb->get_results(
+			$wpdb->prepare(
+				"
+				SELECT *
+	            FROM   $table
+	            WHERE  blog_id = %d
+	            AND    user_id = %s
+	            ORDER BY object_type ASC, ID ASC
+	            LIMIT {$offset}, {$number}",
+				$blog_id,
+				$user->ID,
+			),
+			OBJECT
+		); // WPCS: db call ok, cache ok, unprepared SQL ok.
+			
+		// Abort if no location were found.
+		if ( empty( $locations ) ) {
+			return $export_items;
+		}
+		
+		// loop through locations and collect data.
+		foreach ( $locations as $location ) {
+
+            $item_id     = "{$location->object_type}_location_{$location->ID}";
+            $group_id    = "{$location->object_type}_location";
+            $group_label = ! empty( $group_labels[ $location->object_type ] ) ? $group_labels[ $location->object_type ] : __( 'GEO my WP Locations', 'geo-my-wp' );
+ 			$data        = array();
+
+            foreach ( $location as $field => $value ) {
+	            $data[] = array(
+                    'name'  => $field,
+                    'value' => $value,
+	            );
+	        }
+
+	        // Look for location meta.
+	        $location_meta = gmw_get_location_meta( $location->ID );
+
+            if ( ! empty( $location_meta ) ) {
+            	
+            	foreach( $location_meta as $meta_field => $meta_value ) {
+
+            		$data[] = array(
+	                    'name'  => $meta_field,
+	                    'value' => $meta_value,
+		            );
+            	}
+            }
+
+	        $export_items[] = array(
+                'group_id'    => $group_id,
+                'group_label' => $group_label,
+                'item_id'     => $item_id,
+                'data'        => $data,
+            );
+	    }
+
+	    $done = count( $locations ) < $number;
+
+	    return array(
+	        'data' => $export_items,
+	        'done' => $done,
+	    );
+	}
+		 
 
 	public function update_database_notice() {
 		?>
