@@ -1112,16 +1112,6 @@ ul.gmw-geocoder-suggested-results li {
 
 /*************************************************/
 /***************** New Section *******************/
-/**************** Multiple Locations *****************/
-/*************************************************/
-
-.gmw-ml-return-to-page-button-wrapper {
-	margin-bottom: 20px;
-}
-
-
-/*************************************************/
-/***************** New Section *******************/
 /**************** Search results *****************/
 /*************************************************/
 	
@@ -1245,15 +1235,16 @@ ul.gmw-geocoder-suggested-results li {
 
 	/********** Location meta output **********/
 
-	ul.gmw-location-meta,
-	.widget ul.gmw-location-meta {
+	body ul.gmw-location-meta,
+	body .widget ul.gmw-location-meta {
 		list-style: none;
 		padding: 0px;
 		margin: 0px;
+		padding-left: 0;
 	}
 
-	ul.gmw-location-meta li.field,
-	ul.widget ul.gmw-location-meta li.field {
+	body ul.gmw-location-meta li.field,
+	body ul.widget ul.gmw-location-meta li.field {
 		line-height: 25px;
 		list-style: none;
 		padding:0;
@@ -1262,8 +1253,8 @@ ul.gmw-geocoder-suggested-results li {
 		font-size: 14px;
 	}
 
-	ul.gmw-location-meta li.field span.label,
-	.widget ul.gmw-location-meta li.field span.label {
+	body ul.gmw-location-meta li.field span.label,
+	body .widget ul.gmw-location-meta li.field span.label {
 		text-transform: capitalize;
 		margin: 0px;
 		padding: 0px;
@@ -1428,7 +1419,7 @@ ul.gmw-geocoder-suggested-results li {
 		margin: 0 auto;
 		//width: 100% !important;
 		max-width: 100% !important;
-		padding: 2px 1px 2px;
+		padding: 2px 1px 3px;
 		-webkit-box-sizing: border-box; 
 		-moz-box-sizing: border-box;    
 		box-sizing: border-box;
@@ -2383,14 +2374,17 @@ ul.gmw-geocoder-suggested-results li {
 	}
 
 	div.gmw-single-location-wrapper h3.gmw-sl-title,
-	.widget div.gmw-single-location-wrapper h3.gmw-sl-title {
-		margin: 1px 0 16px;
+	.widget div.gmw-single-location-wrapper h3.gmw-sl-title,
+	body div.gmw-iw-wrapper .gmw-sl-location-name {
+		margin: 1px 0 10px;
 		padding: 8px 0px;
 		border-bottom: 1px solid #e1e8ed;
 	}
 
 	div.gmw-single-location-wrapper h3.gmw-sl-title a,
-	.widget div.gmw-single-location-wrapper h3.gmw-sl-title a {
+	.widget div.gmw-single-location-wrapper h3.gmw-sl-title a,
+	body div.gmw-iw-wrapper .gmw-sl-location-name a,
+	body div.gmw-iw-wrapper .gmw-sl-location-name span {
 		color:#333;	
 	}
 
@@ -2403,7 +2397,7 @@ ul.gmw-geocoder-suggested-results li {
 	div.gmw-single-location-wrapper .gmw-single-location-results-wrapper .gmw-sl-single-location-wrapper {
 		list-style: none;
 		border-top: 1px solid #efefef;
-		padding: 22px 0;
+		padding: 10px 0;
 	}
 
 	div.gmw-single-location-wrapper .gmw-single-location-results-wrapper .gmw-sl-single-location-wrapper:first-child {
@@ -2497,10 +2491,11 @@ ul.gmw-geocoder-suggested-results li {
 	}
 
 	.gm-style-iw div.gmw-sl-iw-wrapper div {
-		border-bottom: 0px;
+		//border-bottom: 0px;
 	}
 
-	div.gmw-sl-iw-wrapper h3.gmw-sl-title {
+	div.gmw-sl-iw-wrapper .gmw-sl-title,
+	div.gmw-sl-iw-wrapper .gmw-sl-location-name {
 		font-size: 16px;
 		text-align: center;
 		font-weight: 300;
@@ -2509,9 +2504,12 @@ ul.gmw-geocoder-suggested-results li {
 	
 	div.gmw-sl-iw-wrapper .gmw-sl-element {
 		padding: 5px 15px;
+		box-sizing: border-box;
 	}
 
-	div.gmw-sl-iw-wrapper h3.gmw-sl-title a {
+	div.gmw-sl-iw-wrapper .gmw-sl-title a,
+	div.gmw-sl-iw-wrapper .gmw-sl-location-name span,
+	div.gmw-sl-iw-wrapper .gmw-sl-location-name a {
 		text-decoration: none;
 		border: 0;
 	}
@@ -2646,6 +2644,25 @@ ul.gmw-geocoder-suggested-results li {
 	}
 
 	/********** Single Location Add-on ends **********/
+
+/*************************************************/
+/***************** New Section *******************/
+/**************** Multiple Locations *****************/
+/*************************************************/
+
+body .gmw-ml-return-to-page-button-wrapper {
+	margin-bottom: 20px;
+}
+
+body .gmw-sl-single-location-wrapper .gmw-sl-location-name.gmw-sl-element span,
+body .gmw-sl-single-location-wrapper .gmw-sl-location-name.gmw-sl-element a {
+	//margin-bottom: 5px;
+	display: inline-block;
+	font-size: 20px;
+}
+
+
+
 
 /*************************************************/
 /***************** New Section *******************/
