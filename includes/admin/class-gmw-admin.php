@@ -68,8 +68,8 @@ class GMW_Admin {
 		$this->settings_page = new GMW_Settings();
 		$this->forms_page    = new GMW_Forms_Page();
 
-		if ( isset( $_GET['page'] ) && $_GET['page'] == 'gmw-forms' && isset( $_GET['gmw_action'] ) && $_GET['gmw_action'] == 'edit_form' && ! empty( $_GET['prefix'] ) && class_exists( 'GMW_' . $_GET['prefix'] . '_Form_Editor' ) ) {
-			$class_name = 'GMW_' . $_GET['prefix'] . '_Form_Editor';
+		if ( isset( $_GET['page'] ) && 'gmw-forms' === $_GET['page'] && isset( $_GET['gmw_action'] ) && 'edit_form' === $_GET['gmw_action'] && ! empty( $_GET['prefix'] ) && class_exists( 'GMW_' . $_GET['prefix'] . '_Form_Editor' ) ) { // WPCS: CSRF ok.
+			$class_name = 'GMW_' . sanitize_text_field( wp_unslash( $_GET['prefix'] ) ) . '_Form_Editor'; // WPCS: CSRF ok.
 		} else {
 			$class_name = 'GMW_Form_Editor';
 		}
@@ -125,12 +125,14 @@ class GMW_Admin {
 	 */
 	public function export_user_data( $email_address, $page = 1 ) {
 
+		// Get user's data.
 		$user         = get_user_by( 'email', $email_address );
 		$export_items = array(
 			'data' => array(),
 			'done' => true,
 		);
 
+		// Abort if user not found.
 		if ( empty( $user ) || empty( $user->ID ) ) {
 			return $export_items;
 		}
@@ -301,7 +303,7 @@ class GMW_Admin {
 			'priority'          => 5,
 		);
 
-		$forms_output = ( ! empty( $_GET['gmw_action'] ) && $_GET['gmw_action'] == 'edit_form' ) ? $this->edit_form_page : $this->forms_page;
+		$forms_output = ( ! empty( $_GET['gmw_action'] ) && 'edit_form' === $_GET['gmw_action'] ) ? $this->edit_form_page : $this->forms_page; // WPCS: CSRF ok.
 
 		$menu_items[] = array(
 			'parent_slug'       => 'gmw-extensions',
@@ -393,28 +395,27 @@ class GMW_Admin {
 
 		foreach ( $deprecated_addons as $key => $addon ) {
 
-			// if ( IS_ADMIN && ( empty( $gmw_addons[$key] ) || ! get_transient( 'gmw_extensions_data' ) ) ) {
-				$new_addon                    = array();
-				$new_addon['slug']            = $key;
-				$new_addon['name']            = $addon['title'];
-				$new_addon['prefix']          = ! empty( $addon['prefix'] ) ? $addon['prefix'] : '1.0';
-				$new_addon['version']         = ! empty( $addon['version'] ) ? $addon['version'] : '1.0';
-				$new_addon['author']          = ! empty( $addon['author'] ) ? $addon['author'] : 'Eyal Fitoussi';
-				$new_addon['description']     = ! empty( $addon['desc'] ) ? $addon['desc'] : '';
-				$new_addon['is_core']         = false;
-				$new_addon['object_type']     = false;
-				$new_addon['full_path']       = ! empty( $addon['file'] ) ? $addon['file'] : '';
-				$new_addon['basename']        = plugin_basename( $new_addon['full_path'] );
-				$new_addon['plugin_dir']      = untrailingslashit( plugin_dir_path( $new_addon['full_path'] ) );
-				$new_addon['plugin_url']      = untrailingslashit( plugins_url( basename( plugin_dir_path( $new_addon['full_path'] ) ), dirname( $new_addon['full_path'] ) ) );
-				$new_addon['required']        = false;
-				$new_addon['min_version']     = ! empty( GMW()->required_versions[ $new_addon['slug'] ] ) ? GMW()->required_versions[ $new_addon['slug'] ] : '1.0';
-				$new_addon['gmw_min_version'] = ! empty( $addon['gmw_version'] ) ? $addon['gmw_version'] : GMW_VERSION;
-				$new_addon['item_name']       = ! empty( $addon['item'] ) ? $addon['item'] : false;
-				$new_addon['item_id']         = ! empty( $addon['item_id'] ) ? $addon['item_id'] : null;
-				$new_addon['api_url']         = ! empty( $addon['api_url'] ) ? $addon['api_url'] : null;
-				$new_addon['license_name']    = ! empty( $addon['name'] ) ? $addon['name'] : false;
-				$new_addon['trigger_license'] = ! empty( $addon['trigger_license'] ) ? $addon['trigger_license'] : false;
+			$new_addon                    = array();
+			$new_addon['slug']            = $key;
+			$new_addon['name']            = $addon['title'];
+			$new_addon['prefix']          = ! empty( $addon['prefix'] ) ? $addon['prefix'] : '1.0';
+			$new_addon['version']         = ! empty( $addon['version'] ) ? $addon['version'] : '1.0';
+			$new_addon['author']          = ! empty( $addon['author'] ) ? $addon['author'] : 'Eyal Fitoussi';
+			$new_addon['description']     = ! empty( $addon['desc'] ) ? $addon['desc'] : '';
+			$new_addon['is_core']         = false;
+			$new_addon['object_type']     = false;
+			$new_addon['full_path']       = ! empty( $addon['file'] ) ? $addon['file'] : '';
+			$new_addon['basename']        = plugin_basename( $new_addon['full_path'] );
+			$new_addon['plugin_dir']      = untrailingslashit( plugin_dir_path( $new_addon['full_path'] ) );
+			$new_addon['plugin_url']      = untrailingslashit( plugins_url( basename( plugin_dir_path( $new_addon['full_path'] ) ), dirname( $new_addon['full_path'] ) ) );
+			$new_addon['required']        = false;
+			$new_addon['min_version']     = ! empty( GMW()->required_versions[ $new_addon['slug'] ] ) ? GMW()->required_versions[ $new_addon['slug'] ] : '1.0';
+			$new_addon['gmw_min_version'] = ! empty( $addon['gmw_version'] ) ? $addon['gmw_version'] : GMW_VERSION;
+			$new_addon['item_name']       = ! empty( $addon['item'] ) ? $addon['item'] : false;
+			$new_addon['item_id']         = ! empty( $addon['item_id'] ) ? $addon['item_id'] : null;
+			$new_addon['api_url']         = ! empty( $addon['api_url'] ) ? $addon['api_url'] : null;
+			$new_addon['license_name']    = ! empty( $addon['name'] ) ? $addon['name'] : false;
+			$new_addon['trigger_license'] = ! empty( $addon['trigger_license'] ) ? $addon['trigger_license'] : false;
 
 				// check for min requirements of add-ons with current version of GEO my WP.
 			if ( ! empty( $new_addon['gmw_min_version'] ) && version_compare( GMW_VERSION, $new_addon['gmw_min_version'], '<' ) ) {
@@ -610,8 +611,8 @@ class GMW_Admin {
 
 								$form['title'] = ! empty( $form['title'] ) ? $form['title'] : 'form_id_' . $form['ID'];
 								?>
-									<option value="<?php echo absint( $form['ID'] ); ?>" data-type="<?php echo $form['addon']; ?>"><?php echo esc_html( $form['title'] ); ?></option>
-									<?php
+								<option value="<?php echo absint( $form['ID'] ); ?>" data-type="<?php echo esc_attr( $form['addon'] ); ?>"><?php echo esc_html( $form['title'] ); ?></option>
+								<?php
 							}
 							?>
 						</select>
