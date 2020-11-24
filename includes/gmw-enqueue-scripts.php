@@ -105,7 +105,7 @@ function gmw_enqueue_scripts() {
 	$options = apply_filters(
 		'gmw_localize_options',
 		array(
-			'settings'    => array(
+			'settings'           => array(
 				'general' => $gmw_options['general_settings'],
 				'api'     => isset( $gmw_options['api_providers'] ) ? $gmw_options['api_providers'] : array(),
 			),
