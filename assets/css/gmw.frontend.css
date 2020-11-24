@@ -2375,7 +2375,8 @@ ul.gmw-geocoder-suggested-results li {
 
 	div.gmw-single-location-wrapper h3.gmw-sl-title,
 	.widget div.gmw-single-location-wrapper h3.gmw-sl-title,
-	body div.gmw-iw-wrapper .gmw-sl-location-name {
+	body div.gmw-iw-wrapper .gmw-sl-location-name,
+	body #item-body div.gmw-iw-wrapper .gmw-sl-location-name {
 		margin: 1px 0 10px;
 		padding: 8px 0px;
 		border-bottom: 1px solid #e1e8ed;
@@ -2661,6 +2662,9 @@ body .gmw-sl-single-location-wrapper .gmw-sl-location-name.gmw-sl-element a {
 	font-size: 20px;
 }
 
+body div.gmw-ml-locations-dashboard-button-warpper {
+	margin-bottom: 20px;
+}
 
 
 
