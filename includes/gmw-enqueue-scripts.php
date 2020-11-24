@@ -105,7 +105,7 @@ function gmw_enqueue_scripts() {
 	$options = apply_filters(
 		'gmw_localize_options',
 		array(
-			'settings'          => array(
+			'settings'    => array(
 				'general' => $gmw_options['general_settings'],
 				'api'     => isset( $gmw_options['api_providers'] ) ? $gmw_options['api_providers'] : array(),
 			),
@@ -117,6 +117,7 @@ function gmw_enqueue_scripts() {
 			'locatorAlerts'      => apply_filters( 'gmw_auto_locator_alerts_enabled', true ) ? '1' : '0',
 			'ulcPrefix'          => gmw_get_ulc_prefix(),
 			'pageLocatorRefresh' => true,
+			'protocol'           => is_ssl() ? 'https' : 'http',
 		),
 		$gmw_options
 	);
