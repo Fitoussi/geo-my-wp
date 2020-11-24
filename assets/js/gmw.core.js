@@ -489,7 +489,7 @@ var GMW = {
             GMW.set_cookie( cookieName, 1, 1 );
 
             // run auto locator
-           	GMW.auto_locator( 'page_locator', GMW.page_locator_success, false );
+           	GMW.auto_locator( 'page_locator', GMW.page_locator_success, GMW.page_locator_failed );
         }
     },
 
@@ -703,6 +703,29 @@ var GMW = {
 	        	}
 	        }, 500);
 	    }
+    },
+
+    /**
+     * Page locator success callback function
+     * 
+     * @param  {[type]} results [description]
+     * @return {[type]}         [description]
+     */
+    page_locator_failed : function( status ) {
+
+    	//if ( typeof gmwVars.locatorAlerts !== 'undefined' && gmwVars.locatorAlerts == 1 ) {
+            
+            // alert error message
+        //    alert( status );
+
+        //} else {
+        	console.log( status );
+       	//}
+
+        GMW.vars.auto_locator.status  = false;
+        GMW.vars.auto_locator.type    = false;
+        GMW.vars.auto_locator.success = false;
+        GMW.vars.auto_locator.failed  = false;
     },
 
     /**
