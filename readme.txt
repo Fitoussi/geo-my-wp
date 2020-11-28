@@ -3,9 +3,9 @@ Contributors: ninjew, Eyal Fitoussi
 Donate link: https://www.paypal.me/fitoussi
 Tags: Geolocation, Directory, Store Locator, Google Maps, OpenStreetMaps, LeafLet, Geotagging, Geocode, Mapping, Proximity search, Zipcode, Geotag posts, Address search, Distance, Directions, Locations, Geo, Members locator, Geotag members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
 Requires at least: 4.5
-Tested up to: 5.5.2
+Tested up to: 5.6
 BuddyPress: 2.8
-Stable tag: 3.6.2
+Stable tag: 3.6.3
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,25 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 3.6.3 =
+
+* Note that version 3.2 was a major release. If you are updating from an earlier version, then backing up your site and/or testing this version on a staging environment first is recommended. See the changelog of version 3.2 for more details before updating.
+*
+* --------------------------------
+* New: integration with WordPress Personal Data Exporter. Now the export will alos exclude the user's locations data.
+* New: shortcode - [gmw_hours_of_operation] to display the hours of operation of a specific object.
+* Fix: variable does not pass properly from PHP to JavaScript and causes issue on Chrome where post wouldn't change from draft to public.
+* Fix: issue on Chrome browsers when trying to Publish a post or when changing the post status.
+* Tweak: improve region verification when geocoding an address using LeafLet.
+* Tweak: give higher priority to locations with the "parent" column set to 1 when getting a location of an object.
+* Tweak: new argument to retrieve multiple locations using the GMW_Location::get_locations_data() method.
+* Tweak: remove comma from the invalid geocoding characters when using LeafLet. LeafLet seems to geocode addresses better when including the comma in the address.
+* Tweak: verify that a parent location is set for an object when adding, updating or deleting a location.
+* Filter: 'gmw_geocoder_invalid_characters' to modify the invalid characters when parsing the raw address before geocoding.
+* various minor bugs fixes.
+* minor CSS changes.
+* WPCS
 
 = 3.6.2 =
 
