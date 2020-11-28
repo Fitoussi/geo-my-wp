@@ -160,7 +160,7 @@ class GMW_Admin {
 	            ORDER BY object_type ASC, ID ASC
 	            LIMIT {$offset}, {$number}",
 				$blog_id,
-				$user->ID,
+				$user->ID
 			),
 			OBJECT
 		); // WPCS: db call ok, cache ok, unprepared SQL ok.
