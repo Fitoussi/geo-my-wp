@@ -126,17 +126,17 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 * Note that version 3.2 was a major release. If you are updating from an earlier version, then backing up your site and/or testing this version on a staging environment first is recommended. See the changelog of version 3.2 for more details before updating.
 *
 * --------------------------------
-* New: integration with WordPress Personal Data Exporter. Now the export will alos exclude the user's locations data.
+* New: integration with WordPress Personal Data Exporter. Now the export will also exclude the user's location data.
 * New: shortcode - [gmw_hours_of_operation] to display the hours of operation of a specific object.
-* Fix: variable does not pass properly from PHP to JavaScript and causes issue on Chrome where post wouldn't change from draft to public.
+* Fix: variable does not pass properly from PHP to JavaScript and causes an issue on Chrome where the post wouldn't change from draft to public.
 * Fix: issue on Chrome browsers when trying to Publish a post or when changing the post status.
 * Tweak: improve region verification when geocoding an address using LeafLet.
 * Tweak: give higher priority to locations with the "parent" column set to 1 when getting a location of an object.
 * Tweak: new argument to retrieve multiple locations using the GMW_Location::get_locations_data() method.
-* Tweak: remove comma from the invalid geocoding characters when using LeafLet. LeafLet seems to geocode addresses better when including the comma in the address.
-* Tweak: verify that a parent location is set for an object when adding, updating or deleting a location.
+* Tweak: remove the comma character from the invalid geocoding characters when using LeafLet. LeafLet seems to geocode addresses better when including the comma in the address.
+* Tweak: verify that a parent location is set for an object when adding, updating, or deleting a location.
 * Filter: 'gmw_geocoder_invalid_characters' to modify the invalid characters when parsing the raw address before geocoding.
-* various minor bugs fixes.
+* Various minor bug fixes.
 * minor CSS changes.
 * WPCS
 
