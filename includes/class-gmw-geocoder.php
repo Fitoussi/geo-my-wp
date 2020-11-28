@@ -142,7 +142,7 @@ class GMW_Geocoder {
 			'gmw_geocoder_invalid_characters',
 			$characters,
 			$this,
-			$raw_data,
+			$raw_data
 		);
 
 		return trim( strtolower( str_replace( array_keys( $invalid_chars ), array_values( $invalid_chars ), $raw_data ) ) );
