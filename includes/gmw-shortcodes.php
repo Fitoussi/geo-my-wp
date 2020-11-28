@@ -207,3 +207,56 @@ add_shortcode( 'gmw_address_fields', 'gmw_get_address_fields_shortcode' );
  * @function in includes/gmw-location-functions.php
  */
 add_shortcode( 'gmw_location_fields', 'gmw_get_location_fields' );
+
+/**
+ * GMW Function - display hours of operation.
+ *
+ * @since 3.6.3
+ *
+ * @author Eyal Fitoussi
+ *
+ * @param array $atts of args.
+ */
+function gmw_get_hours_of_operation_shortcode( $atts = array() ) {
+
+	// default shortcode attributes.
+	$atts = shortcode_atts(
+		array(
+			'location_id' => 0,
+			'object_type' => 'post',
+			'object_id'   => 0,
+			'title'       => __( 'Hours of operation', 'geo-my-wp' ),
+		),
+		$atts,
+		'gmw_get_hours_of_operation'
+	);
+
+	if ( ! empty( $atts['location_id'] ) ) {
+
+		$location_id = absint( $atts['location_id'] );
+
+		$output['data'] = gmw_get_hours_of_operation( $location_id );
+
+	} elseif ( is_string( $atts['object_type'] ) && ! empty( $atts['object_id'] ) ) {
+
+		$output = gmw_get_hours_of_operation( $atts['object_type'], $atts['object_id'] );
+	} else {
+		$output = false;
+	}
+
+	if ( empty( $output ) ) {
+		return;
+	}
+
+	$output = apply_filters(
+		'gmw_hours_of_operation_shortcode_output',
+		array(
+			'title'   => ! empty( $atts['title'] ) ? '<span>' . esc_attr( $atts['title'] ) . '</span>' : '',
+			'content' => $output,
+		),
+		$atts
+	);
+
+	return implode( '', $output );
+}
+add_shortcode( 'gmw_hours_of_operation', 'gmw_get_hours_of_operation_shortcode' );
