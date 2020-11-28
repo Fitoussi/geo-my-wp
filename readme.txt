@@ -5,7 +5,7 @@ Tags: Geolocation, Directory, Store Locator, Google Maps, OpenStreetMaps, LeafLe
 Requires at least: 4.5
 Tested up to: 5.6
 BuddyPress: 2.8
-Stable tag: 3.6.3
+Stable tag: 3.6.3.1
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
