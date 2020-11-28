@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: GEO my WP\n"
-"POT-Creation-Date: 2020-10-29 15:48-1000\n"
+"POT-Creation-Date: 2020-11-27 15:43-1000\n"
 "PO-Revision-Date: 2018-03-05 13:18-1000\n"
 "Last-Translator: Eyal Fitoussi <fitoussi_eyal@hotmail.com>\n"
 "Language-Team: Eyal Fitoussi <fitoussi_eyal@hotmail.com>\n"
@@ -58,26 +58,46 @@ msgstr ""
 msgid "Cheatin' eh?!"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:83
+#: includes/admin/class-gmw-admin.php:108
+msgid "GEO my WP Location Data"
+msgstr ""
+
+#: includes/admin/class-gmw-admin.php:147
+msgid "Posts Locations"
+msgstr ""
+
+#: includes/admin/class-gmw-admin.php:148
+msgid "User Locations"
+msgstr ""
+
+#: includes/admin/class-gmw-admin.php:149
+msgid "BuddyPress Groups Locations"
+msgstr ""
+
+#: includes/admin/class-gmw-admin.php:178
+msgid "GEO my WP Locations"
+msgstr ""
+
+#: includes/admin/class-gmw-admin.php:224
 #, php-format
 msgid ""
 "GEO my WP needs to import existing locations into its new database table. <a "
 "href=\"%s\" class=\"button-primary\"> Import locations</a>"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:103
+#: includes/admin/class-gmw-admin.php:250
 #, php-format
 msgid ""
 "<h2>Important GEO my WP notice!</h2><p>The folders names for the custom "
 "template files have changed since GEO my WP version 3.0. If you have custom "
 "template files placed in the theme or child theme folder, you need to rename "
 "the folders to be able to use your custom template files.</p><p>See <a href="
-"\"%s\" target=\"_blank\">this post</a> to learn about the new folders names."
-"</p><p><a href=\"%s\" class=\"button-secondary\">Dismiss</a></p>"
+"\"%1$s\" target=\"_blank\">this post</a> to learn about the new folders "
+"names.</p><p><a href=\"%2$s\" class=\"button-secondary\">Dismiss</a></p>"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:116
-#: includes/admin/class-gmw-admin.php:149
+#: includes/admin/class-gmw-admin.php:266
+#: includes/admin/class-gmw-admin.php:299
 #: includes/admin/pages/import-export/tabs/gmw-data.php:46
 #: includes/admin/pages/import-export/tabs/gmw-data.php:110
 #: includes/admin/pages/tools/tabs/reset-gmw.php:58
@@ -85,115 +105,116 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:117
-#: includes/admin/class-gmw-admin.php:139
+#: includes/admin/class-gmw-admin.php:267
+#: includes/admin/class-gmw-admin.php:289
 #: includes/admin/updater/class-gmw-license.php:227
 msgid "Extensions"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:138
+#: includes/admin/class-gmw-admin.php:288
 #: includes/admin/pages/class-gmw-extensions.php:612
 msgid "GEO my WP Extensions"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:148
+#: includes/admin/class-gmw-admin.php:298
 #: includes/admin/pages/class-gmw-settings.php:806
 msgid "GEO my WP Settings"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:160
+#: includes/admin/class-gmw-admin.php:310
 #: includes/admin/pages/class-gmw-forms-page.php:328
 msgid "GEO my WP Forms"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:161
+#: includes/admin/class-gmw-admin.php:311
 #: includes/admin/pages/import-export/class-gmw-import-export-page.php:115
 #: includes/admin/pages/tools/tabs/reset-gmw.php:85
 msgid "Forms"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:170
+#: includes/admin/class-gmw-admin.php:320
 msgid "GEO my WP Import / Export"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:171
+#: includes/admin/class-gmw-admin.php:321
 #: includes/admin/pages/import-export/class-gmw-import-export-page.php:72
 msgid "Import / Export"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:180
+#: includes/admin/class-gmw-admin.php:330
 msgid "GEO my WP Tools"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:181
+#: includes/admin/class-gmw-admin.php:331
 #: includes/admin/pages/tools/class-gmw-tools.php:47
 msgid "Tools"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:282
+#: includes/admin/class-gmw-admin.php:427 includes/class-gmw-addon.php:787
 #, php-format
-msgid "%s extension version %s requires GEO my WP plugin version %s or higher."
+msgid ""
+"%1$s extension version %2$s requires GEO my WP plugin version %3$s or higher."
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:294
+#: includes/admin/class-gmw-admin.php:439 includes/class-gmw-addon.php:807
 #, php-format
-msgid "%s extension requires an update to version %s."
+msgid "%1$s extension requires an update to version %2$s."
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:370
+#: includes/admin/class-gmw-admin.php:515
 msgid "GEO my WP Form Shortcode"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:373
+#: includes/admin/class-gmw-admin.php:518
 #: includes/admin/class-gmw-shortcodes-page.php:31
 msgid "GMW Form"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:394
+#: includes/admin/class-gmw-admin.php:537
 msgid "Please select a form"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:419
+#: includes/admin/class-gmw-admin.php:562
 msgid "Insert A Form Shortcode"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:420
+#: includes/admin/class-gmw-admin.php:563
 msgid "Select the type of shortcode you wish to add:"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:429
+#: includes/admin/class-gmw-admin.php:572
 msgid "Complete Form"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:436
+#: includes/admin/class-gmw-admin.php:579
 msgid "Search Form Only"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:443
+#: includes/admin/class-gmw-admin.php:586
 msgid "Map Only"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:450
+#: includes/admin/class-gmw-admin.php:593
 msgid "Search Results Only"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:458
+#: includes/admin/class-gmw-admin.php:601
 msgid "Select a Form"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:482
+#: includes/admin/class-gmw-admin.php:625
 msgid "Insert Shortcode"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:486
+#: includes/admin/class-gmw-admin.php:629
 msgid "Cancel"
 msgstr ""
 
-#: includes/admin/class-gmw-admin.php:502
+#: includes/admin/class-gmw-admin.php:646
 #, php-format
 msgid ""
-"and Geolocating with <a %s>GEO my WP</a>. Your <a %s>feedback</a> on GEO my "
-"WP is greatly appriciated."
+"and Geolocating with <a %1$s>GEO my WP</a>. Your <a %2$s>feedback</a> on GEO "
+"my WP is greatly appriciated."
 msgstr ""
 
 #: includes/admin/class-gmw-form-settings-helper.php:383
@@ -2544,17 +2565,6 @@ msgid ""
 "Contact support for more information."
 msgstr ""
 
-#: includes/class-gmw-addon.php:787
-#, php-format
-msgid ""
-"%1$s extension version %2$s requires GEO my WP plugin version %3$s or higher."
-msgstr ""
-
-#: includes/class-gmw-addon.php:807
-#, php-format
-msgid "%1$s extension requires an update to version %2$s."
-msgstr ""
-
 #: includes/class-gmw-addon.php:941
 #, php-format
 msgid ""
@@ -2562,7 +2572,7 @@ msgid ""
 "information."
 msgstr ""
 
-#: includes/class-gmw-cron.php:39
+#: includes/class-gmw-cron.php:47
 msgid "Once Weekly"
 msgstr ""
 
@@ -2583,27 +2593,27 @@ msgstr ""
 msgid "%s is invalid form type."
 msgstr ""
 
-#: includes/class-gmw-form.php:548
+#: includes/class-gmw-form.php:549
 msgid "Your location"
 msgstr ""
 
-#: includes/class-gmw-form.php:1127
+#: includes/class-gmw-form.php:1128
 msgid "No results found"
 msgstr ""
 
-#: includes/class-gmw-geocoder.php:246
+#: includes/class-gmw-geocoder.php:258
 msgid "Location is missing."
 msgstr ""
 
-#: includes/class-gmw-geocoder.php:282
+#: includes/class-gmw-geocoder.php:294
 msgid "Geocoding failed"
 msgstr ""
 
-#: includes/class-gmw-geocoder.php:334
+#: includes/class-gmw-geocoder.php:346
 msgid "Location data was not found."
 msgstr ""
 
-#: includes/class-gmw-geocoder.php:340
+#: includes/class-gmw-geocoder.php:352
 msgid "Unable to contact the API service or failed geocoding."
 msgstr ""
 
@@ -2891,6 +2901,12 @@ msgstr ""
 msgid "The add-on which this form belongs to is deactivated."
 msgstr ""
 
+#: includes/gmw-shortcodes.php:228
+#: includes/template-functions/gmw-info-window-template-functions.php:129
+#: includes/template-functions/gmw-search-results-template-functions.php:123
+msgid "Hours of operation"
+msgstr ""
+
 #: includes/location-form/includes/class-gmw-location-form.php:362
 msgid "Comnfirming Location..."
 msgstr ""
@@ -2900,7 +2916,7 @@ msgid "Location confirmed"
 msgstr ""
 
 #: includes/location-form/includes/class-gmw-location-form.php:364
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:129
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:136
 #: plugins/single-location/includes/class-gmw-single-location-widget.php:206
 msgid "No location found"
 msgstr ""
@@ -2959,12 +2975,12 @@ msgstr ""
 #: plugins/bp-profile-search-geolocation/includes/class-gmw-bp-profile-search-geolocation.php:143
 #: plugins/members-locator/includes/class-gmw-locations-component.php:99
 #: plugins/members-locator/includes/class-gmw-locations-component.php:132
-#: plugins/members-locator/includes/class-gmw-members-locator-location-tab.php:32
-#: plugins/members-locator/includes/class-gmw-members-locator-location-tab.php:33
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:81
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:86
+#: plugins/members-locator/includes/class-gmw-members-locator-location-tab.php:42
+#: plugins/members-locator/includes/class-gmw-members-locator-location-tab.php:43
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:88
 #: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:93
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:169
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:100
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:176
 msgid "Location"
 msgstr ""
 
@@ -3027,7 +3043,7 @@ msgid "Longitude"
 msgstr ""
 
 #: includes/location-form/includes/class-gmw-location-form.php:704
-#: plugins/members-locator/includes/class-gmw-members-locator-location-tab.php:34
+#: plugins/members-locator/includes/class-gmw-members-locator-location-tab.php:44
 msgid "Update location"
 msgstr ""
 
@@ -3111,11 +3127,6 @@ msgstr ""
 #: includes/template-functions/gmw-search-results-template-functions.php:89
 #: plugins/posts-locator/includes/class-gmw-post-location-form.php:91
 msgid "Contact Information"
-msgstr ""
-
-#: includes/template-functions/gmw-info-window-template-functions.php:129
-#: includes/template-functions/gmw-search-results-template-functions.php:123
-msgid "Hours of operation"
 msgstr ""
 
 #: includes/template-functions/gmw-search-form-template-functions.php:206
@@ -3657,7 +3668,7 @@ msgid ""
 "post in the list of results."
 msgstr ""
 
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:147
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:154
 msgid "Location found but the address is missing"
 msgstr ""
 
