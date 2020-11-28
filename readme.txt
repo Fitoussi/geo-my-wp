@@ -121,6 +121,9 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 
 == Changelog ==
 
+= 3.6.3.1 =
+* Fix: fatal error message.
+
 = 3.6.3 =
 
 * Note that version 3.2 was a major release. If you are updating from an earlier version, then backing up your site and/or testing this version on a staging environment first is recommended. See the changelog of version 3.2 for more details before updating.
