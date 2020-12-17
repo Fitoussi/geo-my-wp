@@ -1207,14 +1207,14 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 				foreach ( $items as $key => $item ) {
 
 					if ( empty( $item['callback_function'] ) ) {
-						continue;
+						//continue;
 					}
 
 					$menu_items[] = $item;
 				}
 
 				// generate single menu item.
-			} elseif ( ! empty( $items['callback_function'] ) ) {
+			} else {
 
 				$menu_items[] = $items;
 			}
