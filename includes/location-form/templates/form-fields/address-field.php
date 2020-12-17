@@ -20,7 +20,7 @@
 	<!-- description -->
 	<?php if ( ! empty( $field['desc'] ) ) : ?>
 		<em class="description">
-			<?php echo $field['desc']; ?>	
+			<?php echo esc_html( $field['desc'] ); ?>
 		</em>
 	<?php endif; ?>
 
