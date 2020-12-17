@@ -21,7 +21,7 @@
 	
 	<?php if ( ! empty( $field['desc'] ) ) { ?>
 		<small class="description">
-			<?php echo $field['desc']; ?>	
+			<?php echo esc_html( $field['desc'] ); ?>
 		</small>
 	<?php } ?>
 
