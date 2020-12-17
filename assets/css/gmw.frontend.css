@@ -2994,9 +2994,10 @@ body div.gmw-ml-locations-dashboard-button-warpper {
 	 
 	div.gmw-ajax-form-wrapper select {
 		border: 1px solid #ccc;
-		height:34px;
+		height: 34px;
 		font-size: 13px;
-		color:#333;
+		color: #333;
+		overflow: scroll;
 	}
 
 	div.gmw-ajax-form-wrapper .gmw-field-label {
