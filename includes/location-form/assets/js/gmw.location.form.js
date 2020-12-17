@@ -1546,13 +1546,15 @@ var GMW_Location_Form = {
 	 */
 	ajax_delete : function() {
 
+		var formValues = jQuery( this_form.vars.form_element ).serialize();
+
 		this_form.ajaxResponse = jQuery.ajax({
 			type 	 : "post",
 			dataType : 'json',
 			url      : gmwVars.ajaxUrl,
 			data 	 : {
 				action       : this_form.vars.delete_callback, 
-			 	'formValues' : jQuery( this_form.vars.form_element ).serialize(), 
+			 	'formValues' : formValues, 
 				'formArgs'   : this_form.vars,
 				'security'	 : this_form.security
 			},		
@@ -1561,6 +1563,8 @@ var GMW_Location_Form = {
 			success  : function( response ) {
 		
 				if ( response ) {
+
+					GMW.do_action( 'gmw_lf_location_deleted', response, formValues, this_form.vars );
 
 					//clear all location fields
 	  				jQuery( '.group_address, .group_coordinates, .gmw-lf-field.address-field, .gmw-lf-extra-field, #gmw_lf_location_id' ).val( '' );
