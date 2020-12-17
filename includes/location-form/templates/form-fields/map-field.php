@@ -17,7 +17,7 @@
 	</div>
 
 	<?php if ( ! empty( $field['desc'] ) ) { ?>
-		<em class="description"><?php echo $field['desc']; ?></em>
+		<em class="description"><?php echo esc_html( $field['desc'] ); ?></em>
 	<?php } ?>
 	
 </fieldset>
