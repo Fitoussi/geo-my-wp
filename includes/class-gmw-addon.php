@@ -1205,11 +1205,6 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 			if ( ! empty( $items[0] ) && is_array( $items[0] ) ) {
 
 				foreach ( $items as $key => $item ) {
-
-					if ( empty( $item['callback_function'] ) ) {
-						//continue;
-					}
-
 					$menu_items[] = $item;
 				}
 
