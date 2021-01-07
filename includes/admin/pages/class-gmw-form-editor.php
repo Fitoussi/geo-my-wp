@@ -1358,9 +1358,9 @@ class GMW_Form_Editor {
 	        </div>
 
 	        <?php 
-	        if ( ! wp_script_is( 'chosen', 'enqueued' ) ) {
-	            wp_enqueue_script( 'chosen' );
-	            wp_enqueue_style( 'chosen' );
+	        if ( ! wp_script_is( 'select2', 'enqueued' ) ) {
+	            wp_enqueue_script( 'select2' );
+	            wp_enqueue_style( 'select2' );
 	        }
 	        ?>
 	    </div>   
