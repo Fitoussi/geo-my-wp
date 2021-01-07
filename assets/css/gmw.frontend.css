@@ -10,12 +10,12 @@
 
 @font-face {
   font-family: 'geo-my-wp';
-  src: url('../font/geo-my-wp.eot?81076368');
-  src: url('../font/geo-my-wp.eot?81076368#iefix') format('embedded-opentype'),
-       url('../font/geo-my-wp.woff2?81076368') format('woff2'),
-       url('../font/geo-my-wp.woff?81076368') format('woff'),
-       url('../font/geo-my-wp.ttf?81076368') format('truetype'),
-       url('../font/geo-my-wp.svg?81076368#geo-my-wp') format('svg');
+  src: url('../font/geo-my-wp.eot?474907');
+  src: url('../font/geo-my-wp.eot?474907#iefix') format('embedded-opentype'),
+       url('../font/geo-my-wp.woff2?474907') format('woff2'),
+       url('../font/geo-my-wp.woff?474907') format('woff'),
+       url('../font/geo-my-wp.ttf?474907') format('truetype'),
+       url('../font/geo-my-wp.svg?474907#geo-my-wp') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -25,7 +25,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'geo-my-wp';
-    src: url('../font/geo-my-wp.svg?81076368#geo-my-wp') format('svg');
+    src: url('../font/geo-my-wp.svg?474907#geo-my-wp') format('svg');
   }
 }
 */
@@ -34,7 +34,7 @@
   font-family: "geo-my-wp";
   font-style: normal;
   font-weight: normal;
-  speak: none;
+  speak: never;
  
   display: inline-block;
   text-decoration: inherit;
@@ -158,9 +158,14 @@
 .gmw-icon-target-1:before { content: '\e85a'; } /* '' */
 .gmw-icon-download:before { content: '\e85b'; } /* '' */
 .gmw-icon-download-1:before { content: '\e85c'; } /* '' */
+.gmw-icon-trash-empty:before { content: '\e85d'; } /* '' */
+.gmw-icon-off:before { content: '\e85e'; } /* '' */
 .gmw-icon-move:before { content: '\f047'; } /* '' */
 .gmw-icon-users-1:before { content: '\f064'; } /* '' */
 .gmw-icon-sort:before { content: '\f0dc'; } /* '' */
+.gmw-icon-trash:before { content: '\f1f8'; } /* '' */
+.gmw-icon-toggle-off:before { content: '\f204'; } /* '' */
+.gmw-icon-toggle-on:before { content: '\f205'; } /* '' */
 .gmw-icon-map-pin:before { content: '\f276'; } /* '' */
 .gmw-icon-map-o:before { content: '\f278'; } /* '' */
 .gmw-icon-map-1:before { content: '\f279'; } /* '' */
