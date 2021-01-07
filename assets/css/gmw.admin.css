@@ -424,6 +424,18 @@ div.gmw-settings-wrapper {
 	max-width: 500px;
 }
 
+body .select2-container {
+	z-index: 9999;
+}
+
+body .gmw-admin-page select {
+	width: 100%;
+	max-width: 500px;
+}
+
+body ul.select2-selection__rendered.ui-sortable li {
+	cursor: move ! important;
+}
 /******* GMW Settings area wrapper end *********/
 
 
