@@ -1036,10 +1036,10 @@ class GMW_Settings {
 			});
 		</script>
 		<?php
-		// load chosen.
-		if ( ! wp_script_is( 'chosen', 'enqueued' ) ) {
-			wp_enqueue_script( 'chosen' );
-			wp_enqueue_style( 'chosen' );
+		// load select2.
+		if ( ! wp_script_is( 'select2', 'enqueued' ) ) {
+			wp_enqueue_script( 'select2' );
+			wp_enqueue_style( 'select2' );
 		}
 	}
 }
