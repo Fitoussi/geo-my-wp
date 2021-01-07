@@ -216,6 +216,7 @@ if ( ! class_exists( 'GMW_Installer' ) ) :
 				parent BIGINT(20) UNSIGNED NOT NULL default 0,
 				status INT(11) NOT NULL default 1,
 				featured TINYINT NOT NULL default 0,
+				location_type BIGINT(20) UNSIGNED NOT NULL DEFAULT 0,
 				title TEXT,
 				latitude FLOAT( 10, 6 ) NOT NULL,
 	  			longitude FLOAT( 10, 6 ) NOT NULL,
@@ -366,6 +367,14 @@ if ( ! class_exists( 'GMW_Installer' ) ) :
 				// create new radius column if not exists.
 				if ( empty( $column ) ) {
 					$wpdb->query( "ALTER TABLE {$locations_table} ADD COLUMN radius NUMERIC( 6,1 ) NOT NULL AFTER map_icon" ); // WPCS: db call ok, cache ok, unprepared SQL ok.
+				}
+
+				// look for the location type colummn.
+				$column = $wpdb->get_results( "SHOW COLUMNS FROM {$locations_table} LIKE 'location_type'" ); // WPCS: db call ok, cache ok, unprepared SQL ok.
+
+				// create new location type column if not exists.
+				if ( empty( $column ) ) {
+					$wpdb->query( "ALTER TABLE {$locations_table} ADD COLUMN location_type bigint(20) unsigned NOT NULL DEFAULT '0' AFTER featured" ); // WPCS: db call ok, cache ok, unprepared SQL ok.
 				}
 
 				// Add indexes if not exist.
