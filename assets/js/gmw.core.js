@@ -788,7 +788,9 @@ var GMW = {
 
         // enable select 2
         } else if ( jQuery().select2 ) {
-            jQuery( 'form' ).find( 'select.gmw-smartbox' ).select2();
+            jQuery( 'form' ).find( 'select.gmw-smartbox' ).select2({
+                width : '100%'
+            });
         }
     },
 
