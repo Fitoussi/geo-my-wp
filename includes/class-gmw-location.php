@@ -355,7 +355,7 @@ class GMW_Location {
 		// verify user ID.
 		if ( ! self::verify_id( $location_data['user_id'] ) ) {
 
-			trigger_error( 'Trying to update a location using invalid user ID.', E_USER_NOTICE );
+			gmw_trigger_error( 'Trying to update a location using invalid user ID.' );
 
 			return false;
 		}
