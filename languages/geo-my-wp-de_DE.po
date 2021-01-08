@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: GEO my WP v2.4.2.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:49-1000\n"
-"PO-Revision-Date: 2021-01-08 09:58+0100\n"
+"PO-Revision-Date: 2021-01-08 10:11+0100\n"
 "Last-Translator: Eyal Fitoussi <fitoussi_eyal@hotmail.com>\n"
 "Language-Team: Eyal Fitoussi <info@geomywp.com>\n"
 "Language: de_DE\n"
@@ -1296,7 +1296,7 @@ msgstr ""
 
 #: includes/admin/pages/class-gmw-form-editor.php:1149
 msgid "Edit Form"
-msgstr ""
+msgstr "Formular bearbeiten"
 
 #: includes/admin/pages/class-gmw-form-editor.php:1155
 msgid "Name"
@@ -1312,20 +1312,20 @@ msgstr ""
 #: includes/admin/pages/class-gmw-form-editor.php:1162
 #: includes/admin/pages/class-gmw-forms-page.php:418
 msgid "Delete form"
-msgstr ""
+msgstr "Formular löschen"
 
 #: includes/admin/pages/class-gmw-form-editor.php:1162
 msgid "Delete Form"
-msgstr ""
+msgstr "Formular löschen"
 
 #: includes/admin/pages/class-gmw-form-editor.php:1164
 #: includes/admin/pages/class-gmw-forms-page.php:412
 msgid "Duplicate form"
-msgstr ""
+msgstr "Formular duplizieren"
 
 #: includes/admin/pages/class-gmw-form-editor.php:1164
 msgid "Duplicate Form"
-msgstr ""
+msgstr "Formular duplizieren"
 
 # @ GMW
 #: includes/admin/pages/class-gmw-form-editor.php:1166
@@ -1334,11 +1334,11 @@ msgstr "Änderungen speichern"
 
 #: includes/admin/pages/class-gmw-form-editor.php:1170
 msgid "Form updated!"
-msgstr ""
+msgstr "Formular aktualisiert!"
 
 #: includes/admin/pages/class-gmw-form-editor.php:1171
 msgid "Form update failed!"
-msgstr ""
+msgstr "Formular Aktualisierung fehlgeschlagen!"
 
 #: includes/admin/pages/class-gmw-form-editor.php:1206
 msgid "Form Usage"
@@ -1424,7 +1424,7 @@ msgstr ""
 #: includes/admin/pages/class-gmw-forms-page.php:370
 #: includes/admin/pages/class-gmw-forms-page.php:484
 msgid "Form Type"
-msgstr ""
+msgstr "Formulartyp"
 
 #: includes/admin/pages/class-gmw-forms-page.php:371
 #: includes/admin/pages/class-gmw-forms-page.php:485
@@ -3005,7 +3005,7 @@ msgstr ""
 
 #: includes/template-functions/class-gmw-template-functions-helper.php:35
 msgid "read more..."
-msgstr ""
+msgstr "mehr lesen..."
 
 # @ GMW
 #: includes/template-functions/class-gmw-template-functions-helper.php:125
@@ -3030,11 +3030,11 @@ msgstr "pro Seite"
 
 #: includes/template-functions/class-gmw-template-functions-helper.php:348
 msgid "Default order"
-msgstr ""
+msgstr "Standardreihenfolge"
 
 #: includes/template-functions/class-gmw-template-functions-helper.php:422
 msgid "1 location found"
-msgstr ""
+msgstr "1 Ort gefunden"
 
 #: includes/template-functions/class-gmw-template-functions-helper.php:424
 msgid "Showing all {total_results} locations"
@@ -3059,7 +3059,7 @@ msgstr "innerhalb"
 
 #: includes/template-functions/gmw-template-functions.php:250
 msgid "Per page"
-msgstr ""
+msgstr "pro Seite"
 
 #: includes/widgets/class-gmw-search-form-widget.php:41
 msgid "Display GEO my WP search form."
@@ -3071,7 +3071,7 @@ msgstr ""
 
 #: includes/widgets/class-gmw-search-form-widget.php:74
 msgid "Search Locations"
-msgstr ""
+msgstr "Suche Orte"
 
 #: includes/widgets/class-gmw-search-form-widget.php:75
 msgid "Title"
@@ -3256,7 +3256,7 @@ msgstr "Vollständige Adresse"
 #: plugins/current-location/includes/class-gmw-current-location-widget.php:98
 #: plugins/single-location/includes/class-gmw-single-location-widget.php:113
 msgid "Postcode"
-msgstr ""
+msgstr "Postleitzahl"
 
 #: plugins/current-location/includes/class-gmw-current-location-widget.php:101
 msgid ""
@@ -3276,7 +3276,7 @@ msgstr ""
 
 #: plugins/current-location/includes/class-gmw-current-location-widget.php:112
 msgid "Address autocomplete"
-msgstr ""
+msgstr "Autovervollständigung Adresse"
 
 #: plugins/current-location/includes/class-gmw-current-location-widget.php:113
 msgid ""
@@ -3625,25 +3625,25 @@ msgstr "E-Mailadresse"
 #: plugins/posts-locator/includes/gmw-posts-locator-search-form-template-functions.php:66
 #, php-format
 msgid "All %s"
-msgstr ""
+msgstr "Alle %s"
 
 #: plugins/posts-locator/includes/gmw-posts-locator-search-form-template-functions.php:67
 #, php-format
 msgid "Select %s"
-msgstr ""
+msgstr "Auswählen %s"
 
 #: plugins/posts-locator/includes/gmw-posts-locator-search-form-template-functions.php:95
 msgid "No results match"
-msgstr ""
+msgstr "Kein Treffer"
 
 #: plugins/posts-locator/includes/gmw-posts-locator-search-form-template-functions.php:193
 #: plugins/posts-locator/includes/gmw-posts-locator-search-form-template-functions.php:253
 msgid "Search site"
-msgstr ""
+msgstr "Suchseite"
 
 #: plugins/posts-locator/loader.php:202
 msgid "Post"
-msgstr ""
+msgstr "Beitrag"
 
 #: plugins/single-location/includes/class-gmw-single-location-widget.php:46
 msgid "Display the location of a single object ( Post, BP member... )."
@@ -3698,7 +3698,7 @@ msgstr ""
 
 #: plugins/single-location/includes/class-gmw-single-location-widget.php:127
 msgid "Distance units"
-msgstr ""
+msgstr "Entfernungs Einheit"
 
 #: plugins/single-location/includes/class-gmw-single-location-widget.php:179
 msgid "Object map icon"
