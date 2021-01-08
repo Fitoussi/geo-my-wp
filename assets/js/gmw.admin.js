@@ -3,11 +3,21 @@ jQuery( document ).ready( function( jQuery ) {
 	var GMW_Admin = {
 
 	    init : function () {
-
-	        // apply chosen to all select elements in GEO my WP admin pages
-	        if ( jQuery().chosen ) {
+	        
+	        /*if ( jQuery().chosen ) {
 	            jQuery( '.gmw-admin-page select:not( .gmw-smartbox-not )' ).chosen( {
 	                width : "100%"
+	            });
+	        }*/
+
+	        jQuery( '.gmw-admin-page select' ).css( { 'width': '100%', 'max-width': '500px' } );
+	        jQuery( '.gmw-admin-page select[multiple]' ).attr( 'data-close-on-select', 'false' );
+
+	        // apply select2 to all select elements in GEO my WP admin pages
+	        if ( jQuery().select2 ) {
+	            jQuery( '.gmw-admin-page select:not( .gmw-smartbox-not )' ).select2({
+	            	//theme: 'classic',
+	            	//closeOnSelect: false,
 	            });
 	        }
 
@@ -15,6 +25,8 @@ jQuery( document ).ready( function( jQuery ) {
 	        GMW_Admin.tabs_switcher_init();
 
 	        GMW_Admin.multiple_address_fields_selector();
+
+	        GMW_Admin.sortable_select_items();
 
 	        // do only on form editor page
 	        if ( jQuery( '#gmw-edit-form-page, .geo-my-wp_page_gmw-settings' ).length ) {
@@ -115,6 +127,77 @@ jQuery( document ).ready( function( jQuery ) {
 	        }); 
 
 	    },
+
+	    /**
+	     * Make multi-select element sortable.
+	     * 
+	     * @return {[type]} [description]
+	     */
+	    sortable_select_items : function() {
+
+			jQuery( '.gmw-admin-page select[multiple][data-sortable="1"]').each( function() {
+
+				var element    = jQuery( this );
+				var ulElem     = element.parent().find( "ul.select2-selection__rendered" );
+				var items      = ulElem.children();
+				var savedOrder = element.data( 'options_order' );
+				    savedOrder = ( savedOrder != 0 && savedOrder.indexOf( ',' ) != -1 ) ? savedOrder.split(',') : '';
+				
+				ulElem.sortable({
+				    containment : 'parent',
+				    cursor      : 'move', 
+				    update      : function() {
+				        orderSortedValues( element, jQuery( this ) );
+				    }
+				});
+
+				// Reorder the select dropdown object based on order of sortable items.
+				orderSortedValues = function( element, ulElem ) {
+					
+				   ulElem.children( 'li[title]' ).each( function( i, obj ) {
+				        
+				        var child = element.children('option').filter( function () { 
+				        	return jQuery(this).html() == obj.title;
+				        });
+
+				        moveElementToEndOfParent( child );
+				    });
+				};
+
+				moveElementToEndOfParent = function( child ) {
+				    
+				    var parent = child.parent();
+
+				    child.detach();
+
+				    parent.append( child );
+				};
+
+				if ( savedOrder != '' ) {
+
+					for ( var i = 0, l = savedOrder.length; i < l; i++ ) {
+
+					    // index is zero-based to you have to remove one from the values in your array
+					    ulElem.prepend( items.get( savedOrder[i] ) );
+					}
+
+					setTimeout( function() {
+						orderSortedValues( element, ulElem );
+					}, 500 );
+				}
+
+
+				element.on( 'select2:select', function ( event ) {
+			        
+			        var id    = event.params.data.id;
+			        var child = jQuery( this ).children( "option[value=" + id + "]" );
+
+			        moveElementToEndOfParent( child );
+
+			        jQuery( this ).trigger( 'change' );
+			    });
+			});
+		},
 
 	    /**
 	     * form editor functions
