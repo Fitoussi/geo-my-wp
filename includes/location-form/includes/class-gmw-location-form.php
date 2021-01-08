@@ -1308,7 +1308,10 @@ class GMW_Location_Form {
 
 		// Update location.
 		$location_id = gmw_insert_location( $location_args );
-		$location['ID'] = gmw_insert_location( $location_args );
+
+		// Get the new location update it was updated in the databased.
+		// The array of the location above might be missing some data if not all the fields were updated.
+		$location = gmw_get_location( $location_id, ARRAY_A, false );
 
 		// filter location meta before updating.
 		$location_meta = apply_filters( 'gmw_lf_location_meta_before_location_updated', $location_meta, $location, $form_values );
