@@ -1292,8 +1292,11 @@ class GMW_Location_Form {
 			'formatted_address' => $location['formatted_address'],
 			'place_id'          => $location['place_id'],
 			'map_icon'          => $location['map_icon'],
-			'radius'            => $location['radius'],
 		);
+
+		if ( array_key_exists( 'radius', $location ) ) {
+			$location_args['radius'] = ! empty( $location['radius'] ) ? $location['radius'] : 0.0;
+		}
 
 		// filter location args before updating location.
 		$location_args = apply_filters( 'gmw_lf_location_args_before_location_updated', $location_args, $location, $form_values );
