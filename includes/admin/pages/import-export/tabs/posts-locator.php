@@ -338,9 +338,9 @@ function gmw_output_import_export_tab() {
 	</div>
 	<?php
 	// load chosen.
-	if ( ! wp_script_is( 'chosen', 'enqueued' ) ) {
-		wp_enqueue_script( 'chosen' );
-		wp_enqueue_style( 'chosen' );
+	if ( ! wp_script_is( 'select2', 'enqueued' ) ) {
+		wp_enqueue_script( 'select2' );
+		wp_enqueue_style( 'select2' );
 	}
 }
 add_action( 'gmw_import_export_posts_locator_tab', 'gmw_output_import_export_tab' );
