@@ -397,10 +397,12 @@ class GMW_Location {
 			// get the country code from the list.
 			$location_data['country_code'] = ! empty( $country_code ) ? $country_code : '';
 		}
+
 		global $wpdb;
 
 		$table          = self::get_table();
 		$default_values = self::default_values();
+
 		// update existing location.
 		if ( $update ) {
 
