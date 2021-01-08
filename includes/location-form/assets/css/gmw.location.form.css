@@ -239,6 +239,7 @@ div#gmw-location-form-wrapper label {
 	margin: 0 0px 3px 3px;
 	display:block;
 	text-transform: capitalize;
+	line-height: 24px;
 }
 
 div#gmw-location-form-wrapper input[type="text"] {
@@ -352,7 +353,8 @@ div#gmw-location-form-wrapper em.description {
 	opacity: .75;
 	font-size: 11px;
 	display: block;
-	margin-top: 2px
+	margin-top: 2px;
+	line-height: 24px;
 }
 
 div#gmw-location-form-wrapper .fa.fa-refresh.fa-spin {
