@@ -324,10 +324,10 @@ class GMW_Location_Form {
 
 		do_action( 'gmw_location_form_enqueue_script' );
 
-		// load chosen if not already loaded.
-		if ( ! wp_script_is( 'chosen', 'enqueued' ) ) {
-			wp_enqueue_script( 'chosen' );
-			wp_enqueue_style( 'chosen' );
+		// load select if not already loaded.
+		if ( ! wp_script_is( 'select2', 'enqueued' ) ) {
+			wp_enqueue_script( 'select2' );
+			wp_enqueue_style( 'select2' );
 		}
 
 		wp_localize_script(
