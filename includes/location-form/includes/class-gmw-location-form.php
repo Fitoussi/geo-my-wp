@@ -1382,24 +1382,25 @@ class GMW_Location_Form {
 		$location = ! empty( $form_values['gmw_location_form'] ) ? $form_values['gmw_location_form'] : array();
 
 		// abort if there is no location ID to delete.
-		$location['ID'] = ! empty( $location['ID'] ) ? $location['ID'] : 0;
-
-		// abort if there is no location ID to delete
 		if ( empty( $location['ID'] ) ) {
 			die();
 		}
 
-		// do something before location deleted
+		// Get the new location update it was updated in the databased.
+		// The array of the location above might be missing some data if not all the fields exists in the location form.
+		$location = gmw_get_location( $location['ID'], ARRAY_A, false );
+
+		// do something before location deleted.
 		do_action( 'gmw_lf_before_location_deleted', $location, $form_values );
 		do_action( 'gmw_lf_before_' . $location['object_type'] . '_location_deleted', $location, $form_values );
 
 		$location_id = gmw_delete_location( $location['ID'], true );
 
-		// do something after location deleted
+		// do something after location deleted.
 		do_action( 'gmw_lf_after_location_deleted', $location, $form_values );
 		do_action( 'gmw_lf_after_' . $location['object_type'] . '_location_deleted', $location, $form_values );
 
-		// send the location ID back to AJAX call
+		// send the location ID back to AJAX call.
 		wp_send_json( ! empty( $location_id ) ? $location_id : false );
 	}
 }
