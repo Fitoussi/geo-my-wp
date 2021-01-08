@@ -260,7 +260,8 @@ class GMW_Location {
 		// get common globals.
 		global $post, $comment, $user;
 
-		$location = $found = false;
+		$location = false;
+		$found    = false;
 
 		// check for post ID and try to get the location if found.
 		if ( ! empty( $post->ID ) ) {
