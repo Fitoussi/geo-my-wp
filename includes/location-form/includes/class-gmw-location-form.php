@@ -1257,36 +1257,22 @@ class GMW_Location_Form {
 			return;
 		}
 
-		// get the object type.
+		// Verify some location data.
+		$location['ID']          = ! empty( $location['ID'] ) ? $location['ID'] : 0;
 		$location['object_type'] = ! empty( $object_type ) ? $object_type : $location['object_type'];
-
-		// get the object ID.
-		$location['object_id'] = ! empty( $object_id ) ? $object_id : $location['object_id'];
-
-		$location['title'] = ! empty( $form_values['title'] ) ? $form_values['title'] : '';
-
-		$location['featured'] = ! empty( $form_values['featured'] ) ? 1 : 0;
-
-		// get the location ID if exists.
-		$location_id = ! empty( $location['ID'] ) ? $location['ID'] : 0;
+		$location['object_id']   = ! empty( $object_id ) ? $object_id : $location['object_id'];
+		$location['title']       = ! empty( $form_values['title'] ) ? $form_values['title'] : '';
+		$location['map_icon']    = ! empty( $location['map_icon'] ) ? $location['map_icon'] : '_default.png';
 
 		// location meta.
 		$location_meta = ! empty( $location['location_meta'] ) ? $location['location_meta'] : array();
 
-		// map icon if exists.
-		$location['map_icon'] = ! empty( $location['map_icon'] ) ? $location['map_icon'] : '_default.png';
-
-		// radius if exists.
-		$location['radius'] = ! empty( $location['radius'] ) ? $location['radius'] : 0.0;
-
 		$location_args = array(
-			'ID'                => $location_id,
+			'ID'                => (int) $location['ID'],
 			'object_type'       => $location['object_type'],
 			'object_id'         => (int) $location['object_id'],
 			'user_id'           => (int) $location['user_id'],
-			'parent'            => 0,
 			'status'            => 1,
-			'featured'          => $location['featured'],
 			'title'             => $location['title'],
 			'latitude'          => $location['latitude'],
 			'longitude'         => $location['longitude'],
