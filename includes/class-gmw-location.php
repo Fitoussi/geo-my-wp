@@ -935,7 +935,7 @@ class GMW_Location {
 		$db_fields = apply_filters( 'gmw_get_locations_db_fields', $db_fields, $gmw );
 		$db_fields = apply_filters( "gmw_get_{$args['object_type']}_locations_db_fields", $db_fields, $gmw );
 
-		// for cache key
+		// for cache key.
 		//$args['db_fields'] = $db_fields;
 
 		$count  = 0;
