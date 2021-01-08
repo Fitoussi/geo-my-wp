@@ -997,10 +997,12 @@ class GMW_Location_Form {
 
 			foreach ( $field['attributes'] as $attribute_name => $attribute_value ) {
 
-				$attributes[] = $attribute_name . '="' . $attribute_value . '"';
+				$attributes[] = $attribute_name . '=' . $attribute_value;
 
 				$field['attributes'] = implode( ' ', $attributes );
 			}
+		} else {
+			$field['attributes'] = '';
 		}
 
 		// include form field file.
