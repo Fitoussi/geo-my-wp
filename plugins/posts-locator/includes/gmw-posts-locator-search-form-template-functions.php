@@ -131,7 +131,7 @@ class GMW_PT_Search_Form_Helper {
 			}
 
 			// select tag.
-			$output .= "<select name=\"tax[{$tax_name}][]\" id=\"{$tax_name}-taxonomy-{$id}\" class=\"gmw-form-field gmw-taxonomy {$tax_name}\">";
+			$output .= "<select name=\"tax[{$tax_name}][]\" id=\"{$tax_name}-taxonomy-{$id}\" class=\"gmw-form-field gmw-taxonomy {$tax_name}\" data-dropdown-parent=\"#{$taxonomy->name}-taxonomy-wrapper\">";
 
 			if ( ! empty( $tax_args['show_option_all'] ) ) {
 				$output .= '<option value="" selected="selected">' . esc_attr( $tax_args['show_option_all'] ) . '</option>';
