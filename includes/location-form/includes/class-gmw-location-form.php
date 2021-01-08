@@ -1343,28 +1343,21 @@ class GMW_Location_Form {
 
 			wp_send_json( ! empty( $location['ID'] ) ? $location['ID'] : false );
 
-		} else {
+		} elseif ( ! IS_ADMIN ) {
 
-			if ( IS_ADMIN ) {
+			// reload page to prevent re-submission.
+			wp_redirect( $_SERVER['REQUEST_URI'] );
 
-			} else {
-
-				// reload page to prevent re-submission.
-				wp_redirect( $_SERVER['REQUEST_URI'] );
-
-				// exist only if stand alone form. Otherwise, we need.
-				// to allow the original form to process.
-				if ( $_POST['gmw_lf_stand_alone'] ) {
-					exit;
-				}
+			// exist only if stand alone form. Otherwise, we need.
+			// to allow the original form to process.
+			if ( $_POST['gmw_lf_stand_alone'] ) {
+				exit;
 			}
 		}
 	}
 
 	/**
 	 * Delete location from database
-	 *
-	 * @return [type] [description]
 	 */
 	public static function delete_location() {
 
