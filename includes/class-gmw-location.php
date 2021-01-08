@@ -415,9 +415,9 @@ class GMW_Location {
 				return false;
 			}
 
-			// if no location name provided look for the saved name to preserve it.
-			if ( empty( $location_data['title'] ) && ! empty( $saved_location->title ) ) {
-				$location_data['title'] = $saved_location->title;
+			// modify the new location args before saving.
+			do_action( 'gmw_pre_update_location', $location_data, $saved_location );
+			do_action( "gmw_pre_update_{$location_data['object_type']}_location", $location_data, $saved_location );
 			}
 
 			// Keep created time as its original time.
