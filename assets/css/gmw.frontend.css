@@ -531,10 +531,13 @@ ul.gmw-geocoder-suggested-results li {
 /***************** Search Forms ******************/
 /*************************************************/
 	
-	.gmw-form-wrapper input[type="text"], 
-	.gmw-form-wrapper select,
-	.gmw-form-wrapper textarea,
-	.gmw-form-wrapper input[type="number"] {
+	body .gmw-form-wrapper input[type="text"], 
+	body .gmw-form-wrapper select,
+	body .gmw-form-wrapper textarea,
+	body .gmw-form-wrapper input[type="number"],
+	body .select2-container--default .select2-selection--single,
+
+	body .select2-container--default .select2-selection--multiple {
 		margin: 0px 0;
 		color: #666;
 		font: inherit;
@@ -641,6 +644,32 @@ ul.gmw-geocoder-suggested-results li {
 		-webkit-box-sizing: border-box; 
 		-moz-box-sizing: border-box;    
 		box-sizing: border-box;
+	}
+
+	body li.select2-results__option {
+		font-size: 13px;
+		line-height: 1.4em;
+	}
+
+	body .select2-container--default .select2-selection--multiple {
+		
+	}
+
+	body .select2-container--default .select2-selection--multiple,
+	body .select2-container--default .select2-selection--single {
+		border-radius: 0;
+		line-height: 20px;
+		font-size: 13px;
+		padding: 4px 3px 3px;
+	}
+
+	body .select2-container--default .select2-selection--single {
+		padding: 5px 1px;
+		min-height: 40px;
+	}
+
+	body .select2-container--default .select2-selection--multiple .select2-selection__choice {
+		padding: 2px 5px;
 	}
 
 	/**** Checkboxes options selector  ****/
