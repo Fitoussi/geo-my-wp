@@ -1306,8 +1306,8 @@ class GMW_Location_Form {
 		do_action( 'gmw_lf_before_location_updated', $location, $location_args, $form_values );
 		do_action( 'gmw_lf_before_' . $location['object_type'] . '_location_updated', $location, $location_args, $form_values );
 
-		// save location.
-		// $location['ID'] = gmw_update_location_data( $location_args );
+		// Update location.
+		$location_id = gmw_insert_location( $location_args );
 		$location['ID'] = gmw_insert_location( $location_args );
 
 		// filter location meta before updating.
