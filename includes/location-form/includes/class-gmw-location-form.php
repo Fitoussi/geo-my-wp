@@ -1095,18 +1095,11 @@ class GMW_Location_Form {
 			}
 
 			$disable = '';
-
-			/*
-			if ( $excluded_fields != false ) {
-				if ( in_array( $field, $excluded_fields ) ) {
-					$disable = 'disabled="disabled"';
-				}
-			} */
-
-			$field = esc_attr( $field );
-
+			$field   = esc_attr( $field );
 			$output .= '<input type="hidden" class="gmw-lf-submission-field ' . $field . ' ' . $group . '" id="gmw_lf_' . $field . '" name="gmw_location_form[' . $field . ']"  value="' . esc_attr( stripslashes( $value ) ) . '">';
 		}
+
+		$output = apply_filters( 'gmw_lf_submission_fields_output', $output, $this );
 
 		wp_nonce_field( 'gmw_lf_update_location', 'gmw_lf_update_location' );
 
