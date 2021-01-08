@@ -1038,7 +1038,7 @@ class GMW_Location {
 			if ( empty( $clauses['address_filters'] ) && ! empty( $args['lat'] ) && ! empty( $args['lng'] ) ) {
 
 				// Get earth radius based on units.
-				if ( 'imperial' == $args['units'] || 3959 == $args['units'] || 'miles' == $args['units'] ) {
+				if ( 'imperial' === $args['units'] || 3959 == $args['units'] || 'miles' === $args['units'] ) {
 					$earth_radius = 3959;
 					$units        = 'mi';
 					$degree       = 69.0;
@@ -1054,7 +1054,7 @@ class GMW_Location {
 				/**
 				 * Since these values are repeatable, we escape them previous.
 				 *
-				 * the query instead of running multiple prepares.
+				 * The query instead of running multiple prepares.
 				 */
 				$lat = esc_sql( $args['lat'] );
 				$lng = esc_sql( $args['lng'] );
