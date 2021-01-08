@@ -773,7 +773,7 @@ class GMW_Location {
 
 			// save to cache if location found.
 			if ( ! empty( $locations ) ) {
-				wp_cache_set( $object_type . '_' . $object_id, serialize( $locations ), 'gmw_locations' );
+				wp_cache_set( $object_type . '_' . $object_id, maybe_serialize( $locations ), 'gmw_locations' );
 			}
 		}
 
