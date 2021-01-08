@@ -1243,6 +1243,85 @@ function gmw_is_parent_location( $location_id ) {
 }
 
 /**
+ * Get the location types from database.
+ *
+ * @param  array $args [description].
+ *
+ * @return [type]       [description]
+ */
+function gmw_get_registered_location_types( $args = array() ) {
+
+	$query_args = array(
+		'post_type'           => 'gmw_location_type',
+		'ignore_sticky_posts' => true,
+		'posts_per_page'      => -1,
+		'suppress_filters'    => true,
+		'orderby'             => 'ID',
+	);
+
+	if ( ! empty( $args['include'] ) ) {
+		$query_args['post__in'] = is_array( $args['include'] ) ? $args['include'] : explode( ',', $args['include'] );
+	}
+
+	if ( ! empty( $args['exlude'] ) ) {
+		$query_args['post__not_in'] = is_array( $args['exclude'] ) ? $args['exclude'] : explode( ',', $args['exclude'] );
+	}
+
+	if ( ! empty( $args['orderby'] ) ) {
+		$query_args['orderby'] = $args['orderby'];
+	}
+
+	$posts = get_posts( $query_args );
+
+	if ( empty( $posts ) ) {
+		return false;
+	}
+
+	$location_types = array();
+
+	foreach ( $posts as $post ) {
+
+		$location_type = array(
+			'ID'          => $post->ID,
+			'title'       => $post->post_title,
+			'description' => $post->post_excerpt,
+		);
+
+		$data = ( ! empty( $post->post_content ) && is_serialized( $post->post_content ) ) ? maybe_unserialize( $post->post_content ) : array();
+
+		$location_type = array_merge( $location_type, $data );
+
+		$location_types[] = (object) $location_type;
+	}
+
+	return $location_types;
+}
+
+/**
+ * Get a specific location type.
+ *
+ * @param  integer $id location type ID.
+ *
+ * @return [type]      [description]
+ */
+function gmw_get_registered_location_type( $id = 0 ) {
+
+	$location_type_id = absint( $id );
+
+	if ( empty( $location_type_id ) ) {
+		return false;
+	}
+
+	$args = array(
+		'include' => $location_type_id,
+	);
+
+	$location_type = gmw_get_registered_location_types( $args );
+
+	return ! empty( $location_type[0] ) ? $location_type[0] : false;
+}
+
+/**
  * Get list of location meta fields
  *
  * Will usually be used in the results.
