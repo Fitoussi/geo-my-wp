@@ -330,29 +330,6 @@ class GMW_Location {
 			return false;
 		}
 
-		// parse location args with default location args.
-		$location_data = wp_parse_args( $args, self::default_values() );
-
-		// verify country code.
-		if ( empty( $location_data['country_code'] ) || strlen( $location_data['country_code'] ) != 2 ) {
-
-			if ( empty( $location_data['country_name'] ) ) {
-
-				$location_data['country_code'] = '';
-
-			} else {
-
-				// get list of countries code. We will use it to make sure that the only the country code passes to the column.
-				$countries = gmw_get_countries_list_array();
-
-				// look for the country code based on the country name.
-				$country_code = array_search( ucwords( $location_data['country_name'] ), $countries );
-
-				// get the country code from the list.
-				$location_data['country_code'] = ! empty( $country_code ) ? $country_code : '';
-			}
-		}
-
 		// verify user ID.
 		if ( ! self::verify_id( $location_data['user_id'] ) ) {
 
@@ -408,6 +385,18 @@ class GMW_Location {
 			}
 		}
 
+		// verify that we are passing country code and not a name.
+		if ( ! empty( $location_data['country_code'] ) && strlen( $location_data['country_code'] ) != 2 ) {
+
+			// get list of countries code. We will use it to make sure that the only the country code passes to the column.
+			$countries = gmw_get_countries_list_array();
+
+			// look for the country code based on the country name.
+			$country_code = array_search( ucwords( $location_data['country_name'] ), $countries, true );
+
+			// get the country code from the list.
+			$location_data['country_code'] = ! empty( $country_code ) ? $country_code : '';
+		}
 		global $wpdb;
 
 		$table          = self::get_table();
