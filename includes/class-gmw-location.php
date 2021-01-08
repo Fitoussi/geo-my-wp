@@ -469,14 +469,14 @@ class GMW_Location {
 		// make it into an object.
 		$location_data = (object) $location_data;
 
-		// do some custom functions once location saved.
-		do_action( 'gmw_save_location', $location_id, $location_data, $updated );
-		do_action( "gmw_save_{$location_data->object_type}_location", $location_id, $location_data, $updated );
-
 		// set updated location in cache.
 		wp_cache_set( $location_id, $location_data, 'gmw_location' );
 		wp_cache_set( $location_data->object_type . '_' . $location_data->object_id, $location_data, 'gmw_location' );
 		wp_cache_delete( $location_data->object_type . '_' . $location_data->object_id, 'gmw_locations' );
+
+		// do some custom functions once location saved.
+		do_action( 'gmw_save_location', $location_id, $location_data, $updated );
+		do_action( "gmw_save_{$location_data->object_type}_location", $location_id, $location_data, $updated );
 
 		return $location_id;
 	}
@@ -1256,13 +1256,13 @@ class GMW_Location {
 			}
 		}
 
-		do_action( 'gmw_location_deleted', $location->ID, $location );
-		do_action( 'gmw_' . $location->object_type . '_location_deleted', $location->ID, $location );
-
 		// clear locations from cache.
 		wp_cache_delete( $location->object_type . '_' . $location->object_id, 'gmw_location' );
 		wp_cache_delete( $location->ID, 'gmw_location' );
 		wp_cache_delete( $location->object_type . '_' . $location->object_id, 'gmw_locations' );
+
+		do_action( 'gmw_location_deleted', $location->ID, $location );
+		do_action( 'gmw_' . $location->object_type . '_location_deleted', $location->ID, $location );
 
 		// delete the location metadata associated with this location if needed.
 		if ( true == $delete_meta ) {
