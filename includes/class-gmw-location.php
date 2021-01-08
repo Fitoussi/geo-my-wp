@@ -406,10 +406,6 @@ class GMW_Location {
 		// update existing location.
 		if ( $update ) {
 
-			// modify the new location args before saving.
-			do_action( 'gmw_pre_update_location', $location_data, $saved_location );
-			do_action( "gmw_pre_update_{$location_data['object_type']}_location", $location_data, $saved_location );
-
 			// verify location ID.
 			if ( ! is_int( $location_id ) || 0 === $location_id ) {
 				return false;
@@ -418,23 +414,32 @@ class GMW_Location {
 			// modify the new location args before saving.
 			do_action( 'gmw_pre_update_location', $location_data, $saved_location );
 			do_action( "gmw_pre_update_{$location_data['object_type']}_location", $location_data, $saved_location );
-			}
 
-			// Keep created time as its original time.
-			$location_data['created'] = $saved_location->created;
+			$new_location_data = array();
+			$new_format        = array();
 
-			// updated time based on current time.
+			// updated time based on current date/time.
 			$location_data['updated'] = current_time( 'mysql' );
 
+			// Order the location data and the location format based on the default values.
+			foreach ( $default_values as $key => $field ) {
+
+				if ( array_key_exists( $key, $location_data ) ) {
+
+					$new_location_data[ $key ] = $location_data[ $key ];
+					$new_format[ $key ]        = self::$format[ $key ];
+				}
+			}
+
 			// make sure that there are no extra columns.
-			$location_data = array_intersect_key( $location_data, self::default_values() );
+			$location_data = array_intersect_key( $location_data, $default_values );
 
 			// update location.
 			$wpdb->update(
 				$table,
-				$location_data,
+				$new_location_data,
 				array( 'ID' => $location_id ),
-				self::get_format(),
+				$new_format,
 				array( '%d' )
 			); // WPCS: db call ok, cache ok, unprepared SQL ok.
 
@@ -446,11 +451,8 @@ class GMW_Location {
 			// Create new location.
 		} else {
 
-			// update the current data - time.
-			$location_data['created'] = current_time( 'mysql' );
-
-			// make sure that there are no extra columns.
-			$location_data = array_intersect_key( $location_data, self::default_values() );
+			// Merge location values with default values and make sure that there are no extra cloumns.
+			$location_data = wp_parse_args( array_intersect_key( $location_data, $default_values ), $default_values );
 
 			// insert new location to database.
 			$wpdb->insert( $table, $location_data, self::get_format() ); // WPCS: db call ok, cache ok, unprepared SQL ok.
