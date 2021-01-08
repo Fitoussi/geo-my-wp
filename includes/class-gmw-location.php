@@ -681,7 +681,7 @@ class GMW_Location {
 		}
 
 		// make sure ID in integer.
-		$location->ID = ( int ) $location->ID;
+		$location->ID = (int) $location->ID;
 
 		// convert to array if needed.
 		if ( ARRAY_A == $output || ARRAY_N == $output ) {
