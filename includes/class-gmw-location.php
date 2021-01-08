@@ -305,16 +305,16 @@ class GMW_Location {
 	 *
 	 * See the default_values array above for the location fields you need to pass.
 	 *
-	 * @param array $args array of location fields and data.
+	 * @param array $location_data array of location fields and data.
 	 *
 	 * @return int location ID
 	 *
 	 * @since 3.0
 	 */
-	public static function insert( $args ) {
+	public static function insert( $location_data ) {
 
 		// verify object ID.
-		if ( ! self::verify_id( $args['object_id'] ) ) {
+		if ( ! self::verify_id( $location_data['object_id'] ) ) {
 
 			gmw_trigger_error( 'Trying to update a location using invalid object ID.' );
 
@@ -322,7 +322,7 @@ class GMW_Location {
 		}
 
 		// verify valid coordinates.
-		if ( ! is_numeric( $args['latitude'] ) || ! is_numeric( $args['longitude'] ) ) {
+		if ( ! is_numeric( $location_data['latitude'] ) || ! is_numeric( $location_data['longitude'] ) ) {
 
 			gmw_trigger_error( 'Trying to update a location using invalid coordinates.' );
 
