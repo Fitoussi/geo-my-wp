@@ -386,10 +386,6 @@ class GMW_Location {
 			$saved_location = self::get_by_object( $location_data['object_type'], $location_data['object_id'] );
 		}
 
-		global $wpdb;
-
-		$table = self::get_table();
-
 		// modify the new location args before saving.
 		$location_data = apply_filters( 'gmw_pre_save_location_data', $location_data, $saved_location );
 		$location_data = apply_filters( "gmw_pre_save_{$location_data['object_type']}_location_data", $location_data, $saved_location );
@@ -412,6 +408,10 @@ class GMW_Location {
 			}
 		}
 
+		global $wpdb;
+
+		$table          = self::get_table();
+		$default_values = self::default_values();
 		// update existing location.
 		if ( $update ) {
 
