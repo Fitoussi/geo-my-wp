@@ -316,7 +316,7 @@ class GMW_Location {
 		// verify object ID.
 		if ( ! self::verify_id( $args['object_id'] ) ) {
 
-			trigger_error( 'Trying to update a location using invalid object ID.', E_USER_NOTICE );
+			gmw_trigger_error( 'Trying to update a location using invalid object ID.' );
 
 			return false;
 		}
@@ -324,7 +324,7 @@ class GMW_Location {
 		// verify valid coordinates.
 		if ( ! is_numeric( $args['latitude'] ) || ! is_numeric( $args['longitude'] ) ) {
 
-			trigger_error( 'Trying to update a location using invalid coordinates.', E_USER_NOTICE );
+			gmw_trigger_error( 'Trying to update a location using invalid coordinates.' );
 
 			return false;
 		}
@@ -376,7 +376,7 @@ class GMW_Location {
 			// Abort if location was not found.
 			if ( empty( $saved_location ) ) {
 
-				trigger_error( 'Trying to update a location using invalid location ID.', E_USER_NOTICE );
+				gmw_trigger_error( 'Trying to update a location using invalid location ID.' );
 
 				return 0;
 			}
@@ -626,9 +626,9 @@ class GMW_Location {
 		}
 
 		// verify object types.
-		if ( ! in_array( $object_type, GMW()->object_types ) ) {
+		if ( ! in_array( $object_type, GMW()->object_types, true ) ) {
 
-			trigger_error( 'Trying to get a location using invalid object type.', E_USER_NOTICE );
+			gmw_trigger_error( 'Trying to get a location using invalid object type.' );
 
 			return false;
 		}
@@ -636,7 +636,7 @@ class GMW_Location {
 		// Verify object ID.
 		if ( ! self::verify_id( $object_id ) ) {
 
-			trigger_error( 'Trying to get a location using invalid object ID.', E_USER_NOTICE );
+			gmw_trigger_error( 'Trying to get a location using invalid object ID.' );
 
 			return false;
 		}
@@ -729,9 +729,9 @@ class GMW_Location {
 		}
 
 		// verify object type.
-		if ( ! in_array( $object_type, GMW()->object_types ) ) {
+		if ( ! in_array( $object_type, GMW()->object_types, true ) ) {
 
-			trigger_error( 'Trying to get a location using invalid object type.', E_USER_NOTICE );
+			gmw_trigger_error( 'Trying to get a location using invalid object type.' );
 
 			return false;
 		}
@@ -739,7 +739,7 @@ class GMW_Location {
 		// verify object ID.
 		if ( ! is_numeric( $object_id ) || ! absint( $object_id ) ) {
 
-			trigger_error( 'Trying to get a locations using invalid object ID.', E_USER_NOTICE );
+			gmw_trigger_error( 'Trying to get a locations using invalid object ID.' );
 
 			return false;
 		}
@@ -1301,9 +1301,9 @@ class GMW_Location {
 		}
 
 		// verify object type.
-		if ( ! in_array( $object_type, GMW()->object_types ) ) {
+		if ( ! in_array( $object_type, GMW()->object_types, true ) ) {
 
-			trigger_error( 'Trying to delete a location using invalid object type.', E_USER_NOTICE );
+			gmw_trigger_error( 'Trying to delete a location using invalid object type.' );
 
 			return false;
 		}
@@ -1311,7 +1311,7 @@ class GMW_Location {
 		// verify object ID.
 		if ( ! is_numeric( $object_id ) || ! absint( $object_id ) ) {
 
-			trigger_error( 'Trying to delete a location using invalid object ID.', E_USER_NOTICE );
+			gmw_trigger_error( 'Trying to delete a location using invalid object ID.' );
 
 			return false;
 		}
@@ -1370,9 +1370,9 @@ class GMW_Location {
 		}
 
 		// verify object type.
-		if ( ! in_array( $object_type, GMW()->object_types ) ) {
+		if ( ! in_array( $object_type, GMW()->object_types, true ) ) {
 
-			trigger_error( 'Trying to delete a location using invalid object type.', E_USER_NOTICE );
+			gmw_trigger_error( 'Trying to delete a location using invalid object type.' );
 
 			return false;
 		}
@@ -1380,7 +1380,7 @@ class GMW_Location {
 		// verify object ID.
 		if ( ! is_numeric( $object_id ) || ! absint( $object_id ) ) {
 
-			trigger_error( 'Trying to delete a location using invalid object ID.', E_USER_NOTICE );
+			gmw_trigger_error( 'Trying to delete a location using invalid object ID.' );
 
 			return false;
 		}
