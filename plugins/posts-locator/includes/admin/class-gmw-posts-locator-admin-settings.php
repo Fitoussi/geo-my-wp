@@ -67,7 +67,7 @@ class GMW_Posts_Locator_Admin_Settings {
 			'desc'          => __( 'Select the post types where you would like to enable geotagging. GEO my WP Location section will be added to the "Edit Post" page of the selected post types.', 'geo-my-wp' ),
             'options'       => gmw_get_post_types_array(),
             'attributes'    => array(),
-            'priority'      => 10
+            'priority'      => 5
 		);
 
         $zoom_levels = array();
