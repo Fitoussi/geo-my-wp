@@ -35,7 +35,7 @@ jQuery( document ).ready( function( jQuery ) {
 	            GMW_Admin.form_editor_init();
 
 	            GMW_Admin.limit_description();
-	        }
+	        }	        
 	    },
 
 	    /**
