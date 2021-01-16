@@ -41,6 +41,7 @@ class GMW_Location_Types {
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 		add_action( 'wp_insert_post_data', array( $this, 'update_meta' ), 10, 3 );
 		add_filter( 'post_updated_messages', array( $this, 'update_notices' ) );
+		add_action( 'wp_ajax_gmw_set_missing_location_type', array( $this, 'set_missing_location_type' ) );
 	}
 
 	/**
@@ -61,6 +62,20 @@ class GMW_Location_Types {
 			}
 			#gmw_lt_xprofile_fields_meta_box .inside {
 				padding:0;
+			}
+
+			.gmw-xprofile-fields-setting-wrapper.single-address-field-setting,
+			.gmw-xprofile-fields-setting-wrapper.multiple-address-field-setting {
+				margin:0;padding: 20px;
+				display:none;background-color: #f7f7f7;
+				border-top: 1px solid #ececec;
+				border-bottom: 1px solid #ececec;
+			}
+
+			.gmw-xprofile-fields-setting-wrapper.usage-setting,
+			.gmw-xprofile-fields-setting-wrapper.address-autocomplete-setting {
+				margin: 0;
+				padding: 20px;
 			}
 		</style>
 		<script type="text/javascript">
@@ -125,6 +140,72 @@ class GMW_Location_Types {
 						width: '100%',
 					});
 				}
+
+				// Update location without location types.
+				jQuery( '#gmw-update-location-types-button' ).on( 'click', function(e) {
+
+					e.preventDefault();
+
+					var gmwAjaxUrl  = '<?php echo GMW()->ajax_url; ?>';
+					var thisData    = jQuery( this ).data();
+					var objectTypes = $( '.gmw-update-location-types-object-types:checked' ).map(function(){
+						return $(this).val();
+					});
+
+					// Show error message if not object types were checked.
+					if ( objectTypes.length == 0 ) {
+
+						alert( 'You must check at least one checkbox.' );
+
+						return false;
+					}
+
+					// Show spinner.
+					jQuery( '#gmw-update-location-types-spinner' ).fadeIn();
+
+					// Update location via ajax.
+					jQuery.ajax( {
+						type     : 'POST',
+						url      : gmwAjaxUrl,
+						dataType : 'json',
+						data     : {
+							action        : 'gmw_set_missing_location_type',
+							object_types  : objectTypes.get().join(','),
+							location_type : thisData.location_type,
+							security      : thisData.nonce,
+						},
+						success : function( response ) {
+
+							if ( response == 0 ) {
+								jQuery( '#gmw-update-location-types-message' ).html( 'There were no locations to update.' ).css( 'color', '#444' ).fadeIn();
+							} else {
+								jQuery( '#gmw-update-location-types-message' ).html( response + ' locations updated.' ).css( 'color', 'green' ).fadeIn();
+							}
+
+							setTimeout( function() {
+								jQuery( '#gmw-update-location-types-message, #gmw-update-location-types-spinner' ).fadeOut();
+							}, 5000 );
+						}
+
+					//if inporter failed or aborted by user
+					}).fail( function ( jqXHR, textStatus, error ) {
+
+						if ( window.console && window.console.log ) {
+
+							console.log( textStatus + ': ' + error );
+
+							if ( jqXHR.responseText ) {
+								console.log(jqXHR.responseText);
+							}
+						}
+
+						jQuery( '#gmw-update-location-types-message' ).html( 'Unexpected error occurred while tying to update the locations.' ).css( 'color', 'red' ).fadeIn();
+
+						setTimeout( function() {
+							jQuery( '#gmw-update-location-types-message, #gmw-update-location-types-spinner' ).fadeOut();
+						}, 5000 );
+					});
+				});
 			});
 		</script>
 		<?php
@@ -329,12 +410,16 @@ class GMW_Location_Types {
 	 * @since 3.6.4
 	 */
 	public function add_meta_boxes() {
+
 		add_meta_box( 'gmw_lt_description', __( 'Description', 'geo-my-wp' ), array( $this, 'description_meta_box' ), 'gmw_location_type', 'normal', 'core', array( '__back_compat_meta_box' => true ) );
 
 		// get the xprofile fields.
-		if ( function_exists( 'bp_is_active' ) && bp_is_active( 'xprofile' ) ) {
+		if ( gmw_is_addon_active( 'bp_xprofile_geolocation' ) && function_exists( 'bp_is_active' ) && bp_is_active( 'xprofile' ) ) {
 			add_meta_box( 'gmw_lt_xprofile_fields_meta_box', __( 'Xprofile Fields', 'geo-my-wp' ), array( $this, 'xprofile_fields_meta_box' ), 'gmw_location_type', 'side' );
 		}
+
+		// get the xprofile fields.
+		add_meta_box( 'gmw_lt_update_locations_location_type', __( 'Update Location Types', 'geo-my-wp' ), array( $this, 'update_locations_location_type_meta_box' ), 'gmw_location_type', 'side' );
 
 		// Disable for now. Will be available in the future.
 		//add_meta_box( 'gmw_lt_user_role_meta_box', __( 'User Roles', 'geo-my-wp' ), array( $this, 'user_role_meta_box' ), 'gmw_location_type', 'side' );
@@ -403,7 +488,7 @@ class GMW_Location_Types {
 
 		if ( ! function_exists( 'bp_has_profile' ) || ! bp_has_profile() ) {
 
-			echo '<div class="gmw-xprofile-fields-setting-wrapper usage-setting" style="margin:0;padding: 20px;">';
+			echo '<div class="gmw-xprofile-fields-setting-wrapper usage-setting">';
 			echo esc_attr( 'Please verify that the Xprofiel Fields component is activated', 'geo-my-wp' );
 			echo '</pre>';
 
@@ -422,28 +507,20 @@ class GMW_Location_Types {
 			);
 		}
 		?>
-		<div class="gmw-xprofile-fields-setting-wrapper usage-setting" style="margin:0;padding: 20px;">
-			<label style="display:block;margin-bottom: 5px"><?php esc_attr_e( 'Fields Usage:', 'geo-my-wp' ); ?></label>
+		<div class="gmw-xprofile-fields-setting-wrapper usage-setting">
+
+			<label style="display:block;margin-bottom: 5px">
+				<?php esc_attr_e( 'Fields Usage:', 'geo-my-wp' ); ?>
+			</label>
+
 			<select id="gmw-xprofile-fields-usage-setting" name="content[xprofile_fields][usage]">
 				<option value="disabled"><?php esc_attr_e( 'Disabled', 'geo-my-wp' ); ?></option>											
 				<option value="single" <?php selected( $saved_data['usage'], 'single', true ); ?>><?php esc_attr_e( 'Single Address Field', 'geo-my-wp' ); ?></option>
 				<option value="multiple" <?php selected( $saved_data['usage'], 'multiple', true ); ?>><?php esc_attr_e( 'Multiple Address Fields', 'geo-my-wp' ); ?></option>									
 			</select>
-			<em style="margin-top: 5px;display: inline-block;"><?php esc_attr_e( 'Select to either use a sinlge address field as the full address, or multiple address fields. Then select the Xprofile Fields for each location field below.', 'geo-my-wp' ); ?></em>
+			<em style="margin-top: 5px;display: block;"><?php esc_attr_e( 'Select to either use a single address field as the full address or multiple address fields.', 'geo-my-wp' ); ?></em>
 		</div>
 
-		<div class="gmw-xprofile-fields-setting-wrapper address-autocomplete-setting" style="margin:0;padding: 20px;background-color: #f7f7f7;border: 1px solid #f1f1f1;display:none">
-			<label style="display:block;margin-bottom: 5px">
-				<input 
-					type="checkbox"
-					id="setting-bp_xprofile_geolocation-address_autocomplete"
-					class="setting-address_autocomplete checkbox"
-					name="content[xprofile_fields][address_autocomplete]"
-					<?php checked( $saved_data['address_autocomplete'], 'on', true ); ?>
-				><?php echo esc_attr_e( 'Google Address Autocomplete', 'geo-my-wp' ); ?>
-			</label>
-			<em style="margin-top: 5px;display: inline-block;"><?php esc_attr_e( 'Check this checkbox to enable Google\'s live suggested results while typeing an address.' ); ?></em>
-		</div>
 		<?php
 
 		$xprofile_fields = array();
@@ -456,8 +533,7 @@ class GMW_Location_Types {
 
 				bp_the_profile_field();
 
-				if ( bp_get_the_profile_field_type() != 'datebox' ) {
-
+				if ( 'datebox' !== bp_get_the_profile_field_type() ) {
 					$xprofile_fields[ bp_get_the_profile_field_id() ] = bp_get_the_profile_field_name();
 				}
 			}
@@ -465,7 +541,9 @@ class GMW_Location_Types {
 
 		$saved_data = $saved_data['address_fields'];
 		?>
-		<div class="gmw-xprofile-fields-setting-wrapper single-address-field-setting" style="margin:0;padding: 20px;display:none">
+		<div class="gmw-xprofile-fields-setting-wrapper single-address-field-setting">
+
+			<em style="margin-bottom: 10px;display: block;"><?php esc_attr_e( 'Select the xprofile field that will be used as the address field.', 'geo-my-wp' ); ?></em>
 
 			<label style="display:block;margin-bottom: 5px"><?php echo esc_attr_e( 'Address ', 'geo-my-wp' ); ?></label>
 
@@ -477,7 +555,7 @@ class GMW_Location_Types {
 
 					<?php $selected = ( isset( $saved_data['address'] ) && $saved_data['address'] == $field_id ) ? 'selected="selected"' : ''; ?>
 
-					<option <?php echo $selected; ?> value="<?php echo esc_attr( $field_id ); ?>">
+					<option <?php echo $selected; // WPCS: XSS ok. ?> value="<?php echo esc_attr( $field_id ); ?>">
 						<?php echo esc_attr( $field_name ); ?>		
 					</option>
 
@@ -486,7 +564,9 @@ class GMW_Location_Types {
 			</select>
 		</div>
 
-		<div class="gmw-xprofile-fields-setting-wrapper multiple-address-field-setting" style="margin:0;padding: 20px;display:none;background-color: #f7f7f7;border: 1px solid #f1f1f1;">
+		<div class="gmw-xprofile-fields-setting-wrapper multiple-address-field-setting">
+
+			<em style="margin-bottom: 10px;display: block;"><?php esc_attr_e( 'Select the xprofile fields for each address field below.', 'geo-my-wp' ); ?></em>
 
 			<?php $address_fields = array( 'street', 'apt', 'city', 'state', 'zipcode', 'country' ); ?>
 
@@ -512,7 +592,132 @@ class GMW_Location_Types {
 			<?php endforeach; ?>
 
 		</div>
+
+		<div class="gmw-xprofile-fields-setting-wrapper address-autocomplete-setting" style="display:none">
+			<label style="display:block;margin-bottom: 5px">
+				<input 
+					type="checkbox"
+					id="setting-bp_xprofile_geolocation-address_autocomplete"
+					class="setting-address_autocomplete checkbox"
+					name="content[xprofile_fields][address_autocomplete]"
+					<?php checked( $saved_data['address_autocomplete'], 'on', true ); ?>
+				><?php echo esc_attr_e( 'Google Address Autocomplete', 'geo-my-wp' ); ?>
+			</label>
+			<em style="margin-top: 5px;display: inline-block;"><?php esc_attr_e( 'Check this checkbox to enable the Google Address Autocompelte feature.', 'geo-my-wp' ); ?></em>
+		</div>
 		<?php
+	}
+
+	/**
+	 * Add the user roles meta box.
+	 *
+	 * @param  object $post post object.
+	 *
+	 * @since 3.6.4
+	 */
+	public function update_locations_location_type_meta_box( $post ) {
+
+		echo '<em style="font-size:12px;line-height:10px;">' . esc_html__( 'Use this tool to update locations which do not have a location type set and assign them this location type.', 'geo-my-wp' ) . '</em>';
+		echo '<hr />';
+		echo '<p>' . esc_html_e( 'Select the Object Types that you would like to update', 'geo-my-wp' ) . '</p>';
+
+		if ( gmw_is_addon_active( 'posts_locator' ) ) {
+			echo '<label style="margin-top:5px;display:block;"><input type="checkbox" class="gmw-update-location-types-object-types" value="post" checked="checked" />Posts </label>';
+		}
+
+		if ( gmw_is_addon_active( 'members_locator' ) || gmw_is_addon_active( 'users_locator' ) ) {
+			echo '<label style="margin-top:5px;display:block;"><input type="checkbox" class="gmw-update-location-types-object-types" value="user" checked="checked" />Users/ BP Memebrs</label>';
+		}
+
+		if ( gmw_is_addon_active( 'bp_groups_locator' ) ) {
+			echo '<label style="margin-top:5px;display:block;"><input type="checkbox" class="gmw-update-location-types-object-types" value="bp_group" checked="checked" />BP Groups</label>';
+		}
+		?>
+		<div style="margin-top:15px;">
+			<button 
+				id="gmw-update-location-types-button"
+				class="button button-secondary button-large"
+				data-location_type="<?php echo absint( $post->ID ); ?>"
+				data-nonce="<?php echo wp_create_nonce( 'gmw_update_locations_location_type_nonce' ); // WPCS: XSS ok. ?>"><?php echo esc_html( 'Update Locations', 'ge-my-wp' ); ?></button>
+
+			<span id="gmw-update-location-types-spinner" class="spinner" style="display:none;visibility: visible;float:none;"></span>
+		</div>
+		<p style="disaply:none;" id="gmw-update-location-types-message"></p>
+		<?php
+
+		wp_nonce_field( 'gmw_update_locations_location_type_nonce', 'gmw_update_locations_location_type_nonce' );
+	}
+
+	/**
+	 * Update locations location types.
+	 *
+	 * Update locations that do not have a location type set with a specific location type.
+	 *
+	 * @sicne 1.1
+	 *
+	 * @author Eyal Fitoussi.
+	 */
+	public function set_missing_location_type() {
+
+		// verify nonce.
+		check_ajax_referer( 'gmw_update_locations_location_type_nonce', 'security', true );
+
+		// Abort if missing data.
+		if ( empty( $_POST ) || empty( $_POST['location_type'] ) || empty( $_POST['object_types'] ) ) {
+			die( 'Missing location types data.' );
+		}
+
+		// Get checked object types.
+		$object_type_in = " AND `object_type` IN ( '" . str_replace( ',', "','", sanitize_text_field( wp_unslash( $_POST['object_types'] ) ) ) . "' ) ";
+
+		global $wpdb;
+
+		// Get objects that already use this location. We can't set multiple locations of the same object with the same location type.
+		$object_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				"
+	            SELECT `object_id`
+	            FROM {$wpdb->base_prefix}gmw_locations 
+	            WHERE `location_type` = %s",
+				array(
+					absint( $_POST['location_type'] ),
+				),
+			)
+		); // WPCS: db call ok, cache ok, unprepared SQL ok.
+
+		// Prepare the excluded object ID.
+		$object_id_not_in = ! empty( $object_ids ) ? 'AND `object_id` NOT IN ( ' . implode( ',', $object_ids ) . ' )' : '';
+
+		// Get the locations ID that we need to update.
+		$locations_id = $wpdb->get_col(
+			"
+	            SELECT `ID`
+	            FROM {$wpdb->base_prefix}gmw_locations
+	            WHERE `location_type` = 0
+				{$object_id_not_in}
+				{$object_type_in}
+				GROUP BY `object_id`"
+		); // WPCS: db call ok, cache ok, unprepared SQL ok.
+
+		// Abort if nothing was found.
+		if ( empty( $locations_id ) ) {
+			wp_send_json( 0 );
+		}
+
+		// Update locations.
+		$updated = $wpdb->query(
+			$wpdb->prepare(
+				"
+	            UPDATE {$wpdb->base_prefix}gmw_locations 
+	            SET   `location_type` = %s 
+	            WHERE `ID` IN ( " . implode( ',', $locations_id ) . ' )',
+				array( absint( $_POST['location_type'] ) )
+			)
+		); // WPCS: db call ok, cache ok, unprepared SQL ok.
+
+		$updated = ! empty( $updated ) ? absint( $updated ) : 0;
+
+		wp_send_json( $updated );
 	}
 
 	/**
