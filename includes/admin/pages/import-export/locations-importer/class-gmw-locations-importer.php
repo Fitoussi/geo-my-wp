@@ -182,11 +182,21 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 			$output['div']       = '<div class="gmw-importer-details" style="display:none;">';
 			$output['importing'] = '<em class="importer-action-message"><i class="gmw-importer-spinner gmw-icon-spin-3 animate-spin"></i><span class="action-ph">' . __( 'Searching for locations...', 'geo-my-wp' ) . '</span></em>';
 			$output['bar']       = '<div class="gmw-importer-progress-bar"><div class="importing"></div></div>';
-			$output['scanned']   = '<p class="locations-completed-message">' . sprintf( __( '%1$s out of %2$s locations were scanned.', 'geo-my-wp' ), '<span class="completed-ph">0</span>', '<span class="total-ph">0</span>' ) . '</p>';
-			$output['updated']   = '<p class="updated-locations-message" ' . $updated . '>' . sprintf( __( '%s locations successfully updated ( were already exsist ).', 'geo-my-wp' ), '<span class="updated-ph">0</span>' ) . '</p>';
-			$output['imported']  = '<p class="imported-locations-message">' . sprintf( __( '%s locations successfully imported.', 'geo-my-wp' ), '<span class="imported-ph">0</span>' ) . '</p>';
-			$output['existing']  = '<p class="existing-locations-message" ' . $exist . '>' . sprintf( __( '%s locations already exist ( were not updated ).', 'geo-my-wp' ), '<span class="existing-ph">0</span>' ) . '</p>';
-			$output['failed']    = '<p class="failed-locations-message">' . sprintf( __( '%s failed to import.', 'geo-my-wp' ), '<span class="failed-ph">0</span>' ) . '</p>';
+
+			/* translators: %1$s: number of locations scanned locations, %2$s: number of locations total locations */
+			$output['scanned'] = '<p class="locations-completed-message">' . sprintf( __( '%1$s out of %2$s locations were scanned.', 'geo-my-wp' ), '<span class="completed-ph">0</span>', '<span class="total-ph">0</span>' ) . '</p>';
+
+			/* translators: %s: number of locations locations updated */
+			$output['updated'] = '<p class="updated-locations-message" ' . $updated . '>' . sprintf( __( '%s locations successfully updated ( were already exsist ).', 'geo-my-wp' ), '<span class="updated-ph">0</span>' ) . '</p>';
+
+			/* translators: %s: number of locations locations imported */
+			$output['imported'] = '<p class="imported-locations-message">' . sprintf( __( '%s locations successfully imported.', 'geo-my-wp' ), '<span class="imported-ph">0</span>' ) . '</p>';
+
+			/* translators: %s: number of locations locations already exists */
+			$output['existing'] = '<p class="existing-locations-message" ' . $exist . '>' . sprintf( __( '%s locations already exist ( were not updated ).', 'geo-my-wp' ), '<span class="existing-ph">0</span>' ) . '</p>';
+
+			/* translators: %s: number of locations imported failed */
+			$output['failed'] = '<p class="failed-locations-message">' . sprintf( __( '%s failed to import.', 'geo-my-wp' ), '<span class="failed-ph">0</span>' ) . '</p>';
 
 			$done_message = $this->done_message();
 
@@ -577,7 +587,7 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 		// verify that a child class name passes.
 		if ( empty( $_POST['importAction'] ) || empty( $_POST['action'] ) ) {
 
-			wp_die( __( 'Action class name is missing', 'geo-my-wp' ), E_USER_ERROR );
+			wp_die( esc_html__( 'Action class name is missing', 'geo-my-wp' ) );
 
 			exit;
 		}
@@ -588,13 +598,14 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 		if ( ! check_ajax_referer( 'gmw_importer_nonce_' . $class_name, 'security', false ) ) {
 
 			// abort if bad nonce.
-			wp_die( __( 'Trying to cheat or something?', 'geo-my-wp' ), __( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
+			wp_die( esc_attr__( 'Trying to cheat or something?', 'geo-my-wp' ), esc_html__( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
 		}
 
 		// verify that the class exists.
 		if ( ! class_exists( $class_name ) ) {
 
-			wp_die( sprintf( __( 'Call to undefined function %s', 'geo-my-wp' ), $class_name ), E_USER_ERROR );
+			/* translators: %s: class name. */
+			wp_die( sprintf( esc_html__( 'Calling to undefined class %s', 'geo-my-wp' ), $class_name ) ); // WPCS: XSS ok.
 
 			exit;
 		}
