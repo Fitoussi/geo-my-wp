@@ -150,17 +150,13 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 		public function form() {
 			?>
 		<form method="post" class="gmw-locations-importer" action="">
-
 			<input type="submit" class="gmw-locations-importer-submit button-primary" value="<?php esc_attr_e( 'Import', 'geo-my-wp' ); ?>" />
-
 			<input type="button" class="gmw-locations-importer-abort button-secondary" value="<?php esc_attr_e( 'Abort', 'geo-my-wp' ); ?>" style="display:none;" />
-
 			<input type="hidden" class="gmw_locations_importer_action" value="<?php echo esc_attr( get_class( $this ) ); ?>" />	
 
 			<?php $nonce = wp_create_nonce( 'gmw_importer_nonce_' . get_class( $this ) ); ?>
 
 			<input type="hidden" name="nonce" class="gmw_locations_importer_nonce" value="<?php echo $nonce; // WPCS: XSS ok. ?>">
-
 		</form>
 			<?php
 		}
@@ -183,20 +179,14 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 			$output = array();
 
 			// create new form details element.
-			$output['div'] = '<div class="gmw-importer-details" style="display:none;">';
-
+			$output['div']       = '<div class="gmw-importer-details" style="display:none;">';
 			$output['importing'] = '<em class="importer-action-message"><i class="gmw-importer-spinner gmw-icon-spin-3 animate-spin"></i><span class="action-ph">' . __( 'Searching for locations...', 'geo-my-wp' ) . '</span></em>';
-
-			$output['bar'] = '<div class="gmw-importer-progress-bar"><div class="importing"></div></div>';
-
-			$output['scanned'] = '<p class="locations-completed-message">' . sprintf( __( '%1$s out of %2$s locations were scanned.', 'geo-my-wp' ), '<span class="completed-ph">0</span>', '<span class="total-ph">0</span>' ) . '</p>';
-
-			$output['updated'] = '<p class="updated-locations-message" ' . $updated . '>' . sprintf( __( '%s locations successfully updated ( were already exsist ).', 'geo-my-wp' ), '<span class="updated-ph">0</span>' ) . '</p>';
-
-			$output['imported'] = '<p class="imported-locations-message">' . sprintf( __( '%s locations successfully imported.', 'geo-my-wp' ), '<span class="imported-ph">0</span>' ) . '</p>';
-
-			$output['existing'] = '<p class="existing-locations-message" ' . $exist . '>' . sprintf( __( '%s locations already exist ( were not updated ).', 'geo-my-wp' ), '<span class="existing-ph">0</span>' ) . '</p>';
-			$output['failed']   = '<p class="failed-locations-message">' . sprintf( __( '%s failed to import.', 'geo-my-wp' ), '<span class="failed-ph">0</span>' ) . '</p>';
+			$output['bar']       = '<div class="gmw-importer-progress-bar"><div class="importing"></div></div>';
+			$output['scanned']   = '<p class="locations-completed-message">' . sprintf( __( '%1$s out of %2$s locations were scanned.', 'geo-my-wp' ), '<span class="completed-ph">0</span>', '<span class="total-ph">0</span>' ) . '</p>';
+			$output['updated']   = '<p class="updated-locations-message" ' . $updated . '>' . sprintf( __( '%s locations successfully updated ( were already exsist ).', 'geo-my-wp' ), '<span class="updated-ph">0</span>' ) . '</p>';
+			$output['imported']  = '<p class="imported-locations-message">' . sprintf( __( '%s locations successfully imported.', 'geo-my-wp' ), '<span class="imported-ph">0</span>' ) . '</p>';
+			$output['existing']  = '<p class="existing-locations-message" ' . $exist . '>' . sprintf( __( '%s locations already exist ( were not updated ).', 'geo-my-wp' ), '<span class="existing-ph">0</span>' ) . '</p>';
+			$output['failed']    = '<p class="failed-locations-message">' . sprintf( __( '%s failed to import.', 'geo-my-wp' ), '<span class="failed-ph">0</span>' ) . '</p>';
 
 			$done_message = $this->done_message();
 
@@ -220,15 +210,15 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 				wp_enqueue_style( 'gmw-locations-importer' );
 			}
 			?>
-		<div class="gmw-locations-importer-wrapper object-<?php echo esc_attr( $this->object_type ); ?> <?php echo esc_attr( get_class( $this ) ); ?>">
+			<div class="gmw-locations-importer-wrapper object-<?php echo esc_attr( $this->object_type ); ?> <?php echo esc_attr( get_class( $this ) ); ?>">
 
-			<?php if ( ! empty( $this->form_message ) ) { ?>
-				<p><?php echo esc_attr( $this->form_message ); ?></p>
-			<?php } ?>
+				<?php if ( ! empty( $this->form_message ) ) { ?>
+					<p><?php echo esc_attr( $this->form_message ); ?></p>
+				<?php } ?>
 
-			<?php echo $this->get_import_details(); ?>
-			<?php $this->form(); ?>
-		</div>
+				<?php echo $this->get_import_details(); // WPCS: XSS ok. ?>
+				<?php $this->form(); ?>
+			</div>
 
 			<?php
 			if ( ! wp_script_is( 'gmw-locations-importer', 'enqueued' ) ) {
@@ -241,13 +231,13 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 		 */
 		public function get_data() {
 
-			$this->total_locations    = absint( $_POST['totalLocations'] );
-			$this->records_completed  = absint( $_POST['recordsCompleted'] );
-			$this->locations_updated  = absint( $_POST['locationsUpdated'] );
-			$this->locations_imported = absint( $_POST['locationsImported'] );
-			$this->locations_exist    = absint( $_POST['locationsExist'] );
-			$this->locations_failed   = absint( $_POST['locationsFailed'] );
-			$this->batch_number       = absint( $_POST['batchNumber'] );
+			$this->total_locations    = ! empty( $_POST['totalLocations'] ) ? absint( $_POST['totalLocations'] ) : 0; // WPCS: CSRF ok.
+			$this->records_completed  = ! empty( $_POST['recordsCompleted'] ) ? absint( $_POST['recordsCompleted'] ) : 0; // WPCS: CSRF ok.
+			$this->locations_updated  = ! empty( $_POST['locationsUpdated'] ) ? absint( $_POST['locationsUpdated'] ) : 0; // WPCS: CSRF ok.
+			$this->locations_imported = ! empty( $_POST['locationsImported'] ) ? absint( $_POST['locationsImported'] ) : 0; // WPCS: CSRF ok.
+			$this->locations_exist    = ! empty( $_POST['locationsExist'] ) ? absint( $_POST['locationsExist'] ) : 0; // WPCS: CSRF ok.
+			$this->locations_failed   = ! empty( $_POST['locationsFailed'] ) ? absint( $_POST['locationsFailed'] ) : 0; // WPCS: CSRF ok.
+			$this->batch_number       = ! empty( $_POST['batchNumber'] ) ? absint( $_POST['batchNumber'] ) : 0; // WPCS: CSRF ok.
 		}
 
 		/**
@@ -481,7 +471,6 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 
 				// allow to modify the $location_args before tempting to import.
 				$location_args = $this->modify_location( $location_args );
-
 				$location_args = apply_filters( 'gmw_locations_importer_location_args', $location_args, $this );
 
 				// try to import location.
@@ -523,7 +512,7 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 			$this->records_completed = $this->locations_imported + $this->locations_exist + $this->locations_failed;
 
 			// calculate percentage done.
-			if ( 0 != $this->total_locations ) {
+			if ( 0 !== absint( $this->total_locations ) ) {
 				$percentage = ( $this->records_completed / $this->total_locations ) * 100;
 			} else {
 				$percentage = '100';
@@ -585,23 +574,22 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 	 */
 	function gmw_locations_importer_init() {
 
-		// verify ajax nonce.
-		if ( ! check_ajax_referer( 'gmw_importer_nonce_' . $_POST['importAction'], 'security', false ) ) {
-
-			// abort if bad nonce.
-			wp_die( __( 'Trying to cheat or something?', 'geo-my-wp' ), __( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
-		}
-
 		// verify that a child class name passes.
-		if ( empty( $_POST['importAction'] ) ) {
+		if ( empty( $_POST['importAction'] ) || empty( $_POST['action'] ) ) {
 
 			wp_die( __( 'Action class name is missing', 'geo-my-wp' ), E_USER_ERROR );
 
 			exit;
 		}
 
-		// get the child class name.
-		$class_name = $_POST['importAction'];
+		$class_name = sanitize_text_field( wp_unslash( $_POST['importAction'] ) ); // WPCS: CSRF ok.
+
+		// verify ajax nonce.
+		if ( ! check_ajax_referer( 'gmw_importer_nonce_' . $class_name, 'security', false ) ) {
+
+			// abort if bad nonce.
+			wp_die( __( 'Trying to cheat or something?', 'geo-my-wp' ), __( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
+		}
 
 		// verify that the class exists.
 		if ( ! class_exists( $class_name ) ) {
