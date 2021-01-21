@@ -32,6 +32,7 @@ class GMW_Location_Types {
 	 */
 	public function __construct() {
 
+		add_action( 'gmw_admin_menu_items', array( $this, 'menu_item' ) );
 		add_action( 'admin_footer-post.php', array( $this, 'load_scripts' ) );
 		add_action( 'admin_footer-post-new.php', array( $this, 'load_scripts' ) );
 		add_action( 'init', array( $this, 'register_post_type' ), 45 );
@@ -42,6 +43,32 @@ class GMW_Location_Types {
 		add_action( 'wp_insert_post_data', array( $this, 'update_meta' ), 10, 3 );
 		add_filter( 'post_updated_messages', array( $this, 'update_notices' ) );
 		add_action( 'wp_ajax_gmw_set_missing_location_type', array( $this, 'set_missing_location_type' ) );
+	}
+
+	/**
+	 * Add submenu item.
+	 *
+	 * @param  array $menu_items menu items.
+	 *
+	 * @since 1.1
+	 *
+	 * @author Eyal Fitoussi
+	 *
+	 * @return array $menu_items menu items.
+	 */
+	public function menu_item( $menu_items ) {
+
+		$menu_items[] = array(
+			'parent_slug'       => 'gmw-extensions',
+			'page_title'        => __( 'GEO my WP Location Types', 'geo-my-wp' ),
+			'menu_title'        => __( 'Location Types', 'gmw-bp-xprofile-geolocation' ),
+			'capability'        => 'manage_options',
+			'menu_slug'         => 'edit.php?post_type=gmw_location_type',
+			'callback_function' => '',
+			'priority'          => 8,
+		);
+
+		return $menu_items;
 	}
 
 	/**
