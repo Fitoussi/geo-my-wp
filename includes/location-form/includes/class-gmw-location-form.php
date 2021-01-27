@@ -216,6 +216,10 @@ class GMW_Location_Form {
 			$this->args[ $boolean_item ] = filter_var( $this->args[ $boolean_item ], FILTER_VALIDATE_BOOLEAN );
 		}
 
+		if ( empty( $this->object_slug ) ) {
+			$this->object_slug = $this->object_type;
+		}
+
 		// verify user ID.
 		$this->args['user_id'] = ! empty( $this->args['user_id'] ) ? $this->args['user_id'] : get_current_user_id();
 
