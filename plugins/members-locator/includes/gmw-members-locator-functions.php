@@ -1,5 +1,11 @@
 <?php
-// Exit if accessed directly
+/**
+ * GEO my WP - Members Locator functions.
+ *
+ * @package geo-my-wp
+ */
+
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -7,7 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Generate the user location form
  *
- * @param  array $args [description]
+ * @param  array $args shortcode attributes.
+ *
  * @return [type]       [description]
  */
 function gmw_member_location_form( $args = array() ) {
@@ -22,13 +29,13 @@ function gmw_member_location_form( $args = array() ) {
 		} elseif ( isset( $args['member_id'] ) ) {
 
 			$args['object_id'] = $args['member_id'];
-			
+
 		} else {
 			$args['object_id'] = get_current_user_id();
 		}
 	}
 
-	// default args
+	// default args.
 	$defaults = array(
 		'location_id'    => 0,
 		'object_id'      => $args['object_id'],
@@ -46,23 +53,24 @@ function gmw_member_location_form( $args = array() ) {
 		return;
 	}
 
-	include_once( 'class-gmw-member-location-form.php' );
+	include_once 'class-gmw-member-location-form.php';
 
 	if ( ! class_exists( 'GMW_Member_Location_Form' ) ) {
 		return;
 	}
 
-	// generate new location form
+	// generate new location form.
 	$location_form = new GMW_Member_Location_Form( $args );
 
-	// display the location form
+	// display the location form.
 	$location_form->display_form();
 }
 
 /**
  * Generate the member location form using shortcode
  *
- * @param  array $atts [description]
+ * @param  array $atts shortcode attributes.
+ *
  * @return [type]       [description]
  */
 function gmw_fl_member_location_form_shortcode( $atts = array() ) {
