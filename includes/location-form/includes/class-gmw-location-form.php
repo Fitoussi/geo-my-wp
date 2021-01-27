@@ -692,7 +692,6 @@ class GMW_Location_Form {
 						'label'       => __( 'Country', 'geo-my-wp' ),
 						'type'        => 'text',
 						'options'     => '',
-						// 'options'   => gmw_get_countries_list_array(),
 						'default'     => '',
 						'id'          => 'gmw-lf-country-code',
 						'class'       => '',
@@ -826,7 +825,7 @@ class GMW_Location_Form {
 						'placeholder' => '',
 						'attributes'  => '',
 						'priority'    => 5,
-						'meta_key'    => 'phone',
+						'meta_key'    => 'phone', // WPCS: slow query ok ( not really a query ).
 					),
 					'fax'     => array(
 						'name'        => 'gmw' . $prefix . 'fax',
@@ -838,7 +837,7 @@ class GMW_Location_Form {
 						'placeholder' => '',
 						'attributes'  => '',
 						'priority'    => 10,
-						'meta_key'    => 'fax',
+						'meta_key'    => 'fax', // WPCS: slow query ok ( not really a query ).
 					),
 					'email'   => array(
 						'name'        => 'gmw' . $prefix . 'email',
@@ -850,7 +849,7 @@ class GMW_Location_Form {
 						'placeholder' => '',
 						'attributes'  => '',
 						'priority'    => 15,
-						'meta_key'    => 'email',
+						'meta_key'    => 'email', // WPCS: slow query ok ( not really a query ).
 					),
 					'website' => array(
 						'name'        => 'gmw' . $prefix . 'website',
@@ -862,7 +861,7 @@ class GMW_Location_Form {
 						'placeholder' => '',
 						'attributes'  => '',
 						'priority'    => 20,
-						'meta_key'    => 'website',
+						'meta_key'    => 'website', // WPCS: slow query ok ( not really a query ).
 					),
 				),
 			);
@@ -909,7 +908,6 @@ class GMW_Location_Form {
 		?>
 		<!-- contact info tab -->
 		<div id="contact-tab-panel" class="section-wrapper contact">
-
 			<?php
 			// For backward compatibility.
 			if ( 'post' === $this->object_type ) {
@@ -929,7 +927,6 @@ class GMW_Location_Form {
 				do_action( 'gmw_lf_pt_contact_section_end', $this );
 			}
 			?>
-
 		</div>
 
 		<!-- contact info tab -->
@@ -963,15 +960,28 @@ class GMW_Location_Form {
 							<label for=""><?php esc_html_e( 'Days', 'geo-my-wp' ); ?></label>
 						</th>
 						<td style="width:150px">
-							<input type="text" class="gmw-lf-field group_days_hours" name="gmw_location_form[location_meta][days_hours][<?php echo $i; ?>][days]" id="gmw-pt-days-<?php echo $i; ?>" value="<?php if ( ! empty( $days_hours[$i]['days'] ) ) echo esc_attr( $days_hours[$i]['days'] ); ?>" />
+							<?php $value = ! empty( $days_hours[ $i ]['days'] ) ? esc_attr( $days_hours[ $i ]['days'] ) : ''; ?>
+							<input 
+								type="text"
+								class="gmw-lf-field group_days_hours"
+								name="gmw_location_form[location_meta][days_hours][<?php echo $i; // WPCS: XSS ok. ?>][days]"
+								id="gmw-pt-days-<?php echo $i; // WPCS: XSS ok. ?>"
+								value="<?php echo $value; // WPCS: XSS ok. ?>"
+								/>
 						</td>
 
 						<th style="width:30px">
 							<label for=""><?php esc_html_e( 'Hours', 'geo-my-wp' ); ?></label>
 						</th>
-
 						<td>
-							<input type="text" class="gmw-pt-field group_days_hours" name="gmw_location_form[location_meta][days_hours][<?php echo $i; ?>][hours]" id="gmw-pt-hours-<?php echo $i; ?>" value="<?php if ( ! empty( $days_hours[$i]['hours'] ) ) echo esc_attr( $days_hours[$i]['hours'] ); ?>" />
+							<?php $value = ! empty( $days_hours[ $i ]['hours'] ) ? esc_attr( $days_hours[ $i ]['hours'] ) : ''; ?>
+							<input 
+								type="text"
+								class="gmw-pt-field group_days_hours"
+								name="gmw_location_form[location_meta][days_hours][<?php echo $i; // WPCS: XSS ok. ?>][hours]"
+								id="gmw-pt-hours-<?php echo $i; // WPCS: XSS ok. ?>"
+								value="<?php echo $value; // WPCS: XSS ok. ?>"
+								/>
 						</td>
 					</tr>
 
@@ -1301,7 +1311,7 @@ class GMW_Location_Form {
 		// loop through and create submission fields.
 		foreach ( $address_fields as $field ) {
 
-			$group = ( 'latitude' == $field || 'longitude' == $field ) ? 'group_coordinates' : 'group_address';
+			$group = ( 'latitude' === $field || 'longitude' === $field ) ? 'group_coordinates' : 'group_address';
 
 			// check for user's current position to automatically fill out the location form if location does not exists in databse.
 			if ( $this->args['default_user_location'] && empty( $this->saved_location ) && ! empty( $this->user_location ) ) {
