@@ -178,6 +178,7 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 		include 'includes/gmw-members-locator-activity.php';
 		include 'includes/gmw-members-locator-template-functions.php';
 		include 'includes/class-gmw-members-locator-form.php';
+		include_once 'includes/class-gmw-member-location-form.php';
 
 		// init the location tab.
 		add_action( 'bp_setup_nav', array( 'GMW_Members_Locator_Addon', 'init_location_tab' ), 20 );
