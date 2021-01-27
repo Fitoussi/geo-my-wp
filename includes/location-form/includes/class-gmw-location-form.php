@@ -115,7 +115,7 @@ class GMW_Location_Form {
 	 *
 	 * @var boolean
 	 */
-	public $enable_additional_fields = false;
+	public $disable_additional_fields = true;
 
 	/**
 	 * Default arguments
@@ -255,6 +255,16 @@ class GMW_Location_Form {
 			$this->args['exclude_fields_groups'] = array_merge( $this->exclude_fields_groups, $this->args['exclude_fields_groups'] );
 		}
 
+		// Exclude the contact and hours of operation fields by default.
+		if ( apply_filters( 'gmw_location_form_disable_additional_fields', $this->disable_additional_fields, $this->slug, $this ) ) {
+
+			array_push( $this->args['exclude_fields_groups'], 'contact', 'days_hours' );
+
+			// Otherwise, generate the contact field elements.
+		} else {
+			add_action( 'gmw_lf_content_end', array( $this, 'contact_info_tabs_panels' ) );
+		}
+
 		// exclude fields.
 		if ( empty( $this->args['exclude_fields'] ) ) {
 
@@ -297,14 +307,6 @@ class GMW_Location_Form {
 			}
 
 			$this->location_id = $this->saved_location->ID;
-		}
-
-		// Enable contact and hours of operation fields.
-		$this->enable_additional_fields = apply_filters( 'gmw_location_form_enable_additional_fields', $this->enable_additional_fields, $this->slug, $this );
-
-		if ( ! empty( $this->enable_additional_fields ) ) {
-			// add custom tab panels.
-			add_action( 'gmw_lf_content_end', array( $this, 'contact_info_tabs_panels' ) );
 		}
 
 		// get existing location ID.
@@ -495,22 +497,17 @@ class GMW_Location_Form {
 				'fields_group' => array( 'coordinates' ),
 				'priority'     => 15,
 			),
-		);
-
-		if ( $this->enable_additional_fields ) {
-
-			$tabs['contact'] = array(
+			'contact'     => array(
 				'label'    => __( 'Contact', 'geo-my-wp' ),
 				'icon'     => 'gmw-icon-phone',
 				'priority' => 20,
-			);
-
-			$tabs['days_hours'] = array(
+			),
+			'days_hours'  => array(
 				'label'    => __( 'Days & Hours', 'geo-my-wp' ),
 				'icon'     => 'gmw-icon-clock',
 				'priority' => 25,
-			);
-		}
+			),
+		);
 
 		$tabs = apply_filters( 'gmw_location_form_tabs', $tabs, $this->args, $this->object_type, $this->slug );
 		$tabs = apply_filters( 'gmw_' . $this->object_slug . '_location_form_tabs', $tabs, $this );
@@ -807,83 +804,80 @@ class GMW_Location_Form {
 			),
 		);
 
-		if ( $this->enable_additional_fields ) {
+		// For backward compatibility.
+		$prefix = ( 'post' === $this->object_type ) ? '_pt_' : '_';
 
-			// For backward compatibility.
-			$prefix = ( 'post' === $this->object_type ) ? '_pt_' : '_';
-
-			$fields['contact_info'] = array(
-				'label'  => __( 'Contact Information', 'geo-my-wp' ),
-				'fields' => array(
-					'phone'   => array(
-						'name'        => 'gmw' . $prefix . 'phone',
-						'label'       => __( 'Phone Number', 'geo-my-wp' ),
-						'desc'        => '',
-						'id'          => 'gmw-phone',
-						'type'        => 'text',
-						'default'     => '',
-						'placeholder' => '',
-						'attributes'  => '',
-						'priority'    => 5,
-						'meta_key'    => 'phone', // WPCS: slow query ok ( not really a query ).
-					),
-					'fax'     => array(
-						'name'        => 'gmw' . $prefix . 'fax',
-						'label'       => __( 'Fax Number', 'geo-my-wp' ),
-						'desc'        => '',
-						'id'          => 'gmw-fax',
-						'type'        => 'text',
-						'default'     => '',
-						'placeholder' => '',
-						'attributes'  => '',
-						'priority'    => 10,
-						'meta_key'    => 'fax', // WPCS: slow query ok ( not really a query ).
-					),
-					'email'   => array(
-						'name'        => 'gmw' . $prefix . 'email',
-						'label'       => __( 'Email Address', 'geo-my-wp' ),
-						'desc'        => '',
-						'id'          => 'gmw-email',
-						'type'        => 'text',
-						'default'     => '',
-						'placeholder' => '',
-						'attributes'  => '',
-						'priority'    => 15,
-						'meta_key'    => 'email', // WPCS: slow query ok ( not really a query ).
-					),
-					'website' => array(
-						'name'        => 'gmw' . $prefix . 'website',
-						'label'       => __( 'Website', 'geo-my-wp' ),
-						'desc'        => 'Ex: www.website.com',
-						'id'          => 'gmw-website',
-						'type'        => 'text',
-						'default'     => '',
-						'placeholder' => '',
-						'attributes'  => '',
-						'priority'    => 20,
-						'meta_key'    => 'website', // WPCS: slow query ok ( not really a query ).
-					),
+		$fields['contact_info'] = array(
+			'label'  => __( 'Contact Information', 'geo-my-wp' ),
+			'fields' => array(
+				'phone'   => array(
+					'name'        => 'gmw' . $prefix . 'phone',
+					'label'       => __( 'Phone Number', 'geo-my-wp' ),
+					'desc'        => '',
+					'id'          => 'gmw-phone',
+					'type'        => 'text',
+					'default'     => '',
+					'placeholder' => '',
+					'attributes'  => '',
+					'priority'    => 5,
+					'meta_key'    => 'phone', // WPCS: slow query ok ( not really a query ).
 				),
-			);
-
-			// days and hours.
-			$fields['days_hours'] = array(
-				'label'  => __( 'Days & Hours', 'geo-my-wp' ),
-				'fields' => array(
-					'days_hours' => array(
-						'name'        => 'gmw' . $prefix . 'days_hours',
-						'label'       => __( 'Days & Hours', 'geo-my-wp' ),
-						'desc'        => '',
-						'id'          => 'gmw-days-hours',
-						'type'        => 'text',
-						'default'     => '',
-						'placeholder' => '',
-						'attributes'  => '',
-						'priority'    => 5,
-					),
+				'fax'     => array(
+					'name'        => 'gmw' . $prefix . 'fax',
+					'label'       => __( 'Fax Number', 'geo-my-wp' ),
+					'desc'        => '',
+					'id'          => 'gmw-fax',
+					'type'        => 'text',
+					'default'     => '',
+					'placeholder' => '',
+					'attributes'  => '',
+					'priority'    => 10,
+					'meta_key'    => 'fax', // WPCS: slow query ok ( not really a query ).
 				),
-			);
-		}
+				'email'   => array(
+					'name'        => 'gmw' . $prefix . 'email',
+					'label'       => __( 'Email Address', 'geo-my-wp' ),
+					'desc'        => '',
+					'id'          => 'gmw-email',
+					'type'        => 'text',
+					'default'     => '',
+					'placeholder' => '',
+					'attributes'  => '',
+					'priority'    => 15,
+					'meta_key'    => 'email', // WPCS: slow query ok ( not really a query ).
+				),
+				'website' => array(
+					'name'        => 'gmw' . $prefix . 'website',
+					'label'       => __( 'Website', 'geo-my-wp' ),
+					'desc'        => 'Ex: www.website.com',
+					'id'          => 'gmw-website',
+					'type'        => 'text',
+					'default'     => '',
+					'placeholder' => '',
+					'attributes'  => '',
+					'priority'    => 20,
+					'meta_key'    => 'website', // WPCS: slow query ok ( not really a query ).
+				),
+			),
+		);
+
+		// days and hours.
+		$fields['days_hours'] = array(
+			'label'  => __( 'Days & Hours', 'geo-my-wp' ),
+			'fields' => array(
+				'days_hours' => array(
+					'name'        => 'gmw' . $prefix . 'days_hours',
+					'label'       => __( 'Days & Hours', 'geo-my-wp' ),
+					'desc'        => '',
+					'id'          => 'gmw-days-hours',
+					'type'        => 'text',
+					'default'     => '',
+					'placeholder' => '',
+					'attributes'  => '',
+					'priority'    => 5,
+				),
+			),
+		);
 
 		// Deprecated filter.
 		$fields = apply_filters( 'gmw_' . $this->object_slug . '_location_tab_fields', $fields, $this->args );
