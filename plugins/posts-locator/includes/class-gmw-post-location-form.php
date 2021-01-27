@@ -42,7 +42,7 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
 	 *
 	 * @var boolean
 	 */
-	public $enable_additional_fields = true;
+	public $disable_additional_fields = false;
 
 	/**
 	 * Run the form class.
