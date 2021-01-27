@@ -37,6 +37,13 @@ class GMW_Location_Form {
 	public $object_type = false;
 
 	/**
+	 * Slug that can be used for action hooks and filters.
+	 *
+	 * @var string
+	 */
+	public $object_slug = '';
+
+	/**
 	 * Exclude form tabs
 	 *
 	 * Additional groups can be excluded via the $args array
