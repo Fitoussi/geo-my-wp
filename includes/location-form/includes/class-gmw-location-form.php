@@ -205,7 +205,7 @@ class GMW_Location_Form {
 		}
 
 		if ( ! empty( $this->args['object_type'] ) ) {
-			$this->slug = $this->args['object_type'];
+			$this->object_type = $this->args['object_type'];
 		} else {
 			$this->args['object_type'] = $this->object_type;
 		}
