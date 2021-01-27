@@ -38,6 +38,13 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
 	public $object_type = 'post';
 
 	/**
+	 * Enable the contact fields by default.
+	 *
+	 * @var boolean
+	 */
+	public $enable_additional_fields = true;
+
+	/**
 	 * Run the form class.
 	 *
 	 * @param array $attr shortcode attributes.
