@@ -3,58 +3,61 @@
  * Location form no tabs tempalte file
  *
  * @params $gmw_location_form - the location form object.
- * 
+ *
  * @since 3.0
+ *
+ * @package geo-my-wp
  */
+
 ?>
 <div class="gmw-lf-content-wrapper">
 
-    <div class="gmw-lf-content-inner">
-        
-        <?php do_action( 'gmw_lf_content_start', $gmw_location_form ); ?>
-        
-        <!-- location fields tab -->
-        <div id="location-section" class="section-wrapper location">
+	<div class="gmw-lf-content-inner">
 
-            <?php do_action( 'gmw_lf_location_section_start', $gmw_location_form ); ?>
+		<?php do_action( 'gmw_lf_content_start', $gmw_location_form ); ?>
 
-            <?php $gmw_location_form->display_form_fields_group( 'location' ); ?>
+		<!-- location fields tab -->
+		<div id="location-section" class="section-wrapper location">
 
-            <?php do_action( 'gmw_lf_location_section_end', $gmw_location_form ); ?>
+			<?php do_action( 'gmw_lf_location_section_start', $gmw_location_form ); ?>
 
-        </div>
+			<?php $gmw_location_form->display_form_fields_group( 'location' ); ?>
 
-        <!-- address tab -->
-        <div id="address-section" class="section-wrapper address">
+			<?php do_action( 'gmw_lf_location_section_end', $gmw_location_form ); ?>
 
-            <?php do_action( 'gmw_lf_address_section_start', $gmw_location_form ); ?>
+		</div>
 
-            <?php $gmw_location_form->display_form_fields_group( 'address' ); ?>
+		<!-- address tab -->
+		<div id="address-section" class="section-wrapper address">
 
-            <?php do_action( 'gmw_lf_address_section_end', $gmw_location_form ); ?>
+			<?php do_action( 'gmw_lf_address_section_start', $gmw_location_form ); ?>
 
-        </div>
-        
-        <!-- coords tab -->
-        <div id="coordinates-section" class="section-wrapper coords">
+			<?php $gmw_location_form->display_form_fields_group( 'address' ); ?>
 
-            <?php do_action('gmw_lf_coords_section_start', $gmw_location_form ); ?>
+			<?php do_action( 'gmw_lf_address_section_end', $gmw_location_form ); ?>
 
-            <?php $gmw_location_form->display_form_fields_group( 'coordinates' ); ?>
+		</div>
 
-            <?php do_action('gmw_lf_coords_section_end', $gmw_location_form ); ?>
+		<!-- coords tab -->
+		<div id="coordinates-section" class="section-wrapper coords">
 
-        </div>
+			<?php do_action( 'gmw_lf_coords_section_start', $gmw_location_form ); ?>
 
-        <?php echo do_action( 'gmw_lf_content_end', $gmw_location_form ); ?>
+			<?php $gmw_location_form->display_form_fields_group( 'coordinates' ); ?>
 
-    </div>
+			<?php do_action( 'gmw_lf_coords_section_end', $gmw_location_form ); ?>
 
-    <ul class="gmw-lf-form-actions-wrapper">
+		</div>
 
-        <li class="gmw-lf-form-actions">
-            <?php $gmw_location_form->display_form_fields_group( 'actions' ); ?>
-        </li>
+		<?php do_action( 'gmw_lf_content_end', $gmw_location_form ); ?>
 
-    </ul>   
+	</div>
+
+	<ul class="gmw-lf-form-actions-wrapper">
+
+		<li class="gmw-lf-form-actions">
+			<?php $gmw_location_form->display_form_fields_group( 'actions' ); ?>
+		</li>
+
+	</ul>   
 </div>   
