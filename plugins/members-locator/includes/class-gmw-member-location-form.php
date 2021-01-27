@@ -38,6 +38,13 @@ class GMW_Member_Location_Form extends GMW_Location_Form {
 	public $object_type = 'user';
 
 	/**
+	 * Object slug to be used with hooks.
+	 *
+	 * @var string
+	 */
+	public $object_slug = 'member';
+
+	/**
 	 * [__construct description]
 	 *
 	 * @param array $attr [description].
