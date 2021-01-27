@@ -58,31 +58,6 @@ class GMW_Member_Location_Form extends GMW_Location_Form {
 	}
 
 	/**
-	 * Additional custom form tabs
-	 *
-	 * @return array
-	 */
-	public function form_tabs() {
-
-		$tabs = parent::form_tabs();
-
-		return apply_filters( 'gmw_member_location_form_tabs', $tabs, $this->args );
-	}
-
-	/**
-	 * Additional form fields
-	 *
-	 * @return array
-	 */
-	public function form_fields() {
-
-		// retreive parent fields.
-		$fields = parent::form_fields();
-
-		return apply_filters( 'gmw_member_location_tab_fields', $fields, $this->args );
-	}
-
-	/**
 	 * Generate custom tabs panels
 	 *
 	 * @return void
