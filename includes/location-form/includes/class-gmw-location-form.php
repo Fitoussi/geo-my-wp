@@ -111,6 +111,13 @@ class GMW_Location_Form {
 	public $template_folders = array();
 
 	/**
+	 * Status of contact fields.
+	 *
+	 * @var boolean
+	 */
+	public $enable_additional_fields = false;
+
+	/**
 	 * Default arguments
 	 *
 	 * @since 3.0
@@ -279,6 +286,7 @@ class GMW_Location_Form {
 			$this->saved_location = $this->get_saved_location();
 		}
 
+		// Can modify the saved location.
 		$this->saved_location = apply_filters( 'gmw_location_form_default_location', $this->saved_location, $this->args, $this );
 
 		if ( ! empty( $this->saved_location ) ) {
@@ -289,6 +297,14 @@ class GMW_Location_Form {
 			}
 
 			$this->location_id = $this->saved_location->ID;
+		}
+
+		// Enable contact and hours of operation fields.
+		$this->enable_additional_fields = apply_filters( 'gmw_location_form_enable_additional_fields', $this->enable_additional_fields, $this->slug, $this );
+
+		if ( ! empty( $this->enable_additional_fields ) ) {
+			// add custom tab panels.
+			add_action( 'gmw_lf_content_end', array( $this, 'contact_info_tabs_panels' ) );
 		}
 
 		// get existing location ID.
@@ -460,32 +476,44 @@ class GMW_Location_Form {
 	 */
 	public function form_tabs() {
 
-		$tabs = apply_filters(
-			'gmw_location_form_tabs',
-			array(
-				'location'    => array(
-					'label'        => __( 'Location', 'geo-my-wp' ),
-					'icon'         => 'gmw-icon-location',
-					'fields_group' => array( 'location' ),
-					'priority'     => 5,
-				),
-				'address'     => array(
-					'label'        => __( 'Address', 'geo-my-wp' ),
-					'icon'         => 'gmw-icon-flag',
-					'fields_group' => array( 'address' ),
-					'priority'     => 10,
-				),
-				'coordinates' => array(
-					'label'        => __( 'Coordinates', 'geo-my-wp' ),
-					'icon'         => 'gmw-icon-compass',
-					'fields_group' => array( 'coordinates' ),
-					'priority'     => 15,
-				),
+		$tabs = array(
+			'location'    => array(
+				'label'        => __( 'Location', 'geo-my-wp' ),
+				'icon'         => 'gmw-icon-location',
+				'fields_group' => array( 'location' ),
+				'priority'     => 5,
 			),
-			$this->args,
-			$this->object_type,
-			$this->slug
+			'address'     => array(
+				'label'        => __( 'Address', 'geo-my-wp' ),
+				'icon'         => 'gmw-icon-flag',
+				'fields_group' => array( 'address' ),
+				'priority'     => 10,
+			),
+			'coordinates' => array(
+				'label'        => __( 'Coordinates', 'geo-my-wp' ),
+				'icon'         => 'gmw-icon-compass',
+				'fields_group' => array( 'coordinates' ),
+				'priority'     => 15,
+			),
 		);
+
+		if ( $this->enable_additional_fields ) {
+
+			$tabs['contact'] = array(
+				'label'    => __( 'Contact', 'geo-my-wp' ),
+				'icon'     => 'gmw-icon-phone',
+				'priority' => 20,
+			);
+
+			$tabs['days_hours'] = array(
+				'label'    => __( 'Days & Hours', 'geo-my-wp' ),
+				'icon'     => 'gmw-icon-clock',
+				'priority' => 25,
+			);
+		}
+
+		$tabs = apply_filters( 'gmw_location_form_tabs', $tabs, $this->args, $this->object_type, $this->slug );
+		$tabs = apply_filters( 'gmw_' . $this->object_slug . '_location_form_tabs', $tabs, $this );
 
 		return $tabs;
 	}
@@ -547,242 +575,424 @@ class GMW_Location_Form {
 	 */
 	public function form_fields() {
 
-		return apply_filters(
-			'gmw_location_form_fields',
-			array(
-				'location'    => array(
-					'label'  => __( 'Find Your Location', 'geo-my-wp' ),
-					'fields' => array(
-						'title'   => array(
-							'name'        => 'title',
-							'label'       => __( 'Location Name', 'geo-my-wp' ),
-							'type'        => 'hidden',
-							'default'     => '',
-							'id'          => 'gmw-lf-title',
-							'class'       => '',
-							'placeholder' => __( 'Location name', 'geo-my-wp' ),
-							'desc'        => '',
-							'attributes'  => array( 'style' => 'width:100%' ),
-							'priority'    => 5,
-							'required'    => false,
-						),
-						'address' => array(
-							'name'        => 'address',
-							'label'       => __( 'Address', 'geo-my-wp' ),
-							'type'        => 'address',
-							'default'     => '',
-							'id'          => 'gmw-lf-address',
-							'class'       => $this->args['address_autocomplete'] ? 'gmw-lf-address-autocomplete' : '',
-							'placeholder' => __( 'Enter an address...', 'geo-my-wp' ),
-							'desc'        => __( 'Type an address to see suggested results.', 'geo-my-wp' ),
-							'attributes'  => array( 'style' => 'width:100%' ),
-							'priority'    => 10,
-							'required'    => false,
-						),
-						'map'     => array(
-							'name'        => 'map',
-							'label'       => '',
-							'type'        => 'map',
-							'default'     => '',
-							'id'          => 'gmw-lf-map',
-							'class'       => 'gmw-map',
-							'placeholder' => '',
-							'desc'        => __( 'Drag the marker to your position on the map..', 'geo-my-wp' ),
-							'attributes'  => array( 'style' => 'height:210px;width:100%' ),
-							'priority'    => 15,
-							'required'    => false,
-						),
+		$fields = array(
+			'location'    => array(
+				'label'  => __( 'Find Your Location', 'geo-my-wp' ),
+				'fields' => array(
+					'title'   => array(
+						'name'        => 'title',
+						'label'       => __( 'Location Name', 'geo-my-wp' ),
+						'type'        => 'hidden',
+						'default'     => '',
+						'id'          => 'gmw-lf-title',
+						'class'       => '',
+						'placeholder' => __( 'Location name', 'geo-my-wp' ),
+						'desc'        => '',
+						'attributes'  => array( 'style' => 'width:100%' ),
+						'priority'    => 5,
+						'required'    => false,
 					),
-				),
-				'address'     => array(
-					'label'  => __( 'Enter Address', 'geo-my-wp' ),
-					'fields' => array(
-						'street'       => array(
-							'name'        => 'street',
-							'label'       => __( 'Street', 'geo-my-wp' ),
-							'type'        => 'text',
-							'default'     => '',
-							'id'          => 'gmw-lf-street',
-							'class'       => '',
-							'placeholder' => '',
-							'desc'        => '',
-							'attributes'  => '',
-							'priority'    => 5,
-							'required'    => false,
-						),
-						'premise'      => array(
-							'name'        => 'premise',
-							'label'       => __( 'Apt/Suit', 'geo-my-wp' ),
-							'type'        => 'text',
-							'default'     => '',
-							'id'          => 'gmw-lf-premise',
-							'class'       => '',
-							'placeholder' => '',
-							'desc'        => '',
-							'attributes'  => '',
-							'priority'    => 10,
-							'required'    => false,
-						),
-						'city'         => array(
-							'name'        => 'city',
-							'label'       => __( 'City', 'geo-my-wp' ),
-							'type'        => 'text',
-							'default'     => '',
-							'id'          => 'gmw-lf-city',
-							'class'       => '',
-							'placeholder' => '',
-							'desc'        => '',
-							'attributes'  => '',
-							'priority'    => 15,
-							'required'    => false,
-						),
-						'region_name'  => array(
-							'name'        => 'region_name',
-							'label'       => __( 'State', 'geo-my-wp' ),
-							'type'        => 'text',
-							'default'     => '',
-							'id'          => 'gmw-lf-region-name',
-							'placeholder' => '',
-							'desc'        => '',
-							'attributes'  => '',
-							'priority'    => 20,
-							'required'    => false,
-						),
-						'postcode'     => array(
-							'name'        => 'postcode',
-							'label'       => __( 'Zipcode', 'geo-my-wp' ),
-							'type'        => 'text',
-							'default'     => '',
-							'id'          => 'gmw-lf-postcode',
-							'class'       => '',
-							'placeholder' => '',
-							'desc'        => '',
-							'attributes'  => '',
-							'priority'    => 25,
-							'required'    => false,
-						),
-						'country_code' => array(
-							'name'        => 'country_code',
-							'label'       => __( 'Country', 'geo-my-wp' ),
-							'type'        => 'text',
-							'options'     => '',
-							// 'options'   => gmw_get_countries_list_array(),
-							'default'     => '',
-							'id'          => 'gmw-lf-country-code',
-							'class'       => '',
-							'placeholder' => '',
-							'desc'        => '',
-							'attributes'  => '',
-							'priority'    => 30,
-							'required'    => false,
-						),
+					'address' => array(
+						'name'        => 'address',
+						'label'       => __( 'Address', 'geo-my-wp' ),
+						'type'        => 'address',
+						'default'     => '',
+						'id'          => 'gmw-lf-address',
+						'class'       => $this->args['address_autocomplete'] ? 'gmw-lf-address-autocomplete' : '',
+						'placeholder' => __( 'Enter an address...', 'geo-my-wp' ),
+						'desc'        => __( 'Type an address to see suggested results.', 'geo-my-wp' ),
+						'attributes'  => array( 'style' => 'width:100%' ),
+						'priority'    => 10,
+						'required'    => false,
 					),
-				),
-				'coordinates' => array(
-					'label'  => __( 'Enter Coordinates', 'geo-my-wp' ),
-					'fields' => array(
-						'latitude'  => array(
-							'name'        => 'latitude',
-							'label'       => __( 'Latitude', 'geo-my-wp' ),
-							'type'        => 'text',
-							'default'     => '',
-							'id'          => 'gmw-lf-latitude',
-							'class'       => '',
-							'placeholder' => '',
-							'desc'        => '',
-							'attributes'  => '',
-							'priority'    => 5,
-							'required'    => false,
-						),
-						'longitude' => array(
-							'name'        => 'longitude',
-							'label'       => __( 'Longitude', 'geo-my-wp' ),
-							'type'        => 'text',
-							'default'     => '',
-							'id'          => 'gmw-lf-longitude',
-							'class'       => '',
-							'placeholder' => '',
-							'desc'        => '',
-							'attributes'  => '',
-							'priority'    => 10,
-							'required'    => false,
-						),
-					),
-				),
-				'actions'     => array(
-					'label'  => false,
-					'fields' => array(
-						'submit_location'  => array(
-							'name'        => 'submit_location',
-							'label'       => __( 'Update location', 'geo-my-wp' ),
-							'type'        => 'submit',
-							'default'     => '',
-							'id'          => 'gmw-lf-submit-location',
-							'class'       => 'gmw-lf-form-action button action-button',
-							'placeholder' => '',
-							'desc'        => '',
-							'attributes'  => '',
-							'priority'    => 5,
-							'required'    => false,
-						),
-						'delete_location'  => array(
-							'name'        => 'delete_location',
-							'label'       => __( 'Delete Location', 'geo-my-wp' ),
-							'type'        => 'button',
-							'default'     => '',
-							'id'          => 'gmw-lf-delete-location',
-							'class'       => 'gmw-lf-form-action button action-button',
-							'placeholder' => '',
-							'desc'        => '',
-							'attributes'  => '',
-							'priority'    => 10,
-							'required'    => false,
-						),
-						'confirm_location' => array(
-							'name'        => 'confirm_location',
-							'label'       => __( 'Confirm Location', 'geo-my-wp' ),
-							'type'        => 'button',
-							'default'     => '',
-							'id'          => 'gmw-lf-confirm-location',
-							'class'       => 'gmw-lf-form-action button action-button gmw-lf-confirm-location',
-							'placeholder' => '',
-							'desc'        => '',
-							'attributes'  => '',
-							'priority'    => 15,
-							'required'    => false,
-						),
-						'message'          => array(
-							'name'        => 'message',
-							'label'       => '',
-							'type'        => 'message',
-							'default'     => '',
-							'id'          => 'gmw-lf-action-message',
-							'class'       => 'gmw-lf-form-action',
-							'placeholder' => '',
-							'desc'        => '',
-							'attributes'  => '',
-							'priority'    => 20,
-							'required'    => false,
-						),
-
-						'loader'           => array(
-							'name'        => 'loader',
-							'label'       => '',
-							'type'        => 'loader',
-							'default'     => '',
-							'id'          => 'gmw-lf-action-loader',
-							'class'       => 'gmw-lf-form-action gmw-icon-spin-3 animate-spin',
-							'placeholder' => '',
-							'desc'        => '',
-							'attributes'  => '',
-							'priority'    => 25,
-							'required'    => false,
-						),
+					'map'     => array(
+						'name'        => 'map',
+						'label'       => '',
+						'type'        => 'map',
+						'default'     => '',
+						'id'          => 'gmw-lf-map',
+						'class'       => 'gmw-map',
+						'placeholder' => '',
+						'desc'        => __( 'Drag the marker to your position on the map..', 'geo-my-wp' ),
+						'attributes'  => array( 'style' => 'height:210px;width:100%' ),
+						'priority'    => 15,
+						'required'    => false,
 					),
 				),
 			),
-			$this
+			'address'     => array(
+				'label'  => __( 'Enter Address', 'geo-my-wp' ),
+				'fields' => array(
+					'street'       => array(
+						'name'        => 'street',
+						'label'       => __( 'Street', 'geo-my-wp' ),
+						'type'        => 'text',
+						'default'     => '',
+						'id'          => 'gmw-lf-street',
+						'class'       => '',
+						'placeholder' => '',
+						'desc'        => '',
+						'attributes'  => '',
+						'priority'    => 5,
+						'required'    => false,
+					),
+					'premise'      => array(
+						'name'        => 'premise',
+						'label'       => __( 'Apt/Suit', 'geo-my-wp' ),
+						'type'        => 'text',
+						'default'     => '',
+						'id'          => 'gmw-lf-premise',
+						'class'       => '',
+						'placeholder' => '',
+						'desc'        => '',
+						'attributes'  => '',
+						'priority'    => 10,
+						'required'    => false,
+					),
+					'city'         => array(
+						'name'        => 'city',
+						'label'       => __( 'City', 'geo-my-wp' ),
+						'type'        => 'text',
+						'default'     => '',
+						'id'          => 'gmw-lf-city',
+						'class'       => '',
+						'placeholder' => '',
+						'desc'        => '',
+						'attributes'  => '',
+						'priority'    => 15,
+						'required'    => false,
+					),
+					'region_name'  => array(
+						'name'        => 'region_name',
+						'label'       => __( 'State', 'geo-my-wp' ),
+						'type'        => 'text',
+						'default'     => '',
+						'id'          => 'gmw-lf-region-name',
+						'placeholder' => '',
+						'desc'        => '',
+						'attributes'  => '',
+						'priority'    => 20,
+						'required'    => false,
+					),
+					'postcode'     => array(
+						'name'        => 'postcode',
+						'label'       => __( 'Zipcode', 'geo-my-wp' ),
+						'type'        => 'text',
+						'default'     => '',
+						'id'          => 'gmw-lf-postcode',
+						'class'       => '',
+						'placeholder' => '',
+						'desc'        => '',
+						'attributes'  => '',
+						'priority'    => 25,
+						'required'    => false,
+					),
+					'country_code' => array(
+						'name'        => 'country_code',
+						'label'       => __( 'Country', 'geo-my-wp' ),
+						'type'        => 'text',
+						'options'     => '',
+						// 'options'   => gmw_get_countries_list_array(),
+						'default'     => '',
+						'id'          => 'gmw-lf-country-code',
+						'class'       => '',
+						'placeholder' => '',
+						'desc'        => '',
+						'attributes'  => '',
+						'priority'    => 30,
+						'required'    => false,
+					),
+				),
+			),
+			'coordinates' => array(
+				'label'  => __( 'Enter Coordinates', 'geo-my-wp' ),
+				'fields' => array(
+					'latitude'  => array(
+						'name'        => 'latitude',
+						'label'       => __( 'Latitude', 'geo-my-wp' ),
+						'type'        => 'text',
+						'default'     => '',
+						'id'          => 'gmw-lf-latitude',
+						'class'       => '',
+						'placeholder' => '',
+						'desc'        => '',
+						'attributes'  => '',
+						'priority'    => 5,
+						'required'    => false,
+					),
+					'longitude' => array(
+						'name'        => 'longitude',
+						'label'       => __( 'Longitude', 'geo-my-wp' ),
+						'type'        => 'text',
+						'default'     => '',
+						'id'          => 'gmw-lf-longitude',
+						'class'       => '',
+						'placeholder' => '',
+						'desc'        => '',
+						'attributes'  => '',
+						'priority'    => 10,
+						'required'    => false,
+					),
+				),
+			),
+			'actions'     => array(
+				'label'  => false,
+				'fields' => array(
+					'submit_location'  => array(
+						'name'        => 'submit_location',
+						'label'       => __( 'Update location', 'geo-my-wp' ),
+						'type'        => 'submit',
+						'default'     => '',
+						'id'          => 'gmw-lf-submit-location',
+						'class'       => 'gmw-lf-form-action button action-button',
+						'placeholder' => '',
+						'desc'        => '',
+						'attributes'  => '',
+						'priority'    => 5,
+						'required'    => false,
+					),
+					'delete_location'  => array(
+						'name'        => 'delete_location',
+						'label'       => __( 'Delete Location', 'geo-my-wp' ),
+						'type'        => 'button',
+						'default'     => '',
+						'id'          => 'gmw-lf-delete-location',
+						'class'       => 'gmw-lf-form-action button action-button',
+						'placeholder' => '',
+						'desc'        => '',
+						'attributes'  => '',
+						'priority'    => 10,
+						'required'    => false,
+					),
+					'confirm_location' => array(
+						'name'        => 'confirm_location',
+						'label'       => __( 'Confirm Location', 'geo-my-wp' ),
+						'type'        => 'button',
+						'default'     => '',
+						'id'          => 'gmw-lf-confirm-location',
+						'class'       => 'gmw-lf-form-action button action-button gmw-lf-confirm-location',
+						'placeholder' => '',
+						'desc'        => '',
+						'attributes'  => '',
+						'priority'    => 15,
+						'required'    => false,
+					),
+					'message'          => array(
+						'name'        => 'message',
+						'label'       => '',
+						'type'        => 'message',
+						'default'     => '',
+						'id'          => 'gmw-lf-action-message',
+						'class'       => 'gmw-lf-form-action',
+						'placeholder' => '',
+						'desc'        => '',
+						'attributes'  => '',
+						'priority'    => 20,
+						'required'    => false,
+					),
+
+					'loader'           => array(
+						'name'        => 'loader',
+						'label'       => '',
+						'type'        => 'loader',
+						'default'     => '',
+						'id'          => 'gmw-lf-action-loader',
+						'class'       => 'gmw-lf-form-action gmw-icon-spin-3 animate-spin',
+						'placeholder' => '',
+						'desc'        => '',
+						'attributes'  => '',
+						'priority'    => 25,
+						'required'    => false,
+					),
+				),
+			),
 		);
+
+		if ( $this->enable_additional_fields ) {
+
+			// For backward compatibility.
+			$prefix = ( 'post' === $this->object_type ) ? '_pt_' : '_';
+
+			$fields['contact_info'] = array(
+				'label'  => __( 'Contact Information', 'geo-my-wp' ),
+				'fields' => array(
+					'phone'   => array(
+						'name'        => 'gmw' . $prefix . 'phone',
+						'label'       => __( 'Phone Number', 'geo-my-wp' ),
+						'desc'        => '',
+						'id'          => 'gmw-phone',
+						'type'        => 'text',
+						'default'     => '',
+						'placeholder' => '',
+						'attributes'  => '',
+						'priority'    => 5,
+						'meta_key'    => 'phone',
+					),
+					'fax'     => array(
+						'name'        => 'gmw' . $prefix . 'fax',
+						'label'       => __( 'Fax Number', 'geo-my-wp' ),
+						'desc'        => '',
+						'id'          => 'gmw-fax',
+						'type'        => 'text',
+						'default'     => '',
+						'placeholder' => '',
+						'attributes'  => '',
+						'priority'    => 10,
+						'meta_key'    => 'fax',
+					),
+					'email'   => array(
+						'name'        => 'gmw' . $prefix . 'email',
+						'label'       => __( 'Email Address', 'geo-my-wp' ),
+						'desc'        => '',
+						'id'          => 'gmw-email',
+						'type'        => 'text',
+						'default'     => '',
+						'placeholder' => '',
+						'attributes'  => '',
+						'priority'    => 15,
+						'meta_key'    => 'email',
+					),
+					'website' => array(
+						'name'        => 'gmw' . $prefix . 'website',
+						'label'       => __( 'Website', 'geo-my-wp' ),
+						'desc'        => 'Ex: www.website.com',
+						'id'          => 'gmw-website',
+						'type'        => 'text',
+						'default'     => '',
+						'placeholder' => '',
+						'attributes'  => '',
+						'priority'    => 20,
+						'meta_key'    => 'website',
+					),
+				),
+			);
+
+			// days and hours.
+			$fields['days_hours'] = array(
+				'label'  => __( 'Days & Hours', 'geo-my-wp' ),
+				'fields' => array(
+					'days_hours' => array(
+						'name'        => 'gmw' . $prefix . 'days_hours',
+						'label'       => __( 'Days & Hours', 'geo-my-wp' ),
+						'desc'        => '',
+						'id'          => 'gmw-days-hours',
+						'type'        => 'text',
+						'default'     => '',
+						'placeholder' => '',
+						'attributes'  => '',
+						'priority'    => 5,
+					),
+				),
+			);
+		}
+
+		// Deprecated filter.
+		$fields = apply_filters( 'gmw_' . $this->object_slug . '_location_tab_fields', $fields, $this->args );
+
+		// Available filters.
+		$fields = apply_filters( 'gmw_location_form_fields', $fields, $this );
+		$fields = apply_filters( 'gmw_' . $this->object_slug . '_location_form_fields', $fields, $this );
+
+		return $fields;
+	}
+
+	/**
+	 * Generate the contact info and hours of operation tabs.
+	 *
+	 * @return void
+	 */
+	public function contact_info_tabs_panels() {
+
+		if ( 'post' === $this->object_type ) {
+			do_action( 'gmw_post_location_form_before_panels', $this );
+		}
+		?>
+		<!-- contact info tab -->
+		<div id="contact-tab-panel" class="section-wrapper contact">
+
+			<?php
+			// For backward compatibility.
+			if ( 'post' === $this->object_type ) {
+				do_action( 'gmw_lf_pt_contact_section_start', $this );
+			}
+			?>
+
+			<?php do_action( 'gmw_lf_contact_section_start', $this ); ?>
+
+			<?php $this->display_form_fields_group( 'contact_info' ); ?>
+
+			<?php do_action( 'gmw_lf_contact_section_end', $this ); ?>
+
+			<?php
+			// For backward compatibility.
+			if ( 'post' === $this->object_type ) {
+				do_action( 'gmw_lf_pt_contact_section_end', $this );
+			}
+			?>
+
+		</div>
+
+		<!-- contact info tab -->
+		<div id="days_hours-tab-panel" class="section-wrapper days-hours">
+
+			<?php
+			// For backward compatibility.
+			if ( 'post' === $this->object_type ) {
+				do_action( 'gmw_lf_post_days_hours_section_start', $this );
+			}
+			?>
+
+			<?php do_action( 'gmw_lf_hours_of_operation_section_start', $this ); ?>
+
+			<h3><?php esc_html_e( 'Days & Hours', 'geo-my-wp' ); ?></h3>
+
+			<?php
+				// get the location's days_hours from database.
+				$days_hours = gmw_get_location_meta( $this->location_id, 'days_hours' );
+
+			if ( empty( $days_hours ) ) {
+				$days_hours = array();
+			}
+			?>
+			<table class="form-table">
+
+				<?php for ( $i = 0; $i <= 6; $i++ ) { ?>
+
+					<tr>
+						<th style="width:30px">
+							<label for=""><?php esc_html_e( 'Days', 'geo-my-wp' ); ?></label>
+						</th>
+						<td style="width:150px">
+							<input type="text" class="gmw-lf-field group_days_hours" name="gmw_location_form[location_meta][days_hours][<?php echo $i; ?>][days]" id="gmw-pt-days-<?php echo $i; ?>" value="<?php if ( ! empty( $days_hours[$i]['days'] ) ) echo esc_attr( $days_hours[$i]['days'] ); ?>" />
+						</td>
+
+						<th style="width:30px">
+							<label for=""><?php esc_html_e( 'Hours', 'geo-my-wp' ); ?></label>
+						</th>
+
+						<td>
+							<input type="text" class="gmw-pt-field group_days_hours" name="gmw_location_form[location_meta][days_hours][<?php echo $i; ?>][hours]" id="gmw-pt-hours-<?php echo $i; ?>" value="<?php if ( ! empty( $days_hours[$i]['hours'] ) ) echo esc_attr( $days_hours[$i]['hours'] ); ?>" />
+						</td>
+					</tr>
+
+				<?php } ?>
+
+			</table>
+
+			<?php
+			// For backward compatibility.
+			if ( 'post' === $this->object_type ) {
+				do_action( 'gmw_lf_post_days_hours_section_end', $this );
+			}
+			?>
+
+			<?php do_action( 'gmw_lf_hours_of_operation_section_end', $this ); ?>
+
+		</div>
+		<?php
+		if ( 'post' === $this->object_type ) {
+			do_action( 'gmw_post_location_form_after_panels', $this );
+		}
 	}
 
 	/**
