@@ -169,15 +169,15 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 		add_action( 'bp_init', array( $this, 'bp_init_functions' ) );
 
 		if ( IS_ADMIN ) {
-			include 'includes/admin/class-gmw-members-locator-form-editor.php';
+			include_once 'includes/admin/class-gmw-members-locator-form-editor.php';
 		}
 
-		include 'includes/gmw-members-locator-functions.php';
-		include 'includes/class-gmw-members-locator-location-tab.php';
-		include 'includes/gmw-members-locator-actions.php';
-		include 'includes/gmw-members-locator-activity.php';
-		include 'includes/gmw-members-locator-template-functions.php';
-		include 'includes/class-gmw-members-locator-form.php';
+		include_once 'includes/gmw-members-locator-functions.php';
+		include_once 'includes/class-gmw-members-locator-location-tab.php';
+		include_once 'includes/gmw-members-locator-actions.php';
+		include_once 'includes/gmw-members-locator-activity.php';
+		include_once 'includes/gmw-members-locator-template-functions.php';
+		include_once 'includes/class-gmw-members-locator-form.php';
 		include_once 'includes/class-gmw-member-location-form.php';
 
 		// init the location tab.
@@ -204,7 +204,7 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 			}
 
 			if ( ! IS_ADMIN || defined( 'DOING_AJAX' ) ) {
-				include 'includes/class-gmw-single-bp-member-location.php';
+				include_once 'includes/class-gmw-single-bp-member-location.php';
 			}
 		}
 	}
