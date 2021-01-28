@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GEO my WP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48-1000\n"
-"PO-Revision-Date: 2020-10-29 15:48-1000\n"
+"POT-Creation-Date: 2021-01-28 13:05-1000\n"
+"PO-Revision-Date: 2021-01-28 13:05-1000\n"
 "Last-Translator: Eyal Fitoussi <fitoussi_eyal@hotmail.com>\n"
 "Language-Team: 日本語\n"
 "Language: ja\n"
@@ -22,7 +22,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: geo-my-wp.php:268 geo-my-wp.php:279
+#: geo-my-wp.php:269 geo-my-wp.php:280
 #: includes/admin/pages/class-gmw-extensions.php:111
 #: includes/admin/pages/class-gmw-extensions.php:124
 #: includes/admin/pages/class-gmw-extensions.php:176
@@ -59,7 +59,27 @@ msgstr ""
 msgid "Cheatin' eh?!"
 msgstr "不正しようとしてますか？？"
 
-#: includes/admin/class-gmw-admin.php:83
+#: includes/admin/class-gmw-admin.php:108
+msgid "GEO my WP Location Data"
+msgstr ""
+
+#: includes/admin/class-gmw-admin.php:147
+msgid "Posts Locations"
+msgstr ""
+
+#: includes/admin/class-gmw-admin.php:148
+msgid "User Locations"
+msgstr ""
+
+#: includes/admin/class-gmw-admin.php:149
+msgid "BuddyPress Groups Locations"
+msgstr ""
+
+#: includes/admin/class-gmw-admin.php:178
+msgid "GEO my WP Locations"
+msgstr ""
+
+#: includes/admin/class-gmw-admin.php:224
 #, php-format
 msgid ""
 "GEO my WP needs to import existing locations into its new database table. <a "
@@ -68,26 +88,19 @@ msgstr ""
 "GEO my WP は新規のテーブル内に既存の位置をインポートする必要があります。 <a "
 "href=\"%s\" class=\"button-primary\"> 位置をインポート</a>"
 
-#: includes/admin/class-gmw-admin.php:103
+#: includes/admin/class-gmw-admin.php:250
 #, php-format
 msgid ""
 "<h2>Important GEO my WP notice!</h2><p>The folders names for the custom "
 "template files have changed since GEO my WP version 3.0. If you have custom "
 "template files placed in the theme or child theme folder, you need to rename "
 "the folders to be able to use your custom template files.</p><p>See <a href="
-"\"%s\" target=\"_blank\">this post</a> to learn about the new folders names."
-"</p><p><a href=\"%s\" class=\"button-secondary\">Dismiss</a></p>"
+"\"%1$s\" target=\"_blank\">this post</a> to learn about the new folders "
+"names.</p><p><a href=\"%2$s\" class=\"button-secondary\">Dismiss</a></p>"
 msgstr ""
-"<h2>GEO my WP からの重要な通知です！</h2><p>Geo my WP バージョン3.0以降、カス"
-"タムテンプレートファイルのフォルダ名が変更されました。 カスタムテンプレート"
-"ファイルを、テーマ・子テーマのフォルダに配置している場合、カスタムテンプレー"
-"トファイルの使用のためにフォルダ名を変更する必要があります。</p><p><a href="
-"\"%s\" target=\"_blank\">コチラの記事（英語のみ）</a>を読み、新しいフォルダ名"
-"について確認下さい。</p><p><a href=\"%s\" class=\"button-secondary\">閉じる</"
-"a></p>"
 
-#: includes/admin/class-gmw-admin.php:116
-#: includes/admin/class-gmw-admin.php:149
+#: includes/admin/class-gmw-admin.php:266
+#: includes/admin/class-gmw-admin.php:299
 #: includes/admin/pages/import-export/tabs/gmw-data.php:46
 #: includes/admin/pages/import-export/tabs/gmw-data.php:110
 #: includes/admin/pages/tools/tabs/reset-gmw.php:58
@@ -95,120 +108,119 @@ msgstr ""
 msgid "Settings"
 msgstr "設定"
 
-#: includes/admin/class-gmw-admin.php:117
-#: includes/admin/class-gmw-admin.php:139
+#: includes/admin/class-gmw-admin.php:267
+#: includes/admin/class-gmw-admin.php:289
 #: includes/admin/updater/class-gmw-license.php:227
 msgid "Extensions"
 msgstr "エクステンション"
 
-#: includes/admin/class-gmw-admin.php:138
+#: includes/admin/class-gmw-admin.php:288
 #: includes/admin/pages/class-gmw-extensions.php:612
 msgid "GEO my WP Extensions"
 msgstr "GEO my WP エクステンション"
 
-#: includes/admin/class-gmw-admin.php:148
+#: includes/admin/class-gmw-admin.php:298
 #: includes/admin/pages/class-gmw-settings.php:806
 msgid "GEO my WP Settings"
 msgstr "GEO my WP 設定"
 
-#: includes/admin/class-gmw-admin.php:160
+#: includes/admin/class-gmw-admin.php:310
 #: includes/admin/pages/class-gmw-forms-page.php:328
 msgid "GEO my WP Forms"
 msgstr "GEO my WP フォーム"
 
-#: includes/admin/class-gmw-admin.php:161
+#: includes/admin/class-gmw-admin.php:311
 #: includes/admin/pages/import-export/class-gmw-import-export-page.php:115
 #: includes/admin/pages/tools/tabs/reset-gmw.php:85
 msgid "Forms"
 msgstr "フォーム"
 
-#: includes/admin/class-gmw-admin.php:170
+#: includes/admin/class-gmw-admin.php:320
 msgid "GEO my WP Import / Export"
 msgstr "GEO my WP インポート/エクスポート"
 
-#: includes/admin/class-gmw-admin.php:171
+#: includes/admin/class-gmw-admin.php:321
 #: includes/admin/pages/import-export/class-gmw-import-export-page.php:72
 msgid "Import / Export"
 msgstr "インポート・エクスポート"
 
-#: includes/admin/class-gmw-admin.php:180
+#: includes/admin/class-gmw-admin.php:330
 msgid "GEO my WP Tools"
 msgstr "GEO my WP ツール"
 
-#: includes/admin/class-gmw-admin.php:181
+#: includes/admin/class-gmw-admin.php:331
 #: includes/admin/pages/tools/class-gmw-tools.php:47
 msgid "Tools"
 msgstr "ツール"
 
-#: includes/admin/class-gmw-admin.php:282
+#: includes/admin/class-gmw-admin.php:427 includes/class-gmw-addon.php:787
 #, php-format
-msgid "%s extension version %s requires GEO my WP plugin version %s or higher."
+msgid ""
+"%1$s extension version %2$s requires GEO my WP plugin version %3$s or higher."
 msgstr ""
-"%s エクステンション バージョン %s は、GEO my WP バージョン %s 以上が必要で"
-"す。"
+"%1$s エクステンション バージョン %2$s は、GEO my WP バージョン %3$s 以上が必"
+"要です。"
 
-#: includes/admin/class-gmw-admin.php:294
+#: includes/admin/class-gmw-admin.php:439 includes/class-gmw-addon.php:807
 #, php-format
-msgid "%s extension requires an update to version %s."
-msgstr "%s エクステンションは、バージョン %s への更新が必要です。"
+msgid "%1$s extension requires an update to version %2$s."
+msgstr "%1$s エクステンションは、バージョン %2$s への更新が必要です。"
 
-#: includes/admin/class-gmw-admin.php:370
+#: includes/admin/class-gmw-admin.php:515
 msgid "GEO my WP Form Shortcode"
 msgstr "GEO my WP フォーム ショートコード"
 
-#: includes/admin/class-gmw-admin.php:373
+#: includes/admin/class-gmw-admin.php:518
 #: includes/admin/class-gmw-shortcodes-page.php:31
 msgid "GMW Form"
 msgstr "GMW フォーム"
 
-#: includes/admin/class-gmw-admin.php:394
+#: includes/admin/class-gmw-admin.php:537
 msgid "Please select a form"
 msgstr "フォームを選択して下さい。"
 
-#: includes/admin/class-gmw-admin.php:419
+#: includes/admin/class-gmw-admin.php:562
 msgid "Insert A Form Shortcode"
 msgstr "フォームのショートコードを挿入"
 
-#: includes/admin/class-gmw-admin.php:420
+#: includes/admin/class-gmw-admin.php:563
 msgid "Select the type of shortcode you wish to add:"
 msgstr "追加したいショートコードのタイプを選択してください："
 
-#: includes/admin/class-gmw-admin.php:429
+#: includes/admin/class-gmw-admin.php:572
 msgid "Complete Form"
 msgstr "フォームを完了する"
 
-#: includes/admin/class-gmw-admin.php:436
+#: includes/admin/class-gmw-admin.php:579
 msgid "Search Form Only"
 msgstr "フォームのみ検索"
 
-#: includes/admin/class-gmw-admin.php:443
+#: includes/admin/class-gmw-admin.php:586
 msgid "Map Only"
 msgstr "マップのみ"
 
-#: includes/admin/class-gmw-admin.php:450
+#: includes/admin/class-gmw-admin.php:593
 msgid "Search Results Only"
 msgstr "検索結果のみ"
 
-#: includes/admin/class-gmw-admin.php:458
+#: includes/admin/class-gmw-admin.php:601
 msgid "Select a Form"
 msgstr "フォームを選択"
 
-#: includes/admin/class-gmw-admin.php:482
+#: includes/admin/class-gmw-admin.php:625
 msgid "Insert Shortcode"
 msgstr "ショートコードを挿入"
 
-#: includes/admin/class-gmw-admin.php:486
+#: includes/admin/class-gmw-admin.php:629
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: includes/admin/class-gmw-admin.php:502
+#: includes/admin/class-gmw-admin.php:646
 #, php-format
 msgid ""
-"and Geolocating with <a %s>GEO my WP</a>. Your <a %s>feedback</a> on GEO my "
-"WP is greatly appriciated."
+"and Geolocating with <a %1$s>GEO my WP</a>. Your <a %2$s>feedback</a> on GEO "
+"my WP is greatly appriciated."
 msgstr ""
-"<a %s>GEO my WP</a>は、位置測定（ジオロケーティング）を行います。 <a %s>"
-"フィードバック</a>は大歓迎です。（英語のみ）"
 
 #: includes/admin/class-gmw-form-settings-helper.php:383
 #: includes/admin/pages/class-gmw-form-editor.php:287
@@ -248,7 +260,7 @@ msgstr "必須"
 #: includes/admin/pages/class-gmw-settings.php:115
 #: includes/admin/pages/class-gmw-settings.php:170
 #: plugins/bp-profile-search-geolocation/includes/admin/class-gmw-bp-profile-search-geolocation-admin.php:65
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:141
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:153
 #: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:122
 #: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:144
 #: plugins/sweetdate-geolocation/includes/admin/class-gmw-sweet-date-admin-settings.php:105
@@ -356,6 +368,7 @@ msgstr "日付フィールドを「年齢」フィルタとして選択"
 #: includes/admin/class-gmw-form-settings-helper.php:845
 #: includes/admin/class-gmw-shortcodes-page.php:302
 #: includes/admin/pages/import-export/tabs/posts-locator.php:257
+#: includes/class-gmw-location-types.php:372
 #: includes/gmw-deprecated-functions.php:1708
 #: includes/gmw-deprecated-functions.php:1714
 #: includes/gmw-deprecated-functions.php:1720
@@ -568,6 +581,9 @@ msgstr "Template File Usage"
 #: includes/admin/class-gmw-shortcodes-page.php:252
 #: includes/admin/class-gmw-shortcodes-page.php:326
 #: includes/admin/pages/class-gmw-form-editor.php:712
+#: includes/class-gmw-location-types.php:345
+#: includes/class-gmw-location-types.php:441
+#: includes/class-gmw-location-types.php:465
 msgid "Description"
 msgstr "詳細"
 
@@ -703,11 +719,11 @@ msgstr "サーバーからアドオンリストの取得に問題があります
 #: includes/admin/pages/class-gmw-form-editor.php:1635
 #: includes/admin/pages/import-export/class-gmw-export.php:184
 #: includes/admin/pages/import-export/gmw-csv-import.php:30
-#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:592
+#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:601
 #: includes/admin/updater/class-gmw-plugins-updater.php:482
-#: includes/location-form/includes/class-gmw-location-form.php:1180
-#: includes/location-form/includes/class-gmw-location-form.php:1209
-#: includes/location-form/includes/class-gmw-location-form.php:1397
+#: includes/location-form/includes/class-gmw-location-form.php:1391
+#: includes/location-form/includes/class-gmw-location-form.php:1420
+#: includes/location-form/includes/class-gmw-location-form.php:1593
 #: plugins/current-location/includes/class-gmw-current-location.php:590
 msgid "Error"
 msgstr "エラー"
@@ -1102,6 +1118,10 @@ msgstr "検索フォームのテンプレートファイルを選択します。
 #: includes/admin/pages/class-gmw-form-editor.php:277
 #: includes/admin/pages/tools/class-gmw-system-info.php:115
 #: includes/admin/pages/tools/class-gmw-system-info.php:123
+#: includes/class-gmw-location-types.php:387
+#: includes/class-gmw-location-types.php:544
+#: includes/class-gmw-location-types.php:579
+#: includes/class-gmw-location-types.php:608
 msgid "Disabled"
 msgstr "無効"
 
@@ -1338,21 +1358,21 @@ msgstr "自動ズーム"
 
 #: includes/admin/pages/class-gmw-form-editor.php:534
 #: plugins/current-location/includes/class-gmw-current-location-widget.php:152
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:109
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:124
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:121
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:136
 #: plugins/single-location/includes/class-gmw-single-location-widget.php:152
 msgid "Map type"
 msgstr "マップ タイプ"
 
 #: includes/admin/pages/class-gmw-form-editor.php:535
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:110
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:122
 #: plugins/sweetdate-geolocation/includes/admin/class-gmw-sweet-date-admin-settings.php:213
 msgid "Select the map type."
 msgstr "マップタイプを選択"
 
 #: includes/admin/pages/class-gmw-form-editor.php:544
 #: plugins/current-location/includes/class-gmw-current-location-widget.php:154
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:112
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:124
 #: plugins/single-location/includes/class-gmw-single-location-widget.php:154
 #: plugins/sweetdate-geolocation/includes/admin/class-gmw-sweet-date-admin-settings.php:215
 msgid "ROADMAP"
@@ -1360,7 +1380,7 @@ msgstr "ロードマップ"
 
 #: includes/admin/pages/class-gmw-form-editor.php:545
 #: plugins/current-location/includes/class-gmw-current-location-widget.php:155
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:113
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:125
 #: plugins/single-location/includes/class-gmw-single-location-widget.php:155
 #: plugins/sweetdate-geolocation/includes/admin/class-gmw-sweet-date-admin-settings.php:216
 msgid "SATELLITE"
@@ -1368,7 +1388,7 @@ msgstr "サテライト"
 
 #: includes/admin/pages/class-gmw-form-editor.php:546
 #: plugins/current-location/includes/class-gmw-current-location-widget.php:156
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:114
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:126
 #: plugins/single-location/includes/class-gmw-single-location-widget.php:156
 #: plugins/sweetdate-geolocation/includes/admin/class-gmw-sweet-date-admin-settings.php:217
 msgid "HYBRID"
@@ -1376,7 +1396,7 @@ msgstr "ハイブリット"
 
 #: includes/admin/pages/class-gmw-form-editor.php:547
 #: plugins/current-location/includes/class-gmw-current-location-widget.php:157
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:115
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:127
 #: plugins/single-location/includes/class-gmw-single-location-widget.php:157
 #: plugins/sweetdate-geolocation/includes/admin/class-gmw-sweet-date-admin-settings.php:218
 msgid "TERRAIN"
@@ -1437,13 +1457,14 @@ msgid "Edit Form"
 msgstr "フォームを編集"
 
 #: includes/admin/pages/class-gmw-form-editor.php:1155
+#: includes/class-gmw-location-types.php:344
 msgid "Name"
 msgstr "名前"
 
 #: includes/admin/pages/class-gmw-form-editor.php:1159
 #: includes/admin/pages/class-gmw-forms-page.php:355
 #: includes/admin/pages/class-gmw-forms-page.php:416
-#: includes/location-form/includes/class-gmw-location-form.php:376
+#: includes/location-form/includes/class-gmw-location-form.php:405
 msgid "This action cannot be undone. Would you like to proceed?"
 msgstr "この操作は、元に戻せません。 続行しますか？"
 
@@ -1829,7 +1850,7 @@ msgstr ""
 msgid "Columns in file do not match the database table."
 msgstr "ファイルの列と、データベーステーブルが一致しません。"
 
-#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:154
+#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:153
 #: includes/admin/pages/import-export/tabs/forms.php:133
 #: includes/admin/pages/import-export/tabs/gmw-data.php:123
 #: includes/admin/pages/import-export/tabs/location-tables.php:111
@@ -1838,55 +1859,61 @@ msgstr "ファイルの列と、データベーステーブルが一致しませ
 msgid "Import"
 msgstr "インポート"
 
-#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:156
+#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:154
 msgid "Abort"
 msgstr "中止"
 
-#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:188
+#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:183
 msgid "Searching for locations..."
 msgstr "位置を検索中…"
 
-#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:192
+#. translators: %1$s: number of locations scanned locations, %2$s: number of locations total locations
+#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:187
 #, php-format
 msgid "%1$s out of %2$s locations were scanned."
 msgstr ""
 
-#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:194
+#. translators: %s: number of locations locations updated
+#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:190
 #, php-format
 msgid "%s locations successfully updated ( were already exsist )."
 msgstr "%s の位置情報は、無事更新されました。（既にあった情報）"
 
-#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:196
+#. translators: %s: number of locations locations imported
+#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:193
 #, php-format
 msgid "%s locations successfully imported."
 msgstr "%s の位置情報は、無事インポートされました。"
 
-#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:198
+#. translators: %s: number of locations locations already exists
+#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:196
 #, php-format
 msgid "%s locations already exist ( were not updated )."
 msgstr "%s の位置情報は、既にあります。（更新されていません。）"
 
+#. translators: %s: number of locations imported failed
 #: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:199
 #, php-format
 msgid "%s failed to import."
 msgstr "%s はインポートに失敗しました。"
 
-#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:592
-#: includes/location-form/includes/class-gmw-location-form.php:1180
-#: includes/location-form/includes/class-gmw-location-form.php:1209
-#: includes/location-form/includes/class-gmw-location-form.php:1397
+#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:590
+msgid "Action class name is missing"
+msgstr "アクションクラス名がありません。"
+
+#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:601
+#: includes/location-form/includes/class-gmw-location-form.php:1391
+#: includes/location-form/includes/class-gmw-location-form.php:1420
+#: includes/location-form/includes/class-gmw-location-form.php:1593
 #: plugins/current-location/includes/class-gmw-current-location.php:590
 msgid "Trying to cheat or something?"
 msgstr "不正な行為か何か試していますか？"
 
-#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:598
-msgid "Action class name is missing"
-msgstr "アクションクラス名がありません。"
-
-#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:609
+#. translators: %s: class name.
+#: includes/admin/pages/import-export/locations-importer/class-gmw-locations-importer.php:608
 #, php-format
-msgid "Call to undefined function %s"
-msgstr "定義されていない機能 ％s を呼び出す %s"
+msgid "Calling to undefined class %s"
+msgstr ""
 
 #: includes/admin/pages/import-export/tabs/forms.php:27
 msgid "Export Forms"
@@ -2254,7 +2281,7 @@ msgstr "近所"
 
 #: includes/admin/pages/import-export/tabs/posts-locator.php:221
 #: includes/gmw-deprecated-functions.php:1471
-#: includes/location-form/includes/class-gmw-location-form.php:615
+#: includes/location-form/includes/class-gmw-location-form.php:651
 #: plugins/current-location/includes/class-gmw-current-location-widget.php:96
 #: plugins/single-location/includes/class-gmw-single-location-widget.php:111
 msgid "City"
@@ -2777,19 +2804,6 @@ msgstr ""
 "GEO my WP %s エクステンションは、ライセンスキーの問題で無効となりました。詳細"
 "は、サポートまでご連絡下さい。"
 
-#: includes/class-gmw-addon.php:787
-#, php-format
-msgid ""
-"%1$s extension version %2$s requires GEO my WP plugin version %3$s or higher."
-msgstr ""
-"%1$s エクステンション バージョン %2$s は、GEO my WP バージョン %3$s 以上が必"
-"要です。"
-
-#: includes/class-gmw-addon.php:807
-#, php-format
-msgid "%1$s extension requires an update to version %2$s."
-msgstr "%1$s エクステンションは、バージョン %2$s への更新が必要です。"
-
 #: includes/class-gmw-addon.php:941
 #, php-format
 msgid ""
@@ -2799,7 +2813,7 @@ msgstr ""
 "%1$s エクステンションは、%2$s の追加が必要となります。詳しくは、サポート"
 "フォームにてご連絡下さい。（英語のみ）"
 
-#: includes/class-gmw-cron.php:39
+#: includes/class-gmw-cron.php:47
 msgid "Once Weekly"
 msgstr "週1回"
 
@@ -2820,29 +2834,236 @@ msgstr "{address}から 半径 {radius} {units} 以内 "
 msgid "%s is invalid form type."
 msgstr "%s は無効なフォームタイプです。"
 
-#: includes/class-gmw-form.php:548
+#: includes/class-gmw-form.php:549
 msgid "Your location"
 msgstr "あなたの位置"
 
-#: includes/class-gmw-form.php:1127
+#: includes/class-gmw-form.php:1128
 msgid "No results found"
 msgstr "何も見つかりませんでした。"
 
-#: includes/class-gmw-geocoder.php:246
+#: includes/class-gmw-geocoder.php:258
 msgid "Location is missing."
 msgstr "位置 がありません。"
 
-#: includes/class-gmw-geocoder.php:282
+#: includes/class-gmw-geocoder.php:294
 msgid "Geocoding failed"
 msgstr "ジオコーティング 失敗"
 
-#: includes/class-gmw-geocoder.php:334
+#: includes/class-gmw-geocoder.php:346
 msgid "Location data was not found."
 msgstr "位置 データは見つかりませんでした。"
 
-#: includes/class-gmw-geocoder.php:340
+#: includes/class-gmw-geocoder.php:352
 msgid "Unable to contact the API service or failed geocoding."
 msgstr "APIサービスに接続できないか、ジオコーディングに失敗しました。"
+
+#: includes/class-gmw-location-types.php:63
+msgid "GEO my WP Location Types"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:64
+#: includes/class-gmw-location-types.php:256
+#: includes/class-gmw-location-types.php:257
+msgid "Location Types"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:254
+msgctxt "Post Type General Name"
+msgid "Location Types"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:255
+msgctxt "Post Type Singular Name"
+msgid "Location Type"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:258
+msgid "Location Type Archives"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:259
+msgid "Location Type Attributes"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:260
+msgid "Parent Location Type:"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:261
+msgid "All Location Types"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:262
+msgid "Add New Location Types"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:263
+msgid "Add New"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:264
+msgid "New Location Type"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:265
+msgid "Edit Location Type"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:266
+msgid "Update Location Type"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:267
+msgid "View Location Type"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:268
+msgid "View Location Types"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:269
+msgid "Search Location Type"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:270
+msgid "Location types not found"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:271
+msgid "Location types not found in Trash"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:272
+msgid "Featured Image"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:273
+msgid "Set featured image"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:274
+msgid "Remove featured image"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:275
+msgid "Use as featured image"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:276
+msgid "Insert into location type"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:277
+msgid "Uploaded to this location type"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:278
+msgid "Location types list"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:279
+msgid "Location types list navigation"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:280
+msgid "Filter location types list"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:284
+msgid "Locations Type"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:285
+msgid "Locations Type for GEO my WP"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:347
+#: includes/class-gmw-location-types.php:445
+#: plugins/members-locator/includes/admin/class-gmw-members-locator-form-editor.php:57
+msgid "Xprofile Fields"
+msgstr "Xprofile フィールド"
+
+#: includes/class-gmw-location-types.php:348
+msgid "Date"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:407
+#: includes/class-gmw-location-types.php:408
+msgid "Location type updated."
+msgstr ""
+
+#: includes/class-gmw-location-types.php:409
+msgid "Location type published."
+msgstr ""
+
+#: includes/class-gmw-location-types.php:410
+msgid "Location type saved."
+msgstr ""
+
+#: includes/class-gmw-location-types.php:411
+msgid "Location type submitted."
+msgstr ""
+
+#: includes/class-gmw-location-types.php:412
+msgid "Location type draft updated."
+msgstr ""
+
+#: includes/class-gmw-location-types.php:431
+msgid "Add location type name"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:449
+msgid "Update Location Types"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:540
+msgid "Fields Usage:"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:545
+msgid "Single Address Field"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:546
+msgid "Multiple Address Fields"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:548
+msgid ""
+"Select to either use a single address field as the full address or multiple "
+"address fields."
+msgstr ""
+
+#: includes/class-gmw-location-types.php:573
+msgid "Select the xprofile field that will be used as the address field."
+msgstr ""
+
+#: includes/class-gmw-location-types.php:575
+msgid "Address "
+msgstr ""
+
+#: includes/class-gmw-location-types.php:596
+msgid "Select the xprofile fields for each address field below."
+msgstr ""
+
+#: includes/class-gmw-location-types.php:631
+msgid "Google Address Autocomplete"
+msgstr ""
+
+#: includes/class-gmw-location-types.php:633
+msgid "Check this checkbox to enable the Google Address Autocompelte feature."
+msgstr ""
+
+#: includes/class-gmw-location-types.php:647
+msgid ""
+"Use this tool to update locations which do not have a location type set and "
+"assign them this location type."
+msgstr ""
+
+#: includes/class-gmw-location-types.php:649
+msgid "Select the Object Types that you would like to update"
+msgstr ""
 
 #: includes/class-gmw-maps-api.php:208
 msgid "Resize map"
@@ -2957,26 +3178,26 @@ msgid "The address fields to be displayed."
 msgstr "表示される住所フィールド"
 
 #: includes/gmw-deprecated-functions.php:1470
-#: includes/location-form/includes/class-gmw-location-form.php:589
+#: includes/location-form/includes/class-gmw-location-form.php:625
 #: plugins/current-location/includes/class-gmw-current-location-widget.php:95
 #: plugins/single-location/includes/class-gmw-single-location-widget.php:110
 msgid "Street"
 msgstr "通り"
 
 #: includes/gmw-deprecated-functions.php:1472
-#: includes/location-form/includes/class-gmw-location-form.php:628
+#: includes/location-form/includes/class-gmw-location-form.php:664
 #: plugins/current-location/includes/class-gmw-current-location-widget.php:97
 #: plugins/single-location/includes/class-gmw-single-location-widget.php:112
 msgid "State"
 msgstr "州（都道府県）"
 
 #: includes/gmw-deprecated-functions.php:1473
-#: includes/location-form/includes/class-gmw-location-form.php:640
+#: includes/location-form/includes/class-gmw-location-form.php:676
 msgid "Zipcode"
 msgstr "郵便番号"
 
 #: includes/gmw-deprecated-functions.php:1474
-#: includes/location-form/includes/class-gmw-location-form.php:653
+#: includes/location-form/includes/class-gmw-location-form.php:689
 #: plugins/current-location/includes/class-gmw-current-location-widget.php:99
 #: plugins/single-location/includes/class-gmw-single-location-widget.php:114
 msgid "Country"
@@ -3134,154 +3355,202 @@ msgstr "フォームは、存在しません。"
 msgid "The add-on which this form belongs to is deactivated."
 msgstr "フォームに属するアドオンは、無効になります。"
 
-#: includes/location-form/includes/class-gmw-location-form.php:362
+#: includes/gmw-shortcodes.php:228
+#: includes/template-functions/gmw-info-window-template-functions.php:129
+#: includes/template-functions/gmw-search-results-template-functions.php:123
+msgid "Hours of operation"
+msgstr "営業時間"
+
+#: includes/location-form/includes/class-gmw-location-form.php:391
 msgid "Comnfirming Location..."
 msgstr "位置を確認中…"
 
-#: includes/location-form/includes/class-gmw-location-form.php:363
+#: includes/location-form/includes/class-gmw-location-form.php:392
 msgid "Location confirmed"
 msgstr "位置 承認済み"
 
-#: includes/location-form/includes/class-gmw-location-form.php:364
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:129
+#: includes/location-form/includes/class-gmw-location-form.php:393
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:136
 #: plugins/single-location/includes/class-gmw-single-location-widget.php:206
 msgid "No location found"
 msgstr "位置が見つかりません。"
 
-#: includes/location-form/includes/class-gmw-location-form.php:365
+#: includes/location-form/includes/class-gmw-location-form.php:394
 msgid "Location changed"
 msgstr "位置 変更済み"
 
-#: includes/location-form/includes/class-gmw-location-form.php:366
+#: includes/location-form/includes/class-gmw-location-form.php:395
 msgid "Location updated!"
 msgstr "位置 は更新されました！"
 
-#: includes/location-form/includes/class-gmw-location-form.php:367
+#: includes/location-form/includes/class-gmw-location-form.php:396
 msgid "There was a problem saving your location. Please try again."
 msgstr "位置の保存に問題があります。再度お試し下さい。"
 
-#: includes/location-form/includes/class-gmw-location-form.php:368
+#: includes/location-form/includes/class-gmw-location-form.php:397
 msgid "Location deleted!"
 msgstr "位置 は削除されました！"
 
-#: includes/location-form/includes/class-gmw-location-form.php:369
+#: includes/location-form/includes/class-gmw-location-form.php:398
 msgid "There was a problem deleting your location. Please try again."
 msgstr "位置の削除に問題があります。再度お試し下さい。"
 
-#: includes/location-form/includes/class-gmw-location-form.php:370
+#: includes/location-form/includes/class-gmw-location-form.php:399
 msgid "Location found!"
 msgstr "位置 が見つかりました！"
 
-#: includes/location-form/includes/class-gmw-location-form.php:371
+#: includes/location-form/includes/class-gmw-location-form.php:400
 msgid ""
 "We were unable to retrieve your location. Enter a valid address or "
 "coordinates."
 msgstr ""
 "あなたの位置を取得できませんでした。 有効な住所・座標を入力してください。"
 
-#: includes/location-form/includes/class-gmw-location-form.php:372
+#: includes/location-form/includes/class-gmw-location-form.php:401
 msgid "No location entered."
 msgstr "位置が入力されていません。"
 
-#: includes/location-form/includes/class-gmw-location-form.php:373
+#: includes/location-form/includes/class-gmw-location-form.php:402
 msgid "You must enter a location to proceed."
 msgstr "続行するには、位置を入力する必要があります。"
 
-#: includes/location-form/includes/class-gmw-location-form.php:374
+#: includes/location-form/includes/class-gmw-location-form.php:403
 msgid "You must confirm your location before it can be saved"
 msgstr "保存する前に、あなたの位置を確認する必要があります。"
 
-#: includes/location-form/includes/class-gmw-location-form.php:375
+#: includes/location-form/includes/class-gmw-location-form.php:404
 msgid "You have not confirmed your location. Would you like to proceed?"
 msgstr "あなたの位置を確認していません。 続行しますか？"
 
-#: includes/location-form/includes/class-gmw-location-form.php:377
+#: includes/location-form/includes/class-gmw-location-form.php:406
 msgid "Coordinates are missing or invalid."
 msgstr "座標は、見つからないか無効です。"
 
-#: includes/location-form/includes/class-gmw-location-form.php:454
+#: includes/location-form/includes/class-gmw-location-form.php:483
 #: plugins/bp-profile-search-geolocation/includes/class-gmw-bp-profile-search-geolocation.php:143
-#: plugins/members-locator/includes/class-gmw-locations-component.php:99
-#: plugins/members-locator/includes/class-gmw-locations-component.php:132
-#: plugins/members-locator/includes/class-gmw-members-locator-location-tab.php:32
-#: plugins/members-locator/includes/class-gmw-members-locator-location-tab.php:33
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:81
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:86
+#: plugins/members-locator/includes/class-gmw-locations-component.php:89
+#: plugins/members-locator/includes/class-gmw-locations-component.php:123
+#: plugins/members-locator/includes/class-gmw-members-locator-location-tab.php:42
+#: plugins/members-locator/includes/class-gmw-members-locator-location-tab.php:43
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:88
 #: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:93
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:169
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:100
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:176
 msgid "Location"
 msgstr "位置"
 
-#: includes/location-form/includes/class-gmw-location-form.php:460
-#: includes/location-form/includes/class-gmw-location-form.php:558
+#: includes/location-form/includes/class-gmw-location-form.php:489
+#: includes/location-form/includes/class-gmw-location-form.php:594
 #: plugins/single-location/includes/class-gmw-single-location-widget.php:109
 #: plugins/sweetdate-geolocation/includes/admin/class-gmw-sweet-date-admin-settings.php:188
 #: plugins/sweetdate-geolocation/includes/class-gmw-sweet-date-geolocation.php:221
 msgid "Address"
 msgstr "住所"
 
-#: includes/location-form/includes/class-gmw-location-form.php:466
+#: includes/location-form/includes/class-gmw-location-form.php:495
 msgid "Coordinates"
 msgstr "座標"
 
-#: includes/location-form/includes/class-gmw-location-form.php:541
+#: includes/location-form/includes/class-gmw-location-form.php:501
+msgid "Contact"
+msgstr "コンタクト"
+
+#: includes/location-form/includes/class-gmw-location-form.php:506
+#: includes/location-form/includes/class-gmw-location-form.php:866
+#: includes/location-form/includes/class-gmw-location-form.php:870
+#: includes/location-form/includes/class-gmw-location-form.php:938
+msgid "Days & Hours"
+msgstr "曜日＆時間"
+
+#: includes/location-form/includes/class-gmw-location-form.php:577
 msgid "Find Your Location"
 msgstr "あなたの位置を検索"
 
-#: includes/location-form/includes/class-gmw-location-form.php:545
+#: includes/location-form/includes/class-gmw-location-form.php:581
 msgid "Location Name"
 msgstr "位置名"
 
-#: includes/location-form/includes/class-gmw-location-form.php:550
+#: includes/location-form/includes/class-gmw-location-form.php:586
 msgid "Location name"
 msgstr ""
 
-#: includes/location-form/includes/class-gmw-location-form.php:563
+#: includes/location-form/includes/class-gmw-location-form.php:599
 msgid "Enter an address..."
 msgstr "住所を入力する…"
 
-#: includes/location-form/includes/class-gmw-location-form.php:564
+#: includes/location-form/includes/class-gmw-location-form.php:600
 msgid "Type an address to see suggested results."
 msgstr "提案結果を表示するすため、住所を入力して下さい。"
 
-#: includes/location-form/includes/class-gmw-location-form.php:577
+#: includes/location-form/includes/class-gmw-location-form.php:613
 msgid "Drag the marker to your position on the map.."
 msgstr "マーカーを地図上の自分の位置にドラッグ"
 
-#: includes/location-form/includes/class-gmw-location-form.php:585
+#: includes/location-form/includes/class-gmw-location-form.php:621
 msgid "Enter Address"
 msgstr "住所を入力"
 
-#: includes/location-form/includes/class-gmw-location-form.php:602
+#: includes/location-form/includes/class-gmw-location-form.php:638
 msgid "Apt/Suit"
 msgstr "番号（建物内）"
 
-#: includes/location-form/includes/class-gmw-location-form.php:669
+#: includes/location-form/includes/class-gmw-location-form.php:704
 msgid "Enter Coordinates"
 msgstr "座標を入力"
 
-#: includes/location-form/includes/class-gmw-location-form.php:673
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:89
+#: includes/location-form/includes/class-gmw-location-form.php:708
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:101
 msgid "Latitude"
 msgstr "緯度"
 
-#: includes/location-form/includes/class-gmw-location-form.php:686
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:99
+#: includes/location-form/includes/class-gmw-location-form.php:721
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:111
 msgid "Longitude"
 msgstr "経度"
 
-#: includes/location-form/includes/class-gmw-location-form.php:704
-#: plugins/members-locator/includes/class-gmw-members-locator-location-tab.php:34
+#: includes/location-form/includes/class-gmw-location-form.php:739
+#: plugins/members-locator/includes/class-gmw-members-locator-location-tab.php:44
 msgid "Update location"
 msgstr "位置を更新"
 
-#: includes/location-form/includes/class-gmw-location-form.php:717
+#: includes/location-form/includes/class-gmw-location-form.php:752
 msgid "Delete Location"
 msgstr "位置を削除"
 
-#: includes/location-form/includes/class-gmw-location-form.php:730
+#: includes/location-form/includes/class-gmw-location-form.php:765
 msgid "Confirm Location"
 msgstr "位置を確認"
+
+#: includes/location-form/includes/class-gmw-location-form.php:811
+#: includes/template-functions/gmw-info-window-template-functions.php:93
+#: includes/template-functions/gmw-search-results-template-functions.php:89
+msgid "Contact Information"
+msgstr "コンタクト情報"
+
+#: includes/location-form/includes/class-gmw-location-form.php:815
+msgid "Phone Number"
+msgstr "電話番号"
+
+#: includes/location-form/includes/class-gmw-location-form.php:827
+msgid "Fax Number"
+msgstr "Fax番号"
+
+#: includes/location-form/includes/class-gmw-location-form.php:839
+msgid "Email Address"
+msgstr "メールアドレス"
+
+#: includes/location-form/includes/class-gmw-location-form.php:851
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:110
+msgid "Website"
+msgstr "Webサイト"
+
+#: includes/location-form/includes/class-gmw-location-form.php:954
+msgid "Days"
+msgstr "日"
+
+#: includes/location-form/includes/class-gmw-location-form.php:968
+msgid "Hours"
+msgstr "時間"
 
 #: includes/location-form/templates/form-fields/address-field.php:16
 msgid "Get your current position"
@@ -3350,17 +3619,6 @@ msgstr "1件の位置が見つかりました。"
 #: includes/template-functions/class-gmw-template-functions-helper.php:424
 msgid "Showing all {total_results} locations"
 msgstr ""
-
-#: includes/template-functions/gmw-info-window-template-functions.php:93
-#: includes/template-functions/gmw-search-results-template-functions.php:89
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:91
-msgid "Contact Information"
-msgstr "コンタクト情報"
-
-#: includes/template-functions/gmw-info-window-template-functions.php:129
-#: includes/template-functions/gmw-search-results-template-functions.php:123
-msgid "Hours of operation"
-msgstr "営業時間"
 
 #: includes/template-functions/gmw-search-form-template-functions.php:206
 #: plugins/bp-profile-search-geolocation/templates/bps-fields/members/bps-proximity-form-field.php:66
@@ -3696,10 +3954,6 @@ msgstr ""
 "ユーザーの位置を取得中に、表示するメッセージを入力します。 空白のままにしてお"
 "きます。"
 
-#: plugins/members-locator/includes/admin/class-gmw-members-locator-form-editor.php:57
-msgid "Xprofile Fields"
-msgstr "Xprofile フィールド"
-
 #: plugins/members-locator/includes/admin/class-gmw-members-locator-form-editor.php:58
 msgid ""
 "<ul><li> - Profile fields - Select the profile fields that will be used as "
@@ -3711,15 +3965,15 @@ msgstr ""
 "フォームにて、年齢範囲フィルターとして使用される日付フィールドを選択します。"
 "</li></ul>"
 
-#: plugins/members-locator/includes/class-gmw-locations-component.php:42
+#: plugins/members-locator/includes/class-gmw-locations-component.php:48
 msgid "Locations"
 msgstr "位置"
 
-#: plugins/members-locator/includes/class-gmw-locations-component.php:77
+#: plugins/members-locator/includes/class-gmw-locations-component.php:66
 msgid "Search Location..."
 msgstr "位置を検索…"
 
-#: plugins/members-locator/includes/class-gmw-locations-component.php:141
+#: plugins/members-locator/includes/class-gmw-locations-component.php:132
 msgid "Update Location"
 msgstr "位置を更新"
 
@@ -3793,7 +4047,7 @@ msgid ""
 msgstr ""
 "Members Locator アドオンは、BuddyPress plugin version 2.8以上が必要です。"
 
-#: plugins/members-locator/loader.php:197
+#: plugins/members-locator/loader.php:198
 msgid "Buddypress Member"
 msgstr "Buddypress メンバー"
 
@@ -3805,13 +4059,13 @@ msgstr "高度なオプション"
 msgid "More options"
 msgstr "さらなるオプション"
 
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:66
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:78
 #: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:68
 #: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:80
 msgid "Post Types"
 msgstr "投稿タイプ"
 
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:67
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:79
 msgid ""
 "Select the post types where you would like to enable geotagging. GEO my WP "
 "Location section will be added to the \"Edit Post\" page of the selected "
@@ -3820,43 +4074,43 @@ msgstr ""
 "ジオタグを有効にする、投稿タイプを選択します。 選択した投稿タイプの『投稿編"
 "集』ページに、GEO my WP 位置項目が追加されます。"
 
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:82
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:94
 msgid "Map Settings ( \"Edit Post\" Page )"
 msgstr "マップ 設定（『投稿編集』ページ）"
 
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:83
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:95
 msgid "Setup the map of the Location section in the \"Edit Post\" page."
 msgstr "『投稿編集』ページにて、位置項目のマップを設定します。"
 
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:90
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:102
 msgid "Default latitude"
 msgstr "デフォルト 緯度"
 
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:91
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:103
 msgid ""
 "Enter the latitude of the default location that will show when the map first "
 "loads."
 msgstr "地図を最初に読み込む際に表示する、デフォルトの位置の緯度を入力します。"
 
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:100
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:112
 msgid "Default longitude"
 msgstr "デフォルト 経度"
 
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:101
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:113
 msgid ""
 "Enter the longitude of the default location that will show when the map "
 "first loads."
 msgstr "地図を最初に読み込む際に表示する、デフォルトの位置の経度を入力します。"
 
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:125
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:137
 msgid "Select the zoom level of the map."
 msgstr "マップのズームレベルを選択"
 
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:140
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:152
 msgid "Mandatory Location"
 msgstr "位置を必須に設定"
 
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:142
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-admin-settings.php:154
 msgid "Prevent post submission when no location entered."
 msgstr "位置が無記入の場合、投稿送信を防止します。"
 
@@ -3908,11 +4162,6 @@ msgstr "検索結果一覧の各位置に表示する位置メタフィールド
 msgid "Email"
 msgstr "メール"
 
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:110
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:131
-msgid "Website"
-msgstr "Webサイト"
-
 #: plugins/posts-locator/includes/admin/class-gmw-posts-locator-form-editor.php:121
 msgid "Hours of Operation"
 msgstr "営業時間"
@@ -3937,40 +4186,9 @@ msgstr ""
 "結果一覧上で各投稿に関連するタームやタクソノミーを表示するには、このチェック"
 "ボックスをオンにして下さい。"
 
-#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:147
+#: plugins/posts-locator/includes/admin/class-gmw-posts-locator-screens.php:154
 msgid "Location found but the address is missing"
 msgstr "位置 は見つかりましたが、住所がありません。"
-
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:63
-msgid "Contact"
-msgstr "コンタクト"
-
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:68
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:146
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:150
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:192
-msgid "Days & Hours"
-msgstr "曜日＆時間"
-
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:95
-msgid "Phone Number"
-msgstr "電話番号"
-
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:107
-msgid "Fax Number"
-msgstr "Fax番号"
-
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:119
-msgid "Email Address"
-msgstr "メールアドレス"
-
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:208
-msgid "Days"
-msgstr "日"
-
-#: plugins/posts-locator/includes/class-gmw-post-location-form.php:215
-msgid "Hours"
-msgstr "時間"
 
 #: plugins/posts-locator/includes/gmw-posts-locator-search-form-template-functions.php:66
 #, php-format
@@ -4291,6 +4509,42 @@ msgstr ""
 #. Author of the plugin/theme
 msgid "Eyal Fitoussi"
 msgstr "Eyal Fitoussi"
+
+#~ msgid ""
+#~ "<h2>Important GEO my WP notice!</h2><p>The folders names for the custom "
+#~ "template files have changed since GEO my WP version 3.0. If you have "
+#~ "custom template files placed in the theme or child theme folder, you need "
+#~ "to rename the folders to be able to use your custom template files.</"
+#~ "p><p>See <a href=\"%s\" target=\"_blank\">this post</a> to learn about "
+#~ "the new folders names.</p><p><a href=\"%s\" class=\"button-secondary"
+#~ "\">Dismiss</a></p>"
+#~ msgstr ""
+#~ "<h2>GEO my WP からの重要な通知です！</h2><p>Geo my WP バージョン3.0以降、"
+#~ "カスタムテンプレートファイルのフォルダ名が変更されました。 カスタムテンプ"
+#~ "レートファイルを、テーマ・子テーマのフォルダに配置している場合、カスタムテ"
+#~ "ンプレートファイルの使用のためにフォルダ名を変更する必要があります。</"
+#~ "p><p><a href=\"%s\" target=\"_blank\">コチラの記事（英語のみ）</a>を読み、"
+#~ "新しいフォルダ名について確認下さい。</p><p><a href=\"%s\" class=\"button-"
+#~ "secondary\">閉じる</a></p>"
+
+#~ msgid ""
+#~ "%s extension version %s requires GEO my WP plugin version %s or higher."
+#~ msgstr ""
+#~ "%s エクステンション バージョン %s は、GEO my WP バージョン %s 以上が必要で"
+#~ "す。"
+
+#~ msgid "%s extension requires an update to version %s."
+#~ msgstr "%s エクステンションは、バージョン %s への更新が必要です。"
+
+#~ msgid ""
+#~ "and Geolocating with <a %s>GEO my WP</a>. Your <a %s>feedback</a> on GEO "
+#~ "my WP is greatly appriciated."
+#~ msgstr ""
+#~ "<a %s>GEO my WP</a>は、位置測定（ジオロケーティング）を行います。 <a %s>"
+#~ "フィードバック</a>は大歓迎です。（英語のみ）"
+
+#~ msgid "Call to undefined function %s"
+#~ msgstr "定義されていない機能 ％s を呼び出す %s"
 
 #~ msgid "Location name."
 #~ msgstr "位置名です。"
