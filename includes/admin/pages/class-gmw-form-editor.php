@@ -1686,22 +1686,22 @@ class GMW_Form_Editor {
 	 */
 	public function update_form() {
 
-		// run a quick security check
+		// run a quick security check.
 		if ( empty( $_POST['gmw_edit_form_nonce'] ) || ! check_admin_referer( 'gmw_edit_form_nonce', 'gmw_edit_form_nonce' ) ) {
-			 wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+			wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 		}
 
-		// validate the values
+		// validate the values.
 		$valid_input = self::validate( $_POST['gmw_form'] );
 
 		global $wpdb;
 
-		// update form in database
+		// update form in database.
 		if ( $wpdb->update(
 
 			$wpdb->prefix . 'gmw_forms',
 			array(
-				'data'  => serialize( $valid_input ),
+				'data'  => maybe_serialize( $valid_input ),
 				'title' => $valid_input['title'],
 			),
 			array( 'ID' => $valid_input['ID'] ),
@@ -1712,7 +1712,7 @@ class GMW_Form_Editor {
 			array( '%d' )
 		) === false ) {
 
-			// update forms in cache
+			// update forms in cache.
 			GMW_Forms_Helper::update_forms_cache();
 
 			wp_safe_redirect(
@@ -1726,7 +1726,7 @@ class GMW_Form_Editor {
 
 		} else {
 
-			// update forms in cache
+			// update forms in cache.
 			GMW_Forms_Helper::update_forms_cache();
 
 			wp_safe_redirect(
