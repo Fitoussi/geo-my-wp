@@ -95,36 +95,7 @@ class GMW_Posts_Locator_Form_Editor {
             'attributes'    => '',
             'priority'      => 13                
         );
-            
-        $settings['search_results']['location_meta'] = array(
-            'name'          => 'location_meta',
-            'type'          => 'multiselect',
-            'default'       => '',
-            'label'         => __( 'Location Meta', 'geo-my-wp' ),
-            'placeholder'   => __( 'Select location metas', 'geo-my-wp' ),
-            'desc'          => __( "Select the the location meta fields which you would like to display for each location in the list of results.", 'geo-my-wp' ),
-            'options'       => array(
-                'phone'     => __( 'Phone', 'geo-my-wp' ),
-                'fax'       => __( 'Fax', 'geo-my-wp' ),
-                'email'     => __( 'Email', 'geo-my-wp' ),
-                'website'   => __( 'Website', 'geo-my-wp' ),
-            ),
-            //'options'       => GMW_Form_Settings_Helper::get_location_meta(),
-            'attributes'    => '',
-            'priority'      => 36   
-        );
-
-        $settings['search_results']['opening_hours'] = array(
-            'name'          => 'opening_hours',
-            'type'          => 'checkbox',
-            'default'       => '',
-            'label'         => __( 'Hours of Operation', 'geo-my-wp' ),
-            'cb_label'      => __( 'Enable', 'geo-my-wp' ),
-            'desc'          => __( 'Display opening days & hours for each location in the list of results.', 'geo-my-wp' ),
-            'attributes'    => '',
-            'priority'      => 38   
-        );
-
+ 
         $settings['search_results']['excerpt'] = array(
             'name'          => 'excerpt',
             'type'          => 'function',
@@ -146,7 +117,8 @@ class GMW_Posts_Locator_Form_Editor {
             'attributes'    => '',
             'priority'      => 65   
         );
-         
+        
+
         return $settings;
     }
 }
