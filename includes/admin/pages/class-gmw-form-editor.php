@@ -97,13 +97,13 @@ class GMW_Form_Editor {
 
 		// settings groups
 		$groups = array(
-			array(
+			'hidden' => array(
 				'slug'     => 'hidden',
 				'label'    => __( 'hidden', 'geo-my-wp' ),
 				'fields'   => array(),
 				'priority' => 1,
 			),
-			array(
+			'page_load_results' => array(
 				'slug'     => 'page_load_results',
 				'label'    => __( 'Page Load Results', 'geo-my-wp' ),
 				'fields'   => array(
@@ -237,7 +237,7 @@ class GMW_Form_Editor {
 				),
 				'priority' => 10,
 			),
-			array(
+			'search_form' => array(
 				'slug'     => 'search_form',
 				'label'    => __( 'Search Form', 'geo-my-wp' ),
 				'fields'   => array(
@@ -337,7 +337,7 @@ class GMW_Form_Editor {
 				),
 				'priority' => 20,
 			),
-			array(
+			'form_submission' => array(
 				'slug'     => 'form_submission',
 				'label'    => __( 'Form Submission', 'geo-my-wp' ),
 				'fields'   => array(
@@ -378,7 +378,7 @@ class GMW_Form_Editor {
 				),
 				'priority' => 30,
 			),
-			array(
+			'search_results' => array(
 				'slug'     => 'search_results',
 				'label'    => __( 'Search Results', 'geo-my-wp' ),
 				'fields'   => array(
@@ -423,6 +423,33 @@ class GMW_Form_Editor {
 						'priority'		=> 35
 					),
 					*/
+					'location_meta' => array(
+						'name'          => 'location_meta',
+						'type'          => 'multiselect',
+						'default'       => '',
+						'label'         => __( 'Location Meta', 'geo-my-wp' ),
+						'placeholder'   => __( 'Select location metas', 'geo-my-wp' ),
+						'desc'          => __( "Select the the location meta fields which you would like to display for each location in the list of results.", 'geo-my-wp' ),
+						'options'       => array(
+						'phone'     => __( 'Phone', 'geo-my-wp' ),
+							'fax'       => __( 'Fax', 'geo-my-wp' ),
+							'email'     => __( 'Email', 'geo-my-wp' ),
+							'website'   => __( 'Website', 'geo-my-wp' ),
+						),
+						//'options'       => GMW_Form_Settings_Helper::get_location_meta(),
+						'attributes'    => '',
+						'priority'      => 35,
+					),
+					'opening_hours' => array(
+						'name'          => 'opening_hours',
+						'type'          => 'checkbox',
+						'default'       => '',
+						'label'         => __( 'Hours of Operation', 'geo-my-wp' ),
+						'cb_label'      => __( 'Enable', 'geo-my-wp' ),
+						'desc'          => __( 'Display opening days & hours for each location in the list of results.', 'geo-my-wp' ),
+						'attributes'    => '',
+						'priority'      => 40,
+					),
 					'directions_link'  => array(
 						'name'       => 'directions_link',
 						'type'       => 'checkbox',
@@ -431,7 +458,7 @@ class GMW_Form_Editor {
 						'cb_label'   => __( 'Enable', 'geo-my-wp' ),
 						'desc'       => __( 'Display directions link, that will open a new window showing the driving directions, in each location in the list of results.', 'geo-my-wp' ),
 						'attributes' => array(),
-						'priority'   => 40,
+						'priority'   => 45,
 					),
 				),
 				'priority' => 40,
@@ -526,7 +553,7 @@ class GMW_Form_Editor {
 				'priority' => 50,
 			),
 		);
-		
+
 		$groups['results_map']['fields']['map_type'] = array(
 			'name'       => 'map_type',
 			'type'       => 'hidden',
@@ -546,6 +573,14 @@ class GMW_Form_Editor {
 				'HYBRID'    => __( 'HYBRID', 'geo-my-wp' ),
 				'TERRAIN'   => __( 'TERRAIN', 'geo-my-wp' ),
 			);
+		}
+
+		$disable_additional_fields = apply_filters( 'gmw_form_editor_disable_additional_fields', true, $groups, $this->form['slug'], $this );
+		$disable_additional_fields = apply_filters( 'gmw_' . $this->form['slug'] . '_form_editor_disable_additional_fields', $disable_additional_fields, $groups, $this->form['slug'], $this );
+
+		// Contact info and hours of operation settings are disabled by default. It can be enabled using this filter.
+		if ( $disable_additional_fields ) {
+			unset( $groups['search_results']['fields']['location_meta'], $groups['search_results']['fields']['opening_hours'] );
 		}
 
 		$temp_array = array();
