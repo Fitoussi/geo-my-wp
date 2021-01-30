@@ -19,6 +19,10 @@ class GMW_Posts_Locator_Form_Editor {
      */
     public function __construct() {
         
+        // Enable Location meta and hours of operation settings.
+        add_filter( 'gmw_posts_locator_form_editor_disable_additional_fields', '__return_false' );
+
+        // Default settings.
         add_filter( 'gmw_posts_locator_form_default_settings', array( $this, 'default_settings' ), 5, 2 );
         
         // init form settings
