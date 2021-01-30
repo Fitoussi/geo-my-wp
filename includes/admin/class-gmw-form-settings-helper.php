@@ -585,22 +585,22 @@ class GMW_Form_Settings_Helper {
 
 				if ( ! empty( $taxes ) ) {
 
-					$style = ( isset( $form['search_form']['post_types'] ) && ( count( $form['search_form']['post_types'] ) == 1 ) && is_array( $form['search_form']['post_types'] ) && ( in_array( $post, $form['search_form']['post_types'] ) ) ) ? '' : 'style="display:none"';
+					$style = ( isset( $form['search_form']['post_types'] ) && ( count( $form['search_form']['post_types'] ) === 1 ) && is_array( $form['search_form']['post_types'] ) && ( in_array( $post, $form['search_form']['post_types'], true ) ) ) ? '' : 'style="display:none"';
 
-					echo '<div id="post-type-' . $post . '-taxonomies-wrapper" class="single-option post-type-taxonomies-wrapper" ' . $style . '>';
+					echo '<div id="post-type-' . esc_attr( $post ) . '-taxonomies-wrapper" class="single-option post-type-taxonomies-wrapper" ' . $style . '>'; // WPCS: XSS ok.
 
 					foreach ( $taxes as $tax ) {
 
 						echo '<label>' . esc_html( get_taxonomy( $tax )->labels->singular_name ) . '</label>';
 
-						echo '<div id="' . esc_attr( $post ) . '_cat' . '" class="taxonomy-wrapper option-content">';
+						echo '<div id="' . esc_attr( $post ) . '_cat" class="taxonomy-wrapper option-content">';
 
-							$nameAttr = esc_attr( $name_attr . "[{$post}][{$tax}][style]" );
-							$selected = ( ! empty( $value[ $post ][ $tax ]['style'] ) && ( $value[ $post ][ $tax ]['style'] == 'dropdown' || $value[ $post ][ $tax ]['style'] == 'drop' ) ) ? 'selected="seletced"' : '';
+							$esc_name_attr = esc_attr( $name_attr . '[' . $post . '][' . $tax . '][style]' );
+							$selected      = ( ! empty( $value[ $post ][ $tax ]['style'] ) && ( 'dropdown' === $value[ $post ][ $tax ]['style'] || 'drop' === $value[ $post ][ $tax ]['style'] ) ) ? 'selected="seletced"' : '';
 
-							echo '<select name="' . $nameAttr . '">';
-							echo '<option value="disable" checked="checked">' . __( 'Disable', 'geo-my-wp' ) . '</option>';
-							echo '<option value="dropdown" ' . $selected . '>' . __( 'Dropdown', 'geo-my-wp' ) . '</option>';
+							echo '<select name="' . $esc_name_attr . '">'; // WPCS: XSS ok.
+							echo '<option value="disable" checked="checked">' . esc_attr__( 'Disable', 'geo-my-wp' ) . '</option>';
+							echo '<option value="dropdown" ' . $selected . '>' . esc_attr__( 'Dropdown', 'geo-my-wp' ) . '</option>'; // WPCS: XSS ok.
 							echo '</select>';
 
 						echo '</div>';
@@ -611,27 +611,28 @@ class GMW_Form_Settings_Helper {
 			}
 			echo '</div>';
 
-			$style = ( empty( $form['search_form']['post_types'] ) || ( count( $form['search_form']['post_types'] ) == 0 ) ) ? '' : 'style="display: none;"';
+			$style = ( empty( $form['search_form']['post_types'] ) || ( count( $form['search_form']['post_types'] ) === 0 ) ) ? '' : 'style="display: none;"';
 
-			echo '<div id="post-types-select-taxonomies-message" ' . $style . '>';
-			echo '<p>' . __( 'Select a post type to see its taxonomies.', 'geo-my-wp' ) . '</p>';
+			echo '<div id="post-types-select-taxonomies-message" ' . $style . '>'; // WPCS: XSS ok.
+			echo '<p>' . esc_attr__( 'Select a post type to see its taxonomies.', 'geo-my-wp' ) . '</p>';
 			echo '</div>';
 
-			$style = ( isset( $form['search_form']['post_types'] ) && ( count( $form['search_form']['post_types'] ) == 1 ) ) ? 'style="display: none;"' : '';
+			$style = ( isset( $form['search_form']['post_types'] ) && ( count( $form['search_form']['post_types'] ) === 1 ) ) ? 'style="display: none;"' : '';
 
-			echo '<div id="post-types-no-taxonomies-message" ' . $style . '>';
-			echo '<p>' . __( 'This feature is not availabe with multiple post types.', 'geo-my-wp' ) . '</p>';
+			echo '<div id="post-types-no-taxonomies-message" ' . $style . '>'; // WPCS: XSS ok.
+			echo '<p>' . esc_attr__( 'This feature is not availabe with multiple post types.', 'geo-my-wp' ) . '</p>';
 			echo '</div>';
 	}
 
 	/**
-	 * Excerpt settings
+	 * Excerpt settings.
 	 *
-	 * @param  [type] $value     [description]
-	 * @param  [type] $name_attr [description]
-	 * @return [type]            [description]
+	 * @param  [type] $value     [description].
+	 *
+	 * @param  [type] $name_attr [description].
 	 */
 	public static function excerpt( $value, $name_attr ) {
+
 		$name_attr = esc_attr( $name_attr );
 
 		if ( empty( $value ) ) {
@@ -648,65 +649,65 @@ class GMW_Form_Settings_Helper {
 				<input 
 					type="checkbox" 
 					value="1" 
-					name="<?php echo $name_attr . '[enabled]'; ?>" 
+					name="<?php echo $name_attr . '[enabled]'; // WPCS: XSS ok. ?>"
 					onclick="jQuery( '.excerpt-options' ).slideToggle();" 
 					<?php echo ! empty( $value['enabled'] ) ? 'checked=checked' : ''; ?> 
 				/>
-				<?php _e( 'Enable', 'geo-my-wp' ); ?>
+				<?php esc_attr_e( 'Enable', 'geo-my-wp' ); ?>
 			</label>
 		</p>
 
 		<div class="excerpt-options gmw-options-box" <?php echo empty( $value['enabled'] ) ? 'style="display:none";' : ''; ?>>
 
 			<div class="single-option">
-				<label><?php _e( 'Usage', 'geo-my-wp' ); ?></label>
+				<label><?php esc_attr_e( 'Usage', 'geo-my-wp' ); ?></label>
 				<div class="option-content">
 					<select 
 						name="<?php echo esc_attr( $name_attr . '[usage]' ); ?>"
-						data-placehoder="<?php _e( 'Select an option', 'geo-my-wp' ); ?>" 
+						data-placehoder="<?php esc_attr_e( 'Select an option', 'geo-my-wp' ); ?>" 
 					>
-						<option value="post_content" selected="selected"><?php _e( 'Post content', 'geo-my-wp' ); ?>
+						<option value="post_content" selected="selected"><?php esc_attr_e( 'Post content', 'geo-my-wp' ); ?>
 						<option value="post_excerpt" 
 						<?php
-						if ( ! empty( $value['usage'] ) && $value['usage'] == 'post_excerpt' ) {
+						if ( ! empty( $value['usage'] ) && 'post_excerpt' === $value['usage'] ) {
 							echo 'selected="selected"';
 						};
 						?>
-						><?php _e( 'Post excerpt', 'geo-my-wp' ); ?></option>
+						><?php esc_attr_e( 'Post excerpt', 'geo-my-wp' ); ?></option>
 					</select>
 					   
 					<p class="description">
-						<?php _e( 'Selet the source of data between the post content or post excerpt.', 'geo-my-wp' ); ?>
+						<?php esc_attr_e( 'Selet the source of data between the post content or post excerpt.', 'geo-my-wp' ); ?>
 					</p>
 				</div>
 			</div>
 
 			<div class="single-option">
-				<label><?php _e( 'Words count', 'geo-my-wp' ); ?></label>
+				<label><?php esc_attr_e( 'Words count', 'geo-my-wp' ); ?></label>
 				<div class="option-content">
 					<input 
 						type="number" 
-						name="<?php echo $name_attr . '[count]'; ?>" 
+						name="<?php echo $name_attr . '[count]'; // WPCS: XSS ok. ?>"
 						value="<?php echo ( ! empty( $value['count'] ) ) ? esc_attr( $value['count'] ) : ''; ?>"
 						placeholder="Enter numeric value"
 					/>
 					<p class="description">
-						<?php _e( 'Enter the number of words that you would like to display, or leave blank to show the entire content.', 'geo-my-wp' ); ?>
+						<?php esc_attr_e( 'Enter the number of words that you would like to display, or leave blank to show the entire content.', 'geo-my-wp' ); ?>
 					</p>
 				</div>
 			</div>
-			
+
 			<div class="single-option">
-				<label><?php _e( 'Read more link', 'geo-my-wp' ); ?></label>
+				<label><?php esc_attr_e( 'Read more link', 'geo-my-wp' ); ?></label>
 				<div class="option-content">
 					<input 
 						type="text" 
-						name="<?php echo $name_attr . '[link]'; ?>" 
+						name="<?php echo $name_attr . '[link]'; // WPCS: XSS ok. ?>"
 						value="<?php echo ( ! empty( $value['link'] ) ) ? esc_attr( stripslashes( $value['link'] ) ) : ''; ?>" 
 						placeholder="Enter text"
 					/>  
 					<p class="description">
-						<?php _e( 'Enter a text that will be used as the "Read more" link and will link to the post page.', 'geo-my-wp' ); ?>
+						<?php esc_attr_e( 'Enter a text that will be used as the "Read more" link and will link to the post page.', 'geo-my-wp' ); ?>
 					</p>
 				</div>
 			</div>
@@ -717,13 +718,14 @@ class GMW_Form_Settings_Helper {
 	/**
 	 * Validate excerpt
 	 *
-	 * @param  [type] $output [description]
+	 * @param  [type] $output [description].
+	 *
 	 * @return [type]         [description]
 	 */
 	public static function validate_excerpt( $output ) {
 
 		$output['enabled'] = ! empty( $output['enabled'] ) ? 1 : '';
-		$output['usage']   = ( $output['usage'] == 'post_content' || $output['usage'] == 'post_excerpt' ) ? $output['usage'] : 'post_content';
+		$output['usage']   = ( 'post_content' === $output['usage'] || 'post_excerpt' === $output['usage'] ) ? $output['usage'] : 'post_content';
 		$output['count']   = isset( $output['count'] ) ? preg_replace( '/[^0-9]/', '', $output['count'] ) : '';
 		$output['link']    = isset( $output['link'] ) ? sanitize_text_field( $output['link'] ) : '';
 
@@ -733,25 +735,26 @@ class GMW_Form_Settings_Helper {
 	/**
 	 * Get BNP xprofile fields array
 	 *
-	 * @param  boolean $date_fields [description]
 	 * @return [type]               [description]
 	 */
 	public static function get_xprofile_fields() {
 
-		// verify BuddyPress plugin
+		// verify BuddyPress plugin.
 		if ( ! class_exists( 'Buddypress' ) ) {
 			return array();
 		}
 
 		global $bp;
 
-		// show message if Xprofile Fields component deactivated
+		// show message if Xprofile Fields component deactivated.
 		if ( ! bp_is_active( 'xprofile' ) ) {
-			trigger_error( __( 'Buddypress xprofile fields component is deactivated. You need to activate in in order to use this feature.', 'geo-my-wp' ), E_USER_NOTICE );
+
+			gmw_trigger_error( esc_attr__( 'Buddypress xprofile fields component is deactivated. You need to activate in in order to use this feature.', 'geo-my-wp' ), E_USER_NOTICE );
+
 			return array();
 		}
 
-		// check for profile fields
+		// check for profile fields.
 		if ( function_exists( 'bp_has_profile' ) ) {
 
 			$args = array(
@@ -764,7 +767,7 @@ class GMW_Form_Settings_Helper {
 				'date_field' => array(),
 			);
 
-			// display profile fields
+			// display profile fields.
 			if ( bp_has_profile( $args ) ) {
 
 				while ( bp_profile_groups() ) {
@@ -777,7 +780,7 @@ class GMW_Form_Settings_Helper {
 
 						$field_type = bp_get_the_profile_field_type();
 
-						if ( $field_type == 'datebox' || $field_type == 'birthdate' ) {
+						if ( 'datebox' === $field_type || 'birthdate' === $field_type ) {
 							$fields['date_field'][ bp_get_the_profile_field_id() ] = bp_get_the_profile_field_name();
 						} else {
 							$fields['fields'][ bp_get_the_profile_field_id() ] = bp_get_the_profile_field_name();
@@ -789,21 +792,23 @@ class GMW_Form_Settings_Helper {
 
 		return $fields;
 	}
+
 	/**
-	 * Form settings xprofile fields function
+	 * Form settings xprofile fields function.
 	 *
-	 * @param  [type] $formID    [description]
-	 * @param  [type] $section   [description]
-	 * @param  [type] $option    [description]
+	 * @param  [type] $value     [description].
+	 *
+	 * @param  [type] $name_attr [description].
+	 *
 	 * @return [type]            [description]
 	 */
 	public static function bp_xprofile_fields( $value, $name_attr ) {
 
 		global $bp;
 
-		// show message if Xprofile Fields component deactivated
+		// show message if Xprofile Fields component deactivated.
 		if ( ! class_exists( 'Buddypress' ) || ! bp_is_active( 'xprofile' ) ) {
-			return _e( 'Buddypress xprofile fields component is required for this feature.', 'geo-my-wp' );
+			return esc_attr_e( 'Buddypress xprofile fields component is required for this feature.', 'geo-my-wp' );
 		}
 
 		$fields = self::get_xprofile_fields();
@@ -814,19 +819,19 @@ class GMW_Form_Settings_Helper {
 		?>
 		<div class="gmw-options-box">
 			<div class="single-option">
-				<label><?php _e( 'Select Profile Fields', 'geo-my-wp' ); ?></label>
+				<label><?php esc_attr_e( 'Select Profile Fields', 'geo-my-wp' ); ?></label>
 				<div class="option-content">
 					<select 
 						name="<?php echo esc_attr( $name_attr . '[fields][]' ); ?>" 
 						multiple 
-						data-placehoder="<?php _e( 'Select profile fields', 'geo-my-wp' ); ?>" 
+						data-placehoder="<?php esc_attr_e( 'Select profile fields', 'geo-my-wp' ); ?>" 
 					>
 					<?php
 					foreach ( $fields['fields'] as $field_id => $field_name ) {
-						 $selected = ( isset( $value['fields'] ) && in_array( $field_id, $value['fields'] ) ) ? 'selected="slected"' : '';
+						$selected = ( isset( $value['fields'] ) && in_array( $field_id, $value['fields'] ) ) ? 'selected="slected"' : '';
 						?>
 							?>
-							<option value="<?php echo esc_attr( $field_id ); ?>" <?php echo $selected; ?>>
+							<option value="<?php echo esc_attr( $field_id ); ?>" <?php echo $selected; // WPCS: XSS OK. ?>>
 								<?php echo esc_html( $field_name ); ?>
 							</option>
 							<?php
@@ -834,24 +839,24 @@ class GMW_Form_Settings_Helper {
 					?>
 					</select>
 					<p class="description">
-						<?php _e( 'Select the profile fields to be used as filters in the search form.', 'geo-my-wp' ); ?>
+						<?php esc_attr_e( 'Select the profile fields to be used as filters in the search form.', 'geo-my-wp' ); ?>
 					</p>
 				</div>
-			
-				<label><?php _e( 'Select date field as "Age range" filter.', 'geo-my-wp' ); ?></label>   
+
+				<label><?php esc_attr_e( 'Select date field as "Age range" filter.', 'geo-my-wp' ); ?></label>   
 
 					<div class="option-content">
 						<select name="<?php echo esc_attr( $name_attr . '[date_field]' ); ?>">
-							<option value="" selected="selected"><?php _e( 'N/A', 'geo-my-wp' ); ?></option>
+							<option value="" selected="selected"><?php esc_attr_e( 'N/A', 'geo-my-wp' ); ?></option>
 							<?php foreach ( $fields['date_field'] as $field_value => $field_name ) { ?>
 								<?php $selected = ( ! empty( $value['date_field'] ) && $value['date_field'] == $field_value ) ? 'selected="selected"' : ''; ?>
-								<option value="<?php echo esc_attr( $field_value ); ?>" <?php echo $selected; ?> >
+								<option value="<?php echo esc_attr( $field_value ); ?>" <?php echo $selected; // WPCS: XSS OK. ?> >
 									<?php echo esc_html( $field_name ); ?>        
 								</option>
 							<?php } ?>
 						</select>
 						<p class="description">
-							<?php _e( 'select a date field to be used as a age range filter in the search form.', 'geo-my-wp' ); ?>
+							<?php esc_attr_e( 'select a date field to be used as a age range filter in the search form.', 'geo-my-wp' ); ?>
 						</p>
 					</div>
 				</div>
@@ -861,9 +866,10 @@ class GMW_Form_Settings_Helper {
 	}
 
 	/**
-	 * validate xprofile fields
+	 * Validate xprofile fields.
 	 *
-	 * @param  [type] $output [description]
+	 * @param  [type] $output [description].
+	 *
 	 * @return [type]         [description]
 	 */
 	public static function validate_bp_xprofile_fields( $output ) {
