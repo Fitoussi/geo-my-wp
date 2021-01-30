@@ -261,7 +261,7 @@ class GMW_Form_Settings_Helper {
 
 		$terms = get_terms( $taxonomy, array( 'hide_empty' => false ) );
 
-		if ( empty( $terms ) ) {
+		if ( empty( $terms ) || is_wp_error( $terms ) ) {
 			return;
 		}
 
