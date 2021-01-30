@@ -1,5 +1,11 @@
 <?php
-// Exit if accessed directly
+/**
+ * GEO my WP form editor.
+ *
+ * @package geo-my-wp
+ */
+
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -10,13 +16,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Edit GMW forms in the back end
  *
  * @since 2.5
- * @author FitoussiEyal
  *
+ * @author Fitoussi Eyal
  */
 class GMW_Form_Editor {
 
 	/**
-	 * enable / disable ajax in form editor
+	 * Enable / disable ajax in form editor.
+	 *
 	 * @var boolean
 	 */
 	public $ajax_enabled = true;
@@ -27,9 +34,9 @@ class GMW_Form_Editor {
 	 * @access public
 	 * @return void
 	 */
-	function __construct() {
+	public function __construct() {
 
-		// trigger ajax form update
+		// trigger ajax form update.
 		if ( apply_filters( 'gmw_form_editor_ajax_enabled', true ) ) {
 
 			$this->ajax_enabled = true;
@@ -37,8 +44,8 @@ class GMW_Form_Editor {
 			add_action( 'wp_ajax_gmw_update_admin_form', array( $this, 'ajax_update_form' ) );
 		}
 
-		// verify that this is Form edit page
-		if ( empty( $_GET['page'] ) || 'gmw-forms' != $_GET['page'] || empty( $_GET['gmw_action'] ) || 'edit_form' != $_GET['gmw_action'] ) {
+		// verify that this is Form edit page.
+		if ( empty( $_GET['page'] ) || 'gmw-forms' !== $_GET['page'] || empty( $_GET['gmw_action'] ) || 'edit_form' !== $_GET['gmw_action'] ) {
 			return;
 		}
 
@@ -49,14 +56,14 @@ class GMW_Form_Editor {
 			add_action( 'gmw_update_admin_form', array( $this, 'update_form' ) );
 		}
 
-		// make sure form ID passed
+		// make sure form ID passed.
 		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) {
 			wp_die( __( 'No form ID provided.', 'geo-my-wp' ) );
 		}
 
-		$form_id = ( int ) $_GET['form_id'];
+		$form_id = (int) $_GET['form_id'];
 
-		// get form data
+		// get form data.
 		$this->form = GMW_Forms_Helper::get_form( $form_id );
 
 		if ( ! gmw_is_addon_active( $this->form['addon'] ) ) {
@@ -66,19 +73,18 @@ class GMW_Form_Editor {
 			wp_die( $link );
 		}
 
-		// varify if the form exists
+		// varify if the form exists.
 		if ( empty( $this->form ) ) {
 			wp_die( __( 'The form you are trying to edit doe\'s not exist!', 'geo-my-wp' ) );
 		}
 	}
 
 	/**
-	 * GMW Function - add notice messages
+	 * GMW Function - add notice messages.
 	 *
-	 * @access public
-	 * @since 3.0
-	 * @author Eyal Fitoussi
+	 * @param  [type] $messages [description].
 	 *
+	 * @return [type]           [description]
 	 */
 	public function notices_messages( $messages ) {
 
@@ -95,9 +101,9 @@ class GMW_Form_Editor {
 	 */
 	public function fields_groups() {
 
-		// settings groups
+		// settings groups.
 		$groups = array(
-			'hidden' => array(
+			'hidden'            => array(
 				'slug'     => 'hidden',
 				'label'    => __( 'hidden', 'geo-my-wp' ),
 				'fields'   => array(),
@@ -237,7 +243,7 @@ class GMW_Form_Editor {
 				),
 				'priority' => 10,
 			),
-			'search_form' => array(
+			'search_form'       => array(
 				'slug'     => 'search_form',
 				'label'    => __( 'Search Form', 'geo-my-wp' ),
 				'fields'   => array(
@@ -337,7 +343,7 @@ class GMW_Form_Editor {
 				),
 				'priority' => 20,
 			),
-			'form_submission' => array(
+			'form_submission'   => array(
 				'slug'     => 'form_submission',
 				'label'    => __( 'Form Submission', 'geo-my-wp' ),
 				'fields'   => array(
@@ -378,7 +384,7 @@ class GMW_Form_Editor {
 				),
 				'priority' => 30,
 			),
-			'search_results' => array(
+			'search_results'    => array(
 				'slug'     => 'search_results',
 				'label'    => __( 'Search Results', 'geo-my-wp' ),
 				'fields'   => array(
@@ -423,32 +429,32 @@ class GMW_Form_Editor {
 						'priority'		=> 35
 					),
 					*/
-					'location_meta' => array(
-						'name'          => 'location_meta',
-						'type'          => 'multiselect',
-						'default'       => '',
-						'label'         => __( 'Location Meta', 'geo-my-wp' ),
-						'placeholder'   => __( 'Select location metas', 'geo-my-wp' ),
-						'desc'          => __( "Select the the location meta fields which you would like to display for each location in the list of results.", 'geo-my-wp' ),
-						'options'       => array(
-						'phone'     => __( 'Phone', 'geo-my-wp' ),
-							'fax'       => __( 'Fax', 'geo-my-wp' ),
-							'email'     => __( 'Email', 'geo-my-wp' ),
-							'website'   => __( 'Website', 'geo-my-wp' ),
+					'location_meta'    => array(
+						'name'        => 'location_meta',
+						'type'        => 'multiselect',
+						'default'     => '',
+						'label'       => __( 'Location Meta', 'geo-my-wp' ),
+						'placeholder' => __( 'Select location metas', 'geo-my-wp' ),
+						'desc'        => __( 'Select the the location meta fields which you would like to display for each location in the list of results.', 'geo-my-wp' ),
+						'options'     => array(
+							'phone'   => __( 'Phone', 'geo-my-wp' ),
+							'fax'     => __( 'Fax', 'geo-my-wp' ),
+							'email'   => __( 'Email', 'geo-my-wp' ),
+							'website' => __( 'Website', 'geo-my-wp' ),
 						),
-						//'options'       => GMW_Form_Settings_Helper::get_location_meta(),
-						'attributes'    => '',
-						'priority'      => 35,
+						// 'options'       => GMW_Form_Settings_Helper::get_location_meta(),
+						'attributes'  => '',
+						'priority'    => 35,
 					),
-					'opening_hours' => array(
-						'name'          => 'opening_hours',
-						'type'          => 'checkbox',
-						'default'       => '',
-						'label'         => __( 'Hours of Operation', 'geo-my-wp' ),
-						'cb_label'      => __( 'Enable', 'geo-my-wp' ),
-						'desc'          => __( 'Display opening days & hours for each location in the list of results.', 'geo-my-wp' ),
-						'attributes'    => '',
-						'priority'      => 40,
+					'opening_hours'    => array(
+						'name'       => 'opening_hours',
+						'type'       => 'checkbox',
+						'default'    => '',
+						'label'      => __( 'Hours of Operation', 'geo-my-wp' ),
+						'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+						'desc'       => __( 'Display opening days & hours for each location in the list of results.', 'geo-my-wp' ),
+						'attributes' => '',
+						'priority'   => 40,
 					),
 					'directions_link'  => array(
 						'name'       => 'directions_link',
@@ -463,7 +469,7 @@ class GMW_Form_Editor {
 				),
 				'priority' => 40,
 			),
-			'results_map' => array(
+			'results_map'       => array(
 				'slug'     => 'results_map',
 				'label'    => __( 'Map', 'geo-my-wp' ),
 				'fields'   => array(
@@ -519,7 +525,8 @@ class GMW_Form_Editor {
 						'attributes' => '',
 						'priority'   => 40,
 					),
-					/*'yl_icon'     	=> array(
+					/*
+					'yl_icon'         => array(
 						'name'        	=> 'yl_icon',
 						'type'  	  	=> 'checkbox',
 						'default'       => '',
@@ -528,16 +535,6 @@ class GMW_Form_Editor {
 						'desc'        	=> __( "Dynamically open on page load the info window of the marker which represents the user's location.", 'geo-my-wp' ),
 						'attributes'  	=> array(),
 						'priority'		=> 25
-					),
-					'map_frame'  	=> array(
-						'name'       	=> 'map_frame',
-						'type'       	=> 'checkbox',
-						'default'       => '',
-						'label'      	=> __( 'Map frame', 'geo-my-wp' ),
-						'cb_label'   	=> __( 'Enable', 'geo-my-wp' ),
-						'desc'       	=> __( 'show frame around the map?', 'geo-my-wp' ),
-						'attributes' 	=> array(),
-						'priority'		=> 30
 					),
 					'no_results_enabled'  	=> array(
 						'name'       	=> 'no_results_enabled',
@@ -609,15 +606,15 @@ class GMW_Form_Editor {
 
 		$fields = array();
 
-		// loop through settings groups
+		// loop through settings groups.
 		foreach ( $this->form_settings_groups as $key => $group ) {
 
-			// verify groups slug
+			// verify groups slug.
 			if ( empty( $group['slug'] ) ) {
 				continue;
 			}
 
-			// Generate the group if does not exsist
+			// Generate the group if does not exsist.
 			if ( ! isset( $fields[ $group['slug'] ] ) ) {
 
 				$fields[ $group['slug'] ] = ! empty( $group['fields'] ) ? $group['fields'] : array();
@@ -628,15 +625,15 @@ class GMW_Form_Editor {
 
 				$fields[ $group['slug'] ] = array_merge_recursive( $fields[ $group['slug'] ], $group['fields'] );
 
-				// remove the duplicate group/tab
+				// remove the duplicate group/tab.
 				unset( $this->form_settings_groups[ $key ] );
 			}
 
-			// allow filtering the specific group
+			// allow filtering the specific group.
 			$fields[ $group['slug'] ] = apply_filters( 'gmw_' . $group['slug'] . '_form_settings', $fields[ $group['slug'] ], $this->form['slug'], $this->form );
 		}
 
-		// filter all fields groups
+		// filter all fields groups.
 		$fields = apply_filters( 'gmw_' . $this->form['slug'] . '_form_settings', $fields, $this->form );
 		$fields = apply_filters( 'gmw_' . $this->form['addon'] . '_addon_form_settings', $fields, $this->form );
 		$fields = apply_filters( 'gmw_form_settings', $fields, $this->form );
@@ -653,19 +650,19 @@ class GMW_Form_Editor {
 	 */
 	protected function init_form_settings() {
 
-		// get groups
+		// get groups.
 		$this->form_settings_groups = $this->fields_groups();
 
-		// get fields
+		// get fields.
 		$this->form_fields = $this->get_fields();
 
 		// allow plugins to extend the form fields
-		//$new_settings = array();
-		//$this->form_fields = apply_filters( 'gmw_' . $this->form['slug'] . '_form_settings', $this->form_fields, $this->form );
-		//$this->form_fields = apply_filters( 'gmw_form_settings', $this->form_fields, $this->form );
-
+		// $new_settings = array();
+		// $this->form_fields = apply_filters( 'gmw_' . $this->form['slug'] . '_form_settings', $this->form_fields, $this->form );
+		// $this->form_fields = apply_filters( 'gmw_form_settings', $this->form_fields, $this->form );
 		// merge settings added from other plugins
-		/*foreach ( $new_settings as $group => $fields ) {
+		/*
+		foreach ( $new_settings as $group => $fields ) {
 
 			if ( empty( $this->form_fields[$group] ) ) {
 				$this->form_fields[$group] = array();
@@ -674,7 +671,7 @@ class GMW_Form_Editor {
 			$this->form_fields[$group] = array_merge( $this->form_fields[$group], $fields );
 		} */
 
-		// backward capability for settings before settings groups were created
+		// backward capability for settings before settings groups were created.
 		foreach ( $this->form_fields as $key => $section ) {
 
 			if ( ! empty( $section[0] ) && ! empty( $section[1] ) && is_string( $section[0] ) ) {
@@ -690,19 +687,19 @@ class GMW_Form_Editor {
 			}
 		}
 
-		// backward capability for replacing std with default
+		// backward capability for replacing std with default.
 		foreach ( $this->form_fields as $key => $section ) {
 
 			foreach ( $section as $sec_key => $sec_value ) {
 
-				// skip hidden field
+				// skip hidden field.
 				if ( empty( $sec_value ) ) {
 					continue;
 				}
 
 				if ( isset( $sec_value['std'] ) && ! isset( $sec_value['default'] ) ) {
 
-					trigger_error( '"std" attribute is no longer supported in GMW settings and was replaced with "default" since version 3.0.', E_USER_NOTICE );
+					gmw_trigger_error( '"std" attribute is no longer supported in GMW settings and was replaced with "default" since version 3.0.', E_USER_NOTICE );
 
 					$this->form_fields[ $key ][ $sec_key ]['default'] = ! empty( $sec_value['default'] ) ? $sec_value['default'] : '';
 
@@ -714,6 +711,7 @@ class GMW_Form_Editor {
 
 	/**
 	 * Get locator button images
+	 *
 	 * @return [type] [description]
 	 */
 	public function locator_options() {
@@ -732,9 +730,7 @@ class GMW_Form_Editor {
 	}
 
 	/**
-	 * Form usage tab
-	 *
-	 * @return [type] [description]
+	 * Form usage tab.
 	 */
 	public function form_usage() {
 		?>
