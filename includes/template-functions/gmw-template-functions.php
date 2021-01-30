@@ -378,14 +378,25 @@ function gmw_get_hours_of_operation( $location = 0, $object_id = 0 ) {
 
 	if ( ! empty( $days_hours ) && is_array( $days_hours ) ) {
 
-		foreach ( $days_hours as $day ) {
+		foreach ( $days_hours as $dh ) {
 
-			if ( array_filter( $day ) ) {
+			if ( array_filter( $dh ) ) {
 
-				$days = esc_attr( $day['days'] );
+				if ( ! apply_filters( 'gmw_get_hours_of_operation_allowed_html', false ) ) {
+
+					$days  = esc_attr( $dh['days'] );
+					$class = $days;
+					$hours = esc_attr( $dh['hours'] );
+
+				} else {
+
+					$days  = wp_kses_post( $dh['days'] );
+					$class = '';
+					$hours = wp_kses_post( $dh['hours'] );
+				}
 
 				$count++;
-				$data .= '<li class="day ' . $days . '"><span class="days">' . $days . ': </span><span class="hours">' . esc_attr( $day['hours'] ) . '</span></li>';
+				$data .= '<li class="day ' . $class . '"><span class="days">' . $days . ': </span><span class="hours">' . $hours . '</span></li>';
 			}
 		}
 	}
