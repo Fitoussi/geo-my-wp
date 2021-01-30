@@ -111,7 +111,17 @@
 						</div>
 
 						<div class="info-right-wrapper">
+
 							<?php do_action( 'bp_directory_members_item' ); ?>
+
+							<?php do_action( 'gmw_search_results_before_contact_info', $member, $gmw ); ?>
+
+							<?php gmw_search_results_location_meta( $member, $gmw ); ?>
+
+							<?php do_action( 'gmw_search_results_before_hours_of_operation', $member, $gmw ); ?>
+
+							<?php gmw_search_results_hours_of_operation( $member, $gmw ); ?>
+
 							<?php do_action( 'gmw_fl_search_results_member_items', $gmw, $member ); ?>
 						</div>
 
