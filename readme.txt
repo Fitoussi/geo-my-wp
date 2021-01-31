@@ -5,7 +5,7 @@ Tags: Geolocation, Directory, Store Locator, Google Maps, OpenStreetMaps, LeafLe
 Requires at least: 4.5
 Tested up to: 5.6
 BuddyPress: 2.8
-Stable tag: 3.6.3.2
+Stable tag: 3.7
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,43 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 3.7 =
+
+* Please note that when updating to GEO my WP v3.7 you will also need to update your premium extensions to latest version.
+*
+* --------------------------------
+* New: Location Type feature added to GEO my WP to allow generating pre-defined location types. This feature is disabled by default and can be enabled when needed.
+* Filter: 'gmw_lf_submission_fields_output' to modify the output of the location form.
+* Action: JavaScript action 'gmw_lf_location_deleted' execute after location was deleted.
+* DB: add the new "location_type" column to the gmw_locations database table.
+* Fix: incorrect variable name caused PHP warning. Should be $this->object_type instead of $this->slug in the GMW_Location_Form class.
+* Fix: verify that get_terms() does not return an error when getting the taxonomy terms in the form editor to prevent PHP error.
+* Tweak: when updating a location, update only the columns that were actually changed rather than all columns.
+* Tweak: change the location of the  'gmw_save_location' and 'gmw_location_deleted' filters and place them after the location cache was cleared.
+* Tweak: allow HTML in hours of operation. Disabled by default and can be enabled using the filter 'gmw_get_hours_of_operation_allowed_html' ( add_filter( 'gmw_get_hours_of_operation_allowed_html', '__return_true' ); ).
+* Tweak: set the taxonomy select input element to scroll when overflow in the search form template.
+* Tweak: when generating GEO my WP's menu items a callback function is now not required.
+* Tweak: move the location_meta ( contact info ) and hours of operation form editor settings from the GMW_Posts_Locator_Form_Editor() class into the GMW_Form_Editor() class so it could be enabled and used with other objects ( using the filter 'gmw_form_editor_disable_additional_fields' ).
+* Tweak: add the location meta ( contact-info ) and hours of operations functions to the Members Locator search results template files.
+* Tweak: allow HTML in hours of operation output. It is disabled by default, but can be enabled using the filter 'gmw_get_hours_of_operation_allowed_html' ( add_filter( 'gmw_get_hours_of_operation_allowed_html', '__return_true' ); ).
+* Tweak: update the jQuery Select2 library. 
+* Tweak: update the fonts icons library. A few icons were added.
+* Tweak: use jQuery Select2 instead of jQuery Chosen in GEO my WP admin's pages.
+* Tweak: replace trigger_error() with gmw_trigger_error(); function to prevent WPCS warning.
+* Tweak: use maybe_serialize() instead of serialize().
+* Tweak: use gmw_insert_location() instead of gmw_update_location_data() when updating location via the Location form.
+* Tweak: add $object_slug variable to the GMW_Locaiton_Form class that can be used as a unique slug for extensions that share the same object type ( for example both users Locator and Members Locator extensions use the 'user' object type ).
+* Tweak: the "contact" and "Hours of operation" location form fields moved from the Posts Locator extension file into the GMW_Location_Form parent class so it can be enabled and used with any object type ( different extensions ). By default, it is enabled for the Posts Locator extension only, but can be enabled/disabled for other extension using the filter 'gmw_location_form_disable_additional_fields' which is set to true by default.
+* Tweak: move the location form tabs and fields filters from the GMW_Location_Form child class of each object to the GMW_Location_Form parent class.
+* Tweak: use include_once instead of include.
+* Language: German translation updated ( thank you @fighterii for the contribution ).
+* Language: POT file updated.
+* Various minor bug fixes and improvements.
+*  WPCS.
+
+= 3.6.3.2 =
+* Fix: fatal error message.
 
 = 3.6.3.1 =
 * Fix: fatal error message.
