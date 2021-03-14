@@ -424,7 +424,7 @@ div.gmw-settings-wrapper {
 	max-width: 500px;
 }
 
-body .select2-container {
+body.geo-my-wp_page_gmw-forms .select2-container {
 	z-index: 9999;
 }
 
