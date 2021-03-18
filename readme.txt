@@ -3,9 +3,9 @@ Contributors: ninjew, Eyal Fitoussi
 Donate link: https://www.paypal.me/fitoussi
 Tags: Geolocation, Directory, Store Locator, Google Maps, OpenStreetMaps, LeafLet, Geotagging, Geocode, Mapping, Proximity search, Zipcode, Geotag posts, Address search, Distance, Directions, Locations, Geo, Members locator, Geotag members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
 Requires at least: 4.5
-Tested up to: 5.6
+Tested up to: 5.7
 BuddyPress: 2.8
-Stable tag: 3.7
+Stable tag: 3.7.0.1
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,13 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 3.7.0.1 =
+
+* Tested with WordPress 5.7
+* Fix: jQuery Select2 conflict with other plugins.
+* Fix: PHP notice. Remove localization of gmwAjaxUrl string. If needed, use gmwVars.ajaxUrl instead.
+* Fix: Undefined index PHP notice.
 
 = 3.7 =
 
