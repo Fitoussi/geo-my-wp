@@ -566,7 +566,7 @@ class GMW_Location_Types {
 			}
 		}
 
-		$saved_data = $saved_data['address_fields'];
+		$saved_address_fields = $saved_data['address_fields'];
 		?>
 		<div class="gmw-xprofile-fields-setting-wrapper single-address-field-setting">
 
@@ -580,7 +580,7 @@ class GMW_Location_Types {
 
 				<?php foreach ( $xprofile_fields as $field_id => $field_name ) { ?>
 
-					<?php $selected = ( isset( $saved_data['address'] ) && $saved_data['address'] == $field_id ) ? 'selected="selected"' : ''; ?>
+					<?php $selected = ( isset( $saved_address_fields['address'] ) && $saved_address_fields['address'] == $field_id ) ? 'selected="selected"' : ''; ?>
 
 					<option <?php echo $selected; // WPCS: XSS ok. ?> value="<?php echo esc_attr( $field_id ); ?>">
 						<?php echo esc_attr( $field_name ); ?>		
@@ -609,7 +609,7 @@ class GMW_Location_Types {
 
 						<?php foreach ( $xprofile_fields as $field_id => $field_name ) { ?>
 
-							<?php $selected = ( isset( $saved_data[ $address_field ] ) && $saved_data[ $address_field ] == $field_id ) ? 'selected="selected"' : ''; ?>
+							<?php $selected = ( isset( $saved_address_fields[ $address_field ] ) && $saved_address_fields[ $address_field ] == $field_id ) ? 'selected="selected"' : ''; ?>
 
 							<option <?php echo $selected; // WPCS: XSS ok. ?> value="<?php echo esc_attr( $field_id ); ?>"><?php echo esc_attr( $field_name ); ?></option>
 						<?php } ?>
