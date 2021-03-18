@@ -124,9 +124,6 @@ function gmw_enqueue_scripts() {
 
 	wp_localize_script( 'gmw', 'gmwVars', $options );
 
-	// deprecated.
-	wp_localize_script( 'gmw', 'gmwAjaxUrl', GMW()->ajax_url );
-
 	// register location form.
 	wp_register_style( 'gmw-location-form', GMW_URL . '/includes/location-form/assets/css/gmw.location.form.min.css', array(), GMW_VERSION );
 	wp_register_script( 'gmw-location-form', GMW_URL . '/includes/location-form/assets/js/gmw.location.form.min.js', $lf_scripts, GMW_VERSION, true );
