@@ -36,9 +36,9 @@ class GMW_Posts_Locator_Screens {
 		foreach ( gmw_get_option( 'post_types_settings', 'post_types', array() ) as $post_type ) {
 
 			// no need to show in resumes or job_listings post types.
-			if ( 'job_listing' === $post_type || 'resume' === $post_type ) {
+			/*if ( ( 'job_listing' === $post_type || 'resume' === $post_type ) && apply_filters( 'gmw_disable_location_form_in_job_listing', true ) ) {
 				continue;
-			}
+			}*/
 
 			if ( 'edit.php' === $pagenow ) {
 				add_filter( "manage_{$post_type}_posts_columns", array( $this, 'add_address_column' ) );
