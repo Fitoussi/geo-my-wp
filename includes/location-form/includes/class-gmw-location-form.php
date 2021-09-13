@@ -132,6 +132,7 @@ class GMW_Location_Form {
 		'object_id'                 => 0,                         // Object ID.
 		'location_id'               => 0,
 		'new_location'              => 0,
+		'disable_location_type'     => 0,
 		'user_id'                   => 0,                         // User ID of the user updating the location.
 		// 'exclude_tabs'            => '',                        // array of tabs to exclude from the location form. Otherwise set to 0 if no need to exclude.
 		'exclude_fields_groups'     => '',                        // array of fields groups to exclude from the location form.
@@ -417,7 +418,7 @@ class GMW_Location_Form {
 	 */
 	protected function get_saved_location() {
 
-		// get location by specif location ID if provided.
+		// get location by specific location ID if provided.
 		if ( ! empty( $this->args['location_id'] ) ) {
 
 			$location = gmw_get_location( $this->args['location_id'] );
@@ -427,7 +428,7 @@ class GMW_Location_Form {
 			$location = gmw_get_location_by_object( $this->object_type, $this->args['object_id'] );
 		}
 
-		return ! empty( $location ) ? $location : false;
+		return ( empty( $location ) || ( ! empty( $this->args['disable_location_type'] ) && ! empty( $location->location_type ) ) ) ? false : $location;
 	}
 
 	/**
@@ -994,6 +995,7 @@ class GMW_Location_Form {
 
 		</div>
 		<?php
+		// For backward compatibility.
 		if ( 'post' === $this->object_type ) {
 			do_action( 'gmw_post_location_form_after_panels', $this );
 		}
@@ -1534,7 +1536,7 @@ class GMW_Location_Form {
 		// Update location.
 		$location_id = gmw_insert_location( $location_args );
 
-		// Get the new location update it was updated in the databased.
+		// Get the new location after it was updated in the databased.
 		// The array of the location above might be missing some data if not all the fields were updated.
 		$location = gmw_get_location( $location_id, ARRAY_A, false );
 
