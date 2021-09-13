@@ -71,7 +71,16 @@ class GMW_BP_Profile_Search_Geolocation {
 	 */
 	public function bpsgeo_get_request( $type = 'search' ) {
 
-		$form_values = bps_get_request( $type );
+		$form_values = '';
+
+		if ( function_exists( 'bps_get_request' ) ) {
+
+			$form_values = bps_get_request( $type );
+
+		} elseif ( function_exists( 'bp_ps_get_request' ) ) {
+
+			$form_values = bp_ps_get_request( $type );
+		}
 
 		if ( ! empty( $form_values['gmw_bpsgeo_location_gmw_proximity'] ) ) {
 			return $form_values['gmw_bpsgeo_location_gmw_proximity'];
