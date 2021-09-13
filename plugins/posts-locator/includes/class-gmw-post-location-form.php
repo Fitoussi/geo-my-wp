@@ -64,6 +64,5 @@ class GMW_Post_Location_Form extends GMW_Location_Form {
 	 */
 	public function create_tabs_panels() {
 		do_action( 'gmw_post_location_tabs_panels', $this );
-		do_action( 'gmw_post_location_form_after_panels', $this );
 	}
 }
