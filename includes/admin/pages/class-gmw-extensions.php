@@ -60,7 +60,7 @@ class GMW_Extensions {
 		// look for extensions feed in transient. Transient should clear every 24 hours
 		if ( false === ( $output = get_transient( 'gmw_extensions_feed' ) ) ) {
 
-			$feed = wp_remote_get( 'http://geomywp.com/extensions/?feed=extensions', array( 'sslverify' => false ) );
+			$feed = wp_remote_get( 'https://geomywp.com/extensions/?feed=extensions', array( 'sslverify' => false ) );
 
 			if ( ! is_wp_error( $feed ) && $feed['response']['code'] == '200' ) {
 
