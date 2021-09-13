@@ -314,7 +314,7 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 
 			// radio buttons.
 			case 'radio':
-				$output .= '<div class="radio">';
+				$output .= '<div class="radio input-options radio-button-options">';
 				$output .= '<span class="label gmw-field-label">' . $label . '</span>';
 
 				// get options.
@@ -334,7 +334,7 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 
 			// checkboxes.
 			case 'checkbox':
-				$output .= '<div class="checkbox">';
+				$output .= '<div class="checkbox input-options checkbox-options">';
 				$output .= '<span class="label gmw-field-label">' . $label . '</span>';
 
 				// get options.
