@@ -37,38 +37,11 @@ class GMW_Locations_Table_Export extends GMW_Export {
 	 */
 	public function csv_cols() {
 
-		$cols = array(
-			'ID'                => 'ID',
-			'object_type'       => 'object_type',
-			'object_id'         => 'object_id',
-			'blog_id'           => 'blog_id',
-			'user_id'           => 'user_id',
-			'parent'            => 'parent',
-			'status'            => 'status',
-			'featured'          => 'featured',
-			'title'             => 'title',
-			'latitude'          => 'latitude',
-			'longitude'         => 'longitude',
-			'street_number'     => 'street_number',
-			'street_name'       => 'street_name',
-			'street'            => 'street',
-			'premise'           => 'premise',
-			'neighborhood'      => 'neighborhood',
-			'city'              => 'city',
-			'county'            => 'county',
-			'region_name'       => 'region_name',
-			'region_code'       => 'region_code',
-			'postcode'          => 'postcode',
-			'country_name'      => 'country_name',
-			'country_code'      => 'country_code',
-			'address'           => 'address',
-			'formatted_address' => 'formatted_address',
-			'place_id'          => 'place_id',
-			'map_icon'          => 'map_icon',
-			'radius'            => 'radius',
-			'created'           => 'created',
-			'updated'           => 'updated',
-		);
+		$cols = array();
+
+		foreach ( GMW_Location::$format as $key => $value ) {
+			$cols[ $key ] = $key;
+		}
 
 		return $cols;
 	}
