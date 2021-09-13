@@ -157,6 +157,10 @@ class GMW_BP_Profile_Search_Geolocation_Addon extends GMW_Addon {
 	 */
 	public function pre_init() {
 
+		if ( ! function_exists( 'bps_buddypress' ) ) {
+			return;
+		}
+
 		parent::pre_init();
 
 		// init add-on bp_init.
