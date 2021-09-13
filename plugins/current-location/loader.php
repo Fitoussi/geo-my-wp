@@ -63,7 +63,7 @@ class GMW_Current_Location_Addon extends GMW_Addon {
 	 *
 	 * @return [type] [description]
 	 */
-	function init_widgets() {
+	public function init_widgets() {
 		include( 'includes/class-gmw-current-location-widget.php' );
 	}
 
