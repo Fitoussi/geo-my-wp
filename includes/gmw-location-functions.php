@@ -1271,6 +1271,9 @@ function gmw_get_registered_location_types( $args = array() ) {
 		$query_args['orderby'] = $args['orderby'];
 	}
 
+	// Modify query args before pulling location types data.
+	$query_args = apply_filters( 'gmw_ml_get_location_types_args', $query_args, $args );
+
 	$posts = get_posts( $query_args );
 
 	if ( empty( $posts ) ) {
