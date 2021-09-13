@@ -2399,7 +2399,7 @@ if ( jQuery( '.gmw-current-location-wrapper' ).length ) {
 	    init : function() {
 
 	        // show / hide current location form on click
-	        jQuery( '.gmw-cl-form-trigger' ).click( function( event ) {
+	        jQuery( document ).on( 'click', '.gmw-cl-form-trigger', function( event ) {
 	            
 	            event.preventDefault();
 	            
