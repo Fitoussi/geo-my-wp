@@ -3,9 +3,9 @@ Contributors: ninjew, Eyal Fitoussi
 Donate link: https://www.paypal.me/fitoussi
 Tags: Geolocation, Directory, Store Locator, Google Maps, OpenStreetMaps, LeafLet, Geotagging, Geocode, Mapping, Proximity search, Zipcode, Geotag posts, Address search, Distance, Directions, Locations, Geo, Members locator, Geotag members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
 Requires at least: 4.5
-Tested up to: 5.7
+Tested up to: 5.8
 BuddyPress: 2.8
-Stable tag: 3.7.0.1
+Stable tag: 3.7.1
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,26 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 3.7.1 =
+
+* Fix: form editor styling issues.
+* Fix: exported locations table missing columns.
+* Fix: getting the user's current location will return incorrect data in some scenarios when empty.
+* Tweak: trigger show/hide current location form for forms that are loaded dynamically.
+* Tweak: Use secure connection when pulling GEO my WP's extensions data in the dashboard.
+* Tweak: when retrieving a location, first look for a location without location type set, then look by the parent and last by ID.
+* Filter: 'gmw_ml_get_location_types_args' to modify the query args before pulling location types data from database.
+* Tweak: new location form argument 'disable_location_type' to prevent the location form from using and showing location types.
+* Tweak: get BP Search Profile search argument using BuddyBoss's function when BuddyBoss theme is being used.
+* Tweak: verify that the BP Profile Search plugin was installed before attempting to load the BP Profile Search Geo extension.
+* Tweak: make function static.
+* Tweak: missing function "public" declaration.
+* Tweak: add a class attribute to Xprofile Fields filters in the search form.
+* Tweak: do not prevent GEO my WP from loading its Location form in the Edit Job/resume pages.
+* Tweak: remove unused action.
+* Tweak: try to get the object ID from the global $post when using the single Location post widget/shortcode.
+* Tweak: include the tom-select library. But it is not yet being used yet.
 
 = 3.7.0.1 =
 
