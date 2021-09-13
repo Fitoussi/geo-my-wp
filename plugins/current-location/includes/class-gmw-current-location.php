@@ -370,7 +370,7 @@ class GMW_Current_Location {
 	 *
 	 * @access public
 	 */
-	public function enqueue_scripts() {
+	public static function enqueue_scripts() {
 
 		// load gmw main script and Google Maps API.
 		if ( ! wp_script_is( 'gmw-current-location', 'enqueue' ) ) {
