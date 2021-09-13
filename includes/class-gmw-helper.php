@@ -49,7 +49,7 @@ class GMW_Helper {
 
 		$location = wp_cache_get( 'gmw_user_current_location' );
 
-		if ( false === $location ) {
+		if ( empty( $location ) ) {
 
 			$location = (object) array();
 
