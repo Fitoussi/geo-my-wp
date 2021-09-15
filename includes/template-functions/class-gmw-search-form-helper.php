@@ -405,12 +405,7 @@ class GMW_Search_Form_Helper {
 		// generate fields.
 		$output = "<div id=\"gmw-submission-fields-{$id}\" class=\"gmw-submission-fields\" data-form_id=\"{$id}\" style=\"display:none\">";
 		// set the page number to 1. We do this to reset the page number when form submitted again.
-		$output .= "<input type=\"hidden\" id=\"gmw-page-{$id}\" class=\"gmw-page\" name=\"page\" value=\"1\" />";
-
-		// Fix for home page pagination when going to the first page.
-		if ( is_front_page() || is_single() ) {
-			$output .= "<input type=\"hidden\" id=\"gmw-paged-{$id}\" class=\"gmw-paged\" name=\"paged\" value=\"1\" />";
-		}
+		$output .= "<input type=\"hidden\" id=\"gmw-paged-{$id}\" class=\"gmw-paged\" name=\"paged\" value=\"1\" />";
 
 		$output .= "<input type=\"hidden\" id=\"gmw-per-page-{$id}\" class=\"gmw-per-page\" name=\"{$url_px}per_page\" value=\"{$per_page}\" />";
 		$output .= "<input type=\"hidden\" id=\"gmw-lat-{$id}\" class=\"gmw-lat\" name=\"{$url_px}lat\" value=\"{$lat}\"/>";
