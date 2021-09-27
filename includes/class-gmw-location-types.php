@@ -708,7 +708,7 @@ class GMW_Location_Types {
 	            WHERE `location_type` = %s",
 				array(
 					absint( $_POST['location_type'] ),
-				),
+				)
 			)
 		); // WPCS: db call ok, cache ok, unprepared SQL ok.
 
