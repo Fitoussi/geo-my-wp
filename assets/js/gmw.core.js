@@ -797,8 +797,20 @@ var GMW = {
 
         // enable select 2
         } else if ( jQuery().select2 ) {
-            jQuery( 'form' ).find( 'select.gmw-smartbox' ).select2({
-                width : '100%'
+            
+            jQuery( 'form' ).find( 'select.gmw-smartbox' ).each( function() {
+
+            	var thisParent = '';
+
+            	if ( typeof jQuery( this ).data( 'gmw-dropdown-parent' ) !== 'undefined' && jQuery( jQuery( this ).data( 'gmw-dropdown-parent' ) ).length ) {
+
+            		var thisParent = jQuery( jQuery( this ).data( 'gmw-dropdown-parent' ) );
+ 	          	}
+
+            	jQuery( this ).select2({
+                	width          : '100%',
+                	dropdownParent : thisParent,
+                });
             });
         }
     },
