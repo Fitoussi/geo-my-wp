@@ -34,7 +34,7 @@ class GMW_Admin {
 		// admin notice to import location to the new database table.
 		if ( get_option( 'gmw_folders_names_changed_notice_viewed' ) === false ) {
 			add_action( 'admin_init', array( $this, 'folders_names_notice_dismiss' ) );
-			add_action( 'admin_notices', array( $this, 'deprecated_folder_names_notice' ) );
+			//add_action( 'admin_notices', array( $this, 'deprecated_folder_names_notice' ) );
 		}
 
 		// do some actions.
