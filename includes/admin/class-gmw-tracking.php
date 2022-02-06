@@ -42,9 +42,13 @@ class GMW_Tracking {
 		// optout user when click on "Don't Allow tracking" buttton
 		add_action( 'gmw_opt_out_of_tracking', array( $this, 'optout_tracking' ) );
 
+
+		add_action( 'gmw_optout_v4_notice', array( $this, 'optout_v4_notice' ) );
+		add_action( 'admin_notices', array( $this, 'gmw_v4_notice' ) );
+
 		// display tracking admin notice
 		add_action( 'admin_notices', array( $this, 'admin_notice' ) );
-		
+
 		// send data
 		add_action( 'admin_init', array( $this, 'send_data' ) );
 
@@ -57,7 +61,48 @@ class GMW_Tracking {
 	 * @access public
 	 * @return void
 	 */
+	public function gmw_v4_notice() {
+
+		// don't show message if was already dismissed
+		if ( get_option( 'gmw_v4_notice_optout' ) ) {
+			return;
+		}
+
+		// verify user access
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$optout_url = add_query_arg( 'gmw_action', 'optout_v4_notice' );
+
+		$output  = '<div style="padding: 10px 15px;" class="updated notice is-dismissible">';
+		$output .= '<p style="margin-bottom:15px">GEO my WP v4.0 beta-1 is now available for testing. Visit <a href="https://geomywp.com/geo-my-wp-4-0-beta1-is-now-ready-for-testing/" target="_blank">this page</a> to learn more about the new version and to download it.</p>';
+		$output .= '<p>';
+		$output .= '&nbsp;<a href="https://geomywp.com/geo-my-wp-4-0-beta1-is-now-ready-for-testing/" target="_blank" class="button-primary">Learn more about GEO my WP v4.0</a>';
+		$output .= '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">Dismiss</a>';
+		$output .= '</p>';
+		$output .= '</div>';
+
+		echo $output;
+	}
+
+	public function optout_v4_notice() {
+
+		// set tracking notice to true. We wont show it again.
+		update_option( 'gmw_v4_notice_optout', '1' );
+	}
+
+	/**
+	 * Display the admin notice to users that have not opted-in or out
+	 *
+	 * @access public
+	 * @return void
+	 */
 	public function admin_notice() {
+
+		if ( ! get_option( 'gmw_v4_notice_optout' ) ) {
+			return;
+		}
 
 		// don't show message if was already dismissed
 		if ( get_option( 'gmw_tracking_notice' ) ) {
