@@ -3,9 +3,9 @@ Contributors: ninjew, Eyal Fitoussi
 Donate link: https://www.paypal.me/fitoussi
 Tags: Geolocation, Directory, Store Locator, Google Maps, OpenStreetMaps, LeafLet, Geotagging, Geocode, Mapping, Proximity search, Zipcode, Geotag posts, Address search, Distance, Directions, Locations, Geo, Members locator, Geotag members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
 Requires at least: 4.5
-Tested up to: 5.8
+Tested up to: 5.9
 BuddyPress: 2.8
-Stable tag: 3.7.1
+Stable tag: 3.7.2
 Requires PHP: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,16 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 3.7.2 =
+
+* Fix: PHP warning caused by extra comma.
+* Fix: Use URL parameter paged instead of Wordpress reserved parameter `page` ( @dismantl ).
+* Tweak: define custom dropdownParent option when rendering Select2 elements. This also fixes a conflict with the WooCommerce plugin.
+* Tweak: Add GEO my WP v4.0 beta admin notice.
+* Tweak: remove notice related to template files.
+* WPCS
+* Update stylesheet
 
 = 3.7.1 =
 
