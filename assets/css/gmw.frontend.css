@@ -160,6 +160,7 @@
 .gmw-icon-download-1:before { content: '\e85c'; } /* '' */
 .gmw-icon-trash-empty:before { content: '\e85d'; } /* '' */
 .gmw-icon-off:before { content: '\e85e'; } /* '' */
+.gmw-icon-directions-solid:before { content: '\e85f'; } /* '' */
 .gmw-icon-move:before { content: '\f047'; } /* '' */
 .gmw-icon-users-1:before { content: '\f064'; } /* '' */
 .gmw-icon-sort:before { content: '\f0dc'; } /* '' */
@@ -167,6 +168,7 @@
 .gmw-icon-toggle-off:before { content: '\f204'; } /* '' */
 .gmw-icon-toggle-on:before { content: '\f205'; } /* '' */
 .gmw-icon-map-pin:before { content: '\f276'; } /* '' */
+.gmw-icon-map-signs:before { content: '\f277'; } /* '' */
 .gmw-icon-map-o:before { content: '\f278'; } /* '' */
 .gmw-icon-map-1:before { content: '\f279'; } /* '' */
 
