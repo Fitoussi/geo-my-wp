@@ -123,8 +123,8 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 
 = 3.7.2 =
 
-* Notice: GEO my WP v4.0 beta-1 is now available for testing. TO learn more about it visit this page -> https://geomywp.com/geo-my-wp-4-0-beta1-is-now-ready-for-testing/
-* Fix: PHP warning caused by extra comma.
+* Notice: GEO my WP v4.0 beta-1 is now available for testing. To learn more about it visit this page -> https://geomywp.com/geo-my-wp-4-0-beta1-is-now-ready-for-testing/
+* Fix: PHP warning caused by an extra comma.
 * Fix: Use URL parameter 'paged' instead of Wordpress reserved parameter `page` ( @dismantl ).
 * Tweak: define custom dropdownParent option when rendering Select2 elements. This also fixes a conflict with the WooCommerce plugin.
 * Tweak: Add GEO my WP v4.0 beta admin notice.
