@@ -38,7 +38,7 @@ function gmw_shortcode( $attr ) {
 
 	$status = 'ok';
 
-	// verify that the element is lagit.
+	// verify that the element is legit.
 	if ( empty( $element_value ) ) {
 
 		$status = 'error';
