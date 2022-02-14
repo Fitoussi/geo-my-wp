@@ -101,6 +101,20 @@ if ( ! class_exists( 'GMW_Installer' ) ) :
 
 			// Flush all internal cache.
 			GMW_Cache_Helper::flush_all();
+
+			$gmw_options = get_option( 'gmw_options' );
+
+			// Activate some core extensions by default.
+			if ( function_exists( 'gmw_update_addon_status' ) ) {
+				gmw_update_addon_status( 'posts_locator', 'active' );
+				gmw_update_addon_status( 'single_location', 'active' );
+				gmw_update_addon_status( 'current_location', 'active' );
+			}
+
+			// Default settings.
+			if ( empty( $gmw_options ) && class_exists( 'GMW_Settings' ) ) {
+				GMW_Settings::setup_defaults();
+			}
 		}
 
 		/**
