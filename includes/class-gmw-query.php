@@ -626,7 +626,7 @@ $wp_query =  new GMW_Query( $args );
 print_r($wp_query);
 while ( gmw_have_locations() ) : gmw_the_location();
 	global $gmw_query;
-echo '11';
+
 	//echo 
 	print_r( $gmw_query->location );
 	//print_r($gmw_query );
