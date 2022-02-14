@@ -4,10 +4,13 @@
  *
  * This is the base class for all export methods.
  *
- * @package     GMW
  * @subpackage  Admin/Tools
+ *
  * @author      This is a class originaly written by Pippin Williamson and modified based on the needs of GEO my WP. Thank you!
+ *
  * @since       2.5
+ *
+ * @package     geo-my-wp
  */
 
 // Exit if accessed directly.
@@ -28,6 +31,7 @@ if ( ! class_exists( 'GMW_Export' ) ) :
 		 * Our export type. Used for export-type specific filters/actions
 		 *
 		 * @var string
+		 *
 		 * @since 2.5
 		 */
 		public $export_type = 'default';
@@ -36,7 +40,9 @@ if ( ! class_exists( 'GMW_Export' ) ) :
 		 * Can we export?
 		 *
 		 * @access public
+		 *
 		 * @since 2.5
+		 *
 		 * @return bool Whether we can export or not
 		 */
 		public function can_export() {
@@ -47,7 +53,9 @@ if ( ! class_exists( 'GMW_Export' ) ) :
 		 * Set the export headers
 		 *
 		 * @access public
+		 *
 		 * @since 2.5
+		 *
 		 * @return void
 		 */
 		public function headers() {
@@ -181,7 +189,7 @@ if ( ! class_exists( 'GMW_Export' ) ) :
 		public function export() {
 
 			if ( ! $this->can_export() ) {
-				wp_die( __( 'You do not have permission to export data.', 'geo-my-wp' ), __( 'Error', 'geo-my-wp' ) );
+				wp_die( esc_html__( 'You do not have permission to export data.', 'geo-my-wp' ), esc_html__( 'Error', 'geo-my-wp' ) );
 			}
 
 			// Set headers.
