@@ -294,181 +294,45 @@ class GMW_Forms_Page {
      * output list of forms
      *
      * @access public
+     *
      * @return void
      */
     public function output() {
 
-        //get forms
-        $forms       = GMW_Forms_Helper::get_forms();
-        $addons_data = gmw_get_addons_data();
-        ?>
-        <div class="wrap">
-           <h2 class="gmw-wrap-top-h2">
-                <i class="gmw-icon-doc-text-inv"></i>
-                <?php echo _e( 'GEO my WP Forms', 'geo-my-wp' ); ?> 
-                <?php echo self::new_form_buttons(); ?>
-                <?php gmw_admin_helpful_buttons(); ?>
-            </h2>
-                
-            <form id="gmw_forms_admin" enctype="multipart/form-data" method="post">
-                <input type="hidden" name="gmw_page" id="gmw_page" value="gmw-forms">
-                
-                <?php wp_nonce_field( 'gmw_forms_page', 'gmw_forms_page' ); ?>
-                
-                <div class="clear"></div>
-                
-                <table class="widefat" style="margin-top: 10px">
-                    
-                    <!-- bulk actions -->
-                    <div id="" class="tablenav top">
+    	gmw_admin_pages_header();
+        ?>		
+		<div id="gmw-forms-page" class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper gmw-admin-page-no-nav">
 
-                        <div class="alignleft actions">
+			<nav class="gmw-admin-page-navigation"></nav>
 
-                            <?php if ( ! empty( $forms ) ) { ?>
-                                
-                                <!-- bulk actions -->
-                                <select id="" class="" name="bulk_action">
-                                    <option value=""><?php _e( 'Bulk Actions', 'geo-my-wp' ); ?></option>
-                                    <option value="delete"><?php _e( 'Delete', 'geo-my-wp' ); ?></option>
-                                </select>
+			<div class="gmw-admin-page-panels-wrapper">
 
-                                <?php $delete_messages = __( 'This action cannot be undone. Would you like to proceed?', 'geo-my-wp' ) ; ?>
+				<h1 style="display:none"></h1>
 
-                                <input type="submit" name="submit" onclick="return confirm( '<?php echo $delete_messages; ?>' );" value="<?php _e( 'Apply', 'geo-my-wp' ); ?>" class="button-secondary">
-                            
-                            <?php } ?>
-                        </div>
-                    </div>
+				<div class="gmw-new-form-wrapper">
+					<h3><?php esc_html_e( 'New Form: ', 'geo-my-wp' ); ?></h3> <?php echo self::new_form_buttons(); ?>
+				</div>
 
-                    <thead>
-                        <tr>
-                            <th class="check-column"  style="width:2%;padding: 15px 3px 15px;">
-                                <input type="checkbox" id="" class="gmw-forms-select-all" title="gmw-forms-bulk-action">
-                            </th>
-                            <th scope="col" id="id" class="manage-column"   style="width:3%;"><?php _e( 'ID', 'geo-my-wp' ); ?></th>
-                            <th scope="col" id="title" class="manage-column"  style="width:25%;"><?php _e( 'Form Title', 'geo-my-wp' ); ?></th>
-                            <th scope="col" id="type" class="manage-column"  style="width:25%;"><?php _e( 'Form Type', 'geo-my-wp' ); ?></th>
-                            <th scope="col" id="extension" class="manage-column"  style="width:25%;"><?php _e( 'Extension', 'geo-my-wp' ); ?></th> 
-                            <th scope="col" id="shortcode" class="manage-column" style="width:20%;"><?php _e( 'Shortcode', 'geo-my-wp' ); ?></th> 
-                        </tr>
-                    </thead>
+	            <form id="gmw_forms_admin" class="gmw-admin-page-conten" enctype="multipart/form-data" method="post">
 
-                    <!-- body -->
-                    <tbody class="list:user user-list">
+	                <input type="hidden" name="gmw_page" id="gmw_page" value="gmw-forms">
+	                
+	                <?php wp_nonce_field( 'gmw_forms_page', 'gmw_forms_page' ); ?>
+	                
+	                <div class="clear"></div>
+	                
+	                <?php
+	                	$forms_table = new GMW_Forms_Table();
+						$forms_table->prepare_items(); 
+						$forms_table->display(); 
+					?>	                 
+	            </form>
+	        </div>
 
-                        <?php $alternate = ''; ?>
-
-                        <?php if ( ! empty( $forms ) ) : ?>
-
-                            <?php $rowNumber = 0; ?>
-
-    			            <?php foreach ( $forms as $form ) : ?>
-
-    			                <?php if ( ! empty( $form['addon'] ) ) : ?>
-    			
-    			                    <?php $alternate = ( $rowNumber % 2 == 0 ) ? 'alternate' : ''; ?>
-    								
-    								<?php $formName = ( ! empty( $form['title'] ) ) ? $form['title'] : 'form_id_'.$form['ID']; ?>
-    								
-                                    <tr class="<?php echo $alternate; ?>" style="height:50px;">
-                                        <th scope="row" class="check-column">
-                                            <input type="checkbox" id="" name="form_ids[]" value="<?php echo $form['ID']; ?>" class="gmw-forms-bulk-action">
-                                        </th>
-                                        <td>
-                                            <span><?php echo esc_attr( $form['ID'] ); ?></span>
-                                        </td>
-                                        <td>
-                                            <span>
-                                                <?php if ( gmw_is_addon_active( $form['addon'] ) ) { ?>
-                                                    
-                                                    <strong><a class="row-title" title="<?php _e( 'Edit this form', 'geo-my-wp' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=edit_form&form_id='.$form['ID'].'&slug='.$form['slug'].'&prefix='.$form['prefix'] ); ?>"><?php echo esc_html( $formName ); ?></a></strong>
-                                                    
-                                                    <div class="row-actions">
-                                                                                                        
-                                                        <span class="edit">
-                                                            <a title="<?php _e( 'Edit form', 'geo-my-wp' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=edit_form&form_id='.$form['ID'].'&slug='.$form['slug'].'&prefix='.$form['prefix'] ); ?>"><?php _e( 'Edit', 'geo-my-wp' ); ?></a> | 
-                                                        </span>
-                                                        <span class="duplicate">
-                                                            <a title="<?php _e( 'Duplicate form', 'geo-my-wp' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=duplicate_form&slug='.$form['slug'].'&form_id='.$form['ID'] ); ?>"><?php _e( 'Duplicate', 'geo-my-wp' ); ?></a> | 
-                                                        </span>
-                                                        <span class="delete">
-
-                                                            <?php $delete_message = __( 'This action cannot be undone. Would you like to proceed?', 'geo-my-wp' ) ; ?>
-
-                                                            <a title="<?php _e( 'Delete form', 'geo-my-wp' ); ?>" href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=delete_form&form_id='.$form['ID'] ); ?>" onclick="return confirm( '<?php echo $delete_message; ?>' ); "><?php _e( 'Delete', 'geo-my-wp' ); ?></a>                                                    
-                                                        </span> 
-                                                    </div>
-
-                                                <?php } else { ?>
-                                                    
-                                                    <strong class="row-title"><?php echo esc_attr( $formName ); ?></strong>
-                                                    <div class="row-actions">
-                                                        <span style="color:#444">
-                                                            <?php _e( 'Extension deactivated.', 'geo-my-wp' ); ?></em> <a href="<?php echo esc_url( 'admin.php?page=gmw-extensions' ); ?>"><?php _e( 'Manage extensions', 'geo-my-wp' ); ?></a>
-                                                        </span>
-                                                    </div>
-
-                                                <?php } ?>
-                                            </span>
-                                        </td>
-    									<td><span><?php echo esc_attr( $form['name'] ); ?></span></td>
-                                        <td>
-                                            <span>
-                                                <?php 
-                                                    $name = ! empty( $addons_data[$form['slug']]['name'] ) ? $addons_data[$form['slug']]['name'] : ucwords( str_replace( '_', ' ', $form['addon'] ) );
-                                                    echo esc_attr( $name ); 
-                                                ?>
-                                            </span>
-                                        </td>
-                                        <td class="column-title" style="padding: 5px 0px;">
-                                            <?php 
-                                                $form_shortcode = '[gmw form="'.$form['ID'].'"]';
-                                                $form_shortcode = apply_filters( 'gmw_forms_page_form_shortcode', $form_shortcode, $form );
-                                                $form_shortcode = apply_filters( 'gmw_forms_page_'.$form['addon'].'_form_shortcode', $form_shortcode, $form );
-                                            ?>
-                                            <code><?php echo esc_attr( $form_shortcode ); ?></code>
-                                        </td>
-                                    </tr>   
-
-                                    <?php $rowNumber++; ?>
-    	
-                                <?php endif; ?>
-    						
-    			            <?php endforeach; ?>
-    				
-    			        <?php else : ?>
-
-                            <tr class="" style="height: 30px;background: #f7f7f7">
-                                <td>
-                                </td>
-                                <td>
-                                </td>
-                                <td>
-                                    <span><?php _e( 'No forms found.', 'geo-my-wp' ); ?></span>
-                                </td>
-                                <td class="column-title" style="padding: 5px 0px;"></td>
-                                <td></td>
-                                <td></td>			          
-                            </tr>
-
-    			        <?php endif; ?>
-    		                
-    	            </tbody>
-
-                    <!-- table footer -->
-	                <tfoot>
-	                    <tr>   
-                            <th class="check-column" style="width: 2%;padding: 15px 3px 15px;"><input type="checkbox" id="" class="gmw-forms-select-all" title="gmw-forms-bulk-action"></th>
-	                        <th scope="col" id="id" class="manage-column" style="width: 3%;"><?php _e( 'ID', 'geo-my-wp' ); ?></th>
-                            <th scope="col" id="title" class="manage-column"><?php _e( 'Form Title', 'geo-my-wp' ); ?></th>
-	                        <th scope="col" id="type" class="manage-column"><?php _e( 'Form Type', 'geo-my-wp' ); ?></th>
-                            <th scope="col" id="extension" class="manage-column"><?php _e( 'Extension', 'geo-my-wp' ); ?></th>  
-                            <th scope="col" id="shortcode" class="manage-column"><?php _e( 'Shortcode', 'geo-my-wp' ); ?></th> 
-	                    </tr>
-	                </tfoot> 
-
-    	        </table>	 
-            </form>
+	        <!-- Side bar -->
+		    <div class="gmw-admin-page-sidebar">
+		    	<?php gmw_admin_sidebar_content(); ?>
+		    </div>    
          </div> 
         <?php
     }
