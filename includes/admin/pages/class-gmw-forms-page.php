@@ -259,15 +259,15 @@ class GMW_Forms_Page {
         // order buttons by priority
         usort( $buttons, 'gmw_sort_by_priority' );
 
-        $output  = '<select onchange="window.location.href = jQuery(this).val();">';
+        $output  = '<select class="gmw-admin-select-enhanced" onchange="window.location.href = jQuery(this).val();">';
 
         if ( empty( $buttons ) ) {
 
-            $output .= '<option value="">'.__( 'Form buttons are not available', 'geo-my-wp' ).'</option>';
+            $output .= '<option value="">' . __( 'Form buttons are not available', 'geo-my-wp' ) . '</option>';
 
         } else { 
             
-            $output .= '<option value="">'.__( 'Create new form', 'geo-my-wp' ).'</option>';
+            $output .= '<option value="">' . __( 'Select form type', 'geo-my-wp' ) . '</option>';
 
             // Generate buttons
             foreach ( $buttons as $button ) {
@@ -279,9 +279,9 @@ class GMW_Forms_Page {
                     $button['name'] = $button['title'];
                 }
                 
-                $form_url = 'admin.php?page=gmw-forms&gmw_action=create_new_form&name='.str_replace( ' ', '+', $button['name'] ).'&addon='.$button['addon'].'&component='.$button['component'].'&object_type='.$button['object_type'].'&prefix='.$button['prefix'].'&slug='.$button['slug'];
+                $form_url = 'admin.php?page=gmw-forms&gmw_action=create_new_form&name=' . str_replace( ' ', '+', $button['name'] ).'&addon=' . $button['addon'] . '&component=' . $button['component'] . '&object_type=' . $button['object_type'] . '&prefix=' . $button['prefix'] . '&slug=' . $button['slug'];
 
-                $output  .= '<option value="'. esc_url( $form_url ).'">'.esc_html( $button['name'] ).'</option>';
+                $output  .= '<option value="' . esc_url( $form_url ) . '">' . esc_html( $button['name'] ) . '</option>';
             }
         }
 
