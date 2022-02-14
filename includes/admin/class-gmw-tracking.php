@@ -1,22 +1,29 @@
 <?php
-// Exit if accessed directly
+/**
+ * GEO my WP tracking.
+ *
+ * @since 3.0
+ *
+ * @author Eyal Fitoussi.
+ *
+ * @package geo-my-wp
+ */
+
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'GMW_Tracking' ) ) :
-	
 /**
  * GMW_Tracking class
  *
  * Tracking plugin usage. Class sends non-sensitive information to geomywp.com for users that have opted in.
- * 
+ *
  * @since 3.0
  *
  * @Author The class was originally developed by Pippin Williamson for Easy Digital Downloads plugin
  *
  * and was modified to work with GEO my WP. Thank you!
- * 
  */
 class GMW_Tracking {
 
@@ -29,26 +36,25 @@ class GMW_Tracking {
 
 	/**
 	 * __Construct function
-	 *
 	 */
 	public function __construct() {
 
 		// schedue data send.
 		$this->schedule_send();
 
-		// optin user when click on "Allow tracking" buttton
+		// optin user when click on "Allow tracking" buttton.
 		add_action( 'gmw_opt_into_tracking', array( $this, 'optin_tracking' ) );
 
-		// optout user when click on "Don't Allow tracking" buttton
+		// optout user when click on "Don't Allow tracking" buttton.
 		add_action( 'gmw_opt_out_of_tracking', array( $this, 'optout_tracking' ) );
 
-		// display tracking admin notice
+		// display tracking admin notice.
 		add_action( 'admin_notices', array( $this, 'admin_notice' ) );
-		
-		// send data
+
+		// send data.
 		add_action( 'admin_init', array( $this, 'send_data' ) );
 
-		//$this->send_data();
+		// $this->send_data();
 	}
 
 	/**
@@ -59,95 +65,93 @@ class GMW_Tracking {
 	 */
 	public function admin_notice() {
 
-		// don't show message if was already dismissed
+		// don't show message if was already dismissed.
 		if ( get_option( 'gmw_tracking_notice' ) ) {
 			return;
 		}
 
-		// hide message if tracking alreay allowed
+		// hide message if tracking alreay allowed.
 		if ( gmw_get_option( 'general_settings', 'allow_tracking', false ) ) {
 			return;
 		}
 
-		// verify user access
+		// verify user access.
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
-			
+
 		$optin_url  = add_query_arg( 'gmw_action', 'opt_into_tracking' );
 		$optout_url = add_query_arg( 'gmw_action', 'opt_out_of_tracking' );
-		
-		$output  = '<div class="gmw-tracking-notice gmw-admin-notice-box gmw-admin-notice-warning notice is-dismissible">';
-		//$output .= '<p>';
-			$output .= '<h3>' . __( 'Enable Usage Tracking', 'geo-my-wp' ) . '</h3>'; 
+
+		$output = '<div class="gmw-tracking-notice gmw-admin-notice-box gmw-admin-notice-warning notice is-dismissible">';
+		// $output .= '<p>';
+			$output .= '<h3>' . __( 'Enable Usage Tracking', 'geo-my-wp' ) . '</h3>';
 			$output .= __( 'Allow GEO my WP to track the plugin usage on your site. Tracking non-sensitive data can help us improve GEO my WP plugin.', 'geo-my-wp' );
 			$output .= '<em style="margin-top:10px">' . __( '*You can change this setting at any time from GEO my WP Settings page.', 'geo-my-wp' ) . '</em>';
-		
-		//$output .= '</p>';
-		$output .= '<p>';	
+
+		// $output .= '</p>';
+		$output .= '<p>';
 		$output .= '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="gmw-settings-action-button button-primary">' . __( 'Allow tracking', 'geo-my-wp' ) . '</a>';
 		$output .= '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="gmw-settings-action-button button-secondary">' . __( 'Do not allow tracking', 'geo-my-wp' ) . '</a>';
 		$output .= '</p>';
 		$output .= '</div>';
 
-		echo $output;
+		echo $output; // WPCS: XSS ok.
 	}
 
 	/**
-	 * Opt-in tracking via the admin notice button
+	 * Opt-in tracking via the admin notice button.
 	 *
-	 * @access public
-	 * @return void
+	 * @param  [type] $data [description].
 	 */
 	public function optin_tracking( $data ) {
 
 		$gmw_options = gmw_get_options_group();
 
-		// set true in admin settings global
+		// set true in admin settings global.
 		$gmw_options['general_settings']['allow_tracking'] = '1';
 
-		// update admin settings
+		// update admin settings.
 		update_option( 'gmw_options', $gmw_options );
 
-		// send data
+		// send data.
 		$this->send_data( true );
 
-		// update tracking notice to true. We wont show it again
+		// update tracking notice to true. We wont show it again.
 		update_option( 'gmw_tracking_notice', '1' );
 
-		// get back to GEO my WP add-ons page
+		// get back to GEO my WP add-ons page.
 		$page = ! empty( $_GET['page'] ) ? $_GET['page'] : 'gmw-extensions';
 
-		//reload the page to prevent resubmission
-        wp_safe_redirect( admin_url( 'admin.php?page='.$page.'&gmw_notice=tracking_allowed&gmw_notice_status=updated' ) );
-        
-        exit;   
+		// reload the page to prevent resubmission.
+		wp_safe_redirect( admin_url( 'admin.php?page=' . $page . '&gmw_notice=tracking_allowed&gmw_notice_status=updated' ) );
+
+		exit;
 	}
 
 	/**
-	 * opt-out tracking via the admin notice button
+	 * Opt-out tracking via the admin notice button.
 	 *
-	 * @access public
-	 * @return void
+	 * @param  [type] $data [description].
 	 */
 	public function optout_tracking( $data ) {
 
 		$gmw_options = gmw_get_options_group();
 
-		// set admin settings to false
+		// set admin settings to false.
 		$gmw_options['general_settings']['allow_tracking'] = '0';
 
-		// update gmw options 
+		// update gmw options.
 		update_option( 'gmw_options', $gmw_options );
 
 		// set tracking notice to true. We wont show it again.
 		update_option( 'gmw_tracking_notice', '1' );
 
-		// go to gmw add-ons page
-		$page = ! empty( $_GET['page'] ) ? $_GET['page'] : 'gmw-extensions';
+		// go to gmw add-ons page.
+		$page = ! empty( $_GET['page'] ) ? $_GET['page'] : 'gmw-extensions'; // WPCS: CSRF ok.
 
-		//reload the page to prevent resubmission
-		wp_safe_redirect( admin_url( 'admin.php?page='.$page ) ); 
+		// reload the page to prevent resubmission.
+		wp_safe_redirect( admin_url( 'admin.php?page=' . $page ) );
 
 		exit;
 	}
@@ -181,16 +185,18 @@ class GMW_Tracking {
 	private function schedule_send() {
 		add_action( 'gmw_weekly_scheduled_events', array( $this, 'send_data' ) );
 	}
-	
+
 	/**
 	 * Get plugin's name.
 	 *
-	 * @return string
+	 * @param  [type] $basename [description].
+	 *
+	 * @return [type]           [description]
 	 */
 	private function get_plugin_name( $basename ) {
 
 		$basename = strtolower( $basename );
-		
+
 		if ( false === strpos( $basename, '/' ) ) {
 			return basename( $basename, '.php' );
 		}
@@ -202,29 +208,28 @@ class GMW_Tracking {
 	 * Setup the data that is going to be tracked and sent
 	 *
 	 * @access private
-	 * @return void
 	 */
 	private function setup_data() {
 
 		$data = array();
 
-		$data['url']   	   = home_url();
-		$data['email'] 	   = get_bloginfo( 'admin_email' );
+		$data['url']       = home_url();
+		$data['email']     = get_bloginfo( 'admin_email' );
 		$data['multisite'] = is_multisite() ? 1 : 0;
 		$data['locale']    = get_locale();
 
-		// versions
+		// versions.
 		$data['php_version'] = phpversion();
 		$data['wp_version']  = get_bloginfo( 'version' );
 		$data['gmw_version'] = GMW_VERSION;
 		$data['server']      = isset( $_SERVER['SERVER_SOFTWARE'] ) ? $_SERVER['SERVER_SOFTWARE'] : '';
-		
-		// theme data
+
+		// theme data.
 		$theme_data    = wp_get_theme();
 		$theme         = $theme_data->Name . ' v' . $theme_data->Version;
 		$data['theme'] = $theme;
-		
-		// plugins data
+
+		// plugins data.
 		if ( ! function_exists( 'get_plugins' ) ) {
 			include ABSPATH . '/wp-admin/includes/plugin.php';
 		}
@@ -235,20 +240,20 @@ class GMW_Tracking {
 		$data['inactive_plugins'] = array();
 
 		foreach ( get_plugins() as $plugin_basename => $plugin ) {
-			
+
 			$plugin_slug = preg_replace( '/[^a-z0-9]/', '_', $this->get_plugin_name( $plugin_basename ) );
 
 			if ( in_array( $plugin_basename, $active_plugins ) ) {
 
-				$data['active_plugins'][$plugin_slug] = $plugin['Version'];
-			
+				$data['active_plugins'][ $plugin_slug ] = $plugin['Version'];
+
 			} else {
-			
-				$data['inactive_plugins'][$plugin_slug] = $plugin['Version'];
+
+				$data['inactive_plugins'][ $plugin_slug ] = $plugin['Version'];
 			}
 		}
 
-		// gmw data
+		// gmw data.
 		$data['gmw_options'] = gmw_get_options_group();
 
 		global $wpdb;
@@ -259,7 +264,7 @@ class GMW_Tracking {
 
 			$form['data'] = maybe_unserialize( $form['data'] );
 
-			$data['forms'][$key] = $form;
+			$data['forms'][ $key ] = $form;
 		}
 
 		return $data;
@@ -268,8 +273,9 @@ class GMW_Tracking {
 	/**
 	 * Send the data to geomywp.com
 	 *
-	 * @access private
-	 * @return void
+	 * @param  boolean $override [description].
+	 *
+	 * @return [type]            [description]
 	 */
 	public function send_data( $override = false ) {
 
@@ -277,29 +283,31 @@ class GMW_Tracking {
 			return;
 		}
 
-		// get the last time data was sent
+		// get the last time data was sent.
 		$last_send = $this->get_last_send();
 
-		// Send data once per week
+		// Send data once per week.
 		if ( $last_send && $last_send > strtotime( '-1 week' ) ) {
 			return;
 		}
 
-		// send data using post request
-		$request = wp_remote_post( 'https://geomywp.com/?gmw_action=data_tracking_send', array(
-			'method'      => 'POST',
-			'timeout'     => 20,
-			'redirection' => 5,
-			'httpversion' => '1.1',
-			'blocking'    => true,
-			'body'        => $this->setup_data(),
-			'user-agent'  => 'GMW/' . GMW_VERSION . '; ' . get_bloginfo( 'url' )
-		) );
+		// send data using post request.
+		$request = wp_remote_post(
+			'https://geomywp.com/?gmw_action=data_tracking_send',
+			array(
+				'method'      => 'POST',
+				'timeout'     => 20,
+				'redirection' => 5,
+				'httpversion' => '1.1',
+				'blocking'    => true,
+				'body'        => $this->setup_data(),
+				'user-agent'  => 'GMW/' . GMW_VERSION . '; ' . get_bloginfo( 'url' ),
+			)
+		);
 
-		// update the sent time
+		// update the sent time.
 		update_option( 'gmw_tracking_last_send', time() );
 	}
 }
-endif;
 
-new GMW_Tracking;
+new GMW_Tracking();
