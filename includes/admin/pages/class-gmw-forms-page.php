@@ -7,7 +7,7 @@
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
-    exit; 
+	exit;
 }
 
 /**
@@ -17,148 +17,146 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class GMW_Forms_Page {
 
-    /**
-     * __construct function.
-     *
-     * @access public
-     *
-     * @return void
-     */
-    public function __construct() {
-    		    	
-        if ( empty( $_GET['page'] ) || 'gmw-forms' !== $_GET['page'] ) {
-            return;
-        }
-     
+	/**
+	 * __construct function.
+	 *
+	 * @access public
+	 *
+	 * @return void
+	 */
+	public function __construct() {
+
+		if ( empty( $_GET['page'] ) || 'gmw-forms' !== $_GET['page'] ) {
+			return;
+		}
+
 		add_filter( 'gmw_admin_notices_messages', array( $this, 'notices_messages' ) );
 		add_action( 'gmw_create_new_form', array( $this, 'create_new_form' ) );
 		add_action( 'gmw_duplicate_form', array( $this, 'duplicate_form' ) );
-        add_action( 'gmw_delete_form', array( $this, 'delete_form' ) );
-    }
+		add_action( 'gmw_delete_form', array( $this, 'delete_form' ) );
+	}
 
-    /**
-     * GMW Function - add notice messages
-     *
-     * @access public
-     *
-     * @since 2.5
-     *
-     * @author Eyal Fitoussi
-     */
-    public function notices_messages( $messages ) {
-    
-		$messages['form_created'] 		 = __( 'Form successfully created.', 'geo-my-wp' );
-		$messages['form_not_created'] 	 = __( 'There was an error while trying to create the new form.', 'geo-my-wp' );
+	/**
+	 * GMW Function - admin notices.
+	 *
+	 * @param  [type] $messages [description].
+	 *
+	 * @return [type]           [description]
+	 */
+	public function notices_messages( $messages ) {
+
+		$messages['form_created']        = __( 'Form successfully created.', 'geo-my-wp' );
+		$messages['form_not_created']    = __( 'There was an error while trying to create the new form.', 'geo-my-wp' );
 		$messages['form_duplicated']     = __( 'Form successfully duplicated.', 'geo-my-wp' );
 		$messages['form_not_duplicated'] = __( 'There was an error while trying to duplicate the form.', 'geo-my-wp' );
-		$messages['form_deleted'] 		 = __( 'Form successfully deleted.', 'geo-my-wp' );
-		$messages['form_not_deleted'] 	 = __( 'There was an error while trying to delete the form.', 'geo-my-wp' );
+		$messages['form_deleted']        = __( 'Form successfully deleted.', 'geo-my-wp' );
+		$messages['form_not_deleted']    = __( 'There was an error while trying to delete the form.', 'geo-my-wp' );
 
-    	return $messages;
-    }
+		return $messages;
+	}
 
-    /**
-     * Create new form.
-     * 
-     * @access public
-     * 
-     * @return void
-     */
-    public function create_new_form() {
-        
-        // verfiy form data.
-        if ( empty( $_GET['addon'] ) || empty( $_GET['slug'] ) ) {
-            
-            wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_not_created&gmw_notice_status=error' ) );
-            
-            exit;
-        }
+	/**
+	 * Create new form.
+	 *
+	 * @access public
+	 *
+	 * @return void
+	 */
+	public function create_new_form() {
 
-        $new_data = array();
+		// verfiy form data.
+		if ( empty( $_GET['addon'] ) || empty( $_GET['slug'] ) ) {
 
-        //get form values
-        $new_form['slug']        = $_GET['slug'];
-        $new_form['addon']       = $_GET['addon'];
-        $new_form['component']   = $_GET['component'];
-        $new_form['object_type'] = $_GET['object_type'];
-        $new_form['name']        = str_replace( '+', ' ', $_GET['name'] );    
-        $new_form['prefix']      = $_GET['prefix'];
- 
-        global $wpdb;
+			wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_not_created&gmw_notice_status=error' ) );
 
-        // create new form in database.
-        $wpdb->insert( 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
-                'slug'        => $new_form['slug'],
-                'addon'       => $new_form['addon'],
-                'component'   => $new_form['component'],
-                'object_type' => $new_form['object_type'],
-                'addon'       => $new_form['addon'],    
-                'name'        => $new_form['name'],
-                'prefix'      => $new_form['prefix'],
-                'title'       => '',
-                'data'        => '',
-            ),
-            array(
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-            )
-        );
+			exit;
+		}
 
-        //get the ID of the new form
-        $new_form_id = $wpdb->insert_id;
+		$new_data = array();
 
-        //make sure a form was created
-    	if ( empty( $new_form_id ) ) {
-       		wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_not_created&gmw_notice_status=error' ) );
-        	exit;
-    	}
-        
-        $new_form['ID'] = $new_form_id;
+		// get form values.
+		$new_form['slug']        = sanitize_text_field( wp_unslash( $_GET['slug'] ) );
+		$new_form['addon']       = sanitize_text_field( wp_unslash( $_GET['addon'] ) );
+		$new_form['component']   = sanitize_text_field( wp_unslash( $_GET['component'] ) );
+		$new_form['object_type'] = sanitize_text_field( wp_unslash( $_GET['object_type'] ) );
+		$new_form['name']        = str_replace( '+', ' ', sanitize_text_field( wp_unslash( $_GET['name'] ) ) );
+		$new_form['prefix']      = sanitize_text_field( wp_unslash( $_GET['prefix'] ) );
 
-        // Update new form with the default values and title.
-        $wpdb->update( 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
-                'title' => 'form_id_' . $new_form_id,
-                'data'  => serialize( GMW_Forms_Helper::default_settings( $new_form ) ), // Generate default values.
-            ), 
-            array( 'ID' => $new_form_id ), 
-            array( 
-                '%s',
-                '%s',
-            ), 
-            array( '%d' ) 
-        );
-        
-        // update forms in cache
-        GMW_Forms_Helper::update_forms_cache();
+		global $wpdb;
 
-        //reload the page to prevent resubmission
-        wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_action=edit_form&form_id=' . absint( $new_form_id ) .'&slug=' . esc_attr( $new_form['slug'] ) . '&prefix=' . esc_attr( $new_form['prefix'] ) ) );
-        
-        exit;
-    }
+		// create new form in database.
+		$wpdb->insert(
+			$wpdb->prefix . 'gmw_forms',
+			array(
+				'slug'        => $new_form['slug'],
+				'addon'       => $new_form['addon'],
+				'component'   => $new_form['component'],
+				'object_type' => $new_form['object_type'],
+				'addon'       => $new_form['addon'],
+				'name'        => $new_form['name'],
+				'prefix'      => $new_form['prefix'],
+				'title'       => '',
+				'data'        => '',
+			),
+			array(
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+			)
+		);
 
-    /**
-     * Duplicate form.
-     * 
-     * @access public
-     *
-     * @return void
-     */
-    public function duplicate_form() {
+		// get the ID of the new form.
+		$new_form_id = $wpdb->insert_id;
 
-		//verify the form ID
+		// make sure a form was created.
+		if ( empty( $new_form_id ) ) {
+			wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_not_created&gmw_notice_status=error' ) );
+			exit;
+		}
+
+		$new_form['ID'] = $new_form_id;
+
+		// Update new form with the default values and title.
+		$wpdb->update(
+			$wpdb->prefix . 'gmw_forms',
+			array(
+				'title' => 'form_id_' . $new_form_id,
+				'data'  => serialize( GMW_Forms_Helper::default_settings( $new_form ) ), // Generate default values.
+			),
+			array( 'ID' => $new_form_id ),
+			array(
+				'%s',
+				'%s',
+			),
+			array( '%d' )
+		);
+
+		// update forms in cache.
+		GMW_Forms_Helper::update_forms_cache();
+
+		// reload the page to prevent resubmission.
+		wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_action=edit_form&form_id=' . absint( $new_form_id ) . '&slug=' . esc_attr( $new_form['slug'] ) . '&prefix=' . esc_attr( $new_form['prefix'] ) ) );
+
+		exit;
+	}
+
+	/**
+	 * Duplicate form.
+	 *
+	 * @access public
+	 *
+	 * @return void
+	 */
+	public function duplicate_form() {
+
+		// verify the form ID.
 		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) {
-			
+
 			wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_not_duplicated&gmw_notice_status=error' ) );
 
 			exit;
@@ -166,41 +164,43 @@ class GMW_Forms_Page {
 
 		global $wpdb;
 
-		// get form data
-		$form = $wpdb->get_row( 
-		    $wpdb->prepare( "
+		// get form data.
+		$form = $wpdb->get_row(
+			$wpdb->prepare(
+				"
 		        SELECT * FROM {$wpdb->prefix}gmw_forms
-		        WHERE ID = %d"
-		    , $_GET['form_id'] )
+		        WHERE ID = %d",
+				absint( $_GET['form_id'] )
+			)
 		);
 
 		if ( empty( $form ) ) {
-		    wp_die( __( 'An error occurred while trying to retrieve the form.', 'geo-my-wp' ) );
+			wp_die( esc_html__( 'An error occurred while trying to retrieve the form.', 'geo-my-wp' ) );
 		}
 
-		//create new form in database
-		$new_form = $wpdb->insert( 
-		    $wpdb->prefix . 'gmw_forms', 
-		    array( 
-		        'slug'        => $form->slug,
-		        'addon'       => $form->addon,
-		        'component'   => $form->component,
-		        'object_type' => $form->object_type,
-		        'name'        => $form->name,
-		        'title'       => $form->title.' copy',
-		        'prefix'      => $form->prefix,
-		        'data'        => $form->data
-		    ),
-		    array(
-		        '%s',
-		        '%s',
-		        '%s',
-		        '%s',
-		        '%s',
-		        '%s',
-		        '%s',
-		        '%s'
-		    )
+		// create new form in database.
+		$new_form = $wpdb->insert(
+			$wpdb->prefix . 'gmw_forms',
+			array(
+				'slug'        => $form->slug,
+				'addon'       => $form->addon,
+				'component'   => $form->component,
+				'object_type' => $form->object_type,
+				'name'        => $form->name,
+				'title'       => $form->title . ' copy',
+				'prefix'      => $form->prefix,
+				'data'        => $form->data,
+			),
+			array(
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+			)
 		);
 
 		// Update forms in cache.
@@ -208,99 +208,93 @@ class GMW_Forms_Page {
 
 		// Reload the page to prevent resubmission.
 		wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_duplicated&gmw_notice_status=updated' ) );
-        
-        exit;
-    }
 
-    /**
-     * Delete form
-     * 
-     * @return [type] [description]
-     */
-    public function delete_form() {
+		exit;
+	}
 
-        // Abort if form ID doesn't exists.
-    	if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) {
-    		wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_not_deleted&gmw_notice_status=error' ) );
-    		exit;
-    	}
-    	
-        GMW_Forms_Helper::delete_form( $_GET['form_id'] );
+	/**
+	 * Delete form.
+	 */
+	public function delete_form() {
 
-        // Reload the page to prevent resubmission.
-        wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_deleted&gmw_notice_status=updated' ) );
-        
-        exit;       
-    }
+		// Abort if form ID doesn't exists.
+		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) {
+			wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_not_deleted&gmw_notice_status=error' ) );
+			exit;
+		}
 
-    /*
-     *  you can add your own button using the filter below. To create a button you will need to pass an array with the following arg:
-     *
-     *  name - the name/slug for the button ( ex. posts or post_types )
-     *  addon - the addon's slug the button belongs to
-     *  title - the title/lable for the button ( ex. Posts locator )
-     *  prefix - a prefix for your button ( ex. for post_type a good prefix would be "pt" )
-     *  priority - the prority the button will show in the dropdown
-     *  
-     *  example :
-     *  $buttons = array(
-     *      'slug'       => 'posts',
-     *      'addon'      => 'posts',
-     *      'name'       => __( 'Post Types ','geo-my-wp' ),
-     *      'prefix'     => pt,
-     *      'priority'   => 1
-     *   );
-     */
-    public static function new_form_buttons() {
-                      
-        $buttons = array();
-        $buttons = apply_filters( 'gmw_admin_new_form_button', $buttons );
-        
-        // order buttons by priority
-        usort( $buttons, 'gmw_sort_by_priority' );
+		GMW_Forms_Helper::delete_form( absint( $_GET['form_id'] ) );
 
-        $output  = '<select class="gmw-admin-select-enhanced" onchange="window.location.href = jQuery(this).val();">';
+		// Reload the page to prevent resubmission.
+		wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_deleted&gmw_notice_status=updated' ) );
 
-        if ( empty( $buttons ) ) {
+		exit;
+	}
 
-            $output .= '<option value="">' . __( 'Form buttons are not available', 'geo-my-wp' ) . '</option>';
+	/**
+	 * You can add your own button using the filter below. To create a button you will need to pass an array with the following args.
+	 *
+	 * Name - the name/slug for the button ( ex. posts or post_types ).
+	 * addon - the addon's slug the button belongs to
+	 * title - the title/lable for the button ( ex. Posts locator )
+	 * prefix - a prefix for your button ( ex. for post_type a good prefix would be "pt" )
+	 * priority - the prority the button will show in the dropdown
+	 *
+	 * example :
+	 * $buttons = array(
+	 *      'slug'       => 'posts',
+	 *      'addon'      => 'posts',
+	 *      'name'       => __( 'Post Types ','geo-my-wp' ),
+	 *      'prefix'     => pt,
+	 *      'priority'   => 1
+	 *  );
+	 */
+	public static function new_form_buttons() {
 
-        } else { 
-            
-            $output .= '<option value="">' . __( 'Select form type', 'geo-my-wp' ) . '</option>';
+		$buttons = array();
+		$buttons = apply_filters( 'gmw_admin_new_form_button', $buttons );
 
-            // Generate buttons
-            foreach ( $buttons as $button ) {
+		// order buttons by priority.
+		usort( $buttons, 'gmw_sort_by_priority' );
 
-                // support older version of the extensions.
-                if ( empty( $button['slug'] ) && ( ! empty( $button['title'] ) && ! empty( $button['name'] ) ) ) {
+		$output = '<select class="gmw-admin-select-enhanced" onchange="window.location.href = jQuery(this).val();">';
 
-                    $button['slug'] = $button['name'];
-                    $button['name'] = $button['title'];
-                }
-                
-                $form_url = 'admin.php?page=gmw-forms&gmw_action=create_new_form&name=' . str_replace( ' ', '+', $button['name'] ).'&addon=' . $button['addon'] . '&component=' . $button['component'] . '&object_type=' . $button['object_type'] . '&prefix=' . $button['prefix'] . '&slug=' . $button['slug'];
+		if ( empty( $buttons ) ) {
 
-                $output  .= '<option value="' . esc_url( $form_url ) . '">' . esc_html( $button['name'] ) . '</option>';
-            }
-        }
+			$output .= '<option value="">' . __( 'Form buttons are not available', 'geo-my-wp' ) . '</option>';
 
-        $output .= '</select>';
+		} else {
 
-        return $output;
-    }
+			$output .= '<option value="">' . __( 'Select form type', 'geo-my-wp' ) . '</option>';
 
-    /**
-     * output list of forms
-     *
-     * @access public
-     *
-     * @return void
-     */
-    public function output() {
+			// Generate buttons.
+			foreach ( $buttons as $button ) {
 
-    	gmw_admin_pages_header();
-        ?>		
+				// support older version of the extensions.
+				if ( empty( $button['slug'] ) && ( ! empty( $button['title'] ) && ! empty( $button['name'] ) ) ) {
+
+					$button['slug'] = $button['name'];
+					$button['name'] = $button['title'];
+				}
+
+				$form_url = 'admin.php?page=gmw-forms&gmw_action=create_new_form&name=' . str_replace( ' ', '+', $button['name'] ) . '&addon=' . $button['addon'] . '&component=' . $button['component'] . '&object_type=' . $button['object_type'] . '&prefix=' . $button['prefix'] . '&slug=' . $button['slug'];
+
+				$output .= '<option value="' . esc_url( $form_url ) . '">' . esc_html( $button['name'] ) . '</option>';
+			}
+		}
+
+		$output .= '</select>';
+
+		return $output;
+	}
+
+	/**
+	 * Output list of forms.
+	 */
+	public function output() {
+
+		gmw_admin_pages_header();
+		?>		
 		<div id="gmw-forms-page" class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper gmw-admin-page-no-nav">
 
 			<nav class="gmw-admin-page-navigation"></nav>
@@ -310,30 +304,31 @@ class GMW_Forms_Page {
 				<h1 style="display:none"></h1>
 
 				<div class="gmw-new-form-wrapper">
-					<h3><?php esc_html_e( 'New Form: ', 'geo-my-wp' ); ?></h3> <?php echo self::new_form_buttons(); ?>
+					<h3><?php esc_html_e( 'New Form: ', 'geo-my-wp' ); ?></h3> <?php echo self::new_form_buttons(); // WPCS: XSS ok. ?>
 				</div>
 
-	            <form id="gmw_forms_admin" class="gmw-admin-page-conten" enctype="multipart/form-data" method="post">
+				<form id="gmw_forms_admin" class="gmw-admin-page-conten" enctype="multipart/form-data" method="post">
 
-	                <input type="hidden" name="gmw_page" id="gmw_page" value="gmw-forms">
-	                
-	                <?php wp_nonce_field( 'gmw_forms_page', 'gmw_forms_page' ); ?>
-	                
-	                <div class="clear"></div>
-	                
-	                <?php
-	                	$forms_table = new GMW_Forms_Table();
-						$forms_table->prepare_items(); 
-						$forms_table->display(); 
-					?>	                 
-	            </form>
-	        </div>
+					<input type="hidden" name="gmw_page" id="gmw_page" value="gmw-forms">
+					
+					<?php wp_nonce_field( 'gmw_forms_page', 'gmw_forms_page' ); ?>
+					
+					<div class="clear"></div>
+					
+					<?php
+						$forms_table = new GMW_Forms_Table();
+						$forms_table->prepare_items();
+						$forms_table->display();
+					?>
+										 
+				</form>
+			</div>
 
-	        <!-- Side bar -->
-		    <div class="gmw-admin-page-sidebar">
-		    	<?php gmw_admin_sidebar_content(); ?>
-		    </div>    
-         </div> 
-        <?php
-    }
+			<!-- Side bar -->
+			<div class="gmw-admin-page-sidebar">
+				<?php gmw_admin_sidebar_content(); ?>
+			</div>    
+		 </div> 
+		<?php
+	}
 }
