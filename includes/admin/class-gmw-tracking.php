@@ -73,21 +73,6 @@ class GMW_Tracking {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
-
-		// disable on local sites
-		/*if (
-			stristr( network_site_url( '/' ), 'dev'       ) !== false ||
-			stristr( network_site_url( '/' ), 'localhost' ) !== false ||
-			stristr( network_site_url( '/' ), ':8888'     ) !== false // This is common with MAMP on OS X
-		) {
-
-			// disable admin notice
-			update_option( 'gmw_tracking_notice', '1' );
-
-		} else {*/
-			
-			$optin_url  = add_query_arg( 'gmw_action', 'opt_into_tracking' );
-			$optout_url = add_query_arg( 'gmw_action', 'opt_out_of_tracking' );
 			
 			$output  = '<div class="gmw-tracking-notice updated notice is-dismissible">';
 			$output .= '<p>';
