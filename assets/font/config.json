@@ -1,5 +1,5 @@
 {
-  "name": "geo-my-wp",
+  "name": "",
   "css_prefix_text": "gmw-icon-",
   "css_use_suffix": false,
   "hinting": true,
@@ -677,6 +677,38 @@
       "css": "toggle-on",
       "code": 61957,
       "src": "fontawesome"
+    },
+    {
+      "uid": "94aa5db477515f1da4ce43b239badb9e",
+      "css": "map-signs",
+      "code": 62071,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "72c79314fc3fec635bb8e0247d4a26e6",
+      "css": "directions-solid",
+      "code": 59487,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M981.7 455.7L544.3 18.3C519.8-6.1 480.2-6.1 455.7 18.3L18.3 455.7C-6.1 480.2-6.1 519.8 18.3 544.3L455.7 981.7C480.2 1006.1 519.8 1006.1 544.3 981.7L981.7 544.3C1006.1 519.8 1006.1 480.2 981.7 455.7ZM784.4 480.2L620 632.1C610 641.3 593.7 634.2 593.7 620.6V515.6H406.2V640.6C406.2 649.3 399.2 656.3 390.6 656.3H328.1C319.5 656.3 312.5 649.3 312.5 640.6V484.4C312.5 449.9 340.5 421.9 375 421.9H593.7V316.9C593.7 303.3 609.9 296.2 620 305.4L784.4 457.3C791.1 463.5 791.1 474 784.4 480.2Z",
+        "width": 1000
+      },
+      "search": [
+        "directions-solid"
+      ]
+    },
+    {
+      "uid": "76f961b11f65300838a5a78856aca30f",
+      "css": "th-large",
+      "code": 59488,
+      "src": "elusive"
+    },
+    {
+      "uid": "50e664a6f12199784c02600b2ccfd60a",
+      "css": "th-list",
+      "code": 59489,
+      "src": "elusive"
     },
     {
       "uid": "b445e87bb489f12f36b58165747a481b",
