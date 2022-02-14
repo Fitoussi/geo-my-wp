@@ -1,4 +1,14 @@
 <?php
+/**
+ * GEO my WP System Info page.
+ *
+ * @since 2.5
+ *
+ * @Author Eyal Fitoussi
+ *
+ * @package geo-my-wp
+ */
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
     exit; 
@@ -242,9 +252,9 @@ class GMW_System_Info {
         $report .= 'SUHOSIN:'."\t\t\t\t".$hassuho."\n";
         $report .= 'OpenSSL:'."\t\t\t\t".$openssl."\n";
     
-        $report .= "\n".'---------------------------------------------';
-        $report .= "\n\t\t".'** PLUGIN INFORMATION **'."\n";
-        $report .= '---------------------------------------------'."\n";
+       // $report .= "\n".'---------------------------------------------';
+       //$report .= "\n\t\t".'** PLUGIN INFORMATION **'."\n";
+       // $report .= '---------------------------------------------'."\n";
 
         if ( $plugins && $mu_plugins ) :
             $report .= 'Total Plugins:'."\t\t\t\t".( count( $plugins ) + count( $mu_plugins ) + count( $nt_plugins ) )."\n";
@@ -253,9 +263,9 @@ class GMW_System_Info {
         // output must-use plugins
         if ( $mu_plugins ) :
 
-            $report .= "\n".'------------------------'."\n";
-            $report .= 'Must-Use Plugins: ('.count( $mu_plugins ).')';
-            $report .= "\n".'------------------------'."\n";
+            $report .= "\n".'---------------------------------------------';
+            $report .= "\n\t\t".'** Must-Use Plugins: ('.count( $mu_plugins ).') **';
+            $report .= "\n".'---------------------------------------------'."\n";
 
             foreach ( $mu_plugins as $mu_path => $mu_plugin ) :
                 $report .= "\t".'- '.$mu_plugin['Name'] . ' ' . $mu_plugin['Version'] ."\n";
@@ -266,9 +276,9 @@ class GMW_System_Info {
         // if multisite, grab active network as well
         if ( is_multisite() ) :
             // active network
-            $report .= "\n".'-------------------------------'."\n";
-            $report .= 'Network Active Plugins: ('.count( $nt_plugins ).')';
-            $report .= "\n".'-------------------------------'."\n";
+            $report .= "\n".'---------------------------------------------';
+            $report .= "\n\t\t".'** Network Active Plugins: ('.count( $nt_plugins ).') **';
+            $report .= "\n".'---------------------------------------------'."\n";
 
             foreach ( $nt_plugins as $plugin_path ) :
                 $plugin_base = plugin_basename( $plugin_path );
@@ -287,9 +297,9 @@ class GMW_System_Info {
         // output active plugins
         if ( $plugins ) :
 
-            $report .= "\n".'------------------------'."\n";
-            $report .= 'Active Plugins: ('.count( $active ).')';
-            $report .= "\n".'------------------------'."\n";
+            $report .= "\n".'---------------------------------------------';
+            $report .= "\n\t\t".'** Active Plugins: ('.count( $active ).') **';
+            $report .= "\n".'---------------------------------------------'."\n";
 
             foreach ( $plugins as $plugin_path => $plugin ) :
                 if ( ! in_array( $plugin_path, $active ) )
@@ -300,7 +310,7 @@ class GMW_System_Info {
         endif;
 
         // output inactive plugins
-        if ( $plugins ) :
+        /*if ( $plugins ) :
 
             $report .= "\n".'------------------------'."\n";
             $report .= 'Inactive Plugins: ('.( count( $plugins ) - count( $active ) ).')';
@@ -312,7 +322,7 @@ class GMW_System_Info {
                 $report .= "\t".'- '.$plugin['Name'] . ' ' . $plugin['Version'] ."\n";
             endforeach;
             $report .= "\n";
-        endif;
+        endif;*/
 
         $report .= "\n".'---------------------------------------------';
         $report .= "\n\t\t".'** GEO my WP Data **'."\n";
