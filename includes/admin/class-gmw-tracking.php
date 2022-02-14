@@ -74,19 +74,23 @@ class GMW_Tracking {
 			return;
 		}
 			
-			$output  = '<div class="gmw-tracking-notice updated notice is-dismissible">';
-			$output .= '<p>';
- 			$output .= sprintf( __( '<h4>Allow GEO my WP to track the plugin usage on your site?</h4><p>Tracking non-sensitive data can help us improve GEO my WP plugin. You can read more about the tracking usage <a href="%s" target="_blank">here</a>.</p><em>*You can disable/enable tracking at any time from GEO my WP Settings page.</em>', 'geo-my-wp' ), 'https://geomywp.com/tracking-data' );
-			
-			$output .= '</p>';
-			$output .= '<p>';	
-			$output .= '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-primary">' . __( 'Allow tracking', 'geo-my-wp' ) . '</a>';
-			$output .= '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow tracking', 'geo-my-wp' ) . '</a>';
-			$output .= '</p>';
-			$output .= '</div>';
+		$optin_url  = add_query_arg( 'gmw_action', 'opt_into_tracking' );
+		$optout_url = add_query_arg( 'gmw_action', 'opt_out_of_tracking' );
+		
+		$output  = '<div class="gmw-tracking-notice gmw-admin-notice-box gmw-admin-notice-warning notice is-dismissible">';
+		//$output .= '<p>';
+			$output .= '<h3>' . __( 'Enable Usage Tracking', 'geo-my-wp' ) . '</h3>'; 
+			$output .= __( 'Allow GEO my WP to track the plugin usage on your site. Tracking non-sensitive data can help us improve GEO my WP plugin.', 'geo-my-wp' );
+			$output .= '<em style="margin-top:10px">' . __( '*You can change this setting at any time from GEO my WP Settings page.', 'geo-my-wp' ) . '</em>';
+		
+		//$output .= '</p>';
+		$output .= '<p>';	
+		$output .= '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="gmw-settings-action-button button-primary">' . __( 'Allow tracking', 'geo-my-wp' ) . '</a>';
+		$output .= '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="gmw-settings-action-button button-secondary">' . __( 'Do not allow tracking', 'geo-my-wp' ) . '</a>';
+		$output .= '</p>';
+		$output .= '</div>';
 
-			echo $output;
-		//}
+		echo $output;
 	}
 
 	/**
