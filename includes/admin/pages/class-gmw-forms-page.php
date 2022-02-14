@@ -98,7 +98,7 @@ class GMW_Forms_Page {
                 'name'        => $new_form['name'],
                 'prefix'      => $new_form['prefix'],
                 'title'       => '',
-                'data'        => $new_form['data']
+                'data'        => '',
             ),
             array(
                 '%s',
@@ -108,7 +108,7 @@ class GMW_Forms_Page {
                 '%s',
                 '%s',
                 '%s',
-                '%s'
+                '%s',
             )
         );
 
@@ -121,15 +121,19 @@ class GMW_Forms_Page {
         	exit;
     	}
         
-        //update new form with the default values
+        $new_form['ID'] = $new_form_id;
+
+        // Update new form with the default values and title.
         $wpdb->update( 
             $wpdb->prefix . 'gmw_forms', 
             array( 
-                'title' => 'form_id_'.$new_form_id,
+                'title' => 'form_id_' . $new_form_id,
+                'data'  => serialize( GMW_Forms_Helper::default_settings( $new_form ) ), // Generate default values.
             ), 
             array( 'ID' => $new_form_id ), 
             array( 
-                '%s'
+                '%s',
+                '%s',
             ), 
             array( '%d' ) 
         );
@@ -138,70 +142,72 @@ class GMW_Forms_Page {
         GMW_Forms_Helper::update_forms_cache();
 
         //reload the page to prevent resubmission
-        wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_action=edit_form&form_id='.$new_form_id.'&slug='.$new_form['slug'].'&prefix='.$new_form['prefix'] ) );
+        wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_action=edit_form&form_id=' . absint( $new_form_id ) .'&slug=' . esc_attr( $new_form['slug'] ) . '&prefix=' . esc_attr( $new_form['prefix'] ) ) );
         
         exit;
     }
 
     /**
-     * Duplicate form
+     * Duplicate form.
      * 
      * @access public
+     *
      * @return void
-     * 
      */
     public function duplicate_form() {
 
-        //verify the form ID
-    	if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) {
-       		wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_not_duplicated&gmw_notice_status=error' ) );
-        	exit;
-    	}
-    	
-        global $wpdb;
+		//verify the form ID
+		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) {
+			
+			wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_not_duplicated&gmw_notice_status=error' ) );
 
-        // get form data
-        $form = $wpdb->get_row( 
-            $wpdb->prepare( "
-                SELECT * FROM {$wpdb->prefix}gmw_forms
-                WHERE ID = %d"
-            , $_GET['form_id'] )
-        );
+			exit;
+		}
 
-        if ( empty( $form ) ) {
-            wp_die( __( 'An error occurred while trying to retrieve the form.', 'geo-my-wp' ) );
-        }
+		global $wpdb;
 
-        //create new form in database
-        $new_form = $wpdb->insert( 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
-                'slug'        => $form->slug,
-                'addon'       => $form->addon,
-                'component'   => $form->component,
-                'object_type' => $form->object_type,
-                'name'        => $form->name,
-                'title'       => $form->title.' copy',
-                'prefix'      => $form->prefix,
-                'data'        => $form->data
-            ),
-            array(
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s'
-            )
-        );
+		// get form data
+		$form = $wpdb->get_row( 
+		    $wpdb->prepare( "
+		        SELECT * FROM {$wpdb->prefix}gmw_forms
+		        WHERE ID = %d"
+		    , $_GET['form_id'] )
+		);
 
-        // update forms in cache
-        GMW_Forms_Helper::update_forms_cache();
+		if ( empty( $form ) ) {
+		    wp_die( __( 'An error occurred while trying to retrieve the form.', 'geo-my-wp' ) );
+		}
 
-        //reload the page to prevent resubmission
-        wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_duplicated&gmw_notice_status=updated' ) );
+		//create new form in database
+		$new_form = $wpdb->insert( 
+		    $wpdb->prefix . 'gmw_forms', 
+		    array( 
+		        'slug'        => $form->slug,
+		        'addon'       => $form->addon,
+		        'component'   => $form->component,
+		        'object_type' => $form->object_type,
+		        'name'        => $form->name,
+		        'title'       => $form->title.' copy',
+		        'prefix'      => $form->prefix,
+		        'data'        => $form->data
+		    ),
+		    array(
+		        '%s',
+		        '%s',
+		        '%s',
+		        '%s',
+		        '%s',
+		        '%s',
+		        '%s',
+		        '%s'
+		    )
+		);
+
+		// Update forms in cache.
+		GMW_Forms_Helper::update_forms_cache();
+
+		// Reload the page to prevent resubmission.
+		wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_duplicated&gmw_notice_status=updated' ) );
         
         exit;
     }
@@ -213,7 +219,7 @@ class GMW_Forms_Page {
      */
     public function delete_form() {
 
-        //abort if form ID doesn't exists
+        // Abort if form ID doesn't exists.
     	if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) {
     		wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_not_deleted&gmw_notice_status=error' ) );
     		exit;
@@ -221,7 +227,7 @@ class GMW_Forms_Page {
     	
         GMW_Forms_Helper::delete_form( $_GET['form_id'] );
 
-        //reload the page to prevent resubmission
+        // Reload the page to prevent resubmission.
         wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_deleted&gmw_notice_status=updated' ) );
         
         exit;       
