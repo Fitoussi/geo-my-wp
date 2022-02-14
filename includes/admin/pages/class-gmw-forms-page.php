@@ -233,39 +233,7 @@ class GMW_Forms_Page {
         exit;       
     }
 
-    /**
-     * Bulk delete forms
-     * 
-     * @return [type] [description]
-     */
-    public function bulk_delete() {
-
-        if ( empty( $_POST['gmw_page'] ) || $_POST['gmw_page'] != 'gmw-forms' || empty( $_POST['form_ids'] ) || $_POST['bulk_action'] != 'delete' )
-            return;
-
-        // run a quick security check
-        if ( ! check_admin_referer( 'gmw_forms_page', 'gmw_forms_page' ) ) {
-            wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
-        }
-
-        global $wpdb;
-
-        //delete forms from database
-        $wpdb->query( 
-            $wpdb->prepare( "
-                DELETE FROM {$wpdb->prefix}gmw_forms
-                WHERE ID IN (".str_repeat( "%d,", count( $_POST['form_ids'] ) - 1 ) . "%d )", $_POST['form_ids'] 
-            )
-        );
-
-        // update forms in cache
-        GMW_Forms_Helper::update_forms_cache();
-        
-        wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_deleted&gmw_notice_status=updated' ) );
-        exit;  
-    }
-    
-     /*
+    /*
      *  you can add your own button using the filter below. To create a button you will need to pass an array with the following arg:
      *
      *  name - the name/slug for the button ( ex. posts or post_types )
