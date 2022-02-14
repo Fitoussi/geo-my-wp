@@ -394,15 +394,28 @@ class GMW_System_Info {
         <form action="" method="post">
             <p>
                 <input type="hidden" name="gmw_action" value="download_system_info">
-                <input type="submit" value="<?php _e( 'Download system info file', 'geo-my-wp' ); ?>" class="button button-primary gmw-system-info-download" name="gmw_system_info_download">
-                <input type="button" value="<?php _e( 'Highlight Data', 'geo-my-wp' ); ?>" onclick="jQuery( 'textarea#gmw-system-info-content' ).focus().select();" class="button button-secondary" name="">
+                <input type="submit" value="<?php _e( 'Download system info file', 'geo-my-wp' ); ?>" class="button button-primary gmw-system-info-download gmw-settings-action-button" name="gmw_system_info_download">
+                <input type="button" value="<?php _e( 'Copy to clipboard', 'geo-my-wp' ); ?>" onclic="jQuery( 'textarea#gmw-system-info-content' ).focus().select();" class="gmw-copy-system-info-button button button-secondary gmw-settings-action-button" name="">
             </p>
             <p><?php echo $this->get_data(); ?></p>
             <p>
-                <input type="submit" value="<?php _e( 'Download system info file', 'geo-my-wp' ); ?>" class="button button-primary gmw-system-info-download" name="gmw_system_info_download">
-                <input type="button" value="<?php _e( 'Highlight Data', 'geo-my-wp' ); ?>" onclick="jQuery( 'textarea#gmw-system-info-content' ).focus().select();" class="button button-secondary" name="">
+                <input type="submit" value="<?php _e( 'Download system info file', 'geo-my-wp' ); ?>" class="button button-primary gmw-system-info-download gmw-settings-action-button" name="gmw_system_info_download">
+                <input type="button" value="<?php _e( 'Copy to clipboard', 'geo-my-wp' ); ?>" onclic="jQuery( 'textarea#gmw-system-info-content' ).focus().select();" class="gmw-copy-system-info-button button button-secondary gmw-settings-action-button" name="">
             </p>
         </form>
+        <script>
+        	jQuery( document ).ready( function($) {
+
+        		$( '.gmw-copy-system-info-button' ).click(function(){
+				    
+				    $( '#gmw-system-info-content' ).focus().select();
+				    
+				    document.execCommand( 'copy' );
+
+				    alert( 'Copied!' );
+				});
+        	});
+        </script>
         <?php
     }
 }
