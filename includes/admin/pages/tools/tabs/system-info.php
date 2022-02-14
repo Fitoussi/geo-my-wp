@@ -1,8 +1,9 @@
 <?php
 /**
- * admin tools "Reset" tab
+ * GEO my WP Tools page - system info tab.
  * 
  * @since  2.5
+ *
  * @author Eyal Fitoussi
  */
 
