@@ -1,5 +1,11 @@
 <?php
-// Exit if accessed directly
+/**
+ * GMW forms page.
+ *
+ * @package gmw-my-wp.
+ */
+
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
     exit; 
 }
@@ -7,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * GMW_Forms class.
  *
- * GEO my WP forms page
+ * GEO my WP forms page.
  */
 class GMW_Forms_Page {
 
@@ -15,43 +21,44 @@ class GMW_Forms_Page {
      * __construct function.
      *
      * @access public
+     *
      * @return void
      */
     public function __construct() {
     		    	
-        if ( empty( $_GET['page'] ) || $_GET['page'] != 'gmw-forms' ) {
+        if ( empty( $_GET['page'] ) || 'gmw-forms' !== $_GET['page'] ) {
             return;
         }
      
-        add_filter( 'gmw_admin_notices_messages', array( $this, 'notices_messages' ) );
-        add_action( 'gmw_create_new_form', 		  array( $this, 'create_new_form'  ) );
-        add_action( 'gmw_duplicate_form',  		  array( $this, 'duplicate_form'   ) );
-        add_action( 'gmw_delete_form', 			  array( $this, 'delete_form' 	   ) );
-        add_action( 'admin_init',                 array( $this, 'bulk_delete'      ) );
+		add_filter( 'gmw_admin_notices_messages', array( $this, 'notices_messages' ) );
+		add_action( 'gmw_create_new_form', array( $this, 'create_new_form' ) );
+		add_action( 'gmw_duplicate_form', array( $this, 'duplicate_form' ) );
+        add_action( 'gmw_delete_form', array( $this, 'delete_form' ) );
     }
 
     /**
      * GMW Function - add notice messages
      *
      * @access public
-     * @since 2.5
-     * @author Eyal Fitoussi
      *
+     * @since 2.5
+     *
+     * @author Eyal Fitoussi
      */
     public function notices_messages( $messages ) {
     
-    	$messages['form_created'] 		 = __( 'Form successfully created.', 'geo-my-wp' );
-    	$messages['form_not_created'] 	 = __( 'There was an error while trying to create the new form.', 'geo-my-wp' );
-    	$messages['form_duplicated']     = __( 'Form successfully duplicated.', 'geo-my-wp' );
-    	$messages['form_not_duplicated'] = __( 'There was an error while trying to duplicate the form.', 'geo-my-wp' );
-    	$messages['form_deleted'] 		 = __( 'Form successfully deleted.', 'geo-my-wp' );
-    	$messages['form_not_deleted'] 	 = __( 'There was an error while trying to delete the form.', 'geo-my-wp' );
+		$messages['form_created'] 		 = __( 'Form successfully created.', 'geo-my-wp' );
+		$messages['form_not_created'] 	 = __( 'There was an error while trying to create the new form.', 'geo-my-wp' );
+		$messages['form_duplicated']     = __( 'Form successfully duplicated.', 'geo-my-wp' );
+		$messages['form_not_duplicated'] = __( 'There was an error while trying to duplicate the form.', 'geo-my-wp' );
+		$messages['form_deleted'] 		 = __( 'Form successfully deleted.', 'geo-my-wp' );
+		$messages['form_not_deleted'] 	 = __( 'There was an error while trying to delete the form.', 'geo-my-wp' );
 
     	return $messages;
     }
 
     /**
-     * Create new form
+     * Create new form.
      * 
      * @access public
      * 
@@ -59,7 +66,7 @@ class GMW_Forms_Page {
      */
     public function create_new_form() {
         
-        //verfiy form data
+        // verfiy form data.
         if ( empty( $_GET['addon'] ) || empty( $_GET['slug'] ) ) {
             
             wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_not_created&gmw_notice_status=error' ) );
@@ -76,11 +83,10 @@ class GMW_Forms_Page {
         $new_form['object_type'] = $_GET['object_type'];
         $new_form['name']        = str_replace( '+', ' ', $_GET['name'] );    
         $new_form['prefix']      = $_GET['prefix'];
-        $new_form['data']        = serialize( GMW_Forms_Helper::default_settings( $new_form ) );
-
+ 
         global $wpdb;
 
-        //create new form in database
+        // create new form in database.
         $wpdb->insert( 
             $wpdb->prefix . 'gmw_forms', 
             array( 
