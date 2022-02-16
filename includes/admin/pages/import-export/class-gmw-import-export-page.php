@@ -41,7 +41,6 @@ class GMW_Import_Export_Page {
 	 * [__construct description]
 	 */
 	public function __construct() {
-
 		add_filter( 'gmw_admin_notices_messages', array( $this, 'admin_notices' ) );
 	}
 
@@ -65,44 +64,60 @@ class GMW_Import_Export_Page {
 	 */
 	public function output() {
 
-		$active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'data'; // WPCS: CSRF ok.
+		$current_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'data'; // WPCS: CSRF ok.
 		?>
-		<div id="gmw-import-export-page" class="wrap gmw-admin-page">
+		<?php gmw_admin_pages_header(); ?>
 
-			<h2 class="gmw-wrap-top-h2">
+		<div id="gmw-import-export-page" class="wrap gmw-admin-page gmw-admin-page-wrapper">
 
-				<i class="gmw-icon-wrench"></i>
+			<nav class="gmw-admin-page-navigation">
 
-				<?php esc_attr_e( 'Import / Export', 'geo-my-wp' ); ?>
-
-				<?php gmw_admin_helpful_buttons(); ?>
-
-			</h2>
-
-			<div class="clear"></div>
-
-			<h2 class="nav-tab-wrapper">
 				<?php
-				foreach ( $this->get_tabs() as $tab_id => $tab_name ) {
+				$tabs = $this->get_tabs();
 
-					$tab_url = admin_url( 'admin.php?page=gmw-import-export&tab=' . $tab_id );
-					$active  = $active_tab == $tab_id ? ' nav-tab-active' : '';
-					echo '<a href="' . esc_url( $tab_url ) . '" title="' . esc_attr( $tab_name ) . '" class="nav-tab' . esc_attr( $active ) . '">' . esc_html( $tab_name ) . '</a>';
+				foreach ( $tabs as $slug => $tab ) {
+
+					// for previous versions.
+					if ( ! is_array( $tab ) ) {
+
+						$tab           = array(
+							'slug'  => $slug,
+							'label' => $tab,
+						);
+						$tabs[ $slug ] = $tab;
+					}
+
+					// Prepare tab URL.
+					$url = add_query_arg( array( 'tab' => $tab['slug'] ), admin_url( 'admin.php?page=gmw-import-export' ) );
+
+					// Get tab icon.
+					$icon = ! empty( $tab['icon'] ) ? 'gmw-icon-' . esc_attr( $tab['icon'] ) : '';
+
+					printf(
+						'<a href="%s"%s><span class="%s"></span></span> <span class="label">%s</span></a>',
+						esc_url( $url ),
+						$current_tab === $tab['slug'] ? ' class="active"' : '',
+						esc_attr( $icon ),
+						esc_html( $tab['label'] )
+					);
 				}
 				?>
-			</h2>
+			</nav>
 
-			<div class="content metabox-holder">
+			<div class="gmw-admin-page-panels-wrapper" id="tab_<?php echo esc_attr( $current_tab ); ?>">
 
-				<div id="gmw-<?php echo esc_attr( $active_tab ); // WPCS: CSRF ok. ?>-tab-content" class="gmw-tools-tab-content">
+				<h1 style="display:none;"></h1>
+				<div id="gmw-<?php echo esc_attr( $current_tab ); ?>-tab-content" class="gmw-import-export-tab-content gmw-admin-page-content-inner">
 
-					<?php do_action( 'gmw_import_export_' . esc_attr( $active_tab ) . '_tab' ); ?>
+					<?php do_action( 'gmw_import_export_' . $current_tab . '_tab' ); ?>
 
 				</div>
+			</div>
 
-			</div><!-- .metabox-holder -->
-
-		</div><!-- .wrap -->
+			<nav class="gmw-admin-page-sidebar">
+				<?php gmw_admin_sidebar_content(); ?>
+			</nav>
+		</div>
 		<?php
 	}
 
@@ -114,10 +129,22 @@ class GMW_Import_Export_Page {
 	 */
 	public function get_tabs() {
 
-		$tabs                    = array();
-		$tabs['data']            = __( 'Data', 'geo-my-wp' );
-		$tabs['forms']           = __( 'Forms', 'geo-my-wp' );
-		$tabs['location_tables'] = __( 'Location Tables', 'geo-my-wp' );
+		$tabs         = array();
+		$tabs['data'] = array(
+			'slug'  => 'data',
+			'label' => __( 'General Data', 'geo-my-wp' ),
+		);
+
+		$tabs['forms'] = array(
+			'slug'  => 'forms',
+			'label' => __( 'Forms', 'geo-my-wp' ),
+		);
+
+		$tabs['location_tables'] = array(
+			'slug'  => 'location_tables',
+			'label' => __( 'Location Tables', 'geo-my-wp' ),
+		);
+
 		$tabs['transfer_locations'] = array(
 			'slug'  => 'transfer_locations',
 			'label' => __( 'Transper Locations', 'geo-my-wp' ),
@@ -126,8 +153,11 @@ class GMW_Import_Export_Page {
 		// if posts locator add-on active.
 		if ( gmw_is_addon_active( 'posts_locator' ) ) {
 
-			// create tab.
-			$tabs['posts_locator'] = __( 'Posts Locator', 'geo-my-wp' );
+			$tabs['posts_locator'] = array(
+				'slug'  => 'posts_locator',
+				'label' => __( 'Posts Locator', 'geo-my-wp' ),
+			);
+
 			// include tab file.
 			include_once 'tabs/posts-locator.php';
 		}
