@@ -118,6 +118,10 @@ class GMW_Import_Export_Page {
 		$tabs['data']            = __( 'Data', 'geo-my-wp' );
 		$tabs['forms']           = __( 'Forms', 'geo-my-wp' );
 		$tabs['location_tables'] = __( 'Location Tables', 'geo-my-wp' );
+		$tabs['transfer_locations'] = array(
+			'slug'  => 'transfer_locations',
+			'label' => __( 'Transper Locations', 'geo-my-wp' ),
+		);
 
 		// if posts locator add-on active.
 		if ( gmw_is_addon_active( 'posts_locator' ) ) {
@@ -129,9 +133,28 @@ class GMW_Import_Export_Page {
 		}
 
 		// if posts locator add-on active.
-		/*if ( gmw_is_addon_active( 'members_locator' ) ) {
-			// $tabs['members_locator'] = __( 'Members Locator', 'geo-my-wp' );
-		}*/
+		if ( gmw_is_addon_active( 'members_locator' ) ) {
+
+			$tabs['members_locator'] = array(
+				'slug'  => 'members_locator',
+				'label' => __( 'Members Locator', 'geo-my-wp' ),
+			);
+
+			// include tab file.
+			include_once 'tabs/members-locator.php';
+		}
+
+		// if posts locator add-on active.
+		if ( gmw_is_addon_active( 'users_locator' ) ) {
+
+			$tabs['users_locator'] = array(
+				'slug'  => 'users_locator',
+				'label' => __( 'Users Locator', 'geo-my-wp' ),
+			);
+
+			// include tab file.
+			require_once 'tabs/users-locator.php';
+		}
 
 		return apply_filters( 'gmw_import_export_tabs', $tabs );
 	}
