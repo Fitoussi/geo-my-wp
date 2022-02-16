@@ -18,11 +18,15 @@ if ( ( empty( $_GET['page'] ) || 'gmw-import-export' !== $_GET['page'] ) && ! de
 
 // include files.
 require_once 'locations-importer/class-gmw-locations-importer.php';
+require_once 'class-gmw-meta-fields-importer.php';
 require_once 'tabs/gmw-data.php';
 require_once 'tabs/forms.php';
 require_once 'tabs/location-tables.php';
 require_once 'tabs/gmw-v-3-import.php';
 require_once 'tabs/posts-locator.php';
+require_once 'tabs/users-locator.php';
+require_once 'tabs/members-locator.php';
+require_once 'tabs/transfer-locations.php';
 require_once 'class-gmw-export.php';
 require_once 'gmw-csv-import.php';
 
