@@ -1,3 +1,13 @@
+/**
+ * Front-end core stylesheet.
+ *
+ * Combines GEO my WP core and other extensions styling.
+ */
+
+/*************************************************/
+/********************* Fonts *********************/
+/*************************************************/
+
 @font-face {
   font-family: 'geo-my-wp';
   src: url('../font/geo-my-wp.eot?97326481');
@@ -41,7 +51,7 @@
 
   /* Animation center compensation - margins should be symmetric */
   /* remove if not needed */
-  margin-left: .2em;
+  //margin-left: .2em;
 
   /* you can be more comfortable with increased icons size */
   /* font-size: 120%; */
@@ -149,33 +159,35 @@
 .gmw-icon-download-1:before { content: '\e85c'; } /* '' */
 .gmw-icon-trash-empty:before { content: '\e85d'; } /* '' */
 .gmw-icon-off:before { content: '\e85e'; } /* '' */
-.gmw-icon-left-open-big:before { content: '\e85f'; } /* '' */
-.gmw-icon-right-open-big:before { content: '\e860'; } /* '' */
-.gmw-icon-up-open-big:before { content: '\e861'; } /* '' */
-.gmw-icon-down-open-big:before { content: '\e862'; } /* '' */
+.gmw-icon-directions-solid:before { content: '\e85f'; } /* '' */
+.gmw-icon-th-large:before { content: '\e860'; } /* '' */
+.gmw-icon-th-list:before { content: '\e861'; } /* '' */
 .gmw-icon-move:before { content: '\f047'; } /* '' */
 .gmw-icon-users-1:before { content: '\f064'; } /* '' */
 .gmw-icon-sort:before { content: '\f0dc'; } /* '' */
-.gmw-icon-minus-squared-alt:before { content: '\f147'; } /* '' */
-.gmw-icon-plus-squared-alt:before { content: '\f196'; } /* '' */
 .gmw-icon-trash:before { content: '\f1f8'; } /* '' */
 .gmw-icon-toggle-off:before { content: '\f204'; } /* '' */
 .gmw-icon-toggle-on:before { content: '\f205'; } /* '' */
 .gmw-icon-map-pin:before { content: '\f276'; } /* '' */
+.gmw-icon-map-signs:before { content: '\f277'; } /* '' */
 .gmw-icon-map-o:before { content: '\f278'; } /* '' */
 .gmw-icon-map-1:before { content: '\f279'; } /* '' */
-
 
 /*
    Animation example, for spinners
 */
 .animate-spin {
-  -moz-animation: spin 2s infinite linear;
-  -o-animation: spin 2s infinite linear;
-  -webkit-animation: spin 2s infinite linear;
-  animation: spin 2s infinite linear;
-  display: inline-block;
+	-moz-animation: spin 2s infinite linear;
+	-o-animation: spin 2s infinite linear;
+	-webkit-animation: spin 2s infinite linear;
+	animation: spin 2s infinite linear;
+	display: inline-block;
 }
+
+.animate-spin:before {
+	margin-left: .2em;
+}
+
 @-moz-keyframes spin {
   0% {
     -moz-transform: rotate(0deg);
