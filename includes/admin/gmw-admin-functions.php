@@ -199,96 +199,20 @@ function gmw_admin_pages_header() {
 	gmw_admin_helpful_buttons();
 	gmw_admin_pages_menu();
 }
-		<a 
-			class="button action gmw-donate" 
-			title="Donate" href="https://www.paypal.me/fitoussi" 
-			target="_blank">
-			<i style="color:red;margin-right:4px;" class="gmw-icon-heart"></i>
-			<?php esc_html_e( 'Donate', 'geo-my-wp' ); ?>
-		</a>
 
-	<?php } ?>
-
-	<span class="gmw-helpful-links-wrapper">
-		<a 
-			class="button action" 
-			title="Official Website" 
-			href="https://geomywp.com" 
-			target="_blank">
-			<i class="dashicons dashicons-welcome-view-site" style="font-size:18px;margin-top:4px"></i>GEOmyWP.com
-		</a>
-
-		<a 
-			class="button action" 
-			title="Extensions" 
-			href="https://geomywp.com/extensions" 
-			target="_blank" 
-			style="color:green">
-			<i class="gmw-icon-puzzle"></i>Extensions
-		</a>
-
-		<a 
-			class="button action" 
-			title="Demo" 
-			href="http://demo.geomywp.com" 
-			target="_blank">
-			<i class="gmw-icon-monitor"></i>
-			<?php esc_html_e( 'Demo', 'geo-my-wp' ); ?>
-		</a>
-
-		<a 
-			class="button action" 
-			title="documentation" 
-			href="https://docs.geomywp.com" 
-			target="_blank">
-			<i class="gmw-icon-doc-text"></i>
-			<?php esc_html_e( 'Docs', 'geo-my-wp' ); ?>
-		</a>
-
-		<a 
-			class="button action" 
-			title="support" 
-			href="https://geomywp.com/support" 
-			target="_blank">
-			<i class="gmw-icon-lifebuoy"></i>
-			<?php esc_html_e( 'Support', 'geo-my-wp' ); ?>
-		</a>
-
-		<a 
-			class="button action" 
-			title="GEO my WP on GitHub" 
-			href="https://github.com/Fitoussi/GEO-my-WP" 
-			target="_blank">
-			<i class="gmw-icon-github"></i>GitHub
-		</a>
-
-		<a 
-			class="button action" 
-			title="Show your support" 
-			href="https://wordpress.org/support/view/plugin-reviews/geo-my-wp?filter=5" 
-			target="_blank">
-			<i style="color:orange" class="gmw-icon-star"></i>
-			<?php esc_html_e( 'Love', 'geo-my-wp' ); ?>
-		</a>
-
-		<a 
-			class="button action" 
-			title="GEO my WP on Facebook" 
-			href="https://www.facebook.com/geomywp" 
-			target="_blank">
-			<i style="color:blue;font-size: 16px" class="gmw-icon-facebook-squared"></i>
-			<?php esc_html_e( 'Like', 'geo-my-wp' ); ?>
-		</a>
-
-		<a 
-			class="button action" 
-			title="GEO my WP on Twitter" 
-			href="https://twitter.com/GEOmyWP" 
-			target="_blank">
-			<i style="color:lightblue;font-size: 16px;" class="gmw-icon-twitter"></i>
-			<?php esc_html_e( 'Follow', 'geo-my-wp' ); ?>
-		</a>
-		<?php do_action( 'gmw_admin_helpful_buttons' ); ?>
-	</span>
+/**
+ * Generate content for the admin's pages sidebar.
+ *
+ * @since 4.0
+ *
+ * @author Eyal Fitoussi
+ *
+ * @return [type] [description]
+ */
+function gmw_admin_sidebar_content() {
+	?>
+	<!-- <iframe class="mj-w-res-iframe" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://app.mailjet.com/widget/iframe/5XJU/KMe" width="100%"></iframe>
+	<script type="text/javascript" src="https://app.mailjet.com/statics/js/iframeResizer.min.js"></script> -->
+	<!-- <img src="https://graphic-mama.s3.amazonaws.com/previews/0v47rp9m1g8yk5ldownyjzq2/61603fd530949-Marker-mascot-pose3_original.jpg" style="max-width:100%" /> -->
 	<?php
 }
