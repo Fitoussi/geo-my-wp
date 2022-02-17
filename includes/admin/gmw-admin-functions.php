@@ -89,6 +89,51 @@ function gmw_get_post_types_array() {
 }
 
 /**
+/**
+ * Main menu for admin pages.
+ *
+ * @since 4.0
+ *
+ * @author Eyal Fitoussi
+ */
+function gmw_admin_pages_menu() {
+
+	global $submenu;
+
+	$menu_items = $submenu['gmw-extensions'];
+
+	$menu_icons = array(
+		'gmw-extensions'    => 'gmw-icon-puzzle',
+		'gmw-forms'         => 'gmw-icon-doc-text',
+		'gmw-settings'      => 'gmw-icon-cog-alt',
+		'gmw-import-export' => 'gmw-icon-updown-circle',
+		'gmw-tools'         => 'gmw-icon-wrench',
+	);
+	?>
+	<div class="gmw-admin-pages-menu-wrapper">
+		
+		<img id="site-logo-header" style="width: 170px;height: 50px;" alt="" src="https://ih2t43wfgid2oh6654e3odav-wpengine.netdna-ssl.com/wp-content/uploads/assets/svg/gmw-logo-new.png" class="ct-image">
+
+		<div class="gmw-admin-pages-menu-inner">
+
+			<?php foreach ( $menu_items as $menu_item ) { ?>
+
+				<?php $active = ( ! empty( $_GET['page'] ) && $_GET['page'] === $menu_item[2] ) ? 'active' : ''; ?>
+				<?php $icon = ! empty( $menu_icons[ $menu_item[2] ] ) ? $menu_icons[ $menu_item[2] ] : ''; ?>
+				<a 
+					class="gmw-admin-pages-menu-item <?php echo $icon; // WPCS: XSS ok. ?> <?php echo $active; // WPCS: XSS ok. ?>" 
+					title="<?php esc_attr( $menu_item[3] ); ?>"
+					href="<?php echo esc_url( admin_url( 'admin.php?page=' . $menu_item[2] ) ); ?>">
+					<?php echo esc_attr( $menu_item[0] ); ?>
+				</a>
+			<?php } ?>
+		</div>
+	</div>
+	<?php do_action( 'gmw_admin_pages_menu' ); ?>
+	<?php
+}
+
+/**
  * GEO my WP top credits
  */
 function gmw_admin_helpful_buttons() {
