@@ -92,6 +92,101 @@ function gmw_get_post_types_array() {
  * GEO my WP top credits
  */
 function gmw_admin_helpful_buttons() {
+	?>
+	<div class="gmw-helpful-links-wrapper">
+		<div class="gmw-helpful-links-inner">
+			<a 
+				class="gmw-helpful-links" 
+				title="Official Website" 
+				href="https://geomywp.com" 
+				target="_blank">
+				<i class="dashicons dashicons-admin-site-alt3"></i>GEOmyWP.com
+			</a>
+
+			<a 
+				class="gmw-helpful-links" 
+				title="Extensions" 
+				href="https://geomywp.com/extensions" 
+				target="_blank">
+				<i class="gmw-icon-puzzle"></i>Extensions
+			</a>
+
+			<a 
+				class="gmw-helpful-links" 
+				title="documentation" 
+				href="https://docs.geomywp.com" 
+				target="_blank">
+				<i class="gmw-icon-doc-text"></i>
+				<?php esc_html_e( 'Docs', 'geo-my-wp' ); ?>
+			</a>
+
+			<a 
+				class="gmw-helpful-links" 
+				title="support" 
+				href="https://geomywp.com/support" 
+				target="_blank">
+				<i class="gmw-icon-lifebuoy"></i>
+				<?php esc_html_e( 'Support', 'geo-my-wp' ); ?>
+			</a>
+
+			<a 
+				class="gmw-helpful-links" 
+				title="Demo" 
+				href="http://demo.geomywp.com" 
+				target="_blank">
+				<i class="gmw-icon-monitor"></i>
+				<?php esc_html_e( 'Demo', 'geo-my-wp' ); ?>
+			</a>
+
+			<a 
+				class="gmw-helpful-links" 
+				title="Donate" 
+				href="https://www.paypal.me/fitoussi" 
+				target="_blank">
+				<i style="font-size: 18px;margin-right: -2px;" class="dashicons dashicons-money-alt"></i>
+				<?php esc_html_e( 'Donate', 'geo-my-wp' ); ?>
+			</a>
+
+			<a 
+				class="gmw-helpful-links" 
+				title="GEO my WP on GitHub" 
+				href="https://github.com/Fitoussi/GEO-my-WP" 
+				target="_blank">
+				<i class="gmw-icon-github"></i>Contribute
+			</a>
+
+			<a 
+				class="gmw-helpful-links" 
+				title="Show your support" 
+				href="https://wordpress.org/support/view/plugin-reviews/geo-my-wp?filter=5" 
+				target="_blank">
+				<i class="gmw-icon-star"></i>
+				<?php esc_html_e( 'Love', 'geo-my-wp' ); ?>
+			</a>
+
+			<a 
+				class="gmw-helpful-links" 
+				title="GEO my WP on Facebook" 
+				href="https://www.facebook.com/geomywp" 
+				target="_blank">
+				<i class="gmw-icon-facebook-squared"></i>
+				<?php esc_html_e( 'Like', 'geo-my-wp' ); ?>
+			</a>
+
+			<a 
+				class="gmw-helpful-links" 
+				title="GEO my WP on Twitter" 
+				href="https://twitter.com/GEOmyWP" 
+				target="_blank">
+				<i class="gmw-icon-twitter"></i>
+				<?php esc_html_e( 'Follow', 'geo-my-wp' ); ?>
+			</a>
+
+			<?php do_action( 'gmw_admin_helpful_buttons' ); ?>
+		</div>
+	</div>
+	<?php
+}
 
 	if ( ! empty( $_GET['page'] ) && 'gmw-forms' !== $_GET['page'] ) { // WPCS: CSRF ok.
 		?>
