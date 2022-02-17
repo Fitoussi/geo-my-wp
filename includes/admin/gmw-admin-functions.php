@@ -53,7 +53,7 @@ function gmw_output_admin_notices() {
 		'em' => array(),
 	);
 	?>
-	<div class="<?php echo esc_attr( $notice_status ); ?>">
+	<div class="gmw-admin-notice-top notice notice-<?php echo esc_attr( $notice_status ); ?>">
 		<p><?php echo isset( $gmw_messages[ $notice_type ] ) ? wp_kses( $gmw_messages[ $notice_type ], $allowed ) : ''; ?></p>
 	</div>
 	<?php
