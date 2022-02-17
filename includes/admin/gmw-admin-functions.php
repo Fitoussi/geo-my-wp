@@ -40,6 +40,10 @@ function gmw_output_admin_notices() {
 	$notice_type   = sanitize_text_field( wp_unslash( $notice_type ) );
 	$notice_status = sanitize_text_field( wp_unslash( $notice_status ) );
 
+	if ( 'updated' === $notice_status ) {
+		$notice_status = 'success';
+	}
+
 	$allowed = array(
 		'a'  => array(
 			'title' => array(),
