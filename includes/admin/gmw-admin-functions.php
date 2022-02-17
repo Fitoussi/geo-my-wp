@@ -188,17 +188,17 @@ function gmw_admin_helpful_buttons() {
 	<?php
 }
 
-	if ( ! empty( $_GET['page'] ) && 'gmw-forms' !== $_GET['page'] ) { // WPCS: CSRF ok.
-		?>
-		<span style="font-size:14px;margin-right:5px;"> - 
-			<?php
-			echo sprintf(
-				/* translators: %s: developer's name. */
-				esc_html__( 'GEO my WP developed by %s', 'geo-my-wp' ),
-				'Eyal Fitoussi'
-			);
-			?>
-		</span>
+/**
+ * Output header for admin pages.
+ *
+ * @since 4.0
+ *
+ * @author Eyal Fitoussi.
+ */
+function gmw_admin_pages_header() {
+	gmw_admin_helpful_buttons();
+	gmw_admin_pages_menu();
+}
 		<a 
 			class="button action gmw-donate" 
 			title="Donate" href="https://www.paypal.me/fitoussi" 
