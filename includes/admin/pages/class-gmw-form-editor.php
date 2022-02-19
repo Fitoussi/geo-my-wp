@@ -195,6 +195,128 @@ class GMW_Form_Editor {
 
 		<?php
 	}
+
+	/**
+	 * Form usage section.
+	 *
+	 * @param  mixed  $value     value.
+	 *
+	 * @param  string $attr_name [description].
+	 *
+	 * @param  array  $form      form object.
+	 */
+	public function form_usage( $value, $attr_name, $form ) {
+
+		$form_id = absint( $form['ID'] );
+		?>
+		<div class="gmw-settings-panel-field gmw-form-feature-settings shortcode-usage">
+			<table class="widefat gmw-form-shortcode-usage-table">
+				<thead>
+					<tr>
+						<th scope="col" style="width: 33%;"><?php esc_html_e( 'Description', 'geo-my-wp' ); ?></th>
+						<th scope="col" style="width: 27%;"><?php esc_html_e( 'Post/Page Content', 'geo-my-wp' ); ?></th>
+						<th scope="col" style="width: 40%;"><?php esc_html_e( 'Template file', 'geo-my-wp' ); ?></th>
+					</tr>
+				</thead>
+
+				<tbody>
+
+					<?php if ( strpos( $form['slug'], '_mashup_map' ) !== false ) { ?>
+
+						<tr>
+							<td class="gmw-form-usage-desc">
+								<p><?php esc_html_e( 'Display the mashup map anywhere on the page.', 'geo-my-wp' ); ?></p>
+							</td>
+							<td class="gmw-form-usage">
+								<p><code>[gmw map="<?php echo $form_id; // WPCS: XSS ok. ?>"]</code></p>
+							</td>
+							<td class="gmw-form-usage">
+								<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw map="' . $form_id . '"]\' ); &#63;&#62;'; // WPCS: XSS ok. ?></code></p>
+							</td>
+						</tr>
+
+					<?php } elseif ( 'global_maps' === $form['addon'] ) { ?>
+
+						<tr>
+							<td class="gmw-form-usage-desc">
+								<p><?php esc_html_e( 'Display the global map anywhere on the page.', 'geo-my-wp' ); ?></p>
+							</td>
+							<td class="gmw-form-usage">
+								<p><code>[gmw_global_map form="<?php echo $form_id; // WPCS: XSS ok. ?>"]</code></p>
+							</td>
+							<td class="gmw-form-usage">
+								<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw_global_map form="' . $form_id . '"]\' ); &#63;&#62;'; // WPCS: XSS ok. ?></code></p>
+							</td>
+						</tr>
+
+					<?php } else { ?>
+
+					<?php $scpx = ( 'ajax_forms' !== $form['addon'] ) ? 'gmw' : 'gmw_ajax_form'; ?>
+
+						<div>
+							<td class="gmw-form-usage-desc">
+								<p><?php esc_html_e( 'Display the complete form ( search form, map, and search results ).', 'geo-my-wp' ); ?></p>
+							</td>
+							<td class="gmw-form-usage">
+								<p><code>[<?php echo $scpx; // WPCS: XSS ok. ?> form="<?php echo $form_id; // WPCS: XSS ok. ?>"]</code></p>
+							</td>
+							<td class="gmw-form-usage">
+								<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[ ' . $scpx .' form="' . $form_id . '"]\' ); &#63;&#62;'; // WPCS: XSS ok. ?></code></p>
+							</td>                			
+						</tr>
+						<tr>
+							<td class="gmw-form-usage-desc">
+								<p><?php esc_html_e( 'Display the search form only.', 'geo-my-wp' ); ?></p>
+							</td>
+							<td class="gmw-form-usage">
+								<p><code>[<?php echo $scpx; // WPCS: XSS ok. ?> search_form="<?php echo $form_id; // WPCS: XSS ok. ?>"]</code></p>
+							</td>
+							<td class="gmw-form-usage">
+								<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[ ' . $scpx .' search_form="' . $form_id . '"]\' ); &#63;&#62;'; // WPCS: XSS ok. ?></code></p>
+							</td>		
+						</tr>
+						<tr>
+							<td class="gmw-form-usage-desc">
+								<p><?php esc_html_e( 'Display the search results of this form only. Can be used to display the search results in a different page or when using the search form in a widget.', 'geo-my-wp' ); ?></p>
+							</td>            
+							<td class="gmw-form-usage">
+								<p><code>[<?php echo $scpx; // WPCS: XSS ok. ?> search_results="<?php echo $form_id; // WPCS: XSS ok. ?>"]</code></p>
+							</td>
+							<td class="gmw-form-usage">
+								<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[ ' . $scpx .' search_results="' . $form_id . '"]\' ); &#63;&#62;'; // WPCS: XSS ok. ?></code></p>
+							</td>
+						</tr>
+						<tr>
+							<td class="gmw-form-usage-desc">
+								<p><?php esc_html_e( 'Display the results map anywhere on a page. By default, the form you create will display the map above the list of results, but using this shortcode you can display the map anywhere else on the page. Notice that you need to set the "Display map" setting of the "Form Submission" tab to "Using shortcode". ', 'geo-my-wp' ); ?></p>
+							</td>
+							<td class="gmw-form-usage">
+								<p><code>[<?php echo $scpx; // WPCS: XSS ok. ?> map="<?php echo $form_id; // WPCS: XSS ok. ?>"]</code></p>
+							</td>
+							<td class="gmw-form-usage">
+								<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[ ' . $scpx .' map="' . $form_id . '"]\' ); &#63;&#62;'; // WPCS: XSS ok. ?></code></p>
+							</td>    
+						</tr>
+
+						<?php if ( 'ajax_forms' !== $form['addon'] ) { ?>
+							<tr>
+								<td class="gmw-form-usage-desc">
+									<p><?php esc_html_e( 'Display the search results of any form.', 'geo-my-wp' ); ?></p>
+								</td>
+								<td class="gmw-form-usage">
+									<p><code>[<?php echo $scpx; // WPCS: XSS ok. ?> form="results"]</code></p>
+								</td>
+								<td class="gmw-form-usage">
+									<p><code><?php echo '&#60;&#63;php echo do_shortcode( \'[gmw form="results"]\' ); &#63;&#62;'; ?></code></p>
+								</td>
+							</tr>
+						<?php } ?>
+					<?php } ?>
+				</tbody>
+			</table>
+		</div>
+		<?php
+	}
 	 * Form groups
 	 *
 	 * @return [type] [description]
