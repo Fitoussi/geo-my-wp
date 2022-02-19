@@ -7,12 +7,15 @@
  * @package geo-my-wp
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+	exit;
 }
 
 /**
- * GMW_PT_Search_Query class
+ * Posts Locator form class.
+ *
+ * @package geo-my-wp
  */
 class GMW_Posts_Locator_Form extends GMW_Form {
 
