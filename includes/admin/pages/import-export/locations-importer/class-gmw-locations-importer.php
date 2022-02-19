@@ -173,15 +173,20 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 		 */
 		public function form() {
 			?>
-		<form method="post" class="gmw-locations-importer" action="">
-			<input type="submit" class="gmw-locations-importer-submit button-primary" value="<?php esc_attr_e( 'Import', 'geo-my-wp' ); ?>" />
-			<input type="button" class="gmw-locations-importer-abort button-secondary" value="<?php esc_attr_e( 'Abort', 'geo-my-wp' ); ?>" style="display:none;" />
-			<input type="hidden" class="gmw_locations_importer_action" value="<?php echo esc_attr( get_class( $this ) ); ?>" />	
+			<form method="post" class="gmw-locations-importer" action="">
 
-			<?php $nonce = wp_create_nonce( 'gmw_importer_nonce_' . get_class( $this ) ); ?>
+				<?php $this->form_fields(); ?>
 
-			<input type="hidden" name="nonce" class="gmw_locations_importer_nonce" value="<?php echo $nonce; // WPCS: XSS ok. ?>">
-		</form>
+				<div class="gmw-locations-importer-action-buttons">
+					<input type="submit" class="gmw-locations-importer-submit gmw-settings-action-button button-primary" value="<?php echo esc_attr( $this->get_import_button_label() ); ?>" />
+					<input type="button" class="gmw-locations-importer-abort gmw-settings-action-button button-secondary" value="<?php echo esc_attr( $this->get_abort_button_label() ); ?>" style="display:none;" />
+				</div>
+				<input type="hidden" class="gmw_locations_importer_action" value="<?php echo esc_attr( get_class( $this ) ); ?>" />	
+
+				<?php $nonce = wp_create_nonce( 'gmw_importer_nonce_' . get_class( $this ) ); ?>
+
+				<input type="hidden" name="nonce" class="gmw_locations_importer_nonce" value="<?php echo $nonce; // WPCS: XSS ok. ?>">
+			</form>
 			<?php
 		}
 
