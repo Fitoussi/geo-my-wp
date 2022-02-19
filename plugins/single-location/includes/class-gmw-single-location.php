@@ -42,13 +42,14 @@ class GMW_Single_Location {
 		'object_type'            => '',
 		'object_id'              => 0, // replaced item_id.
 		'elements'               => 0,
+		'element_width'          => '100%',
 		'address_fields'         => 'address',
 		'additional_info'        => '', // deprecated - replaced with location_meta.
 		'location_meta'          => '',
 		'units'                  => 'imperial',
 		'directions_form_units'  => 'default',
 		'map_height'             => '300px',
-		'map_width'              => '300px',
+		'map_width'              => '100%',
 		'map_type'               => 'ROADMAP',
 		'zoom_level'             => 13,
 		'scrollwheel_map_zoom'   => 1,
@@ -374,11 +375,13 @@ class GMW_Single_Location {
 			$display = 'style="display:inline-block"';
 		}
 
-		$css_class = esc_attr( 'gmw-single-location-wrapper gmw-sl-wrapper gmw-sl-single-' . $this->args['object'] . '-wrapper ' . $this->args['object'] . ' ' . $this->args['css_class'] );
+		$display = '';
+
+		$css_class = esc_attr( 'gmw-element-wrapper gmw-single-location-wrapper gmw-sl-wrapper gmw-sl-single-' . $this->args['object'] . '-wrapper ' . $this->args['object'] . ' ' . $this->args['css_class'] );
 		$css_id    = ! empty( $this->args['css_id'] ) ? $this->args['css_id'] : 'gmw-single-location-wrapper-' . $this->args['element_id'];
 
 		// generate the elements array.
-		$this->elements['element_wrap_start'] = '<div id="' . esc_attr( $css_id ) . '" class="' . $css_class . '" object_type="' . esc_attr( $this->args['object'] ) . '" object_id="' . esc_attr( $this->args['object_id'] ) . '" ' . $display . '>';
+		$this->elements['element_wrap_start'] = '<div id="' . esc_attr( $css_id ) . '" class="' . $css_class . '" object_type="' . esc_attr( $this->args['object'] ) . '" object_id="' . esc_attr( $this->args['object_id'] ) . '" ' . $display . ' style="width:' . $this->args['element_width'] . '">';
 
 		/** Check if this is widget and we use widget title */
 		/** If ( $this->args['is_widget'] && ! empty( $this->args['widget_title'] ) ) {
@@ -469,7 +472,7 @@ class GMW_Single_Location {
 			'gmw_sl_labels',
 			array(
 				'distance'        => __( 'Distance: ', 'geo-my-wp' ),
-				'directions'      => __( 'Directions', 'geo-my-wp' ),
+				'directions'      => __( 'Get directions', 'geo-my-wp' ),
 				'from'            => __( 'From:', 'geo-my-wp' ),
 				'show_directions' => __( 'Show directions', 'geo-my-wp' ),
 			),
@@ -492,7 +495,7 @@ class GMW_Single_Location {
 
 		$name = esc_html( $location->title );
 
-		return apply_filters( 'gmw_sl_location_name', "<h3 class=\"gmw-sl-title post-title gmw-sl-element\">{$name}</h3>", $location, $this->args, $this->user_position, $this );
+		return apply_filters( 'gmw_sl_location_name', "<div class='gmw-sl-title-wrapper'><h3 class=\"gmw-sl-title post-title gmw-sl-element\">{$name}</h3></div>", $location, $this->args, $this->user_position, $this );
 	}
 
 	/**
@@ -655,7 +658,7 @@ class GMW_Single_Location {
 			'iw_content' => ! empty( $this->args['user_info_window'] ) ? $this->args['user_info_window'] : null,
 		);
 
-		return gmw_get_map( $map_args, $map_options, $locations, $user_position );
+		return '<div class="gmw-sl-map-wrapper gmw-sl-element">' . gmw_get_map( $map_args, $map_options, $locations, $user_position ) . '</div>';
 	}
 
 	/**
@@ -680,13 +683,13 @@ class GMW_Single_Location {
 		$output  = '';
 		$output .= "<div id=\"gmw-sl-directions-link-wrapper-{$element_id}\" class=\"gmw-sl-directions-link-wrapper gmw-sl-element gmw-sl-{$object}-direction-link-wrapper\">";
 		$output .= '<div class="trigger-wrapper">';
-		$output .= '<i class="gmw-icon-location-thin"></i>';
+		$output .= '<i class="gmw-icon-directions-solid"></i>';
 		$output .= "<a href=\"#\" id=\"form-trigger-{$element_id}\" class=\"form-trigger\" onclick=\"event.preventDefault();jQuery(this).closest( '.gmw-sl-element' ).find( '.directions-link-form-wrapper' ).slideToggle();\">" . esc_attr( $this->labels['directions'] ) . '</a>';
 		$output .= '</div>';
 		$output .= "<div id=\"directions-link-form-wrapper-{$element_id}\" class=\"directions-link-form-wrapper\" style=\"display:none;\">";
 		$output .= '<form action="https://maps.google.com/maps" method="get" target="_blank">';
 		$output .= '<div class="address-field-wrapper">';
-		$output .= '<label for="start-address-' . $element_id . '">' . esc_attr( $this->labels['from'] ) . ' </label>';
+		$output .= '<label for="origin-' . $element_id . '">' . esc_attr( $this->labels['from'] ) . ' </label>';
 		$output .= '<input type="text" size="35" id="origin-' . $element_id . '" class="origin-field" name="saddr" value="' . esc_attr( $this->user_position['address'] ) . '" placeholder="Your location" />';
 		$output .= "<a href=\"#\" class=\"get-directions-link-submit gmw-icon-search\" onclick=\"jQuery( this ).closest( 'form' ).submit();\"></a>";
 		$output .= '</div>';
@@ -802,7 +805,7 @@ class GMW_Single_Location {
 
 		$iw_elements = array();
 
-		$iw_elements['iw_start'] = '<div class="gmw-iw-wrapper gmw-sl-iw-wrapper ' . esc_attr( $this->args['object'] ) . '">';
+		$iw_elements['iw_start'] = '<div class="gmw-iw-wrapper gmw-info-window-inner gmw-sl-iw-wrapper ' . esc_attr( $this->args['object'] ) . '">';
 
 		foreach ( $iw_elements_array as $value ) {
 			$iw_elements[ $value ] = false;
