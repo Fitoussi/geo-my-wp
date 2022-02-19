@@ -196,6 +196,18 @@ class GMW_Form {
 	 */
 	public $query = array();
 
+	public $element_class_attr = array(
+		'form_wrap'    => array(
+			'gmw-form-wrapper',
+		),
+		'form_element' => array(
+			'gmw_form',
+		),
+		'results_wrap' => array(
+			'gmw-results-wrapper',
+		),
+	);
+
 	/**
 	 * Results message
 	 *
