@@ -100,12 +100,92 @@ class GMW_Members_Locator_Form_Editor {
 		// search form features
 		$fields['search_form']['xprofile_fields'] = array(
 			'name'       => 'xprofile_fields',
-			'type'       => 'function',
-			'default'    => '',
-			'label'      => __( 'Xprofile Fields', 'geo-my-wp' ),
-			'desc'       => __( '<ul><li> - Profile fields - Select the profile fields that will be used as filters in the search form.</li><li> - Age range field - select a date field that will be used as a age range filter in the search form.</li></ul>', 'geo-my-wp' ),
-			'attributes' => '',
-			'priority'   => 13,
+			'type'       => 'fields_group',
+			'label'      => esc_html__( 'Xprofile Fields Filters', 'geo-my-wp' ),
+			'fields'     => array(
+				'fields' => gmw_get_admin_setting_args(
+					array(
+						'name'        => 'fields',
+						'type'        => 'multiselect',
+						'label'       => __( 'Xprofile Fields', 'geo-my-wp' ),
+						'placeholder' => __( 'Select Xprofile fields', 'geo-my-wp' ),
+						'desc'        => __( 'Select the Xprofile fields that you would like to use as filters in the search form.', 'geo-my-wp' ),
+						'options'     => $selected_fields,
+						'attributes'  => array(
+							'data-gmw_ajax_load_options'          => 'gmw_get_bp_xprofile_fields',
+							'data-gmw_ajax_load_options_xprofile' => 'all_fields',
+						),
+						'priority'    => 5,
+					)
+				),
+				'date_field' => gmw_get_admin_setting_args(
+					array(
+						'name'        => 'date_field',
+						'type'        => 'select',
+						'label'       => __( 'Age Range Field ( date field )', 'geo-my-wp' ),
+						'desc'        => __( 'Select a date xprofile field that will be used as an "Age range" filter in the search form.', 'geo-my-wp' ),
+						'options'     => $date_fields,
+						'attributes'  => array(
+							'data-gmw_ajax_load_options'          => 'gmw_get_bp_xprofile_fields',
+							'data-gmw_ajax_load_options_xprofile' => 'date_field',
+						),
+						'priority'    => 10,
+					)
+				),
+			),
+			'feature_disabled' => $disabled,
+			'disabled_message' => __( 'Buddypress xprofile fields component is deactivated. You need to activate in in order to use this feature.', 'geo-my-wp' ),
+			'priority'         => 13,
+		);
+
+		unset( $fields['search_results']['image']['fields']['no_image_url'] );
+
+		$fields['search_results']['image']['fields']['show_grav'] = gmw_get_admin_setting_args(
+			array(
+				'name'        => 'show_grav',
+				'type'        => 'checkbox',
+				'default'     => '',
+				'label'       => __( 'Try Gravatar', 'geo-my-wp' ),
+				'desc'        => __( 'Look for gravatar if avatar was not found.', 'geo-my-wp' ),
+				'cb_label'    => __( 'Enable', 'geo-my-wp' ),
+				'priority'    => 20,
+			)
+		);
+
+		$fields['search_results']['last_active'] = gmw_get_admin_setting_args(
+			array(
+				'name'        => 'last_active',
+				'type'        => 'checkbox',
+				'default'     => '',
+				'label'       => __( 'Show Last Active', 'geo-my-wp' ),
+				'desc'        => __( 'Check to display the member last active.', 'geo-my-wp' ),
+				'cb_label'    => __( 'Enable', 'geo-my-wp' ),
+				'priority'    => 25,
+			)
+		);
+
+		$fields['search_results']['image']['fields']['show_default'] = gmw_get_admin_setting_args(
+			array(
+				'name'        => 'show_default',
+				'type'        => 'checkbox',
+				'default'     => '',
+				'label'       => __( 'Show Default Avatar', 'geo-my-wp' ),
+				'desc'        => __( 'Check to display the default avatar ( useually the Mystery Man image ) when no avatar or gravatar were found. Otherwise, uncheck it to display no image.', 'geo-my-wp' ),
+				'cb_label'    => __( 'Enable', 'geo-my-wp' ),
+				'priority'    => 30,
+			)
+		);
+
+		$fields['search_results']['friendship_button'] = gmw_get_admin_setting_args(
+			array(
+				'name'        => 'friendship_button',
+				'type'        => 'checkbox',
+				'default'     => '',
+				'label'       => __( 'Add Friend Button', 'geo-my-wp' ),
+				'desc'        => __( 'Check to display the Add Friend Button.', 'geo-my-wp' ),
+				'cb_label'    => __( 'Enable', 'geo-my-wp' ),
+				'priority'    => 30,
+			)
 		);
 
 		return $fields;
