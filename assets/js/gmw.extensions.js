@@ -429,21 +429,22 @@ var GMW_Extensions = {
                         
                         if ( licenseData.license == 'valid' ) {
                             
-                            actionMessageWrap.removeClass( 'updating-message' ).addClass( 'updated-message' ).html( 'Activated' ).show(); 
+                            actionMessageWrap.removeClass( 'updating-message' ).addClass( 'updated-message' ).html( 'License activated' ).show(); 
                         
                         } else {
 
-                            actionMessageWrap.removeClass( 'updating-message button-primary' ).addClass( 'gmw-icon-cancel button-secondary' ).html( 'Failed' ).show(); 
+                            actionMessageWrap.removeClass( 'updating-message button-primary' ).addClass( 'gmw-icon-cancel button-secondary' ).html( 'License activation failed' ).show(); 
                         }
                     }
 
                 } else {
 
-                    actionMessageWrap.removeClass( 'updating-message' ).addClass( 'updated-message' ).html( 'Dectivated' ).show();
+                    actionMessageWrap.removeClass( 'updating-message' ).addClass( 'updated-message' ).html( 'License dectivated' ).show();
                 }
 
                 setTimeout( function() {
 
+                	console.log(response)
                     // hide current license form
                     licenseWrap.hide();
 
