@@ -313,7 +313,8 @@ class GMW_Members_Locator_Form extends GMW_Form {
 			$fields_values = apply_filters( 'gmw_fl_xprofile_fields_query_default_values', array(), $this->form );
 		}
 
-		$xp_users_id = array();
+		// Get users ID from xprofile fields query.
+		$xp_users_id = gmw_query_xprofile_fields( $fields_values, $this->form );
 
 		/**
 		 * Query xprofile fields.
@@ -322,7 +323,7 @@ class GMW_Members_Locator_Form extends GMW_Form {
 		 *
 		 * found and we can abort and return no results.
 		 */
-		if ( apply_filters( 'gmw_fl_xprofile_query_enabled', true, $this->form ) && array_filter( $fields_values ) && ( $xp_users_id = gmw_query_xprofile_fields( $fields_values, $this->form ) ) == -1 ) {
+		if ( apply_filters( 'gmw_fl_xprofile_query_enabled', true, $this->form ) && array_filter( $fields_values ) && -1 === $xp_users_id ) {
 			return false;
 		}
 
