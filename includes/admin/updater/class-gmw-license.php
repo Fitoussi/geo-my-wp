@@ -430,9 +430,10 @@ if ( ! class_exists( 'GMW_License' ) ) :
 				// generate data.
 				$action  = 'deactivate_license';
 				$button  = 'button-secondary';
-				$label   = __( 'Deactivate License', 'geo-my-wp' );
+				//$label   = __( 'Deactivate License', 'geo-my-wp' );
+				$label   = '<span class="button-label">' . __( 'Deactivate License', 'geo-my-wp' ) . '</span><span class="gmw-icon-lock dashicon dashicons-unloc"></span>';
 				$message = esc_html( $this->messages['valid'] );
-				$icon    = '<i class="dashicons dashicons-yes"></i>';
+				$icon    = '<i class="dashicons dashicons-yes-alt"></i>';
 				$status  = 'valid';
 
 				// hidden input fields.
@@ -446,7 +447,8 @@ if ( ! class_exists( 'GMW_License' ) ) :
 				$class   = '';
 				$message = $this->messages['activate'];
 				$button  = 'button-primary';
-				$label   = __( 'Activate License', 'geo-my-wp' );
+				//$label   = __( 'Activate License', 'geo-my-wp' );
+				$label   = '<span class="button-label">' . __( 'Activate License', 'geo-my-wp' ) . '</span><span class="gmw-icon-lock-open-alt dashicon dashicons-loc"></span>';
 				$allow   = array(
 					'a' => array(
 						'href'  => array(),
@@ -454,7 +456,7 @@ if ( ! class_exists( 'GMW_License' ) ) :
 					),
 				);
 				$message = wp_kses( $message, $allow );
-				$icon    = '<i class="dashicons dashicons-warning"></i>';
+				$icon    = '<i class="dashicons dashicons-dismiss"></i>';
 				$status  = 'inactive';
 
 				// generate error message.
@@ -482,12 +484,13 @@ if ( ! class_exists( 'GMW_License' ) ) :
 			// generate the license element.
 			$output .= '<div class="gmw-license-wrapper ' . $status . '">';
 			$output .= '<div class="field-wrapper">';
-			$output .= '<span class="gmw-icon-key">' . $license_label . '</span>';
+			//$output .= '<span class="gmw-icon-key">' . $license_label . '</span>';
 			$output .= $key_field;
-			$output .= '</div>';
+			
 			$output .= '<div class="actions-wrapper">';
-			$output .= '<button type="submit" name="gmw_license_submit" class="' . $button . ' ' . $action . ' gmw-license-action-button" style="padding: 0 9px !important;" value="' . $license_name . '" ' . $field_data . '>' . $label . '</button>';
-			$output .= '<span style="display: none" class="button processing actions-message"></span>';
+			$output .= '<button type="submit" name="gmw_license_submit" class="' . $button . ' ' . $action . ' gmw-license-action-button" value="' . $license_name . '" ' . $field_data . '>' . $label . '</button>';
+			$output .= '<span style="display: none" class="button actions-message gmw-license-action-button"></span>';
+			$output .= '</div>';
 			$output .= '</div>';
 
 			$output .= '<p class="description">' . $icon . $message . '</p>';
