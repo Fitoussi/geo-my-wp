@@ -131,9 +131,9 @@ if ( ! class_exists( 'GMW_Post_Category_Walker' ) ) :
 					$icon                = esc_url( $this->category_icons['url'] . $this->category_icons['set_icons'][ $term->term_id ] );
 				}
 
-				$checkbox  = '<li class="gmw-taxonomy-checkbox-wrapper term-' . $term_id . $category_icon_class . '">';
-				$checkbox .= '<label>';
-				$checkbox .= '<input type="checkbox" name="tax[' . esc_attr( $args['taxonomy'] ) . '][]" id="' . $term_id . '" class="gmw-taxonomy-checkbox" value="' . $term_id . '" ' . $checked . '/>';
+				$checkbox  = '<li class="gmw-taxonomy-checkbox-wrapper gmw-field-checkbox-wrapper' . $category_icon_class . '" data-value="' . $term_id . '">';
+				$checkbox .= '<label for="gmw-tax-term-' . $term_id . '" class="gmw-checkbox-label">';
+				$checkbox .= '<input type="checkbox" name="tax[' . esc_attr( $args['taxonomy'] ) . '][]" id="gmw-tax-term-' . $term_id . '" class="gmw-taxonomy-checkbox gmw-field-checkbox" value="' . $term_id . '" ' . $checked . '/>';
 
 				if ( $category_icon_ok ) {
 					$checkbox .= '<img class="category-icon gmw-checkbox-cat-icon' . $icon_checked . '" src="' . $icon . '" onclick="jQuery(this).toggleClass(\'checked\');" />';
@@ -141,8 +141,9 @@ if ( ! class_exists( 'GMW_Post_Category_Walker' ) ) :
 
 				$checkbox .= esc_html( $term_name );
 				$checkbox .= '</label>';
-				$checkbox .= '</li>';
-				$output   .= $checkbox;
+				$checkbox .= '<i class="gmw-icon-plus-squared-alt gmw-children-checkboxes-toggle"></i>';
+
+				$output .= $checkbox;
 
 			} else {
 				$selected = in_array( $term->term_id, $value ) ? 'selected="selected"' : '';
@@ -150,6 +151,24 @@ if ( ! class_exists( 'GMW_Post_Category_Walker' ) ) :
 			}
 
 			return $output;
+		}
+
+		/**
+		 * End level.
+		 *
+		 * @param  [type]  $output  [description].
+		 *
+		 * @param  [type]  $term    [description].
+		 *
+		 * @param  integer $depth   [description].
+		 *
+		 * @param  array   $args    [description].
+		 */
+		public function end_el( &$output, $term, $depth = 0, $args = array() ) {
+
+			if ( 'checkbox' === $args['usage'] ) {
+				$output .= '</li>';
+			}
 		}
 	}
 
