@@ -29,122 +29,128 @@ function gmw_import_export_data_tab() {
 
 	<?php do_action( 'gmw_import_export_before_data_export' ); ?>
 
-	<div id="poststuff" class="metabox-holder">
-		
-		<div id="post-body">
-		
-			<div id="post-body-content">
+	<div class="gmw-settings-panel gmw-export-data-panel">
 
-				<div class="postbox ">
-		
-					<h3 class="hndle">
-						<span><?php _e( 'Export Data', 'geo-my-wp' ); ?> </span>
-					</h3>
-					
-					<div class="inside">
-				    
-					    <p>
-					    	<?php _e( 'Check the checkboxes of the items that you would like to export, then click the "Export" button to generate a .json file.', 'geo-my-wp' ); ?>
-					    </p>
-					    
-					    <form method="post" action="<?php echo admin_url( 'admin.php?page=gmw-import-export&tab=data' ); ?>">
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin.php?page=gmw-import-export&tab=data' ) ); ?>">
+			
+			<fieldset>
+
+				<legend class="gmw-settings-panel-title"><?php esc_html_e( 'Export Data', 'geo-my-wp' ); ?></legend>
+
+				<div class="gmw-settings-panel-content">
+
+					<div class="gmw-settings-panel-description">
+						<?php esc_html_e( 'Check the checkboxes of the items that you would like to export, then click the "Export" button to generate a .json file.', 'geo-my-wp' ); ?>		
+					</div>
+
+					<div class="gmw-settings-panel-field">
+						
+						<div class="gmw-settings-panel-checkboxes">
+									
+							<label>
+								<input type="checkbox" class="cb-export-item" name="export_item[]" value="settings" checked="checked" />
+								
+								<?php esc_html_e( 'Settings', 'geo-my-wp' ); ?>
+								
+								<em class="description">
+									<?php esc_html_e( '( GEO my WP and its extensions )', 'geo-my-wp' ); ?>
+								</em>
+							</label>
+
+							<label>
+								<input type="checkbox" class="cb-export-item" name="export_item[]" value="licenses" checked="checked" />
+								
+								<?php esc_html_e( 'License Keys', 'geo-my-wp' ); ?>
+								
+								<em class="description">
+									<?php esc_html_e( '( exported license keys should be imported back to this site only )', 'geo-my-wp' ); ?>
+								</em>
+							</label>
+						</div>
+						<p>
+							<input type="hidden" name="gmw_action" value="export_data" />
 							
-							<p class="checkboxes">
-								
-								<label>
-									<input type="checkbox" class="cb-export-item" name="export_item[]" value="settings" checked="checked" />
-									
-									<?php _e( 'Settings', 'geo-my-wp' ); ?>
-									
-									<em class="description">
-										<?php _e( '( GEO my WP and its extensions )', 'geo-my-wp' ); ?>
-									</em>
-								</label>
-
-								<lable>
-									<input type="checkbox" class="cb-export-item" name="export_item[]" value="licenses" checked="checked" />
-									
-									<?php _e( 'License Keys', 'geo-my-wp' ); ?>
-									
-									<em class="description">
-										<?php _e( '( exported license keys should be imported back to this site only )', 'geo-my-wp' ); ?>
-									</em>
-								</label>
-							</p>
-							<p>
-								<input type="hidden" name="gmw_action" value="export_data" />
-								
-								<?php wp_nonce_field( 'gmw_export_data_nonce', 'gmw_export_data_nonce' ); ?>
-								
-								<?php submit_button( __( 'Export', 'geo-my-wp' ), 'secondary', 'submit', false, array( 
-										'onclick' => "if ( !jQuery('.cb-export-item').is(':checked') ) { alert('You must check at least one item that you would like to export.'); return false; }" ) ); 
-								?>
-							</p>
-						</form>
+							<?php wp_nonce_field( 'gmw_export_data_nonce', 'gmw_export_data_nonce' ); ?>
+							
+							<?php
+							submit_button(
+								esc_html__( 'Export', 'geo-my-wp' ),
+								'gmw-settings-action-button button-primary',
+								'submit',
+								false,
+								array(
+									'onclick' => "if ( !jQuery('.cb-export-item').is(':checked') ) { alert('You must check at least one item that you would like to export.'); return false; }",
+								)
+							);
+							?>
+						</p>
 					</div>
 				</div>
-			</div>
-		</div>
+			</fieldset>				
+		</form>
 	</div>
 
 	<?php do_action( 'gmw_import_export_before_data_import' ); ?>
 
-	<div id="poststuff" class="metabox-holder">
-		
-		<div id="post-body">
-		
-			<div id="post-body-content">
+	<div class="gmw-settings-panel gmw-import-data-panel">
 
-				<div class="postbox ">
-		
-					<h3 class="hndle">
-						<span><?php _e( 'Import Data', 'geo-my-wp' ); ?> </span>
-					</h3>
-					
-					<div class="inside">
-				    
-					    <p>
-							<?php _e( 'Choose the .json file ( can be generated using the "Export" form above ) and check the checkboxes of the items that you would like to import.', 'geo-my-wp' ); ?>
-						</p>
-					    
-					    <form method="post" enctype="multipart/form-data" action="<?php echo admin_url( 'admin.php?page=gmw-import-export&tab=data' ); ?>">
-							
-							<p>
-								<input type="file" name="import_file" />
-							</p>
+		<form method="post" enctype="multipart/form-data" action="<?php echo esc_url( admin_url( 'admin.php?page=gmw-import-export&tab=data' ) ); ?>">
+			
+			<fieldset>
 
-							<strong><?php _e( 'Items to import', 'geo-my-wp' ); ?></strong>
+				<legend class="gmw-settings-panel-title"><?php esc_html_e( 'Import Data', 'geo-my-wp' ); ?></legend>
 
-							<p class="checkboxes">
-								<label>
-									<input type="checkbox" class="cb-import-item" name="import_item[]" value="settings" checked="checked" />
-									<?php _e( 'Settings', 'geo-my-wp' ); ?>
-								</label>
-																
-								<label>
-									<input type="checkbox" class="cb-import-item" name="import_item[]" value="licenses" checked="checked" /> 
-									<?php _e( 'License Keys', 'geo-my-wp' ); ?>
-								</label>
-							</p>
-							<p>
-								<input type="hidden" name="gmw_action" value="import_data" />
-								
-								<?php wp_nonce_field( 'gmw_import_data_nonce', 'gmw_import_data_nonce' ); ?>
-								
-								<?php submit_button( __( 'Import', 'geo-my-wp' ), 'secondary', 'submit', false, array( 
-										'onclick' => "if ( !jQuery('.cb-import-item').is(':checked') ) { alert('You must check at least one item that you would like to import.'); return false; }" ) ); 
-								?>
-							</p>
-						</form>
+				<div class="gmw-settings-panel-content">
+
+					<div class="gmw-settings-panel-description">
+						<?php esc_html_e( 'Select a .json file and check the items that you would like to import.', 'geo-my-wp' ); ?>
 					</div>
+
+					<div class="gmw-settings-panel-field">
+	
+						<p><input type="file" name="import_file" /></p>
+
+						<strong><?php esc_html_e( 'Items to import', 'geo-my-wp' ); ?></strong>
+
+						<div class="gmw-settings-panel-checkboxes">
+							<label>
+								<input type="checkbox" class="cb-import-item" name="import_item[]" value="settings" checked="checked" />
+								<?php esc_html_e( 'Settings', 'geo-my-wp' ); ?>
+							</label>
+															
+							<label>
+								<input type="checkbox" class="cb-import-item" name="import_item[]" value="licenses" checked="checked" /> 
+								<?php esc_html_e( 'License Keys', 'geo-my-wp' ); ?>
+							</label>
+						</div>
+						<p>
+							<input type="hidden" name="gmw_action" value="import_data" />
+							
+							<?php wp_nonce_field( 'gmw_import_data_nonce', 'gmw_import_data_nonce' ); ?>
+							
+							<?php
+							submit_button(
+								esc_html__( 'Import', 'geo-my-wp' ),
+								'gmw-settings-action-button button-primary',
+								'submit',
+								false,
+								array(
+									'onclick' => "if ( !jQuery('.cb-import-item').is(':checked') ) { alert('You must check at least one item that you would like to import.'); return false; }",
+								)
+							);
+							?>
+						</p>
+					</div>
+				
 				</div>
-			</div>
-		</div>
+			</fieldset>							
+		</form>
+
 	</div>
 
 	<?php do_action( 'gmw_import_export_data_end' ); ?>
 				
-<?php
+	<?php
 }
 add_action( 'gmw_import_export_data_tab', 'gmw_import_export_data_tab' );
 
