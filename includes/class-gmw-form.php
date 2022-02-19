@@ -268,7 +268,7 @@ class GMW_Form {
 			'url'             => '#',
 			'title'           => false,
 			'image_url'       => false,
-			'image'           => false,
+			'image'           => true,
 			'directions_link' => true,
 			'address'         => true,
 			'distance'        => true,
