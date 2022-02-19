@@ -38,15 +38,29 @@ class GMW_Members_Locator_Form_Editor {
 	/**
 	 * Default settings
 	 *
-	 * @param  [type] $settings [description]
+	 * @param  [type] $settings [description].
+	 *
 	 * @return [type]           [description]
 	 */
-	public function set_defaults( $settings ) {
+	public function set_defaults( $settings, $args ) {
 
-		$settings['search_form']['form_template']                 = 'yellow';
-		$settings['search_results']['results_template']           = 'yellow';
+		$settings['search_form']['form_template']                 = 'responsive-1';
 		$settings['search_form']['xprofile_fields']['fields']     = array();
 		$settings['search_form']['xprofile_fields']['date_field'] = '';
+		$settings['search_results']['image']['width']             = '100px';
+		$settings['search_results']['image']['show_grav']         = 1;
+		$settings['search_results']['image']['show_default']      = 1;
+		$settings['search_results']['friendship_button']          = 1;
+
+		// For mashup map.
+		if ( 'members_locator_mashup_map' === $args['slug'] ) {
+
+			$settings['page_load_results']['enabled']         = 1;
+			$settings['page_load_results']['display_results'] = 0;
+			$settings['page_load_results']['display_map']     = 'shortcode';
+			$settings['page_load_results']['per_page']        = 200;
+			$settings['search_form']['form_template']         = '';
+		}
 
 		return $settings;
 	}
