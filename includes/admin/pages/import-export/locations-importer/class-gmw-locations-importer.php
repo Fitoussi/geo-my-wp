@@ -247,7 +247,7 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 			<div class="gmw-locations-importer-wrapper object-<?php echo esc_attr( $this->object_type ); ?> <?php echo esc_attr( get_class( $this ) ); ?>">
 
 				<?php if ( ! empty( $this->form_message ) ) { ?>
-					<p><?php echo esc_attr( $this->form_message ); ?></p>
+					<span class="gmw-locations-importer-description"><?php echo esc_attr( $this->form_message ); ?></span>
 				<?php } ?>
 
 				<?php echo $this->get_import_details(); // WPCS: XSS ok. ?>
