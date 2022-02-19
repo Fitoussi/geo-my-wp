@@ -289,7 +289,7 @@ class GMW_Admin {
 	public function admin_menu() {
 
 		// GEO my WP menu items.
-		add_menu_page( 'GEO my WP', 'GEO my WP', 'manage_options', 'gmw-extensions', array( $this->addons_page, 'output' ), 'dashicons-location-alt', 66 );
+		add_menu_page( 'GEO my WP', 'GEO my WP', 'manage_options', 'gmw-extensions', array( $this->addons_page, 'output' ), GMW_URL . '/menu-icon.png', 66 );
 
 		// sub menu pages.
 		$menu_items = array();
