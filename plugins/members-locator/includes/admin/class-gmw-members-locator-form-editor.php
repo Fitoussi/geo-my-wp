@@ -27,12 +27,14 @@ class GMW_Members_Locator_Form_Editor {
 	 */
 	public function __construct() {
 
+		// Members Locator Form tasks.
 		add_filter( 'gmw_members_locator_form_default_settings', array( $this, 'set_defaults' ), 20 );
-		add_filter( 'gmw_members_locator_form_settings', array( $this, 'form_settings' ), 15 );
-		// settings fields
-		add_action( 'gmw_members_locator_form_settings_xprofile_fields', array( 'GMW_Form_Settings_Helper', 'bp_xprofile_fields' ), 10, 2 );
-		// validations
-		add_filter( 'gmw_members_locator_validate_form_settings_xprofile_fields', array( 'GMW_Form_Settings_Helper', 'validate_bp_xprofile_fields' ) );
+		add_filter( 'gmw_members_locator_form_settings', array( $this, 'form_settings' ), 15, 2 );
+
+		// Mashup map form tasks.
+		add_filter( 'gmw_members_locator_mashup_map_form_default_settings', array( $this, 'set_defaults' ), 5, 2 );
+		add_filter( 'gmw_members_locator_mashup_map_form_settings_groups', array( $this, 'modify_form_settings_groups' ), 5, 2 );
+		add_filter( 'gmw_members_locator_mashup_map_form_settings', array( $this, 'form_settings' ), 5, 2 );
 	}
 
 	/**
