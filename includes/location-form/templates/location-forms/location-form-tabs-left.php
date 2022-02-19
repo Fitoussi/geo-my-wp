@@ -10,8 +10,6 @@
  */
 
 ?>
-<div class="gmw-lf-tabs-bg"></div>
-
 <!-- Left tabs -->
 <ul class="gmw-lf-tabs-wrapper">
 
@@ -23,7 +21,7 @@
 </ul>
 
 <!-- tabs content -->
-<div class="gmw-lf-content-wrapper">
+<div class="gmw-lf-content-wrapper gmw-fields-enhanced">
 
 	<div class="gmw-lf-content-inner tabs-wrapper">
 
