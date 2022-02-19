@@ -516,6 +516,14 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 				$location_args = $this->modify_location( $location_args );
 				$location_args = apply_filters( 'gmw_locations_importer_location_args', $location_args, $this );
 
+				if ( empty( $location_args['address'] ) && ! empty( $location_args['formatted_address'] ) ) {
+					$location_args['address'] = $location_args['formatted_address'];
+				}
+
+				if ( ! empty( $location_args['address'] ) && empty( $location_args['formatted_address'] ) ) {
+					$location_args['formatted_address'] = $location_args['address'];
+				}
+
 				// try to import location.
 				$location_id = gmw_update_location_data( $location_args );
 
