@@ -1078,7 +1078,6 @@ GMW_Map.prototype.render = function( locations, userLocation ) {
 
 	//self.options = jQuery.extend( {}, self.options, self.getMapOptions( self ) );
 
-
 	self.options = jQuery.extend( {}, self.getMapOptions( self ), self.options );
 
 	// modify the map options.
