@@ -116,10 +116,12 @@ function gmw_output_posts_locator_import_export_tab() {
 		</fieldset>
 	</div>
 
-	<?php //do_action( 'gmw_import_export_before_mappress_import' ); ?>
+	<?php // do_action( 'gmw_import_export_before_mappress_import' ); ?>
 
-	<?php /*<div class="gmw-settings-panel gmw-export-data-panel">
-			
+	<?php
+	/*
+	<div class="gmw-settings-panel gmw-export-data-panel">
+
 		<fieldset>
 
 			<legend class="gmw-settings-panel-title"><?php esc_html_e( 'Transfer Posts Location To Another Site.', 'geo-my-wp' ); ?></legend>
@@ -140,7 +142,7 @@ function gmw_output_posts_locator_import_export_tab() {
 
 					<div class="gmw-settings-panel-field">
 
-						<?php 
+						<?php
 						$rr = new GMW_Location_To_Meta_Fields_Importer();
 						$rr->output();
 						?>
@@ -170,7 +172,8 @@ function gmw_output_posts_locator_import_export_tab() {
 				</div>
 			</div>
 		</fieldset>
-	</div>*/ ?>
+	</div>*/
+	?>
 
 	<?php
 }
@@ -231,7 +234,7 @@ class GMW_Post_Custom_Fields_Importer extends GMW_Locations_Importer {
 		$location_fields = get_option( 'gmw_importer_post_meta_fields' );
 
 		// Count rows only when init the importer.
-		$count_rows = $this->total_locations == 0 ? 'SQL_CALC_FOUND_ROWS' : '';
+		$count_rows = absint( $this->total_locations ) === 0 ? 'SQL_CALC_FOUND_ROWS' : '';
 
 		// get posts.
 		$results = $wpdb->get_results(
@@ -251,9 +254,9 @@ class GMW_Post_Custom_Fields_Importer extends GMW_Locations_Importer {
 				INNER JOIN {$wpdb->prefix}postmeta AS wppmeta1 
 				ON ( wpposts.ID = wppmeta1.post_id )
 				AND ( 
-	  			( wppmeta.meta_key = '%s' AND wppmeta.meta_value NOT IN ('') ) 
+	  			( wppmeta.meta_key = %s AND wppmeta.meta_value NOT IN ('') ) 
 	  			AND 
-	  			( wppmeta1.meta_key = '%s' AND wppmeta1.meta_value NOT IN ('') )
+	  			( wppmeta1.meta_key = %s AND wppmeta1.meta_value NOT IN ('') )
 				) 
 				GROUP BY wpposts.ID 
 				ORDER BY wpposts.ID 
@@ -264,11 +267,11 @@ class GMW_Post_Custom_Fields_Importer extends GMW_Locations_Importer {
 					$this->records_completed,
 					$this->records_per_batch,
 				)
-			)
+			) // WPCS: db call ok, cache ok, unprepared SQL ok.
 		);
 
 		// count all rows only when init the importer.
-		$this->total_locations = $this->total_locations == 0 ? $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : $this->total_locations;
+		$this->total_locations = absint( $this->total_locations ) === 0 ? $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : $this->total_locations;
 
 		// abort if nothing was found.
 		if ( empty( $results ) ) {
@@ -336,15 +339,16 @@ class GMW_Map_Press_Importer extends GMW_Locations_Importer {
 		$table_name = $wpdb->prefix . 'mappress_maps';
 
 		// look for Mappress DB table.
-		$table = $wpdb->get_results( "SHOW TABLES LIKE '{$table_name}'", ARRAY_A );
+		$table = $wpdb->get_results( "SHOW TABLES LIKE '{$table_name}'", ARRAY_A ); // WPCS: db call ok, cache ok, unprepared SQL ok.
 
 		// abort if no table exist.
-		if ( count( $table ) == 0 ) {
-			wp_die( sprintf( __( '%s database table cannot be found.', 'geo-my-wp' ), $table_name ) );
+		if ( count( $table ) === 0 ) {
+			/* translators: %s database table name. */
+			wp_die( sprintf( esc_attr__( '%s database table cannot be found.', 'geo-my-wp' ), esc_attr( $table_name ) ) );
 		}
 
 		// count rows only when init the importer.
-		$count_rows = $this->total_locations == 0 ? 'SQL_CALC_FOUND_ROWS' : '';
+		$count_rows = absint( $this->total_locations ) === 0 ? 'SQL_CALC_FOUND_ROWS' : '';
 
 		// get posts.
 		$results = $wpdb->get_results(
@@ -363,10 +367,10 @@ class GMW_Map_Press_Importer extends GMW_Locations_Importer {
 					$this->records_per_batch,
 				)
 			)
-		);
+		); // WPCS: db call ok, cache ok, unprepared SQL ok.
 
 		// count all rows only when init the importer.
-		$this->total_locations = $this->total_locations == 0 ? $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : $this->total_locations;
+		$this->total_locations = absint( $this->total_locations ) === 0 ? $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : $this->total_locations;
 
 		// abort if nothing was found.
 		if ( empty( $results ) ) {
