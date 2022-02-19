@@ -352,7 +352,11 @@ class GMW_Location_Form {
 			wp_enqueue_script( 'gmw-location-form' );
 		}
 
-		do_action( 'gmw_location_form_enqueue_script' );
+		if ( ! wp_style_is(  'gmw-frontend', 'enqueued' ) ) {
+			wp_enqueue_style( 'gmw-frontend' );
+		}
+
+		do_action( 'gmw_location_form_enqueue_script', $this );
 
 		// load select if not already loaded.
 		if ( ! wp_script_is( 'select2', 'enqueued' ) ) {
@@ -947,15 +951,13 @@ class GMW_Location_Form {
 				$days_hours = array();
 			}
 			?>
-			<table class="form-table">
+			<div class="gmw-lf-day-hours-content">
 
 				<?php for ( $i = 0; $i <= 6; $i++ ) { ?>
 
-					<tr>
-						<th style="width:30px">
+					<fieldset class="gmw-lf-field-wrapper gmw-lf-day-hours-row">
+						<span>
 							<label for=""><?php esc_html_e( 'Days', 'geo-my-wp' ); ?></label>
-						</th>
-						<td style="width:150px">
 							<?php $value = ! empty( $days_hours[ $i ]['days'] ) ? esc_attr( $days_hours[ $i ]['days'] ) : ''; ?>
 							<input 
 								type="text"
@@ -964,12 +966,10 @@ class GMW_Location_Form {
 								id="gmw-pt-days-<?php echo $i; // WPCS: XSS ok. ?>"
 								value="<?php echo $value; // WPCS: XSS ok. ?>"
 								/>
-						</td>
+						</span>
 
-						<th style="width:30px">
+						<span>
 							<label for=""><?php esc_html_e( 'Hours', 'geo-my-wp' ); ?></label>
-						</th>
-						<td>
 							<?php $value = ! empty( $days_hours[ $i ]['hours'] ) ? esc_attr( $days_hours[ $i ]['hours'] ) : ''; ?>
 							<input 
 								type="text"
@@ -978,12 +978,12 @@ class GMW_Location_Form {
 								id="gmw-pt-hours-<?php echo $i; // WPCS: XSS ok. ?>"
 								value="<?php echo $value; // WPCS: XSS ok. ?>"
 								/>
-						</td>
-					</tr>
+						</span>
+					</fieldset>
 
 				<?php } ?>
 
-			</table>
+			</div>
 
 			<?php
 			// For backward compatibility.
@@ -1079,20 +1079,21 @@ class GMW_Location_Form {
 
 		$tab_count = 1;
 		$output    = '';
+		$html_tag  = apply_filters( 'gmw_location_form_tabs_html_tag', 'li', $this );
 
 		// loop through tabs.
 		foreach ( $this->tabs as $key => $tab ) {
 
 			$status  = ( 1 === absint( $tab_count ) ) ? 'active' : '';
-			$output .= '<li id="' . sanitize_title( $key ) . '-tab" class="gmw-lf-tab ' . $status . ' ">'; // WPCS ok.
+			$output .= '<' . $html_tag . ' id="' . sanitize_title( $key ) . '-tab" class="gmw-lf-tab ' . $status . ' ">'; // WPCS ok.
 			$output .= '<a href="#" class="tab-anchor" data-name="' . sanitize_title( $key ) . '">';
 
 			if ( ! empty( $tab['icon'] ) ) {
-				$output .= '<i class="' . esc_attr( $tab['icon'] ) . '"></i>';
+				$output .= '<i class="gmw-lf-tab-icon ' . esc_attr( $tab['icon'] ) . '"></i>';
 			}
 			$output .= '<span>' . esc_attr( $tab['label'] ) . '</span>';
 			$output .= '</a>';
-			$output .= '</li>';
+			$output .= '</' . $html_tag . '>';
 
 			$tab_count++;
 		}
@@ -1119,7 +1120,9 @@ class GMW_Location_Form {
 
 		// check if group fields title exists and if so display it.
 		if ( ! empty( $this->form_fields[ $fields_group ]['label'] ) && apply_filters( 'gmw_lf_group_fields_title', true, $this->fields, $fields_group ) ) {
-			echo '<h3>' . esc_attr( $this->form_fields[ $fields_group ]['label'] ) . '</h3>';
+			echo '<div class="gmw-lf-section-title">';
+			echo '<span>' . esc_attr( $this->form_fields[ $fields_group ]['label'] ) . '</span>';
+			echo '</div>';
 		}
 
 		// sort fields.
@@ -1255,7 +1258,7 @@ class GMW_Location_Form {
 		// check for locaiton ID.
 		$location_id = $this->saved_location ? (int) $this->saved_location->ID : '';
 
-		$output = '<div class="gmw-lf-submission-fields-wrapper">';
+		$output = '<div class="gmw-lf-submission-fields-wrapper" style="display:none ! important">';
 
 		// add few more hidden fields with location data.
 		$output .= '<input type="hidden" class="gmw-lf-submission-field location-id" id="gmw_lf_location_id" name="gmw_location_form[ID]" 		   value="' . absint( $location_id ) . '" />';
@@ -1356,7 +1359,7 @@ class GMW_Location_Form {
 		do_action( 'gmw_before_location_form_wrapper', $gmw_location_form );
 
 		// form wrapper.
-		echo '<div id="gmw-location-form-wrapper" class="gmw-location-form-wrapper ' . esc_attr( $gmw_location_form->args['form_template'] ) . '">';
+		echo '<div id="gmw-location-form-wrapper" class="gmw-location-form-wrapper gmw-element-wrapper ' . esc_attr( $gmw_location_form->args['form_template'] ) . '">';
 
 		do_action( 'gmw_before_location_form', $gmw_location_form );
 
@@ -1365,11 +1368,15 @@ class GMW_Location_Form {
 			echo '<form id="gmw-location-form" class="gmw-lf-form" name="gmw_lf_location_form" method="post">';
 		}
 
+		echo '<div class="gmw-location-form-inner">';
+
 		// hidden location fields.
 		echo $gmw_location_form->submission_fields(); // WPCS: XSS ok.
 
 		// include the form template.
 		include $gmw_location_form->template_folders['form_templates'] . $gmw_location_form->args['form_template'] . '.php';
+
+		echo '</div>';
 
 		if ( $gmw_location_form->args['stand_alone'] ) {
 			echo '</form>';
