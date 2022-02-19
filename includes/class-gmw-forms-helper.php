@@ -23,8 +23,39 @@ class GMW_Forms_Helper {
 	 */
 	public static function default_settings( $form = array() ) {
 
-		$form_data = array(
 
+		$css = '/* Below is an example of basic CSS that you could use to modify some of the basic colors and text of the search results template. */
+/*div.gmw-results-wrapper[data-id="' . absint( $form['ID'] ) . '"] {
+	
+	--gmw-form-color-primary: #1C90FF;
+	--gmw-form-color-hover-primary: #256fb8;
+	--gmw-form-font-color-primary: white;
+
+	--gmw-form-color-secondary: #63CC61;
+	--gmw-form-color-hover-secondary: #70d56e;
+	--gmw-form-font-color-secondary: white;
+
+	--gmw-form-color-accent: #317ABE;
+	--gmw-form-color-hover-accent: #de7a22;
+	--gmw-form-font-color-accent: white;
+
+	--gmw-form-title-font-color: #1e90ff;
+	--gmw-form-title-font-hover-color: #1c80e0;
+
+	--gmw-form-link-color: #2f8be4;
+	--gmw-form-link-color-hover: #236db5;
+
+	--gmw-form-font-color: #333;
+	--gmw-form-background-color-primary: #fbfcfe;
+	--gmw-form-font-size: 14px;
+}*/
+';
+
+		$form_data = array(
+			'general_settings'  => array(
+				'form_name'       => 'form_id_' . $form['ID'],
+				'visible_options' => '',
+			),
 			'page_load_results' => array(
 				'enabled'         => 1,
 				'user_location'   => '',
@@ -37,25 +68,45 @@ class GMW_Forms_Helper {
 				'country_filter'  => '',
 				'display_results' => 1,
 				'display_map'     => 'results',
-				'per_page'        => '5,10,15,25',
+				'per_page'        => '5,10,15,25,50',
 			),
 			'search_form'       => array(
-				'form_template'  => 'default',
+				'form_template'  => 'responsive-1',
 				'address_field'  => array(
+					'usage'                => 'single',
 					'label'                => 'Address',
-					'placeholder'          => 'Enter Address',
+					'placeholder'          => 'Type an address',
 					'address_autocomplete' => 1,
 					'locator'              => 1,
-					'locator_submit'       => 1,
-					'mandatory'            => '',
+					'locator_submit'       => '',
+					'required'             => '',
 				),
-				'locator'        => 'disabled',
-				'locator_text'   => '',
-				'locator_image'  => 'blue-dot.png',
-				'locator_submit' => '',
-				'radius'         => '5,10,25,50,100,150,200',
-				'units'          => 'imperial',
-
+				'locator_button' => array(
+					'usage'          => 'disabled',
+					'text'           => __( 'Get my current location', 'geo-my-wp' ),
+					'url'            => GMW_IMAGES . '/locator-images/locate-me-blue.png',
+					'image'          => GMW_IMAGES . '/locator-images/locate-me-blue.png',
+					'locator_submit' => '',
+				),
+				'radius'         => array(
+					'usage'            => 'select',
+					'label'            => 'Radius',
+					'show_options_all' => 'Miles',
+					'options'          => "5\n10\n25\n50\n100",
+					'default_value'    => '50',
+				),
+				'units'          => array(
+					'options' => 'imperial',
+					'label'   => 'Units',
+				),
+				'submit_button' => array(
+					'label' => __( 'Submit', 'geo-my-wp' ),
+				),
+				'styles'        => array(
+					'enhanced_fields'    => 1,
+					'custom_css'         => '',
+					'disable_stylesheet' => '',
+				),
 			),
 			'form_submission'   => array(
 				'results_page'    => '',
@@ -63,16 +114,32 @@ class GMW_Forms_Helper {
 				'display_map'     => 'results',
 			),
 			'search_results'    => array(
-				'results_template' => 'gray',
-				'per_page'         => '5,10,15,25',
+				'results_template' => 'responsive-2',
+				'results_view'     => array(
+					'default' => 'grid',
+					'toggle'  => 1,
+				),
+				'per_page'         => '5,10,15,25,50',
 				'image'            => array(
-					'enabled' => 1,
-					'width'   => '100',
-					'height'  => '100',
+					'enabled'      => 1,
+					'width'        => '120px',
+					'height'       => 'auto',
+					'no_image_url' => GMW_IMAGES . '/no-image.jpg',
+				),
+				'excerpt'          => array(
+					'usage' => 'disabled',
+					'count' => '10',
+					'link'  => 'read more...',
 				),
 				'location_meta'    => array(),
 				'opening_hour'     => '',
 				'directions_link'  => 1,
+				'taxonomies'       => 1,
+				'styles'           => array(
+					'enhanced_fields'    => 1,
+					'custom_css'         => $css,
+					'disable_stylesheet' => '',
+				),
 			),
 			'results_map'       => array(
 				'map_width'  => '100%',
@@ -116,7 +183,7 @@ class GMW_Forms_Helper {
 
 				// if happened that form has no data we need to apply the defaults
 				if ( empty( $form['data'] ) ) {
-					$form['data'] = serialize( GMW_Forms_Helper::default_settings( array() ) );
+					$form['data'] = serialize( GMW_Forms_Helper::default_settings( $form ) );
 				}
 
 				$data = maybe_unserialize( $form['data'] );
@@ -172,7 +239,7 @@ class GMW_Forms_Helper {
 
 				// if happens that form has no data, we need to apply the defaults
 				if ( empty( $form['data'] ) ) {
-					$form['data'] = GMW_Forms_Helper::default_settings( array() );
+					$form['data'] = GMW_Forms_Helper::default_settings( $form );
 				}
 
 				$form = array_merge( $form, maybe_unserialize( $form['data'] ) );
