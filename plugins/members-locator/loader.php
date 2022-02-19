@@ -188,6 +188,7 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 		include_once 'includes/gmw-members-locator-activity.php';
 		include_once 'includes/gmw-members-locator-template-functions.php';
 		include_once 'includes/class-gmw-members-locator-form.php';
+		include_once 'includes/class-gmw-members-locator-mashup-map-form.php';
 		include_once 'includes/class-gmw-member-location-form.php';
 
 		// init the location tab.
