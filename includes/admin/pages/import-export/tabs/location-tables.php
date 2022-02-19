@@ -1,9 +1,21 @@
 <?php
-// Exit if accessed directly
+/**
+ * GEO my WP Import/Export locations tables.
+ *
+ * @author Eyal Fitoussi
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+	exit; // Exit if accessed directly.
 }
 
+/**
+ * Locations table tab output.
+ *
+ * @return [type] [description]
+ */
 function gmw_import_export_location_tables_tab() {
 ?>	
 	<?php do_action( 'gmw_import_export_location_tables_start' ); ?>
@@ -131,17 +143,17 @@ add_action( 'gmw_import_export_location_tables_tab', 'gmw_import_export_location
  */
 function export_location_tables_to_csv() {
 	
-	// make sure at lease one checkbox is checked
+	// make sure at lease one checkbox is checked.
 	if ( empty( $_POST ) || $_POST['gmw_action'] != 'export_location_tables_to_csv' ) {
 		return;
 	}
 	 
-	// check for nonce
+	// check for nonce.
 	if ( empty( $_POST['gmw_export_location_tables_nonce'] ) ) {
 		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
-	// varify nonce
+	// varify nonce.
 	if ( ! wp_verify_nonce( $_POST['gmw_export_location_tables_nonce'], 'gmw_export_location_tables_nonce' ) ) {
 		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
@@ -164,7 +176,7 @@ function export_location_tables_to_csv() {
 	}
 
 	if ( ! empty( $_POST['export_locationmeta_table'] ) ) {
-		
+
 		$locationmeta_export = new GMW_Locationmeta_Table_Export();
 
 		$locationmeta_export->export();
