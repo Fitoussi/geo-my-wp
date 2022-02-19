@@ -876,6 +876,30 @@ class GMW_Form_Editor {
 	}
 
 	/**
+	 * Get premium Message.
+	 *
+	 * @param  [type] $message [description].
+	 *
+	 * @return [type]          [description]
+	 */
+	public function get_premium_message( $message ) {
+
+		$allowed = array(
+			'a'  => array(
+				'href'   => array(),
+				'target' => array(),
+				'title'  => array(),
+			),
+			'p'  => array(
+				'class'  => array(),
+			),
+			'br' => array(),
+		);
+
+		return wp_kses( $message, $allowed );
+	}
+
+	/**
 	 * Form Fields
 	 *
 	 * @access protected
