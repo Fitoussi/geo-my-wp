@@ -268,7 +268,12 @@ function gmw_get_per_page( $gmw = array() ) {
  * @author Eyal Fitoussi
  */
 function gmw_per_page( $gmw = array() ) {
+
+	do_action( 'gmw_before_per_page_filter', $gmw );
+
 	echo gmw_get_per_page( $gmw ); // WPCS: XSS ok.
+
+	do_action( 'gmw_after_per_page_filter', $gmw );
 }
 
 /**
