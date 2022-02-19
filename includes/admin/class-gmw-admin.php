@@ -574,7 +574,7 @@ class GMW_Admin {
 
 				var form_id = jQuery( '#gmw_form_id' ).val();
 
-				if ( form_id == "" ){
+				if ( "" === form_id ){
 
 					alert( '<?php _e( 'Please select a form', 'geo-my-wp' ); ?>' );
 
