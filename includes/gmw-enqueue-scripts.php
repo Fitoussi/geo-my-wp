@@ -128,11 +128,33 @@ function gmw_enqueue_scripts() {
 	wp_register_style( 'gmw-location-form', GMW_URL . '/includes/location-form/assets/css/gmw.location.form.min.css', array(), GMW_VERSION );
 	wp_register_script( 'gmw-location-form', GMW_URL . '/includes/location-form/assets/js/gmw.location.form.min.js', $lf_scripts, GMW_VERSION, true );
 
+	// include GMW main stylesheet.
+	wp_register_style( 'gmw-frontend', GMW_URL . '/assets/css/gmw.frontend.min.css', array(), GMW_VERSION );
+	wp_enqueue_style( 'gmw-frontend' );
+
+	$colors_css_output = '';
+
+	if ( ! empty( $gmw_options['styles'] ) ) {
+
+		foreach( $gmw_options['styles'] as $color_name => $color_value ) {
+
+			if ( empty( $color_value ) ) {
+				continue;
+			}
+			$colors_css_output .= '--gmw-' . str_replace( '_', '-', $color_name ) . ':' . $color_value . ';';
+		}
+	}
+
+	/*$ltr = '';
+
+	if ( ! is_rtl() ) {
+		$ltr = '[class*=" gmw-icon-"]:before,[class^=gmw-icon-]:before {margin-left: 0;}';
+	}*/
+
+	wp_add_inline_style( 'gmw-frontend', ':root{' . $colors_css_output . '}' );
+
 	// register in front-end only.
 	if ( ! IS_ADMIN ) {
-
-		// include GMW main stylesheet.
-		wp_enqueue_style( 'gmw-frontend', GMW_URL . '/assets/css/gmw.frontend.min.css', array(), GMW_VERSION );
 
 		// Map script.
 		wp_register_script( 'gmw-map', GMW_URL . '/assets/js/gmw.map.min.js', $map_scripts, GMW_VERSION, true );
