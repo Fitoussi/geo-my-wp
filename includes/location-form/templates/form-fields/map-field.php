@@ -10,7 +10,7 @@
 
 	<?php } ?>
 
-	<div class="map-wrapper">
+	<div class="map-wrapper gmw-map-wrapper">
 
 		<div id="<?php echo esc_attr( $field['id'] ); ?>" class="<?php echo esc_attr( $field['class'] ); ?>">
 		</div>
