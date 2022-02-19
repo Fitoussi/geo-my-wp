@@ -504,7 +504,7 @@ class GMW_Location_Form {
 				'priority' => 20,
 			),
 			'days_hours'  => array(
-				'label'    => __( 'Days & Hours', 'geo-my-wp' ),
+				'label'    => __( 'Hours of Operation', 'geo-my-wp' ),
 				'icon'     => 'gmw-icon-clock',
 				'priority' => 25,
 			),
@@ -864,11 +864,11 @@ class GMW_Location_Form {
 
 		// days and hours.
 		$fields['days_hours'] = array(
-			'label'  => __( 'Days & Hours', 'geo-my-wp' ),
+			'label'  => __( 'Hours of Operation', 'geo-my-wp' ),
 			'fields' => array(
 				'days_hours' => array(
 					'name'        => 'gmw' . $prefix . 'days_hours',
-					'label'       => __( 'Days & Hours', 'geo-my-wp' ),
+					'label'       => __( 'Hours of Operation', 'geo-my-wp' ),
 					'desc'        => '',
 					'id'          => 'gmw-days-hours',
 					'type'        => 'text',
@@ -936,8 +936,9 @@ class GMW_Location_Form {
 
 			<?php do_action( 'gmw_lf_hours_of_operation_section_start', $this ); ?>
 
-			<h3><?php esc_html_e( 'Days & Hours', 'geo-my-wp' ); ?></h3>
-
+			<div class="gmw-lf-section-title">
+				<span><?php esc_html_e( 'Hours of Operation', 'geo-my-wp' ); ?></span>
+			</div>
 			<?php
 				// get the location's days_hours from database.
 				$days_hours = gmw_get_location_meta( $this->location_id, 'days_hours' );
