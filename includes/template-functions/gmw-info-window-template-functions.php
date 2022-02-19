@@ -267,21 +267,20 @@ if ( gmw_is_addon_active( 'posts_locator' ) ) {
 	 */
 	function gmw_info_window_featured_image( $post, $gmw = array() ) {
 
-		if ( ! $gmw['info_window']['image']['enabled'] || ! has_post_thumbnail() ) {
+		if ( empty( $gmw['info_window']['image']['enabled'] ) ) {
 			return;
 		}
-		?> 
-		<a class="image" href="<?php echo get_permalink( $post->ID ); // WPCS: XSS ok. ?>" >
-			<?php
-			the_post_thumbnail(
-				array(
-					$gmw['info_window']['image']['width'],
-					$gmw['info_window']['image']['height'],
-				)
-			);
-			?>
-		</a>                                  
-		<?php
+
+		$args = array(
+			'object_type'  => 'post',
+			'object_id'    => $post->ID,
+			'width'        => ! empty( $this->form['info_window']['image']['width'] ) ? $this->form['info_window']['image']['width'] : '200px',
+			'height'       => ! empty( $this->form['info_window']['image']['height'] ) ? $this->form['info_window']['image']['height'] : 'auto',
+			'where'        => 'info_window',
+			'no_image_url' => ! empty( $this->form['info_window']['image']['no_image_url'] ) ? $this->form['info_window']['image']['no_image_url'] : '',
+		);
+
+		echo gmw_get_post_featured_image( $args, $post, $gmw );
 	}
 
 	/**
