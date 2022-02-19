@@ -653,7 +653,7 @@ var GMW_Location_Form = {
 		if ( type == 'updating' ) {
 
 			// add new message and type
-	 		jQuery( '#' + this_form.action_fields.message.id ).removeClass( 'changed ok error confirming' ).addClass( 'confirming' ).find( 'span' ).html( message );
+	 		jQuery( '#' + this_form.action_fields.message.id ).removeClass( 'changed ok error confirming gmw-error-message gmw-success-message gmw-warning-message' ).addClass( 'confirming gmw-warning-message' ).find( 'span' ).html( message );
 
 	 		// show message if hidden
 	 		if ( toggle ) {
@@ -665,8 +665,23 @@ var GMW_Location_Form = {
 			// Hide loader first
 			jQuery( '#' + this_form.action_fields.loader.id ).fadeOut( 'fast', function() {
 
+				var newMessageClass = type;
+
+				if ( 'ok' == type ) {
+
+					newMessageClass += ' gmw-success-message';
+
+				} else if ( 'error' == type ) {
+
+					newMessageClass += ' gmw-error-message';
+
+				} else if ( 'changed' == type ) {
+
+					newMessageClass += ' gmw-warning-message';
+				}
+
 				// add new message and type
-		 		jQuery( '#' + this_form.action_fields.message.id ).removeClass( 'changed ok error confirming' ).addClass( type ).find( 'span' ).html( message );
+		 		jQuery( '#' + this_form.action_fields.message.id ).removeClass( 'changed ok error confirming gmw-error-message gmw-success-message gmw-warning-message' ).addClass( newMessageClass ).find( 'span' ).html( message );
 
 		 		// show message if hidden
 		 		if ( toggle ) {
@@ -787,7 +802,7 @@ var GMW_Location_Form = {
 			jQuery( '#' + jQuery( this ).attr( 'id' ).replace( /-/g, '_' ) ).val( jQuery( this ).val() );
 
 			// show location changed message and button
-			if ( ! jQuery( 'p.gmw-lf-form-action' ).hasClass( 'changed' ) ) {
+			if ( ! jQuery( '.gmw-lf-form-action' ).hasClass( 'changed' ) ) {
 				this_form.location_changed();
 			}
 		});
@@ -998,7 +1013,7 @@ var GMW_Location_Form = {
             'q' 	 : [ lat, lng ], 
             'region' : this_form.region
         };
-			
+
 		var geocoder = new GMW_Geocoder( gmwVars.geocodingProvider );
 			
 		geocoder.reverseGeocode( data ,function( response, status ) {
