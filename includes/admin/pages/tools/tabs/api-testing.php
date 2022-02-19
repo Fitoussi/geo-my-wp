@@ -134,12 +134,12 @@ function gmw_verify_google_server_key_test_nonce() {
 
 	// look for nonce.
 	if ( empty( $_POST['gmw_google_server_key_test_nonce'] ) ) {
-		wp_die( esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
 	// varify nonce.
 	if ( ! wp_verify_nonce( $_POST['gmw_google_server_key_test_nonce'], 'gmw_google_server_key_test_nonce' ) ) { // WPCS: CSRF ok, XSS ok, sanitization ok.
-		wp_die( esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 }
 add_action( 'gmw_google_server_key_test', 'gmw_verify_google_server_key_test_nonce' );
