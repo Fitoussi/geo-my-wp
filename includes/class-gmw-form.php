@@ -441,6 +441,18 @@ class GMW_Form {
 	}
 
 	/**
+	 * Get search results page
+	 *
+	 * @return [type] [description]
+	 */
+	public function get_class_attr( $type = 'form_wrap' ) {
+	
+		$output = ! empty( $this->element_class_attr[ $type ] ) ? implode( ' ', $this->element_class_attr[ $type ] ) : '';
+
+		return apply_filters( 'gmw_form_elements_class_attribute', $output, $this->element_class_attr, $this->form );
+	}
+
+	/**
 	 * Display search form
 	 *
 	 * @return void
