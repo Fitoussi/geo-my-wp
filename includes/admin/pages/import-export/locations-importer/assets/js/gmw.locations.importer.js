@@ -26,7 +26,7 @@ jQuery( document ).ready( function( $ ) {
 
                 // get the form element
                 GMW_Import_Locations.form = $( this );
-                
+
                 // run importer
                 if ( ! GMW_Import_Locations.processing ) {
                     
@@ -86,6 +86,8 @@ jQuery( document ).ready( function( $ ) {
             // get nonce value
             nonce = GMW_Import_Locations.form.find( '.gmw_locations_importer_nonce' ).val();
 
+            var formData = GMW_Import_Locations.form.serialize();
+
             // do ajax importing
             GMW_Import_Locations.importer = $.ajax({
                 type     : 'POST',
@@ -93,6 +95,7 @@ jQuery( document ).ready( function( $ ) {
                 dataType : 'json',
                 data     : {
                     action            : 'gmw_locations_importer',
+                    formData          : formData,
                     importAction      : importAction,
                     recordsCompleted  : recordsCompleted,
                     locationsUpdated  : locationsUpdated,
@@ -109,8 +112,8 @@ jQuery( document ).ready( function( $ ) {
                     GMW_Import_Locations.action_ph.html( 'Importing...' );
 
                     // show total records processed
-                    GMW_Import_Locations.form.find( '.completed-ph').html( response.records_completed );
-                    GMW_Import_Locations.form.find( '.total-ph').html( response.total_locations );
+                    GMW_Import_Locations.form.find( '.completed-ph' ).html( response.records_completed );
+                    GMW_Import_Locations.form.find( '.total-ph' ).html( response.total_locations );
 
                     // number of locations updated message
                     GMW_Import_Locations.updated_ph.html( response.locations_updated );
@@ -167,6 +170,7 @@ jQuery( document ).ready( function( $ ) {
                             dataType : 'json',
                             data     : {
                                 action            : 'gmw_locations_importer_done',
+                                formData          : formData,
                                 importAction      : importAction,
                                 recordsFound      : recordsFound,
                                 recordsCompleted  : response.records_completed,
