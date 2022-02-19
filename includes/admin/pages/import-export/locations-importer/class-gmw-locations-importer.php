@@ -296,6 +296,10 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 		 */
 		protected function location_exist( $existing_location, $location ) {
 
+			if ( ! is_object( $existing_location ) ) {
+				$existing_location = (object) $existing_location;
+			}
+
 			// count location as exist.
 			$this->locations_exist++;
 
