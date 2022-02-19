@@ -26,129 +26,135 @@ function gmw_import_export_forms_tab() {
 ?>	
 	<?php do_action( 'gmw_import_export_forms_before_export' ); ?>
 
-	<div id="poststuff" class="metabox-holder">
+	<div class="gmw-settings-panel gmw-export-form-panel">
 
-		<div id="post-body">
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin.php?page=gmw-import-export&tab=forms' ) ); ?>">
+			
+			<fieldset>
 
-			<div id="post-body-content">
+				<legend class="gmw-settings-panel-title"><?php esc_html_e( 'Export Forms', 'geo-my-wp' ); ?></legend>
 
-				<div class="postbox ">
+				<div class="gmw-settings-panel-content">
 
-					<h3 class="hndle">
-						<span><?php _e( 'Export Forms', 'geo-my-wp' ); ?> </span>
-					</h3>
+					<div class="gmw-settings-panel-description">
+						<?php esc_html_e( 'Select the forms you would like to export then click the "Export" button to generate a .json file.', 'geo-my-wp' ); ?>		
+					</div>
 
-					<div class="inside">
-
-						<p>
-							<?php _e( 'Select the forms you would like to export then click the "Export" button to generate a .json file. You can use the file to import your forms back to this site or to another site running GEO my WP version 3.0 or higher.', 'geo-my-wp' ); ?>
-						</p>
-
+					<div class="gmw-settings-panel-field">
+						
 						<?php $forms = gmw_get_forms(); ?>
 
 						<?php if ( ! empty( $forms ) ) { ?>
+						
+							<div class="gmw-settings-panel-checkboxes" style="max-height: 300px;overflow-y: scroll;">
+								<label>
+									<input 
+										type="checkbox" 
+										class="cb-export-item" 
+										checked="checked" 
+										onchange="if ( jQuery( this ).is( ':checked' ) ) { jQuery( this ).closest( 'form' ).find( '.cb-export-item' ).prop( 'checked', true ); } else { jQuery( this ).closest( 'form' ).find( '.cb-export-item' ).prop( 'checked', false ); }"
+									/>
+									<?php esc_html_e( 'All forms', 'geo-my-wp' ); ?>
+								</label>
 
-							<form method="post" action="<?php echo admin_url( 'admin.php?page=gmw-import-export&tab=forms' ); ?>">
-								<p class="checkboxes">
+								<?php foreach ( $forms as $form_id => $values ) { ?>
 
-									<label style="font-weight: 600;margin-bottom: 10px">
+									<?php
+									if ( empty( $values ) ) {
+										continue;
+									}
+									?>
+
+									<?php $title = $values['title'] . ' - ID ' . $values['ID'] . ' ( ' . $values['addon'] . ' ) '; ?>
+
+									<label>
 										<input 
 											type="checkbox" 
 											class="cb-export-item" 
+											name="gmw_forms[]" 
+											value="<?php echo esc_attr( $values['ID'] ); ?>" 
 											checked="checked" 
-											onchange="if ( jQuery( this ).is( ':checked' ) ) { jQuery( this ).closest( 'form' ).find( '.cb-export-item' ).prop( 'checked', true ); } else { jQuery( this ).closest( 'form' ).find( '.cb-export-item' ).prop( 'checked', false ); }"
 										/>
-										<?php _e( 'All forms', 'geo-my-wp' ); ?>
+
+										<?php echo esc_attr( $title ); ?>
 									</label>
 
-									<?php foreach ( $forms as $form_id => $values ) { ?>
+								<?php } ?>
 
-										<?php
-										if ( empty( $values ) ) {
-											continue;}
-?>
+							</div>
+							<p>
+								<input type="hidden" name="gmw_action" value="export_forms" />
 
-										<?php $title = $values['title'] . ' - ID ' . $values['ID'] . ' ( ' . $values['addon'] . ' ) '; ?>
+								<?php wp_nonce_field( 'gmw_export_forms_nonce', 'gmw_export_forms_nonce' ); ?>
 
-										<label>
-											<input 
-												type="checkbox" 
-												class="cb-export-item" 
-												name="gmw_forms[]" 
-												value="<?php echo esc_attr( $values['ID'] ); ?>" 
-												checked="checked" 
-											/>
+								<?php
+								submit_button(
+									esc_html__( 'Export', 'geo-my-wp' ),
+									'gmw-settings-action-button button-primary',
+									'submit',
+									false,
+									array(
+										'onclick' => "if ( ! jQuery('.cb-export-item').is(':checked') ) { alert( 'You must check at least one form that you would like to export.' ); return false; }",
+									)
+								);
+								?>
+							</p>
 
-											<?php echo esc_attr( $title ); ?>
-										</label>
-
-									<?php } ?>
-
-								</p>
-								<p>
-									<input type="hidden" name="gmw_action" value="export_forms" />
-
-									<?php wp_nonce_field( 'gmw_export_forms_nonce', 'gmw_export_forms_nonce' ); ?>
-
-									<?php
-									submit_button(
-										__( 'Export', 'geo-my-wp' ), 'secondary', 'submit', false, array(
-											'onclick' => "if ( !jQuery('.cb-export-item').is(':checked') ) { alert( 'You must check at least one form that you would like to export.' ); return false; }",
-										)
-									);
-									?>
-								</p>
-							</form>
 						<?php } else { ?>
 
-							<p><?php _e( 'There are no forms to export', 'geo-my-wp' ); ?></p>
+							<h4><?php esc_html_e( 'There are no forms to export', 'geo-my-wp' ); ?></h4>
 
 						<?php } ?>
 
-					</div>
+					</div>					
 				</div>
-			</div>
-		</div>
+			</fieldset>		
+		</form>
 	</div>
-
+			
 	<?php do_action( 'gmw_import_export_before_forms_import' ); ?>
 
-	<div id="poststuff" class="metabox-holder">
+	<div class="gmw-settings-panel gmw-import-forms-panel">
 
-		<div id="post-body">
+		<form method="post" enctype="multipart/form-data" action="<?php echo esc_url( admin_url( 'admin.php?page=gmw-import-export&tab=forms' ) ); ?>">
+			
+			<fieldset>
 
-			<div id="post-body-content">
+				<legend class="gmw-settings-panel-title"><?php esc_html_e( 'Import Forms', 'geo-my-wp' ); ?></legend>
 
-				<div class="postbox ">
+				<div class="gmw-settings-panel-content">
 
-					<h3 class="hndle">
-						<span><?php _e( 'Import Forms', 'geo-my-wp' ); ?> </span>
-					</h3>
+					<div class="gmw-settings-panel-description">
+						<?php esc_html_e( 'Select the .json file that you would like to import then click Import.', 'geo-my-wp' ); ?>
+					</div>
 
-					<div class="inside">
-
+					<div class="gmw-settings-panel-field">
+									
 						<p>
-							<?php _e( 'Choose the .json file that you would like to import then click Import.', 'geo-my-wp' ); ?>
+							<input type="file" name="import_file" id="gmw-import-forms-file" />
 						</p>
+						<p>
+							<input type="hidden" name="gmw_action" value="import_forms" name="form_import_file" />
 
-						<form method="post" enctype="multipart/form-data" action="<?php echo admin_url( 'admin.php?page=gmw-import-export&tab=forms' ); ?>">					
-							<p>
-								<input type="file" name="import_file" />
-							</p>
-							<p>
-								<input type="hidden" name="gmw_action" value="import_forms" name="form_import_file" />
+							<?php wp_nonce_field( 'gmw_import_forms_nonce', 'gmw_import_forms_nonce' ); ?>
 
-								<?php wp_nonce_field( 'gmw_import_forms_nonce', 'gmw_import_forms_nonce' ); ?>
-
-								<?php
-								submit_button( __( 'Import', 'geo-my-wp' ), 'secondary', 'submit', false );
-								?>
-							</p>
-						</form>
+							<?php
+								submit_button(
+									esc_html__( 'Import', 'geo-my-wp' ),
+									'gmw-settings-action-button button-primary',
+									'submit',
+									false,
+									array(
+										'onclick' => "if ( jQuery( '#gmw-import-forms-file' ).get(0).files.length === 0 ) { alert( 'Select a file to import.' ); return false; }",
+									)
+								); 
+							?>
+						</p>
 					</div>
 				</div>
-			</div>
-		</div>
+			</fieldset>							
+		</form>
+
 	</div>
 
 	<?php do_action( 'gmw_import_export_forms_end' ); ?>
