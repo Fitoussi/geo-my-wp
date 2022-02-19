@@ -379,9 +379,13 @@ class GMW_Current_Location {
 			// generate hidden form only once.
 			echo self::current_location_fields(); // WPCS: XSS ok.
 
+			$cl_localize = array(
+				'nonce' => wp_create_nonce( 'gmw_current_location_nonce' ),
+			);
+
 			// enqueue scripts.
 			// wp_enqueue_script( 'gmw-current-location' );.
-			wp_localize_script( 'gmw', 'gmw_cl_nonce', wp_create_nonce( 'gmw_current_location_nonce' ) );
+			wp_localize_script( 'gmw', 'gmw_cl_args', $cl_localize );
 		}
 	}
 
