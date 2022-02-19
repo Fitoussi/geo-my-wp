@@ -103,6 +103,24 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 		}
 
 		/**
+		 * Import button label.
+		 *
+		 * @return [type] [description]
+		 */
+		public function get_import_button_label() {
+			return __( 'Import', 'geo-my-wp' );
+		}
+
+		/**
+		 * Abort button label.
+		 *
+		 * @return [type] [description]
+		 */
+		public function get_abort_button_label() {
+			return __( 'Abort', 'geo-my-wp' );
+		}
+
+		/**
 		 * Show locations log in window console.
 		 *
 		 * Will show location information of all imported, exising and failed cases of an importing process
