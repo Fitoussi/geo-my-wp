@@ -1,5 +1,13 @@
 <?php
-// Exit if accessed directly
+/**
+ * GEO my WP Extensions page.
+ *
+ * @author Eyal Fitoussi
+ *
+ * @package geo-my-wp
+ */
+
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -17,7 +25,7 @@ class GMW_Extensions {
 	 */
 	public function __construct() {
 
-		// Abort if not add-ons page
+		// Abort if not add-ons page.
 		if ( empty( $_GET['page'] ) || 'gmw-extensions' != $_GET['page'] ) {
 			return;
 		}
@@ -30,12 +38,11 @@ class GMW_Extensions {
 	}
 
 	/**
-	 * GMW Function - add notice messages
+	 * Notices.
 	 *
-	 * @access public
-	 * @since 2.5
-	 * @author Eyal Fitoussi
+	 * @param  array $messages messages.
 	 *
+	 * @return [type]           [description]
 	 */
 	public function notices_messages( $messages ) {
 
@@ -53,16 +60,19 @@ class GMW_Extensions {
 	 * Add-ons feed from GEO my WP
 	 *
 	 * @access private
-	 * @return void
+	 *
+	 * @return HTML
 	 */
 	private static function get_extensions_feed() {
 
-		// look for extensions feed in transient. Transient should clear every 24 hours
-		if ( false === ( $output = get_transient( 'gmw_extensions_feed' ) ) ) {
+		// look for extensions feed in transient. Transient should clear every 24 hours.
+		$output = get_transient( 'gmw_extensions_feed' );
+
+		if ( false === $output ) {
 
 			$feed = wp_remote_get( 'https://geomywp.com/extensions/?feed=extensions', array( 'sslverify' => false ) );
 
-			if ( ! is_wp_error( $feed ) && $feed['response']['code'] == '200' ) {
+			if ( ! is_wp_error( $feed ) && '200' == $feed['response']['code'] ) {
 
 				if ( isset( $feed['body'] ) && strlen( $feed['body'] ) > 0 ) {
 
@@ -85,7 +95,7 @@ class GMW_Extensions {
 					$message = 'Error message: ' . $feed['errors']['http_request_failed'][0];
 				}
 
-				echo '<div class="error"><p>' . __( 'There was an error retrieving the add-ons list from the server. Please try again later.', 'geo-my-wp' ) . $message . '</p></div>';
+				echo '<div class="error"><p>' . esc_attr__( 'There was an error retrieving the add-ons list from the server. Please try again later.', 'geo-my-wp' ) . esc_attr( $message ) . '</p></div>';
 
 				$output = false;
 			}
@@ -98,30 +108,31 @@ class GMW_Extensions {
 	 * Enable / Disable extension updater.
 	 *
 	 * @access public
+	 *
 	 * @return void
 	 */
 	public static function extensions_updater() {
 
-		// if doing ajax call
+		// if doing ajax call.
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 
-			//verify nonce
+			// verify nonce.
 			if ( ! check_ajax_referer( 'gmw_extension_updater_nonce', 'security', false ) ) {
 				wp_die(
-					__( 'Cheatin\' eh?!', 'geo-my-wp' ),
-					__( 'Error', 'geo-my-wp' ),
+					esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ),
+					esc_attr__( 'Error', 'geo-my-wp' ),
 					array( 'response' => 403 )
 				);
 			}
 
 			$action = $_POST['updater_action'];
 
-			// Otherwise, page load call
+			// Otherwise, page load call.
 		} else {
 
-			// verify nonce
+			// verify nonce.
 			if ( ! check_admin_referer( 'gmw_extension_updater_nonce' ) ) {
-				wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+				wp_die( esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 			}
 
 			if ( empty( $_GET['action'] ) ) {
@@ -131,14 +142,14 @@ class GMW_Extensions {
 			$action = $_GET['action'];
 		}
 
-		// enable updater
-		if ( 'enable' == $action ) {
+		// enable updater.
+		if ( 'enable' === $action ) {
 
 			update_option( 'gmw_extensions_updater', true );
 
 			$notice = 'updater_enabled';
 
-			// disable updater
+			// disable updater.
 		} else {
 
 			update_option( 'gmw_extensions_updater', false );
@@ -146,7 +157,7 @@ class GMW_Extensions {
 			$notice = 'updater_disabled';
 		}
 
-		// done
+		// done.
 		if ( defined( 'DOING_AJAX' ) ) {
 
 			wp_send_json( $notice );
@@ -159,28 +170,29 @@ class GMW_Extensions {
 	}
 
 	/**
-	 * Clear Extensions cache
+	 * Clear Extensions cache.
 	 *
 	 * @access public
+	 *
 	 * @return void
 	 */
 	public function clear_extensions_cache() {
 
-		//make sure we activated an add-on
+		// Make sure we activated an add-on.
 		if ( empty( $_POST['gmw_clear_extensions_cache'] ) ) {
 			return;
 		}
 
-		//varify nonce
-		if ( empty( $_POST['gmw_clear_extensions_cache_nonce'] ) || ! wp_verify_nonce( $_POST['gmw_clear_extensions_cache_nonce'], 'gmw_clear_extensions_cache_nonce' ) ) {
-			wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+		// Varify nonce.
+		if ( empty( $_POST['gmw_clear_extensions_cache_nonce'] ) || ! wp_verify_nonce( $_POST['gmw_clear_extensions_cache_nonce'], 'gmw_clear_extensions_cache_nonce' ) ) { // WPCS: CSRF ok, XSS ok.
+			wp_die( esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 		}
 
 		// delete extensions and license key transient to retrive new data.
 		delete_transient( 'gmw_extensions_feed' );
 		//delete_transient( 'gmw_verify_license_keys' );
 
-		//reload the page to prevent resubmission
+		// Reload the page to prevent resubmission.
 		wp_safe_redirect(
 			admin_url( 'admin.php?page=gmw-extensions&gmw_notice=extensions_cache_cleared&gmw_notice_status=updated' )
 		);
@@ -191,16 +203,17 @@ class GMW_Extensions {
 	/**
 	 * Generate Activate extension button
 	 *
-	 * @param  string $slug     extension slug
-	 * @param  string $basename extension basename
+	 * @param  string $slug     extension slug.
+	 *
+	 * @param  string $basename extension basename.
 	 *
 	 * @return HTML link
 	 */
-	public static function activate_extension_button( $slug = '', $basename = '' ) {
+	public static function get_activate_extension_button( $slug = '', $basename = '' ) {
 
 		$nonce = wp_create_nonce( 'gmw_' . $slug . '_extension_nonce' );
 		$url   = admin_url( 'admin.php?page=gmw-extensions&gmw_action=activate_extension&basename=' . $basename . '&slug=' . $slug . '&_wpnonce=' . $nonce );
-		$label = __( 'Activate', 'geo-my-wp' );
+		$label = esc_attr__( 'Activate', 'geo-my-wp' );
 
 		$output  = '<a href="' . esc_url( $url ) . '"';
 		$output .= ' class="button button-primary gmw-extension-action-button activate"';
@@ -221,16 +234,17 @@ class GMW_Extensions {
 	/**
 	 * Generate Deactivate extension button
 	 *
-	 * @param  string $slug     extension slug
-	 * @param  string $basename extension basename
+	 * @param  string $slug     extension slug.
+	 *
+	 * @param  string $basename extension basename.
 	 *
 	 * @return HTML link
 	 */
-	public static function deactivate_extension_button( $slug = '', $basename = '' ) {
+	public static function get_deactivate_extension_button( $slug = '', $basename = '' ) {
 
 		$nonce = wp_create_nonce( 'gmw_' . $slug . '_extension_nonce' );
 		$url   = admin_url( 'admin.php?page=gmw-extensions&gmw_action=deactivate_extension&basename=' . $basename . '&slug=' . $slug . '&_wpnonce=' . $nonce );
-		$label = __( 'Deactivate', 'geo-my-wp' );
+		$label = esc_attr__( 'Deactivate', 'geo-my-wp' );
 
 		$output  = '<a href="' . esc_url( $url ) . '"';
 		$output .= ' class="button button-secondary gmw-extension-action-button deactivate"';
@@ -249,59 +263,57 @@ class GMW_Extensions {
 	}
 
 	/**
-	 * Activate extension
-	 *
-	 * @return [type] [description]
+	 * Activate extension.
 	 */
 	public static function activate_extension() {
 
-		// make sure we activating extension
-		if ( empty( $_GET['gmw_action'] ) || 'activate_extension' != $_GET['gmw_action'] ) {
+		// make sure we activating extension.
+		if ( empty( $_GET['gmw_action'] ) || 'activate_extension' !== $_GET['gmw_action'] ) {
 			wp_die();
 		}
 
-		$slug     = $_GET['slug'];
-		$basename = $_GET['basename'];
+		$slug     = sanitize_text_field( wp_unslash( $_GET['slug'] ) );
+		$basename = sanitize_text_field( wp_unslash( $_GET['basename'] ) );
 
-		// If doing AJAX call
+		// If doing AJAX call.
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 
-			// verify nonce
+			// verify nonce.
 			if ( ! check_ajax_referer( 'gmw_' . $slug . '_extension_nonce', 'security', false ) ) {
 
 				wp_die(
-					__( 'Cheatin\' eh?!', 'geo-my-wp' ),
-					__( 'Error', 'geo-my-wp' ),
+					esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ),
+					esc_attr__( 'Error', 'geo-my-wp' ),
 					array( 'response' => 403 )
 				);
 			}
 
-			// otherwise, page load submission
+			// otherwise, page load submission.
 		} else {
 
 			if ( ! check_admin_referer( 'gmw_' . $slug . '_extension_nonce' ) ) {
-				wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+				wp_die( esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 			}
 		}
 
 		$plugins = get_plugins();
 
-		//activate the WordPress plugin reagrdless it later it is set as disabled or inactive in GEO my WP.
-		//We do so to allow the license key to load so updates will be available.
+		// Activate the WordPress plugin reagrdless it later it is set as disabled or inactive in GEO my WP.
+		// We do so to allow the license key to load so updates will be available.
 		if ( array_key_exists( $basename, $plugins ) && is_plugin_inactive( $basename ) ) {
 			activate_plugins( $basename );
 		}
 
-		// enable addons after activation
+		// Enable addons after activation.
 		GMW_Addon::init_addons();
 
-		// update active status and get the addon data.
+		// Update active status and get the addon data.
 		$extension = gmw_update_addon_status( $slug, 'active' );
 
-		// get all extensions
+		// Get all extensions.
 		$extensions_data = gmw_get_addons_data( true );
 
-		// if AJAX enabled
+		// If AJAX enabled.
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 
 			$dependends = array();
@@ -311,7 +323,7 @@ class GMW_Extensions {
 			foreach ( $extensions_data as $ext_data ) {
 
 				// if disabled because of a theme skip checking for addons.
-				if ( 'disabled' == $ext_data['status'] && 'theme_missing' == $ext_data['status_details']['error'] ) {
+				if ( 'disabled' === $ext_data['status'] && 'theme_missing' === $ext_data['status_details']['error'] ) {
 
 					continue;
 
@@ -323,18 +335,17 @@ class GMW_Extensions {
 
 							$dependends[ $ext_data['slug'] ] = '';
 
-							// deactivate addon
+							// deactivate addon.
 							gmw_update_addon_status( $ext_data['slug'], 'inactive' );
 						}
 					}
 				}
 			}
 
-			// Generate deactivation button to pass to JS.
-			// It will replace the Activate button.
-			$link = self::deactivate_extension_button( $slug, $basename );
+			// Generate deactivation button to pass to JS. It will replace the Activate button.
+			$link = self::get_deactivate_extension_button( $slug, $basename );
 
-			// proceed to JS
+			// proceed to JS.
 			wp_send_json(
 				array(
 					'newLink'     => $link,
@@ -345,7 +356,7 @@ class GMW_Extensions {
 
 		} else {
 
-			//reload the page to prevent resubmission
+			// Reload the page to prevent resubmission.
 			wp_safe_redirect(
 				admin_url(
 					'admin.php?page=gmw-extensions&gmw_notice=extension_activated&gmw_notice_status=updated'
@@ -363,35 +374,35 @@ class GMW_Extensions {
 	 */
 	public static function deactivate_extension() {
 
-		//make sure we activated an add-on
-		if ( empty( $_GET['gmw_action'] ) || $_GET['gmw_action'] != 'deactivate_extension' ) {
+		// Make sure we activated an add-on.
+		if ( empty( $_GET['gmw_action'] ) || $_GET['gmw_action'] !== 'deactivate_extension' ) {
 			return;
 		}
 
-		$slug     = $_GET['slug'];
-		$basename = $_GET['basename'];
+		$slug     = sanitize_text_field( wp_unslash( $_GET['slug'] ) );
+		$basename = sanitize_text_field( wp_unslash( $_GET['basename'] ) );
 
-		// If doing ajax deactivation
+		// If doing ajax deactivation.
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 
-			// verify nonce
+			// Verify nonce.
 			if ( ! check_ajax_referer( 'gmw_' . $slug . '_extension_nonce', 'security', false ) ) {
 				wp_die(
-					__( 'Cheatin\' eh?!', 'geo-my-wp' ),
-					__( 'Error', 'geo-my-wp' ),
+					esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ),
+					esc_attr__( 'Error', 'geo-my-wp' ),
 					array( 'response' => 403 )
 				);
 			}
 
-			// otherwise, page load action
+			// Otherwise, page load action.
 		} else {
 
 			if ( ! check_admin_referer( 'gmw_' . $slug . '_extension_nonce' ) ) {
-				wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+				wp_die( esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 			}
 		}
 
-		// get WordPress plugins
+		// get WordPress plugins.
 		$plugins = get_plugins();
 
 		// If the extension is a WordPress plugin, deactivate it.
@@ -399,13 +410,13 @@ class GMW_Extensions {
 			deactivate_plugins( $basename );
 		}
 
-		// set addon status inactive and get the addon data
+		// set addon status inactive and get the addon data.
 		$extension = gmw_update_addon_status( $slug, 'inactive' );
 
-		// get extensions
+		// get extensions.
 		$extensions_data = gmw_get_addons_data( true );
 
-		// if doing AJAX
+		// if doing AJAX.
 		if ( defined( 'DOING_AJAX' ) ) {
 
 			$dependends = array();
@@ -414,8 +425,8 @@ class GMW_Extensions {
 			// we will disable them.
 			foreach ( $extensions_data as $ext_data ) {
 
-				// abort if already disabled because of a theme.
-				if ( $ext_data['status'] == 'disabled' && $ext_data['status_details']['error'] == 'theme_missing' ) {
+				// Abort if already disabled because of a theme.
+				if ( 'disabled' === $ext_data['status'] && 'theme_missing' === $ext_data['status_details']['error'] ) {
 
 					continue;
 
@@ -427,15 +438,15 @@ class GMW_Extensions {
 
 							$dependends[ $ext_data['slug'] ] = $required_addon['notice'];
 
-							// update extensions status in database
+							// Update extensions status in database.
 							gmw_update_addon_status( $ext_data['slug'], 'disabled', $required_addon );
 						}
 					}
 				}
 			}
 
-			// generate new Activate link to replace with Deactivate
-			$link = self::activate_extension_button( $extension['slug'], $basename );
+			// Generate new Activate link to replace with Deactivate.
+			$link = self::get_activate_extension_button( $extension['slug'], $basename );
 
 			wp_send_json(
 				array(
@@ -460,33 +471,35 @@ class GMW_Extensions {
 	 * To update license key via HTTP, the function can be found
 	 *
 	 * In the license key file.
-	 *
-	 * @return [type] [description]
 	 */
 	public static function license_key_actions() {
 
-		$form_data = $_POST['data'];
+		if ( empty( $_POST['data'] ) || ! is_array( $_POST['data'] ) ) {
+			return wp_send_json( array() );
+		}
 
-		// check nonce
+		$form_data = array_map( 'sanitize_text_field', $_POST['data'] );
+
+		// Check nonce.
 		if ( ! check_ajax_referer( 'gmw_' . $form_data['license_name'] . '_license_nonce', 'security', false ) ) {
 
-			//abort if bad nonce
+			// Abort if bad nonce.
 			wp_die(
-				__( 'Cheatin\' eh?!', 'geo-my-wp' ),
-				__( 'Error', 'geo-my-wp' ),
+				esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ),
+				esc_attr__( 'Error', 'geo-my-wp' ),
 				array( 'response' => 403 )
 			);
 		}
 
-		// execute license action
+		// Execute license action.
 		$license_data = gmw_license_key_actions( $form_data );
 
-		// abort if failed connecting to remote server
+		// Abort if failed connecting to remote server.
 		if ( ! $license_data->remote_connection ) {
-			wp_die( __( 'connection to remote server failed.', 'geo-my-wp' ) );
+			wp_die( esc_attr__( 'connection to remote server failed.', 'geo-my-wp' ) );
 		}
 
-		// generate new license element to replace with current one.
+		// Generate new license element to replace with current one.
 		$license_input = new GMW_License_Key(
 			$form_data['basename'],
 			$form_data['item_name'],
@@ -496,7 +509,7 @@ class GMW_Extensions {
 
 		$form = $license_input->get_license_key_element();
 
-		// proceed with AJAX
+		// proceed with AJAX.
 		wp_send_json(
 			array(
 				'license_data' => $license_data,
