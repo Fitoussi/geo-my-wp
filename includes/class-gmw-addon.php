@@ -771,7 +771,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 			$licenses_data = GMW()->licenses_data;
 
 			// extensions disabled by the admin are not allowed.
-			if ( ! empty( $this->license_name ) && ! empty( $licenses_data[ $this->license_name ] ) && isset( $licenses_data[ $this->license_name ]['status'] ) && 'disabled' === $licenses_data[ $this->license_name ]['status'] ) {
+			/*if ( ! empty( $this->license_name ) && ! empty( $licenses_data[ $this->license_name ] ) && isset( $licenses_data[ $this->license_name ]['status'] ) && 'disabled' === $licenses_data[ $this->license_name ]['status'] ) {
 
 				$verified['details'] = array(
 					'error'            => 'license_disabled_by_admin',
@@ -786,7 +786,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 				add_action( 'admin_notices', array( $this, 'verify_activation_notice' ) );
 
 				$verified['status'] = false;
-			}
+			}*/
 
 			// verify GEO my WP min version.
 			if ( ! $this->is_core && version_compare( GMW_VERSION, $this->gmw_min_version, '<' ) ) {
