@@ -212,7 +212,7 @@ var GMW_Extensions = {
 
             // show failed message
             actionButton.fadeOut( 'fast', function() {
-                actionButton.html( 'Failed' ).removeClass( 'updating-message button-primary' ).addClass( 'gmw-icon-cancel button-secondary' ).fadeIn( 'fast' );
+                actionButton.html( 'Action failed' ).removeClass( 'updating-message button-primary' ).addClass( 'gmw-icon-cancel button-secondary' ).fadeIn( 'fast' );
             });
 
             setTimeout( function() {
@@ -388,16 +388,16 @@ var GMW_Extensions = {
         // if license key blank we show "Removing" message
         if ( ! license_data.license_key ) {
 
-            actionMessageWrap.addClass( 'updating-message button-primary' ).html( 'Removing key' ).show();  
+            actionMessageWrap.addClass( 'updating-message button-primary' ).html( 'Removing license key' ).show().css( 'display', 'inline-flex' );
 
         // show new updating button message
         } else if ( license_data.action == 'activate_license' ) {
 
-            actionMessageWrap.addClass( 'updating-message button-primary' ).html( 'Activating' ).show();         
+            actionMessageWrap.addClass( 'updating-message button-primary' ).html( 'Activating license' ).show().css( 'display', 'inline-flex' );     
         
         } else {
 
-            actionMessageWrap.addClass( 'updating-message button-secondary' ).html( 'Dectivating' ).show();
+            actionMessageWrap.addClass( 'updating-message button-secondary' ).html( 'Dectivating license' ).show().css( 'display', 'inline-flex' );
         }
 
         // do ajax
