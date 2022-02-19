@@ -66,10 +66,34 @@ class GMW_Members_Locator_Form_Editor {
 	}
 
 	/**
-	 * form settings function.
+	 * Modify some settings and tabs for the mashup map form.
 	 *
-	 * @access public
-	 * @return $settings
+	 * @param  [type] $settings [description].
+	 *
+	 * @param  [type] $form     [description].
+	 *
+	 * @return [type]           [description].
+	 */
+	public function modify_form_settings_groups( $settings, $form ) {
+
+		if ( 'members_locator_mashup_map' === $form['slug'] ) {
+
+			unset( $settings['no_results'] );
+
+			$settings['page_load_results']['label'] = __( 'Map Filters', 'geo-my-wp' );
+
+			$settings['search_form']['tab_class']   = 'gmw-hidden-form-editor-object';
+			$settings['search_form']['panel_class'] = 'gmw-hidden-form-editor-object';
+
+			$settings['search_results']['tab_class']   = 'gmw-hidden-form-editor-object';
+			$settings['search_results']['panel_class'] = 'gmw-hidden-form-editor-object';
+
+			$settings['form_submission']['tab_class']   = 'gmw-hidden-form-editor-object';
+			$settings['form_submission']['panel_class'] = 'gmw-hidden-form-editor-object';
+		}
+
+		return $settings;
+	}
 	 */
 	function form_settings( $fields ) {
 
