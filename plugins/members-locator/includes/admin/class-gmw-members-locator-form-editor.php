@@ -40,7 +40,9 @@ class GMW_Members_Locator_Form_Editor {
 	/**
 	 * Default settings
 	 *
-	 * @param  [type] $settings [description].
+	 * @param  array $settings settings.
+	 *
+	 * @param  array $args     arguments.
 	 *
 	 * @return [type]           [description]
 	 */
