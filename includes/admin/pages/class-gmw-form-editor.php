@@ -853,7 +853,7 @@ class GMW_Form_Editor {
 
 				$fields[ $group['slug'] ] = ! empty( $group['fields'] ) ? $group['fields'] : array();
 
-				// otehrwise, merge the fields of the existing group
+				// Otherwise, merge the fields of the existing group
 				// with the current group.
 			} else {
 
@@ -913,21 +913,6 @@ class GMW_Form_Editor {
 
 		// get fields.
 		$this->form_fields = $this->get_fields();
-
-		// allow plugins to extend the form fields
-		// $new_settings = array();
-		// $this->form_fields = apply_filters( 'gmw_' . $this->form['slug'] . '_form_settings', $this->form_fields, $this->form );
-		// $this->form_fields = apply_filters( 'gmw_form_settings', $this->form_fields, $this->form );
-		// merge settings added from other plugins
-		/*
-		foreach ( $new_settings as $group => $fields ) {
-
-			if ( empty( $this->form_fields[$group] ) ) {
-				$this->form_fields[$group] = array();
-			}
-
-			$this->form_fields[$group] = array_merge( $this->form_fields[$group], $fields );
-		} */
 
 		// backward capability for settings before settings groups were created.
 		foreach ( $this->form_fields as $key => $section ) {
