@@ -58,28 +58,25 @@ class GMW_V_3_Import_Page {
 	public function tab_content() {
 
 		do_action( 'gmw_v3_import_page_start' );
+		?>
+		<?php if ( 0 !== count( $this->posts_table ) ) : ?>
 
-		if ( 0 !== count( $this->posts_table ) ) : ?>
+			<div class="gmw-settings-panel gmw-v3-import-posts-location-panel">
+						
+				<legend class="gmw-settings-panel-title"><?php esc_html_e( 'Import Post Types Locations', 'geo-my-wp' ); ?></legend>
 
-			<div id="poststuff" class="metabox-holder">
+				<div class="gmw-settings-panel-content">
 
-				<div id="post-body">
+					<div class="gmw-settings-panel-description">
+						<?php esc_html_e( 'Import existing posts locations into GEO my WP v3.0 database table.', 'geo-my-wp' ); ?>		
+					</div>
 
-					<div id="post-body-content">
-
-						<div class="postbox ">
-
-							<h3 class="hndle">
-								<span><?php esc_attr_e( 'Import Post Types Locations', 'geo-my-wp' ); ?></span>
-							</h3>
-
-							<div class="inside">
-								<?php
-								$pt_importer = new GMW_Posts_Locations_Importer_V3();
-								$pt_importer->output();
-								?>
-							</div>
-						</div>
+					<div class="gmw-settings-panel-field">
+						
+						<?php
+							$pt_importer = new GMW_Posts_Locations_Importer_V3();
+							$pt_importer->output();
+						?>
 					</div>
 				</div>
 			</div>
@@ -88,27 +85,25 @@ class GMW_V_3_Import_Page {
 
 		<?php if ( 0 !== count( $this->users_table ) ) : ?>
 
-			<div id="poststuff" class="metabox-holder">
+			<div class="gmw-settings-panel gmw-v3-import-users-location-panel">
+					
+				<legend class="gmw-settings-panel-title"><?php esc_html_e( 'Import Users/Members Locations', 'geo-my-wp' ); ?></legend>
 
-				<div id="post-body">
+				<div class="gmw-settings-panel-content">
 
-					<div id="post-body-content">
+					<div class="gmw-settings-panel-description">
+						<?php esc_html_e( 'Import existing users/members locations into GEO my WP v3.0 database table.', 'geo-my-wp' ); ?>		
+					</div>
 
-						<div class="postbox ">
-
-							<h3 class="hndle">
-								<span><?php esc_attr_e( 'Import Users/Members Locations', 'geo-my-wp' ); ?></span>
-							</h3>
-
-							<div class="inside">
-								<?php
-									$users_importer = new GMW_Users_Locations_Importer_V3();
-									$users_importer->output();
-								?>
-							</div><!-- .inside -->
-						</div>
+					<div class="gmw-settings-panel-field">
+						
+						<?php
+							$pt_importer = new GMW_Posts_Locations_Importer_V3();
+							$pt_importer->output();
+						?>
 					</div>
 				</div>
+
 			</div>
 
 			<?php
