@@ -933,7 +933,7 @@ function gmw_get_location_address( $location, $fields = array( 'formatted_addres
 		return false;
 	}
 
-	$output = '';
+	$output = array();
 
 	// loop trough fields and get the specified address fields.
 	foreach ( $fields as $field ) {
@@ -950,10 +950,12 @@ function gmw_get_location_address( $location, $fields = array( 'formatted_addres
 			$field = 'region_name';
 		}
 
-		if ( isset( $location->$field ) ) {
-			$output .= $location->$field . ' ';
+		if ( ! empty( $location->$field ) ) {
+			$output[] = $location->$field;
 		}
 	}
+
+	$output = implode( ' ', $output );
 
 	// modify the output address.
 	$output = apply_filters( 'gmw_location_address', $output, $location, $fields, $gmw );
