@@ -744,7 +744,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 
 			return array(
 				'author'         => $this->author,
-				'description'    => $this->description,
+				'description'    => ! empty( $this->description ) ? $this->description : $this->get_description(),
 				'addon_page'     => $this->addon_page,
 				'docs_page'      => $this->docs_page,
 				'support_page'   => $this->support_page,
