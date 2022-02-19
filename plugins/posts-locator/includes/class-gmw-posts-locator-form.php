@@ -195,32 +195,36 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 					// $clauses['where'] .= " AND gmw_locations.longitude BETWEEN {$bet_lng1} AND {$bet_lng2} ";
 				}
 
-				if ( $where_clause_filter ) {
-					$clauses['where'] .= " AND gmw_locations.object_type = 'post'";
-				}
-
 				// filter locations based on the distance.
 				$clauses['having'] = "HAVING distance <= {$distance} OR distance IS NULL";
-
-				// Remove extra spaces.
-				$this->form['query_args']['orderby'] = trim( $this->form['query_args']['orderby'] );
-
-				// If there is another order-by parameter before the distance append the distance to the orderby clause.
-				if ( false !== strpos( $this->form['query_args']['orderby'], ' distance' ) ) {
-
-					$clauses['orderby'] .= ', distance ASC';
-
-					// If there is another order-by parameter after the distance, prepend the distance first in the orderby clause.
-				} elseif ( false !== strpos( $this->form['query_args']['orderby'], 'distance ' ) ) {
-
-					$clauses['orderby'] = 'distance ASC, ' . $clauses['orderby'];
-
-					// Otherise, we order by the distance only.
-				} elseif ( 'distance' === $this->form['query_args']['orderby'] ) {
-
-					$clauses['orderby'] = ! empty( $this->form['query_args']['order'] ) ? 'distance ' . $this->form['query_args']['order'] : 'distance';
-				}
 			}
+
+			if ( $where_clause_filter ) {
+				$clauses['where'] .= " AND gmw_locations.object_type = 'post'";
+			}
+
+			// filter locations based on the distance.
+			//$clauses['having'] = "HAVING distance <= {$distance} OR distance IS NULL";
+
+			// Remove extra spaces.
+			$this->form['query_args']['orderby'] = trim( $this->form['query_args']['orderby'] );
+
+			// If there is another order-by parameter before the distance append the distance to the orderby clause.
+			if ( false !== strpos( $this->form['query_args']['orderby'], ' distance' ) ) {
+
+				$clauses['orderby'] .= ', distance ASC';
+
+				// If there is another order-by parameter after the distance, prepend the distance first in the orderby clause.
+			} elseif ( false !== strpos( $this->form['query_args']['orderby'], 'distance ' ) ) {
+
+				$clauses['orderby'] = 'distance ASC, ' . $clauses['orderby'];
+
+				// Otherise, we order by the distance only.
+			} elseif ( 'distance' === $this->form['query_args']['orderby'] ) {
+
+				$clauses['orderby'] = ! empty( $this->form['query_args']['order'] ) ? 'distance ' . $this->form['query_args']['order'] : 'distance';
+			}
+
 		} else {
 
 			// if showing posts without location.
