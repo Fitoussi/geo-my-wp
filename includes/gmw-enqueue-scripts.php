@@ -169,8 +169,13 @@ function gmw_enqueue_scripts() {
 			}
 		}
 
+		wp_register_style( 'datetime-picker', GMW_URL . '/assets/lib/flatpicker/jquery.flatPicker.min.css', array(), GMW_VERSION );
+		wp_register_script( 'datetime-picker', GMW_URL . '/assets/lib/flatpicker/jquery.flatPicker.full.min.js', array( 'jquery' ), GMW_VERSION, true );
+
 		// register scripts/styles in admin only.
 	} else {
+
+		wp_register_script( 'gmw-admin', GMW_URL . '/assets/js/gmw.admin.min.js', array( 'jquery', 'gmw' ), GMW_VERSION, true );
 
 		// fonts file in admin only. In front-end it is combined with front-end stylesheet.
 		wp_enqueue_style( 'gmw-fonts', GMW_URL . '/assets/css/gmw.font.min.css', array(), GMW_VERSION );
@@ -178,7 +183,7 @@ function gmw_enqueue_scripts() {
 
 		// enqueue on GMW admin pages only.
 		if ( ! empty( $_GET['page'] ) && strpos( $_GET['page'], 'gmw' ) !== false ) { // WPCS: CSRF ok, sanitization ok.
-			wp_enqueue_script( 'gmw-admin', GMW_URL . '/assets/js/gmw.admin.min.js', array( 'jquery', 'gmw' ), GMW_VERSION, true );
+			wp_enqueue_script( 'gmw-admin' );
 		}
 
 		// register locations importer.
