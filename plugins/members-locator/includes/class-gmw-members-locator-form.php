@@ -76,20 +76,6 @@ class GMW_Members_Locator_Form extends GMW_Form {
 	}
 
 	/**
-	 * Opening div before the search results.
-	 */
-	public function before_search_results() {
-		echo '<div id="buddypress">';
-	}
-
-	/**
-	 * Closing div after the search results.
-	 */
-	public function after_search_results() {
-		echo '</div>';
-	}
-
-	/**
 	 * Modify the members query.
 	 *
 	 * Join GMW locations table and do proximity search when needed.
