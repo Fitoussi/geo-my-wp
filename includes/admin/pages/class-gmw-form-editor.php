@@ -152,6 +152,49 @@ class GMW_Form_Editor {
 	}
 
 	/**
+	 * Form name setting.
+	 *
+	 * @since 4.0
+	 *
+	 * @param  mixed  $value     value.
+	 *
+	 * @param  string $attr_name [description].
+	 *
+	 * @param  array  $form      form object.
+	 */
+	public function form_name_setting( $value, $attr_name, $form ) {
+
+		$form_name = ! empty( $form['title'] ) ? $form['title'] : 'form_id_' . $form['ID'];
+		?>
+		<div class="gmw-settings-panel-field gmw-form-feature-settings form-actions">
+			<div class="gmw-settings-panel-input-container">
+
+				<div class="gmw-settings-multiple-fields-wrapper">
+
+					<div class="gmw-settings-panel-input-container option-type-text">
+						<input type="text" name="gmw_form[title]" value="<?php echo esc_attr( $form_name ); ?>" placeholder="Form name" />
+					</div>
+					<div class="gmw-settings-panel-description"><?php esc_attr_e( 'Enter the form\'s name.', 'geo-my-wp' ); ?></div>
+					<a
+						class="duplicate-form gmw-action-button button-primary"
+						title="<?php esc_attr_e( 'Duplicate form', 'geo-my-wp' ); ?>"
+						href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=duplicate_form&slug=' . $form['slug'] . '&form_id=' . $form['ID'] ); ?>">
+						<?php esc_attr_e( 'Duplicate Form', 'geo-my-wp' ); ?>
+					</a>
+
+					<a
+						class="delete-form gmw-action-button button-primary" 
+						title="<?php esc_attr_e( 'Delete form', 'geo-my-wp' ); ?>" 
+						href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=delete_form&form_id=' . $form['ID'] ); ?>" 
+						onclick="return confirm( '<?php esc_attr_e( 'This action cannot be undone. Would you like to proceed?', 'geo-my-wp' ); ?>' );">
+						<?php esc_html_e( 'Delete Form', 'geo-my-wp' ); ?>
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<?php
+	}
 	 * Form groups
 	 *
 	 * @return [type] [description]
