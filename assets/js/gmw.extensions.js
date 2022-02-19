@@ -174,12 +174,12 @@ var GMW_Extensions = {
                 jQuery( '.extensions-wrapper .gmw-extension-wrapper' ).fadeOut( 'fast' );
                 
                 jQuery( '.extensions-wrapper .gmw-extension-wrapper' + filters ).fadeIn( 'fast' );
-            }
-        });
+            }*/
+        //});
     },
 
     /**
-     * Activate / deavtivate license key
+     * Activate / deactivate license key
      * 
      * @param  {DOMelement} actionButton the button clicked
      * 
@@ -454,6 +454,7 @@ var GMW_Extensions = {
 
                 // new license element
                 newLicenseWrap = response.form;
+
                 // license data
                 licenseData = response.license_data;
 
