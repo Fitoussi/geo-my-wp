@@ -222,7 +222,15 @@ class GMW_Admin {
 	public function update_database_notice() {
 		?>
 		<div class="error">
-			<p><?php echo sprintf( __( 'GEO my WP needs to import existing locations into its new database table. <a href="%s" class="button-primary"> Import locations</a>' ), admin_url( 'admin.php?page=gmw-import-export&tab=gmw_v_3' ) ); ?></p>
+			<p>
+				<?php
+				printf(
+					/* translators: %s link to importer page. */
+					__( 'GEO my WP needs to import existing locations into its new database table. <a href="%s" class="button-primary"> Import locations</a>' ),
+					admin_url( 'admin.php?page=gmw-import-export&tab=gmw_v_3' )
+				);
+				?>
+			</p>
 		</div>
 		<?php
 	}
@@ -236,12 +244,14 @@ class GMW_Admin {
 
 			update_option( 'gmw_folders_names_changed_notice_viewed', 1 );
 
-			wp_safe_redirect( wp_unslash( $_SERVER['REQUEST_URI'] ) );
+			wp_safe_redirect( wp_unslash( $_SERVER['REQUEST_URI'] ) ); // WPCS: CSRF ok, sanitization ok.
 		}
 	}
 
 	/**
 	 * Admin notice.
+	 *
+	 * DEPRECATED
 	 */
 	public function deprecated_folder_names_notice() {
 
