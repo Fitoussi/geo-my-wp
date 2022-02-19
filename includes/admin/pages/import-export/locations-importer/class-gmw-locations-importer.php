@@ -7,8 +7,9 @@
  * @package geo-my-wp
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+	exit;
 }
 
 if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
