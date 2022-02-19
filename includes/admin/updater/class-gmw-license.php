@@ -134,7 +134,7 @@ if ( ! class_exists( 'GMW_License' ) ) :
 		 */
 		public function plugins_page_actions() {
 
-			$this->plugins_page_license_enabled = apply_filters( 'gmw_plugins_page_license_key_enabled', true );
+			$this->plugins_page_license_enabled = apply_filters( 'gmw_plugins_page_license_key_enabled', false );
 
 			// action links.
 			add_filter( 'plugin_action_links_' . plugin_basename( $this->file ), array( $this, 'extension_action_links' ), 10 );
