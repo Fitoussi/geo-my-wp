@@ -145,19 +145,19 @@ add_action( 'gmw_import_export_data_tab', 'gmw_import_export_data_tab' );
  */
 function gmw_export_data() {
 
-	// make sure at lease one checkbox is checked
+	// make sure at lease one checkbox is checked.
 	if ( empty( $_POST['export_item'] ) ) {
-		wp_die( __( 'You must check at least one checkbox of an item that you would like to export.', 'geo-my-wp' ) );
-	}
-	 
-	// check for nonce
-	if ( empty( $_POST['gmw_export_data_nonce'] ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'You must check at least one checkbox of an item that you would like to export.', 'geo-my-wp' ) );
 	}
 
-	// varify nonce
-	if ( ! wp_verify_nonce( $_POST['gmw_export_data_nonce'], 'gmw_export_data_nonce' ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+	// check for nonce.
+	if ( empty( $_POST['gmw_export_data_nonce'] ) ) {
+		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+	}
+
+	// varify nonce.
+	if ( ! wp_verify_nonce( $_POST['gmw_export_data_nonce'], 'gmw_export_data_nonce' ) ) { // WPCS: CSRF ok, sanitization ok.
+		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
 	$export 		  = array();
@@ -198,27 +198,27 @@ add_action( 'gmw_export_data', 'gmw_export_data' );
  */
 function gmw_import_data() {
 
-	//make sure at least one checkbox is checked
+	// make sure at least one checkbox is checked.
 	if ( empty( $_POST['import_item'] ) ) {
-		wp_die( __( 'You must check at least on checkbox of an item that you would like to import', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'You must check at least on checkbox of an item that you would like to import', 'geo-my-wp' ) );
 	}
-	
-	//look for nonce
+
+	// look for nonce.
 	if ( empty( $_POST['gmw_import_data_nonce'] ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
-	//varify nonce
-	if ( ! wp_verify_nonce( $_POST['gmw_import_data_nonce'], 'gmw_import_data_nonce' ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+	// varify nonce.
+	if ( ! wp_verify_nonce( $_POST['gmw_import_data_nonce'], 'gmw_import_data_nonce' ) ) { // WPCS: CSRF ok, sanitization ok.
+		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
- 
-	//get file
-	$import_file = $_FILES['import_file']['tmp_name'];
 
-	//abort if not file uploaded
+	// get file.
+	$import_file = $_FILES['import_file']['tmp_name']; // WPCS: CSRF ok, sanitization ok.
+
+	// abort if not file uploaded.
 	if ( empty( $import_file ) ) {
-		wp_die( __( 'Please upload a file to import', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'Please upload a file to import', 'geo-my-wp' ) );
 	}
 
 	// Retrieve the data from the file and convert the json object to an array
