@@ -252,9 +252,7 @@ class GMW_Current_Location {
 			$output .= '<span class="gmw-cl-title">' . esc_html( $this->args['address_label'] ) . '</span>';
 		}
 
-		//$output .= '<div class="gmw-cl-address location-exists">';
 		$output .= '<span class="gmw-cl-address location-exists">' . stripslashes( esc_html( $this->user_position['address'] ) ) . '</span>';
-		//$output .= '</div>';
 		$output .= '</div>';
 
 		$output = apply_filters( 'gmw_current_location_address', $output, $this->args, $this->user_position );
@@ -559,8 +557,14 @@ class GMW_Current_Location {
 
 			if ( $redirect ) {
 
+				$page = '/';
+
+				if ( ! empty( $_SERVER['REQUEST_URI'] ) ) {
+					$page = wp_unslash( $_SERVER['REQUEST_URI'] ); // WPCS: CSRF ok, sanitization ok.
+				}
+
 				// reload page to prevent form resubmission.
-				wp_redirect( $_SERVER['REQUEST_URI'] );
+				wp_redirect( $page );
 
 				exit;
 			}
@@ -573,16 +577,24 @@ class GMW_Current_Location {
 	public static function page_load_update_location() {
 
 		// Abort if location not found or nonce not verified.
-		if ( empty( $_POST['gmw_cl_location'] ) || empty( $_POST['gmw_cl_nonce'] ) || ! wp_verify_nonce( $_POST['gmw_cl_nonce'], 'gmw_cl_nonce' ) ) {
+		if ( empty( $_POST['gmw_cl_location'] ) || empty( $_POST['gmw_cl_nonce'] ) || ! wp_verify_nonce( $_POST['gmw_cl_nonce'], 'gmw_cl_nonce' ) ) { // WPCS: CSRF ok, sanitization ok.
+
+			$page = '/';
+
+			if ( ! empty( $_SERVER['REQUEST_URI'] ) ) {
+				$page = wp_unslash( $_SERVER['REQUEST_URI'] ); // WPCS: CSRF ok, sanitization ok.
+			}
 
 			// reload page to prevent form resubmission.
-			wp_redirect( $_SERVER['REQUEST_URI'] );
+			wp_redirect( $page );
 
 			exit;
 		}
 
 		// Update cookies.
-		self::update_cookies( $_POST['gmw_cl_location'], false ); // WPCS: CSRF ok, sanitization ok.
+		if ( ! empty( $_POST['gmw_cl_location'] ) ) {
+			self::update_cookies( $_POST['gmw_cl_location'], false ); // WPCS: CSRF ok, sanitization ok.
+		}
 	}
 
 	/**
@@ -594,11 +606,15 @@ class GMW_Current_Location {
 		if ( ! check_ajax_referer( 'gmw_current_location_nonce', 'security', false ) ) {
 
 			// abort if bad nonce.
-			wp_die( __( 'Trying to cheat or something?', 'geo-my-wp' ), __( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
+			wp_die( esc_html__( 'Trying to cheat or something?', 'geo-my-wp' ), esc_html__( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
 		}
 
+		$form_values = array();
+
 		// parse the form values.
-		parse_str( $_POST['form_values'], $form_values );
+		if ( ! empty( $_POST['form_values'] ) ) {
+			parse_str( $_POST['form_values'], $form_values ); // WPCS: CSRF ok, sanitization ok.
+		}
 
 		// update cookies.
 		self::update_cookies( $form_values['gmw_cl_location'], true );
