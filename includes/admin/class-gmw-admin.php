@@ -386,8 +386,7 @@ class GMW_Admin {
 		}
 
 		// apply credit and enqueue scripts and styles in GEO my WP admin pages only.
-		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], $gmw_pages ) ) { // WPCS: CSRF ok.
-
+		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], $gmw_pages ) ) { // WPCS: CSRF ok, sanitization ok.
 			add_filter( 'admin_footer_text', array( $this, 'gmw_credit_footer' ), 10 );
 		}
 	}
@@ -435,6 +434,7 @@ class GMW_Admin {
 				$new_addon['status_details']['error']            = 'gmw_version_mismatch';
 				$new_addon['status_details']['required_version'] = $new_addon['gmw_min_version'];
 				$new_addon['status_details']['notice']           = sprintf(
+					/* translators: %1$s extension's name, %2$s version, %3$s min version. */
 					__( '%1$s extension version %2$s requires GEO my WP plugin version %3$s or higher.', 'geo-my-wp' ),
 					$new_addon['name'],
 					$new_addon['version'],
@@ -447,6 +447,7 @@ class GMW_Admin {
 				$new_addon['status_details']['error']            = 'addon_version_mismatch';
 				$new_addon['status_details']['required_version'] = $new_addon['min_version'];
 				$new_addon['status_details']['notice']           = sprintf(
+					/* translators: %1$s extension's name, %3$s min version. */
 					__( '%1$s extension requires an update to version %2$s.', 'geo-my-wp' ),
 					$new_addon['name'],
 					$new_addon['min_version']
@@ -495,7 +496,7 @@ class GMW_Admin {
 		// alowed pages can be modified.
 		$pages = apply_filters( 'gmw_add_form_button_admin_pages', array( 'post.php', 'page.php', 'page-new.php', 'post-new.php' ) );
 
-		return ( is_array( $pages ) && in_array( basename( wp_unslash( $_SERVER['PHP_SELF'] ) ), $pages ) ) ? 1 : 0; // WPCS: CSRF ok.
+		return ( is_array( $pages ) && in_array( basename( wp_unslash( $_SERVER['PHP_SELF'] ) ), $pages ) ) ? 1 : 0; // WPCS: CSRF ok, sanitization ok.
 	}
 
 	/**
