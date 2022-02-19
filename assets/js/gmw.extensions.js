@@ -474,7 +474,7 @@ var GMW_Extensions = {
             actionMessageWrap.fadeOut( 'slow', function() {
 
                 // show failed message
-                actionMessageWrap.html( 'Failed' ).removeClass( 'updating-message button-primary' ).addClass( 'gmw-icon-cancel button-secondary' ).fadeIn();
+                actionMessageWrap.html( 'Action failed' ).removeClass( 'updating-message button-primary' ).addClass( 'gmw-icon-cancel button-secondary' ).fadeIn();
             });
 
             setTimeout( function() {
