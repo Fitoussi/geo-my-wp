@@ -134,10 +134,20 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 	 */
 	public function form_buttons() {
 		return array(
-			'slug'     => 'posts_locator',
-			'name'     => 'Posts Locator',
-			'prefix'   => 'pt',
-			'priority' => 5,
+			array(
+				'slug'      => 'posts_locator',
+				'name'      => __( 'Posts Locator', 'geo-my-wp' ),
+				'component' => 'posts_locator',
+				'prefix'    => 'pt',
+				'priority'  => 5,
+			),
+			array(
+				'slug'      => 'posts_locator_mashup_map',
+				'name'      => __( 'Posts Mashup Map', 'geo-my-wp' ),
+				'component' => 'posts_locator',
+				'prefix'    => 'ptmmap',
+				'priority'  => 6,
+			),
 		);
 	}
 
