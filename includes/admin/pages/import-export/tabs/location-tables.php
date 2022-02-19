@@ -24,110 +24,103 @@ function gmw_import_export_location_tables_tab() {
 
 	<?php global $wpdb; ?>
 
-	<div id="poststuff" class="metabox-holder">
-		
-		<div id="post-body">
-		
-			<div id="post-body-content">
+	<div class="gmw-settings-panel gmw-admin-notice-box gmw-admin-notice-warning">
 
-				<div class="postbox ">
-		
-					<h3 class="hndle">
-						<span><?php _e( 'Export/Import Location tables using CSV File', 'geo-my-wp' ); ?></span>
-					</h3>
+		<h3 class="gmw-admin-notice-title"><?php esc_html_e( 'Please Note', 'geo-my-wp' ); ?></h3>
 
-					<div class="inside">
+		<div class="gmw-admin-notice-content">
+			<div class="gmw-admin-notice-description">
+				<span><?php esc_html_e( 'Transferring the data of the locations and locationmeta tables between different sites using a CSV file can only be done when the locations and their object ID are matching on both the original and the target site.', 'geo-my-wp' ); ?></span>
+			</div>
+		</div>
+	</div>
+
+	<div class="gmw-settings-panel gmw-export-location-data-panel">
+
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin.php?page=gmw-import-export&tab=location_tables' ) ); ?>">
+			
+			<fieldset>
+
+				<legend class="gmw-settings-panel-title"><?php esc_html_e( 'Export Locations database tables to CSV File', 'geo-my-wp' ); ?></legend>
+
+				<div class="gmw-settings-panel-content">
+
+					<div class="gmw-settings-panel-description">
+						
+						<?php esc_html_e( 'Click the buttons to generate CSV files with the location data.', 'geo-my-wp' ); ?>
+					</div>
+
+					<div class="gmw-settings-panel-field">
+						
+						<input type="hidden" name="gmw_action" value="export_location_tables_to_csv"/>
+
+						<?php wp_nonce_field( 'gmw_export_location_tables_nonce', 'gmw_export_location_tables_nonce' ); ?>
+						
+						<?php submit_button( __( 'Export Locations Table', 'geo-my-wp' ), 'gmw-settings-action-button button-primary', 'export_locations_table', false ); ?>
+						<br />
+						<?php submit_button( __( 'Export Location Meta Table', 'geo-my-wp' ), 'gmw-settings-action-button button-primary', 'export_locationmeta_table', false ); ?>
+					</div>
+				
+				</div>
+			</fieldset>
+								
+		</form>
+
+	</div>
+
+	<?php do_action( 'gmw_import_export_before_location_tables_import' ); ?>
+
+	<div class="gmw-settings-panel gmw-import-location-data-panel">
+
+		<form method="post" enctype="multipart/form-data" action="<?php echo esc_url( admin_url( 'admin.php?page=gmw-import-export&tab=location_tables' ) ); ?>">
+			
+			<fieldset>
+
+				<legend class="gmw-settings-panel-title"><?php esc_html_e( 'Import Location Data From CSV File', 'geo-my-wp' ); ?></legend>
+
+				<div class="gmw-settings-panel-content">
+
+					<div class="gmw-settings-panel-description">
+						<?php esc_html_e( 'Select the type of data that you would like to import using the radio buttons then select the CSV file that you would like to import.', 'geo-my-wp' ); ?>
+					</div>
+
+					<div class="gmw-settings-panel-field">
+						
+						<div class="gmw-settings-panel-radio-buttons">		
+							
+							<label>
+								<input type="radio" name="location_tables_import" value="gmw_locations" checked="checked"><?php esc_html_e( 'Locations table', 'geo-my-wp' ); ?>
+							</label>
+
+							<label>
+								<input type="radio" name="location_tables_import" value="gmw_locationmeta"><?php esc_html_e( 'Location meta table', 'geo-my-wp' ); ?>
+							</label>
+						</div>
 						<p>
-						   <?php _e( "Export/Import of the locations and locationmeta tables on this page should be used for backup purposes only.", "geo-my-wp" ); ?>
-						</p>	
+							<input type="file" name="import_csv_file" id="gmw-import-location-data" />
+						</p>						
 						<p>
-						   <?php _e( "Transferring the data of the locations and locationmeta tables between different sites using a CSV file can only be done when the locations and their object ID are matching on both the original and the target site.", 'geo-my-wp' ); ?>
+							<input type="hidden" name="gmw_action" value="import_location_tables_from_csv" />
+
+							<?php wp_nonce_field( 'gmw_import_location_tables_from_csv_nonce', 'gmw_import_location_tables_from_csv_nonce' ); ?>
+							
+							<?php 
+							submit_button( 
+								__( 'Import', 'geo-my-wp' ), 
+								'gmw-settings-action-button button-primary', 
+								'submit', 
+								false,
+								array(
+									'onclick' => "if ( jQuery( '#gmw-import-location-data' ).get(0).files.length === 0 ) { alert( 'Select a file to import.' ); return false; }",
+								)
+							); ?>
 						</p>
 					</div>
+				
 				</div>
-			</div>
-		</div>
-	</div>
+			</fieldset>							
+		</form>
 
-	<div id="poststuff" class="metabox-holder">
-		
-		<div id="post-body">
-		
-			<div id="post-body-content">
-
-				<div class="postbox ">
-		
-					<h3 class="hndle">
-						<span><?php _e( 'Export Location Database Tables To CSV Files', 'geo-my-wp' ); ?></span>
-					</h3>
-
-					<div class="inside">
-							
-						<p>
-							<?php _e( 'Click the buttons to generate CSV files with the location data.', 'geo-my-wp' ); ?>
-						</p>
-						
-						<form method="post">
-															
-							<input type="hidden" name="gmw_action" value="export_location_tables_to_csv"/>
-
-							<?php wp_nonce_field( 'gmw_export_location_tables_nonce', 'gmw_export_location_tables_nonce' ); ?>
-							
-							<?php submit_button( __( 'Export Locations Table', 'geo-my-wp' ), 'secondary', 'export_locations_table', false ) 
-							?>
-
-							<?php submit_button( __( 'Export Location Meta Table', 'geo-my-wp' ), 'secondary', 'export_locationmeta_table', false ) 
-							?>	
-						</form>
-
-					</div><!-- .inside -->
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<?php do_action( 'gmw_import_export_before_data_import' ); ?>
-
-	<div id="poststuff" class="metabox-holder">
-		
-		<div id="post-body">
-		
-			<div id="post-body-content">
-
-				<div class="postbox ">
-		
-					<h3 class="hndle">
-						<span><?php _e( 'Import Locations Data From CSV File', 'geo-my-wp' ); ?></span>
-					</h3>
-
-					<div class="inside">
-							
-						<p>
-							<?php _e( "Select the type of data that you would like to import using the radio button and choose the CSV file that you would like to import.", "geo-my-wp" ); ?>
-						</p>
-					
-						<form method="post" enctype="multipart/form-data" action="<?php echo admin_url( 'admin.php?page=gmw-import-export&tab=location_tables' ); ?>">
-
-							<p>
-								<input type="radio" name="location_tables_import" value="gmw_locations" checked="checked">
-								<?php _e( 'Locations table', 'geo-my-wp' ); ?>
-								<input type="radio" name="location_tables_import" value="gmw_locationmeta"><?php _e( 'Location meta table', 'geo-my-wp' ); ?>
-							</p>
-							<p>
-								<input type="file" name="import_csv_file" />
-							</p>						
-							<p>
-								<input type="hidden" name="gmw_action" value="import_location_tables_from_csv" />
-
-								<?php wp_nonce_field( 'gmw_import_location_tables_from_csv_nonce', 'gmw_import_location_tables_from_csv_nonce' ); ?>
-								<?php submit_button( __( 'Import', 'geo-my-wp' ), 'secondary', 'submit', false ); ?>
-							</p>
-						</form>
-						
-					</div><!-- .inside -->
-				</div>
-			</div>
-		</div>
 	</div>
 
 	<?php do_action( 'gmw_import_export_data_end' ); ?>
