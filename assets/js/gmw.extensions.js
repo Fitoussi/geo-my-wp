@@ -22,12 +22,16 @@ var GMW_Extensions = {
 
             jQuery( '#gmw-extensions-page .disabler-block' ).show();
 
+            //jQuery( '#gmw-extensions-page .gmw-extension-wrapper.gmw-processing-action' ).find( '.disabler-block' ).show();
+
         } else {
 
             setTimeout( function() {
 
                 // enable everything back
                 jQuery( '#gmw-extensions-page .disabler-block' ).hide();
+
+                jQuery( '#gmw-extensions-page .gmw-extension-wrapper' ).removeClass( 'gmw-processing-action' );
 
             }, 2500 );
         }
@@ -43,16 +47,16 @@ var GMW_Extensions = {
     init : function() {
 
         // sort premium extensions by active status
-        jQuery( '.extensions-wrapper' ).find( '.gmw-extension-wrapper.premium.inactive' ).sort().appendTo( jQuery('.extensions-wrapper') );
-        
+        jQuery( '.extensions-wrapper' ).find( '.gmw-extension-wrapper.premium.inactive' ).sort().appendTo( jQuery( '.extensions-wrapper' ) );
+	
         // info toggle
-        jQuery( '.extensions-updater .info-toggle, .extensions-cache .info-toggle' ).hover( function() { 
+        jQuery( '.gmw-tooltip' ).hover( function() { 
 
-            jQuery( this ).closest( 'div' ).find( '.info-wrapper' ).fadeIn( 'fast' );
+            jQuery( this ).addClass( 'active' );
         
         }, function() {
         
-            jQuery( this ).closest( 'div' ).find( '.info-wrapper' ).fadeOut( 'fast' );
+            jQuery( this ).removeClass( 'active' );
         });
 
         // menu tabs
@@ -68,9 +72,15 @@ var GMW_Extensions = {
             GMW_Extensions.extensions_updater( jQuery( this ) );
         } );
 
-        jQuery( document ).on( 'click', '.gmw-extension-action-button', function(e) {
+        jQuery( document ).on( 'click', '.gmw-extension-action-button:not( .get-extension )', function(e) {
+
+        	e.preventDefault();
+
+        	if ( jQuery( this ).closest( '.gmw-extension-wrapper' ).hasClass( 'disabled' ) ) {
+        		return false;
+        	}
             
-            e.preventDefault();
+            jQuery( this ).closest( '.gmw-extension-wrapper' ).addClass( 'gmw-processing-action' );
 
             GMW_Extensions.set_processing( true );
 
@@ -80,6 +90,8 @@ var GMW_Extensions = {
         jQuery( document ).on( 'click', '.gmw-license-action-button', function( e ) {
 
             e.preventDefault();
+
+            jQuery( this ).closest( '.gmw-extension-wrapper' ).addClass( 'gmw-processing-action' );
 
             GMW_Extensions.set_processing( true );
 
@@ -494,7 +506,18 @@ var GMW_Extensions = {
                     // show new form
                     newLicenseWrap.show();
 
-                }, 1500 );  
+                    if ( response.license_data.license == 'valid' || ( response.license_data.license == 'invalid' &&  response.license_data.error == 'expired' ) ) {
+
+                    	newLicenseWrap.closest( '.gmw-extension-wrapper' ).removeClass( 'disabled' );
+                    
+                    } else {
+
+                    	if ( response.license_data.license == 'deactivated' || response.license_data.license == 'invalid' ) {
+                    		newLicenseWrap.closest( '.gmw-extension-wrapper' ).addClass( 'disabled' ).find( '.activation-disabled-message' ).remove();
+                    	}
+                    }
+
+                }, 2000 );  
             }
 
         }).fail( function ( jqXHR, textStatus, error ) {
