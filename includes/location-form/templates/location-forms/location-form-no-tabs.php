@@ -10,7 +10,7 @@
  */
 
 ?>
-<div class="gmw-lf-content-wrapper">
+<div class="gmw-lf-content-wrapper gmw-fields-enhanced">
 
 	<div class="gmw-lf-content-inner">
 
