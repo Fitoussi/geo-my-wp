@@ -88,7 +88,7 @@ function gmw_output_posts_locator_import_export_tab() {
 	do_action( 'gmw_import_export_before_mappress_import' ); ?>
 
 	<div class="gmw-settings-panel gmw-export-data-panel">
-			
+
 		<fieldset>
 
 			<legend class="gmw-settings-panel-title"><?php esc_html_e( 'MapPress Plugin Importer', 'geo-my-wp' ); ?></legend>
@@ -267,11 +267,11 @@ class GMW_Post_Custom_Fields_Importer extends GMW_Locations_Importer {
 					$this->records_completed,
 					$this->records_per_batch,
 				)
-			) // WPCS: db call ok, cache ok, unprepared SQL ok.
-		);
+			)
+		); // WPCS: db call ok, cache ok, unprepared SQL ok.
 
 		// count all rows only when init the importer.
-		$this->total_locations = absint( $this->total_locations ) === 0 ? $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : $this->total_locations;
+		$this->total_locations = absint( $this->total_locations ) === 0 ? $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : $this->total_locations; // WPCS: db call ok, cache ok, unprepared SQL ok.
 
 		// abort if nothing was found.
 		if ( empty( $results ) ) {
@@ -370,7 +370,7 @@ class GMW_Map_Press_Importer extends GMW_Locations_Importer {
 		); // WPCS: db call ok, cache ok, unprepared SQL ok.
 
 		// count all rows only when init the importer.
-		$this->total_locations = absint( $this->total_locations ) === 0 ? $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : $this->total_locations;
+		$this->total_locations = absint( $this->total_locations ) === 0 ? $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : $this->total_locations; // WPCS: db call ok, cache ok, unprepared SQL ok.
 
 		// abort if nothing was found.
 		if ( empty( $results ) ) {
