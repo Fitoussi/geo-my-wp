@@ -708,7 +708,7 @@ function gmw_get_address_fields( $args = array(), $dep_object_id = 0, $dep_field
 
 			// verify that field is allowed and exists in the location.
 			if ( in_array( $field, $all_fields, true ) && isset( $location->$field ) ) {
-				$output[ $field ] = $location->$field;
+				$output[ $field ] = esc_attr( $location->$field );
 			}
 		}
 	}
