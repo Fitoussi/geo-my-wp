@@ -206,6 +206,25 @@ function gmw_enqueue_scripts() {
 		if ( ! wp_script_is( 'select2', 'registered' ) ) {
 			wp_register_script( 'select2', GMW_URL . '/assets/lib/select2/js/select2.full.min.js', array( 'jquery' ), '4.0.13', true );
 		}
+
+		// Menu icon styling.
+		$style = ".menu-top.toplevel_page_gmw-extensions img {
+			margin-top: -5px;
+			height: 28px;
+			width: auto;
+		}
+		body #footer-thankyou {
+			position: fixed;
+			bottom: 7px;
+			z-index: 999;
+			margin-left: 240px;
+		}
+
+		body.toplevel_page_gmw-extensions #footer-thankyou, 
+		.geo-my-wp_page_gmw-forms:not( .geo-my-wp_page_gmw-form-editor ) #footer-thankyou {
+			margin-left: 0;
+		}";
+		wp_add_inline_style( 'wp-admin', $style );
 	}
 }
 add_action( 'wp_enqueue_scripts', 'gmw_enqueue_scripts' );
