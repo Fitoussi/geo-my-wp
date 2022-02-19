@@ -1,11 +1,21 @@
 <?php
-// Exit if accessed directly
+/**
+ * GEO my WP Memebrs Locator form editor.
+ *
+ * @author Eyal Fitoussi
+ *
+ * @package geo-my-wp
+ */
+
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * GMW_FL_Admin class.
+ * GMW_Members_Locator_Form_Editor
+ *
+ * Members Locator form settings class.
  */
 class GMW_Members_Locator_Form_Editor {
 
