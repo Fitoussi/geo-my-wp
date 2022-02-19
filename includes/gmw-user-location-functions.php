@@ -82,7 +82,7 @@ function gmw_is_user_exists( $user_id = 0 ) {
             WHERE ID = %d",
 			$user_id
 		)
-	);
+	); // WPCS: db call ok, cache ok.
 
 	// abort if user not exists.
 	if ( empty( $user_id ) ) {
@@ -262,22 +262,23 @@ function gmw_get_user_location_data( $id = 0, $by_location_id = false ) {
 
 	global $wpdb;
 
-	$gmw_table   = $wpdb->base_prefix . 'gmw_locations';
-	$users_table = $wpdb->base_prefix . 'users';
+	$fields      = esc_sql( $fields );
+	$gmw_table   = esc_sql( $wpdb->base_prefix ) . 'gmw_locations';
+	$users_table = esc_sql( $wpdb->base_prefix ) . 'users';
 
 	if ( ! $by_location_id ) {
 
 		$sql = $wpdb->prepare(
 			"
             SELECT     $fields
-            FROM       $gmw_table  gmw
+            FROM       $gmw_table gmw
             INNER JOIN $users_table users
             ON         gmw.object_id   = users.ID
             WHERE      gmw.object_type = 'user'
             AND        gmw.object_id   = %d
         ",
 			$id
-		);
+		); // WPCS: Unprepared SQL ok.
 
 	} else {
 
@@ -291,10 +292,10 @@ function gmw_get_user_location_data( $id = 0, $by_location_id = false ) {
             AND        gmw.ID = %d
         ",
 			$id
-		);
+		); // WPCS: Unprepared SQL ok.
 	}
 
-	$location_data = $wpdb->get_row( $sql, OBJECT );
+	$location_data = $wpdb->get_row( $sql, OBJECT ); // WPCS: DB call ok, cache ok, unprepared SQL ok.
 
 	return ! empty( $location_data ) ? $location_data : false;
 }
@@ -351,20 +352,11 @@ function gmw_get_user_locations_data( $user_id = 0 ) {
  *     'fields'      => 'formatted_address', // address fields comma separated
  *     'separator'   => ', ',                // Separator between fields.
  *     'output'      => 'string'             // output type ( object, array or string ).
- * );
+ * );.
  *
  * @return Mixed object || array || string
  */
 function gmw_get_user_address( $args = array() ) {
-
-	// to support older versions. should be removed in the future
-	/*
-	if ( empty( $args['fields'] ) && ! empty( $args['info'] ) ) {
-
-		trigger_error( 'The "info" shortcode attribute of the shortcode [gmw_member_address] is deprecated since GEO my WP version 3.0. Please use the shortcode attribute "fields" instead.', E_USER_NOTICE );
-
-		$args['fields'] = $args['info'];
-	}*/
 
 	// if no specific user ID pass, look for logged in user ID.
 	if ( empty( $args['location_id'] ) ) {
@@ -383,7 +375,7 @@ add_shortcode( 'gmw_user_address', 'gmw_get_user_address' );
  * @param array $args see arguments in the function gmw_get_user_address().
  */
 function gmw_user_address( $args = array() ) {
-	echo gmw_get_user_address( $args );
+	echo gmw_get_user_address( $args ); // WPCS: XSS ok.
 }
 
 /**
@@ -398,7 +390,7 @@ function gmw_user_address( $args = array() ) {
  *     'separator'     => ', ',                // Separator between fields.
  *     'location_meta' => 0                    // Set to 1 when the fields argument is location meta.
  *     'output'        => 'string'             // object || array || string
- * );
+ * );.
  *
  * @return Mixed object || array || string
  */
@@ -422,8 +414,8 @@ add_shortcode( 'gmw_user_location_fields', 'gmw_get_user_location_fields' );
  *
  * @author Eyal Fitoussi
  *
- * @param  integer         $user_id.
- * @param  string || array $location to pass an address it can be either a string or an array of address field for example:
+ * @param  integer         $user_id  user id.
+ * @param  string || array $location location to pass an address it can be either a string or an array of address field for example:.
  *
  * $location = array(
  *     'street'    => 285 Fulton St,
@@ -432,7 +424,7 @@ add_shortcode( 'gmw_user_location_fields', 'gmw_get_user_location_fields' );
  *     'state'     => 'NY',
  *     'zipcode'   => '10007',
  *     'country'   => 'USA'
- * );
+ * );.
  *
  * or pass a set of coordinates via an array of lat,lng. Ex
  *
@@ -482,10 +474,10 @@ function gmw_update_user_location( $user_id = 0, $location = array(), $location_
  */
 function gmw_update_user_location_meta( $user_id = 0, $metadata = array(), $meta_value = false ) {
 
-	// look for location ID
+	// look for location ID.
 	$location_id = gmw_get_location_id( 'user', $user_id );
 
-	// abort if location not exists
+	// abort if location not exists.
 	if ( empty( $location_id ) ) {
 		return false;
 	}
@@ -510,7 +502,9 @@ function gmw_delete_user_location( $user_id = 0, $delete_meta = true ) {
 		return;
 	}
 
-	do_action( 'gmw_before_user_location_deleted', $user_id );
+	// This filter was renamed. It original named 'gmw_before_user_location_deleted'
+	// but a filter with the same name already exists.
+	do_action( 'gmw_pre_user_location_deleted', $user_id );
 
 	gmw_delete_location_by_object( 'user', $user_id, $delete_meta );
 
@@ -541,7 +535,7 @@ add_action( 'delete_user', 'gmw_delete_user_location_action' );
  */
 function gmw_user_location_status( $user_id = 0, $status = 1 ) {
 
-	$status = ( 1 == $status ) ? 1 : 0;
+	$status = 1 === absint( $status ) ? 1 : 0;
 
 	global $wpdb;
 
@@ -549,10 +543,11 @@ function gmw_user_location_status( $user_id = 0, $status = 1 ) {
 		$wpdb->prepare(
 			"
             UPDATE {$wpdb->prefix}gmw_locations 
-			SET   `status`      = $status 
+			SET   `status`      = %s
             WHERE `object_type` = 'user' 
             AND   `object_id`   = %d",
-			array( $user_id )
+			$status,
+			$user_id
 		)
-	);
+	); // WPCS: db call ok, cache ok.
 }
