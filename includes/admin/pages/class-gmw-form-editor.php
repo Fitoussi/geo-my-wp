@@ -2,6 +2,8 @@
 /**
  * GEO my WP form editor.
  *
+ * @author Eyal Fitoussi
+ *
  * @package geo-my-wp
  */
 
