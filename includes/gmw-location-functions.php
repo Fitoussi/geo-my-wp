@@ -1015,6 +1015,103 @@ function gmw_get_linked_location_address( $location, $fields = array( 'formatted
 }
 
 /**
+ * Generate image element for different objects.
+ *
+ * @since 4.0
+ *
+ * @autor Eyal Fitoussi
+ *
+ * @param  array $args   image arguments.
+ *
+ * @param  array $object object.
+ *
+ * @param  array $gmw    form object.
+ *
+ * @return [type]         [description]
+ */
+function gmw_get_image_element( $args, $object, $gmw ) {
+
+	$args = apply_filters( 'gmw_get_image_element_args', $args, $object, $gmw );
+	$args = wp_parse_args(
+		$args,
+		array(
+			'image_url'   => '',
+			'object_type' => 'post',
+			'object_id'   => 0,
+			'permalink'   => '',
+			'width'       => '150px',
+			'height'      => '150px',
+			'class'       => '',
+			'css_id'      => '',
+			'attributes'  => array(),
+			'wrapper'     => true,
+			'where'       => 'search_results',
+		)
+	);
+
+	if ( empty( $args['image_url'] ) ) {
+		return;
+	}
+
+	$args['attributes']['class'] = 'gmw-image gmw-' . esc_attr( $args['object_type'] ) . '-image gmw-' . esc_attr( $args['where'] ) . '-image';
+
+	if ( '' !== $args['class'] ) {
+		$args['attributes']['class'] .= ' ' . $args['class'];
+	}
+
+	if ( '' !== $args['css_id'] ) {
+		$args['attributes']['id'] = $args['css_id'];
+	}
+
+	$image_size = 'width:' . $args['width'] . ';height:' . $args['height'];
+
+	if ( ! empty( $args['attributes']['style'] ) ) {
+		$args['attributes']['style'] .= ';' . $image_size;
+	} else {
+		$args['attributes']['style'] = $image_size;
+
+	}
+	
+	$attributes = '';
+
+	foreach ( $args['attributes'] as $attribute_name => $attribute_value ) {
+		$attributes .= ' ' . esc_attr( $attribute_name ) . '="' . esc_attr( $attribute_value ) . '"';
+	}
+
+	$output = '';
+
+	$is_wrap = false;
+
+	if ( ! empty( $args['wrapper'] ) ) {
+
+		$is_wrap = true;
+
+		$output .= '<div class="gmw-image-wrapper gmw-' . esc_attr( $args['where'] ) . '-image-wrapper">';
+	}
+
+	$is_link = false;
+
+	if ( ! empty( $args['permalink'] ) ) {
+
+		$is_link = true;
+
+		$output .= '<a href="' . esc_url( $args['permalink'] ) . '">';
+	}
+
+	$output .= '<img src="' . esc_url( $args['image_url'] ) . '" ' . $attributes . '/>';
+
+	if ( $is_link ) {
+		$output .= '</a>';
+	}
+
+	if ( $is_wrap ) {
+		$output .= '</div>';
+	}
+
+	return $output;
+}
+
+/**
  * Check if is featured object.
  *
  * @param  stting  $object_type object type.
