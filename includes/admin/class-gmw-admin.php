@@ -54,6 +54,7 @@ class GMW_Admin {
 		include_once 'class-gmw-tracking.php';
 		include_once 'updater/class-gmw-license.php';
 		include_once 'class-gmw-form-settings-helper.php';
+		include_once 'class-gmw-forms-table.php';
 
 		// admin pages.
 		include_once 'pages/class-gmw-extensions.php';
