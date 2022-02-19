@@ -156,9 +156,14 @@ class GMW_Members_Locator_Form extends GMW_Form {
 				$having = "Having distance <= {$distance} OR distance IS NULL";
 
 				// if we order by the distance.
-				if ( 'distance' === $this->form['query_args']['type'] ) {
+				/*if ( 'distance' === $this->form['query_args']['type'] ) {
 					$sql['orderby'] = 'ORDER BY distance';
-				}
+				}*/
+			}
+
+			// if we order by the distance.
+			if ( 'distance' === $this->form['query_args']['type'] ) {
+				$sql['orderby'] = 'ORDER BY distance';
 			}
 		} else {
 
