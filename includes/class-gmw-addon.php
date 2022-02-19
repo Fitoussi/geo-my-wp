@@ -492,6 +492,18 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 				return;
 			}
 
+			/*if ( ! $this->is_core ) {
+	
+				$statuses = array( 'inactive', 'disabled', 'missing', 'invalid_item_id', 'expire', 'no_activations_left', 'invalid' );
+
+				if ( empty( GMW()->licenses_data[ $this->license_name ]['status'] ) || in_array( GMW()->licenses_data[ $this->license_name ]['status'], $statuses, true ) ) {
+					
+					$this->deactivate_addon();
+
+					return;
+				}				
+			}*/
+
 			// initialize the addon.
 			$this->initialize();
 		}
@@ -769,6 +781,53 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 			);
 
 			$licenses_data = GMW()->licenses_data;
+
+			if ( ! $this->is_core ) {
+	
+				$statuses = array( 'inactive', 'disabled', 'missing', 'invalid_item_id', 'expire', 'no_activations_left', 'invalid' );
+
+				if ( empty( $this->license_name ) || empty( $licenses_data[ $this->license_name ]['status'] ) || in_array( $licenses_data[ $this->license_name ]['status'], $statuses, true ) ) {
+					
+					if ( empty( $this->license_name ) || empty( $licenses_data[ $this->license_name ]['status'] ) ) {
+						
+						$error   = 'license_key_inactive';
+						//$message = __( 'License key inactive', 'geo-my-wp' );
+						$message  = sprintf(
+								__( 'GEO my WP %1$s extension is disabled. <a href="%2$s">Activate your license key</a> to start using the extension or <a href="%3$s">deactivate the extension</a> to remove this notice.', 'geo-my-wp' ),
+							$this->name,
+							admin_url( 'admin.php?page=gmw-extensions&extensions_tab=premium' ),
+							admin_url( 'plugins.php?plugin_status=all&paged=1&s' )
+						);
+
+					} else {
+
+						$error    = $licenses_data[ $this->license_name ]['status'];
+						$messages = gmw_license_update_notices();
+						$message  = sprintf(
+							esc_attr__( 'GEO my WP %1$s extension is disabled.', 'geo-my-wp' ),
+							$this->name
+						);
+
+						if ( 'disabled' !== $error ) {
+							$message .= sprintf(
+								__( ' <a href="%1$s">Manage license keys</a>.', 'geo-my-wp' ),
+								admin_url( 'admin.php?page=gmw-extensions&extensions_tab=premium' )
+							);
+						}		
+					}
+
+					$verified['details'] = array(
+						'error'            => $error,
+						'required_version' => '',
+						'notice'           => $message,
+					);
+
+					// display admin notice.
+					add_action( 'admin_notices', array( $this, 'verify_activation_notice' ) );
+
+					$verified['status'] = false;
+				}				
+			}
 
 			// extensions disabled by the admin are not allowed.
 			/*if ( ! empty( $this->license_name ) && ! empty( $licenses_data[ $this->license_name ] ) && isset( $licenses_data[ $this->license_name ]['status'] ) && 'disabled' === $licenses_data[ $this->license_name ]['status'] ) {
