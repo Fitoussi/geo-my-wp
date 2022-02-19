@@ -317,12 +317,24 @@ class GMW_Form_Editor {
 		</div>
 		<?php
 	}
+
+	/**
 	 * Form groups
 	 *
 	 * @return [type] [description]
 	 */
 	public function fields_groups() {
 
+		$premium_settings_message = sprintf( __( 'Check out the <a href="%s" target="_blank">Premium Settings extension</a> for additional field options.', 'geo-my-wp' ), 'https://geomywp.com/extensions/premium-settings' );
+		$results_page             = array(
+			'' => __( ' -- Same Page -- ', 'geo-my-wp' ),
+		);
+
+		$template_object = 'posts_locator' === $this->form['addon'] ? 'post' : 'member';
+
+		if ( ! empty( $this->form['form_submission']['results_page'] ) ) {
+			$results_page[ $this->form['form_submission']['results_page'] ] = get_the_title( $this->form['form_submission']['results_page'] );
+		}
 		// settings groups.
 		$groups = array(
 			'hidden'            => array(
