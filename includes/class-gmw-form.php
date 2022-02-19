@@ -483,11 +483,34 @@ class GMW_Form {
 
 		// get search form template files.
 		$search_form = gmw_get_search_form_template( $this->form['component'], $this->form['search_form']['form_template'], $this->form['addon'] );
-
+		
 		// enqueue style only once.
-		if ( ! wp_style_is( $search_form['stylesheet_handle'], 'enqueued' ) ) {
-			wp_enqueue_style( $search_form['stylesheet_handle'], $search_form['stylesheet_uri'], array( 'gmw-frontend' ), GMW_VERSION );
+		if ( empty( $this->form['search_form']['styles']['disable_stylesheet'] ) && ! wp_style_is( $search_form['stylesheet_handle'], 'enqueued' ) ) {
+			wp_register_style( $search_form['stylesheet_handle'], $search_form['stylesheet_uri'], array( 'gmw-frontend' ), GMW_VERSION, false );
+			wp_enqueue_style( $search_form['stylesheet_handle'] );
 		}
+
+		// Add custom CSS as inline script.
+		if ( ! empty( $this->form['search_form']['styles']['custom_css'] ) ) {
+
+			// Needed when registering an inline style.
+			if ( ! wp_style_is( $search_form['stylesheet_handle'], 'enqueued' ) ) {
+
+				wp_register_style( $search_form['stylesheet_handle'], false );
+				wp_enqueue_style( $search_form['stylesheet_handle'] );
+			}
+
+			wp_add_inline_style( $search_form['stylesheet_handle'], $this->form['search_form']['styles']['custom_css'] );
+		}
+
+		$template_name = str_replace( 'custom_', '', $this->form['search_form']['form_template'] );
+		$form_class    = $template_name . ' gmw-' . $this->form['prefix'] . '-' . $template_name . '-form-wrapper';
+
+ 		if ( ! empty( $this->form['search_form']['styles']['enhanced_fields'] ) ) {
+			$form_class  .= ' gmw-fields-enhanced';
+		}
+
+		$this->element_class_attr['form_wrap'][] = $form_class;
 
 		// temporary for older versions. This function should be used in the search form.
 		$this->form['form_submission']['results_page'] = $this->get_results_page();
@@ -716,15 +739,14 @@ class GMW_Form {
 	public function page_load_results() {
 
 		// get form values.
-		$form_values = $this->form['form_values'];
-
-		$page_load_options          = $this->form['page_load_results'];
+		$form_values                = $this->form['form_values'];
+		$page_load_options          = $this->form['page_load_results'];		
 		$this->form['address']      = '';
 		$this->form['org_address']  = '';
 		$this->form['get_per_page'] = ! empty( $form_values['per_page'] ) ? $form_values['per_page'] : current( explode( ',', $page_load_options['per_page'] ) );
 		$this->form['radius']       = ! empty( $page_load_options['radius'] ) ? $page_load_options['radius'] : 200;
 		$this->form['units']        = ! empty( $page_load_options['units'] ) ? $page_load_options['units'] : 'imperial';
-		$this->form['units_array']  = gmw_get_units_array( $page_load_options['units'] );
+		$this->form['units_array']  = ! empty( $page_load_options['units'] ) ? gmw_get_units_array( $page_load_options['units'] ) : gmw_get_units_array( 'imperial' );
 
 		$user_location = gmw_get_user_current_location();
 
@@ -1077,8 +1099,23 @@ class GMW_Form {
 		$results_template = gmw_get_search_results_template( $this->form['component'], $this->form['search_results']['results_template'], $this->form['addon'] );
 
 		// enqueue stylesheet if not already enqueued.
-		if ( ! wp_style_is( $results_template['stylesheet_handle'], 'enqueued' ) ) {
-			wp_enqueue_style( $results_template['stylesheet_handle'], $results_template['stylesheet_uri'] );
+		if ( empty( $this->form['search_results']['styles']['disable_stylesheet'] ) && ! wp_style_is( $results_template['stylesheet_handle'], 'enqueued' ) ) {
+
+			wp_register_style( $results_template['stylesheet_handle'], $results_template['stylesheet_uri'], array( 'gmw-frontend' ), GMW_VERSION, false );
+			wp_enqueue_style( $results_template['stylesheet_handle'] );
+		}
+
+		// Add custom CSS as inline script.
+		if ( ! empty( $this->form['search_results']['styles']['custom_css'] ) ) {
+
+			// Needed when registering an inline style.
+			if ( ! wp_style_is( $results_template['stylesheet_handle'], 'enqueued' ) ) {
+
+				wp_register_style( $results_template['stylesheet_handle'], false );
+				wp_enqueue_style( $results_template['stylesheet_handle'] );
+			}
+
+			wp_add_inline_style( $results_template['stylesheet_handle'], $this->form['search_results']['styles']['custom_css'] );
 		}
 
 		$this->before_search_results();
@@ -1093,6 +1130,30 @@ class GMW_Form {
 		} else {
 			$this->form['results_message'] = $this->results_message();
 		}
+
+		$template_name = str_replace( 'custom_', '', $this->form['search_results']['results_template'] );
+		$class_attr    = $template_name . ' gmw-' . $this->form['prefix'] . '-' . $template_name . '-results-wrapper';
+		$view          = ! empty( $this->form['search_results']['results_view']['default'] ) ? $this->form['search_results']['results_view']['default'] : 'grid';
+
+		if ( ! empty( $this->form['search_results']['results_view']['toggle'] ) ) {
+
+			if ( ! empty( $_COOKIE['gmw_' . $this->form['ID'] . '_results_view'] ) ) {
+
+				$view = sanitize_text_field( wp_unslash( $_COOKIE['gmw_' . $this->form['ID'] . '_results_view'] ) );
+			}
+		}
+
+		$class_attr .= 'list' === $view ? ' gmw-list-view' : ' gmw-grid-view';
+
+		if ( ! empty( $this->form['search_results']['image']['enabled'] ) ) {
+			$class_attr .= ' gmw-has-image';
+		}
+
+		if ( ! empty( $this->form['search_results']['styles']['enhanced_fields'] ) ) {
+			$class_attr .= ' gmw-fields-enhanced';
+		}
+
+		$this->element_class_attr['results_wrap'][] = $class_attr;
 
 		$gmw       = $this->form;
 		$gmw_form  = $this;
