@@ -613,6 +613,51 @@ function gmw_get_units_array( $units = 'imperial' ) {
 }
 
 /**
+ * Get form field options.
+ *
+ * Generate an array of options from textarea with break lines or from comma separated string.
+ *
+ * For select, radio, and checkboxes fields.
+ *
+ * @since 4.0.
+ *
+ * @author Eyal Fitoussi.
+ *
+ * @param  string  $options textarea with breakline or comma separated string.
+ *
+ * @param  boolean $eol     true for text area with end-of-line false for comma separated string.
+ *
+ * @return array           options.
+ */
+function gmw_get_form_field_options( $options = '', $eol = true ) {
+
+	$output = array();
+
+	if ( empty( $options ) ) {
+		return $output;
+	}
+
+	if ( $eol || strpos( $options, "\n" ) !== FALSE ) {
+
+		$options = explode( PHP_EOL, $options );
+
+		foreach ( $options as $option ) {
+			$option         = explode( ' : ', $option );
+			$val            = trim( $option[0] );
+			$output[]       = array(
+				'value' => '&nbsp;' === $val ? '' : $val,
+				'label' => ! empty( $option[1] ) ? trim( $option[1] ) : $val,
+			);
+		}
+	} else {
+
+		$output = explode( ',', $options );
+	}
+
+	return $output;
+}
+
+/**
  * Calculate the distance between two points
  *
  * @param  [type] $start_lat latitude of start point.
@@ -632,6 +677,41 @@ function gmw_calculate_distance( $start_lat, $start_lng, $end_lat, $end_lng, $un
 	$distance = acos( sin( $end_lat * $rad ) * sin( $start_lat * $rad ) + cos( $end_lat * $rad ) * cos( $start_lat * $rad ) * cos( $end_lng * $rad - $start_lng * $rad ) ) * $radius;
 
 	return round( $distance, 2 );
+}
+
+/**
+ * Get users ID base on user roles
+ *
+ * @param  array $roles [description]
+ * @return [type]        [description]
+ */
+function gmw_get_user_ids_from_roles( $roles, $cache = 'posts' ) {
+
+	if ( empty( $roles ) ) {
+		return;
+	}
+
+	$transient_key = md5( wp_json_encode( $roles ) );
+
+	// look for saved data in transient
+	$users_id = get_transient( 'gmw_user_ids_by_role_' . $transient_key );
+
+	// if no results in transient or if roles changed in the form settings
+	// we will get excluded users from database.
+	if ( empty( $users_id ) ) {
+
+		$args = array(
+			'role__in' => $roles,
+			'fields'  => 'id',
+		);
+
+		$users_id = get_users( $args );
+
+		// save results in transient
+		set_transient( 'gmw_user_ids_by_role_' . $transient_key, $users_id, 60 * MINUTE_IN_SECONDS );
+	}
+
+	return $users_id;
 }
 
 /**
@@ -906,12 +986,12 @@ function gmw_get_element_toggle_button( $args = array() ) {
 
 	$defaults = array(
 		'id'           => 0,
-		'show_icon'    => 'gmw-icon-arrow-down',
-		'hide_icon'    => 'gmw-icon-arrow-up',
+		'show_icon'    => 'gmw-icon-down-open-big',
+		'hide_icon'    => 'gmw-icon-up-open-big',
 		'target'       => '#gmw-popup-info-window',
 		'animation'    => 'height',
 		'open_length'  => '100%',
-		'close_length' => '35px',
+		'close_length' => '40px',
 		'duration'     => '200',
 		'init_visible' => true,
 	);
