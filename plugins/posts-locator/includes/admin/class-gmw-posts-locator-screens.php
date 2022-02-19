@@ -41,7 +41,7 @@ class GMW_Posts_Locator_Screens {
 			}*/
 
 			if ( 'edit.php' === $pagenow ) {
-				add_filter( "manage_{$post_type}_posts_columns", array( $this, 'add_address_column' ) );
+				add_filter( "manage_{$post_type}_posts_columns", array( $this, 'add_address_column' ), 99 );
 				add_action( "manage_{$post_type}_posts_custom_column", array( $this, 'address_column_content' ), 10, 2 );
 			}
 
@@ -77,30 +77,20 @@ class GMW_Posts_Locator_Screens {
 	 */
 	public function add_address_column( $columns ) {
 
-		$new_columns = array();
-		$no_col      = true;
+		if ( array_key_exists( 'comments', $columns ) ) {
 
-		// append "address" column depends on the table arrangemnt.
-		foreach ( $columns as $key => $column ) {
+			$offset = array_search( 'comments', array_keys( $columns ) );
 
-			if ( array_key_exists( 'comments', $columns ) && 'comments' === $key ) {
+		} elseif ( array_key_exists( 'date', $columns ) ) {
 
-				$new_columns['gmw_address'] = '<i class="gmw-icon-location"></i>' . __( 'Location', 'geo-my-wp' );
-				$no_col                     = false;
+			$offset = array_search( 'date', array_keys( $columns ) );
 
-			} elseif ( ! array_key_exists( 'comments', $columns ) && array_key_exists( 'date', $columns ) && 'date' === $key ) {
+		} else {
 
-				$new_columns['gmw_address'] = '<i class="gmw-icon-location"></i>' . __( 'Location', 'geo-my-wp' ) . '</i>';
-				$no_col                     = false;
-			}
-			$new_columns[ $key ] = $column;
+			$offset = array_search( array_key_last( $columns ), array_keys( $columns ) );
 		}
 
-		if ( $no_col ) {
-			$new_columns['gmw_address'] = __( 'Location', 'geo-my-wp' );
-		}
-
-		return $new_columns;
+		return array_merge( array_slice( $columns, 0, $offset ), array( 'gmw_location' => '<i class="gmw-icon-location"></i>' . __( 'Location', 'geo-my-wp' ) ), array_slice( $columns, $offset, null ) );
 	}
 
 	/**
@@ -114,7 +104,7 @@ class GMW_Posts_Locator_Screens {
 	public function address_column_content( $column, $post_id ) {
 
 		// abort if not "Address column".
-		if ( 'gmw_address' !== $column ) {
+		if ( 'gmw_location' !== $column ) {
 			return;
 		}
 
@@ -157,7 +147,7 @@ class GMW_Posts_Locator_Screens {
 		$address = esc_attr( $address );
 
 		// create link to address.
-		$address = ( true === $address_ok ) ? '<a href="http://maps.google.com/?q=' . $address . '" target="_blank" title="location">' . $address . '</a>' : '<span style="color:red">' . $address . '</span>';
+		$address = ( true === $address_ok ) ? '<a href="https://maps.google.com/?q=' . $address . '" target="_blank" title="location">' . $address . '</a>' : '<span style="color:red">' . $address . '</span>';
 		echo '<i class="gmw-icon-ok-circled" style="color: green;margin-right: 1px;font-size: 12px;" style="color:green"></i>' . $address; // WPSC: XSS ok.
 
 	}
