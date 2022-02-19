@@ -89,6 +89,39 @@ function gmw_get_post_types_array() {
 }
 
 /**
+ * Get admin settings field.
+ *
+ * @since 4.0
+ *
+ * @author Eyal Fitoussi
+ *
+ * @param  array  $field     [description].
+ *
+ * @param  string $name_attr [description].
+ *
+ * @param  string $value     [description].
+ *
+ * @return [type]            [description]
+ */
+function gmw_get_admin_settings_field( $field = array(), $name_attr = '', $value = '' ) {
+	return GMW_Form_Settings_Helper::get_settings_field( $field, $name_attr , $value );
+}
+
+/**
+ * Get form builder field arguments.
+ *
+ * @since 4.0
+ *
+ * @author Eyal Fitoussi
+ *
+ * @param  [type] $args [description].
+ *
+ * @return [type]       [description]
+ */
+function gmw_get_admin_setting_args( $args ) {
+	return GMW_Form_Settings_Helper::get_setting_args( $args );
+}
+
 /**
  * Main menu for admin pages.
  *
