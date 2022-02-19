@@ -307,7 +307,7 @@ class GMW_Maps_API {
 			'mapTypeControl'         => true,
 			'mapTypeControlOptions'  => true,
 			'mapTypeId'              => 'ROADMAP',
-			'maxZoom'                => null,
+			'maxZoom'                => 25,
 			'minZoom'                => 1,
 			'zoom'                   => 13,
 			'noClear'                => false,
