@@ -1,18 +1,29 @@
 <?php
-// Exit if accessed directly
+/**
+ * GEO my WP Import/Export data tab.
+ *
+ * @since 2.5
+ *
+ * @author Eyal Fitoussi
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+	exit; // Exit if accessed directly.
 }
 
 /**
  * Export/Import tab output
  *
  * @access public
+ *
  * @since 2.5
+ *
  * @author Eyal Fitoussi
  */
 function gmw_import_export_data_tab() {
-?>	
+	?>	
 	
 	<?php do_action( 'gmw_import_export_data_start' ); ?>
 
@@ -141,6 +152,7 @@ add_action( 'gmw_import_export_data_tab', 'gmw_import_export_data_tab' );
  * Export data to json file
  *
  * @since 2.5
+ *
  * @return void
  */
 function gmw_export_data() {
@@ -160,20 +172,19 @@ function gmw_export_data() {
 		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
-	$export 		  = array();
-	//$export['addons'] = get_option( 'gmw_addons' );
-	 
-	// export settings
-	if ( in_array( 'settings', $_POST['export_item'] ) && function_exists( 'gmw_get_options_group' ) ) {
+	$export = array();
+
+	// export settings.
+	if ( in_array( 'settings', $_POST['export_item'] ) && function_exists( 'gmw_get_options_group' ) ) { // WPCS: CSRF ok, sanitization ok.
 		$export['options'] = gmw_get_options_group();
 	}
-	 	 
-	// export licenses
-	if ( in_array( 'licenses', $_POST['export_item'] ) ) {
+
+	// export licenses.
+	if ( in_array( 'licenses', $_POST['export_item'] ) ) { // WPCS: CSRF ok, sanitization ok.
 		$export['license_keys'] = get_option( 'gmw_license_keys' );
-		$export['statuses'] 	= get_option( 'gmw_premium_plugin_status' );
+		$export['statuses']     = get_option( 'gmw_premium_plugin_status' );
 	}
-	 
+
 	ignore_user_abort( true );
 
 	set_time_limit( 30 );
@@ -182,10 +193,10 @@ function gmw_export_data() {
 
 	header( 'Content-Type: application/json; charset=utf-8' );
 	header( 'Content-Disposition: attachment; filename=gmw-data-export-' . date( 'm-d-Y' ) . '.json' );
-	header( "Expires: 0" );
+	header( 'Expires: 0' );
 
 	echo json_encode( $export );
-	
+
 	exit;
 }
 add_action( 'gmw_export_data', 'gmw_export_data' );
@@ -194,6 +205,7 @@ add_action( 'gmw_export_data', 'gmw_export_data' );
  * Import data from a json file
  *
  * @since 2.5
+ *
  * @return void
  */
 function gmw_import_data() {
@@ -221,30 +233,27 @@ function gmw_import_data() {
 		wp_die( esc_html__( 'Please upload a file to import', 'geo-my-wp' ) );
 	}
 
-	// Retrieve the data from the file and convert the json object to an array
+	// Retrieve the data from the file and convert the json object to an array.
 	$import_data = gmw_object_to_array( json_decode( file_get_contents( $import_file ) ) );
 
-	// import add-ons
-	//if ( isset( $import_data['addons'] ) ) {
-	//	update_option( 'gmw_addons', $import_data['addons'] );
-	//}
-	 
-	// import settings
-	if ( in_array( 'settings', $_POST['import_item'] ) && isset( $import_data['options'] ) ) {
+	// import settings.
+	if ( in_array( 'settings', $_POST['import_item'], true ) && isset( $import_data['options'] ) ) { // WPCS: CSRF ok, sanitization ok.
 		update_option( 'gmw_options', $import_data['options'] );
 	}
-		
-	// import licenses
-	if ( in_array( 'licenses', $_POST['import_item'] ) ) {
+
+	// import licenses.
+	if ( in_array( 'licenses', $_POST['import_item'], true ) ) { // WPCS: CSRF ok, sanitization ok.
+
 		if ( isset( $import_data['license_keys'] ) ) {
 			update_option( 'gmw_license_keys', $import_data['license_keys'] );
 		}
+
 		if ( isset( $import_data['statuses'] ) ) {
 			update_option( 'gmw_premium_plugin_status', $import_data['statuses'] );
 		}
 	}
 
-	wp_safe_redirect( admin_url( 'admin.php?page=gmw-import-export&tab=data&gmw_notice=data_imported&gmw_notice_status=updated' ) ); 
+	wp_safe_redirect( admin_url( 'admin.php?page=gmw-import-export&tab=data&gmw_notice=data_imported&gmw_notice_status=updated' ) );
 		exit;
 
 }
