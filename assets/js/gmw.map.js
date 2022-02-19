@@ -1076,7 +1076,10 @@ GMW_Map.prototype.render = function( locations, userLocation ) {
 	// generate default center for the map.
 	self.options.defaultCenter = typeof self.options.defaultCenter !== 'undefined' ? self.options.defaultCenter.split(',') : [ 40.758895, -73.985131 ];
 
-	self.options = jQuery.extend( {}, self.options, self.getMapOptions( self ) );
+	//self.options = jQuery.extend( {}, self.options, self.getMapOptions( self ) );
+
+
+	self.options = jQuery.extend( {}, self.getMapOptions( self ), self.options );
 
 	// modify the map options.
 	self.options = GMW.apply_filters( 'gmw_map_options', self.options, self );
