@@ -136,7 +136,7 @@ function gmw_enqueue_scripts() {
 
 	if ( ! empty( $gmw_options['styles'] ) ) {
 
-		foreach( $gmw_options['styles'] as $color_name => $color_value ) {
+		foreach ( $gmw_options['styles'] as $color_name => $color_value ) {
 
 			if ( empty( $color_value ) ) {
 				continue;
@@ -145,7 +145,8 @@ function gmw_enqueue_scripts() {
 		}
 	}
 
-	/*$ltr = '';
+	/*
+	$ltr = '';
 
 	if ( ! is_rtl() ) {
 		$ltr = '[class*=" gmw-icon-"]:before,[class^=gmw-icon-]:before {margin-left: 0;}';
@@ -191,7 +192,8 @@ function gmw_enqueue_scripts() {
 		wp_register_style( 'gmw-locations-importer', GMW_URL . '/includes/admin/pages/import-export/locations-importer/assets/css/gmw.locations.importer.min.css', array(), GMW_VERSION );
 
 		// register chosen scripts/style in back-end.
-		/*if ( ! wp_style_is( 'chosen', 'registered' ) ) {
+		/*
+		if ( ! wp_style_is( 'chosen', 'registered' ) ) {
 			wp_register_style( 'chosen', GMW_URL . '/assets/lib/chosen/chosen.min.css', array(), '1.8.7' );
 		}
 		if ( ! wp_script_is( 'chosen', 'registered' ) ) {
@@ -208,7 +210,7 @@ function gmw_enqueue_scripts() {
 		}
 
 		// Menu icon styling.
-		$style = ".menu-top.toplevel_page_gmw-extensions img {
+		$style = '.menu-top.toplevel_page_gmw-extensions img {
 			margin-top: -5px;
 			height: 28px;
 			width: auto;
@@ -223,7 +225,7 @@ function gmw_enqueue_scripts() {
 		body.toplevel_page_gmw-extensions #footer-thankyou, 
 		.geo-my-wp_page_gmw-forms:not( .geo-my-wp_page_gmw-form-editor ) #footer-thankyou {
 			margin-left: 0;
-		}";
+		}';
 		wp_add_inline_style( 'wp-admin', $style );
 	}
 }
