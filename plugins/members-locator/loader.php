@@ -102,10 +102,20 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 	 */
 	public function form_buttons() {
 		return array(
-			'slug'     => 'members_locator',
-			'name'     => 'BP Members Locator',
-			'prefix'   => 'fl',
-			'priority' => 10,
+			array(
+				'slug'      => 'members_locator',
+				'name'      => __( 'BP Members Locator', 'geo-my-wp' ),
+				'component' => 'members_locator',
+				'prefix'    => 'fl',
+				'priority'  => 10,
+			),
+			array(
+				'slug'      => 'members_locator_mashup_map',
+				'name'      => __( 'BP Members Mashup Map', 'geo-my-wp' ),
+				'component' => 'members_locator',
+				'prefix'    => 'flmmap',
+				'priority'  => 11,
+			),
 		);
 	}
 
