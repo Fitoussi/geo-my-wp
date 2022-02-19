@@ -94,11 +94,47 @@ var GMW_Extensions = {
      */
     tabs_init : function() {
 
-        jQuery( '#gmw-extensions-filter ul li a' ).click( function (e) {
+    	jQuery( '#gmw-extensions-tabs-wrapper span' ).on( 'click', function() {
+
+    		var tab = jQuery( this ).data( 'type' );
+
+    		jQuery( '.gmw-extensions-wrapper, #gmw-extensions-tabs-wrapper span' ).removeClass( 'active' );
+    		jQuery( '.gmw-extensions-wrapper.' + tab ).addClass( 'active' );
+
+    		jQuery( this ).addClass( 'active' );
+    	});
+
+        jQuery( '#gmw-extensions-status-filter' ).change( function (e) {
 
             e.preventDefault();
 
-            if ( jQuery( this ).hasClass( 'filter-tab' ) ) {
+            var extensions = jQuery( '#gmw-extensions-filter' ).val();
+            var status     = jQuery( '#gmw-extensions-status-filter' ).val();
+            var thisClass  = '';
+
+            jQuery( '.gmw-admin-page-content-inner .gmw-extension-wrapper' ).hide();
+
+            if ( '' == status ) {
+
+            	
+            	jQuery( '.gmw-admin-page-content-inner .gmw-extension-wrapper' ).show();
+            	/*thisClass = '.' + thisVal;
+
+            	if ( jQuery( '#gmw-active-extensions-filter' ).is( ':checked' ) ) {
+            		thisClass += '.active';
+            	}
+
+            	jQuery( '.gmw-admin-page-content-inner .gmw-extension-wrapper' + thisClass ).show();*/
+
+            } else {
+
+            	jQuery( '.gmw-admin-page-content-inner .gmw-extension-wrapper.' + status ).show();
+            }
+        });
+            //jQuery( '.gmw-admin-page-content-inner .gmw-extension-wrapper' ).hide();
+
+
+            /*if ( jQuery( this ).hasClass( 'filter-tab' ) ) {
 
                 if ( jQuery( this ).data( 'filter' ) == '' ) {
                     
