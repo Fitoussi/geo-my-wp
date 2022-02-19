@@ -69,7 +69,7 @@ class GMW_Admin {
 		$this->settings_page = new GMW_Settings();
 		$this->forms_page    = new GMW_Forms_Page();
 
-		if ( isset( $_GET['page'] ) && 'gmw-forms' === $_GET['page'] && isset( $_GET['gmw_action'] ) && 'edit_form' === $_GET['gmw_action'] && ! empty( $_GET['prefix'] ) && class_exists( 'GMW_' . $_GET['prefix'] . '_Form_Editor' ) ) { // WPCS: CSRF ok.
+		if ( isset( $_GET['page'] ) && 'gmw-forms' === $_GET['page'] && isset( $_GET['gmw_action'] ) && 'edit_form' === $_GET['gmw_action'] && ! empty( $_GET['prefix'] ) && class_exists( 'GMW_' . $_GET['prefix'] . '_Form_Editor' ) ) { // WPCS: CSRF ok, sanitization OK.
 			$class_name = 'GMW_' . sanitize_text_field( wp_unslash( $_GET['prefix'] ) ) . '_Form_Editor'; // WPCS: CSRF ok.
 		} else {
 			$class_name = 'GMW_Form_Editor';
@@ -78,7 +78,7 @@ class GMW_Admin {
 		$this->edit_form_page     = new $class_name();
 		$this->tools_page         = new GMW_Tools();
 		$this->import_export_page = new GMW_Import_Export_Page();
-		// $this->shortcodes_page    = new GMW_Shortcodes_page();
+
 		add_filter( 'plugin_action_links_' . GMW_BASENAME, array( $this, 'gmw_action_links' ), 10, 2 );
 
 		/**
@@ -220,14 +220,19 @@ class GMW_Admin {
 	 * Admin notice.
 	 */
 	public function update_database_notice() {
+		$allowed = array(
+			'a' => array(
+				'class' => array(),
+			),
+		);
 		?>
 		<div class="error">
 			<p>
 				<?php
 				printf(
 					/* translators: %s link to importer page. */
-					__( 'GEO my WP needs to import existing locations into its new database table. <a href="%s" class="button-primary"> Import locations</a>' ),
-					admin_url( 'admin.php?page=gmw-import-export&tab=gmw_v_3' )
+					wp_kses( __( 'GEO my WP needs to import existing locations into its new database table. <a href="%s" class="button-primary">Import locations</a>' ), $allowed ),
+					esc_url( admin_url( 'admin.php?page=gmw-import-export&tab=gmw_v_3' ) )
 				);
 				?>
 			</p>
@@ -386,7 +391,7 @@ class GMW_Admin {
 		}
 
 		// apply credit and enqueue scripts and styles in GEO my WP admin pages only.
-		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], $gmw_pages ) ) { // WPCS: CSRF ok, sanitization ok.
+		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], $gmw_pages, true ) ) { // WPCS: CSRF ok, sanitization ok.
 			add_filter( 'admin_footer_text', array( $this, 'gmw_credit_footer' ), 10 );
 		}
 	}
@@ -496,7 +501,7 @@ class GMW_Admin {
 		// alowed pages can be modified.
 		$pages = apply_filters( 'gmw_add_form_button_admin_pages', array( 'post.php', 'page.php', 'page-new.php', 'post-new.php' ) );
 
-		return ( is_array( $pages ) && in_array( basename( wp_unslash( $_SERVER['PHP_SELF'] ) ), $pages ) ) ? 1 : 0; // WPCS: CSRF ok, sanitization ok.
+		return ( is_array( $pages ) && ! empty( $_SERVER['PHP_SELF'] ) && in_array( basename( wp_unslash( $_SERVER['PHP_SELF'] ) ), $pages, true ) ) ? 1 : 0; // WPCS: CSRF ok, sanitization ok.
 	}
 
 	/**
@@ -568,6 +573,8 @@ class GMW_Admin {
 	 * Popup form to inset GEO my WP form shortcode into content area
 	 */
 	public static function form_insert_popup() {
+
+		$message = __( 'You need to select a form', 'geo-my-wp' );
 		?>
 		<script>
 			function gmwInsertForm() {
@@ -576,7 +583,7 @@ class GMW_Admin {
 
 				if ( "" === form_id ){
 
-					alert( '<?php _e( 'Please select a form', 'geo-my-wp' ); ?>' );
+					alert( '<?php echo esc_html( $message ); ?>' );
 
 					return;
 				}
@@ -708,7 +715,7 @@ class GMW_Admin {
 		);
 
 		$allowed = array(
-			'a'  => array(
+			'a' => array(
 				'href'   => array(),
 				'target' => array(),
 			),
