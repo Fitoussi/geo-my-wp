@@ -1,13 +1,20 @@
 <?php
-// Exit if accessed directly
+/**
+ * GEO my WP - Posts Locator shortcodes page.
+ *
+ * @package geo-my-wp
+ */
+
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+	exit;
 }
 
 /**
  * Generate the post location form.
  *
- * @param  array  $atts [description]
+ * @param  array $atts shortcode attributes.
+ *
  * @return [type]       [description]
  */
 function gmw_post_location_form_shortcode( $atts = array() ) {
