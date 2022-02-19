@@ -41,32 +41,60 @@ class GMW_Tools {
 	 */
 	public function output() {
 
-		$active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'system_info'; // WPCS: CSRF ok.
+		$current_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'system_info'; // WPCS: CSRF ok.
 		?>
-		<div id="gmw-tools-page" class="wrap gmw-admin-page">
-			<h2 class="gmw-wrap-top-h2">   
-				<i class="gmw-icon-wrench"></i>
-				<?php esc_attr_e( 'Tools', 'geo-my-wp' ); ?>
-				<?php gmw_admin_helpful_buttons(); ?>
-			</h2>
-			<div class="clear"></div>
-			<h2 class="nav-tab-wrapper">
+		<?php gmw_admin_pages_header(); ?>
+		
+		<div id="gmw-tools-page" class="wrap gmw-admin-page gmw-admin-page-wrapper">
+	
+			<nav class="gmw-admin-page-navigation">
+
 				<?php
-				foreach ( $this->get_tabs() as $tab_id => $tab_name ) {
+				$tabs = $this->get_tabs();
 
-					$tab_url = admin_url( 'admin.php?page=gmw-tools&tab=' . $tab_id );
+				foreach ( $tabs as $slug => $tab ) {
 
-					$active = $active_tab === $tab_id ? ' nav-tab-active' : '';
+					// for previous versions.
+					if ( ! is_array( $tab ) ) {
 
-					echo '<a href="' . esc_url( $tab_url ) . '" title="' . esc_attr( $tab_name ) . '" class="nav-tab' . $active . '">' . esc_attr( $tab_name ) . '</a>'; // WPCS: XSS ok.
+						$tab = array(
+							'slug'  => $slug,
+							'label' => $tab,
+						);
+						$tabs[ $slug ] = $tab;
+					}
+
+					// Prepare tab URL.
+					$url = add_query_arg( array( 'tab' => $tab['slug'] ), admin_url( 'admin.php?page=gmw-tools' ) );
+
+					// Get tab icon.
+					$icon = ! empty( $tab['icon'] ) ? 'gmw-icon-' . esc_attr( $tab['icon'] ) : '';
+
+					printf(
+						'<a href="%s"%s><span class="%s"></span></span> <span class="label">%s</span></a>',
+						esc_url( $url ),
+						$current_tab === $tab['slug'] ? ' class="active"' : '',
+						$icon,
+						esc_html( $tab['label'] )
+					);
 				}
 				?>
-			</h2>
-			<div class="content metabox-holder">
-				<div id="gmw-<?php echo esc_attr( $active_tab ); ?>-tab-content" class="gmw-tools-tab-content">
-					<?php do_action( 'gmw_tools_' . $active_tab . '_tab' ); ?>
+			</nav>
+
+			<div class="gmw-admin-page-panels-wrapper" id="tab_<?php echo esc_attr( $current_tab ); ?>">
+
+				<h1 style="display:none"></h1>
+
+				<div id="gmw-<?php echo esc_attr( $current_tab ); ?>-tab-content" class="gmw-tools-tab-content gmw-admin-page-content-inner">
+					
+					<?php do_action( 'gmw_tools_' . $current_tab . '_tab' ); ?>
+					
 				</div>
 			</div>
+
+			<nav class="gmw-admin-page-sidebar">
+				<?php gmw_admin_sidebar_content(); ?>
+			</nav>
 		</div>
 		<?php
 	}
