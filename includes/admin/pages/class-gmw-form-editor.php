@@ -1759,7 +1759,6 @@ class GMW_Form_Editor {
 				}
 				break;
 
-			// textarea
 			case 'textarea':
 				if ( ! empty( $value ) ) {
 					$valid_value = sanitize_textarea_field( $value );
@@ -1803,24 +1802,20 @@ class GMW_Form_Editor {
 	 */
 	public function validate( $values ) {
 
-		// hooks for custom validations
-		add_filter( 'gmw_validate_form_settings_address_field', array( 'GMW_Form_Settings_Helper', 'validate_address_field' ) );
-		add_filter( 'gmw_validate_form_settings_image', array( 'GMW_Form_Settings_Helper', 'validate_image' ) );
-
-		//get the current form being updated
+		//get the current form being updated.
 		$this->form = GMW_Forms_Helper::get_form( $values['ID'] );
 
 		$valid_input = array();
 
-		// get basic form values
+		// get basic form values.
 		$valid_input['ID']    = absint( $values['ID'] );
 		$valid_input['title'] = sanitize_text_field( $values['title'] );
 		$valid_input['slug']  = sanitize_text_field( $values['slug'] );
 
-		// get form fields
+		// get form fields.
 		$this->init_form_settings();
 
-		// loop through and validate fields
+		// loop through and validate fields.
 		foreach ( $this->form_fields as $section_name => $section ) {
 
 			foreach ( $section as $sec => $option ) {
@@ -1868,27 +1863,26 @@ class GMW_Form_Editor {
 	 */
 	public function ajax_update_form() {
 
-		// verify nonce
+		// verify nonce.
 		check_ajax_referer( 'gmw_edit_form_nonce', 'security', true );
 
-		// get the submitted values
+		// get the submitted values.
 		parse_str( $_POST['form_values'], $form_values );
 
 		$form = $form_values['gmw_form'];
 
-		// validate the values
+		// validate the values.
 		$valid_input = self::validate( $form );
+		$form_id     = $valid_input['ID'];
+		$title       = $valid_input['title'];
 
-		global $wpdb;
-
-		$form_id = $valid_input['ID'];
 		unset( $valid_input['ID'] );
-
-		$title = $valid_input['title'];
 		unset( $valid_input['title'] );
 		unset( $valid_input['slug'] );
 
-		// update form in database
+		global $wpdb;
+
+		// update form in database.
 		if ( $wpdb->update(
 
 			$wpdb->prefix . 'gmw_forms',
@@ -1905,8 +1899,8 @@ class GMW_Form_Editor {
 		) === false ) {
 
 			wp_die(
-				__( 'Failed saving data in database.', 'geo-my-wp' ),
-				__( 'Error', 'geo-my-wp' ),
+				esc_html__( 'Failed saving data in database.', 'geo-my-wp' ),
+				esc_html__( 'Error', 'geo-my-wp' ),
 				array( 'response' => 403 )
 			);
 
@@ -1931,7 +1925,7 @@ class GMW_Form_Editor {
 
 		// run a quick security check.
 		if ( empty( $_POST['gmw_edit_form_nonce'] ) || ! check_admin_referer( 'gmw_edit_form_nonce', 'gmw_edit_form_nonce' ) ) {
-			wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+			wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 		}
 
 		// validate the values.
