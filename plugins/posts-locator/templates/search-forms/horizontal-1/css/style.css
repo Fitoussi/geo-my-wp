@@ -1,0 +1,50 @@
+div.gmw-form-wrapper.gmw-pt-horizontal-1-form-wrapper {
+
+	/*** Primary color ***/
+	--gmw-form-color-primary: #1e90ff;
+	--gmw-form-color-hover-primary: #2b97ff;
+	--gmw-form-font-color-primary: white;
+
+	/*** Secondary color ***/
+	--gmw-form-color-secondary: #63CC61;
+	--gmw-form-color-hover-secondary: #70d56e;
+	--gmw-form-font-color-secondary: white;
+
+	/*** Accent color ***/
+	--gmw-form-color-accent: #317ABE;
+	--gmw-form-color-hover-accent: #2d72b3;
+	--gmw-form-font-color-accent: white;
+	
+	/*** Misc ***/
+	--gmw-form-font-color: #333;
+	--gmw-form-font-size: 14px;
+}
+
+div.gmw-pt-horizontal-1-form-wrapper {
+	background: #f7f7f7;
+	padding: 15px 20px;
+	border-radius: 5px;
+	box-sizing: border-box;
+}
+
+div.gmw-pt-horizontal-1-form-wrapper .gmw-locator-button-field-wrapper {
+	grid-column: span 2;
+}
+
+div.gmw-pt-horizontal-1-form-wrapper .gmw-main-filters-wrapper {
+	display: grid;
+	grid-template-columns: repeat( auto-fit, minmax( 180px, auto ) );
+	grid-column-gap: var(--gmw-elements-gap);
+	align-items: flex-end;
+}
+
+.widget.gmw-pt-horizontal-1-form-wrapper .gmw-main-filters-wrapper {
+	grid-template-columns: repeat( auto-fit, minmax( 100%, auto ) );
+}
+
+@media screen and ( max-width: 700px ) {
+
+	div.gmw-pt-horizontal-1-form-wrapper .gmw-main-filters-wrapper {
+		grid-template-columns: repeat( auto-fit, minmax( 100%, auto ) );
+	}
+}
