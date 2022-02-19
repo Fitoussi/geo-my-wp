@@ -224,7 +224,6 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 
 				$clauses['orderby'] = ! empty( $this->form['query_args']['order'] ) ? 'distance ' . $this->form['query_args']['order'] : 'distance';
 			}
-
 		} else {
 
 			// if showing posts without location.
