@@ -44,13 +44,14 @@ class GMW_Form_Editor {
 			add_action( 'wp_ajax_gmw_update_admin_form', array( $this, 'ajax_update_form' ) );
 		}
 
-		// verify that this is Form edit page.
+		// verify that this is the Form edit page.
 		if ( empty( $_GET['page'] ) || 'gmw-forms' !== $_GET['page'] || empty( $_GET['gmw_action'] ) || 'edit_form' !== $_GET['gmw_action'] ) {
 			return;
 		}
 
 		do_action( 'gmw_admin_form_editor_init', $_GET );
 
+		// Enable only when AJAX submission is disabled.
 		if ( ! $this->ajax_enabled ) {
 			add_filter( 'gmw_admin_notices_messages', array( $this, 'notices_messages' ) );
 			add_action( 'gmw_update_admin_form', array( $this, 'update_form' ) );
@@ -58,7 +59,7 @@ class GMW_Form_Editor {
 
 		// make sure form ID passed.
 		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) {
-			wp_die( __( 'No form ID provided.', 'geo-my-wp' ) );
+			wp_die( esc_attr__( 'Form ID is missing.', 'geo-my-wp' ) );
 		}
 
 		$form_id = (int) $_GET['form_id'];
@@ -66,17 +67,32 @@ class GMW_Form_Editor {
 		// get form data.
 		$this->form = GMW_Forms_Helper::get_form( $form_id );
 
-		if ( ! gmw_is_addon_active( $this->form['addon'] ) ) {
+		if ( empty( $this->form['addon'] ) || ! gmw_is_addon_active( $this->form['addon'] ) ) {
 
-			$link = 'The extension this form belongs to is deactivated. <a href="' . esc_url( 'admin.php?page=gmw-extensions' ) . '">Manage extensions</a>';
+			$allowed = array(
+				'a' => array(
+					'href' => array(),
+				),
+			);
 
-			wp_die( $link );
+			$link = sprintf(
+				// Translators: %s extensions page URl.
+				wp_kses( __( 'The extension that this form belongs to is deactivated. <a href="%s">Manage extensions</a>.', 'geo-my-wp' ), $allowed ),
+				esc_url( 'admin.php?page=gmw-extensions' )
+			);
+
+			wp_die( $link ); // WPCS: XSS ok.
 		}
 
 		// varify if the form exists.
 		if ( empty( $this->form ) ) {
-			wp_die( __( 'The form you are trying to edit doe\'s not exist!', 'geo-my-wp' ) );
+			wp_die( esc_html__( 'The form that you are trying to edit doe\'s not exist!', 'geo-my-wp' ) );
 		}
+
+		add_action( 'gmw_form_settings_form_name', array( $this, 'form_name_setting' ), 10, 3 );
+		add_action( 'gmw_form_settings_form_usage', array( $this, 'form_usage' ), 10, 3 );
+		add_action('admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+	}
 	}
 
 	/**
