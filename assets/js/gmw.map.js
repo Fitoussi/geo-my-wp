@@ -604,8 +604,8 @@ if ( gmwVars.mapsProvider == 'leaflet' ) {
 						// info window opsions. Can be modified with the filter.
 						var info_window_options = GMW.apply_filters( 'gmw_standard_info_window_options', {
 							content  : '<div class="gmw-info-window standard map-' + self.id + ' ' + self.prefix + '">' + marker.gmwData.iwContent + '</div>',
-							maxWidth : 200,
-							minWidth : 200
+							maxWidth : 'auto',
+							minWidth : 250
 						}, self );
 
 						// generate new window
