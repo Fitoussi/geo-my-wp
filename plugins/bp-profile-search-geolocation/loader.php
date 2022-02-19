@@ -111,7 +111,7 @@ class GMW_BP_Profile_Search_Geolocation_Addon extends GMW_Addon {
 			'plugins' => array(
 				array(
 					'function' => 'bps_buddypress',
-					'notice'   => __( 'BP Profile Search Geolocation extension requires the BP Profile Search plguin.', 'geo-my-wp' ),
+					'notice'   => sprintf( __( 'BP Profile Search Geolocation extension requires the BP Profile Search plguin. <a href="%s" target="_blank">Visit plugin page</a>', 'geo-my-wp' ), 'https://wordpress.org/plugins/bp-profile-search/' )
 				),
 			),
 		);
