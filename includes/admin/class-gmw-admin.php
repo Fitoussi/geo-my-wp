@@ -518,13 +518,43 @@ class GMW_Admin {
 			.wp-core-ui a.gmw_media_link{
 				padding-left: 0.4em;
 			}
+
+			#TB_title {
+				background: 0 0;
+				border-bottom: none;
+				display: flex;
+				height: auto;
+				justify-content: space-between;
+				padding: 1.675rem 2rem 1.375rem;
+				background: #f7f7f7;
+				border-bottom: 1px solid #ededed;
+			}
+
+			.tb-close-icon {
+				margin-top: -5px;
+				margin-right: 20px;
+			}
+
+			#TB_ajaxContent #gmw-form-shortcode-content p {
+				font-weight: 500;
+				margin-bottom: 15px;
+			}
+
+			#TB_ajaxWindowTitle {
+				color: #242748;
+				font-size: 1rem;
+				font-weight: 400;
+				line-height: 1.5rem;
+				padding: 0;
+				white-space: normal;
+			}
 		</style>
 
 		<a 
 			href="#TB_inline?width=480&inlineId=select_gmw_form" 
 			class="thickbox button gmw_media_link" 
 			id="add_gmw_form" 
-			title="<?php esc_html_e( 'GEO my WP Form Shortcode', 'geo-my-wp' ); ?>"
+			title="<?php esc_html_e( 'Insert GEO my WP Form', 'geo-my-wp' ); ?>"
 		>
 		<span class="dashicons-location-alt dashicons"></span>
 			<?php esc_html_e( 'GMW Form', 'geo-my-wp' ); ?>
@@ -566,14 +596,13 @@ class GMW_Admin {
 				window.send_to_editor( '[' + prefix + ' ' + attribute + '="' + form_id + '" name="' + form_name + '"]' );
 			}
 		</script>
-
 		<div id="select_gmw_form" style="display:none;">
+
 			<div class="gmw-form-shortcode-thickbox-wrap">
-				<div>
-					<div>
-						<h3><?php esc_html_e( 'Insert A Form Shortcode', 'geo-my-wp' ); ?></h3>
-						<p><?php esc_html_e( 'Select the type of shortcode you wish to add:', 'geo-my-wp' ); ?></p>
-					</div>
+
+				<div id="gmw-form-shortcode-content">
+
+					<p><?php esc_html_e( 'Select the type of form you wish to add:', 'geo-my-wp' ); ?></p>
 
 					<div class="checkboxes">
 						<label>
@@ -634,7 +663,7 @@ class GMW_Admin {
 						<input 
 							type="button" 
 							class="button-primary" 
-							value="<?php esc_html_e( 'Insert Shortcode', 'geo-my-wp' ); ?>" 
+							value="<?php esc_html_e( 'Insert form', 'geo-my-wp' ); ?>" 
 							onclick="gmwInsertForm();"
 						/>
 						<a class="button" href="#" onclick="tb_remove(); return false;">
