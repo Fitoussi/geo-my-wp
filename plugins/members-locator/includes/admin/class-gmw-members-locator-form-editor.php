@@ -96,10 +96,65 @@ class GMW_Members_Locator_Form_Editor {
 
 		return $settings;
 	}
-	 */
-	function form_settings( $fields ) {
 
-		// search form features
+	/**
+	 * Form settings.
+	 *
+	 * @param  [type] $fields array of form fields.
+	 *
+	 * @param  [type] $form   form object.
+	 *
+	 * @return [type]         [description]
+	 */
+	public function form_settings( $fields, $form ) {
+
+		// Modify some settings for mashup map.
+		if ( 'members_locator_mashup_map' === $form['slug'] ) {
+
+			$fields['page_load_results']['enabled']['wrap_class']    = 'gmw-hidden-form-editor-object';
+			$fields['page_load_results']['enabled']['default']       = 1;
+			$fields['page_load_results']['enabled']['force_default'] = 1;
+
+			$fields['page_load_results']['display_results']['wrap_class']    = 'gmw-hidden-form-editor-object';
+			$fields['page_load_results']['display_results']['type']          = 'hidden';
+			$fields['page_load_results']['display_results']['default']       = 0;
+			$fields['page_load_results']['display_results']['force_default'] = 1;
+
+			$fields['page_load_results']['display_map']['wrap_class']    = 'gmw-hidden-form-editor-object';
+			$fields['page_load_results']['display_map']['type']          = 'hidden';
+			$fields['page_load_results']['display_map']['default']       = 'shortcode';
+			$fields['page_load_results']['display_map']['force_default'] = 1;
+
+			$fields['page_load_results']['per_page']['label']   = __( 'Results Count', 'geo-my-wp' );
+			$fields['page_load_results']['per_page']['desc']    = __( 'Enter the maximum number of locations to show on the map.', 'geo-my-wp' );
+			$fields['page_load_results']['per_page']['type']    = 'number';
+			$fields['page_load_results']['per_page']['default'] = 200;
+
+			$fields['search_form']['form_template']['type']          = 'hidden';
+			$fields['search_form']['form_template']['default']       = '';
+			$fields['search_form']['form_template']['force_default'] = 1;
+
+			return $fields;
+		}
+
+		$disabled        = ( ! class_exists( 'Buddypress' ) || ! bp_is_active( 'xprofile' ) ) ? true : false;
+		$selected_fields = array();
+
+		if ( ! empty( $form['search_form']['xprofile_fields']['fields'] ) ) {
+
+			foreach ( $form['search_form']['xprofile_fields']['fields'] as $key => $value ) {
+				$selected_fields[ $value ] = __( 'Click to load options', 'geo-my-wp' );
+			}
+		}
+
+		$date_fields = array(
+			'' => __( ' -- Select Date Field -- ', 'geo-my-wp' ),
+		);
+
+		if ( ! empty( $form['search_form']['xprofile_fields']['date_field'] ) ) {
+			$date_fields[ $form['search_form']['xprofile_fields']['date_field'] ] = __( 'Click to load options', 'geo-my-wp' );
+		}
+
 		$fields['search_form']['xprofile_fields'] = array(
 			'name'       => 'xprofile_fields',
 			'type'       => 'fields_group',
@@ -194,4 +249,3 @@ class GMW_Members_Locator_Form_Editor {
 	}
 }
 new GMW_Members_Locator_Form_Editor();
-
