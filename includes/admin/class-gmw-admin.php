@@ -304,16 +304,6 @@ class GMW_Admin {
 			'priority'          => 1,
 		);
 
-		$menu_items[] = array(
-			'parent_slug'       => 'gmw-extensions',
-			'page_title'        => __( 'GEO my WP Settings', 'geo-my-wp' ),
-			'menu_title'        => __( 'Settings', 'geo-my-wp' ),
-			'capability'        => 'manage_options',
-			'menu_slug'         => 'gmw-settings',
-			'callback_function' => array( $this->settings_page, 'output' ),
-			'priority'          => 5,
-		);
-
 		$forms_output = ( ! empty( $_GET['gmw_action'] ) && 'edit_form' === $_GET['gmw_action'] ) ? $this->edit_form_page : $this->forms_page; // WPCS: CSRF ok.
 
 		$menu_items[] = array(
@@ -323,7 +313,17 @@ class GMW_Admin {
 			'capability'        => 'manage_options',
 			'menu_slug'         => 'gmw-forms',
 			'callback_function' => array( $forms_output, 'output' ),
-			'priority'          => 8,
+			'priority'          => 3,
+		);
+
+		$menu_items[] = array(
+			'parent_slug'       => 'gmw-extensions',
+			'page_title'        => __( 'GEO my WP Settings', 'geo-my-wp' ),
+			'menu_title'        => __( 'Settings', 'geo-my-wp' ),
+			'capability'        => 'manage_options',
+			'menu_slug'         => 'gmw-settings',
+			'callback_function' => array( $this->settings_page, 'output' ),
+			'priority'          => 5,
 		);
 
 		$menu_items[] = array(
