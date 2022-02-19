@@ -2,7 +2,18 @@
 
 .gmw-locations-importer-wrapper {
 	padding: 5px 5px 15px;
+	width: 100%;
+	background: #f9fbff;
+	padding: 20px;
+	border: 1px solid #F1F4FA;
+	border-radius: 5px;
+	box-sizing: border-box;
 }
+
+.gmw-locations-importer-wrapper form .gmw-settings-action-button {
+	margin-top: 0;
+}
+
 .gmw-importer-details {
 	margin-top: 25px;
 	display: flex;
