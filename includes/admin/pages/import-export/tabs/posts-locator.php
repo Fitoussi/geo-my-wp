@@ -13,371 +13,168 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * GMW_Post_Meta_Fields_Importer class.
+ *
+ * @since 4.0
+ *
+ * @author Eyal Fitoussi.
+ */
+class GMW_Post_Meta_Fields_Importer_Form extends GMW_Meta_Fields_Importer_Form {
+
+	/**
+	 * Name singular.
+	 *
+	 * @var string
+	 */
+	public $singular_name = 'post custom';
+
+	/**
+	 * Slug.
+	 *
+	 * @var string
+	 */
+	public $slug = 'post_meta';
+
+	/**
+	 * Importer class.
+	 *
+	 * @var string
+	 */
+	public $importer_class = 'GMW_Post_Custom_Fields_Importer';
+
+	/**
+	 * Importer class.
+	 *
+	 * @var string
+	 */
+	public $meta_field_function = 'gmw_get_custom_fields';
+
+	/**
+	 * Title.
+	 *
+	 * @return [type] [description]
+	 */
+	public function get_title() {
+		return __( 'Post Custom Fields Importer', 'geo-my-wp' );
+	}
+
+	/**
+	 * Get section description.
+	 *
+	 * @return [type] [description]
+	 */
+	public function get_description() {
+		return __( 'Use this importer to import posts\' location from specific post custom fields into GEO my WP database.', 'geo-my-wp' );
+	}
+}
+
+/**
  * Export/Import tab output
  *
  * @access public
- * @since 2.5
- * @author Eyal Fitoussi
- */
-function gmw_output_import_export_tab() {
-	?>	
-	<ul class="gmw-tabs-wrapper">
-
-		<?php
-		$tabs = array(
-			// 'gmw_custom_fields'  => __( 'GEO my WP Custom Fields', 'geo-my-wp' ),
-			'post_custom_fields' => __( 'Post Custom Fields', 'geo-my-wp' ),
-		);
-
-		if ( class_exists( 'Mappress' ) ) {
-			$tabs['mappress_plugin'] = __( 'MapPress Plugin', 'geo-my-wp' );
-		}
-
-		// filter tabs.
-		$tabs = apply_filters( 'gmw_import_export_posts_locator_tabs', $tabs );
-
-		foreach ( $tabs as $key => $title ) {
-			echo '<li><a href="#" id="' . esc_attr( sanitize_title( $key ) ) . '" title="' . esc_attr( $title ) . '"  class="gmw-nav-tab" data-name="' . esc_attr( sanitize_title( $key ) ) . '">' . esc_attr( $title ) . '</a></li>';
-		}
-		?>
-	</ul>			
-
-	<!-- import export GMW post meta -->
-
-	<div class="gmw-tab-panel gmw_custom_fields">
-
-		<div id="poststuff" class="metabox-holder">
-
-			<div id="post-body">
-
-				<div id="post-body-content">
-
-					<div class="postbox ">
-
-						<h3 class="hndle">
-							<span><?php _e( 'Export/Import Posts Types Locations using GEO my WP post_meta', 'geo-my-wp' ); ?></span>
-						</h3>
-
-						<div class="inside">
-							<p>
-								<?php _e( 'The forms below will help you in the process of exporting the post types locations created on this site and importing them into a different site.', 'geo-my-wp' ); ?><br />
-								<?php printf( __( 'The export/import forms below need to be used together with the native <a href="%1$s" target="blank"> WordPress export system*</a> and <a href="%2$s" target"_blank">WordPress importer*</a> for a complete process.', 'geo-my-wp' ), admin_url( 'export.php' ), admin_url( 'import.php' ) ); ?><br />
-							</p>
-							<p class="description">	
-								<?php _e( '*You can use other plugins ( other than the WordPress native plugins mentioned above ) to export/import your WordPress posts. However, the plugins you chose to use must export and import the custom fields of these posts in order to import/export the locations.', 'geo-my-wp' ); ?>
-							</p>
-							<p>
-								<?php _e( 'Please follow the steps of each form below for a complete process of exporting and importing your post types locations.', 'geo-my-wp' ); ?><br />				
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div id="poststuff" class="metabox-holder">
-
-			<div id="post-body">
-
-				<div id="post-body-content">
-
-					<div class="postbox ">
-
-						<h3 class="hndle">
-							<span><?php _e( 'Export Posts Types Locations To GEO my WP post_meta', 'geo-my-wp' ); ?></span>
-						</h3>
-
-						<div class="inside">
-							<ol>	
-								<?php global $wpdb; ?> 
-								<li>
-									<?php printf( __( "Click on the \"Export\" button below. By doing so the plugin will duplicate each post type location created on this site from GEO my WP's custom table ( %splaces_locator ) into a custom field of the post it belongs to.", 'geo-my-wp' ), $wpdb->prefix ); ?>
-									<form method="post" enctype="multipart/form-data" action="<?php echo admin_url( 'admin.php?page=gmw-tools&tab=import_export' ); ?>">
-										<p>
-											<input type="hidden" name="gmw_action" value="pt_locations_post_meta_export" />
-											<?php wp_nonce_field( 'gmw_pt_locations_post_meta_export_nonce', 'gmw_pt_locations_post_meta_export_nonce' ); ?>
-											<?php submit_button( __( 'Export', 'geo-my-wp' ), 'secondary', 'submit', false ); ?>
-										</p>
-									</form>
-								</li>
-								<li><?php printf( __( 'The next step will be to export your posts using the native <a href="%s" target="blank"> WordPress export system</a>.', 'geo-my-wp' ), esc_url( admin_url( 'export.php' ) ) ); ?></li>
-							</ol>
-					</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div id="poststuff" class="metabox-holder">
-
-			<div id="post-body">
-
-				<div id="post-body-content">
-
-					<div class="postbox ">
-
-						<h3 class="hndle">
-							<span><?php esc_html_e( 'Import Posts Types Locations From GEO my WP post_meta', 'geo-my-wp' ); ?></span>
-						</h3>
-
-						<div class="inside">
-							<ol>
-								<li><?php esc_html_e( 'Before importing your locations into this site make sure you used the "Export" form above on the original site in order to export your locations.', 'geo-my-wp' ); ?></li>
-								<li><?php printf( __( 'Import your posts using <a href="%s" target"_blank">WordPress importer</a>. After done so come back to this page to complete step 3.', 'geo-my-wp' ), admin_url( 'import.php' ) ); ?></li>
-								<li><?php printf( __( "Click on the \"Import\" button. By doing so the plugin will duplicate each post type location from the custom field of the post it belongs to into GEO my WP's custom table in database ( %splaces_locator ).", 'geo-my-wp' ), $wpdb->prefix ); ?></li>
-							</ol>
-
-							<?php
-							// get all custom fields with gmw location from database.
-							$check_pm_locations = $wpdb->get_results(
-								"
-									SELECT *
-									FROM `{$wpdb->prefix}postmeta`
-									WHERE `meta_key` = 'gmw_pt_location'",
-								ARRAY_A
-							);
-
-							// abort if no locations found.
-							$check_pm_locations = ( ! empty( $check_pm_locations ) ) ? true : false;
-							?>
-							<form method="post" enctype="multipart/form-data" action="<?php echo admin_url( 'admin.php?page=gmw-tools&tab=import_export' ); ?>">
-								<p>
-									<input type="hidden" name="gmw_action" value="pt_locations_post_meta_import" />
-									<?php wp_nonce_field( 'gmw_pt_locations_post_meta_import_nonce', 'gmw_pt_locations_post_meta_import_nonce' ); ?>
-									<input type="submit" class="button-secondary" value="<?php _e( 'Import', 'geo-my-wp' ); ?>" <?php if ( ! $check_pm_locations ) { echo 'disabled="disabled"'; } ?>
-									/>
-									<?php echo ( $check_pm_locations ) ? '<em style="color:green">' . __( 'Locations are avalible for import.', 'geo-my-wp' ) . '</em>' : '<em style="color:red">' . __( 'No locations are avalible for import.', 'geo-my-wp' ) . '</em>'; ?>
-								</p>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- import export from custom meta -->
-	<div class="gmw-tab-panel post_custom_fields">
-
-		<div id="poststuff" class="metabox-holder">
-
-			<div id="post-body">
-
-				<div id="post-body-content">
-
-					<div class="postbox ">
-
-						<h3 class="hndle">
-							<span><?php esc_html_e( 'Post Custom Fields Importer', 'geo-my-wp' ); ?></span>
-						</h3>
-
-						<div class="inside">
-							<p>
-								<?php esc_html_e( 'Use this form to import locations from specific custom fields into GEO my WP. This is useful when importing locations created by another plugin and its location data is saved in custom fields.', 'geo-my-wp' ); ?><br />
-							</p>
-							<p>
-								<?php esc_html_e( 'Before you can import locations you need to set the location custom fields. To do so, Click "Set custom field" to set each of GEO my WP\'s location fields.', 'geo-my-wp' ); ?>	
-							</p>
-
-							<p>			
-								<em><?php esc_html_e( '* Note that only the latitude and longitude fields are mandatory. However, to take full advantage of GEO my WP features it is recomended to provide as many fields as possible.', 'geo-my-wp' ); ?>
-								</em>
-							</p>
-
-							<form method="post" enctype="multipart/form-data" action="<?php echo admin_url( 'admin.php?page=gmw-import-export&tab=posts_locator' ); ?>">
-								<?php
-
-								$saved_fields = get_option( 'gmw_importer_post_custom_fields' );
-
-								if ( empty( $saved_fields ) ) {
-									$saved_fields = array();
-								}
-
-								global $wpdb;
-
-								// get all existing custom fields.
-								$cFields = $wpdb->get_col(
-									"
-						        	SELECT meta_key
-						        	FROM   $wpdb->postmeta
-						        	GROUP  BY meta_key
-						        	ORDER  BY meta_id DESC"
-								);
-
-								if ( $cFields ) {
-									natcasesort( $cFields );
-								}
-
-								$fields_data = array(
-									'latitude'          => __( 'Latitude ( mandatory )', 'geo-my-wp' ),
-									'longitude'         => __( 'Longitude ( mandatory )', 'geo-my-wp' ),
-									'street_number'     => __( 'Street Number', 'geo-my-wp' ),
-									'street_name'       => __( 'Street Name', 'geo-my-wp' ),
-									'street'            => __( 'Street ( number + name )', 'geo-my-wp' ),
-									'premise'           => __( 'Apt / Premise', 'geo-my-wp' ),
-									'neighborhood'      => __( 'Neighborhood', 'geo-my-wp' ),
-									'city'              => __( 'City', 'geo-my-wp' ),
-									'county'            => __( 'County', 'geo-my-wp' ),
-									'region_name'       => __( 'State Name ( ex. Florida )', 'geo-my-wp' ),
-									'region_code'       => __( 'State Code ( ex. FL )', 'geo-my-wp' ),
-									'postcode'          => __( 'zipcode', 'geo-my-wp' ),
-									'country_name'      => __( 'Country Name ( ex. United States )', 'geo-my-wp' ),
-									'country_code'      => __( 'Country Code ( ex. US )', 'geo-my-wp' ),
-									'address'           => __( 'Address ( address field the way the user enteres )', 'geo-my-wp' ),
-									'formatted_address' => __( 'Formatted Address ( formatted address returned from Google after geocoding )', 'geo-my-wp' ),
-									'place_id'          => __( 'Google Place ID', 'geo-my-wp' ),
-									'map_icon'          => __( 'Map Icon', 'geo-my-wp' ),
-									'phone'             => __( 'Phone', 'geo-my-wp' ),
-									'fax'               => __( 'Fax', 'geo-my-wp' ),
-									'email'             => __( 'email', 'geo-my-wp' ),
-									'website'           => __( 'website', 'geo-my-wp' ),
-								);
-								?>
-
-								<a href="#" id="post-meta-fields-toggle" onclick="event.preventDefault(); jQuery('#post-meta-wrapper').slideToggle();">
-
-									<?php esc_html_e( 'Set Custom Fields', 'geo-my-wp' ); ?>	
-								</a>
-   
-								<div id="post-meta-wrapper" style="display:none">					
-
-									<?php foreach ( $fields_data as $name => $title ) { ?>			
-
-										<p>
-											<label><?php echo esc_attr( $title ); ?>: </label>
-
-											<select 
-												id="gmw-import-custom-field-<?php echo $name; ?>"
-												class="gmw-import-custom-field gmw-chosen" 
-												name="gmw_post_meta[<?php echo $name; ?>]"
-											>
-												<option value="" selected="selected">
-													<?php esc_html_e( 'N/A', 'geo-my-wp' ); ?>
-												</option>
-
-												<?php foreach ( $cFields as $cField ) { ?>
-
-													<?php $selected = ( ! empty( $saved_fields[ $name ] ) && $saved_fields[ $name ] == $cField ) ? 'selected="selected"' : ''; ?>
-													<option <?php echo $selected; ?> value="<?php echo esc_attr( $cField ); ?>"><?php echo esc_attr( $cField ); ?></option>
-
-												<?php } ?>
-
-											</select>
-										</p>	
-
-									<?php } ?>
-
-									<p>	
-										<input type="hidden" name="gmw_action" value="save_post_custom_fields" />
-
-										<?php wp_nonce_field( 'gmw_save_post_custom_fields_nonce', 'gmw_save_post_custom_fields_nonce' ); ?>
-
-										<input type="submit" id="import-custom-post-meta-submit" class="button-secondary" value="<?php esc_attr_e( 'Save Fields', 'geo-my-wp' ); ?>" />
-									</p>
-								</div>
-							</form>
-							<p>																				
-								<?php
-								if ( empty( $saved_fields['latitude'] ) || empty( $saved_fields['longitude'] ) ) {
-
-									?>
-											<p style="color:red"><?php _e( '*You must set the latitude and longitude fields before you can import locations.', 'geo-my-wp' ); ?>
-											</p>
-											<input type="submit" class="button-primary" value="<?php esc_attr_e( 'Import', 'geo-my-wp' ); ?>" disabled />
-										<?php
-
-								} else {
-									$cf_importer = new GMW_Post_Custom_Fields_Importer();
-									$cf_importer->output();
-								}
-								?>
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- import export from custom meta -->
-	<div class="gmw-tab-panel mappress_plugin">
-
-		<div id="poststuff" class="metabox-holder">
-
-			<div id="post-body">
-
-				<div id="post-body-content">
-
-					<div class="postbox ">
-
-						<h3 class="hndle">
-							<span><?php esc_html_e( 'MapPress Importer', 'geo-my-wp' ); ?></span>
-						</h3>
-
-						<div class="inside">
-							<p>
-								<?php esc_html_e( 'Use this form to import locations from MapPress plugin.' ); ?>
-							</p>
-							<p>
-								<em><?php esc_html_e( '*Note, since the current version of GEO my WP supports only single location per post, this importer imports only the first location created by MapPress from each post.', 'geo-my-wp' ); ?></em>	
-							</p>			
-							<p>																				
-								<?php
-
-									$cf_importer = new GMW_Map_Press_Importer();
-									$cf_importer->output();
-								?>
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<?php
-	// load chosen.
-	if ( ! wp_script_is( 'select2', 'enqueued' ) ) {
-		wp_enqueue_script( 'select2' );
-		wp_enqueue_style( 'select2' );
-	}
-}
-add_action( 'gmw_import_export_posts_locator_tab', 'gmw_output_import_export_tab' );
-
-/**
- * Import locations from post_meta
  *
  * @since 2.5
- * @return void
+ *
+ * @author Eyal Fitoussi
  */
-function gmw_save_post_custom_fields() {
+function gmw_output_posts_locator_import_export_tab() {
 
-	if ( empty( $_POST['gmw_post_meta'] ) ) {
-		return;
-	}
+	// Posts custom fields importer.
+	$post_meta_importer = new GMW_Post_Meta_Fields_Importer_Form();
 
-	// look for nonce.
-	if ( empty( $_POST['gmw_save_post_custom_fields_nonce'] ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
-	}
+	$post_meta_importer->output();
 
-	// varify nonce.
-	if ( ! wp_verify_nonce( $_POST['gmw_save_post_custom_fields_nonce'], 'gmw_save_post_custom_fields_nonce' ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
-	}
+	// MapPress importer.
+	do_action( 'gmw_import_export_before_mappress_import' ); ?>
 
-	// save custom fields in options table.
-	update_option( 'gmw_importer_post_custom_fields', $_POST['gmw_post_meta'] );
+	<div class="gmw-settings-panel gmw-export-data-panel">
+			
+		<fieldset>
 
-	wp_safe_redirect(
-		admin_url(
-			'admin.php?page=gmw-import-export&tab=posts_locator&gmw_notice=&gmw_notice_status=updated'
-		)
-	);
+			<legend class="gmw-settings-panel-title"><?php esc_html_e( 'MapPress Plugin Importer', 'geo-my-wp' ); ?></legend>
 
-	exit;
+			<div class="gmw-settings-panel-content">
 
+				<div class="gmw-settings-panel-description">
+
+					<div class="gmw-settings-panel-description">
+
+						<?php esc_html_e( 'Use this form to import locations from MapPress plugin.' ); ?>
+
+						<p><?php esc_html_e( '*Note, since the current version of GEO my WP supports only single location per post, this importer imports only the first location created by MapPress from each post.', 'geo-my-wp' ); ?></p>	
+
+					</div>
+
+					<div class="gmw-settings-panel-field">
+						<?php
+							$cf_importer = new GMW_Map_Press_Importer();
+							$cf_importer->output();
+						?>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+	</div>
+
+	<?php //do_action( 'gmw_import_export_before_mappress_import' ); ?>
+
+	<?php /*<div class="gmw-settings-panel gmw-export-data-panel">
+			
+		<fieldset>
+
+			<legend class="gmw-settings-panel-title"><?php esc_html_e( 'Transfer Posts Location To Another Site.', 'geo-my-wp' ); ?></legend>
+
+			<div class="gmw-settings-panel-content">
+
+				<div class="gmw-settings-panel-description">
+
+					<div class="gmw-settings-panel-description">
+
+						<p><?php esc_html_e( 'This tool will help you in the process of exporting the post\'s locations created on this site and importing them into a different site.', 'geo-my-wp' ); ?></p>
+
+						<p><?php esc_html_e( 'The export button below will save the posts\' location that were generated by GEO my WP into a specific post custom field named "_gmw_post_locations_export".', 'geo-my-wp' ); ?></p>
+
+						<p><?php esc_html_e( 'You will then be able to export those custom fields using the exporting tool of your choice and import them into another site where you will then use the Import tool to import the location from the custom fields back into GEO my WP.', 'geo-my-wp' ); ?></p>
+
+					</div>
+
+					<div class="gmw-settings-panel-field">
+
+						<?php 
+						$rr = new GMW_Location_To_Meta_Fields_Importer();
+						$rr->output();
+						?>
+
+						<b><?php esc_html_e( 'To trasnfer the location from this site follow the steps below:', 'geo-my-wp' ); ?></b>
+						<ol>
+							<li><?php esc_html_e( 'Select the type of locations that you would like to export then click the Export button.', 'geo-my-wp' ); ?>
+							<form method="post" enctype="multipart/form-data" action="<?php echo admin_url( 'admin.php?page=gmw-import-export&tab=posts_locator' ); ?>">
+
+								<select name="gmw_meta_export_object_type[]">
+									<option value="post"><?php esc_html_e( 'Posts', 'geo-my-wp' ); ?></option>
+									<option value="user"><?php esc_html_e( 'Users', 'geo-my-wp' ); ?></option>
+									<option value="bp_group"><?php esc_html_e( 'BP Groups', 'geo-my-wp' ); ?></option>
+								</select>
+
+								<input type="hidden" name="gmw_action" value="pt_locations_post_meta_export" />
+
+								<?php wp_nonce_field( 'gmw_pt_locations_post_meta_export_nonce', 'gmw_pt_locations_post_meta_export_nonce' ); ?>
+
+								<input type="submit" class="button-secondary gmw-settings-action-button" value="<?php esc_attr_e( 'Export Locations', 'geo-my-wp' ); ?>" />
+							</form>
+							</li>
+							<li><?php printf( __( "The next step will be to export your posts using the native <a href=\"%s\" target=\"blank\"> WordPress export system</a>.", "GMW"), admin_url( 'export.php' ) ); ?></li>
+						</ol>
+					</div>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+	</div>*/ ?>
+
+	<?php
 }
-add_action( 'gmw_save_post_custom_fields', 'gmw_save_post_custom_fields' );
+add_action( 'gmw_import_export_posts_locator_tab', 'gmw_output_posts_locator_import_export_tab' );
 
 /**
  * Locations importer class
@@ -396,7 +193,7 @@ class GMW_Post_Custom_Fields_Importer extends GMW_Locations_Importer {
 	protected $object_type = 'post';
 
 	/**
-	 * records to import per batch.
+	 * Records to import per batch.
 	 *
 	 * @var integer
 	 */
@@ -431,9 +228,9 @@ class GMW_Post_Custom_Fields_Importer extends GMW_Locations_Importer {
 		global $wpdb;
 
 		// get meta fields.
-		$location_fields = get_option( 'gmw_importer_post_custom_fields' );
+		$location_fields = get_option( 'gmw_importer_post_meta_fields' );
 
-		// count rows only when init the importer.
+		// Count rows only when init the importer.
 		$count_rows = $this->total_locations == 0 ? 'SQL_CALC_FOUND_ROWS' : '';
 
 		// get posts.
