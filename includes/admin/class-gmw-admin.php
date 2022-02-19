@@ -679,13 +679,42 @@ class GMW_Admin {
 	/**
 	 * GMW credit footer.
 	 *
-	 * @param  [type] $content [description].
+	 * @param  [type] $text [description].
 	 *
 	 * @return [type]          [description]
 	 */
-	public static function gmw_credit_footer( $content ) {
-		return preg_replace( '/[.,]/', '', $content ) . ' ' . sprintf( __( 'and Geolocating with <a %1$s>GEO my WP</a>. Your <a %2$s>feedback</a> on GEO my WP is greatly appriciated.', 'geo-my-wp' ), 'href="http://geomywp.com" target="_blank" title="GEO my WP website"', '<a href="https://wordpress.org/support/view/plugin-reviews/geo-my-wp?filter=5" target="_blank" title="Rate GEO my WP"' );
+	public static function gmw_credit_footer( $text ) {
+		?>
+		<style type="text/css">
+			body #footer-thankyou {
+				position: fixed;
+				bottom: 7px;
+				z-index: 999;
+				margin-left: 245px;
+			}
+
+			body.toplevel_page_gmw-extensions #footer-thankyou, 
+			.geo-my-wp_page_gmw-forms:not( .geo-my-wp_page_gmw-form-editor ) #footer-thankyou {
+				margin-left: 0;
+			}
+		</style>
+		<?php
+
+		$rate_text = sprintf(
+			/* translators: %1$s link to GEO my WP website, %2$s link to WordPress.org */
+			__( 'and geolocating with <a href="%1$s" target="_blank">GEO my WP</a>! Please <a href="%2$s" target="_blank">rate us on WordPress.org</a>.', 'geo-my-wp' ),
+			'https://geomywp.com',
+			'https://wordpress.org/support/view/plugin-reviews/geo-my-wp?filter=5'
+		);
+
+		$allowed = array(
+			'a'  => array(
+				'href'   => array(),
+				'target' => array(),
+			),
+		);
+
+		return str_replace( '.</span>', '', $text ) . ' ' . wp_kses( $rate_text, $allowed ) . '</span>';
 	}
 }
 new GMW_Admin();
-?>
