@@ -189,67 +189,65 @@ class GMW_Meta_Fields_Importer_Form {
 
 					<div class="gmw-settings-panel-field">
 
-						<div class="gmw-popup-element-wrapper">
+						<div id="gmw-mata-fields-importer-element" class="gmw-popup-element-wrapper">
 
-							<div class="gmw-popup-element-container">
+							<div class="gmw-popup-element-inner">
 
-								<div class="gmw-popup-element-inner">
+								<span class="gmw-popup-element-close-button gmw-icon-cancel-light"></span>
 
-									<span class="gmw-popup-element-close-button gmw-icon-cancel-light"></span>
+								<h3><?php echo esc_html( $this->inner_element_title() ); ?></h3>
 
-									<h3><?php echo esc_html( $this->inner_element_title() ); ?></h3>
+								<form method="post" enctype="multipart/form-data" action="<?php echo esc_url( admin_url( 'admin.php?page=gmw-import-export&tab=' . $current_tab ) ); ?>">
+									<?php
+									$saved_fields = get_option( 'gmw_importer_' . $slug . '_fields' );
 
-									<form method="post" enctype="multipart/form-data" action="<?php echo esc_url( admin_url( 'admin.php?page=gmw-import-export&tab=' . $current_tab ) ); ?>">
-										<?php
-										$saved_fields = get_option( 'gmw_importer_' . $slug . '_fields' );
+									if ( empty( $saved_fields ) ) {
+										$saved_fields = array();
+									}
 
-										if ( empty( $saved_fields ) ) {
-											$saved_fields = array();
-										}
+									$fields_data = $this->get_location_fields();
+									?>
+									<div id="<?php echo $slug; // WPCS: XSS ok. ?>-wrapper" class="gmw-popup-element-fields-wrapper">				
 
-										$fields_data = $this->get_location_fields();
-										?>
-										<div id="<?php echo $slug; // WPCS: XSS ok. ?>-wrapper" class="gmw-popup-element-fields-wrapper">				
+										<?php foreach ( $fields_data as $name => $title ) { ?>			
 
-											<?php foreach ( $fields_data as $name => $title ) { ?>			
+											<?php $name = esc_attr( $name ); ?>
+											<p class="gmw-popup-element-single-field">
+												<label><?php echo esc_attr( $title ); ?>: </label>
+												<select 
+													id="gmw-import-meta-field-<?php echo $name; // WPCS: XSS ok. ?>"
+													class="gmw-import-meta-field"
+													name="gmw_<?php echo $slug; // WPCS: XSS ok. ?>[<?php echo $name; // WPCS: XSS ok. ?>]"
+													data-gmw_ajax_load_options="<?php echo esc_attr( $this->meta_field_function ); ?>"
+													style="width:100%;"
+												>
+													<option value="" selected="selected"><?php esc_html_e( 'Disable', 'geo-my-wp' ); ?></option>
 
-												<?php $name = esc_attr( $name ); ?>
-												<p class="gmw-popup-element-single-field">
-													<label><?php echo esc_attr( $title ); ?>: </label>
-													<select 
-														id="gmw-import-meta-field-<?php echo $name; // WPCS: XSS ok. ?>"
-														class="gmw-import-meta-field"
-														name="gmw_<?php echo $slug; // WPCS: XSS ok. ?>[<?php echo $name; // WPCS: XSS ok. ?>]"
-														data-gmw_ajax_load_options="<?php echo esc_attr( $this->meta_field_function ); ?>"
-														style="width:100%;"
-													>
-														<option value="" selected="selected"><?php esc_html_e( 'Disable', 'geo-my-wp' ); ?></option>
+													<?php if ( ! empty( $saved_fields[ $name ] ) ) { ?>
+														<option value="<?php echo esc_attr( $saved_fields[ $name ] ); ?>" selected="selected"><?php echo esc_attr( $this->get_saved_field_label( $saved_fields[ $name ] ) ); ?></option>
+													<?php } ?>
 
-														<?php if ( ! empty( $saved_fields[ $name ] ) ) { ?>
-															<option value="<?php echo esc_attr( $saved_fields[ $name ] ); ?>" selected="selected"><?php echo esc_attr( $this->get_saved_field_label( $saved_fields[ $name ] ) ); ?></option>
-														<?php } ?>
+												</select>
+											</p>	
 
-													</select>
-												</p>	
+										<?php } ?>
 
-											<?php } ?>
+										<p>	
+											<input type="hidden" name="gmw_action" value="save_<?php echo $slug; // WPCS: XSS ok. ?>_fields" />
 
-											<p>	
-												<input type="hidden" name="gmw_action" value="save_<?php echo $slug; // WPCS: XSS ok. ?>_fields" />
+											<?php wp_nonce_field( 'gmw_save_' . $slug . '_fields_nonce', 'gmw_save_' . $slug . '_fields_nonce' ); ?>
 
-												<?php wp_nonce_field( 'gmw_save_' . $slug . '_fields_nonce', 'gmw_save_' . $slug . '_fields_nonce' ); ?>
-
-												<input type="submit" id="gmw-popup-element-<?php echo $slug; // WPCS: XSS ok. ?>-submit" class="gmw-popup-element-meta-fields-submit button-primary gmw-settings-action-button" value="<?php esc_attr_e( 'Save Fields', 'geo-my-wp' ); ?>" />
-											</p>
-										</div>
-									</form>
-								</div>
+											<input type="submit" id="gmw-popup-element-<?php echo $slug; // WPCS: XSS ok. ?>-submit" class="gmw-popup-element-meta-fields-submit button-primary gmw-settings-action-button" value="<?php esc_attr_e( 'Save Fields', 'geo-my-wp' ); ?>" />
+										</p>
+									</div>
+								</form>
 							</div>
 
-							<a href="#" class="gmw-popup-element-toggle gmw-settings-action-button button-secondary">
-								<?php esc_html_e( 'Select Fields', 'geo-my-wp' ); ?>	
-							</a>
 						</div>
+
+						<a href="#" class="gmw-popup-element-toggle gmw-settings-action-button button-secondary" data-element="#gmw-mata-fields-importer-element">
+							<?php esc_html_e( 'Select Fields', 'geo-my-wp' ); ?>	
+						</a>
 						<div class="gmw-meta-fields-importer-wrapper">																
 							<?php if ( empty( $saved_fields['latitude'] ) || empty( $saved_fields['longitude'] ) ) { ?>
 
