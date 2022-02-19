@@ -280,7 +280,7 @@ if ( gmw_is_addon_active( 'posts_locator' ) ) {
 			'no_image_url' => ! empty( $this->form['info_window']['image']['no_image_url'] ) ? $this->form['info_window']['image']['no_image_url'] : '',
 		);
 
-		echo gmw_get_post_featured_image( $args, $post, $gmw );
+		echo gmw_get_post_featured_image( $args, $post, $gmw ); // WPCS: XSS ok.
 	}
 
 	/**
