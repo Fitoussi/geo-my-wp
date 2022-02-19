@@ -45,27 +45,25 @@ class GMW_Members_Locator_Form extends GMW_Form {
 	 */
 	public function get_info_window_args( $member ) {
 
-		if ( isset( $this->form['info_window']['image'] ) ) {
-			if ( '' === $this->form['info_window']['image']['enabled'] ) {
-				$avatar = false;
-			} else {
-				$avatar = bp_core_fetch_avatar(
-					array(
-						'item_id' => $member->ID,
-						'type'    => 'full',
-						'width'   => $this->form['info_window']['image']['width'],
-						'height'  => $this->form['info_window']['image']['height'],
-					)
-				);
-			}
+		if ( isset( $this->form['info_window']['image'] ) && empty( $this->form['info_window']['image']['enabled'] ) ) {
+
+			$avatar = false;
+
 		} else {
-			$avatar = bp_core_fetch_avatar(
-				array(
-					'item_id' => $member->ID,
-					'width'   => 180,
-					'height'  => 180,
-				)
+
+			$args = array(
+				'object_type'  => 'user',
+				'object_id'    => $member->ID,
+				'width'        => ! empty( $this->form['info_window']['image']['width'] ) ? $this->form['info_window']['image']['width'] : '150px',
+				'height'       => ! empty( $this->form['info_window']['image']['height'] ) ? $this->form['info_window']['image']['height'] : 'auto',
+				'show_grav'    => isset( $this->form['info_window']['image']['show_grav'] ) ? $this->form['info_window']['image']['show_grav'] : true,
+				'show_default' => isset( $this->form['info_window']['image']['show_default'] ) ? $this->form['info_window']['image']['show_default'] : true,
+				'permalink'    => false,
+				'wrapper'      => false,
+				'where'        => 'info_window',
 			);
+
+			$avatar = gmw_get_bp_avatar( $args, $member, $this->form );
 		}
 
 		return array(
