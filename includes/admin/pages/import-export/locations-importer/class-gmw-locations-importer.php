@@ -208,24 +208,24 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 			$output['bar']       = '<div class="gmw-importer-progress-bar"><div class="importing"></div></div>';
 
 			/* translators: %1$s: number of locations scanned locations, %2$s: number of locations total locations */
-			$output['scanned'] = '<p class="locations-completed-message">' . sprintf( __( '%1$s out of %2$s locations were scanned.', 'geo-my-wp' ), '<span class="completed-ph">0</span>', '<span class="total-ph">0</span>' ) . '</p>';
+			$output['scanned'] = '<span class="locations-completed-message">' . sprintf( __( '%1$s out of %2$s locations were scanned.', 'geo-my-wp' ), '<span class="completed-ph">0</span>', '<span class="total-ph">0</span>' ) . '</span>';
 
 			/* translators: %s: number of locations locations updated */
-			$output['updated'] = '<p class="updated-locations-message" ' . $updated . '>' . sprintf( __( '%s locations successfully updated ( were already exsist ).', 'geo-my-wp' ), '<span class="updated-ph">0</span>' ) . '</p>';
+			$output['updated'] = '<span class="updated-locations-message" ' . $updated . '>' . sprintf( __( '%s locations successfully updated ( were already exsist ).', 'geo-my-wp' ), '<span class="updated-ph">0</span>' ) . '</span>';
 
 			/* translators: %s: number of locations locations imported */
-			$output['imported'] = '<p class="imported-locations-message">' . sprintf( __( '%s locations successfully imported.', 'geo-my-wp' ), '<span class="imported-ph">0</span>' ) . '</p>';
+			$output['imported'] = '<span class="imported-locations-message">' . sprintf( __( '%s locations successfully imported.', 'geo-my-wp' ), '<span class="imported-ph">0</span>' ) . '</span>';
 
 			/* translators: %s: number of locations locations already exists */
-			$output['existing'] = '<p class="existing-locations-message" ' . $exist . '>' . sprintf( __( '%s locations already exist ( were not updated ).', 'geo-my-wp' ), '<span class="existing-ph">0</span>' ) . '</p>';
+			$output['existing'] = '<span class="existing-locations-message" ' . $exist . '>' . sprintf( __( '%s locations already exist ( were not updated ).', 'geo-my-wp' ), '<span class="existing-ph">0</span>' ) . '</span>';
 
 			/* translators: %s: number of locations imported failed */
-			$output['failed'] = '<p class="failed-locations-message">' . sprintf( __( '%s failed to import.', 'geo-my-wp' ), '<span class="failed-ph">0</span>' ) . '</p>';
+			$output['failed'] = '<span class="failed-locations-message">' . sprintf( __( '%s failed to import.', 'geo-my-wp' ), '<span class="failed-ph">0</span>' ) . '</span>';
 
 			$done_message = $this->done_message();
 
 			if ( ! empty( $done_message ) ) {
-				$output['done'] = '<p class="done-message" style="display:none">' . esc_html( $done_message ) . '</p>';
+				$output['done'] = '<span class="done-message" style="display:none">' . esc_html( $done_message ) . '</span>';
 			}
 
 			$output['/div'] = '</div>';
