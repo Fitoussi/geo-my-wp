@@ -245,16 +245,16 @@ class GMW_Current_Location {
 	 */
 	public function address() {
 
-		$output = '<div class="gmw-cl-element gmw-cl-address-wrapper">';
+		$output  = '<div class="gmw-cl-element gmw-cl-address-wrapper">';
+		$output .= '<i class="gmw-location-icon gmw-icon-location"></i>';
 
 		if ( ! empty( $this->args['address_label'] ) ) {
 			$output .= '<span class="gmw-cl-title">' . esc_html( $this->args['address_label'] ) . '</span>';
 		}
 
-		$output .= '<div class="gmw-cl-address location-exists">';
-		$output .= '<i class="gmw-location-icon gmw-icon-location"></i>';
-		$output .= '<span class="address-holder">' . stripslashes( esc_html( $this->user_position['address'] ) ) . '</span>';
-		$output .= '</div>';
+		//$output .= '<div class="gmw-cl-address location-exists">';
+		$output .= '<span class="gmw-cl-address location-exists">' . stripslashes( esc_html( $this->user_position['address'] ) ) . '</span>';
+		//$output .= '</div>';
 		$output .= '</div>';
 
 		$output = apply_filters( 'gmw_current_location_address', $output, $this->args, $this->user_position );
@@ -329,13 +329,15 @@ class GMW_Current_Location {
 
 		$output .= '<form id="gmw-cl-form-' . $this->args['element_id'] . '" class="gmw-cl-form" onsubmit="return false;" name="gmw_cl_form" ' . $display . ' data-element-id="' . $this->args['element_id'] . '">';
 		$output .= '<div class="gmw-cl-address-input-wrapper">';
-		$output .= '<i id="gmw-cl-locator-trigger-' . $this->args['element_id'] . '" class="gmw-cl-locator-trigger gmw-icon-target-light" title="Get your current location"></i>';
-		$output .= '<a href="#" id="gmw-cl-form-submit-' . $this->args['element_id'] . '" class="gmw-cl-form-submit gmw-icon-search" title="Search submit"></a>';
+
+		$output .= '<i id="gmw-cl-locator-trigger-' . $this->args['element_id'] . '" class="gmw-cl-locator-trigger gmw-icon-location" title="Get your current location"></i>';
+		//$output .= '<a href="#" id="gmw-cl-form-submit-' . $this->args['element_id'] . '" class="gmw-cl-form-submit gmw-icon-search" title="Search submit"></a>';
+		$output .= '<i id="gmw-cl-form-submit-' . $this->args['element_id'] . '" class="gmw-cl-form-submit gmw-icon-search" title="Search submit"></i>';
 		$output .= '<input type="text" name="gmw_cl_address" id="gmw-cl-address-input-' . $this->args['element_id'] . '" class="gmw-cl-address-input ' . $autocomplete . '" value="" autocomplete="off" placeholder="' . esc_attr( $this->args['address_field_placeholder'] ) . '" />';
 		$output .= '</div>';
 
 		$output .= '<div id="gmw-cl-respond-wrapper-' . $this->args['element_id'] . '" style="display:none;" class="gmw-cl-respond-wrapper">';
-		$output .= '<p id="gmw-cl-message-' . $this->args['element_id'] . '" data-loading_message="' . esc_html( $this->args['loading_message'] ) . '" class="gmw-cl-message"></p>';
+		$output .= '<span id="gmw-cl-message-' . $this->args['element_id'] . '" data-loading_message="' . esc_html( $this->args['loading_message'] ) . '" class="gmw-cl-message gmw-notice-box"></span>';
 		$output .= '</div>';
 		$output .= '<input type="hidden" class="gmw-cl-element-id" value="' . $this->args['element_id'] . '" />';
 		$output .= '</form>';
@@ -346,7 +348,7 @@ class GMW_Current_Location {
 
 				$update_text = esc_attr( $this->args['location_form_trigger'] );
 
-				$output .= '<a href="#" class="gmw-cl-form-trigger" title="' . $update_text . '"><i class="gmw-icon-spin3"></i>' . $update_text . '</a>';
+				$output .= '<a href="#" class="gmw-cl-form-trigger" title="' . $update_text . '">' . $update_text . '</a>';
 			}
 
 			if ( ! empty( $this->args['clear_location_trigger'] ) ) {
@@ -411,7 +413,7 @@ class GMW_Current_Location {
 		$elements = array();
 
 		// build the elements array.
-		$elements['element_wrap_start'] = '<div id="gmw-current-location-wrapper-' . esc_attr( $this->args['element_id'] ) . '" class="gmw-current-location-wrapper">';
+		$elements['element_wrap_start'] = '<div id="gmw-current-location-wrapper-' . esc_attr( $this->args['element_id'] ) . '" class="gmw-current-location-wrapper gmw-element-wrapper">';
 
 		foreach ( $elements_value as $value ) {
 			$elements[ $value ] = false;
