@@ -106,7 +106,7 @@ function gmw_enqueue_scripts() {
 		'gmw_localize_options',
 		array(
 			'settings'           => array(
-				'general' => $gmw_options['general_settings'],
+				'general' => ! empty( $gmw_options['general_settings'] ) ? $gmw_options['general_settings'] : array(),
 				'api'     => isset( $gmw_options['api_providers'] ) ? $gmw_options['api_providers'] : array(),
 			),
 			'mapsProvider'       => $maps_provider,
