@@ -145,7 +145,8 @@ class GMW_Posts_Locations_Importer_V3 extends GMW_Locations_Importer {
 	 *
 	 * @var string
 	 */
-	public $form_message = 'Import existing posts locations into GEO my WP v3.0 database table.';
+	//public $form_message = 'Import existing posts locations into GEO my WP v3.0 database table.';
+	public $form_message = '';
 
 	/**
 	 * Location meta fields.
@@ -271,7 +272,8 @@ class GMW_Users_Locations_Importer_V3 extends GMW_Locations_Importer {
 	 *
 	 * @var string
 	 */
-	public $form_message = 'Import existing users/members locations into GEO my WP v3.0 database table.';
+	//public $form_message = 'Import existing users/members locations into GEO my WP v3.0 database table.';
+	public $form_message = '';
 
 	/**
 	 * Get location from database.
