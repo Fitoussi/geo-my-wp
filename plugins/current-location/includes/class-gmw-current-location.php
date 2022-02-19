@@ -32,7 +32,8 @@ class GMW_Current_Location {
 	protected $args = array(
 		'element_id'                => 0,
 		'elements'                  => 'username,address,map,location_form',
-		'location_form_trigger'     => 'Update your current location',
+		'element-width'             => '100%',
+		'location_form_trigger'     => 'Update your location',
 		'clear_location_trigger'    => 'Clear location',
 		'address_field_placeholder' => 'Enter address',
 		'address_fields'            => 'city,country',
@@ -40,8 +41,8 @@ class GMW_Current_Location {
 		'address_autocomplete'      => 1,
 		'user_greeting'             => 'Hello',
 		'guest_greeting'            => 'Hello, guest!',
-		'map_height'                => '200px',
-		'map_width'                 => '200px',
+		'map_height'                => '250px',
+		'map_width'                 => '100%',
 		'map_icon_url'              => '',
 		'map_icon_size'             => '',
 		'map_type'                  => 'ROADMAP',
@@ -49,7 +50,7 @@ class GMW_Current_Location {
 		'scrollwheel_zoom'          => 1,
 		'expand_on_load'            => 0,
 		'ajax_update'               => 0,
-		'loading_message'           => 'Retrieving your current location...',
+		'loading_message'           => 'Retrieving your location...',
 	);
 
 	/**
