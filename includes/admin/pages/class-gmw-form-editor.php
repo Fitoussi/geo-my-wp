@@ -34,9 +34,12 @@ class GMW_Form_Editor {
 	 * __construct function.
 	 *
 	 * @access public
+	 *
 	 * @return void
 	 */
 	public function __construct() {
+
+		add_action( 'wp_ajax_gmw_get_field_options', array( 'GMW_Form_Settings_Helper', 'get_field_options_ajax' ) );
 
 		// trigger ajax form update.
 		if ( apply_filters( 'gmw_form_editor_ajax_enabled', true ) ) {
