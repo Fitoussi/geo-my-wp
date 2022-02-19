@@ -982,10 +982,18 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		 * Add-on's min version admin notice
 		 */
 		public function verify_activation_notice() {
+
+			$allowed = array(
+				'a'      => array(
+					'href'   => array(),
+					'target' => array(),
+					'title'  => array(),
+				),
+			);
 			?>
-			<div class="error">
-				<p><?php echo esc_html( $this->status_details['notice'] ); ?></p>
-			</div>  
+			<div class="gmw-admin-notice-top notice notice-error">
+				<p><?php echo wp_kses( $this->status_details['notice'], $allowed ); ?></p>
+			</div>
 			<?php
 		}
 
