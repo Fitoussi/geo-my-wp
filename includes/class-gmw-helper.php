@@ -105,7 +105,12 @@ class GMW_Helper {
 		$folder = ! empty( $folder_name ) ? $folder_name . '/' : '';
 
 		// addon data.
-		$component_data   = gmw_get_addon_data( $component );
+		$component_data = gmw_get_addon_data( $component );
+
+		if ( empty( $component_data ) ) {
+			return array();
+		}
+
 		$templates_folder = $component_data['templates_folder'];
 
 		// get plugin's template folders path
