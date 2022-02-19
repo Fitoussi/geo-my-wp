@@ -1,19 +1,30 @@
 <?php
-// Exit if accessed directly
+/**
+ * GEO my WP Import/Export forms.
+ *
+ * @since 3.5
+ *
+ * @author Eyal Fitoussi
+ *
+ * @package geo-my-wp
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
  * Export/Import forms tab output
  *
  * @access public
+ *
  * @since 3.5
+ *
  * @author Eyal Fitoussi
  */
 function gmw_import_export_forms_tab() {
 ?>	
-	<?php do_action( 'gmw_import_export_data_before_export' ); ?>
+	<?php do_action( 'gmw_import_export_forms_before_export' ); ?>
 
 	<div id="poststuff" class="metabox-holder">
 
@@ -155,23 +166,25 @@ add_action( 'gmw_import_export_forms_tab', 'gmw_import_export_forms_tab' );
  */
 function gmw_export_forms() {
 
-	// make sure at lease one checkbox is checked
+	// make sure at lease one checkbox is checked.
 	if ( empty( $_POST['gmw_forms'] ) ) {
-		wp_die( __( 'You must check at least one checkbox of a form that you would like to export.', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'You must check at least one checkbox of a form that you would like to export.', 'geo-my-wp' ) );
 	}
 
-	// check for nonce
+	// check for nonce.
 	if ( empty( $_POST['gmw_export_forms_nonce'] ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
-	// varify nonce
+	// varify nonce.
 	if ( ! wp_verify_nonce( $_POST['gmw_export_forms_nonce'], 'gmw_export_forms_nonce' ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
 	if ( ! function_exists( 'gmw_get_forms' ) ) {
-		wp_die( __( 'gmw_get_forms function not exists.', 'geo-my-wp' ) );
+
+		wp_die( esc_html__( 'gmw_get_forms function not exists.', 'geo-my-wp' ) );
+
 		return;
 	}
 
@@ -179,14 +192,14 @@ function gmw_export_forms() {
 
 	if ( empty( $forms ) ) {
 
-		wp_die( __( 'There are no forms to export.', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'There are no forms to export.', 'geo-my-wp' ) );
 
 		return;
 	}
 
 	global $wpdb;
 
-	// get all data from forms table
+	// get all data from forms table.
 	$export = $wpdb->get_results(
 		$wpdb->prepare(
 			"
@@ -216,31 +229,33 @@ add_action( 'gmw_export_forms', 'gmw_export_forms' );
  * Import forms from a json file
  *
  * @since 3.0
+ *
  * @return void
  */
 function gmw_import_forms() {
 
-	// look for nonce
+	// look for nonce.
 	if ( empty( $_POST['gmw_import_forms_nonce'] ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
-	// varify nonce
+	// varify nonce.
 	if ( ! wp_verify_nonce( $_POST['gmw_import_forms_nonce'], 'gmw_import_forms_nonce' ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
-	//make sure at least one checkbox is checked
+	//make sure at least one checkbox is checked.
 	if ( empty( $_FILES['import_file']['tmp_name'] ) ) {
-		wp_die( __( 'Please upload a file to import', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'Please upload a file to import', 'geo-my-wp' ) );
 	}
 
-	// Retrieve the data from the file and convert the json object to an array
+	// Retrieve the data from the file and convert the json object to an array.
 	$forms = gmw_object_to_array( json_decode( file_get_contents( $_FILES['import_file']['tmp_name'] ) ) );
 
 	if ( empty( $forms ) ) {
 
 		wp_safe_redirect( admin_url( 'admin.php?page=gmw-import-export&tab=forms&gmw_notice=no_forms_to_imported&gmw_notice_status=error' ) );
+
 	} else {
 
 		global $wpdb;
@@ -249,18 +264,22 @@ function gmw_import_forms() {
 
 			global $wpdb;
 
-			// create new form in database
+			// create new form in database.
 			$wpdb->insert(
 				$wpdb->prefix . 'gmw_forms',
 				array(
-					'slug'   => $form['slug'],
-					'addon'  => $form['addon'],
-					'name'   => $form['name'],
-					'title'  => $form['title'],
-					'prefix' => $form['prefix'],
-					'data'   => $form['data'],
+					'slug'        => $form['slug'],
+					'addon'       => $form['addon'],
+					'component'   => $form['component'],
+					'object_type' => $form['object_type'],
+					'name'        => $form['name'],
+					'title'       => $form['title'],
+					'prefix'      => $form['prefix'],
+					'data'        => $form['data'],
 				),
 				array(
+					'%s',
+					'%s',
 					'%s',
 					'%s',
 					'%s',
@@ -271,7 +290,7 @@ function gmw_import_forms() {
 			);
 		}
 
-		// update forms in cache
+		// update forms in cache.
 		GMW_Forms_Helper::update_forms_cache();
 
 		wp_safe_redirect( admin_url( 'admin.php?page=gmw-import-export&tab=forms&gmw_notice=forms_imported&gmw_notice_status=updated' ) );
@@ -287,7 +306,9 @@ add_action( 'gmw_import_forms', 'gmw_import_forms' );
  * Forms notice messages
  *
  * @access public
+ *
  * @since 3.0
+ *
  * @author Eyal Fitoussi
  *
  */
