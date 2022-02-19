@@ -264,7 +264,7 @@ class GMW_Maps_API {
 			'zoom_position'        => false,
 			'group_markers'        => 'standard',
 			'draggable_window'     => 1,
-			'hide_no_locations'    => true,
+			'hide_no_locations'    => false,
 			'render_on_page_load'  => true, // render map on page load?
 			'icon_url'             => GMW()->default_icons['location_icon_url'],
 			'clusters_path'        => 'https://raw.githubusercontent.com/googlemaps/js-marker-clusterer/gh-pages/images/m',
