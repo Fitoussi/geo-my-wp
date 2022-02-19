@@ -182,7 +182,7 @@ if ( ! class_exists( 'GMW_License' ) ) :
 							$color  = 'green';
 						}
 
-						$links[ $action ] = '<a style="color:' . $color . '" href="' . admin_url( 'admin.php?page=gmw-extensions' ) . '">' . $text . '</a>';
+						$links[ $action ] = '<a style="color:' . $color . '" href="' . admin_url( 'admin.php?page=gmw-extensions&extensions_tab=premium' ) . '">' . $text . '</a>';
 
 					} else {
 
@@ -218,7 +218,7 @@ if ( ! class_exists( 'GMW_License' ) ) :
 						$color  = 'green';
 					}
 
-					$links[ $action ] = '<a style="color:' . $color . '" href="' . admin_url( 'admin.php?page=gmw-extensions' ) . '">' . $text . '</a>';
+					$links[ $action ] = '<a style="color:' . $color . '" href="' . admin_url( 'admin.php?page=gmw-extensions&extensions_tab=premium' ) . '">' . $text . '</a>';
 
 					$links['docs'] = $docs_link;
 
