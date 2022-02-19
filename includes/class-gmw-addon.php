@@ -157,6 +157,17 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		public $description = '';
 
 		/**
+		 * Add-on's description.
+		 * 
+		 * can be used insetead of the above.
+		 *
+		 * @var string
+		 */
+		public function get_description() {
+			return '';
+		}
+
+		/**
 		 * Link to the addon's detailes/purchase page. Will show in Extensions page.
 		 *
 		 * @var string
