@@ -61,17 +61,24 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 	 */
 	public function get_info_window_args( $post ) {
 
-		if ( empty( $this->form['info_window']['image']['enabled'] ) ) {
+		if ( isset( $this->form['info_window']['image'] ) && empty( $this->form['info_window']['image']['enabled'] ) ) {
 
 			$image = false;
 
 		} else {
-			$image = gmw_get_post_featured_image(
-				$post,
-				$this->form,
-				array(),
-				array( 'class' => 'skip-lazy' )
+
+			$args = array(
+				'object_type'  => 'post',
+				'object_id'    => $post->ID,
+				'width'        => ! empty( $this->form['info_window']['image']['width'] ) ? $this->form['info_window']['image']['width'] : '150px',
+				'height'       => ! empty( $this->form['info_window']['image']['height'] ) ? $this->form['info_window']['image']['height'] : 'auto',
+				'no_image_url' => ! empty( $this->form['info_window']['image']['no_image_url'] ) ? $this->form['info_window']['image']['no_image_url'] : '',
+				'permalink'    => false,
+				'wrapper'      => false,
+				'where'        => 'info_window',
 			);
+
+			$image = gmw_get_post_featured_image( $args, $post, $this->form );
 		}
 
 		return array(
