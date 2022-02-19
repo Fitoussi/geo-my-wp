@@ -3,6 +3,7 @@
  * admin tools "Reset" tab
  * 
  * @since  2.5
+ *
  * @author Eyal Fitoussi
  */
 
@@ -185,14 +186,16 @@ function gmw_reset_tab() {
 add_action( 'gmw_tools_reset_gmw_tab', 'gmw_reset_tab' );
 
 /**
- * Admin notice
- * @param  [type] $messages [description]
+ * Admin notice.
+ *
+ * @param  [type] $messages [description].
+ *
  * @return [type]           [description]
  */
 function gmw_reset_data_notice_message( $messages ) {
-	
+
 	$messages['reset_gmw_data'] = __( 'GEO my WP data cleared.', 'geo-my-wp' );
-	
+
 	return $messages;
 }
 add_filter( 'gmw_admin_notices_messages', 'gmw_reset_data_notice_message' );
@@ -205,79 +208,77 @@ add_filter( 'gmw_admin_notices_messages', 'gmw_reset_data_notice_message' );
  */
 function gmw_reset_data() {
 
-	//make sure at least one item is checked
+	// make sure at least one item is checked.
 	if ( empty( $_POST['gmw_reset_items'] ) ) {
-		
-		wp_die( __( "You must check at least one checkbox of an item that you'd like to clear.", 'geo-my-wp' ) );
+		wp_die( esc_html__( "You must check at least one checkbox of an item that you'd like to clear.", 'geo-my-wp' ) );
 	}
 
-	//look for nonce
+	// look for nonce.
 	if ( empty( $_POST['gmw_reset_data_nonce'] ) ) {
-		
-		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
-	//varify nonce
-	if ( ! wp_verify_nonce( $_POST['gmw_reset_data_nonce'], 'gmw_reset_data_nonce' ) ) {
-		
-		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+	// varify nonce.
+	if ( ! wp_verify_nonce( $_POST['gmw_reset_data_nonce'], 'gmw_reset_data_nonce' ) ) { // WPCS: CSRF ok, sanitization ok.
+		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
-	//clear settings
-	if ( in_array( 'settings', $_POST['gmw_reset_items'] ) ) {
+	// clear settings.
+	if ( in_array( 'settings', $_POST['gmw_reset_items'] ) ) { // WPCS: CSRF ok, sanitization ok.
 		delete_option( 'gmw_options' );
 	}
 
-	//clear forms
-	if ( in_array( 'forms', $_POST['gmw_reset_items'] ) ) {
+	// clear forms.
+	if ( in_array( 'forms', $_POST['gmw_reset_items'] ) ) { // WPCS: CSRF ok, sanitization ok.
 
 		global $wpdb;
-	    
-	    $table_name = $wpdb->prefix . 'gmw_forms';
-	    $sql = "DROP TABLE IF EXISTS {$table_name}";
-	    $wpdb->query( $sql );
+
+		$table_name = $wpdb->prefix . 'gmw_forms';
+		$sql        = "DROP TABLE IF EXISTS {$table_name}";
+
+		$wpdb->query( $sql );
 	}
-	
-	//clear licensess
-	if ( in_array( 'licenses', $_POST['gmw_reset_items'] ) ) {	
+
+	// clear licensess.
+	if ( in_array( 'licenses', $_POST['gmw_reset_items'] ) ) { // WPCS: CSRF ok, sanitization ok.
 		delete_option( 'gmw_license_keys' );
 		delete_option( 'gmw_premium_plugin_status' );
 	}
-	
-	//clear posts table
-	if ( in_array( 'locations_table', $_POST['gmw_reset_items'] ) ) {
-		
+
+	// clear posts table.
+	if ( in_array( 'locations_table', $_POST['gmw_reset_items'] ) ) { // WPCS: CSRF ok, sanitization ok.
+
 		global $wpdb;
-	    
-	    $table_name = $wpdb->prefix . 'gmw_locations';
-	    $sql = "DROP TABLE IF EXISTS {$table_name}";
+
+		$table_name = $wpdb->prefix . 'gmw_locations';
+		$sql        = "DROP TABLE IF EXISTS {$table_name}";
 
 	    $wpdb->query( $sql );
 	}
-	
-	//clear members table
-	if ( in_array( 'locationmeta_table', $_POST['gmw_reset_items'] ) ) {
-		
+
+	// clear members table.
+	if ( in_array( 'locationmeta_table', $_POST['gmw_reset_items'] ) ) { // WPCS: CSRF ok, sanitization ok.
+
 		global $wpdb;
-		
+
 		$table_name = $wpdb->prefix . 'gmw_locationmeta';
-	    $sql = "DROP TABLE IF EXISTS {$table_name}";
+		$sql = "DROP TABLE IF EXISTS {$table_name}";
 
 	    $wpdb->query( $sql );
 	}
 
 	$page = 'admin.php?page=gmw-tools&tab=reset_gmw&gmw_notice=reset_gmw_data&gmw_notice_status=updated';
 
-	//deactivate GEO my WP
-	if ( in_array( 'uninstall', $_POST['gmw_reset_items'] ) ) {
-		
+	// deactivate GEO my WP.
+	if ( in_array( 'uninstall', $_POST['gmw_reset_items'] ) ) { // WPCS: CSRF ok, sanitization ok.
+
 		$page = 'index.php';
 
 		deactivate_plugins( GMW_BASENAME );
 	}
-	
+
 	wp_safe_redirect( admin_url( $page ) );
-	
+
 	exit;
 }
 add_action( 'gmw_reset_data', 'gmw_reset_data' );
