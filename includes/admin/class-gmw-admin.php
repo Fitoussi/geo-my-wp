@@ -27,15 +27,15 @@ class GMW_Admin {
 		$this->settings = get_option( 'gmw_options' );
 
 		// admin notice to import location to the new database table.
-		if ( get_option( 'gmw_old_locations_tables_exist' ) !== false && get_option( 'gmw_old_locations_tables_updated' ) === false ) {
+		/*if ( get_option( 'gmw_old_locations_tables_exist' ) !== false && get_option( 'gmw_old_locations_tables_updated' ) === false ) {
 			add_action( 'admin_notices', array( $this, 'update_database_notice' ) );
-		}
+		}*/
 
 		// admin notice to import location to the new database table.
-		if ( get_option( 'gmw_folders_names_changed_notice_viewed' ) === false ) {
+		/*if ( get_option( 'gmw_folders_names_changed_notice_viewed' ) === false ) {
 			add_action( 'admin_init', array( $this, 'folders_names_notice_dismiss' ) );
-			//add_action( 'admin_notices', array( $this, 'deprecated_folder_names_notice' ) );
-		}
+			add_action( 'admin_notices', array( $this, 'deprecated_folder_names_notice' ) );
+		}*/
 
 		// do some actions.
 		add_action( 'admin_menu', array( $this, 'admin_menu' ), 12 );
@@ -238,7 +238,7 @@ class GMW_Admin {
 	/**
 	 * Admin notice.
 	 */
-	public function folders_names_notice_dismiss() {
+	/*public function folders_names_notice_dismiss() {
 
 		if ( ! empty( $_GET['action'] ) && 'gmw_folders_names_dismiss' === $_GET['action'] ) { // WPCS: CSRF ok.
 
@@ -246,14 +246,14 @@ class GMW_Admin {
 
 			wp_safe_redirect( wp_unslash( $_SERVER['REQUEST_URI'] ) ); // WPCS: CSRF ok, sanitization ok.
 		}
-	}
+	}*/
 
 	/**
 	 * Admin notice.
 	 *
 	 * DEPRECATED
 	 */
-	public function deprecated_folder_names_notice() {
+	/*public function deprecated_folder_names_notice() {
 
 		$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : 'gmw-extensions'; // WPCS: CSRF ok.
 		?>
@@ -261,7 +261,7 @@ class GMW_Admin {
 			<p><?php echo sprintf( __( '<h2>Important GEO my WP notice!</h2><p>The folders names for the custom template files have changed since GEO my WP version 3.0. If you have custom template files placed in the theme or child theme folder, you need to rename the folders to be able to use your custom template files.</p><p>See <a href="%1$s" target="_blank">this post</a> to learn about the new folders names.</p><p><a href="%2$s" class="button-secondary">Dismiss</a></p>' ), 'https://geomywp.com/geo-my-wp-3-0-upgrade-process/#folders-names', admin_url( 'admin.php?page=' . $page . '&action=gmw_folders_names_dismiss' ) ); ?></p>
 		</div>
 		<?php
-	}
+	}*/
 
 	/**
 	 * Admin action links.
