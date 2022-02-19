@@ -1,10 +1,8 @@
 <?php
 /**
- * Export Import tab
+ * Export Import Posts Locator tab
  *
  * @since 2.5
- *
- * @author The functions below inspired by functions written by Pippin Williamson.
  *
  * @package geo-my-wp
  */
