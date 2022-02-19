@@ -141,6 +141,11 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 		private $log = array();
 
 		/**
+		 * Can add additiona form fields.
+		 */
+		public function form_fields() {}
+
+		/**
 		 * [__construct description]
 		 */
 		public function __construct() {
