@@ -24,50 +24,38 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function gmw_output_api_testing_tab() {
 	?>
-	<div id="gmw-geocoders-testing-tab-content" class="gmw-tools-tab-content">
+	<?php do_action( 'gmw_geocoders_testing_tab_top' ); ?>
 
-		<?php do_action( 'gmw_geocoders_testing_tab_top' ); ?>
+	<?php gmw_google_server_key_test(); ?>
 
-		<div id="poststuff" class="metabox-holder">
+	<div class="gmw-settings-panel gmw-tools-api-testing-panel">
 
-			<div id="post-body">
+		<form method="post" action="<?php echo admin_url( 'admin.php?page=gmw-tools&tab=api_testing' ); // WPCS: XSS ok. ?>">
 
-				<div id="post-body-content">
+			<fieldset>
 
-					<div class="postbox">
+				<legend class="gmw-settings-panel-title"><?php esc_html_e( 'Google Maps Server API Key Test', 'geo-my-wp' ); ?></legend>
 
-						<h3 class="hndle">
-							<span><?php esc_attr_e( 'Google Maps Server API Key Test', 'geo-my-wp' ); ?></span>
-						</h3>
+				<div class="gmw-settings-panel-content">
 
-						<div class="inside">
-
-							<p>To test the server key the plugin will try to geocode a default address and will return a success or failed message.</p>
-
-							<form method="post" action="<?php echo admin_url( 'admin.php?page=gmw-tools&tab=api_testing' ); // WPCS: XSS ok. ?>">
-
-								<p>
-									<input type="hidden" name="gmw_action" value="google_server_key_test" />
-
-									<?php wp_nonce_field( 'gmw_google_server_key_test_nonce', 'gmw_google_server_key_test_nonce' ); ?>
-
-									<input type="submit" class="button-secondary" value="<?php esc_attr_e( 'Test server key', 'geo-my-wp' ); ?>" />
-								</p>
-
-							</form>
-
-							<div id="gmw-google-maps-api-server-key-message-wrapper" style="margin-top: 30px">
-								<?php gmw_google_server_key_test(); ?>
-							</div>
-						</div>
+					<div class="gmw-settings-panel-description">
+						<?php esc_html_e( 'To test your Google Maps server API key, the plugin will try to geocode a default address and will return a success or failed message.', 'geo-my-wp' ); ?>
 					</div>
+
+					<div class="gmw-settings-panel-field">
+						<input type="submit" class="gmw-settings-action-button button-primary" value="<?php esc_attr_e( 'Test server key', 'geo-my-wp' ); ?>" />
+						<input type="hidden" name="gmw_action" value="google_server_key_test" />
+					</div>
+				
 				</div>
-			</div>
-		</div>
-
-		<?php do_action( 'gmw_geocoders_testing_tab_bottom' ); ?>
-
+			</fieldset>
+			
+			<?php wp_nonce_field( 'gmw_google_server_key_test_nonce', 'gmw_google_server_key_test_nonce' ); ?>
+		</form>
 	</div>
+
+	<?php do_action( 'gmw_geocoders_testing_tab_bottom' ); ?>
+
 	<?php
 }
 add_action( 'gmw_tools_api_testing_tab', 'gmw_output_api_testing_tab' );
@@ -102,19 +90,35 @@ function gmw_google_server_key_test() {
 		if ( ! empty( $result['data']->error_message ) ) {
 			$result['error'] .= ' - ' . $result['data']->error_message;
 		}
+		?>
+		<div class="gmw-settings-panel gmw-admin-notice-box gmw-admin-notice-error">
+			<h3 class="gmw-admin-notice-title"><?php esc_attr_e( 'Geocoder Failed!', 'geo-my-wp' ); ?></h3>
+			<div class="gmw-admin-notice-content">
+				<div class="gmw-admin-notice-description">
+					<?php esc_html_e( 'There seems to be an issue with your Google Maps API Server Key. Geocoding failed with the error message:', 'geo-my-wp' ); ?>
+					<em style="background:rgba(255, 0, 0, 0.23);"><?php echo esc_html( $result['error'] ); ?></em>
+					<a style="font-size:12px;" href="#" onclick="event.preventDefault();jQuery( '#google-test-error-details' ).toggle()"><?php esc_html_e( '( Show error details )', 'geo-my-wp' ); ?></a>
+					<br />
+					<textarea id="google-test-error-details" readonly="readonly">
+						<?php print_r( $result ); // WPCS: XSS ok. ?>
+					</textarea>
+				</div>
+			</div>
+		</div>
 
-		echo '<h3 style="color:red">Geocoder Failed!</h3>';
-		echo '<p>There seems to be an issue with your Google Maps API Server Key.<p>';
-		echo '<p>Geocoding failed with the error message: <em style="background:rgba(255, 0, 0, 0.23);">' . esc_html( $result['error'] ) . '</em>';
-		echo ' <a style="font-size:12px;" href="#" onclick="event.preventDefault();jQuery( \'#google-test-error-details\' ).slideToggle()">( Show error details )</a></p>';
-		echo '<br />';
-		echo '<textarea id="google-test-error-details"readonly="readonly" style="min-height: 300px;width: 600px;clear: both;display: none;">';
-		print_r( $result ); // WPCS: XSS ok.
-		echo '</textarea>';
+		<?php
 
 	} else {
-		echo '<h3 style="color:green">Geocoder success!</h3>';
-		echo '<p>Your Google Maps server API key seems to be working properly.</p>';
+		?>
+		<div class=" gmw-settings-panel gmw-admin-notice-box gmw-admin-notice-success">
+			<h3 class="gmw-admin-notice-title"><?php esc_html_e( 'Geocoder success!', 'geo-my-wp' ); ?></h3>
+			<div class="gmw-admin-notice-content">
+				<div class="gmw-admin-notice-description">
+					<?php esc_html_e( 'Your Google Maps server API key appears to be working properly.', 'geo-my-wp' ); ?>
+				</div>
+			</div>
+		</div>
+		<?php
 	}
 }
 
