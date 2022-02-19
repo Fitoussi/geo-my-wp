@@ -60,7 +60,9 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 	 *
 	 * @var string
 	 */
-	public $description = 'Provides geolocation for WordPress post types.';
+	public function get_description() {
+		return __( 'Geotag any of your post types and create proxmity search form that search and find posts based on location.', 'geo-my-wp' );
+	}
 
 	/**
 	 * Object
