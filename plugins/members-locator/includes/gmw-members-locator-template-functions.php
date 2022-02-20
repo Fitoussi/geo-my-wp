@@ -533,6 +533,44 @@ function gmw_search_results_bp_avatar( $object = array(), $gmw = array() ) {
 
 	echo gmw_get_bp_avatar( $args, $object, $gmw ); // WPCS: XSS ok.
 }
+
+/**
+ * Display add friend button in search results.
+ *
+ * @param  object $member  member object.
+ *
+ * @param  array  $gmw     gmw form.
+ *
+ * @return [type]         [description]
+ */
+function gmw_search_results_bp_friendship_button( $member, $gmw ) {
+
+	if ( empty( $gmw['search_results']['friendship_button'] ) ) {
+		return;
+	}
+
+	bp_add_friend_button( $member->id ); // WPCS: XSS ok.
+}
+
+/**
+ * Display last activity.
+ *
+ * @param  object $member  member object.
+ *
+ * @param  array  $gmw     gmw form.
+ *
+ * @return [type]         [description]
+ */
+function gmw_search_results_bp_last_active( $member, $gmw ) {
+
+	if ( ! function_exists( 'bp_get_member_last_active' ) || empty( $gmw['search_results']['last_active'] ) ) {
+		return;
+	}
+
+	echo '<span class="activity">' . bp_get_member_last_active() . '</span>';
+}
+
+/**
  * Query xprofile fields
  *
  * Note $form_values might come from URL. It needs to be sanitized before being used
