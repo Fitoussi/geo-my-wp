@@ -551,168 +551,106 @@ class GMW_Form_Settings_Helper {
 	}
 
 	/**
-	 * Validate image field
+	 * Get field options via AJAX call.
 	 *
-	 * @param  array $output Input values before validation.
-	 *
-	 * @return array         Input values after validation
+	 * @since 4.0
 	 */
-	public static function validate_image( $output ) {
+	public static function get_field_options_ajax() {
 
-		$output['enabled'] = ! empty( $output['enabled'] ) ? 1 : '';
-		$output['width']   = isset( $output['width'] ) ? preg_replace( '/[^0-9%xp]/', '', $output['width'] ) : '100';
-		$output['height']  = isset( $output['height'] ) ? preg_replace( '/[^0-9%xp]/', '', $output['height'] ) : '100';
+		// ajax_load_options holds the function name. If missing, abort.
+		if ( empty( $_POST['args']['gmw_ajax_load_options'] ) ) { // WPCS: CSRF ok, sanitization ok.
+
+			echo json_encode( array() );
+		} else {
+
+			echo json_encode( self::get_field_options( $_POST['args'] ) ); // WPCS: CSRF ok, sanitization ok.
+		}
+
+		die;
+	}
+
+	/**
+	 * Get field options.
+	 *
+	 * This function get the options of a setting field that is generated via AJAX.
+	 *
+	 * @param array $args field arguments.
+	 *
+	 * @since 4.0
+	 *
+	 * @author Eyal Fitoussi
+	 *
+	 * @return [type] [description]
+	 */
+	public static function get_field_options( $args = array() ) {
+
+		if ( empty( $args ) ) {
+			return array();
+		}
+
+		$action = $args['gmw_ajax_load_options'];
+
+		// Get pages.
+		if ( 'gmw_get_pages' === $action ) {
+			$output = self::get_pages( $args );
+		}
+
+		// Get post types.
+		if ( 'gmw_get_post_types' === $action ) {
+			$output = self::get_post_types( $args );
+		}
+
+		// Get users.
+		if ( 'gmw_get_users' === $action ) {
+			$output = self::get_users( $args );
+		}
+
+		// Get user roles.
+		if ( 'gmw_get_user_roles' === $action ) {
+			$output = self::get_user_roles( $args );
+		}
+
+		// Get taxonomy terms.
+		if ( 'gmw_get_taxonomy_terms' === $action ) {
+
+			$output = array();
+
+			if ( ! empty( $args['gmw_ajax_load_options_taxonomy'] ) ) {
+				$output = self::get_taxonomy_terms_array( $args['gmw_ajax_load_options_taxonomy'] );
+			}
+		}
+
+		// Get custom fields.
+		if ( 'gmw_get_custom_fields' === $action ) {
+			$output = self::get_custom_fields_array( $args );
+		}
+
+		// Get custom fields.
+		if ( 'gmw_get_user_meta' === $action ) {
+			$output = self::get_user_meta( $args );
+		}
+
+		if ( 'gmw_get_location_meta' === $action ) {
+			$output = GMW_Form_Settings_Helper::get_location_meta();
+		}
+
+		if ( 'gmw_get_bp_xprofile_fields' === $action ) {
+
+			$xprofile_field = self::get_xprofile_fields();
+			$xprofile_field = ( ! empty( $args['gmw_ajax_load_options_xprofile'] ) && 'date_field' === $args['gmw_ajax_load_options_xprofile'] ) ? $xprofile_field['date_field'] : $xprofile_field['fields'];
+
+			$output = $xprofile_field;
+		}
+
+		if ( 'gmw_get_bp_member_types' === $action ) {
+			$output = self::get_bp_member_types( $args );
+		}
+
+		if ( 'gmw_get_bp_groups' === $action ) {
+			$output = self::get_bp_groups( $args );
+		}
 
 		return $output;
-	}
-
-	/**
-	 * Taxonomies picker.
-	 *
-	 * @param  [type] $value     [description].
-	 *
-	 * @param  [type] $name_attr [description].
-	 *
-	 * @param  [type] $form      [description].
-	 */
-	public static function taxonomies( $value, $name_attr, $form ) {
-		?>
-		<div id="taxonomies-wrapper" class="gmw-options-box">
-			<?php
-			foreach ( get_post_types() as $post ) {
-
-				$taxes = get_object_taxonomies( $post );
-
-				if ( ! empty( $taxes ) ) {
-
-					$style = ( isset( $form['search_form']['post_types'] ) && ( count( $form['search_form']['post_types'] ) === 1 ) && is_array( $form['search_form']['post_types'] ) && ( in_array( $post, $form['search_form']['post_types'], true ) ) ) ? '' : 'style="display:none"';
-
-					echo '<div id="post-type-' . esc_attr( $post ) . '-taxonomies-wrapper" class="single-option post-type-taxonomies-wrapper" ' . $style . '>'; // WPCS: XSS ok.
-
-					foreach ( $taxes as $tax ) {
-
-						echo '<label>' . esc_html( get_taxonomy( $tax )->labels->singular_name ) . '</label>';
-
-						echo '<div id="' . esc_attr( $post ) . '_cat" class="taxonomy-wrapper option-content">';
-
-							$esc_name_attr = esc_attr( $name_attr . '[' . $post . '][' . $tax . '][style]' );
-							$selected      = ( ! empty( $value[ $post ][ $tax ]['style'] ) && ( 'dropdown' === $value[ $post ][ $tax ]['style'] || 'drop' === $value[ $post ][ $tax ]['style'] ) ) ? 'selected="seletced"' : '';
-
-							echo '<select name="' . $esc_name_attr . '">'; // WPCS: XSS ok.
-							echo '<option value="disable" checked="checked">' . esc_attr__( 'Disable', 'geo-my-wp' ) . '</option>';
-							echo '<option value="dropdown" ' . $selected . '>' . esc_attr__( 'Dropdown', 'geo-my-wp' ) . '</option>'; // WPCS: XSS ok.
-							echo '</select>';
-
-						echo '</div>';
-					}
-
-					echo '</div>';
-				}
-			}
-			echo '</div>';
-
-			$style = ( empty( $form['search_form']['post_types'] ) || ( count( $form['search_form']['post_types'] ) === 0 ) ) ? '' : 'style="display: none;"';
-
-			echo '<div id="post-types-select-taxonomies-message" ' . $style . '>'; // WPCS: XSS ok.
-			echo '<p>' . esc_attr__( 'Select a post type to see its taxonomies.', 'geo-my-wp' ) . '</p>';
-			echo '</div>';
-
-			$style = ( isset( $form['search_form']['post_types'] ) && ( count( $form['search_form']['post_types'] ) === 1 ) ) ? 'style="display: none;"' : '';
-
-			echo '<div id="post-types-no-taxonomies-message" ' . $style . '>'; // WPCS: XSS ok.
-			echo '<p>' . esc_attr__( 'This feature is not availabe with multiple post types.', 'geo-my-wp' ) . '</p>';
-			echo '</div>';
-	}
-
-	/**
-	 * Excerpt settings.
-	 *
-	 * @param  [type] $value     [description].
-	 *
-	 * @param  [type] $name_attr [description].
-	 */
-	public static function excerpt( $value, $name_attr ) {
-
-		$name_attr = esc_attr( $name_attr );
-
-		if ( empty( $value ) ) {
-			$value = array(
-				'enabled' => '',
-				'usage'   => 'post_content',
-				'count'   => '10',
-				'link'    => 'read more...',
-			);
-		}
-		?>
-		<p>
-			<label>
-				<input 
-					type="checkbox" 
-					value="1" 
-					name="<?php echo $name_attr . '[enabled]'; // WPCS: XSS ok. ?>"
-					onclick="jQuery( '.excerpt-options' ).slideToggle();" 
-					<?php echo ! empty( $value['enabled'] ) ? 'checked=checked' : ''; ?> 
-				/>
-				<?php esc_attr_e( 'Enable', 'geo-my-wp' ); ?>
-			</label>
-		</p>
-
-		<div class="excerpt-options gmw-options-box" <?php echo empty( $value['enabled'] ) ? 'style="display:none";' : ''; ?>>
-
-			<div class="single-option">
-				<label><?php esc_attr_e( 'Usage', 'geo-my-wp' ); ?></label>
-				<div class="option-content">
-					<select 
-						name="<?php echo esc_attr( $name_attr . '[usage]' ); ?>"
-						data-placehoder="<?php esc_attr_e( 'Select an option', 'geo-my-wp' ); ?>" 
-					>
-						<option value="post_content" selected="selected"><?php esc_attr_e( 'Post content', 'geo-my-wp' ); ?>
-						<option value="post_excerpt" 
-						<?php
-						if ( ! empty( $value['usage'] ) && 'post_excerpt' === $value['usage'] ) {
-							echo 'selected="selected"';
-						};
-						?>
-						><?php esc_attr_e( 'Post excerpt', 'geo-my-wp' ); ?></option>
-					</select>
-					   
-					<p class="description">
-						<?php esc_attr_e( 'Selet the source of data between the post content or post excerpt.', 'geo-my-wp' ); ?>
-					</p>
-				</div>
-			</div>
-
-			<div class="single-option">
-				<label><?php esc_attr_e( 'Words count', 'geo-my-wp' ); ?></label>
-				<div class="option-content">
-					<input 
-						type="number" 
-						name="<?php echo $name_attr . '[count]'; // WPCS: XSS ok. ?>"
-						value="<?php echo ( ! empty( $value['count'] ) ) ? esc_attr( $value['count'] ) : ''; ?>"
-						placeholder="Enter numeric value"
-					/>
-					<p class="description">
-						<?php esc_attr_e( 'Enter the number of words that you would like to display, or leave blank to show the entire content.', 'geo-my-wp' ); ?>
-					</p>
-				</div>
-			</div>
-
-			<div class="single-option">
-				<label><?php esc_attr_e( 'Read more link', 'geo-my-wp' ); ?></label>
-				<div class="option-content">
-					<input 
-						type="text" 
-						name="<?php echo $name_attr . '[link]'; // WPCS: XSS ok. ?>"
-						value="<?php echo ( ! empty( $value['link'] ) ) ? esc_attr( stripslashes( $value['link'] ) ) : ''; ?>" 
-						placeholder="Enter text"
-					/>  
-					<p class="description">
-						<?php esc_attr_e( 'Enter a text that will be used as the "Read more" link and will link to the post page.', 'geo-my-wp' ); ?>
-					</p>
-				</div>
-			</div>
-		</div>
-		<?php
 	}
 
 	/**
