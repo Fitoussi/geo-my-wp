@@ -19,7 +19,7 @@ class GMW_Form_Settings_Helper {
 	/**
 	 * Check if string is json.
 	 *
-	 * @param  [type]  $string [description].
+	 * @param  [type] $string [description].
 	 *
 	 * @return boolean         [description]
 	 */
@@ -156,7 +156,7 @@ class GMW_Form_Settings_Helper {
 									<option value="dropdown" <?php selected( 'dropdown', $tax_options['style'], true ); ?>>
 										<?php esc_attr_e( 'Dropdown', 'geo-my-wp' ); ?>
 									</option>
-												
+
 								</select>
 							</div>
 
@@ -208,10 +208,10 @@ class GMW_Form_Settings_Helper {
 
 			<?php } ?>
 		</div>
-		
+
 		<?php
-		$allwed  = array(
-			'a'   => array(
+		$allwed = array(
+			'a' => array(
 				'href'   => array(),
 				'title'  => array(),
 				'target' => array(),
@@ -223,7 +223,18 @@ class GMW_Form_Settings_Helper {
 				<span><?php esc_html_e( 'Select a post type above in order to see and setup its taxonomies.', 'geo-my-wp' ); ?></span>
 			</div>
 			<div class="post-types-taxonomies-message multiple-selected gmw-admin-notice-box gmw-admin-notice-error">
-				<span><?php echo wp_kses( sprintf( __( 'Taxonomies are not available when selecting multiple post types. This feature is available with the <a href="%s" target="_blank">Premium Settings extension</a>.', 'geo-my-wp' ), 'https://geomywp.com/extensions/premium-settings' ), $allwed ); ?></span>
+				<span>
+				<?php
+				echo wp_kses(
+					sprintf(
+						/* translators: %s link to the premium settings extension page */
+						__( 'Taxonomies are not available when selecting multiple post types. This feature is available with the <a href="%s" target="_blank">Premium Settings extension</a>.', 'geo-my-wp' ),
+						'https://geomywp.com/extensions/premium-settings'
+					),
+					$allwed
+				);
+				?>
+					</span>
 			</div>
 			<div class="post-types-taxonomies-message taxonomies-not-found gmw-admin-notice-box gmw-admin-notice-error">
 				<span><?php esc_html_e( 'No taxonomies were found for the selected post type.', 'geo-my-wp' ); ?></span>
@@ -257,9 +268,9 @@ class GMW_Form_Settings_Helper {
 	 */
 	public static function get_users( $args ) {
 
-		//$query_args = array();
-
-		/*if ( ! empty( $args['gmw_ajax_load_options_query_args'] ) ) {
+		// $query_args = array();
+		/*
+		if ( ! empty( $args['gmw_ajax_load_options_query_args'] ) ) {
 			$query_args = $args['gmw_ajax_load_options_query_args'];
 		}
 
@@ -330,7 +341,7 @@ class GMW_Form_Settings_Helper {
         	FROM $wpdb->postmeta
         	GROUP BY meta_key
         	ORDER BY meta_id DESC"
-		);
+		); // WPCS: db call ok, cache ok.
 
 		$output = array();
 
@@ -366,7 +377,7 @@ class GMW_Form_Settings_Helper {
         	FROM $wpdb->usermeta
         	GROUP BY meta_key
         	ORDER BY umeta_id DESC"
-		);
+		); // WPCS: db call ok, cache ok.
 
 		$output = array();
 
@@ -464,9 +475,8 @@ class GMW_Form_Settings_Helper {
 			foreach ( $terms as $term ) {
 
 				$selected = ( ! empty( $values ) && in_array( $term->$field, $values ) ) ? 'selected="selected"' : '';
-
-				$term_id = esc_attr( $term->$field );
-				$label   = esc_attr( $term->name );
+				$term_id  = esc_attr( $term->$field );
+				$label    = esc_attr( $term->name );
 
 				if ( IS_ADMIN ) {
 					$label .= ' ( ID ' . $term_id . ' )';
@@ -619,7 +629,7 @@ class GMW_Form_Settings_Helper {
 
 		return $output;
 	}
-	
+
 	/**
 	 * Get field options via AJAX call.
 	 *
@@ -630,10 +640,10 @@ class GMW_Form_Settings_Helper {
 		// ajax_load_options holds the function name. If missing, abort.
 		if ( empty( $_POST['args']['gmw_ajax_load_options'] ) ) { // WPCS: CSRF ok, sanitization ok.
 
-			echo json_encode( array() );
+			echo wp_json_encode( array() );
 		} else {
 
-			echo json_encode( self::get_field_options( $_POST['args'] ) ); // WPCS: CSRF ok, sanitization ok.
+			echo wp_json_encode( self::get_field_options( $_POST['args'] ) ); // WPCS: CSRF ok, sanitization ok.
 		}
 
 		die;
@@ -701,7 +711,7 @@ class GMW_Form_Settings_Helper {
 		}
 
 		if ( 'gmw_get_location_meta' === $action ) {
-			$output = GMW_Form_Settings_Helper::get_location_meta();
+			$output = self::get_location_meta();
 		}
 
 		if ( 'gmw_get_bp_xprofile_fields' === $action ) {
@@ -787,7 +797,7 @@ class GMW_Form_Settings_Helper {
 		} elseif ( 'required' === $option ) {
 
 			$defaults['name']     = 'required';
-			$defaults['type' ]    = 'checkbox';
+			$defaults['type']     = 'checkbox';
 			$defaults['label']    = __( 'Required', 'geo-my-wp' );
 			$defaults['cb_label'] = __( 'Enable', 'geo-my-wp' );
 			$defaults['desc']     = __( 'Make this a required field.', 'geo-my-wp' );
@@ -796,7 +806,7 @@ class GMW_Form_Settings_Helper {
 		} elseif ( 'usage_select' === $option ) {
 
 			$defaults['name']     = 'usage';
-			$defaults['type' ]    = 'select';
+			$defaults['type']     = 'select';
 			$defaults['label']    = __( 'Usage', 'geo-my-wp' );
 			$defaults['default']  = 'disabled';
 			$defaults['desc']     = __( 'Select the field usage.', 'geo-my-wp' );
@@ -804,13 +814,13 @@ class GMW_Form_Settings_Helper {
 			$defaults['class']    = 'gmw-smartbox-not';
 			$defaults['options']  = array(
 				'disabled'          => __( 'Disable Filter', 'gmw-my-wp' ),
-				'pre_defined'       => __( 'Pre-defined','gmw-my-wp' ),
+				'pre_defined'       => __( 'Pre-defined', 'gmw-my-wp' ),
 				'dropdown'          => __( 'Select dropdown', 'gmw-my-wp' ),
 				'checkboxes'        => __( 'Checkboxes', 'gmw-my-wp' ),
 				'smartbox'          => __( 'Smartbox', 'gmw-my-wp' ),
 				'smartbox_multiple' => __( 'Smartbox Multiple', 'gmw-my-wp' ),
 			);
-		} 
+		}
 
 		return wp_parse_args( $args, $defaults );
 	}
@@ -833,16 +843,16 @@ class GMW_Form_Settings_Helper {
 		$id_attr       = ! empty( $field['id'] ) ? $field['id'] : 'gmw-form-field-' . $field_name;
 		$field_type    = isset( $field['type'] ) ? $field['type'] : 'text';
 		$placeholder   = ! empty( $field['placeholder'] ) ? 'placeholder="' . esc_attr( $field['placeholder'] ) . '"' : '';
-		//$name_attr     = ! empty( $name_attr ) ? esc_attr( $name_attr . '[' . $field_name . ']' ) : $field_name;
-		$attributes    = array();
-		$class_attr    = ! empty( $field['class'] ) ? $field['class'] : '';
-		$value         = '';
+		// $name_attr     = ! empty( $name_attr ) ? esc_attr( $name_attr . '[' . $field_name . ']' ) : $field_name;
+		$attributes = array();
+		$class_attr = ! empty( $field['class'] ) ? $field['class'] : '';
+		$value      = '';
 
 		if ( ! empty( $field_value ) ) {
 
 			$value = $field_value;
 
-		} else if ( ! empty( $field['value'] ) ) {
+		} elseif ( ! empty( $field['value'] ) ) {
 			$value = $field['value'];
 		}
 
@@ -850,7 +860,7 @@ class GMW_Form_Settings_Helper {
 
 			$name_attr = $name_attr . '[' . $field_name . ']';
 
-		} else if ( ! empty( $field['name_attr'] ) ) {
+		} elseif ( ! empty( $field['name_attr'] ) ) {
 
 			$name_attr = $field['name_attr'] . '[' . $field_name . ']';
 		} else {
@@ -914,17 +924,16 @@ class GMW_Form_Settings_Helper {
 				if ( empty( $value ) ) {
 
 					$value = $option['default'];
-					
-				} elseif ( ! is_array( $value) ) {
+
+				} elseif ( ! is_array( $value ) ) {
 					$value = explode( ',', $value );
 				}
 
-				//$value             = ( ! empty( $value ) && is_array( $value ) ) ? $value : $option['default'];
-
+				// $value = ( ! empty( $value ) && is_array( $value ) ) ? $value : $option['default'];
 				foreach ( $field['options'] as $key_val => $name ) {
 
 					$key_val = esc_attr( $key_val );
-					$checked = in_array( $key_val, $value ) ? 'checked="checked"' : '';
+					$checked = in_array( $key_val, $value ) ? 'checked="checked"' : ''; // WPCS: loose comparison ok.
 
 					$output .= '<label>';
 					$output .= '<input type="checkbox" id="' . esc_attr( $id_attr ) . '-' . $key_val . '"';
@@ -1125,7 +1134,8 @@ class GMW_Form_Settings_Helper {
 				'mm/dd/yyyy' => 'mm/dd/yyyy',
 				'dd/mm/yyyy' => 'dd/mm/yyyy',
 			),
-			/*'time_format'    => array(
+			/*
+			'time_format'    => array(
 				'yyyy/mm/dd' => 'yyyy/mm/dd',
 				'mm/dd/yyyy' => 'mm/dd/yyyy',
 				'dd/mm/yyyy' => 'dd/mm/yyyy',
@@ -1163,7 +1173,7 @@ class GMW_Form_Settings_Helper {
 					<input 
 						type="text"
 						name="<?php echo $option_name . '[' . $field_name . '][name]';  // WPCS: XSS ok. ?>"
-						value="<?php esc_attr_e( $field_values['name'] ); ?>"
+						value="<?php echo esc_attr( $field_values['name'] ); ?>"
 						readonly="readonly"
 						<?php echo $disabled; // WPCS: XSS ok. ?>
 					/>
@@ -1353,7 +1363,7 @@ class GMW_Form_Settings_Helper {
 								?>
 
 								<?php foreach ( $options['compare'] as $option ) { ?>
-									<option value="<?php echo esc_attr( str_replace( ' ', '_', $option ) ); ?>" <?php selected( $option, $field_values['compare'], true ); ?>><?php esc_attr_e( $option ); ?></option>
+									<option value="<?php echo esc_attr( str_replace( ' ', '_', $option ) ); ?>" <?php selected( $option, $field_values['compare'], true ); ?>><?php echo esc_attr( $option ); ?></option>
 								<?php } ?>	
 							</select>
 
@@ -1656,16 +1666,16 @@ class GMW_Form_Settings_Helper {
 			<div id="gmw-custom-fields-new-field-picker">
 
 				<span>
-					<select id="gmw-custom-fields-picker" class="gmw-smartbox" data-gmw_ajax_load_options="<?php esc_attr_e( $args['get_fields_function'] ); ?>">
-						<option value=""><?php esc_attr_e( $args['select_field_label'] ); ?></option>
+					<select id="gmw-custom-fields-picker" class="gmw-smartbox" data-gmw_ajax_load_options="<?php echo esc_attr( $args['get_fields_function'] ); ?>">
+						<option value=""><?php echo esc_attr( $args['select_field_label'] ); ?></option>
 					</select>
 				</span>
 
 				<input 
 					type="button" 
 					class="gmw-new-custom-field-button gmw-settings-action-button button-primary" style="grid-column: span 1;margin-top: 0;padding: 13px;"
-					form_id="<?php esc_attr_e( $form['ID'] ); ?>"
-					value="<?php esc_attr_e( $args['add_field_label'] ); ?>"
+					form_id="<?php echo esc_attr( $form['ID'] ); ?>"
+					value="<?php echo esc_attr( $args['add_field_label'] ); ?>"
 				/>
 			</div>
 
