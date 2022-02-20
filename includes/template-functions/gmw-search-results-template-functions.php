@@ -10,7 +10,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Display address fields in search results
+ * Get address fields in search results
+ *
+ * @since 4.0
+ *
+ * @param  object  $object location object.
+ *
+ * @param  array   $fields address fields to output.
+ *
+ * @param  boolean $linked link address to google map.
+ *
+ * @param  array   $gmw    gmw form.
+ */
+function gmw_get_search_results_address( $object, $fields = array(), $linked = false, $gmw = array() ) {
+	return $linked ? gmw_get_linked_location_address( $object, $fields, $gmw ) : gmw_get_location_address( $object, $fields, $gmw );
+}
  *
  * @param  object $object location object.
  * @param  array  $gmw    gmw form.
