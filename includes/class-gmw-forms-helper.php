@@ -1,12 +1,21 @@
 <?php
-// Exit if accessed directly
+/**
+ * GEO my WP Forms Helper Class.
+ *
+ * Helper class for form editor.
+ *
+ * @author Eyal Fitoussi.
+ *
+ * @package     geo-my-wp
+ */
+
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
  * GMW_Helper class
- *
  */
 class GMW_Forms_Helper {
 
@@ -16,13 +25,13 @@ class GMW_Forms_Helper {
 	public function __construct() {}
 
 	/**
-	 * Default form values
+	 * Default form values.
 	 *
-	 * @param  [type] $args [description]
+	 * @param  array $form form settings.
+	 *
 	 * @return [type]       [description]
 	 */
 	public static function default_settings( $form = array() ) {
-
 
 		$css = '/* Below is an example of basic CSS that you could use to modify some of the basic colors and text of the search results template. */
 /*div.gmw-results-wrapper[data-id="' . absint( $form['ID'] ) . '"] {
@@ -99,10 +108,10 @@ class GMW_Forms_Helper {
 					'options' => 'imperial',
 					'label'   => 'Units',
 				),
-				'submit_button' => array(
+				'submit_button'  => array(
 					'label' => __( 'Submit', 'geo-my-wp' ),
 				),
-				'styles'        => array(
+				'styles'         => array(
 					'enhanced_fields'    => 1,
 					'custom_css'         => '',
 					'disable_stylesheet' => '',
@@ -180,20 +189,19 @@ class GMW_Forms_Helper {
 
 			global $wpdb;
 
-			$forms = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}gmw_forms", ARRAY_A );
-
+			$forms  = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}gmw_forms", ARRAY_A ); // WPCS: db call ok, cache ok.
 			$output = array();
 
 			foreach ( $forms as $form ) {
 
-				// if happened that form has no data we need to apply the defaults
+				// if happened that form has no data we need to apply the defaults.
 				if ( empty( $form['data'] ) ) {
-					$form['data'] = serialize( GMW_Forms_Helper::default_settings( $form ) );
+					$form['data'] = maybe_serialize( self::default_settings( $form ) );
 				}
 
 				$data = maybe_unserialize( $form['data'] );
 
-				// most likely bad data
+				// most likely bad data.
 				if ( ! is_array( $data ) ) {
 					$data = array();
 				}
@@ -212,17 +220,17 @@ class GMW_Forms_Helper {
 	}
 
 	/**
-	 * Get specific form by form ID
+	 * Get specific form by form ID.
 	 *
-	 * @param  boolean $formID - form ID
+	 * @param integer $form_id form ID.
 	 *
 	 * @return array specific form if form ID pass otherwise all forms
 	 */
-	public static function get_form( $form_id = false ) {
+	public static function get_form( $form_id = 0 ) {
 
 		absint( $form_id );
 
-		// abort if no ID passes
+		// abort if no ID passes.
 		if ( empty( $form_id ) ) {
 
 			return false;
@@ -236,15 +244,17 @@ class GMW_Forms_Helper {
 
 			$form = $wpdb->get_row(
 				$wpdb->prepare(
-					"SELECT * FROM {$wpdb->prefix}gmw_forms WHERE ID = %d", $form_id
-				), ARRAY_A
-			);
+					"SELECT * FROM {$wpdb->prefix}gmw_forms WHERE ID = %d",
+					$form_id
+				),
+				ARRAY_A
+			); // WPCS: db call ok, cache ok.
 
 			if ( ! empty( $form ) ) {
 
-				// if happens that form has no data, we need to apply the defaults
+				// if happens that form has no data, we need to apply the defaults.
 				if ( empty( $form['data'] ) ) {
-					$form['data'] = GMW_Forms_Helper::default_settings( $form );
+					$form['data'] = self::default_settings( $form );
 				}
 
 				$form = array_merge( $form, maybe_unserialize( $form['data'] ) );
@@ -267,7 +277,8 @@ class GMW_Forms_Helper {
 	/**
 	 * Delte form
 	 *
-	 * @param  integer $form_id [description]
+	 * @param  integer $form_id [description].
+	 *
 	 * @return [type]           [description]
 	 */
 	public static function delete_form( $form_id = 0 ) {
@@ -278,7 +289,7 @@ class GMW_Forms_Helper {
 
 		global $wpdb;
 
-		//delete form from database
+		// delete form from database.
 		$delete = $wpdb->delete(
 			$wpdb->prefix . 'gmw_forms',
 			array(
@@ -287,29 +298,27 @@ class GMW_Forms_Helper {
 			array(
 				'%d',
 			)
-		);
+		); // WPCS: db call ok, cache ok.
 
-		// update forms in cache
-		GMW_Forms_Helper::update_forms_cache();
+		// update forms in cache.
+		self::update_forms_cache();
 
 		return $delete;
 	}
 
 	/**
 	 * Update forms cache
-	 *
-	 * @return [type] [description]
 	 */
 	public static function update_forms_cache() {
 
 		global $wpdb;
 
-		$forms = $wpdb->get_results( "SELECT ID, data FROM {$wpdb->prefix}gmw_forms", ARRAY_A );
+		$forms = $wpdb->get_results( "SELECT ID, data FROM {$wpdb->prefix}gmw_forms", ARRAY_A ); // WPCS: db call ok, cache ok.
 
 		$output = array();
 
 		foreach ( $forms as $form ) {
-			$output[ $form['ID'] ] = unserialize( $form['data'] );
+			$output[ $form['ID'] ] = maybe_unserialize( $form['data'] );
 		}
 
 		$forms = $output;
