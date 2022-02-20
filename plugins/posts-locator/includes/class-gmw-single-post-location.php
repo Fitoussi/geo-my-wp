@@ -5,8 +5,9 @@
  * @package geo-my-wp
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+	exit;
 }
 
 
@@ -72,10 +73,10 @@ class GMW_Single_Post_Location extends GMW_Single_Location {
 	 */
 	public function title( $location ) {
 
-		$title     = get_the_title( $this->args['object_id'] );
-		$permalink = get_the_permalink( $this->args['object_id'] );
+		$title     = esc_attr( get_the_title( $this->args['object_id'] ) );
+		$permalink = esc_url( get_the_permalink( $this->args['object_id'] ) );
 
-		return apply_filters( 'gmw_sl_title', "<h3 class=\"gmw-sl-title post-title gmw-sl-element\"><a href=\"{$permalink}\" title=\"{$title}\">{$title}</a></h3>", $location, $this->args, $this->user_position, $this );
+		return apply_filters( 'gmw_sl_title', "<div class='gmw-sl-title-wrapper'><h3 class=\"gmw-sl-title post-title gmw-sl-element\"><a href=\"{$permalink}\" title=\"{$title}\">{$title}</a></h3></div>", $location, $this->args, $this->user_position, $this );
 	}
 }
 
