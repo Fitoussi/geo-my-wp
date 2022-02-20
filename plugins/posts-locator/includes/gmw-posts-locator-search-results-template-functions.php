@@ -54,82 +54,58 @@ function gmw_pt_get_tax_query_args( $tax_args = array(), $gmw = array() ) {
 /**
  * Get posts featured image.
  *
- * @param  object|integer $post the post object or post ID.
+ * @param  array  $args image arguments.
  *
- * @param  array          $gmw  gmw form.
+ * @param  object $post post object.
  *
- * @param  array|string   $size image size in pixels. Will override the size provided in $gmw if any.
- *
- * @param  array          $attr image attributes.
+ * @param  array  $gmw  gmw form.
  *
  * @return HTML element.
  */
-function gmw_get_post_featured_image( $post = 0, $gmw = array(), $size = '', $attr = array() ) {
+function gmw_get_post_featured_image( $args = array(), $post = array(), $gmw = array(), $deprecated = array() ) {
 
-	$output = '';
+	// Temporary here to support previous version of passing arguments.
+	// Where first argument used to be the $post and second argument $gmw.
+	if ( ! is_array( $args ) ) {
 
-	// If image size was not provided we are going to use
-	// the size from the form settings if exists.
-	if ( empty( $size ) ) {
-
-		$size = 'post-thumbnail';
-
-		// If form provide image size.
-		if ( ! empty( $gmw['search_results']['image']['width'] ) && ! empty( $gmw['search_results']['image']['height'] ) ) {
-
-			$size = array(
-				$gmw['search_results']['image']['width'],
-				$gmw['search_results']['image']['height'],
-			);
-		}
+		$gmw  = $post;
+		$post = $args;
+		$args = array(
+			'object_type' => 'post',
+			'object_id'   => is_object( $post ) ? $post->ID : $post,
+			'width'       => ! empty( $gmw['search_results']['image']['width'] ) ? $gmw['search_results']['image']['width'] : '150px',
+			'height'      => ! empty( $gmw['search_results']['image']['height'] ) ? $gmw['search_results']['image']['height'] : '150px',
+			'where'       => 'search_results',
+		);
 	}
 
-	// Make sure the class gmw-image is added to all images.
-	if ( isset( $attr['class'] ) ) {
-		$attr['class'] .= ' gmw-image';
-	} else {
-		$attr['class'] = 'gmw-image';
-	}
-
-	// filter the image args.
-	$args = apply_filters(
-		'gmw_pt_post_featured_image_args',
+	$args = apply_filters( 'gmw_get_post_featured_image_args', $args, $post, $gmw );
+	$args = wp_parse_args(
+		$args,
 		array(
-			'size' => $size,
-			'attr' => $attr,
-		),
-		$post,
-		$gmw
+			'object_type'  => 'post',
+			'object_id'    => 0,
+			'permalink'    => true,
+			'width'        => '150px',
+			'height'       => '150px',
+			'where'        => 'search_results',
+			'class'        => '',
+			'no_image_url' => '',
+		)
 	);
 
-	// Look for post thumbnail.
-	if ( has_post_thumbnail() ) {
+	if ( has_post_thumbnail( $args['object_id'] ) ) {
+		$args['image_url'] = wp_get_attachment_image_src( get_post_thumbnail_id( $args['object_id'] ), 'full' )[0];
 
-		$output .= '<div class="post-thumbnail">';
-		$output .= get_the_post_thumbnail(
-			$post,
-			$args['size'],
-			$args['attr']
-		);
-		$output .= '</div>';
-
-		// Otherise, use the default "No image".
 	} else {
 
-		if ( ! is_array( $args['size'] ) ) {
-			$args['size'] = array( 200, 200 );
-		}
-
-		$output .= '<div class="post-thumbnail no-image">';
-		$output .= '<img class="gmw-image"';
-		$output .= 'src="' . GMW_IMAGES . '/no-image.jpg" ';
-		$output .= 'width=" ' . esc_attr( $args['size'][0] ) . '" ';
-		$output .= 'height=" ' . esc_attr( $args['size'][1] ) . '" ';
-		$output .= '/>';
-		$output .= '</div>';
+		$args['image_url'] = $args['no_image_url'];
+		$args['class']    .= ' gmw-no-image';
 	}
 
-	return apply_filters( 'gmw_pt_post_feature_image', $output, $post, $gmw, $size, $attr );
+	$args['permalink'] = ! empty( $args['permalink'] ) ? get_the_permalink( $args['object_id'] ) : false;
+
+	return gmw_get_image_element( $args, $post, $gmw );
 }
 
 /**
@@ -147,7 +123,16 @@ function gmw_search_results_featured_image( $post, $gmw = array() ) {
 		return;
 	}
 
-	echo gmw_get_post_featured_image( $post, $gmw ); // WPCS: XSS ok.
+	$args = array(
+		'object_type'  => 'post',
+		'object_id'    => $post->ID,
+		'width'        => ! empty( $gmw['search_results']['image']['width'] ) ? $gmw['search_results']['image']['width'] : '150px',
+		'height'       => ! empty( $gmw['search_results']['image']['height'] ) ? $gmw['search_results']['image']['height'] : '150px',
+		'no_image_url' => ! empty( $gmw['search_results']['image']['no_image_url'] ) ? $gmw['search_results']['image']['no_image_url'] : '',
+		'where'        => 'search_results',
+	);
+
+	echo gmw_get_post_featured_image( $args, $post, $gmw ); // WPCS: XSS ok.
 }
 
 /**
