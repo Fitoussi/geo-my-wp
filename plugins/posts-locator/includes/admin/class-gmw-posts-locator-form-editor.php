@@ -64,8 +64,8 @@ class GMW_Posts_Locator_Form_Editor {
 			'count' => 10,
 			'link'  => 'read more...',
 		);
-		$settings['search_results']['opening_hours'] = '';
-		$settings['search_results']['taxonomies']    = 1;
+		$settings['search_results']['opening_hours']    = '';
+		$settings['search_results']['taxonomies']       = 1;
 
 		// For mashup map.
 		if ( 'posts_locator_mashup_map' === $args['slug'] ) {
@@ -175,12 +175,12 @@ class GMW_Posts_Locator_Form_Editor {
 		$premium_message = sprintf( __( 'Checkout the <a href="%s" target="_blank">Premium Settings extension</a> for additional post types options.', 'geo-my-wp' ), 'https://geomywp.com/extensions/premium-settings' );
 
 		$settings['search_form']['post_types_settings'] = array(
-			'name'       => 'post_types_settings',
-			'type'       => 'fields_group',
-			'label'      => __( 'Post Types', 'geo-my-wp' ),
-			'fields'     => array(
-				'post_types'     => $post_types_settings,
-				'usage'          => gmw_get_admin_setting_args(
+			'name'            => 'post_types_settings',
+			'type'            => 'fields_group',
+			'label'           => __( 'Post Types', 'geo-my-wp' ),
+			'fields'          => array(
+				'post_types'       => $post_types_settings,
+				'usage'            => gmw_get_admin_setting_args(
 					array(
 						'option_type' => 'usage_select',
 						'default'     => 'pre_defined',
@@ -246,7 +246,7 @@ class GMW_Posts_Locator_Form_Editor {
 						'priority'    => 15,
 					),
 				),
-				'link' => gmw_get_admin_setting_args(
+				'link'  => gmw_get_admin_setting_args(
 					array(
 						'name'        => 'link',
 						'type'        => 'text',
