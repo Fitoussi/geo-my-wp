@@ -20,6 +20,778 @@ if ( ! defined( 'ABSPATH' ) ) {
 class GMW_Search_Form_Helper {
 
 	/**
+	 * Generate a complex field.
+	 *
+	 * Usually with 2 fields when doing a between comparison.
+	 *
+	 * @param  array  $args   arguments for the main wrapper.
+	 *
+	 * @param  array  $fields array of field args.
+	 *
+	 * @param  array  $gmw    gmw form.
+	 *
+	 * @since 4.0
+	 *
+	 * @return [type]         [description]
+	 */
+	public static function get_complex_field( $args = array(), $fields = array(), $gmw = array() ) {
+
+		$defaults = array(
+			'id'            => 0,
+			'slug'          => '',
+			'id_attr'       => '',
+			'class'         => '',
+			'attributes'    => '',
+			'label'         => '',
+			'wrap_disabled' => false,
+		);
+
+		$args       = wp_parse_args( $args, $defaults );
+		$slug       = '' !== $args['slug'] ? $args['slug'] : $fields[0]['slug'];
+		$id_attr    = '' !== $args['id_attr'] ? 'id="' . esc_attr( $args['id_attr'] ) . '"' : '';
+		$class      = 'gmw-form-field-wrapper gmw-' . $slug . '-field-wrapper gmw-field-type-complex-wrapper';
+		$class      = '' !== $args['class'] ? $class . ' ' . $args['class'] : $class;
+		$attributes = '';
+		$count      = 1;
+
+		$output = array();
+
+		if ( ! $args['wrap_disabled'] ) {
+			$output['wrapper'] = '<div ' . $id_attr . 'class="' . esc_attr( $class ) . '"' . $attributes . '>';
+		}
+
+		if ( '' !== $args['label'] ) {
+			$output['label'] = '<span class="gmw-field-label">' . esc_attr( $args['label'] ) . '</span>';
+		}
+
+		if ( ! $args['wrap_disabled'] ) {
+			$output['inner']  = '<div class="gmw-complex-field-inner">';
+		}
+
+		$output['fields'] = '';
+
+		foreach ( $fields as $field_args ) {
+
+			$field_args['wrapper_open']  = false;
+			$field_args['wrapper_close'] = false;
+			$field_args['inner_element'] = true;
+			$field_args['label_inside']  = true;
+			$field_args['array_key']     = ! empty( $field_args['array_key'] ) ? $field_args['array_key'] : $count;
+			$field_args['id_attr']       = 'gmw-' . $field_args['slug'] . '-field-' . $field_args['id'] . '-' . $field_args['array_key'];
+			$field_args['inner_class']   = 'gmw-' . $field_args['slug'] . '-field-' . $field_args['array_key'];
+
+			$output['fields'] .= self::get_field( $field_args, $gmw );
+
+			$count++;
+		}
+
+		if ( ! $args['wrap_disabled'] ) {
+			$output['/inner']   = '</div>';
+			$output['/wrapper'] = '</div>';
+		}
+
+		// Maybe security issue.
+		//$output = apply_filters( 'gmw_search_form_' . str_replace( '-', '_', $args['slug'] ) . '_complex_field_output', $output, $args, $fields, $gmw );
+
+		return implode( '', $output );
+
+		return $output;
+	}
+
+	/**
+	 * Get a single form field.
+	 *
+	 * @param  array  $args   field args.
+	 *
+	 * @param  string $gmw    gmw form object.
+	 *
+	 * @return [type]         [description]
+	 *
+	 * @since 4.0
+	 *
+	 * @author Eyal Fitoussi.
+	 */
+	public static function get_field( $args = array(), $gmw = array() ) {
+
+		$defaults = array(
+			'id'               => 0,  // Form ID.
+			'slug'             => '', // Slug.
+			'type'             => 'text', // Field type.
+			'id_attr'          => '', // Id attribute. By deafult is generated dynamically using form ID + slug.
+			'name'             => '', // name attribute. By deafult is generated dynamically.
+			'sub_name'         => '', // sub_name attribute.
+			'is_array'         => false, // When value is an array ( for multiple select or checkboxes for example ).
+			'array_key'        => '', // When value is an array, you can provide a custom key for that array.
+			'label'            => '', // Label. Can be blank.
+			'inner_label'      => '',
+			'placeholder'      => '', // Placeholder.
+			'class'            => '', // Class attribute. for field.
+			'required'         => 0,  // Required field.
+			'value'            => '',
+			'min_value'        => '0',
+			'max_value'        => '100',
+			'steps'            => '1',
+			'options'          => array(),
+			'date_format'      => 'yyyy/mm/dd',
+			'time_format'      => 'h:i a',
+			'step_time'        => '5',
+			'smartbox'         => true,
+			'show_options_all' => '',
+			'wrapper_open'     => true,
+			'wrapper_close'    => true,
+			'wrapper_id'       => '',
+			'wrapper_class'    => '',
+			'wrapper_atts'     => array(),
+			'attributes'       => array(),
+			'inner_element'    => false,
+			'label_inside'     => false,
+			'inner_class'      => '',
+			'show_clear_field' => false,
+			'additional_args'  => array(),
+		);
+
+		if ( '' === $args['slug'] ) {
+			return;
+		}
+
+		$args         = wp_parse_args( $args, $defaults );
+		$filter_name  = str_replace( '-', '_', $args['slug'] );
+		$args         = apply_filters( 'gmw_search_form_' . $filter_name . '_field_args', $args );
+		$args         = apply_filters( 'gmw_search_form_options_selector_builder_args', $args ); // Deprecated.
+		$args         = apply_filters( 'gmw_search_form_' . $filter_name . '_options_selector_builder_args', $args ); // deprecated.
+		$org_args     = $args;
+		$url_px       = gmw_get_url_prefix();
+
+		if ( 'dropdown' === $args['type'] ) {
+			$args['type'] = 'select';
+		}
+
+		$id                 = absint( $args['id'] );
+		$args['name']       = ! empty( $args['name'] ) ? $url_px . $args['name'] : $url_px . $filter_name;
+		$class_attr         = 'gmw-form-field gmw-' . $args['slug'] . '-field gmw-' . $args['type'] . '-type-field';
+		$args['class_attr'] = ! empty( $args['class'] ) ? $class_attr . ' ' . $args['class'] : $class_attr;	
+		$args['id_attr']    = ! empty( $args['id_attr'] ) ? $args['id_attr'] : 'gmw-' . $args['slug'] . '-field-' . $id;
+		$value              = $args['is_array'] ? array() : ''; // Default.
+
+		if ( ! empty( $args['array_key'] ) ) {
+			$args['is_array'] = true;
+		}
+
+		// Get submitted value. Value is sanitized later in the sctipt.
+		if ( ! empty( $_GET[ $args['name'] ] ) && ! empty( $_GET[ $url_px . 'form' ] ) && $id === absint( $_GET[ $url_px . 'form' ] ) ) { // WPCS: CSRF ok, sanitization ok.
+
+			if ( '' !== $args['sub_name'] ) {
+				$value = ! empty( $_GET[ $args['name'] ][ $args['sub_name'] ] ) ? $_GET[ $args['name'] ][ $args['sub_name'] ] : $value; // WPCS: CSRF ok, sanitization ok.
+
+			} else {
+				$value = $_GET[ $args['name'] ]; // WPCS: CSRF ok, sanitization ok.
+			}
+
+			// Otherwise look for default value.
+		} elseif ( ! empty( $args['value'] ) ) {
+
+			$value = $args['value'];
+		}
+
+		// Look for value in specific array key.
+		if ( is_array( $value ) && '' !== $args['array_key'] ) {
+			$value = ! empty( $value[ $args['array_key'] ] ) ? $value[ $args['array_key'] ] : '';
+		}
+
+		// Escape value.
+		if ( ! empty( $value ) ) {
+			$value = is_array( $value ) ? array_map( 'esc_attr', $value ) : esc_attr( $value );
+		}
+
+		// If this is a sub array name.
+		if ( '' !== $args['sub_name'] ) {
+			$args['name'] .= '[' . $args['sub_name'] . ']';
+		}
+
+		if ( $args['is_array'] ) {
+			$args['name'] .= '' !== $args['array_key'] ? '[' . $args['array_key'] . ']' : '[]';
+		}
+
+		if ( ! is_array( $args['attributes'] ) ) {
+			$args['attributes'] = array();
+		}
+
+		$args['attributes']['data-form_id'] = $id;
+		$args['attributes']['class']        = $args['class_attr'];
+		$args['attributes']['name']         = $args['name'];
+		$args['attributes']['id']           = $args['id_attr'];
+
+		if ( ! empty( $args['required'] ) ) {
+			$args['attributes']['required'] = 'required';
+		}
+
+		if ( ! empty( $args['placeholder'] ) ) {
+			$args['attributes']['placeholder'] = $args['placeholder'];
+		}
+
+		$attributes = '';
+
+		foreach ( array_reverse( $args['attributes'] ) as $attribute_name => $attribute_value ) {
+			$attributes .= ' ' . esc_attr( $attribute_name ) . '="' . esc_attr( $attribute_value ) . '"';
+		}
+
+		$field = '';
+
+		switch ( $args['type'] ) {
+
+			case '':
+			case 'input':
+			case 'text':
+			case 'date':
+			case 'time':
+			case 'datetime':
+				$date_format = '';
+				$step_time   = '';
+
+				if ( 'date' === $args['type'] || 'datetime' === $args['type'] ) {
+
+					$date_format .= ' data-date_format="' . $args['date_format'] . '"';
+				}
+
+				if ( 'time' === $args['type'] || 'datetime' === $args['type'] ) {
+					$date_format .= ' data-time_format="' . $args['time_format'] . '"';
+					$step_time   .= ' data-step_time="' . $args['step_time'] . '"';
+				}
+
+				$field .= '<input type="text" ' . $attributes . ' value="' . $value . '"' . $date_format . $step_time . ' />'; // WPCS: XSS ok. Value already escaped.
+
+				break;
+
+			case 'number':
+				$field .= '<input type="number" ' . $attributes . ' value="' . $value . '" />'; // WPCS: XSS ok. Value already escaped.
+
+				break;
+
+			case 'hidden':
+			case 'pre_defined':
+				if ( is_array( $value ) ) {
+
+					foreach ( $value as $val ) {
+						$field .= '<input type="hidden" ' . $attributes . ' value="' . $val . '" />'; // WPCS: XSS ok. Value already escaped.
+					}
+				} else {
+					$field .= '<input type="hidden" ' . $attributes . ' value="' . $value . '" />'; // WPCS: XSS ok. Value already escaped.
+				}
+
+				break;
+
+			case 'address':
+				$field_args = $args['additional_args'];
+
+				if ( ! empty( $value ) && is_array( $value ) ) {
+					$value = implode( ' ', $value );
+					$value = wp_unslash( $value );
+				} else {
+					$value = '';
+				}
+
+				$field .= '<input type="text" value="' . $value . '" ' . $attributes . '" autocorrect="off" autocapitalize="off" spellcheck="false" />'; // WPCS: XSS ok. Value already escaped.
+
+				if ( ! empty( $field_args['locator_button'] ) ) {
+					$field .= '<i class="gmw-locator-button inside ' . esc_attr( $field_args['icon'] ) . '" data-locator_submit="' . esc_attr( $field_args['locator_submit'] ) . '" data-form_id="' . $id . '"></i>'; // WPCS: XSS ok. $id is already escaped.
+				}
+
+				break;
+
+			case 'select':
+			case 'multiselect':
+			case 'dropdown':
+			case 'smartbox':
+			case 'smartbox_multiple':
+				if ( 'multiselect' === $args['type'] || 'smartbox_multiple' === $args['type'] ) {
+					$attributes .= ' multiple="multiple"';
+				}
+
+				$options_all = ! empty( $args['show_options_all'] ) ? $args['show_options_all'] : '';
+
+				// Requires Premium Settings extension.
+				if ( ( 'smartbox' === $args['type'] || 'smartbox_multiple' === $args['type'] || $args['smartbox'] ) && class_exists( 'GMW_Premium_Settings_Addon' ) ) {
+
+					$attributes .= ' gmw-smartbox data-placeholder="' . $options_all . '"';
+
+					// This function lives in the Premium Settings extension.
+					gmw_ps_enqueue_smartbox();
+				}
+
+				$field .= '<select ' . $attributes . '>';
+
+				if ( ! empty( $options_all ) && in_array( $args['type'], array( 'select', 'dropdown', 'smartbox' ), true ) ) {
+					$field .= '<option value="">' . esc_attr( $options_all ) . '</option>';
+				}
+
+				if ( ! empty( $args['options'] ) ) {
+
+					if ( ! is_array( $args['options'] ) ) {
+						$args['options'] = explode( ',', $args['options'] );
+						$args['options'] = array_combine( $args['options'], $args['options'] );
+					}
+
+					foreach ( $args['options'] as $option_value => $option_label ) {
+
+						// If label is an array of value => label. 
+						if ( is_array( $option_label ) ) {
+
+							$option_value = isset( $option_label['value'] ) ? $option_label['value'] : '';
+							$label        = isset( $option_label['label'] ) ? $option_label['label'] : '';
+
+							// Otherwise, if label only.
+						} else {
+							$label = $option_label;
+						}
+
+						if ( is_array( $value ) ) {
+							$selected = in_array( $option_value, $value ) ? 'selected="selected"' : '';
+						} else {
+							$selected = $value == $option_value ? 'selected="selected"' : '';
+						}
+
+						$field .= '<option value="' . esc_attr( $option_value ) . '" ' . $selected . '>' . esc_attr( $label ) . '</option>';
+					}
+				}
+
+				$field .= '</select>';
+
+				break;
+
+			case 'checkbox':
+			case 'checkboxes':
+				$field .= '<ul class="gmw-field-checkboxes gmw-checkbox-level-top gmw-checkboxes-options-selector">';
+
+				foreach ( $args['options'] as $option_value => $option_label ) {
+
+					// If label is an array of value => label.
+					if ( is_array( $option_label ) ) {
+
+						$option_value = isset( $option_label['value'] ) ? $option_label['value'] : '';
+						$label        = isset( $option_label['label'] ) ? $option_label['label'] : '';
+
+						// Otherwise, if label only.
+					} else {
+						$label = $option_label;
+					}
+
+					if ( is_array( $value ) ) {
+						$checked = in_array( $option_value, $value, true ) ? 'checked="checked"' : ''; // WPCS: sanitization ok, CSRF ok.
+					} else {
+						$checked = $value == $option_value ? 'checked="checked"' : ''; // WPCS: CSRF ok.
+					}
+
+					$option_value = esc_attr( $option_value );
+
+					$field .= '<li class="gmw-field-checkbox-wrapper" data-value="' . $option_value . '">';
+					$field .= '<label for="' . $args['id_attr'] . '-' . $option_value . '" class="gmw-checkbox-label">';
+					$field .= '<input type="checkbox" id="' . $args['id_attr'] . '-' . $option_value . '" name="' . $args['name'] . '" class="gmw-' . $args['slug'] . '-field-checkbox gmw-field-checkbox" value="' . $option_value . '" ' . $checked . '>';
+					$field .= esc_attr( $label );
+					$field .= '</label></li>';
+				}
+
+				$field .= '</ul>';
+
+				break;
+
+			case 'radio':
+				$field .= '<ul class="gmw-field-radio-buttons">';
+
+				if ( ! empty( $args['show_options_all'] ) ) {
+					array_unshift( $args['options'], $args['show_options_all'] );
+				}
+
+				foreach ( $args['options'] as $option_value => $option_label ) {
+
+					// If label is an array of value => label.
+					if ( is_array( $option_label ) ) {
+
+						$option_value = isset( $option_label['value'] ) ? $option_label['value'] : '';
+						$label        = isset( $option_label['label'] ) ? $option_label['label'] : '';
+
+						// Otherwise, if label only.
+					} else {
+						$label = $option_label;
+					}
+
+					if ( is_array( $value ) ) {
+						$checked = in_array( $option_value, $value, true ) ? 'checked="checked"' : ''; // WPCS: sanitization ok, CSRF ok.
+					} else {
+						$checked = $value == $option_value ? 'checked="checked"' : ''; // WPCS: CSRF ok.
+					}
+
+					$option_value = esc_attr( $option_value );
+
+					$field .= '<li class="gmw-field-radio-wrapper" value="' . $option_value . '">';
+					$field .= '<label for="' . esc_attr( $args['id_attr'] ) . '-' . $option_value . '" class="gmw-radio-label">';
+					$field .= '<input type="radio" id="' . esc_attr( $args['id_attr'] ) . '-' . $option_value . '" name="' . esc_attr( $args['name'] ) . '" class="gmw-' . esc_attr( $args['slug'] ) . '-field-radio gmw-field-radio" value="' . $option_value . '" ' . $checked . '>';
+					$field .= esc_attr( $label );
+					$field .= '</label></li>';
+				}
+
+				$field .= '</ul>';
+
+				break;
+
+			case 'textarea':
+				$attributes .= empty( $args['attributes']['cols'] ) ? $attributes . ' cols="40"' : '';
+				$attributes .= empty( $args['attributes']['rows'] ) ? $attributes . ' rows="5"' : '';
+
+				$field .= '<textarea ' . $attributes . '>' . $value . '</textarea>'; // WPCS: XSS ok. Value already escaped.
+
+				break;
+
+			case 'submit':
+				$field .= '<input type="submit" id="gmw-submit-' . $id . '" class="' . esc_attr( $args['class_attr'] ) . ' gmw-form-button gmw-submit-button" value="' . $value . '" data-button_type="' . esc_attr( $args['slug'] ) . '" data-form_id="' . $id . '" />'; // WPCS: XSS ok. Value and $id already escaped.
+
+				break;
+
+			case 'locator_button':
+				$field_args   = $args['additional_args'];
+				$button_usage = esc_attr( $field_args['usage'] );
+
+				// when using an icon.
+				if ( 'image' === $button_usage || 'url' === $button_usage ) {
+
+					$img_url = ( 'image' === $button_usage ) ? GMW_IMAGES . '/locator-images/' . $field_args['image'] : $field_args['image_url'];
+
+					$field .= '<img id="gmw-locator-image-' . $id . '" class="gmw-locator-button image ' . esc_attr( $args['class_attr'] ) . '" data-button_type="locator" data-locator_submit="' . absint( $field_args['form_submit'] ) . '" src="' . esc_url( $img_url ) . '" alt="' . __( 'locator button', 'geo-my-wp' ) . '" data-form_id="' . $id . '" />'; // WPCS: XSS ok. $id already escaped.
+
+					// text button.
+				} elseif ( 'text' === $button_usage ) {
+
+					$label = ! empty( $field_args['label'] ) ? esc_attr( $field_args['label'] ) : '';
+
+					$field .= '<span id="gmw-locator-text-' . $id . '" class="gmw-locator-button text" data-button_type="locator" data-locator_submit="' . absint( $field_args['form_submit'] ) . '" data-form_id="' . $id . '">' . esc_attr( $field_args['label'] ) . '</span>'; // WPCS: XSS ok. $id already escaped.
+				}
+
+				$field .= '<i id="gmw-locator-loader-' . $id . '" class="gmw-locator-loader gmw-icon-spin animate-spin" style="display:none;"></i>'; // WPCS: XSS ok. $id already escaped.
+
+				break;
+
+			case 'taxonomy':
+				$field .= self::get_taxonomy_element( $args['additional_args'], $gmw );
+
+				break;
+
+			case 'link':
+				$field .= '<a ' . $attributes . '>' . esc_attr( $args['inner_label'] ) . '</a>';
+
+				break;
+
+			case 'range_slider':
+				$inner_label = ! empty( $args['inner_label'] ) ? '<span class="range-slider-label"> ' . esc_attr( $args['inner_label'] ) . '</span>' : '';
+
+				$field .= '<input type="range" ' . $attributes . '" min="' . esc_attr( $args['min_value'] ) . '" max="' . esc_attr( $args['max_value'] ) . '" step="' . esc_attr( $args['steps'] ) . '" value="' . $value . '">';
+				$field .= '<span class="gmw-range-slider-output"><span class="range-slider-value">' . $value . '</span>' . $inner_label . '</span>';
+
+				break;
+
+			case 'function':
+				$args['value'] = $value;
+
+				$field .= apply_filters( 'gmw_search_form_' . $args['function'] . '_field_function', '', $args, $gmw, $attributes, $org_args );
+
+				break;
+
+			default:
+				$args['value'] = $value;
+
+				$field .= apply_filters( 'gmw_search_form_' . $args['type'] . '_field', '', $args, $gmw, $attributes, $org_args );
+
+				break;
+		}
+
+		if ( empty( $field ) ) {
+			return;
+		}
+
+		$output = array();
+
+		if ( 'hidden' === $args['type'] ) {
+
+			$output['field'] = '';
+
+		} else {
+
+			// Reset field button.
+			if ( $args['show_clear_field'] ) {
+				$field .= '<a href="#" class="gmw-clear-form-field">' . esc_attr__( 'Reset', 'geo-my-wp' ) . '</a>';
+			}
+
+			if ( $args['wrapper_open'] ) {
+
+				$wrapper_id    = ! empty( $args['wrapper_id'] ) ? 'id="' . esc_attr( $args['wrapper_id'] ) . '" ' : '';
+				$wrapper_class = 'gmw-form-field-wrapper gmw-' . $args['slug'] . '-field-wrapper gmw-field-type-' . $args['type'] . '-wrapper';
+				$wrapper_class = ! empty( $args['wrapper_class'] ) ? $wrapper_class . ' ' . esc_attr( $args['wrapper_class'] ) : $wrapper_class;
+				$attributes    = '';
+
+				// attributes.
+				if ( is_array( $args['wrapper_atts'] ) && ! empty( $args['wrapper_atts'] ) ) {
+
+					foreach ( $args['wrapper_atts'] as $attribute_name => $attribute_value ) {
+						$attributes .= ' ' . esc_attr( $attribute_name ) . '="' . esc_attr( $attribute_value ) . '"';
+					}
+				}
+
+				$output['wrapper'] = '<div ' . $wrapper_id . 'class="' . esc_attr( $wrapper_class ) . '"' . $attributes . '>';
+			}
+
+			if ( $args['inner_element'] ) {
+
+				$inner_class = '' !== $args['inner_class'] ? ' ' . esc_attr( $args['inner_class'] ) : '';
+
+				if ( ! $args['label_inside'] ) {
+					$output['label']  = '';
+				}
+
+				$output['inner']  = '<div class="gmw-field-inner' . $inner_class . '">';
+
+				if ( $args['label_inside'] ) {
+					$output['label']  = '';
+				}
+
+				$output['field']  = '';
+				$output['/inner'] = '</div>';
+			} else {
+				$output['label'] = '';
+				$output['field'] = '';
+			}
+
+			if ( $args['wrapper_close'] ) {
+
+				$output['/wrapper'] = '</div>';
+			}
+
+			if ( '' !== $args['label'] ) {
+				$output['label'] = '<label for="' . esc_attr( $args['id_attr'] ) . '" class="gmw-field-label">' . esc_attr( $args['label'] ) . '</label>';
+			}
+		}
+
+		$output['field'] = $field;
+		// Maybe security issue. Need to check before enabling.
+		//$output          = apply_filters( 'gmw_search_form_' . $filter_name . '_field_output', $output, $args, $gmw );
+
+		// enqueue date picker styles and scripts.
+		if ( ! wp_script_is( 'datetime-picker', 'enqueued' ) && in_array( $args['type'], array( 'date', 'time', 'datetime' ), true ) ) {
+
+			wp_enqueue_script( 'datetime-picker' );
+			wp_enqueue_style( 'datetime-picker' );
+
+		}
+
+		return implode( '', $output );
+	}
+
+	/**
+	 * Generate a single search form taxonomy
+	 *
+	 * @param  array $args [description].
+	 *
+	 * @param  array $gmw  [description].
+	 *
+	 * @return [type]       [description]
+	 */
+	public static function get_taxonomy_element( $args = array(), $gmw = array() ) {
+
+		$defaults = array(
+			'id'                  => 0,
+			'label'               => '',
+			'taxonomy'            => 'category',
+			'post_types'          => array(),
+			'usage'               => 'dropdown',
+			'show_options_all'    => true,
+			'orderby'             => 'id',
+			'order'               => 'ASC',
+			'include'             => '',
+			'exclude'             => '',
+			'show_count'          => 0,
+			'hide_empty'          => 1,
+			'category_icons'      => 0,
+			'multiple_selections' => 0,
+			'required'            => 0,
+		);
+
+		$args         = wp_parse_args( $args, $defaults );
+		$url_px       = gmw_get_url_prefix();
+		$id           = absint( $args['id'] );
+		$tax_name     = esc_attr( $args['taxonomy'] );
+		$taxonomy     = get_taxonomy( $tax_name );
+		$hierarchical = is_taxonomy_hierarchical( $tax_name ) ? true : false;
+		$options_all  = 0;
+		$placeholder  = 0;
+		$id_attr      = $tax_name . '-taxonomy-' . $id;
+
+		if ( empty( $args['show_options_all'] ) ) {
+
+			$options_all = 0;
+			$placeholder = 0;
+
+		} elseif ( is_string( $args['show_options_all'] ) ) {
+
+			$options_all = $args['show_options_all'];
+			$placeholder = $args['show_options_all'];
+
+		} else {
+
+			$options_all = sprintf( __( 'All %s', 'geo-my-wp' ), esc_attr( $taxonomy->labels->name ) );
+			$placeholder = sprintf( __( 'Select %s', 'geo-my-wp' ), esc_attr( $taxonomy->labels->name ) );
+		}
+
+		// set taxonomy args.
+		$tax_args = apply_filters(
+			'gmw_search_form_' . $args['usage'] . '_taxonomy_args',
+			array(
+				'taxonomy'            => $tax_name,
+				'orderby'             => $args['orderby'],
+				'order'               => $args['order'],
+				'hide_empty'          => $args['hide_empty'],
+				'include'             => $args['include'],
+				'exclude'             => $args['exclude'],
+				'exclude_tree'        => '',
+				'number'              => 0,
+				'hierarchical'        => $hierarchical,
+				'child_of'            => 0,
+				'pad_counts'          => 1,
+				'selected'            => ! empty( $_GET['tax'][ $tax_name ] ) ? $_GET['tax'][ $tax_name ] : '', // WPCS: CSRF ok, sanitization ok. $_GET['tax'][ $tax_name ] is an array and should be sanitized in the walker class.
+				'depth'               => $hierarchical ? 0 : -1,
+				'category_icons'      => $args['category_icons'],
+				'gmw_form_id'         => $id,
+				'show_option_all'     => $options_all,
+				'show_count'          => 1 == $args['show_count'] ? 1 : 0,
+				'usage'               => $args['usage'],
+				'multiple_selections' => $args['multiple_selections'],
+				'placeholder'         => $placeholder,
+				'no_results_text'     => __( 'No results match', 'geo-my-wp' ),
+			),
+			$taxonomy,
+			$gmw
+		);
+
+		// deprected hook. Will be removed in the future.
+		$tax_args = apply_filters( 'gmw_pt_' . $args['usage'] . '_taxonomy_args', $tax_args, $gmw, $taxonomy, $tax_name, $args );
+
+		// set terms_hash args. only args that control the output of the terms should be here.
+		// This will be used with the cache helper.
+		$terms_args = array(
+			'taxonomy'     => $tax_args['taxonomy'],
+			'orderby'      => $tax_args['orderby'],
+			'order'        => $tax_args['order'],
+			'hide_empty'   => $tax_args['hide_empty'],
+			'exclude'      => $tax_args['exclude'],
+			'exclude_tree' => $tax_args['exclude_tree'],
+			'include'      => $tax_args['include'],
+			'hierarchical' => $tax_args['hierarchical'],
+			'child_of'     => $tax_args['child_of'],
+		);
+
+		// include GMW_Post_Category_Walker file.
+		if ( ! class_exists( 'GMW_Post_Category_Walker' ) ) {
+			include_once GMW_PT_PATH . '/includes/class-gmw-post-category-walker.php';
+		}
+
+		//$wrap_element = apply_filters( 'gmw_search_form_enable_field_wrapping_element', false, 'taxonomy' );
+		
+		//$output['wrapper'] = '<div id="gmw-' . $args['taxonomy'] .'-taxonomy-wrapper" class="gmw-form-field-wrapper gmw-single-taxonomy-wrapper gmw-' . $args['usage'] . '-taxonomy-wrapper" data-post_types="' . implode( ',', $args['post_types'] ) . '">';
+
+		// if showing label.
+		//if ( ! empty( $args['label'] ) ) {
+			//$output['label'] = '<label class="gmw-field-label" for="' . $id_attr . '">' . esc_attr( $args['label'] ) . '</label>';
+		//}
+
+		//if ( $wrap_element ) {
+			//$output['inner'] = '<div class="gmw-form-field-input-wrapper">';
+		//}
+
+		$output = '';
+
+		// if dropdown style taxonomies.
+		if ( 'dropdown' === $args['usage'] ) {
+
+			$required = ! empty( $args['required'] ) ? 'required' : '';
+
+			// select tag.
+			$output .= "<select name=\"tax[{$tax_name}][]\" id=\"{$id_attr}\" class=\"gmw-form-field gmw-taxonomy-field {$tax_name}\" data-gmw-dropdown-parent=\"#{$taxonomy->name}-taxonomy-wrapper\" {$required}>";
+
+			if ( ! empty( $tax_args['show_option_all'] ) ) {
+				$output .= '<option value="" selected="selected">' . esc_attr( $tax_args['show_option_all'] ) . '</option>';
+			}
+
+			// get the taxonomies terms.
+			$terms = gmw_get_terms( $tax_name, $terms_args );
+
+			// new category walker.
+			$walker = new GMW_Post_Category_Walker();
+
+			// run the category walker.
+			$output .= $walker->walk( $terms, $tax_args['depth'], $tax_args );
+
+			// closing select tag.
+			$output .= '</select>';
+
+			// Filter to generate your custom style.
+		} else {
+
+			$output .= apply_filters( 'gmw_generate_' . $args['usage'] . '_taxonomy', $output, $tax_args, $taxonomy );
+		}
+
+		//if ( $wrap_element ) {
+			//$output['/inner'] = '</div>';
+		//}
+
+		//$output['/wrapper'] = '</div>';
+
+		return $output;
+	}	
+
+	/**
+	 * Hidden submission fields
+	 *
+	 * @param  integer $id       field ID.
+	 *
+	 * @param integer $per_page default per page value.
+	 *
+	 * @return HTML element.s
+	 */
+	public static function submission_fields( $id = 0, $per_page = 0 ) {
+
+		$id       = absint( $id );
+		$per_page = esc_attr( $per_page );
+		$url_px   = gmw_get_url_prefix();
+		$url_px   = esc_attr( $url_px );
+		$lat      = ! empty( $_GET[ $url_px . 'lat' ] ) ? sanitize_text_field( wp_unslash( $_GET[ $url_px . 'lat' ] ) ) : ''; // WPCS: CSRF ok.
+		$lng      = ! empty( $_GET[ $url_px . 'lng' ] ) ? sanitize_text_field( wp_unslash( $_GET[ $url_px . 'lng' ] ) ) : ''; // WPCS: CSRF ok.
+		$state    = ! empty( $_GET['state'] ) ? sanitize_text_field( wp_unslash( $_GET['state'] ) ) : false; // WPCS: CSRF ok.
+		$country  = ! empty( $_GET['country'] ) ? sanitize_text_field( wp_unslash( $_GET['country'] ) ) : false; // WPCS: CSRF ok.
+
+		// generate fields.
+		$output = "<div id=\"gmw-submission-fields-{$id}\" class=\"gmw-submission-fields\" data-form_id=\"{$id}\" style=\"display:none\">";
+		// set the page number to 1. We do this to reset the page number when form submitted again.
+		$output .= "<input type=\"hidden\" id=\"gmw-page-{$id}\" class=\"gmw-page\" name=\"page\" value=\"1\" />";
+
+		// Fix for home page pagination when going to the first page.
+		if ( is_front_page() || is_single() ) {
+			$output .= "<input type=\"hidden\" id=\"gmw-paged-{$id}\" class=\"gmw-paged\" name=\"paged\" value=\"1\" />";
+		}
+
+		$output .= "<input type=\"hidden\" id=\"gmw-per-page-{$id}\" class=\"gmw-per-page\" name=\"{$url_px}per_page\" value=\"{$per_page}\" />";
+		$output .= "<input type=\"hidden\" id=\"gmw-lat-{$id}\" class=\"gmw-lat\" name=\"{$url_px}lat\" value=\"{$lat}\"/>";
+		$output .= "<input type=\"hidden\" id=\"gmw-lng-{$id}\" class=\"gmw-lng\" name=\"{$url_px}lng\" value=\"{$lng}\"/>";
+		$output .= "<input type=\"hidden\" id=\"gmw-form-id-{$id}\" class=\"gmw-form-id\" name=\"{$url_px}form\" value=\"{$id}\" />";
+		$output .= "<input type=\"hidden\" id=\"gmw-action-{$id}\" class=\"gmw-action\" name=\"{$url_px}action\" value=\"fs\"/>";
+
+		$disabled = ! $state ? 'disabled="disabled"' : '';
+		$output  .= "<input type=\"hidden\" id=\"gmw-state-{$id}\" class=\"gmw-state\" name=\"state\" value=\"{$state}\" {$disabled}/>";
+		$disabled = ! $country ? 'disabled="disabled"' : '';
+		$output  .= "<input type=\"hidden\" id=\"gmw-country-{$id}\" class=\"gmw-country\" name=\"country\" value=\"{$country}\" {$disabled}/>";
+
+		$output = apply_filters( 'gmw_submission_fields', $output, $id, $_GET ); // WPCS: CSRF ok.
+
+		$output .= '</div>';
+
+		return $output;
+	}
+
 	/**
 	 * Options selector field generator
 	 *
@@ -127,6 +899,7 @@ class GMW_Search_Form_Helper {
 
 		// new filter.
 		$args = apply_filters( 'gmw_search_form_keywords_field_args', $args );
+
 
 		$required     = ! empty( $args['required'] ) ? 'required' : '';
 		$placeholder  = ! empty( $args['placeholder'] ) ? esc_attr( $args['placeholder'] ) : '';
