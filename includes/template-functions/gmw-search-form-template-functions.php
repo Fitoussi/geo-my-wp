@@ -12,9 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get search form field.
  *
- * @param  array  $args field args.
+ * @param  array $args field args.
  *
- * @param  array  $gmw  gmw form object.
+ * @param  array $gmw  gmw form object.
  *
  * @since 4.0
  *
@@ -29,9 +29,9 @@ function gmw_get_form_field( $args = array(), $gmw = array() ) {
 /**
  * Output search form field.
  *
- * @param  array  $args field args.
+ * @param  array $args field args.
  *
- * @param  array  $gmw  gmw form object.
+ * @param  array $gmw  gmw form object.
  *
  * @since 4.0
  *
@@ -184,7 +184,7 @@ function gmw_search_form_address_field( $gmw = array(), $id = 0, $class = false 
 
 		echo gmw_get_search_form_address_field( $gmw ); // WPCS: XSS ok.
 
-	} else if ( function_exists( 'gmw_get_search_form_address_fields' ) ) {
+	} elseif ( function_exists( 'gmw_get_search_form_address_fields' ) ) {
 
 		echo gmw_get_search_form_address_fields( $gmw ); // WPCS: XSS ok.
 	}
@@ -340,9 +340,9 @@ function gmw_search_form_radius( $gmw = array() ) {
 	do_action( 'gmw_before_search_form_radius', $gmw );
 
 	if ( ! empty( $gmw['search_form']['radius']['usage'] ) && 'slider' === $gmw['search_form']['radius']['usage'] && function_exists( 'gmw_get_search_form_radius_slider' ) ) {
-		echo gmw_get_search_form_radius_slider( $gmw );
+		echo gmw_get_search_form_radius_slider( $gmw ); // WPCS: XSS ok.
 	} else {
-		echo gmw_get_search_form_radius( $gmw );
+		echo gmw_get_search_form_radius( $gmw ); // WPCS: XSS ok.
 	}
 
 	do_action( 'gmw_after_search_form_radius', $gmw );
@@ -417,14 +417,14 @@ function gmw_get_search_form_units( $gmw ) {
 		$defaut_value = $settings['options'];
 	}
 
-	$args   = array(
-		'id'           => $gmw['ID'],
-		'slug'         => 'units',
-		'name'         => 'units',
-		'type'         => $type,
-		'label'        => ! empty( $settings['label'] ) ? $settings['label'] : '',
-		'options'      => $options,
-		'value'        => $defaut_value,
+	$args = array(
+		'id'      => $gmw['ID'],
+		'slug'    => 'units',
+		'name'    => 'units',
+		'type'    => $type,
+		'label'   => ! empty( $settings['label'] ) ? $settings['label'] : '',
+		'options' => $options,
+		'value'   => $defaut_value,
 	);
 
 	return gmw_get_form_field( $args, $gmw );
@@ -477,14 +477,13 @@ function gmw_search_form_keywords_field( $gmw = array() ) {
 /**
  * Output reset button.
  *
- * @param  array  $gmw   gmw form.
+ * @param  array $gmw   gmw form.
  *
  * This function requires the Premium Settings extension.
  *
  * @since 4.0
  *
  * @author Eyal Fitoussi
- * 
  */
 function gmw_search_form_reset_button( $gmw = array() ) {
 
@@ -532,12 +531,11 @@ function gmw_get_search_form_toggle_button( $gmw = array(), $args = array() ) {
 /**
  * Output Additional Filters button.
  *
- * @param  array  $gmw   gmw form.
+ * @param  array $gmw   gmw form.
  *
  * @since 4.0
  *
  * @author Eyal Fitoussi
- * 
  */
 function gmw_search_form_toggle_button( $gmw = array() ) {
 
