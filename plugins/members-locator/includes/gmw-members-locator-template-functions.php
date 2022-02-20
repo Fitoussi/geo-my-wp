@@ -85,7 +85,7 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 	$all_fields    = apply_filters( 'gmw_fl_form_xprofile_field_before_displayed', $all_fields, $gmw );
 	$multiple_wrap = apply_filters( 'gmw_xf_multiple_fields_wrapper', false, $gmw );
 
-	$output  = '';
+	$output = '';
 
 	if ( $multiple_wrap ) {
 		$output .= '<div id="gmw-search-form-xprofile-fields-' . esc_attr( $gmw['ID'] ) . '" class="gmw-search-form-xprofile-fields gmw-fl-form-xprofile-fields gmw-search-form-multiple-fields-wrapper">';
@@ -221,7 +221,7 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 					$field_args['is_array'];
 				} else {
 
-					$field_args['type'] = 'multiselect';
+					$field_args['type']     = 'multiselect';
 					$field_args['is_array'] = true;
 				}
 
@@ -487,7 +487,7 @@ function gmw_search_results_bp_last_active( $member, $gmw ) {
 		return;
 	}
 
-	echo '<span class="activity">' . bp_get_member_last_active() . '</span>';
+	echo '<span class="activity">' . bp_get_member_last_active() . '</span>'; // WPCS: XSS ok.
 }
 
 /**
