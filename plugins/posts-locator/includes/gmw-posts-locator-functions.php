@@ -93,7 +93,7 @@ function gmw_get_terms( $taxonomy = 'category', $args = array() ) {
  *
  * @return array             array of terms
  */
-function gmw_get_the_terms( $post_id = 0, $taxonomy ) {
+function gmw_get_the_terms( $post_id = 0, $taxonomy = '' ) {
 
 	$terms = false;
 
@@ -141,6 +141,7 @@ function gmw_get_post_taxonomies_terms_list( $post, $args = array() ) {
 		'class'      => '',
 		'exclude'    => '',
 		'terms_link' => 1,
+		'separator'  => ', ',
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -174,10 +175,12 @@ function gmw_get_post_taxonomies_terms_list( $post, $args = array() ) {
 				$terms_list[] = $args['terms_link'] ? '<a href="' . esc_url( get_term_link( $term->term_id, $taxonomy->name ) ) . '">' . esc_html( $term->name ) . '</a>' : esc_html( $term->name );
 			}
 
-			$output .= '<div class="gmw-taxonomy-terms gmw-taxes ' . esc_attr( $taxonomy->rewrite['slug'] ) . ' ' . esc_attr( $args['class'] ) . '">';
-			$output .= '<span class="label">' . esc_attr( $taxonomy->label ) . ': </span>';
+			$tax_slug = ! empty( $taxonomy->rewrite['slug'] ) ? esc_attr( $taxonomy->rewrite['slug'] ) : '';
+
+			$output .= '<div class="gmw-taxonomy-terms gmw-taxes ' . $tax_slug . ' ' . esc_attr( $args['class'] ) . '">';
+			$output .= '<span class="gmw-tax-label">' . esc_attr( $taxonomy->label ) . ': </span>';
 			$output .= '<span class="gmw-terms-wrapper">';
-			$output .= join( ', ', $terms_list );
+			$output .= join( $args['separator'], $terms_list );
 			$output .= '</span>';
 			$output .= '</div>';
 		}
