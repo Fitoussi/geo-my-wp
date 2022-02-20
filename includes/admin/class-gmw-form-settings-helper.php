@@ -794,89 +794,644 @@ class GMW_Form_Settings_Helper {
 	}
 
 	/**
-	 * Form settings xprofile fields function.
+	 * Custom Fields Settings.
 	 *
-	 * @param  [type] $value     [description].
+	 * @param  array $args   field args.
 	 *
-	 * @param  [type] $name_attr [description].
-	 *
-	 * @return [type]            [description]
+	 * @param  array $values field values.
 	 */
-	public static function bp_xprofile_fields( $value, $name_attr ) {
+	public static function get_custom_field( $args = array(), $values = array() ) {
 
-		global $bp;
+		// Default args.
+		$defaults = array(
+			'option_name' => '',
+			'name'        => '',
+			'is_original' => true,
+		);
 
-		// show message if Xprofile Fields component deactivated.
-		if ( ! class_exists( 'Buddypress' ) || ! bp_is_active( 'xprofile' ) ) {
-			return esc_attr_e( 'Buddypress xprofile fields component is required for this feature.', 'geo-my-wp' );
-		}
+		$args = wp_parse_args( $args, $defaults );
 
-		$fields = self::get_xprofile_fields();
+		// Default value.
+		$defaults = array(
+			'name'               => '',
+			'usage'              => 'text',
+			'type'               => 'CHAR',
+			'date_type'          => 'yyyy/mm/dd',
+			'compare'            => '=',
+			'label'              => '',
+			'second_label'       => '',
+			'placeholder'        => '',
+			'second_placeholder' => '',
+			'value'              => '',
+			'second_value'       => '',
+			'required'           => 0,
+		);
 
-		if ( ! array_filter( $fields ) ) {
-			return array();
+		$field_values = wp_parse_args( $values, $defaults );
+
+		// Field options.
+		$options = array(
+			'usage'              => array(
+				'hidden'      => 'Pre defined',
+				'text'        => 'Textbox',
+				'number'      => 'Number',
+				'date'        => 'Date',
+				'time'        => 'Time',
+				'datetime'    => 'Date and Time',
+				'select'      => 'Select dropdown',
+				'multiselect' => 'Multi-select box',
+				'checkboxes'  => 'Checkboxes',
+				'radio'       => 'Radio buttons',
+			),
+			'smartbox'           => 0,
+			'options'            => '',
+			'second_options'     => '',
+			'type'               => array(
+				'CHAR'     => 'CHAR',
+				'NUMERIC'  => 'NUMERIC',
+				'BINARY'   => 'BINARY',
+				'DATE'     => 'DATE',
+				'TIME'     => 'TIME',
+				'DECIMAL'  => 'DECIMAL',
+				'SIGNED'   => 'SIGNED',
+				'UNSIGNED' => 'UNSIGNED',
+			),
+			'date_type'          => array(
+				'yyyy/mm/dd' => 'yyyy/mm/dd',
+				'mm/dd/yyyy' => 'mm/dd/yyyy',
+				'dd/mm/yyyy' => 'dd/mm/yyyy',
+			),
+			/*'time_format'    => array(
+				'yyyy/mm/dd' => 'yyyy/mm/dd',
+				'mm/dd/yyyy' => 'mm/dd/yyyy',
+				'dd/mm/yyyy' => 'dd/mm/yyyy',
+			),*/
+			'step_time'          => '15',
+			'compare'            => array( '=', '!=', '>', '>=', '<', '<=', 'LIKE', 'NOT LIKE', 'IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN' /*'EXISTS', 'NOT EXISTS'*/ ),
+			'date_compare'       => array( '=', '!=', '>', '>=', '<', '<=', 'BETWEEN', 'NOT BETWEEN' /*'EXISTS', 'NOT EXISTS'*/ ),
+			'value'              => '',
+			'second_value'       => '',
+			'label'              => '',
+			'second_label'       => '',
+			'placeholderl'       => '',
+			'second_placeholder' => '',
+			'required'           => 0,
+		);
+
+		$option_name = esc_attr( $args['option_name'] );
+		$field_name  = esc_attr( $args['name'] );
+		$is_original = '';
+		$disabled    = '';
+
+		if ( $args['is_original'] ) {
+			$is_original = 'original-field';
+			$disabled    = 'disabled="disabled"';
 		}
 		?>
-		<div class="gmw-options-box">
-			<div class="single-option">
-				<label><?php esc_attr_e( 'Select Profile Fields', 'geo-my-wp' ); ?></label>
-				<div class="option-content">
-					<select 
-						name="<?php echo esc_attr( $name_attr . '[fields][]' ); ?>" 
-						multiple 
-						data-placehoder="<?php esc_attr_e( 'Select profile fields', 'geo-my-wp' ); ?>" 
-					>
-					<?php
-					foreach ( $fields['fields'] as $field_id => $field_name ) {
-						$selected = ( isset( $value['fields'] ) && in_array( $field_id, $value['fields'] ) ) ? 'selected="slected"' : '';
-						?>
-							?>
-							<option value="<?php echo esc_attr( $field_id ); ?>" <?php echo $selected; // WPCS: XSS OK. ?>>
-								<?php echo esc_html( $field_name ); ?>
-							</option>
+		<div class="gmw-custom-field-wrapper gmw-settings-group-wrapper <?php echo $is_original; // WPCS: XSS ok. ?>" data-field_name="<?php echo ( ! $is_original ) ? $field_name : ''; // WPCS: XSS ok. ?>">		
+
+			<div class="custom-field-header gmw-settings-group-header">
+
+				<i class="gmw-settings-group-drag-handle gmw-custom-field-sort-handle gmw-icon-sort gmw-tooltip" aria-label="<?php esc_attr_e( 'Drag to sort fields.', 'geo-my-wp' ); ?>" title="<?php esc_attr_e( 'Sort fields.', 'geo-my-wp' ); ?>"></i>
+				<i class="gmw-settings-group-options-toggle gmw-custom-field-options-toggle gmw-icon-cog gmw-tooltip" aria-label="<?php esc_attr_e( 'Click to manage options.', 'geo-my-wp' ); ?>"></i>
+
+				<span class="custom-field-label">
+					<input 
+						type="text"
+						name="<?php echo $option_name . '[' . $field_name . '][name]';  // WPCS: XSS ok. ?>"
+						value="<?php esc_attr_e( $field_values['name'] ); ?>"
+						readonly="readonly"
+						<?php echo $disabled; // WPCS: XSS ok. ?>
+					/>
+				</span>
+
+				<i class="gmw-settings-group-delete-trigger gmw-custom-field-delete gmw-icon-cancel-circled gmw-tooltip" aria-label="<?php esc_attr_e( 'Click to delete field.', 'geo-my-wp' ); ?>"></i>
+			</div>
+
+			<div class="custom-field-settings gmw-settings-multiple-fields-wrapper gmw-settings-group-content">
+
+				<div class="gmw-settings-panel-field custom-field-usage-option-wrap">
+
+					<div class="gmw-settings-panel-header">
+						<label class="gmw-settings-label"><?php esc_attr_e( 'Field Usage', 'geo-my-wp' ); ?></label>
+					</div>
+
+					<div class="custom-field-option-usage gmw-settings-panel-input-container">
+
+						<select 
+							<?php echo $disabled; // WPCS: XSS ok. ?>
+							class="custom-field-usage-selector gmw-smartbox-not" 
+							name="<?php echo $option_name . '[' . $field_name . '][usage]'; // WPCS: XSS ok. ?>"
+						>
 							<?php
-					}
-					?>
-					</select>
-					<p class="description">
-						<?php esc_attr_e( 'Select the profile fields to be used as filters in the search form.', 'geo-my-wp' ); ?>
-					</p>
-				</div>
+							if ( empty( $field_values['usage'] ) ) {
+								$field_values['usage'] = 'text';
+							}
+							?>
 
-				<label><?php esc_attr_e( 'Select date field as "Age range" filter.', 'geo-my-wp' ); ?></label>   
-
-					<div class="option-content">
-						<select name="<?php echo esc_attr( $name_attr . '[date_field]' ); ?>">
-							<option value="" selected="selected"><?php esc_attr_e( 'N/A', 'geo-my-wp' ); ?></option>
-							<?php foreach ( $fields['date_field'] as $field_value => $field_name ) { ?>
-								<?php $selected = ( ! empty( $value['date_field'] ) && $value['date_field'] == $field_value ) ? 'selected="selected"' : ''; ?>
-								<option value="<?php echo esc_attr( $field_value ); ?>" <?php echo $selected; // WPCS: XSS OK. ?> >
-									<?php echo esc_html( $field_name ); ?>        
-								</option>
+							<?php foreach ( $options['usage'] as $option_value => $option_label ) { ?>
+								<option value="<?php echo esc_attr( $option_value ); ?>" <?php selected( $option_value, $field_values['usage'], true ); ?>><?php echo esc_attr( $option_label ); ?></option>
 							<?php } ?>
 						</select>
-						<p class="description">
-							<?php esc_attr_e( 'select a date field to be used as a age range filter in the search form.', 'geo-my-wp' ); ?>
-						</p>
+
+					</div>
+
+					<div class="gmw-settings-panel-description">
+						<?php esc_attr_e( 'Select the field usage.', 'geo-my-wp' ); ?>
 					</div>
 				</div>
+
+				<div class="gmw-settings-panel-field custom-field-smartbox-option-wrap" data-usage="select,multiselect">
+
+					<div class="gmw-settings-panel-header">
+						<label
+							for="custom-field-smartbox-<?php echo $field_name; // WPCS: XSS ok. ?>"
+							class="gmw-settings-label"><?php esc_html_e( 'Smart Select Field', 'geo-my-wp' ); ?></label>
+					</div>
+
+					<div class="custom-field-option-smartbox gmw-settings-panel-input-container">
+
+						<?php
+						if ( ! isset( $field_values['smartbox'] ) ) {
+							$field_values['smartbox'] = 0;
+						}
+						?>
+
+						<input
+							id="custom-field-smartbox-<?php echo $field_name; // WPCS: XSS ok. ?>"
+							type="checkbox"
+							name="<?php echo $option_name . '[' . $field_name . '][smartbox]'; // WPCS: XSS ok. ?>"
+							value="1"
+							<?php echo $disabled; // WPCS: XSS ok. ?>
+							<?php checked( $field_values['smartbox'], 1, true ); ?>
+						/>
+
+					</div>
+
+					<div class="gmw-settings-panel-description">
+						<?php esc_attr_e( 'Enable smart select field.', 'geo-my-wp' ); ?>
+					</div>
+				</div>
+
+				<?php if ( isset( $options['type'] ) ) { ?>
+
+					<div class="gmw-settings-panel-field custom-field-type-option-wrap" data-usage="text">
+
+						<div class="gmw-settings-panel-header">
+							<label class="gmw-settings-label"><?php esc_html_e( 'Field Type', 'geo-my-wp' ); ?></label>
+						</div>
+
+						<div class="custom-field-option-type gmw-settings-panel-input-container">
+
+							<select 
+								<?php echo $disabled; // WPCS: XSS ok. ?>
+								class="custom-field-type-selector gmw-smartbox-not" 
+								name="<?php echo $option_name . '[' . $field_name . '][type]'; // WPCS: XSS ok. ?>"
+							>
+								<?php
+								if ( ! isset( $field_values['type'] ) ) {
+									$field_values['type'] = 'CHAR';
+								}
+								?>
+
+								<?php foreach ( $options['type'] as $option_value => $option_label ) { ?>
+									<option value="<?php echo esc_attr( $option_value ); ?>" <?php selected( $option_value, $field_values['type'], true ); ?>><?php echo esc_attr( $option_label ); ?></option>
+								<?php } ?>
+							</select>
+
+						</div>
+
+						<div class="gmw-settings-panel-description">
+							<?php esc_html_e( 'Select the field type.', 'geo-my-wp' ); ?>
+						</div>
+					</div>
+
+				<?php } ?>
+
+				<?php if ( isset( $options['date_type'] ) ) { ?>
+
+					<div class="gmw-settings-panel-field custom-field-date-format-option-wrap" data-usage="text,date,datetime">
+
+						<div class="gmw-settings-panel-header">
+							<label class="gmw-settings-label"><?php esc_html_e( 'Date Format', 'geo-my-wp' ); ?></label>
+						</div>
+
+						<div class="custom-field-option-date-format gmw-settings-panel-input-container">
+
+							<select 
+								<?php echo $disabled; // WPCS: XSS ok. ?>
+								class="custom-field-date-format-selector gmw-smartbox-not" 
+								name="<?php echo $option_name . '[' . $field_name . '][date_type]'; // WPCS: XSS ok. ?>">
+
+								<?php
+								if ( ! isset( $field_values['date_type'] ) ) {
+									$field_values['date_type'] = 'yyyy/mm/dd';
+								}
+								?>
+
+								<?php foreach ( $options['date_type'] as $option_value => $option_label ) { ?>
+									<option value="<?php echo esc_attr( $option_value ); ?>" <?php selected( $option_value, $field_values['date_type'], true ); ?>><?php echo esc_attr( $option_label ); ?></option>
+								<?php } ?>	
+							</select>
+						</div>
+
+						<div class="gmw-settings-panel-description">
+							<?php esc_html_e( 'Select the date format.', 'geo-my-wp' ); ?>
+						</div>
+					</div>
+
+				<?php } ?>
+
+				<?php if ( isset( $options['step_time'] ) ) { ?>
+
+					<div class="gmw-settings-panel-field custom-field-time-step-option-wrap" data-usage="time">
+
+						<div class="gmw-settings-panel-header">
+							<label class="gmw-settings-label"><?php esc_html_e( 'Time Step', 'geo-my-wp' ); ?></label>
+						</div>
+
+						<div class="custom-field-option-time-step gmw-settings-panel-input-container">
+
+							<input 
+								type="number" 
+								name="<?php echo $option_name . '[' . $field_name . '][step_time]'; // WPCS: XSS ok. ?>" 
+								value="<?php echo isset( $field_values['step_time'] ) ? esc_attr( stripcslashes( $field_values['step_time'] ) ) : ''; ?>"  
+								<?php echo $disabled; // WPCS: XSS ok. ?>
+							/>
+						</div>
+
+						<div class="gmw-settings-panel-description">
+							<?php esc_html_e( 'Select the date format.', 'geo-my-wp' ); ?>
+						</div>
+					</div>
+
+				<?php } ?>
+
+				<?php if ( isset( $options['compare'] ) ) { ?>
+
+					<div class="gmw-settings-panel-field custom-field-comparison-option-wrap" data-usage="hidden,text,number,select,radio">
+
+						<div class="gmw-settings-panel-header">
+							<label class="gmw-settings-label"><?php esc_html_e( 'Compare', 'geo-my-wp' ); ?></label>
+						</div>
+
+						<div class="custom-field-option-comparison gmw-settings-panel-input-container">
+
+							<select 
+								<?php echo $disabled; // WPCS: XSS ok. ?>
+								class="custom-field-comparison-selector gmw-smartbox-not" 
+								name="<?php echo $option_name . '[' . $field_name . '][compare]'; // WPCS: XSS ok. ?>"
+							>
+								<?php
+								if ( ! isset( $field_values['compare'] ) ) {
+									$field_values['compare'] = '=';
+								}
+								?>
+
+								<?php foreach ( $options['compare'] as $option ) { ?>
+									<option value="<?php echo esc_attr( str_replace( ' ', '_', $option ) ); ?>" <?php selected( $option, $field_values['compare'], true ); ?>><?php esc_attr_e( $option ); ?></option>
+								<?php } ?>	
+							</select>
+
+						</div>
+
+						<div class="gmw-settings-panel-description">
+							<?php esc_html_e( 'Select the comparison operator.', 'geo-my-wp' ); ?>
+						</div>
+					</div>
+
+				<?php } ?>
+
+				<?php if ( isset( $options['date_compare'] ) ) { ?>
+
+					<div class="gmw-settings-panel-field custom-field-date-comparison-option-wrap" data-usage="date">
+
+						<div class="gmw-settings-panel-header">
+							<label class="gmw-settings-label"><?php esc_html_e( 'Compare', 'geo-my-wp' ); ?></label>
+						</div>
+
+						<div class="custom-field-option-data-comparison gmw-settings-panel-input-container">
+
+							<select 
+								<?php echo $disabled; // WPCS: XSS ok. ?>
+								class="custom-field-date-comparison-selector gmw-smartbox-not" 
+								name="<?php echo $option_name . '[' . $field_name . '][date_compare]'; // WPCS: XSS ok. ?>"
+							>
+								<?php
+								if ( ! isset( $field_values['date_compare'] ) ) {
+									$field_values['date_compare'] = '=';
+								}
+								?>
+
+								<?php foreach ( $options['date_compare'] as $option ) { ?>
+									<option value="<?php echo esc_attr( $option ); ?>" <?php selected( $option, $field_values['date_compare'], true ); ?>><?php echo esc_attr( $option ); ?></option>
+								<?php } ?>	
+							</select>
+
+						</div>
+
+						<div class="gmw-settings-panel-description">
+							<?php esc_html_e( 'Select the comparison operator.', 'geo-my-wp' ); ?>
+						</div>
+					</div>
+
+				<?php } ?>
+
+				<?php if ( isset( $options['options'] ) ) { ?>
+
+					<div class="gmw-settings-panel-field custom-field-options-option-wrap" data-usage="select,multiselect,checkboxes,radio">
+
+						<div class="custom-field-option-label gmw-settings-panel-input-container gmw-settings-double-options-holder">
+
+							<div class="gmw-settings-panel-inner-option">
+
+								<div class="gmw-settings-panel-header">
+									<label
+										for="custom-field-options-<?php echo $field_name; // WPCS: XSS ok. ?>"
+										class="gmw-settings-label"><?php esc_attr_e( 'Field Options', 'geo-my-wp' ); ?></label>
+								</div>
+
+								<div class="custom-field-option-options gmw-settings-panel-input-container">
+
+									<?php
+									if ( empty( $field_values['options'] ) ) {
+										$field_values['options'] = '';
+									}
+									?>
+
+									<textarea
+										id="custom-field-options-<?php echo $field_name; // WPCS: XSS ok. ?>"
+										name="<?php echo $option_name . '[' . $field_name . '][options]'; // WPCS: XSS ok. ?>"
+										rows="10"
+										cols="50"
+										<?php echo $disabled; // WPCS: XSS ok. ?>
+									/><?php echo isset( $field_values['options'] ) ? esc_textarea( stripcslashes( $field_values['options'] ) ) : ''; ?></textarea>
+
+								</div>
+							</div>
+
+							<div class="gmw-settings-panel-inner-option custom-field-second-option">
+
+								<div class="gmw-settings-panel-header">
+									<label
+										for="custom-field-options-<?php echo $field_name; // WPCS: XSS ok. ?>"
+										class="gmw-settings-label"><?php esc_attr_e( 'Second Field Options', 'geo-my-wp' ); ?></label>
+								</div>
+
+								<div class="custom-field-option-options gmw-settings-panel-input-container">
+
+									<?php
+									if ( empty( $field_values['second_options'] ) ) {
+										$field_values['second_options'] = '';
+									}
+									?>
+
+									<textarea
+										id="custom-field-options-<?php echo $field_name; // WPCS: XSS ok. ?>"
+										name="<?php echo $option_name . '[' . $field_name . '][second_options]'; // WPCS: XSS ok. ?>"
+										rows="10"
+										cols="50"
+										<?php echo $disabled; // WPCS: XSS ok. ?>
+									/><?php echo isset( $field_values['second_options'] ) ? esc_textarea( stripcslashes( $field_values['second_options'] ) ) : ''; ?></textarea>
+
+								</div>
+							</div>
+
+						</div>
+
+						<div class="gmw-settings-panel-description">
+							<?php esc_html_e( 'Enable smart select field.', 'geo-my-wp' ); ?>
+						</div>
+					</div>
+
+				<?php } ?>
+
+				<div class="gmw-settings-panel-field custom-field-label-option-wrap" data-usage="text,number,select,date,time,datetime,multiselect,checkboxes,radio">
+
+					<div class="custom-field-option-label gmw-settings-panel-input-container gmw-settings-double-options-holder">
+
+						<div class="gmw-settings-panel-inner-option">
+
+							<div class="gmw-settings-panel-header">
+								<label class="gmw-settings-label"><?php esc_attr_e( 'Field Label', 'geo-my-wp' ); ?></label>
+							</div>
+
+							<input 
+								type="text" 
+								name="<?php echo $option_name . '[' . $field_name . '][label]'; // WPCS: XSS ok. ?>" 
+								value="<?php echo isset( $field_values['label'] ) ? esc_attr( stripcslashes( $field_values['label'] ) ) : ''; ?>"  
+								<?php echo $disabled; // WPCS: XSS ok. ?>
+							/>
+						</div>
+
+						<div class="gmw-settings-panel-inner-option custom-field-second-option">
+
+							<div class="gmw-settings-panel-header">
+								<label class="gmw-settings-label"><?php esc_attr_e( 'Second Field Label', 'geo-my-wp' ); ?></label>
+							</div>
+
+							<input 
+								type="text" 
+								name="<?php echo $option_name . '[' . $field_name . '][second_label]'; // WPCS: XSS ok. ?>" 
+								value="<?php echo isset( $field_values['second_label'] ) ? esc_attr( stripcslashes( $field_values['second_label'] ) ) : ''; ?>"
+								<?php echo $disabled; // WPCS: XSS ok. ?>
+							/>
+						</div>
+
+					</div>
+
+					<div class="gmw-settings-panel-description">
+						<?php esc_attr_e( 'Enter the field lable or leave blank to hide it.', 'geo-my-wp' ); ?>
+					</div>
+				</div>
+
+				<div class="gmw-settings-panel-field custom-field-placeholder-option-wrap" data-usage="text,number,date,time,datetime,select,multiselect">
+
+					<div class="custom-field-option-placeholder gmw-settings-panel-input-container gmw-settings-double-options-holder">
+
+						<div class="gmw-settings-panel-inner-option">
+
+							<div class="gmw-settings-panel-header">
+								<label class="gmw-settings-label"><?php esc_attr_e( 'Field Placeholder', 'geo-my-wp' ); ?></label>
+							</div>
+
+							<input 
+								type="text" 
+								name="<?php echo $option_name . '[' . $field_name . '][placeholder]'; // WPCS: XSS ok. ?>" 
+								value="<?php echo isset( $field_values['placeholder'] ) ? esc_attr( stripcslashes( $field_values['placeholder'] ) ) : ''; ?>"  
+								<?php echo $disabled; // WPCS: XSS ok. ?>
+							/>
+						</div>
+
+						<div class="gmw-settings-panel-inner-option custom-field-second-option">
+
+							<div class="gmw-settings-panel-header">
+								<label class="gmw-settings-label"><?php esc_attr_e( 'Second Field Placeholder', 'geo-my-wp' ); ?></label>
+							</div>
+
+							<input 
+								type="text" 
+								name="<?php echo $option_name . '[' . $field_name . '][second_placeholder]'; // WPCS: XSS ok. ?>" 
+								value="<?php echo isset( $field_values['second_placeholder'] ) ? esc_attr( stripcslashes( $field_values['second_placeholder'] ) ) : ''; ?>"
+								<?php echo $disabled; // WPCS: XSS ok. ?>
+							/>
+						</div>
+					</div>
+
+					<div class="gmw-settings-panel-description">
+						<?php esc_html_e( 'Enter the placeholder or leave blank to hide it.', 'geo-my-wp' ); ?>
+					</div>
+				</div>
+
+				<?php if ( isset( $options['value'] ) ) { ?>
+
+					<div class="gmw-settings-panel-field custom-field-value-option-wrap" data-usage="">
+
+						<div class="custom-field-option-label gmw-settings-panel-input-container gmw-settings-double-options-holder">
+
+							<div class="gmw-settings-panel-inner-option">
+
+								<div class="gmw-settings-panel-header">
+									<label class="gmw-settings-label"><?php esc_attr_e( 'Default Value', 'geo-my-wp' ); ?></label>
+								</div>
+
+								<div>
+									<input 
+										type="text" 
+										name="<?php echo $option_name . '[' . $field_name . '][value]'; // WPCS: XSS ok. ?>" 
+										value="<?php echo isset( $field_values['value'] ) ? esc_attr( stripcslashes( $field_values['value'] ) ) : ''; ?>"  
+										<?php echo $disabled; // WPCS: XSS ok. ?>
+									/>
+								</div>
+							</div>
+
+							<div class="gmw-settings-panel-inner-option custom-field-second-option">
+
+								<div class="gmw-settings-panel-header">
+									<label class="gmw-settings-label"><?php esc_attr_e( 'Second Field Value', 'geo-my-wp' ); ?></label>
+								</div>
+
+								<div>
+									<input 
+										type="text" 
+										name="<?php echo $option_name . '[' . $field_name . '][second_value]'; // WPCS: XSS ok. ?>" 
+										value="<?php echo isset( $field_values['second_value'] ) ? esc_attr( stripcslashes( $field_values['second_value'] ) ) : ''; ?>"  
+										<?php echo $disabled; // WPCS: XSS ok. ?>
+									/>
+								</div>
+							</div>
+
+						</div>
+
+						<div class="gmw-settings-panel-description">
+							<?php esc_attr_e( 'Enter a default value or leave blank.', 'geo-my-wp' ); ?>
+						</div>
+					</div>
+
+				<?php } ?>
+
+				<?php if ( isset( $options['required'] ) ) { ?>
+
+					<div class="gmw-settings-panel-field custom-field-required-option-wrap" data-usage="text,number,select,date,time,datetime,multiselect,radio">
+
+						<div class="gmw-settings-panel-header">
+
+							<?php
+							if ( ! isset( $field_values['required'] ) ) {
+								$field_values['required'] = 0;
+							}
+							?>
+
+							<input
+								id="custom-field-required-?php echo $field_name; // WPCS: XSS ok. ?>"
+								type="checkbox"
+								name="<?php echo $option_name . '[' . $field_name . '][required]'; // WPCS: XSS ok. ?>"
+								value="1"
+								<?php echo $disabled; // WPCS: XSS ok. ?>
+								<?php checked( $field_values['required'], 1, true ); ?>
+							/>
+							<label
+								for="custom-field-required-<?php echo $field_name; // WPCS: XSS ok. ?>"
+								class="gmw-settings-label"><?php esc_attr_e( 'Required', 'geo-my-wp' ); ?></label>
+						</div>
+
+						<div class="gmw-settings-panel-description">
+							<?php esc_html_e( 'Make this field required.', 'geo-my-wp' ); ?>
+						</div>
+					</div>
+
+				<?php } ?>
+
 			</div>
 		</div>
 		<?php
 	}
 
 	/**
-	 * Validate xprofile fields.
+	 * Output custom fields generateor.
 	 *
-	 * @param  [type] $output [description].
+	 * @param  [type] $args  [description].
 	 *
-	 * @return [type]         [description]
+	 * @param  [type] $value [description].
+	 *
+	 * @param  [type] $form  [description].
 	 */
-	public static function validate_bp_xprofile_fields( $output ) {
+	public static function get_custom_fields( $args, $value, $form ) {
 
-		$output['fields']     = ! empty( $output['fields'] ) ? array_map( 'intval', $output['fields'] ) : array();
-		$output['date_field'] = ! empty( $output['date_field'] ) ? intval( $output['date_field'] ) : '';
+		$defaults = array(
+			'option_name'         => '',
+			'get_fields_function' => 'gmw_get_custom_fields',
+			'select_field_label'  => __( ' -- Select Field -- ', 'geo-my-wp' ),
+			'add_field_label'     => __( 'Add Field', 'geo-my-wp' ),
+		);
 
-		return $output;
+		$args = wp_parse_args( $args, $defaults );
+		?>
+		<div class="gmw-custom-fields-wrapper">
+
+			<div id="gmw-custom-fields-new-field-picker">
+
+				<span>
+					<select id="gmw-custom-fields-picker" class="gmw-smartbox" data-gmw_ajax_load_options="<?php esc_attr_e( $args['get_fields_function'] ); ?>">
+						<option value=""><?php esc_attr_e( $args['select_field_label'] ); ?></option>
+					</select>
+				</span>
+
+				<input 
+					type="button" 
+					class="gmw-new-custom-field-button gmw-settings-action-button button-primary" style="grid-column: span 1;margin-top: 0;padding: 13px;"
+					form_id="<?php esc_attr_e( $form['ID'] ); ?>"
+					value="<?php esc_attr_e( $args['add_field_label'] ); ?>"
+				/>
+			</div>
+
+			<?php
+				$args = array(
+					'option_name' => $args['option_name'],
+					'name'        => '%%field_name%%',
+				);
+
+				self::get_custom_field( $args, $value );
+			?>
+			<div id="custom-fields-holder" class="gmw-setting-groups-container gmw-settings-group-draggable-area">
+				<?php
+
+				if ( ! empty( $value ) ) {
+
+					foreach ( $value as $field_name => $values ) {
+
+						$args = array(
+							'option_name' => $args['option_name'],
+							'name'        => $field_name,
+							'is_original' => false,
+						);
+
+						self::get_custom_field( $args, $values );
+					}
+				}
+				?>
+			</div>	
+		</div>
+		<?php
 	}
 }
