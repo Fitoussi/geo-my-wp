@@ -44,15 +44,13 @@ function gmw_form_field( $args = array(), $gmw = array() ) {
 /**
  * Form submission hidden fields
  *
- * @param  array  $gmw   the form being used.
+ * @param  array  $gmw       the form being used.
  *
- * @param  string $label the default value of the submit button.
+ * @param  string $dep_label the default value of the submit button ( deprecated ).
  *
  * @return mix HTML elements of the submission fields
  */
-function gmw_get_search_form_submit_button( $gmw = array(), $label = '' ) {
-
-	$id = absint( $gmw['ID'] );
+function gmw_get_search_form_submit_button( $gmw = array(), $dep_label = '' ) {
 
 	if ( ! isset( $gmw['search_results']['per_page'] ) ) {
 		$gmw['search_results']['per_page'] = 10;
@@ -60,17 +58,30 @@ function gmw_get_search_form_submit_button( $gmw = array(), $label = '' ) {
 
 	$per_page = absint( current( explode( ',', $gmw['search_results']['per_page'] ) ) );
 
+	if ( empty( $label ) ) {
+		$label = ! empty( $gmw['search_form']['submit_button']['label'] ) ? $gmw['search_form']['submit_button']['label'] : __( 'Submit', 'geo-my-wp' );
+	}
+
 	$args = array(
-		'id'    => $id,
-		'label' => ! empty( $label ) ? $label : __( 'Submit', 'geo-my-wp' ),
+		'id'    => $gmw['ID'],
+		'slug'  => 'submit',
+		'name'  => 'submit',
+		'type'  => 'submit',
+		'value' => $label,
 	);
 
-	$output  = '';
-	$output .= '<div class="gmw-form-field-wrapper gmw-submit-field-wrapper">';
-	// false argument is deprected. Temporary there to support old versions of search forms templates.
-	$output .= apply_filters( 'gmw_form_submit_button', GMW_Search_Form_Helper::submit_button( $args ), $gmw, false );
-	$output .= '</div>';
-	$output .= GMW_Search_Form_Helper::submission_fields( $id, $per_page );
+	$args = apply_filters( 'gmw_search_form_submit_button_args', $args ); // Deprecated. To be removed.
+
+	// Support previous versions of the filter above.
+	if ( ! empty( $args['label'] ) ) {
+
+		$args['value'] = $args['label'];
+
+		unset( $args['label'] );
+	}
+
+	$output  = apply_filters( 'gmw_form_submit_button', gmw_get_form_field( $args, $gmw ), $gmw );
+	$output .= GMW_Search_Form_Helper::submission_fields( $gmw['ID'], $per_page );
 
 	return $output;
 }
@@ -130,34 +141,30 @@ function gmw_get_search_form_address_field( $gmw ) {
 	}
 
 	$args = array(
-		'id'                   => absint( $gmw['ID'] ),
-		'mandatory'            => ! empty( $settings['mandatory'] ) ? 1 : 0,
-		'placeholder'          => isset( $settings['placeholder'] ) ? $settings['placeholder'] : '',
-		'address_autocomplete' => ! empty( $settings['address_autocomplete'] ) ? 1 : 0,
-		'locator_button'       => ! empty( $settings['locator'] ) ? 1 : 0,
-		'locator_submit'       => ! empty( $settings['locator_submit'] ) ? 1 : 0,
-		'value'                => $value,
+		'id'              => absint( $gmw['ID'] ),
+		'slug'            => 'address',
+		'name'            => 'address',
+		'is_array'        => true,
+		'type'            => 'address',
+		'label'           => ! empty( $settings['label'] ) ? $settings['label'] : '',
+		'placeholder'     => isset( $settings['placeholder'] ) ? $settings['placeholder'] : '',
+		'required'        => ! empty( $settings['required'] ) ? 1 : 0,
+		'value'           => $value,
+		'class'           => ' gmw-full-address',
+		'wrapper_class'   => ! empty( $settings['locator'] ) ? 'gmw-locator-enabled' : '',
+		'additional_args' => array(
+			'locator_button' => ! empty( $settings['locator'] ) ? 1 : 0,
+			'locator_submit' => ! empty( $settings['locator_submit'] ) ? 1 : 0,
+			'icon'           => 'gmw-icon-target-light',
+		),
+		'inner_element'   => true,
 	);
 
-	$label_enabled = false;
-	$label_css     = '';
-
-	if ( ! empty( $settings['label'] ) ) {
-		$label_css     = 'gmw-field-label-enabled';
-		$label_enabled = true;
+	if ( ! empty( $settings['address_autocomplete'] ) ) {
+		$args['class'] .= ' gmw-address-autocomplete';
 	}
 
-	$output = '<div class="gmw-form-field-wrapper gmw-address-field-wrapper ' . $label_css . '">';
-
-	if ( $label_enabled ) {
-		$output .= '<label class="gmw-field-label" for="gmw-address-field-' . $args['id'] . '">' . esc_html( $settings['label'] ) . '</label>';
-	}
-
-	$output .= GMW_Search_Form_Helper::address_field( $args );
-
-	$output .= '</div>';
-
-	return apply_filters( 'gmw_search_form_address_field', $output, $gmw, $args );
+	return gmw_get_form_field( $args, $gmw );
 }
 
 /**
@@ -184,7 +191,7 @@ function gmw_search_form_address_field( $gmw = array(), $id = 0, $class = false 
  * Requires the Premium Settings extension.
  *
  * @since 4.0 ( function moved from the Premium Settings extension ).
- * 
+ *
  * @param  array $gmw gmw form.
  */
 function gmw_search_form_address_fields( $gmw ) {
@@ -200,6 +207,8 @@ function gmw_search_form_address_fields( $gmw ) {
 
 	do_action( 'gmw_after_search_form_address_fields', $gmw );
 }
+
+/**
  * Get locator button
  *
  * @param  [type] $gmw form being processed.
@@ -209,23 +218,32 @@ function gmw_search_form_address_fields( $gmw ) {
 function gmw_get_search_form_locator_button( $gmw ) {
 
 	// abort if disabled.
-	if ( empty( $gmw['search_form']['locator'] ) || 'disabled' === $gmw['search_form']['locator'] ) {
+	if ( empty( $gmw['search_form']['locator_button']['usage'] ) || 'disabled' === $gmw['search_form']['locator_button']['usage'] ) {
 		return;
 	}
 
-	$args = array(
-		'id'          => $gmw['ID'],
-		'usage'       => $gmw['search_form']['locator'],
-		'image'       => isset( $gmw['search_form']['locator_image'] ) ? $gmw['search_form']['locator_image'] : 'locate-me-blue.png',
-		'form_submit' => ! empty( $gmw['search_form']['locator_submit'] ) ? 1 : 0,
-		'label'       => isset( $gmw['search_form']['locator_text'] ) ? $gmw['search_form']['locator_text'] : '',
+	$settings     = $gmw['search_form']['locator_button'];
+	$button_class = 'text' === $settings['usage'] ? 'gmw-form-button' : '';
+	$args         = array(
+		'id'              => $gmw['ID'],
+		'slug'            => 'locator-button',
+		'name'            => 'locator_button',
+		'type'            => 'locator_button',
+		'label'           => '',
+		'value'           => '',
+		'inner_class'     => ' gmw-locator-inner locator-' . $settings['usage'] . ' ' . $button_class,
+		'wrapper_class'   => 'locator-' . $settings['usage'] . ' gmw-locator-button-wrapper ' . $settings['usage'], // gmw-locator-button-wrapper and $settings['usage'] are depreacated.
+		'additional_args' => array(
+			'usage'       => $settings['usage'],
+			'image'       => isset( $settings['image'] ) ? $settings['image'] : 'blue-dot.png',
+			'form_submit' => ! empty( $settings['locator_submit'] ) ? 1 : 0,
+			'label'       => isset( $settings['text'] ) ? $settings['text'] : '',
+			'image_url'   => ! empty( $settings['url'] ) ? $settings['url'] : GMW_IMAGES . '/locator-images/locate-me-blue.png',
+		),
+		'inner_element'   => true,
 	);
 
-	$output  = '<div class="gmw-form-field-wrapper gmw-locator-button-wrapper ' . esc_attr( $gmw['search_form']['locator'] ) . '">';
-	$output .= apply_filters( 'gmw_search_form_locator_button', GMW_Search_Form_Helper::locator_button( $args ), $gmw );
-	$output .= '</div>';
-
-	return $output;
+	return gmw_get_form_field( $args, $gmw );
 }
 
 /**
@@ -255,24 +273,52 @@ function gmw_search_form_locator_button( $gmw = array(), $class = false ) {
  */
 function gmw_get_search_form_radius( $gmw ) {
 
-	if ( 'both' === $gmw['search_form']['units'] ) {
-		$label = __( 'Within', 'geo-my-wp' );
+	if ( empty( $gmw['search_form']['radius']['usage'] ) || ! in_array( $gmw['search_form']['radius']['usage'], array( 'default', 'dropdown', 'select', 'radio' ), true ) ) {
+		return;
+	}
+
+	$settings     = $gmw['search_form']['radius'];
+	$type         = 'hidden';
+	$options      = array();
+	$defaut_value = '';
+
+	if ( 'select' === $settings['usage'] ) {
+
+		$type = 'select';
+
+		if ( ! empty( $settings['options'] ) ) {
+
+			$options = gmw_get_form_field_options( $settings['options'] );
+
+		} else {
+
+			$options = array(
+				'200' => 'Radius',
+				'5'   => '5',
+				'10'  => '10',
+				'25'  => '25',
+				'50'  => '50',
+				'100' => '100',
+			);
+		}
 	} else {
-		$label = ( 'imperial' === $gmw['search_form']['units'] ) ? __( 'Miles', 'geo-my-wp' ) : __( 'Kilometers', 'geo-my-wp' );
+
+		$defaut_value = ! empty( $settings['default_value'] ) ? $settings['default_value'] : '';
 	}
 
 	$args = array(
-		'id'            => $gmw['ID'],
-		'label'         => $label,
-		'default_value' => '',
-		'options'       => $gmw['search_form']['radius'],
+		'id'               => $gmw['ID'],
+		'slug'             => 'distance',
+		'name'             => 'distance',
+		'type'             => $type,
+		'label'            => ! empty( $settings['label'] ) ? $settings['label'] : '',
+		'required'         => ! empty( $settings['required'] ) ? $settings['required'] : '',
+		'value'            => $defaut_value,
+		'options'          => $options,
+		'show_options_all' => isset( $settings['show_options_all'] ) ? $settings['show_options_all'] : '',
 	);
 
-	$output  = '<div class="gmw-form-field-wrapper gmw-distance-field-wrapper">';
-	$output .= apply_filters( 'gmw_search_form_radius_output', GMW_Search_Form_Helper::radius_field( $args ), $gmw );
-	$output .= '</div>';
-
-	return apply_filters( 'gmw_radius_dropdown_output', $output, $gmw );
+	return gmw_get_form_field( $args, $gmw );
 }
 
 /**
