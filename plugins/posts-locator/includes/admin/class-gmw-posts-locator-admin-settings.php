@@ -43,7 +43,6 @@ class GMW_Posts_Locator_Admin_Settings {
 	public function setup_defaults( $defaults ) {
 
 		$defaults['post_types_settings'] = array(
-
 			'edit_post_exclude_tabs'        => array(
 				'dynamic'    => 1,
 				'address'    => 1,
@@ -71,89 +70,101 @@ class GMW_Posts_Locator_Admin_Settings {
 	 */
 	public function admin_settings( $settings ) {
 
-		$settings['post_types_settings']['post_types'] = array(
-			'name'       => 'post_types',
-			'type'       => 'multiselect',
-			'default'    => '',
-			'label'      => __( 'Post Types', 'geo-my-wp' ),
-			'desc'       => __( 'Select the post types where you would like to enable geotagging. GEO my WP Location section will be added to the "Edit Post" page of the selected post types.', 'geo-my-wp' ),
-			'options'    => gmw_get_post_types_array(),
-			'attributes' => array(),
-			'priority'   => 5,
-		);
+		$post_types = gmw_get_option( 'post_types_settings', 'post_types', array() );
 
-		$zoom_levels = array();
-
-		for ( $i = 1; $i <= 21; $i++ ) {
-			$zoom_levels[ $i ] = $i;
+		if ( ! empty( $post_types ) && is_array( $post_types ) ) {
+			$post_types = array_flip( $post_types );
 		}
+
+		$settings['post_types_settings']['post_types'] = gmw_get_admin_setting_args(
+			array(
+				'name'        => 'post_types',
+				'type'        => 'multiselect',
+				'default'     => '',
+				'label'       => __( 'Post Types', 'geo-my-wp' ),
+				'placeholder' => __( 'Select post types', 'geo-my-wp' ),
+				'desc'        => __( 'Select the post types that you would like to geotag. GEO my WP Location form will be added to the "Edit Post" page of the selected post types.', 'geo-my-wp' ),
+				'options'     => $post_types,
+				'attributes'  => array(
+					'data-gmw_ajax_load_options' => 'gmw_get_post_types',
+				),
+				'priority'    => 5,
+			),
+		);
 
 		$settings['post_types_settings']['edit_post_page_options'] = array(
 			'name'       => 'edit_post_page_options',
 			'type'       => 'fields_group',
 			'label'      => __( 'Map Settings ( "Edit Post" Page )', 'geo-my-wp' ),
-			'desc'       => __( 'Setup the map of the Location section in the "Edit Post" page.', 'geo-my-wp' ),
+			'desc'       => __( 'Setup the Location form\'s map of the "Edit Post" page.', 'geo-my-wp' ),
 			'fields'     => array(
-				'edit_post_page_map_latitude'   => array(
-					'name'        => 'edit_post_page_map_latitude',
-					'type'        => 'text',
-					'default'     => '40.711544',
-					'placeholder' => __( 'Latitude', 'geo-my-wp' ),
-					'label'       => __( 'Default latitude', 'geo-my-wp' ),
-					'desc'        => __( 'Enter the latitude of the default location that will show when the map first loads.', 'geo-my-wp' ),
-					'attributes'  => array(),
-					'priority'    => 5,
-				),
-				'edit_post_page_map_longitude'  => array(
-					'name'        => 'edit_post_page_map_longitude',
-					'type'        => 'text',
-					'default'     => '-74.013486',
-					'placeholder' => __( 'Longitude', 'geo-my-wp' ),
-					'label'       => __( 'Default longitude', 'geo-my-wp' ),
-					'desc'        => __( 'Enter the longitude of the default location that will show when the map first loads.', 'geo-my-wp' ),
-					'attributes'  => array(),
-					'priority'    => 10,
-				),
-				'edit_post_page_map_type'       => array(
-					'name'       => 'edit_post_page_map_type',
-					'type'       => 'select',
-					'default'    => 'ROADMAP',
-					'label'      => __( 'Map type', 'geo-my-wp' ),
-					'desc'       => __( 'Select the map type.', 'geo-my-wp' ),
-					'options'    => array(
-						'ROADMAP'   => __( 'ROADMAP', 'geo-my-wp' ),
-						'SATELLITE' => __( 'SATELLITE', 'geo-my-wp' ),
-						'HYBRID'    => __( 'HYBRID', 'geo-my-wp' ),
-						'TERRAIN'   => __( 'TERRAIN', 'geo-my-wp' ),
+				'edit_post_page_map_latitude'   => gmw_get_admin_setting_args(
+					array(
+						'name'        => 'edit_post_page_map_latitude',
+						'type'        => 'text',
+						'default'     => '40.711544',
+						'placeholder' => __( 'Latitude', 'geo-my-wp' ),
+						'label'       => __( 'Default latitude', 'geo-my-wp' ),
+						'desc'        => __( 'Enter the latitude of the default location that will show when the map first loads.', 'geo-my-wp' ),
+						'priority'    => 5,
 					),
-					'attributes' => array(),
-					'priority'   => 15,
 				),
-				'edit_post_page_map_zoom_level' => array(
-					'name'       => 'edit_post_page_map_zoom_level',
-					'type'       => 'select',
-					'default'    => 7,
-					'label'      => __( 'Map type', 'geo-my-wp' ),
-					'desc'       => __( 'Select the zoom level of the map.', 'geo-my-wp' ),
-					'options'    => $zoom_levels,
-					'attributes' => array(),
-					'priority'   => 20,
+				'edit_post_page_map_longitude'  => gmw_get_admin_setting_args(
+					array(
+						'name'        => 'edit_post_page_map_longitude',
+						'type'        => 'text',
+						'default'     => '-74.013486',
+						'placeholder' => __( 'Longitude', 'geo-my-wp' ),
+						'label'       => __( 'Default longitude', 'geo-my-wp' ),
+						'desc'        => __( 'Enter the longitude of the default location that will show when the map first loads.', 'geo-my-wp' ),
+						'priority'    => 10,
+					),
+				),
+				'edit_post_page_map_type'       => gmw_get_admin_setting_args(
+					array(
+						'name'     => 'edit_post_page_map_type',
+						'type'     => 'select',
+						'default'  => 'ROADMAP',
+						'label'    => __( 'Map type', 'geo-my-wp' ),
+						'desc'     => __( 'Select the map type.', 'geo-my-wp' ),
+						'options'  => array(
+							'ROADMAP'   => __( 'ROADMAP', 'geo-my-wp' ),
+							'SATELLITE' => __( 'SATELLITE', 'geo-my-wp' ),
+							'HYBRID'    => __( 'HYBRID', 'geo-my-wp' ),
+							'TERRAIN'   => __( 'TERRAIN', 'geo-my-wp' ),
+						),
+						'class'    => 'gmw-smartbox-not',
+						'priority' => 15,
+					),
+				),
+				'edit_post_page_map_zoom_level' => gmw_get_admin_setting_args(
+					array(
+						'name'     => 'edit_post_page_map_zoom_level',
+						'type'     => 'select',
+						'default'  => 7,
+						'label'    => __( 'Map type', 'geo-my-wp' ),
+						'desc'     => __( 'Select the zoom level.', 'geo-my-wp' ),
+						'options'  => array_slice( range( 0, 21 ), 1, null, true ),
+						'class'    => 'gmw-smartbox-not',
+						'priority' => 20,
+					),
 				),
 			),
 			'attributes' => '',
-			'optionsbox' => 1,
 			'priority'   => 20,
 		);
 
-		$settings['post_types_settings']['location_mandatory'] = array(
-			'name'       => 'location_mandatory',
-			'type'       => 'checkbox',
-			'default'    => 0,
-			'label'      => __( 'Mandatory Location', 'geo-my-wp' ),
-			'cb_label'   => __( 'Enable', 'geo-my-wp' ),
-			'desc'       => __( 'Prevent post submission when no location entered.', 'geo-my-wp' ),
-			'attributes' => array(),
-			'priority'   => 30,
+		$settings['post_types_settings']['location_mandatory'] = gmw_get_admin_setting_args(
+			array(
+				'name'     => 'location_mandatory',
+				'type'     => 'checkbox',
+				'default'  => 0,
+				'label'    => __( 'Post Location Required', 'geo-my-wp' ),
+				'cb_label' => __( 'Enable', 'geo-my-wp' ),
+				'desc'     => __( 'Prevent post submission if no location was entered.', 'geo-my-wp' ),
+				'priority' => 100,
+				'disabled' => true,
+			),
 		);
 
 		return $settings;
