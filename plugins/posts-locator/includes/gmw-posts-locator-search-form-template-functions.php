@@ -139,15 +139,15 @@ function gmw_get_search_form_taxonomies( $gmw ) {
 
 		$post_types = ! empty( $tax_args['post_types'] ) ? $tax_args['post_types'] : array();
 		$args       = array(
-			'id'               => $gmw['ID'],
-			'slug'             => $taxonomy . '-taxonomy',
-			'type'             => 'taxonomy',
-			'name'             => $taxonomy,
-			'is_array'         => true,
-			'label'            => ! empty( $tax_args['label'] ) ? $tax_args['label'] : '',
-			'required'         => ! empty( $settings['required'] ) ? 1 : 0,
-			'wrapper_class'    => 'gmw-field-type-' . $tax_args['style'] . '-wrapper gmw-single-taxonomy-wrapper',
-			'wrapper_atts'     => array(
+			'id'              => $gmw['ID'],
+			'slug'            => $taxonomy . '-taxonomy',
+			'type'            => 'taxonomy',
+			'name'            => $taxonomy,
+			'is_array'        => true,
+			'label'           => ! empty( $tax_args['label'] ) ? $tax_args['label'] : '',
+			'required'        => ! empty( $settings['required'] ) ? 1 : 0,
+			'wrapper_class'   => 'gmw-field-type-' . $tax_args['style'] . '-wrapper gmw-single-taxonomy-wrapper',
+			'wrapper_atts'    => array(
 				'data-post_types' => implode( ',', $post_types ),
 			),
 			'additional_args' => array(
