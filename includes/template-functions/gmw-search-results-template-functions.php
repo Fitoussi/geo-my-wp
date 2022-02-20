@@ -326,3 +326,103 @@ function gmw_get_search_results_permalink( $url, $object, $gmw ) {
 function gmw_search_results_permalink( $url, $object, $gmw ) {
 	echo gmw_get_search_results_permalink( $url, $object, $gmw ); // WPCS: XSS ok.
 }
+
+/**
+ * Get the location's title with the permalink in the search results.
+ *
+ * Modified the permalink and append it with some location data when needed.
+ *
+ * @since 4.0
+ *
+ * @author Eyal Fitoussi
+ *
+ * @param  string $url    original permalink.
+ *
+ * @param  string $title  the title.
+ *
+ * @param  object $object location object.
+ *
+ * @param  array  $gmw    gmw form.
+ *
+ * @return string         modified permalink.
+ */
+function gmw_get_search_results_linked_title( $url, $title, $object, $gmw ) {
+
+	$output = '';
+	$url    = gmw_get_search_results_permalink( $url, $object, $gmw ); // Already escaped.
+	$title  = gmw_get_search_results_title( $title, $object, $gmw ); // Already escaped.
+	$atts   = '';
+
+	$attributes = apply_filters( 'gmw_get_search_results_linked_title_attr', array(), $object, $gmw );
+
+	if ( is_array( $attributes ) && ! empty( $attributes ) ) {
+
+		foreach ( $attributes as $key => $value ) {
+
+			$attributes[] = esc_attr( $attribute_name ) . '="' . esc_attr( $attribute_value ) . '"';
+
+			unset( $attributes[ $key ] );
+		}
+
+		$attr = implode( ' ', $attributes );
+	}
+
+	return '<a href="' . $url . '" ' . $atts . '>' . $title . '</a>'; // WPCS: XSS ok. Already escaped in original functions.
+}
+
+/**
+ * Output the linked title in the search results.
+ *
+ * @param  string $url    permalink.
+ *
+ * @param  string $title  title.
+ *
+ * @param  object $object object in the results.
+ *
+ * @param  array  $gmw    gmw form.
+ */
+function gmw_search_results_linked_title( $url, $title, $object, $gmw ) {
+	echo gmw_get_search_results_linked_title( $url, $title, $object, $gmw ); // WPCS: XSS ok.
+}
+
+/**
+ * Get result view toggle.
+ *
+ * @since 4.0.
+ *
+ * @param array $gmw gme form.
+ */
+function gmw_get_results_view_toggle( $gmw ) {
+
+	if ( empty( $gmw['search_results']['results_view']['toggle'] ) ) {
+		return;
+	}
+
+	$view = ! empty( $_COOKIE[ 'gmw_' . $gmw['ID'] . '_results_view' ] ) ? sanitize_text_field( wp_unslash( $_COOKIE[ 'gmw_' . $gmw['ID'] . '_results_view' ] ) ) : $gmw['search_results']['results_view']['default'];
+	$grid = '';
+	$list = '';
+
+	if ( 'grid' === $view ) {
+		$grid = ' active';
+	} else {
+		$list = ' active';
+	}
+
+	$output  = '<div class="gmw-results-view-toggle-wrapper">';
+	$output .= '<span class="gmw-icon-th-large' . $grid . '" data-view="grid" title="' . esc_attr__( 'Grid View', 'geo-my-wp' ) . '"></span>';
+	$output .= '<span class="gmw-icon-th-list ' . $list . '" data-view="list" title="' . esc_attr__( 'List View', 'geo-my-wp' ) . '"></span>';
+	$output .= '</div>';
+
+	return $output;
+}
+
+/**
+ * Output result view toggle.
+ *
+ * @since 4.0.
+ *
+ * @param array $gmw gme form.
+ */
+function gmw_results_view_toggle( $gmw ) {
+	echo gmw_get_results_view_toggle( $gmw ); // WPCS: XSS ok.
+}
