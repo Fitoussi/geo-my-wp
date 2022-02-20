@@ -70,22 +70,26 @@ function gmw_search_form_bp_groups_field( $gmw = array() ) {
 function gmw_get_search_form_xprofile_fields( $gmw ) {
 
 	// Look for profile fields in form settings.
-	$total_fields = ! empty( $gmw['search_form']['xprofile_fields']['fields'] ) ? $gmw['search_form']['xprofile_fields']['fields'] : array();
+	$all_fields = ! empty( $gmw['search_form']['xprofile_fields']['fields'] ) ? $gmw['search_form']['xprofile_fields']['fields'] : array();
 
 	// look for date profile field in form settings.
 	if ( ! empty( $gmw['search_form']['xprofile_fields']['date_field'] ) ) {
-		array_unshift( $total_fields, $gmw['search_form']['xprofile_fields']['date_field'] );
+		array_unshift( $all_fields, $gmw['search_form']['xprofile_fields']['date_field'] );
 	}
 
 	// abort if no profile fields were chosen.
-	if ( empty( $total_fields ) ) {
+	if ( empty( $all_fields ) ) {
 		return;
 	}
 
-	$output  = '';
-	$output .= '<div id="gmw-search-form-xprofile-fields-' . esc_attr( $gmw['ID'] ) . '" class="gmw-search-form-xprofile-fields gmw-fl-form-xprofile-fields gmw-search-form-multiple-fields-wrapper">';
+	$all_fields    = apply_filters( 'gmw_fl_form_xprofile_field_before_displayed', $all_fields, $gmw );
+	$multiple_wrap = apply_filters( 'gmw_xf_multiple_fields_wrapper', false, $gmw );
 
-	$total_fields = apply_filters( 'gmw_fl_form_xprofile_field_before_displayed', $total_fields, $gmw );
+	$output  = '';
+
+	if ( $multiple_wrap ) {
+		$output .= '<div id="gmw-search-form-xprofile-fields-' . esc_attr( $gmw['ID'] ) . '" class="gmw-search-form-xprofile-fields gmw-fl-form-xprofile-fields gmw-search-form-multiple-fields-wrapper">';
+	}
 
 	$values = isset( $gmw['form_values']['xf'] ) ? $gmw['form_values']['xf'] : array();
 
@@ -95,16 +99,13 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 		$custom_xf_plugin = 'new';
 	}
 
-	foreach ( $total_fields as $field_id ) {
+	foreach ( $all_fields as $field_id ) {
 
-		$field_id    = absint( $field_id );
-		$fid         = 'field_' . $field_id;
-		$field_class = 'gmw-xprofile-field';
-		$field_data  = new BP_XProfile_Field( $field_id );
+		$field_id   = absint( $field_id );
+		$field_data = new BP_XProfile_Field( $field_id );
 
 		// field label can be modified.
 		$label = apply_filters( 'gmw_fl_xprofile_form_field_label', $field_data->name, $field_id, $field_data );
-		$label = esc_html( $label );
 		$value = '';
 
 		// get the submitted value if form submitted.
@@ -118,12 +119,30 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 			$value = apply_filters( 'gmw_fl_xprofile_form_default_value', '', $field_id, $field_data );
 		}
 
+		// Sanitize values.
 		if ( '' !== $value ) {
 			$value = is_array( $value ) ? array_map( 'esc_attr', $value ) : esc_attr( stripslashes( $value ) );
 		}
 
-		// field wrapper.
-		$output .= '<div class="gmw-form-field-wrapper gmw-xprofile-field-wrapper editfield field_type_' . esc_attr( $field_data->type ) . ' field_' . $field_id . ' field_' . sanitize_title( $field_data->name ) . '">';
+		$field_name = sanitize_title( $field_data->name );
+		$field_args = array(
+			'id'            => $gmw['ID'],
+			'type'          => 'text',
+			'name'          => 'xf',
+			'sub_name'      => $field_id,
+			'is_array'      => false,
+			'slug'          => $field_name,
+			'wrapper_class' => 'gmw-xprofile-field-wrapper editfield field_type_' . esc_attr( $field_data->type ) . ' field_' . $field_id . ' field_' . $field_name,
+			'class'         => 'gmw-xprofile-field',
+			'label'         => $label,
+			'placeholder'   => $label,
+			'value'         => $value,
+		);
+
+		// For fields with options all.
+		$option_all = apply_filters( 'gmw_fl_xprofile_form_dropdown_option_all', __( ' -- All -- ', 'geo-my-wp' ), $field_id, $field_data );
+
+		$fields = array();
 
 		// display field.
 		switch ( $field_data->type ) {
@@ -138,108 +157,117 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 					);
 				}
 
-				$output .= '<label class="gmw-field-label" for="' . $fid . '">' . __( 'Age Range (min - max)', 'geo-my-wp' ) . '</label>';
-				$output .= '<input type="number" name="xf[' . $field_id . '][min]" id="' . $fid . '_min" class="' . $field_class . ' range-min" value="' . $value['min'] . '" placeholder="' . __( 'Min', 'geo-my-wp' ) . '" />';
-				$output .= '<input type="number" name="xf[' . $field_id . '][max]" id="' . $fid . '_max" class="' . $field_class . ' range-max" value="' . $value['max'] . '" placeholder="' . __( 'Max', 'geo-my-wp' ) . '" />';
+				$wrapper_args = array(
+					'id'    => $gmw['ID'],
+					'slug'  => $field_name,
+					'class' => $field_args['class'],
+					'label' => __( 'Age Range', 'geo-my-wp' ),
+				);
+
+				$field_args['type']        = 'number';
+				$field_args['class']       = 'range-min';
+				$field_args['placeholder'] = 'Min';
+				$field_args['label']       = '';
+				$field_args['array_key']   = 'min';
+
+				$fields[] = $field_args;
+
+				$field_args['type']        = 'number';
+				$field_args['class']       = 'range-max';
+				$field_args['placeholder'] = 'Max';
+				$field_args['label']       = '';
+				$field_args['array_key']   = 'max';
+
+				$fields[] = $field_args;
+
 				break;
 
 			// textbox field.
 			case 'textbox':
-				$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
-				$output .= '<input type="text" name="xf[' . $field_id . ']" id="' . $fid . '" class="' . $field_class . '" value="' . $value . '" placeholder=" ' . $label . '" />';
+				$field_args['type'] = 'text';
+				$fields[]           = $field_args;
+
 				break;
 
 			// number field.
 			case 'number':
-				$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
-				$output .= '<input type="number" name="xf[' . $field_id . ']" id="' . $fid . '" value="' . $value . '" placeholder=" ' . $label . '" />';
+				$field_args['type'] = 'number';
+				$fields[]           = $field_args;
+
 				break;
 
 			// textarea.
 			case 'textarea':
-				$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
-				$output .= '<textarea rows="5" cols="40" name="xf[' . $field_id . ']" id="' . $fid . '" class="' . $field_class . '">' . $value . '</textarea>';
+				$field_args['type'] = 'textarea';
+				$fields[]           = $field_args;
+
 				break;
 
 			// selectbox.
 			case 'selectbox':
-				$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
-				$output .= '<select name="xf[' . $field_id . ']" id="' . $fid . '" class="' . $field_class . '">';
-
-				// all option.
-				$option_all = apply_filters( 'gmw_fl_xprofile_form_dropdown_option_all', __( ' -- All -- ', 'geo-my-wp' ), $field_id, $field_data );
-
-				if ( ! empty( $option_all ) ) {
-					$output .= '<option value="">' . esc_attr( $option_all ) . '</option>';
-				}
-
-				// get options.
-				$children = $field_data->get_children();
-
-				foreach ( $children as $child ) {
-					$option   = trim( $child->name );
-					$selected = ( $option === $value ) ? "selected='selected'" : '';
-					$output  .= '<option ' . $selected . ' value="' . $option . '">' . esc_attr( $option ) . '</option>';
-				}
-
-				$output .= '</select>';
-
-				break;
-
-			// multiselect box.
 			case 'multiselectbox':
-				$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
-				$output .= '<select name="xf[' . $field_id . '][]" id="' . $fid . '" class="' . $field_class . '" multiple="multiple">';
-
 				// get options.
 				$children = $field_data->get_children();
+				$options  = array();
 
 				foreach ( $children as $child ) {
-					$option   = trim( $child->name );
-					$selected = ( ! empty( $value ) && in_array( $option, $value, true ) ) ? "selected='selected'" : '';
-
-					$output .= '<option ' . $selected . ' value="' . $option . '">' . esc_attr( $option ) . '</option>';
+					$option             = trim( $child->name );
+					$options[ $option ] = $option;
 				}
 
-				$output .= '</select>';
+				if ( 'selectbox' === $field_data->type ) {
+
+					$field_args['type'] = 'select';
+					$field_args['is_array'];
+				} else {
+
+					$field_args['type'] = 'multiselect';
+					$field_args['is_array'] = true;
+				}
+
+				$field_args['options']          = $options;
+				$field_args['show_options_all'] = $option_all;
+
+				$fields[] = $field_args;
 
 				break;
 
 			// radio buttons.
 			case 'radio':
-				$output .= '<div class="radio input-options radio-button-options">';
-				$output .= '<span class="label gmw-field-label">' . $label . '</span>';
-
 				// get options.
 				$children = $field_data->get_children();
+				$options  = array();
 
 				foreach ( $children as $child ) {
-					$option  = trim( $child->name );
-					$checked = ( $child->name === $value ) ? "checked='checked'" : '';
-
-					$output .= '<label><input ' . $checked . ' type="radio" name="xf[' . $field_id . ']" value="' . $option . '" />' . esc_attr( $option ) . '</label>';
+					$option             = trim( $child->name );
+					$options[ $option ] = $option;
 				}
 
-				$output .= '<a href="#" onclick="event.preventDefault();jQuery(this).closest(\'div\').find(\'input\').prop(\'checked\', false);">' . __( 'Clear', 'buddypress' ) . '</a><br/>';
-				$output .= '</div>';
+				$field_args['type']             = 'radio';
+				$field_args['show_clear_field'] = true;
+				$field_args['options']          = $options;
+
+				$fields[] = $field_args;
 
 				break;
 
 			// checkboxes.
 			case 'checkbox':
-				$output .= '<div class="checkbox input-options checkbox-options">';
-				$output .= '<span class="label gmw-field-label">' . $label . '</span>';
-
 				// get options.
 				$children = $field_data->get_children();
+				$options  = array();
 
 				foreach ( $children as $child ) {
-					$option  = trim( $child->name );
-					$checked = ( ! empty( $value ) && in_array( $option, $value, true ) ) ? "checked='checked'" : '';
 
-					$output .= '<label><input ' . $checked . ' type="checkbox" name="xf[' . $field_id . '][]" value="' . $option . '" />' . esc_attr( $option ) . '</label>';
+					$option             = trim( $child->name );
+					$options[ $option ] = $option;
 				}
-				$output .= '</div>';
+
+				$field_args['type']     = 'checkboxes';
+				$field_args['options']  = $options;
+				$field_args['is_array'] = true;
+
+				$fields[] = $field_args;
 
 				break;
 
@@ -254,6 +282,7 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 			case 'select_custom_taxonomy':
 			case 'multiselect_custom_taxonomy':
 				$taxonomy_selected = false;
+				$options           = array();
 
 				if ( 'old' === $custom_xf_plugin ) {
 
@@ -278,61 +307,34 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 					$taxonomy_selected = bp_xprofile_get_meta( $field_id, 'field', 'selected_taxonomy', true );
 				}
 
-				if ( $taxonomy_selected ) {
+				if ( ! empty( $taxonomy_selected ) ) {
 
 					$terms = get_terms(
 						$taxonomy_selected,
 						array( 'hide_empty' => false )
 					);
 
-					if ( $terms ) {
+					if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
 
-						// Generate select custom taxonomy.
-						if ( 'select_custom_taxonomy' === $field_data->type ) {
-
-							$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
-							$output .= '<select name="xf[' . $field_id . ']" id="' . $fid . '" class="' . $field_class . '">';
-
-							$option_all = apply_filters( 'gmw_fl_xprofile_form_dropdown_option_all', __( ' -- All -- ', 'geo-my-wp' ), $field_id, $field_data );
-
-							if ( ! empty( $option_all ) ) {
-								$output .= '<option value="">' . esc_attr( $option_all ) . '</option>';
-							}
-
-							foreach ( $terms as $term ) {
-
-								$selected = ( ! empty( $value ) && absint( $value ) === $term->term_id ) ? "selected='selected'" : '';
-								$output  .= sprintf(
-									'<option value="%s"%s>%s</option>',
-									$term->term_id,
-									$selected,
-									$term->name
-								);
-							}
-
-							$output .= '</select>';
-
-							// Otherwise, generate multi-select.
-						} else {
-
-							$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
-							$output .= '<select name="xf[' . $field_id . '][]" id="' . $fid . '" class="' . $field_class . '" multiple="multiple">';
-
-							foreach ( $terms as $term ) {
-
-								$selected = ( ! empty( $value ) && in_array( absint( $term->term_id ), array_map( 'absint', $value ), true ) ) ? "selected='selected'" : '';
-								$output  .= sprintf(
-									'<option value="%s" %s >%s</option>',
-									$term->term_id,
-									$selected,
-									$term->name
-								);
-							}
-
-							$output .= '</select>';
+						foreach ( $terms as $term ) {
+							$options[ $term->term_id ] = $term->name;
 						}
 					}
 				}
+
+				if ( 'select_custom_taxonomy' === $field_data->type ) {
+
+					$field_args['type'] = 'select';
+				} else {
+
+					$field_args['type']     = 'multiselect';
+					$field_args['is_array'] = true;
+				}
+
+				$field_args['options']          = $options;
+				$field_args['show_options_all'] = $option_all;
+
+				$fields[] = $field_args;
 
 				break;
 
@@ -340,6 +342,7 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 			case 'select_custom_post_type':
 			case 'multiselect_custom_post_type':
 				$post_type_selected = false;
+				$options            = array();
 
 				if ( 'old' === $custom_xf_plugin ) {
 
@@ -352,7 +355,7 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 					$post_type_selected = bp_xprofile_get_meta( $field_id, 'field', 'selected_post_type', true );
 				}
 
-				if ( $post_type_selected ) {
+				if ( ! empty( $post_type_selected ) ) {
 
 					// Get the posts of the selected custom post type.
 					$posts = new WP_Query(
@@ -364,55 +367,46 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 						)
 					);
 
-						// Generate select custom post type.
-					if ( 'select_custom_post_type' === $field_data->type ) {
+					if ( ! empty( $posts ) ) {
 
-						$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
-						$output .= '<select name="xf[' . $field_id . ']" id="' . $fid . '" class="' . $field_class . '">';
-
-						$option_all = apply_filters( 'gmw_fl_xprofile_form_dropdown_option_all', __( ' -- All -- ', 'geo-my-wp' ), $field_id, $field_data );
-
-						if ( ! empty( $option_all ) ) {
-							$output .= '<option value="">' . esc_attr( $option_all ) . '</option>';
+						foreach ( $posts->posts as $post ) {
+							$options[ $post->ID ] = $post->post_title;
 						}
-
-						if ( $posts ) {
-							foreach ( $posts->posts as $post ) {
-								$selected = ( absint( $value ) === $post->ID ) ? "selected='selected'" : '';
-								$output  .= '<option ' . $selected . ' value="' . $post->ID . '">' . $post->post_title . '</option>';
-							}
-						}
-
-						$output .= '</select>';
-
-					// Otherwise, generate multi-select.
-					} else {
-
-						$output .= '<label class="gmw-field-label" for="' . $fid . '">' . $label . '</label>';
-						$output .= '<select name="xf[' . $field_id . '][]" id="' . $fid . '" class="' . $field_class . '" multiple="multiple">';
-
-						if ( $posts ) {
-							foreach ( $posts->posts as $post ) {
-								$selected = ( ! empty( $value ) && in_array( absint( $post->ID ), array_map( 'absint', $value ), true ) ) ? "selected='selected'" : '';
-								$output  .= '<option ' . $selected . ' value="' . $post->ID . '">' . $post->post_title . '</option>';
-							}
-						}
-
-						$output .= '</select>';
 					}
 				}
+
+				if ( 'select_custom_post_type' === $field_data->type ) {
+
+					$field_args['type'] = 'select';
+				} else {
+
+					$field_args['type']     = 'multiselect';
+					$field_args['is_array'] = true;
+				}
+
+				$field_args['options']          = $options;
+				$field_args['show_options_all'] = $option_all;
+
+				$fields[] = $field_args;
 
 				break;
 
 			default:
-				$output = apply_filters( 'gmw_fl_get_xprofile_fields', $output, $field_id, $field_data, $label, $field_class, $fid, $value );
+				// Deprecated.
+				$output = apply_filters( 'gmw_fl_get_xprofile_fields', $output, $field_id, $field_data, $label, $field_args['class'], $field_id, $value );
+
+				// New filter.
+				$output = apply_filters( 'gmw_fl_get_xprofile_fields_default', $output, $field_id, $field_args, $field_data );
+
 				break;
+		}
 
-		} // switch
+		$output .= 1 === count( $fields ) ? gmw_get_form_field( $fields[0], $gmw ) : GMW_Search_Form_Helper::get_complex_field( $wrapper_args, $fields, $gmw );
+	}
 
+	if ( $multiple_wrap ) {
 		$output .= '</div>';
 	}
-	$output .= '</div>';
 
 	return $output;
 }
