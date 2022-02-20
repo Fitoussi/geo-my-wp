@@ -180,7 +180,14 @@ function gmw_search_form_address_field( $gmw = array(), $id = 0, $class = false 
 
 	do_action( 'gmw_before_search_form_address_field', $gmw );
 
-	echo gmw_get_search_form_address_field( $gmw ); // WPCS: XSS ok.
+	if ( empty( $gmw['search_form']['address_field']['usage'] ) || 'single' === $gmw['search_form']['address_field']['usage'] ) {
+
+		echo gmw_get_search_form_address_field( $gmw ); // WPCS: XSS ok.
+
+	} else if ( function_exists( 'gmw_get_search_form_address_fields' ) ) {
+
+		echo gmw_get_search_form_address_fields( $gmw ); // WPCS: XSS ok.
+	}
 
 	do_action( 'gmw_after_search_form_address_field', $gmw );
 }
