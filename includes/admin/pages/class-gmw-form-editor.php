@@ -996,6 +996,40 @@ class GMW_Form_Editor {
 							'priority'    => 15,
 						)
 					),
+					'address'            => array(
+						'name'       => 'address',
+						'type'       => 'fields_group',
+						'label'      => __( 'Address', 'geo-my-wp' ),
+						'fields'     => array(
+							'enabled'      => gmw_get_admin_setting_args(
+								array(
+									'name'       => 'enabled',
+									'type'       => 'checkbox',
+									'default'    => '',
+									'label'      => __( 'Display Address', 'geo-my-wp' ),
+									'desc'       => __( 'Display the address of each location in the list of result.', 'geo-my-wp' ),
+									'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+									'class'      => 'gmw-options-toggle',
+									'attributes' => array(),
+									'priority'   => 5,
+								)
+							),
+							'linked'      => gmw_get_admin_setting_args(
+								array(
+									'name'       => 'linked',
+									'type'       => 'checkbox',
+									'default'    => '',
+									'label'      => __( 'Link Address To Google Maps.', 'geo-my-wp' ),
+									'desc'       => __( 'Clicking on the address will open a new window showing the location on Google Map.', 'geo-my-wp' ),
+									'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+									'attributes' => array(),
+									'priority'   => 20,
+								)
+							),
+						),
+						'attributes' => '',
+						'priority'   => 25,
+					),
 					'image'            => array(
 						'name'       => 'image',
 						'type'       => 'fields_group',
@@ -1050,7 +1084,7 @@ class GMW_Form_Editor {
 							),
 						),
 						'attributes' => '',
-						'priority'   => 25,
+						'priority'   => 30,
 					),
 					'location_meta'    => gmw_get_admin_setting_args(
 						array(
