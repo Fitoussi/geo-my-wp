@@ -716,20 +716,95 @@ class GMW_Form_Settings_Helper {
 	}
 
 	/**
-	 * Validate excerpt
+	 * Generate form field options.
 	 *
-	 * @param  [type] $output [description].
+	 * @param  array || string $args can be string of pre-defined option name or array of field args.
 	 *
-	 * @return [type]         [description]
+	 * @since 4.0
+	 *
+	 * @author Eyal Fitoussi
+	 *
+	 * @return [type]       [description]
 	 */
-	public static function validate_excerpt( $output ) {
+	public static function get_setting_args( $args ) {
 
-		$output['enabled'] = ! empty( $output['enabled'] ) ? 1 : '';
-		$output['usage']   = ( 'post_content' === $output['usage'] || 'post_excerpt' === $output['usage'] ) ? $output['usage'] : 'post_content';
-		$output['count']   = isset( $output['count'] ) ? preg_replace( '/[^0-9]/', '', $output['count'] ) : '';
-		$output['link']    = isset( $output['link'] ) ? sanitize_text_field( $output['link'] ) : '';
+		if ( is_string( $args ) ) {
 
-		return $output;
+			$option = $args;
+			$args   = array();
+
+		} else {
+			// Specific option type.
+			$option = isset( $args['option_type'] ) ? $args['option_type'] : '';
+		}
+
+		// Default option args.
+		$defaults = array(
+			'name'          => '',
+			'type'          => 'text',
+			'default'       => '',
+			'label'         => '',
+			'cb_label'      => '',
+			'placeholder'   => '',
+			'desc'          => '',
+			'options'       => array(),
+			'class'         => '',
+			'attributes'    => array(),
+			'force_default' => 0,
+			'priority'      => 0,
+			'sub_option'    => true,
+		);
+
+		if ( 'label' === $option ) {
+
+			$defaults['name']     = 'label';
+			$defaults['label']    = __( 'Field Label', 'geo-my-wp' );
+			$defaults['desc']     = __( 'Enter the field\'s label or leave it blank to hide it.', 'geo-my-wp' );
+			$defaults['priority'] = 10;
+
+		} elseif ( 'placeholder' === $option ) {
+
+			$defaults['name']     = 'placeholder';
+			$defaults['label']    = __( 'Placeholder', 'geo-my-wp' );
+			$defaults['desc']     = __( 'Enter the field\'s placeholder or leave blank to hide it.', 'geo-my-wp' );
+			$defaults['priority'] = 15;
+
+		} elseif ( 'show_options_all' === $option ) {
+
+			$defaults['name']     = 'show_options_all';
+			$defaults['label']    = __( 'Options all label', 'geo-my-wp' );
+			$defaults['desc']     = __( 'Enter the lable that will be the first option in the select dropdown ( or leave it blank ). This option will have no value and usually will display all options.', 'geo-my-wp' );
+			$defaults['priority'] = 30;
+
+		} elseif ( 'required' === $option ) {
+
+			$defaults['name']     = 'required';
+			$defaults['type' ]    = 'checkbox';
+			$defaults['label']    = __( 'Required', 'geo-my-wp' );
+			$defaults['cb_label'] = __( 'Enable', 'geo-my-wp' );
+			$defaults['desc']     = __( 'Make this a required field.', 'geo-my-wp' );
+			$defaults['priority'] = 80;
+
+		} elseif ( 'usage_select' === $option ) {
+
+			$defaults['name']     = 'usage';
+			$defaults['type' ]    = 'select';
+			$defaults['label']    = __( 'Usage', 'geo-my-wp' );
+			$defaults['default']  = 'disabled';
+			$defaults['desc']     = __( 'Select the field usage.', 'geo-my-wp' );
+			$defaults['priority'] = 5;
+			$defaults['class']    = 'gmw-smartbox-not';
+			$defaults['options']  = array(
+				'disabled'          => __( 'Disable Filter', 'gmw-my-wp' ),
+				'pre_defined'       => __( 'Pre-defined','gmw-my-wp' ),
+				'dropdown'          => __( 'Select dropdown', 'gmw-my-wp' ),
+				'checkboxes'        => __( 'Checkboxes', 'gmw-my-wp' ),
+				'smartbox'          => __( 'Smartbox', 'gmw-my-wp' ),
+				'smartbox_multiple' => __( 'Smartbox Multiple', 'gmw-my-wp' ),
+			);
+		} 
+
+		return wp_parse_args( $args, $defaults );
 	}
 
 	/**
