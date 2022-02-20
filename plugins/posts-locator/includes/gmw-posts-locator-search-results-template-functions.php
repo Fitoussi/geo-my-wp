@@ -5,8 +5,9 @@
  * @package geo-my-wp
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+	exit;
 }
 
 /**
@@ -22,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return [type]           [description]
  */
-function gmw_pt_get_tax_query_args( $tax_args = array(), $gmw ) {
+function gmw_pt_get_tax_query_args( $tax_args = array(), $gmw = array() ) {
 
 	$tax_value = false;
 	$output    = array( 'relation' => 'AND' );
@@ -132,11 +133,11 @@ function gmw_get_post_featured_image( $post = 0, $gmw = array(), $size = '', $at
 }
 
 /**
- * Display featured image in search results
+ * Display featured image in search results.
  *
- * @param  [type] $post [description].
+ * @param  object $post post object.
  *
- * @param  array  $gmw  [description].
+ * @param  array  $gmw  GMW form.
  *
  * @return [type]       [description]
  */
@@ -182,12 +183,12 @@ function gmw_search_results_taxonomies( $post, $gmw = array() ) {
  */
 function gmw_search_results_post_excerpt( $post, $gmw = array() ) {
 
-	if ( empty( $gmw['search_results']['excerpt']['enabled'] ) ) {
+	if ( empty( $gmw['search_results']['excerpt']['usage'] ) ) {
 		return;
 	}
 
 	// verify usage value.
-	$usage = isset( $gmw['search_results']['excerpt']['usage'] ) ? $gmw['search_results']['excerpt']['usage'] : 'post_content';
+	$usage = $gmw['search_results']['excerpt']['usage'];
 
 	if ( empty( $post->$usage ) ) {
 		return;
