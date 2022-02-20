@@ -120,6 +120,11 @@ class GMW_Forms_Helper {
 					'toggle'  => 1,
 				),
 				'per_page'         => '5,10,15,25,50',
+				'address'          => array(
+					'enabled' => 1,
+					'fields'  => array(),
+					'linked'  => 1,
+				),
 				'image'            => array(
 					'enabled'      => 1,
 					'width'        => '120px',
