@@ -17,11 +17,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 class GMW_Form_Settings_Helper {
 
 	/**
+	 * Check if string is json.
+	 *
+	 * @param  [type]  $string [description].
+	 *
+	 * @return boolean         [description]
+	 */
+	public static function is_json( $string ) {
+		return is_string( $string ) && is_array( json_decode( $string, true ) ) && ( json_last_error() == JSON_ERROR_NONE ) ? true : false;
+	}
+
+	/**
 	 * Get list of pages.
 	 *
 	 * @return [type] [description]
 	 */
 	public static function get_pages() {
+
 		$pages = array();
 
 		foreach ( get_pages() as $page ) {
@@ -48,167 +60,177 @@ class GMW_Form_Settings_Helper {
 	}
 
 	/**
-	 * Get a singple form field.
+	 * Taxonomy group sorting
 	 *
-	 * @param  array  $field     field array.
+	 * @param  [type] $a [description].
 	 *
-	 * @param  string $name_attr name attribute.
+	 * @param  [type] $b [description].
 	 *
-	 * @param  string $value     value.
-	 *
-	 * @return [type]            [description]
+	 * @return [type]    [description]
 	 */
-	public static function get_form_field( $field = array(), $name_attr = '', $value = '' ) {
+	public static function sort_taxonomy_terms_groups( $a, $b ) {
+		return strcmp( $a->taxonomy, $b->taxonomy );
+	}
 
-		$default_value = isset( $field['default'] ) ? $field['default'] : '';
-		$field_name    = esc_attr( $field['name'] );
-		$id_attr       = 'gmw-form-field-' . $field_name;
-		$field_type    = isset( $field['type'] ) ? esc_attr( $field['type'] ) : 'text';
-		$placeholder   = ! empty( $field['placeholder'] ) ? 'placeholder="' . esc_attr( $field['placeholder'] ) . '"' : '';
-		$name_attr     = ! empty( $name_attr ) ? esc_attr( $name_attr . '[' . $field_name . ']' ) : $field_name;
-		$attributes    = array();
+	/**
+	 * Taxonomies picker.
+	 *
+	 * @param  [type] $value     [description].
+	 *
+	 * @param  [type] $name_attr [description].
+	 *
+	 * @param  [type] $form      [description].
+	 */
+	public static function taxonomies( $value, $name_attr, $form ) {
 
-		// attributes.
-		if ( ! empty( $field['attributes'] ) && is_array( $field['attributes'] ) ) {
-			foreach ( $field['attributes'] as $attribute_name => $attribute_value ) {
-				$attributes[] = esc_attr( $attribute_name ) . '="' . esc_attr( $attribute_value ) . '"';
-			}
+		if ( empty( $value ) ) {
+			$value = array();
 		}
 
-		$output = '';
+		// get all taxonmoies.
+		$taxonomies = get_taxonomies();
+		?>
+		<div id="taxonomies-core-wrapper" class="gmw-setting-groups-container">
 
-		switch ( $field_type ) {
+			<?php
+			$all_post_types = get_post_types();
 
-			case '':
-			case 'input':
-			case 'text':
-			default:
-				$output .= '<input type="text" id="' . $id_attr . '" class="gmw-form-field regular-text text" name="' . $name_attr . '" value="' . esc_attr( sanitize_text_field( $value ) ) . '" ' . implode( ' ', $attributes ) . ' ' . $placeholder . ' />';
+			foreach ( $taxonomies as $taxonomy_name ) {
 
-				break;
+				$taxonomy = get_taxonomy( $taxonomy_name );
 
-			case 'checkbox':
-				$output .= '<label>';
-				$output .= '<input type="checkbox" id="' . $id_attr . '" class="gmw-form-field checkbox"';
-				$output .= ' name="' . $name_attr . '" value="1"';
-				$output .= ' ' . implode( ' ', $attributes );
-				$output .= ' ' . checked( '1', $value, false ) . ' />';
-				$output .= isset( $field['cb_label'] ) ? esc_attr( $field['cb_label'] ) : '';
-				$output .= '</label>';
-
-				break;
-
-			case 'multicheckbox':
-				foreach ( $field['options'] as $key_val => $name ) {
-
-					$key_val = esc_attr( $key_val );
-					$value   = ! empty( $value[ $key_val ] ) ? $value[ $key_val ] : $default_value;
-					$output .= '<label>';
-					$output .= '<input type="checkbox" id="' . $id_attr . '-' . $key_val . '" class="gmw-form-field ' . $field_name . ' checkbox multicheckbox" name="' . $name_attr . '[' . $key_val . ']" value="1" ' . checked( '1', $value ) . '/>';
-					$output .= esc_html( $name );
-					$output .= '</label>';
-
-				}
-				break;
-
-			case 'multicheckboxvalues':
-				$default_value = is_array( $default_value ) ? $default_value : array();
-
-				foreach ( $field['options'] as $key_val => $name ) {
-
-					$key_val = esc_attr( $key_val );
-					$checked = in_array( $key_val, $value ) ? 'checked="checked"' : '';
-
-					$output .= '<label>';
-					$output .= '<input type="checkbox" id="' . $id_attr . '-' . $key_val . '"';
-					$output .= ' class="gmw-form-field ' . $field_name . ' checkbox multicheckboxvalues"';
-					$output .= ' name="' . $name_attr . '[]"';
-					$output .= ' value="' . $key_val . '"';
-					$output .= $checked;
-					$output .= ' />';
-					$output .= esc_html( $name );
-					$output .= '</label>';
-
-				}
-				break;
-
-			case 'textarea':
-				$output .= '<textarea id="' . $id_attr . '"';
-				$output .= ' class="gmw-form-field textarea large-text"';
-				$output .= ' cols="50" rows="3" name="' . $name_attr . '"';
-				$output .= implode( ' ', $attributes );
-				$output .= ' ' . $placeholder . '>';
-				$output .= esc_textarea( $value );
-				$output .= '</textarea>';
-
-				break;
-
-			case 'radio':
-				$rc = 1;
-				foreach ( $field['options'] as $key_val => $name ) {
-
-					$checked = ( 1 === $rc ) ? 'checked="checked"' : checked( $value, $key_val, false );
-
-					$output .= '<label>';
-					$output .= '<input type="radio" id="' . $id_attr . '"';
-					$output .= ' class="gmw-form-field ' . $field_name . ' radio"';
-					$output .= ' name="' . $name_attr . '"';
-					$output .= ' value="' . esc_attr( $key_val ) . '"';
-					$output .= ' ' . $checked;
-					$output .= ' />';
-					$output .= esc_attr( $name );
-					$output .= '</label>';
-					$output .= '&nbsp;&nbsp;';
-
-					$rc++;
-				}
-				break;
-
-			case 'select':
-				$output .= '<select id="' . $id_attr . '" class="gmw-form-field select"';
-				$output .= ' name="' . $name_attr . '"';
-				$output .= ' ' . implode( ' ', $attributes );
-				$output .= '>';
-
-				foreach ( $field['options'] as $key_val => $name ) {
-					$output .= '<option value="' . esc_attr( $key_val ) . '" ' . selected( $value, $key_val, false ) . '>' . esc_html( $name ) . '</option>';
-				}
-				$output .= '</select>';
-
-				break;
-
-			case 'multiselect':
-				$output .= '<select id="' . $id_attr . '" multiple';
-				$output .= ' class="gmw-form-field multiselect regular-text"';
-				$output .= ' name="' . $name_attr . '[]"';
-				$output .= ' ' . implode( ' ', $attributes );
-				$output .= '>';
-
-				foreach ( $field['options'] as $key_val => $name ) {
-					$selected = ( is_array( $value ) && in_array( $key_val, $value ) ) ? 'selected="selected"' : '';
-					$output  .= '<option value="' . esc_attr( $key_val ) . '" ' . $selected . '>' . esc_html( $name ) . '</option>';
+				// Abort if taxonomies was not found.
+				if ( empty( $taxonomy ) || ! is_object( $taxonomy ) ) {
+					continue;
 				}
 
-				$output .= '</select>';
+				$post_types = $taxonomy->object_type;
 
-				break;
+				// skip If post type of the taxonomy does not exists.
+				if ( 0 === count( array_intersect( $post_types, $all_post_types ) ) ) {
+					continue;
+				}
 
-			case 'password':
-				$output .= '<input type="password" id="' . $id_attr . '"';
-				$output .= ' class="gmw-form-field regular-text password" name="' . $name_attr . '"';
-				$output .= ' value="' . esc_attr( sanitize_text_field( $value ) ) . '"';
-				$output .= ' ' . implode( ' ', $attributes );
-				$output .= ' ' . $placeholder;
-				$output .= '/>';
+				$tax_options = ! empty( $value[ $taxonomy_name ] ) ? $value[ $taxonomy_name ] : array();
+				$defaults    = array(
+					'style'      => 'disable',
+					'post_types' => $post_types,
+					'label'      => '',
+					'required'   => '',
+				);
 
-				break;
+				$tax_options = wp_parse_args( $tax_options, $defaults );
+				$pt_string   = esc_attr( implode( ',', $post_types ) );
+				?>
+				<div id="<?php echo esc_attr( $taxonomy_name ); ?>_cat" class="taxonomy-wrapper gmw-settings-group-wrapper" data-post_types="<?php echo $pt_string; // WPCS: XSS ok. ?>">
 
-			case 'hidden':
-				$output .= '<input type="hidden" id="' . $id_attr . '"';
-				$output .= ' class="gmw-form-field hidden" name="' . $name_attr . '"';
-				$output .= ' value="' . esc_attr( sanitize_text_field( $value ) ) . '"';
-				$output .= ' ' . implode( ' ', $attributes );
-				$output .= ' />';
+					<div class="taxonomy-header gmw-settings-group-header">
+						<i class="gmw-settings-group-options-toggle gmw-taxonomy-options-toggle gmw-icon-cog gmw-tooltip" aria-label="Click to manage options."></i>
+						<span class="gmw-taxonomy-label"><strong><?php echo esc_attr( $taxonomy->labels->singular_name ); ?></strong> ( Post Types - <?php echo $pt_string; // WPCS: XSS ok. ?> )</span>
+					</div>
+
+					<?php $style = ! empty( $tax_options['style'] ) ? $tax_options['style'] : 'disabled'; ?>
+
+					<div class="taxonomy-settings-table-wrapper taxonomy-settings gmw-settings-group-content gmw-settings-multiple-fields-wrapper" data-type="<?php echo esc_attr( $style ); ?>">
+
+						<?php $tax_name_attr = esc_attr( $name_attr . '[' . $taxonomy_name . ']' ); ?>
+
+						<?php foreach ( $post_types as $pt ) { ?>
+							<input type="hidden" name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[post_types][]" value="<?php echo esc_attr( $pt ); ?>" />
+						<?php } ?>
+
+						<div class="gmw-settings-panel-field">
+
+							<div class="gmw-settings-panel-header">
+								<label class="gmw-settings-label"><?php esc_html_e( 'Usage', 'geo-my-wps' ); ?></label>
+							</div>
+
+							<div class="taxonomy-usage taxonomy-tab-content gmw-settings-panel-input-container">					
+
+								<select name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[style]" class="taxonomy-usage gmw-smartbox-not gmw-options-toggle">
+
+									<option value="disable" selected="selected">
+										<?php esc_attr_e( 'Disable', 'geo-my-wps' ); ?>
+									</option>	
+
+									<option value="dropdown" <?php selected( 'dropdown', $tax_options['style'], true ); ?>>
+										<?php esc_attr_e( 'Dropdown', 'geo-my-wp' ); ?>
+									</option>
+												
+								</select>
+							</div>
+
+							<div class="gmw-settings-panel-description">
+								<?php esc_attr_e( 'Select the taxonomy usage.', 'geo-my-wps' ); ?>
+							</div>
+						</div>
+
+						<div class="gmw-settings-panel-field">
+
+							<div class="gmw-settings-panel-header">
+								<label class="gmw-settings-label"><?php esc_attr_e( 'Field Label', 'geo-my-wps' ); ?></label>
+							</div>
+
+							<div class="taxonomy-label taxonomy-tab-content gmw-settings-panel-input-container">					
+								<input 
+									type="text"
+									class="gmw-form-field regular-text text setting-taxonomy-label"
+									name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[label]"
+									value="<?php echo ! empty( $tax_options['label'] ) ? esc_attr( $tax_options['label'] ) : ''; ?>"
+								>
+							</div>
+
+							<div class="gmw-settings-panel-description">
+								<?php esc_attr_e( 'Enter the field lable or leave blank to hide it.', 'geo-my-wps' ); ?>
+							</div>
+						</div>
+
+						<div class="gmw-settings-panel-field">
+
+							<div class="gmw-settings-panel-header">
+								<label class="gmw-settings-label"><?php esc_attr_e( 'Required', 'geo-my-wps' ); ?></label>
+							</div>
+
+							<div class="taxonomy-required taxonomy-tab-content gmw-settings-panel-input-container">					
+								<input
+									type="checkbox"
+									class="gmw-form-field checkbox setting-taxonomy-required"
+									name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[required]"
+									value="1"
+									<?php checked( 1, $tax_options['required'], true ); ?>
+								>
+							</div>
+
+							<div class="gmw-settings-panel-description"><?php esc_attr_e( 'Make this a required field.', 'geo-my-wp' ); ?></div>
+						</div>
+					</div>					
+				</div>
+
+			<?php } ?>
+		</div>
+		
+		<?php
+		$allwed  = array(
+			'a'   => array(
+				'href'   => array(),
+				'title'  => array(),
+				'target' => array(),
+			),
+		);
+		?>
+		<div id="taxonomies-messages-wrapper">
+			<div class="post-types-taxonomies-message select-taxonomy gmw-admin-notice-box gmw-admin-notice-error">
+				<span><?php esc_html_e( 'Select a post type above in order to see and setup its taxonomies.', 'geo-my-wp' ); ?></span>
+			</div>
+			<div class="post-types-taxonomies-message multiple-selected gmw-admin-notice-box gmw-admin-notice-error">
+				<span><?php echo wp_kses( sprintf( __( 'Taxonomies are not available when selecting multiple post types. This feature is available with the <a href="%s" target="_blank">Premium Settings extension</a>.', 'geo-my-wp' ), 'https://geomywp.com/extensions/premium-settings' ), $allwed ); ?></span>
+			</div>
+			<div class="post-types-taxonomies-message taxonomies-not-found gmw-admin-notice-box gmw-admin-notice-error">
+				<span><?php esc_html_e( 'No taxonomies were found for the selected post type.', 'geo-my-wp' ); ?></span>
+			</div>
+		</div>
+		<?php
+	}
 
 	/**
 	 * Get users role.
