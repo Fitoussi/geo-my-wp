@@ -10,6 +10,38 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Get search form field.
+ *
+ * @param  array  $args field args.
+ *
+ * @param  array  $gmw  gmw form object.
+ *
+ * @since 4.0
+ *
+ * @author Eyal Fitoussi
+ *
+ * @return [type]       [description]
+ */
+function gmw_get_form_field( $args = array(), $gmw = array() ) {
+	return GMW_Search_Form_Helper::get_field( $args, $gmw );
+}
+
+/**
+ * Output search form field.
+ *
+ * @param  array  $args field args.
+ *
+ * @param  array  $gmw  gmw form object.
+ *
+ * @since 4.0
+ *
+ * @author Eyal Fitoussi
+ */
+function gmw_form_field( $args = array(), $gmw = array() ) {
+	echo gmw_get_form_field( $args, $gmw );
+}
+
+/**
  * Form submission hidden fields
  *
  * @param  array  $gmw   the form being used.
@@ -147,6 +179,27 @@ function gmw_search_form_address_field( $gmw = array(), $id = 0, $class = false 
 }
 
 /**
+ * Output address fields.
+ *
+ * Requires the Premium Settings extension.
+ *
+ * @since 4.0 ( function moved from the Premium Settings extension ).
+ * 
+ * @param  array $gmw gmw form.
+ */
+function gmw_search_form_address_fields( $gmw ) {
+
+	// This function lives in the Premium Settings extension.
+	if ( ! function_exists( 'gmw_get_search_form_keywords_field' ) ) {
+		return;
+	}
+
+	do_action( 'gmw_before_search_form_address_fields', $gmw );
+
+	echo gmw_get_search_form_address_fields( $gmw ); // WPCS: XSS ok.
+
+	do_action( 'gmw_after_search_form_address_fields', $gmw );
+}
  * Get locator button
  *
  * @param  [type] $gmw form being processed.
@@ -223,17 +276,64 @@ function gmw_get_search_form_radius( $gmw ) {
 }
 
 /**
- * Output radius field.
+ * Output radius field in search form.
+ *
+ * This field will output either the slider from the premium settings or the normal radius field.
  *
  * @param  [type] $gmw gmw form.
  */
-function gmw_search_form_radius( $gmw ) {
+function gmw_search_form_radius( $gmw = array() ) {
 
 	do_action( 'gmw_before_search_form_radius', $gmw );
 
-	echo gmw_get_search_form_radius( $gmw ); // WPCS: XSS ok.
+	if ( ! empty( $gmw['search_form']['radius']['usage'] ) && 'slider' === $gmw['search_form']['radius']['usage'] && function_exists( 'gmw_get_search_form_radius_slider' ) ) {
+		echo gmw_get_search_form_radius_slider( $gmw );
+	} else {
+		echo gmw_get_search_form_radius( $gmw );
+	}
 
 	do_action( 'gmw_after_search_form_radius', $gmw );
+}
+
+/**
+ * Output radius field in search form.
+ *
+ * This function will output the normal radius field only.
+ *
+ * @since 4.0.
+ *
+ * @param  [type] $gmw gmw form.
+ */
+function gmw_search_form_radius_field( $gmw = array() ) {
+
+	do_action( 'gmw_before_search_form_radius_field', $gmw );
+
+	echo gmw_get_search_form_radius( $gmw ); // WPCS: XSS ok.
+
+	do_action( 'gmw_after_search_form_radius_field', $gmw );
+}
+
+/**
+ * Output radius slider in a search form.
+ *
+ * Requires the Premium Settings extension.
+ *
+ * @since 4.0 ( function moved from the Premium Settings extension ).
+ *
+ * @param  array $gmw gmw form.
+ */
+function gmw_search_form_radius_slider( $gmw = array() ) {
+
+	// This function lives in the Premium Settings extension.
+	if ( ! function_exists( 'gmw_get_search_form_radius_slider' ) ) {
+		return;
+	}
+
+	do_action( 'gmw_before_search_form_radius_slider', $gmw );
+
+	echo gmw_get_search_form_radius_slider( $gmw ); // WPCS: XSS ok.
+
+	do_action( 'gmw_after_search_form_radius_slider', $gmw );
 }
 
 /**
@@ -245,29 +345,36 @@ function gmw_search_form_radius( $gmw ) {
  */
 function gmw_get_search_form_units( $gmw ) {
 
-	$id     = absint( $gmw['ID'] );
-	$url_px = esc_attr( gmw_get_url_prefix() );
+	$settings            = $gmw['search_form']['units'];
+	$settings['options'] = ! empty( $settings['options'] ) ? $settings['options'] : 'imperial';
+	$type                = 'hidden';
+	$options             = array();
+	$defaut_value        = '';
 
-	$args = array(
-		'id'       => $gmw['ID'],
-		'units'    => $gmw['search_form']['units'],
-		'mi_label' => __( 'Miles', 'geo-my-wp' ),
-		'km_label' => __( 'Kilometers', 'geo-my-wp' ),
+	if ( 'both' === $settings['options'] ) {
+
+		$type    = 'select';
+		$options = array(
+			'imperial' => 'Miles',
+			'metric'   => 'Kilometers',
+		);
+
+	} else {
+
+		$defaut_value = $settings['options'];
+	}
+
+	$args   = array(
+		'id'           => $gmw['ID'],
+		'slug'         => 'units',
+		'name'         => 'units',
+		'type'         => $type,
+		'label'        => ! empty( $settings['label'] ) ? $settings['label'] : '',
+		'options'      => $options,
+		'value'        => $defaut_value,
 	);
 
-	$output = '';
-
-	if ( 'both' === $args['units'] ) {
-		$output .= '<div class="gmw-form-field-wrapper gmw-units-field-wrapper">';
-	}
-
-	$output .= apply_filters( 'gmw_search_form_units_output', GMW_Search_Form_Helper::units_field( $args ), $gmw );
-
-	if ( 'both' === $args['units'] ) {
-		$output .= '</div>';
-	}
-
-	return $output;
+	return gmw_get_form_field( $args, $gmw );
 }
 
 /**
@@ -284,4 +391,106 @@ function gmw_search_form_units( $gmw = array(), $class = false ) {
 	echo gmw_get_search_form_units( $gmw ); // WPCS: XSS ok.
 
 	do_action( 'gmw_after_search_form_units', $gmw );
+}
+
+/**
+ * Output keywords field.
+ *
+ * Requires the Premium Settings extension.
+ *
+ * @since 4.0 ( function moved from the Premium Settings extension ).
+ *
+ * @param  array $gmw gmw form.
+ */
+function gmw_search_form_keywords_field( $gmw = array() ) {
+
+	// This function lives in the Premium Settings extension.
+	if ( ! function_exists( 'gmw_get_search_form_keywords_field' ) ) {
+		return;
+	}
+
+	// Prevent adding the keywords field using a hook.
+	// This method was used in  previous version of the plugin and template files.
+	remove_action( 'gmw_before_search_form_address_field', 'gmw_append_keywords_field_to_search_form' );
+
+	do_action( 'gmw_before_search_form_keywords_field', $gmw );
+
+	// Function exists in the Premium Settings extension.
+	echo gmw_get_search_form_keywords_field( $gmw ); // WPCS: XSS ok.
+
+	do_action( 'gmw_after_search_form_keywords_field', $gmw );
+}
+
+/**
+ * Output reset button.
+ *
+ * @param  array  $gmw   gmw form.
+ *
+ * This function requires the Premium Settings extension.
+ *
+ * @since 4.0
+ *
+ * @author Eyal Fitoussi
+ * 
+ */
+function gmw_search_form_reset_button( $gmw = array() ) {
+
+	// This function lives in the Premium Settings extension.
+	if ( ! function_exists( 'gmw_get_search_form_reset_button' ) ) {
+		return;
+	}
+
+	do_action( 'gmw_before_search_form_reset_button', $gmw );
+
+	echo gmw_get_search_form_reset_button( $gmw ); // WPCS: XSS ok.
+
+	do_action( 'gmw_after_search_form_reset_button', $gmw );
+}
+
+/**
+ * GMW Additional Filters button.
+ *
+ * @param  array $gmw the form being used.
+ *
+ * @since 4.0
+ *
+ * @return HTML element
+ */
+function gmw_get_search_form_toggle_button( $gmw = array(), $args = array() ) {
+
+	$args = array(
+		'id'          => $gmw['ID'],
+		'slug'        => 'toggle-button',
+		'type'        => 'link',
+		'name'        => '',
+		'class'       => 'gmw-form-button',
+		'inner_label' => __( 'Filter', 'geo-my-wp' ),
+		'attributes'  => array(
+			'data-type'     => 'toggle',
+			'data-element'  => '.gmw-additional-filters-wrapper',
+			'data-duration' => 'fast',
+
+		),
+	);
+
+	return gmw_get_form_field( $args, $gmw );
+}
+
+/**
+ * Output Additional Filters button.
+ *
+ * @param  array  $gmw   gmw form.
+ *
+ * @since 4.0
+ *
+ * @author Eyal Fitoussi
+ * 
+ */
+function gmw_search_form_toggle_button( $gmw = array() ) {
+
+	do_action( 'gmw_before_search_form_toggle_button', $gmw );
+
+	echo gmw_get_search_form_toggle_button( $gmw ); // WPCS: XSS ok.
+
+	do_action( 'gmw_after_search_form_toggle_button', $gmw );
 }
