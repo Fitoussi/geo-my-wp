@@ -15,6 +15,180 @@ if ( ! IS_ADMIN ) {
 	}
 }
 
+/*
+
+.wppl-pt-info-window {
+	float: left;
+	width: 400px;
+}
+
+.wppl-pt-info-window .wppl-info-window-thumb {
+	float: left;
+}
+
+.wppl-pt-info-window .wppl-info-window-thumb img {
+	width: 120px;
+	height: 120px;
+	padding: 5px;
+}
+
+.wppl-pt-info-window .wppl-info-window-info {
+	float: left;
+	width: 230px;
+	font-size: 12px;
+}
+
+.wppl-pt-info-window .wppl-info-window-permalink {
+	float: left;
+	width: 230px;
+	font-size: 16px;
+	text-transform: capitalize;
+}
+
+.wppl-pt-info-window .wppl-info-window-info td {
+	padding: 2px 5px;
+}
+
+.wppl-pt-info-window .wppl-info-window-info span {
+	color: #5E5858;
+	font-weight: bold;
+}
+
+.gmw-fl-activity-map-marker {
+	font-size: 14px;
+	margin-right:3px
+}
+
+.wppl-fl-info-window {
+	float: left;
+	width: 400px;
+}
+
+.wppl-fl-info-window .wppl-info-window-thumb {
+	float: left;
+}
+
+.wppl-fl-info-window .wppl-info-window-thumb img {
+	width: 120px;
+	height: 120px;
+	padding: 5px;
+}
+
+.wppl-fl-info-window .wppl-info-window-info {
+	float: left;
+	width: 230px;
+	font-size: 12px;
+}
+
+.wppl-fl-info-window .wppl-info-window-permalink {
+	float: left;
+	width: 230px;
+	font-size: 16px;
+	text-transform: capitalize;
+}
+
+.wppl-fl-info-window .wppl-info-window-info td {
+	padding: 2px 5px;
+}
+
+.wppl-fl-info-window .wppl-info-window-info span {
+	color: #5E5858;
+	font-weight: bold;
+}
+
+.wppl-gl-info-window {
+	float: left;
+	width: 400px;
+}
+
+.wppl-gl-info-window .wppl-info-window-thumb {
+	float: left;
+}
+
+.wppl-gl-info-window .wppl-info-window-thumb img {
+	width: 80px;
+	height: auto;
+	padding: 5px;
+	margin-right: 5px;
+}
+
+.wppl-gl-info-window .wppl-info-window-info {
+	float: left;
+	width: 230px;
+	font-size: 12px;
+}
+
+.wppl-gl-info-window .wppl-info-window-permalink {
+	float: left;
+	width: 230px;
+	font-size: 16px;
+	text-transform: capitalize;
+}
+
+.wppl-gl-info-window .wppl-info-window-info td {
+	padding: 2px 5px;
+}
+
+.wppl-gl-info-window .wppl-info-window-info span {
+	color: #5E5858;
+	font-weight: bold;
+}
+
+#gmw-gl-group-address-wrapper {
+	margin-top:20px;
+	display:block;
+	width:
+}
+
+.gmw-gl-mt-address-wrapper {
+	display:inline-block;
+}
+
+.gmw-gl-gm-iw-wrapper {
+	min-width:200px;
+}
+
+.gmw-gl-gm-iw-wrapper .gmw-gl-gm-iw-thumb {
+	display: inline-block;
+	vertical-align: top;
+	margin:5px 5px 0px 0;
+}
+
+.gmw-gl-gm-iw-wrapper .gmw-gl-gm-iw-info {
+	display: inline-block;
+}
+
+.gmw-gl-gm-iw-wrapper .gmw-gl-gm-iw-thumb img.avatar {
+	width: 65px;
+	height: auto;
+}
+
+
+
+*/
+
+/**
+ * GMW_PT_Search_Form_Helper class
+ */
+class GMW_PT_Search_Form_Helper {
+
+	/**
+	 * Generate a single search form taxonomy
+	 *
+	 * @param  array $args [description].
+	 *
+	 * @param  array $gmw  [description].
+	 *
+	 * @return [type]       [description]
+	 */
+	public static function get_taxonomy( $args = array(), $gmw = array() ) {
+
+		_deprecated_function( 'GMW_PT_Search_Form_Helper::get_taxonomy', '4.0', 'GMW_Search_Form_Helper::taxonomy_field' );
+
+		return GMW_Search_Form_Helper::taxonomy_field( $args, $gmw );
+	}
+}
+
 function gmw_get_draggable_handle( $gmw = array(), $info = array() , $draggable = '', $handle = true, $icon = 'gmw-icon-target', $containment = 'window' ) {
 					
 	$args = array( 
@@ -196,6 +370,62 @@ function gmw_iw_xprofile_fields( $gmw = array() ) {
 function gmw_new_map_element( $map_args = array(), $map_options = array(), $locations = array(), $user_position = array(), $form = array() ) {
 	_deprecated_function( 'gmw_new_map_element', '3.0', 'gmw_get_map_object' );
 	return gmw_get_map_object( $map_args, $map_options, $locations, $user_position, $form );
+}
+
+
+function gmw_exl_get_roles_users_id( $roles, $cache = 'posts' ) {
+
+	_deprecated_function( 'gmw_exl_get_roles_users_id', '4.0', 'gmw_get_user_ids_from_roles' );
+
+	// look for saved data in transient.
+	$transient = get_transient( 'gmw_roles_' . $cache . '_id' );
+
+	// get excluded users from transient.
+	$users_id = isset( $transient['ids'] ) ? $transient['ids'] : array();
+
+	// if no results in transient or if roles changed in the form settings
+	// we will get excluded users from database.
+	if ( false === $transient || $transient['roles'] !== $roles ) {
+
+		global $wpdb;
+
+		$sql = array();
+
+		// build the roles query.
+		foreach ( $roles as $role ) {
+
+			// support for WordPress lower then V4.0.
+			$like = $wpdb->esc_like( $role );
+			$like = esc_sql( $like );
+			$like = '%' . $like . '%';
+
+			$sql[] = " m.meta_value LIKE '{$like}'";
+		}
+
+		$like = implode( ' OR ', $sql );
+
+		// get excluded users from database.
+		$users_id = $wpdb->get_col(
+			"
+			SELECT u.ID
+			FROM {$wpdb->users} u
+			INNER JOIN {$wpdb->usermeta} m ON m.user_id = u.ID
+			WHERE m.meta_key = '{$wpdb->prefix}capabilities'
+			AND ( {$like} )
+			GROUP BY ID",
+			0
+		); // WPCS: DB call ok, unpreapared sql ok.
+
+		$trans = array(
+			'roles' => $roles,
+			'ids'   => $users_id,
+		);
+
+		// save results in transient.
+		set_transient( 'gmw_roles_' . $cache . '_id', $trans, 30 * MINUTE_IN_SECONDS );
+	}
+
+	return $users_id;
 }
 
 /**
@@ -766,7 +996,7 @@ function gmw_ug_get_author_url( $gmw, $user ) {
 	return gmw_get_user_permalink( $user, $url, $page_id, $query_string, $replace_content );
 }
 
-function gmw_ug_author_url( $gmw = array(), $user ) {
+function gmw_ug_author_url( $gmw = array(), $user = array() ) {
 	_deprecated_function( 'gmw_ug_author_url', '2.0', 'gmw_search_results_user_permalink' );
 	echo gmw_search_results_user_permalink( $user, $gmw );
 }
