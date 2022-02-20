@@ -210,34 +210,200 @@ class GMW_Form_Settings_Helper {
 				$output .= ' ' . implode( ' ', $attributes );
 				$output .= ' />';
 
-				break;
+	/**
+	 * Get users role.
+	 *
+	 * @since 4.0
+	 *
+	 * @return [type] [description]
+	 */
+	public static function get_user_roles() {
 
-			// number.
-			case 'number':
-				$output .= '<input type="number" id="' . $id_attr . '"';
-				$output .= ' class="gmw-form-field number"';
-				$output .= ' name="' . $name_attr . '"';
-				$output .= ' value="' . esc_attr( sanitize_text_field( $value ) ) . '"';
-				$output .= ' ' . implode( ' ', $attributes );
-				$output .= ' />';
+		global $wp_roles;
 
-				break;
+		return $wp_roles->get_names();
+	}
+
+	/**
+	 * Get authors.
+	 *
+	 * @since 4.0
+	 *
+	 * @param array $args args.
+	 *
+	 * @return [type] [description]
+	 */
+	public static function get_users( $args ) {
+
+		//$query_args = array();
+
+		/*if ( ! empty( $args['gmw_ajax_load_options_query_args'] ) ) {
+			$query_args = $args['gmw_ajax_load_options_query_args'];
+		}
+
+		if ( self::is_json( $args['gmw_ajax_load_options_query_args'] ) ) {
+			$query_args = json_decode( $args['gmw_ajax_load_options_query_args'] );
+		}*/
+
+		$query_args = array(
+			'fields' => array( 'ID', 'display_name', 'user_email', 'user_nicename', 'user_login' ),
+		);
+
+		$query_args = apply_filters( 'gmw_ajax_load_get_users_args', $query_args, $args );
+		$users      = get_users( $query_args );
+		$output     = array();
+
+		foreach ( $users as $user ) {
+			$output[ $user->ID ] = '[' . $user->ID . '] [ ' . $user->display_name . ' ] [ ' . $user->user_nicename . ' ] [ ' . $user->user_email . ' ] [ ' . $user->user_login . ' ] ';
 		}
 
 		return $output;
 	}
 
 	/**
-	 * Taxonomy group sorting
+	 * Get array of taxonomy terms.
 	 *
-	 * @param  [type] $a [description].
+	 * @since 4.0
 	 *
-	 * @param  [type] $b [description].
+	 * @param  [type] $taxonomy [description].
 	 *
-	 * @return [type]    [description]
+	 * @return [type]           [description]
 	 */
-	public static function sort_taxonomy_terms_groups( $a, $b ) {
-		return strcmp( $a->taxonomy, $b->taxonomy );
+	public static function get_taxonomy_terms_array( $taxonomy ) {
+
+		if ( empty( $taxonomy ) ) {
+			return array();
+		}
+
+		$terms = get_terms( $taxonomy, array( 'hide_empty' => false ) );
+
+		// Abort if error or nothing was found.
+		if ( empty( $terms ) || is_wp_error( $terms ) ) {
+			return array();
+		}
+
+		$output = array();
+
+		// Collect terms into an array.
+		foreach ( $terms as $term ) {
+			$output[ $term->term_id ] = $term->name . ' (' . $term->term_id . ')';
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Get an array of all post custom fields.
+	 *
+	 * @since 4.0
+	 *
+	 * @return [type] [description]
+	 */
+	public static function get_custom_fields_array() {
+
+		global $wpdb;
+
+		$keys = $wpdb->get_col(
+			"SELECT meta_key
+        	FROM $wpdb->postmeta
+        	GROUP BY meta_key
+        	ORDER BY meta_id DESC"
+		);
+
+		$output = array();
+
+		if ( $keys ) {
+
+			natcasesort( $keys );
+
+			// Collect terms into an array.
+			foreach ( $keys as $key ) {
+
+				$key = esc_attr( $key );
+
+				$output[ $key ] = $key;
+			}
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Get an array of all user meta fields.
+	 *
+	 * @since 4.0
+	 *
+	 * @return [type] [description]
+	 */
+	public static function get_user_meta() {
+
+		global $wpdb;
+
+		$keys = $wpdb->get_col(
+			"SELECT meta_key
+        	FROM $wpdb->usermeta
+        	GROUP BY meta_key
+        	ORDER BY umeta_id DESC"
+		);
+
+		$output = array();
+
+		if ( $keys ) {
+
+			natcasesort( $keys );
+
+			// Collect terms into an array.
+			foreach ( $keys as $key ) {
+
+				$key = esc_attr( $key );
+
+				$output[ $key ] = $key;
+			}
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Get GEO my WP's location meta fields.
+	 *
+	 * @return [type] [description]
+	 */
+	public static function get_location_meta() {
+
+		global $wpdb, $blog_id;
+
+		$location_meta = $wpdb->get_col(
+			$wpdb->prepare(
+				"
+				SELECT DISTINCT meta.`meta_key`
+			 	FROM {$wpdb->base_prefix}gmw_locationmeta meta
+			 	INNER JOIN {$wpdb->base_prefix}gmw_locations locations
+			 	ON meta.location_id = locations.ID
+			 	WHERE locations.blog_id = %d",
+				array( $blog_id )
+			)
+		); // WPCS: db call ok, cache ok.
+
+		if ( empty( $location_meta ) ) {
+			return array();
+		}
+
+		$new_array = array();
+
+		foreach ( $location_meta as $meta ) {
+
+			// skip days_hours since it has its own settings.
+			if ( 'days_hours' === $meta || 0 === strpos( $meta, '_' ) ) {
+				continue;
+			}
+
+			$new_array[ $meta ] = $meta;
+		}
+
+		$location_meta = $new_array;
+
+		return $location_meta;
 	}
 
 	/**
@@ -318,238 +484,120 @@ class GMW_Form_Settings_Helper {
 	}
 
 	/**
-	 * Get location meta fields
+	 * Get BNP xprofile fields array
 	 *
-	 * @return [type] [description]
+	 * @return [type]               [description]
 	 */
-	public static function get_location_meta() {
+	public static function get_xprofile_fields() {
 
-		global $wpdb, $blog_id, $location_meta, $location_meta_status;
+		// verify BuddyPress plugin.
+		if ( ! class_exists( 'Buddypress' ) ) {
+			return array();
+		}
 
-		if ( ! empty( $location_meta_status ) ) {
+		global $bp;
 
-			return $location_meta;
+		// show message if Xprofile Fields component deactivated.
+		if ( ! bp_is_active( 'xprofile' ) ) {
 
-		} else {
+			gmw_trigger_error( esc_html__( 'Buddypress xprofile fields component is deactivated. You need to activate in in order to use this feature.', 'geo-my-wp' ), E_USER_NOTICE );
 
-			$location_meta_status = true;
+			return array();
+		}
 
-			$location_meta = $wpdb->get_col(
-				$wpdb->prepare(
-					"
-					SELECT DISTINCT meta.`meta_key`
-				 	FROM {$wpdb->base_prefix}gmw_locationmeta meta
-				 	INNER JOIN {$wpdb->base_prefix}gmw_locations locations
-				 	ON meta.location_id = locations.ID
-				 	WHERE locations.blog_id = %d",
-					array( $blog_id )
-				)
-			); // WPCS: db call ok, cache ok.
+		// check for profile fields.
+		if ( function_exists( 'bp_has_profile' ) ) {
 
-			if ( empty( $location_meta ) ) {
-				return array();
+			$args = array(
+				'hide_empty_fields' => false,
+				'member_type'       => bp_get_member_types(),
+			);
+
+			$fields = array(
+				'fields'     => array(),
+				'date_field' => array(),
+			);
+
+			// display profile fields.
+			if ( bp_has_profile( $args ) ) {
+
+				while ( bp_profile_groups() ) {
+
+					bp_the_profile_group();
+
+					while ( bp_profile_fields() ) {
+
+						bp_the_profile_field();
+
+						$field_type = bp_get_the_profile_field_type();
+
+						if ( 'datebox' === $field_type || 'birthdate' === $field_type ) {
+							$fields['date_field'][ bp_get_the_profile_field_id() ] = bp_get_the_profile_field_name();
+						} else {
+							$fields['fields'][ bp_get_the_profile_field_id() ] = bp_get_the_profile_field_name();
+						}
+					}
+				}
 			}
+		}
 
-			$new_array = array();
+		return $fields;
+	}
 
-			foreach ( $location_meta as $meta ) {
+	/**
+	 * Get member types.
+	 *
+	 * @param  [type] $args [description].
+	 *
+	 * @return [type]       [description]
+	 */
+	public static function get_bp_member_types( $args ) {
 
-				// skip days_hours since it has its own settings.
-				if ( 'days_hours' === $meta ) {
+		$member_types = array();
+
+		if ( function_exists( 'bp_get_member_types' ) ) {
+
+			foreach ( bp_get_member_types( array(), 'object' ) as $type ) {
+				$member_types[ $type->name ] = $type->labels['name'];
+			};
+		}
+
+		return $member_types;
+	}
+
+	/**
+	 * Get BP Groups.
+	 *
+	 * @param  [type] $args [description].
+	 *
+	 * @return [type]       [description]
+	 */
+	public static function get_bp_groups( $args ) {
+
+		$output = array();
+
+		if ( class_exists( 'BP_Groups_Group' ) ) {
+
+			$groups = BP_Groups_Group::get(
+				array(
+					'type'     => 'alphabetical',
+					'per_page' => 999,
+				)
+			);
+
+			foreach ( $groups['groups'] as $group ) {
+
+				if ( 0 === absint( $group->id ) ) {
 					continue;
 				}
 
-				$new_array[ $meta ] = $meta;
+				$output[ $group->id ] = $group->name;
 			}
-
-			$location_meta = $new_array;
-
-			return $location_meta;
 		}
-	}
-
-	/**
-	 * Address Field
-	 *
-	 * @param  [type] $value     field value.
-	 *
-	 * @param  [type] $name_attr name attribute.
-	 */
-	public static function address_field( $value, $name_attr ) {
-		$name_attr = esc_attr( $name_attr );
-		?>
-		<div class="gmw-options-box gmw-address-fields-settings single">    	
-			<div class="single-option label">	
-					<label><?php esc_html_e( 'Label', 'geo-my-wp' ); ?></label>	
-					<div class="option-content">
-					<input 
-						type="text" 
-						id="gmw-form-address-field-label" 
-						name="<?php echo $name_attr . '[label]'; // WPCS: XSS ok. ?>" 
-						value="<?php echo isset( $value['label'] ) ? esc_attr( stripcslashes( $value['label'] ) ) : ''; ?>"
-					/>	 
-				</div>
-			</div>
-
-			<div class="single-option placeholder">	
-					<label><?php esc_html_e( 'Placeholder', 'geo-my-wp' ); ?></label>	
-					<div class="option-content">
-					<input 
-						type="text" 
-						id="gmw-form-address-field-label" 
-						name="<?php echo $name_attr . '[placeholder]'; // WPCS: XSS ok. ?>" 
-						value="<?php echo isset( $value['placeholder'] ) ? esc_attr( stripcslashes( $value['placeholder'] ) ) : ''; ?>" 
-					/>	 
-				</div>
-			</div>
-
-			<div class="single-option locator">	
-					<label>
-					<input 
-						type="checkbox" 
-						value="1" 
-						name="<?php echo $name_attr . '[locator]'; // WPCS: XSS ok. ?>" 
-						<?php echo ! empty( $value['locator'] ) ? 'checked="checked"' : ''; ?>
-					/>	 
-					<?php esc_html_e( 'Locator Button', 'geo-my-wp' ); ?>
-				</label>	
-			</div>
-
-			<?php
-			$disabled = '';
-			$warning  = '';
-
-			if ( 'google_maps' !== GMW()->maps_provider ) {
-				$disabled = 'disabled="disabled"';
-				$warning  = ' <em style="color:red;font-size:11px;">Availabe with Google Maps provider only</em>.';
-			}
-			?>
-			<div class="single-option autocomplete">	
-					<label>
-					<input 
-						type="checkbox" 
-						value="1" 
-						name="<?php echo $name_attr . '[address_autocomplete]'; // WPCS: XSS ok. ?>" 
-						<?php echo $disabled; // WPCS: XSS ok. ?>
-						<?php echo ! empty( $value['address_autocomplete'] ) ? 'checked="checked"' : ''; ?>
-					/>
-					<?php esc_html_e( 'Address Autocomplete', 'geo-my-wp' ); ?>
-					<?php echo $warning; // WPCS: XSS ok. ?>
-				</label>
-			</div>
-
-			<div class="single-option locator-submit">	
-					<label>
-					<input 
-						type="checkbox" 
-						value="1" 
-						name="<?php echo $name_attr . '[locator_submit]'; // WPCS: XSS ok. ?>" 
-						<?php echo ! empty( $value['locator_submit'] ) ? 'checked="checked"' : ''; ?>
-					/>
-					<?php esc_html_e( 'Locator Submit', 'geo-my-wp' ); ?>
-				</label>
-			</div>
-
-			<div class="single-option mandatory">	
-				<label>	
-					<input 
-						type="checkbox" 
-						value="1" 
-						name="<?php echo $name_attr . '[mandatory]'; // WPCS: XSS ok. ?>" 
-						<?php echo ! empty( $value['mandatory'] ) ? 'checked="checked"' : ''; ?>
-					/>	
-					<?php esc_html_e( 'Mandatory', 'geo-my-wp' ); ?> 
-				</label>
-			</div>			
-		</div>
-		<?php
-	}
-
-	/**
-	 * Validate address field input in form settings
-	 *
-	 * @param  array $output input values before validation.
-	 *
-	 * @return array validated input
-	 */
-	public static function validate_address_field( $output ) {
-
-		$output['label']                = sanitize_text_field( $output['label'] );
-		$output['placeholder']          = sanitize_text_field( $output['placeholder'] );
-		$output['locator']              = ! empty( $output['locator'] ) ? 1 : '';
-		$output['locator_submit']       = ! empty( $output['locator_submit'] ) ? 1 : '';
-		$output['mandatory']            = ! empty( $output['mandatory'] ) ? 1 : '';
-		$output['address_autocomplete'] = ! empty( $output['address_autocomplete'] ) ? 1 : '';
 
 		return $output;
 	}
-
-	/**
-	 * Search form image
-	 *
-	 * @param  [type] $value     [description].
-	 *
-	 * @param  [type] $name_attr [description].
-	 */
-	public static function image( $value, $name_attr ) {
-
-		$name_attr = esc_attr( $name_attr );
-
-		if ( empty( $value ) ) {
-			$value = array(
-				'enabled' => '',
-				'width'   => '100',
-				'height'  => '100',
-			);
-		}
-		?>
-		<p>
-			<label>
-				<input 
-					type="checkbox" 
-					onclick="jQuery( this ).closest( 'td' ).find( '.featured-image-options' ).slideToggle();" 
-					name="<?php echo $name_attr . '[enabled]'; // WPCS: XSS ok. ?>" 
-					value="1" 
-					<?php checked( '1', $value['enabled'] ); ?> 
-				/>
-				<?php esc_html_e( 'Enable', 'geo-my-wp' ); ?>
-				</label>
-		</p>
-
-		<div class="featured-image-options gmw-options-box" <?php echo empty( $value['enabled'] ) ? 'style="display:none";' : ''; ?>>
-
-			<div class="single-option">
-				<label><?php esc_html_e( 'Width', 'geo-my-wp' ); ?></label>
-
-				<div class="option-content">
-					<input 
-						type="text" 
-						size="5" 
-						name="<?php echo $name_attr . '[width]'; // WPCS: XSS ok. ?>" 
-						value="<?php echo ! empty( $value['width'] ) ? esc_attr( $value['width'] ) : '100'; ?>" 
-						placeholder="Numeric value"
-					/>
-				</div>
-			</div>
-
-			<div class="single-option">
-
-				<label><?php esc_html_e( 'Height', 'geo-my-wp' ); ?></label>
-
-				<div class="option-content">
-					<input 
-						type="text" 
-						size="5" 
-						name="<?php echo $name_attr . '[height]'; // WPCS: XSS ok. ?>" 
-						value="<?php echo ! empty( $value['height'] ) ? esc_attr( $value['height'] ) : '100'; ?>"
-						placeholder="Numeric value"
-					/>
-				</div>
-			</div>
-		</div>
-		<?php
-	}
-
+	
 	/**
 	 * Get field options via AJAX call.
 	 *
