@@ -25,19 +25,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 function gmw_get_search_results_address( $object, $fields = array(), $linked = false, $gmw = array() ) {
 	return $linked ? gmw_get_linked_location_address( $object, $fields, $gmw ) : gmw_get_location_address( $object, $fields, $gmw );
 }
+
+/**
+ * Display address fields in search results.
  *
  * @param  object $object location object.
+ *
  * @param  array  $gmw    gmw form.
  */
 function gmw_search_results_address( $object, $gmw = array() ) {
 
-	if ( empty( $gmw['search_results']['address_fields'][0] ) || 'address' === $gmw['search_results']['address_fields'][0] ) {
-		$fields = array( 'formatted_address' );
-	} else {
-		$fields = $gmw['search_results']['address_fields'];
+	if ( empty( $gmw['search_results']['address']['enabled'] ) ) {
+		return;
 	}
 
-	$output = gmw_get_location_address( $object, $fields, $gmw );
+	if ( empty( $gmw['search_results']['address']['fields'][0] ) || 'address' === $gmw['search_results']['address']['fields'][0] ) {
+		$fields = array( 'formatted_address' );
+	} else {
+		$fields = $gmw['search_results']['address']['fields'];
+	}
+
+	$output = gmw_get_search_results_address( $object, $fields, $gmw['search_results']['address']['linked'], $gmw );
 
 	if ( ! empty( $output ) ) {
 		echo '<i class="gmw-icon-location-thin"></i>' . $output; // WPCS: XSS ok.
