@@ -11,125 +11,51 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Search form BP member types filter
+ * Search form BP member types filter.
+ *
+ * Requires the Premium Settings extension.
  *
  * @param  array $gmw gmw form.
  */
-function gmw_search_form_bp_member_types( $gmw = array() ) {
+function gmw_search_form_bp_member_types_field( $gmw = array() ) {
 
-	if ( empty( $gmw['search_form']['member_types_filter'] ) ) {
+	// This function lives in the Premium Settings extension.
+	if ( ! function_exists( 'gmw_get_search_form_bp_member_types_field' ) ) {
 		return;
 	}
 
-	$settings = $gmw['search_form']['member_types_filter'];
+	// remove action which was old way of adding the field to the form.
+	remove_action( 'gmw_search_form_filters', 'gmw_ps_fl_enable_bp_object_types_search_form_filter', 20 );
 
-	if ( ! isset( $settings['usage'] ) || 'disabled' === $settings['usage'] || 'pre_defined' === $settings['usage'] ) {
-		return;
-	}
+	do_action( 'gmw_before_search_form_bp_member_types_field', $gmw );
 
-	$url_px = gmw_get_url_prefix();
+	echo gmw_get_search_form_bp_member_types_field( $gmw ); // WPCS: XSS ok.
 
-	// Can be used with premium features to pass specific member types via array.
-	if ( empty( $settings['member_types'] ) ) {
-
-		$member_types = array();
-
-		foreach ( bp_get_member_types( array(), 'object' ) as $type ) {
-			$member_types[ $type->name ] = $type->labels['name'];
-		}
-	} else {
-
-		$member_types = array_flip( $settings['member_types'] );
-	}
-
-	$args = array(
-		'id'               => $gmw['ID'],
-		'usage'            => isset( $settings['usage'] ) ? $settings['usage'] : 'disabled',
-		'show_options_all' => isset( $settings['show_options_all'] ) ? $settings['show_options_all'] : __( 'Search member types', 'geo-my-wp' ),
-	);
-
-	$element = GMW_Search_Form_Helper::bp_member_types_filter( $args, $member_types );
-
-	$output = '';
-
-	if ( 'pre_defined' !== $args['usage'] ) {
-
-		$output .= '<div class="gmw-form-field-wrapper gmw-bp-member-types-wrapper gmw-bp-member-type-' . esc_attr( $args['usage'] ) . '">';
-
-		if ( ! empty( $settings['label'] ) ) {
-
-			$tag = ( 'checkboxes' === $args['usage'] ) ? 'span' : 'label';
-
-			$output .= '<' . $tag . ' class="gmw-field-label">' . esc_attr( $settings['label'] ) . '</' . $tag . '>';
-		}
-
-		$output .= $element;
-		$output .= '</div>';
-
-	} else {
-		$output .= $element;
-	}
-
-	do_action( 'gmw_before_search_form_bp_member_types', $gmw );
-
-	echo $output; // WPCS: XSS ok.
-
-	do_action( 'gmw_after_search_form_bp_member_types', $gmw );
+	do_action( 'gmw_after_search_form_bp_member_types_field', $gmw );
 }
 
 /**
- * Search form BP Groups filter
+ * Search form BP Groups filter.
+ *
+ * Requires the Premium Settings extension.
  *
  * @param  array $gmw gmw form.
  */
-function gmw_search_form_bp_groups_filter( $gmw = array() ) {
+function gmw_search_form_bp_groups_field( $gmw = array() ) {
 
-	if ( ! function_exists( 'bp_is_active' ) || ! bp_is_active( 'groups' ) ) {
+	// This function lives in the Premium Settings extension.
+	if ( ! function_exists( 'gmw_get_search_form_bp_groups_field' ) ) {
 		return;
 	}
 
-	// abort if no need to display the groups filter.
-	if ( ! isset( $gmw['search_form']['bp_groups']['usage'] ) || 'pre_defined' === $gmw['search_form']['bp_groups']['usage'] ) {
-		return;
-	}
+	// remove action which was old way of adding the field to the form.
+	remove_action( 'gmw_search_form_filters', 'gmw_ps_fl_enable_bp_object_types_search_form_filter', 20 );
 
-	$settings = $gmw['search_form']['bp_groups'];
+	do_action( 'gmw_before_search_form_bp_groups_field', $gmw );
 
-	// set args.
-	$args = array(
-		'id'               => $gmw['ID'],
-		'usage'            => isset( $settings['usage'] ) ? $settings['usage'] : 'dropdown',
-		'show_options_all' => isset( $settings['show_options_all'] ) ? $settings['show_options_all'] : __( 'Search Groups', 'gmw-premium-settings' ),
-	);
+	echo gmw_get_search_form_bp_groups_field( $gmw ); // WPCS: XSS ok.
 
-	// get the filter element.
-	$element = GMW_Search_Form_Helper::bp_groups_filter( $args, $settings['groups'] );
-
-	$output = '';
-
-	if ( 'pre_defined' !== $args['usage'] ) {
-
-		$output .= '<div class="gmw-form-field-wrapper gmw-bp-groups-wrapper gmw-bp-groups-' . esc_attr( $args['usage'] ) . '">';
-
-		if ( ! empty( $settings['label'] ) ) {
-
-			$tag = ( 'checkboxes' === $args['usage'] ) ? 'span' : 'label';
-
-			$output .= '<' . $tag . ' class="gmw-field-label">' . esc_attr( $settings['label'] ) . '</' . $tag . '>';
-		}
-
-		$output .= $element;
-		$output .= '</div>';
-
-	} else {
-		$output .= $element;
-	}
-
-	do_action( 'gmw_before_search_form_bp_groups_filter', $gmw );
-
-	echo $output; // WPCS: XSS ok.
-
-	do_action( 'gmw_after_search_form_bp_groups_filter', $gmw );
+	do_action( 'gmw_after_search_form_bp_groups_field', $gmw );
 }
 
 /**
