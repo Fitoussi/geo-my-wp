@@ -5,42 +5,9 @@
  * @package geo-my-wp
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
-}
-
-if ( ! function_exists( 'gmw_search_results_bp_avatar' ) ) {
-
-	/**
-	 * Display featured image in search results
-	 *
-	 * @param  string $object_type group || member.
-	 * @param  array  $gmw         gmw form.
-	 */
-	function gmw_search_results_bp_avatar( $object_type, $gmw = array() ) {
-
-		if ( ! $gmw['search_results']['image']['enabled'] ) {
-			return;
-		}
-
-		$object_type = ( 'bp_groups_locator' === $gmw['component'] ) ? 'group' : 'member';
-
-		$permalink_function = 'bp_' . $object_type . '_permalink';
-		$avatar_function    = 'bp_' . $object_type . '_avatar';
-		?>
-		<a class="image" href="<?php $permalink_function(); ?>" >
-			<?php
-			$avatar_function(
-				array(
-					'type'   => 'full',
-					'width'  => $gmw['search_results']['image']['width'],
-					'height' => $gmw['search_results']['image']['height'],
-				)
-			);
-			?>
-		</a>                                                              
-		<?php
-	}
+	exit;
 }
 
 /**
@@ -539,6 +506,33 @@ function gmw_search_form_xprofile_fields( $gmw ) {
 }
 
 /**
+ * Output BP avatar in search results.
+ *
+ * @param  object $object memebr | group object.
+ *
+ * @param  array  $gmw    gmw form object.
+ *
+ * @return [type]         [description]
+ */
+function gmw_search_results_bp_avatar( $object = array(), $gmw = array() ) {
+
+	// Abort if iamge is disabled.
+	if ( empty( $gmw['search_results']['image']['enabled'] ) ) {
+		return;
+	}
+
+	$args = array(
+		'object_type'  => 'bp_group' === $object->object_type ? 'group' : 'user',
+		'object_id'    => $object->object_id,
+		'width'        => ! empty( $gmw['search_results']['image']['width'] ) ? $gmw['search_results']['image']['width'] : '150px',
+		'height'       => ! empty( $gmw['search_results']['image']['height'] ) ? $gmw['search_results']['image']['height'] : '150px',
+		'show_grav'    => isset( $gmw['search_results']['image']['show_grav'] ) ? $gmw['search_results']['image']['show_grav'] : true,
+		'show_default' => isset( $gmw['search_results']['image']['show_default'] ) ? $gmw['search_results']['image']['show_default'] : false,
+		'where'        => 'search_results',
+	);
+
+	echo gmw_get_bp_avatar( $args, $object, $gmw ); // WPCS: XSS ok.
+}
  * Query xprofile fields
  *
  * Note $form_values might come from URL. It needs to be sanitized before being used
