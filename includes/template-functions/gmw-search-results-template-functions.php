@@ -53,24 +53,16 @@ function gmw_search_results_address( $object, $gmw = array() ) {
 }
 
 /**
- * Display address that links to a new page with Google Map
+ * Display address that links to a new page with Google Map.
+ *
+ * DEPRECATED since 4.0. Use gmw_search_results_address() instead.
  *
  * @param  object $object location object.
+ *
  * @param  array  $gmw    gmw form.
  */
 function gmw_search_results_linked_address( $object, $gmw = array() ) {
-
-	if ( empty( $gmw['search_results']['address_fields'] ) ) {
-		$fields = array( 'formatted_address' );
-	} else {
-		$fields = $gmw['search_results']['address_fields'];
-	}
-
-	$output = gmw_get_linked_location_address( $object, $fields, $gmw );
-
-	if ( ! empty( $output ) ) {
-		echo '<i class="gmw-icon-location-thin"></i>' . $output; // WPCS: XSS ok.
-	}
+	gmw_search_results_address( $object, $gmw );
 }
 
 /**
