@@ -101,7 +101,7 @@ function gmw_search_results_location_meta( $object, $gmw = array(), $label = tru
 
 	if ( ! empty( $label ) ) {
 		$label   = is_string( $label ) ? esc_html( $label ) : __( 'Contact Information', 'geo-my-wp' );
-		$output .= '<h3>' . $label . '</h3>';
+		$output .= '<span class="gmw-location-meta-label gmw-section-label">' . $label . '</span>';
 	}
 
 	$output .= $data;
@@ -119,23 +119,22 @@ function gmw_search_results_location_meta( $object, $gmw = array(), $label = tru
  */
 function gmw_search_results_hours_of_operation( $object, $gmw = array(), $label = true ) {
 
-	if ( ! isset( $gmw['search_results']['opening_hours'] ) || '' === $gmw['search_results']['opening_hours'] ) {
+	if ( empty( $gmw['search_results']['opening_hours'] ) ) {
 		return;
 	}
 
 	$data = gmw_get_hours_of_operation( $object );
 
-	if ( false === $data ) {
+	if ( empty( $data ) ) {
 		return;
 	}
 
-	$output = '';
-
+	$output  = '';
 	$output .= '<div class="gmw-hours-of-operation-wrapper">';
 
 	if ( ! empty( $label ) ) {
 		$label   = is_string( $label ) ? esc_html( $label ) : __( 'Hours of operation', 'geo-my-wp' );
-		$output .= '<h3>' . $label . '</h3>';
+		$output .= '<span class="gmw-hop-label gmw-section-label">' . $label . '</span>';
 	}
 
 	$output .= $data;
