@@ -733,64 +733,245 @@ class GMW_Form_Settings_Helper {
 	}
 
 	/**
-	 * Get BNP xprofile fields array
+	 * Get a single form field.
 	 *
-	 * @return [type]               [description]
+	 * @param  array  $field        field array.
+	 *
+	 * @param  string $name_attr    name attribute.
+	 *
+	 * @param  string $field_value  value.
+	 *
+	 * @return [type]            [description]
 	 */
-	public static function get_xprofile_fields() {
+	public static function get_settings_field( $field = array(), $name_attr = '', $field_value = '' ) {
 
-		// verify BuddyPress plugin.
-		if ( ! class_exists( 'Buddypress' ) ) {
-			return array();
+		$default_value = isset( $field['default'] ) ? $field['default'] : '';
+		$field_name    = $field['name'];
+		$id_attr       = ! empty( $field['id'] ) ? $field['id'] : 'gmw-form-field-' . $field_name;
+		$field_type    = isset( $field['type'] ) ? $field['type'] : 'text';
+		$placeholder   = ! empty( $field['placeholder'] ) ? 'placeholder="' . esc_attr( $field['placeholder'] ) . '"' : '';
+		//$name_attr     = ! empty( $name_attr ) ? esc_attr( $name_attr . '[' . $field_name . ']' ) : $field_name;
+		$attributes    = array();
+		$class_attr    = ! empty( $field['class'] ) ? $field['class'] : '';
+		$value         = '';
+
+		if ( ! empty( $field_value ) ) {
+
+			$value = $field_value;
+
+		} else if ( ! empty( $field['value'] ) ) {
+			$value = $field['value'];
 		}
 
-		global $bp;
+		if ( ! empty( $name_attr ) ) {
 
-		// show message if Xprofile Fields component deactivated.
-		if ( ! bp_is_active( 'xprofile' ) ) {
+			$name_attr = $name_attr . '[' . $field_name . ']';
 
-			gmw_trigger_error( esc_attr__( 'Buddypress xprofile fields component is deactivated. You need to activate in in order to use this feature.', 'geo-my-wp' ), E_USER_NOTICE );
+		} else if ( ! empty( $field['name_attr'] ) ) {
 
-			return array();
+			$name_attr = $field['name_attr'] . '[' . $field_name . ']';
+		} else {
+			$name_attr = $field_name;
 		}
 
-		// check for profile fields.
-		if ( function_exists( 'bp_has_profile' ) ) {
+		// attributes.
+		if ( ! empty( $field['attributes'] ) && is_array( $field['attributes'] ) ) {
+			foreach ( $field['attributes'] as $attribute_name => $attribute_value ) {
 
-			$args = array(
-				'hide_empty_fields' => false,
-				'member_type'       => bp_get_member_types(),
-			);
-
-			$fields = array(
-				'fields'     => array(),
-				'date_field' => array(),
-			);
-
-			// display profile fields.
-			if ( bp_has_profile( $args ) ) {
-
-				while ( bp_profile_groups() ) {
-
-					bp_the_profile_group();
-
-					while ( bp_profile_fields() ) {
-
-						bp_the_profile_field();
-
-						$field_type = bp_get_the_profile_field_type();
-
-						if ( 'datebox' === $field_type || 'birthdate' === $field_type ) {
-							$fields['date_field'][ bp_get_the_profile_field_id() ] = bp_get_the_profile_field_name();
-						} else {
-							$fields['fields'][ bp_get_the_profile_field_id() ] = bp_get_the_profile_field_name();
-						}
-					}
+				if ( 'class' === $attribute_name ) {
+					$class_attr .= ' ' . $attribute_value;
+				} else {
+					$attributes[] = esc_attr( $attribute_name ) . '="' . esc_attr( $attribute_value ) . '"';
 				}
 			}
 		}
 
-		return $fields;
+		$output = '';
+
+		switch ( $field_type ) {
+
+			case '':
+			case 'input':
+			case 'text':
+			default:
+				$output .= '<input type="text" id="' . esc_attr( $id_attr ) . '" class="gmw-form-field regular-text text ' . esc_attr( $class_attr ) . '" name="' . esc_attr( $name_attr ) . '" value="' . esc_attr( sanitize_text_field( $value ) ) . '" ' . implode( ' ', $attributes ) . ' ' . $placeholder . ' />';
+
+				break;
+
+			case 'checkbox':
+				$output .= '<label>';
+				$output .= '<input type="checkbox" id="' . esc_attr( $id_attr ) . '" class="gmw-form-field checkbox ' . esc_attr( $class_attr ) . '"';
+				$output .= ' name="' . esc_attr( $name_attr ) . '" value="1"';
+				$output .= ' ' . implode( ' ', $attributes );
+				$output .= ' ' . checked( '1', $value, false ) . ' />';
+				$output .= isset( $field['cb_label'] ) ? esc_attr( $field['cb_label'] ) : '';
+				$output .= '</label>';
+
+				break;
+
+			case 'multicheckbox':
+				$option['default'] = is_array( $option['default'] ) ? $option['default'] : array();
+				$value             = ( ! empty( $value ) && is_array( $value ) ) ? $value : $option['default'];
+
+				foreach ( $field['options'] as $key_val => $name ) {
+
+					$key_val = esc_attr( $key_val );
+					$value   = ! empty( $value[ $key_val ] ) ? $value[ $key_val ] : $default_value;
+					$output .= '<label>';
+					$output .= '<input type="checkbox" id="' . esc_attr( $id_attr ) . '-' . $key_val . '" class="gmw-form-field ' . esc_attr( $field_name ) . ' ' . $key_val . ' ' . esc_attr( $class_attr ) . ' checkbox multicheckbox" name="' . esc_attr( $name_attr ) . '[' . $key_val . ']" value="1" ' . checked( '1', $value ) . '/>';
+					$output .= esc_html( $name );
+					$output .= '</label>';
+
+				}
+				break;
+
+			case 'multicheckboxvalues':
+				$option['default'] = is_array( $option['default'] ) ? $option['default'] : array();
+
+				if ( empty( $value ) ) {
+
+					$value = $option['default'];
+					
+				} elseif ( ! is_array( $value) ) {
+					$value = explode( ',', $value );
+				}
+
+				//$value             = ( ! empty( $value ) && is_array( $value ) ) ? $value : $option['default'];
+
+				foreach ( $field['options'] as $key_val => $name ) {
+
+					$key_val = esc_attr( $key_val );
+					$checked = in_array( $key_val, $value ) ? 'checked="checked"' : '';
+
+					$output .= '<label>';
+					$output .= '<input type="checkbox" id="' . esc_attr( $id_attr ) . '-' . $key_val . '"';
+					$output .= ' class="gmw-form-field ' . esc_attr( $field_name ) . ' ' . $key_val . ' ' . esc_attr( $class_attr ) . ' checkbox multicheckboxvalues"';
+					$output .= ' name="' . esc_attr( $name_attr ) . '[]"';
+					$output .= ' value="' . $key_val . '"';
+					$output .= $checked;
+					$output .= ' />';
+					$output .= esc_html( $name );
+					$output .= '</label>';
+
+				}
+				break;
+
+			case 'textarea':
+				$output .= '<textarea id="' . esc_attr( $id_attr ) . '"';
+				$output .= ' class="gmw-form-field textarea large-text ' . esc_attr( $class_attr ) . '"';
+				$output .= ' cols="50" rows="8" name="' . esc_attr( $name_attr ) . '"';
+				$output .= implode( ' ', $attributes );
+				$output .= ' ' . $placeholder . '>';
+				$output .= esc_textarea( $value );
+				$output .= '</textarea>';
+
+				break;
+
+			case 'radio':
+				$rc = 1;
+
+				foreach ( $field['options'] as $key_val => $name ) {
+
+					$checked = ( 1 === $rc ) ? 'checked="checked"' : checked( $value, $key_val, false );
+					$allwed  = array(
+						'a'   => array(
+							'href'  => array(),
+							'title' => array(),
+						),
+						'img' => array(
+							'src' => array(),
+						),
+					);
+
+					$output .= '<label>';
+					$output .= '<input type="radio" id="' . esc_attr( $id_attr ) . '"';
+					$output .= ' class="gmw-form-field ' . esc_attr( $field_name ) . ' ' . $key_val . ' ' . esc_attr( $class_attr ) . ' radio"';
+					$output .= ' name="' . esc_attr( $name_attr ) . '"';
+					$output .= ' value="' . esc_attr( $key_val ) . '"';
+					$output .= ' ' . $checked;
+					$output .= ' />';
+					$output .= wp_kses( $name, $allwed );
+					$output .= '</label>';
+					$output .= '&nbsp;&nbsp;';
+
+					$rc++;
+				}
+				break;
+
+			case 'select':
+				if ( ! empty( $placeholder ) ) {
+					$placeholder = 'data-' . $placeholder;
+				}
+
+				$output .= '<select id="' . esc_attr( $id_attr ) . '" class="gmw-form-field select ' . esc_attr( $class_attr ) . '" ' . $placeholder;
+				$output .= ' name="' . esc_attr( $name_attr ) . '"';
+				$output .= ' ' . implode( ' ', $attributes );
+				$output .= '>';
+
+				foreach ( $field['options'] as $key_val => $name ) {
+					$output .= '<option value="' . esc_attr( $key_val ) . '" ' . selected( $value, $key_val, false ) . '>' . esc_html( $name ) . '</option>';
+				}
+				$output .= '</select>';
+
+				break;
+
+			case 'multiselect':
+			case 'multiselect_name_value':
+				if ( ! empty( $placeholder ) ) {
+					$placeholder = 'data-' . $placeholder;
+				}
+
+				$output .= '<select id="' . esc_attr( $id_attr ) . '" multiple ' . $placeholder;
+				$output .= ' class="gmw-form-field multiselect regular-text ' . esc_attr( $class_attr ) . '"';
+				$output .= ' name="' . esc_attr( $name_attr ) . '[]"';
+				$output .= ' ' . implode( ' ', $attributes );
+				$output .= '>';
+
+				if ( ! empty( $value ) && ! is_array( $value ) ) {
+					$value = explode( ',', $value );
+				}
+
+				foreach ( $field['options'] as $key_val => $name ) {
+					$selected = ( is_array( $value ) && in_array( $key_val, $value ) ) ? 'selected="selected"' : '';
+					$output  .= '<option value="' . esc_attr( $key_val ) . '" ' . $selected . '>' . esc_html( $name ) . '</option>';
+				}
+
+				$output .= '</select>';
+
+				break;
+
+			case 'password':
+				$output .= '<input type="password" id="' . esc_attr( $id_attr ) . '"';
+				$output .= ' class="gmw-form-field regular-text password ' . esc_attr( $class_attr ) . '" name="' . esc_attr( $name_attr ) . '"';
+				$output .= ' value="' . esc_attr( sanitize_text_field( $value ) ) . '"';
+				$output .= ' ' . implode( ' ', $attributes );
+				$output .= ' ' . $placeholder;
+				$output .= '/>';
+
+				break;
+
+			case 'hidden':
+				$output .= '<input type="hidden" id="' . esc_attr( $id_attr ) . '"';
+				$output .= ' class="gmw-form-field hidden ' . esc_attr( $class_attr ) . '" name="' . esc_attr( $name_attr ) . '"';
+				$output .= ' value="' . esc_attr( sanitize_text_field( $value ) ) . '"';
+				$output .= ' ' . implode( ' ', $attributes );
+				$output .= ' />';
+
+				break;
+
+			// number.
+			case 'number':
+				$output .= '<input type="number" id="' . esc_attr( $id_attr ) . '"';
+				$output .= ' class="gmw-form-field number ' . esc_attr( $class_attr ) . '"';
+				$output .= ' name="' . esc_attr( $name_attr ) . '"';
+				$output .= ' value="' . esc_attr( sanitize_text_field( $value ) ) . '"';
+				$output .= ' ' . implode( ' ', $attributes );
+				$output .= ' />';
+
+				break;
+		}
+
+		return $output;
 	}
 
 	/**
