@@ -900,7 +900,6 @@ class GMW_Search_Form_Helper {
 		// new filter.
 		$args = apply_filters( 'gmw_search_form_keywords_field_args', $args );
 
-
 		$required     = ! empty( $args['required'] ) ? 'required' : '';
 		$placeholder  = ! empty( $args['placeholder'] ) ? esc_attr( $args['placeholder'] ) : '';
 		$value        = ! empty( $_GET[ $url_px . 'keywords' ] ) ? sanitize_text_field( wp_unslash( $_GET[ $url_px . 'keywords' ] ) ) : ''; // WPCS: CSRF ok.
