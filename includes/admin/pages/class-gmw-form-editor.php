@@ -1279,7 +1279,7 @@ class GMW_Form_Editor {
 			'results_map'       => array(
 				'slug'     => 'results_map',
 				'type'     => 'fields',
-				'label'    => __( 'Map Settigns', 'geo-my-wp' ),
+				'label'    => __( 'Map Settings', 'geo-my-wp' ),
 				'notice'   => __( 'Manage the appearance of the map.', 'geo-my-wp' ),
 				'fields'   => array(
 					'map_width'          => gmw_get_admin_setting_args(
