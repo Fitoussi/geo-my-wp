@@ -181,7 +181,7 @@ class GMW_Maps_API {
 			'map_width'      => '100%',
 			'map_height'     => '350px',
 			'expand_on_load' => false,
-			'init_visible'   => false,
+			'init_visible'   => true,
 		);
 
 		// merge defaults with incoming args.
