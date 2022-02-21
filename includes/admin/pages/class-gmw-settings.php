@@ -31,29 +31,42 @@ class GMW_Settings {
 	}
 
 	/**
-	 * Setup default settings values
+	 * Setup settings default values.
 	 */
-	public function setup_defaults() {
+	public static function setup_defaults() {
 
 		$defaults = apply_filters(
 			'gmw_admin_settings_setup_defaults',
 			array(
 				'general_settings' => array(
 					'allow_tracking'       => '',
-					'google_map_api_usage' => 'enabled',
-					'google_api'           => '',
-					'js_geocode'           => 1,
 					'country_code'         => 'US',
 					'language_code'        => 'EN',
-					'results_page'         => '',
 					'auto_locate'          => 1,
+					'results_page'         => '',
 				),
 				'api_providers'    => array(
-					'maps_provider'                   => 'google_maps',
-					'geocoding_provider'              => 'google_maps',
+					'maps_provider'                   => 'leaflet',
+					'geocoding_provider'              => 'nominatim',
+					'nominatim_email'                 => get_bloginfo( 'admin_email' ),
 					'google_maps_client_side_api_key' => '',
 					'google_maps_server_side_api_key' => '',
-					'nominatim_email'                 => get_bloginfo( 'admin_email' ),
+					'google_maps_api_china'           => '',
+				),
+				'styles'           => array(
+					'color_primary'           => '#1e90ff',
+					'color_hover_primary'     => '#2b97ff',
+					'font_color_primary'      => '#ffffff',
+					'color_secondary'         => '#63CC61',
+					'color_hover_secondary'   => '#70d56e',
+					'font_color_secondary'    => '#ffffff',
+					'color_accent'            => '#FFA600',
+					'color_hover_accent'      => '#ee9e08',
+					'font_color_accent'       => '#ffffff',
+					'notice_color_success'    => '#63CC61',
+					'notice_color_failed'     => '#FF0200',
+					'notice_color_info'       => '#FFA600',
+					'notice_color_processing' => '#FFA600',
 				),
 			)
 		);
