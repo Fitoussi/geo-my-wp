@@ -39,11 +39,11 @@ class GMW_Settings {
 			'gmw_admin_settings_setup_defaults',
 			array(
 				'general_settings' => array(
-					'allow_tracking'       => '',
-					'country_code'         => 'US',
-					'language_code'        => 'EN',
-					'auto_locate'          => 1,
-					'results_page'         => '',
+					'allow_tracking' => '',
+					'country_code'   => 'US',
+					'language_code'  => 'EN',
+					'auto_locate'    => 1,
+					'results_page'   => '',
 				),
 				'api_providers'    => array(
 					'maps_provider'                   => 'leaflet',
@@ -86,7 +86,7 @@ class GMW_Settings {
 				$gmw_options[ $group_name ] = $group_options;
 
 				$save_options = true;
-			
+
 			} else {
 
 				foreach ( $group_options as $option_key => $option_value ) {
@@ -211,17 +211,17 @@ class GMW_Settings {
 						'priority'   => 40,
 					),
 					'results_page'   => array(
-						'name'       => 'results_page',
-						'type'       => 'select',
+						'name'        => 'results_page',
+						'type'        => 'select',
 						'placeholder' => 'select page',
-						'default'    => '0',
-						'label'      => __( 'Results Page', 'geo-my-wp' ),
-						'desc'       => __( 'Select the page that will display the search result when using the "GMW Search Form" widget, then place the shortcode <code>[gmw form="results"]</code> in the content area of that page. The page that you select here will effect all of GEO my WP forms by default, but can be overriden when editing a specific form.', 'geo-my-wp' ),
+						'default'     => '0',
+						'label'       => __( 'Results Page', 'geo-my-wp' ),
+						'desc'        => __( 'Select the page that will display the search result when using the "GMW Search Form" widget, then place the shortcode <code>[gmw form="results"]</code> in the content area of that page. The page that you select here will effect all of GEO my WP forms by default, but can be overriden when editing a specific form.', 'geo-my-wp' ),
 						'options'     => $results_page,
 						'attributes'  => array(
 							'data-gmw_ajax_load_options' => 'gmw_get_pages',
 						),
-						'priority'   => 50,
+						'priority'    => 50,
 					),
 				),
 				'priority' => 3,
@@ -253,11 +253,11 @@ class GMW_Settings {
 						'priority'   => 10,
 					),
 					'nominatim_options'   => array(
-						'name'       => 'nominatim_options',
-						'type'       => 'fields_group',
-						'label'      => __( 'Nominatim ( OpenStreetMaps )', 'geo-my-wp' ),
-						//'desc'       => __( 'Setup Nominatim options.', 'geo-my-wp' ),
-						'fields'     => array(
+						'name'            => 'nominatim_options',
+						'type'            => 'fields_group',
+						'label'           => __( 'Nominatim ( OpenStreetMaps )', 'geo-my-wp' ),
+						// 'desc'       => __( 'Setup Nominatim options.', 'geo-my-wp' ),
+						'fields'          => array(
 							'nominatim_email' => array(
 								'name'        => 'nominatim_email',
 								'type'        => 'text',
@@ -274,22 +274,22 @@ class GMW_Settings {
 								'priority'    => 5,
 							),
 						),
-						'priority'   => 30,
+						'priority'        => 30,
 						'settings_toggle' => array(
 							'element' => 'maps_provider',
 							'value'   => 'leaflet',
 						),
 					),
 					'google_maps_options' => array(
-						'name'       => 'google_maps_options',
-						'type'       => 'fields_group',
-						'label'      => __( 'Google Maps API Settings', 'geo-my-wp' ),
-						'desc'       => sprintf(
+						'name'            => 'google_maps_options',
+						'type'            => 'fields_group',
+						'label'           => __( 'Google Maps API Settings', 'geo-my-wp' ),
+						'desc'            => sprintf(
 							/* translators: %s: link. */
 							__( 'GEO my WP requires two API keys: A browser and a server API keys. See <a href="%s" target="_blank">this tutorial</a> to learn how to generate your API keys.', 'geo-my-wp' ),
 							'https://docs.geomywp.com/article/141-generate-and-setup-google-maps-api-keys'
 						),
-						'fields'     => array(
+						'fields'          => array(
 							'google_maps_client_side_api_key' => array(
 								'name'        => 'google_maps_client_side_api_key',
 								'type'        => 'text',
@@ -335,18 +335,18 @@ class GMW_Settings {
 				),
 				'priority' => 5,
 			),
-			'styles' => array(
+			'styles'           => array(
 				'slug'     => 'styles',
 				'label'    => __( 'Styling', 'geo-my-wp' ),
 				'icon'     => 'cog',
 				'fields'   => array(
 					'main_colors'   => array(
-						'name'       => 'main_colors',
-						'type'       => 'fields_group',
-						'label'      => __( 'Main Colors', 'geo-my-wp' ),
-						'desc'       => __( 'Manage some of the colors that GEO my WP uses in various places in the plugin.', 'geo-my-wp' ),
-						'fields'     => array(
-							'color_primary'   => array(
+						'name'     => 'main_colors',
+						'type'     => 'fields_group',
+						'label'    => __( 'Main Colors', 'geo-my-wp' ),
+						'desc'     => __( 'Manage some of the colors that GEO my WP uses in various places in the plugin.', 'geo-my-wp' ),
+						'fields'   => array(
+							'color_primary'         => array(
 								'name'        => 'color_primary',
 								'type'        => 'text',
 								'default'     => '',
@@ -372,7 +372,7 @@ class GMW_Settings {
 								),
 								'priority'    => 10,
 							),
-							'font_color_primary'   => array(
+							'font_color_primary'    => array(
 								'name'        => 'font_color_primary',
 								'type'        => 'text',
 								'default'     => '',
@@ -385,7 +385,7 @@ class GMW_Settings {
 								),
 								'priority'    => 15,
 							),
-							'color_secondary'   => array(
+							'color_secondary'       => array(
 								'name'        => 'color_secondary',
 								'type'        => 'text',
 								'default'     => '',
@@ -398,7 +398,7 @@ class GMW_Settings {
 								),
 								'priority'    => 20,
 							),
-							'color_hover_secondary'   => array(
+							'color_hover_secondary' => array(
 								'name'        => 'color_hover_secondary',
 								'type'        => 'text',
 								'default'     => '',
@@ -411,7 +411,7 @@ class GMW_Settings {
 								),
 								'priority'    => 25,
 							),
-							'font_color_secondary'   => array(
+							'font_color_secondary'  => array(
 								'name'        => 'font_color_primary',
 								'type'        => 'text',
 								'default'     => '',
@@ -424,7 +424,7 @@ class GMW_Settings {
 								),
 								'priority'    => 30,
 							),
-							'color_accent'   => array(
+							'color_accent'          => array(
 								'name'        => 'color_accent',
 								'type'        => 'text',
 								'default'     => '',
@@ -437,7 +437,7 @@ class GMW_Settings {
 								),
 								'priority'    => 35,
 							),
-							'color_hover_accent'   => array(
+							'color_hover_accent'    => array(
 								'name'        => 'color_hover_accent',
 								'type'        => 'text',
 								'default'     => '',
@@ -450,7 +450,7 @@ class GMW_Settings {
 								),
 								'priority'    => 40,
 							),
-							'font_color_accent'   => array(
+							'font_color_accent'     => array(
 								'name'        => 'font_color_accent',
 								'type'        => 'text',
 								'default'     => '',
@@ -464,15 +464,15 @@ class GMW_Settings {
 								'priority'    => 45,
 							),
 						),
-						'priority'   => 30,
+						'priority' => 30,
 					),
-					'notice_colors'   => array(
-						'name'       => 'notice_colors',
-						'type'       => 'fields_group',
-						'label'      => __( 'Notices Color', 'geo-my-wp' ),
-						'desc'       => __( 'Manage the colors of GEO my WP\'s notices.', 'geo-my-wp' ),
-						'fields'     => array(
-							'notice_color_success'   => array(
+					'notice_colors' => array(
+						'name'     => 'notice_colors',
+						'type'     => 'fields_group',
+						'label'    => __( 'Notices Color', 'geo-my-wp' ),
+						'desc'     => __( 'Manage the colors of GEO my WP\'s notices.', 'geo-my-wp' ),
+						'fields'   => array(
+							'notice_color_success'    => array(
 								'name'        => 'notice_color_success',
 								'type'        => 'text',
 								'default'     => '',
@@ -485,7 +485,7 @@ class GMW_Settings {
 								),
 								'priority'    => 5,
 							),
-							'notice_color_failed'   => array(
+							'notice_color_failed'     => array(
 								'name'        => 'notice_color_failed',
 								'type'        => 'text',
 								'default'     => '',
@@ -498,7 +498,7 @@ class GMW_Settings {
 								),
 								'priority'    => 10,
 							),
-							'notice_color_info'   => array(
+							'notice_color_info'       => array(
 								'name'        => 'notice_color_info',
 								'type'        => 'text',
 								'default'     => '',
@@ -511,7 +511,7 @@ class GMW_Settings {
 								),
 								'priority'    => 15,
 							),
-							'notice_color_processing'   => array(
+							'notice_color_processing' => array(
 								'name'        => 'notice_color_processing',
 								'type'        => 'text',
 								'default'     => '',
@@ -525,7 +525,7 @@ class GMW_Settings {
 								'priority'    => 20,
 							),
 						),
-						'priority'   => 30,
+						'priority' => 30,
 					),
 				),
 				'priority' => 99,
@@ -754,15 +754,18 @@ class GMW_Settings {
 		// Current tab.
 		$current_tab     = $this->get_current_tab();
 		$current_options = gmw_get_options_group();
+		$options         = ! empty( $_POST['gmw_options'] ) ? $_POST['gmw_options'] : array(); // WPCS: CSRF ok, sanitization ok.
 
 		// Validate options.
-		$validated = $this->validate( $_POST['gmw_options'] ); // WPCS: CSRF ok, sanitization ok.
+		$validated = $this->validate( $options );
 
 		$current_options[ $current_tab ] = $validated[ $current_tab ];
 
 		update_option( 'gmw_options', $current_options );
 
-		wp_safe_redirect( home_url( $_SERVER['REQUEST_URI'] ) );
+		$uri = ! empty( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : ''; // WPCS: CSRF ok, sanitization ok.
+
+		wp_safe_redirect( home_url( $uri ) );
 
 		exit;
 	}
@@ -772,7 +775,7 @@ class GMW_Settings {
 	 *
 	 * @param  array  $settings form settings.
 	 *
-	 * @param  array  $option   field options.
+	 * @param  array  $options  field options.
 	 *
 	 * @param  string $tab      tab name.
 	 *
@@ -780,14 +783,14 @@ class GMW_Settings {
 	 */
 	public function get_form_field( $settings, $options, $tab, $section ) {
 
-		//if ( ! empty( $fields_group ) && ! empty( $options['sub_option'] ) ) {
-
+		// if ( ! empty( $fields_group ) && ! empty( $options['sub_option'] ) ) {
 			$name_attr        = 'gmw_options[' . $tab . ']';
 			$value            = ! empty( $settings[ $tab ][ $options['name'] ] ) ? $settings[ $tab ][ $options['name'] ] : $options['default'];
 			$options['id']    = 'setting-' . $tab . '-' . $options['name'];
 			$class            = 'setting-' . $options['name'];
 			$options['class'] = ! empty( $options['class'] ) ? $options['class'] . ' ' . $class : $class;
-		/*} else {
+		/*
+		} else {
 
 			$name_attr        = 'gmw_form[' . $tab . ']';
 			$value            = ! empty( $this->form[ $tab ][ $options['name'] ] ) ? $this->form[ $tab ][ $options['name'] ] : $options['default'];
@@ -798,6 +801,7 @@ class GMW_Settings {
 
 		echo gmw_get_admin_settings_field( $options, esc_attr( $name_attr ), $value );
 
+		/*
 		return;
 
 		$option['default']  = isset( $option['default'] ) ? $option['default'] : '';
@@ -840,15 +844,15 @@ class GMW_Settings {
 			case 'checkbox':
 				?>
 				<label>
-					<input 
+					<input
 						type="checkbox"
 						id="<?php echo esc_attr( $attr_id ); ?>"
-						class="setting-<?php echo esc_attr( $option['name'] ); ?> checkbox" 
+						class="setting-<?php echo esc_attr( $option['name'] ); ?> checkbox"
 						name="<?php echo esc_attr( $attr_name ); ?>"
-						value="1" 
+						value="1"
 						<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?>
-						<?php checked( '1', $value ); ?> 
-					/> 
+						<?php checked( '1', $value ); ?>
+					/>
 					<?php echo esc_attr( $option['cb_label'] ); // WPCS: XSS ok. ?>
 				</label>
 				<?php
@@ -860,12 +864,12 @@ class GMW_Settings {
 					$value = ! empty( $value[ $key_val ] ) ? $value[ $key_val ] : $option['default'];
 					?>
 					<label>
-						<input 
-							type="checkbox" 
+						<input
+							type="checkbox"
 							id="<?php echo esc_attr( $attr_id . '-' . $key_val ); ?>" class="setting-<?php echo esc_attr( $option['name'] ); ?> checkbox multicheckbox"
 							name="<?php echo esc_attr( $attr_name . '[' . $key_val . ']' ); ?>"
-							value="1" <?php checked( '1', $value ); ?> 
-						/> 
+							value="1" <?php checked( '1', $value ); ?>
+						/>
 						<?php echo esc_html( $name ); ?>
 					</label>
 					<?php
@@ -880,14 +884,14 @@ class GMW_Settings {
 					$checked = in_array( $key_val, $value ) ? 'checked="checked"' : '';
 					?>
 					<label>
-						<input 
-							type="checkbox" 
-							id="<?php echo esc_attr( $attr_id . '-' . $key_val ); ?>" 
-							class="setting-<?php echo esc_attr( $option['name'] ); ?> checkbox multicheckboxvalues" 
-							name="<?php echo esc_attr( $attr_name ) . '[]'; ?>" 
-							value="<?php echo esc_attr( $key_val ); ?>" 
-							<?php echo $checked; // WPCS: XSS ok. ?> 
-						/> 
+						<input
+							type="checkbox"
+							id="<?php echo esc_attr( $attr_id . '-' . $key_val ); ?>"
+							class="setting-<?php echo esc_attr( $option['name'] ); ?> checkbox multicheckboxvalues"
+							name="<?php echo esc_attr( $attr_name ) . '[]'; ?>"
+							value="<?php echo esc_attr( $key_val ); ?>"
+							<?php echo $checked; // WPCS: XSS ok. ?>
+						/>
 						<?php echo esc_html( $name ); ?>
 					</label>
 					<?php
@@ -896,13 +900,13 @@ class GMW_Settings {
 
 			case 'textarea':
 				?>
-				<textarea 
-					id="<?php echo esc_attr( $attr_id ); ?>" 
-					class="<?php echo $class_attr; // WPCS: XSS ok. ?> textarea large-text" 
-					cols="50" 
-					rows="3" 
-					name="<?php echo esc_attr( $attr_name ); ?>" 
-					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?> 
+				<textarea
+					id="<?php echo esc_attr( $attr_id ); ?>"
+					class="<?php echo $class_attr; // WPCS: XSS ok. ?> textarea large-text"
+					cols="50"
+					rows="3"
+					name="<?php echo esc_attr( $attr_name ); ?>"
+					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?>
 					<?php echo $placeholder; // WPCS: XSS ok. ?>><?php echo esc_textarea( $value ); ?></textarea>
 				<?php
 				break;
@@ -914,13 +918,13 @@ class GMW_Settings {
 					$checked = ( 1 === $rc ) ? 'checked="checked"' : checked( $value, $key_val, false );
 					?>
 					<label>
-						<input 
-							type="radio" 
-							id="<?php esc_attr( $attr_id ); ?>" 
-							class="setting-<?php echo esc_attr( $option['name'] ); ?>" 
-							name="<?php echo esc_attr( $attr_name ); ?>" 
+						<input
+							type="radio"
+							id="<?php esc_attr( $attr_id ); ?>"
+							class="setting-<?php echo esc_attr( $option['name'] ); ?>"
+							name="<?php echo esc_attr( $attr_name ); ?>"
 							value="<?php echo esc_attr( $key_val ); ?>"
-							<?php echo $checked; // WPCS: XSS ok. ?> 
+							<?php echo $checked; // WPCS: XSS ok. ?>
 						/>
 						<?php echo esc_attr( $name ); ?>
 					</label>
@@ -937,7 +941,7 @@ class GMW_Settings {
 					$attributes[] = 'data-placeholder="' . $select_options . '"';
 				}
 				?>
-				<select 
+				<select
 					id="<?php echo esc_attr( $attr_id ); ?>"
 					class="<?php echo $class_attr; // WPCS: XSS ok. ?> select"
 					name="<?php echo esc_attr( $attr_name ); ?>"
@@ -958,10 +962,10 @@ class GMW_Settings {
 					$attributes[] = 'data-placeholder="' . $select_options . '"';
 				}
 				?>
-				<select 
-					id="<?php echo esc_attr( $attr_id ); ?>" 
-					multiple 
-					class="<?php echo $class_attr; // WPCS: XSS ok. ?> select" 
+				<select
+					id="<?php echo esc_attr( $attr_id ); ?>"
+					multiple
+					class="<?php echo $class_attr; // WPCS: XSS ok. ?> select"
 					name="<?php echo esc_attr( $attr_name ); ?>[]"
 					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?>>
 					<?php
@@ -977,13 +981,13 @@ class GMW_Settings {
 
 			case 'password':
 				?>
-				<input 
-					type="password" 
-					id="<?php echo esc_attr( $attr_id ); ?>" 
-					class="<?php echo $class_attr; // WPCS: XSS ok. ?> regular-text password" name="<?php echo esc_attr( $attr_name ); ?>" 
+				<input
+					type="password"
+					id="<?php echo esc_attr( $attr_id ); ?>"
+					class="<?php echo $class_attr; // WPCS: XSS ok. ?> regular-text password" name="<?php echo esc_attr( $attr_name ); ?>"
 					value="<?php echo esc_attr( $value ); ?>"
-					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?> 
-					<?php echo $placeholder; // WPCS: XSS ok. ?> 
+					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?>
+					<?php echo $placeholder; // WPCS: XSS ok. ?>
 				/>
 				<?php
 				break;
@@ -995,7 +999,7 @@ class GMW_Settings {
 					id="<?php echo esc_attr( $attr_id ); ?>"
 					class="<?php echo $class_attr; // WPCS: XSS ok. ?> regular-text password" name="<?php echo esc_attr( $attr_name ); ?>"
 					value="<?php echo esc_attr( $value ); ?>"
-					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?> 
+					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?>
 				/>
 				<?php
 				break;
@@ -1003,13 +1007,13 @@ class GMW_Settings {
 			// number.
 			case 'number':
 				?>
-				<input 
+				<input
 					type="number"
 					id="<?php echo esc_attr( $attr_id ); ?>"
 					class="<?php echo $class_attr; // WPCS: XSS ok. ?> regular-text text"
 					name="<?php echo esc_attr( $attr_name ); ?>"
 					value="<?php echo esc_attr( $value ); ?>"
-					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?> 
+					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?>
 				/>
 				<?php
 				break;
@@ -1019,18 +1023,18 @@ class GMW_Settings {
 			case 'text':
 			default:
 				?>
-				<input 
-					type="text" 
+				<input
+					type="text"
 					id="<?php echo esc_attr( $attr_id ); ?>"
-					class="<?php echo $class_attr; // WPCS: XSS ok. ?> regular-text text" 
+					class="<?php echo $class_attr; // WPCS: XSS ok. ?> regular-text text"
 					name="<?php echo esc_attr( $attr_name ); ?>"
-					value="<?php echo esc_attr( $value ); ?>" 
-					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?> 
-					<?php echo $placeholder; // WPCS: XSS ok. ?> 
+					value="<?php echo esc_attr( $value ); ?>"
+					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?>
+					<?php echo $placeholder; // WPCS: XSS ok. ?>
 				/>
 				<?php
 				break;
-		}
+		}*/
 	}
 
 	/**
@@ -1053,15 +1057,15 @@ class GMW_Settings {
 		$section     = ! empty( $this->settings[ $current_tab ] ) ? $this->settings[ $current_tab ] : $this->settings['general_settings'];
 		?>
 		<?php gmw_admin_pages_header(); ?>
-		
+
 		<div id="gmw-settings-page" class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper">
 
 			<nav class="gmw-admin-page-navigation">
-				
+
 				<?php uasort( $this->settings_groups, 'gmw_sort_by_priority' ); ?>
 
 				<?php foreach ( $this->settings_groups as $tab ) { ?>
-					
+
 					<?php
 
 					if ( ! empty( $tab['premium_feature'] ) ) {
@@ -1102,7 +1106,7 @@ class GMW_Settings {
 			</nav>
 
 			<div class="gmw-admin-page-panels-wrapper" id="tab_<?php echo esc_attr( $current_tab ); ?>">
-				
+
 				<h1 style="display:none"></h1>
 
 				<div id="gmw-settings-tab-<?php echo esc_attr( $current_tab ); ?>" class="gmw-settings-form gmw-tab-panel <?php echo esc_attr( $current_tab ); ?>">
@@ -1110,7 +1114,7 @@ class GMW_Settings {
 					<form method="post" action="" class="gmw-settings-form">
 
 						<?php uasort( $section, 'gmw_sort_by_priority' ); ?>
-							
+
 						<?php
 						foreach ( $section as $option ) {
 
@@ -1136,20 +1140,20 @@ class GMW_Settings {
 							$allowed_html = apply_filters(
 								'gmw_settings_page_feature_desc_allowed_html',
 								array(
-									'a' => array(
+									'a'      => array(
 										'href'   => array(),
 										'title'  => array(),
 										'target' => array(),
 									),
-									'span' => array(
-										'style'   => array(),
-										'class'   => array(),
-										'id'      => array(),
+									'span'   => array(
+										'style' => array(),
+										'class' => array(),
+										'id'    => array(),
 									),
-									'div' => array(
-										'style'   => array(),
-										'class'   => array(),
-										'id'      => array(),
+									'div'    => array(
+										'style' => array(),
+										'class' => array(),
+										'id'    => array(),
 									),
 									'code'   => array(),
 									'br'     => array(),
@@ -1174,9 +1178,9 @@ class GMW_Settings {
 								</legend>
 
 								<div class="gmw-settings-panel-content gmw-form-feature-settings <?php echo ! empty( $option['type'] ) ? esc_attr( $option['type'] ) : ''; ?>">
-									
+
 									<div class="gmw-settings-panel-description"><?php echo ( ! empty( $option['desc'] ) ) ? wp_kses( $option['desc'], $allowed_html ) : ''; ?></div>
-									
+
 									<?php if ( 'fields_group' === $option['type'] && array_filter( $option['fields'] ) ) { ?>
 
 										<?php uasort( $option['fields'], 'gmw_sort_by_priority' ); ?>
@@ -1186,7 +1190,7 @@ class GMW_Settings {
 											<?php foreach ( $option['fields'] as $option ) { ?>
 
 												<div class="gmw-settings-panel-field gmw-form-feature-settings single-option option-<?php echo esc_attr( $option['name'] ); ?> <?php echo $feature_disbaled; // WPCS: XSS ok. ?> <?php echo ! empty( $option['type'] ) ? esc_attr( $option['type'] ) : ''; ?> <?php echo ! empty( $option['wrap_class'] ) ? esc_attr( $option['wrap_class'] ) : ''; ?>">
-													
+
 													<div class="gmw-settings-panel-header">
 														<label class="gmw-settings-label"><?php echo ( ! empty( $option['label'] ) ) ? esc_attr( $option['label'] ) : ''; ?></label>
 													</div>
@@ -1202,7 +1206,7 @@ class GMW_Settings {
 										</div>
 
 									<?php } else { ?>
-										
+
 										<div class="gmw-settings-panel-field gmw-form-feature-settings <?php echo $feature_disbaled; // WPCS: XSS ok. ?> <?php echo ! empty( $option['type'] ) ? esc_attr( $option['type'] ) : ''; ?>">
 											<div class="gmw-settings-panel-input-container">
 												<?php $this->get_form_field( $settings, $option, $current_tab, $section ); ?>
@@ -1236,9 +1240,9 @@ class GMW_Settings {
 		<script type="text/javascript">
 
 			jQuery( document ).ready( function( $ ) {
-				
+
 				jQuery( '.gmw-settings-panel[data-gmw_toggle_element]' ).each( function() {
-					
+
 					var element     = jQuery( this );
 					var toggle      = jQuery( '.setting-' + element.attr( 'data-gmw_toggle_element' ) );
 					var toggleValue = element.attr( 'data-gmw_toggle_value' );
@@ -1251,7 +1255,7 @@ class GMW_Settings {
 							element.hide();
 						}
 					} );
-					
+
 					toggle.trigger( 'change' );
 				});
 
@@ -1372,7 +1376,6 @@ class GMW_Settings {
 
 				case 'multiselect':
 				case 'multiselect_name_value':
-
 					if ( empty( $values[ $current_tab ][ $option['name'] ] ) || ! is_array( $values[ $current_tab ][ $option['name'] ] ) ) {
 
 						$valid_input[ $current_tab ][ $option['name'] ] = is_array( $option['default'] ) ? $option['default'] : array();
