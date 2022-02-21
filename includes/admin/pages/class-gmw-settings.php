@@ -1,6 +1,8 @@
 <?php
 /**
- * GEO my WP Admin Settings class.
+ * GEO my WP Admin Settings page.
+ *
+ * @author Eyal Fitoussi
  *
  * @package geo-my-wp
  */
@@ -18,6 +20,7 @@ class GMW_Settings {
 	 * __construct function.
 	 *
 	 * @access public
+	 *
 	 * @return void
 	 */
 	public function __construct() {
@@ -25,10 +28,6 @@ class GMW_Settings {
 		if ( ( empty( $_GET['page'] ) || 'gmw-settings' !== $_GET['page'] ) && ( empty( $_POST['option_page'] ) || 'gmw_options' !== $_POST['option_page'] ) ) { // WPCS: CSRF ok.
 			return;
 		}
-
-		$this->settings_group = 'gmw_options';
-
-		add_action( 'admin_init', array( $this, 'register_settings' ) );
 	}
 
 	/**
