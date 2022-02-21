@@ -196,6 +196,7 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 		include_once 'includes/gmw-posts-locator-search-form-template-functions.php';
 		include_once 'includes/gmw-posts-locator-search-results-template-functions.php';
 		include_once 'includes/class-gmw-posts-locator-form.php';
+		include_once 'includes/class-gmw-posts-locator-mashup-map-form.php';
 		include_once 'includes/class-gmw-post-location-form.php';
 
 		// load single location post.
