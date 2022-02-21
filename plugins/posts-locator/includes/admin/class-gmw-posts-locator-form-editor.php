@@ -30,13 +30,11 @@ class GMW_Posts_Locator_Form_Editor {
 
 		// Posts Locator form tasks.
 		add_filter( 'gmw_posts_locator_form_default_settings', array( $this, 'default_settings' ), 5, 2 );
-		add_filter( 'gmw_posts_locator_form_settings', array( $this, 'form_settings_init' ), 5, 2 );
+		add_filter( 'gmw_posts_locator_form_settings', array( $this, 'form_settings' ), 5, 2 );
 		add_action( 'gmw_posts_locator_form_settings_form_taxonomies', array( 'GMW_Form_Settings_Helper', 'taxonomies' ), 5, 3 );
 
 		// Mashup map form tasks.
-		add_filter( 'gmw_posts_locator_mashup_map_form_default_settings', array( $this, 'default_settings' ), 5, 2 );
-		add_filter( 'gmw_posts_locator_mashup_map_form_settings', array( $this, 'form_settings_init' ), 5, 2 );
-		add_filter( 'gmw_posts_locator_mashup_map_form_settings_groups', array( $this, 'modify_form_settings_groups' ), 5, 2 );
+		add_filter( 'gmw_posts_locator_mashup_map_form_settings', array( $this, 'form_settings' ), 5, 2 );
 	}
 
 	/**
@@ -67,46 +65,6 @@ class GMW_Posts_Locator_Form_Editor {
 		$settings['search_results']['opening_hours']    = '';
 		$settings['search_results']['taxonomies']       = 1;
 
-		// For mashup map.
-		if ( 'posts_locator_mashup_map' === $args['slug'] ) {
-
-			$settings['page_load_results']['enabled']         = 1;
-			$settings['page_load_results']['display_results'] = 0;
-			$settings['page_load_results']['display_map']     = 'shortcode';
-			$settings['page_load_results']['per_page']        = 200;
-			$settings['search_form']['form_template']         = '';
-		}
-
-		return $settings;
-	}
-
-	/**
-	 * Modify some settings and tabs for the mashup map form.
-	 *
-	 * @param  [type] $settings [description].
-	 *
-	 * @param  [type] $form     [description].
-	 *
-	 * @return [type]           [description]
-	 */
-	public function modify_form_settings_groups( $settings, $form ) {
-
-		if ( 'posts_locator_mashup_map' === $form['slug'] ) {
-
-			unset( $settings['no_results'] );
-
-			$settings['page_load_results']['label'] = __( 'Map Filters', 'geo-my-wp' );
-
-			$settings['search_form']['tab_class']   = 'gmw-hidden-form-editor-object';
-			$settings['search_form']['panel_class'] = 'gmw-hidden-form-editor-object';
-
-			$settings['search_results']['tab_class']   = 'gmw-hidden-form-editor-object';
-			$settings['search_results']['panel_class'] = 'gmw-hidden-form-editor-object';
-
-			$settings['form_submission']['tab_class']   = 'gmw-hidden-form-editor-object';
-			$settings['form_submission']['panel_class'] = 'gmw-hidden-form-editor-object';
-		}
-
 		return $settings;
 	}
 
@@ -119,7 +77,7 @@ class GMW_Posts_Locator_Form_Editor {
 	 *
 	 * @return [type]           [description]
 	 */
-	public function form_settings_init( $settings, $form ) {
+	public function form_settings( $settings, $form ) {
 
 		// Post types settings.
 		$post_types_settings = gmw_get_admin_setting_args(
@@ -142,32 +100,8 @@ class GMW_Posts_Locator_Form_Editor {
 		$settings['page_load_results']['post_types']            = $post_types_settings;
 		$settings['page_load_results']['post_types']['options'] = ! empty( $form['page_load_results']['post_types'] ) ? array_combine( $form['page_load_results']['post_types'], $form['page_load_results']['post_types'] ) : array();
 
-		// Modify some settings for mashup map.
+		// No need the settings below for the mashup map form.
 		if ( 'posts_locator_mashup_map' === $form['slug'] ) {
-
-			$settings['page_load_results']['enabled']['wrap_class']    = 'gmw-hidden-form-editor-object';
-			$settings['page_load_results']['enabled']['default']       = 1;
-			$settings['page_load_results']['enabled']['force_default'] = 1;
-
-			$settings['page_load_results']['display_results']['wrap_class']    = 'gmw-hidden-form-editor-object';
-			$settings['page_load_results']['display_results']['type']          = 'hidden';
-			$settings['page_load_results']['display_results']['default']       = 0;
-			$settings['page_load_results']['display_results']['force_default'] = 1;
-
-			$settings['page_load_results']['display_map']['wrap_class']    = 'gmw-hidden-form-editor-object';
-			$settings['page_load_results']['display_map']['type']          = 'hidden';
-			$settings['page_load_results']['display_map']['default']       = 'shortcode';
-			$settings['page_load_results']['display_map']['force_default'] = 1;
-
-			$settings['page_load_results']['per_page']['label']   = __( 'Results Count', 'geo-my-wp' );
-			$settings['page_load_results']['per_page']['desc']    = __( 'Enter the maximum number of locations to show on the map.', 'geo-my-wp' );
-			$settings['page_load_results']['per_page']['type']    = 'number';
-			$settings['page_load_results']['per_page']['default'] = 200;
-
-			$settings['search_form']['form_template']['type']          = 'hidden';
-			$settings['search_form']['form_template']['default']       = '';
-			$settings['search_form']['form_template']['force_default'] = 1;
-
 			return $settings;
 		}
 
