@@ -49,6 +49,12 @@ class GMW_Form_Editor {
 			add_action( 'wp_ajax_gmw_update_admin_form', array( $this, 'ajax_update_form' ) );
 		}
 
+		// Modify form editor for Mashup Map forms.
+		// This hooks must be on top otherwise they won't get triggered during the AJAX request when updating the form.
+		add_filter( 'gmw_mashup_map_form_default_settings', array( $this, 'mashup_map_default_settings' ), 5, 90 );
+		add_filter( 'gmw_mashup_map_form_settings_groups', array( $this, 'mashup_map_form_settings_groups' ), 5, 90 );
+		add_filter( 'gmw_mashup_map_form_settings', array( $this, 'mashup_map_form_settings' ), 5, 90 );
+
 		// verify that this is the Form edit page.
 		if ( empty( $_GET['page'] ) || 'gmw-forms' !== $_GET['page'] || empty( $_GET['gmw_action'] ) || 'edit_form' !== $_GET['gmw_action'] ) { // WPCS: CSRF ok.
 			return;
@@ -147,6 +153,92 @@ class GMW_Form_Editor {
 		$messages['form_not_updated'] = __( 'There was an error while trying to update the form.', 'geo-my-wp' );
 
 		return $messages;
+	}
+
+	/**
+	 * Mashup Map default settings.
+	 *
+	 * @param  array $settings settings.
+	 *
+	 * @param  array $form     form.
+	 *
+	 * @return [type]           [description]
+	 */
+	public function mashup_map_default_settings( $settings, $form ) {
+
+		$settings['page_load_results']['enabled']         = 1;
+		$settings['page_load_results']['display_results'] = 0;
+		$settings['page_load_results']['display_map']     = 'shortcode';
+		$settings['page_load_results']['per_page']        = 500;
+		$settings['search_form']['form_template']         = '';
+
+		return $settings;
+	}
+
+	/**
+	 * Modify the form for Mashup Maps.
+	 *
+	 * Hide some tabs and settigns that are not needed.
+	 *
+	 * @param  [type] $settings [description].
+	 *
+	 * @param  [type] $form     [description].
+	 *
+	 * @return [type]           [description]
+	 */
+	public function mashup_map_form_settings_groups( $settings, $form ) {
+
+		unset( $settings['no_results'] );
+
+		$settings['page_load_results']['label'] = __( 'Map Filters', 'geo-my-wp' );
+
+		$settings['search_form']['tab_class']       = 'gmw-hidden-form-editor-object';
+		$settings['search_form']['panel_class']     = 'gmw-hidden-form-editor-object';
+		$settings['search_results']['tab_class']    = 'gmw-hidden-form-editor-object';
+		$settings['search_results']['panel_class']  = 'gmw-hidden-form-editor-object';
+		$settings['form_submission']['tab_class']   = 'gmw-hidden-form-editor-object';
+		$settings['form_submission']['panel_class'] = 'gmw-hidden-form-editor-object';
+
+		return $settings;
+	}
+
+	/**
+	 * Modify the form settings for Mashup Maps.
+	 *
+	 * Set some hidden default values.
+	 *
+	 * @param  [type] $settings [description].
+	 *
+	 * @param  [type] $form     [description].
+	 *
+	 * @return [type]           [description]
+	 */
+	public function mashup_map_form_settings( $settings, $form ) {
+
+		$settings['page_load_results']['enabled']['wrap_class']    = 'gmw-hidden-form-editor-object';
+		$settings['page_load_results']['enabled']['default']       = 1;
+		$settings['page_load_results']['enabled']['force_default'] = 1;
+
+		$settings['page_load_results']['display_results']['wrap_class']    = 'gmw-hidden-form-editor-object';
+		$settings['page_load_results']['display_results']['type']          = 'hidden';
+		$settings['page_load_results']['display_results']['default']       = 0;
+		$settings['page_load_results']['display_results']['force_default'] = 1;
+
+		$settings['page_load_results']['display_map']['wrap_class']    = 'gmw-hidden-form-editor-object';
+		$settings['page_load_results']['display_map']['type']          = 'hidden';
+		$settings['page_load_results']['display_map']['default']       = 'shortcode';
+		$settings['page_load_results']['display_map']['force_default'] = 1;
+
+		$settings['page_load_results']['per_page']['label']   = __( 'Locations Count', 'geo-my-wp' );
+		$settings['page_load_results']['per_page']['desc']    = __( 'Enter the maximum number of locations to show on the map.', 'geo-my-wp' );
+		$settings['page_load_results']['per_page']['type']    = 'number';
+		$settings['page_load_results']['per_page']['default'] = '';
+
+		$settings['search_form']['form_template']['type']          = 'hidden';
+		$settings['search_form']['form_template']['default']       = '';
+		$settings['search_form']['form_template']['force_default'] = 1;
+
+		return $settings;
 	}
 
 	/**
