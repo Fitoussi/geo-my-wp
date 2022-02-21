@@ -337,12 +337,13 @@ class GMW_Settings {
 	 * Init_settings function.
 	 *
 	 * @access protected
+	 *
 	 * @return void
 	 */
 	protected function init_settings() {
 
 		// generate default values.
-		$this->setup_defaults();
+		self::setup_defaults();
 
 		// get settings groups.
 		$this->settings_groups = $this->settings_groups();
@@ -371,6 +372,10 @@ class GMW_Settings {
 		// backward capability for replacing std with default.
 		foreach ( $this->settings as $key => $section ) {
 
+			if ( empty( $section ) ) {
+				continue;
+			}
+
 			foreach ( $section as $sec_key => $sec_value ) {
 
 				// skip hidden field.
@@ -391,13 +396,14 @@ class GMW_Settings {
 	}
 
 	/**
-	 * Get list of pages
+	 * Get list of pages.
 	 *
 	 * @return array of pages
 	 */
 	public function get_pages() {
 
 		$pages = array();
+
 		foreach ( get_pages() as $page ) {
 			$pages[ $page->ID ] = $page->post_title;
 		}
@@ -406,7 +412,7 @@ class GMW_Settings {
 	}
 
 	/**
-	 * Register_settings function.
+	 * Update settings.
 	 *
 	 * @access public
 	 * @return void
@@ -598,7 +604,6 @@ class GMW_Settings {
 				$this_value = ! empty( $settings[ $tab ][ $option['name'] ] ) ? $settings[ $tab ][ $option['name'] ] : array();
 
 				do_action( 'gmw_main_settings_' . $function, $this_value, $name_attr, $settings, $tab, $option );
-
 				break;
 
 			case 'checkbox':
@@ -613,7 +618,7 @@ class GMW_Settings {
 						<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?>
 						<?php checked( '1', $value ); ?> 
 					/> 
-					<?php echo $option['cb_label']; // WPCS: XSS ok. ?>
+					<?php echo esc_attr( $option['cb_label'] ); // WPCS: XSS ok. ?>
 				</label>
 				<?php
 				break;
@@ -662,7 +667,7 @@ class GMW_Settings {
 				?>
 				<textarea 
 					id="<?php echo esc_attr( $attr_id ); ?>" 
-					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> textarea large-text" 
+					class="<?php echo $class_attr; // WPCS: XSS ok. ?> textarea large-text" 
 					cols="50" 
 					rows="3" 
 					name="<?php echo esc_attr( $attr_name ); ?>" 
@@ -733,8 +738,8 @@ class GMW_Settings {
 				<input 
 					type="password" 
 					id="<?php echo esc_attr( $attr_id ); ?>" 
-					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> regular-text password" name="<?php echo esc_attr( $attr_name ); ?>" 
-					value="<?php echo esc_attr( sanitize_text_field( $value ) ); ?>"
+					class="<?php echo $class_attr; // WPCS: XSS ok. ?> regular-text password" name="<?php echo esc_attr( $attr_name ); ?>" 
+					value="<?php echo esc_attr( $value ); ?>"
 					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?> 
 					<?php echo $placeholder; // WPCS: XSS ok. ?> 
 				/>
@@ -746,8 +751,8 @@ class GMW_Settings {
 				<input
 					type="hidden"
 					id="<?php echo esc_attr( $attr_id ); ?>"
-					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> regular-text password" name="<?php echo esc_attr( $attr_name ); ?>"
-					value="<?php echo esc_attr( sanitize_text_field( $value ) ); ?>"
+					class="<?php echo $class_attr; // WPCS: XSS ok. ?> regular-text password" name="<?php echo esc_attr( $attr_name ); ?>"
+					value="<?php echo esc_attr( $value ); ?>"
 					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?> 
 				/>
 				<?php
@@ -759,9 +764,9 @@ class GMW_Settings {
 				<input 
 					type="number"
 					id="<?php echo esc_attr( $attr_id ); ?>"
-					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> regular-text text"
+					class="<?php echo $class_attr; // WPCS: XSS ok. ?> regular-text text"
 					name="<?php echo esc_attr( $attr_name ); ?>"
-					value="<?php echo esc_attr( sanitize_text_field( $value ) ); ?>"
+					value="<?php echo esc_attr( $value ); ?>"
 					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?> 
 				/>
 				<?php
@@ -775,9 +780,9 @@ class GMW_Settings {
 				<input 
 					type="text" 
 					id="<?php echo esc_attr( $attr_id ); ?>"
-					class="<?php echo 'setting-' . esc_attr( $option['name'] ); ?> regular-text text" 
+					class="<?php echo $class_attr; // WPCS: XSS ok. ?> regular-text text" 
 					name="<?php echo esc_attr( $attr_name ); ?>"
-					value="<?php echo esc_attr( sanitize_text_field( $value ) ); ?>" 
+					value="<?php echo esc_attr( $value ); ?>" 
 					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?> 
 					<?php echo $placeholder; // WPCS: XSS ok. ?> 
 				/>
