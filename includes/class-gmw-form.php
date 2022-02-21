@@ -557,7 +557,7 @@ class GMW_Form {
 			'map_width'      => $this->form['results_map']['map_width'],
 			'map_height'     => $this->form['results_map']['map_height'],
 			'expand_on_load' => ! empty( $this->form['results_map']['expand_on_load'] ) ? true : false,
-			'init_visible'   => 'shortcode' === $this->form['map_usage'] ? false : true,
+			//'init_visible'   => 'shortcode' === $this->form['map_usage'] ? false : true,
 		);
 
 		echo GMW_Maps_API::get_map_element( $args ); // WPCS: XSS ok.
