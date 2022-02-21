@@ -1505,6 +1505,12 @@ class GMW_Form_Editor {
 		$groups = $temp_array;
 		$groups = apply_filters( 'gmw_' . $this->form['slug'] . '_form_settings_groups', $groups, $this->form );
 		$groups = apply_filters( 'gmw_' . $this->form['addon'] . '_addon_form_settings_groups', $groups, $this->form );
+
+		if ( strpos( $this->form['slug'], '_mashup_map' ) !== false ) {
+			$groups = apply_filters( 'gmw_mashup_map_form_settings_groups', $groups, $this->form );
+			$groups = apply_filters( 'gmw_' . $this->form['slug'] . '_mashup_map_form_settings_groups', $groups, $this->form );
+		}
+
 		$groups = apply_filters( 'gmw_form_settings_groups', $groups, $this->form );
 
 		// Add the new 'type' argument if missing.
@@ -1559,6 +1565,12 @@ class GMW_Form_Editor {
 		// filter all fields groups.
 		$fields = apply_filters( 'gmw_' . $this->form['slug'] . '_form_settings', $fields, $this->form );
 		$fields = apply_filters( 'gmw_' . $this->form['addon'] . '_addon_form_settings', $fields, $this->form );
+
+		if ( strpos( $this->form['slug'], '_mashup_map' ) !== false ) {
+			$fields = apply_filters( 'gmw_mashup_map_form_settings', $fields, $this->form );
+			$fields = apply_filters( 'gmw_' . $this->form['slug'] . '_mashup_map_form_settings', $fields, $this->form );
+		}
+
 		$fields = apply_filters( 'gmw_form_settings', $fields, $this->form );
 
 		return $fields;
