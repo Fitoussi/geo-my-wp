@@ -170,7 +170,12 @@ class GMW_Forms_Helper {
 		}
 
 		if ( ! empty( $form['slug'] ) ) {
+
 			$form_data = apply_filters( 'gmw_' . $form['slug'] . '_form_default_settings', $form_data, $form );
+
+			if ( strpos( $form['slug'], '_mashup_map' ) !== false ) {
+				$form_data = apply_filters( 'gmw_mashup_map_form_default_settings', $form_data, $form );
+			}
 		}
 
 		return $form_data;
