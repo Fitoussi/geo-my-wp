@@ -93,6 +93,15 @@ class GMW_Settings {
 	}
 
 	/**
+	 * Get the current Settings page tab.
+	 *
+	 * @since 4.0
+	 *
+	 * @return [type] [description]
+	 */
+	public function get_current_tab() {
+		return ! empty( $_GET['tab'] ) ? esc_attr( $_GET['tab'] ) : 'general_settings'; // WPCS: CSRF ok, sanitization ok.
+	}
 	 * Settings groups
 	 *
 	 * @return [type] [description]
