@@ -312,6 +312,96 @@ class GMW_Settings {
 				),
 			)
 		);
+		// Premium Tabs.
+		if ( ! class_exists( 'GMW_Premium_Settings_Addon' ) ) {
+
+			$settings['premium_settings'] = array(
+				'premium_feature'   => true,
+				'slug'              => 'premium_settings',
+				'label'             => 'Premium Settings',
+				'fields'            => array(),
+				'priority'          => 100,
+				'extension_url'     => 'https://geomywp.com/extensions/premium-settings',
+				'extension_name'    => 'Premium Settings',
+				'extension_content' => 'Enhance GEO my WP\'s forms and other components with premium features.',
+			);
+		}
+
+		// Premium Tabs.
+		if ( ! class_exists( 'GMW_Multiple_Locations_Addon' ) ) {
+
+			$settings['multiple_locations'] = array(
+				'premium_feature'   => true,
+				'slug'              => 'gmw_multiple_locations',
+				'label'             => 'Multiple Locations',
+				'fields'            => array(),
+				'priority'          => 100,
+				'extension_url'     => 'https://geomywp.com/extensions/multiple-locations',
+				'extension_name'    => 'Multiple Locations',
+				'extension_content' => 'Manage multiple locations per object.',
+			);
+		}
+
+		// Premium Tabs.
+		if ( ! class_exists( 'GMW_Ajax_Forms_Addon' ) ) {
+
+			$settings['ajax_forms'] = array(
+				'premium_feature'   => true,
+				'slug'              => 'ajax_forms',
+				'label'             => 'AJAX Forms',
+				'fields'            => array(),
+				'priority'          => 100,
+				'extension_url'     => 'https://geomywp.com/extensions/ajax-forms',
+				'extension_name'    => 'AJAX Forms',
+				'extension_content' => 'Create AJAX powered proximity search forms using GEO my WP forms builder.',
+			);
+		}
+
+		if ( ! class_exists( 'GMW_IP_Address_Locator_Addon' ) ) {
+
+			$settings['ip_address_locator'] = array(
+				'premium_feature'   => true,
+				'slug'              => 'ip_address_locator',
+				'label'             => 'IP Address Locator',
+				'fields'            => array(),
+				'priority'          => 100,
+				'extension_url'     => 'https://geomywp.com/extensions/ip-address-locator',
+				'extension_name'    => 'IP Address Locator',
+				'extension_content' => 'Retrieve the user\'s current location using its IP address rather than using the browser\'s geolocation.',
+			);
+		}
+
+		if ( ! class_exists( 'GMW_WP_Users_Locator_Addon' ) ) {
+
+			$settings['users_locator'] = array(
+				'premium_feature'   => true,
+				'slug'              => 'users_locator',
+				'label'             => 'WP Users Locator',
+				'icon'              => 'users',
+				'fields'            => array(),
+				'priority'          => 101,
+				'extension_url'     => 'https://geomywp.com/extensions/wordpress-users-locator',
+				'extension_name'    => 'WordPress Users Locator',
+				'extension_content' => 'Enhance WordPress users with geolocation and mapping features.',
+			);
+		}
+
+		if ( ! class_exists( 'GMW_BP_Groups_Locator_Addon' ) ) {
+
+			$settings['bp_groups_locator'] = array(
+				'premium_feature'   => true,
+				'slug'              => 'bp_groups_locator',
+				'label'             => 'BP Groups Locator',
+				'icon'              => 'group',
+				'fields'            => array(),
+				'priority'          => 103,
+				'extension_url'     => 'https://geomywp.com/extensions/groups-locator',
+				'extension_name'    => 'BP Group Locator',
+				'extension_content' => 'Enhance BuddyPress Groups component with geolocation and mapping features.',
+			);
+		}
+
+		return apply_filters( 'gmw_admin_settings_groups', $settings );
 	}
 
 	/**
