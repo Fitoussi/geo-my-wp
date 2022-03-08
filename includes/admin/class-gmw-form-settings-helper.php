@@ -800,7 +800,7 @@ class GMW_Form_Settings_Helper {
 			'attributes'    => array(),
 			'force_default' => 0,
 			'priority'      => 0,
-			'sub_option'    => true,
+			'sub_option'    => ( ! empty( $_GET['page'] ) && 'gmw-settings' === $_GET['page'] ) ? false : true, // On settings page, set it to false by default.
 		);
 
 		if ( 'label' === $option ) {
