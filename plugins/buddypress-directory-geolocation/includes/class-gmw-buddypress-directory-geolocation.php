@@ -601,21 +601,41 @@ class GMW_BuddyPress_Directory_Geolocation {
 		}
 
 		$object = $objects_template->$component;
+		$output = '';
 
 		// abort if user does not have a location.
 		if ( empty( $object->lat ) ) {
-			return;
+			return $output;
 		}
 
+
 		// show address in results.
-		echo self::get_address( $object ); // WPCS: XSS ok.
+		$output .= self::get_address( $object ); // WPCS: XSS ok.
 
 		// distance.
-		echo self::get_distance( $object ); // WPCS: XSS ok.
+		$output .= self::get_distance( $object ); // WPCS: XSS ok.
 
 		// show directions in results.
 		if ( ! empty( $this->options['directions_link'] ) ) {
-			echo '<span class="gmw-item gmw-item-directions">' . gmw_get_directions_link( $object, $this->form, $this->labels['get_directions'] ) . '</span>'; // WPCS: XSS ok.
+			$output .= '<span class="gmw-item gmw-item-directions">' . gmw_get_directions_link( $object, $this->form, $this->labels['get_directions'] ) . '</span>'; // WPCS: XSS ok.
 		}
+
+		return $output;
+	}
+
+	/**
+	 * Append location data to each item in the results.
+	 */
+	public function add_elements_to_results() {
+		echo $this->get_results_elements(); // WPCS: XSS ok.
+	}
+
+	/**
+	 * Output of the data for BuddyBoss theme only.
+	 *
+	 * @param [type] $output [description].
+	 */
+	public function add_elements_to_buddyboss_results( $output ) {
+		return $output . $this->get_results_elements();
 	}
 }
