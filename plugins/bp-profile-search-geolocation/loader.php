@@ -1,6 +1,6 @@
 <?php
 /**
- * GEO my WP - BP Profile Search geolocation loader.
+ * GEO my WP - BP Profile Search Geolocation loader.
  *
  * @author Eyal Fitoussi
  *
@@ -78,7 +78,7 @@ class GMW_BP_Profile_Search_Geolocation_Addon extends GMW_Addon {
 	 *
 	 * @var string
 	 */
-	public $description = 'Geolocation integration with BP Profile Search plguin.';
+	public $description = 'Enhance the BP Profile Search plugin with Geolocation features.';
 
 	/**
 	 * Support page.
@@ -111,25 +111,11 @@ class GMW_BP_Profile_Search_Geolocation_Addon extends GMW_Addon {
 			'plugins' => array(
 				array(
 					'function' => 'bps_buddypress',
-					'notice'   => sprintf( __( 'BP Profile Search Geolocation extension requires the BP Profile Search plguin. <a href="%s" target="_blank">Visit plugin page</a>', 'geo-my-wp' ), 'https://wordpress.org/plugins/bp-profile-search/' )
+					'notice'   => sprintf( __( 'BP Profile Search Geolocation extension requires the BP Profile Search plguin. <a href="%s" target="_blank">Visit plugin page</a>', 'geo-my-wp' ), 'https://wordpress.org/plugins/bp-profile-search/' ),
 				),
 			),
 		);
 	}
-
-	/**
-	 * Settings groups
-	 *
-	 * @return [type] [description]
-	 */
-	/**
-		Return array(
-			'slug'     => 'bp_profile_search_geolocation',
-			'label'    => __( 'BP Profile Search Geolocation', 'gmw-my-wp' ),
-			'icon'     => 'buddypress',
-			'priority' => 13,
-		);
-	}*/
 
 	/**
 	 * [$instance description]
@@ -177,17 +163,8 @@ class GMW_BP_Profile_Search_Geolocation_Addon extends GMW_Addon {
 			include_once 'includes/admin/class-gmw-bp-profile-search-geolocation-admin.php';
 		}
 
-		//add_filter( 'bp_get_template_stack', array( $this, 'template_stack' ), 30 );
-
 		include_once 'includes/class-gmw-bp-profile-search-geolocation.php';
 	}
-
-	/*public function template_stack( $stack ) {
-
-		$stack[] = dirname(__FILE__) . '/templates/bps-fields';
-
-		return $stack;
-	}*/
 
 	/**
 	 * Enqueue/register scripts
