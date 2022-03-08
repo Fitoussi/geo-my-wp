@@ -545,3 +545,28 @@ function gmw_search_form_toggle_button( $gmw = array() ) {
 
 	do_action( 'gmw_after_search_form_toggle_button', $gmw );
 }
+
+/**
+ * Search form group types filter.
+ *
+ * @since 4.0.
+ *
+ * This function was originall in the Groups Locator extension.
+ *
+ * Requires the Groups Locator extension.
+ *
+ * @param  array $gmw gmw form.
+ */
+function gmw_search_form_bp_group_types_field( $gmw = array() ) {
+
+	// This function lives in the Groups Locator extension.
+	if ( ! function_exists( 'gmw_get_search_form_bp_group_types_field' ) ) {
+		return;
+	}
+
+	do_action( 'gmw_before_search_form_bp_group_types_field', $gmw );
+
+	echo gmw_get_search_form_bp_group_types_field( $gmw ); // WPCS: XSS ok.
+
+	do_action( 'gmw_after_search_form_bp_group_types_field', $gmw );
+}
