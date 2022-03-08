@@ -1,0 +1,96 @@
+div.gmw-fl-buddyboss-results-wrapper .gmw-results-message,
+div.gmw-fl-buddyboss-results-wrapper .gmw-map-wrapper {
+	border: 0;
+	color: #202020;
+	height: auto;
+	padding: 12px;
+	background: #fff;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	font-weight: 400;
+	text-align: center;
+	//margin-bottom: 20px;
+	box-shadow: none;
+	border: 1px solid #eee;
+	margin-top: 10px;
+}
+
+div.gmw-fl-buddyboss-results-wrapper .gmw-map-wrapper {
+	padding: 10px;
+	margin-bottom: 20px;
+}
+
+div.gmw-fl-buddyboss-results-wrapper .gmw-results-filters select {
+	max-width: 150px;
+	box-shadow: none;
+	border-color: #E6E9EC;
+}
+
+div.gmw-fl-buddyboss-results-wrapper .gmw-results-filters .gmw-results-view-toggle-wrapper {
+	box-shadow: none;
+	background: white;
+	border-color: #E6E9EC;
+}
+
+div.gmw-fl-buddyboss-results-wrapper .gmw-results-list .distance {
+	position: absolute;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	background: #007CFF;
+	color: white;
+	padding: 10px 10px 8px;
+	font-size: 12px;
+	line-height: 1;
+	border-radius: 2px;
+}
+
+div.gmw-fl-buddyboss-results-wrapper .gmw-results-list.list .distance {
+	left: initial;
+	right: 0;
+}
+
+div.gmw-fl-buddyboss-results-wrapper .gmw-results-list .gmw-directions-link {
+	margin-top: 8px;
+	display: inline-block;
+}
+
+div.gmw-fl-buddyboss-results-wrapper .gmw-results-list .gmw-item-address {
+	margin-top: 8px;
+}
+
+div.gmw-fl-buddyboss-results-wrapper .gmw-results-list .gmw-item-address:empty {
+	display: none;
+}
+
+
+div.gmw-fl-buddyboss-results-wrapper .pagination-per-page-wrapper {
+	padding: 25px 0;
+	justify-content: center;
+	margin-top: 10px;
+}
+
+div.gmw-fl-buddyboss-results-wrapper .gmw-pagination li > .current {
+	background: none;
+	color: #777;
+}
+
+div.gmw-fl-buddyboss-results-wrapper .gmw-pagination li > * {
+	font-size: 14px;
+	background-color: transparent;
+	border: none;
+	text-shadow: none;
+	padding: 5px 4px;
+}
+
+div.gmw-fl-buddyboss-results-wrapper .gmw-pagination li:not( .current ):hover > * {
+    background: none;
+    color: #007CFF;
+}
+
+div.gmw-fl-buddyboss-results-wrapper .pagination-per-page-wrapper {
+	justify-content: space-between;
+	font-size: 13px;
+	color: #A2A5A9;
+}
+
