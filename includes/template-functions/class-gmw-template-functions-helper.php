@@ -329,17 +329,13 @@ class GMW_Template_Functions_Helper {
 	 *
 	 * @return [type]          [description]
 	 */
-	public static function get_orderby_filter( $args = array(), $options = array(
-		'distance'   => 'Distance',
-		'post_title' => 'Title',
-	) ) {
+	public static function get_orderby_filter( $args = array(), $options = array() ) {
 
 		if ( $options < 1 ) {
 			return;
 		}
 
-		$url_px = gmw_get_url_prefix();
-
+		$url_px   = gmw_get_url_prefix();
 		$defaults = array(
 			'id'           => 0,
 			'id_attr'      => '',
@@ -361,8 +357,7 @@ class GMW_Template_Functions_Helper {
 
 		$on_change = ! $args['ajax_enabled'] ? 'onchange="window.location.href=this.value"' : '';
 
-		$output = '<select ' . $id_attr . ' name="' . esc_attr( $args['name'] ) . '" class="gmw-orderby-dropdown ' . esc_attr( $args['class'] ) . '" ' . $on_change . '>';
-
+		$output  = '<select ' . $id_attr . ' name="' . esc_attr( $args['name'] ) . '" class="gmw-orderby-dropdown ' . esc_attr( $args['class'] ) . '" ' . $on_change . '>';
 		$output .= '<option value="" selected="selected">' . esc_html( $args['label'] ) . '</option>';
 
 		foreach ( $options as $value => $label ) {
@@ -384,8 +379,7 @@ class GMW_Template_Functions_Helper {
 			}
 
 			$selected = $selected_value === $value ? 'selected="selected"' : '';
-
-			$label = apply_filters( 'gmw_get_orderby_filter_single_label', $label, $args, $options );
+			$label    = apply_filters( 'gmw_get_orderby_filter_single_label', $label, $args, $options );
 
 			$output .= '<option value="' . trim( $option ) . '" ' . $selected . '>' . esc_html( $label ) . '</option>';
 		}
