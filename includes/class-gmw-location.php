@@ -583,7 +583,7 @@ class GMW_Location {
 		}
 
 		// make sure ID in integer.
-		$location->ID = ( int ) $location->ID;
+		$location->ID = (int) $location->ID;
 
 		// conver to array if needed.
 		if ( ARRAY_A == $output || ARRAY_N == $output ) {
@@ -984,7 +984,9 @@ class GMW_Location {
 			$query_args_hash = 'gmw' . $hash . GMW_Cache_Helper::get_transient_version( 'gmw_get_object_' . $args['object_type'] . '_locations' );
 		}
 
-		if ( ! $internal_cache || false === ( $locations = get_transient( $query_args_hash ) ) ) {
+		$locations = get_transient( $query_args_hash );
+
+		if ( ! $internal_cache || false === $locations ) {
 
 			global $wpdb;
 
@@ -1066,8 +1068,8 @@ class GMW_Location {
 					$bet_lng1 = $lng - ( $radius / ( $degree * cos( deg2rad( $lat ) ) ) );
 					$bet_lng2 = $lng + ( $radius / ( $degree * cos( deg2rad( $lat ) ) ) );
 
-					$clauses['where'] .= " AND gmw_locations.latitude BETWEEN {$bet_lat1} AND {$bet_lat2}";
-					$clauses['where'] .= " AND gmw_locations.longitude BETWEEN {$bet_lng1} AND {$bet_lng2} ";
+					//$clauses['where'] .= " AND gmw_locations.latitude BETWEEN {$bet_lat1} AND {$bet_lat2}";
+					//$clauses['where'] .= " AND gmw_locations.longitude BETWEEN {$bet_lng1} AND {$bet_lng2} ";
 
 					$clauses['having'] = "HAVING distance <= {$radius} OR distance IS NULL";
 				}
@@ -1105,17 +1107,24 @@ class GMW_Location {
 				if ( ! empty( $locations ) ) {
 
 					// modify the locations query.
-					foreach ( $locations as $value ) {
+					foreach ( $locations as $location ) {
+
+						/**
+						 * TODO: Make compatible with multiple locations.
+						 */
+						if ( isset( $locations_data['locations_data'][ $location->object_id ] ) ) {
+							continue;
+						}
 
 						// collect objects id into an array.
-						$locations_data['objects_id'][] = $value->object_id;
+						$locations_data['objects_id'][] = $location->object_id;
 
-						if ( isset( $value->featured_location ) && $value->featured_location == 1 ) {
-							$locations_data['featured_ids'][] = $value->object_id;
+						if ( isset( $value->featured_location ) && 1 == $location->featured_location ) {
+							$locations_data['featured_ids'][] = $location->object_id;
 						}
 
 						// replace array keys with object id to be able to do some queries later.
-						$locations_data['locations_data'][ $value->object_id ] = $value;
+						$locations_data['locations_data'][ $location->object_id ] = $location;
 					}
 				}
 
