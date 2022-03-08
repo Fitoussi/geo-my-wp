@@ -110,26 +110,6 @@ class GMW_Form_Editor {
 	 */
 	public function enqueue_scripts() {
 
-		if ( ! wp_script_is( 'jquery-ui-tooltip', 'enqueued' ) ) {
-			wp_enqueue_script( 'jquery-ui-tooltip' );
-			wp_enqueue_style( 'jquery-ui-tooltip' );
-		}
-
-		if ( ! wp_script_is( 'select2', 'enqueued' ) ) {
-			wp_enqueue_script( 'select2' );
-			wp_enqueue_style( 'select2' );
-		}
-
-		if ( ! wp_script_is( 'jquery-confirm', 'enqueued' ) ) {
-			wp_enqueue_script( 'jquery-confirm', GMW_URL . '/assets/lib/jquery-confirm/jquery-confirm.min.js', array( 'jquery' ), GMW_VERSION, true );
-			wp_enqueue_style( 'jquery-confirm', GMW_URL . '/assets/lib/jquery-confirm/jquery-confirm.min.css', array(), GMW_VERSION );
-		}
-
-		if ( ! wp_style_is( 'wp-color-picker', 'enqueued' ) ) {
-			wp_enqueue_style( 'wp-color-picker' );
-			wp_enqueue_script( 'wp-color-picker' );
-		}
-
 		wp_enqueue_code_editor(
 			array(
 				'type'       => 'text/css',
