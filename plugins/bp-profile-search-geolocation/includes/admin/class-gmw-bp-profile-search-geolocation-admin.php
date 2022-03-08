@@ -229,27 +229,36 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 			<p><?php echo wp_kses( sprintf( __( 'Check out the <a href="%s" target="_blank">BuddyPress Members Directory Geolocation extension</a> for additional geolocation features. Display a map above the list of members, display the distance, address, and a directions link in each member in the results.', 'geo-my-wp' ), 'https://geomywp.com/extensions/buddypress-members-directory-geolocation/' ), $allowed ); ?></p>
 		</div>
 
-		<?php
+		<?php $warning = __( 'You can only have one location field per form.', 'geo-my-wp' ); ?>
 
-		$label       = __( 'manage options', 'geo-my-wp' );
-		$warning     = __( 'You can only have one location field per form.', 'geo-my-wp' );
-		$loc_enabled = '0';
-		$loc_element = '';
-		$field_id    = '';
-
-		foreach ( $bps_options['field_code'] as $key => $code ) {
-
-			if ( 'gmw_bpsgeo_location' === $code ) {
-
-				$loc_enabled = '1';
-				$field_id    = esc_attr( $key );
-				$loc_element = '#field_div' . $field_id;
-			}
-		}
-		?>
 		<script type="text/javascript">
 
 			jQuery( document ).ready( function($) {
+
+				// Show location field options only when needed.
+				function gmw_check_for_location_field() {
+
+					jQuery( '#field_box select' ).each( function() {
+				        
+				        jQuery( '#gmw_bpsgeo_location_options' ).hide();
+
+				        if ( jQuery( this ).val() == 'gmw_bpsgeo_location' ) {
+				            jQuery( '#gmw_bpsgeo_location_options' ).show();
+
+				            return false;
+				        }
+				    });
+				}
+
+				jQuery( document ).on( 'change', '#field_box select', function() {
+					gmw_check_for_location_field();
+				});
+
+				jQuery( document ).on( 'click', '.remove_field.delete', function() {
+					gmw_check_for_location_field();
+				});
+
+				gmw_check_for_location_field();
 
 				// Prevent from creating multiple location fields.
 				jQuery( '#field_box' ).on( 'change', 'select.bps_col2', function( event ) {
