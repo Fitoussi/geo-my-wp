@@ -26,7 +26,7 @@ class GMW_Forms_Page {
 	 */
 	public function __construct() {
 
-		if ( empty( $_GET['page'] ) || 'gmw-forms' !== $_GET['page'] ) {
+		if ( empty( $_GET['page'] ) || 'gmw-forms' !== $_GET['page'] ) { // WPCS: CSRF ok.
 			return;
 		}
 
@@ -65,7 +65,7 @@ class GMW_Forms_Page {
 	public function create_new_form() {
 
 		// verfiy form data.
-		if ( empty( $_GET['addon'] ) || empty( $_GET['slug'] ) ) {
+		if ( empty( $_GET['addon'] ) || empty( $_GET['slug'] ) ) { // WPCS: CSRF ok.
 
 			wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_not_created&gmw_notice_status=error' ) );
 
@@ -75,12 +75,12 @@ class GMW_Forms_Page {
 		$new_data = array();
 
 		// get form values.
-		$new_form['slug']        = sanitize_text_field( wp_unslash( $_GET['slug'] ) );
-		$new_form['addon']       = sanitize_text_field( wp_unslash( $_GET['addon'] ) );
-		$new_form['component']   = sanitize_text_field( wp_unslash( $_GET['component'] ) );
-		$new_form['object_type'] = sanitize_text_field( wp_unslash( $_GET['object_type'] ) );
-		$new_form['name']        = str_replace( '+', ' ', sanitize_text_field( wp_unslash( $_GET['name'] ) ) );
-		$new_form['prefix']      = sanitize_text_field( wp_unslash( $_GET['prefix'] ) );
+		$new_form['slug']        = sanitize_text_field( wp_unslash( $_GET['slug'] ) ); // WPCS: CSRF ok.
+		$new_form['addon']       = sanitize_text_field( wp_unslash( $_GET['addon'] ) ); // WPCS: CSRF ok.
+		$new_form['component']   = ! empty( $_GET['component'] ) ? sanitize_text_field( wp_unslash( $_GET['component'] ) ) : ''; // WPCS: CSRF ok.
+		$new_form['object_type'] = ! empty( $_GET['object_type'] ) ? sanitize_text_field( wp_unslash( $_GET['object_type'] ) ) : ''; // WPCS: CSRF ok.
+		$new_form['name']        = ! empty( $_GET['name'] ) ? str_replace( '+', ' ', sanitize_text_field( wp_unslash( $_GET['name'] ) ) ) : ''; // WPCS: CSRF ok.
+		$new_form['prefix']      = ! empty( $_GET['prefix'] ) ? sanitize_text_field( wp_unslash( $_GET['prefix'] ) ) : ''; // WPCS: CSRF ok.
 
 		global $wpdb;
 
@@ -108,7 +108,7 @@ class GMW_Forms_Page {
 				'%s',
 				'%s',
 			)
-		);
+		); // WPCS: db call ok, cache ok.
 
 		// get the ID of the new form.
 		$new_form_id = $wpdb->insert_id;
@@ -126,7 +126,7 @@ class GMW_Forms_Page {
 			$wpdb->prefix . 'gmw_forms',
 			array(
 				'title' => 'form_id_' . $new_form_id,
-				'data'  => serialize( GMW_Forms_Helper::default_settings( $new_form ) ), // Generate default values.
+				'data'  => maybe_serialize( GMW_Forms_Helper::default_settings( $new_form ) ), // Generate default values.
 			),
 			array( 'ID' => $new_form_id ),
 			array(
@@ -134,7 +134,7 @@ class GMW_Forms_Page {
 				'%s',
 			),
 			array( '%d' )
-		);
+		); // WPCS: db call ok, cache ok.
 
 		// update forms in cache.
 		GMW_Forms_Helper::update_forms_cache();
@@ -155,7 +155,7 @@ class GMW_Forms_Page {
 	public function duplicate_form() {
 
 		// verify the form ID.
-		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) {
+		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) { // WPCS: CSRF ok.
 
 			wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_not_duplicated&gmw_notice_status=error' ) );
 
@@ -172,7 +172,7 @@ class GMW_Forms_Page {
 		        WHERE ID = %d",
 				absint( $_GET['form_id'] )
 			)
-		);
+		); // WPCS: db call ok, cache ok, CSRF ok.
 
 		if ( empty( $form ) ) {
 			wp_die( esc_html__( 'An error occurred while trying to retrieve the form.', 'geo-my-wp' ) );
@@ -201,7 +201,7 @@ class GMW_Forms_Page {
 				'%s',
 				'%s',
 			)
-		);
+		); // WPCS: db call ok, cache ok.
 
 		// Update forms in cache.
 		GMW_Forms_Helper::update_forms_cache();
@@ -218,12 +218,12 @@ class GMW_Forms_Page {
 	public function delete_form() {
 
 		// Abort if form ID doesn't exists.
-		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) {
+		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) { // WPCS: CSRF ok.
 			wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_not_deleted&gmw_notice_status=error' ) );
 			exit;
 		}
 
-		GMW_Forms_Helper::delete_form( absint( $_GET['form_id'] ) );
+		GMW_Forms_Helper::delete_form( absint( $_GET['form_id'] ) ); // WPCS: CSRF ok.
 
 		// Reload the page to prevent resubmission.
 		wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_deleted&gmw_notice_status=updated' ) );
@@ -257,7 +257,7 @@ class GMW_Forms_Page {
 		// order buttons by priority.
 		usort( $buttons, 'gmw_sort_by_priority' );
 
-		$output = '<select class="gmw-admin-select-enhanced" onchange="window.location.href = jQuery(this).val();">';
+		$output = '<select class="gmw-admin-select-enhanced gmw-smartbox-not" onchange="window.location.href = jQuery(this).val();">';
 
 		if ( empty( $buttons ) ) {
 
@@ -310,17 +310,17 @@ class GMW_Forms_Page {
 				<form id="gmw_forms_admin" class="gmw-admin-page-conten" enctype="multipart/form-data" method="post">
 
 					<input type="hidden" name="gmw_page" id="gmw_page" value="gmw-forms">
-					
+
 					<?php wp_nonce_field( 'gmw_forms_page', 'gmw_forms_page' ); ?>
-					
+
 					<div class="clear"></div>
-					
+
 					<?php
 						$forms_table = new GMW_Forms_Table();
 						$forms_table->prepare_items();
 						$forms_table->display();
 					?>
-										 
+
 				</form>
 			</div>
 
@@ -328,7 +328,12 @@ class GMW_Forms_Page {
 			<div class="gmw-admin-page-sidebar">
 				<?php gmw_admin_sidebar_content(); ?>
 			</div>    
-		 </div> 
+		</div>
+		<script type="text/javascript">
+			jQuery( document ).ready( function() {
+				jQuery( 'select' ).addClass( 'gmw-smartbox-not' );
+			});
+		</script>
 		<?php
 	}
 }
