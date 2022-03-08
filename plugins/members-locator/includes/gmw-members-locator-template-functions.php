@@ -5,9 +5,8 @@
  * @package geo-my-wp
  */
 
-// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -446,8 +445,8 @@ function gmw_search_results_bp_avatar( $object = array(), $gmw = array() ) {
 		'object_id'    => $object->object_id,
 		'width'        => ! empty( $gmw['search_results']['image']['width'] ) ? $gmw['search_results']['image']['width'] : '150px',
 		'height'       => ! empty( $gmw['search_results']['image']['height'] ) ? $gmw['search_results']['image']['height'] : '150px',
-		'show_grav'    => isset( $gmw['search_results']['image']['show_grav'] ) ? $gmw['search_results']['image']['show_grav'] : true,
-		'show_default' => isset( $gmw['search_results']['image']['show_default'] ) ? $gmw['search_results']['image']['show_default'] : false,
+		'show_grav'    => ! empty( $gmw['search_results']['image']['show_grav'] ) ? $gmw['search_results']['image']['show_grav'] : false,
+		'show_default' => ! empty( $gmw['search_results']['image']['show_default'] ) ? $gmw['search_results']['image']['show_default'] : false,
 		'where'        => 'search_results',
 	);
 
