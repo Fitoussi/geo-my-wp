@@ -38,59 +38,68 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 		$settings = apply_filters(
 			'gmw_bpsgeo_form_settings',
 			array(
-				'palceholder'          => array(
-					'name'        => 'placeholder',
-					'type'        => 'text',
-					'default'     => '',
-					'label'       => __( 'Address Field Placeholder', 'geo-my-wp' ),
-					'placeholder' => __( 'Enter address...', 'geo-my-wp' ),
-					'desc'        => __( 'Enter a placeholder for the address field.', 'geo-my-wp' ),
-					'attributes'  => array(),
-					'priority'    => 10,
+				'palceholder'          => gmw_get_admin_setting_args(
+					array(
+						'name'        => 'placeholder',
+						'type'        => 'text',
+						'default'     => '',
+						'label'       => __( 'Address Field Placeholder', 'geo-my-wp' ),
+						'desc'        => __( 'Enter the placeholder for the address field.', 'geo-my-wp' ),
+						'attributes'  => array(),
+						'priority'    => 10,
+					)
 				),
-				'address_autocomplete' => array(
-					'name'       => 'address_autocomplete',
-					'type'       => 'checkbox',
-					'cb_label'   => 'Enabled',
-					'default'    => '',
-					'label'      => __( 'Address Autocomplete', 'geo-my-wp' ),
-					'desc'       => __( 'Enable Google address autocomplete feature.', 'geo-my-wp' ),
-					'attributes' => array(),
-					'priority'   => 20,
+				'address_autocomplete' => gmw_get_admin_setting_args(
+					array(
+						'name'       => 'address_autocomplete',
+						'type'       => 'checkbox',
+						'cb_label'   => 'Enabled',
+						'default'    => '',
+						'label'      => __( 'Address Autocomplete', 'geo-my-wp' ),
+						'desc'       => __( 'Enable the address autocomplete feature of Google Maps.', 'geo-my-wp' ),
+						'attributes' => array(),
+						'priority'   => 20,
+					)
 				),
-				'locator_button'       => array(
-					'name'       => 'locator_button',
-					'default'    => '',
-					'label'      => __( 'Locator button', 'geo-my-wp' ),
-					'cb_label'   => __( 'Enable', 'geo-my-wp' ),
-					'desc'       => __( 'Display locator button inside the address field.', 'geo-my-wp' ),
-					'type'       => 'checkbox',
-					'attributes' => array(),
-					'priority'   => 30,
+				'locator_button'       => gmw_get_admin_setting_args(
+					array(
+						'name'       => 'locator_button',
+						'default'    => '',
+						'label'      => __( 'Locator button', 'geo-my-wp' ),
+						'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+						'desc'       => __( 'Display locator button inside the address field.', 'geo-my-wp' ),
+						'type'       => 'checkbox',
+						'attributes' => array(),
+						'priority'   => 30,
+					)
 				),
-				'radius'               => array(
-					'name'        => 'radius',
-					'type'        => 'text',
-					'default'     => '10,25,50,100,200',
-					'label'       => __( 'Radius', 'geo-my-wp' ),
-					'placeholder' => __( 'Enter radius values', 'geo-my-wp' ),
-					'desc'        => __( 'Enter a single numeric value to be used as the default or multiple values comma separated that will be displayed as a dropdown select box in the search form.', 'geo-my-wp' ),
-					'attributes'  => array(),
-					'priority'    => 40,
+				'radius'               => gmw_get_admin_setting_args(
+					array(
+						'name'        => 'radius',
+						'type'        => 'text',
+						'default'     => '10,25,50,100,200',
+						'label'       => __( 'Radius', 'geo-my-wp' ),
+						'placeholder' => __( 'Enter radius values', 'geo-my-wp' ),
+						'desc'        => __( 'Enter a single numeric value as the default value or multiple values ( comma separated ) that will be displayed as a dropdown select box in the search form.', 'geo-my-wp' ),
+						'attributes'  => array(),
+						'priority'    => 40,
+					)
 				),
-				'units'                => array(
-					'name'       => 'units',
-					'type'       => 'select',
-					'default'    => '3959',
-					'label'      => __( 'Distance Units', 'geo-my-wp' ),
-					'desc'       => __( 'Select miles or kilometers as the default units value or select "Both" to display a units dropdown menu filter in the search form.', 'geo-my-wp' ),
-					'options'    => array(
-						'both'     => __( 'Both', 'geo-my-wp' ),
-						'imperial' => __( 'Miles', 'geo-my-wp' ),
-						'metric'   => __( 'Kilometers', 'geo-my-wp' ),
-					),
-					'attributes' => array(),
-					'priority'   => 50,
+				'units'                => gmw_get_admin_setting_args(
+					array(
+						'name'       => 'units',
+						'type'       => 'select',
+						'default'    => '3959',
+						'label'      => __( 'Distance Units', 'geo-my-wp' ),
+						'desc'       => __( 'Select miles or kilometers as the default units value or select "Select box filter" to display a units dropdown menu filter in the search form.', 'geo-my-wp' ),
+						'options'    => array(
+							'both'     => __( 'Select box filter', 'geo-my-wp' ),
+							'imperial' => __( 'Miles', 'geo-my-wp' ),
+							'metric'   => __( 'Kilometers', 'geo-my-wp' ),
+						),
+						'attributes' => array(),
+						'priority'   => 50,
+					)
 				),
 			),
 			$form_id,
