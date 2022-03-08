@@ -209,6 +209,11 @@ function gmw_enqueue_scripts() {
 			wp_register_script( 'select2', GMW_URL . '/assets/lib/select2/js/select2.full.min.js', array( 'jquery' ), '4.0.13', true );
 		}
 
+		if ( ! wp_script_is( 'jquery-confirm', 'registered' ) ) {
+			wp_register_script( 'jquery-confirm', GMW_URL . '/assets/lib/jquery-confirm/jquery-confirm.min.js', array( 'jquery' ), GMW_VERSION, true );
+			wp_register_style( 'jquery-confirm', GMW_URL . '/assets/lib/jquery-confirm/jquery-confirm.min.css', array(), GMW_VERSION );
+		}
+
 		// Menu icon styling.
 		$style = '.menu-top.toplevel_page_gmw-extensions img {
 			margin-top: -5px;
