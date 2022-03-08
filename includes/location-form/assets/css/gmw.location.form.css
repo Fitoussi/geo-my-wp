@@ -166,6 +166,10 @@ div#gmw-location-form-wrapper div#gmw-lf-autocomplete-wrapper i:before {
 	color: var( --gmw-color-primary );
 }
 
+div#gmw-location-form-wrapper .gmw-lf-field-wrapper .gmw-lf-field {
+	margin-bottom: 0 ! important;
+}
+
 div#gmw-location-form-wrapper .gmw-lf-field-wrapper .map-wrapper {
 	margin-top: 5px;
 	border: 1px solid #CCC;
@@ -201,6 +205,8 @@ div#gmw-location-form-wrapper .gmw-lf-form-actions {
 div#gmw-location-form-wrapper .gmw-lf-form-actions > * {
 	margin-right: 12px;
 	margin: 6px 12px 6px 0px;
+	background: white;
+	color: var( --gmw-font-color );
 }
 
 div#gmw-location-form-wrapper .gmw-lf-form-actions .gmw-lf-field.button {
@@ -214,6 +220,7 @@ div#gmw-location-form-wrapper .gmw-lf-form-actions .gmw-lf-field.button {
 	line-height: 1.4;
 	border: 1px solid var(--gmw-form-border-color);
 	border-radius: 4px;
+	height: initial;
 }
 
 div#gmw-location-form-wrapper .gmw-lf-form-actions .gmw-lf-field.button.submit_location {
@@ -316,6 +323,7 @@ div#gmw-location-form-wrapper em.description {
 	margin-top: 5px;
 	line-height: 1.6;
 	font-style: normal;
+	background: none;
 }
 
 div#gmw-location-form-wrapper .fa.fa-refresh.fa-spin {
