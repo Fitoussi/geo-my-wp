@@ -36,7 +36,7 @@ class GMW_BP_Profile_Search_Geolocation {
 
 		// Proceed with query filter only if BP Members Directory Geolocation is not installed.
 		// When installed, we will use its built-in query filter.
-		if ( ! class_exists( 'GMW_BP_Members_Directory_Geolocation_Addon' ) ) {
+		if ( ! class_exists( 'GMW_BP_Members_Directory_Geolocation_Addon' ) || ! gmw_get_option( 'bp_members_directory_geolocation', 'enabled', false ) ) {
 			add_action( 'bp_user_query_uid_clauses', array( $this, 'modify_search_query' ), 500, 2 );
 		}
 	}
