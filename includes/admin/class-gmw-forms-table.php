@@ -122,7 +122,7 @@ class GMW_Forms_Table extends WP_List_Table {
 	 */
 	protected function column_title( $item ) {
 
-		$page = sanitize_text_field( wp_unslash( $_REQUEST['page'] ) ); // WPCS: Input var ok.
+		$page = sanitize_text_field( wp_unslash( $_REQUEST['page'] ) ); // WPCS: Input var ok, CSRF ok.
 
 		if ( ! gmw_is_addon_active( $item['extension'] ) ) {
 
@@ -187,16 +187,16 @@ class GMW_Forms_Table extends WP_List_Table {
 			_x( 'Delete', 'Forms table row action', 'geo-my-wp' )
 		);
 
-		$title = sprintf(
+		$form_title = sprintf(
 			'<a href="%1$s"><strong>%2$s</strong></a>',
 			$edit_link,
-			$item['title'],
+			! empty( $item['title'] ) ? $item['title'] : 'form_id_' . $item['ID']
 		);
 
 		// Return the title contents.
 		return sprintf(
 			'%1$s %2$s',
-			$title,
+			$form_title,
 			$this->row_actions( $actions )
 		);
 	}
@@ -270,7 +270,7 @@ class GMW_Forms_Table extends WP_List_Table {
 	                WHERE ID IN (" . str_repeat( '%d,', count( $_POST['form'] ) - 1 ) . '%d )',
 					$_POST['form']
 				)
-			);
+			); // WPCS: db call ok, CSRF ok, cache ok, unprepared sql ok.
 
 			// update forms in cache.
 			GMW_Forms_Helper::update_forms_cache();
@@ -293,8 +293,8 @@ class GMW_Forms_Table extends WP_List_Table {
 		$columns  = $this->get_columns();
 		$hidden   = array();
 		$sortable = $this->get_sortable_columns();
-		$orderby  = ! empty( $_REQUEST['orderby'] ) ? esc_attr( wp_unslash( $_REQUEST['orderby'] ) ) : 'ID'; // WPCS: Input var ok.
-		$order    = ! empty( $_REQUEST['order'] ) ? esc_attr( wp_unslash( $_REQUEST['order'] ) ) : 'ASC'; // WPCS: Input var ok.
+		$orderby  = ! empty( $_REQUEST['orderby'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) : 'ID'; // WPCS: Input var ok, CSRF ok.
+		$order    = ! empty( $_REQUEST['order'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) : 'ASC'; // WPCS: Input var ok, CSRF ok.
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
@@ -307,7 +307,7 @@ class GMW_Forms_Table extends WP_List_Table {
 			FROM {$wpdb->prefix}gmw_forms
 			ORDER BY {$orderby} {$order}",
 			ARRAY_A
-		);
+		); // WPCS: db call ok, CSRF ok, cache ok, unprepared sql ok.
 
 		// Current page.
 		$current_page = $this->get_pagenum();
