@@ -5,9 +5,8 @@
  * @package geo-my-wp
  */
 
-// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -27,12 +26,14 @@ class GMW_Admin {
 		$this->settings = get_option( 'gmw_options' );
 
 		// admin notice to import location to the new database table.
-		/*if ( get_option( 'gmw_old_locations_tables_exist' ) !== false && get_option( 'gmw_old_locations_tables_updated' ) === false ) {
+		/*
+		if ( get_option( 'gmw_old_locations_tables_exist' ) !== false && get_option( 'gmw_old_locations_tables_updated' ) === false ) {
 			add_action( 'admin_notices', array( $this, 'update_database_notice' ) );
 		}*/
 
 		// admin notice to import location to the new database table.
-		/*if ( get_option( 'gmw_folders_names_changed_notice_viewed' ) === false ) {
+		/*
+		if ( get_option( 'gmw_folders_names_changed_notice_viewed' ) === false ) {
 			add_action( 'admin_init', array( $this, 'folders_names_notice_dismiss' ) );
 			add_action( 'admin_notices', array( $this, 'deprecated_folder_names_notice' ) );
 		}*/
@@ -243,7 +244,8 @@ class GMW_Admin {
 	/**
 	 * Admin notice.
 	 */
-	/*public function folders_names_notice_dismiss() {
+	/*
+	public function folders_names_notice_dismiss() {
 
 		if ( ! empty( $_GET['action'] ) && 'gmw_folders_names_dismiss' === $_GET['action'] ) { // WPCS: CSRF ok.
 
@@ -258,7 +260,8 @@ class GMW_Admin {
 	 *
 	 * DEPRECATED
 	 */
-	/*public function deprecated_folder_names_notice() {
+	/*
+	public function deprecated_folder_names_notice() {
 
 		$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : 'gmw-extensions'; // WPCS: CSRF ok.
 		?>
@@ -397,6 +400,13 @@ class GMW_Admin {
 		}
 	}
 
+	/**
+	 * Enqueue scripts.
+	 *
+	 * @since 4.0.
+	 *
+	 * @return [type] [description]
+	 */
 	public function enqueue_scripts() {
 
 		wp_deregister_style( 'gamipress-select2-css' );
@@ -404,7 +414,7 @@ class GMW_Admin {
 
 		$pages = array( 'gmw-extensions', 'gmw-settings', 'gmw-forms' );
 
-		if ( ! in_array( $_GET['page'], $pages, true ) ) {
+		if ( ! empty( $_GET['page'] ) && ! in_array( $_GET['page'], $pages, true ) ) { // WPCS: CSRF ok.
 
 			wp_deregister_style( 'select2' );
 			wp_deregister_script( 'select2' );
