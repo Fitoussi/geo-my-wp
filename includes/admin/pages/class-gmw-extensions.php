@@ -921,7 +921,7 @@ class GMW_Extensions {
 							?>
 						</span>
 
-						<select id="gmw-extensions-status-filter">
+						<select id="gmw-extensions-status-filter" class="gmw-smartbox-not">
 							<option value=""><?php esc_html_e( 'Status', 'geo-my-wp' ); ?></option>
 							<option value="active"><?php esc_html_e( 'Active', 'geo-my-wp' ); ?></option>
 							<option value="inactive"><?php esc_html_e( 'Inactive', 'geo-my-wp' ); ?></option>
