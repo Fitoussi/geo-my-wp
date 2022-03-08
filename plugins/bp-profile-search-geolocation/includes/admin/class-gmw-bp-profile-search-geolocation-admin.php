@@ -219,9 +219,15 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 		}
 
 		echo '</div>';
+		$allowed = array(
+			'a' => array(
+				'href'   => array(),
+				'target' => array(),
+			),
+		);
 		?>
 		<div class="gmw-bpsgeo-additional-features-box">
-			<p><?php printf( __( 'Need additional features to display Google Map, the distance, diretions link, and more? Check out the <a href="%s" target="_blank">BuddyPress Members Directory Geolocation extension</a>.', 'geo-my-wp' ), 'https://geomywp.com/extensions/buddypress-members-directory-geolocation/' ); ?></p>
+			<p><?php echo wp_kses( sprintf( __( 'Check out the <a href="%s" target="_blank">BuddyPress Members Directory Geolocation extension</a> for additional geolocation features. Display a map above the list of members, display the distance, address, and a directions link in each member in the results.', 'geo-my-wp' ), 'https://geomywp.com/extensions/buddypress-members-directory-geolocation/' ), $allowed ); ?></p>
 		</div>
 
 		<?php
