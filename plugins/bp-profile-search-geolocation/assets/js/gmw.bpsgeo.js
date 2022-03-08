@@ -1,5 +1,11 @@
 jQuery( document ).ready( function($) {
 	
+	// Hide the addess and radius field of the Members Directory geolocation extension if location is enabled
+	// via the Profile Search plugin. We can have both included on the page.
+	if ( jQuery( '#gmw_bpsgeo_location_gmw_proximity_wrap' ).length ) {
+		jQuery( '#gmw-bpmdg-search-wrapper, #gmw-bpmdg-radius-wrapper' ).hide();
+	}
+
 	/**
 	 * Clear coords when address changes
 	 * 
@@ -91,10 +97,6 @@ jQuery( document ).ready( function($) {
     		thisForm.find( '.gmw-bpsgeo-address-field' ).val( result.formatted_address );
     		
     		jQuery( '.gmw-bpsgeo-locator-button' ).removeClass( 'animate-spin' );
-    		
-    		/*setTimeout( function() {
-    			thisForm.submit();
-    		}, 500 ); */
     	};
 
     	/**
