@@ -38,7 +38,7 @@ function gmw_get_form_field( $args = array(), $gmw = array() ) {
  * @author Eyal Fitoussi
  */
 function gmw_form_field( $args = array(), $gmw = array() ) {
-	echo gmw_get_form_field( $args, $gmw );
+	echo gmw_get_form_field( $args, $gmw ); // WPCS: XSS ok.
 }
 
 /**
@@ -503,6 +503,8 @@ function gmw_search_form_reset_button( $gmw = array() ) {
  * GMW Additional Filters button.
  *
  * @param  array $gmw the form being used.
+ *
+ * @param  array $args field arguments.
  *
  * @since 4.0
  *
