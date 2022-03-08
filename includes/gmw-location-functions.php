@@ -12,6 +12,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Query locations from GEO my WP's database.
+ *
+ * @since 4.0.
+ *
+ * @param  array  $args            [description].
+ * @param  array  $address_filters [description].
+ * @param  array  $location_meta   [description].
+ * @param  string $db_table        [description].
+ * @param  array  $db_fields       [description].
+ * @param  array  $gmw             [description].
+ *
+ * @return [type]                  [description]
+ */
+function gmw_query_locations( $args = array(), $address_filters = array(), $location_meta = array(), $db_table = 'gmw_locations', $db_fields = array(), $gmw = array() ) {
+	return GMW_Location::get_locations_data( $args, $address_filters, $location_meta, $db_table, $db_fields, $gmw );
+}
+
+/**
  * Check if location exists in database.
  *
  * @param  integer $location_id location ID.
