@@ -264,30 +264,6 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 						}
 					}
 				});
-
-				if ( '<?php echo $loc_enabled; // WPCS: XSS ok. ?>' != '1' ) {
-					return;
-				}
-
-				var fieldId   = '<?php echo $field_id; // WPCS: XSS ok. ?>';
-				var fieldBox  = jQuery( '#bps_fields_box .inside #field_box <?php echo $loc_element; // WPCS: XSS ok. ?>' ).find( '.bps_col5' );
-				var trigger   = jQuery( '<span id="field_mode' + fieldId + '" class="bps_col5 gmw-bpsgeo-options-trigger-wrap"><a class=" gmw-icon-cog gmw-bpsgeo-location-options-trigger"><?php echo $label; // WPCS: XSS ok. ?></a></span>' );
-
-				fieldBox.hide();
-				trigger.insertAfter( fieldBox );
-
-				// Scroll to location options box and show it if it is hidden.
-				jQuery( '#field_box' ).on( 'click', '.gmw-bpsgeo-location-options-trigger', function( event ) {
-
-					optionsBox = $( '.postbox#gmw_bpsgeo_location_options' );
-					optionsBox.show();
-
-					if ( ! optionsBox.find( '.inside' ).is( ':visible' ) ) {
-						optionsBox.find( 'h2.hndle' ).click();
-					}
-
-					optionsBox.get(0).scrollIntoView();
-				});
 			});
 		</script>
 		<?php
