@@ -393,6 +393,51 @@ class GMW_Admin {
 		// apply credit and enqueue scripts and styles in GEO my WP admin pages only.
 		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], $gmw_pages, true ) ) { // WPCS: CSRF ok, sanitization ok.
 			add_filter( 'admin_footer_text', array( $this, 'gmw_credit_footer' ), 10 );
+			add_filter( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		}
+	}
+
+	public function enqueue_scripts() {
+
+		wp_deregister_style( 'gamipress-select2-css' );
+		wp_deregister_script( 'gamipress-select2-js' );
+
+		$pages = array( 'gmw-extensions', 'gmw-settings', 'gmw-forms' );
+
+		if ( ! in_array( $_GET['page'], $pages, true ) ) {
+
+			wp_deregister_style( 'select2' );
+			wp_deregister_script( 'select2' );
+			?>
+			<script type="text/javascript">
+				jQuery( document ).ready( function() {
+					jQuery( 'select' ).addClass( 'gmw-smartbox-not' );
+				});
+			</script>
+			<?php
+
+			return;
+		}
+
+		if ( ! wp_script_is( 'jquery-ui-tooltip', 'enqueued' ) ) {
+			wp_enqueue_script( 'jquery-ui-tooltip' );
+			wp_enqueue_style( 'jquery-ui-tooltip' );
+		}
+
+		if ( ! wp_script_is( 'jquery-confirm', 'enqueued' ) ) {
+			wp_enqueue_script( 'jquery-confirm' );
+			wp_enqueue_style( 'jquery-confirm' );
+		}
+
+		// load select2.
+		if ( ! wp_script_is( 'select2', 'enqueued' ) ) {
+			wp_enqueue_script( 'select2' );
+			wp_enqueue_style( 'select2' );
+		}
+
+		if ( ! wp_style_is( 'wp-color-picker', 'enqueued' ) ) {
+			wp_enqueue_style( 'wp-color-picker' );
+			wp_enqueue_script( 'wp-color-picker' );
 		}
 	}
 
