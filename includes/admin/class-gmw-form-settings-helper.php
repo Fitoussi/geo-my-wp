@@ -598,6 +598,28 @@ class GMW_Form_Settings_Helper {
 	}
 
 	/**
+	 * Get group types.
+	 *
+	 * @param  [type] $args [description].
+	 *
+	 * @return [type]       [description]
+	 */
+	public static function get_bp_group_types( $args ) {
+
+		$group_types = array();
+
+		if ( function_exists( 'bp_groups_get_group_types' ) ) {
+
+			foreach ( bp_groups_get_group_types( array(), 'object' ) as $type ) {
+				$group_types[ $type->name ] = $type->labels['name'];
+			};
+		}
+
+		return $group_types;
+	}
+
+	
+	/**
 	 * Get BP Groups.
 	 *
 	 * @param  [type] $args [description].
@@ -726,8 +748,16 @@ class GMW_Form_Settings_Helper {
 			$output = self::get_bp_member_types( $args );
 		}
 
+		if ( 'gmw_get_bp_group_types' === $action ) {
+			$output = self::get_bp_group_types( $args );
+		}
+
 		if ( 'gmw_get_bp_groups' === $action ) {
 			$output = self::get_bp_groups( $args );
+		}
+
+		if ( ! empty( $args['gmw_ajax_load_options_disabled'] ) ) {
+			$output = array( 'disabled' => __( 'Disabled', 'geo-my-wp' ) ) + $output;
 		}
 
 		return $output;
