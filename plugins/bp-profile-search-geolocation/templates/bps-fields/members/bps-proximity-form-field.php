@@ -36,7 +36,47 @@ $bpsgeo_values = ! empty( $value ) ? $value : array(
 
 $address_value = ! empty( $bpsgeo_values['address'] ) ? esc_attr( $bpsgeo_values['address'] ) : '';
 ?>
-<div class="gmw-bpsgeo-location-fields-inner gmw-flexed-wrapper">
+<style type="text/css">
+.gmw-bpsgeo-location-fields-inner {
+	display: grid;
+	grid-template-columns: repeat( auto-fit, minmax( 120px, auto ) );
+	grid-column-gap: var(--gmw-elements-gap);
+	grid-row-gap: var(--gmw-elements-gap);
+	align-items: center;
+}
+
+.gmw-bpsgeo-address-field-wrap {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	position: relative;
+}
+
+.gmw-bpsgeo-address-field-wrap input.gmw-bpsgeo-address-field {
+	width: 100%;
+	box-sizing: border-box;
+	padding-right: 35px;
+}
+
+.gmw-bpsgeo-address-field-wrap i.gmw-bpsgeo-locator-button {
+	position: absolute;
+	right: 0;
+	padding: 8px 5px;
+	cursor: pointer;
+}
+
+.gmw-bpsgeo-units-field-wrap select,
+.gmw-bpsgeo-distance-field-wrap select {
+	width: 100%;
+}
+
+@media screen and (max-width: 700px ) {
+	.gmw-bpsgeo-location-fields-inner {
+		grid-template-columns: repeat( auto-fit, minmax( 100%, auto ) );
+	}
+}
+</style>
+<div class="gmw-bpsgeo-location-fields-inner">
 
 	<div class="gmw-bpsgeo-address-field-wrap gmw-bpsgeo-location-field-wrap bps-textbox">
 
