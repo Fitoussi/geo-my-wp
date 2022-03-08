@@ -187,40 +187,34 @@ function gmw_search_results_directions_system( $object, $gmw = array() ) {
  * @since 3.0
  *
  * @param  array $gmw  gmw form.
- * @param  array $args array of arguments.
  *
  * return HTML element.
  */
-function gmw_get_search_results_orderby_filter( $gmw = array(), $args = false ) {
+function gmw_get_search_results_orderby_filter( $gmw = array() ) {
 
 	if ( empty( $gmw['search_results']['orderby'] ) ) {
 		return;
 	}
 
-	$orderby = explode( ',', $gmw['search_results']['orderby'] );
+	//$orderby = explode( ',', $gmw['search_results']['orderby'] );
 
-	if ( count( $orderby ) < 1 ) {
+	// Explode options from textarea value.
+	$orderby = explode( PHP_EOL, $gmw['search_results']['orderby'] );
+	$options = array();
+
+	foreach ( $orderby as $option ) {
+		$option          = explode( ' : ', $option );
+		$val             = trim( $option[0] );
+		$options[ $val ] = ! empty( $option[1] ) ? trim( $option[1] ) : $val;
+	}
+
+	if ( count( $options ) < 1 ) {
 		return;
 	}
 
-	$options = array();
-
-	// generate orderby options.
-	foreach ( $orderby as $item ) {
-
-		$item = explode( ':', $item );
-
-		if ( isset( $item[0] ) ) {
-			$options[ $item[0] ] = isset( $item[1] ) ? $item[1] : $item[0];
-		}
-	}
-
-	if ( ! $args ) {
-
-		$args = array(
-			'id' => $gmw['ID'],
-		);
-	}
+	$args = array(
+		'id' => $gmw['ID'],
+	);
 
 	return GMW_Template_Functions_Helper::get_orderby_filter( $args, $options );
 }
