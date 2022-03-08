@@ -990,11 +990,22 @@ class GMW_Form_Settings_Helper {
 		$field_name    = $field['name'];
 		$id_attr       = ! empty( $field['id'] ) ? $field['id'] : 'gmw-form-field-' . $field_name;
 		$field_type    = isset( $field['type'] ) ? $field['type'] : 'text';
-		$placeholder   = ! empty( $field['placeholder'] ) ? 'placeholder="' . esc_attr( $field['placeholder'] ) . '"' : '';
 		// $name_attr     = ! empty( $name_attr ) ? esc_attr( $name_attr . '[' . $field_name . ']' ) : $field_name;
 		$attributes = array();
 		$class_attr = ! empty( $field['class'] ) ? $field['class'] : '';
 		$value      = '';
+
+		if ( ! empty( $field['placeholder'] ) ) {
+
+			$placeholder = 'placeholder="' . esc_attr( $field['placeholder'] ) . '"';
+
+		} elseif ( in_array( $field_type, array( 'select', 'multiselect', 'multiselect_name_value', 'smartbox', 'smartbox_multiple' ) ) ) {
+
+			$placeholder = 'placeholder="' . esc_attr__( 'Select options...', 'geo-my-wp' ) . '"';
+		} else {
+
+			$placeholder = '';
+		}
 
 		if ( ! empty( $field_value ) ) {
 
