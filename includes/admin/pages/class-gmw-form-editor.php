@@ -1335,6 +1335,13 @@ class GMW_Form_Editor {
 		$new_dep_templates    = array();
 		$new_custom_templates = array();
 
+		foreach ( $groups['search_form']['fields']['form_template']['options'] as $value => $name ) {
+
+			if ( strpos( $value, 'buddyboss' ) !== false && ! function_exists( 'buddyboss_theme' ) ) {
+				$groups['search_form']['fields']['form_template']['options'][ $value ] = $name . ' ( requires the BuddyBoss theme )';
+			}
+		}
+
 		foreach ( $groups['search_results']['fields']['results_template']['options'] as $value => $name ) {
 
 			if ( strpos( $value, 'custom_' ) !== false ) {
@@ -1343,7 +1350,11 @@ class GMW_Form_Editor {
 
 			} else {
 
-				if ( in_array( $value, array( 'clean', 'custom', 'default', 'grid-gray', 'purple', 'gray', 'yellow', 'blue' ), true ) ) {
+				if ( strpos( $value, 'buddyboss' ) !== false && ! function_exists( 'buddyboss_theme' ) ) {
+
+					$new_templates[ $value ] = $name . ' ( requires the BuddyBoss theme )';
+
+				} elseif ( in_array( $value, array( 'clean', 'custom', 'default', 'grid-gray', 'purple', 'gray', 'yellow', 'blue', 'red' ), true ) ) {
 
 					$name .= ' ( deprecated )';
 
