@@ -194,9 +194,8 @@ class GMW_BP_Profile_Search_Geolocation {
 			return $clauses;
 		}
 
-		// Get the user ID column based on the orderby type.
-		$column = in_array( $query->query_vars['type'], array( 'active', 'newest', 'popular', 'online' ), true ) ? 'user_id' : 'ID';
-
+		// Get the user ID column based on the Select caluse.
+		$column             = strpos( $clauses['select'], 'u.user_id' ) ? 'user_id' : 'ID';
 		$users_id           = implode( ', ', esc_sql( $results ) );
 		$clauses['where'][] = "u.{$column} IN ( {$users_id } )";
 
