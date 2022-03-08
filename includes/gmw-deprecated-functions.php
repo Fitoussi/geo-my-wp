@@ -1034,6 +1034,51 @@ function gmw_ug_avatar( $gmw, $user ) {
 /*
  *groups locator 
  */
+
+/**
+ * Get Group Types filter in the search form.
+ *
+ * DEPRECATED since v2.0.
+ *
+ * Use the function gmw_search_form_bp_group_types_field() instead.
+ *
+ * @param  array   $gmw    [description].
+ *
+ * @param  boolean $return [description].
+ */
+function gmw_search_form_bp_group_types( $gmw = array(), $return = false ) {
+	_deprecated_function( 'gmw_search_form_bp_group_types', '2.0', 'gmw_search_form_bp_group_types_field' );
+	gmw_search_form_bp_group_types_field( $gmw );
+}
+
+/**
+ * Deprecated @since 2.0.
+ *
+ * @param  [type] $gmw [description].
+ * @return [type]      [description]
+ */
+function gmw_gl_get_oredrby_filter( $gmw ) {
+	_deprecated_function( 'gmw_gl_get_oredrby_filter', '2.0', 'gmw_get_search_results_orderby_filter' );
+	return gmw_get_search_results_orderby_filter( $gmw );
+}
+
+/**
+ * Deprecated @since 2.0.
+ *
+ * GMW FL Search results function - Per page dropdown
+ *
+ * @author Eyal Fitoussi
+ *
+ * @since 1.0
+ *
+ * @param  [type] $gmw [description].
+ */
+function gmw_gl_orderby_dropdown( $gmw ) {
+	_deprecated_function( 'gmw_gl_orderby_dropdown', '2.0', 'gmw_search_results_orderby_filter' );
+	gmw_search_results_orderby_filter( $gmw ); // WPCS: XSS ok.
+}
+
+
 /**
  * GMW GL function - Display group's full address
  * @version 1.0
