@@ -40,13 +40,13 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 			array(
 				'palceholder'          => gmw_get_admin_setting_args(
 					array(
-						'name'        => 'placeholder',
-						'type'        => 'text',
-						'default'     => '',
-						'label'       => __( 'Address Field Placeholder', 'geo-my-wp' ),
-						'desc'        => __( 'Enter the placeholder for the address field.', 'geo-my-wp' ),
-						'attributes'  => array(),
-						'priority'    => 10,
+						'name'       => 'placeholder',
+						'type'       => 'text',
+						'default'    => '',
+						'label'      => __( 'Address Field Placeholder', 'geo-my-wp' ),
+						'desc'       => __( 'Enter the placeholder for the address field.', 'geo-my-wp' ),
+						'attributes' => array(),
+						'priority'   => 10,
 					)
 				),
 				'address_autocomplete' => gmw_get_admin_setting_args(
@@ -226,7 +226,15 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 		);
 		?>
 		<div class="gmw-bpsgeo-additional-features-box">
-			<p><?php echo wp_kses( sprintf( __( 'Check out the <a href="%s" target="_blank">BuddyPress Members Directory Geolocation extension</a> for additional geolocation features. Display a map above the list of members, display the distance, address, and a directions link in each member in the results.', 'geo-my-wp' ), 'https://geomywp.com/extensions/buddypress-members-directory-geolocation/' ), $allowed ); ?></p>
+			<p>
+			<?php
+			echo wp_kses(
+				/* translators: %s link to Prmeium Extension page. */
+				sprintf( __( 'Check out the <a href="%s" target="_blank">BuddyPress Members Directory Geolocation extension</a> for additional geolocation features. Display a map above the list of members, display the distance, address, and a directions link in each member in the results.', 'geo-my-wp' ), 'https://geomywp.com/extensions/buddypress-members-directory-geolocation/' ),
+				$allowed
+			);
+			?>
+				</p>
 		</div>
 
 		<?php $warning = __( 'You can only have one location field per form.', 'geo-my-wp' ); ?>
@@ -239,15 +247,15 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 				function gmw_check_for_location_field() {
 
 					jQuery( '#field_box select' ).each( function() {
-				        
-				        jQuery( '#gmw_bpsgeo_location_options' ).hide();
+						
+						jQuery( '#gmw_bpsgeo_location_options' ).hide();
 
-				        if ( jQuery( this ).val() == 'gmw_bpsgeo_location' ) {
-				            jQuery( '#gmw_bpsgeo_location_options' ).show();
+						if ( jQuery( this ).val() == 'gmw_bpsgeo_location' ) {
+							jQuery( '#gmw_bpsgeo_location_options' ).show();
 
-				            return false;
-				        }
-				    });
+							return false;
+						}
+					});
 				}
 
 				jQuery( document ).on( 'change', '#field_box select', function() {
