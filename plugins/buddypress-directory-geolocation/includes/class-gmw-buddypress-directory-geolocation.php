@@ -138,8 +138,12 @@ class GMW_BuddyPress_Directory_Geolocation {
 
 		// Look for form values in the BP Profile Search plugin.
 		if ( function_exists( 'bps_get_request' ) ) {
+
 			$bp_search_values = bps_get_request( 'search' );
 			$bp_search_values = ! empty( $bp_search_values['gmw_bpsgeo_location_gmw_proximity'] ) ? $bp_search_values['gmw_bpsgeo_location_gmw_proximity'] : array();
+
+		} elseif ( function_exists( 'bp_ps_get_request' ) ) {
+			$bp_search_values = bp_ps_get_request( 'search' );
 		}
 
 		// Use BP Profile Search values if exists.
@@ -223,7 +227,13 @@ class GMW_BuddyPress_Directory_Geolocation {
 
 		// Skip if disabled.
 		if ( ! empty( $results_elements_filter ) ) {
+
 			add_action( $results_elements_filter, array( $this, 'add_elements_to_results' ) );
+
+			// to be used with BuddyBoss only.
+			if ( function_exists( 'buddyboss_theme' ) ) {
+				add_filter( 'bp_member_type_name_string', array( $this, 'add_elements_to_buddyboss_results' ) );
+			}
 		}
 
 		// enable map.
@@ -266,7 +276,15 @@ class GMW_BuddyPress_Directory_Geolocation {
 	 * Enqueue scripts.
 	 */
 	public function enqueue_scripts() {
+
 		wp_enqueue_script( 'gmw-bpdg' );
+
+		$args = array(
+			'prefix'    => $this->prefix,
+			'component' => $this->component,
+		);
+
+		wp_localize_script( 'gmw-bpdg', 'gmwBpdg', $args );
 	}
 
 	/**
@@ -581,9 +599,9 @@ class GMW_BuddyPress_Directory_Geolocation {
 	}
 
 	/**
-	 * Append location data to the list of groups
+	 * Get location data for the results.
 	 */
-	public function add_elements_to_results() {
+	public function get_results_elements() {
 
 		$component = $this->component;
 
