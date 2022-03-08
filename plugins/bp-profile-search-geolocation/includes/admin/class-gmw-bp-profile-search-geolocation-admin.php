@@ -209,7 +209,7 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 			$field['name'] = 'gmw_bpsgeo_' . $field['name'];
 			$value         = ! empty( $options[ $field['name'] ] ) ? $options[ $field['name'] ] : '';
 
-			echo GMW_Form_Settings_Helper::get_form_field( $field, 'options', $value ); // WPCS: XSS ok.
+			echo gmw_get_admin_settings_field( $field, 'options', $value ); // WPCS: XSS ok.
 
 			if ( ! empty( $field['desc'] ) ) {
 				echo '<em class="desc">' . esc_html( $field['desc'] ) . '</em>';
@@ -217,7 +217,6 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 
 			echo '</div>';
 		}
-
 		echo '</div>';
 		$allowed = array(
 			'a' => array(
