@@ -148,6 +148,10 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 		?>
 		<style type="text/css">
 
+			#gmw_bpsgeo_location_options {
+				display:  none;
+			}
+
 			#gmw_bpsgeo_location_options .inside {
 				padding: 0;
 			}
@@ -164,6 +168,7 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 
 			.gmw-bpsgeo-location-field-option p {
 				font-weight: bold;
+				margin: 8px 0;
 			}
 
 			.gmw-bpsgeo-location-field-option.gmw-bpsgeo-placeholder-field-option {
@@ -172,39 +177,21 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 			}
 
 			#gmw_bpsgeo_location_options .desc {
-				margin-top: 5px;
+				margin-top: 10px;
 				display: block;
-			}
-
-			.gmw-bpsgeo-options-trigger-wrap {
-				background: #efefef;
-				padding: 4px 3px;
-				box-sizing: border-box;
-				border: 1px solid #ddd;
-				border-radius: 5px;
-				font-size: 12px;
-				cursor: pointer;
-				box-shadow: inset 0 1px 2px rgba(0,0,0,.07);
-				margin-left: 1px;
-			}
-
-			.gmw-bpsgeo-options-trigger-wrap a {
-				color: #333;
-			}
-
-			.gmw-bpsgeo-additional-features-box {
-				padding: 5px 20px 10px;
-				box-sizing: border-box;
-				color: white;
-				margin-bottom: 15px;
-				background: #fff9dc;
-				color: #555;
-				border-top: 8px solid #ffe669;
-				margin-bottom: 0;
 			}
 
 			.gmw-bpsgeo-additional-features-box p {
 				font-size: 14px;
+				padding: 12px 15px 12px;
+				box-sizing: border-box;
+				color: white;
+				background: #4699E8;
+				margin: 0;
+			}
+
+			.gmw-bpsgeo-additional-features-box p a {
+				color: white;
 			}
 		</style>
 
