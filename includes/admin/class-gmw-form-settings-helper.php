@@ -841,7 +841,7 @@ class GMW_Form_Settings_Helper {
 			$defaults['default']  = 'disabled';
 			$defaults['desc']     = __( 'Select the field usage.', 'geo-my-wp' );
 			$defaults['priority'] = 5;
-			$defaults['class']    = 'gmw-smartbox-not';
+			$defaults['class']    = 'gmw-smartbox-not gmw-options-toggle';
 			$defaults['options']  = array(
 				'disabled'          => __( 'Disable Filter', 'gmw-my-wp' ),
 				'pre_defined'       => __( 'Pre-defined', 'gmw-my-wp' ),
@@ -849,6 +849,124 @@ class GMW_Form_Settings_Helper {
 				'checkboxes'        => __( 'Checkboxes', 'gmw-my-wp' ),
 				'smartbox'          => __( 'Smartbox', 'gmw-my-wp' ),
 				'smartbox_multiple' => __( 'Smartbox Multiple', 'gmw-my-wp' ),
+			);
+	
+		} elseif ( 'usage_include_exclude' === $option ) {
+
+			$defaults['name']     = 'usage';
+			$defaults['type']     = 'select';
+			$defaults['label']    = __( 'Usage', 'geo-my-wp' );
+			$defaults['default']  = 'disabled';
+			$defaults['desc']     = __( 'Select the field usage.', 'geo-my-wp' );
+			$defaults['priority'] = 5;
+			$defaults['class']    = 'gmw-smartbox-not gmw-options-toggle';
+			$defaults['options']  = array(
+				'disabled'          => __( 'Disable', 'gmw-my-wp' ),
+				'include'           => __( 'Include', 'gmw-my-wp' ),
+				'exclude'           => __( 'Exclude', 'gmw-my-wp' ),
+			);
+
+		} elseif ( 'address_fields_output' === $option ) {
+
+			$defaults['name']       = 'address_fields';
+			$defaults['type']       = 'multiselect';
+			$defaults['label']      = __( 'Address Fields', 'geo-my-wp' );
+			$defaults['default']    = array();
+			$defaults['desc']       = __( 'Select the address fields to display.', 'geo-my-wp' );
+			$defaults['priority']   = 10;
+			$defaults['attributes'] = array( 'data' => 'multiselect_address_fields' );
+			$defaults['options']    = array(
+				'address'      => __( 'Formatted address ( full address )', 'geo-my-wp' ),
+				'street'       => __( 'Street', 'geo-my-wp' ),
+				'premise'      => __( 'Apt/Suit ', 'geo-my-wp' ),
+				'city'         => __( 'City', 'geo-my-wp' ),
+				'region_name'  => __( 'State', 'geo-my-wp' ),
+				'postcode'     => __( 'Postcode', 'geo-my-wp' ),
+				'country_code' => __( 'Country', 'geo-my-wp' ),
+			);
+
+		} elseif ( 'map_width' === $option ) {
+
+			$defaults['name']       = 'map_width';
+			$defaults['type']       = 'text';
+			$defaults['label']      = __( 'Map Width', 'geo-my-wp' );
+			$defaults['default']    = '100%';
+			$defaults['desc']       = __( 'Enter the map width in pixels or percentage ( ex. 200px or 100% ).', 'geo-my-wp' );
+			$defaults['priority']   = 30;
+
+		} elseif ( 'map_height' === $option ) {
+
+			$defaults['name']       = 'map_height';
+			$defaults['type']       = 'text';
+			$defaults['label']      = __( 'Map Height', 'geo-my-wp' );
+			$defaults['default']    = '300px';
+			$defaults['desc']       = __( 'Enter the map height in pixels or percentage ( ex. 200px or 100% ).', 'geo-my-wp' );
+			$defaults['priority']   = 40;
+
+		} elseif ( 'map_type' === $option ) {
+
+			$defaults['name']       = 'map_type';
+			$defaults['type']       = 'select';
+			$defaults['label']      = __( 'Map Type', 'geo-my-wp' );
+			$defaults['default']    = array();
+			$defaults['desc']       = __( 'Select the map type.', 'geo-my-wp' );
+			$defaults['priority']   = 50;
+			$defaults['class']      = 'gmw-smartbox-not';
+			$defaults['options']    = array(
+				'ROADMAP'   => __( 'ROADMAP', 'geo-my-wp' ),
+				'SATELLITE' => __( 'SATELLITE', 'geo-my-wp' ),
+				'HYBRID'    => __( 'HYBRID', 'geo-my-wp' ),
+				'TERRAIN'   => __( 'TERRAIN', 'geo-my-wp' ),
+			);
+		
+		} elseif ( 'location_form_exclude_groups' === $option ) {
+
+			$defaults['name']       = 'location_form_exclude_groups';
+			$defaults['type']       = 'multiselect';
+			$defaults['label']      = __( 'Exclude Form Field Groups', 'geo-my-wp' );
+			$defaults['desc']       = __( 'Select the field groups that you wish to exclude from the location form.', 'geo-my-wp' );
+			$defaults['default']    = array();
+			$defaults['priority']   = 5;
+			$defaults['options']    = array(
+				'location'    => __( 'Location', 'geo-my-wp' ),
+				'address'     => __( 'Address', 'geo-my-wp' ),
+				'coordinates' => __( 'Coordinates', 'geo-my-wp' ),
+			);
+
+		} elseif ( 'location_form_exclude_fields' === $option ) {
+
+			$defaults['name']       = 'location_form_exclude_fields';
+			$defaults['type']       = 'multiselect';
+			$defaults['label']      = __( 'Exclude Form Fields', 'geo-my-wp' );
+			$defaults['desc']       = __( 'Select specific fields that you wish to exclude from the location form.', 'geo-my-wp' );
+			$defaults['default']    = array();
+			$defaults['priority']   = 10;
+			$defaults['options']    = array(
+				'address'      => __( 'Address ( with autocomplete )', 'geo-my-wp' ),
+				'map'          => __( 'Map', 'geo-my-wp' ),
+				'street'       => __( 'Street', 'geo-my-wp' ),
+				'premise'      => __( 'Apt/Suit ', 'geo-my-wp' ),
+				'city'         => __( 'City', 'geo-my-wp' ),
+				'region_name'  => __( 'State', 'geo-my-wp' ),
+				'postcode'     => __( 'Postcode', 'geo-my-wp' ),
+				'country_code' => __( 'Country', 'geo-my-wp' ),
+				'latitude'     => __( 'Latitude', 'geo-my-wp' ),
+				'longitude'    => __( 'Longitude', 'geo-my-wp' ),
+			);
+
+		} elseif ( 'location_form_template' === $option ) {
+			
+			$defaults['name']       = 'location_form_template';
+			$defaults['type']       = 'select';
+			$defaults['label']      = __( 'Form Template', 'geo-my-wp' );
+			$defaults['desc']       = __( 'Select the Location form template.', 'geo-my-wp' );
+			$defaults['default']    = 'location-form-tabs-top';
+			$defaults['priority']   = 15;
+			$defaults['class']      = 'gmw-smartbox-not';
+			$defaults['options']    = array(
+				'location-form-tabs-top'  => __( 'Tabs Top ', 'geo-my-wp' ),
+				'location-form-tabs-left' => __( 'Tabs Left', 'geo-my-wp' ),
+				'location-form-no-tabs'   => __( 'No Tabs', 'geo-my-wp' ),
 			);
 		}
 
