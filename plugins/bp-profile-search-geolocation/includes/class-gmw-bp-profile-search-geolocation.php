@@ -28,18 +28,11 @@ class GMW_BP_Profile_Search_Geolocation {
 	public function __construct() {
 
 		// Generate location field.
-		add_filter( 'bps_field_config', array( $this, 'field_display' ), 50, 2 );
-		add_action( 'bps_filter_selector', array( $this, 'field_selector' ), 50 );
-		add_action( 'bps_filter_labels', array( $this, 'field_label' ), 50 );
 		add_filter( 'bps_add_fields', array( $this, 'add_location_field' ), 10 );
 		add_filter( 'bp_get_template_stack', array( $this, 'template_stack' ), 30 );
 
 		// Add location filter on form submission.
 		add_filter( 'bps_filters_template_field', array( $this, 'generate_location_field_filter' ), 50, 2 );
-
-		// Modify form data when using the Members Directory geolocation extension.
-		add_filter( 'gmw_bpmdg_form_data', array( $this, 'modify_form_data' ), 50, 2 );
-		add_filter( 'gmw_kleo_geo_form_data', array( $this, 'modify_form_data' ), 50, 2 );
 
 		// Proceed with query filter only if BP Members Directory Geolocation is not installed.
 		// When installed, we will use its built-in query filter.
@@ -87,52 +80,6 @@ class GMW_BP_Profile_Search_Geolocation {
 		} else {
 			return array();
 		}
-
-	}
-	/**
-	 * Add location field display
-	 *
-	 * @param  array  $displays existing displays.
-	 *
-	 * @param  object $field    field object.
-	 *
-	 * @return array            modified displays.
-	 */
-	public function field_display( $displays, $field ) {
-
-		$displays['gmw_bpsgeo_location'] = array(
-			'gmw_proximity' => 'proximity',
-		);
-
-		return $displays;
-	}
-
-	/**
-	 * Add location field selector
-	 *
-	 * @param  array $labels existing labels.
-	 *
-	 * @return array         modified labels.
-	 */
-	public function field_selector( $labels ) {
-
-		$labels['gmw_proximity'] = 'proximity';
-
-		return $labels;
-	}
-
-	/**
-	 * Add location field label type.
-	 *
-	 * @param  array $labels existing labels.
-	 *
-	 * @return array         modified labels.
-	 */
-	public function field_label( $labels ) {
-
-		$labels['gmw_proximity'] = 'is within';
-
-		return $labels;
 	}
 
 	/**
@@ -254,81 +201,6 @@ class GMW_BP_Profile_Search_Geolocation {
 		$clauses['where'][] = "u.{$column} IN ( {$users_id } )";
 
 		return $clauses;
-	}
-
-	/**
-	 * Modify the form data of the BP Members Directory Geolocation extension ( when activated )
-	 *
-	 * By passing the location field values from BP Profile Search form.
-	 *
-	 * @param  array  $form_data form data of BP Members Directory Geolocation extension.
-	 *
-	 * @param  object $gmw_data  gmw form data.
-	 *
-	 * @return [type]            [description]
-	 */
-	public function modify_form_data( $form_data, $gmw_data ) {
-
-		// Clear BP members directory form values when clearing BPS filters.
-		if ( ! empty( $_GET['bps_form'] ) && 'clear' === $_GET['bps_form'] ) { // WPCS: CSRF ok.
-
-			$form_data['prefix']  = 'bpsgeo';
-			$form_data['address'] = '';
-			$form_data['lat']     = '';
-			$form_data['lng']     = '';
-
-			return $form_data;
-		}
-
-		$values = $this->bpsgeo_get_request( 'search' );
-
-		// Abort if address field left blank.
-		if ( empty( $values['address'] ) ) {
-			return $form_data;
-		}
-
-		$filter = current_filter();
-
-		if ( 'gmw_bpmdg_form_data' === $filter ) {
-
-			$prefix = 'bpbdg';
-
-		} elseif ( 'gmw_kleo_geo_form_data' === $filter ) {
-
-			if ( 'member' !== $gmw_data->component ) {
-				return $form_data;
-			}
-
-			$prefix = 'kleo_geo';
-
-		} else {
-			return $form_data;
-		}
-
-		$ajax = defined( 'DOING_AJAX' );
-
-		/**
-		 * Modify the address field on page load or during ajax but when all the values match
-		 *
-		 * Between the BP Members Directory Geolocation extension and the BP Profile Fields Geolocation forms.
-		 *
-		 * This means that the orderby filter was changed.
-		 *
-		 * When the form values between the 2 plugins do not match it means that the BP Members Directory Geolocation
-		 *
-		 * form was submitted and in this case we don't override the values from BP Profile Fields Geolocation.
-		 */
-		if ( ! $ajax || ( $ajax && $values['address'] === $form_data['address'] && $values['units'] === $form_data['units'] ) && $values['distance'] === $form_data['radius'] ) {
-
-			$form_data['prefix']  = 'bpsgeo';
-			$form_data['address'] = $values['address'];
-			$form_data['lat']     = $values['lat'];
-			$form_data['lng']     = $values['lng'];
-			$form_data['radius']  = $values['distance'];
-			$form_data['units']   = $values['units'];
-		}
-
-		return $form_data;
 	}
 
 	/**
