@@ -1,22 +1,26 @@
 <?php
 /**
- * Members Locator "kleo" search form template file.
+ * GEO my WP Search Form Template. 
  *
- * The information on this file will be displayed as the search forms.
+ * To modify this template file, copy this folder with all its content and place it
  *
- * The function pass 1 args for you to use:
- * $gmw  - the form being used ( array )
+ * in the theme's or child theme's folder of your site under:
  *
- * You could but It is not recomemnded to edit this file directly as your changes will be overwritten on the next update of the plugin.
- * Instead you can copy-paste this template ( the "kleo" folder contains this file and the "css" folder )
- * into the theme's or child theme's folder of your site and apply your changes from there.
+ * your-theme's-or-child-theme's-folder/geo-my-wp/members-locator/search-forms/
  *
- * The template folder will need to be placed under:
- * your-theme's-or-child-theme's-folder/geo-my-wp/friends/search-forms/
+ * You will then be able to select your custom template from the "Search Form Templates" select dropdown option in the "Search Form" tab of the form editor.
  *
- * Once the template folder is in the theme's folder you will be able to choose it when editing the Members locator form.
- * It will show in the "Search results" dropdown menu as "Custom: kleo".
+ * It will be named as "Custom: %folder-name%".
+ *
+ * @param $gmw_form ( object ) the entire form object.
+ *
+ * @param $gmw      ( array )  GEO my WP's form.
+ *
+ * @author Eyal Fitoussi
+ *
+ * @package gmw-my-wp
  */
+
 ?>
 <?php do_action( 'gmw_before_search_form_template', $gmw ); ?>
 
@@ -49,6 +53,10 @@
 				<?php gmw_search_form_radius( $gmw ); ?>
 			
 				<?php gmw_search_form_units( $gmw ); ?>	
+
+				<?php gmw_search_form_bp_member_types_field( $gmw ); ?>
+
+				<?php gmw_search_form_bp_groups_field( $gmw ); ?>
 
 				<?php do_action( 'gmw_search_form_filters', $gmw ); ?>
 															

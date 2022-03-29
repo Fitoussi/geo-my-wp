@@ -1,32 +1,27 @@
 <?php
 /**
- * Members locator "sweetdate" search results template file.
+ * This is the search results template files.
  *
- * This file outputs the search results.
+ * To modify this template file copy-paste this folder with all its content and place it
  *
- * You can modify this file to apply custom changes. However, it is not recomended
- * since your changes will be overwritten on the next update of the plugin.
+ * in the theme's or child theme's folder of your site under:
  *
- * Instead you can copy-paste this template ( the "sweetdate" folder contains this file
- * and the "css" folder ) into the theme's or child theme's folder of your site
- * and apply your changes from there.
- *
- * The template folder will need to be placed under:
  * your-theme's-or-child-theme's-folder/geo-my-wp/members-locator/search-results/
  *
- * Once the template folder is in the theme's folder you will be able to select
- * it in the form editor. It will show in the "Search results" dropdown menu as "Custom: gsweetdate".
+ * You will then be able to select your custom template from the "Search Results Templates" select dropdown option in the "Search Results" tab of the form editor.
  *
- * @param $gmw ( array ) the form being used
+ * It will be labed as "Custom: %folder-name%".
  *
- * @param $members_template ( object ) buddypress members object
+ * @param $gmw  ( array ) the form being used
  *
- * @param $members_template->member ( object ) each member in the loop
+ * @param $gmw_form ( object ) the form object
+ *
+ * @param $member ( object ) member object in the loop
  *
  * @package geo-my-wp
  */
 
-?>	
+?>
 <?php global $members_template; ?>
 
 <div class="gmw-results-wrapper sweetdate gmw-fl-sweetdate-results-wrapper <?php echo esc_attr( $gmw['prefix'] ); ?>" data-id="<?php echo absint( $gmw['ID'] ); ?>" data-prefix="<?php echo esc_attr( $gmw['prefix'] ); ?>">

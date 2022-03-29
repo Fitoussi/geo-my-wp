@@ -1,27 +1,26 @@
 <?php
 /**
- * Members Locator "default" search form template file.
+ * GEO my WP Search Form Template ( NOTE: this template is deprecated and is no longer being supported ).
  *
- * The information on this file outputs the search form.
+ * To modify this template file, copy this folder with all its content and place it
  *
- * You can modify this file to apply custom changes. However, it is not recomended
- * since your changes will be overwritten on the next update of the plugin.
+ * in the theme's or child theme's folder of your site under:
  *
- * Instead you can copy-paste this template ( the "default" folder contains this file
- * and the "css" folder ) into the theme's or child theme's folder of your site
- * and apply your changes from there.
- *
- * The template folder will need to be placed under:
  * your-theme's-or-child-theme's-folder/geo-my-wp/members-locator/search-forms/
  *
- * Once the template folder is in the theme's folder you will be able to select
- * it in the form editor. It will show in the "Search form" dropdown menu as "Custom: default".
+ * You will then be able to select your custom template from the "Search Form Templates" select dropdown option in the "Search Form" tab of the form editor.
  *
- * @param $gmw_form ( object ) the entire form object
- * @param $gmw      ( array )  the form settings and values only
+ * It will be named as "Custom: %folder-name%".
+ *
+ * @param $gmw_form ( object ) the entire form object.
+ *
+ * @param $gmw      ( array )  GEO my WP's form.
  *
  * @author Eyal Fitoussi
+ *
+ * @package gmw-my-wp
  */
+
 ?>
 <?php do_action( 'gmw_before_search_form_template', $gmw ); ?>
 
@@ -33,13 +32,21 @@
 
 		<?php do_action( 'gmw_search_form_start', $gmw ); ?>
 
+		<?php gmw_search_form_keywords_field( $gmw ); ?>
+
 		<?php gmw_search_form_address_field( $gmw ); ?>
 
 		<?php gmw_search_form_locator_button( $gmw ); ?>
 
 		<?php do_action( 'gmw_search_form_filters', $gmw ); ?>
 		
-		<?php gmw_search_form_xprofile_fields( $gmw ); ?>		
+		<?php gmw_search_form_bp_member_types_field( $gmw ); ?>
+
+		<?php gmw_search_form_bp_groups_field( $gmw ); ?>
+
+		<?php gmw_search_form_xprofile_fields( $gmw ); ?>
+
+		<?php gmw_search_form_custom_fields( $gmw ); ?>
 
 		<?php do_action( 'gmw_search_form_before_distance', $gmw ); ?>
 			
@@ -49,6 +56,8 @@
 
 		<?php do_action( 'gmw_search_form_before_submit', $gmw ); ?>
 		
+		<?php gmw_search_form_reset_button( $gmw ); ?>
+
 		<?php gmw_search_form_submit_button( $gmw ); ?>
 
 		<?php do_action( 'gmw_search_form_end', $gmw ); ?>
@@ -59,3 +68,4 @@
 </div>	
 
 <?php do_action( 'gmw_after_search_form_template', $gmw ); ?>
+
