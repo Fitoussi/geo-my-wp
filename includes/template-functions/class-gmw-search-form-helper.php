@@ -199,7 +199,14 @@ class GMW_Search_Form_Helper {
 
 		// Escape value.
 		if ( ! empty( $value ) ) {
-			$value = is_array( $value ) ? array_map( 'esc_attr', $value ) : esc_attr( $value );
+
+			if ( is_array( $value ) ) {
+
+				$value = array_map( 'stripslashes', $value );
+				$value = array_map( 'esc_attr', $value );
+			} else {
+				$value = esc_attr( stripslashes( $value ) );
+			}
 		}
 
 		// If this is a sub array name.
@@ -324,7 +331,7 @@ class GMW_Search_Form_Helper {
 				$field .= '<select ' . $attributes . '>';
 
 				if ( ! empty( $options_all ) && in_array( $args['type'], array( 'select', 'dropdown', 'smartbox' ), true ) ) {
-					$field .= '<option value="">' . esc_attr( $options_all ) . '</option>';
+					$field .= '<option value="">' . esc_attr( stripslashes( $options_all ) ) . '</option>';
 				}
 
 				if ( ! empty( $args['options'] ) ) {
@@ -336,15 +343,15 @@ class GMW_Search_Form_Helper {
 
 					foreach ( $args['options'] as $option_value => $option_label ) {
 
-						// If label is an array of value => label.
 						if ( is_array( $option_label ) ) {
 
-							$option_value = isset( $option_label['value'] ) ? $option_label['value'] : '';
-							$label        = isset( $option_label['label'] ) ? $option_label['label'] : '';
+							$option_value = isset( $option_label['value'] ) ? esc_attr( stripslashes( $option_label['value'] ) ) : '';
+							$label        = isset( $option_label['label'] ) ? esc_attr( stripslashes( $option_label['label'] ) ) : '';
 
 							// Otherwise, if label only.
 						} else {
-							$label = $option_label;
+							$option_value = esc_attr( stripslashes( $option_value ) );
+							$label        = esc_attr( stripslashes( $option_label ) );
 						}
 
 						if ( is_array( $value ) ) {
@@ -353,7 +360,7 @@ class GMW_Search_Form_Helper {
 							$selected = $value == $option_value ? 'selected="selected"' : '';
 						}
 
-						$field .= '<option value="' . esc_attr( $option_value ) . '" ' . $selected . '>' . esc_attr( $label ) . '</option>';
+						$field .= '<option value="' . $option_value . '" ' . $selected . '>' . $label . '</option>';
 					}
 				}
 
@@ -370,12 +377,13 @@ class GMW_Search_Form_Helper {
 					// If label is an array of value => label.
 					if ( is_array( $option_label ) ) {
 
-						$option_value = isset( $option_label['value'] ) ? $option_label['value'] : '';
-						$label        = isset( $option_label['label'] ) ? $option_label['label'] : '';
+						$option_value = isset( $option_label['value'] ) ? esc_attr( stripslashes( $option_label['value'] ) ) : '';
+						$label        = isset( $option_label['label'] ) ? esc_attr( stripslashes( $option_label['label'] ) ) : '';
 
 						// Otherwise, if label only.
 					} else {
-						$label = $option_label;
+						$option_value = esc_attr( stripslashes( $option_value ) );
+						$label        = esc_attr( stripslashes( $option_label ) );
 					}
 
 					if ( is_array( $value ) ) {
@@ -384,12 +392,10 @@ class GMW_Search_Form_Helper {
 						$checked = $value == $option_value ? 'checked="checked"' : ''; // WPCS: CSRF ok.
 					}
 
-					$option_value = esc_attr( $option_value );
-
 					$field .= '<li class="gmw-field-checkbox-wrapper" data-value="' . $option_value . '">';
 					$field .= '<label for="' . $args['id_attr'] . '-' . $option_value . '" class="gmw-checkbox-label">';
 					$field .= '<input type="checkbox" id="' . $args['id_attr'] . '-' . $option_value . '" name="' . $args['name'] . '" class="gmw-' . $args['slug'] . '-field-checkbox gmw-field-checkbox" value="' . $option_value . '" ' . $checked . '>';
-					$field .= esc_attr( $label );
+					$field .= $label;
 					$field .= '</label></li>';
 				}
 
@@ -409,12 +415,13 @@ class GMW_Search_Form_Helper {
 					// If label is an array of value => label.
 					if ( is_array( $option_label ) ) {
 
-						$option_value = isset( $option_label['value'] ) ? $option_label['value'] : '';
-						$label        = isset( $option_label['label'] ) ? $option_label['label'] : '';
+						$option_value = isset( $option_label['value'] ) ? esc_attr( stripslashes( $option_label['value'] ) ) : '';
+						$label        = isset( $option_label['label'] ) ? esc_attr( stripslashes( $option_label['label'] ) ) : '';
 
 						// Otherwise, if label only.
 					} else {
-						$label = $option_label;
+						$option_value = esc_attr( stripslashes( $option_value ) );
+						$label        = esc_attr( stripslashes( $option_label ) );
 					}
 
 					if ( is_array( $value ) ) {
@@ -423,12 +430,10 @@ class GMW_Search_Form_Helper {
 						$checked = $value == $option_value ? 'checked="checked"' : ''; // WPCS: CSRF ok.
 					}
 
-					$option_value = esc_attr( $option_value );
-
 					$field .= '<li class="gmw-field-radio-wrapper" value="' . $option_value . '">';
 					$field .= '<label for="' . esc_attr( $args['id_attr'] ) . '-' . $option_value . '" class="gmw-radio-label">';
 					$field .= '<input type="radio" id="' . esc_attr( $args['id_attr'] ) . '-' . $option_value . '" name="' . esc_attr( $args['name'] ) . '" class="gmw-' . esc_attr( $args['slug'] ) . '-field-radio gmw-field-radio" value="' . $option_value . '" ' . $checked . '>';
-					$field .= esc_attr( $label );
+					$field .= $label;
 					$field .= '</label></li>';
 				}
 
