@@ -545,6 +545,75 @@ function gmw_get_search_form_toggle_button( $gmw = array(), $args = array() ) {
 }
 
 /**
+ * Toggle to open the additional fields wrapper.
+ *
+ * @since 4.0.
+ *
+ * @param  array  $gmw [description].
+ *
+ * @return [type]      [description]
+ */
+function gmw_search_form_modal_box_toggle( $gmw = array() ) {
+
+	if ( empty( $gmw['search_form']['filters_modal']['enabled'] ) ) {
+		return;
+	}
+
+	$args = array(
+		'inner_label' => $gmw['search_form']['filters_modal']['toggle_label'],
+	);
+
+	echo gmw_get_search_form_toggle_button( $gmw, $args ); // WPCS: XSS ok.
+}
+
+/**
+ * Output the additional filters wrapping element in the search form.
+ *
+ * This function needs to be used twice in the form, once where the wrapper begins
+ *
+ * and again where it ends.
+ *
+ * @author Eyal Fitoussi.
+ *
+ * @since 4.0
+ *
+ * @param  string $tag  open || close.
+ *
+ * @param  array  $gmw  GEO my WP form.
+ *
+ * @return [type]       [description]
+ */
+function gmw_search_form_modal_box( $tag = 'open', $gmw = array() ) {
+
+	if ( empty( $gmw['search_form']['filters_modal']['enabled'] ) ) {
+		return;
+	}
+
+	if ( 'close' === $tag ) {
+		?>
+		</div></div></div>
+		<?php
+	} else {
+
+		$title = ! empty( $gmw['search_form']['filters_modal']['modal_title'] ) ? $gmw['search_form']['filters_modal']['modal_title'] : '';
+		?>
+		<div class="gmw-additional-filters-wrapper" data-type="popup">
+
+			<div class="gmw-additional-filters-inner">
+
+				<div class="gmw-additional-filters-header">
+					<span></span>
+					<span class="gmw-additional-filters-title"><?php echo esc_html( $title ); ?></span>
+					<span class="gmw-close-filters-button gmw-icon-cancel-circled"></span>
+				</div>
+
+				<div class="gmw-additional-filters-content gmw-grid-filters-wrapper">
+		<?php
+	}
+
+}
+
+/**
  * Output Additional Filters button.
  *
  * @param  array $gmw   gmw form.
