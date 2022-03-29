@@ -1610,6 +1610,70 @@ class GMW_Form_Editor {
 	}
 
 	/**
+	 * Get nfo_window_template files
+	 *
+	 * @param  string $value       info window template value.
+	 * @param  string $name_attr   name attribute.
+	 * @param  array  $form        gmw form.
+	 * @param  array  $settings form fields.
+	 */
+	public static function info_window_template( $value, $name_attr, $form, $settings ) {
+
+		echo '<div id="info-window-templates-wrapper">';
+
+		$iw_types = $settings['info_window']['iw_appearance']['fields']['iw_type']['options'];
+
+		foreach ( $iw_types as $iw_name => $iw_title ) {
+
+			// get templates.
+			$templates = gmw_get_info_window_templates( $form['component'], $iw_name );
+
+			// Get templates from deprecated location in theme's folder.
+			// Used to be in geo-my-wp/core-extensions/extensions-name/info-window
+			// now it is in geo-my-wp/core-extensions/info-window.
+			$dep_loc_templates = gmw_get_info_window_templates( $form['component'], $iw_name, 'ajax_forms' );
+ 
+			$templates = array_merge( $templates, $dep_loc_templates );
+			?>
+			<div class="gmw-info-window-template <?php echo esc_attr( $iw_name ); ?>" style="display:none;">
+				<select name="<?php echo esc_attr( $name_attr . '[' . $iw_name . ']' ); ?>" class="gmw-smartbox-not">			
+
+					<?php foreach ( $templates as $template_value => $template_name ) { ?>
+
+						<?php $selected = ( isset( $value[ $iw_name ] ) && $value[ $iw_name ] === $template_value ) ? 'selected="selected"' : ''; ?>
+
+						<option value="<?php echo esc_attr( $template_value ); ?>" <?php echo $selected;  // WPCS: XSS ok. ?>>
+							<?php echo esc_html( $template_name ); ?>	
+						</option>
+					<?php } ?>
+				</select>
+			</div>
+			<?php
+		}
+		?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Validate info window settings
+	 *
+	 * @param  string $output info window template value.
+	 *
+	 * @return validate value.
+	 */
+	public static function validate_info_window_template( $output ) {
+
+		if ( ! is_array( $output ) ) {
+			$output = array();
+		}
+
+		$output = array_map( 'sanitize_key', $output );
+
+		return $output;
+	}
+
+	/**
 	 * Get fields
 	 *
 	 * @return [type] [description]
