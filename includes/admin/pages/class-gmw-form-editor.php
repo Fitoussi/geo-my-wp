@@ -2558,6 +2558,25 @@ class GMW_Form_Editor {
 			array( '%d' )
 		); // DB call ok, cache ok.
 
+		$object_type = '';
+
+		if ( 'posts_locator' === $form['component'] ) {
+
+			$object_type = 'post';
+
+		} elseif ( 'users_locator' === $form['component'] || 'members_locator' === $form['component'] ) {
+
+			$object_type = 'user';
+
+		} elseif ( 'bp_groups_locator' === $form['component'] ) {
+
+			$object_type = 'bp_group';
+		}
+
+		if ( '' !== $object_type ) {
+			GMW_Cache_Helper::flush_cache_by_object( $object_type );
+		}
+
 		// update form in database.
 		if ( false === $form_udpated ) {
 
