@@ -140,7 +140,7 @@ class GMW_Members_Locator_Form extends GMW_Form {
 
 			if ( ! empty( $distance ) ) {
 
-				if ( ! apply_filters( 'gmw_disable_query_clause_between', false, 'gmw_fl' ) ) {
+				if ( ! apply_filters( 'gmw_disable_query_clause_between', false, 'gmw_fl', $this->form ) ) {
 
 					// calculate the between point.
 					$bet_lat1 = $lat - ( $distance / $degree );
@@ -154,11 +154,6 @@ class GMW_Members_Locator_Form extends GMW_Form {
 
 				// filter locations based on the distance.
 				$having = "Having distance <= {$distance} OR distance IS NULL";
-
-				// if we order by the distance.
-				/*if ( 'distance' === $this->form['query_args']['type'] ) {
-					$sql['orderby'] = 'ORDER BY distance';
-				}*/
 			}
 
 			// if we order by the distance.
