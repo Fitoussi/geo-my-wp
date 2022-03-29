@@ -401,7 +401,15 @@ function gmw_search_form_radius_slider( $gmw = array() ) {
  */
 function gmw_get_search_form_units( $gmw ) {
 
-	$settings            = $gmw['search_form']['units'];
+	$settings = $gmw['search_form']['units'];
+
+	// Make sure settings are properly set ( to support old version of form in case were not properly updated with the upgrade to v4.0. ).
+	if ( empty( $settings ) || ! is_array( $settings ) ) {
+		$settings = array(
+			'options' => 'imperial',
+		);
+	}
+
 	$settings['options'] = ! empty( $settings['options'] ) ? $settings['options'] : 'imperial';
 	$type                = 'hidden';
 	$options             = array();
