@@ -652,6 +652,56 @@ class GMW_Form_Settings_Helper {
 		return $output;
 	}
 
+	public static function get_templates( $args ) {
+
+		$args = array(
+			'component'   => $args['gmw_ajax_load_component'],
+			'addon'       => $args['gmw_ajax_load_addon'],
+			'folder_name' => $args['gmw_ajax_load_type'],
+		);
+
+		$templates =  gmw_get_templates( $args );
+
+		$new_templates        = array();
+		$new_dep_templates    = array();
+		$new_custom_templates = array();
+
+		// Marked deprecated templates.
+		foreach ( $templates as $value => $name ) {
+
+			if ( strpos( $value, 'custom_' ) !== false ) {
+
+				$new_custom_templates[ $value ] = $name;
+
+			} else {
+
+				if ( strpos( $value, 'buddyboss' ) !== false && ! function_exists( 'buddyboss_theme' ) ) {
+
+					$new_templates[ $value ] = $name . ' ( requires the BuddyBoss theme )';
+
+				} elseif ( 'search-forms' === $args['folder_name'] && in_array( $value, array( 'default', 'compact', 'horizontal', 'horizontal-gray', 'gray', 'purple', 'yellow', 'blue', 'red' ), true ) ) {
+
+					$name .= ' ( deprecated )';
+
+					$new_dep_templates[ $value ] = $name;
+
+				} elseif ( 'search-results' === $args['folder_name'] && in_array( $value, array( 'clean', 'custom', 'default', 'grid-gray', 'grid', 'purple', 'gray', 'yellow', 'blue', 'red' ), true ) ) {
+
+					$name .= ' ( deprecated )';
+
+					$new_dep_templates[ $value ] = $name;
+
+				} else {
+
+					$new_templates[ $value ] = $name;
+
+				}
+			}
+		}
+
+		return array_merge( $new_templates, $new_dep_templates, $new_custom_templates );
+	}
+
 	/**
 	 * Get field options via AJAX call.
 	 *
