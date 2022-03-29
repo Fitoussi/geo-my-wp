@@ -124,7 +124,12 @@ class GMW_Helper {
 		} else {
 
 			$addon_data = gmw_get_addon_data( $addon );
-			$path       = $addon_data['plugin_dir'] . '/plugins/' . $templates_folder . '/templates/' . $folder;
+
+			if ( 'info-window' === $args['folder_name'] ) {
+				$path = $component_data['plugin_dir'] . '/templates/' . $folder;
+			} else {
+				$path = $addon_data['plugin_dir'] . '/plugins/' . $templates_folder . '/templates/' . $folder;
+			}
 		}
 
 		// if this is info-window templates.
@@ -254,13 +259,15 @@ class GMW_Helper {
 			// look for template in custom location or in child theme. If not found check in parent theme.
 			if ( file_exists( $custom_path_uri['path'] . "/{$templates_folder}/{$folder}{$template_name}/" ) ) {
 
-				$output['content_path']   = $custom_path_uri['path'] . "/{$templates_folder}/{$folder}{$template_name}/";
-				$output['stylesheet_uri'] = $custom_path_uri['uri'] . "/{$templates_folder}/{$folder}{$template_name}/css/style.css";
+				$output['content_path']    = $custom_path_uri['path'] . "/{$templates_folder}/{$folder}{$template_name}/";
+				$output['stylesheet_path'] = $custom_path_uri['path'] . "/{$templates_folder}/{$folder}{$template_name}/css/style.css";
+				$output['stylesheet_uri']  = $custom_path_uri['uri'] . "/{$templates_folder}/{$folder}{$template_name}/css/style.css";
 
 			} else {
 
-				$output['content_path']   = TEMPLATEPATH . "/geo-my-wp/{$templates_folder}/{$folder}{$template_name}/";
-				$output['stylesheet_uri'] = get_template_directory_uri() . "/geo-my-wp/{$templates_folder}/{$folder}{$template_name}/css/style.css";
+				$output['content_path']    = TEMPLATEPATH . "/geo-my-wp/{$templates_folder}/{$folder}{$template_name}/";
+				$output['stylesheet_path'] = TEMPLATEPATH . "/geo-my-wp/{$templates_folder}/{$folder}{$template_name}/css/style.css";
+				$output['stylesheet_uri']  = get_template_directory_uri() . "/geo-my-wp/{$templates_folder}/{$folder}{$template_name}/css/style.css";
 			}
 
 			// for previous version of GEO my WP. Need to rename all custom template files to content.php
@@ -284,7 +291,8 @@ class GMW_Helper {
 			// load template files from plugin's folder.
 		} else {
 
-			if ( '' === $addon || $addon == $component ) {
+			// if ( '' === $addon || $addon == $component ) {
+			if ( '' === $addon || $addon == $component || 'info-window' === $args['folder_name'] ) {
 
 				$plugin_url = $component_data['plugin_url'];
 				$plugin_dir = $component_data['plugin_dir'];
@@ -297,8 +305,9 @@ class GMW_Helper {
 			}
 
 			$output['stylesheet_handle'] = "gmw-{$prefix_handle}-{$folder_handle}{$template_name}";
-			$output['stylesheet_uri']    = $plugin_url . "/templates/{$folder}{$template_name}/css/style.css";
 			$output['content_path']      = $plugin_dir . "/templates/{$folder}{$template_name}/{$file_name}";
+			$output['stylesheet_path']   = $plugin_dir . "/templates/{$folder}{$template_name}/css/style.css";
+			$output['stylesheet_uri']    = $plugin_url . "/templates/{$folder}{$template_name}/css/style.css";
 		}
 
 		$output = apply_filters( 'gmw_get_template_output', $output, $addon );
