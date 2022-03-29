@@ -1,6 +1,16 @@
 <?php
 /**
- * GEO my WP Single Item template.
+ * GEO my WP Search Results Template.
+ *
+ * To modify this template file, copy this folder with all its content and place it
+ *
+ * in the theme's or child theme's folder of your site under:
+ *
+ * your-theme's-or-child-theme's-folder/geo-my-wp/members-locator/search-results/
+ *
+ * You will then be able to select your custom template from the "Search Results Templates" select dropdown option in the "Search Results" tab of the form editor.
+ *
+ * It will be named as "Custom: %folder-name%".
  *
  * @param $gmw  ( array ) the form being used
  *
@@ -12,32 +22,25 @@
  */
 
 ?>
-<div id="single-member-<?php echo absint( $member->id ); ?>" class="<?php echo esc_attr( $member->location_class ); ?>" data-bp-item-id="<?php echo absint( $member->id ); ?>" data-bp-item-component="members">
-
-	<?php $address = gmw_get_search_results_address( $member, $gmw, true ); ?>
+<div id="gmw-single-member-<?php echo absint( $member->id ); ?>" class="<?php echo esc_attr( $member->location_class ); ?>" data-bp-item-id="<?php echo absint( $member->id ); ?>" data-bp-item-component="members">
 
 	<div class="gmw-item-inner">
 
 		<?php do_action( 'gmw_search_results_loop_item_start', $member, $gmw ); ?>
 
 		<div class="gmw-item-header">
-
-			<?php gmw_search_results_distance( $member, $gmw ); ?>
-
-			<?php do_action( 'gmw_search_results_loop_before_image', $member, $gmw ); ?>
-
 			<?php gmw_search_results_bp_avatar( $member, $gmw ); ?>
 		</div>
 
 		<div class="gmw-item-content">
-		
+
+			<?php gmw_search_results_distance( $member, $gmw ); ?>
+
 			<h3 class="gmw-item gmw-item-title">
 				<?php gmw_search_results_linked_title( bp_get_member_permalink(), bp_get_member_name(), $member, $gmw ); ?>
+				<?php gmw_search_results_bp_last_active( $member, $gmw ); ?>
+				<?php gmw_search_results_address( $member, $gmw ); ?>
 			</h3>
-
-			<div class="gmw-item gmw-item-address"><?php echo $address; // WPCS: XSS ok. ?></div>
-			
-			<?php gmw_search_results_bp_last_active( $member, $gmw ); ?>
 
 			<?php do_action( 'gmw_search_results_loop_content_start', $member, $gmw ); ?>
 
@@ -53,7 +56,7 @@
 		</div>
 
 		<div class="gmw-item-footer">
-			<div class="gmw-item gmw-item-address"><?php echo $address; // WPCS: XSS ok. ?></div>
+			<?php gmw_search_results_address( $member, $gmw ); ?>
 		</div>
 
 		<?php do_action( 'gmw_search_results_loop_item_end', $member, $gmw ); ?>

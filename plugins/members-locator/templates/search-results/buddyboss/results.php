@@ -1,12 +1,20 @@
 <?php
 /**
- * GEO my WP Results Wrapper template.
+ * GEO my WP Search Results Template.
+ *
+ * To modify this template file, copy this folder with all its content and place it
+ *
+ * in the theme's or child theme's folder of your site under:
+ *
+ * your-theme's-or-child-theme's-folder/geo-my-wp/members-locator/search-results/
+ *
+ * You will then be able to select your custom template from the "Search Results Templates" select dropdown option in the "Search Results" tab of the form editor.
+ *
+ * It will be named as "Custom: %folder-name%".
  *
  * @param $gmw  ( array ) the form being used
  *
  * @param $gmw_form ( object ) the form object
- *
- * @param $member ( object ) the member's object in the loop
  *
  * @package geo-my-wp
  */
@@ -54,6 +62,8 @@
 
 					<?php do_shortcode( 'gmw_search_results_filters', $gmw ); ?>
 
+					<?php gmw_search_results_orderby_filter( $gmw ); ?>
+
 					<?php gmw_results_view_toggle( $gmw ); ?>
 				</div> 
 
@@ -73,7 +83,7 @@
 					$footer_buttons_class = ( bp_is_active('friends') && bp_is_active('messages') ) ? 'footer-buttons-on' : '';
 					$is_follow_active     = bp_is_active('activity') && function_exists('bp_is_activity_follow_active') && bp_is_activity_follow_active();
 					$follow_class         = $is_follow_active ? 'follow-active' : '';
-					$gmw_view             = ( strpos( $gmw_form->get_class_attr( 'results_wrap' ), 'gmw-grid-view' ) !== false ) ? 'grid' : 'list';
+					$gmw_view             = gmw_get_current_results_view( $gmw );
 					?>
 					<ul id="members-list" class="gmw-results-list members-list-wrapper item-list members-list bp-list <?php echo $gmw_view; // WPCS: XSS ok. ?>">
 
@@ -92,8 +102,8 @@
 						?>
 					</ul>
 
-					<div class="pagination-per-page-wrapper">
-						<?php gmw_results_message( $gmw ); ?><?php gmw_pagination( $gmw ); ?>
+					<div class="gmw-pagination-message-wrapper">
+						<span class="gmw-results-message"><?php gmw_results_message( $gmw ); ?></span><?php gmw_pagination( $gmw ); ?>
 					</div> 
 
 					<?php bp_nouveau_after_loop(); ?>
