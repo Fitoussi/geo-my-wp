@@ -80,7 +80,12 @@ class GMW_Forms_Helper {
 				'per_page'        => '5,10,15,25,50',
 			),
 			'search_form'       => array(
-				'form_template'  => 'responsive-1',
+				'form_template'    => 'responsive-1',
+				'filters_modal'    => array(
+					'enabled'      => 0,
+					'toggle_label' => __( 'Filter', 'geo-my-wp' ),
+					'modal_title'  => __( 'More Filters', 'geo-my-wp' ),
+				),
 				'address_field'  => array(
 					'usage'                => 'single',
 					'label'                => 'Address',
@@ -148,7 +153,7 @@ class GMW_Forms_Helper {
 				'location_meta'    => array(),
 				'opening_hour'     => '',
 				'directions_link'  => 1,
-				'taxonomies'       => 1,
+				'distance'         => 1,
 				'styles'           => array(
 					'enhanced_fields'    => 1,
 					'custom_css'         => $css,
@@ -161,9 +166,40 @@ class GMW_Forms_Helper {
 				'map_type'   => 'ROADMAP',
 				'zoom_level' => 'auto',
 			),
+			'info_window'    => array(
+				'address'          => array(
+					'enabled' => 1,
+					'fields'  => array(),
+					'linked'  => 1,
+				),
+				'image'            => array(
+					'enabled'      => 1,
+					'width'        => '120px',
+					'height'       => 'auto',
+					'no_image_url' => GMW_IMAGES . '/no-image.jpg',
+				),
+				'excerpt'          => array(
+					'usage' => 'disabled',
+					'count' => '10',
+					'link'  => 'read more...',
+				),
+				'location_meta'    => array(),
+				'opening_hour'     => '',
+				'directions_link'  => 1,
+				'distance'         => 1,
+				'styles'           => array(
+					'enhanced_fields'    => 1,
+					'custom_css'         => '',
+					'disable_stylesheet' => '',
+				),
+			),
 		);
 
 		$form_data = apply_filters( 'gmw_form_default_settings', $form_data, $form );
+
+		if ( ! empty( $form['component'] ) ) {
+			$form_data = apply_filters( 'gmw_' . $form['component'] . '_component_form_default_settings', $form_data, $form );
+		}
 
 		if ( ! empty( $form['addon'] ) ) {
 			$form_data = apply_filters( 'gmw_' . $form['addon'] . '_addon_form_default_settings', $form_data, $form );
@@ -200,9 +236,9 @@ class GMW_Forms_Helper {
 			foreach ( $forms as $form ) {
 
 				// if happened that form has no data we need to apply the defaults.
-				if ( empty( $form['data'] ) ) {
+				/*if ( empty( $form['data'] ) ) {
 					$form['data'] = maybe_serialize( self::default_settings( $form ) );
-				}
+				}*/
 
 				$data = maybe_unserialize( $form['data'] );
 
