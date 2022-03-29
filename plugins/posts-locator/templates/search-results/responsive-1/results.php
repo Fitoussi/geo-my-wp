@@ -1,12 +1,20 @@
 <?php
 /**
- * GEO my WP Results Wrapper template.
+ * GEO my WP Search Results Template.
+ *
+ * To modify this template file, copy this folder with all its content and place it
+ *
+ * in the theme's or child theme's folder of your site under:
+ *
+ * your-theme's-or-child-theme's-folder/geo-my-wp/posts-locator/search-results/
+ *
+ * You will then be able to select your custom template from the "Search Results Templates" select dropdown option in the "Search Results" tab of the form editor.
+ *
+ * It will be named as "Custom: %folder-name%".
  *
  * @param $gmw  ( array ) the form being used
  *
  * @param $gmw_form ( object ) the form object
- *
- * @param $post ( object ) the post's object in the loop
  *
  * @package geo-my-wp
  */
@@ -18,7 +26,6 @@
 
 	<div class="gmw-results-message">
 		<span><?php gmw_results_message( $gmw ); ?></span>
-		<?php do_action( 'gmw_search_results_after_results_message', $gmw ); ?>
 	</div>
 
 	<?php gmw_results_map( $gmw ); ?>
@@ -28,6 +35,8 @@
 		<?php gmw_per_page( $gmw ); ?>
 
 		<?php do_shortcode( 'gmw_search_results_filters', $gmw ); ?>
+
+		<?php gmw_search_results_orderby_filter( $gmw ); ?>
 
 		<?php gmw_results_view_toggle( $gmw ); ?>
 	</div> 
@@ -53,7 +62,7 @@
 
 	<?php do_action( 'gmw_search_results_after_loop', $gmw ); ?>
 
-	<div class="pagination-per-page-wrapper">
+	<div class="gmw-pagination-wrapper">
 		<?php gmw_pagination( $gmw ); ?>
 	</div> 
 

@@ -1,20 +1,20 @@
 <?php
 /**
- * This is the search form template file.
+ * GEO my WP Search Form Template. 
  *
- * To modify this template file copy-paste this folder with all its content and place it
+ * To modify this template file, copy this folder with all its content and place it
  *
  * in the theme's or child theme's folder of your site under:
  *
  * your-theme's-or-child-theme's-folder/geo-my-wp/posts-locator/search-forms/
  *
- * You will then be able to select your custom template from the form editor, under the "Search Form Templates" dropdown menu.
+ * You will then be able to select your custom template from the "Search Form Templates" select dropdown option in the "Search Form" tab of the form editor.
  *
- * It will be labed with "Custom: %folder-name%".
+ * It will be named as "Custom: %folder-name%".
  *
  * @param $gmw_form ( object ) the entire form object.
  *
- * @param $gmw      ( array )  the form settings and values only.
+ * @param $gmw      ( array )  GEO my WP's form.
  *
  * @author Eyal Fitoussi
  *
@@ -33,15 +33,15 @@
 		<?php do_action( 'gmw_search_form_start', $gmw ); ?>
 
 		<div class="gmw-flexed-wrapper">
-
 			<?php gmw_search_form_keywords_field( $gmw ); ?>
-
 			<?php gmw_search_form_address_field( $gmw ); ?>
-
 			<?php gmw_search_form_radius_field( $gmw ); ?>
-
 			<?php gmw_search_form_units( $gmw ); ?>
 		</div>
+
+		<?php gmw_search_form_additional_filters_wrapper( 'open', $gmw ); ?>
+
+		<?php do_action( 'gmw_search_form_filters_start', $gmw ); ?>
 
 		<?php gmw_search_form_locator_button( $gmw ); ?>
 
@@ -49,19 +49,18 @@
 
 		<?php gmw_search_form_post_types( $gmw ); ?>
 
-		<?php do_action( 'gmw_search_form_filters', $gmw ); ?>
-
 		<div class="gmw-grid-filters-wrapper">
-
 			<?php gmw_search_form_taxonomies( $gmw ); ?>
-
 			<?php gmw_search_form_custom_fields( $gmw ); ?>
 		</div>
 
+		<?php do_action( 'gmw_search_form_filters_end', $gmw ); ?>
+
+		<?php gmw_search_form_additional_filters_wrapper( 'close', $gmw ); ?>
+
 		<div class="gmw-grid-filters-wrapper">
-
+			<?php gmw_search_form_additional_filters_toggle( $gmw ); ?>
 			<?php gmw_search_form_reset_button( $gmw ); ?>
-
 			<?php gmw_search_form_submit_button( $gmw ); ?>
 		</div>
 
