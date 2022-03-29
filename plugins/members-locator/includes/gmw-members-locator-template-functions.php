@@ -433,21 +433,23 @@ function gmw_search_form_xprofile_fields( $gmw ) {
  *
  * @return [type]         [description]
  */
-function gmw_search_results_bp_avatar( $object = array(), $gmw = array() ) {
+function gmw_search_results_bp_avatar( $object = array(), $gmw = array(), $where = 'search_results' ) {
 
 	// Abort if iamge is disabled.
-	if ( empty( $gmw['search_results']['image']['enabled'] ) ) {
+	if ( empty( $gmw[ $where ]['image']['enabled'] ) ) {
 		return;
 	}
+
+	$settings = $gmw[ $where ]['image'];
 
 	$args = array(
 		'object_type'  => 'bp_group' === $object->object_type ? 'group' : 'user',
 		'object_id'    => $object->object_id,
-		'width'        => ! empty( $gmw['search_results']['image']['width'] ) ? $gmw['search_results']['image']['width'] : '150px',
-		'height'       => ! empty( $gmw['search_results']['image']['height'] ) ? $gmw['search_results']['image']['height'] : '150px',
-		'show_grav'    => ! empty( $gmw['search_results']['image']['show_grav'] ) ? $gmw['search_results']['image']['show_grav'] : false,
-		'show_default' => ! empty( $gmw['search_results']['image']['show_default'] ) ? $gmw['search_results']['image']['show_default'] : false,
-		'where'        => 'search_results',
+		'width'        => ! empty( $settings['width'] ) ? $settings['width'] : '150px',
+		'height'       => ! empty( $settings['height'] ) ? $settings['height'] : '150px',
+		'show_grav'    => ! empty( $settings['show_grav'] ) ? $settings['show_grav'] : false,
+		'show_default' => ! empty( $settings['show_default'] ) ? $settings['show_default'] : false,
+		'where'        => $where,
 	);
 
 	echo gmw_get_bp_avatar( $args, $object, $gmw ); // WPCS: XSS ok.
@@ -462,9 +464,9 @@ function gmw_search_results_bp_avatar( $object = array(), $gmw = array() ) {
  *
  * @return [type]         [description]
  */
-function gmw_search_results_bp_friendship_button( $member, $gmw ) {
+function gmw_search_results_bp_friendship_button( $member, $gmw, $where = 'search_results' ) {
 
-	if ( empty( $gmw['search_results']['friendship_button'] ) ) {
+	if ( empty( $gmw[ $where ]['friendship_button'] ) ) {
 		return;
 	}
 
@@ -480,9 +482,9 @@ function gmw_search_results_bp_friendship_button( $member, $gmw ) {
  *
  * @return [type]         [description]
  */
-function gmw_search_results_bp_last_active( $member, $gmw ) {
+function gmw_search_results_bp_last_active( $member, $gmw, $where = 'search_results' ) {
 
-	if ( ! function_exists( 'bp_get_member_last_active' ) || empty( $gmw['search_results']['last_active'] ) ) {
+	if ( ! function_exists( 'bp_get_member_last_active' ) || empty( $gmw[ $where ]['last_active'] ) ) {
 		return;
 	}
 
