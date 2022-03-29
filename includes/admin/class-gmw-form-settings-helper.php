@@ -806,6 +806,10 @@ class GMW_Form_Settings_Helper {
 			$output = self::get_bp_groups( $args );
 		}
 
+		if ( 'gmw_get_templates' === $action ) {
+			$output = self::get_templates( $args );
+		}
+
 		if ( ! empty( $args['gmw_ajax_load_options_disabled'] ) ) {
 			$output = array( 'disabled' => __( 'Disabled', 'geo-my-wp' ) ) + $output;
 		}
