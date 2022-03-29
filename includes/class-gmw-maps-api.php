@@ -496,17 +496,17 @@ class GMW_Maps_API {
 				$target = 'target="_blank"';
 			}
 
-			$output['title'] = '<a class="title gmw-info-window-element" href="' . $args['url'] . '" ' . $target . '>' . esc_attr( $args['title'] ) . '</a>';
+			$output['title'] = '<div class="title gmw-info-window-element"><a href="' . $args['url'] . '" ' . $target . '>' . esc_attr( $args['title'] ) . '</a></div>';
 		}
 
 		// address.
 		if ( ! empty( $args['address_fields'] ) ) {
-			$output['address'] = '<span class="address gmw-icon-location gmw-info-window-element">' . gmw_get_location_address( $location, $args['address_fields'], $gmw ) . '</span>';
+			$output['address'] = '<div class="address gmw-icon-location gmw-info-window-element">' . gmw_get_location_address( $location, $args['address_fields'], $gmw ) . '</div>';
 		}
 
 		// distance.
 		if ( $args['distance'] && isset( $location->distance ) ) {
-			$output['distance'] = '<span class="distance gmw-info-window-element">' . esc_attr( $location->distance ) . ' ' . $location->units . '</span>';
+			$output['distance'] = '<div class="distance gmw-info-window-element">' . esc_attr( $location->distance ) . ' ' . $location->units . '</div>';
 		}
 
 		// directions link.
@@ -517,7 +517,7 @@ class GMW_Maps_API {
 				'lng' => isset( $gmw['lng'] ) ? $gmw['lng'] : '',
 			);
 
-			$output['directions'] = '<span class="directions gmw-info-window-element">' . gmw_get_directions_link( $location, $from_coords ) . '</span>';
+			$output['directions'] = '<div class="directions gmw-info-window-element">' . gmw_get_directions_link( $location, $from_coords ) . '</div>';
 		}
 
 		// location meta.
