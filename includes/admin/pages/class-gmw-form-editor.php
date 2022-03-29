@@ -1251,7 +1251,8 @@ class GMW_Form_Editor {
 							),
 						),
 						'attributes' => '',
-						'priority'   => 30,
+						'priority'   => 40,
+						'iw_option'  => true,
 					),
 					'location_meta'    => gmw_get_admin_setting_args(
 						array(
@@ -1261,13 +1262,14 @@ class GMW_Form_Editor {
 							'label'       => __( 'Location Meta', 'geo-my-wp' ),
 							'placeholder' => __( 'Select location metas', 'geo-my-wp' ),
 							'desc'        => __( 'Select the the location meta fields that you would like to display of each location in the list of results.', 'geo-my-wp' ),
-							'options'     => ! empty( $this->form['search_results']['location_meta'] ) ? array_flip( $this->form['search_results']['location_meta'] ) : array(),
+							'options'     => ! empty( $this->form['search_results']['location_meta'] ) ? array_combine( $this->form['search_results']['location_meta'], $this->form['search_results']['location_meta'] ) : array(),
 							'attributes'  => array(
 								'data-gmw_ajax_load_options' => 'gmw_get_location_meta',
-								'data-sortable'      => '1',
-								'data-options_order' => ( ! empty( $this->form['search_results']['location_meta'] ) && is_array( $this->form['search_results']['location_meta'] ) ) ? implode( ',', $this->form['search_results']['location_meta'] ) : '',
+								//'data-sortable'      => '1',
+								//'data-options_order' => ( ! empty( $this->form['search_results']['location_meta'] ) && is_array( $this->form['search_results']['location_meta'] ) ) ? implode( ',', $this->form['search_results']['location_meta'] ) : '',
 							),
-							'priority'    => 35,
+							'priority'    => 45,
+							'iw_option'   => true,
 						)
 					),
 					'opening_hours'    => gmw_get_admin_setting_args(
@@ -1278,18 +1280,8 @@ class GMW_Form_Editor {
 							'label'    => __( 'Hours of Operation', 'geo-my-wp' ),
 							'cb_label' => __( 'Enable', 'geo-my-wp' ),
 							'desc'     => __( 'Display the days & hours of operation of each location in the list of results.', 'geo-my-wp' ),
-							'priority' => 40,
-						)
-					),
-					'directions_link'  => gmw_get_admin_setting_args(
-						array(
-							'name'     => 'directions_link',
-							'type'     => 'checkbox',
-							'default'  => '',
-							'label'    => __( 'Directions Link', 'geo-my-wp' ),
-							'cb_label' => __( 'Enable', 'geo-my-wp' ),
-							'desc'     => __( 'Display directions link of each location in the list of result. The link will open a new window showing the driving directions on Google Map.', 'geo-my-wp' ),
-							'priority' => 45,
+							'priority' => 50,
+							'iw_option' => true,
 						)
 					),
 					'styles'           => array(
