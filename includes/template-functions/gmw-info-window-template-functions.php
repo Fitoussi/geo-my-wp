@@ -17,16 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param  array  $gmw    gmw form.
  */
 function gmw_info_window_address( $object, $gmw = array() ) {
-
-	if ( empty( $gmw['info_window']['address_fields'] ) ) {
-		return;
-	}
-
-	$output = gmw_get_location_address( $object, $gmw['info_window']['address_fields'], $gmw );
-
-	if ( ! empty( $output ) ) {
-		echo '<span class="address"><i class="gmw-icon-location-thin"></i>' . $output . '</span>'; // WPCS: XSS ok.
-	}
+	gmw_search_results_address( $object, $gmw, 'info_window' );
 }
 
 /**
@@ -59,9 +50,7 @@ function gmw_info_window_linked_address( $object, $gmw = array() ) {
  * @param  array  $gmw    gmw form.
  */
 function gmw_info_window_distance( $object = array(), $gmw = array() ) {
-	if ( ! empty( $object->distance ) && $gmw['info_window']['distance'] ) {
-		echo '<span class="distance">' . gmw_get_distance_to_location( $object ) . '</span>'; // WPCS: xss ok.
-	}
+	gmw_search_results_distance( $object, $gmw, 'info_window' );
 }
 
 /**
@@ -76,28 +65,7 @@ function gmw_info_window_distance( $object = array(), $gmw = array() ) {
  * @return [type]          [description]
  */
 function gmw_info_window_location_meta( $object, $gmw = array(), $label = true ) {
-
-	if ( empty( $gmw['info_window']['location_meta'] ) ) {
-		return;
-	}
-
-	$data = gmw_get_location_meta_list( $object, $gmw['info_window']['location_meta'] );
-
-	if ( empty( $data ) ) {
-		return;
-	}
-
-	$output = '<div class="gmw-location-meta-wrapper">';
-
-	if ( ! empty( $label ) ) {
-		$label   = is_string( $label ) ? esc_html( $label ) : __( 'Contact Information', 'gmw-premium-settings' );
-		$output .= '<h3>' . $label . '</h3>';
-	}
-
-	$output .= $data;
-	$output .= '</div>';
-
-	echo $output; // WPCS: xss ok.
+	gmw_search_results_location_meta( $object, $gmw, $label, $where = 'info_window' );
 }
 
 /**
@@ -110,30 +78,7 @@ function gmw_info_window_location_meta( $object, $gmw = array(), $label = true )
  * @param  boolean $label  [description].
  */
 function gmw_info_window_hours_of_operation( $object, $gmw = array(), $label = true ) {
-
-	if ( empty( $gmw['info_window']['opening_hours'] ) ) {
-		return;
-	}
-
-	$data = gmw_get_hours_of_operation( $object );
-
-	if ( empty( $data ) ) {
-		return;
-	}
-
-	$output = '';
-
-	$output .= '<div class="gmw-hours-of-operation-wrapper">';
-
-	if ( ! empty( $label ) ) {
-		$label   = is_string( $label ) ? esc_html( $label ) : __( 'Hours of operation', 'gmw-premium-settings' );
-		$output .= '<h3>' . $label . '</h3>';
-	}
-
-	$output .= $data;
-	$output .= '</div>';
-
-	echo $output; // WPCS: xss ok.
+	gmw_search_results_hours_of_operation( $object, $gmw, $label, 'info_window' );
 }
 
 /**
@@ -144,17 +89,7 @@ function gmw_info_window_hours_of_operation( $object, $gmw = array(), $label = t
  * @param  array  $gmw    gmw form.
  */
 function gmw_info_window_directions_link( $object, $gmw = array() ) {
-
-	if ( ! $gmw['info_window']['directions_link'] ) {
-		return;
-	}
-
-	$from_coords = array(
-		'lat' => isset( $gmw['lat'] ) ? $gmw['lat'] : '',
-		'lng' => isset( $gmw['lng'] ) ? $gmw['lng'] : '',
-	);
-
-	echo gmw_get_directions_link( $object, $from_coords ); // WPCS: XSS ok.
+	gmw_search_results_directions_link( $object, $gmw, 'info_window' );
 }
 
 /**
@@ -166,6 +101,8 @@ function gmw_info_window_directions_link( $object, $gmw = array() ) {
  */
 function gmw_info_window_directions_system( $object, $gmw = array() ) {
 
+	// Disabled temporarily.
+	return;
 	// to support custom templates that have $gmw as first
 	// argument and do no have $object.
 	if ( empty( $gmw ) ) {
@@ -216,7 +153,26 @@ function gmw_get_info_window_title( $title, $object, $gmw ) {
  * @param  array  $gmw    gmw form.
  */
 function gmw_info_window_title( $title, $object, $gmw ) {
-	echo gmw_get_info_window_title( $title, $object, $gmw ); // WPCS: XSS ok.
+	echo gmw_get_search_results_title( $title, $object, $gmw ); // WPCS: XSS ok.
+}
+
+/**
+ * Output the permalinked title in the info window.
+ *
+ * @since 4.0
+ *
+ * @author Eyal Fitoussi
+ *
+ * @param  url    $url   permalink.
+ *
+ * @param  string $title  title.
+ *
+ * @param  object $object location object.
+ *
+ * @param  array  $gmw    gmw form.
+ */
+function gmw_info_window_linked_title( $url, $title, $object, $gmw ) {
+	echo gmw_get_search_results_linked_title( $url, $title, $object, $gmw ); // WPCS: XSS ok.
 }
 
 /**
@@ -266,21 +222,7 @@ if ( gmw_is_addon_active( 'posts_locator' ) ) {
 	 * @param  array  $gmw  gmw form.
 	 */
 	function gmw_info_window_featured_image( $post, $gmw = array() ) {
-
-		if ( empty( $gmw['info_window']['image']['enabled'] ) ) {
-			return;
-		}
-
-		$args = array(
-			'object_type'  => 'post',
-			'object_id'    => $post->ID,
-			'width'        => ! empty( $this->form['info_window']['image']['width'] ) ? $this->form['info_window']['image']['width'] : '200px',
-			'height'       => ! empty( $this->form['info_window']['image']['height'] ) ? $this->form['info_window']['image']['height'] : 'auto',
-			'where'        => 'info_window',
-			'no_image_url' => ! empty( $this->form['info_window']['image']['no_image_url'] ) ? $this->form['info_window']['image']['no_image_url'] : '',
-		);
-
-		echo gmw_get_post_featured_image( $args, $post, $gmw ); // WPCS: XSS ok.
+		gmw_search_results_featured_image( $post, $gmw, 'info_window' );
 	}
 
 	/**
@@ -291,28 +233,7 @@ if ( gmw_is_addon_active( 'posts_locator' ) ) {
 	 * @param  array  $gmw  gmw form.
 	 */
 	function gmw_info_window_post_excerpt( $post, $gmw = array() ) {
-
-		if ( empty( $gmw['info_window']['excerpt']['enabled'] ) ) {
-			return;
-		}
-
-		// verify usage value.
-		$usage = isset( $gmw['info_window']['excerpt']['usage'] ) ? $gmw['info_window']['excerpt']['usage'] : 'post_content';
-
-		if ( empty( $post->$usage ) ) {
-			return;
-		}
-
-		$args = array(
-			'id'                => $gmw['ID'],
-			'content'           => $post->$usage,
-			'words_count'       => $gmw['info_window']['excerpt']['count'],
-			'link'              => get_the_permalink( $post->ID ),
-			'link_text'         => $gmw['info_window']['excerpt']['link'],
-			'enable_shortcodes' => 1,
-		);
-
-		echo '<div class="excerpt">' . GMW_Template_Functions_Helper::get_excerpt( $args ) . '</div>'; // WPCS: XSS ok.
+		gmw_search_results_post_excerpt( $post, $gmw, $where = 'info_window' );
 	}
 }
 
@@ -329,32 +250,7 @@ if ( gmw_is_addon_active( 'users_locator' ) ) {
 	 * @param  array  $gmw  gmw form.
 	 */
 	function gmw_info_window_user_avatar( $user, $gmw = array() ) {
-
-		if ( ! $gmw['info_window']['image']['enabled'] ) {
-			return;
-		}
-
-		$url = gmw_get_search_results_user_permalink( $user, $gmw );
-		?>
-		   
-		<div class="image user-avatar">
-			<a href="<?php echo esc_url( $url ); ?>" title="<?php echo esc_attr( $user->display_name ); ?> avatar">
-				<?php
-				$args = array(
-					'width'  => $gmw['search_results']['image']['width'],
-					'height' => $gmw['search_results']['image']['height'],
-				);
-				echo get_avatar(
-					$user->ID,
-					'',
-					'',
-					'',
-					$args
-				);
-				?>
-			</a>
-		</div>                                 
-		<?php
+		gmw_search_results_user_avatar( $user, $gmw, 'info_window' );
 	}
 }
 
@@ -371,28 +267,7 @@ if ( class_exists( 'buddypress' ) && ( gmw_is_addon_active( 'members_locator' ) 
 	 * @param  array  $gmw  gmw form.
 	 */
 	function gmw_info_window_bp_avatar( $object, $gmw = array() ) {
-
-		if ( ! $gmw['info_window']['image']['enabled'] ) {
-			return;
-		}
-
-		$object_type = 'bp_groups_locator' === $gmw['component'] ? 'group' : 'member';
-
-		$permalink_function = 'bp_' . $object_type . '_permalink';
-		$avatar_function    = 'bp_' . $object_type . '_avatar';
-		?>
-		<a class="image" href="<?php $permalink_function(); ?>" >
-			<?php
-			$avatar_function(
-				array(
-					'type'   => 'full',
-					'width'  => $gmw['info_window']['image']['width'],
-					'height' => $gmw['info_window']['image']['height'],
-				)
-			);
-			?>
-		</a>                                  
-		<?php
+		gmw_search_results_bp_avatar( $object, $gmw, 'info_window' );
 	}
 
 	/**
