@@ -58,29 +58,32 @@ function gmw_get_search_form_submit_button( $gmw = array(), $dep_label = '' ) {
 
 	$per_page = absint( current( explode( ',', $gmw['search_results']['per_page'] ) ) );
 
-	if ( empty( $label ) ) {
-		$label = ! empty( $gmw['search_form']['submit_button']['label'] ) ? $gmw['search_form']['submit_button']['label'] : __( 'Submit', 'geo-my-wp' );
+	if ( ! empty( $gmw['search_form']['submit_button']['label'] ) ) {
+		
+		//$label = ! empty( $gmw['search_form']['submit_button']['label'] ) ? $gmw['search_form']['submit_button']['label'] : __( 'Submit', 'geo-my-wp' );
+		$label = $gmw['search_form']['submit_button']['label'];
+		$args  = array(
+			'id'    => $gmw['ID'],
+			'slug'  => 'submit',
+			'name'  => 'submit',
+			'type'  => 'submit',
+			'value' => $label,
+		);
+
+		$args = apply_filters( 'gmw_search_form_submit_button_args', $args ); // Deprecated. To be removed.
+
+		// Support previous versions of the filter above.
+		if ( ! empty( $args['label'] ) ) {
+
+			$args['value'] = $args['label'];
+
+			unset( $args['label'] );
+		}
+
+		// false argument is deprected. Temporary there to support old versions of search forms templates.
+		$output  = apply_filters( 'gmw_form_submit_button', gmw_get_form_field( $args, $gmw ), $gmw, false );
 	}
 
-	$args = array(
-		'id'    => $gmw['ID'],
-		'slug'  => 'submit',
-		'name'  => 'submit',
-		'type'  => 'submit',
-		'value' => $label,
-	);
-
-	$args = apply_filters( 'gmw_search_form_submit_button_args', $args ); // Deprecated. To be removed.
-
-	// Support previous versions of the filter above.
-	if ( ! empty( $args['label'] ) ) {
-
-		$args['value'] = $args['label'];
-
-		unset( $args['label'] );
-	}
-
-	$output  = apply_filters( 'gmw_form_submit_button', gmw_get_form_field( $args, $gmw ), $gmw );
 	$output .= GMW_Search_Form_Helper::submission_fields( $gmw['ID'], $per_page );
 
 	return $output;
