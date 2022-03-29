@@ -236,7 +236,7 @@ class GMW_Sweet_Date_Admin_Settings {
 		jQuery( document ).ready( function( $ ) {
 
 			function hideRows() {
-				$( "#sweet_date-enabled-tr" ).show().siblings().toggle();
+				$( "#sweet_date-enabled" ).show().siblings().toggle();
 			}
 
 			if ( ! $( '#setting-sweet_date-enabled' ).is( ':checked' ) ) {
