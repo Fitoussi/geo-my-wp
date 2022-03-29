@@ -817,10 +817,6 @@ class GMW_Settings {
 	 */
 	public function output() {
 
-		if ( ! empty( $_POST['gmw_settings_save_nonce'] ) ) { // WPCS: CSRF ok.
-			$this->update_settings();
-		}
-
 		$this->init_settings();
 
 		$settings    = get_option( 'gmw_options' );
