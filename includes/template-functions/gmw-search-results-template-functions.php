@@ -33,22 +33,22 @@ function gmw_get_search_results_address( $object, $fields = array(), $linked = f
  *
  * @param  array  $gmw    gmw form.
  */
-function gmw_search_results_address( $object, $gmw = array() ) {
+function gmw_search_results_address( $object, $gmw = array(), $where = 'search_results' ) {
 
-	if ( empty( $gmw['search_results']['address']['enabled'] ) ) {
+	if ( empty( $gmw[ $where ]['address']['enabled'] ) ) {
 		return;
 	}
 
-	if ( empty( $gmw['search_results']['address']['fields'][0] ) || 'address' === $gmw['search_results']['address']['fields'][0] ) {
+	if ( empty( $gmw[ $where ]['address']['fields'][0] ) || 'address' === $gmw[ $where ]['address']['fields'][0] ) {
 		$fields = array( 'formatted_address' );
 	} else {
-		$fields = $gmw['search_results']['address']['fields'];
+		$fields = $gmw[ $where ]['address']['fields'];
 	}
 
-	$output = gmw_get_search_results_address( $object, $fields, $gmw['search_results']['address']['linked'], $gmw );
+	$output = gmw_get_search_results_address( $object, $fields, $gmw[ $where ]['address']['linked'], $gmw );
 
 	if ( ! empty( $output ) ) {
-		echo '<i class="gmw-icon-location-thin"></i>' . $output; // WPCS: XSS ok.
+		echo '<div class="gmw-item gmw-item-address"><i class="gmw-icon-location-thin"></i>' . $output . '</div>'; // WPCS: XSS ok.
 	}
 }
 
@@ -71,10 +71,16 @@ function gmw_search_results_linked_address( $object, $gmw = array() ) {
  * @param  object $object location object.
  * @param  array  $gmw    gmw form.
  */
-function gmw_search_results_distance( $object = array(), $gmw = array() ) {
+function gmw_search_results_distance( $object = array(), $gmw = array(), $where = 'search_results' ) {
+
+	if ( empty( $object->distance ) || empty( $gmw[ $where ]['distance'] ) ) {
+		return;
+	}
+
 	$distance = gmw_get_distance_to_location( $object );
+
 	if ( $distance ) {
-		echo '<span class="distance">' . $distance . '</span>'; // WPCS: XSS ok.
+		echo '<span class="gmw-item distance">' . $distance . '</span>'; // WPCS: XSS ok.
 	}
 }
 
@@ -85,21 +91,22 @@ function gmw_search_results_distance( $object = array(), $gmw = array() ) {
  * @param  array  $gmw    gmw form.
  * @param  string $label  label before meta value.
  */
-function gmw_search_results_location_meta( $object, $gmw = array(), $label = true ) {
+function gmw_search_results_location_meta( $object, $gmw = array(), $label = true, $where = 'search_results' ) {
 
-	if ( empty( $gmw['search_results']['location_meta'] ) ) {
+	if ( empty( $gmw[ $where ]['location_meta'] ) ) {
 		return;
 	}
 
-	$data = gmw_get_location_meta_list( $object, $gmw['search_results']['location_meta'] );
+	$data = gmw_get_location_meta_list( $object, $gmw[ $where ]['location_meta'] );
 
 	if ( empty( $data ) ) {
 		return;
 	}
 
-	$output = '<div class="gmw-location-meta-wrapper">';
+	$output = '<div class="gmw-item gmw-location-meta-wrapper">';
 
 	if ( ! empty( $label ) ) {
+
 		$label   = is_string( $label ) ? esc_html( $label ) : __( 'Contact Information', 'geo-my-wp' );
 		$output .= '<span class="gmw-location-meta-label gmw-section-label">' . $label . '</span>';
 	}
@@ -117,9 +124,9 @@ function gmw_search_results_location_meta( $object, $gmw = array(), $label = tru
  * @param  array  $gmw    gmw form.
  * @param  string $label  label before meta value.
  */
-function gmw_search_results_hours_of_operation( $object, $gmw = array(), $label = true ) {
+function gmw_search_results_hours_of_operation( $object, $gmw = array(), $label = true, $where = 'search_results' ) {
 
-	if ( empty( $gmw['search_results']['opening_hours'] ) ) {
+	if ( empty( $gmw[ $where ]['opening_hours'] ) ) {
 		return;
 	}
 
@@ -130,7 +137,7 @@ function gmw_search_results_hours_of_operation( $object, $gmw = array(), $label 
 	}
 
 	$output  = '';
-	$output .= '<div class="gmw-hours-of-operation-wrapper">';
+	$output .= '<div class="gmw-item gmw-hours-of-operation-wrapper">';
 
 	if ( ! empty( $label ) ) {
 		$label   = is_string( $label ) ? esc_html( $label ) : __( 'Hours of operation', 'geo-my-wp' );
@@ -149,9 +156,9 @@ function gmw_search_results_hours_of_operation( $object, $gmw = array(), $label 
  * @param  object $object location object.
  * @param  array  $gmw    gmw form.
  */
-function gmw_search_results_directions_link( $object, $gmw = array() ) {
+function gmw_search_results_directions_link( $object, $gmw = array(), $where = 'search_results' ) {
 
-	if ( ! isset( $gmw['search_results']['directions_link'] ) || '' === $gmw['search_results']['directions_link'] ) {
+	if ( empty( $gmw[ $where ]['directions_link'] ) ) {
 		return;
 	}
 
@@ -160,7 +167,7 @@ function gmw_search_results_directions_link( $object, $gmw = array() ) {
 		'lng' => $gmw['lng'],
 	);
 
-	echo '<span class="gmw-directions-link">' . gmw_get_directions_link( $object, $from_coords ) . '</span>'; // WPCS: XSS ok.
+	echo '<div class="gmw-item gmw-item-directions gmw-directions-link">' . gmw_get_directions_link( $object, $from_coords ) . '</div>'; // WPCS: XSS ok.
 }
 
 /**
