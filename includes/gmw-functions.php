@@ -715,6 +715,29 @@ function gmw_get_user_ids_from_roles( $roles, $cache = 'posts' ) {
 }
 
 /**
+ * Get current results  view.
+ *
+ * @since 4.0.
+ *
+ * @param  array  $gmw gmw form.
+ *
+ * @return [type]      [description]
+ */
+function gmw_get_current_results_view( $gmw ) {
+
+	$view = ! empty( $gmw['search_results']['results_view']['default'] ) ? $gmw['search_results']['results_view']['default'] : 'grid';
+
+	if ( ! empty( $gmw['search_results']['results_view']['toggle'] ) ) {
+
+		if ( ! empty( $_COOKIE[ 'gmw_' . $gmw['ID'] . '_results_view' ] ) ) {
+			$view = sanitize_text_field( wp_unslash( $_COOKIE[ 'gmw_' . $gmw['ID'] . '_results_view' ] ) );
+		}
+	}
+
+	return $view;
+}
+
+/**
  * Get labels
  *
  * Most of the labels of the forms are set below.
