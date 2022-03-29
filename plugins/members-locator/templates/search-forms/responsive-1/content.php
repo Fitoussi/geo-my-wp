@@ -39,7 +39,7 @@
 			<?php gmw_search_form_units( $gmw ); ?>
 		</div>
 
-		<?php gmw_search_form_additional_filters_wrapper( 'open', $gmw ); ?>
+		<?php gmw_search_form_modal_box( 'open', $gmw ); ?>
 
 		<?php do_action( 'gmw_search_form_filters_start', $gmw ); ?>
 
@@ -62,10 +62,10 @@
 
 		<?php do_action( 'gmw_search_form_filters_end', $gmw ); ?>
 
-		<?php gmw_search_form_additional_filters_wrapper( 'close', $gmw ); ?>
+		<?php gmw_search_form_modal_box( 'close', $gmw ); ?>
 
 		<div class="gmw-grid-filters-wrapper">
-			<?php gmw_search_form_additional_filters_toggle( $gmw ); ?>
+			<?php gmw_search_form_modal_box_toggle( $gmw ); ?>
 			<?php gmw_search_form_reset_button( $gmw ); ?>
 			<?php gmw_search_form_submit_button( $gmw ); ?>
 		</div>
