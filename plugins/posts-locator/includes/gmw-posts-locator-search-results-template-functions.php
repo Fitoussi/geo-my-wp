@@ -117,19 +117,20 @@ function gmw_get_post_featured_image( $args = array(), $post = array(), $gmw = a
  *
  * @return [type]       [description]
  */
-function gmw_search_results_featured_image( $post, $gmw = array() ) {
+function gmw_search_results_featured_image( $post, $gmw = array(), $where = 'search_results' ) {
 
-	if ( ! $gmw['search_results']['image']['enabled'] ) {
+	if ( empty( $gmw[ $where ]['image']['enabled'] ) ) {
 		return;
 	}
 
-	$args = array(
+	$settings = $gmw[ $where ]['image'];
+	$args     = array(
 		'object_type'  => 'post',
 		'object_id'    => $post->ID,
-		'width'        => ! empty( $gmw['search_results']['image']['width'] ) ? $gmw['search_results']['image']['width'] : '150px',
-		'height'       => ! empty( $gmw['search_results']['image']['height'] ) ? $gmw['search_results']['image']['height'] : '150px',
-		'no_image_url' => ! empty( $gmw['search_results']['image']['no_image_url'] ) ? $gmw['search_results']['image']['no_image_url'] : '',
-		'where'        => 'search_results',
+		'width'        => ! empty( $settings['width'] ) ? $settings['width'] : '150px',
+		'height'       => ! empty( $settings['height'] ) ? $settings['height'] : '150px',
+		'no_image_url' => ! empty( $settings['no_image_url'] ) ? $settings['no_image_url'] : '',
+		'where'        => $where,
 	);
 
 	echo gmw_get_post_featured_image( $args, $post, $gmw ); // WPCS: XSS ok.
@@ -144,9 +145,9 @@ function gmw_search_results_featured_image( $post, $gmw = array() ) {
  *
  * @return [type]       [description]
  */
-function gmw_search_results_taxonomies( $post, $gmw = array() ) {
+function gmw_search_results_taxonomies( $post, $gmw = array(), $where = 'search_results' ) {
 
-	if ( ! isset( $gmw['search_results']['taxonomies'] ) || '' === $gmw['search_results']['taxonomies'] ) {
+	if ( empty( $gmw[ $where ]['taxonomies'] ) ) {
 		return;
 	}
 
@@ -154,7 +155,7 @@ function gmw_search_results_taxonomies( $post, $gmw = array() ) {
 		'id' => $gmw['ID'],
 	);
 
-	echo '<div class="taxonomies-list-wrapper">' . gmw_get_post_taxonomies_terms_list( $post, $args ) . '</div>'; // WPCS: XSS ok.
+	echo '<div class="gmw-item taxonomies-list-wrapper">' . gmw_get_post_taxonomies_terms_list( $post, $args ) . '</div>'; // WPCS: XSS ok.
 }
 
 /**
@@ -166,14 +167,16 @@ function gmw_search_results_taxonomies( $post, $gmw = array() ) {
  *
  * @return [type]       [description]
  */
-function gmw_search_results_post_excerpt( $post, $gmw = array() ) {
+function gmw_search_results_post_excerpt( $post, $gmw = array(), $where = 'search_results' ) {
 
-	if ( empty( $gmw['search_results']['excerpt']['usage'] ) ) {
+	if ( empty( $gmw[ $where ]['excerpt']['usage'] ) ) {
 		return;
 	}
 
+	$settings = $gmw[ $where ]['excerpt'];
+
 	// verify usage value.
-	$usage = $gmw['search_results']['excerpt']['usage'];
+	$usage = $settings['usage'];
 
 	if ( empty( $post->$usage ) ) {
 		return;
@@ -182,14 +185,14 @@ function gmw_search_results_post_excerpt( $post, $gmw = array() ) {
 	$args = array(
 		'id'                 => $gmw['ID'],
 		'content'            => $post->$usage,
-		'words_count'        => isset( $gmw['search_results']['excerpt']['count'] ) ? $gmw['search_results']['excerpt']['count'] : '',
+		'words_count'        => isset( $settings['count'] ) ? $settings['count'] : '',
 		'link'               => get_the_permalink( $post->ID ),
-		'link_text'          => isset( $gmw['search_results']['excerpt']['link'] ) ? $gmw['search_results']['excerpt']['link'] : '',
+		'link_text'          => isset( $settings['link'] ) ? $settings['link'] : '',
 		'enable_shortcodes'  => 1,
 		'the_content_filter' => 1,
 	);
 
 	$excerpt = GMW_Template_Functions_Helper::get_excerpt( $args );
 
-	echo apply_filters( 'gmw_search_results_post_excerpt_output', '<div class="gmw-excerpt excerpt">' . $excerpt . '</div>', $excerpt, $args, $post, $gmw ); // WPCS: XSS ok.
+	echo apply_filters( 'gmw_search_results_post_excerpt_output', '<div class="gmw-item gmw-excerpt excerpt">' . $excerpt . '</div>', $excerpt, $args, $post, $gmw, $where ); // WPCS: XSS ok.
 }
