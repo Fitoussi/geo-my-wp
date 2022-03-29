@@ -1,0 +1,25 @@
+.gmw-element-template.gmw-pt-buddyboss-form-wrapper .gmw-form {
+	padding: 15px 0;
+	background: none;
+	border: none;
+	box-shadow: none;
+}
+
+div.gmw-pt-buddyboss-form-wrapper .gmw-form-field-wrapper input[type="text"] {
+	background-color: #fff;
+	border: 1px solid #dedfe2;
+	box-shadow: none;
+	border-radius: 100px;
+	margin: 0;
+	position: relative;
+}
+
+div.gmw-pt-buddyboss-form-wrapper .gmw-form-field-wrapper select {
+	box-shadow: none;
+	border-color: #E6E9EC;
+}
+
+div.gmw-pt-buddyboss-form-wrapper .gmw-form-field-wrapper .gmw-field-label,
+div.gmw-pt-buddyboss-form-wrapper .gmw-form-field-wrapper label:not( .gmw-checkbox-label ):not( .gmw-radio-label ) {
+	padding-bottom: 0;
+}
