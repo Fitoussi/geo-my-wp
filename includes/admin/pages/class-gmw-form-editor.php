@@ -1586,6 +1586,7 @@ class GMW_Form_Editor {
 		}
 
 		$groups = $temp_array;
+		$groups = apply_filters( 'gmw_' . $this->form['component'] . '_component_form_settings_groups', $groups, $this->form );
 		$groups = apply_filters( 'gmw_' . $this->form['slug'] . '_form_settings_groups', $groups, $this->form );
 		$groups = apply_filters( 'gmw_' . $this->form['addon'] . '_addon_form_settings_groups', $groups, $this->form );
 
@@ -1710,6 +1711,7 @@ class GMW_Form_Editor {
 		}
 
 		// filter all fields groups.
+		$fields = apply_filters( 'gmw_' . $this->form['component'] . '_component_form_settings', $fields, $this->form );
 		$fields = apply_filters( 'gmw_' . $this->form['slug'] . '_form_settings', $fields, $this->form );
 		$fields = apply_filters( 'gmw_' . $this->form['addon'] . '_addon_form_settings', $fields, $this->form );
 
@@ -1844,6 +1846,7 @@ class GMW_Form_Editor {
 				// $value = ! empty( $this->form[ $tab ][ $options['name'] ] ) ? $this->form[ $tab ][ $options['name'] ] : $options['default'];
 				do_action( 'gmw_' . $this->form['slug'] . '_form_settings_' . $function, $value, $attr_name, $this->form, $this->form_fields, $tab, $options );
 				do_action( 'gmw_' . $this->form['addon'] . '_addon_form_settings_' . $function, $value, $attr_name, $this->form, $this->form_fields, $tab, $options );
+				do_action( 'gmw_' . $this->form['component'] . '_component_form_settings_' . $function, $value, $attr_name, $this->form, $this->form_fields, $tab, $options );
 				do_action( 'gmw_form_settings_' . $function, $value, $attr_name, $this->form, $this->form_fields, $tab, $options );
 
 				break;
