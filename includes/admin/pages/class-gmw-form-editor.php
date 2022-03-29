@@ -1747,6 +1747,22 @@ class GMW_Form_Editor {
 
 		$fields = apply_filters( 'gmw_form_settings', $fields, $this->form );
 
+		// Generate optoons for info-window using the search results options.
+		if ( isset( $fields['info_window'] ) ) {
+
+			foreach ( $fields['search_results'] as $option ) {
+
+				if ( ! empty( $option['iw_option'] ) ) {
+
+					$fields['info_window'][ $option['name'] ] = $option;
+				}
+			}
+
+			if ( ! empty( $fields['info_window']['location_meta'] ) ) {
+				$fields['info_window']['location_meta']['options'] = ! empty( $this->form['info_window']['location_meta'] ) ? array_combine( $this->form['info_window']['location_meta'], $this->form['info_window']['location_meta'] ) : array();
+			}
+		}
+
 		return $fields;
 	}
 
