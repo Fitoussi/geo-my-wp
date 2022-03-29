@@ -1,28 +1,26 @@
-<?php 
+<?php
 /**
- * Posts Locator "horizontal-gray" search form template file. 
- * 
- * The information on this file outputs the search form.
- * 
- * You can modify this file to apply custom changes. However, it is not recomended
- * since your changes will be overwritten on the next update of the plugin.
- * 
- * Instead you can copy-paste this template ( the "horizontal-gray" folder contains this file 
- * and the "css" folder ) into the theme's or child theme's folder of your site 
- * and apply your changes from there. 
- * 
- * The template folder needs to be placed under:
- * your-theme's-or-child-theme's-folder/geo-my-wp/posts-locator/search-forms/
- * 
- * Once the template folder is in the theme's folder you will be able to select 
- * it in the form editor. It will show in the "Search form" dropdown menu as "Custom: horizontal-gray".
+ * GEO my WP Search Form Template ( NOTE: this template is deprecated and is no longer being supported ).
  *
- * @param $gmw_form ( object ) the entire form object
- * @param $gmw      ( array )  the form settings and values only
- * 
+ * To modify this template file, copy this folder with all its content and place it
+ *
+ * in the theme's or child theme's folder of your site under:
+ *
+ * your-theme's-or-child-theme's-folder/geo-my-wp/posts-locator/search-forms/
+ *
+ * You will then be able to select your custom template from the "Search Form Templates" select dropdown option in the "Search Form" tab of the form editor.
+ *
+ * It will be named as "Custom: %folder-name%".
+ *
+ * @param $gmw_form ( object ) the entire form object.
+ *
+ * @param $gmw      ( array )  GEO my WP's form.
+ *
  * @author Eyal Fitoussi
- * 
+ *
+ * @package gmw-my-wp
  */
+
 ?>
 <?php do_action( 'gmw_before_search_form_template', $gmw ); ?>
 
@@ -34,6 +32,8 @@
 			
 		<?php do_action( 'gmw_search_form_start', $gmw ); ?>
 		
+		<?php gmw_search_form_keywords_field( $gmw ); ?>
+
 		<?php gmw_search_form_address_field( $gmw ); ?>
 
 		<?php gmw_search_form_locator_button( $gmw ); ?>
@@ -42,7 +42,9 @@
 
 		<?php gmw_search_form_post_types( $gmw ); ?>
 		
-		<?php gmw_search_form_taxonomies( $gmw ); ?>		
+		<?php gmw_search_form_taxonomies( $gmw ); ?>
+
+		<?php gmw_search_form_custom_fields( $gmw ); ?>	
 				
 		<?php do_action( 'gmw_search_form_before_distance', $gmw ); ?>
 					
@@ -51,7 +53,9 @@
         <?php gmw_search_form_units( $gmw ); ?>
             		
         <?php do_action( 'gmw_search_form_before_submit', $gmw ); ?>
-        
+        	
+        <?php gmw_search_form_reset_button( $gmw ); ?>
+
 		<?php gmw_search_form_submit_button( $gmw ); ?>
 		
 		<?php do_action( 'gmw_search_form_end', $gmw ); ?>

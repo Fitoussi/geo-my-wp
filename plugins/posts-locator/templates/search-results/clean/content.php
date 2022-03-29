@@ -1,22 +1,16 @@
 <?php
 /**
- * Posts locator "clean" search results template file.
+ * GEO my WP Search Results Template ( NOTE: this template is deprecated and is no longer being supported ).
  *
- * This file outputs the search results.
+ * To modify this template file, copy this folder with all its content and place it
  *
- * You can modify this file to apply custom changes. However, it is not recomended
- * to make the changes directly in this file,
- * because your changes will be overwritten with the next update of the plugin.
+ * in the theme's or child theme's folder of your site under:
  *
- * Instead you can copy-paste this template ( the "gray" folder contains this file
- * and the "css" folder ) into the theme's or child theme's folder of your site,
- * and apply your changes from there.
- *
- * The custom template folder will need to be placed under:
  * your-theme's-or-child-theme's-folder/geo-my-wp/posts-locator/search-results/
  *
- * Once the template folder is in the theme's folder, you will be able to select
- * it in the form editor. It will show in the "Search results" dropdown menu labed with "Custom: ".
+ * You will then be able to select your custom template from the "Search Results Templates" select dropdown option in the "Search Results" tab of the form editor.
+ *
+ * It will be named as "Custom: %folder-name%".
  *
  * @param $gmw  ( array ) the form being used
  *
