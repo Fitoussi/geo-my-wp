@@ -1171,6 +1171,31 @@ class GMW_Form_Editor {
 						),
 						'attributes' => '',
 						'priority'   => 25,
+						'iw_option'  => true,
+					),
+					'distance'  => gmw_get_admin_setting_args(
+						array(
+							'name'     => 'distance',
+							'type'     => 'checkbox',
+							'default'  => '',
+							'label'    => __( 'Distance', 'geo-my-wp' ),
+							'cb_label' => __( 'Enable', 'geo-my-wp' ),
+							'desc'     => __( 'Display the distance.', 'geo-my-wp' ),
+							'priority' => 30,
+							'iw_option' => true,
+						)
+					),
+					'directions_link'  => gmw_get_admin_setting_args(
+						array(
+							'name'     => 'directions_link',
+							'type'     => 'checkbox',
+							'default'  => '',
+							'label'    => __( 'Directions Link', 'geo-my-wp' ),
+							'cb_label' => __( 'Enable', 'geo-my-wp' ),
+							'desc'     => __( 'Display directions link of each location in the list of result. The link will open a new window showing the driving directions on Google Map.', 'geo-my-wp' ),
+							'priority' => 35,
+							'iw_option' => true,
+						)
 					),
 					'image'            => array(
 						'name'       => 'image',
