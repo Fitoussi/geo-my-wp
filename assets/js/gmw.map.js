@@ -46,7 +46,7 @@ if ( gmwVars.mapsProvider == 'google_maps' ) {
 
 			self.userInfoWindow = new google.maps.InfoWindow( {
 				content   : content,
-				maxHeight : '15px'
+				ariaLabel : 'gmw-user-iw',
 			} );
 
 			google.maps.event.addListener( marker, 'click', function() {
@@ -304,9 +304,8 @@ if ( gmwVars.mapsProvider == 'google_maps' ) {
 			
 						// info window opsions. Can be modified with the filter.
 						var info_window_options = GMW.apply_filters( 'gmw_standard_info_window_options', {
-							content  : '<div class="gmw-info-window standard map-' + self.id + ' ' + self.prefix + '">' + marker.gmwData.iwContent + '</div>',
-							maxWidth : 200,
-							minWidth: 200
+							content  : '<div class="gmw-element-wrapper gmw-standard-info-window gmw-info-window standard map-' + self.id + ' ' + self.prefix + '">' + marker.gmwData.iwContent + '</div>',
+							ariaLabel : 'gmw-location-iw',
 						}, self );
 
 						// generate new window
@@ -373,8 +372,20 @@ if ( gmwVars.mapsProvider == 'leaflet' ) {
 		// Generate user's info-window.
 		renderUserInfoWindow : function( marker, content, mapObject ) {
 			
-			marker.bindPopup( content );
+			// info window opsions. Can be modified with the filter.
+			var info_window_options = GMW.apply_filters( 'gmw_user_info_window_options', {
+				content  : content,
+				maxWidth : 'auto',
+				minWidth : 250,
+				className : 'gmw-user-iw',
+			}, self );
 
+			// generate new window
+			self.userInfoWindow = L.popup( info_window_options ).setContent( info_window_options.content );
+
+			marker.bindPopup( self.userInfoWindow );
+
+			//self.userInfoWindow = L.popup( info_window_options ).setContent( content );
 			// Open info-window on page load.
 			if ( mapObject.userLocation.iw_open == true ) {
 
@@ -522,7 +533,7 @@ if ( gmwVars.mapsProvider == 'leaflet' ) {
 				iconOptions = {
 				    iconUrl		 : iconUrl,
 				    iconSize 	 : iconSize,
-				    iconAnchor	 : [ iconSize[0] / 2, iconSize[1] ], // caaculate anchor based on icon size
+				    iconAnchor	 : [ iconSize[0] / 2, iconSize[1] ], // caculate anchor based on icon size
 				    popupAnchor	 : [ 1, -iconSize[1] ], // 
 				    //shadowUrl: 'my-icon-shadow.png',
 				    //shadowSize	 : [68, 95],
@@ -603,9 +614,10 @@ if ( gmwVars.mapsProvider == 'leaflet' ) {
 						
 						// info window opsions. Can be modified with the filter.
 						var info_window_options = GMW.apply_filters( 'gmw_standard_info_window_options', {
-							content  : '<div class="gmw-info-window standard map-' + self.id + ' ' + self.prefix + '">' + marker.gmwData.iwContent + '</div>',
+							content  : '<div class="gmw-element-wrapper gmw-standard-info-window gmw-info-window standard map-' + self.id + ' ' + self.prefix + '">' + marker.gmwData.iwContent + '</div>',
 							maxWidth : 'auto',
-							minWidth : 250
+							minWidth : 250,
+							className : 'gmw-location-iw',
 						}, self );
 
 						// generate new window
@@ -1076,9 +1088,9 @@ GMW_Map.prototype.render = function( locations, userLocation ) {
 	// generate default center for the map.
 	self.options.defaultCenter = typeof self.options.defaultCenter !== 'undefined' ? self.options.defaultCenter.split(',') : [ 40.758895, -73.985131 ];
 
-	//self.options = jQuery.extend( {}, self.options, self.getMapOptions( self ) );
+	self.options = jQuery.extend( {}, self.options, self.getMapOptions( self ) );
 
-	self.options = jQuery.extend( {}, self.getMapOptions( self ), self.options );
+	//self.options = jQuery.extend( {}, self.getMapOptions( self ), self.options );
 
 	// modify the map options.
 	self.options = GMW.apply_filters( 'gmw_map_options', self.options, self );
