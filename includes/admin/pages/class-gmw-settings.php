@@ -779,268 +779,33 @@ class GMW_Settings {
 	/**
 	 * Get form fields
 	 *
-	 * @param  array  $settings form settings.
+	 * @param  array  $settings      form settings.
 	 *
-	 * @param  array  $options  field options.
+	 * @param  array  $options       field options.
 	 *
-	 * @param  string $tab      tab name.
+	 * @param  string $tab           tab name.
 	 *
-	 * @param  array  $section  settings section.
+	 * @param  array  $fields_group  fields group.
 	 */
-	public function get_form_field( $settings, $options, $tab, $section ) {
+	public function get_form_field( $settings, $options, $tab, $fields_group = '' ) {
 
-		// if ( ! empty( $fields_group ) && ! empty( $options['sub_option'] ) ) {
+		if ( ! empty( $fields_group ) && ! empty( $options['sub_option'] ) ) {
+			$name_attr        = 'gmw_options[' . $tab . '][' . $fields_group . ']';
+			$value            = ! empty( $settings[ $tab ][ $fields_group ][ $options['name'] ] ) ? $settings[ $tab ][ $fields_group ][ $options['name'] ] : $options['default'];
+			$options['id']    = esc_attr( 'setting-' . $tab . '-' . $fields_group . '-' . $options['name'] );
+			$class            = 'setting-' . $fields_group . '-' . $options['name'];
+			$options['class'] = ! empty( $options['class'] ) ? $options['class'] . ' ' . $class : $class;
+			$options['class'] = esc_attr( $options['class'] );
+		} else {
+
 			$name_attr        = 'gmw_options[' . $tab . ']';
 			$value            = ! empty( $settings[ $tab ][ $options['name'] ] ) ? $settings[ $tab ][ $options['name'] ] : $options['default'];
 			$options['id']    = 'setting-' . $tab . '-' . $options['name'];
 			$class            = 'setting-' . $options['name'];
 			$options['class'] = ! empty( $options['class'] ) ? $options['class'] . ' ' . $class : $class;
-		/*
-		} else {
-
-			$name_attr        = 'gmw_form[' . $tab . ']';
-			$value            = ! empty( $this->form[ $tab ][ $options['name'] ] ) ? $this->form[ $tab ][ $options['name'] ] : $options['default'];
-			$options['id']    = esc_attr( 'setting-' . $tab . '-' . $options['name'] );
-			$class            = 'setting-' . $options['name'];
-			$options['class'] = ! empty( $options['class'] ) ? $options['class'] . ' ' . $class : $class;
-		}*/
-
-		echo gmw_get_admin_settings_field( $options, esc_attr( $name_attr ), $value );
-
-		/*
-		return;
-
-		$option['default']  = isset( $option['default'] ) ? $option['default'] : '';
-		$option['name']     = esc_attr( $option['name'] );
-		$option['cb_label'] = isset( $option['cb_label'] ) ? $option['cb_label'] : '';
-		$value              = ! empty( $settings[ $tab ][ $option['name'] ] ) ? $settings[ $tab ][ $option['name'] ] : $option['default'];
-		$attr_id            = 'setting-' . $tab . '-' . $option['name'];
-		$placeholder        = ! empty( $option['placeholder'] ) ? 'placeholder="' . esc_attr( $option['placeholder'] ) . '"' : '';
-		$attr_name          = 'gmw_options[' . $tab . '][' . $option['name'] . ']';
-		$attributes         = array();
-		$class_attr         = 'setting-' . $option['name'];
-		$class_attr        .= ! empty( $option['class'] ) ? ' ' . $option['class'] : '';
-		$class_attr         = esc_attr( $class_attr );
-		$select_options     = esc_attr__( 'Select some options', 'geo-my-wp' );
-
-		if ( ! isset( $option['type'] ) ) {
-			$option['type'] = 'text';
 		}
 
-		// attributes.
-		if ( ! empty( $option['attributes'] ) && is_array( $option['attributes'] ) ) {
-
-			foreach ( $option['attributes'] as $attribute_name => $attribute_value ) {
-				$attributes[] = esc_attr( $attribute_name ) . '="' . esc_attr( $attribute_value ) . '"';
-			}
-		}
-
-		// display settings fields.
-		switch ( $option['type'] ) {
-
-			// create custom function.
-			case 'function':
-				$function   = ! empty( $option['function'] ) ? $option['function'] : $option['name'];
-				$name_attr  = 'gmw_options[' . $tab . '][' . $option['name'] . ']';
-				$this_value = ! empty( $settings[ $tab ][ $option['name'] ] ) ? $settings[ $tab ][ $option['name'] ] : array();
-
-				do_action( 'gmw_main_settings_' . $function, $this_value, $name_attr, $settings, $tab, $option );
-				break;
-
-			case 'checkbox':
-				?>
-				<label>
-					<input
-						type="checkbox"
-						id="<?php echo esc_attr( $attr_id ); ?>"
-						class="setting-<?php echo esc_attr( $option['name'] ); ?> checkbox"
-						name="<?php echo esc_attr( $attr_name ); ?>"
-						value="1"
-						<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?>
-						<?php checked( '1', $value ); ?>
-					/>
-					<?php echo esc_attr( $option['cb_label'] ); // WPCS: XSS ok. ?>
-				</label>
-				<?php
-				break;
-
-			case 'multicheckbox':
-				foreach ( $option['options'] as $key_val => $name ) {
-
-					$value = ! empty( $value[ $key_val ] ) ? $value[ $key_val ] : $option['default'];
-					?>
-					<label>
-						<input
-							type="checkbox"
-							id="<?php echo esc_attr( $attr_id . '-' . $key_val ); ?>" class="setting-<?php echo esc_attr( $option['name'] ); ?> checkbox multicheckbox"
-							name="<?php echo esc_attr( $attr_name . '[' . $key_val . ']' ); ?>"
-							value="1" <?php checked( '1', $value ); ?>
-						/>
-						<?php echo esc_html( $name ); ?>
-					</label>
-					<?php
-				}
-				break;
-
-			case 'multicheckboxvalues':
-				$option['default'] = is_array( $option['default'] ) ? $option['default'] : array();
-
-				foreach ( $option['options'] as $key_val => $name ) {
-
-					$checked = in_array( $key_val, $value ) ? 'checked="checked"' : '';
-					?>
-					<label>
-						<input
-							type="checkbox"
-							id="<?php echo esc_attr( $attr_id . '-' . $key_val ); ?>"
-							class="setting-<?php echo esc_attr( $option['name'] ); ?> checkbox multicheckboxvalues"
-							name="<?php echo esc_attr( $attr_name ) . '[]'; ?>"
-							value="<?php echo esc_attr( $key_val ); ?>"
-							<?php echo $checked; // WPCS: XSS ok. ?>
-						/>
-						<?php echo esc_html( $name ); ?>
-					</label>
-					<?php
-				}
-				break;
-
-			case 'textarea':
-				?>
-				<textarea
-					id="<?php echo esc_attr( $attr_id ); ?>"
-					class="<?php echo $class_attr; // WPCS: XSS ok. ?> textarea large-text"
-					cols="50"
-					rows="3"
-					name="<?php echo esc_attr( $attr_name ); ?>"
-					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?>
-					<?php echo $placeholder; // WPCS: XSS ok. ?>><?php echo esc_textarea( $value ); ?></textarea>
-				<?php
-				break;
-
-			case 'radio':
-				$rc = 1;
-				foreach ( $option['options'] as $key_val => $name ) {
-
-					$checked = ( 1 === $rc ) ? 'checked="checked"' : checked( $value, $key_val, false );
-					?>
-					<label>
-						<input
-							type="radio"
-							id="<?php esc_attr( $attr_id ); ?>"
-							class="setting-<?php echo esc_attr( $option['name'] ); ?>"
-							name="<?php echo esc_attr( $attr_name ); ?>"
-							value="<?php echo esc_attr( $key_val ); ?>"
-							<?php echo $checked; // WPCS: XSS ok. ?>
-						/>
-						<?php echo esc_attr( $name ); ?>
-					</label>
-					&nbsp;&nbsp;
-					<?php
-					$rc++;
-				}
-				break;
-
-			case 'select':
-				if ( ! empty( $placeholder ) ) {
-					$attributes[] = 'data-' . $placeholder;
-				} else {
-					$attributes[] = 'data-placeholder="' . $select_options . '"';
-				}
-				?>
-				<select
-					id="<?php echo esc_attr( $attr_id ); ?>"
-					class="<?php echo $class_attr; // WPCS: XSS ok. ?> select"
-					name="<?php echo esc_attr( $attr_name ); ?>"
-					<?php echo $placeholder; ?>
-					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?>
-				>
-					<?php foreach ( $option['options'] as $key_val => $name ) { ?>
-						<?php echo '<option value="' . esc_attr( $key_val ) . '" ' . selected( $value, $key_val, false ) . '>' . esc_attr( $name ) . '</option>'; ?>
-					<?php } ?>
-				</select>
-				<?php
-				break;
-
-			case 'multiselect':
-				if ( ! empty( $placeholder ) ) {
-					$attributes[] = 'data-' . $placeholder;
-				} else {
-					$attributes[] = 'data-placeholder="' . $select_options . '"';
-				}
-				?>
-				<select
-					id="<?php echo esc_attr( $attr_id ); ?>"
-					multiple
-					class="<?php echo $class_attr; // WPCS: XSS ok. ?> select"
-					name="<?php echo esc_attr( $attr_name ); ?>[]"
-					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?>>
-					<?php
-					foreach ( $option['options'] as $key_val => $name ) {
-						$selected = ( is_array( $value ) && in_array( $key_val, $value ) ) ? 'selected="selected"' : '';
-						echo '<option value="' . esc_attr( $key_val ) . '" ' . esc_attr( $selected ) . '>' . esc_attr( $name ) . '</option>';
-					}
-					?>
-				</select>
-				<?php
-
-				break;
-
-			case 'password':
-				?>
-				<input
-					type="password"
-					id="<?php echo esc_attr( $attr_id ); ?>"
-					class="<?php echo $class_attr; // WPCS: XSS ok. ?> regular-text password" name="<?php echo esc_attr( $attr_name ); ?>"
-					value="<?php echo esc_attr( $value ); ?>"
-					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?>
-					<?php echo $placeholder; // WPCS: XSS ok. ?>
-				/>
-				<?php
-				break;
-
-			case 'hidden':
-				?>
-				<input
-					type="hidden"
-					id="<?php echo esc_attr( $attr_id ); ?>"
-					class="<?php echo $class_attr; // WPCS: XSS ok. ?> regular-text password" name="<?php echo esc_attr( $attr_name ); ?>"
-					value="<?php echo esc_attr( $value ); ?>"
-					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?>
-				/>
-				<?php
-				break;
-
-			// number.
-			case 'number':
-				?>
-				<input
-					type="number"
-					id="<?php echo esc_attr( $attr_id ); ?>"
-					class="<?php echo $class_attr; // WPCS: XSS ok. ?> regular-text text"
-					name="<?php echo esc_attr( $attr_name ); ?>"
-					value="<?php echo esc_attr( $value ); ?>"
-					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?>
-				/>
-				<?php
-				break;
-
-			case '':
-			case 'input':
-			case 'text':
-			default:
-				?>
-				<input
-					type="text"
-					id="<?php echo esc_attr( $attr_id ); ?>"
-					class="<?php echo $class_attr; // WPCS: XSS ok. ?> regular-text text"
-					name="<?php echo esc_attr( $attr_name ); ?>"
-					value="<?php echo esc_attr( $value ); ?>"
-					<?php echo implode( ' ', $attributes ); // WPCS: XSS ok. ?>
-					<?php echo $placeholder; // WPCS: XSS ok. ?>
-				/>
-				<?php
-				break;
-		}*/
+		echo gmw_get_admin_settings_field( $options, esc_attr( $name_attr ), $value ); // WPCS: XSS ok.
 	}
 
 	/**
