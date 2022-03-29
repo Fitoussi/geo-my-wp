@@ -28,6 +28,8 @@ class GMW_Settings {
 		if ( ( empty( $_GET['page'] ) || 'gmw-settings' !== $_GET['page'] ) && ( empty( $_POST['option_page'] ) || 'gmw_options' !== $_POST['option_page'] ) ) { // WPCS: CSRF ok.
 			return;
 		}
+
+		add_action( 'admin_init', array( $this, 'update_settings' ), 999 );
 	}
 
 	/**
@@ -747,6 +749,10 @@ class GMW_Settings {
 	 * Update settings.
 	 */
 	public function update_settings() {
+
+		if ( empty( $_POST['gmw_settings_save_nonce'] ) ) { // WPCS: CSRF ok.
+			return false;
+		}
 
 		// Verify nonce.
 		check_admin_referer( 'gmw_settings_save', 'gmw_settings_save_nonce' );
