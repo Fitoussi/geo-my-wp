@@ -849,6 +849,11 @@ class GMW_Settings {
 
 					} else {
 
+						// Do not show tab if doesn't have any settings.
+						if ( empty( $this->settings[ $tab['slug'] ] ) ) {
+							continue;
+						}
+
 						// for previous versions.
 						if ( ! empty( $tab['id'] ) ) {
 							$tab['slug'] = $tab['id'];
@@ -886,7 +891,7 @@ class GMW_Settings {
 						foreach ( $section as $option ) {
 
 							$option['type']   = ! empty( $option['type'] ) ? $option['type'] : '';
-							$class            = ! empty( $option['class'] ) ? $option['class'] . ' ' . $option['name'] . ' ' . $option['type'] : $option['name'] . ' ' . $option['type'] . ' ' . $current_tab;
+							$feature_class    = $option['name'] . ' ' . $option['type'] . ' ' . $current_tab;
 							$setting_toggle   = '';
 							$grid_column_css  = ! empty( $option['grid_column'] ) ? 'gmw-settings-panel-grid-column-' . esc_attr( $option['grid_column'] ) : '';
 							$feature_disbaled = '';
@@ -934,7 +939,7 @@ class GMW_Settings {
 							?>
 							<fieldset 
 								id="<?php echo esc_attr( $current_tab ); ?>-<?php echo esc_attr( $option['name'] ); ?>-tr"
-								class="gmw-settings-panel feature-<?php echo esc_attr( $class ); ?> <?php echo $grid_column_css; // WPCS: XSS ok. ?>"
+								class="gmw-settings-panel feature-<?php echo esc_attr( $feature_class ); ?> <?php echo $grid_column_css; // WPCS: XSS ok. ?> <?php echo ! empty( $option['wrap_class'] ) ? esc_attr( $option['wrap_class'] ) : ''; ?>"
 								<?php echo $setting_toggle; // WPCS: XSS ok. ?>>
 
 								<legend class="gmw-settings-panel-title">
@@ -950,6 +955,8 @@ class GMW_Settings {
 
 									<?php if ( 'fields_group' === $option['type'] && array_filter( $option['fields'] ) ) { ?>
 
+										<?php $fields_group = ! empty( $option['name'] ) ? esc_attr( $option['name'] ) : ''; ?>
+
 										<?php uasort( $option['fields'], 'gmw_sort_by_priority' ); ?>
 
 										<div class="gmw-settings-multiple-fields-wrapper">
@@ -963,7 +970,7 @@ class GMW_Settings {
 													</div>
 
 													<div class="gmw-settings-panel-input-container option-type-<?php echo esc_attr( $option['type'] ); ?>">
-														<?php $this->get_form_field( $settings, $option, $current_tab, $section ); ?>
+														<?php $this->get_form_field( $settings, $option, $current_tab, $fields_group ); ?>
 													</div>				
 
 													<div class="gmw-settings-panel-description"><?php echo ( ! empty( $option['desc'] ) ) ? wp_kses( $option['desc'], $allowed_html ) : ''; ?></div>
@@ -976,7 +983,7 @@ class GMW_Settings {
 
 										<div class="gmw-settings-panel-field gmw-form-feature-settings <?php echo $feature_disbaled; // WPCS: XSS ok. ?> <?php echo ! empty( $option['type'] ) ? esc_attr( $option['type'] ) : ''; ?>">
 											<div class="gmw-settings-panel-input-container">
-												<?php $this->get_form_field( $settings, $option, $current_tab, $section ); ?>
+												<?php $this->get_form_field( $settings, $option, $current_tab ); ?>
 											</div>
 										</div>
 
@@ -1046,22 +1053,6 @@ class GMW_Settings {
 			});
 		</script>
 		<?php
-
-		if ( ! wp_script_is( 'jquery-confirm', 'enqueued' ) ) {
-			wp_enqueue_script( 'jquery-confirm', GMW_URL . '/assets/lib/jquery-confirm/jquery-confirm.min.js', array( 'jquery' ), GMW_VERSION, true );
-			wp_enqueue_style( 'jquery-confirm', GMW_URL . '/assets/lib/jquery-confirm/jquery-confirm.min.css', array(), GMW_VERSION );
-		}
-
-		// load select2.
-		if ( ! wp_script_is( 'select2', 'enqueued' ) ) {
-			wp_enqueue_script( 'select2' );
-			wp_enqueue_style( 'select2' );
-		}
-
-		if ( ! wp_style_is( 'wp-color-picker', 'enqueued' ) ) {
-			wp_enqueue_style( 'wp-color-picker' );
-			wp_enqueue_script( 'wp-color-picker' );
-		}
 	}
 
 	/**
@@ -1122,6 +1113,8 @@ class GMW_Settings {
 				case 'checkbox':
 					if ( ! empty( $values[ $current_tab ][ $option['name'] ] ) ) {
 						$valid_input[ $current_tab ][ $option['name'] ] = 1;
+					} else {
+						$valid_input[ $current_tab ][ $option['name'] ] = '';
 					}
 					break;
 
