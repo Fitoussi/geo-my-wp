@@ -1297,30 +1297,31 @@ class GMW_Form_Editor {
 						'type'     => 'fields_group',
 						'label'    => __( 'Styling', 'geo-my-wp' ),
 						'fields'   => array(
-							'enhanced_fields'              => gmw_get_admin_setting_args(
+							'disable_enhanced_fields'              => gmw_get_admin_setting_args(
 								array(
-									'name'       => 'enhanced_fields',
+									'name'       => 'disable_enhanced_fields',
 									'type'       => 'checkbox',
 									'default'    => '',
-									'label'      => __( 'Enhanced Fields', 'geo-my-wp' ),
-									'desc'       => __( 'Enable enhanced CSS for the search results filters.', 'geo-my-wp' ),
-									'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+									'label'      => __( 'Disable Enhanced Fields', 'geo-my-wp' ),
+									'desc'       => __( 'Disable enhanced CSS for the search results filters.', 'geo-my-wp' ),
+									'cb_label'   => __( 'Disable', 'geo-my-wp' ),
 									'attributes' => array(),
 									'priority'   => 5,
 								),
 							),
-							'custom_css'                   => gmw_get_admin_setting_args(
+							'disable_core_styles'           => gmw_get_admin_setting_args(
 								array(
-									'name'     => 'custom_css',
-									'type'     => 'textarea',
-									'default'  => '',
-									'label'    => __( 'Custom CSS', 'geo-my-wp' ),
-									'desc'     => __( 'Use custom CSS to apply custom styling to the template file.', 'geo-my-wp' ),
-									'class'    => 'gmw-code-mirror-field',
-									'priority' => 10,
+									'name'       => 'disable_core_styles',
+									'type'       => 'checkbox',
+									'default'    => '',
+									'label'      => __( 'Disable Built-In Styles', 'geo-my-wp' ),
+									'desc'       => __( 'Chechk this to prevent GEO my WP from applying it\'s core styling on this template file.', 'geo-my-wp' ),
+									'cb_label'   => __( 'Disable', 'geo-my-wp' ),
+									'attributes' => array(),
+									'priority'   => 10,
 								),
 							),
-							'disable_stylesheet'           => gmw_get_admin_setting_args(
+							/*'disable_stylesheet'           => gmw_get_admin_setting_args(
 								array(
 									'name'       => 'disable_stylesheet',
 									'type'       => 'checkbox',
