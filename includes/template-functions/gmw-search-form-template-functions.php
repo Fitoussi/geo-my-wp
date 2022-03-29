@@ -523,19 +523,22 @@ function gmw_search_form_reset_button( $gmw = array() ) {
  */
 function gmw_get_search_form_toggle_button( $gmw = array(), $args = array() ) {
 
-	$args = array(
-		'id'          => $gmw['ID'],
-		'slug'        => 'toggle-button',
-		'type'        => 'link',
-		'name'        => '',
-		'class'       => 'gmw-form-button',
-		'inner_label' => __( 'Filter', 'geo-my-wp' ),
-		'attributes'  => array(
-			'data-type'     => 'toggle',
-			'data-element'  => '.gmw-additional-filters-wrapper',
-			'data-duration' => 'fast',
-
-		),
+	$args = apply_filters( 'gmw_search_form_toggle_button_args', $args, $gmw );
+	$args = wp_parse_args(
+		$args,
+		array(
+			'id'          => $gmw['ID'],
+			'slug'        => 'toggle-button',
+			'type'        => 'link',
+			'name'        => '',
+			'class'       => 'gmw-form-button',
+			'inner_label' => __( 'Filter', 'geo-my-wp' ),
+			'attributes'  => array(
+				'data-type'     => 'toggle',
+				'data-element'  => '.gmw-additional-filters-wrapper',
+				'data-duration' => 'fast',
+			),
+		)
 	);
 
 	return gmw_get_form_field( $args, $gmw );
