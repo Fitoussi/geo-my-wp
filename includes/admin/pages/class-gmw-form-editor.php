@@ -1387,7 +1387,7 @@ class GMW_Form_Editor {
 							'priority'   => 40,
 						)
 					),
-					'no_results_enabled' => gmw_get_admin_setting_args(
+					/*'no_results_enabled' => gmw_get_admin_setting_args(
 						array(
 							'name'          => 'no_results_enabled',
 							'type'          => 'hidden',
@@ -1395,50 +1395,69 @@ class GMW_Form_Editor {
 							'force_default' => 1,
 							'priority'      => 99,
 						)
-					),
+					),*/
 				),
 				'priority' => 50,
 			),
+			'info_window'       => array(
+				'slug'     => 'info_window',
+				'type'     => 'fields',
+				'label'    => __( 'Info Window', 'geo-my-wp' ),
+				'notice'   => __( 'Manage the appearance of the marker\'s info window.', 'geo-my-wp' ),
+				'fields'   => array(
+					'iw_appearance'           => array(
+						'name'       => 'iw_appearance',
+						'type'       => 'fields_group',
+						'label'      => __( 'Appearance', 'geo-my-wp' ),
+						'wrap_class' => 'always-visible',
+						'fields'     => array(
+							'iw_type'          => gmw_get_admin_setting_args(
+								array(
+									'name'       => 'iw_type',
+									'type'       => 'select',
+									'default'    => 'popup',
+									'label'      => __( 'Info Window Type', 'gmw-ajax-forms' ),
+									'desc'       => __( 'Select the info-window type.', 'gmw-ajax-forms' ),
+									'options'    => array(
+										'standard' => 'Standard',
+										'popup'    => 'Popup Window',
+									),
+									'class'      => 'gmw-smartbox-not',
+									'attributes' => array(),
+									'priority'   => 5,
+									'sub_option' => false,
+								)
+							),
+							'template'         => gmw_get_admin_setting_args(
+								array(
+									'name'       => 'template',
+									'type'       => 'function',
+									'default'    => 'default',
+									// name it ajaxfms_info_window_template instead of info_window_template
+									// to prevent conflict with premium settings addon.
+									'function'   => 'info_window_template',
+									'label'      => __( 'Template', 'gmw-ajax-forms' ),
+									'desc'       => __( 'Select the info window template.', 'gmw-ajax-forms' ),
+									'class'      => 'gmw-smartbox-not',
+									'attributes' => array(),
+									'priority'   => 15,
+									'sub_option' => false,
+								)
+							),
+						),
+						'priority'   => 5,
+					),
+				),
+				'priority' => 60,
+			),
 		);
+	
+		$disable_iw = apply_filters( 'gmw_form_editor_disable_info_window', true, $this->form, $groups );
 
-		$new_templates        = array();
-		$new_dep_templates    = array();
-		$new_custom_templates = array();
-
-		foreach ( $groups['search_form']['fields']['form_template']['options'] as $value => $name ) {
-
-			if ( strpos( $value, 'buddyboss' ) !== false && ! function_exists( 'buddyboss_theme' ) ) {
-				$groups['search_form']['fields']['form_template']['options'][ $value ] = $name . ' ( requires the BuddyBoss theme )';
-			}
+		// Contact info and hours of operation settings are disabled by default. It can be enabled using this filter.
+		if ( $disable_iw ) {
+			unset( $groups['info_window'] );
 		}
-
-		foreach ( $groups['search_results']['fields']['results_template']['options'] as $value => $name ) {
-
-			if ( strpos( $value, 'custom_' ) !== false ) {
-
-				$new_custom_templates[ $value ] = $name;
-
-			} else {
-
-				if ( strpos( $value, 'buddyboss' ) !== false && ! function_exists( 'buddyboss_theme' ) ) {
-
-					$new_templates[ $value ] = $name . ' ( requires the BuddyBoss theme )';
-
-				} elseif ( in_array( $value, array( 'clean', 'custom', 'default', 'grid-gray', 'purple', 'gray', 'yellow', 'blue', 'red' ), true ) ) {
-
-					$name .= ' ( deprecated )';
-
-					$new_dep_templates[ $value ] = $name;
-
-				} else {
-					$new_templates[ $value ] = $name;
-				}
-			}
-		}
-
-		$new_templates = array_merge( $new_templates, $new_dep_templates, $new_custom_templates );
-
-		$groups['search_results']['fields']['results_template']['options'] = $new_templates;
 
 		if ( ! class_exists( 'GMW_Premium_Settings_Addon' ) ) {
 
@@ -1471,16 +1490,19 @@ class GMW_Form_Editor {
 				$premium_settings_data,
 			);
 
-			$groups['info_window'] = array_merge(
-				array(
-					'slug'     => 'info_window',
-					'type'     => 'premium',
-					'label'    => 'Marker Info-Window',
-					'fields'   => array(),
-					'priority' => 102,
-				),
-				$premium_settings_data,
-			);
+			if ( ! isset( $groups['info_window'] ) ) {
+
+				$groups['info_window'] = array_merge(
+					array(
+						'slug'     => 'info_window',
+						'type'     => 'premium',
+						'label'    => 'Info Window',
+						'fields'   => array(),
+						'priority' => 102,
+					),
+					$premium_settings_data,
+				);
+			}
 		}
 
 		if ( ! class_exists( 'GMW_Exclude_Locations_Addon' ) ) {
