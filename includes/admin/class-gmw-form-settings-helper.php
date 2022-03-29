@@ -1023,6 +1023,20 @@ class GMW_Form_Settings_Helper {
 				'location-form-no-tabs'   => __( 'No Tabs', 'geo-my-wp' ),
 			);
 		}
+		 elseif ( 'marker_grouping' === $option ) {
+
+		 	$defaults['name']       = 'grouping';
+			$defaults['type']       = 'select';
+			$defaults['label']      = __( 'Markers Grouping', 'geo-my-wp' );
+			$defaults['desc']       = __( 'Group markers that are close together on the map.', 'geo-my-wp' );
+			$defaults['default']    = 'standard';
+			$defaults['priority']   = 10;
+			$defaults['options']    = array(
+				'standard'           => __( 'No Grouping', 'geo-my-wp' ),
+				'markers_clusterer'  => __( 'Markers clusterer', 'geo-my-wp' ),
+				'markers_spiderfier' => __( 'Markers Spiderfier', 'geo-my-wp' ),
+			);
+		 }
 
 		return wp_parse_args( $args, $defaults );
 	}
