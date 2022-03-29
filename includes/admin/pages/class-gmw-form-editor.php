@@ -1332,7 +1332,7 @@ class GMW_Form_Editor {
 									'attributes' => array(),
 									'priority'   => 15,
 								),
-							),
+							),*/
 							'disable_single_item_template' => gmw_get_admin_setting_args(
 								array(
 									'name'       => 'disable_single_item_template',
