@@ -402,14 +402,30 @@ class GMW_Form_Editor {
 		/* translators: %s: link to extensions page. */
 		$premium_settings_message = sprintf( __( 'Check out the <a href="%s" target="_blank">Premium Settings extension</a> for additional field options.', 'geo-my-wp' ), 'https://geomywp.com/extensions/premium-settings' );
 		$results_page             = array(
-			'' => __( ' -- Same Page -- ', 'geo-my-wp' ),
+			'disabled' => __( ' -- Same Page -- ', 'geo-my-wp' ),
 		);
 
 		$template_object = 'posts_locator' === $this->form['addon'] ? 'post' : 'member';
 
-		if ( ! empty( $this->form['form_submission']['results_page'] ) ) {
+		if ( ! empty( $this->form['form_submission']['results_page'] ) && 'disabled' !== $this->form['form_submission']['results_page'] ) {
 			$results_page[ $this->form['form_submission']['results_page'] ] = get_the_title( $this->form['form_submission']['results_page'] );
 		}
+
+		$form_templates = array(
+			'disabled' => __( 'Disable the search form', 'geo-my-wp' ),
+		);
+
+		if ( ! empty( $this->form['search_form']['form_template'] ) && 'disabled' !== $this->form['search_form']['form_template'] ) {
+			$form_templates[ $this->form['search_form']['form_template'] ] = $this->form['search_form']['form_template'];
+		}
+
+		/*$results_templates = array(
+			'disabled' => __( 'Disable the search form', 'geo-my-wp' ),
+		);*/
+
+		/*if ( ! empty( $this->form['search_form']['form_template'] ) && 'disabled' !== $this->form['search_form']['form_template'] ) {
+			$form_templates[ $this->form['search_form']['form_template'] ] = $this->form['search_form']['form_template'];
+		}*/
 
 		// settings groups.
 		$groups = array(
@@ -1010,7 +1026,7 @@ class GMW_Form_Editor {
 									'attributes' => array(),
 									'priority'   => 15,
 								),
-							),
+							),*/
 						),
 						'priority' => 99,
 					),
@@ -1027,7 +1043,7 @@ class GMW_Form_Editor {
 						array(
 							'name'       => 'results_page',
 							'type'       => 'select',
-							'default'    => '',
+							'default'    => 'disabled',
 							'label'      => __( 'Search Results Page', 'geo-my-wp' ),
 							'desc'       => __( 'Select a specific result page when using the "GMW Search Form" widget, or when you wish to display the search form in one page and the list of result in a different page. <br /> To do so, select a page from the dropdown menu then place the shortcode <code>[gmw form="results"]</code> in the content area of that page.<br /> Otherwise, select "Same Page" to display both the search form and search result in the same page.', 'geo-my-wp' ),
 							'options'    => $results_page,
