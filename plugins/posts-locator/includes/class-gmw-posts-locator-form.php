@@ -183,7 +183,7 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 
 			if ( ! empty( $distance ) ) {
 
-				if ( ! apply_filters( 'gmw_disable_query_clause_between', false, 'gmw_pt' ) ) {
+				if ( ! apply_filters( 'gmw_disable_query_clause_between', false, 'gmw_pt', $this->form ) ) {
 
 					// calculate the between point.
 					$bet_lat1 = $lat - ( $distance / $degree );
