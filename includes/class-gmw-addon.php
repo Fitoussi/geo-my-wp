@@ -690,7 +690,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 					add_filter( 'gmw_admin_settings_groups', array( $this, 'admin_settings_groups_init' ) );
 
 					// generate form settings groups.
-					add_filter( 'gmw_form_settings_groups', array( $this, 'form_settings_groups_init' ) );
+					add_filter( 'gmw_form_settings_groups', array( $this, 'form_settings_groups_init' ), 5, 2 );
 
 					// generate form button.
 					add_filter( 'gmw_admin_new_form_button', array( $this, 'form_buttons_init' ) );
@@ -1361,9 +1361,9 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		 *
 		 * @return array
 		 */
-		public function form_settings_groups_init( $settings_groups ) {
+		public function form_settings_groups_init( $settings_groups, $form ) {
 
-			$groups = $this->form_settings_groups();
+			$groups = $this->form_settings_groups( $settings_groups, $form );
 
 			// Loop through multi-array for multiple menu item.
 			if ( ! empty( $groups[0] ) && is_array( $groups[0] ) ) {
