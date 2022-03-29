@@ -146,7 +146,7 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 				'name'      => __( 'Posts Mashup Map', 'geo-my-wp' ),
 				'component' => 'posts_locator',
 				'prefix'    => 'ptmmap',
-				'priority'  => 6,
+				'priority'  => 7,
 			),
 		);
 	}
