@@ -601,7 +601,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 	/**
 	 * Get location data for the results.
 	 */
-	public function get_results_elements() {
+	public function get_item_location_elements() {
 
 		$component = $this->component;
 
@@ -638,14 +638,14 @@ class GMW_BuddyPress_Directory_Geolocation {
 			$output .= '<span class="gmw-item gmw-item-directions">' . gmw_get_directions_link( $object, $this->form, $this->labels['get_directions'] ) . '</span>'; // WPCS: XSS ok.
 		}
 
-		return $output;
+		return apply_filters( 'gmw_' . $this->prefix . '_item_location_elements', $output, $object, $this );
 	}
 
 	/**
 	 * Append location data to each item in the results.
 	 */
 	public function add_elements_to_results() {
-		echo $this->get_results_elements(); // WPCS: XSS ok.
+		echo $this->get_item_location_elements(); // WPCS: XSS ok.
 	}
 
 	/**
@@ -654,6 +654,6 @@ class GMW_BuddyPress_Directory_Geolocation {
 	 * @param [type] $output [description].
 	 */
 	public function add_elements_to_buddyboss_results( $output ) {
-		return $output . $this->get_results_elements();
+		return $output . $this->get_item_location_elements();
 	}
 }
