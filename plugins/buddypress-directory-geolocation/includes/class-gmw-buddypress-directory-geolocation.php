@@ -306,7 +306,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 				'kilometers'            => __( 'Kilometers', 'geo-my-wp' ),
 				'sortby_distance'       => __( 'Distance', 'geo-my-wp' ),
 				'get_directions'        => __( 'Get directions', 'geo-my-wp' ),
-				'address_error_message' => __( 'The address could not be verified. Try a different address.', 'geo-my-wp' ),
+				'address_error_message' => __( 'We could not verify the address that you entered.', 'geo-my-wp' ),
 			)
 		);
 
