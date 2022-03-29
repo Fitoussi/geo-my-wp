@@ -202,7 +202,7 @@ class GMW_Template_Functions_Helper {
 		$pages       = array_intersect( range( 1, $args['total'] ), array_merge( $start_pages, $end_pages, $mid_pages ) );
 		$prev_page   = 0;
 
-		$output = '<ul>';
+		$output = '<ul class="gmw-pagination">';
 
 		if ( $args['current'] && $args['current'] > 1 ) {
 
