@@ -442,7 +442,7 @@ class GMW_Form {
 		}
 
 		// if this is page ID.
-		if ( ! empty( $this->form['form_submission']['results_page'] ) ) {
+		if ( ! empty( $this->form['form_submission']['results_page'] ) && 'disabled' !== $this->form['form_submission']['results_page'] ) {
 
 			return get_permalink( $this->form['form_submission']['results_page'] );
 		}
@@ -480,21 +480,21 @@ class GMW_Form {
 	 */
 	public function search_form() {
 
-		// enable/disable form filter.
+		// Enable/disable form filter.
 		if ( apply_filters( "gmw_{$this->form['ID']}_disable_search_form", false, $this ) ) {
 			return;
 		}
 
-		// verify search form tempalte.
-		if ( empty( $this->form['search_form']['form_template'] ) || '-1' === $this->form['search_form']['form_template'] || 'no_form' === $this->form['search_form']['form_template'] ) {
+		// Verify search form tempalte.
+		if ( empty( $this->form['search_form']['form_template'] ) || 'disabled' === $this->form['search_form']['form_template'] ) {
 			return;
 		}
 
-		// get search form template files.
+		// Get search form template files.
 		$search_form = gmw_get_search_form_template( $this->form['component'], $this->form['search_form']['form_template'], $this->form['addon'] );
 
-		// enqueue style only once.
-		if ( empty( $this->form['search_form']['styles']['disable_stylesheet'] ) && ! wp_style_is( $search_form['stylesheet_handle'], 'enqueued' ) ) {
+		// Enqueue style if stylesheet exists.
+		if ( ! wp_style_is( $search_form['stylesheet_handle'], 'enqueued' ) && file_exists( $search_form['stylesheet_path'] ) ) {
 			wp_register_style( $search_form['stylesheet_handle'], $search_form['stylesheet_uri'], array( 'gmw-frontend' ), GMW_VERSION, false );
 			wp_enqueue_style( $search_form['stylesheet_handle'] );
 		}
@@ -512,10 +512,15 @@ class GMW_Form {
 		}
 
 		$template_name = str_replace( 'custom_', '', $this->form['search_form']['form_template'] );
-		$form_class    = $template_name . ' gmw-' . $this->form['prefix'] . '-' . $template_name . '-form-wrapper';
+		$form_class    = ' gmw-template-' . $template_name . ' gmw-' . $this->form['prefix'] . '-' . $template_name . '-form-wrapper';
+		//$form_class    = $template_name . ' gmw-template-' . $template_name . ' gmw-' . $this->form['prefix'] . '-' . $template_name . '-form-wrapper';
 
-		if ( ! empty( $this->form['search_form']['styles']['enhanced_fields'] ) ) {
+		if ( empty( $this->form['search_form']['styles']['disable_enhanced_fields'] ) ) {
 			$form_class .= ' gmw-fields-enhanced';
+		}
+
+		if ( empty( $this->form['search_form']['styles']['disable_core_styles'] ) ) {
+			$form_class .= ' gmw-element-template';
 		}
 
 		$this->element_class_attr['form_wrap'][] = $form_class;
@@ -523,7 +528,7 @@ class GMW_Form {
 		// temporary for older versions. This function should be used in the search form.
 		$this->form['form_submission']['results_page'] = $this->get_results_page();
 
-		// to support older versions of search form tempalte files.
+		// to support older versions of search form template files.
 		$this->form['search_results']['results_page'] = $this->form['form_submission']['results_page'];
 
 		do_action( 'gmw_before_search_form', $this->form, $this );
@@ -1107,8 +1112,7 @@ class GMW_Form {
 		$results_template = gmw_get_search_results_template( $this->form['component'], $this->form['search_results']['results_template'], $this->form['addon'] );
 
 		// enqueue stylesheet if not already enqueued.
-		if ( empty( $this->form['search_results']['styles']['disable_stylesheet'] ) && ! wp_style_is( $results_template['stylesheet_handle'], 'enqueued' ) ) {
-
+		if ( ! wp_style_is( $results_template['stylesheet_handle'], 'enqueued' ) && file_exists( $results_template['stylesheet_path'] ) ) {
 			wp_register_style( $results_template['stylesheet_handle'], $results_template['stylesheet_uri'], array( 'gmw-frontend' ), GMW_VERSION, false );
 			wp_enqueue_style( $results_template['stylesheet_handle'] );
 		}
@@ -1139,7 +1143,7 @@ class GMW_Form {
 		}
 
 		$template_name = str_replace( 'custom_', '', $this->form['search_results']['results_template'] );
-		$class_attr    = $template_name . ' gmw-' . $this->form['prefix'] . '-' . $template_name . '-results-wrapper';
+		$class_attr    = ' gmw-template-' . $template_name . ' gmw-' . $this->form['prefix'] . '-' . $template_name . '-results-wrapper';
 		$view          = ! empty( $this->form['search_results']['results_view']['default'] ) ? $this->form['search_results']['results_view']['default'] : 'grid';
 
 		if ( ! empty( $this->form['search_results']['results_view']['toggle'] ) ) {
@@ -1155,8 +1159,12 @@ class GMW_Form {
 			$class_attr .= ' gmw-has-image';
 		}
 
-		if ( ! empty( $this->form['search_results']['styles']['enhanced_fields'] ) ) {
+		if ( empty( $this->form['search_results']['styles']['disable_enhanced_fields'] ) ) {
 			$class_attr .= ' gmw-fields-enhanced';
+		}
+
+		if ( empty( $this->form['search_results']['styles']['disable_core_styles'] ) ) {
+			$class_attr .= ' gmw-element-template';
 		}
 
 		$this->element_class_attr['results_wrap'][] = $class_attr;
