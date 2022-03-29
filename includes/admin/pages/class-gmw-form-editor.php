@@ -40,6 +40,10 @@ class GMW_Form_Editor {
 	public function __construct() {
 
 		add_action( 'wp_ajax_gmw_get_field_options', array( 'GMW_Form_Settings_Helper', 'get_field_options_ajax' ) );
+		
+		// custom functions.
+		add_action( 'gmw_form_settings_info_window_template', array( 'GMW_Form_Editor', 'info_window_template' ), 10, 4 );
+		add_filter( 'gmw_validate_form_settings_info_window_template', array( 'GMW_Form_Editor', 'validate_info_window_template' ), 10, 4 );
 
 		// trigger ajax form update.
 		if ( apply_filters( 'gmw_form_editor_ajax_enabled', true ) ) {
