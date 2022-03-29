@@ -648,12 +648,60 @@ class GMW_Form_Editor {
 							'default'    => '',
 							'label'      => __( 'Search Form Template', 'geo-my-wp' ),
 							'desc'       => __( 'Select the search form template file that you would like to use or select "Disabled" to disable the search form.', 'geo-my-wp' ),
-							'options'    => array( '' => __( 'Disable the search form', 'geo-my-wp' ) ) + gmw_get_search_form_templates( $this->form['component'], $this->form['addon'] ),
+							'attributes'  => array(
+								'data-gmw_ajax_load_options'   => 'gmw_get_templates',
+								'data-gmw_ajax_load_component' => $this->form['component'],
+								'data-gmw_ajax_load_addon'     => $this->form['addon'],
+								'data-gmw_ajax_load_type'      => 'search-forms',
+							),
+							'options'    => $form_templates,
 							'class'      => 'gmw-options-toggle',
-							'attributes' => array(),
 							'wrap_class' => 'always-visible',
 							'priority'   => 5,
 						)
+					),
+					'filters_modal'  => array(
+						'name'            => 'filters_modal',
+						'type'            => 'fields_group',
+						'label'           => __( 'Filters Modal Box', 'geo-my-wp' ),
+						'desc'            => __( 'Display some of the form filters inside a popup modal box.', 'geo-my-wp' ),
+						'fields'          => array(
+							'enabled'      => gmw_get_admin_setting_args(
+								array(
+									'name'       => 'enabled',
+									'type'       => 'checkbox',
+									'default'    => '',
+									'label'      => __( 'Enable Modal', 'geo-my-wp' ),
+									//'desc'       => __( 'Display some of the form filters inside a popup modal box.', 'geo-my-wp' ),
+									'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+									'class'      => 'gmw-options-toggle',
+									'attributes' => array(),
+									'priority'   => 5,
+								)
+							),
+							'toggle_label'                => gmw_get_admin_setting_args(
+								array(
+									'option_type' => 'label',
+									'name'        => 'toggle_label',
+									'label'       => __( 'Modal Toggle label', 'geo-my-wp' ),
+									'desc'        => __( 'Enter the label for the modal box toggle.', 'geo-my-wp' ),
+									'priority'    => 10,
+								)
+							),
+							'modal_title'       => gmw_get_admin_setting_args(
+								array(
+									'name'     => 'modal_title',
+									'type'     => 'text',
+									'default'  => '',
+									'label'    => __( 'Modal Box Title', 'geo-my-wp' ),
+									'desc'     => __( 'Enter the title of the modal box or leave empty to hide the title.', 'geo-my-wp' ),
+									'priority' => 15,
+								)
+							),
+
+						),
+						'attributes'      => '',
+						'priority'        => 8,
 					),
 					'address_field'  => array(
 						'name'            => 'address_field',
@@ -1019,9 +1067,15 @@ class GMW_Form_Editor {
 							'name'       => 'results_template',
 							'type'       => 'select',
 							'default'    => 'gray',
-							'label'      => __( 'Search Result Template', 'geo-my-wp' ),
+							'label'      => __( 'Search Results Template', 'geo-my-wp' ),
 							'desc'       => __( 'Select the search result template file.', 'geo-my-wp' ),
-							'options'    => gmw_get_search_results_templates( $this->form['component'], $this->form['addon'] ),
+							'attributes'  => array(
+								'data-gmw_ajax_load_options'   => 'gmw_get_templates',
+								'data-gmw_ajax_load_component' => $this->form['component'],
+								'data-gmw_ajax_load_addon'     => $this->form['addon'],
+								'data-gmw_ajax_load_type'      => 'search-results',
+							),
+							'options'    => ! empty( $this->form['search_results']['results_template'] ) ? array( $this->form['search_results']['results_template'] => $this->form['search_results']['results_template'] ) : array(),
 							'sub_option' => false,
 							'wrap_class' => 'always-visible',
 							'priority'   => 5,
