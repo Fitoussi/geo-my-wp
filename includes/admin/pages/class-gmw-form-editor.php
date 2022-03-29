@@ -949,7 +949,7 @@ class GMW_Form_Editor {
 							'label' => gmw_get_admin_setting_args(
 								array(
 									'option_type' => 'label',
-									'default'     => __( 'Search', 'geo-my-wp' ),
+									'default'     => '',
 									'label'       => __( 'Button Label', 'geo-my-wp' ),
 									'desc'        => __( 'Enter the label for the submit button.', 'geo-my-wp' ),
 									'priority'    => 5,
