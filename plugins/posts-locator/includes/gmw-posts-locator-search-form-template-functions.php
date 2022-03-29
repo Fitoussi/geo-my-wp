@@ -127,6 +127,10 @@ function gmw_get_search_form_taxonomies( $gmw ) {
 	// Loop through and generate taxonomies.
 	foreach ( $gmw['search_form']['taxonomies'] as $taxonomy => $tax_args ) {
 
+		if ( empty( $tax_args['post_types'] ) || ! is_array( $tax_args['post_types'] ) ) {
+			continue;
+		}
+
 		// skip If post type of the taxonomy was not selected in the form builder.
 		if ( 0 === count( array_intersect( $tax_args['post_types'], $gmw['search_form']['post_types'] ) ) ) {
 			continue;
