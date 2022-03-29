@@ -1009,8 +1009,8 @@ function gmw_get_element_toggle_button( $args = array() ) {
 
 	$defaults = array(
 		'id'           => 0,
-		'show_icon'    => 'gmw-icon-down-open-big',
-		'hide_icon'    => 'gmw-icon-up-open-big',
+		'show_icon'    => 'gmw-icon-arrow-down',
+		'hide_icon'    => 'gmw-icon-arrow-up',
 		'target'       => '#gmw-popup-info-window',
 		'animation'    => 'height',
 		'open_length'  => '100%',
