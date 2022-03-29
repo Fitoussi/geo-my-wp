@@ -26,15 +26,30 @@ class GMW_Posts_Locator_Form_Editor {
 	public function __construct() {
 
 		// Enable Location meta and hours of operation settings.
-		add_filter( 'gmw_posts_locator_form_editor_disable_additional_fields', '__return_false' );
+		add_filter( 'gmw_form_editor_disable_additional_fields', array( $this, 'enable_location_meta' ), 15, 4 );
 
-		// Posts Locator form tasks.
-		add_filter( 'gmw_posts_locator_form_default_settings', array( $this, 'default_settings' ), 5, 2 );
-		add_filter( 'gmw_posts_locator_form_settings', array( $this, 'form_settings' ), 5, 2 );
-		add_action( 'gmw_posts_locator_form_settings_form_taxonomies', array( 'GMW_Form_Settings_Helper', 'taxonomies' ), 5, 3 );
+		// Default settings.
+		add_filter( 'gmw_form_default_settings', array( $this, 'default_settings' ), 10, 2 );
+		add_filter( 'gmw_form_settings', array( $this, 'form_settings' ), 10, 2 );
 
 		// Mashup map form tasks.
 		add_filter( 'gmw_posts_locator_mashup_map_form_settings', array( $this, 'form_settings' ), 5, 2 );
+
+		// Taxonomies.
+		add_action( 'gmw_posts_locator_component_form_settings_form_taxonomies', array( 'GMW_Form_Settings_Helper', 'taxonomies' ), 5, 3 );
+	}
+
+	/**
+	 * Enable location meta.
+	 *
+	 * @param  [type] $output      [description].
+	 * @param  [type] $groups      [description].
+	 * @param  [type] $slug        [description].
+	 * @param  [type] $form_object [description].
+	 * @return [type]              [description]
+	 */
+	public function enable_location_meta( $output, $groups, $slug, $form_object ) {
+		return 'posts_locator' === $form_object->form['component'] ? false : $output;
 	}
 
 	/**
@@ -46,7 +61,11 @@ class GMW_Posts_Locator_Form_Editor {
 	 *
 	 * @return [type]           [description]
 	 */
-	public function default_settings( $settings, $args ) {
+	public static function default_settings( $settings, $form ) {
+
+		if ( 'posts_locator' !== $form['component'] ) {
+			return $settings;
+		}
 
 		$settings['page_load_results']['post_types']    = array( 'post' );
 		$settings['search_form']['post_types']          = array( 'post' );
@@ -58,12 +77,15 @@ class GMW_Posts_Locator_Form_Editor {
 		);
 		$settings['search_form']['taxonomies']          = '';
 		$settings['search_results']['excerpt']          = array(
-			'usage' => 'post_content',
+			'usage' => 'disabled',
 			'count' => 10,
 			'link'  => 'read more...',
 		);
 		$settings['search_results']['opening_hours']    = '';
 		$settings['search_results']['taxonomies']       = 1;
+
+		$settings['info_window']['excerpt']    = $settings['search_results']['excerpt'];
+		$settings['info_window']['taxonomies'] = 1;
 
 		return $settings;
 	}
@@ -77,7 +99,11 @@ class GMW_Posts_Locator_Form_Editor {
 	 *
 	 * @return [type]           [description]
 	 */
-	public function form_settings( $settings, $form ) {
+	public static function form_settings( $settings, $form ) {
+
+		if ( 'posts_locator' !== $form['component'] ) {
+			return $settings;
+		}
 
 		// Post types settings.
 		$post_types_settings = gmw_get_admin_setting_args(
@@ -155,7 +181,7 @@ class GMW_Posts_Locator_Form_Editor {
 			'name'       => 'excerpt',
 			'type'       => 'fields_group',
 			'label'      => __( 'Post Excerpt', 'geo-my-wp' ),
-			'desc'       => __( 'Display the post excerpt in the search results.', 'geo-my-wp' ),
+			'desc'       => __( 'Display the post excerpt.', 'geo-my-wp' ),
 			'fields'     => array(
 				'usage' => gmw_get_admin_setting_args(
 					array(
@@ -193,17 +219,19 @@ class GMW_Posts_Locator_Form_Editor {
 				),
 			),
 			'attributes' => '',
-			'priority'   => 30,
+			'priority'   => 60,
+			'iw_option'  => 1,
 		);
 
 		$settings['search_results']['taxonomies'] = gmw_get_admin_setting_args(
 			array(
-				'name'     => 'taxonomies',
-				'type'     => 'checkbox',
-				'label'    => __( 'Taxonomies', 'geo-my-wp' ),
-				'cb_label' => __( 'Enable', 'geo-my-wp' ),
-				'desc'     => __( 'Check this checkbox to display the taxonomies and terms associate with each post in the list of results.', 'geo-my-wp' ),
-				'priority' => 65,
+				'name'      => 'taxonomies',
+				'type'      => 'checkbox',
+				'label'     => __( 'Taxonomies', 'geo-my-wp' ),
+				'cb_label'  => __( 'Enable', 'geo-my-wp' ),
+				'desc'      => __( 'Check this checkbox to display the taxonomies and terms associate with each post.', 'geo-my-wp' ),
+				'priority'  => 65,
+				'iw_option' => 1,
 			),
 		);
 
