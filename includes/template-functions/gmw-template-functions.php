@@ -156,6 +156,38 @@ function gmw_shortcode_map( $gmw ) {
 	do_action( 'gmw_after_shortcode_map', $gmw );
 }
 
+function gmw_get_info_window_template_data( $gmw ) {
+
+	$iw_type       = $gmw['info_window']['iw_type'];
+	$template_name = $gmw['info_window']['template'][ $iw_type ];
+
+	// get info-window stylesheet.
+	$template = gmw_get_info_window_template( $gmw['component'], $iw_type, $template_name );
+
+	// If template wasn't found, check if it exists in the deprecated location of theme's folder.
+	if ( strpos( $template_name, 'custom_' ) !== false && ! file_exists( $template['content_path'] ) ) {
+		$template = gmw_get_info_window_template( $gmw['component'], $iw_type, $template_name, $gmw['addon'] );
+	}
+
+	if ( ! wp_style_is( $template['stylesheet_handle'], 'enqueued' ) && file_exists( $template['stylesheet_path'] ) ) {
+		wp_enqueue_style( $template['stylesheet_handle'], $template['stylesheet_uri'] );
+	}
+
+	// Add custom CSS as inline script.
+	if ( ! empty( $gmw['info_window']['styles']['custom_css'] ) ) {
+
+		// Needed when registering an inline style.
+		if ( ! wp_style_is( $template['stylesheet_handle'], 'enqueued' ) ) {
+			wp_register_style( $template['stylesheet_handle'], false );
+			wp_enqueue_style( $template['stylesheet_handle'] );
+		}
+
+		wp_add_inline_style( $template['stylesheet_handle'], $gmw['info_window']['styles']['custom_css'] );
+	}
+
+	return $template;
+}
+
 /**
  * Get pagination
  *
