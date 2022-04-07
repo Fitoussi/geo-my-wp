@@ -1790,6 +1790,10 @@ class GMW_Form_Editor {
 			$fields[ $group['slug'] ] = apply_filters( 'gmw_' . $group['slug'] . '_form_settings', $fields[ $group['slug'] ], $this->form['slug'], $this->form );
 		}
 
+		
+
+		$fields = apply_filters( 'gmw_form_settings', $fields, $this->form );
+
 		// filter all fields groups.
 		$fields = apply_filters( 'gmw_' . $this->form['component'] . '_component_form_settings', $fields, $this->form );
 		$fields = apply_filters( 'gmw_' . $this->form['slug'] . '_form_settings', $fields, $this->form );
@@ -1800,10 +1804,8 @@ class GMW_Form_Editor {
 			$fields = apply_filters( 'gmw_' . $this->form['slug'] . '_mashup_map_form_settings', $fields, $this->form );
 		}
 
-		$fields = apply_filters( 'gmw_form_settings', $fields, $this->form );
-
-		// Generate optoons for info-window using the search results options.
-		if ( isset( $fields['info_window'] ) ) {
+		// Generate options for info-window using the search results options.
+		if ( isset( $fields['info_window'] ) && ! empty( $fields['search_results'] ) ) {
 
 			foreach ( $fields['search_results'] as $option ) {
 
@@ -1816,7 +1818,19 @@ class GMW_Form_Editor {
 			if ( ! empty( $fields['info_window']['location_meta'] ) ) {
 				$fields['info_window']['location_meta']['options'] = ! empty( $this->form['info_window']['location_meta'] ) ? array_combine( $this->form['info_window']['location_meta'], $this->form['info_window']['location_meta'] ) : array();
 			}
+
+			unset(
+				$fields['info_window']['styles']['fields']['disable_enhanced_fields'],
+				$fields['info_window']['styles']['fields']['disable_single_item_template'],
+			);
 		}
+
+		// Use this hook to remove some settings if needed.
+		// This hook fires later than the hooks above to allow all the form settigns to built-up 
+		// throughout the different extensions first before removing anythings.
+		$fields = apply_filters( 'gmw_form_remove_settings', $fields, $this->form );
+
+		//$fields = apply_filters( 'gmw_form_settings', $fields, $this->form );
 
 		return $fields;
 	}
@@ -2347,7 +2361,17 @@ class GMW_Form_Editor {
 				$args[ str_replace( 'data-', '', $name ) ] = $attribute;
 			}
 
-			$option['options'] = GMW_Form_Settings_Helper::get_field_options( $args );
+			$field_options = GMW_Form_Settings_Helper::get_field_options( $args );
+
+			if ( ! empty( $field_options[0]['label'] ) ) {
+
+				foreach ( $field_options as $field_option ) {
+					$option['options'][ $field_option['value'] ] = $field_option['label'];
+				}
+			} else {
+				$option['options'] = $field_options;
+			}
+
 		}
 
 		switch ( $option['type'] ) {
