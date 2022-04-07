@@ -123,8 +123,9 @@ class GMW_Posts_Locator_Form_Editor {
 			),
 		);
 
-		$settings['page_load_results']['post_types']            = $post_types_settings;
-		$settings['page_load_results']['post_types']['options'] = ! empty( $form['page_load_results']['post_types'] ) ? array_combine( $form['page_load_results']['post_types'], $form['page_load_results']['post_types'] ) : array();
+		$settings['page_load_results']['post_types']             = $post_types_settings;
+		$settings['page_load_results']['post_types']['options']  = ! empty( $form['page_load_results']['post_types'] ) ? array_combine( $form['page_load_results']['post_types'], $form['page_load_results']['post_types'] ) : array();
+		$settings['page_load_results']['post_types']['priority'] = 10;
 
 		// No need the settings below for the mashup map form.
 		if ( 'posts_locator_mashup_map' === $form['slug'] ) {
