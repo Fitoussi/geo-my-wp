@@ -105,13 +105,15 @@ function gmw_no_results_message( $gmw = array() ) {
 function gmw_get_results_map( $gmw, $init_visible = true, $implode = true ) {
 
 	$args = array(
-		'map_id'         => $gmw['ID'],
-		'prefix'         => $gmw['prefix'],
-		'map_type'       => $gmw['addon'],
-		'map_width'      => $gmw['results_map']['map_width'],
-		'map_height'     => $gmw['results_map']['map_height'],
-		'expand_on_load' => ! empty( $gmw['results_map']['expand_on_load'] ) ? true : false,
-		'init_visible'   => $init_visible,
+		'map_id'              => $gmw['ID'],
+		'prefix'              => $gmw['prefix'],
+		'map_type'            => $gmw['addon'],
+		'map_width'           => $gmw['results_map']['map_width'],
+		'map_height'          => $gmw['results_map']['map_height'],
+		'expand_on_load'      => ! empty( $gmw['results_map']['expand_on_load'] ) ? true : false,
+		'map_position_filter' => ! empty( $gmw['results_map']['position_filter']['enabled'] ) ? true : false,
+		'map_position_label'  => ! empty( $gmw['results_map']['position_filter']['label'] ) ? $gmw['results_map']['position_filter']['label'] : '',
+		'init_visible'        => $init_visible,
 	);
 
 	return GMW_Maps_API::get_map_element( $args, $implode );
