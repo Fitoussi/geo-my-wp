@@ -136,7 +136,7 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 		return array(
 			array(
 				'slug'      => 'posts_locator',
-				'name'      => __( 'Posts Locator', 'geo-my-wp' ),
+				'name'      => __( 'Posts Locator Form', 'geo-my-wp' ),
 				'component' => 'posts_locator',
 				'prefix'    => 'pt',
 				'priority'  => 5,
