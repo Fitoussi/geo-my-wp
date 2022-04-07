@@ -175,13 +175,15 @@ class GMW_Maps_API {
 
 		// default map args.
 		$default_args = array(
-			'map_id'         => '',
-			'map_type'       => 'na',
-			'prefix'         => '',
-			'map_width'      => '100%',
-			'map_height'     => '350px',
-			'expand_on_load' => false,
-			'init_visible'   => true,
+			'map_id'              => '',
+			'map_type'            => 'na',
+			'prefix'              => '',
+			'map_width'           => '100%',
+			'map_height'          => '350px',
+			'expand_on_load'      => false,
+			'init_visible'        => true,
+			'map_position_filter' => false,
+			'map_position_label'  => '',
 		);
 
 		// merge defaults with incoming args.
@@ -211,6 +213,11 @@ class GMW_Maps_API {
 		// generate the map element.
 		$output['wrap']   = "<div id=\"gmw-map-wrapper-{$map_id}\" class=\"gmw-map-wrapper {$prefix} {$map_type} {$expanded}\" style=\"{$display}width:{$map_width};height:{$map_height};\">";
 		$output['toggle'] = "<span id=\"gmw-resize-map-toggle-{$map_id}\" class=\"gmw-resize-map-toggle {$trigger}\" style=\"display:none;\" title=\"{$map_title}\"></span>";
+
+		if ( $args['map_position_filter'] ) {
+			$output['position_filter'] = "<div id=\"gmw-map-position-filter-wrapper-{$map_id}\" class=\"gmw-map-position-filter-wrapper gmw-field-checkboxes gmw-checkboxes-enhanced\" style=\"display:none;\"><label for=\"gmw-map-position-filter-{$map_id}\" class=\"gmw-checkbox-label\"><input type=\"checkbox\" id=\"gmw-map-position-filter-{$map_id}\" class=\"gmw-field-checkbox gmw-map-position-filter\" data-id=\"{$map_id}\" />{$args['map_position_label']}</label></div>";
+		}
+
 		$output['map']    = "<div id=\"gmw-map-{$map_id}\" class=\"gmw-map {$prefix} {$map_type}\" style=\"width:100%; height:100%\" data-map_id=\"{$map_id}\" data-prefix=\"{$prefix}\" data-map_type=\"{$map_type}\"></div>";
 		$output['cover']  = '<div class="gmw-map-cover"></div>';
 		$output['loader'] = "<i id=\"gmw-map-loader-{$map_id}\" class=\"gmw-map-loader gmw-icon-spin-light animate-spin\"></i>";
