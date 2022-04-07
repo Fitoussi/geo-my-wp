@@ -168,6 +168,7 @@ function gmw_get_search_form_taxonomies( $gmw ) {
 				'hide_empty'          => isset( $tax_args['hide_empty'] ) ? 1 : 0,
 				'category_icons'      => isset( $tax_args['cat_icons'] ) ? 1 : 0,
 				'multiple_selections' => isset( $tax_args['multiple_selections'] ) ? 1 : 0,
+				'smartbox'            => isset( $tax_args['smartbox'] ) ? 1 : 0,
 				'required'            => ! empty( $tax_args['required'] ) ? 1 : 0,
 			),
 		);
