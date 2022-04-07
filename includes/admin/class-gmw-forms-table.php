@@ -289,7 +289,7 @@ class GMW_Forms_Table extends WP_List_Table {
 		global $wpdb;
 
 		// Per page.
-		$per_page = 10;
+		$per_page = 20;
 		$columns  = $this->get_columns();
 		$hidden   = array();
 		$sortable = $this->get_sortable_columns();
