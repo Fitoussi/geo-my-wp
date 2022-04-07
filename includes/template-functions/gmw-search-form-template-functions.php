@@ -57,6 +57,7 @@ function gmw_get_search_form_submit_button( $gmw = array(), $dep_label = '' ) {
 	}
 
 	$per_page = absint( current( explode( ',', $gmw['search_results']['per_page'] ) ) );
+	$output   = '';
 
 	if ( ! empty( $gmw['search_form']['submit_button']['label'] ) ) {
 		
