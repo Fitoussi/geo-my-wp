@@ -616,6 +616,7 @@ class GMW_Search_Form_Helper {
 			'hide_empty'          => 1,
 			'category_icons'      => 0,
 			'multiple_selections' => 0,
+			'smartbox'            => 0,
 			'required'            => 0,
 		);
 
@@ -668,6 +669,7 @@ class GMW_Search_Form_Helper {
 				'show_count'          => 1 == $args['show_count'] ? 1 : 0,
 				'usage'               => $args['usage'],
 				'multiple_selections' => $args['multiple_selections'],
+				'smartbox'            => $args['smartbox'],
 				'placeholder'         => $placeholder,
 				'no_results_text'     => __( 'No results match', 'geo-my-wp' ),
 			),
@@ -706,15 +708,22 @@ class GMW_Search_Form_Helper {
 		// if ( $wrap_element ) {
 			// $output['inner'] = '<div class="gmw-form-field-input-wrapper">';
 		// }
+		
 		$output = '';
 
-		// if dropdown style taxonomies.
-		if ( 'dropdown' === $args['usage'] ) {
+		if ( ! empty( $args['smartbox'] ) && ( 'select' === $args['usage'] || 'dropdown' === $args['usage'] || 'multiselect' === $args['usage'] ) ) {
+			$args['usage']     = 'multiselect' === $args['usage'] ? 'smartbox_multiple' : 'smartbox';
+			$tax_args['usage'] = $args['usage'];
+		}
 
-			$required = ! empty( $args['required'] ) ? 'required' : '';
+		// if dropdown style taxonomies.
+		if ( 'select' === $args['usage'] || 'dropdown' === $args['usage'] || 'multiselect' === $args['usage'] ) {
+
+			$multiple = 'multiselect' === $args['usage'] ? ' multiple="multiple" ' : '';
+			$required = ! empty( $args['required'] ) ? 'required="required"' : '';
 
 			// select tag.
-			$output .= "<select name=\"tax[{$tax_name}][]\" id=\"{$id_attr}\" class=\"gmw-form-field gmw-taxonomy-field {$tax_name}\" data-gmw-dropdown-parent=\"#{$taxonomy->name}-taxonomy-wrapper\" {$required}>";
+			$output .= "<select name=\"tax[{$tax_name}][]\" id=\"{$id_attr}\" class=\"gmw-form-field gmw-taxonomy-field {$tax_name}\" data-gmw-dropdown-parent=\"#{$taxonomy->name}-taxonomy-wrapper\" {$required} {$multiple}>";
 
 			if ( ! empty( $tax_args['show_option_all'] ) ) {
 				$output .= '<option value="" selected="selected">' . esc_attr( $tax_args['show_option_all'] ) . '</option>';
