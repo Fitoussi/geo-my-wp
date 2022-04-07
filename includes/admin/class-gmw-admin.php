@@ -412,7 +412,7 @@ class GMW_Admin {
 		wp_deregister_style( 'gamipress-select2-css' );
 		wp_deregister_script( 'gamipress-select2-js' );
 
-		$pages = array( 'gmw-extensions', 'gmw-settings', 'gmw-forms' );
+		$pages = array( 'gmw-extensions', 'gmw-settings', 'gmw-forms', 'gmw-import-export' );
 
 		if ( ! empty( $_GET['page'] ) && ! in_array( $_GET['page'], $pages, true ) ) { // WPCS: CSRF ok.
 
