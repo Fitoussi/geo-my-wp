@@ -53,8 +53,8 @@ if ( ! empty( $gmw['info_window']['location_meta'] ) ) {
 }
 
 // append distance + units to the post.
-$post->distance = $location->distance;
-$post->units    = $location->units;
+$post->distance = isset( $location->distance ) ? $location->distance : '';
+$post->units    = isset( $location->units ) ? $location->units : '';
 
 // filter post object.
 $post = apply_filters( 'gmw_' . $gmw['prefix'] . '_post_before_info_window', $post, $gmw ); // WPCS: override ok.
