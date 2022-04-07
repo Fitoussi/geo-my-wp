@@ -419,6 +419,8 @@ class GMW_Form_Editor {
 			$form_templates[ $this->form['search_form']['form_template'] ] = $this->form['search_form']['form_template'];
 		}
 
+		$depreacated_message = __( 'Note that templates that are labeled "Deprecated" are no longer supprted and might not include new features that are added to the plugin.', 'geo-my-wp' );
+
 		/*$results_templates = array(
 			'disabled' => __( 'Disable the search form', 'geo-my-wp' ),
 		);*/
@@ -663,7 +665,7 @@ class GMW_Form_Editor {
 							'type'       => 'select',
 							'default'    => '',
 							'label'      => __( 'Search Form Template', 'geo-my-wp' ),
-							'desc'       => __( 'Select the search form template file that you would like to use or select "Disabled" to disable the search form.', 'geo-my-wp' ),
+							'desc'       => sprintf( __( 'Select the search form template file that you would like to use or select "Disabled" to disable the search form.<br />%s', 'geo-my-wp' ), $depreacated_message ),
 							'attributes'  => array(
 								'data-gmw_ajax_load_options'   => 'gmw_get_templates',
 								'data-gmw_ajax_load_component' => $this->form['component'],
@@ -1096,7 +1098,7 @@ class GMW_Form_Editor {
 							'type'       => 'select',
 							'default'    => 'gray',
 							'label'      => __( 'Search Results Template', 'geo-my-wp' ),
-							'desc'       => __( 'Select the search result template file.', 'geo-my-wp' ),
+							'desc'       => sprintf( __( 'Select the search result template file.<br />%s', 'geo-my-wp' ), $depreacated_message ),
 							'attributes'  => array(
 								'data-gmw_ajax_load_options'   => 'gmw_get_templates',
 								'data-gmw_ajax_load_component' => $this->form['component'],
@@ -1483,7 +1485,7 @@ class GMW_Form_Editor {
 									// to prevent conflict with premium settings addon.
 									'function'   => 'info_window_template',
 									'label'      => __( 'Template', 'gmw-ajax-forms' ),
-									'desc'       => __( 'Select the info window template.', 'gmw-ajax-forms' ),
+									'desc'       => sprintf( __( 'Select the info window template.<br />%s', 'gmw-ajax-forms' ), $depreacated_message ),
 									'class'      => 'gmw-smartbox-not',
 									'attributes' => array(),
 									'priority'   => 15,
@@ -1679,8 +1681,40 @@ class GMW_Form_Editor {
 			// Used to be in geo-my-wp/core-extensions/extensions-name/info-window
 			// now it is in geo-my-wp/core-extensions/info-window.
 			$dep_loc_templates = gmw_get_info_window_templates( $form['component'], $iw_name, 'ajax_forms' );
- 
+
 			$templates = array_merge( $templates, $dep_loc_templates );
+
+			// Marked deprecated templates.
+			//if ( 'popup' === $iw_name ) {
+
+				$new_templates        = array();
+				$new_dep_templates    = array();
+				$new_custom_templates = array();
+
+				foreach ( $templates as $temp_value => $temp_name ) {
+
+					if ( strpos( $temp_value, 'custom_' ) !== false ) {
+
+						$new_custom_templates[ $temp_value ] = $temp_name;
+
+					} else {
+
+						if ( in_array( $temp_value, array( 'center-white', 'left-white', 'right-white', 'gray' ), true ) ) {
+
+							$temp_name .= ' ( deprecated )';
+
+							$new_dep_templates[ $temp_value ] = $temp_name;
+
+						} else {
+
+							$new_templates[ $temp_value ] = $temp_name;
+
+						}
+					}
+				}
+
+				$templates = array_merge( $new_templates, $new_dep_templates, $new_custom_templates );
+			//}
 			?>
 			<div class="gmw-info-window-template <?php echo esc_attr( $iw_name ); ?>" style="display:none;">
 				<select name="<?php echo esc_attr( $name_attr . '[' . $iw_name . ']' ); ?>" class="gmw-smartbox-not">			
