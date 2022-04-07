@@ -1163,6 +1163,10 @@ function gmw_get_element_dragging_handle( $args = array() ) {
 		$remote  = '';
 	}
 
+	if ( ! wp_script_is( 'jquery-ui-draggable', 'enqueued' ) ) {
+		wp_enqueue_script( 'jquery-ui-draggable' );
+	}
+
 	return '<span class="gmw-draggable ' . esc_attr( $args['icon'] ) . $remote . '" data-draggable="' . esc_attr( $args['target'] ) . '" data-containment="' . esc_attr( $args['containment'] ) . '" data-handle="' . esc_attr( $args['handle'] ) . '" ' . $display . '></span>';
 }
 
