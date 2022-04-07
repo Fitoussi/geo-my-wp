@@ -1,67 +1,65 @@
 <?php
 /**
- * GEO my WP Info-Window Template. 
+ * Popup info-window template file.
  *
- * To modify this template file, copy this folder with all its content and place it
+ * The content of this file will be displayed in the map markers' info-window.
  *
- * in the theme's or child theme's folder of your site under:
+ * This file can be overridden by copying it to
  *
- * your-theme's-or-child-theme's-folder/geo-my-wp/members-locator/info-window/popup/
+ * your-theme's-or-child-theme's-folder/geo-my-wp/members-locator/ajax-forms/info-window/popup/
  *
- * You will then be able to select your custom template from the "Templates" select dropdown option in the "Info Window" tab of the form editor.
+ * @param $gmw    - the form being used ( array )
  *
- * It will be named as "Custom: %folder-name%".
+ * @param $member - the member being displayed ( object )
  *
- * @param $gmw    ( array )  GEO my WP's form.
- *
- * @param $member ( object ) the memebr's object.
- *
- * @author Eyal Fitoussi
- *
- * @package gmw-my-wp
+ * @package gmw-ajax-forms
  */
 
 ?>
-<?php do_action( 'gmw_info_window_before', $member, $gmw ); ?> 
+<?php do_action( 'gmw_info_window_before', $member, $gmw ); ?>  
 
 <div class="buttons-wrapper">
-	<?php gmw_element_dragging_handle( array( 'handle' => '.buttons-wrapper' ) ); ?>
+	<?php gmw_element_dragging_handle(); ?>
 	<?php gmw_element_toggle_button(); ?>
-	<?php gmw_info_window_distance( $member, $gmw ); ?>
-	<?php gmw_element_close_button( 'gmw-icon-cancel-circled' ); ?>
+	<?php gmw_element_close_button( 'gmw-icon-cancel' ); ?>
 </div>
 
 <div class="gmw-info-window-inner popup template-content-wrapper">
 
 	<?php do_action( 'gmw_info_window_start', $member, $gmw ); ?>
 
-	<div class="gmw-item-header">
-		<?php gmw_search_results_bp_avatar( $member, $gmw, 'info_window' ); ?>
-	</div>
+	<?php gmw_info_window_bp_avatar( $member, $gmw ); ?>    
 
-	<div class="gmw-item-content">
+	<?php do_action( 'gmw_info_window_before_title', $member, $gmw ); ?>
 
-		<h3 class="gmw-item gmw-item-title">
-			<?php gmw_search_results_linked_title( bp_get_member_permalink(), bp_get_member_name(), $member, $gmw ); ?>
-			<?php gmw_search_results_bp_last_active( $member, $gmw, 'info_window' ); ?>
-		</h3>
+	<a class="title" href="<?php gmw_info_window_permalink( bp_member_permalink(), $member, $gmw ); ?>">
+		<?php gmw_info_window_title( bp_member_name(), $member, $gmw ); ?>
+	</a>
 
-		<?php do_action( 'gmw_info_window_content_start', $member, $gmw ); ?>
+	<span class="last-active">
+		<?php bp_member_last_active(); ?>       
+	</span>
 
-		<?php gmw_info_window_address( $member, $gmw ); ?>
+	<?php do_action( 'gmw_info_window_before_address', $member, $gmw ); ?>
 
-		<?php gmw_info_window_location_meta( $member, $gmw ); ?>
+	<?php gmw_info_window_address( $member, $gmw ); ?>
 
-		<?php gmw_info_window_hours_of_operation( $member, $gmw ); ?>
+	<?php gmw_info_window_directions_link( $member, $gmw ); ?>
 
-		<?php gmw_info_window_directions_link( $member, $gmw ); ?>
+	<?php gmw_info_window_distance( $member, $gmw ); ?>
 
-		<?php gmw_search_results_bp_friendship_button( $member, $gmw, 'info_window' ); ?>
+	<?php do_action( 'gmw_info_window_before_xprofile_fields', $member, $gmw ); ?>
 
-		<?php do_action( 'gmw_info_window_content_end', $member, $gmw ); ?>
-	</div>
+	<?php gmw_info_window_member_xprofile_fields( $member, $gmw ); ?>
 
-	<?php do_action( 'gmw_info_window_end', $member, $gmw ); ?>
+	<?php do_action( 'gmw_info_window_before_location_meta', $member, $gmw ); ?>
+
+	<?php gmw_info_window_location_meta( $member, $gmw, false ); ?>
+
+	<?php gmw_info_window_directions_system( $member, $gmw ); ?>
+
+	<?php do_action( 'gmw_info_window_end', $member, $gmw ); ?> 
+
 </div>  
 
 <?php do_action( 'gmw_info_window_after', $member, $gmw ); ?>

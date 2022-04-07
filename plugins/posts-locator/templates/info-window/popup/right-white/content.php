@@ -1,66 +1,75 @@
 <?php
 /**
- * GEO my WP Info-Window Template. 
+ * Popup "left-white" info-window template file .
  *
- * To modify this template file, copy this folder with all its content and place it
+ * The content of this file will be displayed in the map markers info-window.
  *
- * in the theme's or child theme's folder of your site under:
+ * You can modify this file to apply custom changes. However, it is not recomended
+ * to make the changes directly in this file,
+ * because your changes will be overwritten with the next update of the plugin.
  *
- * your-theme's-or-child-theme's-folder/geo-my-wp/posts-locator/info-window/popup/
+ * Instead, you can copy or move this template ( the folder contains this file
+ * and the "css" folder ) into the theme's or child theme's folder of your site,
+ * and apply your changes from there.
  *
- * You will then be able to select your custom template from the "Templates" select dropdown option in the "Info Window" tab of the form editor.
+ * The custom template folder will need to be placed under:
+ * your-theme's-or-child-theme's-folder/geo-my-wp/posts-locator/global-maps/info-window/popup/
  *
- * It will be named as "Custom: %folder-name%".
+ * Once the template folder is in the theme's folder, you will be able to select
+ * it in the form editor.
  *
- * @param $gmw  ( array )  GEO my WP's form.
+ * $gmw  - the form being used ( array )
  *
- * @param $post ( object ) the post's object.
+ * $post - the member being displayed ( object )
  *
- * @author Eyal Fitoussi
- *
- * @package gmw-my-wp
+ * @package gmw-global-maps.
  */
 
 ?>
 <?php do_action( 'gmw_info_window_before', $post, $gmw ); ?>  
 
-<div class="buttons-wrapper">
-	<?php gmw_element_close_button( 'gmw-icon-cancel-circled' ); ?>
-	<?php gmw_info_window_distance( $post, $gmw ); ?>
-	<?php gmw_element_toggle_button(); ?>
+<div id="gmw-toggle-button-wrapper">
+	<?php gmw_right_element_toggle_button( '#gmw-popup-info-window', '320px' ); ?>
 </div>
 
-<span class="gmw-element-drawer-toggle gmw-icon-arrow-right" data-direction="right" data-duration="500" data-toggle_open="gmw-icon-arrow-left" data-toggle_close="gmw-icon-arrow-right"></span>
+<div class="gmw-info-window-header">
+
+	<?php gmw_element_close_button( 'gmw-icon-cancel' ); ?>
+
+	<?php do_action( 'gmw_info_window_before_title', $post, $gmw ); ?>
+
+	<a href="<?php gmw_info_window_permalink( get_permalink(), $post, $gmw ); ?>">
+		<?php gmw_info_window_title( get_the_title(), $post, $gmw ); ?>
+	</a>
+
+	<?php gmw_info_window_distance( $post, $gmw ); ?>
+
+</div>
 
 <div class="gmw-info-window-inner popup template-content-wrapper">
 
 	<?php do_action( 'gmw_info_window_start', $post, $gmw ); ?>
 
-	<?php gmw_info_window_featured_image( $post, $gmw ); ?>
+	<?php gmw_info_window_featured_image( $post, $gmw ); ?>	
 
-	<div class="gmw-item-content">
+	<?php do_action( 'gmw_info_window_before_address', $post, $gmw ); ?>
 
-		<h3 class="gmw-item gmw-item-title">
-			<?php gmw_info_window_linked_title( get_permalink( $post->ID ), $post->post_title, $post, $gmw ); ?>
-			<?php gmw_info_window_address( $post, $gmw ); ?>
-		</h3>
+	<?php gmw_info_window_address( $post, $gmw ); ?>
 
-		<?php do_action( 'gmw_info_window_content_start', $post, $gmw ); ?>
+	<?php gmw_info_window_directions_link( $post, $gmw ); ?>
 
-		<?php gmw_info_window_post_excerpt( $post, $gmw ); ?>
+	<?php do_action( 'gmw_info_window_before_excerpt', $post, $gmw ); ?>
 
-		<?php gmw_info_window_location_meta( $post, $gmw ); ?>
+	<?php gmw_info_window_post_excerpt( $post, $gmw ); ?>
 
-		<?php gmw_info_window_hours_of_operation( $post, $gmw ); ?>
+	<?php do_action( 'gmw_info_window_before_location_meta', $post, $gmw ); ?>
 
-		<?php gmw_search_results_taxonomies( $post, $gmw, 'info_window' ); ?>
+	<?php gmw_info_window_location_meta( $post, $gmw, false ); ?>
 
-		<?php gmw_info_window_directions_link( $post, $gmw ); ?>
+	<?php gmw_info_window_directions_system( $post, $gmw ); ?>
 
-		<?php do_action( 'gmw_info_window_content_end', $post, $gmw ); ?>         
-	</div>
+	<?php do_action( 'gmw_info_window_end', $post, $gmw ); ?>	
 
-	<?php do_action( 'gmw_info_window_end', $post, $gmw ); ?>            	    
-</div>
+</div>  
 
 <?php do_action( 'gmw_info_window_after', $post, $gmw ); ?>
