@@ -107,7 +107,7 @@ if ( ! class_exists( 'GMW_Post_Category_Walker' ) ) :
 			$term_name = $args['show_count'] ? $term->name . '&nbsp;(' . $term->count . ')' : $term->name;
 			$term_id   = absint( $term->term_id );
 
-			if ( 'checkbox' === $args['usage'] ) {
+			if ( 'checkbox' === $args['usage'] || 'checkboxes' === $args['usage'] ) {
 
 				$checked             = '';
 				$icon_checked        = '';
