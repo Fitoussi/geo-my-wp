@@ -257,7 +257,7 @@ class GMW_Forms_Page {
 		// order buttons by priority.
 		usort( $buttons, 'gmw_sort_by_priority' );
 
-		$output = '<select class="gmw-admin-select-enhanced gmw-smartbox-not" onchange="window.location.href = jQuery(this).val();">';
+		$output = '<select class="gmw-admin-select-enhanced" onchange="window.location.href = jQuery(this).val();">';
 
 		if ( empty( $buttons ) ) {
 
@@ -269,6 +269,10 @@ class GMW_Forms_Page {
 
 			// Generate buttons.
 			foreach ( $buttons as $button ) {
+
+				if ( in_array( $button['slug'], array( 'posts_locator', 'members_locator', 'bp_groups_locator', 'users_locator' ), true ) ) {
+					$output .= '<option disabled>----- ' . esc_html( $button['name'] ) . 's -----</option>';
+				}
 
 				// support older version of the extensions.
 				if ( empty( $button['slug'] ) && ( ! empty( $button['title'] ) && ! empty( $button['name'] ) ) ) {
