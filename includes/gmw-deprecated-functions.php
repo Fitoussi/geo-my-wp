@@ -201,6 +201,11 @@ function gmw_get_draggable_handle( $gmw = array(), $info = array() , $draggable 
 	return gmw_get_element_dragging_handle( $args );
 }
 
+function gmw_search_form_bp_groups_filter( $gmw ) {
+	_deprecated_function( 'gmw_search_form_bp_groups_filter', '4.0', 'gmw_search_form_bp_groups_field' );
+	gmw_search_form_bp_groups_field( $gmw );
+}
+
 function gmw_get_xprofile_fields( $gmw = array() ) {
 	_deprecated_function( 'gmw_get_xprofile_fields', '3.0', 'gmw_get_search_form_xprofile_fields' );
 	return gmw_get_search_form_xprofile_fields( $gmw );
