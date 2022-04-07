@@ -26,7 +26,7 @@ require_once 'tabs/gmw-v-3-import.php';
 require_once 'tabs/posts-locator.php';
 require_once 'tabs/users-locator.php';
 require_once 'tabs/members-locator.php';
-require_once 'tabs/transfer-locations.php';
+//require_once 'tabs/transfer-locations.php';
 require_once 'class-gmw-export.php';
 require_once 'gmw-csv-import.php';
 
@@ -145,10 +145,10 @@ class GMW_Import_Export_Page {
 			'label' => __( 'Location Tables', 'geo-my-wp' ),
 		);
 
-		$tabs['transfer_locations'] = array(
+		/*$tabs['transfer_locations'] = array(
 			'slug'  => 'transfer_locations',
 			'label' => __( 'Transper Locations', 'geo-my-wp' ),
-		);
+		);*/
 
 		// if posts locator add-on active.
 		if ( gmw_is_addon_active( 'posts_locator' ) ) {
