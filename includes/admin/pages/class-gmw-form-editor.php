@@ -555,7 +555,7 @@ class GMW_Form_Editor {
 							),
 						),
 						'attributes' => array(),
-						'priority'   => 15,
+						'priority'   => 7,
 					),
 					'address_filters'  => array(
 						'name'       => 'address_filters',
@@ -610,7 +610,7 @@ class GMW_Form_Editor {
 							),
 						),
 						'attributes' => array(),
-						'priority'   => 20,
+						'priority'   => 8,
 					),
 					'display_results'  => gmw_get_admin_setting_args(
 						array(
@@ -1000,7 +1000,7 @@ class GMW_Form_Editor {
 									'type'       => 'checkbox',
 									'default'    => '',
 									'label'      => __( 'Disable Built-In Style', 'geo-my-wp' ),
-									'desc'       => __( 'Chechk this to prevent GEO my WP from applying it\'s core styling on this template file.', 'geo-my-wp' ),
+									'desc'       => __( 'Prevent GEO my WP from applying it\'s core styling on this template file.', 'geo-my-wp' ),
 									'cb_label'   => __( 'Disable', 'geo-my-wp' ),
 									'attributes' => array(),
 									'priority'   => 10,
@@ -1325,7 +1325,7 @@ class GMW_Form_Editor {
 									'type'       => 'checkbox',
 									'default'    => '',
 									'label'      => __( 'Disable Built-In Styles', 'geo-my-wp' ),
-									'desc'       => __( 'Chechk this to prevent GEO my WP from applying it\'s core styling on this template file.', 'geo-my-wp' ),
+									'desc'       => __( 'Prevent GEO my WP from applying it\'s core styling on this template file.', 'geo-my-wp' ),
 									'cb_label'   => __( 'Disable', 'geo-my-wp' ),
 									'attributes' => array(),
 									'priority'   => 10,
