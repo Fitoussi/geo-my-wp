@@ -168,7 +168,7 @@ class GMW_Posts_Locator_Form_Editor {
 				'name'            => 'taxonomies',
 				'type'            => 'function',
 				'function'        => 'form_taxonomies',
-				'label'           => __( 'Taxonomy Filters', 'geo-my-wp' ),
+				'label'           => __( 'Taxonomies', 'geo-my-wp' ),
 				'desc'            => __( 'Enable the taxonomies that you would like to use as filters in the search form.', 'geo-my-wp' ),
 				'priority'        => 13,
 				'premium_message' => array(
