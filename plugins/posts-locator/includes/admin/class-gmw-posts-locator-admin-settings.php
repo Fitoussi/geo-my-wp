@@ -73,7 +73,7 @@ class GMW_Posts_Locator_Admin_Settings {
 		$post_types = gmw_get_option( 'post_types_settings', 'post_types', array() );
 
 		if ( ! empty( $post_types ) && is_array( $post_types ) ) {
-			$post_types = array_flip( $post_types );
+			$post_types = array_combine( $post_types, $post_types );
 		}
 
 		$settings['post_types_settings']['post_types'] = gmw_get_admin_setting_args(
