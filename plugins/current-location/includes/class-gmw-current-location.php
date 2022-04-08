@@ -230,7 +230,7 @@ class GMW_Current_Location {
 			$displayed = 'guest';
 		}
 
-		$output = '<div class="gmw-cl-element welcome-message ' . $displayed . '"><span>' . esc_attr( $this->displayed_name ) . '</span></div>';
+		$output = '<div class="gmw-cl-element welcome-message ' . $displayed . '"><h3 class="gmw-cl-title gmw-cl-element">' . esc_attr( $this->displayed_name ) . '</h3></div>';
 		$output = apply_filters( 'gmw_current_location_displayed_name', $output, $this->args, $current_user, $this->user_position );
 
 		return $output;
