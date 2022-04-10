@@ -328,7 +328,7 @@ class GMW_Current_Location {
 		$output .= '<form id="gmw-cl-form-' . $this->args['element_id'] . '" class="gmw-cl-form" onsubmit="return false;" name="gmw_cl_form" ' . $display . ' data-element-id="' . $this->args['element_id'] . '">';
 		$output .= '<div class="gmw-cl-address-input-wrapper">';
 
-		$output .= '<i id="gmw-cl-locator-trigger-' . $this->args['element_id'] . '" class="gmw-cl-locator-trigger gmw-icon-location" title="Get your current location"></i>';
+		$output .= '<i id="gmw-cl-locator-trigger-' . $this->args['element_id'] . '" class="gmw-cl-locator-trigger gmw-icon-location-- gmw-icon-target-light" title="Get your current location"></i>';
 		//$output .= '<a href="#" id="gmw-cl-form-submit-' . $this->args['element_id'] . '" class="gmw-cl-form-submit gmw-icon-search" title="Search submit"></a>';
 		$output .= '<i id="gmw-cl-form-submit-' . $this->args['element_id'] . '" class="gmw-cl-form-submit gmw-icon-search" title="Search submit"></i>';
 		$output .= '<input type="text" name="gmw_cl_address" id="gmw-cl-address-input-' . $this->args['element_id'] . '" class="gmw-cl-address-input ' . $autocomplete . '" value="" autocomplete="off" placeholder="' . esc_attr( $this->args['address_field_placeholder'] ) . '" />';
@@ -383,8 +383,6 @@ class GMW_Current_Location {
 				'nonce' => wp_create_nonce( 'gmw_current_location_nonce' ),
 			);
 
-			// enqueue scripts.
-			// wp_enqueue_script( 'gmw-current-location' );.
 			wp_localize_script( 'gmw', 'gmw_cl_args', $cl_localize );
 		}
 	}

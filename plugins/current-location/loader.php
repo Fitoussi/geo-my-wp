@@ -1,5 +1,11 @@
 <?php
-// Exit if accessed directly
+/**
+ * Current Location loader.
+ *
+ * @package geo-my-wp
+ */
+
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -10,29 +16,56 @@ if ( ! class_exists( 'GMW_Addon' ) ) {
 
 /**
  * Current Location addon
- *
  */
 class GMW_Current_Location_Addon extends GMW_Addon {
 
-	// slug
+	/**
+	 * Slug.
+	 *
+	 * @var string
+	 */
 	public $slug = 'current_location';
 
-	// add-on's name
+	/**
+	 * Name.
+	 *
+	 * @var string
+	 */
 	public $name = 'Current Location';
 
-	// prefix
+	/**
+	 * Prefix.
+	 *
+	 * @var string
+	 */
 	public $prefix = 'cl';
 
-	// version
+	/**
+	 * Version.
+	 *
+	 * @var [type]
+	 */
 	public $version = GMW_VERSION;
 
-	// description
+	/**
+	 * Description.
+	 *
+	 * @var string
+	 */
 	public $description = "Retreive and display the visitor's current position.";
 
-	// path
+	/**
+	 * Path.
+	 *
+	 * @var [type]
+	 */
 	public $full_path = __FILE__;
 
-	// core add-on
+	/**
+	 * Core addon.
+	 *
+	 * @var boolean
+	 */
 	public $is_core = true;
 
 	/**
@@ -42,6 +75,11 @@ class GMW_Current_Location_Addon extends GMW_Addon {
 	 */
 	public $docs_page = 'https://docs.geomywp.com/category/48-current-location';
 
+	/**
+	 * [$instance description].
+	 *
+	 * @var null
+	 */
 	private static $instance = null;
 
 	/**
@@ -52,7 +90,7 @@ class GMW_Current_Location_Addon extends GMW_Addon {
 	public static function get_instance() {
 
 		if ( self::$instance == null ) {
-			self::$instance = new self;
+			self::$instance = new self();
 		}
 
 		return self::$instance;
@@ -60,36 +98,22 @@ class GMW_Current_Location_Addon extends GMW_Addon {
 
 	/**
 	 * Load widget
-	 *
-	 * @return [type] [description]
 	 */
 	public function init_widgets() {
-		include( 'includes/class-gmw-current-location-widget.php' );
+		include_once 'includes/class-gmw-current-location-widget.php';
 	}
 
 	/**
 	 * Include files
-	 * @return [type] [description]
 	 */
 	public function pre_init() {
 
 		parent::pre_init();
 
 		if ( ! IS_ADMIN || defined( 'DOING_AJAX' ) ) {
-			include( 'includes/class-gmw-current-location.php' );
-			include( 'includes/gmw-current-location-shortcode.php' );
+			include_once 'includes/class-gmw-current-location.php';
+			include_once 'includes/gmw-current-location-shortcode.php';
 		}
-	}
-
-	/**
-	 * Enqueue scripts
-	 *
-	 * @return [type] [description]
-	 */
-	public function enqueue_scripts() {
-
-		// register gmw script
-		//wp_register_script( 'gmw-current-location', GMW_URL.'/assets/js/gmw.current.location.min.js', array( 'jquery', 'gmw' ), GMW_VERSION, true );
 	}
 }
 GMW_Addon::register( 'GMW_Current_Location_Addon' );
