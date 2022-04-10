@@ -959,11 +959,7 @@ class GMW_Maps_API {
 
 		// Marker Clusterer.
 		if ( self::$markers_clusterer && ! wp_script_is( 'gmw-marker-cluster', 'enqueued' ) ) {
-
 			wp_enqueue_script( 'gmw-marker-cluster', GMW_URL . '/assets/lib/google/markercluster/google.markercluster.min.js', array(), GMW_VERSION, true );
-
-			$cluster_image = apply_filters( 'gmw_clusters_folder', 'https://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclustererplus/images/m' );
-			wp_localize_script( 'gmw-marker-cluster', 'clusterImage', $cluster_image );
 		}
 
 		// Marker spiderfiers.
