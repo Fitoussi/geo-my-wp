@@ -157,8 +157,11 @@ function gmw_shortcode( $attr ) {
 
 	GMW()->current_form = $new_form->form;
 
+	do_action( 'gmw_element_loaded', 'form' );
+
 	// output only if element allowed.
 	if ( $new_form->element_allowed ) {
+
 		// display the form.
 		$new_form->output();
 	}

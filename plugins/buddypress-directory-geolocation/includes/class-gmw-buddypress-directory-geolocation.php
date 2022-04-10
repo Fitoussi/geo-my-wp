@@ -247,6 +247,8 @@ class GMW_BuddyPress_Directory_Geolocation {
 			add_action( 'bp_after_directory_' . $this->component . 's', array( $this, 'map_element' ), 50 );
 			add_action( 'bp_after_' . $this->component . 's_loop', array( $this, 'trigger_js_and_map' ) );
 		}
+
+		do_action( 'gmw_element_loaded', 'buddypress_directory' );
 	}
 
 	/**

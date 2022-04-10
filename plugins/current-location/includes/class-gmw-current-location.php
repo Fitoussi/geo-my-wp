@@ -439,6 +439,8 @@ class GMW_Current_Location {
 
 		$output = implode( '', $elements );
 
+		do_action( 'gmw_element_loaded', 'current_location' );
+
 		// enqueue main script if not loaded already.
 		if ( ! wp_script_is( 'gmw', 'enqueued' ) ) {
 			wp_enqueue_script( 'gmw' );

@@ -878,6 +878,8 @@ class GMW_Single_Location {
 
 		$output = implode( '', $this->elements );
 
+		do_action( 'gmw_element_loaded', 'single_location' );
+
 		return apply_filters( 'gmw_sl_display_output', $output, $this->elements, $this->args, $this->location_data, $this->user_position, $this );
 	}
 }

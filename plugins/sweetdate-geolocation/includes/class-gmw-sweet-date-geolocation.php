@@ -164,6 +164,8 @@ class GMW_Sweet_Date_Geolocation {
 			add_action( 'bp_members_directory_member_sub_types', array( $this, 'map_element' ) );
 			add_action( 'bp_after_members_loop', array( $this, 'trigger_js_and_map' ) );
 		}
+
+		do_action( 'gmw_element_loaded', 'sweet_date' );
 	}
 
 	/**
