@@ -515,12 +515,8 @@ class GMW_Form {
 		$form_class    = ' gmw-template-' . $template_name . ' gmw-' . $this->form['prefix'] . '-' . $template_name . '-form-wrapper';
 		//$form_class    = $template_name . ' gmw-template-' . $template_name . ' gmw-' . $this->form['prefix'] . '-' . $template_name . '-form-wrapper';
 
-		if ( empty( $this->form['search_form']['styles']['disable_enhanced_fields'] ) ) {
-			$form_class .= ' gmw-fields-enhanced';
-		}
-
 		if ( empty( $this->form['search_form']['styles']['disable_core_styles'] ) ) {
-			$form_class .= ' gmw-element-template';
+			$form_class .= ' gmw-element-template gmw-fields-enhanced';
 		}
 
 		$this->element_class_attr['form_wrap'][] = $form_class;
@@ -1159,12 +1155,8 @@ class GMW_Form {
 			$class_attr .= ' gmw-has-image';
 		}
 
-		if ( empty( $this->form['search_results']['styles']['disable_enhanced_fields'] ) ) {
-			$class_attr .= ' gmw-fields-enhanced';
-		}
-
 		if ( empty( $this->form['search_results']['styles']['disable_core_styles'] ) ) {
-			$class_attr .= ' gmw-element-template';
+			$class_attr .= ' gmw-element-template gmw-fields-enhanced';
 		}
 
 		$this->element_class_attr['results_wrap'][] = $class_attr;
