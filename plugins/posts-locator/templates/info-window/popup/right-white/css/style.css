@@ -1,0 +1,115 @@
+/**
+ * Members Locator Global Map right-white info window stylsheet
+ *
+ * @author Eyal Fitoussi
+ */
+#gmw-popup-info-window.template-right-white {
+	right: 0;
+	top: 0;
+	border-radius: 0;
+	height: 100%;
+	max-height: 100%;
+	border: 0;
+	padding: 0;
+	max-width: 320px;
+	width: 100%;
+	overflow: visible;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+	left: initial;
+}
+
+#gmw-popup-info-window.template-right-white .gmw-info-window-header {
+	background: #333;
+	color: white;
+	width: 100%;
+	display: block;
+	padding: 8px 15px;
+	text-align: center;
+	line-height: 28px;
+	box-sizing: border-box;
+}
+
+
+#gmw-popup-info-window.template-right-white .gmw-info-window-header .iw-close-button {
+	float: right;
+	color: white;
+}
+
+#gmw-popup-info-window.template-right-white.hidden {
+	padding: 0;
+}
+
+#gmw-popup-info-window.template-right-white .gmw-info-window-header a.title {
+	background: #333;
+	color: white;
+	font-size: 20px;
+	text-decoration: none;
+	max-width: 230px;
+}
+
+#gmw-popup-info-window.template-right-white .gmw-info-window-header .distance {
+	float: left;
+}
+
+#gmw-popup-info-window.template-right-white a.image {
+	width: 100%;
+	height: auto;
+	max-height: 200px;
+	margin-bottom: 20px;
+}
+
+#gmw-popup-info-window.template-right-white .gmw-info-window-inner {
+	overflow-x: scroll;
+	padding: 20px;
+	box-sizing: border-box;
+}
+
+#gmw-popup-info-window.template-right-white span.address {
+	font-size: 14px;
+	margin: 10px 0px;
+}
+
+#gmw-popup-info-window.template-right-white a.gmw-get-directions {
+	font-size: 13px;
+	margin-right: 10px;
+}
+
+#gmw-popup-info-window.template-right-white .gmw-info-window-inner ul.gmw-xprofile-fields li {
+	font-size: 14px;
+}
+
+#gmw-popup-info-window.template-right-white ul.gmw-location-meta-wrapper li.field, 
+#gmw-popup-info-window.template-right-white.widget .gmw-location-meta-wrapper li.field,
+#gmw-popup-info-window.template-right-white ul.gmw-location-meta li {
+	line-height: 24px;
+	font-size: 14px;
+}
+
+#gmw-popup-info-window.template-right-white #gmw-toggle-button-wrapper {
+	position: absolute;
+	z-index: 0;
+	top: 45px;
+	right: 100%;
+	display: block;
+}
+
+#gmw-popup-info-window.template-right-white #gmw-toggle-button-wrapper span {
+	color: #333;
+	width: 23px;
+	height: 48px;
+	cursor: pointer;
+	box-shadow: -5px 2px 5px rgba(0, 0, 0, 0.16);
+	background: #fff;
+	display: block;
+	font-size: 11px;
+	padding: 15px 4px;
+	box-sizing: border-box;
+	line-height: 18px;
+}
+
+/* smaller screens */
+@media (max-width:600px) {
+	#gmw-popup-info-window.template-right-white {
+		max-width: 100%;
+	}
+}

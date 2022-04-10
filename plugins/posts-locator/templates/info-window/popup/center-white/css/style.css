@@ -1,0 +1,64 @@
+/**
+ * Post Locator Global Map center-white info window stylsheet
+ *
+ * @author Eyal Fitoussi
+ */
+#gmw-popup-info-window.template-center-white {
+	padding-top: 35px;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+	border: 0;
+	padding: 0;
+}
+
+#gmw-popup-info-window.template-center-white .buttons-wrapper {
+	background: #333;
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 5px 10px;
+	line-height: 25px;
+}
+
+#gmw-popup-info-window.template-center-white .buttons-wrapper span {
+	color: white;
+}
+
+#gmw-popup-info-window.template-center-white span.gmw-draggable {
+	float: left;
+}
+
+#gmw-popup-info-window.template-center-white div.gmw-info-window-inner.popup {
+	padding: 50px 20px;
+}
+
+#gmw-popup-info-window.template-center-white a.title {
+	font-size: 22px;
+}
+
+#gmw-popup-info-window.template-center-white span.address {
+	font-size: 14px;
+}
+
+#gmw-popup-info-window.template-center-white a.gmw-get-directions {
+	font-size: 13px;
+	margin-right: 10px;
+}
+
+#gmw-popup-info-window.template-center-white ul.gmw-location-meta-wrapper li.field, 
+#gmw-popup-info-window.template-center-white.widget .gmw-location-meta-wrapper li.field,
+#gmw-popup-info-window.template-center-white ul.gmw-xprofile-fields li {
+	line-height: 24px;
+	font-size: 14px;
+}
+
+/* smaller screens */
+@media (max-width:600px) {
+	#gmw-popup-info-window.template-center-white {
+		width: 100%;
+		height: 100%;
+		min-height: 100%;
+		position: fixed;
+		top: 0;
+		left: 0;
+	}
+}
