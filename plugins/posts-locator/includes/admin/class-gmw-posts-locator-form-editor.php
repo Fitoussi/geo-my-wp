@@ -132,9 +132,6 @@ class GMW_Posts_Locator_Form_Editor {
 			return $settings;
 		}
 
-		/* translators: %s link to the prmium settings page. */
-		$premium_message = sprintf( __( 'Checkout the <a href="%s" target="_blank">Premium Settings extension</a> for additional post types options.', 'geo-my-wp' ), 'https://geomywp.com/extensions/premium-settings' );
-
 		$settings['search_form']['post_types_settings'] = array(
 			'name'            => 'post_types_settings',
 			'type'            => 'fields_group',
@@ -155,9 +152,11 @@ class GMW_Posts_Locator_Form_Editor {
 				'show_options_all' => gmw_get_admin_setting_args( 'show_options_all' ),
 				'required'         => gmw_get_admin_setting_args( 'required' ),
 			),
-			'premium_message' => array(
-				'class'   => 'GMW_Premium_Settings_Addon',
-				'message' => $premium_message,
+			'premium_message' => gmw_get_admin_setting_args(
+				array(
+					'option_type' => 'premium_message',
+					'field_name'  => 'post types',
+				),
 			),
 			'attributes'      => '',
 			'priority'        => 12,
@@ -171,9 +170,11 @@ class GMW_Posts_Locator_Form_Editor {
 				'label'           => __( 'Taxonomies', 'geo-my-wp' ),
 				'desc'            => __( 'Enable the taxonomies that you would like to use as filters in the search form.', 'geo-my-wp' ),
 				'priority'        => 13,
-				'premium_message' => array(
-					'class'   => 'GMW_Premium_Settings_Addon',
-					'message' => $premium_message,
+				'premium_message' => gmw_get_admin_setting_args(
+					array(
+						'option_type' => 'premium_message',
+						'field_name'  => 'taxonomies',
+					),
 				),
 			),
 		);
