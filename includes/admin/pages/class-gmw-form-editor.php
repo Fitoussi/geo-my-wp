@@ -400,8 +400,8 @@ class GMW_Form_Editor {
 	public function fields_groups() {
 
 		/* translators: %s: link to extensions page. */
-		$premium_settings_message = sprintf( __( 'Check out the <a href="%s" target="_blank">Premium Settings extension</a> for additional field options.', 'geo-my-wp' ), 'https://geomywp.com/extensions/premium-settings' );
-		$results_page             = array(
+		//$premium_settings_message = sprintf( __( 'Check out the <a href="%s" target="_blank">Premium Settings extension</a> for additional field options.', 'geo-my-wp' ), 'https://geomywp.com/extensions/premium-settings' );
+		$results_page = array(
 			'disabled' => __( ' -- Same Page -- ', 'geo-my-wp' ),
 		);
 
@@ -792,10 +792,11 @@ class GMW_Form_Editor {
 								)
 							),
 						),
-						/* translators: %s premium settings extension page link. */
-						'premium_message' => array(
-							'class'   => 'GMW_Premium_Settings_Addon',
-							'message' => $premium_settings_message,
+						'premium_message' => gmw_get_admin_setting_args(
+							array(
+								'option_type' => 'premium_message',
+								'field_name'  => 'address field',
+							),
 						),
 						'attributes'      => '',
 						'priority'        => 12,
@@ -926,9 +927,11 @@ class GMW_Form_Editor {
 								)
 							),
 						),
-						'premium_message' => array(
-							'class'   => 'GMW_Premium_Settings_Addon',
-							'message' => $premium_settings_message,
+						'premium_message' => gmw_get_admin_setting_args(
+							array(
+								'option_type' => 'premium_message',
+								'field_name'  => 'radius field',
+							),
 						),
 						'attributes'      => '',
 						'priority'        => 40,
@@ -982,18 +985,6 @@ class GMW_Form_Editor {
 						'type'     => 'fields_group',
 						'label'    => __( 'Form Styling', 'geo-my-wp' ),
 						'fields'   => array(
-							'disable_enhanced_fields'    => gmw_get_admin_setting_args(
-								array(
-									'name'       => 'disable_enhanced_fields',
-									'type'       => 'checkbox',
-									'default'    => '',
-									'label'      => __( 'Disabled Enhanced Fields', 'geo-my-wp' ),
-									'desc'       => __( 'Disabled enhanced CSS for the form filters.', 'geo-my-wp' ),
-									'cb_label'   => __( 'Disable', 'geo-my-wp' ),
-									'attributes' => array(),
-									'priority'   => 5,
-								),
-							),
 							'disable_core_styles'           => gmw_get_admin_setting_args(
 								array(
 									'name'       => 'disable_core_styles',
@@ -1307,18 +1298,6 @@ class GMW_Form_Editor {
 						'type'     => 'fields_group',
 						'label'    => __( 'Styling', 'geo-my-wp' ),
 						'fields'   => array(
-							'disable_enhanced_fields'              => gmw_get_admin_setting_args(
-								array(
-									'name'       => 'disable_enhanced_fields',
-									'type'       => 'checkbox',
-									'default'    => '',
-									'label'      => __( 'Disable Enhanced Fields', 'geo-my-wp' ),
-									'desc'       => __( 'Disable enhanced CSS for the search results filters.', 'geo-my-wp' ),
-									'cb_label'   => __( 'Disable', 'geo-my-wp' ),
-									'attributes' => array(),
-									'priority'   => 5,
-								),
-							),
 							'disable_core_styles'           => gmw_get_admin_setting_args(
 								array(
 									'name'       => 'disable_core_styles',
@@ -2255,7 +2234,7 @@ class GMW_Form_Editor {
 														<?php } ?>
 													</div>
 
-													<?php if ( ! empty( $field_options['premium_message']['message'] ) && ! empty( $field_options['premium_message']['class'] ) && ! class_exists( $field_options['premium_message']['class'] ) ) { ?>
+													<?php if ( ! empty( $field_options['premium_message']['message'] ) && ! empty( $field_options['premium_message']['extension_class'] ) && ! class_exists( $field_options['premium_message']['extension_class'] ) ) { ?>
 														<div class="gmw-premium-options-message">
 															<?php echo $this->get_premium_message( $field_options['premium_message']['message'] ); // WPCS: XSS ok. ?>
 														</div>
@@ -2263,7 +2242,7 @@ class GMW_Form_Editor {
 
 												<?php } ?>
 
-												<?php if ( ! empty( $option['premium_message']['message'] ) && ! empty( $option['premium_message']['class'] ) && ! class_exists( $option['premium_message']['class'] ) ) { ?>
+												<?php if ( ! empty( $option['premium_message']['message'] ) && ! empty( $option['premium_message']['extension_class'] ) && ! class_exists( $option['premium_message']['extension_class'] ) ) { ?>
 													<div class="gmw-premium-options-message">
 														<?php echo $this->get_premium_message( $option['premium_message']['message'] ); // WPCS: XSS ok. ?>
 													</div>
@@ -2278,7 +2257,7 @@ class GMW_Form_Editor {
 												</div>
 											</div>
 
-											<?php if ( ! empty( $option['premium_message']['message'] ) && ! empty( $option['premium_message']['class'] ) && ! class_exists( $option['premium_message']['class'] ) ) { ?>
+											<?php if ( ! empty( $option['premium_message']['message'] ) && ! empty( $option['premium_message']['extension_class'] ) && ! class_exists( $option['premium_message']['extension_class'] ) ) { ?>
 												<div class="gmw-premium-options-message">
 													<?php echo $this->get_premium_message( $option['premium_message']['message'] ); // WPCS: XSS ok. ?>
 												</div>
