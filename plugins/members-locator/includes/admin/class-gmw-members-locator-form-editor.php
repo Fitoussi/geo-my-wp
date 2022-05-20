@@ -122,7 +122,7 @@ class GMW_Members_Locator_Form_Editor {
 						'desc'        => __( 'Select the Xprofile fields that you would like to use as filters in the search form.', 'geo-my-wp' ),
 						'options'     => $selected_fields,
 						'attributes'  => array(
-							'data-gmw_ajax_load_options' => 'gmw_get_bp_xprofile_fields',
+							'data-gmw_ajax_load_options'          => 'gmw_get_bp_xprofile_fields',
 							'data-gmw_ajax_load_options_xprofile' => 'all_fields',
 						),
 						'priority'    => 5,
@@ -138,7 +138,7 @@ class GMW_Members_Locator_Form_Editor {
 						'desc'        => __( 'Select a date xprofile field that will be used as an "Age range" filter in the search form.', 'geo-my-wp' ),
 						'options'     => $date_fields,
 						'attributes'  => array(
-							'data-gmw_ajax_load_options' => 'gmw_get_bp_xprofile_fields',
+							'data-gmw_ajax_load_options'          => 'gmw_get_bp_xprofile_fields',
 							'data-gmw_ajax_load_options_xprofile' => 'date_field',
 						),
 						'priority'    => 10,
