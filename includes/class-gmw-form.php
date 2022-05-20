@@ -962,6 +962,7 @@ class GMW_Form {
 		}
 
 		$args = apply_filters(
+			// Global Filter used on all form types and components.
 			'gmw_form_map_location_args',
 			array(
 				'ID'                  => $object->object_id,
@@ -980,6 +981,8 @@ class GMW_Form {
 			$this->form,
 			$this
 		);
+
+		$args = apply_filters( 'gmw_' . $this->form['component'] . '_map_location_args', $args, $object, $this->form, $this );
 
 		return apply_filters( 'gmw_' . $this->form['prefix'] . '_form_map_location_args', $args, $object, $this->form, $this );
 	}
