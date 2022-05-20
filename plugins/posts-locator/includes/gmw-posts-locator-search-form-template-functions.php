@@ -81,6 +81,7 @@ function gmw_get_search_form_post_types( $gmw ) {
 		'options'          => $options,
 		'value'            => $value,
 		'wrapper_class'    => 'gmw-post-types-wrapper gmw-post-types-' . $type . '-wrapper', // deprecated classes.
+		'smartbox'         => ! empty( $settings['smartbox'] ) ? 1 : 0,
 	);
 
 	return gmw_get_form_field( $args, $gmw );
@@ -114,12 +115,11 @@ function gmw_get_search_form_taxonomies( $gmw ) {
 		return;
 	}
 
-	// abort if multiple post types were set and premium settings isn't activated.
-	if ( 1 !== count( $gmw['search_form']['post_types'] ) ) {
+	$pt_count = count( $gmw['search_form']['post_types'] );
 
-		if ( ! class_exists( 'GMW_Premium_Settings_Addon' ) ) {
-			return;
-		}
+	// abort if multiple post types were selected.
+	if ( 1 !== $pt_count ) {
+		return;
 	}
 
 	$tax_elements = '';
@@ -153,6 +153,7 @@ function gmw_get_search_form_taxonomies( $gmw ) {
 			'wrapper_class'   => 'gmw-field-type-' . $tax_args['style'] . '-wrapper gmw-single-taxonomy-wrapper',
 			'wrapper_atts'    => array(
 				'data-post_types' => implode( ',', $post_types ),
+				'style'           => $pt_count > 1 ? 'display:none' : '',
 			),
 			'additional_args' => array(
 				'id'                  => $gmw['ID'],
