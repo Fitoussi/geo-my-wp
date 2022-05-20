@@ -855,41 +855,7 @@ class GMW_Form {
 	 */
 	public function get_address_filters() {
 
-		$this->form['address_filters'] = array();
-
-		// if on page load results.
-		if ( $this->form['page_load_action'] ) {
-
-			if ( ! empty( $this->form['page_load_results']['city_filter'] ) ) {
-				$this->form['address_filters']['city'] = $this->form['page_load_results']['city_filter'];
-			}
-
-			if ( ! empty( $this->form['page_load_results']['state_filter'] ) ) {
-				$this->form['address_filters']['region_name'] = $this->form['page_load_results']['state_filter'];
-			}
-
-			if ( ! empty( $this->form['page_load_results']['zipcode_filter'] ) ) {
-				$this->form['address_filters']['postcode'] = $this->form['page_load_results']['zipcode_filter'];
-			}
-
-			if ( ! empty( $this->form['page_load_results']['country_filter'] ) ) {
-				$this->form['address_filters']['country_code'] = $this->form['page_load_results']['country_filter'];
-			}
-		}
-
-		// if searching within state or country only is enabled.
-		if ( apply_filters( 'gmw_search_within_boundaries', true, $this->form, $this ) && $this->form['submitted'] ) {
-
-			// if searching state boundaries.
-			if ( isset( $this->form['form_values']['state'] ) && '' !== $this->form['form_values']['state'] ) {
-				$this->form['address_filters']['region_name'] = $this->form['form_values']['state'];
-			}
-
-			// When searchin boundaries of a country.
-			if ( isset( $this->form['form_values']['country'] ) && '' !== $this->form['form_values']['country'] ) {
-				$this->form['address_filters']['country_code'] = $this->form['form_values']['country'];
-			}
-		}
+		$this->form['address_filters'] = gmw_form_get_address_filters( $this->form );
 
 		return $this->form['address_filters'];
 	}
