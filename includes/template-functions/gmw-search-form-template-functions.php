@@ -293,9 +293,14 @@ function gmw_get_search_form_radius( $gmw ) {
 	$options      = array();
 	$defaut_value = '';
 
-	if ( 'select' === $settings['usage'] ) {
+	if ( 'select' === $settings['usage'] || 'radio' === $settings['usage'] ) {
 
 		$type = 'select';
+
+		if ( 'radio' === $settings['usage'] ) {
+			$type                         = 'radio';
+			$settings['show_options_all'] = '';
+		}
 
 		if ( ! empty( $settings['options'] ) ) {
 
@@ -500,7 +505,7 @@ function gmw_search_form_keywords_field( $gmw = array() ) {
 function gmw_search_form_reset_button( $gmw = array() ) {
 
 	// This function lives in the Premium Settings extension.
-	if ( ! function_exists( 'gmw_get_search_form_reset_button' ) ) {
+	if ( ! function_exists( 'gmw_get_search_form_reset_button' ) || empty( $gmw['search_form']['reset_button']['enabled'] ) ) {
 		return;
 	}
 
