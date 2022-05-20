@@ -1480,7 +1480,421 @@ class GMW_Form_Editor {
 				'priority' => 60,
 			),
 		);
-	
+		
+		$is_global_maps = ( 'global_maps' === $this->form['addon'] ) ? true : false;
+		$is_ajax_form   = ( 'ajax_forms' === $this->form['addon'] ) ? true : false;
+
+		$keywords_options = array( 'disabled' => 'Disable' );
+
+		if ( 'posts_locator' === $this->form['component'] ) {
+
+			$keywords_options['title']   = __( 'Search post title', 'geo-my-wp' );
+			$keywords_options['content'] = __( 'Search post title and content', 'geo-my-wp' );
+
+		} elseif ( 'members_locator' === $this->form['component'] ) {
+
+			$keywords_options['name'] = __( 'Search member name', 'geo-my-wp' );
+
+		} elseif ( 'bp_groups_locator' === $this->form['component'] ) {
+
+			$keywords_options['name'] = __( 'Search group name and description', 'geo-my-wp' );
+
+		} elseif ( 'users_locator' === $this->form['component'] ) {
+
+			$keywords_options['name'] = __( 'Search user name', 'geo-my-wp' );
+		}
+
+		$keywords_options = apply_filters( 'gmw_ps_form_settings_keywords_field_options', $keywords_options, $this->form );
+
+		$groups['search_form']['fields']['keywords'] = array(
+			'name'     => 'keywords',
+			'type'     => 'fields_group',
+			'label'    => __( 'Keywords Field', 'geo-my-wp' ),
+			'desc'     => __( 'Add keywords search field to the search form.', 'geo-my-wp' ),
+			'fields'   => array(
+				'usage'       => gmw_get_admin_setting_args(
+					array(
+						'name'       => 'usage',
+						'type'       => 'select',
+						'default'    => 'disable',
+						'options'    => $keywords_options,
+						'label'      => __( 'Field Usage', 'geo-my-wp' ),
+						// 'desc'        => __( '', 'geo-my-wp' ),
+						'attributes' => array(
+							'class' => 'gmw-options-toggle gmw-smartbox-not',
+						),
+						'priority'   => 5,
+					)
+				),
+				'label'       => gmw_get_admin_setting_args( 'label' ),
+				'placeholder' => gmw_get_admin_setting_args( 'placeholder' ),
+				'required'    => gmw_get_admin_setting_args( 'required' ),
+			),
+			'priority' => 12,
+			'premium_message' => gmw_get_admin_setting_args(
+				array(
+					'option_type'      => 'premium_message',
+					'option_disabled'  => 1,
+				),
+			),
+		);
+
+		$groups['search_form']['fields']['custom_fields'] = gmw_get_admin_setting_args(
+			array(
+				'name'       => 'custom_fields',
+				'type'       => 'select',
+				'default'    => '',
+				'label'      => __( 'Custom fields', 'geo-my-wp' ),
+				'desc'       => __( 'Add custom fields as filters to the search form.', 'geo-my-wp' ),
+				'attributes' => array(),
+				'priority'   => 16,
+				'premium_message' => gmw_get_admin_setting_args(
+					array(
+						'option_type'      => 'premium_message',
+						'option_disabled'  => 1,
+					),
+				),
+			)
+		);
+
+		$groups['search_form']['fields']['reset_button'] = gmw_get_admin_setting_args(
+			array(
+				'name'     => 'reset_button',
+				'type'     => 'fields_group',
+				'label'    => __( 'Reset Form Button', 'geo-my-wp' ),
+				'fields'   => array(
+					'enabled' => gmw_get_admin_setting_args(
+						array(
+							'name'       => 'enabled',
+							'type'       => 'checkbox',
+							'default'    => '',
+							'label'      => __( 'Enable Reset Button', 'geo-my-wp' ),
+							'desc'       => __( 'Display reset form button in the search form.', 'geo-my-wp' ),
+							'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+							'attributes' => array(
+								'class' => 'gmw-options-toggle',
+							),
+							'priority'   => 5,
+						)
+					),
+					'label'   => gmw_get_admin_setting_args(
+						array(
+							'option_type' => 'label',
+							'desc'        => __( 'Enter the label for the button.', 'geo-my-wp' ),
+						)
+					),
+					/*'submit_form' => gmw_get_admin_setting_args(
+						array(
+							'name'       => 'submit_form',
+							'type'       => 'checkbox',
+							'default'    => '',
+							'label'      => __( 'Submit Form', 'geo-my-wp' ),
+							'desc'       => __( 'Submit the form automatically after reseting.', 'geo-my-wp' ),
+							'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+							'priority'   => 15,
+						)
+					),*/
+				),
+				'priority' => 65,
+				'premium_message' => gmw_get_admin_setting_args(
+					array(
+						'option_type'      => 'premium_message',
+						'option_disabled'  => 1,
+					),
+				),
+			)
+		);
+
+		$groups['results_map']['fields']['max_zoom_level'] = gmw_get_admin_setting_args(
+			array(
+				'name'     => 'max_zoom_level',
+				'type'     => 'select',
+				'default'  => '',
+				'label'    => __( 'Maximum Zoom Level', 'geo-my-wp' ),
+				'desc'     => __( 'Select a value to set the maximum zoom level of the map. You can use this feature for privacy purposes by preventing users from zooming in to a street level.', 'geo-my-wp' ),
+				'options'  => array(
+					''   => __( 'disable', 'geo-my-wp' ),
+					'1'  => '1',
+					'2'  => '2',
+					'3'  => '3',
+					'4'  => '4',
+					'5'  => '5',
+					'6'  => '6',
+					'7'  => '7',
+					'8'  => '8',
+					'9'  => '9',
+					'10' => '10',
+					'11' => '11',
+					'12' => '12',
+					'13' => '13',
+					'14' => '14',
+					'15' => '15',
+					'16' => '16',
+					'17' => '17',
+					'18' => '18',
+					'19' => '19',
+					'20' => '20',
+				),
+				'class'    => 'gmw-smartbox-not',
+				'priority' => 40,
+				'premium_message' => gmw_get_admin_setting_args(
+					array(
+						'option_type'      => 'premium_message',
+						'option_disabled'  => 1,
+					),
+				),
+			)
+		);
+
+		$groups['results_map']['fields']['map_boundaries'] = gmw_get_admin_setting_args(
+			array(
+				'name'     => 'map_boundaries',
+				'type'     => 'fields_group',
+				'label'    => __( 'Map Boundaries', 'geo-my-wp' ),
+				'fields'   => array(
+					'enabled' => gmw_get_admin_setting_args(
+						array(
+							'name'       => 'enabled',
+							'type'       => 'checkbox',
+							'default'    => '',
+							'label'      => __( 'Restrict Map Boundaries', 'geo-my-wp' ),
+							'desc'       => __( 'Restrict the map view for a specific area.', 'geo-my-wp' ),
+							'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+							'attributes' => array(
+								'class' => 'gmw-options-toggle',
+							),
+							'priority'   => 5,
+						)
+					),
+					'southwest' => gmw_get_admin_setting_args(
+						array(
+							'name'        => 'southwest',
+							'type'        => 'text',
+							'default'     => '',
+							'label'       => __( 'Southwest Point', 'geo-my-wp' ),
+							'placeholder' => __( '26.423277,-82.137132', 'geo-my-wp' ),
+							'desc'        => __( 'Enter a set of coordinates ( ex. 26.423277,-82.137132 ) that represents the southwest point of the area that you would like to restrict on the map.', 'geo-my-wp' ),
+							'priority'    => 10,
+						)
+					),
+					'northeast' => gmw_get_admin_setting_args(
+						array(
+							'name'        => 'northeast',
+							'type'        => 'text',
+							'default'     => '',
+							'label'       => __( 'Northeast Point', 'geo-my-wp' ),
+							'placeholder' => __( '26.4724595,-82.0217760', 'geo-my-wp' ),
+							'desc'        => __( 'Enter a set of coordinates ( ex. 26.4724595,-82.0217760 ) that represents the northeast point of the area that you would like to restrict on the map.', 'geo-my-wp' ),
+							'priority'    => 15,
+						)
+					),
+				),
+				'priority' => 45,
+				'premium_message' => gmw_get_admin_setting_args(
+					array(
+						'option_type'      => 'premium_message',
+						'option_disabled'  => 1,
+					),
+				),
+			)
+		);
+
+		if ( ! $is_global_maps ) {
+
+			$groups['page_load_results']['fields']['orderby'] = gmw_get_admin_setting_args(
+				array(
+					'name'     => 'orderby',
+					'type'     => 'select',
+					'default'  => 'distance',
+					'label'    => __( 'Orderby', 'geo-my-wp' ),
+					'desc'     => __( 'Select the initial order of the results.', 'geo-my-wp' ),
+					'options'  => array(),
+					'class'    => 'gmw-smartbox-not',
+					'premium_message' => gmw_get_admin_setting_args(
+						array(
+							'option_type'      => 'premium_message',
+							'option_disabled'  => 1,
+						),
+					),
+					'priority' => 95,
+				)
+			);
+
+			$groups['form_submission']['fields']['orderby'] = gmw_get_admin_setting_args(
+				array(
+					'name'       => 'orderby',
+					'type'       => 'select',
+					'default'    => 'distance',
+					'label'      => __( 'Orderby', 'geo-my-wp' ),
+					'desc'       => __( 'Select the default order of the results on form submission.', 'geo-my-wp' ),
+					'options'    => array(),
+					'attributes' => array(),
+					'class'      => 'gmw-smartbox-not',
+					'premium_message' => gmw_get_admin_setting_args(
+						array(
+							'option_type'      => 'premium_message',
+							'option_disabled'  => 1,
+						),
+					),
+					'priority'   => 25,
+				)
+			);
+
+			$groups['search_results']['fields']['orderby'] = gmw_get_admin_setting_args(
+				array(
+					'name'     => 'orderby',
+					'type'     => 'fields_group',
+					'label'    => __( 'Order-by Filter', 'geo-my-wp' ),
+					'fields'   => array(
+						'enabled' => gmw_get_admin_setting_args(
+							array(
+								'name'       => 'enabled',
+								'type'       => 'checkbox',
+								'default'    => '',
+								'label'      => __( 'Enable Orderby Filter', 'geo-my-wp' ),
+								'desc'       => __( 'Display an order-by select box in the search results to allow users to select the order of the results.', 'geo-my-wp' ),
+								'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+								'attributes' => array(
+									'class' => 'gmw-options-toggle',
+								),
+								'priority'   => 5,
+							)
+						),
+						'options' => gmw_get_admin_setting_args(
+							array(
+								'name'       => 'options',
+								'type'       => 'textarea',
+								'default'    => '',
+								'label'      => __( 'Dropdown Options', 'geo-my-wp' ),
+								'desc'       => __( 'Enter each option on a new line. For more control, you can specify both a value and label like this: <br /> distance : Distance', 'geo-my-wp' ),
+								'wrap_class' => 'usage_select',
+								'priority'   => 20,
+							)
+						),
+					),
+					'priority' => 18,
+					'premium_message' => gmw_get_admin_setting_args(
+						array(
+							'option_type'      => 'premium_message',
+							'option_disabled'  => 1,
+						),
+					),
+				)
+			);
+
+			$controls = array(
+				'zoomControl'      => __( 'Zoom', 'geo-my-wp' ),
+				'scrollwheel'      => __( 'Scrollwheel zoom', 'geo-my-wp' ),
+				'resizeMapControl' => __( 'Resize map trigger', 'geo-my-wp' ),
+			);
+
+			if ( 'google_maps' === GMW()->maps_provider ) {
+				$controls['rotateControl']      = __( 'Rotate Control', 'geo-my-wp' );
+				$controls['scaleControl']       = __( 'Scale', 'geo-my-wp' );
+				$controls['mapTypeControl']     = __( 'Map Type', 'geo-my-wp' );
+				$controls['streetViewControl']  = __( 'Street View', 'geo-my-wp' );
+				$controls['overviewMapControl'] = __( 'Overview', 'geo-my-wp' );
+			}
+
+			$groups['results_map']['fields']['map_controls'] = gmw_get_admin_setting_args(
+				array(
+					'name'        => 'map_controls',
+					'type'        => 'multiselect',
+					'placeholder' => 'Select map controls',
+					'default'     => array(),
+					'label'       => __( 'Map controls', 'geo-my-wp' ),
+					'desc'        => __( 'Select the map controls would you like to display.', 'geo-my-wp' ),
+					'options'     => $controls,
+					'priority'    => 50,
+					'premium_message' => gmw_get_admin_setting_args(
+						array(
+							'option_type'      => 'premium_message',
+							'option_disabled'  => 1,
+						),
+					),
+				)
+			);
+		}
+
+		$map_styles = gmw_get_admin_setting_args(
+			array(
+				'name'     => 'styles',
+				'type'     => 'fields_group',
+				'label'    => __( 'Map Styles', 'geo-my-wp' ),
+				'desc'     => __( 'Map Styles.', 'geo-my-wp' ),
+				'fields'   => array(
+					'styles'             => gmw_get_admin_setting_args(
+						array(
+							'name'       => 'styles',
+							'type'       => 'textarea',
+							'default'    => '',
+							'label'      => __( 'Maps Styles', 'geo-my-wp' ),
+							'desc'       => sprintf(
+								/* translators: %s: link */
+								__( 'Enter the script of the map style that you would like to use. You can find a large collection of map styles on the <a href="%s" target="_blank">Snazzy Maps website</a>.', 'geo-my-wp' ),
+								'https://snazzymaps.com'
+							),
+							'sub_option' => 0,
+							'priority'   => 5,
+						)
+					),
+					'snazzy_maps_styles' => gmw_get_admin_setting_args(
+						array(
+							'name'       => 'snazzy_maps_styles',
+							'type'       => 'function',
+							'function'   => 'ps_snazzy_maps_styles',
+							'default'    => '',
+							'label'      => __( 'Snazzy Maps Styles', 'geo-my-wp' ),
+							'desc'       => sprintf(
+								/* translators: %s: link */
+								__( 'Choose the map style which you would like to apply to the map of this form. You can <a href="%s">explore</a> more styles to be added to this list by saving them to your list. Note that selecting a map style here will overwite any custom style added in the textarea above.', 'geo-my-wp' ),
+								'?page=snazzy_maps&tab=1'
+							),
+							'sub_option' => 0,
+							'priority'   => 10,
+						)
+					),
+				),
+				'priority' => 60,
+				'premium_message' => gmw_get_admin_setting_args(
+					array(
+						'option_type'      => 'premium_message',
+						'option_disabled'  => 1,
+					),
+				),
+			)
+		);
+
+		if ( 'google_maps' === GMW()->maps_provider ) {
+
+			$groups['results_map']['fields']['styles'] = $map_styles;
+
+		} else {
+
+			$groups['results_map']['fields']['styles']                                   = $map_styles;
+			$groups['results_map']['fields']['styles']['fields']['styles']['desc']       = __( '<div class="gmw-admin-notice-box gmw-admin-notice-error">This feature is availabe with Google Maps provider only.</div>', 'geo-my-wp' );
+			$groups['results_map']['fields']['styles']['fields']['styles']['attributes'] = array( 'disabled' => 'disabled' );
+
+			$groups['results_map']['fields']['styles']['fields']['snazzy_maps_styles']['desc']       = $groups['results_map']['fields']['styles']['fields']['styles']['desc'];
+			$groups['results_map']['fields']['styles']['fields']['snazzy_maps_styles']['attributes'] = array( 'disabled' => 'disabled' );
+		}
+
+		if ( ! $is_global_maps && ! $is_ajax_form ) {
+
+			$groups['info_window']['fields']['iw_appearance']['fields']['ajax_enabled'] = gmw_get_admin_setting_args(
+				array(
+					'name'       => 'ajax_enabled',
+					'type'       => 'checkbox',
+					'default'    => '',
+					'label'      => __( 'Ajax Powered Content', 'geo-my-wp' ),
+					'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+					'desc'       => __( 'Load the info-window content via Ajax. This feature uses PHP template files that can be modified.', 'geo-my-wp' ),
+					'sub_option' => 0,
+					'priority'   => 8,
+				)
+			);
+		}
+
 		$disable_iw = apply_filters( 'gmw_form_editor_disable_info_window', true, $this->form, $groups );
 
 		// Contact info and hours of operation settings are disabled by default. It can be enabled using this filter.
@@ -1539,13 +1953,13 @@ class GMW_Form_Editor {
 			$groups['exclude_locations'] = array(
 				'slug'              => 'exclude_locations',
 				'type'              => 'premium',
-				'label'             => 'Exclude Locations',
+				'label'             => 'Filter Locations',
 				'fields'            => array(),
 				'priority'          => 103,
 				'extension_slug'    => 'exclude_locations',
 				'extension_url'     => 'https://geomywp.com/extensions/exclude-locations',
-				'extension_name'    => 'Exclude Locations',
-				'extension_content' => 'Exclude locations based on user roles, user ID, post IDs, member types, and more...',
+				'extension_name'    => 'Filter Locations',
+				'extension_content' => 'Filter locations based on user roles, user ID, post IDs, member types, and more...',
 			);
 		}
 
@@ -1909,73 +2323,56 @@ class GMW_Form_Editor {
 			$options['type'] = 'text';
 		}
 
-		// display settings fields.
-		switch ( $options['type'] ) {
+		if ( ! empty( $fields_group ) && ! empty( $options['sub_option'] ) ) {
 
-			// custom function.
-			case 'function':
-				if ( ! empty( $fields_group ) && ! empty( $options['sub_option'] ) ) {
+			$name_attr        = 'gmw_form[' . $tab . '][' . $fields_group . ']';
+			$value            = ! empty( $this->form[ $tab ][ $fields_group ][ $options['name'] ] ) ? $this->form[ $tab ][ $fields_group ][ $options['name'] ] : $options['default'];
+			$options['id']    = esc_attr( 'setting-' . $tab . '-' . $fields_group . '-' . $options['name'] );
+			$class            = 'setting-' . $fields_group . '-' . $options['name'];
+			$options['class'] = ! empty( $options['class'] ) ? $options['class'] . ' ' . $class : $class;
+		} else {
 
-					$attr_name        = 'gmw_form[' . $tab . '][' . $fields_group . '][' . $options['name'] . ']';
-					$value            = ! empty( $this->form[ $tab ][ $fields_group ][ $options['name'] ] ) ? $this->form[ $tab ][ $fields_group ][ $options['name'] ] : $options['default'];
-					$options['id']    = esc_attr( 'setting-' . $tab . '-' . $fields_group . '-' . $options['name'] );
-					$class            = 'setting-' . $fields_group . '-' . $options['name'];
-					$options['class'] = ! empty( $options['class'] ) ? $options['class'] . ' ' . $class : $class;
-					$options['class'] = esc_attr( $options['class'] );
-				} else {
-					$attr_name        = 'gmw_form[' . $tab . '][' . $options['name'] . ']';
-					$value            = ! empty( $this->form[ $tab ][ $options['name'] ] ) ? $this->form[ $tab ][ $options['name'] ] : $options['default'];
-					$options['id']    = esc_attr( 'setting-' . $tab . '-' . $options['name'] );
-					$class            = 'setting-' . $options['name'];
-					$options['class'] = ! empty( $options['class'] ) ? $options['class'] . ' ' . $class : $class;
-					$options['class'] = esc_attr( $options['class'] );
-				}
-
-				// $attr_name = esc_attr( 'gmw_form[' . $tab . '][' . $options['name'] . ']' );
-				$function = ! empty( $options['function'] ) ? $options['function'] : $options['name'];
-
-				// $value = ! empty( $this->form[ $tab ][ $options['name'] ] ) ? $this->form[ $tab ][ $options['name'] ] : $options['default'];
-				do_action( 'gmw_' . $this->form['slug'] . '_form_settings_' . $function, $value, $attr_name, $this->form, $this->form_fields, $tab, $options );
-				do_action( 'gmw_' . $this->form['addon'] . '_addon_form_settings_' . $function, $value, $attr_name, $this->form, $this->form_fields, $tab, $options );
-				do_action( 'gmw_' . $this->form['component'] . '_component_form_settings_' . $function, $value, $attr_name, $this->form, $this->form_fields, $tab, $options );
-				do_action( 'gmw_form_settings_' . $function, $value, $attr_name, $this->form, $this->form_fields, $tab, $options );
-
-				break;
-
-			case 'checkbox':
-			case 'multicheckbox':
-			case 'multicheckboxvalues':
-			case 'textarea':
-			case 'radio':
-			case 'select':
-			case 'multiselect':
-			case 'multiselect_name_value':
-			case 'password':
-			case 'hidden':
-			case 'number':
-			case '':
-			case 'input':
-			case 'text':
-				if ( ! empty( $fields_group ) && ! empty( $options['sub_option'] ) ) {
-
-					$name_attr        = 'gmw_form[' . $tab . '][' . $fields_group . ']';
-					$value            = ! empty( $this->form[ $tab ][ $fields_group ][ $options['name'] ] ) ? $this->form[ $tab ][ $fields_group ][ $options['name'] ] : $options['default'];
-					$options['id']    = esc_attr( 'setting-' . $tab . '-' . $fields_group . '-' . $options['name'] );
-					$class            = 'setting-' . $fields_group . '-' . $options['name'];
-					$options['class'] = ! empty( $options['class'] ) ? $options['class'] . ' ' . $class : $class;
-				} else {
-
-					$name_attr        = 'gmw_form[' . $tab . ']';
-					$value            = ! empty( $this->form[ $tab ][ $options['name'] ] ) ? $this->form[ $tab ][ $options['name'] ] : $options['default'];
-					$options['id']    = esc_attr( 'setting-' . $tab . '-' . $options['name'] );
-					$class            = 'setting-' . $options['name'];
-					$options['class'] = ! empty( $options['class'] ) ? $options['class'] . ' ' . $class : $class;
-				}
-
-				echo gmw_get_admin_settings_field( $options, esc_attr( $name_attr ), $value ); // WPCS: XSS ok.
-
-				break;
+			$name_attr        = 'gmw_form[' . $tab . ']';
+			$value            = ! empty( $this->form[ $tab ][ $options['name'] ] ) ? $this->form[ $tab ][ $options['name'] ] : $options['default'];
+			$options['id']    = esc_attr( 'setting-' . $tab . '-' . $options['name'] );
+			$class            = 'setting-' . $options['name'];
+			$options['class'] = ! empty( $options['class'] ) ? $options['class'] . ' ' . $class : $class;
 		}
+
+		// display settings fields.
+		if ( 'function' === $options['type'] ) {
+
+			$name_attr .= '[' . $options['name'] . ']';
+			$function   = ! empty( $options['function'] ) ? $options['function'] : $options['name'];
+
+			do_action( 'gmw_' . $this->form['slug'] . '_form_settings_' . $function, $value, $name_attr, $this->form, $this->form_fields, $tab, $options );
+			do_action( 'gmw_' . $this->form['addon'] . '_addon_form_settings_' . $function, $value, $name_attr, $this->form, $this->form_fields, $tab, $options );
+			do_action( 'gmw_' . $this->form['component'] . '_component_form_settings_' . $function, $value, $name_attr, $this->form, $this->form_fields, $tab, $options );
+			do_action( 'gmw_form_settings_' . $function, $value, $name_attr, $this->form, $this->form_fields, $tab, $options );
+
+			// Pre-defined fields.
+		} else {
+			echo gmw_get_admin_settings_field( $options, esc_attr( $name_attr ), $value ); // WPCS: XSS ok.
+		}
+	}
+
+	public function is_pro_feature( $field_options ) {
+
+		$output = array(
+			'is_pro'      => false,
+			'is_disabled' => false,
+		);
+
+		if ( ! empty( $field_options['premium_message']['message'] ) && ! empty( $field_options['premium_message']['extension_class'] ) && ! class_exists( $field_options['premium_message']['extension_class'] ) ) {
+
+			$output['is_pro'] = true;
+
+			if ( $field_options['premium_message']['option_disabled'] ) {
+				$output['is_disabled'] = true;
+			}
+		}
+
+		return $output;
 	}
 
 	/**
@@ -2003,6 +2400,10 @@ class GMW_Form_Editor {
 		}
 		?>
 		<form method="post" action="" id="gmw-form-editor" class="<?php echo $class; // WPCS: XSS ok. ?>" data-ajax_enabled="<?php echo esc_attr( $this->ajax_enabled ); ?>" data-nonce="<?php echo wp_create_nonce( 'gmw_edit_form_nonce' ); // WPCS: XSS ok. ?>">
+
+			<div id="gmw-edit-form-page-loader" style="position: absolute;width: 100%;height: 100%;top: 0;left: 0;background: white;z-index: 999999999;">
+				<i style="font-size: 60px;color: #4699E8;margin: 0;position: absolute;top: 40%;left: 50%;-ms-transform: translate(-50%, -50%);transform: translate(-50%, -50%);" class="gmw-icon gmw-icon-cog animate-spin"></i>
+			</div>
 
 			<?php gmw_admin_helpful_buttons(); ?>
 
@@ -2045,10 +2446,10 @@ class GMW_Form_Editor {
 				</div>
 			</div>
 
+
 			<div id="gmw-edit-form-page" class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper gmw-admin-page-no-sidebar">
 
 				<nav class="gmw-admin-page-navigation gmw-tabs-wrapper gmw-edit-form-page-nav-tabs">
-
 					<?php
 					foreach ( $this->form_settings_groups as $group ) {
 
@@ -2117,10 +2518,15 @@ class GMW_Form_Editor {
 								'class' => array(),
 								'id'    => array(),
 							),
-							'code' => array(),
-							'br'   => array(),
-							'em'   => array(),
-							'p'    => array(),
+							'code'   => array(),
+							'b'      => array(),
+							'br'     => array(),
+							'em'     => array(),
+							'p'      => array(),
+							'strong' => array(),
+							'div'    => array(
+								'class' => array(),
+							),
 						)
 					);
 
@@ -2158,6 +2564,7 @@ class GMW_Form_Editor {
 
 								$grid_column_css  = ! empty( $option['grid_column'] ) ? 'gmw-settings-panel-grid-column-' . esc_attr( $option['grid_column'] ) : '';
 								$feature_disbaled = '';
+								$pro_feature      = $this->is_pro_feature( $option );
 
 								if ( ! empty( $option['feature_disabled'] ) ) {
 
@@ -2190,7 +2597,11 @@ class GMW_Form_Editor {
 
 											<i class="gmw-icon-cog"></i>
 											<label for="setting-<?php echo esc_attr( $option['name'] ); ?>">
-												<?php echo esc_html( $option['label'] ); ?>	
+												<?php echo esc_html( $option['label'] ); ?>
+
+												<?php if ( $pro_feature['is_disabled'] ) { ?>
+													<span class="gmw-form-pro-feature">Premium</span>
+												<?php } ?>
 											</label>
 
 											<?php
@@ -2219,9 +2630,29 @@ class GMW_Form_Editor {
 
 												<?php foreach ( $option['fields'] as $field_options ) { ?>
 
-													<?php $grid_column_css = ! empty( $field_options['grid_column'] ) ? 'gmw-settings-panel-grid-column-' . esc_attr( $field_options['grid_column'] ) : ''; ?>
+													<?php
+													$grid_column_css  = ! empty( $field_options['grid_column'] ) ? 'gmw-settings-panel-grid-column-' . esc_attr( $field_options['grid_column'] ) : '';
+													$pro_feature      = $this->is_pro_feature( $field_options );
+													$wrap_attrs       = '';
 
-													<div class="<?php echo $id_attr; // WPCS: XSS ok. ?> gmw-settings-panel-field gmw-form-feature-settings single-option option-<?php echo esc_attr( $field_options['name'] ); ?> <?php echo $feature_disbaled; // WPCS: XSS ok. ?> <?php echo ! empty( $field_options['type'] ) ? esc_attr( $field_options['type'] ) : ''; ?> <?php echo ! empty( $field_options['wrap_class'] ) ? esc_attr( $field_options['wrap_class'] ) : ''; ?>">
+													// attributes.
+													if ( ! empty( $field_options['wrap_attrs'] ) && is_array( $field_options['wrap_attrs'] ) ) {
+
+														$attrs = [];
+
+														foreach ( $field_options['wrap_attrs'] as $attr_name => $attr_value ) {
+
+															if ( 'class' === $attr_name ) {
+																$field_options['wrap_class'] .= ' ' . $attr_value;
+															} else {
+																$attrs[] = esc_attr( $attr_name ) . '="' . esc_attr( $attr_value ) . '"';
+															}
+														}
+
+														$wrap_attrs = implode( ' ', $attrs );
+													}
+													?>
+													<div class="<?php echo $id_attr; // WPCS: XSS ok. ?> gmw-settings-panel-field gmw-form-feature-settings single-option option-<?php echo esc_attr( $field_options['name'] ); ?> <?php echo $feature_disbaled; // WPCS: XSS ok. ?> <?php echo ! empty( $field_options['type'] ) ? esc_attr( $field_options['type'] ) : ''; ?> <?php echo ! empty( $field_options['wrap_class'] ) ? esc_attr( $field_options['wrap_class'] ) : ''; ?>" <?php echo $wrap_attrs; ?>>
 
 														<div class="gmw-settings-panel-header">
 															<label class="gmw-settings-label"><?php echo ( ! empty( $field_options['label'] ) ) ? esc_html( $field_options['label'] ) : ''; ?></label>
@@ -2236,24 +2667,55 @@ class GMW_Form_Editor {
 														<?php } ?>
 													</div>
 
-													<?php if ( ! empty( $field_options['premium_message']['message'] ) && ! empty( $field_options['premium_message']['extension_class'] ) && ! class_exists( $field_options['premium_message']['extension_class'] ) ) { ?>
+													<?php if ( $pro_feature['is_pro'] ) { ?>
 														<div class="gmw-premium-options-message">
 															<?php echo $this->get_premium_message( $field_options['premium_message']['message'] ); // WPCS: XSS ok. ?>
+
+															<?php if ( $pro_feature['is_disabled'] ) { ?>
+																<div class="gmw-premium-extension-option-disabled"></div>
+															<?php } ?>
 														</div>
 													<?php } ?>
 
 												<?php } ?>
 
-												<?php if ( ! empty( $option['premium_message']['message'] ) && ! empty( $option['premium_message']['extension_class'] ) && ! class_exists( $option['premium_message']['extension_class'] ) ) { ?>
+												<?php $pro_feature = $this->is_pro_feature( $option ); ?>
+
+												<?php if ( $pro_feature['is_pro'] ) { ?>
+
 													<div class="gmw-premium-options-message">
 														<?php echo $this->get_premium_message( $option['premium_message']['message'] ); // WPCS: XSS ok. ?>
 													</div>
+
+													<?php if ( $pro_feature['is_disabled'] ) { ?>
+														<div class="gmw-premium-extension-option-disabled"></div>
+													<?php } ?>
 												<?php } ?>
 											</div>
 
 										<?php } else { ?>
 
-											<div class="gmw-settings-panel-field gmw-form-feature-settings <?php echo $feature_disbaled; ?> <?php echo ! empty( $option['type'] ) ? esc_attr( $option['type'] ) : ''; ?>">
+											<?php
+												$wrap_attrs = '';
+
+												// attributes.
+												if ( ! empty( $option['wrap_attrs'] ) && is_array( $option['wrap_attrs'] ) ) {
+
+													$attrs = [];
+
+													foreach ( $option['wrap_attrs'] as $attr_name => $attr_value ) {
+
+														if ( 'class' === $attr_name ) {
+															$option['wrap_class'] .= ' ' . $attr_value;
+														} else {
+															$attrs[] = esc_attr( $attr_name ) . '="' . esc_attr( $attr_value ) . '"';
+														}
+													}
+
+													$wrap_attrs = implode( ' ', $attrs );
+												}
+											?>
+											<div class="gmw-settings-panel-field gmw-form-feature-settings <?php echo $feature_disbaled; ?> <?php echo ! empty( $option['type'] ) ? esc_attr( $option['type'] ) : ''; ?> <?php echo ! empty( $option['wrap_class'] ) ? esc_attr( $option['wrap_class'] ) : ''; ?>" <?php echo $wrap_attrs; ?>>
 												<div class="gmw-settings-panel-input-container">
 													<?php $this->get_form_field( $option, $tab ); ?>
 												</div>
@@ -2263,6 +2725,9 @@ class GMW_Form_Editor {
 												<div class="gmw-premium-options-message">
 													<?php echo $this->get_premium_message( $option['premium_message']['message'] ); // WPCS: XSS ok. ?>
 												</div>
+												<?php if ( $option['premium_message']['option_disabled'] ) { ?>
+													<div class="gmw-premium-extension-option-disabled"></div>
+												<?php } ?>
 											<?php } ?>
 
 										<?php } ?>
@@ -2272,7 +2737,6 @@ class GMW_Form_Editor {
 							<?php } ?> 
 							<?php do_action( 'form_editor_tab_end', $tab, $section, $this->form['ID'], $this->form ); ?>
 							<?php do_action( 'form_editor_' . $tab . '_tab_end', $tab, $section, $this->form['ID'], $this->form ); ?>
-
 						</div>
 					<?php } ?>
 					<?php
@@ -2313,6 +2777,10 @@ class GMW_Form_Editor {
 		jQuery( document ).ready( function( $ ) {
 			jQuery( 'body' ).addClass( 'geo-my-wp_page_gmw-form-editor' );
 			jQuery( 'html' ).addClass( 'folded' ).find( '#adminmenumain, #adminmenuback' ).css( 'overflow', 'initial' );
+
+			setTimeout( function() {
+				jQuery( '#gmw-edit-form-page-loader' ).fadeOut( 'slow' );
+			}, 100 );
 		});
 		</script>         
 		<?php
