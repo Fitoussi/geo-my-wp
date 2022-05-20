@@ -340,3 +340,26 @@ div#gmw-location-form-wrapper .gmw-lf-day-hours-content > .gmw-lf-day-hours-row 
 	grid-column-gap: 20px;
 }
 
+div#gmw-location-form-wrapper .gmw-lf-content-wrapper .gmw-map-icons-wrapper {
+	display: grid;
+	grid-template-columns: repeat(auto-fit,minmax(60px,1fr));
+	grid-gap: 12px;
+}
+
+div#gmw-location-form-wrapper .gmw-lf-content-wrapper .gmw-map-icons-wrapper label,
+.groups.group-admin #buddypress #item-body #group-settings-form .gmw-lf-content-wrapper .gmw-map-icons-wrapper label {
+	display: flex;
+	box-sizing: border-box;
+	background: #f7f7f7;
+	padding: 10px 15px;
+	border: 1px solid #ededed;
+	border-radius: 6px;
+	margin: 0;
+	cursor: pointer;
+	flex-direction: column-reverse;
+}
+
+div#gmw-location-form-wrapper .gmw-lf-content-wrapper .gmw-map-icons-wrapper label img {
+	max-height: 35px;
+	max-width: 35px;
+}
