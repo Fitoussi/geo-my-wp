@@ -199,14 +199,12 @@ function gmw_search_results_directions_system( $object, $gmw = array() ) {
  */
 function gmw_get_search_results_orderby_filter( $gmw = array() ) {
 
-	if ( empty( $gmw['search_results']['orderby'] ) ) {
+	if ( empty( $gmw['search_results']['orderby']['enabled'] ) || empty( $gmw['search_results']['orderby']['options'] ) ) {
 		return;
 	}
 
-	//$orderby = explode( ',', $gmw['search_results']['orderby'] );
-
 	// Explode options from textarea value.
-	$orderby = explode( PHP_EOL, $gmw['search_results']['orderby'] );
+	$orderby = explode( PHP_EOL, $gmw['search_results']['orderby']['options'] );
 	$options = array();
 
 	foreach ( $orderby as $option ) {
@@ -220,7 +218,8 @@ function gmw_get_search_results_orderby_filter( $gmw = array() ) {
 	}
 
 	$args = array(
-		'id' => $gmw['ID'],
+		'id'           => $gmw['ID'],
+		'ajax_enabled' => 'ajax_forms' === $gmw['addon'] ? true : false,
 	);
 
 	return GMW_Template_Functions_Helper::get_orderby_filter( $args, $options );
@@ -426,4 +425,35 @@ function gmw_get_results_view_toggle( $gmw ) {
  */
 function gmw_results_view_toggle( $gmw ) {
 	echo gmw_get_results_view_toggle( $gmw ); // WPCS: XSS ok.
+}
+
+/**
+ * Output BP avatar in search results.
+ *
+ * @param  object $object memebr | group object.
+ *
+ * @param  array  $gmw    gmw form object.
+ *
+ * @return [type]         [description]
+ */
+function gmw_search_results_bp_avatar( $object = array(), $gmw = array(), $where = 'search_results' ) {
+
+	// Abort if iamge is disabled.
+	if ( empty( $gmw[ $where ]['image']['enabled'] ) ) {
+		return;
+	}
+
+	$settings = $gmw[ $where ]['image'];
+
+	$args = array(
+		'object_type'  => 'bp_group' === $object->object_type ? 'group' : 'user',
+		'object_id'    => $object->object_id,
+		'width'        => ! empty( $settings['width'] ) ? $settings['width'] : '150px',
+		'height'       => ! empty( $settings['height'] ) ? $settings['height'] : '150px',
+		'show_grav'    => ! empty( $settings['show_grav'] ) ? $settings['show_grav'] : false,
+		'show_default' => ! empty( $settings['show_default'] ) ? $settings['show_default'] : false,
+		'where'        => $where,
+	);
+
+	echo gmw_get_bp_avatar( $args, $object, $gmw ); // WPCS: XSS ok.
 }
