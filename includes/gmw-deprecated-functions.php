@@ -168,6 +168,281 @@ if ( ! IS_ADMIN ) {
 */
 
 /**
+ * Add orderby filter to the search results via hook.
+ *
+ * @see function in geo-my-wp/includes/template-functions/gmw-search-results-template-functions.php.
+ *
+ * DEPRECATED.
+ *
+ * The orderby filter is now added directly to the search results template files.
+ *
+ * The below is still here for the deprecated template files, but will be removed in teh future.
+ *
+ * Moved from the Premium Settings extension. Deprecated on premium settings v3.0.
+ *
+ * @param array $gmw gmw form.
+ */
+function gmw_ps_add_search_results_orderby_filter( $gmw = array() ) {
+	if ( 'posts_locator' === $gmw['slug'] || 'members_locator' === $gmw['slug'] ) {
+		gmw_search_results_orderby_filter( $gmw );
+	}
+}
+add_action( 'gmw_search_results_after_results_message', 'gmw_ps_add_search_results_orderby_filter' );
+
+/**
+ * MOved from the Premium Settings extension.
+ *
+ * Deprecated since Premium Settings v3.0.
+ *
+ * @var string
+ */
+Function gmw_ps_bp_object_types_query( $gmw, $object, $name_tag = '' ) {
+
+	_deprecated_function( 'gmw_ps_bp_object_types_query', '4.0', 'there is no replacment to this function.' );
+
+	If ( '' == $name_tag ) {
+		$name_tag = 'bp_' . $object . '_types';
+	}
+
+	// filter type on page load.
+	if ( $gmw['page_load_action'] && 'disabled' != $gmw['page_load_results'][ 'include_exclude_' . $object . '_types' ]['usage'] ) {
+
+		$settings = $gmw['page_load_results'][ 'include_exclude_' . $object . '_types' ];
+
+		if ( empty( $settings['usage'] ) || ! $settings[ $object . '_types' ] ) {
+
+			return $gmw;
+
+		} else {
+
+			if ( 'include' == $settings['usage'] ) {
+
+				$gmw['query_args'][ $object . '_type__in' ] = $settings[ $object . '_types' ];
+
+			} else {
+
+				$gmw['query_args'][ $object . '_type__not_in' ] = $settings[ $object . '_types' ];
+			}
+		}
+
+		return $gmw;
+	}
+
+	// filter group on form submission.
+	if ( ! $gmw['submitted'] || 'disabled' == $gmw['search_form'][ $object . '_types_filter' ]['usage'] ) {
+		return $gmw;
+	}
+
+	$settings = $gmw['search_form'][ $object . '_types_filter' ];
+
+	/**
+	 * If set to pre-defined or no group types were selected in formm, then there are 2 scenarios:
+	 *
+	 * Either show only selected groups, when specifci groups
+	 *
+	 * are selected for the filter. Or show all groups types
+	 *
+	 * if nothing was selected.
+	 */
+	if ( 'pre_defined' == $settings['usage'] || empty( $gmw['form_values'][ $name_tag ] ) || ! array_filter( $gmw['form_values'][ $name_tag ] ) ) {
+
+		$settings = $gmw['search_form'][ $object . '_types_filter' ];
+
+		// if no types were selected in form editor we dont use the filter.
+		if ( ! $settings[ $object . '_types' ] ) {
+
+			return $gmw;
+
+			// otherwise, filter all selected types.
+		} else {
+
+			$gmw['query_args'][ $object . '_type__in' ] = $settings[ $object . '_types' ];
+		}
+
+		// otherwise, filter group types submitted in the form filter.
+	} elseif ( 'pre_defined' != $settings['usage'] ) {
+
+		$gmw['query_args'][ $object . '_type__in' ] = $gmw['form_values'][ $name_tag ];
+	}
+
+	return $gmw;
+}
+
+/**
+ * MOved from the Premium Settings extension.
+ *
+ * Deprecated since Premium Settings v3.0.
+ *
+ * @var string
+ */
+function gmw_search_form_pre_defined_options_selector( $output, $args ) {
+
+	$output .= '<input type="hidden" name="' . esc_attr( $args['name'] ) . '[]" value="" />';
+
+	return $output;
+}
+//add_filter( 'gmw_search_form_pre_defined_field', 'gmw_search_form_pre_defined_options_selector', 5, 2 );
+
+/**
+ * MOved from the Premium Settings extension.
+ *
+ * Deprecated since Premium Settings v3.0.
+ *
+ * @var string
+ */
+function gmw_search_form_checkboxes_options_selector( $output, $args ) {
+
+	$output = '<ul class="gmw-field-checkboxes gmw-checkbox-level-top gmw-checkboxes-options-selector">';
+	$value  = $args['value'];
+
+	foreach ( $args['options'] as $option_value => $label ) {
+
+		$option_value = esc_attr( $option_value );
+
+		if ( is_array( $value ) ) {
+			$checked = in_array( $option_value, $value, true ) ? 'checked="checked"' : ''; // WPCS: sanitization ok, CSRF ok.
+		} else {
+			$checked = $value == $option_value ? 'checked="checked"' : ''; // WPCS: CSRF ok.
+		}
+
+		$output .= '<li class="gmw-field-checkbox-wrapper" data-value="' . $option_value . '">';
+		$output .= '<label for="' . $args['id_attr'] . '-' . $option_value . '" class="gmw-checkbox-label">';
+		$output .= '<input type="checkbox" id="' . $args['id_attr'] . '-' . $option_value . '" name="' . $args['name'] . '" class="gmw-' . $args['slug'] . '-field-checkbox gmw-field-checkbox" value="' . $option_value . '" ' . $checked . '>';
+		$output .= esc_attr( $label );
+		$output .= '</label></li>';
+	}
+
+	$output .= '</ul>';
+
+	return $output;
+}
+//add_filter( 'gmw_search_form_checkboxes_field', 'gmw_search_form_checkboxes_options_selector', 5, 2 );
+//add_filter( 'gmw_search_form_checkbox_field', 'gmw_search_form_checkboxes_options_selector', 5, 2 );
+
+/**
+ * MOved from the Premium Settings extension.
+ *
+ * Deprecated since Premium Settings v3.0.
+ *
+ * @var string
+ */
+function gmw_search_form_smartbox_options_selector( $output, $args, $options ) {
+
+	$id_tag   = ( '' !== $args['id_tag'] ) ? 'id="' . esc_attr( $args['id_tag'] ) . '"' : '';
+	$multiple = ( 'smartbox_multiple' === $args['usage'] ) ? 'multiple' : '';
+
+	$output .= '<select name="' . esc_attr( $args['name_tag'] ) . '[]" data-placeholder="' . esc_attr( $args['show_options_all'] ) . '" ' . $id_tag . ' class="gmw-form-field gmw-' . esc_attr( $args['object'] ) . '-field gmw-smartbox" ' . $multiple . '>';
+
+	if ( 'smartbox' === $args['usage'] && ! empty( $args['show_options_all'] ) ) {
+		$output .= '<option value="">' . esc_attr( $args['show_options_all'] ) . '</option>';
+	}
+
+	foreach ( $options as $value => $name ) {
+
+		$selected = ( isset( $_GET[ $args['name_tag'] ] ) && in_array( $value, $_GET[ $args['name_tag'] ], true ) ) ? 'selected="selected"' : ''; // WPCS: CSRF ok, sanitization ok.
+
+		$output .= '<option value="' . esc_attr( $value ) . '" ' . $selected . '>' . esc_html( $name ) . '</option>';
+	}
+
+	$output .= '</select>';
+
+	gmw_ps_enqueue_smartbox();
+
+	return $output;
+}
+//add_filter( 'gmw_search_form_smartbox_options_selector', 'gmw_search_form_smartbox_options_selector', 5, 3 );
+//add_filter( 'gmw_search_form_smartbox_multiple_options_selector', 'gmw_search_form_smartbox_options_selector', 5, 3 );
+
+/**
+ * MOved from the Premium Settings extension.
+ *
+ * Deprecated since Premium Settings v3.0.
+ *
+ * @var string
+ */
+function gmw_get_search_form_address_fields( $gmw ) {
+
+	// abort if using single address field.
+	if ( empty( $gmw['search_form']['address_field']['usage'] ) || 'single' === $gmw['search_form']['address_field']['usage'] ) {
+		return $output;
+	}
+
+	if ( empty( $gmw['search_form']['address_field']['multiple'] ) ) {
+		return $output;
+	}
+
+	$id = absint( $gmw['ID'] );
+
+	//$output = '<div class="gmw-address-fields-wrapper gmw-search-form-multiple-fields-wrapper">';
+
+	$output = '';
+
+	foreach ( $gmw['search_form']['address_field']['multiple'] as $field_name => $field_args ) {
+
+		// sanitize fields.
+		array_map( 'esc_attr', $field_args );
+
+		$placeholder = '';
+		$mandatory   = isset( $field_args['mandatory'] ) ? 'mandatory' : '';
+		$usage       = isset( $field_args['usage'] ) ? $field_args['usage'] : 'disabled';
+		$field_name  = esc_attr( $field_name );
+		$url_px      = esc_attr( gmw_get_url_prefix() );
+		$placeholder = isset( $field_args['placeholder'] ) ? $field_args['placeholder'] : '';
+
+		if ( 'default' === $usage ) {
+
+			$output .= "<input type='hidden' id='gmw-{$field_name}-field-{$id}'  name='{$url_px}address[{$field_name}]' value='{$field_args['value']}' />";
+
+		} elseif ( 'include' === $usage ) {
+
+			$value   = ! empty( $_GET[ $url_px . 'address' ][ $field_name ] ) ? esc_attr( stripslashes( $_GET[ $url_px . 'address' ][ $field_name ] ) ) : ''; // WPCS: CSRF ok, sanitization ok.
+			$output .= "<div class=\"gmw-form-field-wrapper gmw-{$field_name}-field-wrapper\">";
+
+			// create label.
+			if ( ! empty( $field_args['title'] ) ) {
+
+				if ( isset( $field_args['within'] ) ) {
+
+					$placeholder = $field_args['title'];
+
+				} else {
+
+					$output .= "<label for='gmw-{$field_name}-field-{$id}' class='gmw-field-label'>{$field_args['title']}</label>";
+				}
+			}
+
+			if ( 'country' !== $field_name ) {
+				// input text field.
+				$output .= "<input type='text' id='gmw-{$field_name}-field-{$id}' name='{$url_px}address[{$field_name}]' class='gmw-address {$field_name} {$mandatory}' value='{$value}' size='20' placeholder='{$placeholder}' />";
+			} else {
+
+				$placeholder = ! empty( $placeholder ) ? $placeholder : __( 'Select country...', 'gmw-premium-settings' );
+
+				$output .= "<select id='gmw-{$field_name}-field-{$id}' data-placeholder='{$placeholder}' name='{$url_px}address[country]' class='gmw-smartbox gmw-saf-{$field_name} gmw-address'>";
+				$output .= '<option value="" selected="selected">' . $placeholder . '</option>';
+
+				foreach ( gmw_get_countries_array() as $country ) {
+
+					$selected = ( $value === $country['name'] ) ? 'selected="selected"' : '';
+
+					$output .= '<option value="' . esc_attr( $country['name'] ) . '" ' . $selected . '>' . esc_attr( $country['name'] ) . '</option>';
+				}
+
+				$output .= '</select>';
+
+				gmw_ps_enqueue_smartbox();
+			}
+
+			$output .= '</div>';
+		}
+	}
+	//$output .= '</div>';
+
+	return $output;
+}
+//add_filter( 'gmw_search_form_address_field', 'gmw_get_search_form_address_fields', 10, 2 );
+
+/**
  * GMW_PT_Search_Form_Helper class
  */
 class GMW_PT_Search_Form_Helper {
@@ -187,6 +462,58 @@ class GMW_PT_Search_Form_Helper {
 
 		return GMW_Search_Form_Helper::taxonomy_field( $args, $gmw );
 	}
+}
+
+/**
+ * Date format convertor for custom fields queries.
+ *
+ * @author Eyal Fitoussi
+ *
+ * @param string $date the date value.
+ *
+ * @param string $type the date type.
+ *
+ * DEPRECATED @since 4.0 ( moved from the Premium Settings extension ).
+ */
+function gmw_date_converter( $date, $type ) {
+
+	_deprecated_function( 'gmw_date_converter', '4.0', 'there is no alternative to this function' );
+
+	if ( empty( $date ) ) {
+
+		$date = date( 'ymd' );
+
+	} else {
+
+		if ( 'mm/dd/yyyy' === $type ) {
+
+			$date = explode( '/', $date );
+			$date = $date[2] . $date[0] . $date[1];
+
+		} elseif ( 'dd/mm/yyyy' === $type ) {
+
+			$date = explode( '/', $date );
+			$date = $date[2] . $date[1] . $date[0];
+		}
+	}
+
+	return $date;
+}
+
+/**
+ * Date format convertor for custom fields queries
+ *
+ * @author Eyal Fitoussi
+ *
+ * @param string $date the date value.
+ *
+ * @param string $type the date type.
+ *
+ * @since 1.5
+ */
+function gmw_ps_pt_date_converter( $date, $type ) {
+	_deprecated_function( 'gmw_ps_pt_date_converter', '3.0', 'gmw_date_converter' );
+	return gmw_date_converter( $date, $type );
 }
 
 function gmw_get_draggable_handle( $gmw = array(), $info = array() , $draggable = '', $handle = true, $icon = 'gmw-icon-target', $containment = 'window' ) {
