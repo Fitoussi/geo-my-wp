@@ -613,6 +613,55 @@ function gmw_get_units_array( $units = 'imperial' ) {
 }
 
 /**
+ * Array filter function that does not check for 0 as an empty.
+ *
+ * @since 4.0
+ *
+ * @param  array $value the array to filter.
+ *
+ * @return [type]        [description]
+ */
+function gmw_array_filter_callback( $value ) {
+	return ( null !== $value && false !== $value && '' !== $value );
+}
+
+/**
+ * Generate the address filters SQL.
+ *
+ * @param  array  $address_filters array of address field => value pairs.
+ * 
+ * @param  array  $gmw             gmw form.
+ *
+ * @return [type]                  [description]
+ */
+function gmw_get_address_fields_filters_sql( $address_filters = array(), $gmw = array() ) {
+	return GMW_Location::query_address_fields( $address_filters, $gmw );
+}
+
+/**
+ * SQL to get locations within bounderies.
+ *
+ * @param  array $sw southwest coords.
+ * @param  array $ne northeast coords.
+ *
+ * @since 4.0.
+ *
+ * @return [type]     [description]
+ */
+function gmw_get_locations_within_bounderies_sql( $southwest = array(), $northeast = array() ) {
+
+	if ( empty( $southwest ) || empty( $northeast ) ) {
+		return;
+	}
+
+	$sw = explode( ',', $southwest );
+	$ne = explode( ',', $northeast );
+
+	return " AND ( gmw_locations.latitude BETWEEN {$sw[0]} AND {$ne[0]} ) AND ( ( {$sw[1]} < {$ne[1]} AND gmw_locations.longitude BETWEEN {$sw[1]} AND {$ne[1]} ) 
+			OR ( {$sw[1]} > {$ne[1]} AND (gmw_locations.longitude BETWEEN {$sw[1]} AND 180 OR gmw_locations.longitude BETWEEN -180 AND {$ne[1]} ) ) )";
+}
+
+/**
  * Get form field options.
  *
  * Generate an array of options from textarea with break lines or from comma separated string.
@@ -1230,8 +1279,8 @@ function gmw_get_map( $map_args = array(), $map_options = array(), $locations = 
  *
  * @return [type]       [description]
  */
-function gmw_get_map_element( $args = array() ) {
-	return GMW_Maps_API::get_map_element( $args );
+function gmw_get_map_element( $args = array(), $gmw = array() ) {
+	return GMW_Maps_API::get_map_element( $args, $gmw );
 }
 
 /**
