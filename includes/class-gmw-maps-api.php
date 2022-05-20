@@ -167,11 +167,11 @@ class GMW_Maps_API {
 	 *     'init_visible'   => false
 	 *   );.
 	 *
-	 * @param boolean $implode implode the map output?.
+	 * @param array $gmw gmw form.
 	 *
 	 * @return HTML element of map
 	 */
-	public static function get_map_element( $args, $implode = true ) {
+	public static function get_map_element( $args = array(), $gmw = array() ) {
 
 		// default map args.
 		$default_args = array(
@@ -184,6 +184,7 @@ class GMW_Maps_API {
 			'init_visible'        => true,
 			'map_position_filter' => false,
 			'map_position_label'  => '',
+			'implode'             => true,
 		);
 
 		// merge defaults with incoming args.
@@ -202,23 +203,24 @@ class GMW_Maps_API {
 			$trigger  = 'gmw-icon-resize-full';
 		}
 
-		$map_id     = esc_attr( $args['map_id'] );
-		$prefix     = esc_attr( $args['prefix'] );
-		$map_type   = esc_attr( $args['map_type'] );
-		$map_width  = esc_attr( $args['map_width'] );
-		$map_height = esc_attr( $args['map_height'] );
-		$map_title  = esc_html( __( 'Resize map', 'geo-my-wp' ) );
-		$display    = ( $args['init_visible'] || $args['expand_on_load'] ) ? '' : 'display:none;';
+		$map_id      = esc_attr( $args['map_id'] );
+		$prefix      = esc_attr( $args['prefix'] );
+		$map_type    = esc_attr( $args['map_type'] );
+		$map_width   = esc_attr( $args['map_width'] );
+		$map_height  = esc_attr( $args['map_height'] );
+		$map_title   = esc_html( __( 'Resize map', 'geo-my-wp' ) );
+		$display     = ( $args['init_visible'] || $args['expand_on_load'] ) ? '' : 'display:none;';
+		$icons_usage = ! empty( $gmw['map_markers']['usage'] ) ? esc_attr( $gmw['map_markers']['usage'] ) : 'global';
 
 		// generate the map element.
 		$output['wrap']   = "<div id=\"gmw-map-wrapper-{$map_id}\" class=\"gmw-map-wrapper {$prefix} {$map_type} {$expanded}\" style=\"{$display}width:{$map_width};height:{$map_height};\">";
 		$output['toggle'] = "<span id=\"gmw-resize-map-toggle-{$map_id}\" class=\"gmw-resize-map-toggle {$trigger}\" style=\"display:none;\" title=\"{$map_title}\"></span>";
 
 		if ( $args['map_position_filter'] ) {
-			$output['position_filter'] = "<div id=\"gmw-map-position-filter-wrapper-{$map_id}\" class=\"gmw-map-position-filter-wrapper gmw-field-checkboxes gmw-checkboxes-enhanced\" style=\"display:none;\"><label for=\"gmw-map-position-filter-{$map_id}\" class=\"gmw-checkbox-label\"><input type=\"checkbox\" id=\"gmw-map-position-filter-{$map_id}\" class=\"gmw-field-checkbox gmw-map-position-filter\" data-id=\"{$map_id}\" />{$args['map_position_label']}</label></div>";
+			$output['position_filter'] = "<div id=\"gmw-map-position-filter-wrapper-{$map_id}\" class=\"gmw-map-position-filter-wrapper gmw-field-checkboxes gmw-fields-enhanced\" style=\"display:none;\"><label for=\"gmw-map-position-filter-{$map_id}\" class=\"gmw-checkbox-label\"><input type=\"checkbox\" id=\"gmw-map-position-filter-{$map_id}\" class=\"gmw-field-checkbox gmw-map-position-filter\" data-id=\"{$map_id}\" />{$args['map_position_label']}</label></div>";
 		}
 
-		$output['map']    = "<div id=\"gmw-map-{$map_id}\" class=\"gmw-map {$prefix} {$map_type}\" style=\"width:100%; height:100%\" data-map_id=\"{$map_id}\" data-prefix=\"{$prefix}\" data-map_type=\"{$map_type}\"></div>";
+		$output['map']    = "<div id=\"gmw-map-{$map_id}\" class=\"gmw-map {$prefix} {$map_type}\" style=\"width:100%; height:100%\" data-map_id=\"{$map_id}\" data-prefix=\"{$prefix}\" data-map_type=\"{$map_type}\" data-icons_usage=\"{$icons_usage}\"></div>";
 		$output['cover']  = '<div class="gmw-map-cover"></div>';
 		$output['loader'] = "<i id=\"gmw-map-loader-{$map_id}\" class=\"gmw-map-loader gmw-icon-spin-light animate-spin\"></i>";
 		$output['/wrap']  = '</div>';
@@ -227,7 +229,7 @@ class GMW_Maps_API {
 		$output = apply_filters( 'gmw_map_output', $output, $args );
 		$output = apply_filters( "gmw_map_output_{$args['map_id']}", $output, $args );
 
-		return $implode ? implode( ' ', $output ) : $output;
+		return $args['implode'] ? implode( ' ', $output ) : $output;
 	}
 
 	/**
@@ -276,6 +278,7 @@ class GMW_Maps_API {
 			'icon_url'             => GMW()->default_icons['location_icon_url'],
 			'clusters_path'        => 'https://raw.githubusercontent.com/googlemaps/js-marker-clusterer/gh-pages/images/m',
 			'map_provider'         => GMW()->maps_provider,
+			'map_bounderies'       => array(),
 		);
 
 		// if Google maps is the provider, we don't need icon size by default.
@@ -512,7 +515,7 @@ class GMW_Maps_API {
 		}
 
 		// distance.
-		if ( $args['distance'] && isset( $location->distance ) ) {
+		if ( $args['distance'] && ! empty( $location->distance ) ) {
 			$output['distance'] = '<div class="distance gmw-info-window-element">' . esc_attr( $location->distance ) . ' ' . $location->units . '</div>';
 		}
 
@@ -986,6 +989,10 @@ class GMW_Maps_API {
 	 * @since 3.1
 	 */
 	public static function leaflet_map_scripts() {
+
+		if ( ! wp_style_is( 'leaflet', 'enqueued' ) ) {
+			wp_enqueue_style( 'leaflet' );
+		}
 
 		// Marker Clusterer.
 		if ( self::$markers_clusterer && ! wp_script_is( 'gmw-marker-cluster', 'enqueued' ) ) {
