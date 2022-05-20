@@ -654,7 +654,8 @@ class GMW_Location {
 		            WHERE    blog_id     = %d 
 		            AND      object_type = %s 
 		            AND      object_id   = %d
-		            ORDER BY location_type ASC, parent DESC, ID ASC", // We first get locations without location type, then by Parent, then by ID.
+		            /*ORDER BY location_type ASC, parent DESC, ID ASC // We first get locations without location type, then by Parent, then by ID.*/
+		           ",
 					$blog_id,
 					$object_type,
 					$object_id
