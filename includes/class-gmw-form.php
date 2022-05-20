@@ -597,7 +597,7 @@ class GMW_Form {
 			//'init_visible'   => 'shortcode' === $this->form['map_usage'] ? false : true,
 		);
 
-		echo GMW_Maps_API::get_map_element( $args ); // WPCS: XSS ok.
+		echo gmw_get_map_element( $args, $this->form ); // WPCS: XSS ok.
 	}
 
 	/**
