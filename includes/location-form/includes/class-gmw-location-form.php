@@ -144,7 +144,7 @@ class GMW_Location_Form {
 		'default_user_location'     => 0,                         // auto-populate location fields with the user's current position if exsist. That is in case that there is no location save for the user.
 		'stand_alone'               => 1,                         // Wrap the location form within <form> element. That is if the location form is a stand alone and not within another form.
 		'form_element'              => '#gmw-location-form',      // form wrapper element. If the location form is within another form the main form element should be used in here.
-		'form_template'             => 'location-form-tabs-left', // Form template name.
+		'form_template'             => 'location-form-tabs-top', // Form template name.
 		// 'floating_form'               => 0,.
 		'submit_enabled'            => 1,                         // Show "Submit" button within the location form. That can be used when the location form is a stand alone. If the location form is within another form then the submit button of that form should be used.
 		'preserve_submitted_values' => 0,                         // when form submitted via page load, populate the form with the submitted values.
