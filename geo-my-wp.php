@@ -500,7 +500,7 @@ class GEO_MY_WP {
 		include GMW_PLUGINS_PATH . '/members-locator/loader.php';
 		include GMW_PLUGINS_PATH . '/bp-profile-search-geolocation/loader.php';
 		include GMW_PLUGINS_PATH . '/current-location/loader.php';
-		include GMW_PLUGINS_PATH . '/sweetdate-geolocation/loader.php';
+		//include GMW_PLUGINS_PATH . '/sweetdate-geolocation/loader.php';
 	}
 
 	/**
