@@ -502,7 +502,7 @@ class GMW_Sweet_Date_Geolocation {
 		);
 
 		// display the map element
-		echo GMW_Maps_API::get_map_element( $args );
+		echo gmw_get_map_element( $args, $this->form );
 	}
 
 	/**
