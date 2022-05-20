@@ -60,8 +60,8 @@ if ( bp_has_members(
 		}
 
 		// append distance + units to member.
-		$members_template->member->distance = $location->distance;
-		$members_template->member->units    = $location->units;
+		$members_template->member->distance = ! empty( $location->distance ) ? $location->distance : '';
+		$members_template->member->units    = ! empty( $location->units ) ? $location->units : '';
 
 		// modify member object.
 		$members_template->member = apply_filters( 'gmw_ajaxfmsfl_member_before_info_window', $members_template->member, $gmw );
