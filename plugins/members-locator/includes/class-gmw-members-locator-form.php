@@ -11,11 +11,264 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Extend the Memebrs Locator Form classes.
+ *
+ * @since 4.0.
+ */
+trait GMW_Members_Locator_Form_Trait {
+
+	/**
+	 * Modifies the BP members query.
+	 *
+	 * Join GMW locations table and do proximity search when needed.
+	 *
+	 * @since 1.1
+	 *
+	 * @param  array  $query array of query clauses.
+	 *
+	 * @return string        modified sql query
+	 */
+	public function query_clauses( $query ) {
+
+		global $wpdb;
+
+		// When orderby is an array, get the column using the SELECT clause.
+		if ( isset( $query->uid_clauses['orderby'] ) && is_array( $query->uid_clauses['orderby'] ) ) {
+
+			$column = strpos( $query->uid_clauses['select'], 'ON u.ID' ) !== false ? 'ID' : 'user_id';
+
+			// Otherwise, get the table column based on the type argument.
+		} else {
+			$column = in_array( $this->form['query_args']['type'], array( 'active', 'newest', 'popular', 'online' ), true ) ? 'user_id' : 'ID';
+		}
+
+		// add the location db fields to the query.
+		$fields       = ', gmw_locations.' . implode( ', gmw_locations.', $this->db_fields );
+		$having       = '';
+		$where        = '';
+		$join         = "INNER JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON ( u.{$column} = gmw_locations.object_id AND gmw_locations.object_type = 'user' ) ";
+		$units        = '';
+		$distance_sql = "'' AS distance";
+
+		// get address filters query.
+		$address_filters = gmw_get_address_fields_filters_sql( $this->get_address_filters(), $this->form );
+
+		// search within map bounderies.
+		if ( ! empty( $this->form['form_values']['nelatlng'] ) && ! empty( $this->form['form_values']['swlatlng'] ) ) {
+
+			$where .= gmw_get_locations_within_bounderies_sql( $this->form['form_values']['swlatlng'], $this->form['form_values']['nelatlng'] );
+
+			// when address provided, and not filtering based on address fields, we will do proximity search.
+		} elseif ( '' === $address_filters && ! empty( $this->form['lat'] ) && ! empty( $this->form['lng'] ) ) {
+
+			// generate some radius/units data.
+			if ( 'imperial' === $this->form['units'] ) {
+				$earth_radius = 3959;
+				$units        = 'mi';
+				$degree       = 69.0;
+			} else {
+				$earth_radius = 6371;
+				$units        = 'km';
+				$degree       = 111.045;
+			}
+
+			// since these values are repeatable, we escape them previous
+			// the query instead of running multiple prepares.
+			$lat          = esc_sql( $this->form['lat'] );
+			$lng          = esc_sql( $this->form['lng'] );
+			$distance     = ! empty( $this->form['radius'] ) ? esc_sql( $this->form['radius'] ) : '';
+			$distance_sql = "ROUND( {$earth_radius} * acos( cos( radians( {$lat} ) ) * cos( radians( gmw_locations.latitude ) ) * cos( radians( gmw_locations.longitude ) - radians( {$lng} ) ) + sin( radians( {$lat} ) ) * sin( radians( gmw_locations.latitude ) ) ),1 ) AS distance";
+
+			if ( ! empty( $distance ) ) {
+
+				if ( ! apply_filters( 'gmw_disable_query_clause_between', false, 'gmw_' . $this->form['prefix'], $this->form ) ) {
+
+					// calculate the between point.
+					$bet_lat1 = $lat - ( $distance / $degree );
+					$bet_lat2 = $lat + ( $distance / $degree );
+					$bet_lng1 = $lng - ( $distance / ( $degree * cos( deg2rad( $lat ) ) ) );
+					$bet_lng2 = $lng + ( $distance / ( $degree * cos( deg2rad( $lat ) ) ) );
+
+					$where .= " AND gmw_locations.latitude BETWEEN {$bet_lat1} AND {$bet_lat2}";
+					$where .= " AND gmw_locations.longitude BETWEEN {$bet_lng1} AND {$bet_lng2} ";
+				}
+
+				// filter locations based on the distance.
+				$having = "Having distance <= {$distance} OR distance IS NULL";
+			}
+
+			// if we order by the distance.
+			if ( 'distance' === $this->form['query_args']['type'] ) {
+				$query->uid_clauses['orderby'] = 'ORDER BY distance';
+			}
+		} else {
+
+			// if showing members without location.
+			if ( ! empty( $this->enable_objects_without_location ) ) {
+
+				// left join the location table into the query to display posts with no location as well.
+				$join = str_replace( 'INNER', 'LEFT', $join );
+
+			} else {
+
+				$where .= " AND ( gmw_locations.latitude != 0.000000 && gmw_locations.longitude != 0.000000 )";
+			}
+
+			$where .= ' ' . $address_filters;
+		}
+
+		$fields .= ", {$distance_sql}, '{$units}' AS units";
+
+		$clauses = array();
+
+		// we need to sepeate the SELECT and FROM caluses in the original query.
+		$select = explode( 'FROM', $query->uid_clauses['select'] );
+
+		$clauses['select']  = 'global_maps' === $this->form['addon'] ? 'SELECT' : 'SELECT SQL_CALC_FOUND_ROWS';
+		$clauses['fields']  = str_replace( 'SELECT', '', $select[0] ) . $fields;
+		$clauses['from']    = " FROM {$select[1]}";
+		$clauses['join']    = $join;
+		$clauses['where']   = $query->uid_clauses['where'];
+		$clauses['where']  .= $where;
+		$clauses['groupby'] = "GROUP BY u.{$column}";
+		$clauses['having']  = $having;
+		$clauses['orderby'] = $query->uid_clauses['orderby'];
+		$clauses['order']   = $query->uid_clauses['order'];
+		$clauses['limit']   = $query->uid_clauses['limit'];
+
+		// modify the query.
+		$clauses = apply_filters( 'gmw_members_locator_location_query_clauses', $clauses, $this->form, $this, $query );
+		$clauses = apply_filters( 'gmw_' . $this->form['prefix'] . '_location_query_clauses', $clauses, $this->form, $query, $this );
+
+		// If orderby is an array.
+		if ( is_array( $clauses['orderby'] ) ) {
+
+			$orderby_multiple = array();
+
+			foreach ( $clauses['orderby'] as $part ) {
+				$orderby_multiple[] = $part[0] . ' ' . $part[1];// column_name DESC/ASC
+			}
+
+			$clauses['orderby'] = 'ORDER BY ' . implode( ', ', $orderby_multiple );
+			$clauses['order']   = '';
+		}
+
+		// get results of locations + users data.
+		$this->locations = $wpdb->get_results( implode( ' ', $clauses ) ); // WPCS: db call ok, cache ok, unprepared SQL ok.
+
+		if ( 'global_maps' === $this->form['addon'] ) {
+
+			$query->gmw_locations = $this->locations;
+
+			return $query;
+		}
+
+		// get total results.
+		$this->total_users = $wpdb->get_var( 'SELECT FOUND_ROWS()' ); // WPCS: db call ok, cache ok.
+
+		// if locations found.
+		if ( ! empty( $this->locations ) ) {
+
+			$ids = wp_list_pluck( $this->locations, 'id' );
+
+			/**
+			 * Otherwise, when no locations are found
+			 *
+			 * We pass 0 as the users id to include
+			 *
+			 * in the users query to make it fail and show no results.
+			 */
+		} else {
+
+			$ids = array( 0 );
+		}
+
+		$ids = implode( ',', $ids );
+
+		$query->uid_clauses['where']  .= " AND u.{$column} IN ( {$ids} )";
+		$query->uid_clauses['orderby'] = '';
+		$query->uid_clauses['order']   = '';
+		$query->uid_clauses['limit']   = '';
+
+		return $query;
+	}
+
+	/**
+	 * Merge locations data with users data in the results.
+	 *
+	 * @since 1.1
+	 *
+	 * @param  array $results array of objects.
+	 *
+	 * @return array of objects with locations.
+	 */
+	public function append_location_data_to_results( $results ) {
+
+		$users = array();
+
+		foreach ( $results['users'] as $u ) {
+			$users[ $u->ID ] = $u;
+		}
+
+		$temp = array();
+
+		// merge users data with locations data.
+		foreach ( $this->locations as $location ) {
+
+			if ( ! isset( $users[ $location->id ] ) ) {
+				continue;
+			}
+
+			foreach ( $users[ $location->id ] as $key => $value ) {
+				$location->$key = $value;
+			}
+
+			$temp[] = $location;
+
+			do_action( 'gmw_' . $this->form['prefix'] . '_append_location_data_to_results', $location, $results, $this->form, $this );
+		}
+
+		// return new data to BuddyPress.
+		$results['users'] = $temp;
+		$results['total'] = $this->total_users;
+
+		return $results;
+	}
+
+	/**
+	 * Perform xProfile fields query.
+	 *
+	 * @param  [type] $query [description].
+	 *
+	 * @return [type]        [description]
+	 */
+	public function xprofile_query( $query ) {
+
+		if ( empty( $this->form['query_args']['xprofile_query'] ) ) {
+			return $query;
+		}
+
+		if ( ! empty( $query->query_vars['xprofile_query'] ) ) {
+			$query->query_vars['xprofile_query'] = array_merge( $query->query_vars['xprofile_query'], $this->form['query_args']['xprofile_query'] );
+		} else {
+			$query->query_vars['xprofile_query'] = $this->form['query_args']['xprofile_query'];
+		}
+
+		return $query;
+	}
+}
+
+/**
  * Members Locator search query class
  *
  * @author Eyal Fitoussi
  */
 class GMW_Members_Locator_Form extends GMW_Form {
+
+	/**
+	 * Inherit search queries from Trait.
+	 */
+	use GMW_Members_Locator_Form_Trait;
 
 	/**
 	 * Permalink hook
@@ -76,286 +329,29 @@ class GMW_Members_Locator_Form extends GMW_Form {
 	}
 
 	/**
-	 * Modify the members query.
-	 *
-	 * Join GMW locations table and do proximity search when needed.
-	 *
-	 * @since 3.2
-	 *
-	 * @param  array  $sql   clauses array.
-	 *
-	 * @param  object $query search query object.
-	 *
-	 * @return [type]        [description]
-	 */
-	public function modify_members_query_clauses( $sql, $query ) {
-
-		global $wpdb;
-
-		// Get the table column based on the type argument.
-		$column = in_array( $this->form['query_args']['type'], array( 'active', 'newest', 'popular', 'online' ), true ) ? 'user_id' : 'ID';
-
-		// add the location db fields to the query.
-		$fields = ', gmw_locations.' . implode( ', gmw_locations.', $this->db_fields );
-		$having = '';
-		$where  = '';
-		$tjoin  = "{$wpdb->base_prefix}gmw_locations gmw_locations ON u.{$column} = gmw_locations.object_id AND gmw_locations.object_type = 'user' ";
-		$join   = '';
-
-		// include specific users ID if returned from xprofile filters.
-		if ( ! empty( $this->form['query_args']['gmw_args']['xprofile_users_id'] ) ) {
-			$users_id = esc_sql( implode( ',', $this->form['query_args']['gmw_args']['xprofile_users_id'] ) );
-			$where   .= " AND u.{$column} IN ( {$users_id} ) ";
-		}
-
-		// get address filters query.
-		$address_filters = GMW_Location::query_address_fields( $this->get_address_filters(), $this->form );
-
-		// when address provided, and not filtering based on address fields, we will do proximity search.
-		if ( empty( $address_filters ) && ! empty( $this->form['lat'] ) && ! empty( $this->form['lng'] ) ) {
-
-			// generate some radius/units data.
-			if ( in_array( $this->form['units_array']['units'], array( 'imperial', 3959, 'miles', '3959' ), true ) ) {
-				$earth_radius = 3959;
-				$units        = 'mi';
-				$degree       = 69.0;
-			} else {
-				$earth_radius = 6371;
-				$units        = 'km';
-				$degree       = 111.045;
-			}
-
-			// add units to locations data.
-			$fields .= ", '{$units}' AS units";
-
-			// since these values are repeatable, we escape them previous
-			// the query instead of running multiple prepares.
-			$lat      = esc_sql( $this->form['lat'] );
-			$lng      = esc_sql( $this->form['lng'] );
-			$distance = ! empty( $this->form['radius'] ) ? esc_sql( $this->form['radius'] ) : '';
-
-			$fields .= " , ROUND( {$earth_radius} * acos( cos( radians( {$lat} ) ) * cos( radians( gmw_locations.latitude ) ) * cos( radians( gmw_locations.longitude ) - radians( {$lng} ) ) + sin( radians( {$lat} ) ) * sin( radians( gmw_locations.latitude ) ) ),1 ) AS distance";
-
-			$join = "INNER JOIN {$tjoin}";
-
-			if ( ! empty( $distance ) ) {
-
-				if ( ! apply_filters( 'gmw_disable_query_clause_between', false, 'gmw_fl', $this->form ) ) {
-
-					// calculate the between point.
-					$bet_lat1 = $lat - ( $distance / $degree );
-					$bet_lat2 = $lat + ( $distance / $degree );
-					$bet_lng1 = $lng - ( $distance / ( $degree * cos( deg2rad( $lat ) ) ) );
-					$bet_lng2 = $lng + ( $distance / ( $degree * cos( deg2rad( $lat ) ) ) );
-
-					$where .= " AND gmw_locations.latitude BETWEEN {$bet_lat1} AND {$bet_lat2}";
-					$where .= " AND gmw_locations.longitude BETWEEN {$bet_lng1} AND {$bet_lng2} ";
-				}
-
-				// filter locations based on the distance.
-				$having = "Having distance <= {$distance} OR distance IS NULL";
-			}
-
-			// if we order by the distance.
-			if ( 'distance' === $this->form['query_args']['type'] ) {
-				$sql['orderby'] = 'ORDER BY distance';
-			}
-		} else {
-
-			// if showing members without location.
-			if ( $this->enable_objects_without_location ) {
-
-				// left join the location table into the query to display posts with no location as well.
-				$join   = "LEFT JOIN {$tjoin}";
-				$where .= " {$address_filters}";
-
-			} else {
-
-				$join   = "INNER JOIN {$tjoin}";
-				$where .= " {$address_filters} AND ( gmw_locations.latitude != 0.000000 && gmw_locations.longitude != 0.000000 )";
-			}
-		}
-
-		$clauses = array();
-
-		// we need to sepeate the SELECT and FROM caluses in the original query.
-		$select = explode( 'FROM', $sql['select'] );
-
-		/**
-		 * Build custom query using BuddyPress members query clauses
-		 *
-		 * Combine with the locations table and proximity search.
-		 */
-		$clauses['select']  = 'SELECT SQL_CALC_FOUND_ROWS';
-		$clauses['fields']  = str_replace( 'SELECT', '', $select[0] ) . $fields;
-		$clauses['from']    = " FROM {$select[1]}";
-		$clauses['join']    = $join;
-		$clauses['where']   = ! empty( $sql['where'] ) ? 'WHERE ' . implode( ' AND ', $sql['where'] ) : 'WHERE 1 = 1';
-		$clauses['where']  .= $where;
-		$clauses['groupby'] = "GROUP BY u.{$column}";
-		$clauses['having']  = $having;
-		$clauses['orderby'] = $sql['orderby'];
-		$clauses['order']   = $sql['order'];
-		$clauses['limit']   = $sql['limit'];
-
-		// modify the query.
-		$clauses = apply_filters( 'gmw_fl_location_query_clauses', $clauses, $this->form, $query, $this );
-
-		// get results of locations + users data.
-		$this->locations = $wpdb->get_results( implode( ' ', $clauses ) ); // WPCS: db call ok, cache ok, unprepared SQL ok.
-
-		// get total results.
-		$this->total_users = $wpdb->get_var( 'SELECT FOUND_ROWS()' ); // WPCS: db call ok, cache ok.
-
-		// if locations found.
-		if ( ! empty( $this->locations ) ) {
-
-			/**
-			 * Here we build a fake query to return back to the SQL function of the BuddyPress query.
-			 *
-			 * Since we already retrieved the users data using our custom query
-			 *
-			 * We dont need BuddyPress to run another query to get the users id.
-			 *
-			 * This query will simply use the users id we already have.
-			 */
-			$users_id_sql = '';
-			$count        = 0;
-
-			foreach ( $this->locations as $location ) {
-
-				if ( $count > 0 ) {
-					$users_id_sql .= ' union all ';
-				}
-
-				$users_id_sql .= 'select ' . $location->id . ' id';
-
-				$count++;
-			}
-
-			/**
-			 * Otherwise, when no locations are found, we pass 0 as the users id to include
-			 *
-			 * In the users query to make it fail and show no results.
-			 */
-		} else {
-
-			$users_id_sql = 'SELECT 0 id';
-		}
-
-		$sql['select']  = $users_id_sql;
-		$sql['where']   = '';
-		$sql['orderby'] = '';
-		$sql['order']   = '';
-		$sql['limit']   = '';
-
-		return $sql;
-	}
-
-	/**
-	 * Merge locations data with users data in the results.
-	 *
-	 * @since 3.2
-	 *
-	 * @param  array $results search results array.
-	 *
-	 * @return [type]          [description]
-	 */
-	public function append_location_data_to_results( $results ) {
-
-		$users = array();
-
-		foreach ( $results['users'] as $u ) {
-			$users[ $u->ID ] = $u;
-		}
-
-		$temp = array();
-
-		// merge users data with locations data.
-		foreach ( $this->locations as $location ) {
-
-			if ( ! empty( $users[ $location->id ] ) ) {
-				foreach ( $users[ $location->id ] as $key => $value ) {
-					$location->$key = $value;
-				}
-			}
-
-			$temp[] = $location;
-		}
-
-		// return new data to BuddyPress.
-		$results['users'] = $temp;
-		$results['total'] = $this->total_users;
-
-		return $results;
-	}
-
-	/**
 	 * Members search query.
 	 *
 	 * @return [type] [description]
 	 */
 	public function search_query() {
 
-		// look for xprofile values in URL.
-		if ( isset( $this->form['form_values']['xf'] ) && array_filter( $this->form['form_values']['xf'] ) ) {
-
-			$fields_values = $this->form['form_values']['xf'];
-
-			// otherwise, can do something custom with xprofile fields
-			// by passing array of array( fields => value ).
-		} else {
-			$fields_values = apply_filters( 'gmw_fl_xprofile_fields_query_default_values', array(), $this->form );
-		}
-
-		// Get users ID from xprofile fields query.
-		$xp_users_id = gmw_query_xprofile_fields( $fields_values, $this->form );
-
-		/**
-		 * Query xprofile fields.
-		 *
-		 * What xprofile query returns -1, it means that no users were
-		 *
-		 * found and we can abort and return no results.
-		 */
-		if ( apply_filters( 'gmw_fl_xprofile_query_enabled', true, $this->form ) && array_filter( $fields_values ) && -1 === $xp_users_id ) {
-			return false;
-		}
-
-		// add users ID to GEO my WP cache. We will use this data when modiying the query.
-		$this->query_cache_args['xprofile_users_id'] = $xp_users_id;
-
-		/**
-		 * [ DEPRECATED ] can show members without locations.
-		 *
-		 * Instead, use the filter 'gmw_form_enable_objects_without_location' to return true || false
-		 *
-		 * Or use the filter 'gmw_fl_search_query_args' below to set the
-		 *
-		 * $this->form['query_args']['gmw_args']['showing_objects_without_location'] to true or false.
-		 */
-		$show_non_located_members = apply_filters( 'gmw_show_members_without_locations', false, $this->form );
-
-		if ( $show_non_located_members ) {
-			$this->enable_objects_without_location                      = true;
-			$this->query_cache_args['showing_objects_without_location'] = true;
-		}
-
 		// query args.
 		$this->form['query_args'] = apply_filters(
 			'gmw_fl_search_query_args',
 			array(
-				'type'        => 'distance',
-				'per_page'    => $this->form['get_per_page'],
-				'page'        => $this->form['paged'],
-				'count_total' => false, // we do a total count in our custom members query.
-				'gmw_args'    => $this->query_cache_args,
+				'type'           => 'distance',
+				'per_page'       => $this->form['get_per_page'],
+				'page'           => $this->form['paged'],
+				'count_total'    => false, // we do a total count in our custom members query.
+				'gmw_args'       => $this->query_cache_args,
+				'xprofile_query' => gmw_query_xprofile_fields( $this->form ),
 			),
 			$this->form,
 			$this
 		);
 
 		// modify the form values before the query takes place.
+		$this->form     = apply_filters( 'gmw_members_locator_form_before_members_query', $this->form, $this );
 		$this->form     = apply_filters( 'gmw_fl_form_before_members_query', $this->form, $this );
 		$internal_cache = GMW()->internal_cache;
 
@@ -373,14 +369,16 @@ class GMW_Members_Locator_Form extends GMW_Form {
 
 			// filter the members query.
 			// Use high priority to allow other plugins to use this filter before GEO my WP does.
-			add_action( 'bp_user_query_uid_clauses', array( $this, 'modify_members_query_clauses' ), 500, 2 );
-			add_filter( 'bp_core_get_users', array( $this, 'append_location_data_to_results' ), 30 );
+			add_action( 'bp_pre_user_query_construct', array( $this, 'xprofile_query' ), 90 );
+			add_action( 'bp_pre_user_query', array( $this, 'query_clauses' ), 90, 2 );
+			add_filter( 'bp_core_get_users', array( $this, 'append_location_data_to_results' ), 90 );
 
 			// query members.
 			$results = bp_has_members( $this->form['query_args'] ) ? true : false;
 
-			remove_action( 'bp_user_query_uid_clauses', array( $this, 'modify_members_query_clauses' ), 500, 2 );
-			remove_filter( 'bp_core_get_users', array( $this, 'append_location_data_to_results' ), 30 );
+			remove_action( 'bp_pre_user_query_construct', array( $this, 'xprofile_query' ), 90 );
+			remove_action( 'bp_pre_user_query', array( $this, 'query_clauses' ), 90, 2 );
+			remove_filter( 'bp_core_get_users', array( $this, 'append_location_data_to_results' ), 39 );
 
 			// set new query in transient.
 			if ( $internal_cache ) {
