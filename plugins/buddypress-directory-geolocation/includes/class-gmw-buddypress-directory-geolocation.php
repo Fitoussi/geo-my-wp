@@ -73,12 +73,15 @@ class GMW_BuddyPress_Directory_Geolocation {
 	 * @var array
 	 */
 	public $form = array(
+		'addon'    => '',
 		'prefix'   => '',
 		'address'  => '',
 		'lat'      => '',
 		'lng'      => '',
 		'distance' => '',
+		'radius'   => '', // Duplciate of distance, to support other queries and elements of the plugin.
 		'units'    => 'imperial',
+		'options'  => array(),
 	);
 
 	/**
@@ -110,6 +113,13 @@ class GMW_BuddyPress_Directory_Geolocation {
 	public $doing_ajax = false;
 
 	/**
+	 * Objects without location enabled by default.
+	 *
+	 * @var boolean
+	 */
+	public $enable_objects_without_location = true;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -125,9 +135,11 @@ class GMW_BuddyPress_Directory_Geolocation {
 			return;
 		}
 
-		$this->is_bp_nouveau  = function_exists( 'bp_nouveau' ) ? true : false;
-		$this->form['prefix'] = $this->prefix;
-		$this->form['units']  = 'metric' === $this->options['units'] ? 'metric' : 'imperial';
+		$this->is_bp_nouveau   = function_exists( 'bp_nouveau' ) ? true : false;
+		$this->form['addon']   = 'bp_' . $this->component . 's_directiory_geolocation';
+		$this->form['prefix']  = $this->prefix;
+		$this->form['units']   = 'metric' === $this->options['units'] ? 'metric' : 'imperial';
+		$this->form['options'] = $this->options;
 
 		// labels.
 		$this->labels            = $this->labels();
@@ -209,7 +221,12 @@ class GMW_BuddyPress_Directory_Geolocation {
 			}
 		}
 
+		// Duplciate of distance, to support other queries and elements of the different extensions.
+		$this->form['radius'] = $this->form['distance'];
+
 		$this->form = apply_filters( 'gmw_' . $this->prefix . '_form_data', $this->form, $this );
+
+		$this->enable_objects_without_location = apply_filters( 'gmw_' . $this->prefix . '_enable_objects_without_location', $this->enable_objects_without_location, $this->form, $this );
 
 		// action hooks / filters.
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -249,6 +266,26 @@ class GMW_BuddyPress_Directory_Geolocation {
 		}
 
 		do_action( 'gmw_element_loaded', 'buddypress_directory' );
+		add_action( 'bp_nouveau_feedback_messages', array( $this, 'modify_results_message' ) );
+	}
+
+	/**
+	 * Modify results message when geocoding fails.
+	 *
+	 * @since 2.0
+	 *
+	 * @param  [type] $messages [description].
+	 *
+	 * @return [type]           [description]
+	 */
+	public function modify_results_message( $messages ) {
+
+		if ( ! empty( $this->form['geocoding_failed'] ) ) {
+			$messages['members-loop-none']['message'] = $this->labels['address_error_message'];
+			$messages['groups-loop-none']['message'] = $this->labels['address_error_message'];
+		}
+
+		return $messages;
 	}
 
 	/**
@@ -475,7 +512,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 		);
 
 		// display the map element.
-		echo GMW_Maps_API::get_map_element( $args ); // WPCS XSS ok.
+		echo gmw_get_map_element( $args, $this->form ); // WPCS XSS ok.
 	}
 
 	/**
