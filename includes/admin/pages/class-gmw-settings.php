@@ -805,7 +805,18 @@ class GMW_Settings {
 			$options['class'] = ! empty( $options['class'] ) ? $options['class'] . ' ' . $class : $class;
 		}
 
-		echo gmw_get_admin_settings_field( $options, esc_attr( $name_attr ), $value ); // WPCS: XSS ok.
+		// custom function.
+		if ( 'function' === $options['type'] ) {
+
+			$name_attr .= '[' . $options['name'] . ']';
+			$function   = ! empty( $options['function'] ) ? $options['function'] : $options['name'];
+
+			do_action( 'gmw_main_settings_' . $function, $value, $name_attr, $settings, $tab, $options );
+
+			// Pre-defined fields.
+		} else {
+			echo gmw_get_admin_settings_field( $options, esc_attr( $name_attr ), $value ); // WPCS: XSS ok.
+		}
 	}
 
 	/**
