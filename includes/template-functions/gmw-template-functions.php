@@ -2,10 +2,6 @@
 /**
  * GEO my WP template functions.
  *
- * Generates the proximity search forms.
- *
- * This class should be extended for different object types.
- *
  * @package geo-my-wp
  */
 
@@ -668,4 +664,3 @@ function gmw_get_bp_groups_from_db( $groups = array() ) {
 
 	return $output;
 }
-
