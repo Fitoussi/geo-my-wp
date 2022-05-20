@@ -129,6 +129,8 @@ class GMW_Form {
 		'object_id',
 		'title as location_name',
 		'user_id',
+		'latitude',
+		'longitude',
 		'latitude as lat',
 		'longitude as lng',
 		'street_name',
