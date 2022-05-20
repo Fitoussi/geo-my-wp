@@ -102,6 +102,11 @@ function gmw_shortcode( $attr ) {
 		return gmw_global_map_shortcode( $attr );
 	}
 
+	// allow using this shortcode for AJAX Forms as well.
+	if ( 'ajax_forms' === $form['addon'] && function_exists( 'gmw_ajax_form_shortcode' ) ) {
+		return gmw_ajax_form_shortcode( $attr );
+	}
+
 	// Abort if the add-on this form belongs to is deactivated.
 	if ( ! gmw_is_addon_active( $form['addon'] ) ) {
 
@@ -125,6 +130,7 @@ function gmw_shortcode( $attr ) {
 
 	// do something before everything begines.
 	do_action( 'gmw_shortcode_pre_init', $form );
+	do_action( 'gmw_element_pre_loaded', 'form', $form );
 
 	ob_start();
 
@@ -157,7 +163,7 @@ function gmw_shortcode( $attr ) {
 
 	GMW()->current_form = $new_form->form;
 
-	do_action( 'gmw_element_loaded', 'form' );
+	do_action( 'gmw_element_loaded', 'form', $form );
 
 	// output only if element allowed.
 	if ( $new_form->element_allowed ) {
