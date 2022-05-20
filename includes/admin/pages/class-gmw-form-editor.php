@@ -483,17 +483,19 @@ class GMW_Form_Editor {
 				'label'    => __( 'Page Load Results', 'geo-my-wp' ),
 				'notice'   => __( 'Manage the appearance of the form during its intial load ( when the page first loads ).', 'geo-my-wp' ),
 				'fields'   => array(
-					'enabled'          => array(
-						'name'       => 'enabled',
-						'type'       => 'checkbox',
-						'default'    => '',
-						'label'      => __( 'Form Load Options', 'geo-my-wp' ),
-						'desc'       => __( 'Dynamically display results when the form first loads.', 'geo-my-wp' ),
-						'cb_label'   => __( 'Enable', 'geo-my-wp' ),
-						'class'      => 'gmw-options-toggle',
-						'attributes' => array(),
-						'wrap_class' => 'always-visible',
-						'priority'   => 2,
+					'enabled'          => gmw_get_admin_setting_args(
+						array(
+							'name'       => 'enabled',
+							'type'       => 'checkbox',
+							'default'    => '',
+							'label'      => __( 'Form Load Options', 'geo-my-wp' ),
+							'desc'       => __( 'Dynamically display results when the form first loads.', 'geo-my-wp' ),
+							'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+							'class'      => 'gmw-options-toggle',
+							'attributes' => array(),
+							'wrap_class' => 'always-visible',
+							'priority'   => 2,
+						)
 					),
 					'proximity_filter' => array(
 						'name'       => 'proximity_filter',
@@ -871,7 +873,7 @@ class GMW_Form_Editor {
 					'radius'         => array(
 						'name'            => 'radius',
 						'type'            => 'fields_group',
-						'label'           => __( 'Radius / Distance Field', 'geo-my-wp' ),
+						'label'           => __( 'Radius Field', 'geo-my-wp' ),
 						'fields'          => array(
 							'usage'            => gmw_get_admin_setting_args(
 								array(
@@ -905,7 +907,7 @@ class GMW_Form_Editor {
 									'default'    => "5\n10\n25\n50\n100",
 									'label'      => __( 'Dropdown Options', 'geo-my-wp' ),
 									'desc'       => __( 'Enter each option on a new line. For more control, you can specify both a value and label like this: <br /> 10 : 10 Miles', 'geo-my-wp' ),
-									'wrap_class' => 'usage_select',
+									'wrap_class' => 'usage_select usage_radio',
 									'priority'   => 20,
 								)
 							),
@@ -915,7 +917,7 @@ class GMW_Form_Editor {
 									'type'       => 'number',
 									'default'    => '50',
 									'label'      => __( 'Default Value', 'geo-my-wp' ),
-									'wrap_class' => 'usage_default usage_slider',
+									'wrap_class' => 'usage_default usage_slider usage_radio',
 									'priority'   => 20,
 								)
 							),
@@ -923,7 +925,7 @@ class GMW_Form_Editor {
 								array(
 									'option_type' => 'required',
 									'name'        => 'required',
-									'wrap_class'  => 'usage_select usage_slider',
+									'wrap_class'  => 'usage_select usage_slider usage_radio',
 								)
 							),
 						),
@@ -990,7 +992,7 @@ class GMW_Form_Editor {
 									'name'       => 'disable_core_styles',
 									'type'       => 'checkbox',
 									'default'    => '',
-									'label'      => __( 'Disable Built-In Style', 'geo-my-wp' ),
+									'label'      => __( 'Disable Core Styles', 'geo-my-wp' ),
 									'desc'       => __( 'Prevent GEO my WP from applying it\'s core styling on this template file.', 'geo-my-wp' ),
 									'cb_label'   => __( 'Disable', 'geo-my-wp' ),
 									'attributes' => array(),
@@ -1303,7 +1305,7 @@ class GMW_Form_Editor {
 									'name'       => 'disable_core_styles',
 									'type'       => 'checkbox',
 									'default'    => '',
-									'label'      => __( 'Disable Built-In Styles', 'geo-my-wp' ),
+									'label'      => __( 'Disable Core Styles', 'geo-my-wp' ),
 									'desc'       => __( 'Prevent GEO my WP from applying it\'s core styling on this template file.', 'geo-my-wp' ),
 									'cb_label'   => __( 'Disable', 'geo-my-wp' ),
 									'attributes' => array(),
@@ -1463,7 +1465,7 @@ class GMW_Form_Editor {
 									// name it ajaxfms_info_window_template instead of info_window_template
 									// to prevent conflict with premium settings addon.
 									'function'   => 'info_window_template',
-									'label'      => __( 'Template', 'gmw-ajax-forms' ),
+									'label'      => __( 'Info Window Template', 'gmw-ajax-forms' ),
 									'desc'       => sprintf( __( 'Select the info window template.<br />%s', 'gmw-ajax-forms' ), $depreacated_message ),
 									'class'      => 'gmw-smartbox-not',
 									'attributes' => array(),
