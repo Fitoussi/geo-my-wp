@@ -939,8 +939,13 @@ class GMW_Form {
 	 */
 	public function get_map_location( $object, $info_window = false ) {
 
-		// allow disabling info window data. If using AJAX for example.
-		if ( apply_filters( 'gmw_form_get_info_window_content', true, $this->form, $this ) ) {
+		// Verify location.
+		if ( ! isset( $object->location_id ) || '0.000000' === $object->lat || '0.000000' === $object->lng ) {
+			return false;
+		}
+
+		// Generate info-window content if enabled.
+		if ( $this->get_info_window_content ) {
 			$info_window = gmw_get_info_window_content( $object, $this->get_info_window_args( $object ), $this->form );
 		}
 
