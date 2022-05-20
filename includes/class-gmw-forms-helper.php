@@ -77,7 +77,8 @@ class GMW_Forms_Helper {
 				'country_filter'  => '',
 				'display_results' => 1,
 				'display_map'     => 'results',
-				'per_page'        => '5,10,15,25,50',
+				'per_page'        => '10,20,50,100',
+				'orderby'         => 'distance',
 			),
 			'search_form'       => array(
 				'form_template'    => 'responsive-1',
@@ -126,6 +127,7 @@ class GMW_Forms_Helper {
 				'results_page'    => '',
 				'display_results' => 1,
 				'display_map'     => 'results',
+				'orderby'         => 'distance',
 			),
 			'search_results'    => array(
 				'results_template' => 'responsive-2',
@@ -133,7 +135,7 @@ class GMW_Forms_Helper {
 					'default' => 'grid',
 					'toggle'  => 1,
 				),
-				'per_page'         => '5,10,15,25,50',
+				'per_page'         => '10,20,50,100',
 				'address'          => array(
 					'enabled' => 1,
 					'fields'  => array(),
@@ -161,12 +163,22 @@ class GMW_Forms_Helper {
 				),
 			),
 			'results_map'       => array(
-				'map_width'  => '100%',
-				'map_height' => '300px',
-				'map_type'   => 'ROADMAP',
-				'zoom_level' => 'auto',
+				'map_width'          => '100%',
+				'map_height'         => '300px',
+				'map_type'           => 'ROADMAP',
+				'zoom_level'         => 'auto',
+				'min_zoom_level'     => '',
+				'max_zoon_level'     => '',
+				'map_controls'       => array( 'zoomControl', 'mapTypeControl' ),
+				'styles'             => '',
+				'snazzy_maps_styles' => '',
 			),
 			'info_window'    => array(
+				'iw_type'         => 'popup',
+				'ajax_enabled'    => 1,
+				'template'        => array(
+					'popup' => 'slide-left',
+				),
 				'address'          => array(
 					'enabled' => 1,
 					'fields'  => array(),
