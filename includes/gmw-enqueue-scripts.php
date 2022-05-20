@@ -52,6 +52,25 @@ function gmw_register_google_maps_api() {
 }
 
 /**
+ * Enqueue forms stylesheet when needed.
+ *
+ * @since 4.0
+ *
+ * @param  string $where [description].
+ */
+function gmw_enqueue_form_stylesheet( $where = 'form' ) {
+
+	if ( ! wp_style_is( 'gmw-frontend', 'enqueue' ) ) {
+		wp_enqueue_style( 'gmw-frontend' );
+	}
+
+	if ( in_array( $where, array( 'form', 'location_form', 'buddypress_directory' ), true ) && ! wp_style_is( 'gmw-forms', 'enqueue' ) ) {
+		wp_enqueue_style( 'gmw-forms' );
+	}
+}
+add_action( 'gmw_element_loaded', 'gmw_enqueue_form_stylesheet' );
+
+/**
  * GMW enqueue scripts and styles
  *
  * Note, some additional script / styles enqueue in class-gmw-maps-api.php file.
@@ -76,7 +95,8 @@ function gmw_enqueue_scripts() {
 		$map_scripts[] = 'leaflet';
 		$lf_scripts[]  = 'leaflet';
 
-		wp_register_script( 'leaflet', GMW_URL . '/assets/lib/leaflet/leaflet.min.js', array(), '1.5.1', true );
+		wp_register_script( 'leaflet', GMW_URL . '/assets/lib/leaflet/leaflet.min.js', array(), '1.7.1', true );
+		wp_register_style( 'leaflet', GMW_URL . '/assets/lib/leaflet/leaflet.min.css', array(), '1.7.1' );
 
 	} else {
 		do_action( 'gmw_register_maps_provider_' . $maps_provider );
@@ -130,10 +150,12 @@ function gmw_enqueue_scripts() {
 
 	// include GMW main stylesheet.
 	wp_register_style( 'gmw-frontend', GMW_URL . '/assets/css/gmw.frontend.min.css', array(), GMW_VERSION );
-	wp_enqueue_style( 'gmw-frontend' );
+	//wp_enqueue_style( 'gmw-frontend' );
+	wp_register_style( 'gmw-forms', GMW_URL . '/assets/css/gmw.forms.min.css', array( 'gmw-frontend' ), GMW_VERSION );
 
 	$colors_css_output = '';
 
+	// Load color styles from settings page.
 	if ( ! empty( $gmw_options['styles'] ) ) {
 
 		foreach ( $gmw_options['styles'] as $color_name => $color_value ) {
@@ -169,9 +191,6 @@ function gmw_enqueue_scripts() {
 				gmw_enqueue_form_styles( $form_style );
 			}
 		}
-
-		wp_register_style( 'datetime-picker', GMW_URL . '/assets/lib/flatpicker/jquery.flatPicker.min.css', array(), GMW_VERSION );
-		wp_register_script( 'datetime-picker', GMW_URL . '/assets/lib/flatpicker/jquery.flatPicker.full.min.js', array( 'jquery' ), GMW_VERSION, true );
 
 		// register scripts/styles in admin only.
 	} else {
@@ -234,5 +253,5 @@ function gmw_enqueue_scripts() {
 		wp_add_inline_style( 'wp-admin', $style );
 	}
 }
-add_action( 'wp_enqueue_scripts', 'gmw_enqueue_scripts' );
+add_action( 'wp_enqueue_scripts', 'gmw_enqueue_scripts', 50 );
 add_action( 'admin_enqueue_scripts', 'gmw_enqueue_scripts' );
