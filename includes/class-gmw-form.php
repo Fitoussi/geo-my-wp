@@ -612,6 +612,10 @@ class GMW_Form {
 			return;
 		}
 
+		if ( $this->load_info_window_templates ) {
+			$this->get_info_window_template_data();
+		}
+
 		$iw_type     = ! empty( $this->form['info_window']['iw_type'] ) ? $this->form['info_window']['iw_type'] : 'standard';
 		$iw_ajax     = ! empty( $this->form['info_window']['ajax_enabled'] ) ? 1 : 0;
 		$iw_template = ! empty( $this->form['info_window']['template'][ $iw_type ] ) ? $this->form['info_window']['template'][ $iw_type ] : 'default';
@@ -641,6 +645,7 @@ class GMW_Form {
 			'iw_content' => __( 'Your location', 'geo-my-wp' ),
 			'iw_open'    => ! empty( $this->form['results_map']['yl_icon'] ) ? true : false,
 		);
+
 
 		// generate the map.
 		return gmw_get_map_object( $map_args, $map_options, $this->map_locations, $user_position, $this->form );
