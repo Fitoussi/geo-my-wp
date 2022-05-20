@@ -13,6 +13,59 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+function gmw_form_get_address_filters( $gmw ) {
+
+	$address_filters = array();
+
+	// if on page load results.
+	if ( $gmw['page_load_action'] ) {
+
+		if ( ! empty( $gmw['page_load_results']['city_filter'] ) ) {
+			$address_filters['city'] = $gmw['page_load_results']['city_filter'];
+		}
+
+		if ( ! empty( $gmw['page_load_results']['state_filter'] ) ) {
+			$address_filters['region_name'] = $gmw['page_load_results']['state_filter'];
+		}
+
+		if ( ! empty( $gmw['page_load_results']['zipcode_filter'] ) ) {
+			$address_filters['postcode'] = $gmw['page_load_results']['zipcode_filter'];
+		}
+
+		if ( ! empty( $gmw['page_load_results']['country_filter'] ) ) {
+			$address_filters['country_code'] = $gmw['page_load_results']['country_filter'];
+		}
+	}
+
+	// if searching within state or country only is enabled.
+	if ( $gmw['submitted'] && apply_filters( 'gmw_search_within_boundaries', true, $gmw ) ) {
+
+		// if searching state boundaries.
+		if ( isset( $gmw['form_values']['state'] ) && '' !== $gmw['form_values']['state'] ) {
+			$address_filters['region_name'] = $gmw['form_values']['state'];
+		}
+
+		// When searchin boundaries of a country.
+		if ( isset( $gmw['form_values']['country'] ) && '' !== $gmw['form_values']['country'] ) {
+			$address_filters['country_code'] = $gmw['form_values']['country'];
+		}
+	}
+
+	return $address_filters;
+}
+
+function gmw_form_get_cached_results( $args = array(), $key = 'gmw_get_object_user_query' ) {
+
+	if ( empty( $args ) ) {
+		return false;
+	}
+
+	$hash            = md5( wp_json_encode( $args ) );
+	$query_args_hash = 'gmw' . $hash . GMW_Cache_Helper::get_transient_version( $key );
+
+	return get_transient( $query_args_hash );
+}
+
 /**
  * Get the search results message
  *
@@ -114,9 +167,10 @@ function gmw_get_results_map( $gmw, $init_visible = true, $implode = true ) {
 		'map_position_filter' => ! empty( $gmw['results_map']['position_filter']['enabled'] ) ? true : false,
 		'map_position_label'  => ! empty( $gmw['results_map']['position_filter']['label'] ) ? $gmw['results_map']['position_filter']['label'] : '',
 		'init_visible'        => $init_visible,
+		'implode'             => $implode,
 	);
 
-	return GMW_Maps_API::get_map_element( $args, $implode );
+	return gmw_get_map_element( $args, $gmw );
 }
 
 /**
@@ -464,3 +518,154 @@ function gmw_get_hours_of_operation( $location = 0, $object_id = 0 ) {
 function gmw_hours_of_operation( $location = 0, $object_id = 0 ) {
 	echo gmw_get_hours_of_operation( $location, $object_id ); // WPCS: XSS ok.
 }
+
+/**
+ * Get BuddyPress avatar ( member || group ).
+ *
+ * @since 4.0
+ *
+ * @param  array $args   arguments.
+ *
+ * @param  array $object object ( member, group... ).
+ *
+ * @param  array $gmw    gmw form object.
+ *
+ * @return [type]         [description]
+ */
+function gmw_get_bp_avatar( $args = array(), $object = array(), $gmw = array() ) {
+
+	$args = apply_filters( 'gmw_get_bp_avatar_args', $args, $object, $gmw );
+	$args = wp_parse_args(
+		$args,
+		array(
+			'object_type'  => 'user',
+			'object_id'    => 0,
+			'image_url'    => '',
+			'permalink'    => true,
+			'width'        => '150px',
+			'height'       => '150px',
+			'show_grav'    => true,
+			'show_default' => true,
+		)
+	);
+
+	$avatar_args = array(
+		'item_id' => $args['object_id'],
+		'object'  => $args['object_type'],
+		'type'    => 'full',
+		'html'    => false,
+		'no_grav' => $args['show_grav'] ? false : true,
+	);
+
+	if ( ! $args['show_default'] ) {
+		add_filter( 'bp_core_default_avatar_' . $args['object_type'], '__return_false', 50 );
+	}
+	// Get avatar URL.
+	$args['image_url'] = bp_core_fetch_avatar( $avatar_args );
+
+	if ( ! $args['show_default'] ) {
+		remove_filter( 'bp_core_default_avatar_' . $args['object_type'], '__return_false', 50 );
+	}
+
+	// Get permalink if needed.
+	if ( ! empty( $args['permalink'] ) ) {
+
+		if ( 'group' === $args['object_type'] ) {
+
+			$args['permalink'] = bp_get_group_permalink( $object );
+
+		} else {
+			$args['permalink'] = bp_core_get_user_domain( $args['object_id'] );
+		}
+	}
+
+	return gmw_get_image_element( $args, $object, $gmw ); // WPCS: XXS ok.
+}
+
+/**
+ * Get array of BuddyPress groups from the database.
+ *
+ * @param  array $groups array of group IDs to retrive specific groups or leave empty to get all groups.
+ *
+ * @since 4.0
+ *
+ * @author Eyal Fitoussi.
+ *
+ * @return [type]         [description]
+ */
+function gmw_get_bp_groups_from_db( $groups = array() ) {
+
+	/**
+	 * Use BP built in class to have more options when pulling groups from database.
+	 *
+	 * This might be a bit more memory consuming and so it is disabled by default.
+	 */
+	if ( apply_filters( 'gmw_ps_advanced_get_bp_groups_list', false ) && class_exists( 'BP_Groups_Group' ) ) {
+
+		// Advanced method using BP class.
+		$groups = BP_Groups_Group::get(
+			apply_filters(
+				'gmw_search_form_get_groups_list_args',
+				array(
+					'type'               => 'alphabetical',
+					'per_page'           => 999,
+					'orderby'            => 'date_created',
+					'order'              => 'DESC',
+					'page'               => null,
+					'user_id'            => 0,
+					'slug'               => array(),
+					'search_terms'       => false,
+					'search_columns'     => array(),
+					'group_type'         => '',
+					'group_type__in'     => '',
+					'group_type__not_in' => '',
+					'meta_query'         => false, // WPSC: slow query ok.
+					'include'            => ! empty( $groups ) ? $groups : '',
+					'parent_id'          => null,
+					'update_meta_cache'  => true,
+					'update_admin_cache' => false,
+					'exclude'            => false,
+					'show_hidden'        => false,
+					'status'             => array(),
+				)
+			)
+		);
+
+		$groups = $groups['groups'];
+
+		// Simple method directly from the database.
+	} else {
+
+		global $wpdb;
+
+		$where = '';
+
+		if ( ! empty( $groups ) ) {
+			$groups     = array_map( 'absint', $groups );
+			$groups_var = implode( ',', $groups );
+			$where      = "WHERE id IN ( {$groups_var} )";
+		}
+
+		$groups = $wpdb->get_results(
+			"
+            SELECT id, name 
+            FROM {$wpdb->prefix}bp_groups
+            {$where}
+            "
+		); // WPCS: unprepared sql ok, db call ok, cache ok.
+	}
+
+	$output = array();
+
+	foreach ( $groups as $group ) {
+
+		if ( 0 === absint( $group->id ) ) {
+			continue;
+		}
+
+		$output[ $group->id ] = $group->name;
+	}
+
+	return $output;
+}
+
