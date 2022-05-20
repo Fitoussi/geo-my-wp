@@ -199,6 +199,24 @@ class GMW_Form {
 	public $query = array();
 
 	/**
+	 * Generate the info-window content during query loop?
+	 *
+	 * This can be disabled if needed. For example, if using AJAX info-window.
+	 *
+	 * @var boolean
+	 */
+	public $get_info_window_content = true;
+
+	/**
+	 * Generate info-window contant during search query.
+	 *
+	 * This can be disable if needed. In case where AJAX info-window is enabled for example.
+	 *
+	 * @var boolean
+	 */
+	public $load_info_window_templates = false;
+
+	/**
 	 * Default class attributes.
 	 *
 	 * @since 4.0.
@@ -411,9 +429,16 @@ class GMW_Form {
 		}
 		/* End deprecated */
 
+		$this->load_info_window_templates      = apply_filters( 'gmw_load_info_window_templates', $this->load_info_window_templates, $this->form, $this );
 		$this->enable_objects_without_location = apply_filters( 'gmw_form_enable_objects_without_location', $this->enable_objects_without_location, $this->form, $this );
+		$this->db_fields                       = apply_filters( 'gmw_form_db_fields', $this->db_fields, $this->form, $this );
 
-		$this->db_fields = apply_filters( 'gmw_form_db_fields', $this->db_fields, $this->form, $this );
+		// Disable standard info-window content if AJAX info-window is enabled.
+		if ( $this->load_info_window_templates ) {
+			$this->get_info_window_content = false;
+		}
+
+		$this->get_info_window_content = apply_filters( 'gmw_form_get_info_window_content', $this->get_info_window_content, $this->form, $this );
 
 		// can modify form values.
 		$this->form = apply_filters( 'gmw_default_form_values', $this->form, $this );
@@ -544,6 +569,15 @@ class GMW_Form {
 		if ( ! wp_script_is( 'gmw', 'enqueued' ) ) {
 			wp_enqueue_script( 'gmw' );
 		}
+	}
+
+	/**
+	 * Enqueue info-window stylesheet once on page load
+	 *
+	 * @since 4.0
+	 */
+	public function get_info_window_template_data() {
+		$this->form['info_window_template'] = gmw_get_info_window_template_data( $this->form );
 	}
 
 	/**
