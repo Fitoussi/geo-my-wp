@@ -761,6 +761,12 @@ class GMW_Form_Settings_Helper {
 
 					$new_dep_templates[ $value ] = $name;
 
+				} elseif ( 'info-window' === $args['folder_name'] && in_array( $value, array( 'center-white', 'left-white', 'right-white' ), true ) ) {
+
+					$name .= ' ( deprecated )';
+
+					$new_dep_templates[ $value ] = $name;
+
 				} else {
 
 					$new_templates[ $value ] = $name;
@@ -810,6 +816,7 @@ class GMW_Form_Settings_Helper {
 			return array();
 		}
 
+		$output = array();
 		$action = $args['gmw_ajax_load_options'];
 
 		// Get pages.
@@ -893,6 +900,8 @@ class GMW_Form_Settings_Helper {
 			$output = array( 'disabled' => __( 'Disabled', 'geo-my-wp' ) ) + $output;
 		}
 
+		$output = apply_filters( 'gmw_get_field_options_via_ajax', $output, $action, $args );
+
 		return $output;
 	}
 
@@ -934,6 +943,8 @@ class GMW_Form_Settings_Helper {
 			'force_default' => 0,
 			'priority'      => 0,
 			'sub_option'    => ( ! empty( $_GET['page'] ) && 'gmw-settings' === $_GET['page'] ) ? false : true, // On settings page, set it to false by default.
+			'fields'        => array(),
+			'ps_required'   => 0,
 		);
 
 		if ( 'label' === $option ) {
@@ -1209,8 +1220,8 @@ class GMW_Form_Settings_Helper {
 				break;
 
 			case 'multicheckbox':
-				$option['default'] = is_array( $option['default'] ) ? $option['default'] : array();
-				$value             = ( ! empty( $value ) && is_array( $value ) ) ? $value : $option['default'];
+				$field['default'] = is_array( $field['default'] ) ? $field['default'] : array();
+				$value            = ( ! empty( $value ) && is_array( $value ) ) ? $value : $field['default'];
 
 				foreach ( $field['options'] as $key_val => $name ) {
 
@@ -1225,11 +1236,11 @@ class GMW_Form_Settings_Helper {
 				break;
 
 			case 'multicheckboxvalues':
-				$option['default'] = is_array( $option['default'] ) ? $option['default'] : array();
+				$field['default'] = is_array( $field['default'] ) ? $field['default'] : array();
 
 				if ( empty( $value ) ) {
 
-					$value = $option['default'];
+					$value = $field['default'];
 
 				} elseif ( ! is_array( $value ) ) {
 					$value = explode( ',', $value );
@@ -1290,13 +1301,13 @@ class GMW_Form_Settings_Helper {
 					$output .= ' />';
 					$output .= wp_kses( $name, $allwed );
 					$output .= '</label>';
-					$output .= '&nbsp;&nbsp;';
 
 					$rc++;
 				}
 				break;
 
 			case 'select':
+			case 'selectbox':
 				if ( ! empty( $placeholder ) ) {
 					$placeholder = 'data-' . $placeholder;
 				}
@@ -1364,6 +1375,7 @@ class GMW_Form_Settings_Helper {
 				$output .= ' name="' . esc_attr( $name_attr ) . '"';
 				$output .= ' value="' . esc_attr( sanitize_text_field( $value ) ) . '"';
 				$output .= ' ' . implode( ' ', $attributes );
+				$output .= ' ' . $placeholder;
 				$output .= ' />';
 
 				break;
