@@ -954,6 +954,15 @@ class GMW_Form_Settings_Helper {
 			$defaults['desc']     = __( 'Enter the field\'s label or leave it blank to hide it.', 'geo-my-wp' );
 			$defaults['priority'] = 10;
 
+		} elseif ( 'smartbox' === $option ) {
+
+			$defaults['name']     = 'smartbox';
+			$defaults['type']     = 'checkbox';
+			$defaults['cb_label'] = __( 'Enable', 'geo-my-wp' );
+			$defaults['label']    = __( 'Select Smart Box', 'geo-my-wp' );
+			$defaults['desc']     = __( 'Enable select smart box.', 'geo-my-wp' );
+			$defaults['priority'] = 8;
+
 		} elseif ( 'placeholder' === $option ) {
 
 			$defaults['name']     = 'placeholder';
