@@ -996,12 +996,12 @@ class GMW_Form_Settings_Helper {
 			$defaults['priority'] = 5;
 			$defaults['class']    = 'gmw-smartbox-not gmw-options-toggle';
 			$defaults['options']  = array(
-				'disabled'          => __( 'Disable Filter', 'gmw-my-wp' ),
+				'disabled'          => __( 'Disable', 'gmw-my-wp' ),
 				'pre_defined'       => __( 'Pre-defined', 'gmw-my-wp' ),
-				'dropdown'          => __( 'Select dropdown', 'gmw-my-wp' ),
+				'select'            => __( 'Select dropdown', 'gmw-my-wp' ),
+				'multiselect'       => __( 'Multi-Select box', 'gmw-my-wp' ),
 				'checkboxes'        => __( 'Checkboxes', 'gmw-my-wp' ),
-				'smartbox'          => __( 'Smartbox', 'gmw-my-wp' ),
-				'smartbox_multiple' => __( 'Smartbox Multiple', 'gmw-my-wp' ),
+				'radio'             => __( 'Radio buttons', 'gmw-my-wp' ),
 			);
 	
 		} elseif ( 'usage_include_exclude' === $option ) {
