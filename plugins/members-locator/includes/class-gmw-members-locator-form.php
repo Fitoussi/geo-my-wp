@@ -344,7 +344,7 @@ class GMW_Members_Locator_Form extends GMW_Form {
 				'page'           => $this->form['paged'],
 				'count_total'    => false, // we do a total count in our custom members query.
 				'gmw_args'       => $this->query_cache_args,
-				'xprofile_query' => gmw_query_xprofile_fields( $this->form ),
+				'xprofile_query' => gmw_get_xprofile_query_args( $this->form ),
 			),
 			$this->form,
 			$this
