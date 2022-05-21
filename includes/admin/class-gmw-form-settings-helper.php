@@ -73,15 +73,49 @@ class GMW_Form_Settings_Helper {
 	}
 
 	/**
-	 * Taxonomies picker.
+	 * Generate taxonomies settings for the form editor.
+	 *
+	 * @param  [type] $args      [description].
 	 *
 	 * @param  [type] $value     [description].
 	 *
 	 * @param  [type] $name_attr [description].
 	 *
 	 * @param  [type] $form      [description].
+	 *
+	 * @return [type]            [description]
 	 */
-	public static function taxonomies( $value, $name_attr, $form ) {
+	public static function form_editor_taxonomies( $args, $value, $name_attr, $form ) {
+
+		$taxonomies_options = wp_parse_args(
+			$args,
+			array(
+				'where'                 => 'search_form_taxonomies',
+				'multiple_post_types'   => 0,
+				'sortable'              => 0,
+				'usage'                 => 1,
+				'usage_options'         => array(
+					'disabled'        => __( 'Disable', 'geo-my-wp' ),
+					//'pre_defined'       => __( 'Pre defined', 'geo-my-wps' ),
+					'select'          => __( 'Select dropdown', 'geo-my-wp' ),
+					//'multiselect'   => __( 'Smartbox', 'geo-my-wp' ),
+					//'smartbox_multiple' => __( 'Smartbox Multiple', 'geo-my-wp' ),
+					//'checkboxes'        => __( 'Checkboxes', 'geo-my-wp' ),
+				),
+				'smartbox'            => 0,
+				'label'               => 1,
+				'options_all'         => 0,
+				'include_terms'       => 0,
+				'exclude_terms'       => 0,
+				'orderby'             => 0,
+				'order'               => 0,
+				'count'               => 0,
+				'hide_empty'          => 0,
+				'required'            => 1,
+			)
+		);
+
+		$taxonomies_options = apply_filters( 'gmw_form_editor_taxonomies_options', $taxonomies_options, $form );
 
 		if ( empty( $value ) ) {
 			$value = array();
@@ -89,8 +123,16 @@ class GMW_Form_Settings_Helper {
 
 		// get all taxonmoies.
 		$taxonomies = get_taxonomies();
+
+		// Order taxonmies based on saved data.
+		if ( ! empty( $value ) ) {
+			$taxonomies = array_merge( array_flip( array_keys( $value ) ), $taxonomies );
+		}
+
+		$multiple_pt  = ! empty( $taxonomies_options['multiple_post_types'] ) ? ' multiple-post-types ' : '';
+		$incexc_class = ! empty( $taxonomies_options['include_exclude_terms'] ) ? ' incexc-terms-enabled' : '';
 		?>
-		<div id="taxonomies-core-wrapper" class="gmw-setting-groups-container">
+		<div id="taxonomies-wrapper" class="gmw-setting-groups-container gmw-settings-group-draggable-area <?php echo $multiple_pt; // WPCS: XSS ok. ?><?php echo $incexc_class; // WPCS: XSS ok. ?>">
 
 			<?php
 			$all_post_types = get_post_types();
@@ -111,105 +153,451 @@ class GMW_Form_Settings_Helper {
 					continue;
 				}
 
-				$tax_options = ! empty( $value[ $taxonomy_name ] ) ? $value[ $taxonomy_name ] : array();
-				$defaults    = array(
-					'style'      => 'disable',
-					'post_types' => $post_types,
-					'label'      => '',
-					'required'   => '',
-				);
+				// Set default taxonomy value.
+				if ( empty( $value[ $taxonomy_name ] ) ) {
 
-				$tax_options = wp_parse_args( $tax_options, $defaults );
-				$pt_string   = esc_attr( implode( ',', $post_types ) );
+					$value[ $taxonomy_name ] = array(
+						'style'      => 'na',
+						'post_types' => $post_types,
+					);
+				}
+
+				$tax_option = $value[ $taxonomy_name ];
 				?>
-				<div id="<?php echo esc_attr( $taxonomy_name ); ?>_cat" class="taxonomy-wrapper gmw-settings-group-wrapper" data-post_types="<?php echo $pt_string; // WPCS: XSS ok. ?>">
+				<div id="<?php echo esc_attr( $taxonomy_name ); ?>_cat" class="taxonomy-wrapper gmw-settings-group-wrapper" data-post_types="<?php echo esc_attr( implode( ',', $post_types ) ); ?>">
 
 					<div class="taxonomy-header gmw-settings-group-header">
-						<i class="gmw-settings-group-options-toggle gmw-taxonomy-options-toggle gmw-icon-cog gmw-tooltip" aria-label="Click to manage options."></i>
-						<span class="gmw-taxonomy-label"><strong><?php echo esc_attr( $taxonomy->labels->singular_name ); ?></strong> ( Post Types - <?php echo $pt_string; // WPCS: XSS ok. ?> )</span>
+
+						<?php if ( ! empty( $taxonomies_options['sortable'] ) ) { ?>
+
+							<?php wp_enqueue_script( 'jquery-ui-sortable' ); ?>
+
+							<i class="gmw-settings-group-drag-handle gmw-taxonomy-sort-handle gmw-icon-sort gmw-tooltip--" aria-label="Drag to sort taxonomies." title="Sort taxonomy"></i>
+						<?php } ?>
+
+						<i class="gmw-settings-group-options-toggle gmw-taxonomy-options-toggle gmw-icon-cog gmw-tooltip--" aria-label="Click to manage options."></i>
+						<span class="gmw-taxonomy-label"><strong><?php echo esc_html( $taxonomy->labels->singular_name ) ; ?></strong> ( Post Types - <?php echo implode( ', ', $post_types ); ?> )</span>
 					</div>
 
-					<?php $style = ! empty( $tax_options['style'] ) ? $tax_options['style'] : 'disabled'; ?>
+					<?php $style = ! empty( $tax_option['style'] ) ? $tax_option['style'] : 'disabled'; ?>
 
 					<div class="taxonomy-settings-table-wrapper taxonomy-settings gmw-settings-group-content gmw-settings-multiple-fields-wrapper" data-type="<?php echo esc_attr( $style ); ?>">
 
 						<?php $tax_name_attr = esc_attr( $name_attr . '[' . $taxonomy_name . ']' ); ?>
 
 						<?php foreach ( $post_types as $pt ) { ?>
-							<input type="hidden" name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[post_types][]" value="<?php echo esc_attr( $pt ); ?>" />
+							<input type="hidden" name="<?php echo $tax_name_attr; ?>[post_types][]" value="<?php echo esc_attr( $pt ); ?>" />
 						<?php } ?>
 
-						<div class="gmw-settings-panel-field">
+						<?php if ( ! empty( $taxonomies_options['usage_options'] ) ) { ?>
 
-							<div class="gmw-settings-panel-header">
-								<label class="gmw-settings-label"><?php esc_html_e( 'Usage', 'geo-my-wps' ); ?></label>
+							<div class="gmw-settings-panel-field taxonomy-usage-option-wrap">
+
+								<div class="gmw-settings-panel-header">
+									<label class="gmw-settings-label"><?php echo esc_attr_e( 'Usage', 'geo-my-wp' ); ?></label>
+								</div>
+
+								<div class="taxonomy-usage taxonomy-tab-content gmw-settings-panel-input-container">					
+
+									<select name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[style]" class="taxonomy-usage gmw-smartbox-not">
+
+										<?php foreach ( $taxonomies_options['usage_options'] as $usage_value => $usage_label ) { ?>
+
+											<option value="<?php echo esc_attr( $usage_value ); ?>" <?php selected( $usage_value, $tax_option['style'], true ); ?>>
+												<?php echo esc_attr( $usage_label ); ?>
+											</option>
+
+										<?php } ?>
+
+									</select>
+								</div>
+
+								<div class="gmw-settings-panel-description">
+									<?php esc_attr_e( 'Select the field usage.', 'geo-my-wp' ); ?>
+								</div>
 							</div>
 
-							<div class="taxonomy-usage taxonomy-tab-content gmw-settings-panel-input-container">					
+						<?php } ?>
 
-								<select name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[style]" class="taxonomy-usage gmw-smartbox-not gmw-options-toggle">
+						<?php $tax_label = esc_attr( stripcslashes( $taxonomy->labels->name ) ); ?>
 
-									<option value="disable" selected="selected">
-										<?php esc_attr_e( 'Disable', 'geo-my-wps' ); ?>
-									</option>	
+						<?php if ( ! empty( $taxonomies_options['smartbox'] ) ) { ?>
 
-									<option value="dropdown" <?php selected( 'dropdown', $tax_options['style'], true ); ?>>
-										<?php esc_attr_e( 'Dropdown', 'geo-my-wp' ); ?>
-									</option>
+							<div class="gmw-settings-panel-field" data-usage="select,multiselect">
 
-								</select>
+								<div class="gmw-settings-panel-header">
+									<label class="gmw-settings-label"><?php esc_attr_e( 'Smart Select Field', 'geo-my-wp' ); ?></label>
+								</div>
+
+								<div class="gmw-settings-panel-input-container">
+									<label>
+										<input 
+											type="checkbox" 
+											name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[smartbox]"
+											value="1" 
+											<?php echo ! empty( $tax_option['smartbox'] ) ? 'checked="checked"' : ''; ?> 
+										/>
+										<?php esc_attr_e( 'Enable', 'geo-my-wp' ); ?>
+									</label>
+								</div>
+
+								<div class="gmw-settings-panel-description">
+									<?php esc_attr_e( 'Enable smart select field.', 'geo-my-wp' ); ?>
+								</div>
+
+							</div>
+						<?php } ?>
+
+						<?php if ( ! empty( $taxonomies_options['label'] ) ) { ?>
+
+							<div class="gmw-settings-panel-field taxonomy-enabled-settings" data-usage="checkboxes,select,multiselect">
+
+								<div class="gmw-settings-panel-header">
+									<label class="gmw-settings-label"><?php esc_attr_e( 'Field Label', 'geo-my-wp' ); ?></label>	
+								</div>
+
+								<div class="tax-content gmw-settings-panel-input-container">
+
+									<input 
+										type="text" 
+										placeholder="<?php esc_attr_e( 'Taxonomy label', 'geo-my-wp' ); ?>"
+										name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[label]"
+										value="<?php echo isset( $tax_option['label'] ) ? esc_attr( stripcslashes( $tax_option['label'] ) ) : $tax_label; ?>"
+									/>
+								</div>
+
+								<div class="gmw-settings-panel-description">
+									<?php esc_attr_e( 'Enter the field\'s label or leave it blank to hide it.', 'geo-my-wp' ); ?>
+								</div>
 							</div>
 
-							<div class="gmw-settings-panel-description">
-								<?php esc_attr_e( 'Select the taxonomy usage.', 'geo-my-wps' ); ?>
+						<?php } ?>
+
+						<?php if ( ! empty( $taxonomies_options['options_all'] ) ) { ?>
+
+							<div class="gmw-settings-panel-field taxonomy-enabled-settings" data-usage="select">
+
+								<div class="gmw-settings-panel-header">
+									<label class="gmw-settings-label"><?php esc_attr_e( 'Options All Label', 'geo-my-wp' ); ?></label>
+								</div>
+
+								<div class="tax-content gmw-settings-panel-input-container">
+
+									<input 
+										type="text" 
+										placeholder="<?php esc_attr_e( 'Options all label', 'geo-my-wp' ); ?>" 
+										name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[show_options_all]"
+										value="<?php echo isset( $tax_option['show_options_all'] ) ? esc_attr( stripcslashes( $tax_option['show_options_all'] ) ) : 'All '. $tax_label; ?>"
+									/>
+								</div>
+
+								<div class="gmw-settings-panel-description">
+									<?php esc_attr_e( 'Enter the lable that will be the first option in the select dropdown ( or leave it blank ). This option will have no value and usually will display all options.', 'geo-my-wp' ); ?>
+								</div>
 							</div>
-						</div>
+						<?php } ?>
 
-						<div class="gmw-settings-panel-field">
+						<?php if ( ! empty( $taxonomies_options['include_terms'] ) ) { ?>
 
-							<div class="gmw-settings-panel-header">
-								<label class="gmw-settings-label"><?php esc_attr_e( 'Field Label', 'geo-my-wps' ); ?></label>
+							<div class="gmw-settings-panel-field option-include-terms" data-usage="">
+
+								<div class="gmw-settings-panel-header">
+									<label class="gmw-settings-label"><?php esc_attr_e( 'Include Terms', 'geo-my-wp' ); ?></label>
+								</div>
+
+								<div class="tax-content gmw-settings-panel-input-container">
+
+									<?php $include_value = isset( $tax_option['include'] ) ? $tax_option['include'] : ''; ?>
+
+									<select
+										multiple 
+										data-placeholder="Select terms" 
+										class="taxonomies-picker"
+										data-gmw_ajax_load_options="gmw_get_taxonomy_terms"
+										data-gmw_ajax_load_options_taxonomy="<?php echo esc_attr( $taxonomy_name ); ?>"
+										name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[include][]">
+
+										<?php
+										if ( ! empty( $tax_option['include'] ) ) {
+											foreach ( $tax_option['include'] as $tax_value ) {
+												echo '<option selected="selected" value="' . $tax_value . '">' . __( 'Click to load options', 'geo-my-wp' ) . '</option>';
+											}
+										}
+										?>
+										<?php //echo GMW_Form_Settings_Helper::get_taxonomy_terms( $taxonomy_name, $include_value ); // WPCS: XSS ok. ?>
+									</select>
+
+								</div>
+
+								<div class="gmw-settings-panel-description">
+									<?php esc_attr_e( 'Select specific taxonomy terms to include.', 'geo-my-wp' ); ?>
+								</div>
+							</div>
+						<?php } ?>
+
+						<?php if ( ! empty( $taxonomies_options['exclude_terms'] ) ) { ?>
+
+							<div class="gmw-settings-panel-field option-exclude-terms" data-usage="">
+
+								<div class="gmw-settings-panel-header">
+									<label class="gmw-settings-label"><?php esc_attr_e( 'Exclude Terms', 'geo-my-wp' ); ?></label>
+								</div>
+
+								<div class="tax-content gmw-settings-panel-input-container">
+
+									<?php $exclude_value = isset( $tax_option['exclude'] ) ? $tax_option['exclude'] : ''; ?>
+
+									<select 
+										multiple 
+										data-placeholder="Select terms" 
+										class="taxonomies-picker" 
+										name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[exclude][]"
+										data-gmw_ajax_load_options="gmw_get_taxonomy_terms"
+										data-gmw_ajax_load_options_taxonomy="<?php echo esc_attr( $taxonomy_name ); ?>">
+										<?php
+										if ( ! empty( $tax_option['exclude'] ) ) {
+											foreach ( $tax_option['exclude'] as $tax_value ) {
+												echo '<option selected="selected" value="' . $tax_value . '">' . __( 'Click to load options', 'geo-my-wp' ) . '</option>';
+											}
+										}
+										?>
+										<?php //echo GMW_Form_Settings_Helper::get_taxonomy_terms( $taxonomy_name, $exclude_value ); // WPCS: XSS ok. ?>
+									</select>
+
+									<div class="gmw-settings-panel-description">
+										<?php esc_attr_e( 'Select specific taxonomy terms to exclude.', 'geo-my-wp' ); ?>
+									</div>
+
+								</div>
+							</div>
+						<?php } ?>
+
+						<?php if ( ! empty( $taxonomies_options['orderby'] ) ) { ?>
+
+							<div class="gmw-settings-panel-field taxonomy-enabled-settings" data-usage="checkboxes,select,multiselect">
+
+								<div class="gmw-settings-panel-header">
+									<label class="gmw-settings-label"><?php esc_attr_e( 'Sort By', 'geo-my-wp' ); ?></label>
+								</div>
+
+								<?php $selected = ! empty( $tax_option['orderby'] ) ? $tax_option['orderby'] : ''; ?>
+
+								<div class="tax-content gmw-settings-panel-input-container">
+
+									<select name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[orderby]" class="gmw-smartbox-not">
+										<option value="id" selected="selected"><?php esc_attr_e( 'ID', 'geo-my-wp' ); ?></option>
+										<option value="name" <?php if ( 'name' === $selected ) echo 'selected="selected"'; ?>>
+											<?php esc_attr_e( 'Name', 'geo-my-wp' ); ?>
+										</option>
+										<option value="slug" <?php if ( 'slug' === $selected ) echo 'selected="selected"'; ?>>
+											<?php esc_attr_e( 'Slug', 'geo-my-wp' ); ?>
+										</option>
+									</select>
+
+								</div>
+
+								<div class="gmw-settings-panel-description">
+									<?php esc_attr_e( 'Select how to sort the taxonomy terms.', 'geo-my-wp' ); ?>
+								</div>
+							</div>
+						<?php } ?>
+
+						<?php if ( ! empty( $taxonomies_options['order'] ) ) { ?>
+
+							<div class="gmw-settings-panel-field taxonomy-enabled-settings" data-usage="checkboxes,select,multiselect">
+
+								<div class="gmw-settings-panel-header">
+									<label class="gmw-settings-label"><?php esc_attr_e( 'Order', 'geo-my-wp' ); ?></label>
+								</div>
+
+								<?php $selected = ! empty( $tax_option['order'] ) ? $tax_option['order'] : ''; ?>
+
+								<div class="tax-content gmw-settings-panel-input-container">
+
+									<select name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[order]" class="gmw-smartbox-not">
+										<option value="ASC" selected="selected"><?php esc_attr_e( 'ASC', 'geo-my-wp' ); ?></option>
+										<option value="DESC" <?php if ( $selected == 'DESC' ) echo 'selected="selected"'; ?>><?php esc_attr_e( 'DESC', 'geo-my-wp' ); ?></option>
+									</select>
+
+								</div>
+
+								<div class="gmw-settings-panel-description">
+									<?php esc_attr_e( 'Select the order of the terms.', 'geo-my-wp' ); ?>
+								</div>
+							</div>
+						<?php } ?>
+
+						<?php if ( ! empty( $taxonomies_options['count'] ) ) { ?>
+
+							<div class="gmw-settings-panel-field taxonomy-enabled-settings" data-usage="checkboxes,select,multiselect">
+
+								<div class="gmw-settings-panel-header">
+									<label class="gmw-settings-label"><?php esc_attr_e( 'Show Posts Count', 'geo-my-wp' ); ?></label>
+								</div>
+
+								<div class="tax-content gmw-settings-panel-input-container">
+
+									<label>
+
+										<input 
+											type="checkbox" 
+											name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[show_count]"
+											value="1" 
+											<?php echo ! empty( $tax_option['show_count'] ) ? 'checked="checked"' : ''; ?> 
+										/>
+										<?php esc_attr_e( 'Enable', 'geo-my-wp' ); ?>
+									</label>
+								</div>
+
+								<div class="gmw-settings-panel-description">
+									<?php esc_attr_e( 'Display the posts count for each term.', 'geo-my-wp' ); ?>
+								</div>
+
+							</div>
+						<?php } ?>
+
+						<?php if ( ! empty( $taxonomies_options['hide_empty'] ) ) { ?>
+
+							<div class="gmw-settings-panel-field taxonomy-enabled-settings" data-usage="checkboxes,select,multiselect">
+
+								<div class="gmw-settings-panel-header">
+									<label class="gmw-settings-label"><?php esc_attr_e( 'Hide Empty', 'geo-my-wp' ); ?></label>
+								</div>
+
+								<div class="tax-content gmw-settings-panel-input-container">
+
+									<label>
+										<input 
+											type="checkbox" 
+											name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[hide_empty]"
+											value="1" <?php echo ! empty( $tax_option['hide_empty'] ) ? 'checked="checked"' : ''; ?>
+										/>
+										<?php esc_attr_e( 'Enable', 'geo-my-wp' ); ?>
+									</label>
+								</div>
+
+								<div class="gmw-settings-panel-description">
+									<?php esc_attr_e( 'Hide terms without posts.', 'geo-my-wp' ); ?>
+								</div>				
+							</div>
+						<?php } ?>
+
+						<?php /*if ( ! empty( GMW()->options['post_types_settings']['per_category_icons']['enabled'] ) ) { ?>
+
+							<div class="gmw-settings-panel-field taxonomy-enabled-settings" style="display:none">
+
+								<label class="gmw-settings-panel-header">						
+									<input 
+										type="checkbox" 
+										class="category-icon" 
+										name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[cat_icons]"
+										value="1" 
+										<?php echo ! empty( $tax_option['cat_icons'] ) ? 'checked="checked"' : ''; ?> />
+									<?php esc_attr_e( 'Category icons', 'geo-my-wp' ); ?>
+								</label>
+
 							</div>
 
-							<div class="taxonomy-label taxonomy-tab-content gmw-settings-panel-input-container">					
-								<input 
-									type="text"
-									class="gmw-form-field regular-text text setting-taxonomy-label"
-									name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[label]"
-									value="<?php echo ! empty( $tax_options['label'] ) ? esc_attr( $tax_options['label'] ) : ''; ?>"
-								>
+						<?php } */?>
+
+						<?php if ( ! empty( $taxonomies_options['required'] ) ) { ?>
+
+							<div class="gmw-settings-panel-field" data-usage="select,multiselect">
+
+								<div class="gmw-settings-panel-header">
+									<label class="gmw-settings-label"><?php echo esc_attr_e( 'Required', 'geo-my-wps' ); ?></label>
+								</div>
+
+								<div class="taxonomy-required taxonomy-tab-content gmw-settings-panel-input-container">					
+									<input
+										type="checkbox"
+										class="gmw-form-field checkbox setting-taxonomy-required"
+										name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[required]"
+										value="1"
+										<?php echo ! empty( $tax_option['required'] ) ? 'checked="checked"' : ''; ?>
+									>
+								</div>
+
+								<div class="gmw-settings-panel-description"><?php esc_attr_e( 'Make this a required field.', 'geo-my-wp' ); ?></div>
 							</div>
+						<?php } ?>
 
-							<div class="gmw-settings-panel-description">
-								<?php esc_attr_e( 'Enter the field lable or leave blank to hide it.', 'geo-my-wps' ); ?>
-							</div>
-						</div>
-
-						<div class="gmw-settings-panel-field">
-
-							<div class="gmw-settings-panel-header">
-								<label class="gmw-settings-label"><?php esc_attr_e( 'Required', 'geo-my-wps' ); ?></label>
-							</div>
-
-							<div class="taxonomy-required taxonomy-tab-content gmw-settings-panel-input-container">					
-								<input
-									type="checkbox"
-									class="gmw-form-field checkbox setting-taxonomy-required"
-									name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[required]"
-									value="1"
-									<?php checked( 1, $tax_options['required'], true ); ?>
-								>
-							</div>
-
-							<div class="gmw-settings-panel-description"><?php esc_attr_e( 'Make this a required field.', 'geo-my-wp' ); ?></div>
-						</div>
-					</div>					
+					</div>		
 				</div>
 
 			<?php } ?>
+
+			<?php //echo self::include_exclude_terms( $val, $name_attr . '[include_exclude_terms]', $form ); // WPCS: XSS ok. ?>
 		</div>
 
-		<?php
+
+		<?php /*$tax_name_attr = esc_attr( $name_attr . '[include_exclude_terms]' ); ?>
+
+		<div id="include-exclude-tax-terms" class="gmw-setting-groups-container">
+
+			<div class="gmw-settings-group-wrapper">
+
+				<div class="gmw-settings-group-conten gmw-settings-multiple-fields-wrapper">
+	
+					<div class="gmw-settings-panel-field">
+
+						<div class="gmw-settings-panel-header">
+							<label class="gmw-settings-label"><?php echo esc_attr_e( 'Usage', 'geo-my-wp' ); ?></label>
+						</div>
+
+						<div class="taxonomy-usage taxonomy-tab-content gmw-settings-panel-input-container">					
+
+							<select name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[usage]" class="gmw-smartbox-not">
+								<option value="disable" <?php selected( 'disable', $tax_option['style'], true ); ?>><?php esc_attr_e( 'Disable', 'geo-my-wp' ); ?></option>
+								<option value="include" <?php selected( 'include', $tax_option['style'], true ); ?>><?php esc_attr_e( 'Include Terms', 'geo-my-wp' ); ?></option>
+								<option value="exclude" <?php selected( 'exclude', $tax_option['style'], true ); ?>><?php esc_attr_e( 'Exclude Terms', 'geo-my-wp' ); ?></option>
+							</select>
+						</div>
+
+						<div class="gmw-settings-panel-description">
+							<?php esc_attr_e( 'Select the field usage.', 'geo-my-wp' ); ?>
+						</div>
+					</div>		
+
+					<div class="gmw-settings-panel-field option-include-terms">
+
+						<div class="gmw-settings-panel-header">
+							<label class="gmw-settings-label"><?php esc_attr_e( 'Include Terms', 'geo-my-wp' ); ?></label>
+						</div>
+
+						<div class="tax-content gmw-settings-panel-input-container">
+
+							<?php $include_value = isset( $tax_option['include'] ) ? $tax_option['include'] : ''; ?>
+
+							<select
+								multiple 
+								data-placeholder="Select terms" 
+								class="taxonomies-picker"
+								data-gmw_ajax_load_options="gmw_get_taxonomy_terms"
+								data-gmw_ajax_load_options_taxonomy="<?php echo esc_attr( $taxonomy_name ); ?>"
+								name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[terms_id][]">
+
+								<?php
+								if ( ! empty( $tax_option['include'] ) ) {
+									foreach ( $tax_option['include'] as $tax_value ) {
+										echo '<option selected="selected" value="' . $tax_value . '">' . __( 'Click to load options', 'geo-my-wp' ) . '</option>';
+									}
+								}
+								?>
+							</select>
+
+						</div>
+
+						<div class="gmw-settings-panel-description">
+							<?php esc_attr_e( 'Select specific taxonmoy terms to include.', 'geo-my-wp' ); ?>
+						</div>
+					</div>
+				</div>		
+			</div>
+		</div>
+
+		<?php */
+
 		$allwed = array(
 			'a' => array(
 				'href'   => array(),
