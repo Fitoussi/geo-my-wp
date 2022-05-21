@@ -780,3 +780,34 @@ function gmw_get_member_xprofile_fields( $member_id = 0, $fields = array() ) {
 
 	return '' === $output ? false : '<ul class="gmw-xprofile-fields">' . $output . '</ul>';
 }
+
+/**
+ * Display xprofile fields in search results.
+ *
+ * @param  object $member the member object.
+ *
+ * @param  array  $gmw    gmw form.
+ *
+ * @since 4.0 ( moved from Premium Settings ).
+ */
+function gmw_search_results_member_xprofile_fields( $member, $gmw = array(), $where = 'search_results' ) {
+
+	if ( empty( $gmw[ $where ]['xprofile_fields'] ) ) {
+		return;
+	}
+
+	// Look for profile fields in form settings.
+	$total_fields = ! empty( $gmw[ $where ]['xprofile_fields']['fields'] ) ? $gmw[ $where ]['xprofile_fields']['fields'] : array();
+
+	// look for date profile field in form settings.
+	if ( ! empty( $gmw[ $where ]['xprofile_fields']['date_field'] ) ) {
+		array_unshift( $total_fields, $gmw[ $where ]['xprofile_fields']['date_field'] );
+	}
+
+	// abort if no profile fields were chosen.
+	if ( empty( $total_fields ) ) {
+		return;
+	}
+
+	echo gmw_get_member_xprofile_fields( $member->id, $total_fields ); // WPCS: XSS ok.
+}
