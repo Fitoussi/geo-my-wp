@@ -749,7 +749,7 @@ class GMW_Form_Settings_Helper {
 
 					$new_templates[ $value ] = $name . ' ( requires the BuddyBoss theme )';
 
-				} elseif ( 'search-forms' === $args['folder_name'] && in_array( $value, array( 'default', 'compact', 'horizontal', 'horizontal-gray', 'gray', 'purple', 'yellow', 'blue', 'red' ), true ) ) {
+				} elseif ( 'search-forms' === $args['folder_name'] && in_array( $value, array( 'default', 'compact', 'horizontal', 'horizontal-gray', 'gray', 'purple', 'yellow', 'blue', 'red', 'left-white', 'right-white' ), true ) ) {
 
 					$name .= ' ( deprecated )';
 
