@@ -36,7 +36,11 @@ class GMW_Posts_Locator_Form_Editor {
 		add_filter( 'gmw_posts_locator_mashup_map_form_settings', array( $this, 'form_settings' ), 5, 2 );
 
 		// Taxonomies.
-		add_action( 'gmw_posts_locator_component_form_settings_form_taxonomies', array( 'GMW_Form_Settings_Helper', 'taxonomies' ), 5, 3 );
+		add_action( 'gmw_posts_locator_component_form_settings_form_taxonomies', array( $this, 'taxonomies' ), 5, 3 );
+	}
+
+	public function taxonomies( $value, $name_attr, $form ) {
+		GMW_Form_Settings_Helper::form_editor_taxonomies( array(), $value, $name_attr, $form );
 	}
 
 	/**
@@ -119,6 +123,7 @@ class GMW_Posts_Locator_Form_Editor {
 					'data-gmw_ajax_load_options' => 'gmw_get_post_types',
 				),
 				'priority'    => 4,
+				'wrap_class'  => 'gmw-option-toggle-not',
 				'sub_option'  => false,
 			),
 		);
@@ -158,6 +163,7 @@ class GMW_Posts_Locator_Form_Editor {
 					'field_name'  => 'post types',
 				),
 			),
+			'wrap_class'      => 'gmw-field-usage-options-toggle',
 			'attributes'      => '',
 			'priority'        => 12,
 		);
