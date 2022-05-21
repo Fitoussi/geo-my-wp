@@ -1071,10 +1071,10 @@ class GMW_Form_Settings_Helper {
 				'HYBRID'    => __( 'HYBRID', 'geo-my-wp' ),
 				'TERRAIN'   => __( 'TERRAIN', 'geo-my-wp' ),
 			);
-		
-		} elseif ( 'location_form_exclude_groups' === $option ) {
 
-			$defaults['name']       = 'location_form_exclude_groups';
+		} elseif ( 'location_form_exclude_fields_groups' === $option ) {
+
+			$defaults['name']       = 'location_form_exclude_fields_groups';
 			$defaults['type']       = 'multiselect';
 			$defaults['label']      = __( 'Exclude Form Field Groups', 'geo-my-wp' );
 			$defaults['desc']       = __( 'Select the field groups that you wish to exclude from the location form.', 'geo-my-wp' );
@@ -1084,6 +1084,8 @@ class GMW_Form_Settings_Helper {
 				'location'    => __( 'Location', 'geo-my-wp' ),
 				'address'     => __( 'Address', 'geo-my-wp' ),
 				'coordinates' => __( 'Coordinates', 'geo-my-wp' ),
+				'contact'     => __( 'Contact Info', 'geo-my-wp' ),
+				'days_hours'  => __( 'Days & Hours', 'geo-my-wp' ),
 			);
 
 		} elseif ( 'location_form_exclude_fields' === $option ) {
@@ -1121,21 +1123,72 @@ class GMW_Form_Settings_Helper {
 				'location-form-tabs-left' => __( 'Tabs Left', 'geo-my-wp' ),
 				'location-form-no-tabs'   => __( 'No Tabs', 'geo-my-wp' ),
 			);
-		}
-		 elseif ( 'marker_grouping' === $option ) {
 
-		 	$defaults['name']       = 'grouping';
+		} elseif ( 'marker_grouping' === $option ) {
+
+			$defaults['name']       = 'grouping';
 			$defaults['type']       = 'select';
 			$defaults['label']      = __( 'Markers Grouping', 'geo-my-wp' );
-			$defaults['desc']       = __( 'Group markers that are close together on the map.', 'geo-my-wp' );
+			$defaults['desc']       = __( 'Enable this to group markers that are close together on the map.', 'geo-my-wp' );
 			$defaults['default']    = 'standard';
 			$defaults['priority']   = 10;
+			$defaults['class']      = 'gmw-smartbox-not';
 			$defaults['options']    = array(
 				'standard'           => __( 'No Grouping', 'geo-my-wp' ),
 				'markers_clusterer'  => __( 'Markers clusterer', 'geo-my-wp' ),
 				'markers_spiderfier' => __( 'Markers Spiderfier', 'geo-my-wp' ),
 			);
-		 }
+
+		} elseif ( 'map_controls' === $option ) {
+
+			$controls = array(
+				'zoomControl'      => __( 'Zoom', 'geo-my-wp' ),
+				'scrollwheel'      => __( 'Scrollwheel zoom', 'geo-my-wp' ),
+				'resizeMapControl' => __( 'Resize map trigger', 'geo-my-wp' ),
+			);
+
+			if ( 'google_maps' == GMW()->maps_provider ) {
+				$controls['rotateControl']      = __( 'Rotate Control', 'geo-my-wp' );
+				$controls['scaleControl']       = __( 'Scale', 'geo-my-wp' );
+				$controls['mapTypeControl']     = __( 'Map Type', 'geo-my-wp' );
+				$controls['streetViewControl']  = __( 'Street View', 'geo-my-wp' );
+				$controls['overviewMapControl'] = __( 'Overview', 'geo-my-wp' );
+			}
+
+			$defaults['name']        = 'map_controls';
+			$defaults['type']        = 'multiselect';
+			$defaults['placeholder'] = __( 'Select map controls', 'geo-my-wp' );
+			$defaults['label']       = __( 'Map Controls', 'geo-my-wp' );
+			$defaults['desc']        = __( 'Select the map controls that you wish to enable.', 'geo-my-wp' );
+			$defaults['default']     = 'standard';
+			$defaults['options']     = $controls;
+			$defaults['priority']    = 50;
+
+		} elseif ( 'premium_message' === $option ) {
+
+			$defaults['extension_name']  = 'Premium Settings';
+			$defaults['extension_class'] = 'GMW_Premium_Settings_Addon';
+			$defaults['field_name']      = 'Premium Settings';
+			$defaults['extension_link']  = 'https://geomywp.com/extensions/premium-settings';
+			$defaults['message']         = '';
+			$defaults['option_disabled'] = false;
+
+			$args = wp_parse_args( $args, $defaults );
+
+			if ( empty( $args['message'] ) ) {
+
+				if ( $args['option_disabled'] ) {
+
+					/* translators: %1$s: link to extensions page, %2$s: field name. */
+					$args['message'] = sprintf( __( 'This feature requires the <a href="%1$s" target="_blank">%2$s</a> extension.', 'geo-my-wp' ), $args['extension_link'], $args['extension_name'] );
+
+				} else {
+				
+					/* translators: %1$s: link to extensions page, %2$s: field name. */
+					$args['message'] = sprintf( __( 'Visit the <a href="%1$s" target="_blank">%2$s</a> extension\'s page for additional %3$s options.', 'geo-my-wp' ), $args['extension_link'], $args['extension_name'], $args['field_name'] );
+				}
+			}
+		}
 
 		return wp_parse_args( $args, $defaults );
 	}
