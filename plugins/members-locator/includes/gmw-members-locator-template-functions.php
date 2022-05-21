@@ -425,37 +425,6 @@ function gmw_search_form_xprofile_fields( $gmw ) {
 }
 
 /**
- * Output BP avatar in search results.
- *
- * @param  object $object memebr | group object.
- *
- * @param  array  $gmw    gmw form object.
- *
- * @return [type]         [description]
- */
-function gmw_search_results_bp_avatar( $object = array(), $gmw = array(), $where = 'search_results' ) {
-
-	// Abort if iamge is disabled.
-	if ( empty( $gmw[ $where ]['image']['enabled'] ) ) {
-		return;
-	}
-
-	$settings = $gmw[ $where ]['image'];
-
-	$args = array(
-		'object_type'  => 'bp_group' === $object->object_type ? 'group' : 'user',
-		'object_id'    => $object->object_id,
-		'width'        => ! empty( $settings['width'] ) ? $settings['width'] : '150px',
-		'height'       => ! empty( $settings['height'] ) ? $settings['height'] : '150px',
-		'show_grav'    => ! empty( $settings['show_grav'] ) ? $settings['show_grav'] : false,
-		'show_default' => ! empty( $settings['show_default'] ) ? $settings['show_default'] : false,
-		'where'        => $where,
-	);
-
-	echo gmw_get_bp_avatar( $args, $object, $gmw ); // WPCS: XSS ok.
-}
-
-/**
  * Display add friend button in search results.
  *
  * @param  object $member  member object.
