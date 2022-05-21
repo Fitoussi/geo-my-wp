@@ -440,6 +440,40 @@ class GMW_Form_Settings_Helper {
 	}
 
 	/**
+	 * Get all taxonomy terms into an array.
+	 *
+	 * @since 4.0.
+	 *
+	 * @return [type] [description]
+	 */
+	public static function get_all_taxonomy_terms() {
+
+		$taxonomies = get_object_taxonomies( array_values( get_post_types() ) );
+		$terms      = get_terms( $taxonomies, array( 'hide_empty' => false ) );
+
+		if ( empty( $terms ) || is_wp_error( $terms ) ) {
+			return;
+		}
+
+		usort( $terms, array( 'self', 'sort_taxonomy_terms_groups' ) );
+
+		$output = array();
+
+		foreach ( $terms as $term ) {
+
+			$term_id = $term->term_taxonomy_id;
+
+			$output[] = array(
+				'value' => $term_id,
+				'label' => $term->slug . ' ( ID ' . $term_id . ' )' . ' ( ' . $term->taxonomy . ' ) ',
+			);
+		}
+
+
+		return $output;
+	}
+	  
+	/**
 	 * Get terms taxonomy array
 	 *
 	 * @param  string  $taxonomy    taxonomy name.
@@ -652,6 +686,42 @@ class GMW_Form_Settings_Helper {
 		return $output;
 	}
 
+	/**
+	 * Get an array of all BP group meta fields.
+	 *
+	 * @since 4.0
+	 *
+	 * @return [type] [description]
+	 */
+	public static function get_bp_group_meta() {
+
+		global $wpdb;
+
+		$keys = $wpdb->get_col(
+			"SELECT meta_key
+        	FROM {$wpdb->prefix}bp_groups_groupmeta
+        	GROUP BY meta_key
+        	ORDER BY meta_key ASC"
+		); // WPCS: db call ok, cache ok.
+
+		$output = array();
+
+		if ( $keys ) {
+
+			natcasesort( $keys );
+
+			// Collect terms into an array.
+			foreach ( $keys as $key ) {
+
+				$key = esc_attr( $key );
+
+				$output[ $key ] = $key;
+			}
+		}
+
+		return $output;
+	}
+
 	public static function get_templates( $args ) {
 
 		$args = array(
@@ -806,8 +876,17 @@ class GMW_Form_Settings_Helper {
 			$output = self::get_bp_groups( $args );
 		}
 
+		// Get custom fields.
+		if ( 'gmw_get_bp_group_meta' === $action ) {
+			$output = self::get_bp_group_meta( $args );
+		}
+
 		if ( 'gmw_get_templates' === $action ) {
 			$output = self::get_templates( $args );
+		}
+
+		if ( 'gmw_get_all_taxonomy_terms' === $action ) {
+			$output = self::get_all_taxonomy_terms( $args );
 		}
 
 		if ( ! empty( $args['gmw_ajax_load_options_disabled'] ) ) {
