@@ -39,6 +39,14 @@ class GMW_Posts_Locator_Form_Editor {
 		add_action( 'gmw_posts_locator_component_form_settings_form_taxonomies', array( $this, 'taxonomies' ), 5, 3 );
 	}
 
+	/**
+	 * Generate the taxonomy settings.
+	 *
+	 * @param  [type] $value     [description].
+	 * @param  [type] $name_attr [description].
+	 * @param  [type] $form      [description].
+	 * @return [type]            [description]
+	 */
 	public function taxonomies( $value, $name_attr, $form ) {
 		GMW_Form_Settings_Helper::form_editor_taxonomies( array(), $value, $name_attr, $form );
 	}
