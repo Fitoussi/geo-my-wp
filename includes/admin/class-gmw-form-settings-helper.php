@@ -319,7 +319,7 @@ class GMW_Form_Settings_Helper {
 
 		// Collect terms into an array.
 		foreach ( $terms as $term ) {
-			$output[ $term->term_id ] = $term->name . ' (' . $term->term_id . ')';
+			$output[ $term->term_id ] = $term->name . ' ( ID ' . $term->term_id . ' )';
 		}
 
 		return $output;
