@@ -174,7 +174,7 @@ class GMW_Forms_Helper {
 				'snazzy_maps_styles' => '',
 			),
 			'info_window'    => array(
-				'iw_type'         => 'popup',
+				'iw_type'         => 'standard',
 				'ajax_enabled'    => 1,
 				'template'        => array(
 					'popup' => 'slide-left',

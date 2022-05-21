@@ -1444,7 +1444,7 @@ class GMW_Form_Editor {
 								array(
 									'name'       => 'iw_type',
 									'type'       => 'select',
-									'default'    => 'popup',
+									'default'    => 'standard',
 									'label'      => __( 'Info Window Type', 'gmw-ajax-forms' ),
 									'desc'       => __( 'Select the info-window type.', 'gmw-ajax-forms' ),
 									'options'    => array(
