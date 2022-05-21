@@ -461,6 +461,147 @@ function gmw_search_results_bp_last_active( $member, $gmw, $where = 'search_resu
 }
 
 /**
+ * Generate the xprofile query args to pass to BuddyPress bp_has_members() function.
+ *
+ * @since 4.0.
+ *
+ * @param  array  $gmw           [description].
+ *
+ * @param  array  $fields_values [description]
+ *
+ * @return [type]                [description]
+ */
+function gmw_get_xprofile_query_args( $gmw = array(), $fields_values = array() ) {
+
+	// look for xprofile values in URL.
+	if ( empty( $fields_values ) ) {
+
+		if ( isset( $gmw['form_values']['xf'] ) && array_filter( $gmw['form_values']['xf'] ) ) {
+
+			$fields_values = $gmw['form_values']['xf'];
+
+			// otherwise, can do something custom with xprofile fields
+			// by passing array of array( fields => value ).
+		} else {
+			$fields_values = apply_filters( 'gmw_' . $gmw['prefix'] . '_xprofile_fields_query_default_values', array(), $gmw );
+		}
+	}
+
+	if ( empty( $fields_values ) ) {
+		return array();
+	}
+
+	$meta_args = array();
+
+	foreach ( $fields_values as $field_id => $value ) {
+
+		if ( empty( $value ) || ( is_array( $value ) && ! array_filter( $value ) ) ) {
+			continue;
+		}
+
+		// get the field data.
+		$field_data = new BP_XProfile_Field( $field_id );
+
+		switch ( $field_data->type ) {
+
+			case 'textbox':
+			case 'textarea':
+				$this_query = array(
+					'field'   => $field_id,
+					'value'   => $value,
+					'compare' => 'LIKE',
+				);
+
+				break;
+
+			case 'number':
+				$this_query = array(
+					'field'   => $field_id,
+					'value'   => $value,
+					'compare' => '=',
+					'type'    => 'NUMERIC',
+				);
+
+				break;
+
+			case 'selectbox':
+			case 'radio':
+			case 'select_custom_post_type':
+			case 'select_custom_taxonomy':
+				$this_query = array(
+					'field'   => $field_id,
+					'value'   => $value,
+					'compare' => '=',
+				);
+
+				break;
+
+			case 'multiselectbox':
+			case 'checkbox':
+			case 'multiselect_custom_post_type':
+			case 'multiselect_custom_taxonomy':
+				$this_query = array( 'relation' => 'OR' );
+
+				foreach( $value as $item ) {
+				    $this_query[] = array(
+				        'field'   => $field_id,
+				        'value'   => sprintf( ':"%s";', $item ),
+				        'compare' => 'LIKE',
+				    );
+				}
+
+				break;
+
+			/*case 'datebox':
+			case 'birthdate':
+				if ( ! is_array( $value ) || ! array_filter( $value ) ) {
+					break;
+				}
+
+				$min = ! empty( $value['min'] ) ? $value['min'] : '1';
+				$max = ! empty( $value['max'] ) ? $value['max'] : '200';
+
+				if ( $min > $max ) {
+					$max = $min;
+				}
+
+				$time  = time();
+				$day   = date( 'j', $time );
+				$month = date( 'n', $time );
+				$year  = date( 'Y', $time );
+				$ymin  = $year - $max - 1;
+				$ymax  = $year - $min;
+
+				if ( '' !== $max ) {
+					$sql .= $wpdb->prepare( ' AND DATE(value) > %s', "$ymin-$month-$day" );
+				}
+				if ( '' !== $min ) {
+					$sql .= $wpdb->prepare( ' AND DATE(value) <= %s', "$ymax-$month-$day" );
+				}
+
+				break;*/
+		}
+
+		// create the meta query args.
+		$meta_args[] = apply_filters(
+			'gmw_fl_xprofile_query_field_args',
+			$this_query,
+			$gmw,
+			$field_id,
+			$field_data,
+			$fields_values,
+		);
+	}
+
+	if ( ! empty( $meta_args ) ) {
+		$meta_args['relation'] = 'AND';
+	}
+
+	return $meta_args;
+}
+
+
+/**
  * Query xprofile fields
  *
  * Note $form_values might come from URL. It needs to be sanitized before being used
