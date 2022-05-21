@@ -24,7 +24,7 @@ trait GMW_Members_Locator_Form_Trait {
 	 *
 	 * @since 1.1
 	 *
-	 * @param  array  $query array of query clauses.
+	 * @param  array $query array of query clauses.
 	 *
 	 * @return string        modified sql query
 	 */
@@ -32,12 +32,11 @@ trait GMW_Members_Locator_Form_Trait {
 
 		global $wpdb;
 
-		// When orderby is an array, get the column using the SELECT clause.
-		if ( isset( $query->uid_clauses['orderby'] ) && is_array( $query->uid_clauses['orderby'] ) ) {
-
-			$column = strpos( $query->uid_clauses['select'], 'ON u.ID' ) !== false ? 'ID' : 'user_id';
-
-			// Otherwise, get the table column based on the type argument.
+		// Try getting the column using the SELECT clause.
+		if ( strpos( $query->uid_clauses['select'], 'ON u.ID' ) !== false ) {
+			$column = 'ID';
+		} elseif ( strpos( $query->uid_clauses['select'], 'ON u.user_id' ) !== false ) {
+			$column = 'user_id';
 		} else {
 			$column = in_array( $this->form['query_args']['type'], array( 'active', 'newest', 'popular', 'online' ), true ) ? 'user_id' : 'ID';
 		}
@@ -111,7 +110,7 @@ trait GMW_Members_Locator_Form_Trait {
 
 			} else {
 
-				$where .= " AND ( gmw_locations.latitude != 0.000000 && gmw_locations.longitude != 0.000000 )";
+				$where .= ' AND ( gmw_locations.latitude != 0.000000 && gmw_locations.longitude != 0.000000 )';
 			}
 
 			$where .= ' ' . $address_filters;
@@ -146,7 +145,7 @@ trait GMW_Members_Locator_Form_Trait {
 			$orderby_multiple = array();
 
 			foreach ( $clauses['orderby'] as $part ) {
-				$orderby_multiple[] = $part[0] . ' ' . $part[1];// column_name DESC/ASC
+				$orderby_multiple[] = $part[0] . ' ' . $part[1];
 			}
 
 			$clauses['orderby'] = 'ORDER BY ' . implode( ', ', $orderby_multiple );
