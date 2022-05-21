@@ -220,7 +220,7 @@ class GMW_Form_Settings_Helper {
 		?>
 		<div id="taxonomies-messages-wrapper">
 			<div class="post-types-taxonomies-message select-taxonomy gmw-admin-notice-box gmw-admin-notice-error">
-				<span><?php esc_html_e( 'Select a post type above in order to see and setup its taxonomies.', 'geo-my-wp' ); ?></span>
+				<span><?php esc_html_e( 'Select at least one post type above in order to see and setup the taxonomies.', 'geo-my-wp' ); ?></span>
 			</div>
 			<div class="post-types-taxonomies-message multiple-selected gmw-admin-notice-box gmw-admin-notice-error">
 				<span>
@@ -228,7 +228,7 @@ class GMW_Form_Settings_Helper {
 				echo wp_kses(
 					sprintf(
 						/* translators: %s link to the premium settings extension page */
-						__( 'Taxonomies are not available when selecting multiple post types. This feature is available with the <a href="%s" target="_blank">Premium Settings extension</a>.', 'geo-my-wp' ),
+						__( 'Taxonomies are not available when selecting multiple post types.', 'geo-my-wp' ),
 						'https://geomywp.com/extensions/premium-settings'
 					),
 					$allwed
