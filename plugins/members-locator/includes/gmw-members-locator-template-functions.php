@@ -764,6 +764,7 @@ function gmw_get_member_xprofile_fields( $member_id = 0, $fields = array() ) {
 		}
 
 		if ( 'datebox' === $field_data->type ) {
+
 			$age = intval( date( 'Y', time() - strtotime( $field_value ) ) ) - 1970;
 			// translators: %s for age.
 			$field_value      = sprintf( __( ' %s Years old', 'geo-my-wp' ), $age );
