@@ -25,31 +25,198 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function gmw_pt_get_tax_query_args( $tax_args = array(), $gmw = array() ) {
 
-	$tax_value = false;
-	$output    = array( 'relation' => 'AND' );
+	// Abort if multiple post types selected.
+	if ( empty( $gmw['search_form']['post_types'] ) || 1 !== count( $gmw['search_form']['post_types'] ) ) {
+		return array();
+	}
 
-	foreach ( $tax_args as $taxonomy => $values ) {
+	$output = array( 'relation' => 'AND' );
 
-		if ( array_filter( $values ) ) {
+	// Loop through taxonomies in the search form settings.
+	foreach ( $gmw['search_form']['taxonomies'] as $taxonomy => $taxonomy_args ) {
+
+		// Skip if taxonomy is disabled.
+		if ( empty( $taxonomy_args['style'] ) || 'disable' === $taxonomy_args['style'] || 'disabled' === $taxonomy_args['style'] ) {
+			continue;
+		}
+
+		// Skip taxonomy if not below to the selected post type.
+		if ( ! in_array( $gmw['search_form']['post_types'][0], $taxonomy_args['post_types'], true ) ) {
+			continue;
+		}
+
+		$tax_exists = false;
+		$tax_values = array();
+
+		// Check if taxonomy term/s were selected in the search form.
+		if ( ! empty( $tax_args[ $taxonomy ] ) && array_filter( $tax_args[ $taxonomy ] ) ) {
+			$tax_exists = true;
+			$tax_values = $tax_args[ $taxonomy ];
+		}
+
+		// Query taxonomy from the search form.
+		if ( $tax_exists ) {
+
 			$output[] = array(
 				'taxonomy' => $taxonomy,
 				'field'    => 'id',
-				'terms'    => $values,
+				'terms'    => $tax_values,
 				'operator' => 'IN',
 			);
 		}
 
+		// Query include/exclude terms.
+		// Only if taxonomy was not selected in the search form or is set to pre-defined.
+		if ( ! $tax_exists || 'pre_defined' === $taxonomy_args['style'] ) {
+
+			// include terms.
+			if ( ! empty( $taxonomy_args['include'] ) ) {
+
+				$output[] = array(
+					'taxonomy' => $taxonomy,
+					'field'    => 'id',
+					'terms'    => is_array( $taxonomy_args['include'] ) ? $taxonomy_args['include'] : explode( ',', $taxonomy_args['include'] ),
+					'operator' => 'IN',
+				);
+			}
+
+			// exclude terms.
+			if ( ! empty( $taxonomy_args['exclude'] ) ) {
+
+				$output[] = array(
+					'taxonomy' => $taxonomy,
+					'field'    => 'id',
+					'terms'    => is_array( $taxonomy_args['exclude'] ) ? $taxonomy_args['exclude'] : explode( ',', $taxonomy_args['exclude'] ),
+					'operator' => 'NOT IN',
+				);
+			}
+		}
+
 		// extend the taxonomy query.
-		$output = apply_filters( 'gmw_' . $gmw['prefix'] . '_query_taxonomy', $output, $taxonomy, $values, $gmw );
+		$output = apply_filters( 'gmw_' . $gmw['prefix'] . '_query_taxonomy', $output, $taxonomy, $tax_values, $gmw );
 	}
 
-	// verify that there is at least one query to performe.
-	if ( empty( $output[0] ) ) {
-		$output = array();
-	}
-
-	return $output;
+	return ! empty( $output[0] ) ? $output : array();
 }
+
+/**
+ * Query pre-defined taxonomies.
+ *
+ * To be used with premium extensions.
+ *
+ * This functions can be used when multiple post types are selected.
+ *
+ * @param  array $gmw  gmw form.
+ *
+ * @since 4.0
+ *
+ * @return array
+ */
+function gmw_get_pre_defined_tax_query( $gmw ) {
+
+	// for page load results.
+	if ( $gmw['page_load_action'] && ! empty( $gmw['page_load_results']['include_exclude_terms'] ) ) {
+
+		$post_types = $gmw['page_load_results']['post_types'];
+		$tax_args   = $gmw['page_load_results']['include_exclude_terms'];
+
+		// on form submission.
+	} elseif ( $gmw['submitted'] && isset( $gmw['search_form']['post_types'] ) && 1 < count( $gmw['search_form']['post_types'] ) && ! empty( $gmw['search_form']['include_exclude_terms'] ) ) {
+
+		$post_types = ! empty( $gmw['form_values']['post'] ) ? $gmw['form_values']['post'] : $gmw['search_form']['post_types'];
+		$tax_args   = $gmw['search_form']['include_exclude_terms'];
+
+	} else {
+
+		return array();
+	}
+
+	$tax_query = array();
+
+	foreach ( $tax_args as $taxonomy => $args ) {
+
+		if ( empty( $args['post_types'] ) ) {
+			continue;
+		}
+
+		$post_type = array_intersect( $args['post_types'], $post_types );
+
+		if ( empty( $post_type ) ) {
+			continue;
+		}
+
+		$post_type = $post_type[0];
+
+		if ( ! isset( $tax_query[ $post_type ] ) ) {
+			$tax_query[ $post_type ] = array();
+		}
+
+		// include terms.
+		if ( isset( $args['include'] ) ) {
+
+			$tax_query[ $post_type ][] = array(
+				'taxonomy' => $taxonomy,
+				'field'    => 'id',
+				'terms'    => is_array( $args['include'] ) ? $args['include'] : explode( ',', $args['include'] ),
+				'operator' => 'IN',
+			);
+		}
+
+		// exclude terms.
+		if ( isset( $args['exclude'] ) ) {
+
+			$tax_query['tax_query'][ $post_type ][] = array(
+				'taxonomy' => $taxonomy,
+				'field'    => 'id',
+				'terms'    => is_array( $args['exclude'] ) ? $args['exclude'] : explode( ',', $args['exclude'] ),
+				'operator' => 'NOT IN',
+			);
+		}
+
+		if ( ! empty( $tax_query[ $post_type ] ) ) {
+			$tax_query[ $post_type ]['relation'] = 'AND';
+		} else {
+			unset( $tax_query[ $post_type ] );
+		}
+	}
+
+	if ( ! empty( $tax_query ) ) {
+		$tax_query['relation'] = 'OR';
+	}
+
+	return $tax_query;
+}
+
+/**
+ * Apply tax query dynamically  to all of the Posts Locator forms.
+ *
+ * @since 4.0.
+ *
+ * @param  array $gmw gmw form.
+ *
+ * @return [type]      [description]
+ */
+function gmw_generate_tax_query( $gmw ) {
+
+	$tax_query = gmw_get_pre_defined_tax_query( $gmw );
+
+	if ( ! empty( $tax_query ) ) {
+		return $tax_query;
+	}
+
+	if ( ! isset( $gmw['form_values']['tax'] ) ) {
+		$gmw['form_values']['tax'] = array();
+	}
+
+	$tax_query = gmw_pt_get_tax_query_args( $gmw['form_values']['tax'], $gmw );
+
+	if ( ! empty( $tax_query ) ) {
+		return $tax_query;
+	}
+
+	return array();
+}
+//add_filter( 'gmw_posts_locator_form_before_posts_query', 'gmw_pt_execute_tax_query' );
 
 /**
  * Get posts featured image.
