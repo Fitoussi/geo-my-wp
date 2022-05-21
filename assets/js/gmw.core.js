@@ -113,6 +113,8 @@ var GMW = {
 		'country_code'
 	],
 
+	sliders : {},
+
     /**
      * Run on page load
      * 
@@ -157,11 +159,18 @@ var GMW = {
         // toggle element
         GMW.toggle_element();
 
-        // trigger range slider
-        GMW.rangeslider();
+        // trigger range slider.
+        if ( typeof 'noUiSlider' !== 'undefined' ) {
+      		GMW.range_slider();
+    	}
 
-        // trigger range slider
-        GMW.date_picker();
+    	GMW.results_view_toggle();
+
+        if ( typeof jQuery().flatpickr !== 'undefined' ) {
+        	GMW.date_time_picker();
+       	}
+
+      	GMW.bp_functions_init();
     },
 
     /**
@@ -581,7 +590,7 @@ var GMW = {
         GMW.do_action( 'gmw_save_location_fields', result );
 
         // save location in current location form and cookies.
-        for ( fieldName in result ) {
+        for ( var fieldName in result ) {
         	
         	// we only want some fields to save in cookies.
         	if ( jQuery.inArray( fieldName, GMW.current_location_fields ) !== -1 ) {
@@ -746,11 +755,21 @@ var GMW = {
      */
     form_functions : function() {
 
-        GMW.enable_smartbox();
-     
+    	if ( jQuery( 'form.gmw-form' ).find( 'select.gmw-smartbox, select[gmw-smartbox]' ).length ) {
+        	GMW.enable_smartbox();
+    	}
+     	
+     	// Remove the "required" attribute from fields inside a hidden element.
+     	jQuery( 'form.gmw-form' ).find( 'input[required], select[required]' ).each( function() {
+
+     		if ( ! jQuery( this ).is( ':visible' ) ) {
+     			jQuery( this ).removeAttr( 'required' ).attr( 'required-disabled', '' );
+     		}
+     	});
+
         // remove hidden coordinates when address field value changes
-        jQuery( 'form' ).find( 'input.gmw-address' ).keyup( function ( event ) { 
-            
+        jQuery( 'form' ).find( 'input.gmw-address, .gmw-address-field' ).keyup( function ( event ) {
+
             // abort if enter key.
             if ( event.which == 13 ) {
                 return;
@@ -775,12 +794,211 @@ var GMW = {
             GMW.form_submission( jQuery( this ), event );
         });
 
-        jQuery( '.gmw-xprofile-fields-form-trigger' ).on( 'click', function(e) {
+        // Was suppose to be for multiple post types and multiple taxonomies, but this feature is not added to the plugin at the moment.
+        // It is too complex.
+        /*jQuery( 'form.gmw-form' ).find( 'select.gmw-post-types-field, .gmw-post-types-field-checkbox, .gmw-post-types-field-radio' ).on( 'change', function() {
+
+        	var thisForm = jQuery( this ).closest( 'form' );
+
+        	if ( jQuery( this ).attr( 'type' ) == 'checkbox' || jQuery( this ).attr( 'type' ) == 'radio' ) {
+
+	        	var elements = thisForm.find( '.gmw-post-types-field-checkbox, .gmw-post-types-field-radio' );
+	        	var checked  = thisForm.find( '.gmw-post-types-field-checkbox:checked, .gmw-post-types-field-radio:checked' );
+
+	        	// If all or none of the post types chceked, show all taxonomies.
+	        	//if ( checked.length == 0 || checked.length == elements.length || checked.val() == '' || checked.val() == '0' ) {
+	        	if ( checked.length == 0 || checked.length > 1 || checked.val() == '' || checked.val() == '0' ) {
+
+	        		thisForm.find( '.gmw-field-type-taxonomy-wrapper' ).slideUp( 'fast' ).find( 'input, select' ).prop( 'disabled', true );
+	        		
+	        		// Otherwise, show only taxonomies of checked post types.
+	        	} else {
+
+	        		elements.each( function() {
+
+	        			if ( jQuery( this ).is( ':checked' ) ) {
+	        				thisForm.find( '.gmw-field-type-taxonomy-wrapper[data-post_types*="' + jQuery( this ).val() + '"]' ).slideDown( 'fast' ).find( 'input, select' ).prop( 'disabled', false );
+
+		        		} else {
+		        			thisForm.find( '.gmw-field-type-taxonomy-wrapper[data-post_types*="' + jQuery( this ).val() + '"]' ).slideUp( 'fast' ).find( 'input, select' ).prop( 'disabled', true );
+		        		}
+	        		});
+	        	}
+	        } else {
+
+	        	var postTypes = jQuery( this ).val();
+
+	        	if ( postTypes.length == 0 || postTypes.length > 1 || postTypes == '' || postTypes == '0' ) {
+	        		
+	        		thisForm.find( '.gmw-field-type-taxonomy-wrapper' ).slideUp( 'fast' ).find( 'input, select' ).prop( 'disabled', true );
+	        	
+	        	} else {
+	        		
+	        		if ( jQuery.isArray( postTypes ) ) {
+
+	        			thisForm.find( '.gmw-field-type-taxonomy-wrapper' ).hide().find( 'input, select' ).prop( 'disabled', true );
+
+	        			for ( var i = 0; i < postTypes.length; ++i ) {
+
+				            thisForm.find( '.gmw-field-type-taxonomy-wrapper[data-post_types*="' + postTypes[i] + '"]' ).slideDown( 'fast' ).find( 'input, select' ).prop( 'disabled', false );
+						}
+
+	        		} else {
+
+	        			thisForm.find( '.gmw-field-type-taxonomy-wrapper' ).slideUp( 'fast' ).find( 'input, select' ).prop( 'disabled', true );
+
+	        			thisForm.find( '.gmw-field-type-taxonomy-wrapper[data-post_types*="' + postTypes + '"]' ).slideDown( 'fast' ).find( 'input, select' ).prop( 'disabled', false );
+	        		}
+	        	}
+	        }
+        });*/
+
+        //jQuery( 'form.gmw-form' ).find( 'select.gmw-post-types-field, .gmw-post-types-field-checkbox, .gmw-post-types-field-radio' ).trigger( 'change' );
+
+        /**
+         * GMW modal box toggle.
+         *
+         * @param  {[type]} ) {                   	var button [description]
+         * @return {[type]}   [description]
+         */
+        jQuery( '.gmw-toggle-button-field' ).each( function() {
+
+        	var button      = jQuery( this );
+        	var data        = button.data();
+        	var element     = button.closest( '.gmw-form-wrapper, gmw-results-wrapper' ).find( data.element );
+        	var type        = element.attr( 'data-type' );
+        	var closeButton = element.find( '.gmw-close-filters-button, .gmw-modal-box-wrapper, .gmw-submit, .gmw-submit-field' );
+
+        	button.click( function(e) {
+        		
+        		e.preventDefault();
+
+        		if ( type == 'popup' ) {
+
+        			// Hack for global Maps. Prevent the modal box from popup within the map bounderies.
+        			jQuery( this ).closest( '.gmw-global-map-wrapper' ).css( 'overflow', 'initial' );
+
+	        		element.fadeToggle( data.duration );
+
+	        	} else {
+	        		element.slideToggle( data.duration );
+	        	}
+
+	        	element.toggleClass( 'gmw-element-visible' );
+        	});
+
+        	closeButton.add( data.element).click( function(e) {
+
+        		if ( e.target !== e.currentTarget ) {
+        			return;
+        		}
+
+        		if ( type == 'popup' ) {
+
+        			jQuery( this ).closest( '.gmw-global-map-wrapper' ).css( 'overflow', 'hidden' );
+
+	        		element.fadeOut( data.duration );
+
+	        	} else {
+	        		element.slideUp( data.duration );
+	        	}
+
+	        	element.removeClass( 'gmw-element-visible' );
+        	});
+        });
+
+        jQuery( 'form.gmw-form' ).find( '.gmw-xprofile-fields-form-trigger' ).on( 'click', function(e) {
         	
         	e.preventDefault();
 
         	jQuery( this ).closest( 'form' ).find( '.gmw-search-form-xprofile-fields' ).slideToggle().toggleClass( 'xprofile-visible' );
         });
+
+        jQuery( 'ul.gmw-checkbox-children.gmw-checkbox-level-0' ).prev( '.gmw-children-checkboxes-toggle' ).show().on( 'click', function() {
+        	jQuery( this ).toggleClass( 'gmw-icon-plus-squared-alt gmw-icon-minus-squared-alt' ).next( 'ul' ).slideToggle( 'fast' );
+        });
+
+        jQuery( 'form.gmw-form' ).find( '.gmw-taxonomy-checkbox' ).on( 'change', function() {
+
+        	var checkboxes = jQuery( this ).closest( 'li' ).find( 'ul' ).find( 'input[type="checkbox"]' );
+
+        	if ( jQuery( this ).is( ':checked' ) ) {
+        		checkboxes.prop( 'checked', true );
+        	} else {
+        		checkboxes.prop( 'checked', false );
+        	}
+        });
+
+        // Reset form.
+        jQuery( 'form.gmw-form' ).on( 'click', '.gmw-reset-form-field', function() {
+
+        	var submit = jQuery( this ).closest( '.gmw-form-wrapper' ).hasClass( 'gmw-ajax-form-wrapper' ) ? true : false;
+
+        	GMW.reset_form( jQuery( this ).data( 'form_id' ), submit );
+
+        	return false;
+		});
+
+		jQuery( document ).on( 'click', '.gmw-element-drawer-toggle', function() {
+
+			var toggle  = jQuery( this );
+			var data    = jQuery( this ).data();
+			var element = jQuery( this ).closest( '.gmw-element-wrapper, .gmw-element-template' );
+			
+			element.css( 'transition', 'margin ' + data.duration + 'ms' );
+			toggle.toggleClass( data.toggle_close + ' ' + data.toggle_open );
+
+			if ( element.hasClass( 'gmw-drawer-closed' ) ) {
+
+				element.removeClass( 'gmw-drawer-closed' );
+				element.css( 'margin-' + data.direction, '0' );
+
+			} else {
+
+				var elementWidth = element.width();
+
+				element.addClass( 'gmw-drawer-closed' );
+				element.css( 'margin-' + data.direction, '-' + elementWidth + 'px' );
+			}
+
+			//jQuery( this ).closest( '.gmw-element-wrapper' ).addClass( 'gmw-drawer-closed' );
+		});
+
+		jQuery( document ).on( 'click', '.gmw-reset-field-trigger', function( e ) {
+
+			e.preventDefault();
+
+			var wrapper = jQuery( this ).parent();
+
+			wrapper.find( ':input[type="text"], :input[type="number"], textarea' ).val( '' ).trigger( 'change' );
+			wrapper.find( ':input[type="checkbox"], :input[type="radio"]' ).prop( 'checked', false ).trigger( 'change' );
+			wrapper.find( 'select option' ).removeAttr( 'selected' ).trigger( 'change' );
+		});
+    },
+
+    reset_form : function( formId, submit ) {
+
+		var $form = jQuery( '#gmw-submission-fields-' + formId ).closest( 'form' );
+
+		$form.trigger( 'reset' );
+		
+		$form.find( ':input[type="text"]' ).not( ':input[type="hidden"]' ).val( '' ).trigger( 'change.select2' );
+		$form.find( 'select' ).not( ':input[type="hidden"]' ).not( '[multiple]' ).find( 'option:eq(0)' ).prop( 'selected', true ).trigger( 'change.select2' );
+		
+		$form.find( 'select[multiple]' ).not( ':input[type="hidden"]' ).val( '' ).trigger( 'change.select2' );
+		$form.find( 'textarea' ).val( '' );
+
+		jQuery( ':input[type="checkbox"], :input[type="radio"]', $form ).not( ':input[type="hidden"]' ).prop( 'checked', false );
+
+		if ( jQuery().fSelect ) {
+			$form.find( 'select.gmw-smartbox, select[gmw-smartbox]' ).fSelect( 'reload' );
+		}
+
+		if ( typeof submit !== 'undefined' && submit == true ) {
+			$form.submit();
+		}
+
+		return false;
     },
 
     /**
@@ -789,30 +1007,51 @@ var GMW = {
      */
     enable_smartbox : function() {
 
-        // enable chosen for GEO my WP form elements
-        if ( jQuery().chosen ) {
-            jQuery( 'form' ).find( 'select.gmw-smartbox' ).chosen( {
-                width : '100%'
-            });
+    	var smartBox = 'fselect';
 
-        // enable select 2
-        } else if ( jQuery().select2 ) {
-            
-            jQuery( 'form' ).find( 'select.gmw-smartbox' ).each( function() {
+    	if ( typeof gmwVars.settings.general.smartbox_library !== 'undefined' ) {
+    		smartBox = gmwVars.settings.general.smartbox_library;
+    	}
 
-            	var thisParent = '';
+    	if ( smartBox == 'fselect' && jQuery().fSelect ) {
+
+    		jQuery( '.gmw-form' ).find( 'select.gmw-smartbox, select[gmw-smartbox]' ).each( function() {
+
+    			var data = jQuery( this ).data();
+
+				jQuery( this ).fSelect({
+				    placeholder : data.placeholder,
+				    numDisplayed : 3,
+				    overflowText : '{n} selected',
+				    noResultsText : data.no_results_text,
+				    searchText : data.search_text,
+				    showSearch : true,
+				});
+			});
+		}
+
+		if ( smartBox == 'select2' && jQuery().select2 ) {
+
+    		jQuery( '.gmw-form' ).find( 'select.gmw-smartbox, select[gmw-smartbox]' ).each( function() {
+
+				var thisParent = '';
 
             	if ( typeof jQuery( this ).data( 'gmw-dropdown-parent' ) !== 'undefined' && jQuery( jQuery( this ).data( 'gmw-dropdown-parent' ) ).length ) {
 
-            		var thisParent = jQuery( jQuery( this ).data( 'gmw-dropdown-parent' ) );
+            		thisParent = jQuery( jQuery( this ).data( 'gmw-dropdown-parent' ) );
+ 	          	
+ 	          	} else {
+
+ 	          		thisParent = jQuery( this ).parent();
  	          	}
 
             	jQuery( this ).select2({
                 	width          : '100%',
                 	dropdownParent : thisParent,
+                	allowClear     : true,
                 });
-            });
-        }
+			});
+		}
     },
 
     /**
@@ -837,7 +1076,7 @@ var GMW = {
         } 
 
         //var form         = form;
-        var addressField = form.find( 'input.gmw-address, select.gmw-address' );
+        var addressField = form.find( 'input.gmw-address, select.gmw-address, input.gmw-address-field, select.gmw-address-field' );
         var address      = '';
 
         // prevent form submission. We need to run some functions.
@@ -945,11 +1184,13 @@ var GMW = {
         form.find( '.gmw-lat' ).val( parseFloat( result.lat ).toFixed(6) );
         form.find( '.gmw-lng' ).val( parseFloat( result.lng ).toFixed(6) );
 
+        GMW.do_action( 'gmw_form_geocoder_success', result );
+
         // submit the form
         setTimeout(function() {
             GMW.vars.form_submission.submit = true;
             GMW.vars.form_submission.form.submit();  
-        }, 300);
+        }, 300 );
 
         return false; 
     },
@@ -1026,7 +1267,7 @@ var GMW = {
     locator_button_success : function( result ) {
 
         var form         = GMW.vars.locator_button.form;
-        var addressField = form.find( 'input.gmw-address' );
+        var addressField = form.find( 'input.gmw-address, input.gmw-address-field' );
 
         // enable all forms.
         jQuery( 'form.gmw-form' ).find( 'input[type="text"], .gmw-submit' ).removeAttr( 'disabled' );
@@ -1042,11 +1283,11 @@ var GMW = {
         
         } else {        
 
-            form.find( '.gmw-address.street' ).val( result.street );
-            form.find( '.gmw-address.city' ).val( result.city );
-            form.find( '.gmw-address.state' ).val( result.region_name );
-            form.find( '.gmw-address.zipcode' ).val( result.postcode );
-            form.find( '.gmw-address.country' ).val( result.country_code );
+            form.find( '.gmw-address.street, .gmw-address-field.street' ).val( result.street );
+            form.find( '.gmw-address.city, .gmw-address-field.city' ).val( result.city );
+            form.find( '.gmw-address.state, .gmw-address-field.state' ).val( result.region_name );
+            form.find( '.gmw-address.zipcode, .gmw-address-field.zipcode' ).val( result.postcode );
+            form.find( '.gmw-address.country, .gmw-address-field.country' ).val( result.country_code );
         }
        
         // if form locator set to auto submit form. 
@@ -1073,7 +1314,7 @@ var GMW = {
      */
     locator_button_failed : function( status ) {
 
-    	var message = 'Geocoder failed due to: ' + status;
+    	var message = status;
 
     	if ( typeof gmwVars.locatorAlerts !== 'undefined' && gmwVars.locatorAlerts == 1 ) {
 	            
@@ -1134,10 +1375,92 @@ var GMW = {
      * 
      * @return {[type]} [description]
      */
-    rangeslider : function() {
-        jQuery( 'form' ).find( 'input.gmw-range-slider' ).on( 'input change', function() {
-            jQuery( this ).prev( 'span, label' ).find( 'output' ).html( jQuery( this ).val() );
+    range_slider : function() {
+
+    	/*jQuery( 'form' ).find( 'input.gmw-range_slider-field' ).on( 'input change', function() {
+        	jQuery( this ).next( '.gmw-range-slider-output' ).find( '.range-slider-value' ).html( jQuery( this ).val() );
+        });*/
+
+        jQuery( '.gmw-form' ).find( '.gmw-slider-type-field, .gmw-range_slider-type-field' ).each( function() {
+
+        	var element    = jQuery( this );
+        	var sliderId   = jQuery( this ).attr( 'id' );
+    		var sliderData = jQuery( this ).data();
+    		var start      = [ sliderData.value ];
+    		var connect    = 'lower';
+
+    		if ( element.hasClass( 'gmw-range_slider-type-field' ) ) {
+    			start   = [ sliderData.value, sliderData.value_second ];
+    			connect = true;
+    		}
+
+    		/*if ( typeof GMW.sliders[ sliderId ] !== 'undefined' ) {
+        		GMW.sliders[ sliderId ].noUiSlider.destroy();
+        	}*/
+
+        	GMW.sliders[ sliderId ] = document.getElementById( sliderId );
+
+        	if ( '' != sliderData.prefix ) {
+        		sliderData.prefix = '<span class="gmw-slider-prefix">' + sliderData.prefix + '</span>';
+        	}
+
+			if ( '' != sliderData.suffix ) {
+        		sliderData.suffix = '<span class="gmw-slider-suffix">' + sliderData.suffix + '</span>';
+        	}
+
+			var ll = noUiSlider.create( GMW.sliders[ sliderId ], {
+			    start: start,
+			    range: {
+			        'min': [ sliderData.min ],
+			        'max': [ sliderData.max ]
+			    },
+			    step     : sliderData.step,
+			    connect  : connect,
+    			tooltips : {
+			    	from : Number,
+				    to   : function( value ) {
+				        return ( sliderData.prefix + parseInt( value ) + sliderData.suffix );
+				    }
+			    },
+			});
+
+			GMW.sliders[ sliderId ].noUiSlider.on( 'end', function(value) {
+				jQuery( '#' + sliderId + '-hidden-second' ).val( parseInt( value[1] ) );
+				jQuery( '#' + sliderId + '-hidden' ).val( parseInt( value[0] ) ).trigger( 'change' );
+			});
         });
+    },
+
+    /**
+     * Results view toggle.
+     *
+     * @return {[type]} [description]
+     */
+    results_view_toggle : function() {
+
+		jQuery( '.gmw-results-view-toggle-wrapper' ).on( 'click', function() {
+
+			var toggle         = jQuery( this );
+			var element        = toggle.find( 'span:not( .active )' );
+			var resultsWrapper = toggle.closest( '.gmw-results-wrapper' );
+			var resultsList    = resultsWrapper.find( '.gmw-results-list' );
+			var view           = element.data( 'view' );
+			var formId         = resultsWrapper.data( 'id' );
+			
+			GMW.set_cookie( 'gmw_' + formId + '_results_view', view, 1 );
+
+			element.closest( '.gmw-results-view-toggle-wrapper' ).children().removeClass( 'active' );
+			element.addClass( 'active' );
+
+			resultsList.fadeOut( 'fast', function() {
+
+				resultsWrapper.removeClass( 'gmw-list-view gmw-grid-view' ).addClass( 'gmw-' + view + '-view' );
+
+				// For BuddyBoss.
+				resultsWrapper.find( '#members-list, #groups-list' ).removeClass( 'list grid' ).addClass( view );
+				resultsList.fadeIn( 'fast' );
+			});			
+		});
     },
 
     /**
@@ -1145,46 +1468,67 @@ var GMW = {
      * 
      * @return {[type]} [description]
      */
-    date_picker : function() {
+    date_time_picker : function() {
 
-        var date_fields = jQuery( '.gmw-date-field' );
-        var time_fields = jQuery( '.gmw-time-field' );
-        var options     = {};
+        var datetime_fields = jQuery( '.gmw-date-type-field, .gmw-time-type-field, .gmw-datetime-type-field' );
 
-        if ( date_fields.length > 0 && typeof jQuery.fn.pickadate !== 'undefined') {
-         
-            date_fields.each( function() {
-                
-                var date_type = jQuery( this ).data( 'date_type' );
-                    options   = GMW.apply_filters( 'gmw_date_custom_field_options', {
-	                	editable : true,
-	                    format   : date_type || 'yyyy/mm/dd',
-	                    //formatSubmit : 'yyyy/mm/dd',
-	                    //formatSubmit : 'yyyy/mm/dd',
-	                    //hiddenName   : true
-	                },
-	                jQuery( this )
-               	);
-                jQuery( this ).pickadate( options );
-            });
+        if ( datetime_fields.length == 0 ) {
+        	return;
         }
 
-        if ( time_fields.length > 0 && typeof jQuery.fn.pickatime !== 'undefined') {
+        datetime_fields.each( function() {
             
-            time_fields.each( function() {
+            var thisField = jQuery( this );
+            var format    = thisField.data( 'date_format' );
+            var options   = {};
 
-	        	options = GMW.apply_filters( 'gmw_time_custom_field_options', {
-	                	interval : 1
-	                    //formatSubmit : 'yyyy/mm/dd',
-	                    //format       : date_type || 'yyyy/mm/dd',
-	                    //formatSubmit : 'yyyy/mm/dd',
-	                    //hiddenName   : true
-	                },
-	                jQuery( this )
-	            );
-                jQuery( this ).pickatime( options );
-            });
-        }
+            options.dateFormat = format;
+
+            if ( thisField.hasClass( 'gmw-datetime-type-field' ) ) {
+
+            	options.enableTime = true;
+
+            } else if ( thisField.hasClass( 'gmw-time-type-field' ) ) {
+
+            	options.noCalendar = true;
+            	options.enableTime = true;
+            }
+
+            // Enable seconds.
+            if ( format.indexOf( ':s' ) != -1 || format.indexOf( ':S' ) != -1 ) {
+        		options.enableSeconds = true;
+        	}
+
+        	// Enable 24 hours.
+        	if ( format.indexOf( ':H' ) != -1 ) {
+        		options.time_24hr = true;
+        	}
+            /*options['plugins'] = [ 
+            	new rangePlugin({ 
+            		input: "#gmw-cf-first_name-field-6-1"
+            	}),
+            	new confirmDatePlugin({})
+
+            ];*/
+
+           	options = GMW.apply_filters( 'gmw_date_custom_field_options', options, thisField );
+
+            flatpickr( jQuery( this ), options );
+        });
+    },
+
+    draggable_remote_elements : function() {
+
+    	jQuery( '.gmw-draggable.remote-toggle' ).each( function() {
+
+        	if ( ! jQuery( this ).hasClass( 'draggable-enabled' ) ) {
+            
+	            var data   = jQuery( this ).data();
+	            var target = jQuery( data.handle );
+
+	            target.addClass( 'gmw-draggable' ).attr( 'data-draggable', data.draggable ).attr( 'data-containment', data.containment );
+	        }
+        });
     },
 
     /**
@@ -1204,13 +1548,7 @@ var GMW = {
          * @param  {[type]}   var data [description]
          * @return {[type]}   [description]
          */
-        jQuery( '.gmw-draggable.remote-toggle' ).each( function() {
-
-            var data   = jQuery( this ).data();
-            var target = jQuery( data.handle );
-            
-            target.addClass( 'gmw-draggable' ).attr( 'data-draggable', data.draggable ).attr( 'data-containment', data.containment );
-        });
+        GMW.draggable_remote_elements();
 
         /**
          * Enable draggable on mouseenter
@@ -1220,9 +1558,9 @@ var GMW = {
          */
         jQuery( document ).on( 'mouseenter', '.gmw-draggable', function( e ) {
 
-            if ( ! jQuery( this ).hasClass( 'enabled' ) ) {
-            
-                jQuery( this ).addClass( 'enabled' );
+            if ( ! jQuery( this ).hasClass( 'draggable-enabled' ) ) {
+
+                jQuery( this ).addClass( 'draggable-enabled' );
 
                 var dragData = jQuery( this ).data();
 
@@ -1230,7 +1568,7 @@ var GMW = {
                     dragData.draggable   = jQuery( this ).closest( '.gmw-form-wrapper' );
                     dragData.containment = jQuery( this ).closest( '.gmw-global-map-wrapper' );
                 }
-                
+
                 jQuery( dragData.draggable ).draggable({
                     containment : dragData.containment,
                     handle      : jQuery( this )        
@@ -1279,7 +1617,7 @@ var GMW = {
             // jquery aniation
             if ( data.animation == 'height' || data.animation == 'width'  ) {
                
-               target.animate( options, data.duration ) ;
+               target.animate( options, data.duration );
             
             // otherwise, we can use translatex, and we do it using css
             } else {
@@ -1315,6 +1653,71 @@ var GMW = {
 
 	    return result !== 'undefined' ? result : '';
 	},
+
+	/**
+	 * functions related to BuddyPress plugin.
+	 *
+	 * @return {[type]} [description]
+	 */
+	bp_functions_init : function() {
+
+		// Trigger add friend/join group buttons with Nouveau theme.
+		if ( typeof bp !== 'undefined' && typeof bp.Nouveau !== 'undefined' ) {
+       		
+       		jQuery( '.gmw-results' ).on( 'click', '[data-bp-btn-action]', bp.Nouveau, bp.Nouveau.buttonAction );
+       	
+       		// Trigger for legacy theme.
+       	} else if ( typeof bp_init_activity !== 'undefined' && typeof bp_init_activity === 'function' ) {
+
+       		jQuery( '.gmw-results' ).on('click', '.friendship-button a', function() {
+				jQuery(this).parent().addClass('loading');
+				var fid   = jQuery(this).attr('id'),
+					nonce   = jQuery(this).attr('href'),
+					thelink = jQuery(this);
+
+				fid = fid.split('-');
+				fid = fid[1];
+
+				nonce = nonce.split('?_wpnonce=');
+				nonce = nonce[1].split('&');
+				nonce = nonce[0];
+
+				jQuery.post( ajaxurl, {
+					action: 'addremove_friend',
+					'cookie': bp_get_cookies(),
+					'fid': fid,
+					'_wpnonce': nonce
+				},
+				function(response)
+				{
+					var action  = thelink.attr('rel');
+						parentdiv = thelink.parent();
+
+					if ( action === 'add' ) {
+						jQuery(parentdiv).fadeOut(200,
+							function() {
+								parentdiv.removeClass('add_friend');
+								parentdiv.removeClass('loading');
+								parentdiv.addClass('pending_friend');
+								parentdiv.fadeIn(200).html(response);
+							}
+							);
+
+					} else if ( action === 'remove' ) {
+						jQuery(parentdiv).fadeOut(200,
+							function() {
+								parentdiv.removeClass('remove_friend');
+								parentdiv.removeClass('loading');
+								parentdiv.addClass('add');
+								parentdiv.fadeIn(200).html(response);
+							}
+							);
+					}
+				});
+				return false;
+			} );
+		}
+	}
 };
 
 /************************************************/
@@ -2416,7 +2819,7 @@ if ( jQuery( '.gmw-current-location-wrapper' ).length ) {
 	            event.preventDefault();
 	            
 	            // toggle form
-	            jQuery( this ).closest( '.gmw-cl-form-wrapper' ).find( 'form' ).slideToggle();
+	            jQuery( this ).closest( '.gmw-cl-form-wrapper' ).find( 'form' ).slideToggle( 'fast' );
 	        });
 
 	        // clear location
@@ -2452,7 +2855,7 @@ if ( jQuery( '.gmw-current-location-wrapper' ).length ) {
 
 	           		// show loading message
 	            	jQuery( '#gmw-cl-respond-wrapper-' + GMW_Current_Location.object_id ).slideDown( 'fast', function() {
-	               		jQuery( '#gmw-cl-message-' + GMW_Current_Location.object_id ).addClass( 'locating' ).html( loadingMessage );     
+	               		jQuery( '#gmw-cl-message-' + GMW_Current_Location.object_id ).addClass( 'locating gmw-processing-message' ).html( loadingMessage );     
 	            	});
 	            }
 
@@ -2499,7 +2902,7 @@ if ( jQuery( '.gmw-current-location-wrapper' ).length ) {
 
 	           		// show loading message
 	            	jQuery( '#gmw-cl-respond-wrapper-' + GMW_Current_Location.object_id ).slideDown( 'fast', function() {
-	               		jQuery( '#gmw-cl-message-' + GMW_Current_Location.object_id ).addClass( 'locating' ).html( loadingMessage );     
+	               		jQuery( '#gmw-cl-message-' + GMW_Current_Location.object_id ).addClass( 'locating gmw-processing-message' ).html( loadingMessage );     
 	            	});
 	            }
 	            
@@ -2543,7 +2946,7 @@ if ( jQuery( '.gmw-current-location-wrapper' ).length ) {
 	            data     : {
 	                action      : 'gmw_update_current_location',
 	                form_values : jQuery( '#gmw-current-location-hidden-form' ).serialize(), 
-	               	security 	: gmw_cl_nonce,
+	               	security 	: gmw_cl_args.nonce,
 	            },
 
 	            // on save success
@@ -2657,14 +3060,16 @@ if ( jQuery( '.gmw-current-location-wrapper' ).length ) {
 	    geocoder_failed : function( status ) {
 
 	    	jQuery( '#gmw-cl-respond-wrapper-' + GMW_Current_Location.object_id ).slideDown( function() {
-	    		jQuery( '#gmw-cl-message-' + GMW_Current_Location.object_id ).addClass( 'error' ).html( GMW_Current_Location.messages.geocoder_failed + status );
+	    		jQuery( '#gmw-cl-message-' + GMW_Current_Location.object_id ).removeClass( 'locating gmw-processing-message' ).addClass( 'error gmw-error-message' ).html( GMW_Current_Location.messages.geocoder_failed + status );
 
 	    	});
 	        
 	        setTimeout( function() {
-	            jQuery( '.gmw-cl-respond-wrapper' ).slideUp();
-	            jQuery( '.gmw-cl-message' ).removeClass( 'error' ).html( '' );
-	            jQuery( '.gmw-cl-address-input' ).prop( 'readonly',false );
+	            jQuery( '.gmw-cl-respond-wrapper' ).slideUp( 'fast', function() {
+	            	 jQuery( '.gmw-cl-message' ).removeClass( 'error gmw-error-message' ).html( '' );
+	           	});
+	           
+	            jQuery( '.gmw-cl-address-input' ).prop( 'readonly', false );
 	            jQuery( '.gmw-cl-form-submit' ).removeClass( 'gmw-icon-spin-light animate-spin').addClass( 'gmw-icon-search' );
 	        }, 3000 );                       
 	    },
