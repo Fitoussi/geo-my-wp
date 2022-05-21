@@ -243,7 +243,7 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 				}
 
 				$field_args['type']             = 'radio';
-				$field_args['show_clear_field'] = true;
+				$field_args['show_reset_field'] = true;
 				$field_args['options']          = $options;
 
 				$fields[] = $field_args;
