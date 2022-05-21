@@ -1657,6 +1657,8 @@ var GMW = {
 	/**
 	 * functions related to BuddyPress plugin.
 	 *
+	 * Friendship and join group button in GEO my WP search resutls.
+	 *
 	 * @return {[type]} [description]
 	 */
 	bp_functions_init : function() {
