@@ -880,7 +880,7 @@ class GMW_Form {
 		);
 
 		// address filters.
-		$this->form['address_filters'] = gmw_form_get_address_filters( $this->form );
+		//$this->form['address_filters'] = gmw_form_get_address_filters( $this->form );
 
 		$location_meta = ! empty( $this->form['search_results']['location_meta'] ) ? $this->form['search_results']['location_meta'] : false;
 
