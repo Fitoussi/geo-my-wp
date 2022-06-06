@@ -640,7 +640,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 		$output  = '';
 
 		if ( ! empty( $address ) ) {
-			$output .= '<div class="gmw-item gmw-item-address"><i class="gmw-icon-location-thin"></i>' . esc_attr( $address ) . '</div>'; // WPCS: XSS ok.
+			$output .= '<span class="gmw-item gmw-item-address"><i class="gmw-icon-location-thin"></i>' . esc_attr( $address ) . '</span>'; // WPCS: XSS ok.
 		}
 
 		return apply_filters( 'gmw_' . $this->prefix . '_' . $this->component . '_address', $output, $object, $this );
