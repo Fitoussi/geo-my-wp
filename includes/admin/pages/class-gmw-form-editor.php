@@ -2415,7 +2415,7 @@ class GMW_Form_Editor {
 
 				<span class="edit-form-title">
 					<span class="dashicons dashicons-edit-large"></span>
-					<?php echo esc_html__( 'Editing Form', 'geo-my-wp' ) . ' ' . absint( $this->form['ID'] ) . ' <em style="font-size: 13px;font-weight: 100">( ' . esc_attr( $this->form['name'] ) . ' )</em> '; ?>
+					<?php echo esc_html__( 'Editing Form', 'geo-my-wp' ) . ' ' . absint( $this->form['ID'] ) . ' <em style="font-size: 14px;font-weight: 400;color: #888;">( ' . esc_attr( $this->form['name'] ) . ' form )</em> '; ?>
 				</span>
 
 					<div class="action-area">
