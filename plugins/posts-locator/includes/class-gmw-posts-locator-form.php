@@ -131,17 +131,22 @@ trait GMW_Posts_Locator_Form_Trait {
 		$clauses['where']  .= $where;
 		$clauses['having']  = $having;
 
-		// modify the clauses.
-		$clauses = apply_filters( 'gmw_posts_locator_locations_query_clauses', $clauses, $this->form, $this );
-		$clauses = apply_filters( 'gmw_' . $this->form['prefix'] . '_location_query_clauses', $clauses, $this->form );
-
-		// make sure we have groupby to only pull posts one time.
 		if ( empty( $clauses['groupby'] ) ) {
 			$clauses['groupby'] = $wpdb->prefix . 'posts.ID';
 		}
 
+		// modify the clauses.
+		$clauses = apply_filters( 'gmw_posts_locator_locations_query_clauses', $clauses, $this->form, $this );
+		$clauses = apply_filters( 'gmw_' . $this->form['prefix'] . '_posts_query_clauses', $clauses, $this->form );
+		$clauses = apply_filters( 'gmw_' . $this->form['prefix'] . '_location_query_clauses', $clauses, $this->form );
+
+
 		// add having clause.
-		$clauses['groupby'] .= ' ' . $clauses['having'];
+		if ( ! empty( $clauses['groupby'] ) ) {
+			$clauses['groupby'] .= ' ' . $clauses['having'];
+		} else {
+			$clauses['where'] .= ' ' . $clauses['having'];
+		}
 
 		unset( $clauses['having'] );
 
