@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function gmw_pt_get_tax_query_args( $tax_args = array(), $gmw = array() ) {
 
 	// Abort if multiple post types selected.
-	if ( empty( $gmw['search_form']['post_types'] ) || 1 !== count( $gmw['search_form']['post_types'] ) ) {
+	if ( empty( $gmw['search_form']['post_types'] ) || 1 !== count( $gmw['search_form']['post_types'] ) || empty( $gmw['search_form']['taxonomies'] ) ) {
 		return array();
 	}
 
