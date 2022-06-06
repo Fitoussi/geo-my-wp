@@ -251,9 +251,7 @@ function gmw_search_results_orderby_filter( $gmw = array() ) {
  */
 function gmw_get_search_results_title( $title, $object, $gmw ) {
 
-	if ( apply_filters( 'gmw_results_title_location_name_enabled', false ) && ! empty( $object->location_name ) && $object->location_name !== $title ) {
-		$title .= ' - ' . esc_html( $object->location_name );
-	}
+	$title = apply_filters( 'gmw_get_location_title', $title, $object, $gmw );
 
 	// append the address to the permalink.
 	return esc_html( apply_filters( "gmw_{$gmw['prefix']}_get_location_title", $title, $object, $gmw ) );
