@@ -484,6 +484,10 @@ class GMW_Maps_API {
 			$args['url'] = esc_url( $args['url'] );
 		}
 
+		if ( '' !== $args['title'] ) {
+			$args['title'] = gmw_get_search_results_title( $args['title'], $location, $gmw );
+		}
+
 		$output = array();
 
 		$output['wrap'] = '<div class="gmw-element-wrapper gmw-info-window-inner ' . esc_attr( $args['type'] ) . '" data-location_id="' . absint( $location->location_id ) . '" data-object="' . esc_attr( $location->object_type ) . '" data-prefix="' . esc_attr( $args['prefix'] ) . '">';
