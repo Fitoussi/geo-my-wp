@@ -398,7 +398,7 @@ class GMW_Form {
 		$this->form['max_pages']        = 0;
 		$this->form['in_widget']        = ! empty( $this->form['params']['widget'] ) ? true : false;
 		$this->form['modify_permalink'] = 1;
-		$this->form['address_filters']  = array();
+		$this->form['address_filters']  = gmw_form_get_address_filters( $this->form );
 
 		// check if form submitted.
 		if ( isset( $_GET[ $this->url_px . 'form' ] ) && isset( $_GET[ $this->url_px . 'action' ] ) && 'fs' === $_GET[ $this->url_px . 'action' ] ) { // WPCS: CSRF ok.
@@ -853,12 +853,12 @@ class GMW_Form {
 	 *
 	 * @return [type] [description]
 	 */
-	public function get_address_filters() {
+	/*public function get_address_filters() {
 
 		$this->form['address_filters'] = gmw_form_get_address_filters( $this->form );
 
 		return $this->form['address_filters'];
-	}
+	}*/
 
 	/**
 	 * Prepare data before quering locations
@@ -880,12 +880,12 @@ class GMW_Form {
 		);
 
 		// address filters.
-		$address_filters = $this->get_address_filters();
+		$this->form['address_filters'] = gmw_form_get_address_filters( $this->form );
 
 		$location_meta = ! empty( $this->form['search_results']['location_meta'] ) ? $this->form['search_results']['location_meta'] : false;
 
 		// query locations from database.
-		$locations = GMW_Location::get_locations_data( $args, $address_filters, $location_meta, $this->locations_table, $this->db_fields, $this->form );
+		$locations = GMW_Location::get_locations_data( $args, $this->form['address_filters'], $location_meta, $this->locations_table, $this->db_fields, $this->form );
 
 		// get locations data.
 		if ( ! empty( $locations ) ) {

@@ -50,7 +50,7 @@ trait GMW_Members_Locator_Form_Trait {
 		$distance_sql = "'' AS distance";
 
 		// get address filters query.
-		$address_filters = gmw_get_address_fields_filters_sql( $this->get_address_filters(), $this->form );
+		$address_filters = gmw_get_address_fields_filters_sql( $this->form['address_filters'], $this->form );
 
 		// search within map bounderies.
 		if ( ! empty( $this->form['form_values']['nelatlng'] ) && ! empty( $this->form['form_values']['swlatlng'] ) ) {
