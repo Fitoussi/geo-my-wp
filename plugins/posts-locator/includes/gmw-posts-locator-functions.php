@@ -152,7 +152,8 @@ function gmw_get_post_taxonomies_terms_list( $post, $args = array() ) {
 	// get taxonomies attached to the post.
 	$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
 
-	$output = '';
+	$output      = '';
+	$parent_args = $args;
 
 	// loop through taxonomies.
 	foreach ( $taxonomies as $taxonomy ) {
@@ -166,6 +167,16 @@ function gmw_get_post_taxonomies_terms_list( $post, $args = array() ) {
 		$terms = gmw_get_the_terms( $post->ID, $taxonomy->name );
 
 		if ( $terms && ! is_wp_error( $terms ) ) {
+
+			/*$defaults = array(
+				'id'         => $args['id'],
+				'class'      => $args['class'],
+				'terms_link' => $args['terms_link'],
+				'separator'  => $args['terms_lin'],
+			);*/
+
+			//$args = wp_parse_args( $args, $defaults );
+			$args = apply_filters( 'gmw_' . $taxonomy->name . '_taxonomy_list_args', $parent_args, $post, $taxonomy );
 
 			$tax_output = array();
 			$terms_list = array();
