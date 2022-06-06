@@ -394,7 +394,7 @@ class GMW_Admin {
 		}
 
 		// apply credit and enqueue scripts and styles in GEO my WP admin pages only.
-		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], $gmw_pages, true ) ) { // WPCS: CSRF ok, sanitization ok.
+		if ( ( isset( $_GET['page'] ) && in_array( $_GET['page'], $gmw_pages, true ) ) || ( isset( $_GET['post_type'] ) && 'gmw_location_type' === $_GET['post_type'] ) ) { // WPCS: CSRF ok, sanitization ok.
 			add_filter( 'admin_footer_text', array( $this, 'gmw_credit_footer' ), 10 );
 			add_filter( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		}
@@ -414,7 +414,7 @@ class GMW_Admin {
 
 		$pages = array( 'gmw-extensions', 'gmw-settings', 'gmw-forms', 'gmw-import-export' );
 
-		if ( ! empty( $_GET['page'] ) && ! in_array( $_GET['page'], $pages, true ) ) { // WPCS: CSRF ok.
+		if ( ( ! empty( $_GET['page'] ) && ! in_array( $_GET['page'], $pages, true ) ) || ( isset( $_GET['post_type'] ) && 'gmw_location_type' === $_GET['post_type'] ) ) { // WPCS: CSRF ok.
 
 			wp_deregister_style( 'select2' );
 			wp_deregister_script( 'select2' );
