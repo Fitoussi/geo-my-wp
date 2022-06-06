@@ -230,7 +230,7 @@ class GMW_BP_Profile_Search_Geolocation {
 			$output = sprintf( esc_html__( 'is nearby %1$s', 'geo-my-wp' ), $values['address'] );
 		}
 
-		do_action( 'gmw_element_loaded', 'bp_profile_search_geolocation' );
+		do_action( 'gmw_element_loaded', 'bp_profile_search_geolocation', $this );
 
 		return $output;
 	}

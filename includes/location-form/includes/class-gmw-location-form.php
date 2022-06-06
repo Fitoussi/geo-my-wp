@@ -1386,7 +1386,7 @@ class GMW_Location_Form {
 
 		do_action( 'gmw_after_location_form_wrapper', $gmw_location_form );
 
-		do_action( 'gmw_element_loaded', 'location_form' );
+		do_action( 'gmw_element_loaded', 'location_form', $this );
 	}
 
 	/**
