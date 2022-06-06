@@ -240,16 +240,24 @@ class GMW_BuddyPress_Directory_Geolocation {
 		$this->action_hooks();
 
 		// Modify the hook that is used to generate the location data in the results.
-		$results_elements_filter = apply_filters( 'gmw_gl_' . $this->prefix . '_' . $this->component . 's_loop_location_elements_hook', 'bp_directory_' . $this->component . 's_item' );
+		$results_elements_filter = apply_filters( 'gmw_' . $this->prefix . '_' . $this->component . 's_loop_location_elements_hook', 'bp_directory_' . $this->component . 's_item' );
 
 		// Skip if disabled.
 		if ( ! empty( $results_elements_filter ) ) {
 
-			add_action( $results_elements_filter, array( $this, 'add_elements_to_results' ) );
+			global $buddyboss_platform_plugin_file;
 
-			// to be used with BuddyBoss only.
 			if ( function_exists( 'buddyboss_theme' ) ) {
+	
 				add_filter( 'bp_member_type_name_string', array( $this, 'add_elements_to_buddyboss_results' ) );
+
+			} elseif ( ! empty( $buddyboss_platform_plugin_file ) ) {
+
+				add_action( 'bp_member_members_list_item', array( $this, 'add_elements_to_results' ) );
+
+			} else {
+
+				add_action( $results_elements_filter, array( $this, 'add_elements_to_results' ) );
 			}
 		}
 
@@ -265,7 +273,8 @@ class GMW_BuddyPress_Directory_Geolocation {
 			add_action( 'bp_after_' . $this->component . 's_loop', array( $this, 'trigger_js_and_map' ) );
 		}
 
-		do_action( 'gmw_element_loaded', 'buddypress_directory' );
+		do_action( 'gmw_element_loaded', 'buddypress_directory', $this );
+
 		add_action( 'bp_nouveau_feedback_messages', array( $this, 'modify_results_message' ) );
 	}
 
