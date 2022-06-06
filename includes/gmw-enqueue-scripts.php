@@ -64,7 +64,7 @@ function gmw_enqueue_form_stylesheet( $where = 'form' ) {
 		wp_enqueue_style( 'gmw-frontend' );
 	}
 
-	if ( in_array( $where, array( 'form', 'location_form', 'buddypress_directory' ), true ) && ! wp_style_is( 'gmw-forms', 'enqueue' ) ) {
+	if ( in_array( $where, array( 'form', 'location_form', 'buddypress_directory', 'locations_dashboard', 'single_location', 'single_object_locations' ), true ) && ! wp_style_is( 'gmw-forms', 'enqueue' ) ) {
 		wp_enqueue_style( 'gmw-forms' );
 	}
 }
@@ -202,7 +202,7 @@ function gmw_enqueue_scripts() {
 		wp_enqueue_style( 'gmw-admin', GMW_URL . '/assets/css/gmw.admin.min.css', array(), GMW_VERSION );
 
 		// enqueue on GMW admin pages only.
-		if ( ! empty( $_GET['page'] ) && strpos( $_GET['page'], 'gmw' ) !== false ) { // WPCS: CSRF ok, sanitization ok.
+		if ( ( ! empty( $_GET['page'] ) && strpos( $_GET['page'], 'gmw' ) !== false ) || ( isset( $_GET['post_type'] ) && 'gmw_location_type' === $_GET['post_type'] )  ) { // WPCS: CSRF ok, sanitization ok.
 			wp_enqueue_script( 'gmw-admin' );
 		}
 
