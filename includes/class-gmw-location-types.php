@@ -100,7 +100,8 @@ class GMW_Location_Types {
 			}
 
 			.gmw-xprofile-fields-setting-wrapper.usage-setting,
-			.gmw-xprofile-fields-setting-wrapper.address-autocomplete-setting {
+			.gmw-xprofile-fields-setting-wrapper.address-autocomplete-setting,
+			.gmw-xprofile-fields-setting-wrapper {
 				margin: 0;
 				padding: 20px;
 			}
@@ -131,7 +132,18 @@ class GMW_Location_Types {
 					}
 				});
 
-				if ( $( '#gmw-xprofile-fields-usage-setting' ).val() == 'disabled' ) {
+				jQuery( '#setting-bp_xprofile_geolocation-enabled' ).on( 'change', function() {
+
+					if ( jQuery( this ).is( ':checked' ) ) {
+						jQuery( '.gmw-xprofile-fields-setting-wrapper.single-address-field-setting, .gmw-xprofile-fields-setting-wrapper.address-autocomplete-setting' ).slideDown( 'fast' );
+					} else {
+						jQuery( '.gmw-xprofile-fields-setting-wrapper.single-address-field-setting, .gmw-xprofile-fields-setting-wrapper.address-autocomplete-setting' ).slideUp( 'fast' );
+					}
+				});
+
+				jQuery( '#setting-bp_xprofile_geolocation-enabled' ).trigger( 'change' );
+
+				/*if ( $( '#gmw-xprofile-fields-usage-setting' ).val() == 'disabled' ) {
 					$( '.gmw-xprofile-fields-setting-wrapper:not( .usage-setting )' ).slideUp();
 				}
 
@@ -159,14 +171,14 @@ class GMW_Location_Types {
 
 						$( '.gmw-xprofile-fields-setting-wrapper.multiple-address-field-setting' ).slideDown(); 
 					}
-				});
+				});*/
 
-				if ( jQuery().select2 ) {
+				/*if ( jQuery().select2 ) {
 					jQuery( '.gmw-xprofile-fields-setting-wrapper select:not( .gmw-smartbox-not )' ).select2({
 						theme: 'classic',
 						width: '100%',
 					});
-				}
+				}*/
 
 				// Update location without location types.
 				jQuery( '#gmw-update-location-types-button' ).on( 'click', function(e) {
@@ -236,7 +248,6 @@ class GMW_Location_Types {
 			});
 		</script>
 		<?php
-
 	}
 
 	/**
@@ -344,7 +355,7 @@ class GMW_Location_Types {
 			'title'           => __( 'Name' ),
 			'description'     => __( 'Description' ),
 			//'user_roles'  => __( 'User Roles' ),
-			'xprofile_fields' => __( 'Xprofile Fields' ),
+			//'xprofile_fields' => __( 'BuddyPress Xprofile Fields' ),
 			'date'            => __( 'Date' ),
 		);
 
@@ -384,7 +395,7 @@ class GMW_Location_Types {
 
 				$settings = maybe_unserialize( $post->post_content );
 
-				echo ! empty( $settings['xprofile_fields']['usage'] ) ? esc_attr( $settings['xprofile_fields']['usage'] ) : esc_attr__( 'Disabled', 'geo-my-wp' ); // WPCS: XSS ok.
+				echo ! empty( $settings['xprofile_fields']['enabled'] ) ? 'Enabled' : esc_attr__( 'Disabled', 'geo-my-wp' ); // WPCS: XSS ok.
 
 				break;
 
@@ -441,9 +452,9 @@ class GMW_Location_Types {
 		add_meta_box( 'gmw_lt_description', __( 'Description', 'geo-my-wp' ), array( $this, 'description_meta_box' ), 'gmw_location_type', 'normal', 'core', array( '__back_compat_meta_box' => true ) );
 
 		// get the xprofile fields.
-		if ( gmw_is_addon_active( 'bp_xprofile_geolocation' ) && function_exists( 'bp_is_active' ) && bp_is_active( 'xprofile' ) ) {
-			add_meta_box( 'gmw_lt_xprofile_fields_meta_box', __( 'Xprofile Fields', 'geo-my-wp' ), array( $this, 'xprofile_fields_meta_box' ), 'gmw_location_type', 'side' );
-		}
+		/*if ( gmw_is_addon_active( 'bp_xprofile_geolocation' ) && function_exists( 'bp_is_active' ) && bp_is_active( 'xprofile' ) ) {
+			add_meta_box( 'gmw_lt_xprofile_fields_meta_box', __( 'BuddyPress Xprofile Fields', 'geo-my-wp' ), array( $this, 'xprofile_fields_meta_box' ), 'gmw_location_type', 'side' );
+		}*/
 
 		// get the xprofile fields.
 		add_meta_box( 'gmw_lt_update_locations_location_type', __( 'Update Location Types', 'geo-my-wp' ), array( $this, 'update_locations_location_type_meta_box' ), 'gmw_location_type', 'side' );
@@ -534,103 +545,119 @@ class GMW_Location_Types {
 			);
 		}
 		?>
-		<div class="gmw-xprofile-fields-setting-wrapper usage-setting">
+		<div class="gmw-location-type-xprofile-fields-metabox-inside gmw-admin-page">
 
-			<label style="display:block;margin-bottom: 5px">
-				<?php esc_attr_e( 'Fields Usage:', 'geo-my-wp' ); ?>
-			</label>
+			<?php /*<div class="gmw-xprofile-fields-setting-wrapper usage-setting">
 
-			<select id="gmw-xprofile-fields-usage-setting" name="content[xprofile_fields][usage]">
-				<option value="disabled"><?php esc_attr_e( 'Disabled', 'geo-my-wp' ); ?></option>											
-				<option value="single" <?php selected( $saved_data['usage'], 'single', true ); ?>><?php esc_attr_e( 'Single Address Field', 'geo-my-wp' ); ?></option>
-				<option value="multiple" <?php selected( $saved_data['usage'], 'multiple', true ); ?>><?php esc_attr_e( 'Multiple Address Fields', 'geo-my-wp' ); ?></option>									
-			</select>
-			<em style="margin-top: 5px;display: block;"><?php esc_attr_e( 'Select to either use a single address field as the full address or multiple address fields.', 'geo-my-wp' ); ?></em>
-		</div>
+				<label style="display:block;margin-bottom: 5px">
+					<?php esc_attr_e( 'Fields Usage:', 'geo-my-wp' ); ?>
+				</label>
 
-		<?php
+				<select id="gmw-xprofile-fields-usage-setting" name="content[xprofile_fields][usage]" class="gmw-smartbox-not">
+					<option value="disabled"><?php esc_attr_e( 'Disabled', 'geo-my-wp' ); ?></option>											
+					<option value="single" <?php selected( $saved_data['usage'], 'single', true ); ?>><?php esc_attr_e( 'Single Address Field', 'geo-my-wp' ); ?></option>
+					<option value="multiple" <?php selected( $saved_data['usage'], 'multiple', true ); ?>><?php esc_attr_e( 'Multiple Address Fields', 'geo-my-wp' ); ?></option>									
+				</select>
+				<em style="margin-top: 5px;display: block;"><?php esc_attr_e( 'Select to either use a single address field or multiple address fields.', 'geo-my-wp' ); ?></em>
+			</div> */
+			?>
 
-		$xprofile_fields = array();
+			<div class="gmw-xprofile-fields-setting-wrapper enabled">
+				<label style="display:block;margin-bottom: 5px">
+					<input 
+						type="checkbox"
+						id="setting-bp_xprofile_geolocation-enabled"
+						class="setting-xprofile-integration-enabled checkbox"
+						name="content[xprofile_fields][enabled]"
+						<?php checked( $saved_data['enabled'], 'on', true ); ?>
+					><?php echo esc_attr_e( 'Enable Xprofile Fields Integration', 'geo-my-wp' ); ?>
+				</label>
+				<em style="margin-top: 5px;display: inline-block;"><?php esc_attr_e( 'Check this checkbox to sync this location type with BuddyPress xprofile field.', 'geo-my-wp' ); ?></em>
+			</div>
 
-		while ( bp_profile_groups() ) {
+			<?php
 
-			bp_the_profile_group();
+			$xprofile_fields = array();
 
-			while ( bp_profile_fields() ) {
+			while ( bp_profile_groups() ) {
 
-				bp_the_profile_field();
+				bp_the_profile_group();
 
-				if ( 'datebox' !== bp_get_the_profile_field_type() ) {
-					$xprofile_fields[ bp_get_the_profile_field_id() ] = bp_get_the_profile_field_name();
+				while ( bp_profile_fields() ) {
+
+					bp_the_profile_field();
+
+					if ( 'datebox' !== bp_get_the_profile_field_type() ) {
+						$xprofile_fields[ bp_get_the_profile_field_id() ] = bp_get_the_profile_field_name();
+					}
 				}
 			}
-		}
 
-		$saved_address_fields = $saved_data['address_fields'];
-		?>
-		<div class="gmw-xprofile-fields-setting-wrapper single-address-field-setting">
+			$saved_address_fields = $saved_data['address_fields'];
+			?>
+			<div class="gmw-xprofile-fields-setting-wrapper single-address-field-setting">
 
-			<em style="margin-bottom: 10px;display: block;"><?php esc_attr_e( 'Select the xprofile field that will be used as the address field.', 'geo-my-wp' ); ?></em>
+				<label style="display:block;margin-bottom: 5px"><?php echo esc_attr_e( 'Address ', 'geo-my-wp' ); ?></label>
 
-			<label style="display:block;margin-bottom: 5px"><?php echo esc_attr_e( 'Address ', 'geo-my-wp' ); ?></label>
+				<select name="content[xprofile_fields][address_fields][address]" class="gmw-smartbox">
 
-			<select name="content[xprofile_fields][address_fields][address]">
+					<?php /* <option value=""><?php esc_attr_e( 'Disabled', 'geo-my-wp' ); ?></option> */ ?>
 
-				<option value=""><?php esc_attr_e( 'Disabled', 'geo-my-wp' ); ?></option>
+					<?php foreach ( $xprofile_fields as $field_id => $field_name ) { ?>
 
-				<?php foreach ( $xprofile_fields as $field_id => $field_name ) { ?>
+						<?php $selected = ( isset( $saved_address_fields['address'] ) && $saved_address_fields['address'] == $field_id ) ? 'selected="selected"' : ''; ?>
 
-					<?php $selected = ( isset( $saved_address_fields['address'] ) && $saved_address_fields['address'] == $field_id ) ? 'selected="selected"' : ''; ?>
+						<option <?php echo $selected; // WPCS: XSS ok. ?> value="<?php echo esc_attr( $field_id ); ?>">
+							<?php echo esc_attr( $field_name ); ?>		
+						</option>
 
-					<option <?php echo $selected; // WPCS: XSS ok. ?> value="<?php echo esc_attr( $field_id ); ?>">
-						<?php echo esc_attr( $field_name ); ?>		
-					</option>
+					<?php } ?>
 
-				<?php } ?>
+				</select>
+				<em style="margin-top: 10px;display: block;"><?php esc_attr_e( 'Select the xprofile field that you wish to use as the address field.', 'geo-my-wp' ); ?></em>
+			</div>
 
-			</select>
-		</div>
+			<?php /* <div class="gmw-xprofile-fields-setting-wrapper multiple-address-field-setting">
 
-		<div class="gmw-xprofile-fields-setting-wrapper multiple-address-field-setting">
+				<em style="margin-bottom: 10px;display: block;"><?php esc_attr_e( 'Select an xprofile field for each of the address fields below ( not required to use all fields ).', 'geo-my-wp' ); ?></em>
 
-			<em style="margin-bottom: 10px;display: block;"><?php esc_attr_e( 'Select the xprofile fields for each address field below.', 'geo-my-wp' ); ?></em>
+				<?php $address_fields = array( 'street', 'apt', 'city', 'state', 'zipcode', 'country' ); ?>
 
-			<?php $address_fields = array( 'street', 'apt', 'city', 'state', 'zipcode', 'country' ); ?>
+				<?php foreach ( $address_fields as $address_field ) : ?>
 
-			<?php foreach ( $address_fields as $address_field ) : ?>
+					<div class="gmw-xprofile-address-fields" style="margin-bottom: 15px">
 
-				<div class="gmw-xprofile-address-fields" style="margin-bottom: 15px">
+						<label style="display:block;margin-bottom: 5px"><?php echo ucwords( $address_field ); // WPCS: XSS ok. ?></label>
 
-					<label style="display:block;margin-bottom: 5px"><?php echo ucwords( $address_field ); // WPCS: XSS ok. ?></label>
+						<select name="content[xprofile_fields][address_fields][<?php echo $address_field; // WPCS: XSS ok. ?>]">
 
-					<select name="content[xprofile_fields][address_fields][<?php echo $address_field; // WPCS: XSS ok. ?>]">
+							<option value=""><?php esc_attr_e( 'Disabled', 'geo-my-wp' ); ?></option>
 
-						<option value=""><?php esc_attr_e( 'Disabled', 'geo-my-wp' ); ?></option>
+							<?php foreach ( $xprofile_fields as $field_id => $field_name ) { ?>
 
-						<?php foreach ( $xprofile_fields as $field_id => $field_name ) { ?>
+								<?php $selected = ( isset( $saved_address_fields[ $address_field ] ) && $saved_address_fields[ $address_field ] == $field_id ) ? 'selected="selected"' : ''; ?>
 
-							<?php $selected = ( isset( $saved_address_fields[ $address_field ] ) && $saved_address_fields[ $address_field ] == $field_id ) ? 'selected="selected"' : ''; ?>
+								<option <?php echo $selected; // WPCS: XSS ok. ?> value="<?php echo esc_attr( $field_id ); ?>"><?php echo esc_attr( $field_name ); ?></option>
+							<?php } ?>
 
-							<option <?php echo $selected; // WPCS: XSS ok. ?> value="<?php echo esc_attr( $field_id ); ?>"><?php echo esc_attr( $field_name ); ?></option>
-						<?php } ?>
+						</select>
+					</div>
+				<?php endforeach; ?>
 
-					</select>
-				</div>
-			<?php endforeach; ?>
+			</div> */ ?>
 
-		</div>
-
-		<div class="gmw-xprofile-fields-setting-wrapper address-autocomplete-setting" style="display:none">
-			<label style="display:block;margin-bottom: 5px">
-				<input 
-					type="checkbox"
-					id="setting-bp_xprofile_geolocation-address_autocomplete"
-					class="setting-address_autocomplete checkbox"
-					name="content[xprofile_fields][address_autocomplete]"
-					<?php checked( $saved_data['address_autocomplete'], 'on', true ); ?>
-				><?php echo esc_attr_e( 'Google Address Autocomplete', 'geo-my-wp' ); ?>
-			</label>
-			<em style="margin-top: 5px;display: inline-block;"><?php esc_attr_e( 'Check this checkbox to enable the Google Address Autocompelte feature.', 'geo-my-wp' ); ?></em>
+			<div class="gmw-xprofile-fields-setting-wrapper address-autocomplete-setting" style="display:none">
+				<label style="display:block;margin-bottom: 5px">
+					<input 
+						type="checkbox"
+						id="setting-bp_xprofile_geolocation-address_autocomplete"
+						class="setting-address_autocomplete checkbox"
+						name="content[xprofile_fields][address_autocomplete]"
+						<?php checked( $saved_data['address_autocomplete'], 'on', true ); ?>
+					><?php echo esc_attr_e( 'Enable Google Address Autocomplete', 'geo-my-wp' ); ?>
+				</label>
+				<?php /* <em style="margin-top: 5px;display: inline-block;"><?php esc_attr_e( 'Check this checkbox to enable the Google Address Autocompelte feature.', 'geo-my-wp' ); ?></em> */ ?>
+			</div>
 		</div>
 		<?php
 	}
