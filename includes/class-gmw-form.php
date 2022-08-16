@@ -1008,6 +1008,12 @@ class GMW_Form {
 	 */
 	public function the_location( $object_id, $object ) {
 
+		// Can pass object as a single argument which should also include the object ID.
+		if ( is_object( $object_id ) ) {
+			$object    = $object_id;
+			$object_id = $object->object_id;
+		}
+
 		// setup class tag.
 		$object->location_class  = 'single-' . $this->form['object_type'];
 		$object->location_class .= ' gmw-single-item gmw-single-' . $this->form['object_type'] . ' gmw-object-' . $object->object_id . ' gmw-location-' . $object->location_id;
