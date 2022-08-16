@@ -1,0 +1,45 @@
+div.gmw-fl-youzify-results-wrapper {
+	--gmw-form-color-primary: #4fc1e9; 
+}
+
+div.gmw-fl-youzify-results-wrapper #youzify-members-list > li {
+	float: none;
+	width: initial;
+}
+
+div.gmw-fl-youzify-results-wrapper #youzify-members-list > li .gmw-image-wrapper {
+	border: 0;
+}
+
+div.gmw-fl-youzify-results-wrapper #youzify-members-list > li .gmw-image-wrapper img {
+	border-radius: 100%;
+}
+
+div.gmw-fl-youzify-results-wrapper #youzify-members-list > li .youzify-user-data {
+	margin: 0;
+}
+
+div.gmw-fl-youzify-results-wrapper #youzify-members-list > li .friendship-button a {
+	padding: 0;
+	border-radius: 50px;
+	display: block;
+	border: 0;
+}
+
+div.gmw-fl-youzify-results-wrapper .gmw-pagination li > * {
+	padding: 0;
+	width: 40px;
+	height: 40px;
+	font-size: 12px;
+	margin-top: 30px;
+	font-weight: 600;
+	line-height: 40px;
+	margin-right: 5px;
+	text-align: center;
+	display: inline-block;
+	text-transform: uppercase;
+	box-shadow: none!important;
+	border: 0;
+	border-radius: 5px;
+	background: #f9f9f9;
+}
