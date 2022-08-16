@@ -871,6 +871,41 @@ Function gmw_get_labels( $form = array() ) {
 */
 
 /**
+ * Check if template file requires a theme or plugin to be installed.
+ *
+ * @since 4.0
+ *
+ * @author Eyal Fitoussi
+ *
+ * @param  string $template template name to verify.
+ *
+ * @return [type]           [description]
+ */
+function gmw_verify_template_file_requirement( $template = '' ) {
+
+	if ( strpos( $template, 'buddyboss' ) !== false && ! function_exists( 'buddyboss_theme' ) ) {
+
+		gmw_trigger_error( 'GEO my WP\'s BuddyBoss template file requires the BuddyBoss theme. Install the BuddyBoss theme or select a different template file.' );
+
+		return false;
+
+	} elseif ( strpos( $template, 'youzify' ) !== false && ! class_exists( 'Youzify' ) ) {
+
+		gmw_trigger_error( 'GEO my WP\'s Youzify template file requires the Youzify plugin. Install the Youzify plugin or select a different template file.' );
+
+		return false;
+
+	} elseif ( strpos( $template, 'peepso' ) !== false && ! class_exists( 'PeepSo' ) ) {
+
+		gmw_trigger_error( 'GEO my WP\'s PeepSo template file requires the PeepSo plugin. Install the PeepSo plugin or select a different template file.' );
+
+		return false;
+	}
+
+	return true;
+}
+
+/**
  * Get template file and its stylesheet
  *
  * @since 3.0
