@@ -860,6 +860,34 @@ class GMW_Form_Settings_Helper {
 
 		return $output;
 	}
+
+	/**
+	 * Get all taxonomy terms into an array.
+	 *
+	 * @since 4.0.
+	 *
+	 * @return [type] [description]
+	 */
+	public static function get_peepso_profile_fields() {
+
+		if ( ! class_exists( 'PeepSoUser' ) ) {
+			return array();
+		}
+
+		$peepso_user    = PeepSoUser::get_instance( 0 );
+		$profile_fields = new PeepSoProfileFields( $peepso_user );
+		$profile_fields = $profile_fields->load_fields();
+		$output         = array();
+
+		foreach ( $profile_fields as $field_type => $args ) {
+
+			if ( in_array( $args->meta->class, array( 'text', 'selectsingle', 'location' ) ) ) {
+				$output[ $args->id ] = $args->title . ' ( Field ID ' . $args->id . ' )';
+			}		
+		}
+
+		return $output;
+	}
 	  
 	/**
 	 * Get terms taxonomy array
@@ -1282,6 +1310,10 @@ class GMW_Form_Settings_Helper {
 
 		if ( 'gmw_get_all_taxonomy_terms' === $action ) {
 			$output = self::get_all_taxonomy_terms( $args );
+		}
+
+		if ( 'gmw_get_peepso_profile_fields' === $action ) {
+			$output = self::get_peepso_profile_fields( $args );
 		}
 
 		if ( ! empty( $args['gmw_ajax_load_options_disabled'] ) ) {
