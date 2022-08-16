@@ -1676,3 +1676,24 @@ function gmw_get_directions_link( $location, $from_coords = array(), $label = ''
 function gmw_directions_link( $location, $from_coords = array(), $label = '' ) {
 	echo gmw_get_directions_link( $location, $from_coords, $label ); // WPCS: XSS ok.
 }
+
+function gmw_get_location_class_attribute( $object, $gmw = array() ) {
+
+	$classes = array(
+		'gmw-single-item gmw-single-' . $object->object_type,
+		'gmw-object-' . $object->object_id,
+	);
+
+	if ( isset( $object->location_id ) ) {
+
+		$classes[] = 'gmw-location-' . $object->location_id;
+
+		if ( ! empty( $object->featured_location ) ) {
+			$classes[] = 'gmw-featured-location';
+		}
+	}
+
+	$classes = apply_filters( 'gmw_get_location_class_attribute', $classes, $gmw );
+
+	return implode( ' ', $classes );
+}
