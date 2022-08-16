@@ -45,6 +45,10 @@ function gmw_search_results_address( $object, $gmw = array(), $where = 'search_r
 		$fields = $gmw[ $where ]['address']['fields'];
 	}
 
+	if ( ! isset( $gmw[ $where ]['address']['linked'] ) ) {
+		$gmw[ $where ]['address']['linked'] = true;
+	}
+
 	$output = gmw_get_search_results_address( $object, $fields, $gmw[ $where ]['address']['linked'], $gmw );
 
 	if ( ! empty( $output ) ) {
@@ -254,7 +258,7 @@ function gmw_get_search_results_title( $title, $object, $gmw ) {
 	$title = apply_filters( 'gmw_get_location_title', $title, $object, $gmw );
 
 	// append the address to the permalink.
-	return esc_html( apply_filters( "gmw_{$gmw['prefix']}_get_location_title", $title, $object, $gmw ) );
+	return esc_html( stripslashes( apply_filters( "gmw_{$gmw['prefix']}_get_location_title", $title, $object, $gmw ) ) );
 }
 
 /**
