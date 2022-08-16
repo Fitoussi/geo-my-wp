@@ -62,7 +62,7 @@ var GMW = {
     // navigator timeout  limit 
     navigator_timeout : 10000,
 
-    autocomplete_fields : ( typeof gmwAutocompleteFields !== undefined ) ? {} : gmwAutocompleteFields,
+    autocomplete_fields : ( typeof gmwAutocompleteFields !== 'undefined' ) ? gmwAutocompleteFields : {},
 
     // Navigator error messages
     navigator_error_messages : {
@@ -143,6 +143,10 @@ var GMW = {
         // dont not enable autocomplete if google is not defined.
         // This check should be imporved.
         if ( typeof google !== 'undefined' ) {
+
+        	jQuery.each( GMW.autocomplete_fields, function( index, element ) {
+        		jQuery( '#' + element ).addClass( 'gmw-address-autocomplete' );
+        	});
 
 	        // Enable address autocomplete on address fields
 	        jQuery( 'input.gmw-address-autocomplete' ).each( function() {
