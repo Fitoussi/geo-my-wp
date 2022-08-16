@@ -58,8 +58,24 @@ jQuery( document ).ready( function( $ ) {
 		return false;
 	}*/
 
+	function gmw_bpdg_submit_form() {
+		jQuery( '#dir-' + gmwBpdg.component + 's-search-submit, #' + gmwBpdg.component + 's_search_submit' ).click();
+	}
+
 	// Move geolocation form field dynamically into the directory form.
-	$( '#gmw-' + gmwBpdg.prefix + '-form-temp-holder' ).children().detach().insertBefore( '#' + gmwBpdg.component + 's_search_submit' );
+	if ( jQuery( '.youzify-search-input-form' ).length ) {
+
+		$( '#gmw-' + gmwBpdg.prefix + '-form-temp-holder' ).children().detach().insertAfter( '.youzify-left-side-wrapper' ).find( 'input[type="text"]' ).addClass( 'youzify-search-input' );
+
+		jQuery( '.youzify-search-input-container' ).addClass( 'gmw-bpdg-enabled' );
+
+		if ( jQuery( '.youzify-search-input-container' ).find( '.youzify-show-filters' ).length && jQuery( '.youzify-search-input-container' ).find( '.gmw-bpdg-radius-field-wrapper' ).length ) {
+			 jQuery( '.youzify-search-input-container' ).addClass( 'filters-enabled' );
+		}
+
+	} else {
+		$( '#gmw-' + gmwBpdg.prefix + '-form-temp-holder' ).children().detach().insertBefore( '#' + gmwBpdg.component + 's_search_submit' );
+	}
 
 	/**
 	 * Move map outside the groups list.
@@ -78,7 +94,7 @@ jQuery( document ).ready( function( $ ) {
 	    	jQuery( '#gmw-lat-' + gmwBpdg.prefix ).val( '' );
 			jQuery( '#gmw-lng-' + gmwBpdg.prefix ).val( '' );
 
-			jQuery( '#dir-' + gmwBpdg.component + 's-search-submit' ).click();
+			gmw_bpdg_submit_form();
 	    }
 
 	    return false;
@@ -94,7 +110,7 @@ jQuery( document ).ready( function( $ ) {
 		jQuery( '#gmw-lat-' + gmwBpdg.prefix ).val( place.geometry.location.lat() );
 		jQuery( '#gmw-lng-' + gmwBpdg.prefix ).val( place.geometry.location.lng() );
 
-		jQuery( '#dir-' + gmwBpdg.component + 's-search-submit, #' + gmwBpdg.component + 's_search_submit' ).click();
+		gmw_bpdg_submit_form();
 
 		//jQuery( '#gmw-address-field-' + gmwBpdg.prefix ).addClass( 'autocomplete-triggered' );
 			
@@ -113,7 +129,7 @@ jQuery( document ).ready( function( $ ) {
     		$( '#gmw-address-field-' + gmwBpdg.prefix ).val( result.formatted_address );
     		$( '.gmw-locator-button' ).removeClass( 'animate-spin' );
     			
-    		jQuery( '#dir-' + gmwBpdg.component + 's-search-submit, #' + gmwBpdg.component + 's_search_submit' ).click();
+    		gmw_bpdg_submit_form();
 
 			//jQuery( 'body.directory.groups.buddypress.bp-legacy' ).find( '#groups_search_submit' ).click();
 			//$( '#dir-groups-search-form, #search-groups-form' ).submit();
@@ -142,7 +158,7 @@ jQuery( document ).ready( function( $ ) {
 
 	// Submit form when selecting radius value.
 	jQuery( '#gmw-distance-field-' + gmwBpdg.prefix ).change( function() {
-		jQuery( '#dir-' + gmwBpdg.component + 's-search-submit, #' + gmwBpdg.component + 's_search_submit' ).click();
+		gmw_bpdg_submit_form();
 
 		//jQuery( 'body.directory.groups.buddypress.bp-legacy' ).find( '#groups_search_submit' ).click();
 		//$( '#dir-groups-search-form, #search-groups-form' ).submit();
@@ -167,7 +183,7 @@ jQuery( document ).ready( function( $ ) {
 
 		    event.preventDefault();
 
-		    jQuery( '#dir-' + gmwBpdg.component + 's-search-submit' ).click();
+		    gmw_bpdg_submit_form();
 		}
 
 		return;
