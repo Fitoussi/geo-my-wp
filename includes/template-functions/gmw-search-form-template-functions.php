@@ -492,6 +492,32 @@ function gmw_search_form_keywords_field( $gmw = array() ) {
 }
 
 /**
+ * Output custom fields filters in the search form.
+ *
+ * This function requires the Premium Settings extension.
+ *
+ * @since 4.0 ( function moved from the Premium Settings function );
+ *
+ * @param  array $gmw gmw form.
+ */
+function gmw_search_form_custom_fields( $gmw ) {
+
+	// This function lives in the Premium Settings extension.
+	if ( ! function_exists( 'gmw_get_search_form_custom_fields' ) ) {
+		return;
+	}
+
+	// Remove filter that adds the custom fields filter dynamically into the form.
+	remove_action( 'gmw_search_form_before_distance', 'gmw_append_custom_fields_to_search_form', 10, 1 );
+
+	do_action( 'gmw_before_search_form_custom_fields', $gmw );
+
+	echo gmw_get_search_form_custom_fields( $gmw ); // WPCS: XSS ok.
+
+	do_action( 'gmw_after_search_form_custom_fields', $gmw );
+}
+
+/**
  * Output reset button.
  *
  * @param  array $gmw   gmw form.
