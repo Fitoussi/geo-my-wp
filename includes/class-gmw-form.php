@@ -517,6 +517,10 @@ class GMW_Form {
 			return;
 		}
 
+		if ( ! gmw_verify_template_file_requirement( $this->form['search_form']['form_template'] ) ) {
+			return;
+		}
+
 		// Get search form template files.
 		$search_form = gmw_get_search_form_template( $this->form['component'], $this->form['search_form']['form_template'], $this->form['addon'] );
 
@@ -1115,7 +1119,7 @@ class GMW_Form {
 	 */
 	public function search_results() {
 
-		if ( ! $this->show_results ) {
+		if ( ! $this->show_results || ! gmw_verify_template_file_requirement( $this->form['search_results']['results_template'] ) ) {
 			return;
 		}
 
