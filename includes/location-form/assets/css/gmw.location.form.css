@@ -149,7 +149,7 @@ div#gmw-location-form-wrapper label {
 
 div#gmw-location-form-wrapper div#gmw-lf-autocomplete-wrapper {
 	display: flex;
-	justify-content: flex-end;
+	justify-content: flex-start;
 	align-items: center;
 }
 
@@ -160,7 +160,7 @@ div#gmw-location-form-wrapper div#gmw-lf-autocomplete-wrapper i {
 
 div#gmw-location-form-wrapper div#gmw-lf-autocomplete-wrapper i:before {
 	display: inline-block;
-	width: 30px;
+	width: 40px;
 	height: 100%;
 	font-size: 18px;
 	color: var( --gmw-color-primary );
@@ -178,7 +178,7 @@ div#gmw-location-form-wrapper .gmw-lf-field-wrapper .map-wrapper {
 }
 
 div#gmw-location-form-wrapper .gmw-lf-field.address-field {
-	padding-right: 35px;
+	padding-left: 35px;
 }
 
 div#gmw-location-form-wrapper .gmw-lf-form-actions-wrapper {
