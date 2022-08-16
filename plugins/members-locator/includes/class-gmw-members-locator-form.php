@@ -209,7 +209,7 @@ trait GMW_Members_Locator_Form_Trait {
 			$users[ $u->ID ] = $u;
 		}
 
-		$temp = array();
+		$temp_users = array();
 
 		// merge users data with locations data.
 		foreach ( $this->locations as $location ) {
@@ -218,17 +218,25 @@ trait GMW_Members_Locator_Form_Trait {
 				continue;
 			}
 
-			foreach ( $users[ $location->id ] as $key => $value ) {
-				$location->$key = $value;
+			// Merge location object with user object.
+			$location = (object) array_merge( (array) $location, (array) $users[ $location->id ] );
+
+			// Add some data manually as it might be missing for users without a location.
+			if ( empty( $location->location_id ) ) {
+				$location->object_type = 'user';
+				$location->object_id   = $location->ID;
+				$location->user_id     = $location->ID;
 			}
 
-			$temp[] = $location;
+			$temp_users[] = apply_filters( 'gmw_' . $this->form['prefix'] . '_modify_location_data_to_results', $location, $results, $this->form, $this );
 
 			do_action( 'gmw_' . $this->form['prefix'] . '_append_location_data_to_results', $location, $results, $this->form, $this );
+
+			//apply_filters( 'gmw_' . $this->form['prefix'] . '_append_location_data_to_results', $location, $results, $this->form, $this );
 		}
 
-		// return new data to BuddyPress.
-		$results['users'] = $temp;
+		// Return new data to BuddyPress.
+		$results['users'] = $temp_users;
 		$results['total'] = $this->total_users;
 
 		return $results;
@@ -366,6 +374,8 @@ class GMW_Members_Locator_Form extends GMW_Form {
 
 		if ( ! $internal_cache || empty( $members_template ) ) {
 
+			add_filter( 'gmw_' . $this->form['prefix'] . '_modify_location_data_to_results', array( $this, 'the_location' ), 50, 2 );
+
 			// filter the members query.
 			// Use high priority to allow other plugins to use this filter before GEO my WP does.
 			add_action( 'bp_pre_user_query_construct', array( $this, 'xprofile_query' ), 90 );
@@ -378,6 +388,7 @@ class GMW_Members_Locator_Form extends GMW_Form {
 			remove_action( 'bp_pre_user_query_construct', array( $this, 'xprofile_query' ), 90 );
 			remove_action( 'bp_pre_user_query', array( $this, 'query_clauses' ), 90, 2 );
 			remove_filter( 'bp_core_get_users', array( $this, 'append_location_data_to_results' ), 39 );
+			remove_filter( 'gmw_' . $this->form['prefix'] . '_modify_location_data_to_results', array( $this, 'the_location' ), 50, 2 );
 
 			// set new query in transient.
 			if ( $internal_cache ) {
@@ -394,14 +405,16 @@ class GMW_Members_Locator_Form extends GMW_Form {
 		$this->form['total_results'] = $members_template->total_member_count;
 		$this->form['max_pages']     = ceil( $this->form['total_results'] / $this->form['get_per_page'] );
 
-		$temp_array = array();
+		/*$temp_array = array();
 
 		foreach ( $members_template->members as $member ) {
 			$temp_array[] = parent::the_location( $member->id, $member );
 		}
 
 		$this->form['results']     = $temp_array;
-		$members_template->members = $temp_array;
+		$members_template->members = $temp_array;*/
+
+		$this->form['results'] = $members_template->members;
 
 		return $this->form['results'];
 	}
