@@ -229,6 +229,8 @@ class GMW_Maps_API {
 		$output = apply_filters( 'gmw_map_output', $output, $args );
 		$output = apply_filters( "gmw_map_output_{$args['map_id']}", $output, $args );
 
+		self::$map_enabled = true;
+		
 		return $args['implode'] ? implode( ' ', $output ) : $output;
 	}
 
