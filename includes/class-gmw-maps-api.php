@@ -278,7 +278,7 @@ class GMW_Maps_API {
 			'hide_no_locations'    => false,
 			'render_on_page_load'  => true, // render map on page load?
 			'icon_url'             => GMW()->default_icons['location_icon_url'],
-			'clusters_path'        => 'https://raw.githubusercontent.com/googlemaps/js-marker-clusterer/gh-pages/images/m',
+			'clusters_path'        => GMW_IMAGES . '/markerclusters/m',
 			'map_provider'         => GMW()->maps_provider,
 			'map_bounderies'       => array(),
 		);
