@@ -395,11 +395,11 @@ class GMW_BuddyPress_Directory_Geolocation {
 			'wrapper_close'  => false,
 		);
 
-		$wrap_class = '';
+		$wrap_class = 'gmw-bpdg-address-field-wrapper';
 		$locator    = '';
 
 		if ( ! empty( $this->options['locator_button'] ) ) {
-			$wrap_class = 'class="gmw-locator-button-enabled"';
+			$wrap_class .= ' gmw-locator-button-enabled';
 			$locator    = '<i class="gmw-locator-button inside gmw-icon-target-light" data-locator_submit="1" data-form_id="' . $prefix . '"></i>';
 		}
 
@@ -410,7 +410,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 			$field .= '<form id="gmw-' . $prefix . '-form" class="bp-dir-search-form">';
 		}
 
-		$field .= '<div id="gmw-address-field-' . $prefix . '-wrapper"' . $wrap_class . '">';
+		$field .= '<div id="gmw-address-field-' . $prefix . '-wrapper" class="' . $wrap_class . '">';
 		$field .= $locator;
 		$field .= gmw_get_form_field( $args, $this->form );
 		$field .= '</div>';
@@ -465,7 +465,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 
 			if ( ! $profile_search ) {
 				$nouveau_class = $this->is_bp_nouveau ? 'dir-search ' . esc_attr( $this->component ) . 's-search bp-search select-wrap' : '';
-				$field        .= '<div id="gmw-' . esc_attr( $this->prefix ) . '-radius-wrapper" class="' . $nouveau_class . '">';
+				$field        .= '<div id="gmw-' . esc_attr( $this->prefix ) . '-radius-wrapper" class="gmw-bpdg-radius-field-wrapper ' . $nouveau_class . '">';
 			}
 
 			$field .= gmw_get_form_field( $args );
@@ -613,10 +613,6 @@ class GMW_BuddyPress_Directory_Geolocation {
 	 */
 	public function get_distance( $object ) {
 
-		if ( empty( $this->options['distance'] ) || empty( $object->distance ) ) {
-			return;
-		}
-
 		$output = '<span class="gmw-item gmw-item-distance">' . esc_attr( $object->distance ) . ' ' . esc_attr( $object->units ) . '</span>';
 
 		// display the distance in results.
@@ -631,10 +627,6 @@ class GMW_BuddyPress_Directory_Geolocation {
 	 * @return [type]         [description]
 	 */
 	public function get_address( $object ) {
-
-		if ( empty( $this->options['address_fields'] ) ) {
-			return;
-		}
 
 		$address = gmw_get_location_address( $object, $this->options['address_fields'] );
 		$output  = '';
@@ -674,17 +666,26 @@ class GMW_BuddyPress_Directory_Geolocation {
 			return $output;
 		}
 
+		$output = '<div class="gmw-' . $this->prefix . '-location-meta-wrapper">';
 
 		// show address in results.
-		$output .= self::get_address( $object ); // WPCS: XSS ok.
+		if ( ! empty( $this->options['address_fields'] ) ) {
+			$output .= self::get_address( $object ); // WPCS: XSS ok.
+		}
 
-		// distance.
-		$output .= self::get_distance( $object ); // WPCS: XSS ok.
+		if ( ! empty( $this->options['distance'] ) && ! empty( $object->distance ) ) {
+			$output .= self::get_distance( $object ); // WPCS: XSS ok.
+		}
 
 		// show directions in results.
 		if ( ! empty( $this->options['directions_link'] ) ) {
-			$output .= '<span class="gmw-item gmw-item-directions">' . gmw_get_directions_link( $object, $this->form, $this->labels['get_directions'] ) . '</span>'; // WPCS: XSS ok.
+
+			$directions = gmw_get_directions_link( $object, $this->form, $this->labels['get_directions'] );
+
+			$output .= '<span class="gmw-item gmw-item-directions">' . $directions . '</span>'; // WPCS: XSS ok.
 		}
+
+		$output .= '</div>';
 
 		return apply_filters( 'gmw_' . $this->prefix . '_item_location_elements', $output, $object, $this );
 	}
