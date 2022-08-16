@@ -14,7 +14,7 @@ function gmw_form_get_address_filters( $gmw ) {
 	$address_filters = array();
 
 	// if on page load results.
-	if ( $gmw['page_load_action'] ) {
+	if ( ! empty( $gmw['page_load_action'] ) ) {
 
 		if ( ! empty( $gmw['page_load_results']['city_filter'] ) ) {
 			$address_filters['city'] = $gmw['page_load_results']['city_filter'];
@@ -34,7 +34,7 @@ function gmw_form_get_address_filters( $gmw ) {
 	}
 
 	// if searching within state or country only is enabled.
-	if ( $gmw['submitted'] && apply_filters( 'gmw_search_within_boundaries', true, $gmw ) ) {
+	if ( ! empty( $gmw['submitted'] ) && apply_filters( 'gmw_search_within_boundaries', true, $gmw ) ) {
 
 		// if searching state boundaries.
 		if ( isset( $gmw['form_values']['state'] ) && '' !== $gmw['form_values']['state'] ) {
@@ -157,8 +157,8 @@ function gmw_get_results_map( $gmw, $init_visible = true, $implode = true ) {
 		'map_id'              => $gmw['ID'],
 		'prefix'              => $gmw['prefix'],
 		'map_type'            => $gmw['addon'],
-		'map_width'           => $gmw['results_map']['map_width'],
-		'map_height'          => $gmw['results_map']['map_height'],
+		'map_width'           => ! empty( $gmw['results_map']['map_width'] ) ? $gmw['results_map']['map_width'] : '100%',
+		'map_height'          => ! empty( $gmw['results_map']['map_height'] ) ? $gmw['results_map']['map_height'] : '300px',
 		'expand_on_load'      => ! empty( $gmw['results_map']['expand_on_load'] ) ? true : false,
 		'map_position_filter' => ! empty( $gmw['results_map']['position_filter']['enabled'] ) ? true : false,
 		'map_position_label'  => ! empty( $gmw['results_map']['position_filter']['label'] ) ? $gmw['results_map']['position_filter']['label'] : '',
