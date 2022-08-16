@@ -9,6 +9,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+/**
+ * Generate GEo my WP address filters.
+ *
+ * @since 4.0
+ *
+ * @author Eyal Fitoussi.
+ *
+ * @param  array $gmw gmw form.
+ *
+ * @return [type]      [description]
+ */
 function gmw_form_get_address_filters( $gmw ) {
 
 	$address_filters = array();
@@ -50,6 +61,17 @@ function gmw_form_get_address_filters( $gmw ) {
 	return $address_filters;
 }
 
+/**
+ * Get search results from internal cache.
+ *
+ * @author Eyal Fitoussi.
+ *
+ * @param  array  $args [description].
+ *
+ * @param  string $key  [description].
+ *
+ * @return [type]       [description]
+ */
 function gmw_form_get_cached_results( $args = array(), $key = 'gmw_get_object_user_query' ) {
 
 	if ( empty( $args ) ) {
@@ -173,6 +195,7 @@ function gmw_get_results_map( $gmw, $init_visible = true, $implode = true ) {
  * Output map in search results template file
  *
  * @param array   $gmw gmw form.
+ *
  * @param boolean $init_visible show on page load?.
  */
 function gmw_results_map( $gmw, $init_visible = true ) {
@@ -208,6 +231,17 @@ function gmw_shortcode_map( $gmw ) {
 	do_action( 'gmw_after_shortcode_map', $gmw );
 }
 
+/**
+ * Get info-window template data.
+ *
+ * @since 4.0
+ *
+ * @author Eyal Fitoussi.
+ *
+ * @param array $gmw gmw form.
+ *
+ * @return [type]      [description]
+ */
 function gmw_get_info_window_template_data( $gmw ) {
 
 	$iw_type       = $gmw['info_window']['iw_type'];
