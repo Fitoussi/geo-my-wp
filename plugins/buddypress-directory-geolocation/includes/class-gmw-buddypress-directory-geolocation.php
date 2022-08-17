@@ -120,6 +120,13 @@ class GMW_BuddyPress_Directory_Geolocation {
 	public $enable_objects_without_location = true;
 
 	/**
+	 * Check if using buddyboss theme.
+	 *
+	 * @var boolean
+	 */
+	public $is_buddyboss = false;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -234,8 +241,22 @@ class GMW_BuddyPress_Directory_Geolocation {
 		// Add "Distance" to the order by filter.
 		add_action( 'bp_' . $this->component . 's_directory_order_options', array( $this, 'orderby_distance' ), 5 );
 
-		// Modify the search form of the directory.
-		add_filter( 'bp_directory_' . $this->component . 's_search_form', array( $this, 'directory_form' ) );
+		// SweetDate theme.
+		if ( function_exists( 'sweetdate_setup' ) ) {
+
+			add_action( 'kleo_bp_search_add_data', array( $this, 'sweetdate_directory_form' ) );
+			add_action( 'bp_groups_directory_group_filter', array( $this, 'sweetdate_directory_form' ) );
+
+			// For Kleo Theme.
+		} elseif ( function_exists( 'kleo_setup' ) ) {
+
+			add_filter( 'bp_directory_' . $this->component . 's_search_form', array( $this, 'kleo_directory_form' ) );
+
+			// All themes.
+		} else {
+
+			add_filter( 'bp_directory_' . $this->component . 's_search_form', array( $this, 'directory_form' ) );
+		}
 
 		$this->action_hooks();
 
@@ -247,14 +268,15 @@ class GMW_BuddyPress_Directory_Geolocation {
 
 			global $buddyboss_platform_plugin_file;
 
-			if ( function_exists( 'buddyboss_theme' ) ) {
-	
-				add_filter( 'bp_member_type_name_string', array( $this, 'add_elements_to_buddyboss_results' ) );
+			// For BuddyBoss theme.
+			if ( function_exists( 'buddyboss_theme' ) || ! empty( $buddyboss_platform_plugin_file ) ) {
 
-			} elseif ( ! empty( $buddyboss_platform_plugin_file ) ) {
+				$this->is_buddyboss = true;
 
 				add_action( 'bp_member_members_list_item', array( $this, 'add_elements_to_results' ) );
+				add_action( 'bp_directory_groups_item', array( $this, 'add_elements_to_results' ) );
 
+				// For other themes.
 			} else {
 
 				add_action( $results_elements_filter, array( $this, 'add_elements_to_results' ) );
@@ -291,7 +313,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 
 		if ( ! empty( $this->form['geocoding_failed'] ) ) {
 			$messages['members-loop-none']['message'] = $this->labels['address_error_message'];
-			$messages['groups-loop-none']['message'] = $this->labels['address_error_message'];
+			$messages['groups-loop-none']['message']  = $this->labels['address_error_message'];
 		}
 
 		return $messages;
@@ -328,8 +350,9 @@ class GMW_BuddyPress_Directory_Geolocation {
 		wp_enqueue_script( 'gmw-bpdg' );
 
 		$args = array(
-			'prefix'    => $this->prefix,
-			'component' => $this->component,
+			'prefix'       => $this->prefix,
+			'component'    => $this->component,
+			'is_buddyboss' => $this->is_buddyboss,
 		);
 
 		wp_localize_script( 'gmw-bpdg', 'gmwBpdg', $args );
@@ -400,7 +423,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 
 		if ( ! empty( $this->options['locator_button'] ) ) {
 			$wrap_class .= ' gmw-locator-button-enabled';
-			$locator    = '<i class="gmw-locator-button inside gmw-icon-target-light" data-locator_submit="1" data-form_id="' . $prefix . '"></i>';
+			$locator     = '<i class="gmw-locator-button inside gmw-icon-target-light" data-locator_submit="1" data-form_id="' . $prefix . '"></i>';
 		}
 
 		$field = '';
@@ -482,29 +505,198 @@ class GMW_BuddyPress_Directory_Geolocation {
 	}
 
 	/**
-	 * Modify the groupss search form - append GMW field to it.
+	 * Generate the search form element.
 	 *
-	 * @param array $search_form_html form element.
+	 * @since 2.0
+	 *
+	 * @author Eyal Fitoussi
+	 *
+	 * @return [type] [description]
 	 */
-	public function directory_form( $search_form_html ) {
+	public function get_form_elements() {
 
-		$prefix                       = esc_attr( $this->prefix );
-		$search_form                  = array();
+		$prefix      = esc_attr( $this->prefix );
+		$search_form = array();
+
+		if ( ! $this->is_bp_nouveau ) {
+			$search_form['holder'] = '<div id="gmw-' . $prefix . '-form-temp-holder">';
+		}
+
 		$search_form['address_field'] = $this->get_form_address_field();
 		$search_form['radius_field']  = $this->get_form_radius_field();
 		$search_form['coords']        = '<input type="hidden" name="lat" id="gmw-lat-' . $prefix . '" value="' . esc_attr( $this->form['lat'] ) . '" />';
 		$search_form['coords']       .= '<input type="hidden" name="lng" id="gmw-lng-' . $prefix . '" value="' . esc_attr( $this->form['lng'] ) . '" />';
 
-		$search_form = apply_filters( 'gmw_' . $prefix . '_search_form_html', $search_form, $this );
-		$search_form = implode( ' ', $search_form );
-
 		if ( ! $this->is_bp_nouveau ) {
-			$search_form = '<div id="gmw-' . $prefix . '-form-temp-holder">' . $search_form . '</div>';
+			$search_form['/holder'] = '</div>';
 		}
+
+		return apply_filters( 'gmw_' . $prefix . '_search_form_html', $search_form, $this );
+	}
+
+	/**
+	 * Modify the directory search form with GEolocation filters.
+	 *
+	 * This will be used by default for most themes.
+	 *
+	 * @since 4.0
+	 *
+	 * @author Eyal Fitoussi
+	 *
+	 * @param array $search_form_html form element.
+	 */
+	public function directory_form( $search_form_html ) {
+
+		$search_form = $this->get_form_elements();
+		$search_form = implode( ' ', $search_form );
 
 		return $search_form_html . $search_form;
 	}
 
+	/**
+	 * Search form for the SweetDate theme.
+	 *
+	 * @since 4.0
+	 *
+	 * @author Eyal Fitoussi
+	 */
+	public function sweetdate_directory_form() {
+
+		$search_form = $this->get_form_elements();
+
+		// Only for the members page.
+		if ( 'bp_groups_directory_group_filter' !== current_action() ) {
+
+			$search_form['address_field'] = '<div class="three columns hz-textbox">' . $search_form['address_field'] . '</div>';
+			$search_form['radius_field']  = '<div class="two columns">' . $search_form['radius_field'] . '</div>';
+
+			unset( $search_form['holder'], $search_form['/holder'] );
+		}
+
+		?>
+		<style type="text/css">
+
+			body.directory.groups.buddypress #search-groups-form {
+				display: flex;
+				margin-bottom: 20px;
+			}
+
+			body.directory.groups.buddypress #search-groups-form * {
+				margin-bottom: 0;
+			}
+
+			body.directory.groups.buddypress #search-groups-form > * {
+				flex-grow: 1;
+				margin-right: 10px;
+				width: initial;
+			}
+
+			body.directory.groups.buddypress #search-groups-form.custom #gmw-bpgdg-radius-wrapper div.custom.dropdown {
+				width: 100% ! important;
+			}
+
+			body.directory.groups.buddypress #groups_search_submit {
+				margin-right: 0;
+			}
+
+			body.directory.groups.buddypress #search-groups-form #gmw-bpgdg-radius-wrapper {
+				max-width: 120px;
+			}
+
+			#members-group-list #members-list .gmw-item-distance,
+			body.directory.buddypress #groups-list .gmw-item-distance,
+			body.directory.buddypress #members-list .gmw-item-distance {
+				top: 100px;
+				right: 16px;
+			}
+		</style>
+		<script type="text/javascript">
+			jQuery( document ).ready( function() {
+				jQuery( '#gmw-' + gmwBpdg.prefix + '-form-temp-holder' ).children().detach().insertBefore( '#groups_search_submit' );
+			});
+		</script>
+		<?php
+		echo implode( ' ', $search_form );
+	}
+
+	/**
+	 * Styling for the Kleo theme.
+	 *
+	 * @author Eyal Fitoussi
+	 *
+	 * @since 4.0
+	 *
+	 * @author Eyal Fitoussi
+	 */
+	public function kleo_directory_form( $search_form_html ) {
+
+		$search_form = $this->get_form_elements();
+		?>
+		<style type="text/css">
+
+			body.buddypress.directory.bp-legacy #buddypress div#members-dir-search,
+			body.buddypress.directory.bp-legacy #buddypress div#group-dir-search {
+				//display: grid;
+				//grid-template-columns: 40% 40% auto;
+				//grid-gap: 25px;
+				display: flex;
+			}
+
+			body.buddypress.directory.bp-legacy #search-members-form,
+			body.buddypress.directory.bp-legacy #search-groups-form {
+				margin-left: initial;
+				margin-right: initial;
+				min-width: initial;
+				flex-grow: 1;
+				margin-right: 20px;
+			}
+
+			body.buddypress.directory.bp-legacy #buddypress .gmw-bpdg-radius-field-wrapper {
+				width: 120px;
+				margin-left: 20px;
+			}
+
+			body.buddypress.directory.bp-legacy #buddypress .gmw-distance-field {
+				width: 100%;
+			}
+
+			body.buddypress.directory.bp-legacy #buddypress .gmw-bpdg-address-field-wrapper {
+				//margin-left: auto;
+				//margin-right: auto;
+				display: inline-block;
+				border-radius: 22px;
+				border-style: solid;
+				border-width: 1px;
+				height: 33px;
+				line-height: 30px;
+				padding: 0 10px;
+				-webkit-transition: .7s;
+				-moz-transition: .7s;
+				-o-transition: .7s;
+				transition: .7s;
+				text-align: left;
+				box-shadow: 0 0 0 4px #f7f7f7;
+				border-color: #e5e5e5;
+				//margin-left: 0;
+				//margin-right: 20px;
+				//min-width: 30%;
+				flex-grow: 1;
+			}
+
+			#members-group-list #members-list .gmw-item-distance,
+			body.directory.buddypress #groups-list .gmw-item-distance,
+			body.directory.buddypress #members-list .gmw-item-distance {
+				top: 10px;
+				right: 10px;
+			}
+
+		</style>
+		<?php
+
+		unset( $search_form['holder'], $search_form['/holder'] );
+
+		return $search_form_html . implode( ' ', $search_form );
+	}
 	/**
 	 * Generate the map element
 	 */
@@ -695,14 +887,5 @@ class GMW_BuddyPress_Directory_Geolocation {
 	 */
 	public function add_elements_to_results() {
 		echo $this->get_item_location_elements(); // WPCS: XSS ok.
-	}
-
-	/**
-	 * Output of the data for BuddyBoss theme only.
-	 *
-	 * @param [type] $output [description].
-	 */
-	public function add_elements_to_buddyboss_results( $output ) {
-		return $output . $this->get_item_location_elements();
 	}
 }
