@@ -276,6 +276,11 @@ class GMW_BuddyPress_Directory_Geolocation {
 				add_action( 'bp_member_members_list_item', array( $this, 'add_elements_to_results' ) );
 				add_action( 'bp_directory_groups_item', array( $this, 'add_elements_to_results' ) );
 
+			} elseif ( function_exists( 'buddyx_template_pack_check' ) ) {
+				
+				add_filter( 'bp_nouveau_get_member_meta', array( $this, 'add_elements_to_results_buddyx' ) );
+				add_action( 'bp_directory_groups_item', array( $this, 'add_elements_to_results' ) );
+
 				// For other themes.
 			} else {
 
@@ -887,5 +892,21 @@ class GMW_BuddyPress_Directory_Geolocation {
 	 */
 	public function add_elements_to_results() {
 		echo $this->get_item_location_elements(); // WPCS: XSS ok.
+	}
+
+	/**
+	 * Append location data to each item in the results for BuddyX theme.
+	 *
+	 * @param array $meta memebr meta.
+	 *
+	 * @since 4.0
+	 *
+	 * @return [type]         [description]
+	 */
+	public function add_elements_to_results_buddyx( $meta ) {
+
+		echo $this->get_item_location_elements(); // WPCS: XSS ok.
+
+		return $meta;
 	}
 }
