@@ -30,7 +30,7 @@ $members_list_item_content = ob_get_contents();
 ob_end_clean();
 
 $member_loop_has_content = empty( $members_list_item_content ) ? false : true;
-$classes                 = explode( ' ', $member->location_class . ' item-entry' );
+$classes                 = explode( ' ', gmw_get_object_class( $member, $gmw ) . ' item-entry' );
 ?>
 
 <li id="gmw-single-member-<?php echo absint( $member->id ); ?>" <?php bp_member_class( $classes ); ?> data-bp-item-id="<?php bp_member_user_id(); ?>" data-bp-item-component="members">

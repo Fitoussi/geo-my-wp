@@ -22,7 +22,7 @@
  */
 
 ?>
-<div id="gmw-single-post-<?php echo absint( $post->ID ); ?>" class="<?php echo esc_attr( $post->location_class ); ?>">
+<div id="gmw-single-post-<?php echo absint( $post->ID ); ?>" class="<?php gmw_object_class( $post, $gmw ); ?>">
 
 	<div class="gmw-item-inner">
 

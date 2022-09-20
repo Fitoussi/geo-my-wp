@@ -22,7 +22,7 @@
  */
 
 ?>
-<li id="gmw-single-member-<?php echo absint( $member->id ); ?>" <?php bp_member_class( explode( ' ', $member->location_class ) ); ?> data-bp-item-id="<?php echo absint( $member->id ) ?>" data-bp-item-component="members">
+<li id="gmw-single-member-<?php echo absint( $member->id ); ?>" <?php bp_member_class( explode( ' ', gmw_get_object_class( $member, $gmw ) ) ); ?> data-bp-item-id="<?php echo absint( $member->id ) ?>" data-bp-item-component="members">
 
 	<div class="youzify-user-data gmw-item-inner">
 

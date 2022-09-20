@@ -22,7 +22,7 @@
  */
 
 ?>
-<article id="gmw-single-post-<?php echo absint( $post->ID ); ?>" <?php post_class( explode( ' ', $post->location_class ) ); ?>>
+<article id="gmw-single-post-<?php echo absint( $post->ID ); ?>" <?php post_class( explode( ' ', gmw_get_object_class( $post, $gmw ) ) ); ?>>
 
 	<div class="post-inner-wrap">
 

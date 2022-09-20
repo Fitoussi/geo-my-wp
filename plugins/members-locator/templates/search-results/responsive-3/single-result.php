@@ -22,7 +22,7 @@
  */
 
 ?>
-<div id="gmw-single-member-<?php echo absint( $member->id ); ?>" class="<?php echo esc_attr( $member->location_class ); ?>" data-bp-item-id="<?php echo absint( $member->id ); ?>" data-bp-item-component="members">
+<div id="gmw-single-member-<?php echo absint( $member->id ); ?>" class="<?php gmw_object_class( $member, $gmw ); ?>" data-bp-item-id="<?php echo absint( $member->id ); ?>" data-bp-item-component="members">
 
 	<div class="gmw-item-inner">
 
