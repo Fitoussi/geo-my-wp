@@ -21,7 +21,7 @@
 
 ?>
 <!--  Main results wrapper -->
-<div class="post-grid bb-grid <?php echo esc_attr( $gmw_form->get_class_attr( 'results_wrap' ) ); ?>" data-id="<?php echo absint( $gmw['ID'] ); ?>" data-prefix="<?php echo esc_attr( $gmw['prefix'] ); ?>">
+<div class="post-grid bb-grid <?php gmw_form_class( 'results_wrapper', $gmw ); ?>" data-id="<?php echo absint( $gmw['ID'] ); ?>" data-prefix="<?php echo esc_attr( $gmw['prefix'] ); ?>">
 	<?php
 	do_action( 'gmw_search_results_wrapper_start', $gmw );
 
