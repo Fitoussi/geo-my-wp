@@ -1,5 +1,29 @@
 jQuery( document ).ready( function( $ ) {
 	
+
+	// This is a workaround to move the geolcoation items ( address, distance, directions link ) in each member in the results to a better position inside the div element.
+	// There is only one hook that we could use for adding those geolocation items into the results, but that hook is not a great location
+	// to showcase those items. This is a "hacky" way of doing so, and hpefully temporary.
+	if ( gmwBpdg.is_buddyboss ) {
+
+		$( document ).ajaxComplete(function( event, request, settings ) {
+
+			if ( typeof settings.data !== 'undefined' && settings.data.indexOf( 'action=members_filter' ) > -1 ) {
+				
+				setTimeout( function() {
+
+					jQuery( '.bp-members-list-hook-inner' ).each( function() {
+						
+						var item    = jQuery( this );
+						var wrapper = jQuery( this ).closest( '.item-entry' );
+
+						item.find( '.gmw-bpmdg-location-meta-wrapper' ).detach().insertAfter( wrapper.find( '.list-wrap-inner .item-block' ) );
+					});
+				}, 300 );
+			}		
+		});
+	}
+
 	function gmw_bpdg_update_cookies( save ) {
 
 		if ( save ) {
@@ -61,6 +85,10 @@ jQuery( document ).ready( function( $ ) {
 	function gmw_bpdg_submit_form() {
 		jQuery( '#dir-' + gmwBpdg.component + 's-search-submit, #' + gmwBpdg.component + 's_search_submit' ).click();
 	}
+
+	jQuery( '.item-list-tabs #members-all, .item-list-tabs #groups-all' ).on( 'click', function() {
+		GMW.set_cookie( 'gmw_' + gmwBpdg.prefix + '_address', '', 1 );
+	});
 
 	// Move geolocation form field dynamically into the directory form.
 	if ( jQuery( '.youzify-search-input-form' ).length ) {
@@ -233,7 +261,7 @@ jQuery( document ).ready( function( $ ) {
 	 *
 	 * @return {[type]}  [description]
 	 */
-	$( '#dir-' + gmwBpdg.component + 's-search-form' ).submit( function( e ) {
+	$( '#dir-' + gmwBpdg.component + 's-search-form, #horizontal_search' ).submit( function( e ) {
 
 		gmw_bpdg_update_cookies( true );
 
