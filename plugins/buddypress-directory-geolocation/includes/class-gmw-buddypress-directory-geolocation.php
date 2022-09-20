@@ -73,15 +73,17 @@ class GMW_BuddyPress_Directory_Geolocation {
 	 * @var array
 	 */
 	public $form = array(
-		'addon'    => '',
-		'prefix'   => '',
-		'address'  => '',
-		'lat'      => '',
-		'lng'      => '',
-		'distance' => '',
-		'radius'   => '', // Duplciate of distance, to support other queries and elements of the plugin.
-		'units'    => 'imperial',
-		'options'  => array(),
+		'component'       => '',
+		'addon'           => '',
+		'prefix'          => '',
+		'address'         => '',
+		'lat'             => '',
+		'lng'             => '',
+		'distance'        => '',
+		'radius'          => '', // Duplciate of distance, to support other queries and elements of the plugin.
+		'units'           => 'imperial',
+		'options'         => array(),
+		'address_filters' => array(),
 	);
 
 	/**
@@ -127,6 +129,13 @@ class GMW_BuddyPress_Directory_Geolocation {
 	public $is_buddyboss = false;
 
 	/**
+	 * Check if search form already loaded.
+	 *
+	 * @var boolean
+	 */
+	public $form_loaded = false;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -142,11 +151,12 @@ class GMW_BuddyPress_Directory_Geolocation {
 			return;
 		}
 
-		$this->is_bp_nouveau   = function_exists( 'bp_nouveau' ) ? true : false;
-		$this->form['addon']   = 'bp_' . $this->component . 's_directiory_geolocation';
-		$this->form['prefix']  = $this->prefix;
-		$this->form['units']   = 'metric' === $this->options['units'] ? 'metric' : 'imperial';
-		$this->form['options'] = $this->options;
+		$this->is_bp_nouveau     = function_exists( 'bp_nouveau' ) ? true : false;
+		$this->form['component'] = 'bp_directiory_geolocation';
+		$this->form['addon']     = 'bp_' . $this->component . 's_directiory_geolocation';
+		$this->form['prefix']    = $this->prefix;
+		$this->form['units']     = 'metric' === $this->options['units'] ? 'metric' : 'imperial';
+		$this->form['options']   = $this->options;
 
 		// labels.
 		$this->labels            = $this->labels();
@@ -235,6 +245,11 @@ class GMW_BuddyPress_Directory_Geolocation {
 
 		$this->enable_objects_without_location = apply_filters( 'gmw_' . $this->prefix . '_enable_objects_without_location', $this->enable_objects_without_location, $this->form, $this );
 
+		$this->db_fields = apply_filters( 'gmw_' . $this->prefix . '_form_db_fields', $this->db_fields, $this->form );
+		$this->db_fields = preg_filter( '/^/', 'gmw_locations.', $this->db_fields );
+		$this->db_fields = apply_filters( 'gmw_' . $this->prefix . '_form_db_fields_prefixed', $this->db_fields, $this->form );
+		$this->db_fields = implode( ',', $this->db_fields );
+
 		// action hooks / filters.
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
@@ -268,8 +283,13 @@ class GMW_BuddyPress_Directory_Geolocation {
 
 			global $buddyboss_platform_plugin_file;
 
-			// For BuddyBoss theme.
-			if ( function_exists( 'buddyboss_theme' ) || ! empty( $buddyboss_platform_plugin_file ) ) {
+			// Youzify plugin.
+			if ( class_exists( 'Youzify' ) ) {
+
+				add_action( $results_elements_filter, array( $this, 'add_elements_to_results' ) );
+
+				// For BuddyBoss theme.
+			} elseif ( function_exists( 'buddyboss_theme' ) || ! empty( $buddyboss_platform_plugin_file ) ) {
 
 				$this->is_buddyboss = true;
 
@@ -551,6 +571,8 @@ class GMW_BuddyPress_Directory_Geolocation {
 	 * @param array $search_form_html form element.
 	 */
 	public function directory_form( $search_form_html ) {
+		
+		$this->form_loaded = true;
 
 		$search_form = $this->get_form_elements();
 		$search_form = implode( ' ', $search_form );
@@ -785,7 +807,9 @@ class GMW_BuddyPress_Directory_Geolocation {
 	 *
 	 * @param  object $info_window info window.
 	 */
-	public function map_location( $object, $info_window ) {
+	/*public function map_location( $object, $info_window_args ) {
+
+		$info_window = gmw_get_info_window_content( $group, $info_window_args, $this->form );		
 
 		// add lat/lng locations array to pass to map.
 		return apply_filters(
@@ -801,6 +825,20 @@ class GMW_BuddyPress_Directory_Geolocation {
 			$object,
 			$this
 		);
+	}*/
+
+	public function the_location( $object ) {
+
+		if ( ! empty( $this->options['map'] ) ) {
+
+			$object->map_icon = '';
+			$info_window_args = $this->get_info_window_args( $object );
+			$location         = gmw_get_object_location_map( $object, $info_window_args, $this->form );
+
+			if ( $location ) {
+				$this->map_locations[] = $location;
+			}
+		}
 	}
 
 	/**
@@ -858,10 +896,13 @@ class GMW_BuddyPress_Directory_Geolocation {
 		$object = $objects_template->$component;
 		$output = '';
 
-		// abort if user does not have a location.
+		// abort if object does not have a location.
 		if ( empty( $object->lat ) ) {
 			return $output;
 		}
+
+		// Collect location.
+		$this->the_location( $object );
 
 		$output = '<div class="gmw-' . $this->prefix . '-location-meta-wrapper">';
 
