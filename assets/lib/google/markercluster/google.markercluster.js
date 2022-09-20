@@ -1,1632 +1,3940 @@
-/**
- * @name MarkerClustererPlus for Google Maps V3
- * @version 2.1.2 [May 28, 2014]
- * @author Gary Little
- * @fileoverview
- * The library creates and manages per-zoom-level clusters for large amounts of markers.
- * <p>
- * This is an enhanced V3 implementation of the
- * <a href="http://gmaps-utility-library-dev.googlecode.com/svn/tags/markerclusterer/"
- * >V2 MarkerClusterer</a> by Xiaoxi Wu. It is based on the
- * <a href="http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclusterer/"
- * >V3 MarkerClusterer</a> port by Luke Mahe. MarkerClustererPlus was created by Gary Little.
- * <p>
- * v2.0 release: MarkerClustererPlus v2.0 is backward compatible with MarkerClusterer v1.0. It
- *  adds support for the <code>ignoreHidden</code>, <code>title</code>, <code>batchSizeIE</code>,
- *  and <code>calculator</code> properties as well as support for four more events. It also allows
- *  greater control over the styling of the text that appears on the cluster marker. The
- *  documentation has been significantly improved and the overall code has been simplified and
- *  polished. Very large numbers of markers can now be managed without causing Javascript timeout
- *  errors on Internet Explorer. Note that the name of the <code>clusterclick</code> event has been
- *  deprecated. The new name is <code>click</code>, so please change your application code now.
- */
+var markerClusterer = (function (exports) {
+  'use strict';
 
-/**
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-
-/**
- * @name ClusterIconStyle
- * @class This class represents the object for values in the <code>styles</code> array passed
- *  to the {@link MarkerClusterer} constructor. The element in this array that is used to
- *  style the cluster icon is determined by calling the <code>calculator</code> function.
- *
- * @property {string} url The URL of the cluster icon image file. Required.
- * @property {number} height The display height (in pixels) of the cluster icon. Required.
- * @property {number} width The display width (in pixels) of the cluster icon. Required.
- * @property {Array} [anchorText] The position (in pixels) from the center of the cluster icon to
- *  where the text label is to be centered and drawn. The format is <code>[yoffset, xoffset]</code>
- *  where <code>yoffset</code> increases as you go down from center and <code>xoffset</code>
- *  increases to the right of center. The default is <code>[0, 0]</code>.
- * @property {Array} [anchorIcon] The anchor position (in pixels) of the cluster icon. This is the
- *  spot on the cluster icon that is to be aligned with the cluster position. The format is
- *  <code>[yoffset, xoffset]</code> where <code>yoffset</code> increases as you go down and
- *  <code>xoffset</code> increases to the right of the top-left corner of the icon. The default
- *  anchor position is the center of the cluster icon.
- * @property {string} [textColor="black"] The color of the label text shown on the
- *  cluster icon.
- * @property {number} [textSize=11] The size (in pixels) of the label text shown on the
- *  cluster icon.
- * @property {string} [textDecoration="none"] The value of the CSS <code>text-decoration</code>
- *  property for the label text shown on the cluster icon.
- * @property {string} [fontWeight="bold"] The value of the CSS <code>font-weight</code>
- *  property for the label text shown on the cluster icon.
- * @property {string} [fontStyle="normal"] The value of the CSS <code>font-style</code>
- *  property for the label text shown on the cluster icon.
- * @property {string} [fontFamily="Arial,sans-serif"] The value of the CSS <code>font-family</code>
- *  property for the label text shown on the cluster icon.
- * @property {string} [backgroundPosition="0 0"] The position of the cluster icon image
- *  within the image defined by <code>url</code>. The format is <code>"xpos ypos"</code>
- *  (the same format as for the CSS <code>background-position</code> property). You must set
- *  this property appropriately when the image defined by <code>url</code> represents a sprite
- *  containing multiple images. Note that the position <i>must</i> be specified in px units.
- */
-/**
- * @name ClusterIconInfo
- * @class This class is an object containing general information about a cluster icon. This is
- *  the object that a <code>calculator</code> function returns.
- *
- * @property {string} text The text of the label to be shown on the cluster icon.
- * @property {number} index The index plus 1 of the element in the <code>styles</code>
- *  array to be used to style the cluster icon.
- * @property {string} title The tooltip to display when the mouse moves over the cluster icon.
- *  If this value is <code>undefined</code> or <code>""</code>, <code>title</code> is set to the
- *  value of the <code>title</code> property passed to the MarkerClusterer.
- */
-/**
- * A cluster icon.
- *
- * @constructor
- * @extends google.maps.OverlayView
- * @param {Cluster} cluster The cluster with which the icon is to be associated.
- * @param {Array} [styles] An array of {@link ClusterIconStyle} defining the cluster icons
- *  to use for various cluster sizes.
- * @private
- */
-function ClusterIcon(cluster, styles) {
-  cluster.getMarkerClusterer().extend(ClusterIcon, google.maps.OverlayView);
-
-  this.cluster_ = cluster;
-  this.className_ = cluster.getMarkerClusterer().getClusterClass();
-  this.styles_ = styles;
-  this.center_ = null;
-  this.div_ = null;
-  this.sums_ = null;
-  this.visible_ = false;
-
-  this.setMap(cluster.getMap()); // Note: this causes onAdd to be called
-}
-
-
-/**
- * Adds the icon to the DOM.
- */
-ClusterIcon.prototype.onAdd = function () {
-  var cClusterIcon = this;
-  var cMouseDownInCluster;
-  var cDraggingMapByCluster;
-
-  this.div_ = document.createElement("div");
-  this.div_.className = this.className_;
-  if (this.visible_) {
-    this.show();
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
   }
 
-  this.getPanes().overlayMouseTarget.appendChild(this.div_);
+  function _defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
 
-  // Fix for Issue 157
-  this.boundsChangedListener_ = google.maps.event.addListener(this.getMap(), "bounds_changed", function () {
-    cDraggingMapByCluster = cMouseDownInCluster;
-  });
+  function _createClass(Constructor, protoProps, staticProps) {
+    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) _defineProperties(Constructor, staticProps);
+    return Constructor;
+  }
 
-  google.maps.event.addDomListener(this.div_, "mousedown", function () {
-    cMouseDownInCluster = true;
-    cDraggingMapByCluster = false;
-  });
+  function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+      throw new TypeError("Super expression must either be null or a function");
+    }
 
-  google.maps.event.addDomListener(this.div_, "click", function (e) {
-    cMouseDownInCluster = false;
-    if (!cDraggingMapByCluster) {
-      var theBounds;
-      var mz;
-      var mc = cClusterIcon.cluster_.getMarkerClusterer();
-      /**
-       * This event is fired when a cluster marker is clicked.
-       * @name MarkerClusterer#click
-       * @param {Cluster} c The cluster that was clicked.
-       * @event
-       */
-      google.maps.event.trigger(mc, "click", cClusterIcon.cluster_);
-      google.maps.event.trigger(mc, "clusterclick", cClusterIcon.cluster_); // deprecated name
+    subClass.prototype = Object.create(superClass && superClass.prototype, {
+      constructor: {
+        value: subClass,
+        writable: true,
+        configurable: true
+      }
+    });
+    if (superClass) _setPrototypeOf(subClass, superClass);
+  }
 
-      // The default click handler follows. Disable it by setting
-      // the zoomOnClick property to false.
-      if (mc.getZoomOnClick()) {
-        // Zoom into the cluster.
-        mz = mc.getMaxZoom();
-        theBounds = cClusterIcon.cluster_.getBounds();
-        mc.getMap().fitBounds(theBounds);
-        // There is a fix for Issue 170 here:
-        setTimeout(function () {
-          mc.getMap().fitBounds(theBounds);
-          // Don't zoom beyond the max zoom level
-          if (mz !== null && (mc.getMap().getZoom() > mz)) {
-            mc.getMap().setZoom(mz + 1);
-          }
-        }, 100);
+  function _getPrototypeOf(o) {
+    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+      return o.__proto__ || Object.getPrototypeOf(o);
+    };
+    return _getPrototypeOf(o);
+  }
+
+  function _setPrototypeOf(o, p) {
+    _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+      o.__proto__ = p;
+      return o;
+    };
+
+    return _setPrototypeOf(o, p);
+  }
+
+  function _isNativeReflectConstruct() {
+    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+    if (Reflect.construct.sham) return false;
+    if (typeof Proxy === "function") return true;
+
+    try {
+      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function _assertThisInitialized(self) {
+    if (self === void 0) {
+      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }
+
+    return self;
+  }
+
+  function _possibleConstructorReturn(self, call) {
+    if (call && (typeof call === "object" || typeof call === "function")) {
+      return call;
+    }
+
+    return _assertThisInitialized(self);
+  }
+
+  function _createSuper(Derived) {
+    var hasNativeReflectConstruct = _isNativeReflectConstruct();
+
+    return function _createSuperInternal() {
+      var Super = _getPrototypeOf(Derived),
+          result;
+
+      if (hasNativeReflectConstruct) {
+        var NewTarget = _getPrototypeOf(this).constructor;
+
+        result = Reflect.construct(Super, arguments, NewTarget);
+      } else {
+        result = Super.apply(this, arguments);
       }
 
-      // Prevent event propagation to the map:
-      e.cancelBubble = true;
-      if (e.stopPropagation) {
-        e.stopPropagation();
+      return _possibleConstructorReturn(this, result);
+    };
+  }
+
+  function _slicedToArray(arr, i) {
+    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+  }
+
+  function _toConsumableArray(arr) {
+    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+  }
+
+  function _arrayWithoutHoles(arr) {
+    if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+  }
+
+  function _arrayWithHoles(arr) {
+    if (Array.isArray(arr)) return arr;
+  }
+
+  function _iterableToArray(iter) {
+    if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+  }
+
+  function _iterableToArrayLimit(arr, i) {
+    if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _e = undefined;
+
+    try {
+      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+        _arr.push(_s.value);
+
+        if (i && _arr.length === i) break;
+      }
+    } catch (err) {
+      _d = true;
+      _e = err;
+    } finally {
+      try {
+        if (!_n && _i["return"] != null) _i["return"]();
+      } finally {
+        if (_d) throw _e;
       }
     }
-  });
 
-  google.maps.event.addDomListener(this.div_, "mouseover", function () {
-    var mc = cClusterIcon.cluster_.getMarkerClusterer();
-    /**
-     * This event is fired when the mouse moves over a cluster marker.
-     * @name MarkerClusterer#mouseover
-     * @param {Cluster} c The cluster that the mouse moved over.
-     * @event
-     */
-    google.maps.event.trigger(mc, "mouseover", cClusterIcon.cluster_);
-  });
-
-  google.maps.event.addDomListener(this.div_, "mouseout", function () {
-    var mc = cClusterIcon.cluster_.getMarkerClusterer();
-    /**
-     * This event is fired when the mouse moves out of a cluster marker.
-     * @name MarkerClusterer#mouseout
-     * @param {Cluster} c The cluster that the mouse moved out of.
-     * @event
-     */
-    google.maps.event.trigger(mc, "mouseout", cClusterIcon.cluster_);
-  });
-};
-
-
-/**
- * Removes the icon from the DOM.
- */
-ClusterIcon.prototype.onRemove = function () {
-  if (this.div_ && this.div_.parentNode) {
-    this.hide();
-    google.maps.event.removeListener(this.boundsChangedListener_);
-    google.maps.event.clearInstanceListeners(this.div_);
-    this.div_.parentNode.removeChild(this.div_);
-    this.div_ = null;
+    return _arr;
   }
-};
 
-
-/**
- * Draws the icon.
- */
-ClusterIcon.prototype.draw = function () {
-  if (this.visible_) {
-    var pos = this.getPosFromLatLng_(this.center_);
-    this.div_.style.top = pos.y + "px";
-    this.div_.style.left = pos.x + "px";
+  function _unsupportedIterableToArray(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(o);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
   }
-};
 
+  function _arrayLikeToArray(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
 
-/**
- * Hides the icon.
- */
-ClusterIcon.prototype.hide = function () {
-  if (this.div_) {
-    this.div_.style.display = "none";
+    for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+    return arr2;
   }
-  this.visible_ = false;
-};
+
+  function _nonIterableSpread() {
+    throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  }
+
+  function _nonIterableRest() {
+    throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  }
+
+  var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+  var check = function (it) {
+    return it && it.Math == Math && it;
+  }; // https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
 
 
-/**
- * Positions and shows the icon.
- */
-ClusterIcon.prototype.show = function () {
-  if (this.div_) {
-    var img = "";
-    // NOTE: values must be specified in px units
-    var bp = this.backgroundPosition_.split(" ");
-    var spriteH = parseInt(bp[0].replace(/^\s+|\s+$/g, ""), 10);
-    var spriteV = parseInt(bp[1].replace(/^\s+|\s+$/g, ""), 10);
-    var pos = this.getPosFromLatLng_(this.center_);
-    this.div_.style.cssText = this.createCss(pos);
-    img = "<img src='" + this.url_ + "' style='position: absolute; top: " + spriteV + "px; left: " + spriteH + "px; ";
-    if (!this.cluster_.getMarkerClusterer().enableRetinaIcons_) {
-      img += "clip: rect(" + (-1 * spriteV) + "px, " + ((-1 * spriteH) + this.width_) + "px, " +
-          ((-1 * spriteV) + this.height_) + "px, " + (-1 * spriteH) + "px);";
+  var global$d = // eslint-disable-next-line es-x/no-global-this -- safe
+  check(typeof globalThis == 'object' && globalThis) || check(typeof window == 'object' && window) || // eslint-disable-next-line no-restricted-globals -- safe
+  check(typeof self == 'object' && self) || check(typeof commonjsGlobal == 'object' && commonjsGlobal) || // eslint-disable-next-line no-new-func -- fallback
+  function () {
+    return this;
+  }() || Function('return this')();
+
+  var objectGetOwnPropertyDescriptor = {};
+
+  var fails$e = function (exec) {
+    try {
+      return !!exec();
+    } catch (error) {
+      return true;
     }
-    img += "'>";
-    this.div_.innerHTML = img + "<div style='" +
-        "position: absolute;" +
-        "top: " + this.anchorText_[0] + "px;" +
-        "left: " + this.anchorText_[1] + "px;" +
-        "color: " + this.textColor_ + ";" +
-        "font-size: " + this.textSize_ + "px;" +
-        "font-family: " + this.fontFamily_ + ";" +
-        "font-weight: " + this.fontWeight_ + ";" +
-        "font-style: " + this.fontStyle_ + ";" +
-        "text-decoration: " + this.textDecoration_ + ";" +
-        "text-align: center;" +
-        "width: " + this.width_ + "px;" +
-        "line-height:" + this.height_ + "px;" +
-        "'>" + this.sums_.text + "</div>";
-    if (typeof this.sums_.title === "undefined" || this.sums_.title === "") {
-      this.div_.title = this.cluster_.getMarkerClusterer().getTitle();
+  };
+
+  var fails$d = fails$e; // Detect IE8's incomplete defineProperty implementation
+
+  var descriptors = !fails$d(function () {
+    // eslint-disable-next-line es-x/no-object-defineproperty -- required for testing
+    return Object.defineProperty({}, 1, {
+      get: function () {
+        return 7;
+      }
+    })[1] != 7;
+  });
+
+  var fails$c = fails$e;
+  var functionBindNative = !fails$c(function () {
+    // eslint-disable-next-line es-x/no-function-prototype-bind -- safe
+    var test = function () {
+      /* empty */
+    }.bind(); // eslint-disable-next-line no-prototype-builtins -- safe
+
+
+    return typeof test != 'function' || test.hasOwnProperty('prototype');
+  });
+
+  var NATIVE_BIND$2 = functionBindNative;
+  var call$6 = Function.prototype.call;
+  var functionCall = NATIVE_BIND$2 ? call$6.bind(call$6) : function () {
+    return call$6.apply(call$6, arguments);
+  };
+
+  var objectPropertyIsEnumerable = {};
+
+  var $propertyIsEnumerable = {}.propertyIsEnumerable; // eslint-disable-next-line es-x/no-object-getownpropertydescriptor -- safe
+
+  var getOwnPropertyDescriptor$2 = Object.getOwnPropertyDescriptor; // Nashorn ~ JDK8 bug
+
+  var NASHORN_BUG = getOwnPropertyDescriptor$2 && !$propertyIsEnumerable.call({
+    1: 2
+  }, 1); // `Object.prototype.propertyIsEnumerable` method implementation
+  // https://tc39.es/ecma262/#sec-object.prototype.propertyisenumerable
+
+  objectPropertyIsEnumerable.f = NASHORN_BUG ? function propertyIsEnumerable(V) {
+    var descriptor = getOwnPropertyDescriptor$2(this, V);
+    return !!descriptor && descriptor.enumerable;
+  } : $propertyIsEnumerable;
+
+  var createPropertyDescriptor$3 = function (bitmap, value) {
+    return {
+      enumerable: !(bitmap & 1),
+      configurable: !(bitmap & 2),
+      writable: !(bitmap & 4),
+      value: value
+    };
+  };
+
+  var NATIVE_BIND$1 = functionBindNative;
+  var FunctionPrototype$1 = Function.prototype;
+  var bind$2 = FunctionPrototype$1.bind;
+  var call$5 = FunctionPrototype$1.call;
+  var uncurryThis$j = NATIVE_BIND$1 && bind$2.bind(call$5, call$5);
+  var functionUncurryThis = NATIVE_BIND$1 ? function (fn) {
+    return fn && uncurryThis$j(fn);
+  } : function (fn) {
+    return fn && function () {
+      return call$5.apply(fn, arguments);
+    };
+  };
+
+  var uncurryThis$i = functionUncurryThis;
+  var toString$5 = uncurryThis$i({}.toString);
+  var stringSlice = uncurryThis$i(''.slice);
+
+  var classofRaw$1 = function (it) {
+    return stringSlice(toString$5(it), 8, -1);
+  };
+
+  var uncurryThis$h = functionUncurryThis;
+  var fails$b = fails$e;
+  var classof$7 = classofRaw$1;
+  var $Object$3 = Object;
+  var split = uncurryThis$h(''.split); // fallback for non-array-like ES3 and non-enumerable old V8 strings
+
+  var indexedObject = fails$b(function () {
+    // throws an error in rhino, see https://github.com/mozilla/rhino/issues/346
+    // eslint-disable-next-line no-prototype-builtins -- safe
+    return !$Object$3('z').propertyIsEnumerable(0);
+  }) ? function (it) {
+    return classof$7(it) == 'String' ? split(it, '') : $Object$3(it);
+  } : $Object$3;
+
+  var $TypeError$a = TypeError; // `RequireObjectCoercible` abstract operation
+  // https://tc39.es/ecma262/#sec-requireobjectcoercible
+
+  var requireObjectCoercible$4 = function (it) {
+    if (it == undefined) throw $TypeError$a("Can't call method on " + it);
+    return it;
+  };
+
+  var IndexedObject$3 = indexedObject;
+  var requireObjectCoercible$3 = requireObjectCoercible$4;
+
+  var toIndexedObject$4 = function (it) {
+    return IndexedObject$3(requireObjectCoercible$3(it));
+  };
+
+  // https://tc39.es/ecma262/#sec-iscallable
+
+  var isCallable$e = function (argument) {
+    return typeof argument == 'function';
+  };
+
+  var isCallable$d = isCallable$e;
+
+  var isObject$8 = function (it) {
+    return typeof it == 'object' ? it !== null : isCallable$d(it);
+  };
+
+  var global$c = global$d;
+  var isCallable$c = isCallable$e;
+
+  var aFunction = function (argument) {
+    return isCallable$c(argument) ? argument : undefined;
+  };
+
+  var getBuiltIn$5 = function (namespace, method) {
+    return arguments.length < 2 ? aFunction(global$c[namespace]) : global$c[namespace] && global$c[namespace][method];
+  };
+
+  var uncurryThis$g = functionUncurryThis;
+  var objectIsPrototypeOf = uncurryThis$g({}.isPrototypeOf);
+
+  var getBuiltIn$4 = getBuiltIn$5;
+  var engineUserAgent = getBuiltIn$4('navigator', 'userAgent') || '';
+
+  var global$b = global$d;
+  var userAgent = engineUserAgent;
+  var process = global$b.process;
+  var Deno = global$b.Deno;
+  var versions = process && process.versions || Deno && Deno.version;
+  var v8 = versions && versions.v8;
+  var match, version;
+
+  if (v8) {
+    match = v8.split('.'); // in old Chrome, versions of V8 isn't V8 = Chrome / 10
+    // but their correct versions are not interesting for us
+
+    version = match[0] > 0 && match[0] < 4 ? 1 : +(match[0] + match[1]);
+  } // BrowserFS NodeJS `process` polyfill incorrectly set `.v8` to `0.0`
+  // so check `userAgent` even if `.v8` exists, but 0
+
+
+  if (!version && userAgent) {
+    match = userAgent.match(/Edge\/(\d+)/);
+
+    if (!match || match[1] >= 74) {
+      match = userAgent.match(/Chrome\/(\d+)/);
+      if (match) version = +match[1];
+    }
+  }
+
+  var engineV8Version = version;
+
+  /* eslint-disable es-x/no-symbol -- required for testing */
+  var V8_VERSION$1 = engineV8Version;
+  var fails$a = fails$e; // eslint-disable-next-line es-x/no-object-getownpropertysymbols -- required for testing
+
+  var nativeSymbol = !!Object.getOwnPropertySymbols && !fails$a(function () {
+    var symbol = Symbol(); // Chrome 38 Symbol has incorrect toString conversion
+    // `get-own-property-symbols` polyfill symbols converted to object are not Symbol instances
+
+    return !String(symbol) || !(Object(symbol) instanceof Symbol) || // Chrome 38-40 symbols are not inherited from DOM collections prototypes to instances
+    !Symbol.sham && V8_VERSION$1 && V8_VERSION$1 < 41;
+  });
+
+  /* eslint-disable es-x/no-symbol -- required for testing */
+  var NATIVE_SYMBOL$1 = nativeSymbol;
+  var useSymbolAsUid = NATIVE_SYMBOL$1 && !Symbol.sham && typeof Symbol.iterator == 'symbol';
+
+  var getBuiltIn$3 = getBuiltIn$5;
+  var isCallable$b = isCallable$e;
+  var isPrototypeOf$1 = objectIsPrototypeOf;
+  var USE_SYMBOL_AS_UID$1 = useSymbolAsUid;
+  var $Object$2 = Object;
+  var isSymbol$3 = USE_SYMBOL_AS_UID$1 ? function (it) {
+    return typeof it == 'symbol';
+  } : function (it) {
+    var $Symbol = getBuiltIn$3('Symbol');
+    return isCallable$b($Symbol) && isPrototypeOf$1($Symbol.prototype, $Object$2(it));
+  };
+
+  var $String$3 = String;
+
+  var tryToString$2 = function (argument) {
+    try {
+      return $String$3(argument);
+    } catch (error) {
+      return 'Object';
+    }
+  };
+
+  var isCallable$a = isCallable$e;
+  var tryToString$1 = tryToString$2;
+  var $TypeError$9 = TypeError; // `Assert: IsCallable(argument) is true`
+
+  var aCallable$3 = function (argument) {
+    if (isCallable$a(argument)) return argument;
+    throw $TypeError$9(tryToString$1(argument) + ' is not a function');
+  };
+
+  var aCallable$2 = aCallable$3; // `GetMethod` abstract operation
+  // https://tc39.es/ecma262/#sec-getmethod
+
+  var getMethod$1 = function (V, P) {
+    var func = V[P];
+    return func == null ? undefined : aCallable$2(func);
+  };
+
+  var call$4 = functionCall;
+  var isCallable$9 = isCallable$e;
+  var isObject$7 = isObject$8;
+  var $TypeError$8 = TypeError; // `OrdinaryToPrimitive` abstract operation
+  // https://tc39.es/ecma262/#sec-ordinarytoprimitive
+
+  var ordinaryToPrimitive$1 = function (input, pref) {
+    var fn, val;
+    if (pref === 'string' && isCallable$9(fn = input.toString) && !isObject$7(val = call$4(fn, input))) return val;
+    if (isCallable$9(fn = input.valueOf) && !isObject$7(val = call$4(fn, input))) return val;
+    if (pref !== 'string' && isCallable$9(fn = input.toString) && !isObject$7(val = call$4(fn, input))) return val;
+    throw $TypeError$8("Can't convert object to primitive value");
+  };
+
+  var shared$3 = {exports: {}};
+
+  var global$a = global$d; // eslint-disable-next-line es-x/no-object-defineproperty -- safe
+
+  var defineProperty$4 = Object.defineProperty;
+
+  var defineGlobalProperty$3 = function (key, value) {
+    try {
+      defineProperty$4(global$a, key, {
+        value: value,
+        configurable: true,
+        writable: true
+      });
+    } catch (error) {
+      global$a[key] = value;
+    }
+
+    return value;
+  };
+
+  var global$9 = global$d;
+  var defineGlobalProperty$2 = defineGlobalProperty$3;
+  var SHARED = '__core-js_shared__';
+  var store$3 = global$9[SHARED] || defineGlobalProperty$2(SHARED, {});
+  var sharedStore = store$3;
+
+  var store$2 = sharedStore;
+  (shared$3.exports = function (key, value) {
+    return store$2[key] || (store$2[key] = value !== undefined ? value : {});
+  })('versions', []).push({
+    version: '3.24.1',
+    mode: 'global',
+    copyright: '© 2014-2022 Denis Pushkarev (zloirock.ru)',
+    license: 'https://github.com/zloirock/core-js/blob/v3.24.1/LICENSE',
+    source: 'https://github.com/zloirock/core-js'
+  });
+
+  var requireObjectCoercible$2 = requireObjectCoercible$4;
+  var $Object$1 = Object; // `ToObject` abstract operation
+  // https://tc39.es/ecma262/#sec-toobject
+
+  var toObject$5 = function (argument) {
+    return $Object$1(requireObjectCoercible$2(argument));
+  };
+
+  var uncurryThis$f = functionUncurryThis;
+  var toObject$4 = toObject$5;
+  var hasOwnProperty = uncurryThis$f({}.hasOwnProperty); // `HasOwnProperty` abstract operation
+  // https://tc39.es/ecma262/#sec-hasownproperty
+  // eslint-disable-next-line es-x/no-object-hasown -- safe
+
+  var hasOwnProperty_1 = Object.hasOwn || function hasOwn(it, key) {
+    return hasOwnProperty(toObject$4(it), key);
+  };
+
+  var uncurryThis$e = functionUncurryThis;
+  var id = 0;
+  var postfix = Math.random();
+  var toString$4 = uncurryThis$e(1.0.toString);
+
+  var uid$2 = function (key) {
+    return 'Symbol(' + (key === undefined ? '' : key) + ')_' + toString$4(++id + postfix, 36);
+  };
+
+  var global$8 = global$d;
+  var shared$2 = shared$3.exports;
+  var hasOwn$7 = hasOwnProperty_1;
+  var uid$1 = uid$2;
+  var NATIVE_SYMBOL = nativeSymbol;
+  var USE_SYMBOL_AS_UID = useSymbolAsUid;
+  var WellKnownSymbolsStore = shared$2('wks');
+  var Symbol$1 = global$8.Symbol;
+  var symbolFor = Symbol$1 && Symbol$1['for'];
+  var createWellKnownSymbol = USE_SYMBOL_AS_UID ? Symbol$1 : Symbol$1 && Symbol$1.withoutSetter || uid$1;
+
+  var wellKnownSymbol$8 = function (name) {
+    if (!hasOwn$7(WellKnownSymbolsStore, name) || !(NATIVE_SYMBOL || typeof WellKnownSymbolsStore[name] == 'string')) {
+      var description = 'Symbol.' + name;
+
+      if (NATIVE_SYMBOL && hasOwn$7(Symbol$1, name)) {
+        WellKnownSymbolsStore[name] = Symbol$1[name];
+      } else if (USE_SYMBOL_AS_UID && symbolFor) {
+        WellKnownSymbolsStore[name] = symbolFor(description);
+      } else {
+        WellKnownSymbolsStore[name] = createWellKnownSymbol(description);
+      }
+    }
+
+    return WellKnownSymbolsStore[name];
+  };
+
+  var call$3 = functionCall;
+  var isObject$6 = isObject$8;
+  var isSymbol$2 = isSymbol$3;
+  var getMethod = getMethod$1;
+  var ordinaryToPrimitive = ordinaryToPrimitive$1;
+  var wellKnownSymbol$7 = wellKnownSymbol$8;
+  var $TypeError$7 = TypeError;
+  var TO_PRIMITIVE = wellKnownSymbol$7('toPrimitive'); // `ToPrimitive` abstract operation
+  // https://tc39.es/ecma262/#sec-toprimitive
+
+  var toPrimitive$2 = function (input, pref) {
+    if (!isObject$6(input) || isSymbol$2(input)) return input;
+    var exoticToPrim = getMethod(input, TO_PRIMITIVE);
+    var result;
+
+    if (exoticToPrim) {
+      if (pref === undefined) pref = 'default';
+      result = call$3(exoticToPrim, input, pref);
+      if (!isObject$6(result) || isSymbol$2(result)) return result;
+      throw $TypeError$7("Can't convert object to primitive value");
+    }
+
+    if (pref === undefined) pref = 'number';
+    return ordinaryToPrimitive(input, pref);
+  };
+
+  var toPrimitive$1 = toPrimitive$2;
+  var isSymbol$1 = isSymbol$3; // `ToPropertyKey` abstract operation
+  // https://tc39.es/ecma262/#sec-topropertykey
+
+  var toPropertyKey$3 = function (argument) {
+    var key = toPrimitive$1(argument, 'string');
+    return isSymbol$1(key) ? key : key + '';
+  };
+
+  var global$7 = global$d;
+  var isObject$5 = isObject$8;
+  var document$1 = global$7.document; // typeof document.createElement is 'object' in old IE
+
+  var EXISTS$1 = isObject$5(document$1) && isObject$5(document$1.createElement);
+
+  var documentCreateElement$2 = function (it) {
+    return EXISTS$1 ? document$1.createElement(it) : {};
+  };
+
+  var DESCRIPTORS$9 = descriptors;
+  var fails$9 = fails$e;
+  var createElement = documentCreateElement$2; // Thanks to IE8 for its funny defineProperty
+
+  var ie8DomDefine = !DESCRIPTORS$9 && !fails$9(function () {
+    // eslint-disable-next-line es-x/no-object-defineproperty -- required for testing
+    return Object.defineProperty(createElement('div'), 'a', {
+      get: function () {
+        return 7;
+      }
+    }).a != 7;
+  });
+
+  var DESCRIPTORS$8 = descriptors;
+  var call$2 = functionCall;
+  var propertyIsEnumerableModule$1 = objectPropertyIsEnumerable;
+  var createPropertyDescriptor$2 = createPropertyDescriptor$3;
+  var toIndexedObject$3 = toIndexedObject$4;
+  var toPropertyKey$2 = toPropertyKey$3;
+  var hasOwn$6 = hasOwnProperty_1;
+  var IE8_DOM_DEFINE$1 = ie8DomDefine; // eslint-disable-next-line es-x/no-object-getownpropertydescriptor -- safe
+
+  var $getOwnPropertyDescriptor$1 = Object.getOwnPropertyDescriptor; // `Object.getOwnPropertyDescriptor` method
+  // https://tc39.es/ecma262/#sec-object.getownpropertydescriptor
+
+  objectGetOwnPropertyDescriptor.f = DESCRIPTORS$8 ? $getOwnPropertyDescriptor$1 : function getOwnPropertyDescriptor(O, P) {
+    O = toIndexedObject$3(O);
+    P = toPropertyKey$2(P);
+    if (IE8_DOM_DEFINE$1) try {
+      return $getOwnPropertyDescriptor$1(O, P);
+    } catch (error) {
+      /* empty */
+    }
+    if (hasOwn$6(O, P)) return createPropertyDescriptor$2(!call$2(propertyIsEnumerableModule$1.f, O, P), O[P]);
+  };
+
+  var objectDefineProperty = {};
+
+  var DESCRIPTORS$7 = descriptors;
+  var fails$8 = fails$e; // V8 ~ Chrome 36-
+  // https://bugs.chromium.org/p/v8/issues/detail?id=3334
+
+  var v8PrototypeDefineBug = DESCRIPTORS$7 && fails$8(function () {
+    // eslint-disable-next-line es-x/no-object-defineproperty -- required for testing
+    return Object.defineProperty(function () {
+      /* empty */
+    }, 'prototype', {
+      value: 42,
+      writable: false
+    }).prototype != 42;
+  });
+
+  var isObject$4 = isObject$8;
+  var $String$2 = String;
+  var $TypeError$6 = TypeError; // `Assert: Type(argument) is Object`
+
+  var anObject$5 = function (argument) {
+    if (isObject$4(argument)) return argument;
+    throw $TypeError$6($String$2(argument) + ' is not an object');
+  };
+
+  var DESCRIPTORS$6 = descriptors;
+  var IE8_DOM_DEFINE = ie8DomDefine;
+  var V8_PROTOTYPE_DEFINE_BUG$1 = v8PrototypeDefineBug;
+  var anObject$4 = anObject$5;
+  var toPropertyKey$1 = toPropertyKey$3;
+  var $TypeError$5 = TypeError; // eslint-disable-next-line es-x/no-object-defineproperty -- safe
+
+  var $defineProperty = Object.defineProperty; // eslint-disable-next-line es-x/no-object-getownpropertydescriptor -- safe
+
+  var $getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+  var ENUMERABLE = 'enumerable';
+  var CONFIGURABLE$1 = 'configurable';
+  var WRITABLE = 'writable'; // `Object.defineProperty` method
+  // https://tc39.es/ecma262/#sec-object.defineproperty
+
+  objectDefineProperty.f = DESCRIPTORS$6 ? V8_PROTOTYPE_DEFINE_BUG$1 ? function defineProperty(O, P, Attributes) {
+    anObject$4(O);
+    P = toPropertyKey$1(P);
+    anObject$4(Attributes);
+
+    if (typeof O === 'function' && P === 'prototype' && 'value' in Attributes && WRITABLE in Attributes && !Attributes[WRITABLE]) {
+      var current = $getOwnPropertyDescriptor(O, P);
+
+      if (current && current[WRITABLE]) {
+        O[P] = Attributes.value;
+        Attributes = {
+          configurable: CONFIGURABLE$1 in Attributes ? Attributes[CONFIGURABLE$1] : current[CONFIGURABLE$1],
+          enumerable: ENUMERABLE in Attributes ? Attributes[ENUMERABLE] : current[ENUMERABLE],
+          writable: false
+        };
+      }
+    }
+
+    return $defineProperty(O, P, Attributes);
+  } : $defineProperty : function defineProperty(O, P, Attributes) {
+    anObject$4(O);
+    P = toPropertyKey$1(P);
+    anObject$4(Attributes);
+    if (IE8_DOM_DEFINE) try {
+      return $defineProperty(O, P, Attributes);
+    } catch (error) {
+      /* empty */
+    }
+    if ('get' in Attributes || 'set' in Attributes) throw $TypeError$5('Accessors not supported');
+    if ('value' in Attributes) O[P] = Attributes.value;
+    return O;
+  };
+
+  var DESCRIPTORS$5 = descriptors;
+  var definePropertyModule$4 = objectDefineProperty;
+  var createPropertyDescriptor$1 = createPropertyDescriptor$3;
+  var createNonEnumerableProperty$3 = DESCRIPTORS$5 ? function (object, key, value) {
+    return definePropertyModule$4.f(object, key, createPropertyDescriptor$1(1, value));
+  } : function (object, key, value) {
+    object[key] = value;
+    return object;
+  };
+
+  var makeBuiltIn$2 = {exports: {}};
+
+  var DESCRIPTORS$4 = descriptors;
+  var hasOwn$5 = hasOwnProperty_1;
+  var FunctionPrototype = Function.prototype; // eslint-disable-next-line es-x/no-object-getownpropertydescriptor -- safe
+
+  var getDescriptor = DESCRIPTORS$4 && Object.getOwnPropertyDescriptor;
+  var EXISTS = hasOwn$5(FunctionPrototype, 'name'); // additional protection from minified / mangled / dropped function names
+
+  var PROPER = EXISTS && function something() {
+    /* empty */
+  }.name === 'something';
+
+  var CONFIGURABLE = EXISTS && (!DESCRIPTORS$4 || DESCRIPTORS$4 && getDescriptor(FunctionPrototype, 'name').configurable);
+  var functionName = {
+    EXISTS: EXISTS,
+    PROPER: PROPER,
+    CONFIGURABLE: CONFIGURABLE
+  };
+
+  var uncurryThis$d = functionUncurryThis;
+  var isCallable$8 = isCallable$e;
+  var store$1 = sharedStore;
+  var functionToString = uncurryThis$d(Function.toString); // this helper broken in `core-js@3.4.1-3.4.4`, so we can't use `shared` helper
+
+  if (!isCallable$8(store$1.inspectSource)) {
+    store$1.inspectSource = function (it) {
+      return functionToString(it);
+    };
+  }
+
+  var inspectSource$3 = store$1.inspectSource;
+
+  var global$6 = global$d;
+  var isCallable$7 = isCallable$e;
+  var inspectSource$2 = inspectSource$3;
+  var WeakMap$1 = global$6.WeakMap;
+  var nativeWeakMap = isCallable$7(WeakMap$1) && /native code/.test(inspectSource$2(WeakMap$1));
+
+  var shared$1 = shared$3.exports;
+  var uid = uid$2;
+  var keys$1 = shared$1('keys');
+
+  var sharedKey$2 = function (key) {
+    return keys$1[key] || (keys$1[key] = uid(key));
+  };
+
+  var hiddenKeys$4 = {};
+
+  var NATIVE_WEAK_MAP = nativeWeakMap;
+  var global$5 = global$d;
+  var uncurryThis$c = functionUncurryThis;
+  var isObject$3 = isObject$8;
+  var createNonEnumerableProperty$2 = createNonEnumerableProperty$3;
+  var hasOwn$4 = hasOwnProperty_1;
+  var shared = sharedStore;
+  var sharedKey$1 = sharedKey$2;
+  var hiddenKeys$3 = hiddenKeys$4;
+  var OBJECT_ALREADY_INITIALIZED = 'Object already initialized';
+  var TypeError$2 = global$5.TypeError;
+  var WeakMap = global$5.WeakMap;
+  var set, get, has;
+
+  var enforce = function (it) {
+    return has(it) ? get(it) : set(it, {});
+  };
+
+  var getterFor = function (TYPE) {
+    return function (it) {
+      var state;
+
+      if (!isObject$3(it) || (state = get(it)).type !== TYPE) {
+        throw TypeError$2('Incompatible receiver, ' + TYPE + ' required');
+      }
+
+      return state;
+    };
+  };
+
+  if (NATIVE_WEAK_MAP || shared.state) {
+    var store = shared.state || (shared.state = new WeakMap());
+    var wmget = uncurryThis$c(store.get);
+    var wmhas = uncurryThis$c(store.has);
+    var wmset = uncurryThis$c(store.set);
+
+    set = function (it, metadata) {
+      if (wmhas(store, it)) throw new TypeError$2(OBJECT_ALREADY_INITIALIZED);
+      metadata.facade = it;
+      wmset(store, it, metadata);
+      return metadata;
+    };
+
+    get = function (it) {
+      return wmget(store, it) || {};
+    };
+
+    has = function (it) {
+      return wmhas(store, it);
+    };
+  } else {
+    var STATE = sharedKey$1('state');
+    hiddenKeys$3[STATE] = true;
+
+    set = function (it, metadata) {
+      if (hasOwn$4(it, STATE)) throw new TypeError$2(OBJECT_ALREADY_INITIALIZED);
+      metadata.facade = it;
+      createNonEnumerableProperty$2(it, STATE, metadata);
+      return metadata;
+    };
+
+    get = function (it) {
+      return hasOwn$4(it, STATE) ? it[STATE] : {};
+    };
+
+    has = function (it) {
+      return hasOwn$4(it, STATE);
+    };
+  }
+
+  var internalState = {
+    set: set,
+    get: get,
+    has: has,
+    enforce: enforce,
+    getterFor: getterFor
+  };
+
+  var fails$7 = fails$e;
+  var isCallable$6 = isCallable$e;
+  var hasOwn$3 = hasOwnProperty_1;
+  var DESCRIPTORS$3 = descriptors;
+  var CONFIGURABLE_FUNCTION_NAME = functionName.CONFIGURABLE;
+  var inspectSource$1 = inspectSource$3;
+  var InternalStateModule = internalState;
+  var enforceInternalState = InternalStateModule.enforce;
+  var getInternalState = InternalStateModule.get; // eslint-disable-next-line es-x/no-object-defineproperty -- safe
+
+  var defineProperty$3 = Object.defineProperty;
+  var CONFIGURABLE_LENGTH = DESCRIPTORS$3 && !fails$7(function () {
+    return defineProperty$3(function () {
+      /* empty */
+    }, 'length', {
+      value: 8
+    }).length !== 8;
+  });
+  var TEMPLATE = String(String).split('String');
+
+  var makeBuiltIn$1 = makeBuiltIn$2.exports = function (value, name, options) {
+    if (String(name).slice(0, 7) === 'Symbol(') {
+      name = '[' + String(name).replace(/^Symbol\(([^)]*)\)/, '$1') + ']';
+    }
+
+    if (options && options.getter) name = 'get ' + name;
+    if (options && options.setter) name = 'set ' + name;
+
+    if (!hasOwn$3(value, 'name') || CONFIGURABLE_FUNCTION_NAME && value.name !== name) {
+      if (DESCRIPTORS$3) defineProperty$3(value, 'name', {
+        value: name,
+        configurable: true
+      });else value.name = name;
+    }
+
+    if (CONFIGURABLE_LENGTH && options && hasOwn$3(options, 'arity') && value.length !== options.arity) {
+      defineProperty$3(value, 'length', {
+        value: options.arity
+      });
+    }
+
+    try {
+      if (options && hasOwn$3(options, 'constructor') && options.constructor) {
+        if (DESCRIPTORS$3) defineProperty$3(value, 'prototype', {
+          writable: false
+        }); // in V8 ~ Chrome 53, prototypes of some methods, like `Array.prototype.values`, are non-writable
+      } else if (value.prototype) value.prototype = undefined;
+    } catch (error) {
+      /* empty */
+    }
+
+    var state = enforceInternalState(value);
+
+    if (!hasOwn$3(state, 'source')) {
+      state.source = TEMPLATE.join(typeof name == 'string' ? name : '');
+    }
+
+    return value;
+  }; // add fake Function#toString for correct work wrapped methods / constructors with methods like LoDash isNative
+  // eslint-disable-next-line no-extend-native -- required
+
+
+  Function.prototype.toString = makeBuiltIn$1(function toString() {
+    return isCallable$6(this) && getInternalState(this).source || inspectSource$1(this);
+  }, 'toString');
+
+  var isCallable$5 = isCallable$e;
+  var definePropertyModule$3 = objectDefineProperty;
+  var makeBuiltIn = makeBuiltIn$2.exports;
+  var defineGlobalProperty$1 = defineGlobalProperty$3;
+
+  var defineBuiltIn$3 = function (O, key, value, options) {
+    if (!options) options = {};
+    var simple = options.enumerable;
+    var name = options.name !== undefined ? options.name : key;
+    if (isCallable$5(value)) makeBuiltIn(value, name, options);
+
+    if (options.global) {
+      if (simple) O[key] = value;else defineGlobalProperty$1(key, value);
     } else {
-      this.div_.title = this.sums_.title;
+      try {
+        if (!options.unsafe) delete O[key];else if (O[key]) simple = true;
+      } catch (error) {
+        /* empty */
+      }
+
+      if (simple) O[key] = value;else definePropertyModule$3.f(O, key, {
+        value: value,
+        enumerable: false,
+        configurable: !options.nonConfigurable,
+        writable: !options.nonWritable
+      });
     }
-    this.div_.style.display = "";
+
+    return O;
+  };
+
+  var objectGetOwnPropertyNames = {};
+
+  var ceil = Math.ceil;
+  var floor = Math.floor; // `Math.trunc` method
+  // https://tc39.es/ecma262/#sec-math.trunc
+  // eslint-disable-next-line es-x/no-math-trunc -- safe
+
+  var mathTrunc = Math.trunc || function trunc(x) {
+    var n = +x;
+    return (n > 0 ? floor : ceil)(n);
+  };
+
+  var trunc = mathTrunc; // `ToIntegerOrInfinity` abstract operation
+  // https://tc39.es/ecma262/#sec-tointegerorinfinity
+
+  var toIntegerOrInfinity$3 = function (argument) {
+    var number = +argument; // eslint-disable-next-line no-self-compare -- NaN check
+
+    return number !== number || number === 0 ? 0 : trunc(number);
+  };
+
+  var toIntegerOrInfinity$2 = toIntegerOrInfinity$3;
+  var max$1 = Math.max;
+  var min$2 = Math.min; // Helper for a popular repeating case of the spec:
+  // Let integer be ? ToInteger(index).
+  // If integer < 0, let result be max((length + integer), 0); else let result be min(integer, length).
+
+  var toAbsoluteIndex$2 = function (index, length) {
+    var integer = toIntegerOrInfinity$2(index);
+    return integer < 0 ? max$1(integer + length, 0) : min$2(integer, length);
+  };
+
+  var toIntegerOrInfinity$1 = toIntegerOrInfinity$3;
+  var min$1 = Math.min; // `ToLength` abstract operation
+  // https://tc39.es/ecma262/#sec-tolength
+
+  var toLength$1 = function (argument) {
+    return argument > 0 ? min$1(toIntegerOrInfinity$1(argument), 0x1FFFFFFFFFFFFF) : 0; // 2 ** 53 - 1 == 9007199254740991
+  };
+
+  var toLength = toLength$1; // `LengthOfArrayLike` abstract operation
+  // https://tc39.es/ecma262/#sec-lengthofarraylike
+
+  var lengthOfArrayLike$4 = function (obj) {
+    return toLength(obj.length);
+  };
+
+  var toIndexedObject$2 = toIndexedObject$4;
+  var toAbsoluteIndex$1 = toAbsoluteIndex$2;
+  var lengthOfArrayLike$3 = lengthOfArrayLike$4; // `Array.prototype.{ indexOf, includes }` methods implementation
+
+  var createMethod$3 = function (IS_INCLUDES) {
+    return function ($this, el, fromIndex) {
+      var O = toIndexedObject$2($this);
+      var length = lengthOfArrayLike$3(O);
+      var index = toAbsoluteIndex$1(fromIndex, length);
+      var value; // Array#includes uses SameValueZero equality algorithm
+      // eslint-disable-next-line no-self-compare -- NaN check
+
+      if (IS_INCLUDES && el != el) while (length > index) {
+        value = O[index++]; // eslint-disable-next-line no-self-compare -- NaN check
+
+        if (value != value) return true; // Array#indexOf ignores holes, Array#includes - not
+      } else for (; length > index; index++) {
+        if ((IS_INCLUDES || index in O) && O[index] === el) return IS_INCLUDES || index || 0;
+      }
+      return !IS_INCLUDES && -1;
+    };
+  };
+
+  var arrayIncludes = {
+    // `Array.prototype.includes` method
+    // https://tc39.es/ecma262/#sec-array.prototype.includes
+    includes: createMethod$3(true),
+    // `Array.prototype.indexOf` method
+    // https://tc39.es/ecma262/#sec-array.prototype.indexof
+    indexOf: createMethod$3(false)
+  };
+
+  var uncurryThis$b = functionUncurryThis;
+  var hasOwn$2 = hasOwnProperty_1;
+  var toIndexedObject$1 = toIndexedObject$4;
+  var indexOf = arrayIncludes.indexOf;
+  var hiddenKeys$2 = hiddenKeys$4;
+  var push$1 = uncurryThis$b([].push);
+
+  var objectKeysInternal = function (object, names) {
+    var O = toIndexedObject$1(object);
+    var i = 0;
+    var result = [];
+    var key;
+
+    for (key in O) !hasOwn$2(hiddenKeys$2, key) && hasOwn$2(O, key) && push$1(result, key); // Don't enum bug & hidden keys
+
+
+    while (names.length > i) if (hasOwn$2(O, key = names[i++])) {
+      ~indexOf(result, key) || push$1(result, key);
+    }
+
+    return result;
+  };
+
+  var enumBugKeys$3 = ['constructor', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'toLocaleString', 'toString', 'valueOf'];
+
+  var internalObjectKeys$1 = objectKeysInternal;
+  var enumBugKeys$2 = enumBugKeys$3;
+  var hiddenKeys$1 = enumBugKeys$2.concat('length', 'prototype'); // `Object.getOwnPropertyNames` method
+  // https://tc39.es/ecma262/#sec-object.getownpropertynames
+  // eslint-disable-next-line es-x/no-object-getownpropertynames -- safe
+
+  objectGetOwnPropertyNames.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
+    return internalObjectKeys$1(O, hiddenKeys$1);
+  };
+
+  var objectGetOwnPropertySymbols = {};
+
+  objectGetOwnPropertySymbols.f = Object.getOwnPropertySymbols;
+
+  var getBuiltIn$2 = getBuiltIn$5;
+  var uncurryThis$a = functionUncurryThis;
+  var getOwnPropertyNamesModule = objectGetOwnPropertyNames;
+  var getOwnPropertySymbolsModule$1 = objectGetOwnPropertySymbols;
+  var anObject$3 = anObject$5;
+  var concat$1 = uncurryThis$a([].concat); // all object keys, includes non-enumerable and symbols
+
+  var ownKeys$1 = getBuiltIn$2('Reflect', 'ownKeys') || function ownKeys(it) {
+    var keys = getOwnPropertyNamesModule.f(anObject$3(it));
+    var getOwnPropertySymbols = getOwnPropertySymbolsModule$1.f;
+    return getOwnPropertySymbols ? concat$1(keys, getOwnPropertySymbols(it)) : keys;
+  };
+
+  var hasOwn$1 = hasOwnProperty_1;
+  var ownKeys = ownKeys$1;
+  var getOwnPropertyDescriptorModule = objectGetOwnPropertyDescriptor;
+  var definePropertyModule$2 = objectDefineProperty;
+
+  var copyConstructorProperties$1 = function (target, source, exceptions) {
+    var keys = ownKeys(source);
+    var defineProperty = definePropertyModule$2.f;
+    var getOwnPropertyDescriptor = getOwnPropertyDescriptorModule.f;
+
+    for (var i = 0; i < keys.length; i++) {
+      var key = keys[i];
+
+      if (!hasOwn$1(target, key) && !(exceptions && hasOwn$1(exceptions, key))) {
+        defineProperty(target, key, getOwnPropertyDescriptor(source, key));
+      }
+    }
+  };
+
+  var fails$6 = fails$e;
+  var isCallable$4 = isCallable$e;
+  var replacement = /#|\.prototype\./;
+
+  var isForced$2 = function (feature, detection) {
+    var value = data[normalize(feature)];
+    return value == POLYFILL ? true : value == NATIVE ? false : isCallable$4(detection) ? fails$6(detection) : !!detection;
+  };
+
+  var normalize = isForced$2.normalize = function (string) {
+    return String(string).replace(replacement, '.').toLowerCase();
+  };
+
+  var data = isForced$2.data = {};
+  var NATIVE = isForced$2.NATIVE = 'N';
+  var POLYFILL = isForced$2.POLYFILL = 'P';
+  var isForced_1 = isForced$2;
+
+  var global$4 = global$d;
+  var getOwnPropertyDescriptor$1 = objectGetOwnPropertyDescriptor.f;
+  var createNonEnumerableProperty$1 = createNonEnumerableProperty$3;
+  var defineBuiltIn$2 = defineBuiltIn$3;
+  var defineGlobalProperty = defineGlobalProperty$3;
+  var copyConstructorProperties = copyConstructorProperties$1;
+  var isForced$1 = isForced_1;
+  /*
+    options.target         - name of the target object
+    options.global         - target is the global object
+    options.stat           - export as static methods of target
+    options.proto          - export as prototype methods of target
+    options.real           - real prototype method for the `pure` version
+    options.forced         - export even if the native feature is available
+    options.bind           - bind methods to the target, required for the `pure` version
+    options.wrap           - wrap constructors to preventing global pollution, required for the `pure` version
+    options.unsafe         - use the simple assignment of property instead of delete + defineProperty
+    options.sham           - add a flag to not completely full polyfills
+    options.enumerable     - export as enumerable property
+    options.dontCallGetSet - prevent calling a getter on target
+    options.name           - the .name of the function if it does not match the key
+  */
+
+  var _export = function (options, source) {
+    var TARGET = options.target;
+    var GLOBAL = options.global;
+    var STATIC = options.stat;
+    var FORCED, target, key, targetProperty, sourceProperty, descriptor;
+
+    if (GLOBAL) {
+      target = global$4;
+    } else if (STATIC) {
+      target = global$4[TARGET] || defineGlobalProperty(TARGET, {});
+    } else {
+      target = (global$4[TARGET] || {}).prototype;
+    }
+
+    if (target) for (key in source) {
+      sourceProperty = source[key];
+
+      if (options.dontCallGetSet) {
+        descriptor = getOwnPropertyDescriptor$1(target, key);
+        targetProperty = descriptor && descriptor.value;
+      } else targetProperty = target[key];
+
+      FORCED = isForced$1(GLOBAL ? key : TARGET + (STATIC ? '.' : '#') + key, options.forced); // contained in target
+
+      if (!FORCED && targetProperty !== undefined) {
+        if (typeof sourceProperty == typeof targetProperty) continue;
+        copyConstructorProperties(sourceProperty, targetProperty);
+      } // add a flag to not completely full polyfills
+
+
+      if (options.sham || targetProperty && targetProperty.sham) {
+        createNonEnumerableProperty$1(sourceProperty, 'sham', true);
+      }
+
+      defineBuiltIn$2(target, key, sourceProperty, options);
+    }
+  };
+
+  var uncurryThis$9 = functionUncurryThis;
+  var aCallable$1 = aCallable$3;
+  var NATIVE_BIND = functionBindNative;
+  var bind$1 = uncurryThis$9(uncurryThis$9.bind); // optional / simple context binding
+
+  var functionBindContext = function (fn, that) {
+    aCallable$1(fn);
+    return that === undefined ? fn : NATIVE_BIND ? bind$1(fn, that) : function ()
+    /* ...args */
+    {
+      return fn.apply(that, arguments);
+    };
+  };
+
+  var classof$6 = classofRaw$1; // `IsArray` abstract operation
+  // https://tc39.es/ecma262/#sec-isarray
+  // eslint-disable-next-line es-x/no-array-isarray -- safe
+
+  var isArray$1 = Array.isArray || function isArray(argument) {
+    return classof$6(argument) == 'Array';
+  };
+
+  var wellKnownSymbol$6 = wellKnownSymbol$8;
+  var TO_STRING_TAG$1 = wellKnownSymbol$6('toStringTag');
+  var test = {};
+  test[TO_STRING_TAG$1] = 'z';
+  var toStringTagSupport = String(test) === '[object z]';
+
+  var TO_STRING_TAG_SUPPORT$2 = toStringTagSupport;
+  var isCallable$3 = isCallable$e;
+  var classofRaw = classofRaw$1;
+  var wellKnownSymbol$5 = wellKnownSymbol$8;
+  var TO_STRING_TAG = wellKnownSymbol$5('toStringTag');
+  var $Object = Object; // ES3 wrong here
+
+  var CORRECT_ARGUMENTS = classofRaw(function () {
+    return arguments;
+  }()) == 'Arguments'; // fallback for IE11 Script Access Denied error
+
+  var tryGet = function (it, key) {
+    try {
+      return it[key];
+    } catch (error) {
+      /* empty */
+    }
+  }; // getting tag from ES6+ `Object.prototype.toString`
+
+
+  var classof$5 = TO_STRING_TAG_SUPPORT$2 ? classofRaw : function (it) {
+    var O, tag, result;
+    return it === undefined ? 'Undefined' : it === null ? 'Null' // @@toStringTag case
+    : typeof (tag = tryGet(O = $Object(it), TO_STRING_TAG)) == 'string' ? tag // builtinTag case
+    : CORRECT_ARGUMENTS ? classofRaw(O) // ES3 arguments fallback
+    : (result = classofRaw(O)) == 'Object' && isCallable$3(O.callee) ? 'Arguments' : result;
+  };
+
+  var uncurryThis$8 = functionUncurryThis;
+  var fails$5 = fails$e;
+  var isCallable$2 = isCallable$e;
+  var classof$4 = classof$5;
+  var getBuiltIn$1 = getBuiltIn$5;
+  var inspectSource = inspectSource$3;
+
+  var noop = function () {
+    /* empty */
+  };
+
+  var empty = [];
+  var construct = getBuiltIn$1('Reflect', 'construct');
+  var constructorRegExp = /^\s*(?:class|function)\b/;
+  var exec = uncurryThis$8(constructorRegExp.exec);
+  var INCORRECT_TO_STRING = !constructorRegExp.exec(noop);
+
+  var isConstructorModern = function isConstructor(argument) {
+    if (!isCallable$2(argument)) return false;
+
+    try {
+      construct(noop, empty, argument);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  var isConstructorLegacy = function isConstructor(argument) {
+    if (!isCallable$2(argument)) return false;
+
+    switch (classof$4(argument)) {
+      case 'AsyncFunction':
+      case 'GeneratorFunction':
+      case 'AsyncGeneratorFunction':
+        return false;
+    }
+
+    try {
+      // we can't check .prototype since constructors produced by .bind haven't it
+      // `Function#toString` throws on some built-it function in some legacy engines
+      // (for example, `DOMQuad` and similar in FF41-)
+      return INCORRECT_TO_STRING || !!exec(constructorRegExp, inspectSource(argument));
+    } catch (error) {
+      return true;
+    }
+  };
+
+  isConstructorLegacy.sham = true; // `IsConstructor` abstract operation
+  // https://tc39.es/ecma262/#sec-isconstructor
+
+  var isConstructor$1 = !construct || fails$5(function () {
+    var called;
+    return isConstructorModern(isConstructorModern.call) || !isConstructorModern(Object) || !isConstructorModern(function () {
+      called = true;
+    }) || called;
+  }) ? isConstructorLegacy : isConstructorModern;
+
+  var isArray = isArray$1;
+  var isConstructor = isConstructor$1;
+  var isObject$2 = isObject$8;
+  var wellKnownSymbol$4 = wellKnownSymbol$8;
+  var SPECIES$1 = wellKnownSymbol$4('species');
+  var $Array = Array; // a part of `ArraySpeciesCreate` abstract operation
+  // https://tc39.es/ecma262/#sec-arrayspeciescreate
+
+  var arraySpeciesConstructor$1 = function (originalArray) {
+    var C;
+
+    if (isArray(originalArray)) {
+      C = originalArray.constructor; // cross-realm fallback
+
+      if (isConstructor(C) && (C === $Array || isArray(C.prototype))) C = undefined;else if (isObject$2(C)) {
+        C = C[SPECIES$1];
+        if (C === null) C = undefined;
+      }
+    }
+
+    return C === undefined ? $Array : C;
+  };
+
+  var arraySpeciesConstructor = arraySpeciesConstructor$1; // `ArraySpeciesCreate` abstract operation
+  // https://tc39.es/ecma262/#sec-arrayspeciescreate
+
+  var arraySpeciesCreate$2 = function (originalArray, length) {
+    return new (arraySpeciesConstructor(originalArray))(length === 0 ? 0 : length);
+  };
+
+  var bind = functionBindContext;
+  var uncurryThis$7 = functionUncurryThis;
+  var IndexedObject$2 = indexedObject;
+  var toObject$3 = toObject$5;
+  var lengthOfArrayLike$2 = lengthOfArrayLike$4;
+  var arraySpeciesCreate$1 = arraySpeciesCreate$2;
+  var push = uncurryThis$7([].push); // `Array.prototype.{ forEach, map, filter, some, every, find, findIndex, filterReject }` methods implementation
+
+  var createMethod$2 = function (TYPE) {
+    var IS_MAP = TYPE == 1;
+    var IS_FILTER = TYPE == 2;
+    var IS_SOME = TYPE == 3;
+    var IS_EVERY = TYPE == 4;
+    var IS_FIND_INDEX = TYPE == 6;
+    var IS_FILTER_REJECT = TYPE == 7;
+    var NO_HOLES = TYPE == 5 || IS_FIND_INDEX;
+    return function ($this, callbackfn, that, specificCreate) {
+      var O = toObject$3($this);
+      var self = IndexedObject$2(O);
+      var boundFunction = bind(callbackfn, that);
+      var length = lengthOfArrayLike$2(self);
+      var index = 0;
+      var create = specificCreate || arraySpeciesCreate$1;
+      var target = IS_MAP ? create($this, length) : IS_FILTER || IS_FILTER_REJECT ? create($this, 0) : undefined;
+      var value, result;
+
+      for (; length > index; index++) if (NO_HOLES || index in self) {
+        value = self[index];
+        result = boundFunction(value, index, O);
+
+        if (TYPE) {
+          if (IS_MAP) target[index] = result; // map
+          else if (result) switch (TYPE) {
+              case 3:
+                return true;
+              // some
+
+              case 5:
+                return value;
+              // find
+
+              case 6:
+                return index;
+              // findIndex
+
+              case 2:
+                push(target, value);
+              // filter
+            } else switch (TYPE) {
+              case 4:
+                return false;
+              // every
+
+              case 7:
+                push(target, value);
+              // filterReject
+            }
+        }
+      }
+
+      return IS_FIND_INDEX ? -1 : IS_SOME || IS_EVERY ? IS_EVERY : target;
+    };
+  };
+
+  var arrayIteration = {
+    // `Array.prototype.forEach` method
+    // https://tc39.es/ecma262/#sec-array.prototype.foreach
+    forEach: createMethod$2(0),
+    // `Array.prototype.map` method
+    // https://tc39.es/ecma262/#sec-array.prototype.map
+    map: createMethod$2(1),
+    // `Array.prototype.filter` method
+    // https://tc39.es/ecma262/#sec-array.prototype.filter
+    filter: createMethod$2(2),
+    // `Array.prototype.some` method
+    // https://tc39.es/ecma262/#sec-array.prototype.some
+    some: createMethod$2(3),
+    // `Array.prototype.every` method
+    // https://tc39.es/ecma262/#sec-array.prototype.every
+    every: createMethod$2(4),
+    // `Array.prototype.find` method
+    // https://tc39.es/ecma262/#sec-array.prototype.find
+    find: createMethod$2(5),
+    // `Array.prototype.findIndex` method
+    // https://tc39.es/ecma262/#sec-array.prototype.findIndex
+    findIndex: createMethod$2(6),
+    // `Array.prototype.filterReject` method
+    // https://github.com/tc39/proposal-array-filtering
+    filterReject: createMethod$2(7)
+  };
+
+  var fails$4 = fails$e;
+  var wellKnownSymbol$3 = wellKnownSymbol$8;
+  var V8_VERSION = engineV8Version;
+  var SPECIES = wellKnownSymbol$3('species');
+
+  var arrayMethodHasSpeciesSupport$3 = function (METHOD_NAME) {
+    // We can't use this feature detection in V8 since it causes
+    // deoptimization and serious performance degradation
+    // https://github.com/zloirock/core-js/issues/677
+    return V8_VERSION >= 51 || !fails$4(function () {
+      var array = [];
+      var constructor = array.constructor = {};
+
+      constructor[SPECIES] = function () {
+        return {
+          foo: 1
+        };
+      };
+
+      return array[METHOD_NAME](Boolean).foo !== 1;
+    });
+  };
+
+  var $$8 = _export;
+  var $map = arrayIteration.map;
+  var arrayMethodHasSpeciesSupport$2 = arrayMethodHasSpeciesSupport$3;
+  var HAS_SPECIES_SUPPORT$2 = arrayMethodHasSpeciesSupport$2('map'); // `Array.prototype.map` method
+  // https://tc39.es/ecma262/#sec-array.prototype.map
+  // with adding support of @@species
+
+  $$8({
+    target: 'Array',
+    proto: true,
+    forced: !HAS_SPECIES_SUPPORT$2
+  }, {
+    map: function map(callbackfn
+    /* , thisArg */
+    ) {
+      return $map(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
+    }
+  });
+
+  /*! *****************************************************************************
+  Copyright (c) Microsoft Corporation.
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+  REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+  AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+  INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+  LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+  OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+  PERFORMANCE OF THIS SOFTWARE.
+  ***************************************************************************** */
+  function __rest(s, e) {
+    var t = {};
+
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+
+    if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+      if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+    }
+    return t;
   }
-  this.visible_ = true;
-};
 
+  var aCallable = aCallable$3;
+  var toObject$2 = toObject$5;
+  var IndexedObject$1 = indexedObject;
+  var lengthOfArrayLike$1 = lengthOfArrayLike$4;
+  var $TypeError$4 = TypeError; // `Array.prototype.{ reduce, reduceRight }` methods implementation
 
-/**
- * Sets the icon styles to the appropriate element in the styles array.
- *
- * @param {ClusterIconInfo} sums The icon label text and styles index.
- */
-ClusterIcon.prototype.useStyle = function (sums) {
-  this.sums_ = sums;
-  var index = Math.max(0, sums.index - 1);
-  index = Math.min(this.styles_.length - 1, index);
-  var style = this.styles_[index];
-  this.url_ = style.url;
-  this.height_ = style.height;
-  this.width_ = style.width;
-  this.anchorText_ = style.anchorText || [0, 0];
-  this.anchorIcon_ = style.anchorIcon || [parseInt(this.height_ / 2, 10), parseInt(this.width_ / 2, 10)];
-  this.textColor_ = style.textColor || "black";
-  this.textSize_ = style.textSize || 11;
-  this.textDecoration_ = style.textDecoration || "none";
-  this.fontWeight_ = style.fontWeight || "bold";
-  this.fontStyle_ = style.fontStyle || "normal";
-  this.fontFamily_ = style.fontFamily || "Arial,sans-serif";
-  this.backgroundPosition_ = style.backgroundPosition || "0 0";
-};
+  var createMethod$1 = function (IS_RIGHT) {
+    return function (that, callbackfn, argumentsLength, memo) {
+      aCallable(callbackfn);
+      var O = toObject$2(that);
+      var self = IndexedObject$1(O);
+      var length = lengthOfArrayLike$1(O);
+      var index = IS_RIGHT ? length - 1 : 0;
+      var i = IS_RIGHT ? -1 : 1;
+      if (argumentsLength < 2) while (true) {
+        if (index in self) {
+          memo = self[index];
+          index += i;
+          break;
+        }
 
+        index += i;
 
-/**
- * Sets the position at which to center the icon.
- *
- * @param {google.maps.LatLng} center The latlng to set as the center.
- */
-ClusterIcon.prototype.setCenter = function (center) {
-  this.center_ = center;
-};
+        if (IS_RIGHT ? index < 0 : length <= index) {
+          throw $TypeError$4('Reduce of empty array with no initial value');
+        }
+      }
 
+      for (; IS_RIGHT ? index >= 0 : length > index; index += i) if (index in self) {
+        memo = callbackfn(memo, self[index], index, O);
+      }
 
-/**
- * Creates the cssText style parameter based on the position of the icon.
- *
- * @param {google.maps.Point} pos The position of the icon.
- * @return {string} The CSS style text.
- */
-ClusterIcon.prototype.createCss = function (pos) {
-  var style = [];
-  style.push("cursor: pointer;");
-  style.push("position: absolute; top: " + pos.y + "px; left: " + pos.x + "px;");
-  style.push("width: " + this.width_ + "px; height: " + this.height_ + "px;");
-  return style.join("");
-};
+      return memo;
+    };
+  };
 
+  var arrayReduce = {
+    // `Array.prototype.reduce` method
+    // https://tc39.es/ecma262/#sec-array.prototype.reduce
+    left: createMethod$1(false),
+    // `Array.prototype.reduceRight` method
+    // https://tc39.es/ecma262/#sec-array.prototype.reduceright
+    right: createMethod$1(true)
+  };
 
-/**
- * Returns the position at which to place the DIV depending on the latlng.
- *
- * @param {google.maps.LatLng} latlng The position in latlng.
- * @return {google.maps.Point} The position in pixels.
- */
-ClusterIcon.prototype.getPosFromLatLng_ = function (latlng) {
-  var pos = this.getProjection().fromLatLngToDivPixel(latlng);
-  pos.x -= this.anchorIcon_[1];
-  pos.y -= this.anchorIcon_[0];
-  pos.x = parseInt(pos.x, 10);
-  pos.y = parseInt(pos.y, 10);
-  return pos;
-};
+  var fails$3 = fails$e;
 
+  var arrayMethodIsStrict$3 = function (METHOD_NAME, argument) {
+    var method = [][METHOD_NAME];
+    return !!method && fails$3(function () {
+      // eslint-disable-next-line no-useless-call -- required for testing
+      method.call(null, argument || function () {
+        return 1;
+      }, 1);
+    });
+  };
 
-/**
- * Creates a single cluster that manages a group of proximate markers.
- *  Used internally, do not call this constructor directly.
- * @constructor
- * @param {MarkerClusterer} mc The <code>MarkerClusterer</code> object with which this
- *  cluster is associated.
- */
-function Cluster(mc) {
-  this.markerClusterer_ = mc;
-  this.map_ = mc.getMap();
-  this.gridSize_ = mc.getGridSize();
-  this.minClusterSize_ = mc.getMinimumClusterSize();
-  this.averageCenter_ = mc.getAverageCenter();
-  this.markers_ = [];
-  this.center_ = null;
-  this.bounds_ = null;
-  this.clusterIcon_ = new ClusterIcon(this, mc.getStyles());
-}
+  var classof$3 = classofRaw$1;
+  var global$3 = global$d;
+  var engineIsNode = classof$3(global$3.process) == 'process';
 
+  var $$7 = _export;
+  var $reduce = arrayReduce.left;
+  var arrayMethodIsStrict$2 = arrayMethodIsStrict$3;
+  var CHROME_VERSION = engineV8Version;
+  var IS_NODE = engineIsNode;
+  var STRICT_METHOD$2 = arrayMethodIsStrict$2('reduce'); // Chrome 80-82 has a critical bug
+  // https://bugs.chromium.org/p/chromium/issues/detail?id=1049982
 
-/**
- * Returns the number of markers managed by the cluster. You can call this from
- * a <code>click</code>, <code>mouseover</code>, or <code>mouseout</code> event handler
- * for the <code>MarkerClusterer</code> object.
- *
- * @return {number} The number of markers in the cluster.
- */
-Cluster.prototype.getSize = function () {
-  return this.markers_.length;
-};
+  var CHROME_BUG = !IS_NODE && CHROME_VERSION > 79 && CHROME_VERSION < 83; // `Array.prototype.reduce` method
+  // https://tc39.es/ecma262/#sec-array.prototype.reduce
 
+  $$7({
+    target: 'Array',
+    proto: true,
+    forced: !STRICT_METHOD$2 || CHROME_BUG
+  }, {
+    reduce: function reduce(callbackfn
+    /* , initialValue */
+    ) {
+      var length = arguments.length;
+      return $reduce(this, callbackfn, length, length > 1 ? arguments[1] : undefined);
+    }
+  });
 
-/**
- * Returns the array of markers managed by the cluster. You can call this from
- * a <code>click</code>, <code>mouseover</code>, or <code>mouseout</code> event handler
- * for the <code>MarkerClusterer</code> object.
- *
- * @return {Array} The array of markers in the cluster.
- */
-Cluster.prototype.getMarkers = function () {
-  return this.markers_;
-};
+  var TO_STRING_TAG_SUPPORT$1 = toStringTagSupport;
+  var classof$2 = classof$5; // `Object.prototype.toString` method implementation
+  // https://tc39.es/ecma262/#sec-object.prototype.tostring
 
+  var objectToString = TO_STRING_TAG_SUPPORT$1 ? {}.toString : function toString() {
+    return '[object ' + classof$2(this) + ']';
+  };
 
-/**
- * Returns the center of the cluster. You can call this from
- * a <code>click</code>, <code>mouseover</code>, or <code>mouseout</code> event handler
- * for the <code>MarkerClusterer</code> object.
- *
- * @return {google.maps.LatLng} The center of the cluster.
- */
-Cluster.prototype.getCenter = function () {
-  return this.center_;
-};
+  var TO_STRING_TAG_SUPPORT = toStringTagSupport;
+  var defineBuiltIn$1 = defineBuiltIn$3;
+  var toString$3 = objectToString; // `Object.prototype.toString` method
+  // https://tc39.es/ecma262/#sec-object.prototype.tostring
 
-
-/**
- * Returns the map with which the cluster is associated.
- *
- * @return {google.maps.Map} The map.
- * @ignore
- */
-Cluster.prototype.getMap = function () {
-  return this.map_;
-};
-
-
-/**
- * Returns the <code>MarkerClusterer</code> object with which the cluster is associated.
- *
- * @return {MarkerClusterer} The associated marker clusterer.
- * @ignore
- */
-Cluster.prototype.getMarkerClusterer = function () {
-  return this.markerClusterer_;
-};
-
-
-/**
- * Returns the bounds of the cluster.
- *
- * @return {google.maps.LatLngBounds} the cluster bounds.
- * @ignore
- */
-Cluster.prototype.getBounds = function () {
-  var i;
-  var bounds = new google.maps.LatLngBounds(this.center_, this.center_);
-  var markers = this.getMarkers();
-  for (i = 0; i < markers.length; i++) {
-    bounds.extend(markers[i].getPosition());
-  }
-  return bounds;
-};
-
-
-/**
- * Removes the cluster from the map.
- *
- * @ignore
- */
-Cluster.prototype.remove = function () {
-  this.clusterIcon_.setMap(null);
-  this.markers_ = [];
-  delete this.markers_;
-};
-
-
-/**
- * Adds a marker to the cluster.
- *
- * @param {google.maps.Marker} marker The marker to be added.
- * @return {boolean} True if the marker was added.
- * @ignore
- */
-Cluster.prototype.addMarker = function (marker) {
-  var i;
-  var mCount;
-  var mz;
-
-  if (this.isMarkerAlreadyAdded_(marker)) {
-    return false;
+  if (!TO_STRING_TAG_SUPPORT) {
+    defineBuiltIn$1(Object.prototype, 'toString', toString$3, {
+      unsafe: true
+    });
   }
 
-  if (!this.center_) {
-    this.center_ = marker.getPosition();
-    this.calculateBounds_();
-  } else {
-    if (this.averageCenter_) {
-      var l = this.markers_.length + 1;
-      var lat = (this.center_.lat() * (l - 1) + marker.getPosition().lat()) / l;
-      var lng = (this.center_.lng() * (l - 1) + marker.getPosition().lng()) / l;
-      this.center_ = new google.maps.LatLng(lat, lng);
-      this.calculateBounds_();
+  var $$6 = _export;
+  var $filter = arrayIteration.filter;
+  var arrayMethodHasSpeciesSupport$1 = arrayMethodHasSpeciesSupport$3;
+  var HAS_SPECIES_SUPPORT$1 = arrayMethodHasSpeciesSupport$1('filter'); // `Array.prototype.filter` method
+  // https://tc39.es/ecma262/#sec-array.prototype.filter
+  // with adding support of @@species
+
+  $$6({
+    target: 'Array',
+    proto: true,
+    forced: !HAS_SPECIES_SUPPORT$1
+  }, {
+    filter: function filter(callbackfn
+    /* , thisArg */
+    ) {
+      return $filter(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
+    }
+  });
+
+  /**
+   * Copyright 2021 Google LLC
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *      http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   */
+  var Cluster = /*#__PURE__*/function () {
+    function Cluster(_ref) {
+      var markers = _ref.markers,
+          position = _ref.position;
+
+      _classCallCheck(this, Cluster);
+
+      this.markers = markers;
+
+      if (position) {
+        if (position instanceof google.maps.LatLng) {
+          this._position = position;
+        } else {
+          this._position = new google.maps.LatLng(position);
+        }
+      }
+    }
+
+    _createClass(Cluster, [{
+      key: "bounds",
+      get: function get() {
+        if (this.markers.length === 0 && !this._position) {
+          return undefined;
+        }
+
+        return this.markers.reduce(function (bounds, marker) {
+          return bounds.extend(marker.getPosition());
+        }, new google.maps.LatLngBounds(this._position, this._position));
+      }
+    }, {
+      key: "position",
+      get: function get() {
+        return this._position || this.bounds.getCenter();
+      }
+      /**
+       * Get the count of **visible** markers.
+       */
+
+    }, {
+      key: "count",
+      get: function get() {
+        return this.markers.filter(function (m) {
+          return m.getVisible();
+        }).length;
+      }
+      /**
+       * Add a marker to the cluster.
+       */
+
+    }, {
+      key: "push",
+      value: function push(marker) {
+        this.markers.push(marker);
+      }
+      /**
+       * Cleanup references and remove marker from map.
+       */
+
+    }, {
+      key: "delete",
+      value: function _delete() {
+        if (this.marker) {
+          this.marker.setMap(null);
+          delete this.marker;
+        }
+
+        this.markers.length = 0;
+      }
+    }]);
+
+    return Cluster;
+  }();
+
+  /**
+   * Copyright 2021 Google LLC
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *      http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   */
+  var filterMarkersToPaddedViewport = function filterMarkersToPaddedViewport(map, mapCanvasProjection, markers, viewportPadding) {
+    var extendedMapBounds = extendBoundsToPaddedViewport(map.getBounds(), mapCanvasProjection, viewportPadding);
+    return markers.filter(function (marker) {
+      return extendedMapBounds.contains(marker.getPosition());
+    });
+  };
+  /**
+   * Extends a bounds by a number of pixels in each direction.
+   */
+
+  var extendBoundsToPaddedViewport = function extendBoundsToPaddedViewport(bounds, projection, pixels) {
+    var _latLngBoundsToPixelB = latLngBoundsToPixelBounds(bounds, projection),
+        northEast = _latLngBoundsToPixelB.northEast,
+        southWest = _latLngBoundsToPixelB.southWest;
+
+    var extendedPixelBounds = extendPixelBounds({
+      northEast: northEast,
+      southWest: southWest
+    }, pixels);
+    return pixelBoundsToLatLngBounds(extendedPixelBounds, projection);
+  };
+  /**
+   * @hidden
+   */
+
+  var distanceBetweenPoints = function distanceBetweenPoints(p1, p2) {
+    var R = 6371; // Radius of the Earth in km
+
+    var dLat = (p2.lat - p1.lat) * Math.PI / 180;
+    var dLon = (p2.lng - p1.lng) * Math.PI / 180;
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(p1.lat * Math.PI / 180) * Math.cos(p2.lat * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+  /**
+   * @hidden
+   */
+
+  var latLngBoundsToPixelBounds = function latLngBoundsToPixelBounds(bounds, projection) {
+    return {
+      northEast: projection.fromLatLngToDivPixel(bounds.getNorthEast()),
+      southWest: projection.fromLatLngToDivPixel(bounds.getSouthWest())
+    };
+  };
+  /**
+   * @hidden
+   */
+
+
+  var extendPixelBounds = function extendPixelBounds(_ref, pixels) {
+    var northEast = _ref.northEast,
+        southWest = _ref.southWest;
+    northEast.x += pixels;
+    northEast.y -= pixels;
+    southWest.x -= pixels;
+    southWest.y += pixels;
+    return {
+      northEast: northEast,
+      southWest: southWest
+    };
+  };
+  /**
+   * @hidden
+   */
+
+  var pixelBoundsToLatLngBounds = function pixelBoundsToLatLngBounds(_ref2, projection) {
+    var northEast = _ref2.northEast,
+        southWest = _ref2.southWest;
+    var bounds = new google.maps.LatLngBounds();
+    bounds.extend(projection.fromDivPixelToLatLng(northEast));
+    bounds.extend(projection.fromDivPixelToLatLng(southWest));
+    return bounds;
+  };
+
+  /**
+   * @hidden
+   */
+
+  var AbstractAlgorithm = /*#__PURE__*/function () {
+    function AbstractAlgorithm(_ref) {
+      var _ref$maxZoom = _ref.maxZoom,
+          maxZoom = _ref$maxZoom === void 0 ? 16 : _ref$maxZoom;
+
+      _classCallCheck(this, AbstractAlgorithm);
+
+      this.maxZoom = maxZoom;
+    }
+    /**
+     * Helper function to bypass clustering based upon some map state such as
+     * zoom, number of markers, etc.
+     *
+     * ```typescript
+     *  cluster({markers, map}: AlgorithmInput): Cluster[] {
+     *    if (shouldBypassClustering(map)) {
+     *      return this.noop({markers, map})
+     *    }
+     * }
+     * ```
+     */
+
+
+    _createClass(AbstractAlgorithm, [{
+      key: "noop",
+      value: function noop(_ref2) {
+        var markers = _ref2.markers;
+        return _noop(markers);
+      }
+    }]);
+
+    return AbstractAlgorithm;
+  }();
+  /**
+   * Abstract viewport algorithm proves a class to filter markers by a padded
+   * viewport. This is a common optimization.
+   *
+   * @hidden
+   */
+
+  var AbstractViewportAlgorithm = /*#__PURE__*/function (_AbstractAlgorithm) {
+    _inherits(AbstractViewportAlgorithm, _AbstractAlgorithm);
+
+    var _super = _createSuper(AbstractViewportAlgorithm);
+
+    function AbstractViewportAlgorithm(_a) {
+      var _this;
+
+      _classCallCheck(this, AbstractViewportAlgorithm);
+
+      var _a$viewportPadding = _a.viewportPadding,
+          viewportPadding = _a$viewportPadding === void 0 ? 60 : _a$viewportPadding,
+          options = __rest(_a, ["viewportPadding"]);
+
+      _this = _super.call(this, options);
+      _this.viewportPadding = 60;
+      _this.viewportPadding = viewportPadding;
+      return _this;
+    }
+
+    _createClass(AbstractViewportAlgorithm, [{
+      key: "calculate",
+      value: function calculate(_ref3) {
+        var markers = _ref3.markers,
+            map = _ref3.map,
+            mapCanvasProjection = _ref3.mapCanvasProjection;
+
+        if (map.getZoom() >= this.maxZoom) {
+          return {
+            clusters: this.noop({
+              markers: markers,
+              map: map,
+              mapCanvasProjection: mapCanvasProjection
+            }),
+            changed: false
+          };
+        }
+
+        return {
+          clusters: this.cluster({
+            markers: filterMarkersToPaddedViewport(map, mapCanvasProjection, markers, this.viewportPadding),
+            map: map,
+            mapCanvasProjection: mapCanvasProjection
+          })
+        };
+      }
+    }]);
+
+    return AbstractViewportAlgorithm;
+  }(AbstractAlgorithm);
+  /**
+   * @hidden
+   */
+
+  var _noop = function _noop(markers) {
+    var clusters = markers.map(function (marker) {
+      return new Cluster({
+        position: marker.getPosition(),
+        markers: [marker]
+      });
+    });
+    return clusters;
+  };
+
+  // flag - `iterable` interface - 'entries', 'keys', 'values', 'forEach' methods
+
+  var domIterables = {
+    CSSRuleList: 0,
+    CSSStyleDeclaration: 0,
+    CSSValueList: 0,
+    ClientRectList: 0,
+    DOMRectList: 0,
+    DOMStringList: 0,
+    DOMTokenList: 1,
+    DataTransferItemList: 0,
+    FileList: 0,
+    HTMLAllCollection: 0,
+    HTMLCollection: 0,
+    HTMLFormElement: 0,
+    HTMLSelectElement: 0,
+    MediaList: 0,
+    MimeTypeArray: 0,
+    NamedNodeMap: 0,
+    NodeList: 1,
+    PaintRequestList: 0,
+    Plugin: 0,
+    PluginArray: 0,
+    SVGLengthList: 0,
+    SVGNumberList: 0,
+    SVGPathSegList: 0,
+    SVGPointList: 0,
+    SVGStringList: 0,
+    SVGTransformList: 0,
+    SourceBufferList: 0,
+    StyleSheetList: 0,
+    TextTrackCueList: 0,
+    TextTrackList: 0,
+    TouchList: 0
+  };
+
+  var documentCreateElement$1 = documentCreateElement$2;
+  var classList = documentCreateElement$1('span').classList;
+  var DOMTokenListPrototype$1 = classList && classList.constructor && classList.constructor.prototype;
+  var domTokenListPrototype = DOMTokenListPrototype$1 === Object.prototype ? undefined : DOMTokenListPrototype$1;
+
+  var $forEach = arrayIteration.forEach;
+  var arrayMethodIsStrict$1 = arrayMethodIsStrict$3;
+  var STRICT_METHOD$1 = arrayMethodIsStrict$1('forEach'); // `Array.prototype.forEach` method implementation
+  // https://tc39.es/ecma262/#sec-array.prototype.foreach
+
+  var arrayForEach = !STRICT_METHOD$1 ? function forEach(callbackfn
+  /* , thisArg */
+  ) {
+    return $forEach(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined); // eslint-disable-next-line es-x/no-array-prototype-foreach -- safe
+  } : [].forEach;
+
+  var global$2 = global$d;
+  var DOMIterables = domIterables;
+  var DOMTokenListPrototype = domTokenListPrototype;
+  var forEach = arrayForEach;
+  var createNonEnumerableProperty = createNonEnumerableProperty$3;
+
+  var handlePrototype = function (CollectionPrototype) {
+    // some Chrome versions have non-configurable methods on DOMTokenList
+    if (CollectionPrototype && CollectionPrototype.forEach !== forEach) try {
+      createNonEnumerableProperty(CollectionPrototype, 'forEach', forEach);
+    } catch (error) {
+      CollectionPrototype.forEach = forEach;
+    }
+  };
+
+  for (var COLLECTION_NAME in DOMIterables) {
+    if (DOMIterables[COLLECTION_NAME]) {
+      handlePrototype(global$2[COLLECTION_NAME] && global$2[COLLECTION_NAME].prototype);
     }
   }
 
-  marker.isAdded = true;
-  this.markers_.push(marker);
+  handlePrototype(DOMTokenListPrototype);
 
-  mCount = this.markers_.length;
-  mz = this.markerClusterer_.getMaxZoom();
-  if (mz !== null && this.map_.getZoom() > mz) {
-    // Zoomed in past max zoom, so show the marker.
-    if (marker.getMap() !== this.map_) {
-      marker.setMap(this.map_);
+  var $$5 = _export;
+  var call$1 = functionCall; // `URL.prototype.toJSON` method
+  // https://url.spec.whatwg.org/#dom-url-tojson
+
+  $$5({
+    target: 'URL',
+    proto: true,
+    enumerable: true
+  }, {
+    toJSON: function toJSON() {
+      return call$1(URL.prototype.toString, this);
     }
-  } else if (mCount < this.minClusterSize_) {
-    // Min cluster size not reached so show the marker.
-    if (marker.getMap() !== this.map_) {
-      marker.setMap(this.map_);
-    }
-  } else if (mCount === this.minClusterSize_) {
-    // Hide the markers that were showing.
-    for (i = 0; i < mCount; i++) {
-      this.markers_[i].setMap(null);
-    }
-  } else {
-    marker.setMap(null);
-  }
+  });
 
-  this.updateIcon_();
-  return true;
-};
+  var fastDeepEqual = function equal(a, b) {
+    if (a === b) return true;
 
+    if (a && b && typeof a == 'object' && typeof b == 'object') {
+      if (a.constructor !== b.constructor) return false;
+      var length, i, keys;
 
-/**
- * Determines if a marker lies within the cluster's bounds.
- *
- * @param {google.maps.Marker} marker The marker to check.
- * @return {boolean} True if the marker lies in the bounds.
- * @ignore
- */
-Cluster.prototype.isMarkerInClusterBounds = function (marker) {
-  return this.bounds_.contains(marker.getPosition());
-};
+      if (Array.isArray(a)) {
+        length = a.length;
+        if (length != b.length) return false;
 
+        for (i = length; i-- !== 0;) if (!equal(a[i], b[i])) return false;
 
-/**
- * Calculates the extended bounds of the cluster with the grid.
- */
-Cluster.prototype.calculateBounds_ = function () {
-  var bounds = new google.maps.LatLngBounds(this.center_, this.center_);
-  this.bounds_ = this.markerClusterer_.getExtendedBounds(bounds);
-};
-
-
-/**
- * Updates the cluster icon.
- */
-Cluster.prototype.updateIcon_ = function () {
-  var mCount = this.markers_.length;
-  var mz = this.markerClusterer_.getMaxZoom();
-
-  if (mz !== null && this.map_.getZoom() > mz) {
-    this.clusterIcon_.hide();
-    return;
-  }
-
-  if (mCount < this.minClusterSize_) {
-    // Min cluster size not yet reached.
-    this.clusterIcon_.hide();
-    return;
-  }
-
-  var numStyles = this.markerClusterer_.getStyles().length;
-  var sums = this.markerClusterer_.getCalculator()(this.markers_, numStyles);
-  this.clusterIcon_.setCenter(this.center_);
-  this.clusterIcon_.useStyle(sums);
-  this.clusterIcon_.show();
-};
-
-
-/**
- * Determines if a marker has already been added to the cluster.
- *
- * @param {google.maps.Marker} marker The marker to check.
- * @return {boolean} True if the marker has already been added.
- */
-Cluster.prototype.isMarkerAlreadyAdded_ = function (marker) {
-  var i;
-  if (this.markers_.indexOf) {
-    return this.markers_.indexOf(marker) !== -1;
-  } else {
-    for (i = 0; i < this.markers_.length; i++) {
-      if (marker === this.markers_[i]) {
         return true;
       }
-    }
-  }
-  return false;
-};
 
+      if (a.constructor === RegExp) return a.source === b.source && a.flags === b.flags;
+      if (a.valueOf !== Object.prototype.valueOf) return a.valueOf() === b.valueOf();
+      if (a.toString !== Object.prototype.toString) return a.toString() === b.toString();
+      keys = Object.keys(a);
+      length = keys.length;
+      if (length !== Object.keys(b).length) return false;
 
-/**
- * @name MarkerClustererOptions
- * @class This class represents the optional parameter passed to
- *  the {@link MarkerClusterer} constructor.
- * @property {number} [gridSize=60] The grid size of a cluster in pixels. The grid is a square.
- * @property {number} [maxZoom=null] The maximum zoom level at which clustering is enabled or
- *  <code>null</code> if clustering is to be enabled at all zoom levels.
- * @property {boolean} [zoomOnClick=true] Whether to zoom the map when a cluster marker is
- *  clicked. You may want to set this to <code>false</code> if you have installed a handler
- *  for the <code>click</code> event and it deals with zooming on its own.
- * @property {boolean} [averageCenter=false] Whether the position of a cluster marker should be
- *  the average position of all markers in the cluster. If set to <code>false</code>, the
- *  cluster marker is positioned at the location of the first marker added to the cluster.
- * @property {number} [minimumClusterSize=2] The minimum number of markers needed in a cluster
- *  before the markers are hidden and a cluster marker appears.
- * @property {boolean} [ignoreHidden=false] Whether to ignore hidden markers in clusters. You
- *  may want to set this to <code>true</code> to ensure that hidden markers are not included
- *  in the marker count that appears on a cluster marker (this count is the value of the
- *  <code>text</code> property of the result returned by the default <code>calculator</code>).
- *  If set to <code>true</code> and you change the visibility of a marker being clustered, be
- *  sure to also call <code>MarkerClusterer.repaint()</code>.
- * @property {string} [title=""] The tooltip to display when the mouse moves over a cluster
- *  marker. (Alternatively, you can use a custom <code>calculator</code> function to specify a
- *  different tooltip for each cluster marker.)
- * @property {function} [calculator=MarkerClusterer.CALCULATOR] The function used to determine
- *  the text to be displayed on a cluster marker and the index indicating which style to use
- *  for the cluster marker. The input parameters for the function are (1) the array of markers
- *  represented by a cluster marker and (2) the number of cluster icon styles. It returns a
- *  {@link ClusterIconInfo} object. The default <code>calculator</code> returns a
- *  <code>text</code> property which is the number of markers in the cluster and an
- *  <code>index</code> property which is one higher than the lowest integer such that
- *  <code>10^i</code> exceeds the number of markers in the cluster, or the size of the styles
- *  array, whichever is less. The <code>styles</code> array element used has an index of
- *  <code>index</code> minus 1. For example, the default <code>calculator</code> returns a
- *  <code>text</code> value of <code>"125"</code> and an <code>index</code> of <code>3</code>
- *  for a cluster icon representing 125 markers so the element used in the <code>styles</code>
- *  array is <code>2</code>. A <code>calculator</code> may also return a <code>title</code>
- *  property that contains the text of the tooltip to be used for the cluster marker. If
- *   <code>title</code> is not defined, the tooltip is set to the value of the <code>title</code>
- *   property for the MarkerClusterer.
- * @property {string} [clusterClass="cluster"] The name of the CSS class defining general styles
- *  for the cluster markers. Use this class to define CSS styles that are not set up by the code
- *  that processes the <code>styles</code> array.
- * @property {Array} [styles] An array of {@link ClusterIconStyle} elements defining the styles
- *  of the cluster markers to be used. The element to be used to style a given cluster marker
- *  is determined by the function defined by the <code>calculator</code> property.
- *  The default is an array of {@link ClusterIconStyle} elements whose properties are derived
- *  from the values for <code>imagePath</code>, <code>imageExtension</code>, and
- *  <code>imageSizes</code>.
- * @property {boolean} [enableRetinaIcons=false] Whether to allow the use of cluster icons that
- * have sizes that are some multiple (typically double) of their actual display size. Icons such
- * as these look better when viewed on high-resolution monitors such as Apple's Retina displays.
- * Note: if this property is <code>true</code>, sprites cannot be used as cluster icons.
- * @property {number} [batchSize=MarkerClusterer.BATCH_SIZE] Set this property to the
- *  number of markers to be processed in a single batch when using a browser other than
- *  Internet Explorer (for Internet Explorer, use the batchSizeIE property instead).
- * @property {number} [batchSizeIE=MarkerClusterer.BATCH_SIZE_IE] When Internet Explorer is
- *  being used, markers are processed in several batches with a small delay inserted between
- *  each batch in an attempt to avoid Javascript timeout errors. Set this property to the
- *  number of markers to be processed in a single batch; select as high a number as you can
- *  without causing a timeout error in the browser. This number might need to be as low as 100
- *  if 15,000 markers are being managed, for example.
- * @property {string} [imagePath=MarkerClusterer.IMAGE_PATH]
- *  The full URL of the root name of the group of image files to use for cluster icons.
- *  The complete file name is of the form <code>imagePath</code>n.<code>imageExtension</code>
- *  where n is the image file number (1, 2, etc.).
- * @property {string} [imageExtension=MarkerClusterer.IMAGE_EXTENSION]
- *  The extension name for the cluster icon image files (e.g., <code>"png"</code> or
- *  <code>"jpg"</code>).
- * @property {Array} [imageSizes=MarkerClusterer.IMAGE_SIZES]
- *  An array of numbers containing the widths of the group of
- *  <code>imagePath</code>n.<code>imageExtension</code> image files.
- *  (The images are assumed to be square.)
- */
-/**
- * Creates a MarkerClusterer object with the options specified in {@link MarkerClustererOptions}.
- * @constructor
- * @extends google.maps.OverlayView
- * @param {google.maps.Map} map The Google map to attach to.
- * @param {Array.<google.maps.Marker>} [opt_markers] The markers to be added to the cluster.
- * @param {MarkerClustererOptions} [opt_options] The optional parameters.
- */
-function MarkerClusterer(map, opt_markers, opt_options) {
-  // MarkerClusterer implements google.maps.OverlayView interface. We use the
-  // extend function to extend MarkerClusterer with google.maps.OverlayView
-  // because it might not always be available when the code is defined so we
-  // look for it at the last possible moment. If it doesn't exist now then
-  // there is no point going ahead :)
-  this.extend(MarkerClusterer, google.maps.OverlayView);
+      for (i = length; i-- !== 0;) if (!Object.prototype.hasOwnProperty.call(b, keys[i])) return false;
 
-  opt_markers = opt_markers || [];
-  opt_options = opt_options || {};
-
-  this.markers_ = [];
-  this.clusters_ = [];
-  this.listeners_ = [];
-  this.activeMap_ = null;
-  this.ready_ = false;
-
-  this.gridSize_ = opt_options.gridSize || 60;
-  this.minClusterSize_ = opt_options.minimumClusterSize || 2;
-  this.maxZoom_ = opt_options.maxZoom || null;
-  this.styles_ = opt_options.styles || [];
-  this.title_ = opt_options.title || "";
-  this.zoomOnClick_ = true;
-  if (opt_options.zoomOnClick !== undefined) {
-    this.zoomOnClick_ = opt_options.zoomOnClick;
-  }
-  this.averageCenter_ = false;
-  if (opt_options.averageCenter !== undefined) {
-    this.averageCenter_ = opt_options.averageCenter;
-  }
-  this.ignoreHidden_ = false;
-  if (opt_options.ignoreHidden !== undefined) {
-    this.ignoreHidden_ = opt_options.ignoreHidden;
-  }
-  this.enableRetinaIcons_ = false;
-  if (opt_options.enableRetinaIcons !== undefined) {
-    this.enableRetinaIcons_ = opt_options.enableRetinaIcons;
-  }
-  this.imagePath_ = opt_options.imagePath || MarkerClusterer.IMAGE_PATH;
-  this.imageExtension_ = opt_options.imageExtension || MarkerClusterer.IMAGE_EXTENSION;
-  this.imageSizes_ = opt_options.imageSizes || MarkerClusterer.IMAGE_SIZES;
-  this.calculator_ = opt_options.calculator || MarkerClusterer.CALCULATOR;
-  this.batchSize_ = opt_options.batchSize || MarkerClusterer.BATCH_SIZE;
-  this.batchSizeIE_ = opt_options.batchSizeIE || MarkerClusterer.BATCH_SIZE_IE;
-  this.clusterClass_ = opt_options.clusterClass || "cluster";
-
-  if (navigator.userAgent.toLowerCase().indexOf("msie") !== -1) {
-    // Try to avoid IE timeout when processing a huge number of markers:
-    this.batchSize_ = this.batchSizeIE_;
-  }
-
-  this.setupStyles_();
-
-  this.addMarkers(opt_markers, true);
-  this.setMap(map); // Note: this causes onAdd to be called
-}
-
-
-/**
- * Implementation of the onAdd interface method.
- * @ignore
- */
-MarkerClusterer.prototype.onAdd = function () {
-  var cMarkerClusterer = this;
-
-  this.activeMap_ = this.getMap();
-  this.ready_ = true;
-
-  this.repaint();
-
-  // Add the map event listeners
-  this.listeners_ = [
-    google.maps.event.addListener(this.getMap(), "zoom_changed", function () {
-      cMarkerClusterer.resetViewport_(false);
-      // Workaround for this Google bug: when map is at level 0 and "-" of
-      // zoom slider is clicked, a "zoom_changed" event is fired even though
-      // the map doesn't zoom out any further. In this situation, no "idle"
-      // event is triggered so the cluster markers that have been removed
-      // do not get redrawn. Same goes for a zoom in at maxZoom.
-      if (this.getZoom() === (this.get("minZoom") || 0) || this.getZoom() === this.get("maxZoom")) {
-        google.maps.event.trigger(this, "idle");
+      for (i = length; i-- !== 0;) {
+        var key = keys[i];
+        if (!equal(a[key], b[key])) return false;
       }
-    }),
-    google.maps.event.addListener(this.getMap(), "idle", function () {
-      cMarkerClusterer.redraw_();
-    })
-  ];
-};
 
+      return true;
+    } // true if both NaN, false otherwise
 
-/**
- * Implementation of the onRemove interface method.
- * Removes map event listeners and all cluster icons from the DOM.
- * All managed markers are also put back on the map.
- * @ignore
- */
-MarkerClusterer.prototype.onRemove = function () {
-  var i;
 
-  // Put all the managed markers back on the map:
-  for (i = 0; i < this.markers_.length; i++) {
-    if (this.markers_[i].getMap() !== this.activeMap_) {
-      this.markers_[i].setMap(this.activeMap_);
-    }
-  }
-
-  // Remove all clusters:
-  for (i = 0; i < this.clusters_.length; i++) {
-    this.clusters_[i].remove();
-  }
-  this.clusters_ = [];
-
-  // Remove map event listeners:
-  for (i = 0; i < this.listeners_.length; i++) {
-    google.maps.event.removeListener(this.listeners_[i]);
-  }
-  this.listeners_ = [];
-
-  this.activeMap_ = null;
-  this.ready_ = false;
-};
-
-
-/**
- * Implementation of the draw interface method.
- * @ignore
- */
-MarkerClusterer.prototype.draw = function () {};
-
-
-/**
- * Sets up the styles object.
- */
-MarkerClusterer.prototype.setupStyles_ = function () {
-  var i, size;
-  if (this.styles_.length > 0) {
-    return;
-  }
-
-  for (i = 0; i < this.imageSizes_.length; i++) {
-    size = this.imageSizes_[i];
-    this.styles_.push({
-      url: this.imagePath_ + (i + 1) + "." + this.imageExtension_,
-      height: size,
-      width: size
-    });
-  }
-};
-
-
-/**
- *  Fits the map to the bounds of the markers managed by the clusterer.
- */
-MarkerClusterer.prototype.fitMapToMarkers = function () {
-  var i;
-  var markers = this.getMarkers();
-  var bounds = new google.maps.LatLngBounds();
-  for (i = 0; i < markers.length; i++) {
-    bounds.extend(markers[i].getPosition());
-  }
-
-  this.getMap().fitBounds(bounds);
-};
-
-
-/**
- * Returns the value of the <code>gridSize</code> property.
- *
- * @return {number} The grid size.
- */
-MarkerClusterer.prototype.getGridSize = function () {
-  return this.gridSize_;
-};
-
-
-/**
- * Sets the value of the <code>gridSize</code> property.
- *
- * @param {number} gridSize The grid size.
- */
-MarkerClusterer.prototype.setGridSize = function (gridSize) {
-  this.gridSize_ = gridSize;
-};
-
-
-/**
- * Returns the value of the <code>minimumClusterSize</code> property.
- *
- * @return {number} The minimum cluster size.
- */
-MarkerClusterer.prototype.getMinimumClusterSize = function () {
-  return this.minClusterSize_;
-};
-
-/**
- * Sets the value of the <code>minimumClusterSize</code> property.
- *
- * @param {number} minimumClusterSize The minimum cluster size.
- */
-MarkerClusterer.prototype.setMinimumClusterSize = function (minimumClusterSize) {
-  this.minClusterSize_ = minimumClusterSize;
-};
-
-
-/**
- *  Returns the value of the <code>maxZoom</code> property.
- *
- *  @return {number} The maximum zoom level.
- */
-MarkerClusterer.prototype.getMaxZoom = function () {
-  return this.maxZoom_;
-};
-
-
-/**
- *  Sets the value of the <code>maxZoom</code> property.
- *
- *  @param {number} maxZoom The maximum zoom level.
- */
-MarkerClusterer.prototype.setMaxZoom = function (maxZoom) {
-  this.maxZoom_ = maxZoom;
-};
-
-
-/**
- *  Returns the value of the <code>styles</code> property.
- *
- *  @return {Array} The array of styles defining the cluster markers to be used.
- */
-MarkerClusterer.prototype.getStyles = function () {
-  return this.styles_;
-};
-
-
-/**
- *  Sets the value of the <code>styles</code> property.
- *
- *  @param {Array.<ClusterIconStyle>} styles The array of styles to use.
- */
-MarkerClusterer.prototype.setStyles = function (styles) {
-  this.styles_ = styles;
-};
-
-
-/**
- * Returns the value of the <code>title</code> property.
- *
- * @return {string} The content of the title text.
- */
-MarkerClusterer.prototype.getTitle = function () {
-  return this.title_;
-};
-
-
-/**
- *  Sets the value of the <code>title</code> property.
- *
- *  @param {string} title The value of the title property.
- */
-MarkerClusterer.prototype.setTitle = function (title) {
-  this.title_ = title;
-};
-
-
-/**
- * Returns the value of the <code>zoomOnClick</code> property.
- *
- * @return {boolean} True if zoomOnClick property is set.
- */
-MarkerClusterer.prototype.getZoomOnClick = function () {
-  return this.zoomOnClick_;
-};
-
-
-/**
- *  Sets the value of the <code>zoomOnClick</code> property.
- *
- *  @param {boolean} zoomOnClick The value of the zoomOnClick property.
- */
-MarkerClusterer.prototype.setZoomOnClick = function (zoomOnClick) {
-  this.zoomOnClick_ = zoomOnClick;
-};
-
-
-/**
- * Returns the value of the <code>averageCenter</code> property.
- *
- * @return {boolean} True if averageCenter property is set.
- */
-MarkerClusterer.prototype.getAverageCenter = function () {
-  return this.averageCenter_;
-};
-
-
-/**
- *  Sets the value of the <code>averageCenter</code> property.
- *
- *  @param {boolean} averageCenter The value of the averageCenter property.
- */
-MarkerClusterer.prototype.setAverageCenter = function (averageCenter) {
-  this.averageCenter_ = averageCenter;
-};
-
-
-/**
- * Returns the value of the <code>ignoreHidden</code> property.
- *
- * @return {boolean} True if ignoreHidden property is set.
- */
-MarkerClusterer.prototype.getIgnoreHidden = function () {
-  return this.ignoreHidden_;
-};
-
-
-/**
- *  Sets the value of the <code>ignoreHidden</code> property.
- *
- *  @param {boolean} ignoreHidden The value of the ignoreHidden property.
- */
-MarkerClusterer.prototype.setIgnoreHidden = function (ignoreHidden) {
-  this.ignoreHidden_ = ignoreHidden;
-};
-
-
-/**
- * Returns the value of the <code>enableRetinaIcons</code> property.
- *
- * @return {boolean} True if enableRetinaIcons property is set.
- */
-MarkerClusterer.prototype.getEnableRetinaIcons = function () {
-  return this.enableRetinaIcons_;
-};
-
-
-/**
- *  Sets the value of the <code>enableRetinaIcons</code> property.
- *
- *  @param {boolean} enableRetinaIcons The value of the enableRetinaIcons property.
- */
-MarkerClusterer.prototype.setEnableRetinaIcons = function (enableRetinaIcons) {
-  this.enableRetinaIcons_ = enableRetinaIcons;
-};
-
-
-/**
- * Returns the value of the <code>imageExtension</code> property.
- *
- * @return {string} The value of the imageExtension property.
- */
-MarkerClusterer.prototype.getImageExtension = function () {
-  return this.imageExtension_;
-};
-
-
-/**
- *  Sets the value of the <code>imageExtension</code> property.
- *
- *  @param {string} imageExtension The value of the imageExtension property.
- */
-MarkerClusterer.prototype.setImageExtension = function (imageExtension) {
-  this.imageExtension_ = imageExtension;
-};
-
-
-/**
- * Returns the value of the <code>imagePath</code> property.
- *
- * @return {string} The value of the imagePath property.
- */
-MarkerClusterer.prototype.getImagePath = function () {
-  return this.imagePath_;
-};
-
-
-/**
- *  Sets the value of the <code>imagePath</code> property.
- *
- *  @param {string} imagePath The value of the imagePath property.
- */
-MarkerClusterer.prototype.setImagePath = function (imagePath) {
-  this.imagePath_ = imagePath;
-};
-
-
-/**
- * Returns the value of the <code>imageSizes</code> property.
- *
- * @return {Array} The value of the imageSizes property.
- */
-MarkerClusterer.prototype.getImageSizes = function () {
-  return this.imageSizes_;
-};
-
-
-/**
- *  Sets the value of the <code>imageSizes</code> property.
- *
- *  @param {Array} imageSizes The value of the imageSizes property.
- */
-MarkerClusterer.prototype.setImageSizes = function (imageSizes) {
-  this.imageSizes_ = imageSizes;
-};
-
-
-/**
- * Returns the value of the <code>calculator</code> property.
- *
- * @return {function} the value of the calculator property.
- */
-MarkerClusterer.prototype.getCalculator = function () {
-  return this.calculator_;
-};
-
-
-/**
- * Sets the value of the <code>calculator</code> property.
- *
- * @param {function(Array.<google.maps.Marker>, number)} calculator The value
- *  of the calculator property.
- */
-MarkerClusterer.prototype.setCalculator = function (calculator) {
-  this.calculator_ = calculator;
-};
-
-
-/**
- * Returns the value of the <code>batchSizeIE</code> property.
- *
- * @return {number} the value of the batchSizeIE property.
- */
-MarkerClusterer.prototype.getBatchSizeIE = function () {
-  return this.batchSizeIE_;
-};
-
-
-/**
- * Sets the value of the <code>batchSizeIE</code> property.
- *
- *  @param {number} batchSizeIE The value of the batchSizeIE property.
- */
-MarkerClusterer.prototype.setBatchSizeIE = function (batchSizeIE) {
-  this.batchSizeIE_ = batchSizeIE;
-};
-
-
-/**
- * Returns the value of the <code>clusterClass</code> property.
- *
- * @return {string} the value of the clusterClass property.
- */
-MarkerClusterer.prototype.getClusterClass = function () {
-  return this.clusterClass_;
-};
-
-
-/**
- * Sets the value of the <code>clusterClass</code> property.
- *
- *  @param {string} clusterClass The value of the clusterClass property.
- */
-MarkerClusterer.prototype.setClusterClass = function (clusterClass) {
-  this.clusterClass_ = clusterClass;
-};
-
-
-/**
- *  Returns the array of markers managed by the clusterer.
- *
- *  @return {Array} The array of markers managed by the clusterer.
- */
-MarkerClusterer.prototype.getMarkers = function () {
-  return this.markers_;
-};
-
-
-/**
- *  Returns the number of markers managed by the clusterer.
- *
- *  @return {number} The number of markers.
- */
-MarkerClusterer.prototype.getTotalMarkers = function () {
-  return this.markers_.length;
-};
-
-
-/**
- * Returns the current array of clusters formed by the clusterer.
- *
- * @return {Array} The array of clusters formed by the clusterer.
- */
-MarkerClusterer.prototype.getClusters = function () {
-  return this.clusters_;
-};
-
-
-/**
- * Returns the number of clusters formed by the clusterer.
- *
- * @return {number} The number of clusters formed by the clusterer.
- */
-MarkerClusterer.prototype.getTotalClusters = function () {
-  return this.clusters_.length;
-};
-
-
-/**
- * Adds a marker to the clusterer. The clusters are redrawn unless
- *  <code>opt_nodraw</code> is set to <code>true</code>.
- *
- * @param {google.maps.Marker} marker The marker to add.
- * @param {boolean} [opt_nodraw] Set to <code>true</code> to prevent redrawing.
- */
-MarkerClusterer.prototype.addMarker = function (marker, opt_nodraw) {
-  this.pushMarkerTo_(marker);
-  if (!opt_nodraw) {
-    this.redraw_();
-  }
-};
-
-
-/**
- * Adds an array of markers to the clusterer. The clusters are redrawn unless
- *  <code>opt_nodraw</code> is set to <code>true</code>.
- *
- * @param {Array.<google.maps.Marker>} markers The markers to add.
- * @param {boolean} [opt_nodraw] Set to <code>true</code> to prevent redrawing.
- */
-MarkerClusterer.prototype.addMarkers = function (markers, opt_nodraw) {
-  var key;
-  for (key in markers) {
-    if (markers.hasOwnProperty(key)) {
-      this.pushMarkerTo_(markers[key]);
-    }
-  }  
-  if (!opt_nodraw) {
-    this.redraw_();
-  }
-};
-
-
-/**
- * Pushes a marker to the clusterer.
- *
- * @param {google.maps.Marker} marker The marker to add.
- */
-MarkerClusterer.prototype.pushMarkerTo_ = function (marker) {
-  // If the marker is draggable add a listener so we can update the clusters on the dragend:
-  if (marker.getDraggable()) {
-    var cMarkerClusterer = this;
-    google.maps.event.addListener(marker, "dragend", function () {
-      if (cMarkerClusterer.ready_) {
-        this.isAdded = false;
-        cMarkerClusterer.repaint();
-      }
-    });
-  }
-  marker.isAdded = false;
-  this.markers_.push(marker);
-};
-
-
-/**
- * Removes a marker from the cluster.  The clusters are redrawn unless
- *  <code>opt_nodraw</code> is set to <code>true</code>. Returns <code>true</code> if the
- *  marker was removed from the clusterer.
- *
- * @param {google.maps.Marker} marker The marker to remove.
- * @param {boolean} [opt_nodraw] Set to <code>true</code> to prevent redrawing.
- * @return {boolean} True if the marker was removed from the clusterer.
- */
-MarkerClusterer.prototype.removeMarker = function (marker, opt_nodraw) {
-  var removed = this.removeMarker_(marker);
-
-  if (!opt_nodraw && removed) {
-    this.repaint();
-  }
-
-  return removed;
-};
-
-
-/**
- * Removes an array of markers from the cluster. The clusters are redrawn unless
- *  <code>opt_nodraw</code> is set to <code>true</code>. Returns <code>true</code> if markers
- *  were removed from the clusterer.
- *
- * @param {Array.<google.maps.Marker>} markers The markers to remove.
- * @param {boolean} [opt_nodraw] Set to <code>true</code> to prevent redrawing.
- * @return {boolean} True if markers were removed from the clusterer.
- */
-MarkerClusterer.prototype.removeMarkers = function (markers, opt_nodraw) {
-  var i, r;
-  var removed = false;
-
-  for (i = 0; i < markers.length; i++) {
-    r = this.removeMarker_(markers[i]);
-    removed = removed || r;
-  }
-
-  if (!opt_nodraw && removed) {
-    this.repaint();
-  }
-
-  return removed;
-};
-
-
-/**
- * Removes a marker and returns true if removed, false if not.
- *
- * @param {google.maps.Marker} marker The marker to remove
- * @return {boolean} Whether the marker was removed or not
- */
-MarkerClusterer.prototype.removeMarker_ = function (marker) {
-  var i;
-  var index = -1;
-  if (this.markers_.indexOf) {
-    index = this.markers_.indexOf(marker);
-  } else {
-    for (i = 0; i < this.markers_.length; i++) {
-      if (marker === this.markers_[i]) {
-        index = i;
-        break;
-      }
-    }
-  }
-
-  if (index === -1) {
-    // Marker is not in our list of markers, so do nothing:
-    return false;
-  }
-
-  marker.setMap(null);
-  this.markers_.splice(index, 1); // Remove the marker from the list of managed markers
-  return true;
-};
-
-
-/**
- * Removes all clusters and markers from the map and also removes all markers
- *  managed by the clusterer.
- */
-MarkerClusterer.prototype.clearMarkers = function () {
-  this.resetViewport_(true);
-  this.markers_ = [];
-};
-
-
-/**
- * Recalculates and redraws all the marker clusters from scratch.
- *  Call this after changing any properties.
- */
-MarkerClusterer.prototype.repaint = function () {
-  var oldClusters = this.clusters_.slice();
-  this.clusters_ = [];
-  this.resetViewport_(false);
-  this.redraw_();
-
-  // Remove the old clusters.
-  // Do it in a timeout to prevent blinking effect.
-  setTimeout(function () {
-    var i;
-    for (i = 0; i < oldClusters.length; i++) {
-      oldClusters[i].remove();
-    }
-  }, 0);
-};
-
-
-/**
- * Returns the current bounds extended by the grid size.
- *
- * @param {google.maps.LatLngBounds} bounds The bounds to extend.
- * @return {google.maps.LatLngBounds} The extended bounds.
- * @ignore
- */
-MarkerClusterer.prototype.getExtendedBounds = function (bounds) {
-  var projection = this.getProjection();
-
-  // Turn the bounds into latlng.
-  var tr = new google.maps.LatLng(bounds.getNorthEast().lat(),
-      bounds.getNorthEast().lng());
-  var bl = new google.maps.LatLng(bounds.getSouthWest().lat(),
-      bounds.getSouthWest().lng());
-
-  // Convert the points to pixels and the extend out by the grid size.
-  var trPix = projection.fromLatLngToDivPixel(tr);
-  trPix.x += this.gridSize_;
-  trPix.y -= this.gridSize_;
-
-  var blPix = projection.fromLatLngToDivPixel(bl);
-  blPix.x -= this.gridSize_;
-  blPix.y += this.gridSize_;
-
-  // Convert the pixel points back to LatLng
-  var ne = projection.fromDivPixelToLatLng(trPix);
-  var sw = projection.fromDivPixelToLatLng(blPix);
-
-  // Extend the bounds to contain the new bounds.
-  bounds.extend(ne);
-  bounds.extend(sw);
-
-  return bounds;
-};
-
-
-/**
- * Redraws all the clusters.
- */
-MarkerClusterer.prototype.redraw_ = function () {
-  this.createClusters_(0);
-};
-
-
-/**
- * Removes all clusters from the map. The markers are also removed from the map
- *  if <code>opt_hide</code> is set to <code>true</code>.
- *
- * @param {boolean} [opt_hide] Set to <code>true</code> to also remove the markers
- *  from the map.
- */
-MarkerClusterer.prototype.resetViewport_ = function (opt_hide) {
-  var i, marker;
-  // Remove all the clusters
-  for (i = 0; i < this.clusters_.length; i++) {
-    this.clusters_[i].remove();
-  }
-  this.clusters_ = [];
-
-  // Reset the markers to not be added and to be removed from the map.
-  for (i = 0; i < this.markers_.length; i++) {
-    marker = this.markers_[i];
-    marker.isAdded = false;
-    if (opt_hide) {
-      marker.setMap(null);
-    }
-  }
-};
-
-
-/**
- * Calculates the distance between two latlng locations in km.
- *
- * @param {google.maps.LatLng} p1 The first lat lng point.
- * @param {google.maps.LatLng} p2 The second lat lng point.
- * @return {number} The distance between the two points in km.
- * @see http://www.movable-type.co.uk/scripts/latlong.html
-*/
-MarkerClusterer.prototype.distanceBetweenPoints_ = function (p1, p2) {
-  var R = 6371; // Radius of the Earth in km
-  var dLat = (p2.lat() - p1.lat()) * Math.PI / 180;
-  var dLon = (p2.lng() - p1.lng()) * Math.PI / 180;
-  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(p1.lat() * Math.PI / 180) * Math.cos(p2.lat() * Math.PI / 180) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  var d = R * c;
-  return d;
-};
-
-
-/**
- * Determines if a marker is contained in a bounds.
- *
- * @param {google.maps.Marker} marker The marker to check.
- * @param {google.maps.LatLngBounds} bounds The bounds to check against.
- * @return {boolean} True if the marker is in the bounds.
- */
-MarkerClusterer.prototype.isMarkerInBounds_ = function (marker, bounds) {
-  return bounds.contains(marker.getPosition());
-};
-
-
-/**
- * Adds a marker to a cluster, or creates a new cluster.
- *
- * @param {google.maps.Marker} marker The marker to add.
- */
-MarkerClusterer.prototype.addToClosestCluster_ = function (marker) {
-  var i, d, cluster, center;
-  var distance = 40000; // Some large number
-  var clusterToAddTo = null;
-  for (i = 0; i < this.clusters_.length; i++) {
-    cluster = this.clusters_[i];
-    center = cluster.getCenter();
-    if (center) {
-      d = this.distanceBetweenPoints_(center, marker.getPosition());
-      if (d < distance) {
-        distance = d;
-        clusterToAddTo = cluster;
-      }
-    }
-  }
-
-  if (clusterToAddTo && clusterToAddTo.isMarkerInClusterBounds(marker)) {
-    clusterToAddTo.addMarker(marker);
-  } else {
-    cluster = new Cluster(this);
-    cluster.addMarker(marker);
-    this.clusters_.push(cluster);
-  }
-};
-
-
-/**
- * Creates the clusters. This is done in batches to avoid timeout errors
- *  in some browsers when there is a huge number of markers.
- *
- * @param {number} iFirst The index of the first marker in the batch of
- *  markers to be added to clusters.
- */
-MarkerClusterer.prototype.createClusters_ = function (iFirst) {
-  var i, marker;
-  var mapBounds;
-  var cMarkerClusterer = this;
-  if (!this.ready_) {
-    return;
-  }
-
-  // Cancel previous batch processing if we're working on the first batch:
-  if (iFirst === 0) {
-    /**
-     * This event is fired when the <code>MarkerClusterer</code> begins
-     *  clustering markers.
-     * @name MarkerClusterer#clusteringbegin
-     * @param {MarkerClusterer} mc The MarkerClusterer whose markers are being clustered.
-     * @event
-     */
-    google.maps.event.trigger(this, "clusteringbegin", this);
-
-    if (typeof this.timerRefStatic !== "undefined") {
-      clearTimeout(this.timerRefStatic);
-      delete this.timerRefStatic;
-    }
-  }
-
-  // Get our current map view bounds.
-  // Create a new bounds object so we don't affect the map.
-  //
-  // See Comments 9 & 11 on Issue 3651 relating to this workaround for a Google Maps bug:
-  if (this.getMap().getZoom() > 3) {
-    mapBounds = new google.maps.LatLngBounds(this.getMap().getBounds().getSouthWest(),
-      this.getMap().getBounds().getNorthEast());
-  } else {
-    mapBounds = new google.maps.LatLngBounds(new google.maps.LatLng(85.02070771743472, -178.48388434375), new google.maps.LatLng(-85.08136444384544, 178.00048865625));
-  }
-  var bounds = this.getExtendedBounds(mapBounds);
-
-  var iLast = Math.min(iFirst + this.batchSize_, this.markers_.length);
-
-  for (i = iFirst; i < iLast; i++) {
-    marker = this.markers_[i];
-    if (!marker.isAdded && this.isMarkerInBounds_(marker, bounds)) {
-      if (!this.ignoreHidden_ || (this.ignoreHidden_ && marker.getVisible())) {
-        this.addToClosestCluster_(marker);
-      }
-    }
-  }
-
-  if (iLast < this.markers_.length) {
-    this.timerRefStatic = setTimeout(function () {
-      cMarkerClusterer.createClusters_(iLast);
-    }, 0);
-  } else {
-    delete this.timerRefStatic;
-
-    /**
-     * This event is fired when the <code>MarkerClusterer</code> stops
-     *  clustering markers.
-     * @name MarkerClusterer#clusteringend
-     * @param {MarkerClusterer} mc The MarkerClusterer whose markers are being clustered.
-     * @event
-     */
-    google.maps.event.trigger(this, "clusteringend", this);
-  }
-};
-
-
-/**
- * Extends an object's prototype by another's.
- *
- * @param {Object} obj1 The object to be extended.
- * @param {Object} obj2 The object to extend with.
- * @return {Object} The new extended object.
- * @ignore
- */
-MarkerClusterer.prototype.extend = function (obj1, obj2) {
-  return (function (object) {
-    var property;
-    for (property in object.prototype) {
-      this.prototype[property] = object.prototype[property];
-    }
-    return this;
-  }).apply(obj1, [obj2]);
-};
-
-
-/**
- * The default function for determining the label text and style
- * for a cluster icon.
- *
- * @param {Array.<google.maps.Marker>} markers The array of markers represented by the cluster.
- * @param {number} numStyles The number of marker styles available.
- * @return {ClusterIconInfo} The information resource for the cluster.
- * @constant
- * @ignore
- */
-MarkerClusterer.CALCULATOR = function (markers, numStyles) {
-  var index = 0;
-  var title = "";
-  var count = markers.length.toString();
-
-  var dv = count;
-  while (dv !== 0) {
-    dv = parseInt(dv / 10, 10);
-    index++;
-  }
-
-  index = Math.min(index, numStyles);
-  return {
-    text: count,
-    index: index,
-    title: title
+    return a !== a && b !== b;
   };
-};
+
+  /**
+   * The default Grid algorithm historically used in Google Maps marker
+   * clustering.
+   *
+   * The Grid algorithm does not implement caching and markers may flash as the
+   * viewport changes. Instead use {@link SuperClusterAlgorithm}.
+   */
+
+  var GridAlgorithm = /*#__PURE__*/function (_AbstractViewportAlgo) {
+    _inherits(GridAlgorithm, _AbstractViewportAlgo);
+
+    var _super = _createSuper(GridAlgorithm);
+
+    function GridAlgorithm(_a) {
+      var _this;
+
+      _classCallCheck(this, GridAlgorithm);
+
+      var _a$maxDistance = _a.maxDistance,
+          maxDistance = _a$maxDistance === void 0 ? 40000 : _a$maxDistance,
+          _a$gridSize = _a.gridSize,
+          gridSize = _a$gridSize === void 0 ? 40 : _a$gridSize,
+          options = __rest(_a, ["maxDistance", "gridSize"]);
+
+      _this = _super.call(this, options);
+      _this.clusters = [];
+      _this.maxDistance = maxDistance;
+      _this.gridSize = gridSize;
+      _this.state = {
+        zoom: null
+      };
+      return _this;
+    }
+
+    _createClass(GridAlgorithm, [{
+      key: "calculate",
+      value: function calculate(_ref) {
+        var markers = _ref.markers,
+            map = _ref.map,
+            mapCanvasProjection = _ref.mapCanvasProjection;
+        var state = {
+          zoom: map.getZoom()
+        };
+        var changed = false;
+
+        if (this.state.zoom > this.maxZoom && state.zoom > this.maxZoom) ; else {
+          changed = !fastDeepEqual(this.state, state);
+        }
+
+        this.state = state;
+
+        if (map.getZoom() >= this.maxZoom) {
+          return {
+            clusters: this.noop({
+              markers: markers,
+              map: map,
+              mapCanvasProjection: mapCanvasProjection
+            }),
+            changed: changed
+          };
+        }
+
+        return {
+          clusters: this.cluster({
+            markers: filterMarkersToPaddedViewport(map, mapCanvasProjection, markers, this.viewportPadding),
+            map: map,
+            mapCanvasProjection: mapCanvasProjection
+          })
+        };
+      }
+    }, {
+      key: "cluster",
+      value: function cluster(_ref2) {
+        var _this2 = this;
+
+        var markers = _ref2.markers,
+            map = _ref2.map,
+            mapCanvasProjection = _ref2.mapCanvasProjection;
+        this.clusters = [];
+        markers.forEach(function (marker) {
+          _this2.addToClosestCluster(marker, map, mapCanvasProjection);
+        });
+        return this.clusters;
+      }
+    }, {
+      key: "addToClosestCluster",
+      value: function addToClosestCluster(marker, map, projection) {
+        var maxDistance = this.maxDistance; // Some large number
+
+        var cluster = null;
+
+        for (var i = 0; i < this.clusters.length; i++) {
+          var candidate = this.clusters[i];
+          var distance = distanceBetweenPoints(candidate.bounds.getCenter().toJSON(), marker.getPosition().toJSON());
+
+          if (distance < maxDistance) {
+            maxDistance = distance;
+            cluster = candidate;
+          }
+        }
+
+        if (cluster && extendBoundsToPaddedViewport(cluster.bounds, projection, this.gridSize).contains(marker.getPosition())) {
+          cluster.push(marker);
+        } else {
+          var _cluster = new Cluster({
+            markers: [marker]
+          });
+
+          this.clusters.push(_cluster);
+        }
+      }
+    }]);
+
+    return GridAlgorithm;
+  }(AbstractViewportAlgorithm);
+
+  /**
+   * Noop algorithm does not generate any clusters or filter markers by the an extended viewport.
+   */
+
+  var NoopAlgorithm = /*#__PURE__*/function (_AbstractAlgorithm) {
+    _inherits(NoopAlgorithm, _AbstractAlgorithm);
+
+    var _super = _createSuper(NoopAlgorithm);
+
+    function NoopAlgorithm(_a) {
+      _classCallCheck(this, NoopAlgorithm);
+
+      var options = __rest(_a, []);
+
+      return _super.call(this, options);
+    }
+
+    _createClass(NoopAlgorithm, [{
+      key: "calculate",
+      value: function calculate(_ref) {
+        var markers = _ref.markers,
+            map = _ref.map,
+            mapCanvasProjection = _ref.mapCanvasProjection;
+        return {
+          clusters: this.cluster({
+            markers: markers,
+            map: map,
+            mapCanvasProjection: mapCanvasProjection
+          }),
+          changed: false
+        };
+      }
+    }, {
+      key: "cluster",
+      value: function cluster(input) {
+        return this.noop(input);
+      }
+    }]);
+
+    return NoopAlgorithm;
+  }(AbstractAlgorithm);
+
+  var internalObjectKeys = objectKeysInternal;
+  var enumBugKeys$1 = enumBugKeys$3; // `Object.keys` method
+  // https://tc39.es/ecma262/#sec-object.keys
+  // eslint-disable-next-line es-x/no-object-keys -- safe
+
+  var objectKeys$2 = Object.keys || function keys(O) {
+    return internalObjectKeys(O, enumBugKeys$1);
+  };
+
+  var DESCRIPTORS$2 = descriptors;
+  var uncurryThis$6 = functionUncurryThis;
+  var call = functionCall;
+  var fails$2 = fails$e;
+  var objectKeys$1 = objectKeys$2;
+  var getOwnPropertySymbolsModule = objectGetOwnPropertySymbols;
+  var propertyIsEnumerableModule = objectPropertyIsEnumerable;
+  var toObject$1 = toObject$5;
+  var IndexedObject = indexedObject; // eslint-disable-next-line es-x/no-object-assign -- safe
+
+  var $assign = Object.assign; // eslint-disable-next-line es-x/no-object-defineproperty -- required for testing
+
+  var defineProperty$2 = Object.defineProperty;
+  var concat = uncurryThis$6([].concat); // `Object.assign` method
+  // https://tc39.es/ecma262/#sec-object.assign
+
+  var objectAssign = !$assign || fails$2(function () {
+    // should have correct order of operations (Edge bug)
+    if (DESCRIPTORS$2 && $assign({
+      b: 1
+    }, $assign(defineProperty$2({}, 'a', {
+      enumerable: true,
+      get: function () {
+        defineProperty$2(this, 'b', {
+          value: 3,
+          enumerable: false
+        });
+      }
+    }), {
+      b: 2
+    })).b !== 1) return true; // should work with symbols and should have deterministic property order (V8 bug)
+
+    var A = {};
+    var B = {}; // eslint-disable-next-line es-x/no-symbol -- safe
+
+    var symbol = Symbol();
+    var alphabet = 'abcdefghijklmnopqrst';
+    A[symbol] = 7;
+    alphabet.split('').forEach(function (chr) {
+      B[chr] = chr;
+    });
+    return $assign({}, A)[symbol] != 7 || objectKeys$1($assign({}, B)).join('') != alphabet;
+  }) ? function assign(target, source) {
+    // eslint-disable-line no-unused-vars -- required for `.length`
+    var T = toObject$1(target);
+    var argumentsLength = arguments.length;
+    var index = 1;
+    var getOwnPropertySymbols = getOwnPropertySymbolsModule.f;
+    var propertyIsEnumerable = propertyIsEnumerableModule.f;
+
+    while (argumentsLength > index) {
+      var S = IndexedObject(arguments[index++]);
+      var keys = getOwnPropertySymbols ? concat(objectKeys$1(S), getOwnPropertySymbols(S)) : objectKeys$1(S);
+      var length = keys.length;
+      var j = 0;
+      var key;
+
+      while (length > j) {
+        key = keys[j++];
+        if (!DESCRIPTORS$2 || call(propertyIsEnumerable, S, key)) T[key] = S[key];
+      }
+    }
+
+    return T;
+  } : $assign;
+
+  var $$4 = _export;
+  var assign = objectAssign; // `Object.assign` method
+  // https://tc39.es/ecma262/#sec-object.assign
+  // eslint-disable-next-line es-x/no-object-assign -- required for testing
+
+  $$4({
+    target: 'Object',
+    stat: true,
+    arity: 2,
+    forced: Object.assign !== assign
+  }, {
+    assign: assign
+  });
+
+  var kdbush = {exports: {}};
+
+  (function (module, exports) {
+    (function (global, factory) {
+      module.exports = factory() ;
+    })(commonjsGlobal, function () {
+
+      function sortKD(ids, coords, nodeSize, left, right, depth) {
+        if (right - left <= nodeSize) {
+          return;
+        }
+
+        var m = left + right >> 1;
+        select(ids, coords, m, left, right, depth % 2);
+        sortKD(ids, coords, nodeSize, left, m - 1, depth + 1);
+        sortKD(ids, coords, nodeSize, m + 1, right, depth + 1);
+      }
+
+      function select(ids, coords, k, left, right, inc) {
+        while (right > left) {
+          if (right - left > 600) {
+            var n = right - left + 1;
+            var m = k - left + 1;
+            var z = Math.log(n);
+            var s = 0.5 * Math.exp(2 * z / 3);
+            var sd = 0.5 * Math.sqrt(z * s * (n - s) / n) * (m - n / 2 < 0 ? -1 : 1);
+            var newLeft = Math.max(left, Math.floor(k - m * s / n + sd));
+            var newRight = Math.min(right, Math.floor(k + (n - m) * s / n + sd));
+            select(ids, coords, k, newLeft, newRight, inc);
+          }
+
+          var t = coords[2 * k + inc];
+          var i = left;
+          var j = right;
+          swapItem(ids, coords, left, k);
+
+          if (coords[2 * right + inc] > t) {
+            swapItem(ids, coords, left, right);
+          }
+
+          while (i < j) {
+            swapItem(ids, coords, i, j);
+            i++;
+            j--;
+
+            while (coords[2 * i + inc] < t) {
+              i++;
+            }
+
+            while (coords[2 * j + inc] > t) {
+              j--;
+            }
+          }
+
+          if (coords[2 * left + inc] === t) {
+            swapItem(ids, coords, left, j);
+          } else {
+            j++;
+            swapItem(ids, coords, j, right);
+          }
+
+          if (j <= k) {
+            left = j + 1;
+          }
+
+          if (k <= j) {
+            right = j - 1;
+          }
+        }
+      }
+
+      function swapItem(ids, coords, i, j) {
+        swap(ids, i, j);
+        swap(coords, 2 * i, 2 * j);
+        swap(coords, 2 * i + 1, 2 * j + 1);
+      }
+
+      function swap(arr, i, j) {
+        var tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+      }
+
+      function range(ids, coords, minX, minY, maxX, maxY, nodeSize) {
+        var stack = [0, ids.length - 1, 0];
+        var result = [];
+        var x, y;
+
+        while (stack.length) {
+          var axis = stack.pop();
+          var right = stack.pop();
+          var left = stack.pop();
+
+          if (right - left <= nodeSize) {
+            for (var i = left; i <= right; i++) {
+              x = coords[2 * i];
+              y = coords[2 * i + 1];
+
+              if (x >= minX && x <= maxX && y >= minY && y <= maxY) {
+                result.push(ids[i]);
+              }
+            }
+
+            continue;
+          }
+
+          var m = Math.floor((left + right) / 2);
+          x = coords[2 * m];
+          y = coords[2 * m + 1];
+
+          if (x >= minX && x <= maxX && y >= minY && y <= maxY) {
+            result.push(ids[m]);
+          }
+
+          var nextAxis = (axis + 1) % 2;
+
+          if (axis === 0 ? minX <= x : minY <= y) {
+            stack.push(left);
+            stack.push(m - 1);
+            stack.push(nextAxis);
+          }
+
+          if (axis === 0 ? maxX >= x : maxY >= y) {
+            stack.push(m + 1);
+            stack.push(right);
+            stack.push(nextAxis);
+          }
+        }
+
+        return result;
+      }
+
+      function within(ids, coords, qx, qy, r, nodeSize) {
+        var stack = [0, ids.length - 1, 0];
+        var result = [];
+        var r2 = r * r;
+
+        while (stack.length) {
+          var axis = stack.pop();
+          var right = stack.pop();
+          var left = stack.pop();
+
+          if (right - left <= nodeSize) {
+            for (var i = left; i <= right; i++) {
+              if (sqDist(coords[2 * i], coords[2 * i + 1], qx, qy) <= r2) {
+                result.push(ids[i]);
+              }
+            }
+
+            continue;
+          }
+
+          var m = Math.floor((left + right) / 2);
+          var x = coords[2 * m];
+          var y = coords[2 * m + 1];
+
+          if (sqDist(x, y, qx, qy) <= r2) {
+            result.push(ids[m]);
+          }
+
+          var nextAxis = (axis + 1) % 2;
+
+          if (axis === 0 ? qx - r <= x : qy - r <= y) {
+            stack.push(left);
+            stack.push(m - 1);
+            stack.push(nextAxis);
+          }
+
+          if (axis === 0 ? qx + r >= x : qy + r >= y) {
+            stack.push(m + 1);
+            stack.push(right);
+            stack.push(nextAxis);
+          }
+        }
+
+        return result;
+      }
+
+      function sqDist(ax, ay, bx, by) {
+        var dx = ax - bx;
+        var dy = ay - by;
+        return dx * dx + dy * dy;
+      }
+
+      var defaultGetX = function (p) {
+        return p[0];
+      };
+
+      var defaultGetY = function (p) {
+        return p[1];
+      };
+
+      var KDBush = function KDBush(points, getX, getY, nodeSize, ArrayType) {
+        if (getX === void 0) getX = defaultGetX;
+        if (getY === void 0) getY = defaultGetY;
+        if (nodeSize === void 0) nodeSize = 64;
+        if (ArrayType === void 0) ArrayType = Float64Array;
+        this.nodeSize = nodeSize;
+        this.points = points;
+        var IndexArrayType = points.length < 65536 ? Uint16Array : Uint32Array;
+        var ids = this.ids = new IndexArrayType(points.length);
+        var coords = this.coords = new ArrayType(points.length * 2);
+
+        for (var i = 0; i < points.length; i++) {
+          ids[i] = i;
+          coords[2 * i] = getX(points[i]);
+          coords[2 * i + 1] = getY(points[i]);
+        }
+
+        sortKD(ids, coords, nodeSize, 0, ids.length - 1, 0);
+      };
+
+      KDBush.prototype.range = function range$1(minX, minY, maxX, maxY) {
+        return range(this.ids, this.coords, minX, minY, maxX, maxY, this.nodeSize);
+      };
+
+      KDBush.prototype.within = function within$1(x, y, r) {
+        return within(this.ids, this.coords, x, y, r, this.nodeSize);
+      };
+
+      return KDBush;
+    });
+  })(kdbush);
+
+  var KDBush = kdbush.exports;
+
+  const defaultOptions = {
+    minZoom: 0,
+    // min zoom to generate clusters on
+    maxZoom: 16,
+    // max zoom level to cluster the points on
+    minPoints: 2,
+    // minimum points to form a cluster
+    radius: 40,
+    // cluster radius in pixels
+    extent: 512,
+    // tile extent (radius is calculated relative to it)
+    nodeSize: 64,
+    // size of the KD-tree leaf node, affects performance
+    log: false,
+    // whether to log timing info
+    // whether to generate numeric ids for input features (in vector tiles)
+    generateId: false,
+    // a reduce function for calculating custom cluster properties
+    reduce: null,
+    // (accumulated, props) => { accumulated.sum += props.sum; }
+    // properties to use for individual points when running the reducer
+    map: props => props // props => ({sum: props.my_value})
+
+  };
+
+  const fround = Math.fround || (tmp => x => {
+    tmp[0] = +x;
+    return tmp[0];
+  })(new Float32Array(1));
+
+  class Supercluster {
+    constructor(options) {
+      this.options = extend$1(Object.create(defaultOptions), options);
+      this.trees = new Array(this.options.maxZoom + 1);
+    }
+
+    load(points) {
+      const {
+        log,
+        minZoom,
+        maxZoom,
+        nodeSize
+      } = this.options;
+      if (log) console.time('total time');
+      const timerId = `prepare ${points.length} points`;
+      if (log) console.time(timerId);
+      this.points = points; // generate a cluster object for each point and index input points into a KD-tree
+
+      let clusters = [];
+
+      for (let i = 0; i < points.length; i++) {
+        if (!points[i].geometry) continue;
+        clusters.push(createPointCluster(points[i], i));
+      }
+
+      this.trees[maxZoom + 1] = new KDBush(clusters, getX, getY, nodeSize, Float32Array);
+      if (log) console.timeEnd(timerId); // cluster points on max zoom, then cluster the results on previous zoom, etc.;
+      // results in a cluster hierarchy across zoom levels
+
+      for (let z = maxZoom; z >= minZoom; z--) {
+        const now = +Date.now(); // create a new set of clusters for the zoom and index them with a KD-tree
+
+        clusters = this._cluster(clusters, z);
+        this.trees[z] = new KDBush(clusters, getX, getY, nodeSize, Float32Array);
+        if (log) console.log('z%d: %d clusters in %dms', z, clusters.length, +Date.now() - now);
+      }
+
+      if (log) console.timeEnd('total time');
+      return this;
+    }
+
+    getClusters(bbox, zoom) {
+      let minLng = ((bbox[0] + 180) % 360 + 360) % 360 - 180;
+      const minLat = Math.max(-90, Math.min(90, bbox[1]));
+      let maxLng = bbox[2] === 180 ? 180 : ((bbox[2] + 180) % 360 + 360) % 360 - 180;
+      const maxLat = Math.max(-90, Math.min(90, bbox[3]));
+
+      if (bbox[2] - bbox[0] >= 360) {
+        minLng = -180;
+        maxLng = 180;
+      } else if (minLng > maxLng) {
+        const easternHem = this.getClusters([minLng, minLat, 180, maxLat], zoom);
+        const westernHem = this.getClusters([-180, minLat, maxLng, maxLat], zoom);
+        return easternHem.concat(westernHem);
+      }
+
+      const tree = this.trees[this._limitZoom(zoom)];
+
+      const ids = tree.range(lngX(minLng), latY(maxLat), lngX(maxLng), latY(minLat));
+      const clusters = [];
+
+      for (const id of ids) {
+        const c = tree.points[id];
+        clusters.push(c.numPoints ? getClusterJSON(c) : this.points[c.index]);
+      }
+
+      return clusters;
+    }
+
+    getChildren(clusterId) {
+      const originId = this._getOriginId(clusterId);
+
+      const originZoom = this._getOriginZoom(clusterId);
+
+      const errorMsg = 'No cluster with the specified id.';
+      const index = this.trees[originZoom];
+      if (!index) throw new Error(errorMsg);
+      const origin = index.points[originId];
+      if (!origin) throw new Error(errorMsg);
+      const r = this.options.radius / (this.options.extent * Math.pow(2, originZoom - 1));
+      const ids = index.within(origin.x, origin.y, r);
+      const children = [];
+
+      for (const id of ids) {
+        const c = index.points[id];
+
+        if (c.parentId === clusterId) {
+          children.push(c.numPoints ? getClusterJSON(c) : this.points[c.index]);
+        }
+      }
+
+      if (children.length === 0) throw new Error(errorMsg);
+      return children;
+    }
+
+    getLeaves(clusterId, limit, offset) {
+      limit = limit || 10;
+      offset = offset || 0;
+      const leaves = [];
+
+      this._appendLeaves(leaves, clusterId, limit, offset, 0);
+
+      return leaves;
+    }
+
+    getTile(z, x, y) {
+      const tree = this.trees[this._limitZoom(z)];
+
+      const z2 = Math.pow(2, z);
+      const {
+        extent,
+        radius
+      } = this.options;
+      const p = radius / extent;
+      const top = (y - p) / z2;
+      const bottom = (y + 1 + p) / z2;
+      const tile = {
+        features: []
+      };
+
+      this._addTileFeatures(tree.range((x - p) / z2, top, (x + 1 + p) / z2, bottom), tree.points, x, y, z2, tile);
+
+      if (x === 0) {
+        this._addTileFeatures(tree.range(1 - p / z2, top, 1, bottom), tree.points, z2, y, z2, tile);
+      }
+
+      if (x === z2 - 1) {
+        this._addTileFeatures(tree.range(0, top, p / z2, bottom), tree.points, -1, y, z2, tile);
+      }
+
+      return tile.features.length ? tile : null;
+    }
+
+    getClusterExpansionZoom(clusterId) {
+      let expansionZoom = this._getOriginZoom(clusterId) - 1;
+
+      while (expansionZoom <= this.options.maxZoom) {
+        const children = this.getChildren(clusterId);
+        expansionZoom++;
+        if (children.length !== 1) break;
+        clusterId = children[0].properties.cluster_id;
+      }
+
+      return expansionZoom;
+    }
+
+    _appendLeaves(result, clusterId, limit, offset, skipped) {
+      const children = this.getChildren(clusterId);
+
+      for (const child of children) {
+        const props = child.properties;
+
+        if (props && props.cluster) {
+          if (skipped + props.point_count <= offset) {
+            // skip the whole cluster
+            skipped += props.point_count;
+          } else {
+            // enter the cluster
+            skipped = this._appendLeaves(result, props.cluster_id, limit, offset, skipped); // exit the cluster
+          }
+        } else if (skipped < offset) {
+          // skip a single point
+          skipped++;
+        } else {
+          // add a single point
+          result.push(child);
+        }
+
+        if (result.length === limit) break;
+      }
+
+      return skipped;
+    }
+
+    _addTileFeatures(ids, points, x, y, z2, tile) {
+      for (const i of ids) {
+        const c = points[i];
+        const isCluster = c.numPoints;
+        let tags, px, py;
+
+        if (isCluster) {
+          tags = getClusterProperties(c);
+          px = c.x;
+          py = c.y;
+        } else {
+          const p = this.points[c.index];
+          tags = p.properties;
+          px = lngX(p.geometry.coordinates[0]);
+          py = latY(p.geometry.coordinates[1]);
+        }
+
+        const f = {
+          type: 1,
+          geometry: [[Math.round(this.options.extent * (px * z2 - x)), Math.round(this.options.extent * (py * z2 - y))]],
+          tags
+        }; // assign id
+
+        let id;
+
+        if (isCluster) {
+          id = c.id;
+        } else if (this.options.generateId) {
+          // optionally generate id
+          id = c.index;
+        } else if (this.points[c.index].id) {
+          // keep id if already assigned
+          id = this.points[c.index].id;
+        }
+
+        if (id !== undefined) f.id = id;
+        tile.features.push(f);
+      }
+    }
+
+    _limitZoom(z) {
+      return Math.max(this.options.minZoom, Math.min(Math.floor(+z), this.options.maxZoom + 1));
+    }
+
+    _cluster(points, zoom) {
+      const clusters = [];
+      const {
+        radius,
+        extent,
+        reduce,
+        minPoints
+      } = this.options;
+      const r = radius / (extent * Math.pow(2, zoom)); // loop through each point
+
+      for (let i = 0; i < points.length; i++) {
+        const p = points[i]; // if we've already visited the point at this zoom level, skip it
+
+        if (p.zoom <= zoom) continue;
+        p.zoom = zoom; // find all nearby points
+
+        const tree = this.trees[zoom + 1];
+        const neighborIds = tree.within(p.x, p.y, r);
+        const numPointsOrigin = p.numPoints || 1;
+        let numPoints = numPointsOrigin; // count the number of points in a potential cluster
+
+        for (const neighborId of neighborIds) {
+          const b = tree.points[neighborId]; // filter out neighbors that are already processed
+
+          if (b.zoom > zoom) numPoints += b.numPoints || 1;
+        } // if there were neighbors to merge, and there are enough points to form a cluster
 
 
-/**
- * The number of markers to process in one batch.
- *
- * @type {number}
- * @constant
- */
-MarkerClusterer.BATCH_SIZE = 2000;
+        if (numPoints > numPointsOrigin && numPoints >= minPoints) {
+          let wx = p.x * numPointsOrigin;
+          let wy = p.y * numPointsOrigin;
+          let clusterProperties = reduce && numPointsOrigin > 1 ? this._map(p, true) : null; // encode both zoom and point index on which the cluster originated -- offset by total length of features
+
+          const id = (i << 5) + (zoom + 1) + this.points.length;
+
+          for (const neighborId of neighborIds) {
+            const b = tree.points[neighborId];
+            if (b.zoom <= zoom) continue;
+            b.zoom = zoom; // save the zoom (so it doesn't get processed twice)
+
+            const numPoints2 = b.numPoints || 1;
+            wx += b.x * numPoints2; // accumulate coordinates for calculating weighted center
+
+            wy += b.y * numPoints2;
+            b.parentId = id;
+
+            if (reduce) {
+              if (!clusterProperties) clusterProperties = this._map(p, true);
+              reduce(clusterProperties, this._map(b));
+            }
+          }
+
+          p.parentId = id;
+          clusters.push(createCluster(wx / numPoints, wy / numPoints, id, numPoints, clusterProperties));
+        } else {
+          // left points as unclustered
+          clusters.push(p);
+
+          if (numPoints > 1) {
+            for (const neighborId of neighborIds) {
+              const b = tree.points[neighborId];
+              if (b.zoom <= zoom) continue;
+              b.zoom = zoom;
+              clusters.push(b);
+            }
+          }
+        }
+      }
+
+      return clusters;
+    } // get index of the point from which the cluster originated
 
 
-/**
- * The number of markers to process in one batch (IE only).
- *
- * @type {number}
- * @constant
- */
-MarkerClusterer.BATCH_SIZE_IE = 500;
+    _getOriginId(clusterId) {
+      return clusterId - this.points.length >> 5;
+    } // get zoom of the point from which the cluster originated
 
 
-/**
- * The default root name for the marker cluster images.
- *
- * @type {string}
- * @constant
- */
-MarkerClusterer.IMAGE_PATH = "../images/m";
+    _getOriginZoom(clusterId) {
+      return (clusterId - this.points.length) % 32;
+    }
+
+    _map(point, clone) {
+      if (point.numPoints) {
+        return clone ? extend$1({}, point.properties) : point.properties;
+      }
+
+      const original = this.points[point.index].properties;
+      const result = this.options.map(original);
+      return clone && result === original ? extend$1({}, result) : result;
+    }
+
+  }
+
+  function createCluster(x, y, id, numPoints, properties) {
+    return {
+      x: fround(x),
+      // weighted cluster center; round for consistency with Float32Array index
+      y: fround(y),
+      zoom: Infinity,
+      // the last zoom the cluster was processed at
+      id,
+      // encodes index of the first child of the cluster and its zoom level
+      parentId: -1,
+      // parent cluster id
+      numPoints,
+      properties
+    };
+  }
+
+  function createPointCluster(p, id) {
+    const [x, y] = p.geometry.coordinates;
+    return {
+      x: fround(lngX(x)),
+      // projected point coordinates
+      y: fround(latY(y)),
+      zoom: Infinity,
+      // the last zoom the point was processed at
+      index: id,
+      // index of the source feature in the original input array,
+      parentId: -1 // parent cluster id
+
+    };
+  }
+
+  function getClusterJSON(cluster) {
+    return {
+      type: 'Feature',
+      id: cluster.id,
+      properties: getClusterProperties(cluster),
+      geometry: {
+        type: 'Point',
+        coordinates: [xLng(cluster.x), yLat(cluster.y)]
+      }
+    };
+  }
+
+  function getClusterProperties(cluster) {
+    const count = cluster.numPoints;
+    const abbrev = count >= 10000 ? `${Math.round(count / 1000)}k` : count >= 1000 ? `${Math.round(count / 100) / 10}k` : count;
+    return extend$1(extend$1({}, cluster.properties), {
+      cluster: true,
+      cluster_id: cluster.id,
+      point_count: count,
+      point_count_abbreviated: abbrev
+    });
+  } // longitude/latitude to spherical mercator in [0..1] range
 
 
-/**
- * The default extension name for the marker cluster images.
- *
- * @type {string}
- * @constant
- */
-MarkerClusterer.IMAGE_EXTENSION = "png";
+  function lngX(lng) {
+    return lng / 360 + 0.5;
+  }
+
+  function latY(lat) {
+    const sin = Math.sin(lat * Math.PI / 180);
+    const y = 0.5 - 0.25 * Math.log((1 + sin) / (1 - sin)) / Math.PI;
+    return y < 0 ? 0 : y > 1 ? 1 : y;
+  } // spherical mercator to longitude/latitude
 
 
-/**
- * The default array of sizes for the marker cluster images.
- *
- * @type {Array.<number>}
- * @constant
- */
-MarkerClusterer.IMAGE_SIZES = [53, 56, 66, 78, 90];
+  function xLng(x) {
+    return (x - 0.5) * 360;
+  }
+
+  function yLat(y) {
+    const y2 = (180 - y * 360) * Math.PI / 180;
+    return 360 * Math.atan(Math.exp(y2)) / Math.PI - 90;
+  }
+
+  function extend$1(dest, src) {
+    for (const id in src) dest[id] = src[id];
+
+    return dest;
+  }
+
+  function getX(p) {
+    return p.x;
+  }
+
+  function getY(p) {
+    return p.y;
+  }
+
+  /**
+   * A very fast JavaScript algorithm for geospatial point clustering using KD trees.
+   *
+   * @see https://www.npmjs.com/package/supercluster for more information on options.
+   */
+
+  var SuperClusterAlgorithm = /*#__PURE__*/function (_AbstractAlgorithm) {
+    _inherits(SuperClusterAlgorithm, _AbstractAlgorithm);
+
+    var _super = _createSuper(SuperClusterAlgorithm);
+
+    function SuperClusterAlgorithm(_a) {
+      var _this;
+
+      _classCallCheck(this, SuperClusterAlgorithm);
+
+      var maxZoom = _a.maxZoom,
+          _a$radius = _a.radius,
+          radius = _a$radius === void 0 ? 60 : _a$radius,
+          options = __rest(_a, ["maxZoom", "radius"]);
+
+      _this = _super.call(this, {
+        maxZoom: maxZoom
+      });
+      _this.superCluster = new Supercluster(Object.assign({
+        maxZoom: _this.maxZoom,
+        radius: radius
+      }, options));
+      _this.state = {
+        zoom: null
+      };
+      return _this;
+    }
+
+    _createClass(SuperClusterAlgorithm, [{
+      key: "calculate",
+      value: function calculate(input) {
+        var changed = false;
+
+        if (!fastDeepEqual(input.markers, this.markers)) {
+          changed = true; // TODO use proxy to avoid copy?
+
+          this.markers = _toConsumableArray(input.markers);
+          var points = this.markers.map(function (marker) {
+            return {
+              type: "Feature",
+              geometry: {
+                type: "Point",
+                coordinates: [marker.getPosition().lng(), marker.getPosition().lat()]
+              },
+              properties: {
+                marker: marker
+              }
+            };
+          });
+          this.superCluster.load(points);
+        }
+
+        var state = {
+          zoom: input.map.getZoom()
+        };
+
+        if (!changed) {
+          if (this.state.zoom > this.maxZoom && state.zoom > this.maxZoom) ; else {
+            changed = changed || !fastDeepEqual(this.state, state);
+          }
+        }
+
+        this.state = state;
+
+        if (changed) {
+          this.clusters = this.cluster(input);
+        }
+
+        return {
+          clusters: this.clusters,
+          changed: changed
+        };
+      }
+    }, {
+      key: "cluster",
+      value: function cluster(_ref) {
+        var map = _ref.map;
+        return this.superCluster.getClusters([-180, -90, 180, 90], Math.round(map.getZoom())).map(this.transformCluster.bind(this));
+      }
+    }, {
+      key: "transformCluster",
+      value: function transformCluster(_ref2) {
+        var _ref2$geometry$coordi = _slicedToArray(_ref2.geometry.coordinates, 2),
+            lng = _ref2$geometry$coordi[0],
+            lat = _ref2$geometry$coordi[1],
+            properties = _ref2.properties;
+
+        if (properties.cluster) {
+          return new Cluster({
+            markers: this.superCluster.getLeaves(properties.cluster_id, Infinity).map(function (leaf) {
+              return leaf.properties.marker;
+            }),
+            position: new google.maps.LatLng({
+              lat: lat,
+              lng: lng
+            })
+          });
+        } else {
+          var marker = properties.marker;
+          return new Cluster({
+            markers: [marker],
+            position: marker.getPosition()
+          });
+        }
+      }
+    }]);
+
+    return SuperClusterAlgorithm;
+  }(AbstractAlgorithm);
+
+  var objectDefineProperties = {};
+
+  var DESCRIPTORS$1 = descriptors;
+  var V8_PROTOTYPE_DEFINE_BUG = v8PrototypeDefineBug;
+  var definePropertyModule$1 = objectDefineProperty;
+  var anObject$2 = anObject$5;
+  var toIndexedObject = toIndexedObject$4;
+  var objectKeys = objectKeys$2; // `Object.defineProperties` method
+  // https://tc39.es/ecma262/#sec-object.defineproperties
+  // eslint-disable-next-line es-x/no-object-defineproperties -- safe
+
+  objectDefineProperties.f = DESCRIPTORS$1 && !V8_PROTOTYPE_DEFINE_BUG ? Object.defineProperties : function defineProperties(O, Properties) {
+    anObject$2(O);
+    var props = toIndexedObject(Properties);
+    var keys = objectKeys(Properties);
+    var length = keys.length;
+    var index = 0;
+    var key;
+
+    while (length > index) definePropertyModule$1.f(O, key = keys[index++], props[key]);
+
+    return O;
+  };
+
+  var getBuiltIn = getBuiltIn$5;
+  var html$1 = getBuiltIn('document', 'documentElement');
+
+  /* global ActiveXObject -- old IE, WSH */
+  var anObject$1 = anObject$5;
+  var definePropertiesModule = objectDefineProperties;
+  var enumBugKeys = enumBugKeys$3;
+  var hiddenKeys = hiddenKeys$4;
+  var html = html$1;
+  var documentCreateElement = documentCreateElement$2;
+  var sharedKey = sharedKey$2;
+  var GT = '>';
+  var LT = '<';
+  var PROTOTYPE = 'prototype';
+  var SCRIPT = 'script';
+  var IE_PROTO = sharedKey('IE_PROTO');
+
+  var EmptyConstructor = function () {
+    /* empty */
+  };
+
+  var scriptTag = function (content) {
+    return LT + SCRIPT + GT + content + LT + '/' + SCRIPT + GT;
+  }; // Create object with fake `null` prototype: use ActiveX Object with cleared prototype
+
+
+  var NullProtoObjectViaActiveX = function (activeXDocument) {
+    activeXDocument.write(scriptTag(''));
+    activeXDocument.close();
+    var temp = activeXDocument.parentWindow.Object;
+    activeXDocument = null; // avoid memory leak
+
+    return temp;
+  }; // Create object with fake `null` prototype: use iframe Object with cleared prototype
+
+
+  var NullProtoObjectViaIFrame = function () {
+    // Thrash, waste and sodomy: IE GC bug
+    var iframe = documentCreateElement('iframe');
+    var JS = 'java' + SCRIPT + ':';
+    var iframeDocument;
+    iframe.style.display = 'none';
+    html.appendChild(iframe); // https://github.com/zloirock/core-js/issues/475
+
+    iframe.src = String(JS);
+    iframeDocument = iframe.contentWindow.document;
+    iframeDocument.open();
+    iframeDocument.write(scriptTag('document.F=Object'));
+    iframeDocument.close();
+    return iframeDocument.F;
+  }; // Check for document.domain and active x support
+  // No need to use active x approach when document.domain is not set
+  // see https://github.com/es-shims/es5-shim/issues/150
+  // variation of https://github.com/kitcambridge/es5-shim/commit/4f738ac066346
+  // avoid IE GC bug
+
+
+  var activeXDocument;
+
+  var NullProtoObject = function () {
+    try {
+      activeXDocument = new ActiveXObject('htmlfile');
+    } catch (error) {
+      /* ignore */
+    }
+
+    NullProtoObject = typeof document != 'undefined' ? document.domain && activeXDocument ? NullProtoObjectViaActiveX(activeXDocument) // old IE
+    : NullProtoObjectViaIFrame() : NullProtoObjectViaActiveX(activeXDocument); // WSH
+
+    var length = enumBugKeys.length;
+
+    while (length--) delete NullProtoObject[PROTOTYPE][enumBugKeys[length]];
+
+    return NullProtoObject();
+  };
+
+  hiddenKeys[IE_PROTO] = true; // `Object.create` method
+  // https://tc39.es/ecma262/#sec-object.create
+  // eslint-disable-next-line es-x/no-object-create -- safe
+
+  var objectCreate = Object.create || function create(O, Properties) {
+    var result;
+
+    if (O !== null) {
+      EmptyConstructor[PROTOTYPE] = anObject$1(O);
+      result = new EmptyConstructor();
+      EmptyConstructor[PROTOTYPE] = null; // add "__proto__" for Object.getPrototypeOf polyfill
+
+      result[IE_PROTO] = O;
+    } else result = NullProtoObject();
+
+    return Properties === undefined ? result : definePropertiesModule.f(result, Properties);
+  };
+
+  var wellKnownSymbol$2 = wellKnownSymbol$8;
+  var create = objectCreate;
+  var defineProperty$1 = objectDefineProperty.f;
+  var UNSCOPABLES = wellKnownSymbol$2('unscopables');
+  var ArrayPrototype = Array.prototype; // Array.prototype[@@unscopables]
+  // https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
+
+  if (ArrayPrototype[UNSCOPABLES] == undefined) {
+    defineProperty$1(ArrayPrototype, UNSCOPABLES, {
+      configurable: true,
+      value: create(null)
+    });
+  } // add a key to Array.prototype[@@unscopables]
+
+
+  var addToUnscopables$1 = function (key) {
+    ArrayPrototype[UNSCOPABLES][key] = true;
+  };
+
+  var $$3 = _export;
+  var $includes = arrayIncludes.includes;
+  var fails$1 = fails$e;
+  var addToUnscopables = addToUnscopables$1; // FF99+ bug
+
+  var BROKEN_ON_SPARSE = fails$1(function () {
+    return !Array(1).includes();
+  }); // `Array.prototype.includes` method
+  // https://tc39.es/ecma262/#sec-array.prototype.includes
+
+  $$3({
+    target: 'Array',
+    proto: true,
+    forced: BROKEN_ON_SPARSE
+  }, {
+    includes: function includes(el
+    /* , fromIndex = 0 */
+    ) {
+      return $includes(this, el, arguments.length > 1 ? arguments[1] : undefined);
+    }
+  }); // https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
+
+  addToUnscopables('includes');
+
+  var isObject$1 = isObject$8;
+  var classof$1 = classofRaw$1;
+  var wellKnownSymbol$1 = wellKnownSymbol$8;
+  var MATCH$1 = wellKnownSymbol$1('match'); // `IsRegExp` abstract operation
+  // https://tc39.es/ecma262/#sec-isregexp
+
+  var isRegexp = function (it) {
+    var isRegExp;
+    return isObject$1(it) && ((isRegExp = it[MATCH$1]) !== undefined ? !!isRegExp : classof$1(it) == 'RegExp');
+  };
+
+  var isRegExp = isRegexp;
+  var $TypeError$3 = TypeError;
+
+  var notARegexp = function (it) {
+    if (isRegExp(it)) {
+      throw $TypeError$3("The method doesn't accept regular expressions");
+    }
+
+    return it;
+  };
+
+  var classof = classof$5;
+  var $String$1 = String;
+
+  var toString$2 = function (argument) {
+    if (classof(argument) === 'Symbol') throw TypeError('Cannot convert a Symbol value to a string');
+    return $String$1(argument);
+  };
+
+  var wellKnownSymbol = wellKnownSymbol$8;
+  var MATCH = wellKnownSymbol('match');
+
+  var correctIsRegexpLogic = function (METHOD_NAME) {
+    var regexp = /./;
+
+    try {
+      '/./'[METHOD_NAME](regexp);
+    } catch (error1) {
+      try {
+        regexp[MATCH] = false;
+        return '/./'[METHOD_NAME](regexp);
+      } catch (error2) {
+        /* empty */
+      }
+    }
+
+    return false;
+  };
+
+  var $$2 = _export;
+  var uncurryThis$5 = functionUncurryThis;
+  var notARegExp = notARegexp;
+  var requireObjectCoercible$1 = requireObjectCoercible$4;
+  var toString$1 = toString$2;
+  var correctIsRegExpLogic = correctIsRegexpLogic;
+  var stringIndexOf = uncurryThis$5(''.indexOf); // `String.prototype.includes` method
+  // https://tc39.es/ecma262/#sec-string.prototype.includes
+
+  $$2({
+    target: 'String',
+    proto: true,
+    forced: !correctIsRegExpLogic('includes')
+  }, {
+    includes: function includes(searchString
+    /* , position = 0 */
+    ) {
+      return !!~stringIndexOf(toString$1(requireObjectCoercible$1(this)), toString$1(notARegExp(searchString)), arguments.length > 1 ? arguments[1] : undefined);
+    }
+  });
+
+  /* eslint-disable es-x/no-array-prototype-indexof -- required for testing */
+
+
+  var $$1 = _export;
+  var uncurryThis$4 = functionUncurryThis;
+  var $IndexOf = arrayIncludes.indexOf;
+  var arrayMethodIsStrict = arrayMethodIsStrict$3;
+  var un$IndexOf = uncurryThis$4([].indexOf);
+  var NEGATIVE_ZERO = !!un$IndexOf && 1 / un$IndexOf([1], 1, -0) < 0;
+  var STRICT_METHOD = arrayMethodIsStrict('indexOf'); // `Array.prototype.indexOf` method
+  // https://tc39.es/ecma262/#sec-array.prototype.indexof
+
+  $$1({
+    target: 'Array',
+    proto: true,
+    forced: NEGATIVE_ZERO || !STRICT_METHOD
+  }, {
+    indexOf: function indexOf(searchElement
+    /* , fromIndex = 0 */
+    ) {
+      var fromIndex = arguments.length > 1 ? arguments[1] : undefined;
+      return NEGATIVE_ZERO // convert -0 to +0
+      ? un$IndexOf(this, searchElement, fromIndex) || 0 : $IndexOf(this, searchElement, fromIndex);
+    }
+  });
+
+  var $TypeError$2 = TypeError;
+  var MAX_SAFE_INTEGER = 0x1FFFFFFFFFFFFF; // 2 ** 53 - 1 == 9007199254740991
+
+  var doesNotExceedSafeInteger$1 = function (it) {
+    if (it > MAX_SAFE_INTEGER) throw $TypeError$2('Maximum allowed index exceeded');
+    return it;
+  };
+
+  var toPropertyKey = toPropertyKey$3;
+  var definePropertyModule = objectDefineProperty;
+  var createPropertyDescriptor = createPropertyDescriptor$3;
+
+  var createProperty$1 = function (object, key, value) {
+    var propertyKey = toPropertyKey(key);
+    if (propertyKey in object) definePropertyModule.f(object, propertyKey, createPropertyDescriptor(0, value));else object[propertyKey] = value;
+  };
+
+  var tryToString = tryToString$2;
+  var $TypeError$1 = TypeError;
+
+  var deletePropertyOrThrow$1 = function (O, P) {
+    if (!delete O[P]) throw $TypeError$1('Cannot delete property ' + tryToString(P) + ' of ' + tryToString(O));
+  };
+
+  var $ = _export;
+  var toObject = toObject$5;
+  var toAbsoluteIndex = toAbsoluteIndex$2;
+  var toIntegerOrInfinity = toIntegerOrInfinity$3;
+  var lengthOfArrayLike = lengthOfArrayLike$4;
+  var doesNotExceedSafeInteger = doesNotExceedSafeInteger$1;
+  var arraySpeciesCreate = arraySpeciesCreate$2;
+  var createProperty = createProperty$1;
+  var deletePropertyOrThrow = deletePropertyOrThrow$1;
+  var arrayMethodHasSpeciesSupport = arrayMethodHasSpeciesSupport$3;
+  var HAS_SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('splice');
+  var max = Math.max;
+  var min = Math.min; // `Array.prototype.splice` method
+  // https://tc39.es/ecma262/#sec-array.prototype.splice
+  // with adding support of @@species
+
+  $({
+    target: 'Array',
+    proto: true,
+    forced: !HAS_SPECIES_SUPPORT
+  }, {
+    splice: function splice(start, deleteCount
+    /* , ...items */
+    ) {
+      var O = toObject(this);
+      var len = lengthOfArrayLike(O);
+      var actualStart = toAbsoluteIndex(start, len);
+      var argumentsLength = arguments.length;
+      var insertCount, actualDeleteCount, A, k, from, to;
+
+      if (argumentsLength === 0) {
+        insertCount = actualDeleteCount = 0;
+      } else if (argumentsLength === 1) {
+        insertCount = 0;
+        actualDeleteCount = len - actualStart;
+      } else {
+        insertCount = argumentsLength - 2;
+        actualDeleteCount = min(max(toIntegerOrInfinity(deleteCount), 0), len - actualStart);
+      }
+
+      doesNotExceedSafeInteger(len + insertCount - actualDeleteCount);
+      A = arraySpeciesCreate(O, actualDeleteCount);
+
+      for (k = 0; k < actualDeleteCount; k++) {
+        from = actualStart + k;
+        if (from in O) createProperty(A, k, O[from]);
+      }
+
+      A.length = actualDeleteCount;
+
+      if (insertCount < actualDeleteCount) {
+        for (k = actualStart; k < len - actualDeleteCount; k++) {
+          from = k + actualDeleteCount;
+          to = k + insertCount;
+          if (from in O) O[to] = O[from];else deletePropertyOrThrow(O, to);
+        }
+
+        for (k = len; k > len - actualDeleteCount + insertCount; k--) deletePropertyOrThrow(O, k - 1);
+      } else if (insertCount > actualDeleteCount) {
+        for (k = len - actualDeleteCount; k > actualStart; k--) {
+          from = k + actualDeleteCount - 1;
+          to = k + insertCount - 1;
+          if (from in O) O[to] = O[from];else deletePropertyOrThrow(O, to);
+        }
+      }
+
+      for (k = 0; k < insertCount; k++) {
+        O[k + actualStart] = arguments[k + 2];
+      }
+
+      O.length = len - actualDeleteCount + insertCount;
+      return A;
+    }
+  });
+
+  var isCallable$1 = isCallable$e;
+  var $String = String;
+  var $TypeError = TypeError;
+
+  var aPossiblePrototype$1 = function (argument) {
+    if (typeof argument == 'object' || isCallable$1(argument)) return argument;
+    throw $TypeError("Can't set " + $String(argument) + ' as a prototype');
+  };
+
+  /* eslint-disable no-proto -- safe */
+  var uncurryThis$3 = functionUncurryThis;
+  var anObject = anObject$5;
+  var aPossiblePrototype = aPossiblePrototype$1; // `Object.setPrototypeOf` method
+  // https://tc39.es/ecma262/#sec-object.setprototypeof
+  // Works with __proto__ only. Old v8 can't work with null proto objects.
+  // eslint-disable-next-line es-x/no-object-setprototypeof -- safe
+
+  var objectSetPrototypeOf = Object.setPrototypeOf || ('__proto__' in {} ? function () {
+    var CORRECT_SETTER = false;
+    var test = {};
+    var setter;
+
+    try {
+      // eslint-disable-next-line es-x/no-object-getownpropertydescriptor -- safe
+      setter = uncurryThis$3(Object.getOwnPropertyDescriptor(Object.prototype, '__proto__').set);
+      setter(test, []);
+      CORRECT_SETTER = test instanceof Array;
+    } catch (error) {
+      /* empty */
+    }
+
+    return function setPrototypeOf(O, proto) {
+      anObject(O);
+      aPossiblePrototype(proto);
+      if (CORRECT_SETTER) setter(O, proto);else O.__proto__ = proto;
+      return O;
+    };
+  }() : undefined);
+
+  var isCallable = isCallable$e;
+  var isObject = isObject$8;
+  var setPrototypeOf = objectSetPrototypeOf; // makes subclassing work correct for wrapped built-ins
+
+  var inheritIfRequired$1 = function ($this, dummy, Wrapper) {
+    var NewTarget, NewTargetPrototype;
+    if ( // it can work only with native `setPrototypeOf`
+    setPrototypeOf && // we haven't completely correct pre-ES6 way for getting `new.target`, so use this
+    isCallable(NewTarget = dummy.constructor) && NewTarget !== Wrapper && isObject(NewTargetPrototype = NewTarget.prototype) && NewTargetPrototype !== Wrapper.prototype) setPrototypeOf($this, NewTargetPrototype);
+    return $this;
+  };
+
+  var uncurryThis$2 = functionUncurryThis; // `thisNumberValue` abstract operation
+  // https://tc39.es/ecma262/#sec-thisnumbervalue
+
+  var thisNumberValue$1 = uncurryThis$2(1.0.valueOf);
+
+  var whitespaces$1 = '\u0009\u000A\u000B\u000C\u000D\u0020\u00A0\u1680\u2000\u2001\u2002' + '\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF';
+
+  var uncurryThis$1 = functionUncurryThis;
+  var requireObjectCoercible = requireObjectCoercible$4;
+  var toString = toString$2;
+  var whitespaces = whitespaces$1;
+  var replace = uncurryThis$1(''.replace);
+  var whitespace = '[' + whitespaces + ']';
+  var ltrim = RegExp('^' + whitespace + whitespace + '*');
+  var rtrim = RegExp(whitespace + whitespace + '*$'); // `String.prototype.{ trim, trimStart, trimEnd, trimLeft, trimRight }` methods implementation
+
+  var createMethod = function (TYPE) {
+    return function ($this) {
+      var string = toString(requireObjectCoercible($this));
+      if (TYPE & 1) string = replace(string, ltrim, '');
+      if (TYPE & 2) string = replace(string, rtrim, '');
+      return string;
+    };
+  };
+
+  var stringTrim = {
+    // `String.prototype.{ trimLeft, trimStart }` methods
+    // https://tc39.es/ecma262/#sec-string.prototype.trimstart
+    start: createMethod(1),
+    // `String.prototype.{ trimRight, trimEnd }` methods
+    // https://tc39.es/ecma262/#sec-string.prototype.trimend
+    end: createMethod(2),
+    // `String.prototype.trim` method
+    // https://tc39.es/ecma262/#sec-string.prototype.trim
+    trim: createMethod(3)
+  };
+
+  var DESCRIPTORS = descriptors;
+  var global$1 = global$d;
+  var uncurryThis = functionUncurryThis;
+  var isForced = isForced_1;
+  var defineBuiltIn = defineBuiltIn$3;
+  var hasOwn = hasOwnProperty_1;
+  var inheritIfRequired = inheritIfRequired$1;
+  var isPrototypeOf = objectIsPrototypeOf;
+  var isSymbol = isSymbol$3;
+  var toPrimitive = toPrimitive$2;
+  var fails = fails$e;
+  var getOwnPropertyNames = objectGetOwnPropertyNames.f;
+  var getOwnPropertyDescriptor = objectGetOwnPropertyDescriptor.f;
+  var defineProperty = objectDefineProperty.f;
+  var thisNumberValue = thisNumberValue$1;
+  var trim = stringTrim.trim;
+  var NUMBER = 'Number';
+  var NativeNumber = global$1[NUMBER];
+  var NumberPrototype = NativeNumber.prototype;
+  var TypeError$1 = global$1.TypeError;
+  var arraySlice = uncurryThis(''.slice);
+  var charCodeAt = uncurryThis(''.charCodeAt); // `ToNumeric` abstract operation
+  // https://tc39.es/ecma262/#sec-tonumeric
+
+  var toNumeric = function (value) {
+    var primValue = toPrimitive(value, 'number');
+    return typeof primValue == 'bigint' ? primValue : toNumber(primValue);
+  }; // `ToNumber` abstract operation
+  // https://tc39.es/ecma262/#sec-tonumber
+
+
+  var toNumber = function (argument) {
+    var it = toPrimitive(argument, 'number');
+    var first, third, radix, maxCode, digits, length, index, code;
+    if (isSymbol(it)) throw TypeError$1('Cannot convert a Symbol value to a number');
+
+    if (typeof it == 'string' && it.length > 2) {
+      it = trim(it);
+      first = charCodeAt(it, 0);
+
+      if (first === 43 || first === 45) {
+        third = charCodeAt(it, 2);
+        if (third === 88 || third === 120) return NaN; // Number('+0x1') should be NaN, old V8 fix
+      } else if (first === 48) {
+        switch (charCodeAt(it, 1)) {
+          case 66:
+          case 98:
+            radix = 2;
+            maxCode = 49;
+            break;
+          // fast equal of /^0b[01]+$/i
+
+          case 79:
+          case 111:
+            radix = 8;
+            maxCode = 55;
+            break;
+          // fast equal of /^0o[0-7]+$/i
+
+          default:
+            return +it;
+        }
+
+        digits = arraySlice(it, 2);
+        length = digits.length;
+
+        for (index = 0; index < length; index++) {
+          code = charCodeAt(digits, index); // parseInt parses a string to a first unavailable symbol
+          // but ToNumber should return NaN if a string contains unavailable symbols
+
+          if (code < 48 || code > maxCode) return NaN;
+        }
+
+        return parseInt(digits, radix);
+      }
+    }
+
+    return +it;
+  }; // `Number` constructor
+  // https://tc39.es/ecma262/#sec-number-constructor
+
+
+  if (isForced(NUMBER, !NativeNumber(' 0o1') || !NativeNumber('0b1') || NativeNumber('+0x1'))) {
+    var NumberWrapper = function Number(value) {
+      var n = arguments.length < 1 ? 0 : NativeNumber(toNumeric(value));
+      var dummy = this; // check on 1..constructor(foo) case
+
+      return isPrototypeOf(NumberPrototype, dummy) && fails(function () {
+        thisNumberValue(dummy);
+      }) ? inheritIfRequired(Object(n), dummy, NumberWrapper) : n;
+    };
+
+    for (var keys = DESCRIPTORS ? getOwnPropertyNames(NativeNumber) : ( // ES3:
+    'MAX_VALUE,MIN_VALUE,NaN,NEGATIVE_INFINITY,POSITIVE_INFINITY,' + // ES2015 (in case, if modules with ES2015 Number statics required before):
+    'EPSILON,MAX_SAFE_INTEGER,MIN_SAFE_INTEGER,isFinite,isInteger,isNaN,isSafeInteger,parseFloat,parseInt,' + // ESNext
+    'fromString,range').split(','), j = 0, key; keys.length > j; j++) {
+      if (hasOwn(NativeNumber, key = keys[j]) && !hasOwn(NumberWrapper, key)) {
+        defineProperty(NumberWrapper, key, getOwnPropertyDescriptor(NativeNumber, key));
+      }
+    }
+
+    NumberWrapper.prototype = NumberPrototype;
+    NumberPrototype.constructor = NumberWrapper;
+    defineBuiltIn(global$1, NUMBER, NumberWrapper, {
+      constructor: true
+    });
+  }
+
+  /**
+   * Copyright 2021 Google LLC
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *      http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   */
+
+  /**
+   * Provides statistics on all clusters in the current render cycle for use in {@link Renderer.render}.
+   */
+  var ClusterStats = /*#__PURE__*/_createClass(function ClusterStats(markers, clusters) {
+    _classCallCheck(this, ClusterStats);
+
+    this.markers = {
+      sum: markers.length
+    };
+    var clusterMarkerCounts = clusters.map(function (a) {
+      return a.count;
+    });
+    var clusterMarkerSum = clusterMarkerCounts.reduce(function (a, b) {
+      return a + b;
+    }, 0);
+    this.clusters = {
+      count: clusters.length,
+      markers: {
+        mean: clusterMarkerSum / clusters.length,
+        sum: clusterMarkerSum,
+        min: Math.min.apply(Math, _toConsumableArray(clusterMarkerCounts)),
+        max: Math.max.apply(Math, _toConsumableArray(clusterMarkerCounts))
+      }
+    };
+  });
+  var DefaultRenderer = /*#__PURE__*/function () {
+    function DefaultRenderer() {
+      _classCallCheck(this, DefaultRenderer);
+    }
+
+    _createClass(DefaultRenderer, [{
+      key: "render",
+      value:
+      /**
+       * The default render function for the library used by {@link MarkerClusterer}.
+       *
+       * Currently set to use the following:
+       *
+       * ```typescript
+       * // change color if this cluster has more markers than the mean cluster
+       * const color =
+       *   count > Math.max(10, stats.clusters.markers.mean)
+       *     ? "#ff0000"
+       *     : "#0000ff";
+       *
+       * // create svg url with fill color
+       * const svg = window.btoa(`
+       * <svg fill="${color}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+       *   <circle cx="120" cy="120" opacity=".6" r="70" />
+       *   <circle cx="120" cy="120" opacity=".3" r="90" />
+       *   <circle cx="120" cy="120" opacity=".2" r="110" />
+       *   <circle cx="120" cy="120" opacity=".1" r="130" />
+       * </svg>`);
+       *
+       * // create marker using svg icon
+       * return new google.maps.Marker({
+       *   position,
+       *   icon: {
+       *     url: `data:image/svg+xml;base64,${svg}`,
+       *     scaledSize: new google.maps.Size(45, 45),
+       *   },
+       *   label: {
+       *     text: String(count),
+       *     color: "rgba(255,255,255,0.9)",
+       *     fontSize: "12px",
+       *   },
+       *   // adjust zIndex to be above other markers
+       *   zIndex: 1000 + count,
+       * });
+       * ```
+       */
+      function render(_ref, stats) {
+        var count = _ref.count,
+            position = _ref.position;
+        // change color if this cluster has more markers than the mean cluster
+        var color = count > Math.max(10, stats.clusters.markers.mean) ? "#ff0000" : "#0000ff"; // create svg url with fill color
+
+        var svg = window.btoa("\n  <svg fill=\"".concat(color, "\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 240\">\n    <circle cx=\"120\" cy=\"120\" opacity=\".6\" r=\"70\" />\n    <circle cx=\"120\" cy=\"120\" opacity=\".3\" r=\"90\" />\n    <circle cx=\"120\" cy=\"120\" opacity=\".2\" r=\"110\" />\n  </svg>")); // create marker using svg icon
+
+        return new google.maps.Marker({
+          position: position,
+          icon: {
+            url: "data:image/svg+xml;base64,".concat(svg),
+            scaledSize: new google.maps.Size(45, 45)
+          },
+          label: {
+            text: String(count),
+            color: "rgba(255,255,255,0.9)",
+            fontSize: "12px"
+          },
+          title: "Cluster of ".concat(count, " markers"),
+          // adjust zIndex to be above other markers
+          zIndex: Number(google.maps.Marker.MAX_ZINDEX) + count
+        });
+      }
+    }]);
+
+    return DefaultRenderer;
+  }();
+
+  /**
+   * Copyright 2019 Google LLC. All Rights Reserved.
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *      http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   */
+
+  /**
+   * Extends an object's prototype by another's.
+   *
+   * @param type1 The Type to be extended.
+   * @param type2 The Type to extend with.
+   * @ignore
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function extend(type1, type2) {
+    /* istanbul ignore next */
+    // eslint-disable-next-line prefer-const
+    for (var property in type2.prototype) {
+      type1.prototype[property] = type2.prototype[property];
+    }
+  }
+  /**
+   * @ignore
+   */
+
+
+  var OverlayViewSafe = /*#__PURE__*/_createClass(function OverlayViewSafe() {
+    _classCallCheck(this, OverlayViewSafe);
+
+    // MarkerClusterer implements google.maps.OverlayView interface. We use the
+    // extend function to extend MarkerClusterer with google.maps.OverlayView
+    // because it might not always be available when the code is defined so we
+    // look for it at the last possible moment. If it doesn't exist now then
+    // there is no point going ahead :)
+    extend(OverlayViewSafe, google.maps.OverlayView);
+  });
+
+  exports.MarkerClustererEvents = void 0;
+
+  (function (MarkerClustererEvents) {
+    MarkerClustererEvents["CLUSTERING_BEGIN"] = "clusteringbegin";
+    MarkerClustererEvents["CLUSTERING_END"] = "clusteringend";
+    MarkerClustererEvents["CLUSTER_CLICK"] = "click";
+  })(exports.MarkerClustererEvents || (exports.MarkerClustererEvents = {}));
+
+  var defaultOnClusterClickHandler = function defaultOnClusterClickHandler(_, cluster, map) {
+    map.fitBounds(cluster.bounds);
+  };
+  /**
+   * MarkerClusterer creates and manages per-zoom-level clusters for large amounts
+   * of markers. See {@link MarkerClustererOptions} for more details.
+   *
+   */
+
+  var MarkerClusterer = /*#__PURE__*/function (_OverlayViewSafe) {
+    _inherits(MarkerClusterer, _OverlayViewSafe);
+
+    var _super = _createSuper(MarkerClusterer);
+
+    function MarkerClusterer(_ref) {
+      var _this;
+
+      var map = _ref.map,
+          _ref$markers = _ref.markers,
+          markers = _ref$markers === void 0 ? [] : _ref$markers,
+          _ref$algorithm = _ref.algorithm,
+          algorithm = _ref$algorithm === void 0 ? new SuperClusterAlgorithm({}) : _ref$algorithm,
+          _ref$renderer = _ref.renderer,
+          renderer = _ref$renderer === void 0 ? new DefaultRenderer() : _ref$renderer,
+          _ref$onClusterClick = _ref.onClusterClick,
+          onClusterClick = _ref$onClusterClick === void 0 ? defaultOnClusterClickHandler : _ref$onClusterClick;
+
+      _classCallCheck(this, MarkerClusterer);
+
+      _this = _super.call(this);
+      _this.markers = _toConsumableArray(markers);
+      _this.clusters = [];
+      _this.algorithm = algorithm;
+      _this.renderer = renderer;
+      _this.onClusterClick = onClusterClick;
+
+      if (map) {
+        _this.setMap(map);
+      }
+
+      return _this;
+    }
+
+    _createClass(MarkerClusterer, [{
+      key: "addMarker",
+      value: function addMarker(marker, noDraw) {
+        if (this.markers.includes(marker)) {
+          return;
+        }
+
+        this.markers.push(marker);
+
+        if (!noDraw) {
+          this.render();
+        }
+      }
+    }, {
+      key: "addMarkers",
+      value: function addMarkers(markers, noDraw) {
+        var _this2 = this;
+
+        markers.forEach(function (marker) {
+          _this2.addMarker(marker, true);
+        });
+
+        if (!noDraw) {
+          this.render();
+        }
+      }
+    }, {
+      key: "removeMarker",
+      value: function removeMarker(marker, noDraw) {
+        var index = this.markers.indexOf(marker);
+
+        if (index === -1) {
+          // Marker is not in our list of markers, so do nothing:
+          return false;
+        }
+
+        marker.setMap(null);
+        this.markers.splice(index, 1); // Remove the marker from the list of managed markers
+
+        if (!noDraw) {
+          this.render();
+        }
+
+        return true;
+      }
+    }, {
+      key: "removeMarkers",
+      value: function removeMarkers(markers, noDraw) {
+        var _this3 = this;
+
+        var removed = false;
+        markers.forEach(function (marker) {
+          removed = _this3.removeMarker(marker, true) || removed;
+        });
+
+        if (removed && !noDraw) {
+          this.render();
+        }
+
+        return removed;
+      }
+    }, {
+      key: "clearMarkers",
+      value: function clearMarkers(noDraw) {
+        this.markers.length = 0;
+
+        if (!noDraw) {
+          this.render();
+        }
+      }
+      /**
+       * Recalculates and draws all the marker clusters.
+       */
+
+    }, {
+      key: "render",
+      value: function render() {
+        var map = this.getMap();
+
+        if (map instanceof google.maps.Map && this.getProjection()) {
+          google.maps.event.trigger(this, exports.MarkerClustererEvents.CLUSTERING_BEGIN, this);
+
+          var _this$algorithm$calcu = this.algorithm.calculate({
+            markers: this.markers,
+            map: map,
+            mapCanvasProjection: this.getProjection()
+          }),
+              clusters = _this$algorithm$calcu.clusters,
+              changed = _this$algorithm$calcu.changed; // allow algorithms to return flag on whether the clusters/markers have changed
+
+
+          if (changed || changed == undefined) {
+            // reset visibility of markers and clusters
+            this.reset(); // store new clusters
+
+            this.clusters = clusters;
+            this.renderClusters();
+          }
+
+          google.maps.event.trigger(this, exports.MarkerClustererEvents.CLUSTERING_END, this);
+        }
+      }
+    }, {
+      key: "onAdd",
+      value: function onAdd() {
+        this.idleListener = this.getMap().addListener("idle", this.render.bind(this));
+        this.render();
+      }
+    }, {
+      key: "onRemove",
+      value: function onRemove() {
+        google.maps.event.removeListener(this.idleListener);
+        this.reset();
+      }
+    }, {
+      key: "reset",
+      value: function reset() {
+        this.markers.forEach(function (marker) {
+          return marker.setMap(null);
+        });
+        this.clusters.forEach(function (cluster) {
+          return cluster.delete();
+        });
+        this.clusters = [];
+      }
+    }, {
+      key: "renderClusters",
+      value: function renderClusters() {
+        var _this4 = this;
+
+        // generate stats to pass to renderers
+        var stats = new ClusterStats(this.markers, this.clusters);
+        var map = this.getMap();
+        this.clusters.forEach(function (cluster) {
+          if (cluster.markers.length === 1) {
+            cluster.marker = cluster.markers[0];
+          } else {
+            cluster.marker = _this4.renderer.render(cluster, stats);
+
+            if (_this4.onClusterClick) {
+              cluster.marker.addListener("click",
+              /* istanbul ignore next */
+              function (event) {
+                google.maps.event.trigger(_this4, exports.MarkerClustererEvents.CLUSTER_CLICK, cluster);
+
+                _this4.onClusterClick(event, cluster, map);
+              });
+            }
+          }
+
+          cluster.marker.setMap(map);
+        });
+      }
+    }]);
+
+    return MarkerClusterer;
+  }(OverlayViewSafe);
+
+  exports.AbstractAlgorithm = AbstractAlgorithm;
+  exports.AbstractViewportAlgorithm = AbstractViewportAlgorithm;
+  exports.Cluster = Cluster;
+  exports.ClusterStats = ClusterStats;
+  exports.DefaultRenderer = DefaultRenderer;
+  exports.GridAlgorithm = GridAlgorithm;
+  exports.MarkerClusterer = MarkerClusterer;
+  exports.NoopAlgorithm = NoopAlgorithm;
+  exports.SuperClusterAlgorithm = SuperClusterAlgorithm;
+  exports.defaultOnClusterClickHandler = defaultOnClusterClickHandler;
+  exports.distanceBetweenPoints = distanceBetweenPoints;
+  exports.extendBoundsToPaddedViewport = extendBoundsToPaddedViewport;
+  exports.extendPixelBounds = extendPixelBounds;
+  exports.filterMarkersToPaddedViewport = filterMarkersToPaddedViewport;
+  exports.noop = _noop;
+  exports.pixelBoundsToLatLngBounds = pixelBoundsToLatLngBounds;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
+
+  return exports;
+
+})({});
