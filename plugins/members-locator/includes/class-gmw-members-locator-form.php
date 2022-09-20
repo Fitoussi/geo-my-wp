@@ -41,8 +41,7 @@ trait GMW_Members_Locator_Form_Trait {
 			$column = in_array( $this->form['query_args']['type'], array( 'active', 'newest', 'popular', 'online' ), true ) ? 'user_id' : 'ID';
 		}
 
-		// add the location db fields to the query.
-		$fields       = ', gmw_locations.' . implode( ', gmw_locations.', $this->db_fields );
+		$fields       = ', ' . $this->db_fields;
 		$having       = '';
 		$where        = '';
 		$join         = "INNER JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON ( u.{$column} = gmw_locations.object_id AND gmw_locations.object_type = 'user' ) ";
@@ -205,8 +204,8 @@ trait GMW_Members_Locator_Form_Trait {
 
 		$users = array();
 
-		foreach ( $results['users'] as $u ) {
-			$users[ $u->ID ] = $u;
+		foreach ( $results['users'] as $user ) {
+			$users[ $user->ID ] = $user;
 		}
 
 		$temp_users = array();
@@ -223,16 +222,14 @@ trait GMW_Members_Locator_Form_Trait {
 
 			// Add some data manually as it might be missing for users without a location.
 			if ( empty( $location->location_id ) ) {
-				$location->object_type = 'user';
-				$location->object_id   = $location->ID;
-				$location->user_id     = $location->ID;
+				$location->object_type   = 'user';
+				$location->object_id     = $location->ID;
+				$location->user_id       = $location->ID;
+				$location->location_name = isset( $location->name ) ? $location->name : '';
 			}
 
-			$temp_users[] = apply_filters( 'gmw_' . $this->form['prefix'] . '_modify_location_data_to_results', $location, $results, $this->form, $this );
-
-			do_action( 'gmw_' . $this->form['prefix'] . '_append_location_data_to_results', $location, $results, $this->form, $this );
-
-			//apply_filters( 'gmw_' . $this->form['prefix'] . '_append_location_data_to_results', $location, $results, $this->form, $this );
+			$location     = apply_filters( 'gmw_' . $this->form['prefix'] . '_modify_location_data_to_results', $location, $results, $this->form, $this );
+			$temp_users[] = $location;
 		}
 
 		// Return new data to BuddyPress.
@@ -263,6 +260,138 @@ trait GMW_Members_Locator_Form_Trait {
 
 		return $query;
 	}
+
+	/**
+	 * Pass an array of arguments to the search query.
+	 *
+	 * Arguments can be modified using the filter:
+	 *
+	 * apply_filters( 'gmw_' . $this->form['prefix'] . '_search_query_args', $this->form['query_args'], $this->form, $this );
+	 *
+	 * The filter can be found in geo-my-wp/includes/class-gmw-base-form.php.
+	 *
+	 * in GMW_Form_Core->parse_query_args();
+	 *
+	 * @since 4.0
+	 *
+	 * @return [type] [description]
+	 */
+	public function get_query_args() {
+
+		return array(
+			'type'           => $this->form['orderby'],
+			'per_page'       => ( -1 === $this->form['per_page'] || '-1' === $this->form['per_page'] ) ? '' : $this->form['per_page'],
+			'page'           => $this->form['paged'],
+			'count_total'    => false, // we do a total count in our custom members query.
+			'xprofile_query' => gmw_get_xprofile_query_args( $this->form ),
+			'page_arg'       => 'paged',
+		);
+	}
+
+	/**
+	 * Execute the search query.
+	 *
+	 * There are various filters that can be used to filter the form object and the query before and after the search query takes place.
+	 *
+	 * The filters can be found in geo-my-wp/includes/class-gmw-base-form.php.
+	 *
+	 * in GMW_Form_Core->pre_search_query_hooks() and GMW_Form_Core->post_search_query_hooks();
+	 *
+	 * Pre search query filters:
+	 *
+	 * apply_filters( 'gmw_form_before_search_query', $this->form, $this );
+	 *
+	 * apply_filters( 'gmw_' . $this->form['component'] . '_form_before_search_query', $this->form, $this );
+	 *
+	 * apply_filters( 'gmw_' . $this->form['prefix'] . '_form_before_search_query', $this->form, $this );
+	 *
+	 * Post search query filters:
+	 *
+	 * // Modify the form object.
+	 * $this->form  = apply_filters( 'gmw_' . $this->form['prefix'] . '_form_after_search_query', $this->form, $this );
+	 *
+	 * // Modify the search query.
+	 * $this->query = apply_filters( 'gmw_' . $this->form['prefix'] . '_query_after_search_query', $this->query, $this->form, $this );
+	 *
+	 * @since 4.0
+	 */
+	public function parse_search_query() {
+
+		// filter the members query.
+		// Use high priority to allow other plugins to use this filter before GEO my WP does.
+		add_action( 'bp_pre_user_query_construct', array( $this, 'xprofile_query' ), 90 );
+		add_action( 'bp_pre_user_query', array( $this, 'query_clauses' ), 90, 2 );
+		add_filter( 'bp_core_get_users', array( $this, 'append_location_data_to_results' ), 90 );
+
+		bp_has_members( $this->form['query_args'] ) ? true : false;
+
+		remove_action( 'bp_pre_user_query_construct', array( $this, 'xprofile_query' ), 90 );
+		remove_action( 'bp_pre_user_query', array( $this, 'query_clauses' ), 90, 2 );
+		remove_filter( 'bp_core_get_users', array( $this, 'append_location_data_to_results' ), 39 );
+
+		global $members_template;
+
+		$this->query = $members_template;
+	}
+
+	/**
+	 * Parse the search query results.
+	 *
+	 * @since 4.0
+	 */
+	public function parse_query_results() {
+
+		global $members_template;
+
+		if ( ! empty( $members_template->members ) ) {
+
+			$this->form['results']       = $members_template->members;
+			$this->form['results_count'] = count( $members_template->members );
+			$this->form['total_results'] = $members_template->total_member_count;
+			$this->form['max_pages']     = ! empty( absint( $this->form['per_page'] ) ) ? ceil( $this->form['total_results'] / $this->form['per_page'] ) : 1;
+		}
+	}
+
+	/**
+	 * The members loop.
+	 *
+	 * To be used when displaying map only without the results.
+	 *
+	 * In that case we need to run the loop in order to collect some data for the map.
+	 *
+	 * @since 4.0
+	 *
+	 * @param  boolean $include [description].
+	 */
+	public function object_loop( $include = false ) {
+
+		global $members_template;
+
+		// The variables are for AJAX forms deprecated template files. To be removed.
+		$gmw       = $this->form;
+		$gmw_form  = $this;
+		$gmw_query = $this->query;
+
+		while ( bp_members() ) :
+
+			bp_the_member();
+
+			$member = $members_template->member;
+
+			do_action( 'gmw_the_object_location', $member, $this->form );
+
+			// For AJAX forms deprecated template files. To be removed.
+			if ( $include ) {
+
+				if ( empty( $gmw['search_results']['styles']['disable_single_item_template'] ) ) {
+					include $gmw['results_template']['content_path'] . 'single-result.php';
+				} else {
+					do_action( 'gmw_search_results_single_item_template', $member, $this->form );
+				}
+			}
+
+		endwhile;
+	}
 }
 
 /**
@@ -276,13 +405,6 @@ class GMW_Members_Locator_Form extends GMW_Form {
 	 * Inherit search queries from Trait.
 	 */
 	use GMW_Members_Locator_Form_Trait;
-
-	/**
-	 * Permalink hook
-	 *
-	 * @var string
-	 */
-	public $object_permalink_hook = 'bp_get_member_permalink';
 
 	/**
 	 * Results message
@@ -333,89 +455,5 @@ class GMW_Members_Locator_Form extends GMW_Form {
 			'url'    => bp_core_get_user_domain( $member->ID ),
 			'title'  => $member->display_name,
 		);
-	}
-
-	/**
-	 * Members search query.
-	 *
-	 * @return [type] [description]
-	 */
-	public function search_query() {
-
-		// query args.
-		$this->form['query_args'] = apply_filters(
-			'gmw_fl_search_query_args',
-			array(
-				'type'           => 'distance',
-				'per_page'       => $this->form['get_per_page'],
-				'page'           => $this->form['paged'],
-				'count_total'    => false, // we do a total count in our custom members query.
-				'gmw_args'       => $this->query_cache_args,
-				'xprofile_query' => gmw_get_xprofile_query_args( $this->form ),
-			),
-			$this->form,
-			$this
-		);
-
-		// modify the form values before the query takes place.
-		$this->form     = apply_filters( 'gmw_members_locator_form_before_members_query', $this->form, $this );
-		$this->form     = apply_filters( 'gmw_fl_form_before_members_query', $this->form, $this );
-		$internal_cache = GMW()->internal_cache;
-
-		global $members_template;
-
-		if ( $internal_cache ) {
-
-			// prepare for cache.
-			$hash             = md5( wp_json_encode( $this->form['query_args'] ) );
-			$query_args_hash  = 'gmw' . $hash . GMW_Cache_Helper::get_transient_version( 'gmw_get_object_user_query' );
-			$members_template = get_transient( $query_args_hash );
-		}
-
-		if ( ! $internal_cache || empty( $members_template ) ) {
-
-			add_filter( 'gmw_' . $this->form['prefix'] . '_modify_location_data_to_results', array( $this, 'the_location' ), 50, 2 );
-
-			// filter the members query.
-			// Use high priority to allow other plugins to use this filter before GEO my WP does.
-			add_action( 'bp_pre_user_query_construct', array( $this, 'xprofile_query' ), 90 );
-			add_action( 'bp_pre_user_query', array( $this, 'query_clauses' ), 90, 2 );
-			add_filter( 'bp_core_get_users', array( $this, 'append_location_data_to_results' ), 90 );
-
-			// query members.
-			$results = bp_has_members( $this->form['query_args'] ) ? true : false;
-
-			remove_action( 'bp_pre_user_query_construct', array( $this, 'xprofile_query' ), 90 );
-			remove_action( 'bp_pre_user_query', array( $this, 'query_clauses' ), 90, 2 );
-			remove_filter( 'bp_core_get_users', array( $this, 'append_location_data_to_results' ), 39 );
-			remove_filter( 'gmw_' . $this->form['prefix'] . '_modify_location_data_to_results', array( $this, 'the_location' ), 50, 2 );
-
-			// set new query in transient.
-			if ( $internal_cache ) {
-				set_transient( $query_args_hash, $members_template, GMW()->internal_cache_expiration );
-			}
-		}
-
-		// Modify the form after the search query.
-		$this->form       = apply_filters( 'gmw_fl_form_after_members_query', $this->form, $this );
-		$members_template = apply_filters( 'gmw_fl_members_before_members_loop', $members_template, $this->form, $this );
-		$this->query      = $members_template;
-
-		$this->form['results_count'] = count( $members_template->members );
-		$this->form['total_results'] = $members_template->total_member_count;
-		$this->form['max_pages']     = ceil( $this->form['total_results'] / $this->form['get_per_page'] );
-
-		/*$temp_array = array();
-
-		foreach ( $members_template->members as $member ) {
-			$temp_array[] = parent::the_location( $member->id, $member );
-		}
-
-		$this->form['results']     = $temp_array;
-		$members_template->members = $temp_array;*/
-
-		$this->form['results'] = $members_template->members;
-
-		return $this->form['results'];
 	}
 }
