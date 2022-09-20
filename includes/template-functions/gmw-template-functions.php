@@ -576,6 +576,7 @@ function gmw_get_bp_avatar( $args = array(), $object = array(), $gmw = array() )
 			'height'       => '150px',
 			'show_grav'    => true,
 			'show_default' => true,
+			'class'        => 'avatar',
 		)
 	);
 
