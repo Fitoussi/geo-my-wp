@@ -56,7 +56,7 @@ function gmw_get_search_form_submit_button( $gmw = array(), $dep_label = '' ) {
 		$gmw['search_results']['per_page'] = 10;
 	}
 
-	$per_page = absint( current( explode( ',', $gmw['search_results']['per_page'] ) ) );
+	$per_page = current( explode( ',', $gmw['search_results']['per_page'] ) );
 	$output   = '';
 
 	if ( ! empty( $gmw['search_form']['submit_button']['label'] ) ) {
