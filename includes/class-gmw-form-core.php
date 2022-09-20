@@ -928,7 +928,7 @@ class GMW_Form_Core {
 		if ( $this->form['map_enabled'] ) {
 
 			$iw_args  = $this->get_info_window_content ? $this->get_info_window_args( $object ) : array();
-			$location = gmw_get_object_location_map( $object, $iw_args, $this->form );
+			$location = gmw_get_object_map_location( $object, $iw_args, $this->form );
 
 			if ( $location ) {
 				$this->map_locations[] = $location;
