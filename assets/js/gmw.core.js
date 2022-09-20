@@ -1447,7 +1447,7 @@ var GMW = {
 			var toggle         = jQuery( this );
 			var element        = toggle.find( 'span:not( .active )' );
 			var resultsWrapper = toggle.closest( '.gmw-results-wrapper' );
-			var resultsList    = resultsWrapper.find( '.gmw-results-list' );
+			var resultsList    = resultsWrapper.find( '.gmw-bp-results-list, .gmw-results-list' );
 			var view           = element.data( 'view' );
 			var formId         = resultsWrapper.data( 'id' );
 			
@@ -1458,6 +1458,7 @@ var GMW = {
 
 			resultsList.fadeOut( 'fast', function() {
 
+				resultsWrapper.find( '#members-list, #groups-list' ).removeClass( 'list grid' ).addClass( view ); // For buddypress Nouveau.
 				resultsWrapper.removeClass( 'gmw-list-view gmw-grid-view' ).addClass( 'gmw-' + view + '-view' );
 
 				// For BuddyBoss.
