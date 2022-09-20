@@ -1040,7 +1040,7 @@ class GMW_Form_Settings_Helper {
 		if ( function_exists( 'bp_get_member_types' ) ) {
 
 			foreach ( bp_get_member_types( array(), 'object' ) as $type ) {
-				$member_types[ $type->name ] = $type->labels['name'];
+				$member_types[ $type->name ] = ! empty( $type->labels['name'] ) ? $type->labels['name'] : $type->name;
 			};
 		}
 
@@ -1146,11 +1146,12 @@ class GMW_Form_Settings_Helper {
 			'folder_name' => $args['gmw_ajax_load_type'],
 		);
 
-		$templates =  gmw_get_templates( $args );
+		$templates = gmw_get_templates( $args );
 
 		$new_templates        = array();
 		$new_dep_templates    = array();
 		$new_custom_templates = array();
+		$bp_template          = function_exists( 'bp_get_theme_package_id' ) ? bp_get_theme_package_id() : '';
 
 		// Marked deprecated templates.
 		foreach ( $templates as $value => $name ) {
@@ -1172,6 +1173,14 @@ class GMW_Form_Settings_Helper {
 				} elseif ( strpos( $value, 'peepso' ) !== false && ! class_exists( 'PeepSo' ) ) {
 
 					$new_templates[ $value ] = $name . ' ( requires the PeepSo plugin )';
+
+				} elseif ( strpos( $value, 'buddypress-legacy' ) !== false && 'legacy' !== $bp_template ) {
+
+					$new_templates[ $value ] = $name . ' ( requires the BuddyPress Legacy template pack )';
+
+				} elseif ( strpos( $value, 'buddypress-nouveau' ) !== false && 'nouveau' !== $bp_template ) {
+
+					$new_templates[ $value ] = $name . ' ( requires the BuddyPress Nouveau template pack )';
 
 				} elseif ( 'search-forms' === $args['folder_name'] && in_array( $value, array( 'default', 'compact', 'horizontal', 'horizontal-gray', 'gray', 'purple', 'yellow', 'blue', 'red', 'left-white', 'right-white' ), true ) ) {
 
@@ -1199,7 +1208,13 @@ class GMW_Form_Settings_Helper {
 			}
 		}
 
-		return array_merge( $new_templates, $new_dep_templates, $new_custom_templates );
+		$output = array_merge( $new_templates, $new_dep_templates, $new_custom_templates );
+
+		/*if ( 'ajax_forms' === $args['addon'] && 'search-results' === $args['folder_name'] ) {
+			$output = array_merge( array( 'disabled' => __( 'Disable the search results', 'geo-my-wp' ) ), $output );
+		}*/
+
+		return $output;
 	}
 
 	/**
