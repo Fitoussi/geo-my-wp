@@ -833,7 +833,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 
 			$object->map_icon = '';
 			$info_window_args = $this->get_info_window_args( $object );
-			$location         = gmw_get_object_location_map( $object, $info_window_args, $this->form );
+			$location         = gmw_get_object_map_location( $object, $info_window_args, $this->form );
 
 			if ( $location ) {
 				$this->map_locations[] = $location;
