@@ -419,15 +419,17 @@ class GMW_Form_Editor {
 			$form_templates[ $this->form['search_form']['form_template'] ] = $this->form['search_form']['form_template'];
 		}
 
+		$results_templates = array();
+
+		if ( 'ajax_forms' === $this->form['addon'] ) {
+			$results_templates['disabled'] = __( 'Disable the search results', 'geo-my-wp' );
+		}
+
+		if ( ! empty( $this->form['search_results']['results_template'] ) && 'disabled' !== $this->form['search_results']['results_template'] ) {
+			$results_templates[ $this->form['search_results']['results_template'] ] = $this->form['search_results']['results_template'];
+		}
+
 		$depreacated_message = __( 'Note that templates that are labeled "Deprecated" are no longer supprted and might not include new features that are added to the plugin.', 'geo-my-wp' );
-
-		/*$results_templates = array(
-			'disabled' => __( 'Disable the search form', 'geo-my-wp' ),
-		);*/
-
-		/*if ( ! empty( $this->form['search_form']['form_template'] ) && 'disabled' !== $this->form['search_form']['form_template'] ) {
-			$form_templates[ $this->form['search_form']['form_template'] ] = $this->form['search_form']['form_template'];
-		}*/
 
 		// settings groups.
 		$groups = array(
@@ -1089,7 +1091,7 @@ class GMW_Form_Editor {
 						array(
 							'name'       => 'results_template',
 							'type'       => 'select',
-							'default'    => 'gray',
+							'default'    => '',
 							'label'      => __( 'Search Results Template', 'geo-my-wp' ),
 							'desc'       => sprintf( __( 'Select the search result template file.<br />%s', 'geo-my-wp' ), $depreacated_message ),
 							'attributes'  => array(
@@ -1098,7 +1100,7 @@ class GMW_Form_Editor {
 								'data-gmw_ajax_load_addon'     => $this->form['addon'],
 								'data-gmw_ajax_load_type'      => 'search-results',
 							),
-							'options'    => ! empty( $this->form['search_results']['results_template'] ) ? array( $this->form['search_results']['results_template'] => $this->form['search_results']['results_template'] ) : array(),
+							'options'    => $results_templates,
 							'sub_option' => false,
 							'wrap_class' => 'always-visible',
 							'priority'   => 5,
