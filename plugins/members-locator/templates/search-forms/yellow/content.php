@@ -28,7 +28,7 @@
 	
 	<?php do_action( 'gmw_before_search_form', $gmw ); ?>
 	
-	<form class="standard-form gmw-form" name="gmw_form" action="<?php echo esc_attr( $gmw_form->get_results_page() ); ?>" method="get" data-id="<?php echo esc_attr( $gmw['ID'] ); ?>" data-prefix="<?php echo esc_attr( $gmw['prefix'] ); ?>">
+	<form class="standard-form gmw-form" name="gmw_form" action="<?php gmw_form_results_page( $gmw ); ?>" method="get" data-id="<?php echo esc_attr( $gmw['ID'] ); ?>" data-prefix="<?php echo esc_attr( $gmw['prefix'] ); ?>">
 			
 		<?php do_action( 'gmw_search_form_start', $gmw ); ?>
 		
