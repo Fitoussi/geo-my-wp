@@ -259,12 +259,14 @@ class GMW_Helper {
 			// look for template in custom location or in child theme. If not found check in parent theme.
 			if ( file_exists( $custom_path_uri['path'] . "/{$templates_folder}/{$folder}{$template_name}/" ) ) {
 
+				$output['path']            = $custom_path_uri['path'] . "/{$templates_folder}/{$folder}{$template_name}/";
 				$output['content_path']    = $custom_path_uri['path'] . "/{$templates_folder}/{$folder}{$template_name}/";
 				$output['stylesheet_path'] = $custom_path_uri['path'] . "/{$templates_folder}/{$folder}{$template_name}/css/style.css";
 				$output['stylesheet_uri']  = $custom_path_uri['uri'] . "/{$templates_folder}/{$folder}{$template_name}/css/style.css";
 
 			} else {
 
+				$output['path']            = TEMPLATEPATH . "/geo-my-wp/{$templates_folder}/{$folder}{$template_name}/";
 				$output['content_path']    = TEMPLATEPATH . "/geo-my-wp/{$templates_folder}/{$folder}{$template_name}/";
 				$output['stylesheet_path'] = TEMPLATEPATH . "/geo-my-wp/{$templates_folder}/{$folder}{$template_name}/css/style.css";
 				$output['stylesheet_uri']  = get_template_directory_uri() . "/geo-my-wp/{$templates_folder}/{$folder}{$template_name}/css/style.css";
@@ -304,6 +306,7 @@ class GMW_Helper {
 				$plugin_dir = $addon['plugin_dir'] . '/plugins/' . $component_data['templates_folder'];
 			}
 
+			$output['path']              = $plugin_dir . "/templates/{$folder}{$template_name}/";
 			$output['stylesheet_handle'] = "gmw-{$prefix_handle}-{$folder_handle}{$template_name}";
 			$output['content_path']      = $plugin_dir . "/templates/{$folder}{$template_name}/{$file_name}";
 			$output['stylesheet_path']   = $plugin_dir . "/templates/{$folder}{$template_name}/css/style.css";
