@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Extend the Posts Locator Form classes.
+ * User to extend the Posts Locator Form classes.
  *
  * @since 4.0.
  */
@@ -30,8 +30,7 @@ trait GMW_Posts_Locator_Form_Trait {
 
 		global $wpdb;
 
-		// add the location db fields to the query.
-		$fields       = ', gmw_locations.' . implode( ', gmw_locations.', $this->db_fields );
+		$fields       = ', ' . $this->db_fields;
 		$having       = '';
 		$join         = "INNER JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON ( $wpdb->posts.ID = gmw_locations.object_id AND gmw_locations.object_type = 'post' ) ";
 		$where        = '';
@@ -52,7 +51,7 @@ trait GMW_Posts_Locator_Form_Trait {
 
 			$where .= gmw_get_locations_within_bounderies_sql( $this->form['form_values']['swlatlng'], $this->form['form_values']['nelatlng'] );
 
-		// when address provided, and not filtering based on address fields, we will do proximity search.
+			// When address provided, and not filtering based on address fields, we will do proximity search.
 		} elseif ( empty( $address_filters ) && ! empty( $this->form['lat'] ) && ! empty( $this->form['lng'] ) ) {
 
 			// generate some radius/units data.
@@ -68,10 +67,9 @@ trait GMW_Posts_Locator_Form_Trait {
 
 			// since these values are repeatable, we escape them previous
 			// the query instead of running multiple prepares.
-			$lat      = esc_sql( $this->form['lat'] );
-			$lng      = esc_sql( $this->form['lng'] );
-			$distance = ! empty( $this->form['radius'] ) ? esc_sql( $this->form['radius'] ) : '';
-
+			$lat          = esc_sql( $this->form['lat'] );
+			$lng          = esc_sql( $this->form['lng'] );
+			$distance     = ! empty( $this->form['radius'] ) ? esc_sql( $this->form['radius'] ) : '';
 			$distance_sql = "ROUND( {$earth_radius} * acos( cos( radians( {$lat} ) ) * cos( radians( gmw_locations.latitude ) ) * cos( radians( gmw_locations.longitude ) - radians( {$lng} ) ) + sin( radians( {$lat} ) ) * sin( radians( gmw_locations.latitude ) ) ),1 ) AS distance";
 
 			if ( ! empty( $distance ) ) {
@@ -120,7 +118,7 @@ trait GMW_Posts_Locator_Form_Trait {
 
 			} else {
 
-				$where .= " AND ( gmw_locations.latitude != 0.000000 && gmw_locations.longitude != 0.000000 ) ";
+				$where .= ' AND ( gmw_locations.latitude != 0.000000 && gmw_locations.longitude != 0.000000 ) ';
 			}
 
 			$where .= ' ' . $address_filters;
@@ -140,7 +138,6 @@ trait GMW_Posts_Locator_Form_Trait {
 		$clauses = apply_filters( 'gmw_' . $this->form['prefix'] . '_posts_query_clauses', $clauses, $this->form );
 		$clauses = apply_filters( 'gmw_' . $this->form['prefix'] . '_location_query_clauses', $clauses, $this->form );
 
-
 		// add having clause.
 		if ( ! empty( $clauses['groupby'] ) ) {
 			$clauses['groupby'] .= ' ' . $clauses['having'];
@@ -151,6 +148,162 @@ trait GMW_Posts_Locator_Form_Trait {
 		unset( $clauses['having'] );
 
 		return $clauses;
+	}
+
+	/**
+	 * Pass an array of arguments to the search query.
+	 *
+	 * Arguments can be modified using the filter:
+	 *
+	 * apply_filters( 'gmw_' . $this->form['prefix'] . '_search_query_args', $this->form['query_args'], $this->form, $this );
+	 *
+	 * The filter can be found in geo-my-wp/includes/class-gmw-base-form.php.
+	 *
+	 * in GMW_Form_Core->parse_query_args();
+	 *
+	 * @since 4.0
+	 *
+	 * @return [type] [description]
+	 */
+	public function get_query_args() {
+
+		// get the post types from page load settings.
+		if ( $this->form['page_load_action'] ) {
+
+			$post_types = $this->form['page_load_results']['post_types'];
+
+			// otherwise, on form submission.
+		} else {
+
+			// Check in submitted values.
+			if ( ! empty( $this->form['form_values']['post'] ) && array_filter( $this->form['form_values']['post'] ) ) {
+
+				$post_types = $this->form['form_values']['post'];
+
+				// otherwise grab all the post types from the search form settings.
+			} else {
+
+				$post_types                        = ! empty( $this->form['search_form']['post_types'] ) ? $this->form['search_form']['post_types'] : array( 'post' );
+				$this->form['form_values']['post'] = $post_types;
+			}
+		}
+
+		$tax_query = array();
+		// tax query can be disable if a custom query is needed.
+		if ( apply_filters( 'gmw_enable_taxonomy_search_query', true, $this->form, $this ) ) {
+			//$tax_args = ! empty( $this->form['form_values']['tax'] ) ? gmw_pt_get_tax_query_args( $this->form['form_values']['tax'], $this->form ) : array();
+			$tax_query = gmw_generate_tax_query( $this->form );
+		}
+
+		// query args.
+		return array(
+			'post_type'           => $post_types,
+			'post_status'         => array( 'publish' ),
+			'tax_query'           => $tax_query, // WPCS: slow query ok.
+			'posts_per_page'      => ! empty( $this->form['per_page'] ) ? $this->form['per_page'] : -1,
+			'paged'               => $this->form['paged'],
+			'orderby'             => $this->form['orderby'],
+			'order'               => 'post_modified' === $this->form['orderby'] || 'post_date' === $this->form['orderby'] ? 'DESC' : 'ASC',
+			'ignore_sticky_posts' => 1,
+			// below we can save on performance when showing map only ( without the list of results ).
+			'no_found_rows'       => $this->form['results_enabled'] ? false : true,
+			'fields'              => '*',
+		);
+	}
+
+	/**
+	 * Execute the search query.
+	 *
+	 * There are various filters that can be used to filter the form object and the query before and after the search query takes place.
+	 *
+	 * The filters can be found in geo-my-wp/includes/class-gmw-base-form.php.
+	 *
+	 * in GMW_Form_Core->pre_search_query_hooks() and GMW_Form_Core->post_search_query_hooks();
+	 *
+	 * Pre search query filters:
+	 *
+	 * apply_filters( 'gmw_form_before_search_query', $this->form, $this );
+	 *
+	 * apply_filters( 'gmw_' . $this->form['component'] . '_form_before_search_query', $this->form, $this );
+	 *
+	 * apply_filters( 'gmw_' . $this->form['prefix'] . '_form_before_search_query', $this->form, $this );
+	 *
+	 * Post search query filters:
+	 *
+	 * // Modify the form object.
+	 * $this->form  = apply_filters( 'gmw_' . $this->form['prefix'] . '_form_after_search_query', $this->form, $this );
+	 *
+	 * // Modify the search query.
+	 * $this->query = apply_filters( 'gmw_' . $this->form['prefix'] . '_query_after_search_query', $this->query, $this->form, $this );
+	 *
+	 * @since 4.0
+	 */
+	public function parse_search_query() {
+
+		// add filters to wp_query to do radius calculation and get locations detail into results.
+		add_filter( 'posts_clauses', array( $this, 'query_clauses' ) );
+
+		$this->query = new WP_Query( $this->form['query_args'] );
+
+		remove_filter( 'posts_clauses', array( $this, 'query_clauses' ) );
+
+		$this->query->request = null;
+	}
+
+	/**
+	 * Parse the search query results.
+	 *
+	 * @since 4.0
+	 */
+	public function parse_query_results() {
+
+		if ( ! empty( $this->query->posts ) ) {
+
+			$this->form['results']       = $this->query->posts;
+			$this->form['results_count'] = count( $this->query->posts );
+			$this->form['total_results'] = $this->query->found_posts;
+			$this->form['max_pages']     = $this->query->max_num_pages;
+		}
+	}
+
+	/**
+	 * The posts loop.
+	 *
+	 * To be used when displaying map only without the results.
+	 *
+	 * In that case we need to run the loop in order to collect some data for the map.
+	 *
+	 * @since 4.0
+	 *
+	 * @param  boolean $include [description].
+	 */
+	public function object_loop( $include = false ) {
+
+		// The variables are for AJAX forms deprecated template files. To be removed.
+		$gmw       = $this->form;
+		$gmw_form  = $this;
+		$gmw_query = $this->query;
+
+		while ( $this->query->have_posts() ) :
+
+			$this->query->the_post();
+
+			global $post;
+
+			// This action is required. Do not remove.
+			do_action( 'gmw_the_object_location', $post, $this->form );
+
+			// For AJAX forms deprecated template files. To be removed.
+			if ( $include ) {
+
+				if ( empty( $this->form['search_results']['styles']['disable_single_item_template'] ) ) {
+					include $this->form['results_template']['content_path'] . 'single-result.php';
+				} else {
+					do_action( 'gmw_search_results_single_item_template', $post, $this->form );
+				}
+			}
+
+		endwhile;
 	}
 }
 
@@ -165,13 +318,6 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 	 * Inherit search queries fromt Trait.
 	 */
 	use GMW_Posts_Locator_Form_Trait;
-
-	/**
-	 * Permalink hook
-	 *
-	 * @var string
-	 */
-	public $object_permalink_hook = 'the_permalink';
 
 	/**
 	 * Info window data
@@ -209,166 +355,5 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 			'url'    => get_permalink( $post->ID ),
 			'title'  => $post->post_title,
 		);
-	}
-
-	/**
-	 * Query results
-	 *
-	 * @return [type] [description]
-	 */
-	public function search_query() {
-
-		// get the post types from page load settings.
-		if ( $this->form['page_load_action'] ) {
-
-			$post_types = ! empty( $this->form['page_load_results']['post_types'] ) ? $this->form['page_load_results']['post_types'] : 'post';
-
-			// when set to 1 means that we need to show all post types.
-		} elseif ( ! empty( $this->form['form_values']['post'] ) && array_filter( $this->form['form_values']['post'] ) ) {
-
-			$post_types = $this->form['form_values']['post'];
-
-		} else {
-
-			$post_types                        = ! empty( $this->form['search_form']['post_types'] ) ? $this->form['search_form']['post_types'] : 'post';
-			$this->form['form_values']['post'] = $post_types;
-		}
-
-		$tax_query = array();
-		
-		// tax query can be disable if a custom query is needed.
-		if ( apply_filters( 'gmw_enable_taxonomy_search_query', true, $this->form, $this ) ) {
-			//$tax_args = ! empty( $this->form['form_values']['tax'] ) ? gmw_pt_get_tax_query_args( $this->form['form_values']['tax'], $this->form ) : array();
-			$tax_query = gmw_generate_tax_query( $this->form );
-		}
-
-		if ( empty( $this->form['get_per_page'] ) ) {
-			$this->form['get_per_page'] = -1;
-		}
-
-		$this->query_cache_args['post_types']       = $post_types;
-		$this->query_cache_args['show_non_located'] = $this->enable_objects_without_location;
-
-		// query args.
-		$this->form['query_args'] = apply_filters(
-			'gmw_pt_search_query_args',
-			array(
-				'post_type'           => $post_types,
-				'post_status'         => array( 'publish' ),
-				'tax_query'           => $tax_query, // WPCS: slow query ok.
-				'posts_per_page'      => $this->form['get_per_page'],
-				'paged'               => $this->form['paged'],
-				'ignore_sticky_posts' => 1,
-				'orderby'             => 'distance',
-				'gmw_args'            => $this->query_cache_args,
-				// below we can save on performance when showing map only ( without the list of results ).
-				'no_found_rows'       => $this->form['display_list'] ? false : true,
-				//'fields'              => $this->form['display_list'] ? '*' : 'id=>parent',
-			),
-			$this->form,
-			$this
-		);
-
-		$this->form = apply_filters( 'gmw_posts_locator_form_before_posts_query', $this->form, $this );
-		$this->form = apply_filters( 'gmw_pt_form_before_posts_query', $this->form, $this );
-
-		$internal_cache = GMW()->internal_cache;
-		$this->query    = false;
-
-		if ( $internal_cache ) {
-
-			// cache key.
-			$hash            = md5( wp_json_encode( $this->form['query_args'] ) );
-			$query_args_hash = 'gmw' . $hash . GMW_Cache_Helper::get_transient_version( 'gmw_get_object_post_query' );
-			$this->query     = get_option( $query_args_hash );
-		}
-
-		// look for query in cache.
-		if ( ! $internal_cache || empty( $this->query ) ) {
-
-			// add filters to wp_query to do radius calculation and get locations detail into results.
-			add_filter( 'posts_clauses', array( $this, 'query_clauses' ) );
-
-			// posts query.
-			$this->query = new WP_Query( $this->form['query_args'] );
-
-			remove_filter( 'posts_clauses', array( $this, 'query_clauses' ) );
-
-			// set new query in transient.
-			if ( $internal_cache ) {
-
-				/**
-				 * This is a temporary solution for an issue with caching SQL requests
-				 * For some reason when LIKE is being used in SQL WordPress replace the % of the LIKE
-				 * with long random numbers. This SQL is still being saved in the transient. Hoever,
-				 * it is not being pulled back properly when GEO my WP trying to use it.
-				 * It shows an error "unserialize(): Error at offset " and the value returns blank.
-				 * As a temporary work around, we remove the [request] value, which contains the long numbers, from the WP_Query and save it in the transien without it.
-				 *
-				 * @var [type]
-				 */
-				unset( $this->query->request, $this->query->query_vars['search_orderby_title'] );
-
-				set_transient( $query_args_hash, $this->query, GMW()->internal_cache_expiration );
-			}
-		}
-
-		// Modify the form after the search query.
-		$this->form = apply_filters( 'gmw_pt_form_after_posts_query', $this->form, $this );
-
-		// make sure posts exist.
-		if ( empty( $this->query->posts ) ) {
-			return false;
-		}
-
-		$this->form['results']       = $this->query->posts;
-		$this->form['results_count'] = count( $this->query->posts );
-		$this->form['total_results'] = $this->query->found_posts;
-		$this->form['max_pages']     = $this->query->max_num_pages;
-
-		// if showing the list of results we use the 'the_post'
-		// hook to generate the_location data.
-		if ( $this->form['display_list'] ) {
-
-			add_action( 'the_post', array( $this, 'the_post' ), 5 );
-
-			add_action( 'gmw_shortcode_end', array( $this, 'remove_the_post' ) );
-
-			// otherwise, if only the map shows, we need to run a loop
-			// to generate the map data of each location.
-		} else {
-
-			foreach ( $this->form['results'] as $post ) {
-				$this->map_locations[] = $this->get_map_location( $post, false );
-			}
-		}
-
-		return $this->form['results'];
-	}
-
-	/**
-	 * Generate the location data.
-	 *
-	 * @param object $post post object.
-	 */
-	public function the_post( $post ) {
-
-		$post = parent::the_location( $post->ID, $post );
-
-		return $post;
-	}
-
-	/**
-	 * Remove the_post action hook when form completed
-	 *
-	 * @param  [type] $form gmw form.
-	 */
-	public function remove_the_post( $form ) {
-
-		if ( absint( $this->form['ID'] ) === absint( $form['ID'] ) ) {
-			remove_action( 'the_post', array( $this, 'the_post' ), 5 );
-		}
-
-		wp_reset_postdata();
 	}
 }
