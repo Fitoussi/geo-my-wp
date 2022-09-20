@@ -442,6 +442,7 @@ class GEO_MY_WP {
 		include 'includes/template-functions/gmw-template-functions.php';
 		include 'includes/template-functions/gmw-search-form-template-functions.php';
 		include 'includes/template-functions/gmw-search-results-template-functions.php';
+		include 'includes/class-gmw-form-core.php';
 		include 'includes/class-gmw-form.php';
 		include 'includes/gmw-shortcodes.php';
 		include_once 'includes/class-gmw-geocoder.php';
