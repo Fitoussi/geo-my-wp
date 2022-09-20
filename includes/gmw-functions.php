@@ -883,6 +883,8 @@ Function gmw_get_labels( $form = array() ) {
  */
 function gmw_verify_template_file_requirement( $template = '' ) {
 
+	$bp_template = function_exists( 'bp_get_theme_package_id' ) ? bp_get_theme_package_id() : '';
+
 	if ( strpos( $template, 'buddyboss' ) !== false && ! function_exists( 'buddyboss_theme' ) ) {
 
 		gmw_trigger_error( 'GEO my WP\'s BuddyBoss template file requires the BuddyBoss theme. Install the BuddyBoss theme or select a different template file.' );
@@ -900,9 +902,311 @@ function gmw_verify_template_file_requirement( $template = '' ) {
 		gmw_trigger_error( 'GEO my WP\'s PeepSo template file requires the PeepSo plugin. Install the PeepSo plugin or select a different template file.' );
 
 		return false;
+
+	} elseif ( strpos( $template, 'buddypress-legacy' ) !== false && 'legacy' !== $bp_template ) {
+
+		gmw_trigger_error( 'GEO my WP\'s buddypress-legacy template file requires the BuddyPress plugin and it\'s Legacy template package enabled.' );
+
+		return false;
+
+	} elseif ( strpos( $template, 'buddypress-nouveau' ) !== false && 'nouveau' !== $bp_template ) {
+
+		gmw_trigger_error( 'GEO my WP\'s buddypress-nouveau template file requires the BuddyPress plugin and it\'s Nouveau template package enabled.' );
+
+		return false;
 	}
 
 	return true;
+}
+
+/**
+ * Generate the map location for an object.
+ *
+ * @param  object $object  The object.
+ *
+ * @param  array  $iw_args Info window args. Pass an empty array if no need to generate info-window.
+ *
+ * @param  array  $gmw     gmw form.
+ *
+ * @since 4.0
+ *
+ * @author Eyal Fitoussi.
+ *
+ * @return [type]          [description]
+ */
+function gmw_get_object_map_location( $object, $iw_args = array(), $gmw = array() ) {
+
+	if ( ! isset( $object->location_id ) || '0.000000' === $object->lat || '0.000000' === $object->lng ) {
+		return;
+	}
+
+	$info_window = ! empty( $iw_args ) ? gmw_get_info_window_content( $object, $iw_args, $gmw ) : false;
+	$map_icon    = isset( $object->map_icon ) ? $object->map_icon : '';
+
+	// Deprecated. Use one of the filters below instead ( @since 4.0 ).
+	$map_icon = apply_filters( 'gmw_' . $gmw['prefix'] . '_map_icon', $map_icon, $object, $gmw, $gmw );
+	
+	$args = (object) array(
+		'ID'                  => $object->object_id,
+		'location_id'         => $object->location_id,
+		'object_id'           => $object->object_id,
+		'object_type'         => $object->object_type,
+		'lat'                 => $object->lat,
+		'lng'                 => $object->lng,
+		'distance'            => isset( $object->distance ) ? $object->distance : null,
+		'units'               => isset( $object->units ) ? $object->units : null,
+		'map_icon'            => $map_icon,
+		'info_window_content' => $info_window,
+	);
+
+	// Deprecated filter. Use one from the below filters instead.
+	if ( 'ajax_forms' === $gmw['addon'] ) {
+		$args = apply_filters( 'gmw_ajax_form_map_location_args', $args, $object, $gmw, $gmw );
+	}
+
+	// Global Filter used on all form types and components.
+	$args = apply_filters( 'gmw_form_map_location_args', $args, $object, $gmw, $gmw );
+	$args = apply_filters( 'gmw_' . $gmw['component'] . '_map_location_args', $args, $object, $gmw );
+	$args = apply_filters( 'gmw_' . $gmw['prefix'] . '_form_map_location_args', $args, $object, $gmw );
+
+	return $args;
+}
+
+/**
+ * Generate the DB fields that will be pulled from GMW locations DB table for the different search queries.
+ *
+ * @param  array  $db_fields can pass default value if needed. Otherwise, pass empty array to use the default.
+ *
+ * @param  array  $gmw       gmw form.
+ *
+ * @since 4.0
+ *
+ * @return [type]            [description]
+ */
+/*function gmw_parse_form_db_fields( $db_fields = array(), $gmw = array() ) {
+
+	if ( empty( $db_fields ) ) {
+
+		$db_fields = array(
+			// '',
+			'ID as location_id',
+			'object_type',
+			'object_id',
+			'title as location_name',
+			'user_id',
+			'latitude',
+			'longitude',
+			'latitude as lat',
+			'longitude as lng',
+			'street_name',
+			'street_number',
+			'street',
+			'premise',
+			'neighborhood',
+			'city',
+			'region_name',
+			'region_code',
+			'postcode',
+			'country_name',
+			'country_code',
+			'address',
+			'formatted_address',
+		);
+	}
+
+	$db_fields = apply_filters( 'gmw_form_db_fields', $db_fields, $gmw );
+	$db_fields = preg_filter( '/^/', 'gmw_locations.', $db_fields );
+	$db_fields = apply_filters( 'gmw_form_db_fields_prefixed', $db_fields, $gmw );
+
+	// Deprecated. To be removed in the future. Use one of the filters below instead.
+	if ( isset( $gmw['addon'] ) && 'ajax_forms' === $gmw['addon'] ) {
+
+		$db_fields = apply_filters( 'gmw_ajaxfms_ajax_form_db_fields', $db_fields, $gmw );
+
+	// Deprecated. To be removed in the future. Use one of the filters below instead.
+	} elseif ( isset( $gmw['addon'] ) && 'global_maps' === $gmw['addon'] ) {
+
+		$db_fields = apply_filters( 'gmw_gmaps_global_map_db_fields', $db_fields, $gmw );
+
+		// Needed for normal forms only.
+	} else {
+
+		// The below is temporary. To be removed in the future.
+		// This will add the dynamic location_class and location_count to the query results. This use to be done via the loop but now uses a function ( gmw_object_class() ) directly in the template file.
+		// This is here to suppport older version of the template files that do not have that function in them.
+		$db_fields[] = "CONCAT( 'single-{$gmw['object_type']} gmw-single-item gmw-single-{$gmw['object_type']} gmw-object-', ifnull( gmw_locations.object_id, '0' ), ' gmw-location-', ifnull( gmw_locations.ID, '0' ) ) AS location_class";
+		$db_fields[] = "'' AS location_count";
+	}
+
+	return implode( ',', $db_fields );
+}*/
+
+/**
+ * Generate the results page URL for the search form "action" attribute.
+ *
+ * @since 4.0
+ *
+ * @param  array $gmw  gmw form.
+ *
+ * @return [type]          [description]
+ */
+function gmw_get_form_results_page( $gmw = array() ) {
+
+	// if already contains URL do nothing.
+	if ( ! empty( $gmw['form_submission']['results_page'] ) && strpos( $gmw['form_submission']['results_page'], 'http' ) !== false ) {
+		return $gmw['form_submission']['results_page'];
+	}
+
+	// if this is page ID.
+	if ( ! empty( $gmw['form_submission']['results_page'] ) && 'disabled' !== $gmw['form_submission']['results_page'] ) {
+		return get_permalink( $gmw['form_submission']['results_page'] );
+	}
+
+	// if no page ID set and its in widget, get the results page from settings page.
+	if ( $gmw['in_widget'] ) {
+
+		$gmw['form_submission']['results_page'] = get_permalink( GMW()->options['general_settings']['results_page'] );
+
+		return $gmw['form_submission']['results_page'];
+	}
+
+	// otherwise false.
+	return false;
+}
+
+/**
+ * Output the results page URL for the search form "action" attribute.
+ *
+ * @since 4.0
+ *
+ * @param  array $gmw  gmw form.
+ */
+function gmw_form_results_page( $gmw = array() ) {
+	echo esc_url( gmw_get_form_results_page( $gmw ) );
+}
+
+/**
+ * Generate class attributes for the form elements ( search form and search results ).
+ *
+ * @since 4.0
+ *
+ * @param  string $element search_form || search_results.
+ *
+ * @param  array  $gmw     gmw form.
+ *
+ * @return [type]          [description]
+ */
+function gmw_get_form_class( $element = 'form_wrapper', $gmw = array() ) {
+
+	$element       = 'results_wrapper' === $element ? 'results' : 'form';
+	$template_name = str_replace( 'custom_', '', $gmw['search_' . $element ][ $element . '_template'] );
+	$class         = array(
+		'gmw-' . $element . '-wrapper',
+		'gmw-template-' . $template_name,
+		'gmw-' . $gmw['prefix'] . '-' . $template_name . '-' . $element . '-wrapper',
+	);
+
+	if ( 'ajax_forms' === $gmw['addon'] ) {
+
+		$class[] = 'gmw-ajax-' . $element . '-wrapper';
+		$class[] = 'gmw-ajax-form-element';
+
+		// Below classes should be removed in the future.
+		$class[] = $gmw['prefix'];
+		$class[] = 'template-' . $template_name;
+
+	} elseif ( 'global_maps' === $gmw['addon'] ) {
+
+		$class[] = 'gmw-global-map-element';
+	}
+
+	if ( empty( $gmw['search_' . $element ]['styles']['disable_core_styles'] ) ) {
+		$class[] = 'gmw-element-template';
+		$class[] = 'gmw-fields-enhanced';
+	}
+
+	if ( 'results' === $element ) {
+
+		$class[] = 'list' === gmw_get_current_results_view( $gmw ) ? 'gmw-list-view' : 'gmw-grid-view';
+
+		if ( ! empty( $gmw['search_results']['image']['enabled'] ) ) {
+			$class[] = 'gmw-has-image image-enabled';
+		} else {
+			$class[] = 'image-disabled';
+		}
+	}
+
+	$class = apply_filters( 'gmw_form_element_class_attribute', $class, $element, $gmw );
+
+	return implode( ' ', $class );
+}
+
+/**
+ * Output the class attributes for the form elements ( search form and search results ).
+ *
+ * @since 4.0
+ *
+ * @param  string $element form_wrapper || results_wrapper.
+ *
+ * @param  array  $gmw gmw form.
+ */
+function gmw_form_class( $element = 'form', $gmw = array() ) {
+	echo esc_attr( gmw_get_form_class( $element, $gmw ) );
+}
+
+/**
+ * Generate class attributes for a single location in the loop.
+ *
+ * @param  object $object the location object.
+ *
+ * @param  string $gmw    gmw form.
+ *
+ * @since 4.0
+ *
+ * @author Eyal Fitoussi
+ *
+ * @return class attributes.
+ */
+function gmw_get_object_class( $object, $gmw = array() ) {
+
+	// Fill missing data. Usually when object does not have a location.
+	if ( empty( $object->object_id ) ) {
+		$object->object_type = $gmw['object_type'];
+		$object->object_id   = isset( $object->ID ) ? $object->ID : $object->id;
+	}
+
+	$output = array(
+		'gmw-single-item',
+		'gmw-single-' . $object->object_type,
+		'gmw-object-' . $object->object_id,
+	);
+
+	if ( ! empty( $object->location_id ) ) {
+		$output[] = 'gmw-location-' . $object->location_id;
+	}
+
+	if ( ! empty( $object->featured_location ) ) {
+		$output[] = 'gmw-featured-location';
+	}
+
+	$output = apply_filters( 'gmw_get_object_class_attr', $output, $object, $gmw );
+
+	return implode( ' ', $output );
+}
+
+/**
+ * Output the class attributes for a single location in the loop.
+ *
+ * @param  object $object the location object.
+ *
+ * @param  string $gmw    gmw form.
+ *
+ * @since 4.0
+ *
+ * @author Eyal Fitoussi
+ */
+function gmw_object_class( $object, $gmw = array() ) {
+	echo esc_attr( gmw_get_object_class( $object, $gmw ) );
 }
 
 /**
@@ -1308,9 +1612,11 @@ function gmw_get_map( $map_args = array(), $map_options = array(), $locations = 
 }
 
 /**
- * Get map element
+ * Get the map element.
  *
- * @param  array $args array of arguments.
+ * @param  array $args map arguments.
+ *
+ * @param  array $gmw  GMW form.
  *
  * @return [type]       [description]
  */
