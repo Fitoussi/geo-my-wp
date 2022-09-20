@@ -24,6 +24,10 @@
 
 	<?php do_action( 'gmw_search_results_start', $gmw ); ?>
 
+	<div class="gmw-results-message">
+		<span><?php gmw_results_message( $gmw ); ?></span>
+	</div>
+
 	<?php gmw_results_map( $gmw ); ?>
 
 	<div class="gmw-results-filters gmw-flexed-wrapper">
@@ -46,6 +50,9 @@
 			$gmw_query->the_post();
 
 			global $post;
+
+			// This action is required. Do not remove.
+			do_action( 'gmw_the_object_location', $post, $gmw );
 
 			if ( empty( $gmw['search_results']['styles']['disable_single_item_template'] ) ) {
 				include 'single-result.php';

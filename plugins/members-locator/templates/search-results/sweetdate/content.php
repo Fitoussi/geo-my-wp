@@ -62,6 +62,8 @@
 					<!-- do not remove this line -->
 					<?php $member = $members_template->member; ?>
 
+					<?php do_action( 'gmw_the_object_location', $member, $gmw ); ?>
+
 					<!-- do not remove this line -->
 					<?php do_action( 'gmw_search_results_loop_item_start', $gmw, $member ); ?>
 

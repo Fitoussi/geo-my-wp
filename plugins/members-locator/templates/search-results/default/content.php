@@ -64,6 +64,8 @@
 
 					<?php $member = $members_template->member; ?>
 
+					<?php do_action( 'gmw_the_object_location', $member, $gmw ); ?>
+
 					<li id="single-member-<?php echo absint( $member->id ); ?>" class="single-member <?php echo esc_attr( $member->location_class ); ?>">
 
 						<?php do_action( 'gmw_search_results_loop_item_start', $gmw, $member ); ?>

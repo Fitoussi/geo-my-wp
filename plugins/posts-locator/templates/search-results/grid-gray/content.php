@@ -56,6 +56,8 @@
 
 					<?php global $post; ?>
 
+					<?php do_action( 'gmw_the_object_location', $post, $gmw ); ?>
+
 					<li id="single-post-<?php echo absint( $post->ID ); ?>" class="<?php echo esc_attr( $post->location_class ); ?>">
 
 						<div class="wrapper-inner">

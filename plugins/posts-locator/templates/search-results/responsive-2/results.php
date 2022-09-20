@@ -51,6 +51,9 @@
 
 			global $post;
 
+			// This action is required. Do not remove.
+			do_action( 'gmw_the_object_location', $post, $gmw );
+
 			if ( empty( $gmw['search_results']['styles']['disable_single_item_template'] ) ) {
 				include 'single-result.php';
 			} else {

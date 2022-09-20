@@ -57,6 +57,8 @@
 
 					<?php global $post; ?>
 
+					<?php do_action( 'gmw_the_object_location', $post, $gmw ); ?>
+
 					<li id="single-post-<?php echo absint( $post->ID ); ?>" class="<?php echo esc_attr( $post->location_class ); ?>">
 
 						<?php do_action( 'gmw_search_results_loop_item_start', $gmw, $post ); ?>
@@ -64,7 +66,7 @@
 						<div class="wppl-title-holder">
 							<h2 class="wppl-h2">
 								<a href="<?php gmw_search_results_permalink( get_permalink(), $post, $gmw ); ?>">
-									<?php echo absint( $post->location_count ); ?>) <?php gmw_search_results_title( get_the_title(), $post, $gmw ); ?> 
+									<?php gmw_search_results_title( get_the_title(), $post, $gmw ); ?> 
 								</a>
 								<?php gmw_search_results_distance( $post, $gmw ); ?>
 							</h2>
