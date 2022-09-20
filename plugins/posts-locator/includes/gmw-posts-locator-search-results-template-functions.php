@@ -216,7 +216,7 @@ function gmw_generate_tax_query( $gmw ) {
 
 	return array();
 }
-//add_filter( 'gmw_posts_locator_form_before_posts_query', 'gmw_pt_execute_tax_query' );
+//add_filter( 'gmw_posts_locator_form_before_search_query', 'gmw_pt_execute_tax_query' );
 
 /**
  * Get posts featured image.
