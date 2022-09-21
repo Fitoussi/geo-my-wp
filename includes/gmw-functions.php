@@ -883,11 +883,13 @@ Function gmw_get_labels( $form = array() ) {
  */
 function gmw_verify_template_file_requirement( $template = '' ) {
 
+	global $buddyboss_platform_plugin_file;
+
 	$bp_template = function_exists( 'bp_get_theme_package_id' ) ? bp_get_theme_package_id() : '';
 
-	if ( strpos( $template, 'buddyboss' ) !== false && ! function_exists( 'buddyboss_theme' ) ) {
+	if ( strpos( $template, 'buddyboss' ) !== false && ( ! function_exists( 'buddyboss_theme' ) || empty( $buddyboss_platform_plugin_file ) ) ) {
 
-		gmw_trigger_error( 'GEO my WP\'s BuddyBoss template file requires the BuddyBoss theme. Install the BuddyBoss theme or select a different template file.' );
+		gmw_trigger_error( 'GEO my WP\'s BuddyBoss template file requires both the BuddyBoss theme and BuddyBoss Platform plugin.' );
 
 		return false;
 

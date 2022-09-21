@@ -1162,9 +1162,11 @@ class GMW_Form_Settings_Helper {
 
 			} else {
 
-				if ( strpos( $value, 'buddyboss' ) !== false && ! function_exists( 'buddyboss_theme' ) ) {
+				global $buddyboss_platform_plugin_file;
 
-					$new_templates[ $value ] = $name . ' ( requires the BuddyBoss theme )';
+				if ( strpos( $value, 'buddyboss' ) !== false && ( ! function_exists( 'buddyboss_theme' ) || empty( $buddyboss_platform_plugin_file ) ) ) {
+
+					$new_templates[ $value ] = $name . ' ( requires the BuddyBoss theme and BuddyBoss platform plugin )';
 
 				} elseif ( strpos( $value, 'youzify' ) !== false && ! class_exists( 'Youzify' ) ) {
 
