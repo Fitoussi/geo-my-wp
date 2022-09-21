@@ -262,6 +262,7 @@ class GMW_Form_Core {
 		$this->form['lat']              = false;
 		$this->form['lng']              = false;
 		$this->form['address']          = false;
+		$this->form['paged_name']       = 'page';
 		$this->form['paged']            = 1;
 		$this->form['per_page']         = -1;
 		$this->form['get_per_page']     = false; // Deprecated. Use per_page instead.
