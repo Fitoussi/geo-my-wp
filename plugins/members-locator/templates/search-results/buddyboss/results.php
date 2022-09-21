@@ -54,6 +54,10 @@
 
 			<div class="screen-content members-directory-content">
 
+				<div class="gmw-results-message">
+					<span><?php gmw_results_message( $gmw ); ?></span>
+				</div>
+
 				<?php gmw_results_map( $gmw ); ?>
 
 				<div class="gmw-results-filters gmw-flexed-wrapper">
@@ -69,25 +73,26 @@
 
 				<div id="members-dir-list" class="members dir-list" data-bp-list="member">
 
-					<?php bp_nouveau_before_loop(); ?>
-
 					<?php
-					$message_button_args = array(
-						'link_text'         => '<i class="bb-icon-mail-small"></i>',
-						'button_attr' => array(
-							'data-balloon-pos' => 'down',
-							'data-balloon' => __( 'Message', 'buddyboss-theme' ),
-						)
-					);
+					bp_nouveau_before_loop();
 
-					$footer_buttons_class = ( bp_is_active('friends') && bp_is_active('messages') ) ? 'footer-buttons-on' : '';
-					$is_follow_active     = bp_is_active('activity') && function_exists('bp_is_activity_follow_active') && bp_is_activity_follow_active();
-					$follow_class         = $is_follow_active ? 'follow-active' : '';
-					$gmw_view             = gmw_get_current_results_view( $gmw );
+					$footer_buttons_class = ( bp_is_active( 'friends' ) && bp_is_active( 'messages' ) ) ? ' footer-buttons-on' : '';
+					$is_follow_active     = bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active();
+					$follow_class         = $is_follow_active ? ' follow-active' : '';
+
+					// Member directories elements.
+					$enabled_online_status = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'online-status' );
+					$enabled_profile_type  = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'profile-type' );
+					$enabled_followers     = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'followers' );
+					$enabled_last_active   = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'last-active' );
+					$enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'joined-date' );
+					$gmw_view              = gmw_get_current_results_view( $gmw );
 					?>
+
 					<ul id="members-list" class="gmw-results-list members-list-wrapper item-list members-list bp-list <?php echo $gmw_view; // WPCS: XSS ok. ?>">
 
-						<?php while ( bp_members() ) {
+						<?php
+						while ( bp_members() ) {
 
 							bp_the_member();
 
@@ -118,20 +123,20 @@
 
 				<?php
 				/**
-				* Fires and displays the members content.
-				*
-				* @since BuddyPress 1.1.0
-				*/
+				 * Fires and displays the members content.
+				 *
+				 * @since BuddyPress 1.1.0
+				 */
 				do_action( 'bp_directory_members_content' );
 				?>
 			</div><!-- // .screen-content -->
 
 			<?php
 				/**
-				* Fires after the display of the members content.
-				*
-				* @since BuddyPress 1.1.0
-				*/
+				 * Fires after the display of the members content.
+				 *
+				 * @since BuddyPress 1.1.0
+				 */
 				do_action( 'bp_after_directory_members_content' );
 			?>
 
@@ -139,10 +144,10 @@
 
 		<?php
 			/**
-			* Fires after the display of the members.
-			*
-			* @since BuddyPress 1.1.0
-			*/
+			 * Fires after the display of the members.
+			 *
+			 * @since BuddyPress 1.1.0
+			 */
 			do_action( 'bp_after_directory_members' );
 		?>
 
@@ -150,19 +155,10 @@
 
 	<?php
 	/**
-	* Fires at the bottom of the members directory template file.
-	*
-	* @since BuddyPress 1.5.0
-	*/
+	 * Fires at the bottom of the members directory template file.
+	 *
+	 * @since BuddyPress 1.5.0
+	 */
 	do_action( 'bp_after_directory_members_page' );
 	?>
 </div>
-
-
-
-
-
-
-
-
-

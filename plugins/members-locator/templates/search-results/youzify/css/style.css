@@ -1,5 +1,7 @@
 div.gmw-fl-youzify-results-wrapper {
-	--gmw-form-color-primary: #4fc1e9; 
+	--gmw-form-color-primary: #4fc1e9;
+	background: #eaeaea;
+	padding: 15px;
 }
 
 div.gmw-fl-youzify-results-wrapper #youzify-members-list > li {

@@ -19,6 +19,9 @@
  * @package geo-my-wp
  */
 
+buddypress()->__set( 'current_component', 'members' );
+buddypress()->__set( 'is_directory', true );
+
 global $members_template;
 ?>
 <!--  Main results wrapper -->
