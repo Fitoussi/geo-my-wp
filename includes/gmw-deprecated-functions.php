@@ -167,6 +167,13 @@ if ( ! IS_ADMIN ) {
 
 */
 
+class GMW_Global_Map {
+
+	public function __construct() {
+		trigger_error( 'GMW_Global_Map class is deprecated since v3.0. Use GMW_Global_Map_Form instead.', E_USER_NOTICE );
+	}
+}
+
 /**
  * Add orderby filter to the search results via hook.
  *
