@@ -295,9 +295,8 @@ class GMW_BuddyPress_Directory_Geolocation {
 
 				add_action( 'bp_member_members_list_item', array( $this, 'add_elements_to_results' ) );
 				add_action( 'bp_directory_groups_item', array( $this, 'add_elements_to_results' ) );
-
 			} elseif ( function_exists( 'buddyx_template_pack_check' ) ) {
-				
+
 				add_filter( 'bp_nouveau_get_member_meta', array( $this, 'add_elements_to_results_buddyx' ) );
 				add_action( 'bp_directory_groups_item', array( $this, 'add_elements_to_results' ) );
 
@@ -571,7 +570,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 	 * @param array $search_form_html form element.
 	 */
 	public function directory_form( $search_form_html ) {
-		
+
 		$this->form_loaded = true;
 
 		$search_form = $this->get_form_elements();
@@ -643,7 +642,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 			});
 		</script>
 		<?php
-		echo implode( ' ', $search_form );
+		echo implode( ' ', $search_form ); // WPCS: XSS ok.
 	}
 
 	/**
@@ -652,6 +651,8 @@ class GMW_BuddyPress_Directory_Geolocation {
 	 * @author Eyal Fitoussi
 	 *
 	 * @since 4.0
+	 *
+	 * @param string $search_form_html the search form element.
 	 *
 	 * @author Eyal Fitoussi
 	 */
@@ -724,8 +725,9 @@ class GMW_BuddyPress_Directory_Geolocation {
 
 		return $search_form_html . implode( ' ', $search_form );
 	}
+
 	/**
-	 * Generate the map element
+	 * Generate the map element.
 	 */
 	public function map_element() {
 
@@ -744,7 +746,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 	}
 
 	/**
-	 * Generate the map
+	 * Generate the map.
 	 */
 	public function trigger_js_and_map() {
 
@@ -801,32 +803,10 @@ class GMW_BuddyPress_Directory_Geolocation {
 	}
 
 	/**
-	 * Generate group location for the map.
+	 * Collect object location in the loop.
 	 *
-	 * @param  object $object      object ( group/member ) data.
-	 *
-	 * @param  object $info_window info window.
+	 * @param  [type] $object the object in the loop.
 	 */
-	/*public function map_location( $object, $info_window_args ) {
-
-		$info_window = gmw_get_info_window_content( $group, $info_window_args, $this->form );		
-
-		// add lat/lng locations array to pass to map.
-		return apply_filters(
-			'gmw_' . $this->prefix . '_' . $this->component . '_data',
-			array(
-				'ID'                  => $object->id,
-				'lat'                 => $object->lat,
-				'lng'                 => $object->lng,
-				'map_icon'            => '',
-				'icon_size'           => GMW()->default_icons['location_icon_size'],
-				'info_window_content' => $info_window,
-			),
-			$object,
-			$this
-		);
-	}*/
-
 	public function the_location( $object ) {
 
 		if ( ! empty( $this->options['map'] ) ) {
