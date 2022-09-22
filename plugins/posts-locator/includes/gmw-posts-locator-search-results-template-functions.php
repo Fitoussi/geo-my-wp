@@ -112,7 +112,7 @@ function gmw_pt_get_tax_query_args( $tax_args = array(), $gmw = array() ) {
  *
  * @return array
  */
-function gmw_get_pre_defined_tax_query( $gmw ) {
+function gmw_get_pre_defined_tax_query( $gmw = array() ) {
 
 	// for page load results.
 	if ( $gmw['page_load_action'] && ! empty( $gmw['page_load_results']['include_exclude_terms'] ) ) {
@@ -196,7 +196,7 @@ function gmw_get_pre_defined_tax_query( $gmw ) {
  *
  * @return [type]      [description]
  */
-function gmw_generate_tax_query( $gmw ) {
+function gmw_generate_tax_query( $gmw = array() ) {
 
 	$tax_query = gmw_get_pre_defined_tax_query( $gmw );
 
