@@ -1531,6 +1531,113 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		 * Enqueue scripts
 		 */
 		public function enqueue_scripts() {}
+
+		/**
+		 * Initiator for AJAX powered forms.
+		 *
+		 * @param  array || int $form array or form ID.
+		 *
+		 * @return global map object
+		 */
+		public static function ajax_form_init( $form = array() ) {
+
+			// Get the form in case we pass form ID.
+			if ( ! is_array( $form ) && absint( $form ) ) {
+
+				if ( isset( $_POST['form_id'] ) ) { // WPCS: CSRF ok.
+					$form = gmw_get_form( absint( $_POST['form_id'] ) ); // WPCS: CSRF ok.
+				} else {
+					return __( 'GMW form ID is missing.', 'geo-my-wp' );
+				}
+			}
+
+			/**
+			 * Include required files and functions.
+			 *
+			 * Using the hooks below we make sure
+			 *
+			 * we include some global maps files and functions only when needed.
+			 *
+			 * Which means when the shortcode and maps takes place.
+			 *
+			 * @param  array  $form [description]
+			 * @return [type]       [description]
+			 */
+
+			// Deprecated filters. Use the below instead.
+			if ( 'ajax_forms' === $form['addon'] ) {
+				do_action( 'gmw_ajaxfms_form_init', $form );
+				do_action( 'gmw_' . $form['prefix'] . '_form_init', $form );
+			}
+
+			// Deprecated filters. Use the below instead.
+			if ( 'global_maps' === $form['addon'] ) {
+				do_action( 'gmw_global_map_init', $form );
+				do_action( 'gmw_' . $form['prefix'] . '_global_map_init', $form );
+			}
+
+			// New filters.
+			do_action( 'gmw_ajax_form_init', $form );
+			do_action( 'gmw_' . $form['component'] . '_ajax_form_init', $form );
+			do_action( 'gmw_' . $form['prefix'] . '_ajax_form_init', $form );
+
+			$custom_class_name = apply_filters( 'gmw_ajax_form_custom_class_name', '', $form );
+
+			// For custom class name.
+			if ( '' !== $custom_class_name ) {
+
+				$class_name = $custom_class_name;
+
+				// Otherwise, use core file and class names.
+			} else {
+
+				$folder_name = GMW()->addons[ $form['component'] ]['templates_folder'];
+				$file_name   = 'class-gmw-' . str_replace( '_', '-', $form['slug'] ) . '-form.php';
+				$file_path   = GMW()->addons[ $form['addon'] ]['plugin_dir'] . '/plugins/' . $folder_name . '/includes/' . $file_name;
+				$class_name  = 'GMW_' . $form['slug'] . '_Form';
+
+				if ( file_exists( $file_path ) ) {
+					include_once $file_path;
+				}
+			}
+
+			// If class doens't exist.
+			if ( ! class_exists( $class_name ) ) {
+				return $class_name . ' class is missing.';
+			}
+
+			// initiate the class.
+			return new $class_name( $form );
+		}
+
+		/**
+		 * Execute AJAX form submission.
+		 *
+		 * @since 4.0
+		 */
+		public static function ajax_form_submission() {
+
+			do_action( 'gmw_pre_ajax_form_sumission', $_POST ); // WPCS: CSRF ok.
+
+			if ( isset( $_POST['form_id'] ) ) { // WPCS: CSRF ok.
+
+				// init global map.
+				$form_object = static::ajax_form_init( absint( $_POST['form_id'] ) ); // WPCS: CSRF ok.
+			} else {
+				die( 'GMW form ID missing' );
+			}
+
+			// make sure map object was returned.
+			if ( is_object( $form_object ) ) {
+
+				$form_object->get_results();
+
+				// otherwise, show failed message.
+			} else {
+
+				die( $form_object ); // WPCS: XSS ok.
+			}
+		}
 	}
 
 endif;
