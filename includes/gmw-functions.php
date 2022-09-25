@@ -641,14 +641,15 @@ function gmw_get_address_fields_filters_sql( $address_filters = array(), $gmw = 
 /**
  * SQL to get locations within bounderies.
  *
- * @param  array $sw southwest coords.
- * @param  array $ne northeast coords.
+ * @param  string $southwest southwest coords comma separated.
+ *
+ * @param  string $northeast northeast coords comma separated.
  *
  * @since 4.0.
  *
  * @return [type]     [description]
  */
-function gmw_get_locations_within_bounderies_sql( $southwest = array(), $northeast = array() ) {
+function gmw_get_locations_within_bounderies_sql( $southwest = '', $northeast = '' ) {
 
 	if ( empty( $southwest ) || empty( $northeast ) ) {
 		return;
@@ -985,7 +986,7 @@ function gmw_get_object_map_location( $object, $iw_args = array(), $gmw = array(
  *
  * @return [type]            [description]
  */
-/*function gmw_parse_form_db_fields( $db_fields = array(), $gmw = array() ) {
+function gmw_parse_form_db_fields( $db_fields = array(), $gmw = array() ) {
 
 	if ( empty( $db_fields ) ) {
 
@@ -1017,6 +1018,7 @@ function gmw_get_object_map_location( $object, $iw_args = array(), $gmw = array(
 	}
 
 	$db_fields = apply_filters( 'gmw_form_db_fields', $db_fields, $gmw );
+	//$db_fields = apply_filters( 'gmw_' . $gmw['prefix'] . '_form_db_fields', $db_fields, $gmw );
 	$db_fields = preg_filter( '/^/', 'gmw_locations.', $db_fields );
 	$db_fields = apply_filters( 'gmw_form_db_fields_prefixed', $db_fields, $gmw );
 
@@ -1040,8 +1042,8 @@ function gmw_get_object_map_location( $object, $iw_args = array(), $gmw = array(
 		$db_fields[] = "'' AS location_count";
 	}
 
-	return implode( ',', $db_fields );
-}*/
+	return $db_fields; //implode( ',', $db_fields );
+}
 
 /**
  * Generate the results page URL for the search form "action" attribute.
