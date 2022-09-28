@@ -58,6 +58,7 @@ trait GMW_Posts_Locator_Form_Trait {
 		}
 
 		$tax_query = array();
+
 		// tax query can be disable if a custom query is needed.
 		if ( apply_filters( 'gmw_enable_taxonomy_search_query', true, $this->form, $this ) ) {
 			//$tax_args = ! empty( $this->form['form_values']['tax'] ) ? gmw_pt_get_tax_query_args( $this->form['form_values']['tax'], $this->form ) : array();
@@ -99,24 +100,24 @@ trait GMW_Posts_Locator_Form_Trait {
 	 *
 	 * Post search query filters:
 	 *
-	 * // Modify the form object.
+	 * // Modify the form.
 	 * $this->form  = apply_filters( 'gmw_' . $this->form['prefix'] . '_form_after_search_query', $this->form, $this );
 	 *
 	 * // Modify the search query.
 	 * $this->query = apply_filters( 'gmw_' . $this->form['prefix'] . '_query_after_search_query', $this->query, $this->form, $this );
 	 *
+	 * You can also modify the posts clauses using the filter below which can be found in class-gmw-wp-query.php file.
+	 *
+	 * $clauses = apply_filters( 'gmw_posts_locator_query_clauses', $clauses, $gmw, $object );
+	 *
+	 * @author Eyal Fitoussi
+	 *
 	 * @since 4.0
 	 */
 	public function parse_search_query() {
 
-		// add filters to wp_query to do radius calculation and get locations detail into results.
-		add_filter( 'posts_clauses', array( $this, 'query_clauses' ) );
-
-		$this->query = new WP_Query( $this->form['query_args'] );
-
-		remove_filter( 'posts_clauses', array( $this, 'query_clauses' ) );
-
-		$this->query->request = null;
+		$this->query          = new GMW_WP_Query( $this->form['query_args'], $this->form );
+		$this->query->request = null; // Remove for internal cache purposes.
 	}
 
 	/**
