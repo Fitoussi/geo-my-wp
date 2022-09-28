@@ -105,25 +105,25 @@ class GEO_MY_WP {
 	 * @var array
 	 */
 	public $required_versions = array(
-		'ajax_forms'                       => '1.9',
-		'bp_groups_locator'                => '1.9',
-		'groups_locator'                   => '1.9', // old slug.
-		'bp_members_directory_geolocation' => '1.9',
-		'geo_members_directory'            => '1.9', // old slug.
+		'ajax_forms'                       => '1.999',
+		'bp_groups_locator'                => '1.999',
+		'groups_locator'                   => '1.999', // old slug.
+		'bp_members_directory_geolocation' => '1.999',
+		'geo_members_directory'            => '1.999', // old slug.
 		'bp_xprofile_geolocation'          => '1.9',
 		'xprofile_fields'                  => '1.9', // old slug.
-		'exclude_locations'                => '1.9',
-		'exclude_members'                  => '1.9', // old slug.
-		'global_maps'                      => '2.9',
+		'exclude_locations'                => '1.999',
+		'exclude_members'                  => '1.999', // old slug.
+		'global_maps'                      => '2.9999',
 		'gmw_kleo_geolocation'             => '1.9',
 		'nearby_locations'                 => '1.9',
 		'nearby_posts'                     => '1.9',   // old slug.
-		'premium_settings'                 => '2.9',
-		'users_locator'                    => '1.9',
-		'wp_users_geo-location'            => '1.9', // old slug.
+		'premium_settings'                 => '2.999',
+		'users_locator'                    => '1.999',
+		'wp_users_geo-location'            => '1.999', // old slug.
 		'radius_per_location'              => '1.199',
 		'ip_address_locator'               => '1.0.9',
-		'gmw_multiple_locations'           => '1.999',
+		'gmw_multiple_locations'           => '1.9999',
 		'gmw_peepso_geolocation'           => '0.1',
 	);
 
