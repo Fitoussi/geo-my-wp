@@ -707,6 +707,9 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 
 			// include widgets.
 			add_action( 'widgets_init', array( $this, 'init_widgets' ) );
+
+			// Include files required for the different forms.
+			add_action( 'gmw_pre_form_init', array( $this, 'include_form_files' ), 10 );
 		}
 
 		/**
@@ -1521,6 +1524,15 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		 * Initialization code in the front-end
 		 */
 		protected function init_frontend() {}
+
+		/**
+		 * Include files required for the different GEO my WP's forms.
+		 *
+		 * @since 4.0
+		 *
+		 * @return [type] [description]
+		 */
+		public function include_form_files() {}
 
 		/**
 		 * Initialization code in AJAX mode
