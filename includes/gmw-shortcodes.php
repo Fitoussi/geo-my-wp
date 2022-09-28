@@ -22,28 +22,23 @@ if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
  */
 function gmw_shortcode( $attr ) {
 
+	$element       = key( $attr );
+	$element_value = $attr[ $element ];
+
 	// abort if no shortcode attribute provided!
-	if ( empty( $attr ) ) {
-		return gmw_trigger_error( 'Shortcode attributes are missing.' );
+	if ( ! in_array( $element, array( 'form', 'search_form', 'search_results', 'map' ), true ) ) {
+
+		gmw_trigger_error( 'GEO my WP form shortcode is missing one of the required shortcode attributes.' );
+
+		return;
 	}
 
 	$_GET = apply_filters( 'gmw_modify_get_args', $_GET ); // WPCS: CSRF ok.
 
-	// get the first attribute of the shortcode.
-	// the first attribute must be the element ( form, search_form, map or search_results ).
-	$element = key( $attr );
-
-	// get the form ID from the shortcode attrbute.
-	$element_value = $attr[ $element ];
-
-	$status = 'ok';
-
 	// verify that the element is legit.
 	if ( empty( $element_value ) ) {
 
-		$status = 'error';
-
-		$error_message = __( 'Invalid or missing form type.', 'geo-my-wp' );
+		gmw_trigger_error( 'Invalid or missing GEO my WP form type.' ); // WPCS : XSS ok.
 
 		return;
 	}
@@ -56,23 +51,13 @@ function gmw_shortcode( $attr ) {
 		// abort if form was not submitted.
 		if ( ! isset( $_GET[ $url_px . 'form' ] ) ) { // WPCS: CSRF ok.
 
-			$status = 'results page was not submitted.';
+			gmw_trigger_error( 'GEO my WP results page was not submitted.' ); // WPCS : XSS ok.
 
 			return;
 		}
 
 		// get the form ID from URL.
 		$form_id = absint( $_GET[ $url_px . 'form' ] ); // WPCS: CSRF ok.
-
-		// abort if search_results shortcode is being used but does not belong
-		// to the submitted search form.
-		/**
-		If ( $element == 'search_results' && $element_value != $form_id ) {
-
-			$status = 'results page does not match.';
-
-			return;
-		} */
 
 		// set the element as results page.
 		$element = 'search_results';
@@ -90,29 +75,15 @@ function gmw_shortcode( $attr ) {
 	// abort if form was not found.
 	if ( empty( $form ) ) {
 
-		$status = 'error';
-
-		$error_message = __( 'Form does not exist.', 'geo-my-wp' );
+		gmw_trigger_error( 'GEO my WP Form does not exist.' ); // WPCS : XSS ok.
 
 		return;
-	}
-
-	// allow using this shortcode for global maps as well.
-	if ( 'global_maps' === $form['addon'] && function_exists( 'gmw_global_map_shortcode' ) ) {
-		return gmw_global_map_shortcode( $attr );
-	}
-
-	// allow using this shortcode for AJAX Forms as well.
-	if ( 'ajax_forms' === $form['addon'] && function_exists( 'gmw_ajax_form_shortcode' ) ) {
-		return gmw_ajax_form_shortcode( $attr );
 	}
 
 	// Abort if the add-on this form belongs to is deactivated.
 	if ( ! gmw_is_addon_active( $form['addon'] ) ) {
 
-		$status = 'error';
-
-		$error_message = __( 'The add-on which this form belongs to is deactivated.', 'geo-my-wp' );
+		gmw_trigger_error( 'The add-on which this GEO my WP form belongs to is deactivated.' ); // WPCS : XSS ok.
 
 		return;
 	}
@@ -125,8 +96,8 @@ function gmw_shortcode( $attr ) {
 		$form['current_element'] = 'search_results';
 	}
 
-	// shortcode attributes.
-	$form['params'] = $attr;
+	$form['element'] = $form['current_element']; // Deprecated. Used in AJAX Forms.
+	$form['params']  = $attr;
 
 	// do something before everything begines.
 	do_action( 'gmw_shortcode_pre_init', $form );
@@ -134,47 +105,30 @@ function gmw_shortcode( $attr ) {
 
 	ob_start();
 
-	// if form verified.
-	if ( 'ok' !== $status ) {
+	$form_object = GMW_Form_Core::init( $form );
 
-		if ( ! empty( $error_message ) ) {
-			gmw_trigger_error( $error_message );
-		}
-
-		return;
+	// Abort if form object doesn't exist.
+	if ( empty( $form_object ) || ! is_object( $form_object ) ) {
+		return $form_object;
 	}
 
-	// get the class name of the add-on need to be queried based on its slug.
-	if ( class_exists( 'GMW_' . $form['slug'] . '_Form' ) ) {
-
-		$class_name = 'GMW_' . $form['slug'] . '_Form';
-
-		// otherwise, can use the filter for custom class.
-	} else {
-
-		$class_name = apply_filters( 'gmw_form_custom_class_name', '', $form['slug'], $form );
-
-		if ( ! class_exists( $class_name ) ) {
-			return gmw_trigger_error( 'GMW form class is missing.' );
-		}
-	}
-
-	$new_form = new $class_name( $form );
-
-	GMW()->current_form = $new_form->form;
-
-	do_action( 'gmw_element_loaded', 'form', $form );
+	do_action( 'gmw_element_loaded', 'form', $form_object->form );
 
 	// output only if element allowed.
-	if ( $new_form->element_allowed ) {
+	if ( $form_object->element_allowed ) {
 
 		// display the form.
-		$new_form->output();
+		$form_object->output();
 	}
 
 	$output_form = ob_get_contents();
 
 	ob_end_clean();
+
+	// For deprecated template files. To be removed.
+	if ( 'ajax_forms' === $form_object->form['addon'] && ! empty( $form_object->form['general_settings']['legacy_style'] ) && ! wp_style_is( 'gmw-ajax-forms-legacy-frontend', 'enqueued' ) ) {
+		wp_enqueue_style( 'gmw-ajax-forms-legacy-frontend' );
+	}
 
 	return $output_form;
 }
