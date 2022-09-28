@@ -134,9 +134,12 @@ trait GMW_Members_Locator_Form_Trait {
 		$clauses['order']   = $query->uid_clauses['order'];
 		$clauses['limit']   = $query->uid_clauses['limit'];
 
-		// modify the query.
-		$clauses = apply_filters( 'gmw_members_locator_location_query_clauses', $clauses, $this->form, $this, $query );
+		// Deprecated filter. Use the below instead.
 		$clauses = apply_filters( 'gmw_' . $this->form['prefix'] . '_location_query_clauses', $clauses, $this->form, $query, $this );
+
+		// New Filters
+		$clauses = apply_filters( 'gmw_members_locator_query_clauses', $clauses, $this->form, $this, $query );
+		$clauses = apply_filters( 'gmw_' . $this->form['prefix'] . '_members_query_clauses', $clauses, $this->form, $this, $query );
 
 		// If orderby is an array.
 		if ( is_array( $clauses['orderby'] ) ) {
@@ -342,6 +345,9 @@ trait GMW_Members_Locator_Form_Trait {
 	public function parse_query_results() {
 
 		global $members_template;
+
+		// For when coming from cache.
+		$members_template = $this->query;
 
 		if ( ! empty( $members_template->members ) ) {
 
