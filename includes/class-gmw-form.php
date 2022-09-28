@@ -46,40 +46,11 @@ class GMW_Form extends GMW_Form_Core {
 	public $render_map = false;
 
 	/**
-	 * __construct
-	 *
-	 * Verify some data and generate default values.
-	 *
-	 * @param array $form the form being processed.
-	 */
-	public function __construct( $form ) {
-
-		$this->form = $form;
-
-		// verify that the form element is lagit.
-		if ( ! in_array( $this->form['current_element'], $this->allowed_form_elements, true ) ) {
-
-			$this->element_allowed = false;
-
-			$message = sprintf(
-				/* translators: %s replaced with form type */
-				__( '%s is invalid form type.', 'geo-my-wp' ),
-				$this->form['current_element']
-			);
-
-			return gmw_trigger_error( $message );
-		}
-
-		// get from default values.
-		$this->setup_defaults();
-	}
-
-	/**
 	 * Set default form values.
 	 *
 	 * @since 4.0
 	 */
-	public function set_default_form_values() {
+	public function set_default_values() {
 
 		// Get current page slug. Home page and singular slug is different than other pages.
 		$page_name = ( is_front_page() || is_single() ) ? 'page' : $this->paged_name;
@@ -107,17 +78,16 @@ class GMW_Form extends GMW_Form_Core {
 		}
 
 		// Deprecated. Use results enabled instead.
-		$this->form['display_list']    = $this->form['results_enabled']; // Deprecated.
-		$this->form['address_filters'] = gmw_form_get_address_filters( $this->form );
+		$this->form['display_list'] = $this->form['results_enabled']; // Deprecated.
 
 		// for older version. to prevent PHP warnings.
 		$this->form['search_results']['results_page'] = $this->form['form_submission']['results_page'];
 		$this->form['search_results']['display_map']  = $this->form['map_usage'];
 
 		/* temporary to support previous version of template files ( will be removed ) */
-		if ( function_exists( 'gmw_3_deprecated_form_settings' ) ) {
+		/*if ( function_exists( 'gmw_3_deprecated_form_settings' ) ) {
 			$this->form = gmw_3_deprecated_form_settings( $this->form );
-		}
+		}*/
 
 		$this->load_info_window_templates = apply_filters( 'gmw_load_info_window_templates', $this->load_info_window_templates, $this->form, $this );
 
@@ -253,8 +223,6 @@ class GMW_Form extends GMW_Form_Core {
 		$this->form['org_address']  = '';
 		$this->form['per_page']     = ! empty( $form_values['per_page'] ) ? $form_values['per_page'] : current( explode( ',', $page_load_options['per_page'] ) );
 		$this->form['get_per_page'] = $this->form['per_page']; // Deprecated.
-		$this->form['radius']       = ! empty( $page_load_options['radius'] ) ? $page_load_options['radius'] : 200;
-		$this->form['units']        = ! empty( $page_load_options['units'] ) ? $page_load_options['units'] : 'imperial';
 		$this->form['units_array']  = ! empty( $page_load_options['units'] ) ? gmw_get_units_array( $page_load_options['units'] ) : gmw_get_units_array( 'imperial' );
 
 		// Look for page page in submitted values.
@@ -269,21 +237,6 @@ class GMW_Form extends GMW_Form_Core {
 		}
 
 		$this->form['get_per_page'] = $this->form['per_page']; // get_per_page deprecated.
-
-		// Get page load location.
-		$page_load_location = $this->get_page_load_location();
-
-		$this->form['address'] = $page_load_location['address'];
-
-		if ( -1 !== $this->form['lat'] ) {
-
-			$this->form['lat'] = $page_load_location['lat'];
-			$this->form['lng'] = $page_load_location['lng'];
-		} else {
-
-			$this->form['lat'] = '';
-			$this->form['lng'] = '';
-		}
 
 		// filter the form value before query.
 		$this->form = apply_filters( 'gmw_page_load_results_before_results', $this->form, $this );
