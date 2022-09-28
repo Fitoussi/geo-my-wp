@@ -123,6 +123,24 @@ class GMW_Form_Core {
 	public $query = array();
 
 	/**
+	 * Hold the locations from search results.
+	 *
+	 * @since 4.0
+	 *
+	 * @var array
+	 */
+	public $results = array();
+
+	/**
+	 * Hold the HTML results for AJAX forms.
+	 *
+	 * @since 4.0
+	 *
+	 * @var array
+	 */
+	public $html_results = '';
+
+	/**
 	 * $map_locations
 	 *
 	 * Holder for the location data that will pass to the map generator
@@ -163,7 +181,104 @@ class GMW_Form_Core {
 	 *
 	 * @param array $form the form being processed.
 	 */
-	public function __construct( $form ) {}
+	public function __construct( $form ) {
+
+		$this->form = $form;
+
+		// verify that the form element is lagit.
+		if ( ! wp_doing_ajax() && ! empty( $this->form['current_element'] ) && ! in_array( $this->form['current_element'], $this->allowed_form_elements, true ) ) {
+
+			$this->element_allowed = false;
+
+			$message = sprintf(
+				/* translators: %s replaced with form type */
+				__( '%s is invalid form type.', 'geo-my-wp' ),
+				$this->form['current_element']
+			);
+
+			return gmw_trigger_error( $message );
+		}
+
+		// get from default values.
+		$this->setup_defaults();
+	}
+
+	/**
+	 * Initiator for AJAX powered forms.
+	 *
+	 * @param  array || int $form array or form ID.
+	 *
+	 * @return global map object
+	 */
+	public static function init( $form = array() ) {
+
+		// Get the form in case we pass form ID.
+		if ( is_numeric( $form ) ) {
+			$form = gmw_get_form( $form ); // WPCS: CSRF ok.
+		}
+
+		if ( empty( $form ) || ! is_array( $form ) ) {
+			return __( 'GEO my WP form doesn\'t exist.', 'geo-my-wp' );
+		}
+
+		/**
+		 * Include required files and functions.
+		 *
+		 * Using the hooks below we make sure
+		 *
+		 * we include some global maps files and functions only when needed.
+		 *
+		 * Which means when the shortcode and maps takes place.
+		 *
+		 * @param  array  $form [description]
+		 * @return [type]       [description]
+		 */
+
+		// Deprecated filters. Use the below instead.
+		if ( 'ajax_forms' === $form['addon'] ) {
+			do_action( 'gmw_ajaxfms_form_init', $form );
+			do_action( 'gmw_' . $form['prefix'] . '_form_init', $form );
+		}
+
+		// Deprecated filters. Use the below instead.
+		if ( 'global_maps' === $form['addon'] ) {
+			do_action( 'gmw_global_map_init', $form );
+			do_action( 'gmw_' . $form['prefix'] . '_global_map_init', $form );
+		}
+
+		// New filters.
+		do_action( 'gmw_pre_form_init', $form );
+		do_action( 'gmw_' . $form['component'] . '_pre_form_init', $form );
+		do_action( 'gmw_' . $form['prefix'] . '_pre_form_init', $form );
+
+		$custom_class_name = apply_filters( 'gmw_form_custom_class_name', '', $form );
+
+		// For custom class name.
+		if ( '' !== $custom_class_name ) {
+
+			$class_name = $custom_class_name;
+
+			// Otherwise, use core file and class names.
+		} else {
+
+			$folder_name = GMW()->addons[ $form['component'] ]['templates_folder'];
+			$file_name   = 'class-gmw-' . str_replace( '_', '-', $form['slug'] ) . '-form.php';
+			$file_path   = GMW()->addons[ $form['addon'] ]['plugin_dir'] . '/plugins/' . $folder_name . '/includes/' . $file_name;
+			$class_name  = 'GMW_' . $form['slug'] . '_Form';
+
+			if ( file_exists( $file_path ) ) {
+				include_once $file_path;
+			}
+		}
+
+		// If class doens't exist.
+		if ( ! class_exists( $class_name ) ) {
+			return $class_name . ' class is missing.';
+		}
+
+		// initiate the class.
+		return new $class_name( $form );
+	}
 
 	/**
 	 * Generate the DB fields that will be pulled from GMW locations DB table for the different search queries.
@@ -174,63 +289,7 @@ class GMW_Form_Core {
 	 */
 	public function parse_db_fields() {
 
-		if ( ! empty( $this->db_fields ) ) {
-
-			$db_fields = $this->db_fields;
-
-		} else {
-
-			$db_fields = array(
-				// '',
-				'ID as location_id',
-				'object_type',
-				'object_id',
-				'title as location_name',
-				'user_id',
-				'latitude',
-				'longitude',
-				'latitude as lat',
-				'longitude as lng',
-				'street_name',
-				'street_number',
-				'street',
-				'premise',
-				'neighborhood',
-				'city',
-				'region_name',
-				'region_code',
-				'postcode',
-				'country_name',
-				'country_code',
-				'address',
-				'formatted_address',
-			);
-		}
-
-		$db_fields = apply_filters( 'gmw_form_db_fields', $db_fields, $this->form );
-		$db_fields = apply_filters( 'gmw_' . $this->form['prefix'] . '_form_db_fields', $db_fields, $this->form );
-		$db_fields = preg_filter( '/^/', 'gmw_locations.', $db_fields );
-		$db_fields = apply_filters( 'gmw_form_db_fields_prefixed', $db_fields, $this->form );
-
-		// Deprecated. To be removed in the future. Use one of the filters below instead.
-		if ( isset( $this->form['addon'] ) && 'ajax_forms' === $this->form['addon'] ) {
-
-			$db_fields = apply_filters( 'gmw_ajaxfms_ajax_form_db_fields', $db_fields, $this->form );
-
-			// Deprecated. To be removed in the future. Use one of the filters below instead.
-		} elseif ( isset( $this->form['addon'] ) && 'global_maps' === $this->form['addon'] ) {
-
-			$db_fields = apply_filters( 'gmw_gmaps_global_map_db_fields', $db_fields, $this->form );
-
-			// Needed for normal forms only.
-		} else {
-
-			// The below is temporary. To be removed in the future.
-			// This will add the dynamic location_class and location_count to the query results. This use to be done via the loop but now uses a function ( gmw_object_class() ) directly in the template file.
-			// This is here to suppport older version of the template files that do not have that function in them.
-			$db_fields[] = "CONCAT( 'single-{$this->form['object_type']} gmw-single-item gmw-single-{$this->form['object_type']} gmw-object-', ifnull( gmw_locations.object_id, '0' ), ' gmw-location-', ifnull( gmw_locations.ID, '0' ) ) AS location_class";
-			$db_fields[] = "'' AS location_count";
-		}
+		$db_fields = gmw_parse_form_db_fields( $this->db_fields, $this->form );
 
 		return implode( ',', $db_fields );
 	}
@@ -239,8 +298,12 @@ class GMW_Form_Core {
 	 * Set default form values in child class.
 	 *
 	 * The form values here will be appended to the default form values generated by the setup_defaults() method.
+	 *
+	 * Usually, in the child class this method will check for the form state, if it is a page load or if was submitted.
+	 *
+	 * And based on that it will append some additional default values to the form.
 	 */
-	public function set_default_form_values() {}
+	public function set_default_values() {}
 
 	/**
 	 * Setup the default form values.
@@ -249,13 +312,12 @@ class GMW_Form_Core {
 	 */
 	public function setup_defaults() {
 
-		$this->ID            = $this->form['ID'];
-		$this->prefix        = $this->form['prefix'];
-		$this->object_type   = $this->form['object_type'];
-		$this->url_px        = gmw_get_url_prefix();
-		$this->cache_enabled = GMW()->internal_cache;
+		$this->url_px = gmw_get_url_prefix();
+		$this->ID     = $this->form['ID'];
 
 		$this->form['elements']         = ! empty( $this->form['params']['elements'] ) ? explode( ',', $this->form['params']['elements'] ) : array();
+		$this->form['user_loggedin']    = ( function_exists( 'is_user_logged_in' ) && is_user_logged_in() ) ? 1 : 0;
+		$this->form['in_widget']        = ! empty( $this->form['params']['widget'] ) ? true : false;
 		$this->form['submitted']        = false;
 		$this->form['page_load_action'] = false;
 		$this->form['form_values']      = array();
@@ -280,14 +342,44 @@ class GMW_Form_Core {
 		$this->form['results_count']    = 0;
 		$this->form['total_results']    = 0;
 		$this->form['max_pages']        = 0;
-		$this->form['in_widget']        = ! empty( $this->form['params']['widget'] ) ? true : false;
+		$this->form['results_message']    = __( 'Showing locations', 'geo-my-wp' );
+		$this->form['no_results_message'] = __( 'No results found.', 'geo-my-wp' );
 		$this->form['modify_permalink'] = 1;
+		$this->form['html_results']     = '';
 		$this->form['no_results_map_enabled'] = true;
-		$this->form['user_loggedin']    = ( function_exists( 'is_user_logged_in' ) && is_user_logged_in() ) ? 1 : 0;
 
-		// Set additional form values in child class.
-		$this->set_default_form_values();
+		/**
+		 * This is where the child class apply its default form values.
+		 *
+		 * Child class should do so based on page load or form submission values.
+		 */
+		$this->set_default_values();
 
+		// Address filters.
+		$this->form['address_filters'] = gmw_form_get_address_filters( $this->form );
+
+		// For page load default proximity search.
+		if ( $this->form['page_load_action'] ) {
+
+			$page_load_location    = $this->get_page_load_location();
+			$this->form['address'] = $page_load_location['address'];
+			$this->form['radius']  = ! empty( $this->form['page_load_results']['radius'] ) ? $this->form['page_load_results']['radius'] : false;
+			$this->form['units']   = ! empty( $this->form['page_load_results']['units'] ) ? $this->form['page_load_results']['units'] : 'imperial';
+
+			// Check if geocoder failed ( -1 for lat/lng ).
+			if ( -1 !== $page_load_location['lat'] ) {
+				$this->form['lat'] = $page_load_location['lat'];
+				$this->form['lng'] = $page_load_location['lng'];
+			} else {
+				$this->form['lat'] = '';
+				$this->form['lng'] = '';
+			}
+		}
+
+		$this->prefix      = empty( $this->prefix ) ? $this->form['prefix'] : $this->prefix;
+		$this->object_type = empty( $this->object_type ) ? $this->form['object_type'] : $this->object_type;
+
+		$this->cache_enabled                   = GMW()->internal_cache;
 		$this->db_fields                       = $this->parse_db_fields();
 		$this->enable_objects_without_location = apply_filters( 'gmw_form_enable_objects_without_location', $this->enable_objects_without_location, $this->form, $this );
 
@@ -570,14 +662,36 @@ class GMW_Form_Core {
 	}
 
 	/**
-	 * Parse the query arguments.
+	 * Parse the search query arguments.
+	 *
+	 * Query args can be modified using the filter:
+	 *
+	 * apply_filters( 'gmw_' . $this->form['prefix'] . '_search_query_args', $this->form['query_args'], $this->form, $this );
 	 *
 	 * @since 4.0
 	 */
 	public function parse_query_args() {
 
-		// Get the query arguments.
-		$this->form['query_args'] = $this->get_query_args();
+		/**
+		 * GMW Query args to pass to query.
+		 *
+		 * @var array
+		 */
+		$gmw_location_args = array(
+			'gmw_enabled'                         => true,
+			'gmw_address'                         => $this->form['address'],
+			'gmw_lat'                             => $this->form['lat'],
+			'gmw_lng'                             => $this->form['lng'],
+			'gmw_radius'                          => $this->form['radius'],
+			'gmw_units'                           => $this->form['units'],
+			'gmw_address_filters'                 => $this->form['address_filters'],
+			'gmw_swlatlng'                        => ! empty( $this->form['form_values']['swlatlng'] ) ? $this->form['form_values']['swlatlng'] : '',
+			'gmw_nelatlng'                        => ! empty( $this->form['form_values']['nelatlng'] ) ? $this->form['form_values']['nelatlng'] : '',
+			'gmw_enable_objects_without_location' => $this->enable_objects_without_location,
+		);
+
+		// Get the query arguments from child class and merge them with gmw query args.
+		$this->form['query_args'] = wp_parse_args( $this->get_query_args(), $gmw_location_args );
 
 		// Pass form values to the query. Can be used with different filters inside the main query.
 		// Also used for intenal cache purposes.
@@ -608,7 +722,7 @@ class GMW_Form_Core {
 	/**
 	 * That's where the search query goes.
 	 *
-	 * The results need to be passed to $this->query.
+	 * Use this method in the child class to performe the search query and pass the results into $this->query.
 	 *
 	 * @since 4.0
 	 */
@@ -653,9 +767,9 @@ class GMW_Form_Core {
 
 			// Groups global maps.
 			if ( 'gmapsgl' === $this->form['prefix'] ) {
-				$this->locations = apply_filters( 'gmw_gmapsgl_cached_groups_locations', $this->locations, $this->form );
-				$this->locations = apply_filters( 'gmw_gmapsgl_groups_locations', $this->locations, $this->form );
-				$this->locations = apply_filters( 'gmw_gmapsgl_groups_after_groups_query', $this->locations, $this->form );
+				$this->query->locations = apply_filters( 'gmw_gmapsgl_cached_groups_locations', $this->query->locations, $this->form );
+				$this->query->locations = apply_filters( 'gmw_gmapsgl_groups_locations', $this->query->locations, $this->form );
+				$this->query->locations = apply_filters( 'gmw_gmapsgl_groups_after_groups_query', $this->query->locations, $this->form );
 			}
 		}
 
@@ -671,15 +785,15 @@ class GMW_Form_Core {
 	/**
 	 * Parse the search results.
 	 *
-	 * Pass some results variables into the form object.
+	 * Use in child class to pass some results variables into the form object.
 	 *
-	 * this->form['results']       = array();
+	 * this->form['results']       = array(); // search results.
 	 *
-	 * $this->form['results_count'] = 0;
+	 * $this->form['results_count'] = 0; // number of results currently showing on the page.
 	 *
-	 * $this->form['total_results'] = 0;
+	 * $this->form['total_results'] = 0; // Total results.
 	 *
-	 * $this->form['max_pages']     = 0;
+	 * $this->form['max_pages']     = 0; // Maximum number of pages.
 	 *
 	 * @since 4.0
 	 */
@@ -701,6 +815,8 @@ class GMW_Form_Core {
 	 * 2. $this->parse_search_query() - this is where the search query should takes place.
 	 *
 	 * 3. $this->parse_query_results() - this is where you generate some results data once the resultes were found.
+	 *
+	 * Since 4.0
 	 *
 	 * @return [type] [description]
 	 */
@@ -750,7 +866,16 @@ class GMW_Form_Core {
 	}
 
 	/**
-	 * The members loop.
+	 * Check if locations exists
+	 *
+	 * @return boolean [description]
+	 */
+	public function has_locations() {
+		return $this->form['has_locations'] ? true : false;
+	}
+
+	/**
+	 * The object loop.
 	 *
 	 * To be used when displaying map only without the results.
 	 *
@@ -759,15 +884,6 @@ class GMW_Form_Core {
 	 * @since 4.0
 	 */
 	public function object_loop() {}
-
-	/**
-	 * Check if locations exists
-	 *
-	 * @return boolean [description]
-	 */
-	public function has_locations() {
-		return $this->form['has_locations'] ? true : false;
-	}
 
 	/**
 	 * Get template files and enqueue stylesheets and custom CSS.
@@ -940,6 +1056,19 @@ class GMW_Form_Core {
 	}
 
 	/**
+	 * For AJAX submissions.
+	 *
+	 * Use this method in child class to performe the search query and return the required data that will then pass via wp_send_json() to the JavaScript file.
+	 *
+	 * @since 4.0
+	 *
+	 * @return [type] [description]
+	 */
+	public function get_json_data() {
+		return array();
+	}
+
+	/**
 	 * Send json data for AJAX calls.
 	 *
 	 * @param  array $json_data [description].
@@ -963,4 +1092,36 @@ class GMW_Form_Core {
 
 		wp_send_json( $json_data );
 	}
+
+	/**
+	 * Initiate GEO my WP form during AJAX form submission.
+	 *
+	 * @since 4.0
+	 */
+	public static function ajax_submission() {
+
+		// deprecated filters.
+		do_action( 'gmw_ajaxfms_form_submission', $_POST ); // WPCS: CSRF ok.
+		do_action( 'wp_ajax_gmw_ajax_forms_form_submission' );
+		do_action( 'wp_ajax_nopriv_gmw_ajax_forms_form_submission' );
+
+		if ( ! isset( $_POST['form_id'] ) ) { // WPCS: CSRF ok.
+			die( 'GEO my WP form ID is missing' );
+		}
+
+		// New filter.
+		do_action( 'gmw_pre_ajax_form_sumission' ); // WPCS: CSRF ok.		
+
+		$form_object = static::init( absint( $_POST['form_id'] ) ); // WPCS: CSRF ok.
+
+		if ( empty( $form_object ) || ! is_object( $form_object ) ) {
+			die( $form_object ); // WPCS: XSS ok.
+		}
+
+		$json_data = $form_object->get_json_data();
+
+		$form_object->send_json( $json_data );
+	}
 }
+add_action( 'wp_ajax_gmw_form_ajax_submission', array( 'GMW_Form_Core', 'ajax_submission' ), 10 );
+add_action( 'wp_ajax_nopriv_gmw_form_ajax_submission', array( 'GMW_Form_Core', 'ajax_submission' ), 10 );
