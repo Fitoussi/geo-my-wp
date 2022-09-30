@@ -102,7 +102,7 @@ trait GMW_Members_Locator_Form_Trait {
 		} else {
 
 			// if showing members without location.
-			if ( ! empty( $this->enable_objects_without_location ) ) {
+			if ( ! empty( $this->form['enable_objects_without_location'] ) ) {
 
 				// left join the location table into the query to display posts with no location as well.
 				$join = str_replace( 'INNER', 'LEFT', $join );
