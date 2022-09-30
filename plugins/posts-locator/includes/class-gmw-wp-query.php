@@ -232,7 +232,7 @@ class GMW_WP_Query extends WP_Query {
 
 		// Let's make sure address is not an array.
 		if ( is_array( $args['gmw_address'] ) ) {
-			$args['gmw_address'] = trim( explode( ' ', $args['gmw_address'] ) );
+			$args['gmw_address'] = trim( implode( ' ', $args['gmw_address'] ) );
 		}
 
 		global $wpdb;
@@ -333,7 +333,7 @@ class GMW_WP_Query extends WP_Query {
 		} else {
 
 			// if showing posts without location.
-			if ( ! empty( $args['objects_without_location'] ) ) {
+			if ( ! empty( $args['gmw_enable_objects_without_location'] ) ) {
 
 				// left join the location table into the query to display posts with no location as well.
 				$join = str_replace( 'INNER', 'LEFT', $join );
