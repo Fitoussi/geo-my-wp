@@ -175,6 +175,17 @@ class GMW_Form_Core {
 	public $load_info_window_templates = false;
 
 	/**
+	 * Enable AJAX on page load results.
+	 *
+	 * For AJAX powered forms.
+	 *
+	 * @since 4.0
+	 *
+	 * @var boolean
+	 */
+	public $page_load_results_ajax = false;
+
+	/**
 	 * __construct
 	 *
 	 * Verify some data and generate default values.
@@ -315,38 +326,40 @@ class GMW_Form_Core {
 		$this->url_px = gmw_get_url_prefix();
 		$this->ID     = $this->form['ID'];
 
-		$this->form['elements']         = ! empty( $this->form['params']['elements'] ) ? explode( ',', $this->form['params']['elements'] ) : array();
-		$this->form['user_loggedin']    = ( function_exists( 'is_user_logged_in' ) && is_user_logged_in() ) ? 1 : 0;
-		$this->form['in_widget']        = ! empty( $this->form['params']['widget'] ) ? true : false;
-		$this->form['submitted']        = false;
-		$this->form['page_load_action'] = false;
-		$this->form['form_values']      = array();
-		$this->form['lat']              = false;
-		$this->form['lng']              = false;
-		$this->form['address']          = false;
-		$this->form['paged_name']       = 'page';
-		$this->form['paged']            = 1;
-		$this->form['per_page']         = -1;
-		$this->form['get_per_page']     = false; // Deprecated. Use per_page instead.
-		$this->form['query_args']       = array();
-		$this->form['address_filters']  = array();
-		$this->form['orderby']          = 'distance';
-		$this->form['units_array']      = false;
-		$this->form['radius']           = false;
-		$this->form['map_enabled']      = false;
-		$this->form['map_usage']        = 'results';
-		$this->form['results_enabled']  = false;
-		$this->form['display_list']     = false; // Deprecated. Replaced with results_enabled.
-		$this->form['has_locations']    = false;
-		$this->form['results']          = array();
-		$this->form['results_count']    = 0;
-		$this->form['total_results']    = 0;
-		$this->form['max_pages']        = 0;
-		$this->form['results_message']    = __( 'Showing locations', 'geo-my-wp' );
-		$this->form['no_results_message'] = __( 'No results found.', 'geo-my-wp' );
-		$this->form['modify_permalink'] = 1;
-		$this->form['html_results']     = '';
-		$this->form['no_results_map_enabled'] = true;
+		$this->form['elements']                        = ! empty( $this->form['params']['elements'] ) ? explode( ',', $this->form['params']['elements'] ) : array();
+		$this->form['user_loggedin']                   = ( function_exists( 'is_user_logged_in' ) && is_user_logged_in() ) ? 1 : 0;
+		$this->form['in_widget']                       = ! empty( $this->form['params']['widget'] ) ? true : false;
+		$this->form['submitted']                       = false;
+		$this->form['page_load_action']                = false;
+		$this->form['form_values']                     = array();
+		$this->form['lat']                             = false;
+		$this->form['lng']                             = false;
+		$this->form['address']                         = false;
+		$this->form['paged_name']                      = 'page';
+		$this->form['paged']                           = 1;
+		$this->form['per_page']                        = -1;
+		$this->form['get_per_page']                    = false; // Deprecated. Use per_page instead.
+		$this->form['query_args']                      = array();
+		$this->form['address_filters']                 = array();
+		$this->form['orderby']                         = 'distance';
+		$this->form['units_array']                     = false;
+		$this->form['radius']                          = false;
+		$this->form['map_enabled']                     = false;
+		$this->form['map_usage']                       = 'results';
+		$this->form['results_enabled']                 = false;
+		$this->form['display_list']                    = false; // Deprecated. Replaced with results_enabled.
+		$this->form['has_locations']                   = false;
+		$this->form['results']                         = array();
+		$this->form['results_count']                   = 0;
+		$this->form['total_results']                   = 0;
+		$this->form['max_pages']                       = 0;
+		$this->form['results_message']                 = __( 'Showing locations', 'geo-my-wp' );
+		$this->form['no_results_message']              = __( 'No results found.', 'geo-my-wp' );
+		$this->form['modify_permalink']                = 1;
+		$this->form['html_results']                    = '';
+		$this->form['no_results_map_enabled']          = true;
+		$this->form['enable_page_load_ajax']           = $this->page_load_results_ajax;
+		$this->form['enable_objects_without_location'] = apply_filters( 'gmw_form_enable_objects_without_location', $this->enable_objects_without_location, $this->form, $this ); // Deprecated filter. Use 'gmw_default_form_values' instead.
 
 		/**
 		 * This is where the child class apply its default form values.
@@ -376,12 +389,10 @@ class GMW_Form_Core {
 			}
 		}
 
-		$this->prefix      = empty( $this->prefix ) ? $this->form['prefix'] : $this->prefix;
-		$this->object_type = empty( $this->object_type ) ? $this->form['object_type'] : $this->object_type;
-
-		$this->cache_enabled                   = GMW()->internal_cache;
-		$this->db_fields                       = $this->parse_db_fields();
-		$this->enable_objects_without_location = apply_filters( 'gmw_form_enable_objects_without_location', $this->enable_objects_without_location, $this->form, $this );
+		$this->prefix        = empty( $this->prefix ) ? $this->form['prefix'] : $this->prefix;
+		$this->object_type   = empty( $this->object_type ) ? $this->form['object_type'] : $this->object_type;
+		$this->cache_enabled = GMW()->internal_cache;
+		$this->db_fields     = $this->parse_db_fields();
 
 		// Deprecated filters. Use the below instead.
 		if ( 'global_maps' === $this->form['addon'] ) {
@@ -399,7 +410,7 @@ class GMW_Form_Core {
 		$this->form = apply_filters( "gmw_{$this->form['prefix']}_default_form_values", $this->form, $this );
 
 		$this->query_cache_args['user_loggedin']                    = $this->form['user_loggedin'];
-		$this->query_cache_args['showing_objects_without_location'] = $this->enable_objects_without_location;
+		$this->query_cache_args['showing_objects_without_location'] = $this->form['enable_objects_without_location'];
 		$this->query_cache_args['db_fields']                        = $this->db_fields;
 	}
 
@@ -687,7 +698,7 @@ class GMW_Form_Core {
 			'gmw_address_filters'                 => $this->form['address_filters'],
 			'gmw_swlatlng'                        => ! empty( $this->form['form_values']['swlatlng'] ) ? $this->form['form_values']['swlatlng'] : '',
 			'gmw_nelatlng'                        => ! empty( $this->form['form_values']['nelatlng'] ) ? $this->form['form_values']['nelatlng'] : '',
-			'gmw_enable_objects_without_location' => $this->enable_objects_without_location,
+			'gmw_enable_objects_without_location' => $this->form['enable_objects_without_location'],
 		);
 
 		// Get the query arguments from child class and merge them with gmw query args.
@@ -952,12 +963,14 @@ class GMW_Form_Core {
 	public function map() {
 
 		$args = array(
-			'map_id'         => $this->form['ID'],
-			'prefix'         => $this->form['prefix'],
-			'map_type'       => $this->form['addon'],
-			'map_width'      => $this->form['results_map']['map_width'],
-			'map_height'     => $this->form['results_map']['map_height'],
-			'expand_on_load' => ! empty( $this->form['results_map']['expand_on_load'] ) ? true : false,
+			'map_id'              => $this->form['ID'],
+			'prefix'              => $this->form['prefix'],
+			'map_type'            => $this->form['addon'],
+			'map_width'           => $this->form['results_map']['map_width'],
+			'map_height'          => $this->form['results_map']['map_height'],
+			'map_position_filter' => ! empty( $this->form['results_map']['position_filter']['enabled'] ) ? true : false,
+			'map_position_label'  => ! empty( $this->form['results_map']['position_filter']['label'] ) ? $this->form['results_map']['position_filter']['label'] : '',
+			'expand_on_load'      => ! empty( $this->form['results_map']['expand_on_load'] ) ? true : false,
 		);
 
 		echo gmw_get_map_element( $args, $this->form ); // WPCS: XSS ok.
