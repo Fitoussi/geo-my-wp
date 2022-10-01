@@ -14,6 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class GMW_Admin {
 
+	public $gmw_page = false;
+
 	/**
 	 * __construct function.
 	 *
@@ -41,6 +43,7 @@ class GMW_Admin {
 		// do some actions.
 		add_action( 'admin_menu', array( $this, 'admin_menu' ), 12 );
 		add_action( 'admin_init', array( $this, 'init_addons' ) );
+		add_filter( 'admin_body_class', array( $this, 'modify_body_class' ), 50 );
 
 		// "GMW Form" button in edit post page.
 		if ( self::add_form_button_pages() ) {
@@ -376,7 +379,7 @@ class GMW_Admin {
 		usort( $menu_items, 'gmw_sort_by_priority' );
 
 		// gmw admin pages.
-		$gmw_pages = array();
+		$this->gmw_pages = array();
 
 		// loop and create menu items and pages.
 		foreach ( $menu_items as $key => $item ) {
@@ -390,14 +393,28 @@ class GMW_Admin {
 				$item['callback_function']
 			);
 
-			$gmw_pages[] = $item['menu_slug'];
+			$this->gmw_pages[] = $item['menu_slug'];
 		}
 
 		// apply credit and enqueue scripts and styles in GEO my WP admin pages only.
-		if ( ( isset( $_GET['page'] ) && in_array( $_GET['page'], $gmw_pages, true ) ) || ( isset( $_GET['post_type'] ) && 'gmw_location_type' === $_GET['post_type'] ) ) { // WPCS: CSRF ok, sanitization ok.
+		if ( ( isset( $_GET['page'] ) && in_array( $_GET['page'], $this->gmw_pages, true ) ) || ( isset( $_GET['post_type'] ) && 'gmw_location_type' === $_GET['post_type'] ) ) { // WPCS: CSRF ok, sanitization ok.
+
+			$this->gmw_page = true;
+
 			add_filter( 'admin_footer_text', array( $this, 'gmw_credit_footer' ), 10 );
 			add_filter( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		}
+	}
+
+	public function modify_body_class( $classes ) {
+
+		if ( $this->gmw_page ) {
+
+			$hide_notices = gmw_get_option( 'general_settings', 'hide_admin_notices', false ) ? 'gmw-admin-notices-disabled' : '';
+			$classes     .= ' gmw-admin-page ' . 'gmw-' . sanitize_text_field( wp_unslash( $_GET['page'] ) ) . '-page ' . $hide_notices;
+		}
+
+		return $classes;
 	}
 
 	/**
