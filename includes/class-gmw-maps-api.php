@@ -220,9 +220,9 @@ class GMW_Maps_API {
 			$output['position_filter'] = "<div id=\"gmw-map-position-filter-wrapper-{$map_id}\" class=\"gmw-map-position-filter-wrapper gmw-field-checkboxes gmw-fields-enhanced\" style=\"display:none;\"><label for=\"gmw-map-position-filter-{$map_id}\" class=\"gmw-checkbox-label\"><input type=\"checkbox\" id=\"gmw-map-position-filter-{$map_id}\" class=\"gmw-field-checkbox gmw-map-position-filter\" data-id=\"{$map_id}\" />{$args['map_position_label']}</label></div>";
 		}
 
+		$output['cover']  = '<div id="gmw-map-loader-' . $map_id . '" class="gmw-map-loader"></div>';
 		$output['map']    = "<div id=\"gmw-map-{$map_id}\" class=\"gmw-map {$prefix} {$map_type}\" style=\"width:100%; height:100%\" data-map_id=\"{$map_id}\" data-prefix=\"{$prefix}\" data-map_type=\"{$map_type}\" data-icons_usage=\"{$icons_usage}\"></div>";
-		$output['cover']  = '<div class="gmw-map-cover"></div>';
-		$output['loader'] = "<i id=\"gmw-map-loader-{$map_id}\" class=\"gmw-map-loader gmw-icon-spin-light animate-spin\"></i>";
+		//$output['loader'] = "<i id=\"gmw-map-loader-{$map_id}\" class=\"gmw-map-loader gmw-icon-spin-light animate-spin\"></i>";
 		$output['/wrap']  = '</div>';
 
 		// modify the map element.
