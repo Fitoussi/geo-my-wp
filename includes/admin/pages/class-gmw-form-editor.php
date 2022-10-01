@@ -2448,7 +2448,6 @@ class GMW_Form_Editor {
 				</div>
 			</div>
 
-
 			<div id="gmw-edit-form-page" class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper gmw-admin-page-no-sidebar">
 
 				<nav class="gmw-admin-page-navigation gmw-tabs-wrapper gmw-edit-form-page-nav-tabs">
