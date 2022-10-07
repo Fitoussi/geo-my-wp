@@ -406,6 +406,14 @@ class GMW_Admin {
 		}
 	}
 
+	/**
+	 * MOdify body tag's class attribute.
+	 *
+	 * @since 4.0
+	 *
+	 * @param  [type] $classes [description]
+	 * @return [type]          [description]
+	 */
 	public function modify_body_class( $classes ) {
 
 		if ( $this->gmw_page ) {
