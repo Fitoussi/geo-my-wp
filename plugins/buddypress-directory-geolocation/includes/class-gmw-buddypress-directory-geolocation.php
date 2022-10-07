@@ -576,6 +576,67 @@ class GMW_BuddyPress_Directory_Geolocation {
 		$search_form = $this->get_form_elements();
 		$search_form = implode( ' ', $search_form );
 
+		?>
+		<style type="text/css">
+
+			.youzify-search-input-container.gmw-bpdg-enabled .youzify-search-input-with-dropdown {
+				overflow: hidden;
+			}
+
+			@media screen and ( max-width: 700px ) {
+
+				.youzify-search-input-container.gmw-bpdg-enabled .youzify-search-input-with-dropdown {
+					flex-direction: column;
+					height: 175px;
+					margin-top: 50px;
+				}
+
+				.youzify-search-input-container.gmw-bpdg-enabled .youzify-left-side-wrapper {
+					width: 100%;
+				}
+
+				.youzify-search-input-container.gmw-bpdg-enabled .youzify-search-input-form {
+					position: initial;
+				}
+
+				.youzify-search-input-container.gmw-bpdg-enabled .youzify-search-input-form input {
+					margin: 0;
+					padding: 0;
+					padding-left: 10px;
+				}
+
+				.youzify-search-input-container.gmw-bpdg-enabled .gmw-bpdg-address-field-wrapper {
+					width: 100%;
+					background: white;
+					height: 55px;
+					padding-left: 18px;
+					border-top: 1px solid #f6f6f6;
+				}
+
+				.youzify-search-input-container.gmw-bpdg-enabled .gmw-bpdg-address-field-wrapper input {
+					padding-left: 35px!important;
+				}
+
+				.youzify-search-input-container.gmw-bpdg-enabled .gmw-bpdg-radius-field-wrapper  {
+					width: 100%;
+					max-width: 100%;
+					margin: 0 auto;
+				}
+
+				.youzify-search-input-container.gmw-bpdg-enabled .gmw-bpdg-radius-field-wrapper .nice-select .current {
+					height: 100%;
+					line-height: 55px;
+					text-align: left;
+					padding-left: 12px;
+				}
+
+				.youzify-search-input-container.gmw-bpdg-enabled .gmw-bpdg-radius-field-wrapper .nice-select .list {
+					width: 100%;
+				}
+			}
+		</style>
+		<?php
+
 		return $search_form_html . $search_form;
 	}
 
