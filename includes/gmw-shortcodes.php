@@ -81,9 +81,11 @@ function gmw_shortcode( $attr ) {
 	}
 
 	// Abort if the add-on this form belongs to is deactivated.
-	if ( ! gmw_is_addon_active( $form['addon'] ) ) {
+	if ( ! gmw_is_addon_active( $form['addon'] ) || ! gmw_is_addon_active( $form['component'] ) ) {
+		
+		$addon = ! gmw_is_addon_active( $form['addon'] ) ? $form['addon'] : $form['component'];
 
-		gmw_trigger_error( 'The add-on which this GEO my WP form belongs to is deactivated.' ); // WPCS : XSS ok.
+		gmw_trigger_error( 'The add-on ' . str_replace( '_', ' ', $form['addon'] ) . ' which this GEO my WP form belongs to is deactivated.' ); // WPCS : XSS ok.
 
 		return;
 	}
