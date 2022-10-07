@@ -110,8 +110,8 @@ class GEO_MY_WP {
 		'groups_locator'                   => '1.999', // old slug.
 		'bp_members_directory_geolocation' => '1.999',
 		'geo_members_directory'            => '1.999', // old slug.
-		'bp_xprofile_geolocation'          => '1.9',
-		'xprofile_fields'                  => '1.9', // old slug.
+		'bp_xprofile_geolocation'          => '1.999',
+		'xprofile_fields'                  => '1.999', // old slug.
 		'exclude_locations'                => '1.999',
 		'exclude_members'                  => '1.999', // old slug.
 		'global_maps'                      => '2.9999',
@@ -121,7 +121,7 @@ class GEO_MY_WP {
 		'premium_settings'                 => '2.999',
 		'users_locator'                    => '1.999',
 		'wp_users_geo-location'            => '1.999', // old slug.
-		'radius_per_location'              => '1.199',
+		'radius_per_location'              => '1.1999',
 		'ip_address_locator'               => '1.0.9',
 		'gmw_multiple_locations'           => '1.9999',
 		'gmw_peepso_geolocation'           => '0.1',
