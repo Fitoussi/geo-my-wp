@@ -1418,7 +1418,7 @@ class GMW_Search_Form_Helper {
 			'class_tag'        => '',
 			'name_tag'         => $url_px . 'bp_groups',
 			'object'           => 'bp-groups',
-			'show_options_all' => __( 'Search groups', 'gmw-premium-settings' ),
+			'show_options_all' => __( 'Search groups', 'geo-my-wp' ),
 		);
 
 		$args = wp_parse_args( $args, $defaults );

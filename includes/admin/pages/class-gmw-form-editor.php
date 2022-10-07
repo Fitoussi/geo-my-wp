@@ -1447,8 +1447,8 @@ class GMW_Form_Editor {
 									'name'       => 'iw_type',
 									'type'       => 'select',
 									'default'    => 'standard',
-									'label'      => __( 'Info Window Type', 'gmw-ajax-forms' ),
-									'desc'       => __( 'Select the info-window type.', 'gmw-ajax-forms' ),
+									'label'      => __( 'Info Window Type', 'geo-my-wp' ),
+									'desc'       => __( 'Select the info-window type.', 'geo-my-wp' ),
 									'options'    => array(
 										'standard' => 'Standard',
 										'popup'    => 'Popup Window',
@@ -1467,8 +1467,8 @@ class GMW_Form_Editor {
 									// name it ajaxfms_info_window_template instead of info_window_template
 									// to prevent conflict with premium settings addon.
 									'function'   => 'info_window_template',
-									'label'      => __( 'Info Window Template', 'gmw-ajax-forms' ),
-									'desc'       => sprintf( __( 'Select the info window template.<br />%s', 'gmw-ajax-forms' ), $depreacated_message ),
+									'label'      => __( 'Info Window Template', 'geo-my-wp' ),
+									'desc'       => sprintf( __( 'Select the info window template.<br />%s', 'geo-my-wp' ), $depreacated_message ),
 									'class'      => 'gmw-smartbox-not',
 									'attributes' => array(),
 									'priority'   => 15,

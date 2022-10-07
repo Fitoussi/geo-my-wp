@@ -344,7 +344,7 @@ function gmw_get_search_form_address_fields( $gmw ) {
 				$output .= "<input type='text' id='gmw-{$field_name}-field-{$id}' name='{$url_px}address[{$field_name}]' class='gmw-address {$field_name} {$mandatory}' value='{$value}' size='20' placeholder='{$placeholder}' />";
 			} else {
 
-				$placeholder = ! empty( $placeholder ) ? $placeholder : __( 'Select country...', 'gmw-premium-settings' );
+				$placeholder = ! empty( $placeholder ) ? $placeholder : __( 'Select country...', 'geo-my-wp' );
 
 				$output .= "<select id='gmw-{$field_name}-field-{$id}' data-placeholder='{$placeholder}' name='{$url_px}address[country]' class='gmw-smartbox gmw-saf-{$field_name} gmw-address'>";
 				$output .= '<option value="" selected="selected">' . $placeholder . '</option>';

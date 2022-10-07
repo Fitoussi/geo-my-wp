@@ -548,7 +548,7 @@ class GMW_Form_Core {
 			'address'    => isset( $this->form['address'] ) ? $this->form['address'] : false,
 			'map_icon'   => GMW()->default_icons['user_location_icon_url'],
 			'icon_size'  => GMW()->default_icons['user_location_icon_size'],
-			'iw_content' => __( 'Your Location', 'gmw-ajax-forms' ),
+			'iw_content' => __( 'Your Location', 'geo-my-wp' ),
 			'iw_open'    => ! empty( $this->form['results_map']['yl_icon'] ) ? true : false,
 		);
 
