@@ -2778,10 +2778,6 @@ class GMW_Form_Editor {
 		jQuery( document ).ready( function( $ ) {
 			jQuery( 'body' ).addClass( 'geo-my-wp_page_gmw-form-editor' );
 			jQuery( 'html' ).addClass( 'folded' ).find( '#adminmenumain, #adminmenuback' ).css( 'overflow', 'initial' );
-
-			setTimeout( function() {
-				jQuery( '#gmw-edit-form-page-loader' ).fadeOut( 'slow' );
-			}, 100 );
 		});
 		</script>         
 		<?php
