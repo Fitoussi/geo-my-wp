@@ -46,7 +46,8 @@ class GMW_Tools {
 		<?php gmw_admin_pages_header(); ?>
 		
 		<div id="gmw-tools-page" class="wrap gmw-admin-page gmw-admin-page-wrapper">
-	
+			
+			<nav class="gmw-admin-page-navigation-bg"></nav>
 			<nav class="gmw-admin-page-navigation">
 
 				<?php

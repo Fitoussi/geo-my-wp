@@ -70,6 +70,7 @@ class GMW_Import_Export_Page {
 
 		<div id="gmw-import-export-page" class="wrap gmw-admin-page gmw-admin-page-wrapper">
 
+			<nav class="gmw-admin-page-navigation-bg"></nav>
 			<nav class="gmw-admin-page-navigation">
 
 				<?php

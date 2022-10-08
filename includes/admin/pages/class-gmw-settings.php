@@ -848,6 +848,7 @@ class GMW_Settings {
 
 		<div id="gmw-settings-page" class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper">
 
+			<nav class="gmw-admin-page-navigation-bg"></nav>
 			<nav class="gmw-admin-page-navigation">
 
 				<?php uasort( $this->settings_groups, 'gmw_sort_by_priority' ); ?>
