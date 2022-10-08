@@ -134,7 +134,6 @@ function gmw_admin_pages_menu() {
 	global $submenu;
 
 	$menu_items = $submenu['gmw-extensions'];
-
 	$menu_icons = array(
 		'gmw-extensions'    => 'gmw-icon-puzzle',
 		'gmw-forms'         => 'gmw-icon-doc-text',
@@ -152,11 +151,12 @@ function gmw_admin_pages_menu() {
 			<?php foreach ( $menu_items as $menu_item ) { ?>
 
 				<?php $active = ( ! empty( $_GET['page'] ) && $_GET['page'] === $menu_item[2] ) ? 'active' : ''; ?>
-				<?php $icon = ! empty( $menu_icons[ $menu_item[2] ] ) ? $menu_icons[ $menu_item[2] ] : ''; ?>
+				<?php $icon   = ! empty( $menu_icons[ $menu_item[2] ] ) ? $menu_icons[ $menu_item[2] ] : ''; ?>
+				<?php $url    = strpos( $menu_item[2], 'edit.php' ) !== false ? $menu_item[2] : 'admin.php?page=' . $menu_item[2]; ?>
 				<a 
 					class="gmw-admin-pages-menu-item <?php echo $icon; // WPCS: XSS ok. ?> <?php echo $active; // WPCS: XSS ok. ?>" 
 					title="<?php esc_attr( $menu_item[3] ); ?>"
-					href="<?php echo esc_url( admin_url( 'admin.php?page=' . $menu_item[2] ) ); ?>">
+					href="<?php echo esc_url( admin_url( $url ) ); ?>">
 					<?php echo esc_attr( $menu_item[0] ); ?>
 				</a>
 			<?php } ?>
