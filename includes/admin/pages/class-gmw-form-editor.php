@@ -2403,7 +2403,7 @@ class GMW_Form_Editor {
 		?>
 		<form method="post" action="" id="gmw-form-editor" class="<?php echo $class; // WPCS: XSS ok. ?>" data-ajax_enabled="<?php echo esc_attr( $this->ajax_enabled ); ?>" data-nonce="<?php echo wp_create_nonce( 'gmw_edit_form_nonce' ); // WPCS: XSS ok. ?>">
 
-			<div id="gmw-edit-form-page-loader" style="position: absolute;width: 100%;height: 100%;top: 0;left: 0;background: white;z-index: 999999999;">
+			<div id="gmw-admin-page-loader" style="position: fixed;width: 100%;height: 100%;top: 0;left: 0;background: white;z-index: 999999999;">
 				<i style="font-size: 60px;color: #4699E8;margin: 0;position: absolute;top: 40%;left: 50%;-ms-transform: translate(-50%, -50%);transform: translate(-50%, -50%);" class="gmw-icon gmw-icon-cog animate-spin"></i>
 			</div>
 
