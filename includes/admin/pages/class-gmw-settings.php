@@ -907,6 +907,10 @@ class GMW_Settings {
 
 					<form method="post" action="" class="gmw-settings-form">
 
+						<div id="gmw-admin-page-loader" style="position: fixed;width: 100%;height: 100%;top: 0;left: 0;background: white;z-index: 999999999;">
+							<i style="font-size: 60px;color: #4699E8;margin: 0;position: absolute;top: 40%;left: 50%;-ms-transform: translate(-50%, -50%);transform: translate(-50%, -50%);" class="gmw-icon gmw-icon-cog animate-spin"></i>
+						</div>
+
 						<?php uasort( $section, 'gmw_sort_by_priority' ); ?>
 
 						<?php
