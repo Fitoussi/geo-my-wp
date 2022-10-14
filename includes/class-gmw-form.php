@@ -345,43 +345,6 @@ class GMW_Form extends GMW_Form_Core {
 	}
 
 	/**
-	 * Display the search results.
-	 *
-	 * @return void
-	 */
-	public function search_results() {
-
-		if ( ! $this->show_results || ! gmw_verify_template_file_requirement( $this->form['search_results']['results_template'] ) ) {
-			return;
-		}
-
-		// if locations found.
-		do_action( 'gmw_have_locations_start', $this->form, $this );
-		do_action( 'gmw_have_' . $this->form['prefix'] . '_locations_start', $this->form, $this );
-
-		// generate no results message.
-		if ( ! $this->form['has_locations'] ) {
-			$this->form['no_results_message'] = $this->no_results_message();
-		} else {
-			$this->form['results_message'] = $this->get_results_message();
-		}
-
-		$gmw       = $this->form;
-		$gmw_form  = $this;
-		$gmw_query = $this->query;
-		$template  = $this->get_template_file( 'search_results' );
-
-		// temporary to support older versions of the plugin.
-		// This global should now be at the begining of the results template file.
-		global $members_template, $groups_template;
-
-		include $template['content_path'];
-
-		do_action( 'gmw_have_locations_end', $this->form, $this );
-		do_action( 'gmw_have_' . $this->form['prefix'] . '_locations_end', $this->form, $this );
-	}
-
-	/**
 	 * Display the form elements.
 	 *
 	 * @return void

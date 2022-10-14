@@ -953,7 +953,41 @@ class GMW_Form_Core {
 	 *
 	 * @return void
 	 */
-	public function search_results() {}
+	public function search_results() {
+
+		if ( ! $this->show_results || ! gmw_verify_template_file_requirement( $this->form['search_results']['results_template'] ) ) {
+			return;
+		}
+
+		// if locations found.
+		do_action( 'gmw_have_locations_start', $this->form, $this );
+		do_action( 'gmw_have_' . $this->form['prefix'] . '_locations_start', $this->form, $this );
+
+		// generate no results message.
+		if ( ! $this->form['has_locations'] ) {
+			$this->form['no_results_message'] = $this->no_results_message();
+		} else {
+			$this->form['results_message'] = $this->get_results_message();
+		}
+
+		$gmw       = $this->form;
+		$gmw_form  = $this;
+		$gmw_query = $this->query;
+
+		// Maybe already generated somewhere else.
+		if ( empty( $this->results_template ) ) {
+			$this->results_template = $this->get_template_file( 'search_results' );
+		}
+
+		// temporary to support older versions of the plugin.
+		// This global should now be at the begining of the results template file.
+		global $members_template, $groups_template;
+
+		include $this->results_template['content_path'];
+
+		do_action( 'gmw_have_locations_end', $this->form, $this );
+		do_action( 'gmw_have_' . $this->form['prefix'] . '_locations_end', $this->form, $this );
+	}
 
 	/**
 	 * Generate the map element on the page.
