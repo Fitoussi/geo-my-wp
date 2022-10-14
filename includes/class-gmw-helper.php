@@ -237,6 +237,7 @@ class GMW_Helper {
 			$template_name    = str_replace( 'custom_', '', $template_name );
 			$templates_folder = $component_data['templates_folder'];
 
+			$output['is_custom']         = true;
 			$output['stylesheet_handle'] = "gmw-{$prefix_handle}-{$folder_handle}custom-{$template_name}";
 
 			// modify the PATH and URI of the custom template files.
@@ -280,7 +281,13 @@ class GMW_Helper {
 
 			} else {
 
-				if ( 'search-forms' === $folder_name ) {
+				$deprecated = false;
+
+				if ( file_exists( $output['content_path'] . 'content-start.php' ) ) {
+
+					$output['content_path'] .= 'content-start.php';
+	
+				} elseif ( 'search-forms' === $folder_name ) {
 
 					$output['content_path'] .= 'search-form.php';
 
@@ -306,6 +313,7 @@ class GMW_Helper {
 				$plugin_dir = $addon['plugin_dir'] . '/plugins/' . $component_data['templates_folder'];
 			}
 
+			$output['is_custom']         = false;
 			$output['path']              = $plugin_dir . "/templates/{$folder}{$template_name}/";
 			$output['stylesheet_handle'] = "gmw-{$prefix_handle}-{$folder_handle}{$template_name}";
 			$output['content_path']      = $plugin_dir . "/templates/{$folder}{$template_name}/{$file_name}";
