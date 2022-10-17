@@ -225,6 +225,8 @@ class GMW_Forms_Table extends WP_List_Table {
 		$form_shortcode = apply_filters( 'gmw_forms_page_form_shortcode', $form_shortcode, $item );
 		$form_shortcode = apply_filters( 'gmw_forms_page_' . $item['extension'] . '_form_shortcode', $form_shortcode, $item );
 
+		//'<span class="gmw-form-shortcode"><code>' . esc_attr( $form_shortcode ) . '</code><i class="gmw-shortcode-ctc gmw-icon-lifebuoy"></i></span>';
+
 		return '<code>' . esc_attr( $form_shortcode ) . '</code>';
 	}
 
