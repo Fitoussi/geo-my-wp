@@ -186,6 +186,13 @@ class GMW_Form_Core {
 	public $page_load_results_ajax = false;
 
 	/**
+	 * Holds the results template path and uri.
+	 *
+	 * @since 4.0
+	 */
+	public $results_template = array();
+
+	/**
 	 * __construct
 	 *
 	 * Verify some data and generate default values.
@@ -324,7 +331,6 @@ class GMW_Form_Core {
 	public function setup_defaults() {
 
 		$this->url_px = gmw_get_url_prefix();
-		$this->ID     = $this->form['ID'];
 
 		$this->form['elements']                        = ! empty( $this->form['params']['elements'] ) ? explode( ',', $this->form['params']['elements'] ) : array();
 		$this->form['user_loggedin']                   = ( function_exists( 'is_user_logged_in' ) && is_user_logged_in() ) ? 1 : 0;
@@ -332,9 +338,9 @@ class GMW_Form_Core {
 		$this->form['submitted']                       = false;
 		$this->form['page_load_action']                = false;
 		$this->form['form_values']                     = array();
-		$this->form['lat']                             = false;
-		$this->form['lng']                             = false;
-		$this->form['address']                         = false;
+		$this->form['lat']                             = '';
+		$this->form['lng']                             = '';
+		$this->form['address']                         = '';
 		$this->form['paged_name']                      = 'page';
 		$this->form['paged']                           = 1;
 		$this->form['per_page']                        = -1;
@@ -342,6 +348,7 @@ class GMW_Form_Core {
 		$this->form['query_args']                      = array();
 		$this->form['address_filters']                 = array();
 		$this->form['orderby']                         = 'distance';
+		$this->form['order']                           = 'ASC';
 		$this->form['units_array']                     = false;
 		$this->form['radius']                          = false;
 		$this->form['map_enabled']                     = false;
@@ -380,15 +387,16 @@ class GMW_Form_Core {
 			$this->form['units']   = ! empty( $this->form['page_load_results']['units'] ) ? $this->form['page_load_results']['units'] : 'imperial';
 
 			// Check if geocoder failed ( -1 for lat/lng ).
-			if ( -1 !== $page_load_location['lat'] ) {
+			if ( -1 !== $page_load_location['lat'] && '' !== $page_load_location['lat'] ) {
 				$this->form['lat'] = $page_load_location['lat'];
 				$this->form['lng'] = $page_load_location['lng'];
-			} else {
+			} /*else {
 				$this->form['lat'] = '';
 				$this->form['lng'] = '';
-			}
+			}*/
 		}
 
+		$this->ID            = $this->form['ID'];
 		$this->prefix        = empty( $this->prefix ) ? $this->form['prefix'] : $this->prefix;
 		$this->object_type   = empty( $this->object_type ) ? $this->form['object_type'] : $this->object_type;
 		$this->cache_enabled = GMW()->internal_cache;
@@ -721,8 +729,13 @@ class GMW_Form_Core {
 
 		$object_type = 'bp_group' === $this->form['object_type'] ? 'group' : $this->form['object_type'];
 
-		// Deprecated filter. Use any of the below filters instead.
+		// Deprecated filters. Use any of the below new filters instead.
 		$this->form = apply_filters( 'gmw_' . $this->form['prefix'] . '_form_before_' . $object_type . 's_query', $this->form, $this );
+		$this->form = apply_filters( 'gmw_' . $this->form['component'] . '_form_before_' . $object_type . 's_query', $this->form, $this );
+
+		if ( 'nbpost' === $this->form['prefix'] ) {
+			$this->form = apply_filters( 'gmw_nbp_form_before_posts_query', $this->form, $this );
+		}
 
 		// New filters.
 		$this->form = apply_filters( 'gmw_form_before_search_query', $this->form, $this );
@@ -873,6 +886,10 @@ class GMW_Form_Core {
 		// Parse the query results.
 		$this->parse_query_results();
 
+		if ( ! empty( $this->form['results'] ) ) {
+			$this->form['has_locations'] = true;
+		}
+
 		return apply_filters( 'gmw_' . $this->form['prefix'] . '_search_query_results', $this->form['results'], $this->form, $this );
 	}
 
@@ -903,22 +920,37 @@ class GMW_Form_Core {
 	 *
 	 * @param  string $template_type 'search-form' || 'search-results'.
 	 *
+	 * @param  string $template_name template name.
+	 *
 	 * @return [type]                [description]
 	 */
-	public function get_template_file( $template_type = 'search_form' ) {
+	public function get_template_file( $template_type = 'search_form', $template_name = '', $file_name = 'content.php' ) {
 
-		if ( 'search_results' === $template_type ) {
-			$function  = 'gmw_get_search_results_template';
-			$type      = 'results';
-			$file_name = 'content.php';
-		} else {
-			$type      = 'form';
-			$function  = 'gmw_get_search_form_template';
-			$file_name = '';
+		$folder_name = '';
+		$type        = '';
+
+		if ( 'search_form' === $template_type ) {
+
+			$type          = 'form';
+			$folder_name   = 'search-forms';
+			$template_name = '' !== $template_name ? $template_name : $this->form['search_form']['form_template'];
+
+		} elseif ( 'search_results' === $template_type ) {
+
+			$type          = 'results';
+			$folder_name   = 'search-results';
+			$template_name = '' !== $template_name ? $template_name : $this->form['search_results']['results_template'];
 		}
 
-		// get results template file.
-		$template = $function( $this->form['component'], $this->form[ 'search_' . $type ][ $type . '_template' ], $this->form['addon'], $file_name );
+		$args = array(
+			'component'     => $this->form['component'],
+			'addon'         => $this->form['addon'],
+			'folder_name'   => $folder_name,
+			'template_name' => $template_name,
+			'file_name'     => $file_name,
+		);
+
+		$template = gmw_get_template( $args );
 
 		// enqueue stylesheet if not already enqueued.
 		if ( ! wp_style_is( $template['stylesheet_handle'], 'enqueued' ) && file_exists( $template['stylesheet_path'] ) ) {
