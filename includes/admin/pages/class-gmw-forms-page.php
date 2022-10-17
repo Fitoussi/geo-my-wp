@@ -335,7 +335,20 @@ class GMW_Forms_Page {
 		</div>
 		<script type="text/javascript">
 			jQuery( document ).ready( function() {
+
 				jQuery( 'select' ).addClass( 'gmw-smartbox-not' );
+
+				/*jQuery( '.gmw-shortcode-ctc' ).on( 'click', function() {
+
+				  // Get the text field
+				  var copyText = jQuery( this ).parent().find( 'code' ).html();
+
+				   // Copy the text inside the text field
+				  navigator.clipboard.writeText(copyText);
+
+				  // Alert the copied text
+				  alert("Copied the text: " + copyText);
+				})*/
 			});
 		</script>
 		<?php
