@@ -175,19 +175,6 @@ trait GMW_Posts_Locator_Form_Trait {
 
 		endwhile;
 	}
-}
-
-/**
- * Posts Locator form class.
- *
- * @package geo-my-wp
- */
-class GMW_Posts_Locator_Form extends GMW_Form {
-
-	/**
-	 * Inherit search queries fromt Trait.
-	 */
-	use GMW_Posts_Locator_Form_Trait;
 
 	/**
 	 * Info window data
@@ -226,4 +213,17 @@ class GMW_Posts_Locator_Form extends GMW_Form {
 			'title'  => $post->post_title,
 		);
 	}
+}
+
+/**
+ * Posts Locator form class.
+ *
+ * @package geo-my-wp
+ */
+class GMW_Posts_Locator_Form extends GMW_Form {
+
+	/**
+	 * Inherit search queries fromt Trait.
+	 */
+	use GMW_Posts_Locator_Form_Trait;
 }

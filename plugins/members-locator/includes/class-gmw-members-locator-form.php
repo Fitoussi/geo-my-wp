@@ -398,31 +398,6 @@ trait GMW_Members_Locator_Form_Trait {
 
 		endwhile;
 	}
-}
-
-/**
- * Members Locator search query class
- *
- * @author Eyal Fitoussi
- */
-class GMW_Members_Locator_Form extends GMW_Form {
-
-	/**
-	 * Inherit search queries from Trait.
-	 */
-	use GMW_Members_Locator_Form_Trait;
-
-	/**
-	 * Results message
-	 *
-	 * @var array
-	 */
-	public function results_message_placeholders() {
-		return array(
-			'count_message'    => __( 'Viewing {from_count} - {to_count} of {total_results} members', 'geo-my-wp' ),
-			'location_message' => __( ' within {radius}{units} from {address}', 'geo-my-wp' ),
-		);
-	}
 
 	/**
 	 * Get info-window data.
@@ -460,6 +435,31 @@ class GMW_Members_Locator_Form extends GMW_Form {
 			'image'  => $avatar,
 			'url'    => bp_core_get_user_domain( $member->ID ),
 			'title'  => $member->display_name,
+		);
+	}
+}
+
+/**
+ * Members Locator search query class
+ *
+ * @author Eyal Fitoussi
+ */
+class GMW_Members_Locator_Form extends GMW_Form {
+
+	/**
+	 * Inherit search queries from Trait.
+	 */
+	use GMW_Members_Locator_Form_Trait;
+
+	/**
+	 * Results message
+	 *
+	 * @var array
+	 */
+	public function results_message_placeholders() {
+		return array(
+			'count_message'    => __( 'Viewing {from_count} - {to_count} of {total_results} members', 'geo-my-wp' ),
+			'location_message' => __( ' within {radius}{units} from {address}', 'geo-my-wp' ),
 		);
 	}
 }
