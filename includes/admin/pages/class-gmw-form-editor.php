@@ -594,8 +594,8 @@ class GMW_Form_Editor {
 									'name'       => 'zipcode_filter',
 									'type'       => 'text',
 									'default'    => '',
-									'label'      => __( 'Zipcode Filter', 'geo-my-wp' ),
-									'desc'       => __( 'Enter a zipcode to filter the results.', 'geo-my-wp' ),
+									'label'      => __( 'Postcode Filter', 'geo-my-wp' ),
+									'desc'       => __( 'Enter a postcode to filter the results.', 'geo-my-wp' ),
 									'priority'   => 15,
 									'sub_option' => false,
 								)
