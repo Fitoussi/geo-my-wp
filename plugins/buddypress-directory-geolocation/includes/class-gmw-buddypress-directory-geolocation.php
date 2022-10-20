@@ -295,6 +295,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 
 				add_action( 'bp_member_members_list_item', array( $this, 'add_elements_to_results' ) );
 				add_action( 'bp_directory_groups_item', array( $this, 'add_elements_to_results' ) );
+
 			} elseif ( function_exists( 'buddyx_template_pack_check' ) ) {
 
 				add_filter( 'bp_nouveau_get_member_meta', array( $this, 'add_elements_to_results_buddyx' ) );
@@ -320,7 +321,6 @@ class GMW_BuddyPress_Directory_Geolocation {
 		}
 
 		do_action( 'gmw_element_loaded', 'buddypress_directory', $this );
-
 		add_action( 'bp_nouveau_feedback_messages', array( $this, 'modify_results_message' ) );
 	}
 
@@ -402,7 +402,8 @@ class GMW_BuddyPress_Directory_Geolocation {
 				'sortby_distance'       => __( 'Distance', 'geo-my-wp' ),
 				'get_directions'        => __( 'Get directions', 'geo-my-wp' ),
 				'address_error_message' => __( 'We could not verify the address that you entered.', 'geo-my-wp' ),
-			)
+			),
+			$this->form
 		);
 
 		return $output;
@@ -870,7 +871,11 @@ class GMW_BuddyPress_Directory_Geolocation {
 	 */
 	public function the_location( $object ) {
 
-		if ( ! empty( $this->options['map'] ) ) {
+		// Make sure we run this only once.
+		// For scenarios where the same hook that fire this fucntionis being executed twice.
+		if ( ! empty( $this->options['map'] ) && empty( $object->gmw_location_processes ) ) {
+
+			$object->gmw_location_processes = true;
 
 			$object->map_icon = '';
 			$info_window_args = $this->get_info_window_args( $object );
