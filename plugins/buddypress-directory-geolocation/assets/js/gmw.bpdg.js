@@ -328,25 +328,22 @@ if ( gmwVars.mapsProvider === 'google_maps' ) {
 			'init' : function( mapObject ) {
 
 				// initialize markers clusterer if needed and if exists
-			    if ( typeof MarkerClusterer === 'function' ) {
-			    	
+			    if ( typeof markerClusterer.MarkerClusterer !== 'undefined' ) {
+			    	//console.log(mapObject.map)
 			    	// init new clusters object
-					mapObject.clusters = new MarkerClusterer( 
-						mapObject.map, 
-						mapObject.markers,
-						{
-							imagePath    : mapObject.clustersPath,
-							clusterClass : mapObject.prefix + '-cluster cluster',
-							maxZoom 	 : 15 
-						}
-					);
+					mapObject.clusters = new markerClusterer.MarkerClusterer({
+						//algorithm: Algorithm,
+					    map     : mapObject.map,
+					    markers : mapObject.markersl,
+					    //renderer : renderer,
+					});
 				} 
 			},
 
 			'clear' : function( mapObject ) {
 
 				// initialize markers clusterer if needed and if exists
-			    if ( typeof MarkerClusterer === 'function' ) {
+			    if ( typeof markerClusterer.MarkerClusterer === 'function' ) {
 
 			    	// remove existing clusters
 			    	if ( mapObject.clusters != false ) {		
@@ -356,12 +353,10 @@ if ( gmwVars.mapsProvider === 'google_maps' ) {
 			},
 
 			'addMarker' : function( marker, mapObject ) {
-
 				mapObject.clusters.addMarker( marker );	
 			},
 
 			'markerClick' : function( marker, mapObject ) {
-
 				google.maps.event.addListener( marker, 'click', function() {
 
 					mapObject.markerClick( this );
