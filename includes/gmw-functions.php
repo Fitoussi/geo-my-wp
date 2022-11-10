@@ -81,7 +81,19 @@ function gmw_get_object_blog_id( $object = '' ) {
  */
 function gmw_get_blog_id( $object = '' ) {
 
-	if ( is_multisite() ) {
+	$multisite_global_objects = array( 'user', 'bp_group' );
+
+	if ( is_multisite() && ! in_array( $object, $multisite_global_objects ) ) {
+
+		global $blog_id;
+
+		return $blog_id;
+
+	} else {
+		return 1;
+	}
+
+	/*if ( is_multisite() ) {
 
 		if ( '' !== $object ) {
 
@@ -98,7 +110,7 @@ function gmw_get_blog_id( $object = '' ) {
 
 	} else {
 		return 1;
-	}
+	}*/
 }
 
 /**
