@@ -408,6 +408,11 @@ class GMW_Current_Location {
 
 		$elements = array();
 
+		// display widget title if needed.
+		if ( ! empty( $this->args['widget_title'] ) ) {
+			$elements['widget_title'] = html_entity_decode( $this->args['widget_title'] ); // WPCS: XSS ok.
+		}
+
 		// build the elements array.
 		$elements['element_wrap_start'] = '<div id="gmw-current-location-wrapper-' . esc_attr( $this->args['element_id'] ) . '" class="gmw-current-location-wrapper gmw-element-wrapper">';
 
