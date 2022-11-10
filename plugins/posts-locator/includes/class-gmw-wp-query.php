@@ -33,18 +33,18 @@ class GMW_WP_Query extends WP_Query {
 	 * @var array
 	 */
 	public static $gmw_vars = array(
-		'gmw_enabled'                  => true,
-		'gmw_address'                  => '',
-		'gmw_lat'                      => '',
-		'gmw_lng'                      => '',
-		'gmw_radius'                   => '100',
-		'gmw_units'                    => 'metric',
-		'gmw_address_filters'          => array(),
-		'gmw_swlatlng'                 => '',
-		'gmw_nelatlng'                 => '',
-		'gmw_objects_without_location' => true,
-		'gmw_map_locations'            => false,
-		'gmw_info_window'              => true,
+		'gmw_enabled'                         => true,
+		'gmw_address'                         => '',
+		'gmw_lat'                             => '',
+		'gmw_lng'                             => '',
+		'gmw_radius'                          => '100',
+		'gmw_units'                           => 'metric',
+		'gmw_address_filters'                 => array(),
+		'gmw_swlatlng'                        => '',
+		'gmw_nelatlng'                        => '',
+		'gmw_enable_objects_without_location' => true,
+		'gmw_map_locations'                   => false,
+		'gmw_info_window'                     => true,
 	);
 
 	/**
@@ -168,7 +168,7 @@ class GMW_WP_Query extends WP_Query {
 	 *  'gmw_address_filters'          => array(),
 	 *  'gmw_swlatlng'                 => '',
 	 *  'gmw_nelatlng'                 => '',
-	 *  'gmw_objects_without_location' => true,
+	 *  'gmw_enable_objects_without_location' => true,
 	 * );
 	 *
 	 * @param  array  $clauses original WP_Query posts clauses.
@@ -193,15 +193,15 @@ class GMW_WP_Query extends WP_Query {
 		if ( ! isset( $object->gmw_form ) ) {
 
 			$defaults = array(
-				'gmw_address'                  => '',
-				'gmw_lat'                      => '',
-				'gmw_lng'                      => '',
-				'gmw_radius'                   => '100',
-				'gmw_units'                    => 'metric',
-				'gmw_address_filters'          => array(),
-				'gmw_swlatlng'                 => '',
-				'gmw_nelatlng'                 => '',
-				'gmw_objects_without_location' => true,
+				'gmw_address'                         => '',
+				'gmw_lat'                             => '',
+				'gmw_lng'                             => '',
+				'gmw_radius'                          => '100',
+				'gmw_units'                           => 'metric',
+				'gmw_address_filters'                 => array(),
+				'gmw_swlatlng'                        => '',
+				'gmw_nelatlng'                        => '',
+				'gmw_enable_objects_without_location' => true,
 			);
 
 			$object->query_vars = wp_parse_args( $object->query_vars, self::$gmw_vars );
@@ -237,18 +237,13 @@ class GMW_WP_Query extends WP_Query {
 
 		global $wpdb;
 
+		$blog_id      = gmw_get_blog_id( 'post' );
 		$fields       = ', ' . implode( ',', gmw_parse_form_db_fields( array(), $gmw ) );
 		$having       = '';
-		$join         = "INNER JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON ( $wpdb->posts.ID = gmw_locations.object_id AND gmw_locations.object_type = 'post' ) ";
+		$join         = "INNER JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON ( $wpdb->posts.ID = gmw_locations.object_id AND gmw_locations.object_type = 'post' AND gmw_locations.blog_id = {$blog_id} ) ";
 		$where        = '';
 		$units        = '';
 		$distance_sql = "'' AS distance";
-
-		// In multisite we need to check for the blog ID.
-		if ( is_multisite() && ! empty( $wpdb->blogid ) ) {
-			$blog_id = absint( $wpdb->blogid );
-			$where   = " AND gmw_locations.blog_id = {$blog_id} ";
-		}
 
 		// get address filters query.
 		$address_filters = gmw_get_address_fields_filters_sql( $args['gmw_address_filters'], $gmw );
