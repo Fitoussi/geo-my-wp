@@ -435,7 +435,7 @@ function gmw_search_form_xprofile_fields( $gmw ) {
  */
 function gmw_search_results_bp_friendship_button( $member, $gmw, $where = 'search_results' ) {
 
-	if ( empty( $gmw[ $where ]['friendship_button'] ) ) {
+	if ( ! function_exists( 'bp_add_friend_button' ) || empty( $gmw[ $where ]['friendship_button'] ) ) {
 		return;
 	}
 
