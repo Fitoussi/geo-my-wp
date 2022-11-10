@@ -263,9 +263,10 @@ function gmw_get_post_featured_image( $args = array(), $post = array(), $gmw = a
 
 	if ( has_post_thumbnail( $args['object_id'] ) ) {
 		$args['image_url'] = wp_get_attachment_image_src( get_post_thumbnail_id( $args['object_id'] ), 'full' )[0];
+	}
 
-	} else {
-
+	// If no image was found.
+	if ( empty( $args['image_url'] ) ) {
 		$args['image_url'] = $args['no_image_url'];
 		$args['class']    .= ' gmw-no-image';
 	}
