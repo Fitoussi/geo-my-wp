@@ -641,7 +641,7 @@ function gmw_search_form_modal_box( $tag = 'open', $gmw = array() ) {
 					<span class="gmw-close-filters-button gmw-icon-cancel-circled"></span>
 				</div>
 
-				<div class="gmw-modal-box-content gmw-grid-filters-wrapper">
+				<div class="gmw-modal-box-content gmw-flexed-wrapper">
 		<?php
 	}
 
