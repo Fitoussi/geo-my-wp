@@ -251,8 +251,7 @@ class GMW_Template_Functions_Helper {
 	 */
 	public static function get_per_page( $args = array() ) {
 
-		$url_px = gmw_get_url_prefix();
-
+		$url_px   = gmw_get_url_prefix();
 		$defaults = array(
 			'id'            => 0,
 			'id_attr'       => '',
@@ -460,7 +459,7 @@ class GMW_Template_Functions_Helper {
 			$output .= $count_message . ' ';
 		}
 
-		if ( ! empty( $args['location_message'] ) && $args['form_submitted'] && ! empty( $args['address'] ) ) {
+		if ( ! empty( $args['location_message'] ) && $args['form_submitted'] && ! empty( $args['address'] ) && ! empty( $args['radius'] ) ) {
 
 			$location_message = str_replace(
 				array( '{radius}', '{units}', '{address}' ),
