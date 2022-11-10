@@ -226,7 +226,7 @@ class GMW_Form extends GMW_Form_Core {
 		$this->form['units_array']  = ! empty( $page_load_options['units'] ) ? gmw_get_units_array( $page_load_options['units'] ) : gmw_get_units_array( 'imperial' );
 
 		// Look for page page in submitted values.
-		if ( isset( $form_values['per_page'] ) ) {
+		/*if ( isset( $this->form['per_page'] ) ) {
 
 			$this->form['per_page'] = $form_values['per_page'];
 
@@ -234,7 +234,7 @@ class GMW_Form extends GMW_Form_Core {
 		} elseif ( isset( $this->form['search_results']['per_page'] ) ) {
 
 			$this->form['per_page'] = current( explode( ',', $this->form['search_results']['per_page'] ) );
-		}
+		}*/
 
 		$this->form['get_per_page'] = $this->form['per_page']; // get_per_page deprecated.
 
