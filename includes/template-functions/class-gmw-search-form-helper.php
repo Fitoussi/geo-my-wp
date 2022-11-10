@@ -713,7 +713,7 @@ class GMW_Search_Form_Helper {
 		$placeholder  = 0;
 		$id_attr      = $tax_name . '-taxonomy-' . $id;
 
-		if ( empty( $args['show_options_all'] ) || 'multiselect' === $args['usage'] || 'smartbox_multiple' === $args['usage'] || 'checkboxes' === $args['usage'] ) {
+		if ( empty( $args['show_options_all'] ) || 'checkboxes' === $args['usage'] ) {
 
 			$options_all = 0;
 			$placeholder = 0;
