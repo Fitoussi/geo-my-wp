@@ -363,6 +363,11 @@ class GMW_Location {
 			$saved_location = self::get_by_object( $location_data['object_type'], $location_data['object_id'] );
 		}
 
+		// Verify blog ID.
+		if ( empty( $location_data['blog_id'] ) ) {
+			$location_data['blog_id'] = gmw_get_blog_id( $location_data['object_type'] );
+		}
+
 		// modify the new location args before saving.
 		$location_data = apply_filters( 'gmw_pre_save_location_data', $location_data, $saved_location );
 		$location_data = apply_filters( "gmw_pre_save_{$location_data['object_type']}_location_data", $location_data, $saved_location );
