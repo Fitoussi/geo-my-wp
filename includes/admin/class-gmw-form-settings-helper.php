@@ -275,7 +275,7 @@ class GMW_Form_Settings_Helper {
 
 						<?php if ( ! empty( $taxonomies_options['options_all'] ) ) { ?>
 
-							<div class="gmw-settings-panel-field taxonomy-enabled-settings" data-usage="select">
+							<div class="gmw-settings-panel-field taxonomy-enabled-settings" data-usage="select,multiselect">
 
 								<div class="gmw-settings-panel-header">
 									<label class="gmw-settings-label"><?php esc_attr_e( 'Options All Label', 'geo-my-wp' ); ?></label>

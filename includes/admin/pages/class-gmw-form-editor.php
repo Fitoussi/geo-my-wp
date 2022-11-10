@@ -892,7 +892,7 @@ class GMW_Form_Editor {
 							'label'            => gmw_get_admin_setting_args(
 								array(
 									'option_type' => 'label',
-									'wrap_class'  => 'usage_select usage_slider',
+									'wrap_class'  => 'usage_select usage_slider usage_radio',
 								)
 							),
 							'show_options_all' => gmw_get_admin_setting_args(
