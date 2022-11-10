@@ -179,8 +179,8 @@ class GMW_BuddyPress_Directory_Geolocation {
 		if ( ! empty( $bp_search_values ) ) {
 
 			$this->form['address'] = ! empty( $bp_search_values['address'] ) ? sanitize_text_field( wp_unslash( $bp_search_values['address'] ) ) : '';
-			$this->form['lat']     = ! empty( $bp_search_values['lat'] ) ? sanitize_text_field( wp_unslash( $bp_search_values['lat'] ) ) : '';
-			$this->form['lng']     = ! empty( $bp_search_values['lng'] ) ? sanitize_text_field( wp_unslash( $bp_search_values['lng'] ) ) : '';
+			$this->form['lat']     = ( ! empty( $this->form['address'] ) && ! empty( $bp_search_values['lat'] ) ) ? sanitize_text_field( wp_unslash( $bp_search_values['lat'] ) ) : '';
+			$this->form['lng']     = ( ! empty( $this->form['address'] ) && ! empty( $bp_search_values['lng'] ) ) ? sanitize_text_field( wp_unslash( $bp_search_values['lng'] ) ) : '';
 
 			if ( 1 === count( $this->radius_values ) ) {
 				$this->form['distance'] = end( $this->radius_values );
@@ -239,11 +239,10 @@ class GMW_BuddyPress_Directory_Geolocation {
 		}
 
 		// Duplciate of distance, to support other queries and elements of the different extensions.
-		$this->form['radius'] = $this->form['distance'];
+		$this->form['radius']                          = $this->form['distance'];
+		$this->form['enable_objects_without_location'] = $this->enable_objects_without_location;
 
 		$this->form = apply_filters( 'gmw_' . $this->prefix . '_form_data', $this->form, $this );
-
-		$this->enable_objects_without_location = apply_filters( 'gmw_' . $this->prefix . '_enable_objects_without_location', $this->enable_objects_without_location, $this->form, $this );
 
 		$this->db_fields = apply_filters( 'gmw_' . $this->prefix . '_form_db_fields', $this->db_fields, $this->form );
 		$this->db_fields = preg_filter( '/^/', 'gmw_locations.', $this->db_fields );
@@ -581,7 +580,11 @@ class GMW_BuddyPress_Directory_Geolocation {
 		<style type="text/css">
 
 			.youzify-search-input-container.gmw-bpdg-enabled .youzify-search-input-with-dropdown {
-				overflow: hidden;
+				//overflow: hidden;
+			}
+
+			.youzify-search-input-container.gmw-bpdg-enabled .gmw-bpdg-radius-field-wrapper .nice-select.open .list {
+				width: 100% ! important;
 			}
 
 			@media screen and ( max-width: 700px ) {
@@ -629,10 +632,6 @@ class GMW_BuddyPress_Directory_Geolocation {
 					line-height: 55px;
 					text-align: left;
 					padding-left: 12px;
-				}
-
-				.youzify-search-input-container.gmw-bpdg-enabled .gmw-bpdg-radius-field-wrapper .nice-select .list {
-					width: 100%;
 				}
 			}
 		</style>
