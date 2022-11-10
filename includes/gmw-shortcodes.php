@@ -121,6 +121,12 @@ function gmw_shortcode( $attr ) {
 
 		// display the form.
 		$form_object->output();
+
+		// This resets the posts query and it is here temporary.
+		// This should really be added after the loop in to the various posts locator search results template files across the different add-ons.
+		if ( function_exists( 'wp_reset_query' ) && 'post' === $form_object->form['object_type'] ) {
+			wp_reset_postdata();
+		}
 	}
 
 	$output_form = ob_get_contents();
