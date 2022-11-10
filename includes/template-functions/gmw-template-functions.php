@@ -677,10 +677,11 @@ function gmw_get_bp_groups_from_db( $groups = array() ) {
 			$where      = "WHERE id IN ( {$groups_var} )";
 		}
 
+		$bp     = buddypress();
 		$groups = $wpdb->get_results(
 			"
             SELECT id, name 
-            FROM {$wpdb->prefix}bp_groups
+            FROM {$bp->groups->table_name}
             {$where}
             "
 		); // WPCS: unprepared sql ok, db call ok, cache ok.
