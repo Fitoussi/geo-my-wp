@@ -36,7 +36,7 @@
 
 		<?php gmw_search_form_address_field( $gmw ); ?>
 
-		<?php gmw_search_form_radius( $gmw ); ?>
+		<?php gmw_search_form_radius_field( $gmw ); ?>
 
 		<?php gmw_search_form_units( $gmw ); ?>
 
@@ -45,6 +45,8 @@
 		<?php do_action( 'gmw_search_form_filters_start', $gmw ); ?>
 
 		<?php gmw_search_form_locator_button( $gmw ); ?>
+
+		<?php gmw_search_form_radius_slider( $gmw ); ?>
 
 		<?php gmw_search_form_bp_member_types_field( $gmw ); ?>
 

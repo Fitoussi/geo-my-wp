@@ -32,7 +32,7 @@
 
 		<?php do_action( 'gmw_search_form_start', $gmw ); ?>
 
-		<div class="gmw-flexed-wrapper">
+		<div class="gmw-form-main-fields-wrapper gmw-flexed-wrapper">
 			<?php gmw_search_form_keywords_field( $gmw ); ?>
 			<?php gmw_search_form_address_field( $gmw ); ?>
 			<?php gmw_search_form_radius_field( $gmw ); ?>
@@ -44,12 +44,10 @@
 		<?php do_action( 'gmw_search_form_filters_start', $gmw ); ?>
 
 		<?php gmw_search_form_locator_button( $gmw ); ?>
-
 		<?php gmw_search_form_radius_slider( $gmw ); ?>
 
-		<?php gmw_search_form_post_types( $gmw ); ?>
-
-		<div class="gmw-grid-filters-wrapper">
+		<div class="gmw-form-advanced-fields-wrapper gmw-flexed-wrapper">
+			<?php gmw_search_form_post_types( $gmw ); ?>
 			<?php gmw_search_form_taxonomies( $gmw ); ?>
 			<?php gmw_search_form_custom_fields( $gmw ); ?>
 		</div>
@@ -58,8 +56,8 @@
 
 		<?php gmw_search_form_modal_box( 'close', $gmw ); ?>
 
-		<div class="gmw-grid-filters-wrapper">
-			<?php gmw_search_form_modal_box_toggle( $gmw ); ?>
+		<div class="gmw-form-action-buttons-wrapper gmw-flexed-wrapper">
+			<?php gmw_search_form_modal_box_toggle( $gmw ); ?>	
 			<?php gmw_search_form_reset_button( $gmw ); ?>
 			<?php gmw_search_form_submit_button( $gmw ); ?>
 		</div>
