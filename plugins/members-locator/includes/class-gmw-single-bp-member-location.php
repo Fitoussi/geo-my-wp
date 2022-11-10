@@ -106,7 +106,7 @@ class GMW_Single_BP_Member_Location extends GMW_Single_Location {
 	 * @return [type] [description]
 	 */
 	public function name( $location ) {
-		return apply_filters( 'gmw_sl_title', '<h3 class="gmw-sl-title member-name gmw-sl-element">' . bp_core_get_userlink( $this->args['object_id'] ) . '</h3>', $location, $this->args, $this->user_position, $this );
+		return apply_filters( 'gmw_sl_title', '<div class="gmw-sl-title-wrapper"><h3 class="gmw-sl-title member-name gmw-sl-element">' . bp_core_get_userlink( $this->args['object_id'] ) . '</h3></div>', $location, $this->args, $this->user_position, $this );
 	}
 
 	/**
