@@ -15,7 +15,6 @@ div.gmw-results-wrapper.purple select {
 	border: 1px solid #ccc;
 	height: 25px;
 	color:#555;
-	max-width: 150px;
 }
 
 div.gmw-results-wrapper.purple .pagination-per-page-wrapper {}

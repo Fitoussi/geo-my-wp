@@ -16,7 +16,6 @@ div.gmw-fl-buddyboss-results-wrapper .gmw-map-wrapper {
 }
 
 div.gmw-fl-buddyboss-results-wrapper .gmw-results-filters select {
-	max-width: 150px;
 	box-shadow: none;
 	border-color: #E6E9EC;
 }
@@ -32,6 +31,12 @@ div.gmw-fl-buddyboss-results-wrapper .gmw-results-filters .gmw-results-view-togg
 	border-radius: 30;
 	overflow: initial;
 	background: none;
+}
+
+div.gmw-fl-buddyboss-results-wrapper .gmw-results-list {
+	display: inherit;
+    grid-template-columns: inherit;
+    grid-gap: inherit;
 }
 
 div.gmw-fl-buddyboss-results-wrapper .gmw-results-list .gmw-item {
