@@ -41,10 +41,11 @@ trait GMW_Members_Locator_Form_Trait {
 			$column = in_array( $this->form['query_args']['type'], array( 'active', 'newest', 'popular', 'online' ), true ) ? 'user_id' : 'ID';
 		}
 
+		$blog_id      = gmw_get_blog_id( 'user' );
 		$fields       = ', ' . $this->db_fields;
 		$having       = '';
 		$where        = '';
-		$join         = "INNER JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON ( u.{$column} = gmw_locations.object_id AND gmw_locations.object_type = 'user' ) ";
+		$join         = "INNER JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON ( u.{$column} = gmw_locations.object_id AND gmw_locations.object_type = 'user' AND gmw_locations.blog_id = {$blog_id} ) ";
 		$units        = '';
 		$distance_sql = "'' AS distance";
 
@@ -137,7 +138,7 @@ trait GMW_Members_Locator_Form_Trait {
 		// Deprecated filter. Use the below instead.
 		$clauses = apply_filters( 'gmw_' . $this->form['prefix'] . '_location_query_clauses', $clauses, $this->form, $query, $this );
 
-		// New Filters
+		// New Filters.
 		$clauses = apply_filters( 'gmw_members_locator_query_clauses', $clauses, $this->form, $this, $query );
 		$clauses = apply_filters( 'gmw_' . $this->form['prefix'] . '_members_query_clauses', $clauses, $this->form, $this, $query );
 
