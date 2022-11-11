@@ -1061,7 +1061,7 @@ function gmw_get_image_element( $args, $object, $gmw ) {
 			'height'      => '150px',
 			'class'       => '',
 			'css_id'      => '',
-			'attributes'  => array(),
+			'attributes'  => array( 'decoding' => 'async' ),
 			'wrapper'     => true,
 			'where'       => 'search_results',
 		)
@@ -1071,7 +1071,7 @@ function gmw_get_image_element( $args, $object, $gmw ) {
 		return;
 	}
 
-	$args['attributes']['class'] = 'gmw-image gmw-' . esc_attr( $args['object_type'] ) . '-image gmw-' . esc_attr( $args['where'] ) . '-image';
+	$args['attributes']['class'] = 'skip-lazy gmw-image gmw-' . esc_attr( $args['object_type'] ) . '-image gmw-' . esc_attr( $args['where'] ) . '-image';
 
 	if ( '' !== $args['class'] ) {
 		$args['attributes']['class'] .= ' ' . $args['class'];
