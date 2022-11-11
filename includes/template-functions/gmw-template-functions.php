@@ -591,6 +591,7 @@ function gmw_get_bp_avatar( $args = array(), $object = array(), $gmw = array() )
 	if ( ! $args['show_default'] ) {
 		add_filter( 'bp_core_default_avatar_' . $args['object_type'], '__return_false', 50 );
 	}
+
 	// Get avatar URL.
 	$args['image_url'] = bp_core_fetch_avatar( $avatar_args );
 
