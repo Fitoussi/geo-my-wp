@@ -1,6 +1,5 @@
 jQuery( document ).ready( function( $ ) {
 	
-
 	// This is a workaround to move the geolcoation items ( address, distance, directions link ) in each member in the results to a better position inside the div element.
 	// There is only one hook that we could use for adding those geolocation items into the results, but that hook is not a great location
 	// to showcase those items. This is a "hacky" way of doing so, and hpefully temporary.
