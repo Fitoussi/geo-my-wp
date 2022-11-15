@@ -7,7 +7,7 @@
  * Author: Eyal Fitoussi
  * Author URI: http://www.geomywp.com
  * Requires at least: 4.5
- * Tested up to: 6.0.0
+ * Tested up to: 6.2
  * Text Domain: geo-my-wp
  * Domain Path: /languages
  * License: GNU General Public License v3.0
@@ -116,8 +116,8 @@ class GEO_MY_WP {
 		'exclude_members'                  => '1.999', // old slug.
 		'global_maps'                      => '2.9999',
 		'gmw_kleo_geolocation'             => '1.9',
-		'nearby_locations'                 => '1.9',
-		'nearby_posts'                     => '1.9',   // old slug.
+		'nearby_locations'                 => '1.999',
+		'nearby_posts'                     => '1.999',   // old slug.
 		'premium_settings'                 => '2.999',
 		'users_locator'                    => '1.999',
 		'wp_users_geo-location'            => '1.999', // old slug.
