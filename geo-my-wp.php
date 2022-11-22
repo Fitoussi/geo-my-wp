@@ -124,7 +124,7 @@ class GEO_MY_WP {
 		'radius_per_location'              => '1.1999',
 		'ip_address_locator'               => '1.0.9',
 		'gmw_multiple_locations'           => '1.9999',
-		'gmw_peepso_geolocation'           => '0.1',
+		'gmw_peepso_geolocation'           => '0.999',
 	);
 
 	/**
