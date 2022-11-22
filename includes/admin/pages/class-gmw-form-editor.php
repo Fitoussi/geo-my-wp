@@ -669,7 +669,7 @@ class GMW_Form_Editor {
 							'type'       => 'select',
 							'default'    => '',
 							'label'      => __( 'Search Form Template', 'geo-my-wp' ),
-							'desc'       => sprintf( __( 'Select the search form template file that you would like to use or select "Disabled" to disable the search form.<br />%s', 'geo-my-wp' ), $depreacated_message ),
+							'desc'       => sprintf( __( 'Select the search form template file that you would like to use. You can also disable the search form if you wish to display the map or list of results only.<br />%s', 'geo-my-wp' ), $depreacated_message ),
 							'attributes'  => array(
 								'data-gmw_ajax_load_options'   => 'gmw_get_templates',
 								'data-gmw_ajax_load_component' => $this->form['component'],
@@ -1110,6 +1110,7 @@ class GMW_Form_Editor {
 						'name'     => 'results_view',
 						'type'     => 'fields_group',
 						'label'    => __( 'Results View', 'geo-my-wp' ),
+						'desc'     => __( 'Set up the search results view ( Grid and/or List ).', 'geo-my-wp' ),
 						'fields'   => array(
 							'default' => gmw_get_admin_setting_args(
 								array(
@@ -2605,12 +2606,11 @@ class GMW_Form_Editor {
 												<?php } ?>
 											</label>
 
-											<?php
-											/*
+											<?php /*
 											if ( '' !== $desc ) { ?>
-												<i class="gmw-settings-desc-tooltip dashicons dashicons-editor-help gmw-tooltip" aria-label="<?php echo $desc // WPCS: XSS ok.; ?>"></i>
-											<?php } */
-											?>
+												<i class="gmw-settings-desc-tooltip dashicons dashicons-editor-help gmw-tooltip" aria-label='<?php echo $desc // WPCS: XSS ok.; ?>'></i>
+											<?php }
+											*/ ?>
 										<?php } ?>
 
 									</legend>
