@@ -1188,19 +1188,19 @@ class GMW_Form_Settings_Helper {
 
 					$name .= ' ( deprecated )';
 
-					$new_dep_templates[ $value ] = $name;
+					$new_dep_templates[ $value ] = '* ' . $name;
 
 				} elseif ( 'search-results' === $args['folder_name'] && in_array( $value, array( 'clean', 'custom', 'default', 'grid-gray', 'grid', 'purple', 'gray', 'yellow', 'blue', 'red' ), true ) ) {
 
 					$name .= ' ( deprecated )';
 
-					$new_dep_templates[ $value ] = $name;
+					$new_dep_templates[ $value ] = '* ' . $name;
 
 				} elseif ( 'info-window' === $args['folder_name'] && in_array( $value, array( 'center-white', 'left-white', 'right-white' ), true ) ) {
 
 					$name .= ' ( deprecated )';
 
-					$new_dep_templates[ $value ] = $name;
+					$new_dep_templates[ $value ] = '* ' . $name;
 
 				} else {
 
