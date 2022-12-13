@@ -16,24 +16,41 @@ var GMW_Extensions = {
      * 
      * @param {[type]} status [description]
      */
-    set_processing : function( status ) {
+    set_processing : function( status, reload ) {
 
         if ( status ) {
 
             jQuery( '#gmw-extensions-page .disabler-block' ).show();
 
+            jQuery( '#gmw-admin-page-loader' ).fadeTo( 'fast', '0.8' );
             //jQuery( '#gmw-extensions-page .gmw-extension-wrapper.gmw-processing-action' ).find( '.disabler-block' ).show();
 
         } else {
 
-            setTimeout( function() {
+        	// Reload page if needed. Usually when activating/deactivating a parent extension.
+        	if ( reload ) {
 
-                // enable everything back
-                jQuery( '#gmw-extensions-page .disabler-block' ).hide();
+        		setTimeout( function() {
 
-                jQuery( '#gmw-extensions-page .gmw-extension-wrapper' ).removeClass( 'gmw-processing-action' );
+		    		location.reload();
 
-            }, 2500 );
+		    		return;
+
+	            }, 1500 );
+
+        	} else {
+
+	            setTimeout( function() {
+
+	                // enable everything back
+	                jQuery( '#gmw-extensions-page .disabler-block' ).hide();
+
+	                jQuery( '#gmw-admin-page-loader' ).fadeOut( 'fast', function() {
+	                	jQuery( '#gmw-extensions-page .gmw-extension-wrapper' ).removeClass( 'gmw-processing-action' );
+	                });
+
+	            }, 2500 );
+	        }
         }
 
         GMW_Extensions.processing = status;
@@ -67,7 +84,7 @@ var GMW_Extensions = {
             
             e.preventDefault();
 
-            GMW_Extensions.set_processing( true );
+            GMW_Extensions.set_processing( true, false );
 
             GMW_Extensions.extensions_updater( jQuery( this ) );
         } );
@@ -82,7 +99,7 @@ var GMW_Extensions = {
             
             jQuery( this ).closest( '.gmw-extension-wrapper' ).addClass( 'gmw-processing-action' );
 
-            GMW_Extensions.set_processing( true );
+            GMW_Extensions.set_processing( true, false );
 
             GMW_Extensions.extension_activation( jQuery( this ) );
         } );
@@ -93,7 +110,7 @@ var GMW_Extensions = {
 
             jQuery( this ).closest( '.gmw-extension-wrapper' ).addClass( 'gmw-processing-action' );
 
-            GMW_Extensions.set_processing( true );
+            GMW_Extensions.set_processing( true, false );
 
             GMW_Extensions.license_key_actions( jQuery( this ) );
         }); 
@@ -273,12 +290,12 @@ var GMW_Extensions = {
             }, 1500 ); 
 
             // disable processing
-            GMW_Extensions.set_processing( false );
+            GMW_Extensions.set_processing( false, false );
 
         }).done( function ( response ) {
 
             // disable processing
-            GMW_Extensions.set_processing( false );
+            GMW_Extensions.set_processing( false, false );
         } );
     }, 
 
@@ -348,12 +365,12 @@ var GMW_Extensions = {
                                 // disable activation from all dependents.
                                 if ( licenseData.action == 'activate_extension' ) {
 
-                                    jQuery( '.gmw-extension-wrapper[data-slug="'+slug+'"]' ).removeClass( 'disabled' );
+                                    jQuery( '.gmw-extension-wrapper[data-slug="' + slug + '"]' ).removeClass( 'disabled' );
 
                                 // otherwise, we disable dependends
                                 } else {
 
-                                    jQuery( '.gmw-extension-wrapper[data-slug="'+slug+'"]' ).removeClass( 'active' ).addClass( 'inactive disabled' ).find( '.activation-disabled-message p span' ).html( message );
+                                    jQuery( '.gmw-extension-wrapper[data-slug="' + slug+ '"]' ).removeClass( 'active' ).addClass( 'inactive disabled' ).find( '.activation-disabled-message p span' ).html( message );
                                 }
                             //}
                         }); 
@@ -400,12 +417,16 @@ var GMW_Extensions = {
             }, 1500 );
 
             // disable processing
-            GMW_Extensions.set_processing( false );
+            GMW_Extensions.set_processing( false, false );
 
         } ).done( function ( response ) {
-            
+
+        	//var reload = jQuery( newLink ).data( 'is_parent' ) == 1 ? true : false;
+
+        	var reload = false;
+
             // disable processing
-            GMW_Extensions.set_processing( false );
+            GMW_Extensions.set_processing( false, reload );
         });
     },
 
@@ -548,12 +569,12 @@ var GMW_Extensions = {
             }, 1500 );
 
             // disable processing
-            GMW_Extensions.set_processing( false ); 
+            GMW_Extensions.set_processing( false, false ); 
 
         }).done( function ( response ) {
 
             // disable processing
-            GMW_Extensions.set_processing( false );
+            GMW_Extensions.set_processing( false, false );
         });
     },
 };
