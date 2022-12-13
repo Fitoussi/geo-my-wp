@@ -2412,7 +2412,7 @@ class GMW_Form_Editor {
 
 			<div class="gmw-edit-form-page-top-wrapper gmw-admin-page">
 
-				<img id="site-logo-header" style="width: 170px;height: 50px;" alt="" src="https://geomywp.com/wp-content/uploads/assets/svg/gmw-logo-new.png" class="ct-image">
+				<img id="site-logo-header" style="width: 170px;height: 50px;" alt="" src="<?php echo GMW_URL . '/gmw-logo.png'; ?>" class="ct-image">
 
 				<div class="gmw-edit-form-page-top-inner">
 
