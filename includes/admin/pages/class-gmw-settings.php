@@ -109,6 +109,17 @@ class GMW_Settings {
 	}
 
 	/**
+	 * Get the main/parent Settings page tab.
+	 *
+	 * @since 4.0
+	 *
+	 * @return [type] [description]
+	 */
+	public function get_parent_tab() {
+		return ! empty( $_GET['tab'] ) ? esc_attr( $_GET['tab'] ) : 'general_settings'; // WPCS: CSRF ok, sanitization ok.
+	}
+
+	/**
 	 * Get the current Settings page tab.
 	 *
 	 * @since 4.0
@@ -116,7 +127,18 @@ class GMW_Settings {
 	 * @return [type] [description]
 	 */
 	public function get_current_tab() {
-		return ! empty( $_GET['tab'] ) ? esc_attr( $_GET['tab'] ) : 'general_settings'; // WPCS: CSRF ok, sanitization ok.
+
+		if ( ! empty( $_GET['sub_tab'] ) ) {
+
+			return $_GET['sub_tab']; // WPCS: CSRF ok, sanitization ok.
+
+		} elseif ( ! empty( $_GET['tab'] ) ) {
+
+			return esc_attr( $_GET['tab'] ); // WPCS: CSRF ok, sanitization ok.
+
+		} else {
+			return 'general_settings';
+		}
 	}
 
 	/**
@@ -842,7 +864,10 @@ class GMW_Settings {
 
 		$settings    = get_option( 'gmw_options' );
 		$current_tab = $this->get_current_tab();
+		$parent_tab  = $this->get_parent_tab();
 		$section     = ! empty( $this->settings[ $current_tab ] ) ? $this->settings[ $current_tab ] : $this->settings['general_settings'];
+		$parent_tabs = wp_list_pluck( $this->settings_groups, 'parent' ); 
+
 		?>
 		<?php gmw_admin_pages_header(); ?>
 
@@ -852,6 +877,8 @@ class GMW_Settings {
 			<nav class="gmw-admin-page-navigation">
 
 				<?php uasort( $this->settings_groups, 'gmw_sort_by_priority' ); ?>
+
+				<?php $sub_tabs = array(); ?>
 
 				<?php foreach ( $this->settings_groups as $tab ) { ?>
 
@@ -871,26 +898,51 @@ class GMW_Settings {
 
 					} else {
 
-						// Do not show tab if doesn't have any settings.
-						if ( empty( $this->settings[ $tab['slug'] ] ) ) {
+						// When it is a sub-tab, we are not going to display it in the main navigation.
+						if ( ! empty( $tab['parent'] ) ) {
+
+							// Collect sub-tab into an array.
+							if ( $tab['parent'] === $parent_tab ) {
+								$sub_tabs[] = $tab['slug'];
+							}
+
 							continue;
 						}
+
+						// Do not show tab if doesn't have any settings.
+						/*if ( empty( $this->settings[ $tab['slug'] ] ) && empty( $tab['force_display'] ) ) {
+							continue;
+						}*/
 
 						// for previous versions.
 						if ( ! empty( $tab['id'] ) ) {
 							$tab['slug'] = $tab['id'];
 						}
 
-						// Prepare tab URL.
+						// Prepare tab's URL.
 						$url = add_query_arg( array( 'tab' => $tab['slug'] ), admin_url( 'admin.php?page=gmw-settings' ) );
 
+						// When tab does not have any settings.
+						if ( empty( $this->settings[ $tab['slug'] ] ) ) {
+
+							// Check if it is a parent tab, and if so, add its first sub-tab as parameter to the URL.
+							// The first sub tab will be the settings page that shows up when clicking the parent tab.
+							if ( in_array( $tab['slug'], $parent_tabs ) ) {
+								$url = add_query_arg( array( 'sub_tab' => array_search( $tab['slug'], $parent_tabs ) ), $url );
+
+								// Otherwise, do not display the tab.
+							} else {
+								continue;
+							}
+						}
+
 						// Get tab icon.
-						$icon = ! empty( $tab['icon'] ) ? esc_attr( $tab['icon'] ) : 'cog';
+						//$icon = ! empty( $tab['icon'] ) ? esc_attr( $tab['icon'] ) : 'cog';
 
 						printf(
 							'<a href="%s"%s><span class="gmw-icon gmw-icon-%s"></span> <span class="label">%s</span></a>',
 							esc_url( $url ),
-							$current_tab === $tab['slug'] ? ' class="active"' : '',
+							$parent_tab === $tab['slug'] ? ' class="active"' : '',
 							'',
 							esc_html( $tab['label'] )
 						);
@@ -899,9 +951,90 @@ class GMW_Settings {
 				<?php } ?>
 			</nav>
 
-			<div class="gmw-admin-page-panels-wrapper" id="tab_<?php echo esc_attr( $current_tab ); ?>">
+			<?php $sub_nav_class = ! empty( $sub_tabs ) ? ' gmw-has-sub-nav' : ''; ?>
 
-				<h1 style="display:none"></h1>
+			<div class="gmw-admin-page-panels-wrapper<?php echo $sub_nav_class; // WPCS: XSS ok. ?>" id="tab_<?php echo esc_attr( $current_tab ); ?>">
+
+				<?php if ( ! empty( $sub_tabs ) ) { // Generate the sub navigation. ?>
+
+					<?php
+					// We append the parent tab to the subtab since it will be the first tab that we need to display.
+					array_unshift( $sub_tabs, $parent_tab );
+					?>
+
+					<nav class="gmw-admin-page-navigation gmw-sub-nav">
+
+						<?php foreach ( $sub_tabs as $tab_slug ) { ?>
+
+							<?php
+							// Skip tab if doesn't have any settings.
+							if ( empty( $this->settings[ $tab_slug ] ) ) {
+								continue;
+							}
+
+							$tab = $this->settings_groups[ $tab_slug ];
+							$url = add_query_arg(
+								array(
+									'tab'     => $parent_tab,
+									'sub_tab' => $tab_slug,
+								),
+								admin_url( 'admin.php?page=gmw-settings' )
+							);
+
+							// Get tab icon.
+							//$icon = ! empty( $tab['icon'] ) ? esc_attr( $tab['icon'] ) : 'cog';
+
+							printf(
+								'<a href="%s"%s><span class="gmw-icon gmw-icon-%s"></span> <span class="label">%s</span></a>',
+								esc_url( $url ),
+								$current_tab === $tab['slug'] ? ' class="active"' : '',
+								'',
+								reset( $sub_tabs ) === $tab_slug ? __( 'General Settings', 'geo-my-wp' ) : esc_html( $tab['label'] )
+							);
+							?>
+						<?php } ?>
+					</nav>
+
+				<?php } ?>
+
+				<?php
+				$allowed_html = apply_filters(
+					'gmw_settings_page_feature_desc_allowed_html',
+					array(
+						'a'      => array(
+							'href'   => array(),
+							'title'  => array(),
+							'target' => array(),
+						),
+						'span'   => array(
+							'style' => array(),
+							'class' => array(),
+							'id'    => array(),
+						),
+						'div'    => array(
+							'style' => array(),
+							'class' => array(),
+							'id'    => array(),
+						),
+						'code'   => array(),
+						'br'     => array(),
+						'em'     => array(),
+						'p'      => array(),
+						'strong' => array(),
+						'b'      => array(),
+						'u'      => array(),
+					)
+				);
+				?>
+				<?php if ( ! empty( $this->settings_groups[ $current_tab ]['page_title'] ) ) { ?>
+					<h1 style=""><?php echo esc_attr( $this->settings_groups[ $current_tab ]['page_title'] ); ?></h1>
+				<?php } ?>
+
+				<?php if ( ! empty( $this->settings_groups[ $current_tab ]['desc'] ) ) { ?>
+					<div class="gmw-admin-notice-box" style="grid-column: span 2;">
+						<i class="gmw-icon-info-circled-1" style="margin-right: 3px"></i><span><?php echo wp_kses( $this->settings_groups[ $current_tab ]['desc'], $allowed_html ); ?></span>
+					</div>
+				<?php } ?>
 
 				<div id="gmw-settings-tab-<?php echo esc_attr( $current_tab ); ?>" class="gmw-settings-form gmw-tab-panel <?php echo esc_attr( $current_tab ); ?>">
 
@@ -934,34 +1067,6 @@ class GMW_Settings {
 							if ( ! empty( $option['settings_toggle'] ) && is_array( $option['settings_toggle'] ) ) {
 								$setting_toggle = 'data-gmw_toggle_element="' . esc_attr( $option['settings_toggle']['element'] ) . '" data-gmw_toggle_value="' . esc_attr( $option['settings_toggle']['value'] ) . '"';
 							}
-
-							$allowed_html = apply_filters(
-								'gmw_settings_page_feature_desc_allowed_html',
-								array(
-									'a'      => array(
-										'href'   => array(),
-										'title'  => array(),
-										'target' => array(),
-									),
-									'span'   => array(
-										'style' => array(),
-										'class' => array(),
-										'id'    => array(),
-									),
-									'div'    => array(
-										'style' => array(),
-										'class' => array(),
-										'id'    => array(),
-									),
-									'code'   => array(),
-									'br'     => array(),
-									'em'     => array(),
-									'p'      => array(),
-									'strong' => array(),
-									'b'      => array(),
-									'u'      => array(),
-								)
-							);
 							?>
 							<fieldset 
 								id="<?php echo esc_attr( $current_tab ); ?>-<?php echo esc_attr( $option['name'] ); ?>-tr"
