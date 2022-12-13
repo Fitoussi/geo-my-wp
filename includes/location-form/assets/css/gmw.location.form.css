@@ -156,6 +156,7 @@ div#gmw-location-form-wrapper div#gmw-lf-autocomplete-wrapper {
 div#gmw-location-form-wrapper div#gmw-lf-autocomplete-wrapper i {
 	position: absolute;
 	cursor: pointer;
+	z-index: 1;
 }
 
 div#gmw-location-form-wrapper div#gmw-lf-autocomplete-wrapper i:before {
