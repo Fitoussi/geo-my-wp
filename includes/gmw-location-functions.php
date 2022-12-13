@@ -1597,12 +1597,14 @@ function gmw_location_meta_list( $location, $fields = array(), $labels = array()
  * Usually will be used in the results.
  *
  * @param  object $location    location object or location ID.
+ *
  * @param  array  $from_coords array of coords array( lat,lng ).
+ *
  * @param  string $label       link label - default "get directions".
  *
  * @return HTML element        link to Google Maps.
  */
-function gmw_get_directions_link( $location, $from_coords = array(), $label = '' ) {
+function gmw_get_directions_link( $location, $from_coords = array(), $label = '', $link_only = false ) {
 
 	// if location ID pass get the location data.
 	if ( is_int( $location ) ) {
@@ -1630,8 +1632,9 @@ function gmw_get_directions_link( $location, $from_coords = array(), $label = ''
 	}
 
 	$args = array(
-		'to_lat' => $location->lat,
-		'to_lng' => $location->lng,
+		'to_lat'    => $location->lat,
+		'to_lng'    => $location->lng,
+		'link_only' => $link_only,
 	);
 
 	if ( ! empty( $from_coords[0] ) && ! empty( $from_coords[1] ) ) {
@@ -1673,8 +1676,8 @@ function gmw_get_directions_link( $location, $from_coords = array(), $label = ''
  * @param  array  $from_coords array of coords array( lat,lng ).
  * @param  string $label       link label - default "get directions".
  */
-function gmw_directions_link( $location, $from_coords = array(), $label = '' ) {
-	echo gmw_get_directions_link( $location, $from_coords, $label ); // WPCS: XSS ok.
+function gmw_directions_link( $location, $from_coords = array(), $label = '', $link_only = false ) {
+	echo gmw_get_directions_link( $location, $from_coords, $label, $link_only = false ); // WPCS: XSS ok.
 }
 
 function gmw_get_location_class_attribute( $object, $gmw = array() ) {
