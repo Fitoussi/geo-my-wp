@@ -45,6 +45,7 @@ class GMW_WP_Query extends WP_Query {
 		'gmw_enable_objects_without_location' => true,
 		'gmw_map_locations'                   => false,
 		'gmw_info_window'                     => true,
+		'gmw_object_type'                     => 'post',
 	);
 
 	/**
@@ -160,15 +161,16 @@ class GMW_WP_Query extends WP_Query {
 	 * The available arguments are listed below:
 	 *
 	 * array(
-	 *  'gmw_address'                  => '',
-	 *  'gmw_lat'                      => '',
-	 *  'gmw_lng'                      => '',
-	 *  'gmw_radius'                   => '100',
-	 *  'gmw_units'                    => 'metric',
-	 *  'gmw_address_filters'          => array(),
-	 *  'gmw_swlatlng'                 => '',
-	 *  'gmw_nelatlng'                 => '',
+	 *  'gmw_address'                         => '',
+	 *  'gmw_lat'                             => '',
+	 *  'gmw_lng'                             => '',
+	 *  'gmw_radius'                          => '100',
+	 *  'gmw_units'                           => 'metric',
+	 *  'gmw_address_filters'                 => array(),
+	 *  'gmw_swlatlng'                        => '',
+	 *  'gmw_nelatlng'                        => '',
 	 *  'gmw_enable_objects_without_location' => true,
+	 *  'gmw_object_type'                     => 'post',
 	 * );
 	 *
 	 * @param  array  $clauses original WP_Query posts clauses.
@@ -202,6 +204,7 @@ class GMW_WP_Query extends WP_Query {
 				'gmw_swlatlng'                        => '',
 				'gmw_nelatlng'                        => '',
 				'gmw_enable_objects_without_location' => true,
+				'gmw_object_type'                     => 'post',
 			);
 
 			$object->query_vars = wp_parse_args( $object->query_vars, self::$gmw_vars );
@@ -240,7 +243,7 @@ class GMW_WP_Query extends WP_Query {
 		$blog_id      = gmw_get_blog_id( 'post' );
 		$fields       = ', ' . implode( ',', gmw_parse_form_db_fields( array(), $gmw ) );
 		$having       = '';
-		$join         = "INNER JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON ( $wpdb->posts.ID = gmw_locations.object_id AND gmw_locations.object_type = 'post' AND gmw_locations.blog_id = {$blog_id} ) ";
+		$join         = "INNER JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON ( $wpdb->posts.ID = gmw_locations.object_id AND gmw_locations.object_type = '{$args['gmw_object_type']}' AND gmw_locations.blog_id = {$blog_id} ) ";
 		$where        = '';
 		$units        = '';
 		$distance_sql = "'' AS distance";
