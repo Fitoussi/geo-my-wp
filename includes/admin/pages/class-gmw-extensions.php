@@ -210,6 +210,8 @@ class GMW_Extensions {
 	 */
 	public static function get_activate_extension_button( $slug = '', $basename = '' ) {
 
+		$extension_data = gmw_get_addon_data( $slug );
+
 		$nonce = wp_create_nonce( 'gmw_' . $slug . '_extension_nonce' );
 		$url   = admin_url( 'admin.php?page=gmw-extensions&gmw_action=activate_extension&basename=' . $basename . '&slug=' . $slug . '&_wpnonce=' . $nonce );
 		$label = esc_attr__( 'Activate', 'geo-my-wp' );
@@ -217,6 +219,7 @@ class GMW_Extensions {
 		$output  = '<a href="' . esc_url( $url ) . '"';
 		$output .= ' class="button button-primary gmw-extension-action-button activate"';
 		$output .= ' data-slug="' . esc_attr( $slug ) . '"';
+		$output .= ' data-is_parent="' . esc_attr( $extension_data['is_parent'] ) . '"';
 		$output .= ' data-basename="' . esc_attr( $basename ) . '"';
 		$output .= ' data-action="activate_extension"';
 		$output .= ' data-nonce="' . $nonce . '"';
@@ -241,6 +244,8 @@ class GMW_Extensions {
 	 */
 	public static function get_deactivate_extension_button( $slug = '', $basename = '' ) {
 
+		$extension_data = gmw_get_addon_data( $slug );
+
 		$nonce = wp_create_nonce( 'gmw_' . $slug . '_extension_nonce' );
 		$url   = admin_url( 'admin.php?page=gmw-extensions&gmw_action=deactivate_extension&basename=' . $basename . '&slug=' . $slug . '&_wpnonce=' . $nonce );
 		$label = esc_attr__( 'Deactivate', 'geo-my-wp' );
@@ -248,6 +253,7 @@ class GMW_Extensions {
 		$output  = '<a href="' . esc_url( $url ) . '"';
 		$output .= ' class="button button-secondary gmw-extension-action-button deactivate"';
 		$output .= ' data-slug="' . esc_attr( $slug ) . '"';
+		$output .= ' data-is_parent="' . esc_attr( $extension_data['is_parent'] ) . '"';
 		$output .= ' data-basename="' . esc_attr( $basename ) . '"';
 		$output .= ' data-action="deactivate_extension"';
 		$output .= ' data-nonce="' . $nonce . '"';
@@ -321,6 +327,11 @@ class GMW_Extensions {
 			// we will enable them.
 			foreach ( $extensions_data as $ext_data ) {
 
+				// Activate child extensions.
+				if ( ! empty( $ext_data['parent'] ) && $slug === $ext_data['parent'] ) {					
+					//gmw_update_addon_status( $ext_data['slug'], 'active' );
+				}
+
 				// if disabled because of a theme skip checking for addons.
 				if ( 'disabled' === $ext_data['status'] && 'theme_missing' === $ext_data['status_details']['error'] ) {
 
@@ -378,8 +389,9 @@ class GMW_Extensions {
 			return;
 		}
 
-		$slug     = sanitize_text_field( wp_unslash( $_GET['slug'] ) );
-		$basename = sanitize_text_field( wp_unslash( $_GET['basename'] ) );
+		$slug           = sanitize_text_field( wp_unslash( $_GET['slug'] ) );
+		$basename       = sanitize_text_field( wp_unslash( $_GET['basename'] ) );
+		$extension_data = gmw_get_addon_data( $slug );
 
 		// If doing ajax deactivation.
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
@@ -401,12 +413,16 @@ class GMW_Extensions {
 			}
 		}
 
-		// get WordPress plugins.
-		$plugins = get_plugins();
+		// Don't deactivate the plugin when activating a sub-extension.
+		if ( empty( $extension_data['parent'] ) ) {
 
-		// If the extension is a WordPress plugin, deactivate it.
-		if ( array_key_exists( $basename, $plugins ) && is_plugin_active( $basename ) ) {
-			deactivate_plugins( $basename );
+			// get WordPress plugins.
+			$plugins = get_plugins();
+
+			// If the extension is a WordPress plugin, deactivate it.
+			if ( array_key_exists( $basename, $plugins ) && is_plugin_active( $basename ) ) {
+				deactivate_plugins( $basename );
+			}
 		}
 
 		// set addon status inactive and get the addon data.
@@ -423,6 +439,11 @@ class GMW_Extensions {
 			// look for other extensions dependends on this extension.
 			// we will disable them.
 			foreach ( $extensions_data as $ext_data ) {
+
+				// deactivate child extensions.
+				if ( ! empty( $ext_data['parent'] ) && $slug === $ext_data['parent'] ) {					
+					//gmw_update_addon_status( $ext_data['slug'], 'inactive' );
+				}
 
 				// Abort if already disabled because of a theme.
 				if ( 'disabled' === $ext_data['status'] && 'theme_missing' === $ext_data['status_details']['error'] ) {
@@ -759,23 +780,34 @@ class GMW_Extensions {
 				
 				<?php if ( empty( $extension['is_core'] ) && ! empty( $extension['license_name'] ) ) { ?>
 
-					<form method="post" action="" class="extension-license-form" data-slug="<?php echo esc_attr( $extension['slug'] ); ?>">
+					<?php if ( empty( $extension['parent'] ) ) { ?>
+					
+						<form method="post" action="" class="extension-license-form" data-slug="<?php echo esc_attr( $extension['slug'] ); ?>">
 
-					<?php
-					// Display license key form element.
-					if ( class_exists( 'GMW_License_Key' ) ) {
+						<?php
+						// Display license key form element.
+						if ( class_exists( 'GMW_License_Key' ) ) {
 
-						$gmw_license_key = new GMW_License_Key(
-							$extension['full_path'],
-							$extension['item_name'],
-							$extension['license_name'],
-							$extension['item_id']
-						);
+							$gmw_license_key = new GMW_License_Key(
+								$extension['full_path'],
+								$extension['item_name'],
+								$extension['license_name'],
+								$extension['item_id']
+							);
 
-						echo $gmw_license_key->get_license_key_element(); // WPCS: XSS ok.
-					}
-					?>
-					</form>
+							echo $gmw_license_key->get_license_key_element(); // WPCS: XSS ok.
+						}
+						?>
+						</form>
+
+					<?php } else { ?>
+
+						<?php $parent = gmw_get_addon_data( $extension['parent'] ); ?>
+
+						<div class="gmw-license-wrapper valid"><p class="description">License key is already activated via the <?php echo esc_attr( $parent['name'] ); ?> extension.</p></div>
+
+					<?php } ?>
+
 				<?php } ?>
 			</div>
 
@@ -828,9 +860,7 @@ class GMW_Extensions {
 						if ( empty( $extensions_data[ $slug ][ $rd ] ) ) {
 
 							if ( ! empty( $values[ $rd ] ) ) {
-
 								$extensions_data[ $slug ][ $rd ] = ! empty( $values[ $rd ] ) ? $values[ $rd ] : '';
-
 							}
 						}
 					}
@@ -850,10 +880,16 @@ class GMW_Extensions {
 		// rearrange extensions.
 		foreach ( $extensions_data as $key => $value ) {
 
+			if ( $value['hide_in_extensions'] ) {
+
+				unset( $extensions_data[ $key ] );
+
+				continue;
+			}
+
 			if ( ! empty( $value['is_core'] ) ) {
 
 				if ( 'posts_locator' !== $key && 'members_locator' !== $key ) {
-
 					$extensions['core'][ $key ] = $value;
 				}
 			} else {
@@ -887,6 +923,10 @@ class GMW_Extensions {
 
 		<!-- Extensions page wrapper -->
 		<div id="gmw-extensions-page" class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper">
+
+			<div id="gmw-admin-page-loader" style="display: none;position: absolute;width: 100%;height: 100%;top: 0;left: 0;background: white;z-index: 999999999;">
+				<!-- <i style="font-size: 60px;color: #4699E8;margin: 0;position: absolute;top: 40%;left: 50%;-ms-transform: translate(-50%, -50%);transform: translate(-50%, -50%);" class="gmw-icon gmw-icon-cog animate-spin"></i> -->
+			</div>
 
 			<nav class="gmw-admin-page-navigation"></nav>
 
