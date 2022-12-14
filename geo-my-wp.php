@@ -121,7 +121,7 @@ class GEO_MY_WP {
 		'premium_settings'                 => '2.999',
 		'users_locator'                    => '1.999',
 		'wp_users_geo-location'            => '1.999', // old slug.
-		'radius_per_location'              => '1.1999',
+		'radius_per_location'              => '1.999',
 		'ip_address_locator'               => '1.0.9',
 		'gmw_multiple_locations'           => '1.9999',
 		'gmw_peepso_geolocation'           => '0.999',
@@ -334,7 +334,7 @@ class GEO_MY_WP {
 	 */
 	public function install() {
 
-		include 'includes/class-gmw-installer.php';
+		require_once 'includes/class-gmw-installer.php';
 
 		GMW_Installer::init();
 
@@ -349,7 +349,7 @@ class GEO_MY_WP {
 		// check if version changed.
 		if ( version_compare( GMW_VERSION, get_option( 'gmw_version' ), '>' ) ) {
 
-			include 'includes/class-gmw-installer.php';
+			require_once 'includes/class-gmw-installer.php';
 
 			GMW_Installer::init();
 
@@ -423,37 +423,37 @@ class GEO_MY_WP {
 	public function includes() {
 
 		// include files.
-		include 'includes/class-gmw-cache-helper.php';
-		include 'includes/class-gmw-helper.php';
-		include 'includes/class-gmw-forms-helper.php';
-		include 'includes/gmw-functions.php';
-		include 'includes/class-gmw-addon.php';
-		include 'includes/class-gmw-location-meta.php';
-		include 'includes/class-gmw-location.php';
-		include 'includes/gmw-location-functions.php';
-		include 'includes/gmw-user-location-functions.php';
-		include 'includes/class-gmw-maps-api.php';
-		include 'includes/gmw-deprecated-functions.php';
-		include 'includes/class-gmw-cron.php';
-		include 'includes/gmw-enqueue-scripts.php';
-		include 'includes/location-form/includes/class-gmw-location-form.php';
-		include 'includes/template-functions/class-gmw-search-form-helper.php';
-		include 'includes/template-functions/class-gmw-template-functions-helper.php';
-		include 'includes/template-functions/gmw-template-functions.php';
-		include 'includes/template-functions/gmw-search-form-template-functions.php';
-		include 'includes/template-functions/gmw-search-results-template-functions.php';
-		include 'includes/class-gmw-form-core.php';
-		include 'includes/class-gmw-form.php';
-		include 'includes/gmw-shortcodes.php';
-		include_once 'includes/class-gmw-geocoder.php';
-		include_once 'includes/gmw-geocoding-providers.php';
+		require_once 'includes/class-gmw-cache-helper.php';
+		require_once 'includes/class-gmw-helper.php';
+		require_once 'includes/class-gmw-forms-helper.php';
+		require_once 'includes/gmw-functions.php';
+		require_once 'includes/class-gmw-addon.php';
+		require_once 'includes/class-gmw-location-meta.php';
+		require_once 'includes/class-gmw-location.php';
+		require_once 'includes/gmw-location-functions.php';
+		require_once 'includes/users-locator/gmw-user-location-functions.php';
+		require_once 'includes/class-gmw-maps-api.php';
+		require_once 'includes/gmw-deprecated-functions.php';
+		require_once 'includes/class-gmw-cron.php';
+		require_once 'includes/gmw-enqueue-scripts.php';
+		require_once 'includes/location-form/includes/class-gmw-location-form.php';
+		require_once 'includes/template-functions/class-gmw-search-form-helper.php';
+		require_once 'includes/template-functions/class-gmw-template-functions-helper.php';
+		require_once 'includes/template-functions/gmw-template-functions.php';
+		require_once 'includes/template-functions/gmw-search-form-template-functions.php';
+		require_once 'includes/template-functions/gmw-search-results-template-functions.php';
+		require_once 'includes/class-gmw-form-core.php';
+		require_once 'includes/class-gmw-form.php';
+		require_once 'includes/gmw-shortcodes.php';
+		require_once 'includes/class-gmw-geocoder.php';
+		require_once 'includes/gmw-geocoding-providers.php';
 
 		// load core add-ons.
 		self::$instance->load_core_addons();
 
 		// include admin files.
 		if ( IS_ADMIN ) {
-			include GMW_PATH . '/includes/admin/class-gmw-admin.php';
+			require_once GMW_PATH . '/includes/admin/class-gmw-admin.php';
 		}
 	}
 
@@ -476,9 +476,8 @@ class GEO_MY_WP {
 	 * Loads widgets.
 	 */
 	public function widgets_init() {
-
-		include 'includes/class-gmw-widget.php';
-		include 'includes/widgets/class-gmw-search-form-widget.php';
+		require_once 'includes/class-gmw-widget.php';
+		require_once 'includes/widgets/class-gmw-search-form-widget.php';
 	}
 
 	/**
@@ -496,11 +495,11 @@ class GEO_MY_WP {
 	 * Include core add-ons.
 	 */
 	private function load_core_addons() {
-		include GMW_PLUGINS_PATH . '/single-location/loader.php';
-		include GMW_PLUGINS_PATH . '/posts-locator/loader.php';
-		include GMW_PLUGINS_PATH . '/members-locator/loader.php';
-		include GMW_PLUGINS_PATH . '/bp-profile-search-geolocation/loader.php';
-		include GMW_PLUGINS_PATH . '/current-location/loader.php';
+		require_once GMW_PLUGINS_PATH . '/single-location/loader.php';
+		require_once GMW_PLUGINS_PATH . '/posts-locator/loader.php';
+		require_once GMW_PLUGINS_PATH . '/members-locator/loader.php';
+		require_once GMW_PLUGINS_PATH . '/bp-profile-search-geolocation/loader.php';
+		require_once GMW_PLUGINS_PATH . '/current-location/loader.php';
 		//include GMW_PLUGINS_PATH . '/sweetdate-geolocation/loader.php';
 	}
 
