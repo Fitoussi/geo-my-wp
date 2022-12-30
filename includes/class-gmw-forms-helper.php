@@ -81,8 +81,8 @@ class GMW_Forms_Helper {
 				'orderby'         => 'distance',
 			),
 			'search_form'       => array(
-				'form_template'    => 'responsive-1',
-				'filters_modal'    => array(
+				'form_template'  => 'responsive-1',
+				'filters_modal'  => array(
 					'enabled'      => 0,
 					'toggle_label' => __( 'Filter', 'geo-my-wp' ),
 					'modal_title'  => __( 'More Filters', 'geo-my-wp' ),
@@ -173,33 +173,33 @@ class GMW_Forms_Helper {
 				'styles'             => '',
 				'snazzy_maps_styles' => '',
 			),
-			'info_window'    => array(
+			'info_window'       => array(
 				'iw_type'         => 'standard',
 				'ajax_enabled'    => 1,
 				'template'        => array(
 					'popup' => 'slide-left',
 				),
-				'address'          => array(
+				'address'         => array(
 					'enabled' => 1,
 					'fields'  => array(),
 					'linked'  => 1,
 				),
-				'image'            => array(
+				'image'           => array(
 					'enabled'      => 1,
 					'width'        => '120px',
 					'height'       => 'auto',
 					'no_image_url' => GMW_IMAGES . '/no-image.jpg',
 				),
-				'excerpt'          => array(
+				'excerpt'         => array(
 					'usage' => 'disabled',
 					'count' => '10',
 					'link'  => 'read more...',
 				),
-				'location_meta'    => array(),
-				'opening_hour'     => '',
-				'directions_link'  => 1,
-				'distance'         => 1,
-				'styles'           => array(
+				'location_meta'   => array(),
+				'opening_hour'    => '',
+				'directions_link' => 1,
+				'distance'        => 1,
+				'styles'          => array(
 					'enhanced_fields'    => 1,
 					'custom_css'         => '',
 					'disable_stylesheet' => '',
@@ -248,7 +248,8 @@ class GMW_Forms_Helper {
 			foreach ( $forms as $form ) {
 
 				// if happened that form has no data we need to apply the defaults.
-				/*if ( empty( $form['data'] ) ) {
+				/*
+				if ( empty( $form['data'] ) ) {
 					$form['data'] = maybe_serialize( self::default_settings( $form ) );
 				}*/
 
@@ -270,6 +271,654 @@ class GMW_Forms_Helper {
 		}
 
 		return ! empty( $forms ) ? $forms : array();
+	}
+
+	/**
+	 * Transfer forms data from GMW v3.x to v4.0.
+	 *
+	 * @since 4.0.
+	 *
+	 * @param  [type] $form [description].
+	 *
+	 * @return [type]       [description]
+	 */
+	public static function gmw_v4_form_data_importer( $form ) {
+
+		/********** ---- Search Form ---- **********/
+
+		if ( ! isset( $form['search_form']['filters_modal'] ) ) {
+
+			$form['search_form']['filters_modal'] = array(
+				'enabled'      => '',
+				'toggle_label' => 'Filters',
+				'modal_title'  => 'More Filters',
+			);
+		}
+
+		$form['search_form']['address_field']['required'] = 0;
+		$form['search_form']['address_field']['usage']    = 'single';
+
+		/***** Locator Button *****/
+
+		$form['search_form']['locator_button']            = array(
+			'usage'          => ! empty( $form['search_form']['locator'] ) ? $form['search_form']['locator'] : 'disabled',
+			'text'           => ! empty( $form['search_form']['locator_text'] ) ? $form['search_form']['locator_text'] : 'Get my current location',
+			'image'          => ! empty( $form['search_form']['locator_image'] ) ? $form['search_form']['locator_image'] : 'blue-dot.png',
+			'url'            => GMW_IMAGES . '/locator-images/locate-me-blue.png',
+			'locator_submit' => ! empty( $form['search_form']['locator_submit'] ) ? $form['search_form']['locator_submit'] : 0,
+		);
+
+		unset(
+			$form['search_form']['locator'],
+			$form['search_form']['locator_text'],
+			$form['search_form']['locator_image'],
+			$form['search_form']['locator_submit']
+		);
+
+		/***** Radius *****/
+
+		if ( ! empty( $form['search_form']['radius_slider']['enabled'] ) ) {
+
+			$form['search_form']['radius'] = array(
+				'usage'            => 'slider',
+				'label'            => 'Radius',
+				'show_options_all' => 'Miles',
+				'options'          => "5\n10\n25\n50\n100",
+				'default_value'    => ! empty( $form['search_form']['radius_slider']['default_value'] ) ? $form['search_form']['radius_slider']['default_value'] : '50',
+				'required'         => 0,
+				'min_value'        => ! empty( $form['search_form']['radius_slider']['min_value'] ) ? $form['search_form']['radius_slider']['min_value'] : '0',
+				'max_value'        => ! empty( $form['search_form']['radius_slider']['max_value'] ) ? $form['search_form']['radius_slider']['max_value'] : '200',
+				'prefix'           => '',
+				'suffix'           => '',
+			);
+
+			unset( $form['search_form']['radius_slider'] );
+
+		} else {
+
+			if ( strpos( $form['search_form']['radius'], ',' ) !== false ) {
+
+				$usage   = 'select';
+				$default = '50';
+				$options = str_replace( ",", "\n", $form['search_form']['radius'] );
+
+			} else {
+
+				$usage   = 'default';
+				$default = $form['search_form']['radius'];
+				$options = "5\n10\n25\n50\n100";
+			}
+
+			$form['search_form']['radius'] = array(
+				'usage'            => $usage,
+				'label'            => 'Radius',
+				'show_options_all' => 'Miles',
+				'options'          => $options,
+				'default_value'    => $default,
+				'required'         => 0,
+				'min_value'        => '0',
+				'max_value'        => '200',
+				'prefix'           => '',
+				'suffix'           => '',
+			);
+		}
+
+		$form['search_form']['units'] = array(
+			'options' => ! empty( $form['search_form']['units'] ) ? $form['search_form']['units'] : 'both',
+			'label'   => 'Units',
+		);
+
+		$form['search_form']['submit_button'] = array(
+			'label' => 'Search',
+		);
+
+		$form['search_form']['styles'] = array(
+			'disable_core_styles' => '',
+			'custom_css'          => '',
+		);
+
+		if ( isset( $form['search_form']['keywords'] ) ) {
+			$form['search_form']['keywords']['required'] = '';
+		}
+
+		$form['search_form']['reset_button'] = array(
+			'enabled' => '',
+			'label'   => 'Reset',
+		);
+
+		/***** post types *****/
+
+		if ( ! empty( $form['search_form']['post_types_settings'] ) ) {
+
+			$form['search_form']['post_types_settings']['required'] = 0;
+			$form['search_form']['post_types_settings']['smartbox'] = 0;
+
+			if ( 'dropdown' === $form['search_form']['post_types_settings']['usage'] ) {
+
+				$form['search_form']['post_types_settings']['usage'] = 'select';
+
+			} elseif ( 'smartbox' === $form['search_form']['post_types_settings']['usage'] ) {
+
+				$form['search_form']['post_types_settings']['usage']    = 'select';
+				$form['search_form']['post_types_settings']['smartbox'] = 1;
+
+			} elseif ( 'smartbox_multiple' === $form['search_form']['post_types_settings']['usage'] ) {
+
+				$form['search_form']['post_types_settings']['usage']    = 'multiselect';
+				$form['search_form']['post_types_settings']['smartbox'] = 1;
+
+			} elseif ( 'checkbox' === $form['search_form']['post_types_settings']['usage'] ) {
+
+				$form['search_form']['post_types_settings']['usage'] = 'checkboxes';
+			}
+		}
+
+		if ( ! empty( $form['search_form']['custom_fields'] ) ) {
+
+			foreach ( $form['search_form']['custom_fields'] as $cf_name => $cf_value ) {
+
+				$usage        = 'text';
+				$compare      = '=';
+				$date_compare = '=';
+				$date_format  = 'm/d/Y';
+
+				if ( 'NUMERIC' === $cf_value['type'] ) {
+
+					$usage   = 'number';
+					$compare = $cf_value['compare'];
+
+				} elseif ( 'DATE' === $cf_value['type'] ) {
+
+					$usage        = 'date';
+					$date_compare = $cf_value['compare'];
+					$date_format  = $cf_value['date_type'];
+
+				} elseif ( 'TIME' === $cf_value['type'] ) {
+
+					$usage        = 'time';
+					$compare      = $cf_value['compare'];
+					$date_compare = $cf_value['compare'];
+				}
+
+				$form['search_form']['custom_fields'][ $cf_name ] = array(
+                    'name'                    => $cf_name,
+					'usage'                   => $usage,
+					'options'                 => array(),
+					'second_options'          => array(),
+					'date_format'             => $date_format,
+					'time_format'             => 'h:iK',
+					'compare'                 => $compare,
+					'date_compare'            => $date_compare,
+					'slider_compare'          => '=',
+					'label'                   => ! empty( $cf_value['label'][0] ) ? $cf_value['label'][0] : '',
+					'second_label'            => ! empty( $cf_value['label'][1] ) ? $cf_value['label'][1] : '',
+					'placeholder'             => ! empty( $cf_value['placeholder'][0] ) ? $cf_value['placeholder'][0] : '',
+					'second_placeholder'      => ! empty( $cf_value['placeholder'][1] ) ? $cf_value['placeholder'][1] : '',
+					'show_options_all'        => '',
+					'second_show_options_all' => '',
+					'min_value'               => 0,
+					'max_value'               => 100,
+					'value'                   => '',
+					'second_value'            => '',
+					'value_prefix'            => '',
+					'value_suffix'            => '',
+					'step'                    => 1,
+                );
+			}
+
+			if ( ! empty( $form['search_form']['taxonomies'] ) ) {
+
+				$new_taxonomies = array();
+				$all_post_types = get_post_types();
+
+				if ( 'posts_locator_global_map' === $form['slug'] ) {
+
+					if ( isset( $form['search_form']['taxonomies']['include_exclude_terms']['usage'] ) && ! empty( $form['search_form']['taxonomies']['include_exclude_terms']['terms_id'] ) ) {
+
+						$terms_usage = $form['search_form']['taxonomies']['include_exclude_terms']['usage'];
+
+						foreach( $form['search_form']['taxonomies']['include_exclude_terms']['terms_id'] as $term_tax_id ) {
+
+							$term = get_term_by( 'term_taxonomy_id', $term_tax_id );
+
+							if ( empty( $term ) || is_wp_error( $term ) ) {
+								continue;
+							}
+
+							if ( ! isset( $form['search_form']['taxonomies']['include_exclude_terms'][ $term->taxonomy ] ) ) {
+
+								$form['search_form']['taxonomies']['include_exclude_terms'][ $term->taxonomy ] = array(
+									'post_types' => array(),
+									'include'    => array(),
+									'exclude'    => array(),
+								);
+							}
+
+							$form['search_form']['taxonomies']['include_exclude_terms'][ $term->taxonomy ][ $terms_usage ][] = $term->term_id;
+						}
+
+						unset(
+							$form['search_form']['taxonomies']['include_exclude_terms']['usage'],
+							$form['search_form']['taxonomies']['include_exclude_terms']['terms_id']
+						);
+					}
+
+					if ( isset( $form['page_load_results']['include_exclude_terms']['usage'] ) && ! empty( $form['page_load_results']['include_exclude_terms']['terms_id'] ) ) {
+
+						$terms_usage = $form['page_load_results']['include_exclude_terms']['usage'];
+
+						foreach( $form['page_load_results']['include_exclude_terms']['terms_id'] as $term_tax_id ) {
+
+							$term = get_term_by( 'term_taxonomy_id', $term_tax_id );
+	
+							if ( empty( $term ) || is_wp_error( $term ) ) {
+								continue;
+							}
+
+							if ( ! isset( $form['page_load_results']['include_exclude_terms'][ $term->taxonomy ] ) ) {
+
+								$form['page_load_results']['include_exclude_terms'][ $term->taxonomy ] = array(
+									'post_types' => array(),
+									'include'    => array(),
+									'exclude'    => array(),
+								);
+							}
+
+							$form['page_load_results']['include_exclude_terms'][ $term->taxonomy ][ $terms_usage ][] = $term->term_id;
+						}
+
+						unset(
+							$form['page_load_results']['include_exclude_terms']['usage'],
+							$form['page_load_results']['include_exclude_terms']['terms_id']
+						);
+					}
+				}
+
+				$inc_exc_terms = isset( $form['search_form']['taxonomies']['include_exclude_terms'] ) ? $form['search_form']['taxonomies']['include_exclude_terms'] : array();
+
+				foreach ( $form['search_form']['taxonomies'] as $pt_slug => $pt_options ) {
+
+					if ( 'include_exclude_terms' === $pt_slug ) {
+
+						//$inc_exc_terms = $form['search_form']['taxonomies']['include_exclude_terms'];
+
+						continue;
+					}
+
+					foreach ( $pt_options as $tax_name => $tax_options ) {
+
+						if ( empty( $tax_options['style'] ) ) {
+							continue;
+						}
+
+						$taxonomy = get_taxonomy( $tax_name );
+
+						$new_taxonomies[ $tax_name ] = $tax_options;
+						$pt_added                    = false;
+
+						// Abort if taxonomies was not found.
+						if ( ! empty( $taxonomy ) && is_object( $taxonomy ) ) {
+							
+							$post_types = $taxonomy->object_type;
+
+							if ( 0 !== count( array_intersect( $post_types, $all_post_types ) ) ) {
+
+								$new_taxonomies[ $tax_name ]['post_types'] = $post_types;
+
+								if ( ! empty( $inc_exc_terms[ $tax_name ] ) ) {
+									$inc_exc_terms[ $tax_name ]['post_types'] = $post_types;
+								}
+
+								if ( ! empty( $form['page_load_results']['include_exclude_terms'][ $tax_name ] ) ) {
+									$form['page_load_results']['include_exclude_terms'][ $tax_name ]['post_types'] = $post_types;
+								}
+
+								$pt_added = true;
+							}
+						}
+
+						if ( ! $pt_added ) {
+
+							$new_taxonomies[ $tax_name ]['post_types'] = array( $pt_slug );
+
+							if ( ! empty( $inc_exc_terms[ $tax_name ] ) ) {
+								$inc_exc_terms[ $tax_name ]['post_types'] = array( $pt_slug );
+							}
+
+							if ( ! empty( $form['page_load_results']['include_exclude_terms'][ $tax_name ] ) ) {
+								$form['page_load_results']['include_exclude_terms'][ $tax_name ]['post_types'] = array( $pt_slug );
+							}
+						}
+
+						// skip If post type of the taxonomy does not exists.
+						/*if ( 0 === count( array_intersect( $post_types, $all_post_types ) ) ) {
+							continue;
+						}
+						*/
+
+
+						if ( 'dropdown' === $tax_options['style'] ) {
+
+							$new_taxonomies[ $tax_name ]['style'] = 'select';
+
+						} elseif ( 'smartbox' === $tax_options['style'] ) {
+
+							$new_taxonomies[ $tax_name ]['style']    = 'select';
+							$new_taxonomies[ $tax_name ]['smartbox'] = 1;
+
+						} elseif ( 'smartbox_multiple' === $tax_options['style'] ) {
+
+							$new_taxonomies[ $tax_name ]['style']    = 'multiselect';
+							$new_taxonomies[ $tax_name ]['smartbox'] = 1;
+
+						} elseif ( 'checkbox' === $tax_options['style'] ) {
+
+							$new_taxonomies[ $tax_name ]['style'] = 'checkboxes';
+						}
+					}
+				}
+
+				$form['search_form']['taxonomies']            = $new_taxonomies;
+				$form['search_form']['include_exclude_terms'] = $inc_exc_terms;
+
+				/*if ( 'posts_locator_global_map' === $form['slug'] && isset( $form['search_form']['include_exclude_terms']['usage'] ) && ! empty( $form['search_form']['include_exclude_terms']['terms_id'] ) ) {
+
+					foreach( $form['search_form']['include_exclude_terms']['terms_id'] as $term_id ) {
+
+						echo '<Pre>';
+						print_r(get_term( 1 ) );
+							df();
+					}
+				} */
+				/*echo '<pre>';
+				print_r($form['search_form']['include_exclude_terms']);
+				df();*/
+			}
+		}
+
+		/********** ----- Search Results ----- **********/
+
+		$form['search_results']['results_view'] = array(
+			'default' => 'grid',
+			'toggle'  => 1,
+		);
+
+		if ( isset( $form['search_results']['image'] ) && is_array( $form['search_results']['image'] ) ) {
+
+			 $form['search_results']['image']['no_image_url'] = GMW_IMAGES . '/no-image.jpg';
+
+		} else {
+
+			$form['search_results']['image'] = array(
+				'enabled'      => 0,
+				'width'        => '120px',
+				'height'       => 'auto',
+				'no_image_url' => GMW_IMAGES . '/no-image.jpg',
+			);
+		}
+
+		$form['search_results']['address'] = array(
+			'enabled' => 1,
+			'linked'  => 1,
+			'fields'  => array(),
+		);
+
+		if ( isset( $form['search_results']['address_fields'] ) ) {
+
+			$form['search_results']['address']['fields'] = $form['search_results']['address_fields'];
+
+			unset( $form['search_results']['address_fields'] );
+		}
+
+		$form['search_results']['orderby'] = array(
+			'enabled' => ! empty( $form['search_results']['orderby'] ) ? 1 : 0,
+			'options' => ! empty( $form['search_results']['orderby'] ) ? str_replace( array( ':', ',' ), array( ' : ', "\n" ), $form['search_results']['orderby'] ) : '',
+		);
+
+		$form['search_results']['distance'] = 1;
+
+		/********** No results **********/
+
+		if ( ! empty( $form['no_results']['message'] ) ) {
+
+			$form['no_results']['message'] = array(
+				'wider_search_radius'    => ! empty( $form['no_results']['wider_search']['radius'] ) ? $form['no_results']['wider_search']['radius'] : 200,
+				'wider_search_link_text' => ! empty( $form['no_results']['wider_search']['link_text'] ) ? $form['no_results']['wider_search']['link_text'] : 'click here',
+				'all_results_link_text'  => ! empty( $form['no_results']['all_results_link'] ) ? $form['no_results']['all_results_link'] : 'click here',
+				'message'                => $form['no_results']['message'],
+			);
+
+			unset( $form['no_results']['wider_search'], $form['no_results']['all_results_link'] );
+		}
+
+		/***** Post types */
+		if ( isset( $form['search_results']['excerpt']['enabled'] ) ) {
+
+			$form['search_results']['excerpt'] = array(
+				'usage' => ! empty( $form['search_results']['excerpt']['enabled'] ) ? $form['search_results']['excerpt']['usage'] : 'disabled',
+				'count' => ! empty( $form['search_results']['excerpt']['count'] ) ? $form['search_results']['excerpt']['count'] : 20,
+				'link'  => ! empty( $form['search_results']['excerpt']['link'] ) ? $form['search_results']['excerpt']['link'] : '',
+			);
+		}
+
+		/***** Info - window *****/
+
+		if ( isset( $form['info_window'] ) ) {
+
+			$form['info_window']['address'] = array(
+				'enabled' => 1,
+				'linked'  => 1,
+				'fields'  => array(),
+			);
+
+			if ( isset( $form['info_window']['address_fields'] ) ) {
+
+				$form['info_window']['address']['fields'] = $form['info_window']['address_fields'];
+
+				unset( $form['info_window']['address_fields'] );
+			}
+
+			if ( isset( $form['info_window']['image'] ) ) {
+				$form['info_window']['image']['no_image_url'] = GMW_IMAGES . '/no-image.jpg';
+			}
+
+			$form['info_window']['styles'] = array(
+				'disable_core_styles' => '',
+				'custom_css'          => '',
+			);
+
+			/***** Post types ****/
+			if ( isset( $form['info_window']['excerpt']['enabled'] ) ) {
+
+				$form['info_window']['excerpt'] = array(
+					'usage' => ! empty( $form['info_window']['excerpt']['enabled'] ) ? $form['info_window']['excerpt']['usage'] : 'disabled',
+					'count' => ! empty( $form['info_window']['excerpt']['count'] ) ? $form['info_window']['excerpt']['count'] : 20,
+					'link'  => ! empty( $form['info_window']['excerpt']['link'] ) ? $form['info_window']['excerpt']['link'] : '',
+				);
+			}
+		}
+
+		/********** Memebrs Locator forms **********/
+
+		if ( 'members_locator' === $form['component'] ) {
+
+			if ( ! empty( $form['page_load_results']['include_exclude_member_types'] ) ) {
+
+				$mtypes = $form['page_load_results']['include_exclude_member_types'];
+
+				if ( isset( $mtypes['member_types'] ) && is_array( $mtypes['member_types'] ) ) {
+
+					$form['page_load_results']['include_exclude_member_types']['options'] = $mtypes['member_types'];
+
+					unset( $form['page_load_results']['include_exclude_member_types']['member_types'] );
+				}
+
+				$form['page_load_results']['member_types_filter'] = $form['page_load_results']['include_exclude_member_types'];
+
+				unset( $form['page_load_results']['include_exclude_member_types'] );
+			}
+
+			if ( ! empty( $form['search_form']['member_types_filter'] ) ) {
+
+				if ( isset( $form['search_form']['member_types_filter']['member_types'] ) ) {
+
+					$form['search_form']['member_types_filter']['options'] = $form['search_form']['member_types_filter']['member_types'];
+
+					unset( $form['search_form']['member_types_filter']['member_types'] );
+				}
+
+				$form['search_form']['member_types_filter']['required'] = 0;
+				$form['search_form']['member_types_filter']['smartbox'] = 0;
+
+				if ( 'dropdown' === $form['search_form']['member_types_filter']['usage'] ) {
+
+					$form['search_form']['member_types_filter']['usage'] = 'select';
+
+				} elseif ( 'smartbox' === $form['search_form']['member_types_filter']['usage'] ) {
+
+					$form['search_form']['member_types_filter']['usage']    = 'select';
+					$form['search_form']['member_types_filter']['smartbox'] = 1;
+
+				} elseif ( 'smartbox_multiple' === $form['search_form']['member_types_filter']['usage'] ) {
+
+					$form['search_form']['member_types_filter']['usage']    = 'multiselect';
+					$form['search_form']['member_types_filter']['smartbox'] = 1;
+
+				} elseif ( 'checkbox' === $form['search_form']['member_types_filter']['usage'] ) {
+
+					$form['search_form']['member_types_filter']['usage'] = 'checkboxes';
+				}
+			}
+
+			if ( ! empty( $form['search_form']['bp_groups'] ) ) {
+
+				if ( isset( $form['search_form']['bp_groups']['groups'] ) ) {
+
+					$form['search_form']['bp_groups']['options'] = $form['search_form']['bp_groups']['groups'];
+
+					unset( $form['search_form']['bp_groups']['groups'] );
+				}
+
+				$form['search_form']['bp_groups']['required'] = 0;
+				$form['search_form']['bp_groups']['smartbox'] = 0;
+
+				if ( 'dropdown' === $form['search_form']['bp_groups']['usage'] ) {
+
+					$form['search_form']['bp_groups']['usage'] = 'select';
+
+				} elseif ( 'smartbox' === $form['search_form']['bp_groups']['usage'] ) {
+
+					$form['search_form']['bp_groups']['usage']    = 'select';
+					$form['search_form']['bp_groups']['smartbox'] = 1;
+
+				} elseif ( 'smartbox_multiple' === $form['search_form']['bp_groups']['usage'] ) {
+
+					$form['search_form']['bp_groups']['usage']    = 'multiselect';
+					$form['search_form']['bp_groups']['smartbox'] = 1;
+
+				} elseif ( 'checkbox' === $form['search_form']['bp_groups']['usage'] ) {
+
+					$form['search_form']['bp_groups']['usage'] = 'checkboxes';
+				}
+			}
+		}
+
+		/********** Groups Locator forms **********/
+
+		if ( 'bp_groups_locator' === $form['component'] ) {
+
+			if ( ! empty( $form['page_load_results']['include_exclude_group_types'] ) ) {
+
+				$mtypes = $form['page_load_results']['include_exclude_group_types'];
+
+				if ( isset( $mtypes['group_types'] ) && is_array( $mtypes['group_types'] ) ) {
+
+					$form['page_load_results']['include_exclude_group_types']['options'] = array_values( $mtypes['group_types'] );
+
+					unset( $form['page_load_results']['include_exclude_group_types']['group_types'] );
+				}
+
+				$form['page_load_results']['group_types_filter'] = $form['page_load_results']['include_exclude_group_types'];
+
+				unset( $form['page_load_results']['include_exclude_group_types'] );
+			}
+
+			if ( ! empty( $form['search_form']['group_types_filter'] ) ) {
+
+				if ( isset( $form['search_form']['group_types_filter']['group_types'] ) ) {
+
+					$form['search_form']['group_types_filter']['options'] = $form['search_form']['group_types_filter']['group_types'];
+
+					unset( $form['search_form']['group_types_filter']['group_types'] );
+				}
+
+				$form['search_form']['group_types_filter']['required'] = 0;
+				$form['search_form']['group_types_filter']['smartbox'] = 0;
+
+				if ( 'dropdown' === $form['search_form']['group_types_filter']['usage'] ) {
+
+					$form['search_form']['group_types_filter']['usage'] = 'select';
+
+				} elseif ( 'smartbox' === $form['search_form']['group_types_filter']['usage'] ) {
+
+					$form['search_form']['group_types_filter']['usage']    = 'select';
+					$form['search_form']['group_types_filter']['smartbox'] = 1;
+
+				} elseif ( 'smartbox_multiple' === $form['search_form']['group_types_filter']['usage'] ) {
+
+					$form['search_form']['group_types_filter']['usage']    = 'multiselect';
+					$form['search_form']['group_types_filter']['smartbox'] = 1;
+
+				} elseif ( 'checkbox' === $form['search_form']['group_types_filter']['usage'] ) {
+
+					$form['search_form']['group_types_filter']['usage'] = 'checkboxes';
+				}
+			}
+		}
+
+		$form['general_settings'] = array(
+			'form_name'       => '',
+			'visible_options' => '',
+			'form_usage'      => '',
+		);
+
+		/********** AJAX Forms **********/
+
+		if ( 'ajax_forms' === $form['addon'] ) {
+			$form['general_settings']['legacy_style'] = 1;
+		}
+
+		/********** Update new form data in database **********/
+
+		$form_data = $form;
+
+		unset(
+			$form_data['ID'],
+			$form_data['slug'],
+			$form_data['addon'],
+			$form_data['component'],
+			$form_data['object_type'],
+			$form_data['name'],
+			$form_data['title'],
+			$form_data['prefix'],
+		);
+
+		global $wpdb;
+
+		$wpdb->update(
+
+			$wpdb->prefix . 'gmw_forms',
+			array(
+				'data'  => serialize( $form_data ),
+			),
+			array( 'ID' => $form['ID'] ),
+			array(
+				'%s',
+			),
+			array( '%d' )
+		); // DB call ok, cache ok.
+
+		return $form;
 	}
 
 	/**
@@ -322,6 +971,10 @@ class GMW_Forms_Helper {
 
 				wp_cache_delete( $form_id, 'gmw_forms' );
 			}
+		}
+
+		if ( ! isset( $form['general_settings'] ) ) {
+			$form = self::gmw_v4_form_data_importer( $form );
 		}
 
 		return ! empty( $form ) ? $form : false;
