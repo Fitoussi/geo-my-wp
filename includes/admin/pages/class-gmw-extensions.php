@@ -219,7 +219,7 @@ class GMW_Extensions {
 		$output  = '<a href="' . esc_url( $url ) . '"';
 		$output .= ' class="button button-primary gmw-extension-action-button activate"';
 		$output .= ' data-slug="' . esc_attr( $slug ) . '"';
-		$output .= ' data-is_parent="' . esc_attr( $extension_data['is_parent'] ) . '"';
+		//$output .= ' data-is_parent="' . esc_attr( $extension_data['is_parent'] ) . '"';
 		$output .= ' data-basename="' . esc_attr( $basename ) . '"';
 		$output .= ' data-action="activate_extension"';
 		$output .= ' data-nonce="' . $nonce . '"';
@@ -253,7 +253,7 @@ class GMW_Extensions {
 		$output  = '<a href="' . esc_url( $url ) . '"';
 		$output .= ' class="button button-secondary gmw-extension-action-button deactivate"';
 		$output .= ' data-slug="' . esc_attr( $slug ) . '"';
-		$output .= ' data-is_parent="' . esc_attr( $extension_data['is_parent'] ) . '"';
+		//$output .= ' data-is_parent="' . esc_attr( $extension_data['is_parent'] ) . '"';
 		$output .= ' data-basename="' . esc_attr( $basename ) . '"';
 		$output .= ' data-action="deactivate_extension"';
 		$output .= ' data-nonce="' . $nonce . '"';
@@ -880,7 +880,7 @@ class GMW_Extensions {
 		// rearrange extensions.
 		foreach ( $extensions_data as $key => $value ) {
 
-			if ( $value['hide_in_extensions'] ) {
+			if ( ! empty( $value['hide_in_extensions'] ) ) {
 
 				unset( $extensions_data[ $key ] );
 
