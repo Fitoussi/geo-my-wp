@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-include_once 'includes/class-gmw-buddypress-directory-geolocation.php';
+require_once 'includes/class-gmw-buddypress-directory-geolocation.php';
 
 function gmw_bpdg_register_scripts() {
 	wp_register_script( 'gmw-bpdg', GMW_PLUGINS_URL . '/buddypress-directory-geolocation/assets/js/gmw.bpdg.min.js', array( 'jquery', 'gmw' ), GMW_VERSION, true );

@@ -266,7 +266,7 @@ class GMW_Sweet_Date_Geolocation {
 		// if address entered
 		if ( ! empty( $this->form_data['address'] ) && ( empty( $this->form_data['lat'] ) || empty( $this->form_data['lng'] ) ) ) {
 
-			include_once( GMW_PATH . '/includes/gmw-geocoder.php' );
+			require_once GMW_PATH . '/includes/gmw-geocoder.php';
 
 			// geocode the address entered
 			$this->returned_address = gmw_geocoder( $this->form_data['address'] );

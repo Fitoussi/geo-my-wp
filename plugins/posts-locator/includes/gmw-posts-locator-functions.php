@@ -246,7 +246,7 @@ function gmw_post_location_form( $args = array() ) {
 		}
 	}
 
-	include_once 'class-gmw-post-location-form.php';
+	require_once 'class-gmw-post-location-form.php';
 
 	if ( ! class_exists( 'GMW_Post_Location_Form' ) ) {
 		return;

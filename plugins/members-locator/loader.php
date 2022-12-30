@@ -193,17 +193,17 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 		add_action( 'bp_init', array( $this, 'bp_init_functions' ) );
 
 		if ( IS_ADMIN ) {
-			include_once 'includes/admin/class-gmw-members-locator-form-editor.php';
+			require_once 'includes/admin/class-gmw-members-locator-form-editor.php';
 		}
 
-		include_once 'includes/gmw-members-locator-functions.php';
-		include_once 'includes/class-gmw-members-locator-location-tab.php';
-		include_once 'includes/gmw-members-locator-actions.php';
-		include_once 'includes/gmw-members-locator-activity.php';
-		include_once 'includes/gmw-members-locator-template-functions.php';
-		include_once 'includes/class-gmw-members-locator-form.php';
-		include_once 'includes/class-gmw-members-locator-mashup-map-form.php';
-		include_once 'includes/class-gmw-member-location-form.php';
+		require_once 'includes/gmw-members-locator-functions.php';
+		require_once 'includes/class-gmw-members-locator-location-tab.php';
+		require_once 'includes/gmw-members-locator-actions.php';
+		require_once 'includes/gmw-members-locator-activity.php';
+		require_once 'includes/gmw-members-locator-template-functions.php';
+		require_once 'includes/class-gmw-members-locator-form.php';
+		require_once 'includes/class-gmw-members-locator-mashup-map-form.php';
+		require_once 'includes/class-gmw-member-location-form.php';
 
 		// init the location tab.
 		add_action( 'bp_setup_nav', array( 'GMW_Members_Locator_Addon', 'init_location_tab' ), 20 );
@@ -229,7 +229,7 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 			}
 
 			if ( ! IS_ADMIN || defined( 'DOING_AJAX' ) ) {
-				include_once 'includes/class-gmw-single-bp-member-location.php';
+				require_once 'includes/class-gmw-single-bp-member-location.php';
 			}
 		}
 	}

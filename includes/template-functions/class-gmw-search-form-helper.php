@@ -779,7 +779,7 @@ class GMW_Search_Form_Helper {
 
 		// include GMW_Post_Category_Walker file.
 		if ( ! class_exists( 'GMW_Post_Category_Walker' ) ) {
-			include_once GMW_PT_PATH . '/includes/class-gmw-post-category-walker.php';
+			require_once GMW_PT_PATH . '/includes/class-gmw-post-category-walker.php';
 		}
 
 		// $wrap_element = apply_filters( 'gmw_search_form_enable_field_wrapping_element', false, 'taxonomy' );

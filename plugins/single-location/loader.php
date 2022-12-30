@@ -100,7 +100,7 @@ class GMW_Single_Location_Addon extends GMW_Addon {
 	 * Init widgets
 	 */
 	public function init_widgets() {
-		include_once 'includes/class-gmw-single-location-widget.php';
+		require_once 'includes/class-gmw-single-location-widget.php';
 	}
 
 	/**
@@ -112,8 +112,8 @@ class GMW_Single_Location_Addon extends GMW_Addon {
 
 		// include classes files.
 		if ( ! IS_ADMIN || defined( 'DOING_AJAX' ) ) {
-			include_once 'includes/class-gmw-single-location.php';
-			include_once 'includes/gmw-single-location-shortcode.php';
+			require_once 'includes/class-gmw-single-location.php';
+			require_once 'includes/gmw-single-location-shortcode.php';
 		}
 	}
 }

@@ -53,7 +53,7 @@ function gmw_member_location_form( $args = array() ) {
 		return;
 	}
 
-	include_once 'class-gmw-member-location-form.php';
+	require_once 'class-gmw-member-location-form.php';
 
 	if ( ! class_exists( 'GMW_Member_Location_Form' ) ) {
 		return;

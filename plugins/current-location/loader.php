@@ -100,7 +100,7 @@ class GMW_Current_Location_Addon extends GMW_Addon {
 	 * Load widget
 	 */
 	public function init_widgets() {
-		include_once 'includes/class-gmw-current-location-widget.php';
+		require_once 'includes/class-gmw-current-location-widget.php';
 	}
 
 	/**
@@ -111,8 +111,8 @@ class GMW_Current_Location_Addon extends GMW_Addon {
 		parent::pre_init();
 
 		if ( ! IS_ADMIN || defined( 'DOING_AJAX' ) ) {
-			include_once 'includes/class-gmw-current-location.php';
-			include_once 'includes/gmw-current-location-shortcode.php';
+			require_once 'includes/class-gmw-current-location.php';
+			require_once 'includes/gmw-current-location-shortcode.php';
 		}
 	}
 }

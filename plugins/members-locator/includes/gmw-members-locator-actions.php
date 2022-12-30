@@ -123,7 +123,7 @@ function gmw_after_member_location_updated( $user_location, $form_values ) {
 	// filter allows to disable activity update.
 	if ( ! apply_filters( 'gmw_fl_disable_location_activity_update', false ) ) {
 
-		include_once 'gmw-members-locator-activity.php';
+		require_once 'gmw-members-locator-activity.php';
 
 		// update activity.
 		if ( function_exists( 'gmw_record_member_location_activity' ) ) {

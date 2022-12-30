@@ -160,10 +160,10 @@ class GMW_BP_Profile_Search_Geolocation_Addon extends GMW_Addon {
 
 		// include in admin only.
 		if ( IS_ADMIN && ! defined( 'DOING_AJAX' ) ) {
-			include_once 'includes/admin/class-gmw-bp-profile-search-geolocation-admin.php';
+			require_once 'includes/admin/class-gmw-bp-profile-search-geolocation-admin.php';
 		}
 
-		include_once 'includes/class-gmw-bp-profile-search-geolocation.php';
+		require_once 'includes/class-gmw-bp-profile-search-geolocation.php';
 	}
 
 	/**

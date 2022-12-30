@@ -181,24 +181,24 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 
 		parent::pre_init();
 
-		include 'includes/gmw-posts-locator-functions.php';
-		include 'includes/gmw-posts-locator-shortcodes.php';
+		require_once 'includes/gmw-posts-locator-functions.php';
+		require_once 'includes/gmw-posts-locator-shortcodes.php';
 
 		// include admin files.
 		if ( IS_ADMIN ) {
 
-			include_once 'includes/admin/class-gmw-posts-locator-form-editor.php';
-			include_once 'includes/admin/class-gmw-posts-locator-admin-settings.php';
-			include_once 'includes/admin/class-gmw-posts-locator-screens.php';
+			require_once 'includes/admin/class-gmw-posts-locator-form-editor.php';
+			require_once 'includes/admin/class-gmw-posts-locator-admin-settings.php';
+			require_once 'includes/admin/class-gmw-posts-locator-screens.php';
 		}
 
 		// include template functions.
-		include_once 'includes/gmw-posts-locator-search-form-template-functions.php';
-		include_once 'includes/gmw-posts-locator-search-results-template-functions.php';
-		include_once 'includes/class-gmw-wp-query.php';
-		include_once 'includes/class-gmw-posts-locator-form.php';
-		include_once 'includes/class-gmw-posts-locator-mashup-map-form.php';
-		include_once 'includes/class-gmw-post-location-form.php';
+		require_once 'includes/gmw-posts-locator-search-form-template-functions.php';
+		require_once 'includes/gmw-posts-locator-search-results-template-functions.php';
+		require_once 'includes/class-gmw-wp-query.php';
+		require_once 'includes/class-gmw-posts-locator-form.php';
+		require_once 'includes/class-gmw-posts-locator-mashup-map-form.php';
+		require_once 'includes/class-gmw-post-location-form.php';
 
 		// load single location post.
 		if ( gmw_is_addon_active( 'single_location' ) ) {
@@ -223,7 +223,7 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 			}
 
 			if ( ! IS_ADMIN || defined( 'DOING_AJAX' ) ) {
-				include_once 'includes/class-gmw-single-post-location.php';
+				require_once 'includes/class-gmw-single-post-location.php';
 			}
 		}
 	}
