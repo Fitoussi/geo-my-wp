@@ -741,7 +741,7 @@ class GMW_Location_Form {
 				'fields' => array(
 					'submit_location'  => array(
 						'name'        => 'submit_location',
-						'label'       => __( 'Update location', 'geo-my-wp' ),
+						'label'       => __( 'Save location', 'geo-my-wp' ),
 						'type'        => 'submit',
 						'default'     => '',
 						'id'          => 'gmw-lf-submit-location',
