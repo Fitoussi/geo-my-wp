@@ -40,7 +40,7 @@ class GMW_Form_Editor {
 	public function __construct() {
 
 		add_action( 'wp_ajax_gmw_get_field_options', array( 'GMW_Form_Settings_Helper', 'get_field_options_ajax' ) );
-		
+
 		// custom functions.
 		add_action( 'gmw_form_settings_info_window_template', array( 'GMW_Form_Editor', 'info_window_template' ), 10, 4 );
 		add_filter( 'gmw_validate_form_settings_info_window_template', array( 'GMW_Form_Editor', 'validate_info_window_template' ), 10, 4 );
@@ -73,7 +73,7 @@ class GMW_Form_Editor {
 		}
 
 		// make sure form ID passed.
-		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) { // WPCS: CSRF ok.
+		/*if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) { // WPCS: CSRF ok.
 			wp_die( esc_attr__( 'Form ID is missing.', 'geo-my-wp' ) );
 		}
 
@@ -81,6 +81,11 @@ class GMW_Form_Editor {
 
 		// get form data.
 		$this->form = GMW_Forms_Helper::get_form( $form_id );
+
+		// varify if the form exists.
+		if ( empty( $this->form ) ) {
+			wp_die( esc_html__( 'The form that you are trying to edit doe\'s not exist!', 'geo-my-wp' ) );
+		}
 
 		if ( empty( $this->form['addon'] ) || ! gmw_is_addon_active( $this->form['addon'] ) ) {
 
@@ -97,12 +102,7 @@ class GMW_Form_Editor {
 			);
 
 			wp_die( $link ); // WPCS: XSS ok.
-		}
-
-		// varify if the form exists.
-		if ( empty( $this->form ) ) {
-			wp_die( esc_html__( 'The form that you are trying to edit doe\'s not exist!', 'geo-my-wp' ) );
-		}
+		}*/
 
 		add_action( 'gmw_form_settings_form_name', array( $this, 'form_name_setting' ), 10, 3 );
 		add_action( 'gmw_form_settings_form_usage', array( $this, 'form_usage' ), 10, 3 );
@@ -669,6 +669,7 @@ class GMW_Form_Editor {
 							'type'       => 'select',
 							'default'    => '',
 							'label'      => __( 'Search Form Template', 'geo-my-wp' ),
+							/* translators: %s: deprecation message. */
 							'desc'       => sprintf( __( 'Select the search form template file that you would like to use. You can also disable the search form if you wish to display the map or list of results only.<br />%s', 'geo-my-wp' ), $depreacated_message ),
 							'attributes'  => array(
 								'data-gmw_ajax_load_options'   => 'gmw_get_templates',
@@ -1093,6 +1094,7 @@ class GMW_Form_Editor {
 							'type'       => 'select',
 							'default'    => '',
 							'label'      => __( 'Search Results Template', 'geo-my-wp' ),
+							/* translators: %s: deprecation message. */
 							'desc'       => sprintf( __( 'Select the search result template file.<br />%s', 'geo-my-wp' ), $depreacated_message ),
 							'attributes'  => array(
 								'data-gmw_ajax_load_options'   => 'gmw_get_templates',
@@ -1469,6 +1471,7 @@ class GMW_Form_Editor {
 									// to prevent conflict with premium settings addon.
 									'function'   => 'info_window_template',
 									'label'      => __( 'Info Window Template', 'geo-my-wp' ),
+									/* translators: %s: deprecation message. */
 									'desc'       => sprintf( __( 'Select the info window template.<br />%s', 'geo-my-wp' ), $depreacated_message ),
 									'class'      => 'gmw-smartbox-not',
 									'attributes' => array(),
@@ -1483,7 +1486,7 @@ class GMW_Form_Editor {
 				'priority' => 60,
 			),
 		);
-		
+
 		$is_global_maps = ( 'global_maps' === $this->form['addon'] ) ? true : false;
 		$is_ajax_form   = ( 'ajax_forms' === $this->form['addon'] ) ? true : false;
 
@@ -1868,6 +1871,8 @@ class GMW_Form_Editor {
 			)
 		);
 
+		$gm_only_message = '<div class="gmw-admin-notice-box gmw-admin-notice-error">' . __( 'This feature is availabe with Google Maps provider only.', 'geo-my-wp' ) . '</div>';
+
 		if ( 'google_maps' === GMW()->maps_provider ) {
 
 			$groups['results_map']['fields']['styles'] = $map_styles;
@@ -1875,7 +1880,7 @@ class GMW_Form_Editor {
 		} else {
 
 			$groups['results_map']['fields']['styles']                                   = $map_styles;
-			$groups['results_map']['fields']['styles']['fields']['styles']['desc']       = __( '<div class="gmw-admin-notice-box gmw-admin-notice-error">This feature is availabe with Google Maps provider only.</div>', 'geo-my-wp' );
+			$groups['results_map']['fields']['styles']['fields']['styles']['desc']       = $gm_only_message;
 			$groups['results_map']['fields']['styles']['fields']['styles']['attributes'] = array( 'disabled' => 'disabled' );
 
 			$groups['results_map']['fields']['styles']['fields']['snazzy_maps_styles']['desc']       = $groups['results_map']['fields']['styles']['fields']['styles']['desc'];
@@ -1979,25 +1984,27 @@ class GMW_Form_Editor {
 			)
 		);
 
-		if ( 'google_maps' === GMW()->maps_provider ) {
+		$groups['results_map']['fields']['map_type']['type']    = 'select';
+		$groups['results_map']['fields']['map_type']['options'] = array(
+			'ROADMAP'   => __( 'ROADMAP', 'geo-my-wp' ),
+			'SATELLITE' => __( 'SATELLITE', 'geo-my-wp' ),
+			'HYBRID'    => __( 'HYBRID', 'geo-my-wp' ),
+			'TERRAIN'   => __( 'TERRAIN', 'geo-my-wp' ),
+		);
+
+		if ( 'google_maps' !== GMW()->maps_provider ) {
 
 			if ( isset( $groups['results_map'] ) ) {
-
-				$groups['results_map']['fields']['map_type']['type']    = 'select';
-				$groups['results_map']['fields']['map_type']['options'] = array(
-					'ROADMAP'   => __( 'ROADMAP', 'geo-my-wp' ),
-					'SATELLITE' => __( 'SATELLITE', 'geo-my-wp' ),
-					'HYBRID'    => __( 'HYBRID', 'geo-my-wp' ),
-					'TERRAIN'   => __( 'TERRAIN', 'geo-my-wp' ),
+				$groups['results_map']['fields']['map_type']['desc']      .= $gm_only_message;
+				$groups['results_map']['fields']['map_type']['attributes'] = array(
+					'disabled' => 'disabled',
 				);
 			}
-		} else {
 
+			$groups['search_form']['fields']['address_field']['fields']['address_autocomplete']['desc']      .= $gm_only_message;
 			$groups['search_form']['fields']['address_field']['fields']['address_autocomplete']['attributes'] = array(
 				'disabled' => 'disabled',
 			);
-
-			$groups['search_form']['fields']['address_field']['fields']['address_autocomplete']['desc'] .= '<br /><span style="color:red">' . __( 'This feature is available with Google Maps provider only.', 'geo-my-wp' ) . '</span>';
 		}
 
 		$disable_additional_fields = apply_filters( 'gmw_form_editor_disable_additional_fields', true, $groups, $this->form['slug'], $this );
@@ -2188,8 +2195,6 @@ class GMW_Form_Editor {
 			$fields[ $group['slug'] ] = apply_filters( 'gmw_' . $group['slug'] . '_form_settings', $fields[ $group['slug'] ], $this->form['slug'], $this->form );
 		}
 
-		
-
 		$fields = apply_filters( 'gmw_form_settings', $fields, $this->form );
 
 		// filter all fields groups.
@@ -2359,6 +2364,15 @@ class GMW_Form_Editor {
 		}
 	}
 
+	/**
+	 * Check if feature belongs to premium extension.
+	 *
+	 * @since 4.0
+	 *
+	 * @param [type] $field_options [description].
+	 *
+	 * @return boolean                [description]
+	 */
 	public function is_pro_feature( $field_options ) {
 
 		$output = array(
@@ -2384,6 +2398,48 @@ class GMW_Form_Editor {
 	 * @access public
 	 */
 	public function output() {
+
+		// make sure form ID passed.
+		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) { // WPCS: CSRF ok.
+			wp_die( esc_attr__( 'Form ID is missing.', 'geo-my-wp' ) );
+		}
+
+		$form_id = (int) $_GET['form_id'];
+
+		// get form data.
+		$this->form = GMW_Forms_Helper::get_form( $form_id );
+		$allowed    = array(
+			'a' => array(
+				'href' => array(),
+			),
+		);
+
+		// varify if the form exists.
+		if ( empty( $this->form ) ) {
+
+			$link  = '<div class="gmw-admin-notice-box gmw-admin-notice-error" style="display: block;margin: 100px auto;width: 600px;">';
+			$link .= sprintf(
+				/* translators: %s link to GEO my WP's forms page. */
+				wp_kses( __( 'The form that you are trying to edit doe\'s not exist. <a href="%s">Return to the Forms page.</a>', 'geo-my-wp' ), $allowed ),
+				esc_url( 'admin.php?page=gmw-forms' )
+			);
+			$link .= '</div>';
+
+			wp_die( $link ); // WPCS: XSS ok.
+		}
+
+		if ( empty( $this->form['addon'] ) || ! gmw_is_addon_active( $this->form['addon'] ) ) {
+
+			$link  = '<div class="gmw-admin-notice-box gmw-admin-notice-error" style="display: block;margin: 100px auto;width: 600px;">';
+			$link .= sprintf(
+				/* Translators: %s extensions page URl. */
+				wp_kses( __( 'The extension that this form belongs to is deactivated. <a href="%s">Manage extensions</a>.', 'geo-my-wp' ), $allowed ),
+				esc_url( 'admin.php?page=gmw-extensions' )
+			);
+			$link .= '</div>';
+
+			wp_die( $link ); // WPCS: XSS ok.
+		}
 
 		// get form fields.
 		$this->init_form_settings();
@@ -2817,7 +2873,6 @@ class GMW_Form_Editor {
 			} else {
 				$option['options'] = $field_options;
 			}
-
 		}
 
 		switch ( $option['type'] ) {
