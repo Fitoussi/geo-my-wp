@@ -144,7 +144,9 @@ function gmw_admin_pages_menu() {
 	?>
 	<div class="gmw-admin-pages-menu-wrapper">
 		
-		<img id="site-logo-header" style="width: 170px;height: 50px;" alt="" src="<?php echo GMW_URL . '/gmw-logo.png'; ?>" class="ct-image">
+		<a href="https://geomywp.com/" target=_blank">
+			<img id="site-logo-header" style="width: 170px;height: 50px;" alt="" src="<?php echo GMW_URL . '/gmw-logo.png'; ?>" class="ct-image">
+		</a>
 
 		<div class="gmw-admin-pages-menu-inner">
 
