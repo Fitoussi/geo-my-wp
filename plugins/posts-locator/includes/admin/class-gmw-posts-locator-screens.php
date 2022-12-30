@@ -35,6 +35,9 @@ class GMW_Posts_Locator_Screens {
 		// apply features only for the chosen post types.
 		foreach ( gmw_get_option( 'post_types_settings', 'post_types', array() ) as $post_type ) {
 
+			// Prevent location update on page load. Now location should be saved inside the form box.
+			remove_action( 'gmw_update_lf_location', 'gmw_update_lf_location' );
+
 			// no need to show in resumes or job_listings post types.
 			/*if ( ( 'job_listing' === $post_type || 'resume' === $post_type ) && apply_filters( 'gmw_disable_location_form_in_job_listing', true ) ) {
 				continue;
@@ -258,10 +261,10 @@ class GMW_Posts_Locator_Screens {
 			array(
 				'object_id'          => $post->ID,
 				'form_template'      => 'location-form-tabs-left',
-				'submit_enabled'     => 0,
-				'auto_confirm'       => 0,
+				//'submit_enabled'     => 1,
+				//'auto_confirm'       => 1,
 				'stand_alone'        => 0,
-				'ajax_enabled'       => 0,
+				//'ajax_enabled'       => ,
 				'confirm_required'   => 0,
 				'form_element'       => '.wrap form',
 				'map_zoom_level'     => gmw_get_option( 'post_types_settings', 'edit_post_page_map_zoom_level', 7 ),
@@ -282,18 +285,121 @@ class GMW_Posts_Locator_Screens {
 	 */
 	public function display_meta_box( $post ) {
 
-		// expand button.
-		echo '<i type="button" id="gmw-location-section-resize" class="gmw-icon-resize-full" title="Expand full screen" style="display: block" onclick="jQuery( this ).closest( \'#gmw-location-meta-box\' ).find( \'.inside\' ).toggleClass( \'fullscreen\' );"></i>';
+		if ( apply_filters( 'gmw_edit_posrt_location_form_modal_disabled', false ) ) {
 
-		// form args.
-		$form_args = self::get_location_form_args( $post );
+			// expand button.
+			echo '<i type="button" id="gmw-location-section-resize" class="gmw-icon-resize-full" title="Expand full screen" style="display: block" onclick="jQuery( this ).closest( \'#gmw-location-meta-box\' ).find( \'.inside\' ).toggleClass( \'fullscreen\' );"></i>';
 
-		do_action( 'gmw_edit_post_page_before_location_form', $post );
+			// form args.
+			$form_args = self::get_location_form_args( $post );
 
-		// generate the form.
-		gmw_post_location_form( $form_args );
+			do_action( 'gmw_edit_post_page_before_location_form', $post );
 
-		do_action( 'gmw_edit_post_page_after_location_form', $post );
+			// generate the form.
+			gmw_post_location_form( $form_args );
+
+			do_action( 'gmw_edit_post_page_after_location_form', $post );
+
+			return;
+		}
+
+		$address    = gmw_get_post_location( $post->ID );
+		$no_address = __( 'No location found.', 'geo-my-wp' );
+		$address    = ! empty( $address->address ) ? $address->address : $no_address;
+		$link       = '<a id="gmw-modal-location-form-toggle" href="#" class="gmw-popup-element-toggle button" data-element="#gmw-location-form-modal-element">' . esc_html__( 'Edit Location', 'geo-my-wp' ) . '</a>';
+
+		wp_enqueue_script( 'gmw-admin' );
+		?>
+		<style type="text/css">
+			#gmw-location-form-modal-element .gmw-popup-element-inner {
+				padding: 0;
+				max-height: initial;
+			}
+
+			#gmw-location-form-modal-element #gmw-location-form-wrapper {
+				border: 0;
+			}
+
+			#gmw-modal-location-form-toggle {
+				color: white;
+				background: #1e90ff;
+				border: 1px solid #1e90ff;
+			}
+
+			#gmw-modal-location-form-toggle:hover {
+				background: #1d80e0;
+			}
+
+			#gmw-location-section-wrapper {
+				padding: 1em;
+			}
+
+			#gmw-location {
+				padding: 0;
+				border: 0;
+			}
+
+			#gmw-location:focus {
+				outline:none !important;
+				outline-width: 0 !important;
+				box-shadow: none;
+				-moz-box-shadow: none;
+				-webkit-box-shadow: none;
+			}
+		</style>
+		<script type="text/javascript">
+
+			jQuery( document ).ready( function( $) {
+
+				var noLocationText = '<?php echo esc_attr( $no_address ); ?>';
+
+				// Fill selected address in the address field when location updated.
+				GMW.add_action( 'gmw_lf_location_saved', function( response, form_values, form ) {
+
+					$( '#gmw-location' ).val( jQuery( '#gmw_lf_address' ).val() );
+
+					setTimeout( function() {
+						jQuery( '#gmw-location-form-modal-element' ).fadeOut( 'fast' );
+					}, 1500 );
+				});
+
+				// Remove address from field when location deleted.
+				GMW.add_action( 'gmw_lf_location_deleted', function( response, formValues ) {
+					$( '#gmw-location' ).val( noLocationText );
+				});
+			});
+		</script>
+
+		<div id="gmw-location-section-wrapper">
+			<span>
+				<input style="background: none;" type="text" readonly="readonly" id="gmw-location" value="<?php echo esc_attr( $address ); ?>" class="regular-text" />
+			</span>
+			<span>
+				<?php echo $link; // WPCS: XSS ok. ?>
+			</span>
+		</div>
+
+		<div id="gmw-location-form-modal-element" class="gmw-popup-element-wrapper">
+
+			<div class="gmw-popup-element-inner">
+
+				<span class="gmw-popup-element-close-button gmw-icon-cancel-light"></span>
+
+				<?php
+
+				// form args.
+				$form_args = self::get_location_form_args( $post );
+
+				do_action( 'gmw_edit_post_page_before_location_form', $post );
+
+				// generate the form.
+				gmw_post_location_form( $form_args );
+
+				do_action( 'gmw_edit_post_page_after_location_form', $post );
+				?>
+			</div>
+		</div>
+		<?php
 	}
 
 	/**
