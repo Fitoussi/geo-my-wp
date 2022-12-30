@@ -91,13 +91,16 @@ class GMW_Settings {
 
 			} else {
 
-				foreach ( $group_options as $option_key => $option_value ) {
+				if ( is_array( $group_options ) ) {
 
-					if ( ! isset( $gmw_options[ $group_name ][ $option_key ] ) ) {
+					foreach ( $group_options as $option_key => $option_value ) {
 
-						$gmw_options[ $group_name ][ $option_key ] = $option_value;
+						if ( ! isset( $gmw_options[ $group_name ][ $option_key ] ) ) {
 
-						$save_options = true;
+							$gmw_options[ $group_name ][ $option_key ] = $option_value;
+
+							$save_options = true;
+						}
 					}
 				}
 			}
@@ -166,8 +169,10 @@ class GMW_Settings {
 		$settings = array(
 			'general_settings' => array(
 				'slug'     => 'general_settings',
+				'parent'   => '',
 				'label'    => __( 'General Settings', 'geo-my-wp' ),
 				'icon'     => 'cog',
+				'desc'     => __( 'GEO my WP general settings.', 'geo-my-wp' ),
 				'fields'   => array(
 					'allow_tracking' => array(
 						'name'       => 'allow_tracking',
@@ -262,8 +267,10 @@ class GMW_Settings {
 			),
 			'api_providers'    => array(
 				'slug'     => 'api_providers',
+				'parent'   => '',
 				'label'    => __( 'Maps & Geocoders', 'geo-my-wp' ),
 				'icon'     => 'map-o',
+				'desc'     => __( 'Maps and geocoders settings.', 'geo-my-wp' ),
 				'fields'   => array(
 					'maps_provider'       => array(
 						'name'       => 'maps_provider',
@@ -371,8 +378,10 @@ class GMW_Settings {
 			),
 			'styles'           => array(
 				'slug'     => 'styles',
+				'parent'   => '',
 				'label'    => __( 'Styling', 'geo-my-wp' ),
 				'icon'     => 'cog',
+				'desc'     => __( 'Colors and styling options.', 'geo-my-wp' ),
 				'fields'   => array(
 					'main_colors'   => array(
 						'name'     => 'main_colors',
@@ -572,6 +581,7 @@ class GMW_Settings {
 			$settings['premium_settings'] = array(
 				'premium_feature'   => true,
 				'slug'              => 'premium_settings',
+				'parent'            => '',
 				'label'             => 'Premium Settings',
 				'fields'            => array(),
 				'priority'          => 100,
@@ -587,6 +597,7 @@ class GMW_Settings {
 			$settings['multiple_locations'] = array(
 				'premium_feature'   => true,
 				'slug'              => 'gmw_multiple_locations',
+				'parent'            => '',
 				'label'             => 'Multiple Locations',
 				'fields'            => array(),
 				'priority'          => 100,
@@ -602,6 +613,7 @@ class GMW_Settings {
 			$settings['ajax_forms'] = array(
 				'premium_feature'   => true,
 				'slug'              => 'ajax_forms',
+				'parent'            => '',
 				'label'             => 'AJAX Forms',
 				'fields'            => array(),
 				'priority'          => 100,
@@ -616,6 +628,7 @@ class GMW_Settings {
 			$settings['ip_address_locator'] = array(
 				'premium_feature'   => true,
 				'slug'              => 'ip_address_locator',
+				'parent'            => '',
 				'label'             => 'IP Address Locator',
 				'fields'            => array(),
 				'priority'          => 100,
@@ -630,6 +643,7 @@ class GMW_Settings {
 			$settings['users_locator'] = array(
 				'premium_feature'   => true,
 				'slug'              => 'users_locator',
+				'parent'            => '',
 				'label'             => 'WP Users Locator',
 				'icon'              => 'users',
 				'fields'            => array(),
@@ -645,6 +659,7 @@ class GMW_Settings {
 			$settings['bp_groups_locator'] = array(
 				'premium_feature'   => true,
 				'slug'              => 'bp_groups_locator',
+				'parent'            => '',
 				'label'             => 'BP Groups Locator',
 				'icon'              => 'group',
 				'fields'            => array(),
@@ -809,7 +824,7 @@ class GMW_Settings {
 	}
 
 	/**
-	 * Get form fields
+	 * Get form fields.
 	 *
 	 * @param  array  $settings      form settings.
 	 *
@@ -866,8 +881,6 @@ class GMW_Settings {
 		$current_tab = $this->get_current_tab();
 		$parent_tab  = $this->get_parent_tab();
 		$section     = ! empty( $this->settings[ $current_tab ] ) ? $this->settings[ $current_tab ] : $this->settings['general_settings'];
-		$parent_tabs = wp_list_pluck( $this->settings_groups, 'parent' ); 
-
 		?>
 		<?php gmw_admin_pages_header(); ?>
 
@@ -877,6 +890,8 @@ class GMW_Settings {
 			<nav class="gmw-admin-page-navigation">
 
 				<?php uasort( $this->settings_groups, 'gmw_sort_by_priority' ); ?>
+
+				<?php $parent_tabs = wp_list_pluck( $this->settings_groups, 'parent' ); ?>
 
 				<?php $sub_tabs = array(); ?>
 
@@ -928,6 +943,7 @@ class GMW_Settings {
 							// Check if it is a parent tab, and if so, add its first sub-tab as parameter to the URL.
 							// The first sub tab will be the settings page that shows up when clicking the parent tab.
 							if ( in_array( $tab['slug'], $parent_tabs ) ) {
+
 								$url = add_query_arg( array( 'sub_tab' => array_search( $tab['slug'], $parent_tabs ) ), $url );
 
 								// Otherwise, do not display the tab.
@@ -1040,10 +1056,6 @@ class GMW_Settings {
 
 					<form method="post" action="" class="gmw-settings-form">
 
-						<div id="gmw-admin-page-loader" style="position: fixed;width: 100%;height: 100%;top: 0;left: 0;background: white;z-index: 999999999;">
-							<i style="font-size: 60px;color: #4699E8;margin: 0;position: absolute;top: 40%;left: 50%;-ms-transform: translate(-50%, -50%);transform: translate(-50%, -50%);" class="gmw-icon gmw-icon-cog animate-spin"></i>
-						</div>
-
 						<?php uasort( $section, 'gmw_sort_by_priority' ); ?>
 
 						<?php
@@ -1075,9 +1087,15 @@ class GMW_Settings {
 
 								<legend class="gmw-settings-panel-title">
 									<i class="gmw-icon-cog"></i>
+
 									<?php if ( isset( $option['label'] ) ) { ?>
 										<?php echo esc_html( $option['label'] ); ?>                 
 									<?php } ?>
+
+									<?php if ( ! empty( $option['desc'] ) ) { ?>
+										<i class="gmw-settings-desc-tooltip dashicons dashicons-editor-help gmw-tooltip" aria-label="[placeholder]"></i>
+									<?php } ?>
+
 								</legend>
 
 								<div class="gmw-settings-panel-content gmw-form-feature-settings <?php echo ! empty( $option['type'] ) ? esc_attr( $option['type'] ) : ''; ?>">
@@ -1131,6 +1149,9 @@ class GMW_Settings {
 
 						<?php wp_nonce_field( 'gmw_settings_save', 'gmw_settings_save_nonce' ); ?>
 
+						<div id="gmw-admin-page-loader" style="position: fixed;width: 100%;height: 100%;top: 0;left: 0;background: white;z-index: 999999999;">
+							<i style="font-size: 60px;color: #4699E8;margin: 0;position: absolute;top: 40%;left: 50%;-ms-transform: translate(-50%, -50%);transform: translate(-50%, -50%);" class="gmw-icon gmw-icon-cog animate-spin"></i>
+						</div>
 					</form>
 				</div>
 			</div>
@@ -1275,12 +1296,24 @@ class GMW_Settings {
 
 						$valid_input[ $current_tab ][ $option['name'] ] = array();
 
-						foreach ( $option['options'] as $key_val => $name ) {
+						/*foreach ( $option['options'] as $key_val => $name ) {
 
 							if ( in_array( $key_val, $values[ $current_tab ][ $option['name'] ] ) ) {
 
 								$valid_input[ $current_tab ][ $option['name'] ][] = $key_val;
 							}
+
+							
+						}*/
+
+						foreach ( $values[ $current_tab ][ $option['name'] ] as $this_value ) {
+
+							if ( isset( $option['options'][ $this_value ] ) ) {
+
+								$valid_input[ $current_tab ][ $option['name'] ][] = $this_value;
+							}
+
+							
 						}
 					}
 					break;
