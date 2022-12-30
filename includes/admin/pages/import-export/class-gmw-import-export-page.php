@@ -160,7 +160,7 @@ class GMW_Import_Export_Page {
 			);
 
 			// include tab file.
-			include_once 'tabs/posts-locator.php';
+			require_once 'tabs/posts-locator.php';
 		}
 
 		// if posts locator add-on active.
@@ -172,7 +172,7 @@ class GMW_Import_Export_Page {
 			);
 
 			// include tab file.
-			include_once 'tabs/members-locator.php';
+			require_once 'tabs/members-locator.php';
 		}
 
 		// if posts locator add-on active.

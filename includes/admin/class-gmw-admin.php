@@ -54,19 +54,19 @@ class GMW_Admin {
 		do_action( 'gmw_pre_admin_include_pages' );
 
 		// admin functions.
-		include_once 'gmw-admin-functions.php';
-		include_once 'class-gmw-tracking.php';
-		include_once 'updater/class-gmw-license.php';
-		include_once 'class-gmw-form-settings-helper.php';
-		include_once 'class-gmw-forms-table.php';
+		require_once 'gmw-admin-functions.php';
+		require_once 'class-gmw-tracking.php';
+		require_once 'updater/class-gmw-license.php';
+		require_once 'class-gmw-form-settings-helper.php';
+		require_once 'class-gmw-forms-table.php';
 
 		// admin pages.
-		include_once 'pages/class-gmw-extensions.php';
-		include_once 'pages/class-gmw-settings.php';
-		include_once 'pages/class-gmw-forms-page.php';
-		include_once 'pages/class-gmw-form-editor.php';
-		include_once 'pages/tools/class-gmw-tools.php';
-		include_once 'pages/import-export/class-gmw-import-export-page.php';
+		require_once 'pages/class-gmw-extensions.php';
+		require_once 'pages/class-gmw-settings.php';
+		require_once 'pages/class-gmw-forms-page.php';
+		require_once 'pages/class-gmw-form-editor.php';
+		require_once 'pages/tools/class-gmw-tools.php';
+		require_once 'pages/import-export/class-gmw-import-export-page.php';
 
 		// set pages.
 		$this->addons_page   = new GMW_Extensions();

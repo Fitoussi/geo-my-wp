@@ -285,7 +285,7 @@ class GMW_Form_Core {
 			$class_name  = 'GMW_' . $form['slug'] . '_Form';
 
 			if ( file_exists( $file_path ) ) {
-				include_once $file_path;
+				require_once $file_path;
 			}
 		}
 

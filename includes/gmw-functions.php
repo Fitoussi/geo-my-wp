@@ -1801,23 +1801,23 @@ function gmw_ajax_info_window_init() {
 	$location = apply_filters( 'gmw_' . $gmw['prefix'] . '_location_pre_ajax_info_window_init', $location, $gmw );
 
 	// include info-window template functions.
-	include_once GMW_PATH . '/includes/template-functions/gmw-info-window-template-functions.php';
+	require_once GMW_PATH . '/includes/template-functions/gmw-info-window-template-functions.php';
 
 	if ( 'posts_locator' === $gmw['component'] ) {
 
-		include_once GMW_PT_PATH . '/includes/gmw-posts-locator-ajax-info-window-loader.php';
+		require_once GMW_PT_PATH . '/includes/gmw-posts-locator-ajax-info-window-loader.php';
 
 	} elseif ( 'members_locator' === $gmw['component'] ) {
 
-		include_once GMW_FL_PATH . '/includes/gmw-members-locator-ajax-info-window-loader.php';
+		require_once GMW_FL_PATH . '/includes/gmw-members-locator-ajax-info-window-loader.php';
 
 	} elseif ( 'bp_groups_locator' === $gmw['component'] ) {
 
-		include_once GMW_GL_PATH . '/includes/gmw-groups-locator-ajax-info-window-loader.php';
+		require_once GMW_GL_PATH . '/includes/gmw-groups-locator-ajax-info-window-loader.php';
 
 	} elseif ( 'users_locator' === $gmw['component'] ) {
 
-		include_once GMW_UL_PATH . '/includes/gmw-users-locator-ajax-info-window-loader.php';
+		require_once GMW_UL_PATH . '/includes/gmw-users-locator-ajax-info-window-loader.php';
 	}
 
 	// execute custom info-window functions.
