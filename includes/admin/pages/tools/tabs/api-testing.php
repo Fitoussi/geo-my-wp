@@ -43,7 +43,7 @@ function gmw_output_api_testing_tab() {
 					</div>
 
 					<div class="gmw-settings-panel-field">
-						<input type="submit" class="gmw-settings-action-button button-primary" value="<?php esc_attr_e( 'Test server key', 'geo-my-wp' ); ?>" />
+						<input type="submit" class="gmw-settings-action-button button-primary" value="<?php esc_attr_e( 'Test Google Maps Server API Key', 'geo-my-wp' ); ?>" />
 						<input type="hidden" name="gmw_action" value="google_server_key_test" />
 					</div>
 				
