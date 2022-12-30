@@ -104,6 +104,7 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 		return array(
 			'slug'     => 'members_locator',
 			'label'    => __( 'BuddyPress Members Locator', 'geo-my-wp' ),
+			'desc'     => __( 'BuddyPress Members Locator general settings.', 'geo-my-wp' ),
 			'icon'     => 'buddypress',
 			'priority' => 10,
 		);
