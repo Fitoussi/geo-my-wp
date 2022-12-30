@@ -411,15 +411,27 @@ class GMW_Admin {
 	 *
 	 * @since 4.0
 	 *
-	 * @param  [type] $classes [description]
+	 * @param  [type] $classes [description].
+	 *
 	 * @return [type]          [description]
 	 */
 	public function modify_body_class( $classes ) {
 
 		if ( $this->gmw_page ) {
 
+			$page = '';
+
+			if ( ! empty( $_GET['page'] ) ) {
+
+				$page = sanitize_text_field( wp_unslash( $_GET['page'] ) );
+
+			} elseif ( ! empty( $_GET['post_type'] ) && 'gmw_location_type' === $_GET['post_type'] ) {
+
+				$page = 'location-types';
+			}
+
 			$hide_notices = gmw_get_option( 'general_settings', 'hide_admin_notices', false ) ? 'gmw-admin-notices-disabled' : '';
-			$classes     .= ' gmw-admin-page ' . 'gmw-' . sanitize_text_field( wp_unslash( $_GET['page'] ) ) . '-page ' . $hide_notices;
+			$classes     .= ' gmw-admin-page gmw-' . $page . '-page ' . $hide_notices; // WPCS: XSS ok.
 		}
 
 		return $classes;
