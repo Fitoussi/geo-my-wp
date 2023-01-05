@@ -40,7 +40,7 @@ class GMW_Location_Types {
 		add_action( 'manage_gmw_location_type_posts_custom_column', array( $this, 'manage_columns' ), 10, 2 );
 		add_filter( 'enter_title_here', array( $this, 'modify_title_placeholder' ), 50, 2 );
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
-		add_action( 'wp_insert_post_data', array( $this, 'update_meta' ), 10, 3 );
+		//add_action( 'wp_insert_post_data', array( $this, 'update_meta' ), 10, 3 );
 		add_filter( 'post_updated_messages', array( $this, 'update_notices' ) );
 		add_action( 'wp_ajax_gmw_set_missing_location_type', array( $this, 'set_missing_location_type' ) );
 	}
@@ -110,16 +110,16 @@ class GMW_Location_Types {
 
 			jQuery( document ).ready( function ($) {
 
-				//Require post title when adding/editing Project Summaries
+				// Require post title when adding/editing location type.
 				$( 'body' ).on( 'submit.edit-post', '#post', function () {
 
-					// If the title isn't set
+					// If the title isn't set.
 					if ( $( "#title" ).val().replace( / /g, '' ).length === 0 ) {
 
-					// Show the alert
+					// Show the alert.
 					window.alert( 'A location type name is required.' );
 
-					// Hide the spinner
+					// Hide the spinner.
 					$( '#major-publishing-actions .spinner' ).hide();
 
 					// The buttons get "disabled" added to them on submit. Remove that class.
@@ -391,13 +391,13 @@ class GMW_Location_Types {
 
 				break;*/
 
-			case 'xprofile_fields':
+			/*case 'xprofile_fields':
 
 				$settings = maybe_unserialize( $post->post_content );
 
 				echo ! empty( $settings['xprofile_fields']['enabled'] ) ? 'Enabled' : esc_attr__( 'Disabled', 'geo-my-wp' ); // WPCS: XSS ok.
 
-				break;
+				break;*/
 
 			default:
 				break;
@@ -439,7 +439,7 @@ class GMW_Location_Types {
 	 * @since 3.6.4
 	 */
 	public function modify_title_placeholder( $placeholder, $post ) {
-		return 'gmw_location_type' === $post->post_type ? __( 'Add location type name', 'geo-my-wp' ) : $placeholder;
+		return 'gmw_location_type' === $post->post_type ? __( 'Location type name', 'geo-my-wp' ) : $placeholder;
 	}
 
 	/**
@@ -516,7 +516,9 @@ class GMW_Location_Types {
 	}
 
 	/**
-	 * Add the user roles meta box.
+	 * Add the Xprofiel fields meta box.
+	 *
+	 * DEPRECATED.
 	 *
 	 * @param  object $post post object.
 	 *
@@ -791,15 +793,13 @@ class GMW_Location_Types {
 			return $data;
 		}
 
-		if ( empty( $post['content']['xprofile_fields']['address_autocomplete'] ) ) {
-			$post['content']['xprofile_fields']['address_autocomplete'] = '';
+		$post['post_content'] = maybe_unserialize( $post['post_content'] );
+
+		if ( empty( $post['post_content']['user_roles'] ) ) {
+			$post['post_content']['user_roles'] = array();
 		}
 
-		if ( empty( $post['content']['user_roles'] ) ) {
-			$post['content']['user_roles'] = array();
-		}
-
-		$data['post_content'] = maybe_serialize( $post['content'] );
+		$data['post_content'] = maybe_serialize( $post['post_content'] );
 
 		return $data;
 	}
