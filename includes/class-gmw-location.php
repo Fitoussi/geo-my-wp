@@ -360,7 +360,13 @@ class GMW_Location {
 			}
 		} else {
 
-			$saved_location = self::get_by_object( $location_data['object_type'], $location_data['object_id'] );
+			$args = array(
+				'object_type'   => $location_data['object_type'],
+				'object_id'     => $location_data['object_id'],
+				'location_type' => ! empty( $location_data['location_type'] ) ? $location_data['location_type'] : 0,
+			);
+
+			$saved_location = self::get_by_object_data( $args );
 		}
 
 		// Verify blog ID.
@@ -613,9 +619,127 @@ class GMW_Location {
 	 *
 	 * @return object || Array return the location data
 	 *
+	 * @since 4.0
+	 */
+	public static function get_by_object_data( $args = array(), $output = OBJECT, $cache = true ) {
+
+		// default values.
+		$args = wp_parse_args(
+			$args,
+			array(
+				'object_type'   => 'post',
+				'object_id'     => 0,
+				'location_type' => 0,
+			)
+		);
+
+		$args = apply_filters( 'gmw_get_location_by_object_data', $args );
+
+		$object_type   = $args['object_type'];
+		$object_id     = $args['object_id'];
+		$location_type = $args['location_type'];
+
+		// verify object type and object ID. If any of them empty use try_get_location function.
+		if ( empty( $object_type ) || empty( $object_id ) ) {
+
+			// try to get location usign global variables.
+			return self::try_get_locations( true, $output, $cache );
+		}
+
+		// verify object types.
+		if ( ! in_array( $object_type, GMW()->object_types, true ) ) {
+
+			gmw_trigger_error( 'Trying to get a location using invalid object type.' );
+
+			return false;
+		}
+
+		// Verify object ID.
+		if ( ! self::verify_id( $object_id ) ) {
+
+			gmw_trigger_error( 'Trying to get a location using invalid object ID.' );
+
+			return false;
+		}
+
+		$object_id = absint( $object_id );
+
+		// look for locations in cache if needed.
+		$location = $cache ? wp_cache_get( $object_type . '_' . $object_id . '_' . $location_type, 'gmw_location' ) : false;
+
+		if ( false === $location ) {
+
+			global $wpdb;
+
+			$blog_id  = gmw_get_blog_id( $object_type );
+			$table    = self::get_table();
+			$location = $wpdb->get_row(
+				$wpdb->prepare(
+					"
+					SELECT *, latitude as lat, longitude as lng, title as location_name, featured as featured_location
+		            FROM     $table
+		            WHERE    blog_id     = %d 
+		            AND      object_type = %s 
+		            AND      object_id   = %d
+		            AND      location_type = %d
+		            /*ORDER BY location_type ASC, parent DESC, ID ASC // We first get locations without location type, then by Parent, then by ID.*/
+		           ",
+					$blog_id,
+					$object_type,
+					$object_id,
+					$location_type
+				),
+				OBJECT
+			); // WPCS: unprepared SQL ok, db call ok.
+
+			// save to cache if location found.
+			if ( ! empty( $location ) ) {
+				wp_cache_set( $object_type . '_' . $object_id, $location, 'gmw_location' );
+				wp_cache_set( $location->ID, $location, 'gmw_location' );
+			}
+		}
+
+		// if no location found.
+		if ( empty( $location ) ) {
+			return null;
+		}
+
+		// make sure ID in integer.
+		$location->ID = (int) $location->ID;
+
+		// convert to array if needed.
+		if ( ARRAY_A == $output || ARRAY_N == $output ) {
+			$location = gmw_to_array( $location, $output );
+		}
+
+		return $location;
+	}
+
+	/**
+	 * Get location data based on object_type and object_id pairs.
+	 *
+	 * The returned location will be the parent location in case that the object_type - object_id pair has multiple locations
+	 *
+	 * @param  string   $object_type the object type post, user...
+	 *
+	 * @param  integer  $object_id   the object ID. post ID, User ID...
+	 *
+	 * @param  constant $output     OBJECT || ARRAY_A || ARRAY_N  the output type of the location data.
+	 *
+	 * @param  boolean  $cache      Look for location in cache.
+	 *
+	 * @return object || Array return the location data
+	 *
 	 * @since 3.2
 	 */
 	public static function get_by_object( $object_type = '', $object_id = 0, $output = OBJECT, $cache = true ) {
+
+		$args = array(
+			'object_type' => $object_type,
+			'object_id'   => $object_id,
+		);
+
+		return self::get_by_object_data( $args );
 
 		// verify object type and object ID. If any of them empty use try_get_location function.
 		if ( empty( $object_type ) || empty( $object_id ) ) {
@@ -1302,7 +1426,78 @@ class GMW_Location {
 	 *
 	 * @since 3.2
 	 */
+	public static function delete_by_object_data( $args = array(), $delete_meta = true ) {
+
+		// default values.
+		$args = wp_parse_args(
+			$args,
+			array(
+				'object_type'   => 'post',
+				'object_id'     => 0,
+				'location_type' => 0,
+			)
+		);
+
+		$args = apply_filters( 'gmw_delete_location_by_object_data', $args );
+
+		// verify data.
+		if ( empty( $args['object_type'] ) || empty( $args['object_id'] ) ) {
+			return false;
+		}
+
+		// verify object type.
+		if ( ! in_array( $args['object_type'], GMW()->object_types, true ) ) {
+
+			gmw_trigger_error( 'Trying to delete a location using invalid object type.' );
+
+			return false;
+		}
+
+		// verify object ID.
+		if ( ! is_numeric( $args['object_id'] ) || ! absint( $args['object_id'] ) ) {
+
+			gmw_trigger_error( 'Trying to delete a location using invalid object ID.' );
+
+			return false;
+		}
+
+		$args['object_id'] = absint( $args['object_id'] );
+
+		// get location to make sure it exists
+		// this will get the parent location.
+		$location = self::get_by_object_data( $args );
+
+		// abort if no location found.
+		if ( empty( $location ) ) {
+			return false;
+		}
+
+		return self::delete( $location, $delete_meta );
+	}
+
+	/**
+	 * Delete location using object type and object ID pair
+	 *
+	 * The parent location data and all associated location meta will be deleted.
+	 *
+	 * @param  string  $object_type object type ( post, user... ).
+	 *
+	 * @param  integer $object_id   object id ( post iD, user ID... ).
+	 *
+	 * @param  boolean $delete_meta true or false if to delete the location meta belog to that location.
+	 *
+	 * @return boolean true for deleted false for failed
+	 *
+	 * @since 3.2
+	 */
 	public static function delete_by_object( $object_type = '', $object_id = 0, $delete_meta = true ) {
+
+		$args = array(
+			'object_type' => $object_type,
+			'object_id'   => $object_id,
+		);
+
+		return self::delete_by_object_data( $args );
 
 		// verify data.
 		if ( empty( $object_type ) || empty( $object_id ) ) {
