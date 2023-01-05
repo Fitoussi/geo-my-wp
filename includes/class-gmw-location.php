@@ -480,9 +480,11 @@ class GMW_Location {
 		// make it into an object.
 		$location_data = (object) $location_data;
 
+		$location_type = isset( $location_data->location_type ) ? $location_data->location_type : 0;
+
 		// set updated location in cache.
 		wp_cache_set( $location_id, $location_data, 'gmw_location' );
-		wp_cache_set( $location_data->object_type . '_' . $location_data->object_id, $location_data, 'gmw_location' );
+		wp_cache_set( $location_data->object_type . '_' . $location_data->object_id . '_' . $location_type, $location_data, 'gmw_location' );
 		wp_cache_delete( $location_data->object_type . '_' . $location_data->object_id, 'gmw_locations' );
 
 		// do some custom functions once location saved.
