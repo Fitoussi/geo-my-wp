@@ -114,6 +114,33 @@ function gmw_get_location_by_object( $object_type = '', $object_id = 0, $output 
 }
 
 /**
+ * Get a location by object type and object ID pair.
+ *
+ * @Since 4.0
+ *
+ * @author Eyal Fitoussi
+ *
+ * @param  array    $args         array of arguments:
+ *
+ * $args = array(
+ *     'object_type'   => 'post',
+ *     'object_id'     => 0,
+ *     'location_type' => 0,
+ * );
+ *
+ * @param  int      $object_id    object ID ( post ID, user ID... ).
+ *
+ * @param  constant $output       OBJECT | ARRAY_A | ARRAY_N.
+ *
+ * @param  boolean  $cache        look for location in cache first.
+ *
+ * @return object              complete location data.
+ */
+function gmw_get_location_by_object_data( $args = array(), $output = OBJECT, $cache = true ) {
+	return GMW_Location::get_by_object_data( $args, $output, $cache );
+}
+
+/**
  * Get the location ID by object type and object ID.
  *
  * @Since 3.0
@@ -160,7 +187,8 @@ function gmw_get_locations( $object_type = '', $object_id = 0, $output = OBJECT,
  *
  * @Since 3.0
  *
- * @param mixed   $args        int as location ID || array of object_type and object_id.
+ * @param mixed   $args        int as location ID || array of object_type and object_id ( location_type as optional value ).
+ *
  * @param boolean $delete_meta location meta as well?.
  *
  * @return integer              ID of the deleted location.
@@ -175,10 +203,11 @@ function gmw_delete_location( $args = 0, $delete_meta = true ) {
 		// when array of object type and object ID.
 	} elseif ( is_array( $args ) ) {
 
-		$object_type = ! empty( $args['object_type'] ) ? $args['object_type'] : '';
-		$object_id   = ! empty( $args['object_id'] ) ? $args['object_id'] : 0;
+		//$object_type   = ! empty( $args['object_type'] ) ? $args['object_type'] : '';
+		//$object_id     = ! empty( $args['object_id'] ) ? $args['object_id'] : 0;
+		//$location_type = ! empty( $args['location_type'] ) ? $args['location_type'] : 0;
 
-		return gmw_delete_location_by_object( $object_type, $object_id, $delete_meta );
+		return gmw_delete_location_by_object_data( $args, $delete_meta );
 
 		// deprecated way of passing arguments. Use the methods above.
 	} elseif ( is_string( $args ) && gmw_verify_id( $delete_meta ) ) {
@@ -205,6 +234,28 @@ function gmw_delete_location( $args = 0, $delete_meta = true ) {
  */
 function gmw_delete_location_by_object( $object_type = '', $object_id = 0, $delete_meta = true ) {
 	return GMW_Location::delete_by_object( $object_type, $object_id, $delete_meta );
+}
+
+/**
+ * Delete location by object data.
+ *
+ * Delete the default location of an object.
+ *
+ * @param  array    $args         array of arguments:
+ *
+ * $args = array(
+ *     'object_type'   => 'post',
+ *     'object_id'     => 0,
+ *     'location_type' => 0,
+ * );
+ * 
+ * @param  int     $object_id    object ID ( post ID, user ID... ).
+ * @param  boolean $delete_meta  location meta as well?.
+ *
+ * @return integer              ID of the deleted location.
+ */
+function gmw_delete_location_by_object_data( $args = array(), $delete_meta = true ) {
+	return GMW_Location::delete_by_object_data( $args, $delete_meta );
 }
 
 /**
@@ -397,6 +448,7 @@ function gmw_update_location( $args = array(), $location = array(), $force_refre
 			'location_id'   => 0,
 			'object_type'   => $args,
 			'object_id'     => $location,
+			'location_type' => 0,
 			'location_name' => '',
 			'user_id'       => $dep_user_id,
 		);
@@ -413,6 +465,7 @@ function gmw_update_location( $args = array(), $location = array(), $force_refre
 				'location_id'   => 0,
 				'object_type'   => '',
 				'object_id'     => 0,
+				'location_type' => 0,
 				'location_name' => '',
 				'user_id'       => 0,
 			)
@@ -434,14 +487,16 @@ function gmw_update_location( $args = array(), $location = array(), $force_refre
 			return false;
 		}
 
-		$object_type = $saved_location->object_type;
-		$object_id   = $saved_location->object_id;
+		$object_type   = $saved_location->object_type;
+		$object_id     = $saved_location->object_id;
+		$location_type = $saved_location->location_type;
 
 	} elseif ( ! empty( $args['object_type'] ) && ! empty( $args['object_id'] ) ) {
 
-		$location_id = 0;
-		$object_type = $args['object_type'];
-		$object_id   = $args['object_id'];
+		$location_id   = 0;
+		$object_type   = $args['object_type'];
+		$object_id     = $args['object_id'];
+		$location_type = $args['location_type'];
 
 	} else {
 
@@ -554,6 +609,7 @@ function gmw_update_location( $args = array(), $location = array(), $force_refre
 		'ID'                => $location_id,
 		'object_type'       => $object_type,
 		'object_id'         => $object_id,
+		'location_type'     => $location_type,
 		'user_id'           => $user_id,
 		'title'             => $location_name,
 		'latitude'          => (float) $latitude,
