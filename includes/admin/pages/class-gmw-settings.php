@@ -816,9 +816,9 @@ class GMW_Settings {
 
 		update_option( 'gmw_options', $current_options );
 
-		$uri = ! empty( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : ''; // WPCS: CSRF ok, sanitization ok.
+		$uri = ! empty( $_SERVER['QUERY_STRING'] ) ? $_SERVER['QUERY_STRING'] : ''; // WPCS: CSRF ok, sanitization ok.
 
-		wp_safe_redirect( home_url( $uri ) );
+		wp_safe_redirect( admin_url( 'admin.php?' . $uri ) );
 
 		exit;
 	}
