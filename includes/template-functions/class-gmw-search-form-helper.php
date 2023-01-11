@@ -36,6 +36,10 @@ class GMW_Search_Form_Helper {
 	 */
 	public static function get_complex_field( $args = array(), $fields = array(), $gmw = array() ) {
 
+		if ( empty( $fields ) || ! is_array( $fields ) || empty( $fields[0] ) || ! is_array( $fields[0] ) ) {
+			return;
+		}
+
 		$defaults = array(
 			'id'            => 0,
 			'slug'          => '',

@@ -141,7 +141,8 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 		// For fields with options all.
 		$option_all = apply_filters( 'gmw_fl_xprofile_form_dropdown_option_all', __( ' -- All -- ', 'geo-my-wp' ), $field_id, $field_data );
 
-		$fields = array();
+		$fields       = array();
+		$wrapper_args = array();
 
 		// display field.
 		switch ( $field_data->type ) {
