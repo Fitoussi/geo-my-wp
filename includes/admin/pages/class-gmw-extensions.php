@@ -671,7 +671,7 @@ class GMW_Extensions {
 				</div>
 
 				<div class="gmw-extension-image">
-					<img src="https://geomywp.com/wp-content/uploads/extensions-images/<?php echo esc_attr( $extension['slug'] ); ?>.svg" onerror="jQuery( this ).hide();">
+					<img src="https://geomywp.com/wp-content/uploads/extensions-images/<?php echo esc_attr( $extension['slug'] ); ?>.svg?v=<?php echo wp_rand( '1', '100' ); ?>" onerror="jQuery( this ).hide();">
 				</div>
 
 				<h3 class="gmw-extension-title"><?php echo esc_attr( $extension['name'] ); ?>    
