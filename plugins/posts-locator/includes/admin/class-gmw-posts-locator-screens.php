@@ -372,11 +372,11 @@ class GMW_Posts_Locator_Screens {
 
 		<div id="gmw-location-section-wrapper">
 			<span>
-				<input style="background: none;" type="text" readonly="readonly" id="gmw-location" value="<?php echo esc_attr( $address ); ?>" class="regular-text" />
+				<input style="background: none;width:100%" type="text" readonly="readonly" id="gmw-location" value="<?php echo esc_attr( $address ); ?>" class="regular-text" />
 			</span>
-			<span>
+			<div style="margin-top:10px">
 				<?php echo $link; // WPCS: XSS ok. ?>
-			</span>
+			</div>
 		</div>
 
 		<div id="gmw-location-form-modal-element" class="gmw-popup-element-wrapper">
