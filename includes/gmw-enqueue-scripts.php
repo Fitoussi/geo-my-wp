@@ -83,6 +83,7 @@ function gmw_enqueue_scripts() {
 	$main_scripts     = array( 'jquery' );
 	$map_scripts      = array( 'jquery', 'gmw' );
 	$lf_scripts       = array( 'jquery', 'gmw' );
+	$lf_styles        = array();
 
 	// load maps provider.
 	if ( 'google_maps' === $maps_provider ) {
@@ -94,6 +95,7 @@ function gmw_enqueue_scripts() {
 
 		$map_scripts[] = 'leaflet';
 		$lf_scripts[]  = 'leaflet';
+		$lf_styles[]   = 'leaflet';
 
 		wp_register_script( 'leaflet', GMW_URL . '/assets/lib/leaflet/leaflet.min.js', array(), '1.7.1', true );
 		wp_register_style( 'leaflet', GMW_URL . '/assets/lib/leaflet/leaflet.min.css', array(), '1.7.1' );
@@ -145,7 +147,7 @@ function gmw_enqueue_scripts() {
 	wp_localize_script( 'gmw', 'gmwVars', $options );
 
 	// register location form.
-	wp_register_style( 'gmw-location-form', GMW_URL . '/includes/location-form/assets/css/gmw.location.form.min.css', array(), GMW_VERSION );
+	wp_register_style( 'gmw-location-form', GMW_URL . '/includes/location-form/assets/css/gmw.location.form.min.css', $lf_styles, GMW_VERSION );
 	wp_register_script( 'gmw-location-form', GMW_URL . '/includes/location-form/assets/js/gmw.location.form.min.js', $lf_scripts, GMW_VERSION, true );
 
 	// include GMW main stylesheet.
