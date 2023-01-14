@@ -86,8 +86,12 @@ class GMW_Members_Locator_Form_Editor {
 		$disabled        = ( ! class_exists( 'Buddypress' ) || ! bp_is_active( 'xprofile' ) ) ? true : false;
 		$selected_fields = array();
 
-		if ( ! empty( $form['search_form']['xprofile_fields']['fields'] ) ) {
+		/*if ( ! empty( $form['search_form']['xprofile_fields']['fields'] ) ) {
 			$selected_fields = array_combine( $form['search_form']['xprofile_fields']['fields'], $form['search_form']['xprofile_fields']['fields'] );
+		}*/
+
+		foreach( $form['search_form']['xprofile_fields']['fields'] as $xpfield_id ) {
+			$selected_fields[ $xpfield_id ] = __( 'Click to load option', 'geo-my-wp' );
 		}
 
 		$date_fields = array();
