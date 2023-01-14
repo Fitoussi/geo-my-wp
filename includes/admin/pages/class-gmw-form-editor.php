@@ -2658,7 +2658,7 @@ class GMW_Form_Editor {
 												<?php echo esc_html( $option['label'] ); ?>
 
 												<?php if ( $pro_feature['is_disabled'] ) { ?>
-													<span class="gmw-form-pro-feature">Premium</span>
+													<span class="gmw-form-pro-feature">Pro Feature</span>
 												<?php } ?>
 											</label>
 
