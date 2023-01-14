@@ -65,7 +65,7 @@ class GMW_Location_Types {
 			'capability'        => 'manage_options',
 			'menu_slug'         => 'edit.php?post_type=gmw_location_type',
 			'callback_function' => '',
-			'priority'          => 8,
+			'priority'          => 15,
 		);
 
 		return $menu_items;
