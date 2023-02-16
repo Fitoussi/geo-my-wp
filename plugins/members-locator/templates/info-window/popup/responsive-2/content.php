@@ -44,9 +44,13 @@
 
 		<?php do_action( 'gmw_info_window_content_start', $member, $gmw ); ?>
 
+		<?php gmw_search_results_meta_fields( $member, $gmw, 'info_window' ); ?>
+
 		<?php gmw_info_window_location_meta( $member, $gmw ); ?>
 
 		<?php gmw_search_results_member_xprofile_fields( $member, $gmw, 'info_window' ); ?>
+
+		<?php gmw_search_results_member_types( $member, $gmw, 'info_window' ); ?>
 
 		<?php gmw_info_window_hours_of_operation( $member, $gmw ); ?>
 

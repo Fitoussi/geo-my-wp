@@ -45,6 +45,8 @@
 
 		<?php gmw_info_window_post_excerpt( $post, $gmw ); ?>
 
+		<?php gmw_search_results_meta_fields( $post, $gmw, 'info_window' ); ?>
+
 		<?php gmw_info_window_location_meta( $post, $gmw ); ?>
 
 		<?php gmw_info_window_hours_of_operation( $post, $gmw ); ?>
