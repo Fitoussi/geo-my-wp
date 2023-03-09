@@ -258,7 +258,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 		// SweetDate theme.
 		if ( function_exists( 'sweetdate_setup' ) ) {
 
-			add_action( 'kleo_bp_search_add_data', array( $this, 'sweetdate_directory_form' ) );
+			//add_action( 'kleo_bp_search_add_data', array( $this, 'sweetdate_directory_form' ) );
 			add_action( 'bp_groups_directory_group_filter', array( $this, 'sweetdate_directory_form' ) );
 
 			// For Kleo Theme.
