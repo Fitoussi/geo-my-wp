@@ -689,3 +689,26 @@ function gmw_search_form_bp_group_types_field( $gmw = array() ) {
 
 	do_action( 'gmw_after_search_form_bp_group_types_field', $gmw );
 }
+
+/**
+ * Search form user role filter.
+ *
+ * Requires the Premium Settings extension.
+ *
+ * since 4.0
+ *
+ * @param  array $gmw gmw form.
+ */
+function gmw_search_form_user_role_field( $gmw = array() ) {
+
+	// This function lives in the Premium Settings extension.
+	if ( ! function_exists( 'gmw_get_search_form_user_role_field' ) ) {
+		return;
+	}
+
+	do_action( 'gmw_before_search_form_user_role_field', $gmw );
+
+	echo gmw_get_search_form_user_role_field( $gmw ); // WPCS: XSS ok.
+
+	do_action( 'gmw_after_search_form_user_role_field', $gmw );
+}
