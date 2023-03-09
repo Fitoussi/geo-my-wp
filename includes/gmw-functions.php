@@ -1156,6 +1156,10 @@ function gmw_get_form_class( $element = 'form_wrapper', $gmw = array() ) {
 		} else {
 			$class[] = 'image-disabled';
 		}
+
+		if ( ! empty( $gmw['search_results']['results_view']['grid_columns'] ) ) {
+			$class[] = 'grid-col-' . absint( $gmw['search_results']['results_view']['grid_columns'] );
+		}
 	}
 
 	$class = apply_filters( 'gmw_form_element_class_attribute', $class, $element, $gmw );
