@@ -218,25 +218,37 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 			echo '</div>';
 		}
 		echo '</div>';
+
 		$allowed = array(
 			'a' => array(
 				'href'   => array(),
 				'target' => array(),
 			),
 		);
-		?>
-		<div class="gmw-bpsgeo-additional-features-box">
-			<p>
-			<?php
+
+		echo '<div class="gmw-bpsgeo-additional-features-box"><p>';
+
+		if ( gmw_is_addon_active( 'bp_members_directory_geolocation' ) ) {
+
 			echo wp_kses(
-				/* translators: %s link to Prmeium Extension page. */
+				/* translators: %s link to Members Locator Settings page. */
+				sprintf( __( 'Additional features available via the <a href="%s">Settings page of the BuddyPress Members Directory Geolocation extension</a>', 'geo-my-wp' ), admin_url( 'admin.php?page=gmw-settings&tab=members_locator&sub_tab=bp_members_directory_geolocation' ) ),
+				$allowed
+			);
+
+		} else {
+
+			echo wp_kses(
+				/* translators: %s link to the BP Directory Geolocation extension page. */
 				sprintf( __( 'Check out the <a href="%s" target="_blank">BuddyPress Members Directory Geolocation extension</a> for additional geolocation features. Display a map above the list of members, display the distance, address, and a directions link in each member in the results.', 'geo-my-wp' ), 'https://geomywp.com/extensions/buddypress-members-directory-geolocation/' ),
 				$allowed
 			);
-			?>
-				</p>
-		</div>
+		}
+		?>
+		</p></div>
 
+		<?php
+		?>
 		<?php $warning = __( 'You can only have one location field per form.', 'geo-my-wp' ); ?>
 
 		<script type="text/javascript">
