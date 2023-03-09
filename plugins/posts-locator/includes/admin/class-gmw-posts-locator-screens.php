@@ -27,6 +27,8 @@ class GMW_Posts_Locator_Screens {
 
 		global $pagenow;
 
+		add_action( 'ithemes_sync_duplicate_post_addon_default_post_meta', array( $this, 'duplicate_post_locations' ), 80, 2 );
+
 		// load page only on new and edit post pages.
 		if ( empty( $pagenow ) || ! in_array( $pagenow, array( 'post-new.php', 'post.php', 'edit.php' ), true ) ) {
 			return;
@@ -67,6 +69,41 @@ class GMW_Posts_Locator_Screens {
 				// these action fire functions responsible for a fix where posts status wont change from pending to publish.
 				// add_action( 'gmw_lf_before_post_location_updated', array( $this, 'post_status_publish_fix' ) );
 				// $this->post_status_publish_fix();
+			}
+		}
+	}
+
+	/**
+	 * Duplicate post locations when duplicating a post.
+	 *
+	 * @since 4.0
+	 *
+	 * @param  [type] $post               [description].
+	 *
+	 * @param  [type] $duplicated_post_id [description].
+	 */
+	public function duplicate_post_locations( $post, $duplicated_post_id ) {
+
+		$locations = gmw_get_post_locations( $duplicated_post_id );
+
+		foreach ( $locations as $location ) {
+
+			$org_location_id     = $location->ID;
+			$location->ID        = 0;
+			$location->object_id = $post->ID;
+
+			// Insert location for the new post.
+			$new_location_id = gmw_insert_location( ( array ) $location );
+
+			// Verify that location was created.
+			if ( ! empty( $new_location_id ) ) {
+
+				// Get meta fields from the original location.
+				$mfields = array( 'phone', 'fax', 'email', 'website', 'days_hours' );
+				$lmeta   = gmw_get_location_meta( $org_location_id, $mfields );
+
+				// Inset meta field to duplicated location.
+				gmw_update_location_metas( $new_location_id, $lmeta );
 			}
 		}
 	}
