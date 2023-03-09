@@ -918,6 +918,12 @@ function gmw_verify_template_file_requirement( $template = '' ) {
 
 		return false;
 
+	} elseif ( strpos( $template, 'rehub' ) !== false && ! function_exists( 'rehub_framework_register_scripts' ) ) {
+
+		gmw_trigger_error( sprintf( 'GEO my WP\'s %s template file requires the ReHub theme. Install the ReHub theme or select a different template file.', $template ) );
+
+		return false;
+
 	} elseif ( strpos( $template, 'buddypress-legacy' ) !== false && 'legacy' !== $bp_template ) {
 
 		gmw_trigger_error( 'GEO my WP\'s buddypress-legacy template file requires the BuddyPress plugin and it\'s Legacy template package enabled.' );
