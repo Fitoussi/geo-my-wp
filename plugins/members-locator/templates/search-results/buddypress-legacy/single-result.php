@@ -67,9 +67,13 @@
 
 			<?php gmw_search_results_address( $member, $gmw ); ?>
 
+			<?php gmw_search_results_meta_fields( $member, $gmw ); ?>
+
 			<?php gmw_search_results_location_meta( $member, $gmw ); ?>
 
 			<?php gmw_search_results_member_xprofile_fields( $member, $gmw ); ?>
+
+			<?php gmw_search_results_member_types( $member, $gmw ); ?>
 
 			<?php gmw_search_results_hours_of_operation( $member, $gmw ); ?>
 

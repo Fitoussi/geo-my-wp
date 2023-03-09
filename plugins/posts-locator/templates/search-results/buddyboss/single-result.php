@@ -55,6 +55,8 @@
 				<?php gmw_search_results_post_excerpt( $post, $gmw ); ?>
 			</div>
 
+			<?php gmw_search_results_meta_fields( $post, $gmw ); ?>
+
 			<?php gmw_search_results_location_meta( $post, $gmw ); ?>
 
 			<?php gmw_search_results_hours_of_operation( $post, $gmw ); ?>

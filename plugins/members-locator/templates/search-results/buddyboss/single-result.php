@@ -119,7 +119,13 @@ $primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' 
 					endif;
 					?>
 
+					<?php gmw_search_results_meta_fields( $member, $gmw ); ?>
+
 					<?php gmw_search_results_location_meta( $member, $gmw ); ?>
+
+					<?php gmw_search_results_member_xprofile_fields( $member, $gmw ); ?>
+
+					<?php gmw_search_results_member_types( $member, $gmw ); ?>
 
 					<?php gmw_search_results_hours_of_operation( $member, $gmw ); ?>
 
