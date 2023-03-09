@@ -1810,6 +1810,10 @@ function gmw_ajax_info_window_init() {
 	$location = apply_filters( 'gmw_location_pre_ajax_info_window_init', $location, $gmw );
 	$location = apply_filters( 'gmw_' . $gmw['prefix'] . '_location_pre_ajax_info_window_init', $location, $gmw );
 
+	// execute custom info-window functions.
+	do_action( 'gmw_' . $gmw['component'] . '_pre_ajax_info_window_init', $location, $gmw );
+	do_action( 'gmw_pre_ajax_info_window_init', $location, $gmw );
+
 	// include info-window template functions.
 	require_once GMW_PATH . '/includes/template-functions/gmw-info-window-template-functions.php';
 
@@ -1831,6 +1835,7 @@ function gmw_ajax_info_window_init() {
 	}
 
 	// execute custom info-window functions.
+	do_action( 'gmw_' . $gmw['component'] . '_ajax_info_window_init', $location, $gmw );
 	do_action( 'gmw_' . $gmw['prefix'] . '_ajax_info_window_init', $location, $gmw );
 	do_action( 'gmw_ajax_info_window_init', $location, $gmw );
 
