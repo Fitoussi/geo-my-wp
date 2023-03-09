@@ -163,7 +163,10 @@ class GMW_System_Info {
         $report .= 'Active Theme:'."\t\t\t".$theme."\n";
         $report .= 'Post Types:'."\t\t\t\t".implode( ', ', get_post_types( '', 'names' ) )."\n";
         $report .= 'Post Stati:'."\t\t\t\t".implode( ', ', get_post_stati() )."\n";
-        $report .= 'User Count:'."\t\t\t\t".count( get_users() )."\n";
+        
+        $user_count = count_users();
+
+		$report .= 'User Count:'."\t\t\t\t".$user_count['total_users']."\n";
 
         $report .= "\n".'---------------------------------------------';
         $report .= "\n\t\t".'** WORDPRESS CONFIG **'."\n";
