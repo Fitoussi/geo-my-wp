@@ -86,9 +86,12 @@ function gmw_ul_user_location_form( $args = array() ) {
 	if ( ! absint( $args['object_id'] ) ) {
 
 		if ( get_current_user_id() ) {
+
 			$args['object_id'] = get_current_user_id();
+
 		} else {
-			return;
+
+			$args['object_id'] = 0;
 		}
 	}
 
