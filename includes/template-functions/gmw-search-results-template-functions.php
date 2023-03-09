@@ -459,3 +459,123 @@ function gmw_search_results_bp_avatar( $object = array(), $gmw = array(), $where
 
 	echo gmw_get_bp_avatar( $args, $object, $gmw ); // WPCS: XSS ok.
 }
+
+function gmw_get_meta_field_value( $type, $field, $object ) {
+
+	$value = '';
+
+	if ( 'post_meta' === $type ) {
+
+		$value = get_post_meta( $object->ID, $field, true );
+
+	} elseif ( 'user_meta' === $type ) {
+
+		$value = get_user_meta( $object->ID, $field, true );
+
+	} elseif ( 'bp_user_meta' === $type ) {
+
+		$value = get_user_meta( $object->id, $field, true );
+
+	} elseif ( 'xprofile_field' === $type && function_exists( 'xprofile_get_field' ) ) {
+			
+		$field_id   = absint( $field ); 
+        $field_data = xprofile_get_field( $field_id, $object->id, true );
+        $value      = maybe_unserialize( $field_data->data->value );
+
+		if ( ! empty( $value ) && 'datebox' === $field_data->type ) {
+			$value = intval( date( 'Y', time() - strtotime( $value ) ) ) - 1970;
+		}
+
+	} elseif ( 'bp_group_meta' === $type && function_exists( 'groups_get_groupmeta' ) ) {
+
+		$value = groups_get_groupmeta( $object->id, $field, true );
+	}
+
+	return $value;
+}
+
+/**
+ * Get Search results meta fields.
+ *
+ * Get the meta fields in search results and info-window.
+ *
+ * @since 3.0
+ *
+ * @param  array $gmw gmw form.
+ */
+function gmw_get_search_results_meta_fields( $type = 'post_meta', $meta_fields = array(), $object = array(), $gmw = array() ) {
+
+	if ( empty( $meta_fields ) ) {
+		return;
+	}
+
+	$output = '';
+
+	foreach( $meta_fields as $field => $options ) {
+
+		if ( empty( $options['field_output'] ) ) {
+			continue;
+		}
+
+		$field_name  = $options['name'];
+		$field_value = gmw_get_meta_field_value( $type, $field, $object );
+
+		if ( empty( $field_value ) ) {
+			continue;
+		}
+
+		$field_value = maybe_unserialize( $field_value );
+		$field_value = is_array( $field_value ) ? implode( ', ', $field_value ) : $field_value;
+
+		$output .= '<li class="gmw-meta-field field-name-' . esc_attr( $field_name ) . '">';
+
+		if ( ! empty( $options['label'] ) ) {
+			$output .= '<span class="label">' . esc_html( $options['label'] ) . '</span>';
+		}
+
+		$field_output = str_replace( '%field%', $field_value, $options['field_output'] );
+
+		$output .= '<span class="field">';
+		$output .= esc_attr( $field_output );
+		$output .= '</span>';
+		$output .= '</li>';
+	}
+
+	return empty( $output ) ? false : '<ul class="gmw-meta-fields ' . esc_attr( $type ) . '">' . $output . '</ul>';
+}
+
+/**
+ * Search results meta fields.
+ *
+ * Display meta fields in search results and info-window.
+ *
+ * Requires the Premium Settings extension.
+ *
+ * @since 4.0
+ *
+ * @param  array $gmw gmw form.
+ */
+function gmw_search_results_meta_fields( $object = array(), $gmw = array(), $where = 'search_results' ) {
+
+	if ( empty( $gmw[ $where ]['meta_fields'] ) ) {
+		return;
+	}
+
+	$component = $gmw['component'];
+	$type      = 'post_meta';
+
+	if ( 'users_locator' === $component ) {
+
+		$type = 'user_meta';
+
+	} elseif ( 'members_locator' === $component ) {
+
+		$type = 'bp_user_meta';
+
+	} elseif ( 'bp_groups_locator' === $component ) {
+
+		$type = 'bp_user_meta';
+	}
+
+	echo gmw_get_search_results_meta_fields( $type, $gmw[ $where ]['meta_fields'], $object, $gmw ); // WPCS: XSS OK.
+}
