@@ -1,0 +1,22 @@
+.gmw-results-wrapper.gmw-template-rehub-members {
+	--gmw-form-color-primary: #66B22C;
+	--gmw-form-color-secondary: #66B22C;
+	--gmw-form-color-hover-primary: #66B22C;
+}
+
+.gmw-results-wrapper.gmw-template-rehub-members .rh-user-rank-mc,
+.gmw-results-wrapper.gmw-template-rehub-members .rh-user-m-type {
+	position: absolute;
+	font-size: 12;
+	z-index: 1;
+	padding: 10px 10px 8px;
+}
+
+.gmw-results-wrapper.gmw-template-rehub-members .gmw-item-footer {
+	background: none;
+	border-top: 1px solid rgba(206,206,206,0.3);
+}
+
+.gmw-results-wrapper.gmw-template-rehub-members .gmw-item-footer .gmw-item-address * {
+	color: var(--gmw-form-link-color);
+}

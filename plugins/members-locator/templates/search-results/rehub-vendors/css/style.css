@@ -1,0 +1,35 @@
+/*.gmw-results-wrapper.gmw-template-rehub-vendors {
+	--gmw-form-color-primary: #66B22C;
+	--gmw-form-color-secondary: #66B22C;
+	--gmw-form-color-hover-primary: #66B22C;
+}*/
+
+.gmw-results-wrapper.gmw-template-rehub-vendors .gmw-item-content {
+	padding: 50px 20px 20px 20px;
+}
+
+.gmw-results-wrapper.gmw-template-rehub-vendors .wcv_vendorslist {
+	overflow: initial;
+}
+
+.gmw-results-wrapper.gmw-template-rehub-vendors .distance {
+	left: 0;
+	right: initial;
+}
+
+.gmw-results-wrapper.gmw-template-rehub-vendors .rh-user-rank-mc,
+.gmw-results-wrapper.gmw-template-rehub-vendors .rh-user-m-type {
+	position: absolute;
+	font-size: 12;
+	z-index: 1;
+	padding: 10px 10px 8px;
+}
+
+.gmw-results-wrapper.gmw-template-rehub-vendors .gmw-item-footer {
+	background: none;
+	border-top: 1px solid rgba(206,206,206,0.3);
+}
+
+.gmw-results-wrapper.gmw-template-rehub-vendors .gmw-item-footer .gmw-item-address * {
+	color: var(--gmw-form-link-color);
+}
