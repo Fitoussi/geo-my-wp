@@ -150,7 +150,19 @@ function gmw_admin_pages_menu() {
 
 		<div class="gmw-admin-pages-menu-inner">
 
+			<?php $count = 0; ?>
+
 			<?php foreach ( $menu_items as $menu_item ) { ?>
+
+				<?php
+				
+				// We want only the first main menu items. No need all.
+				if ( 5 === $count ) {
+					break;
+				}
+
+				$count++;
+				?>
 
 				<?php $active = ( ! empty( $_GET['page'] ) && $_GET['page'] === $menu_item[2] ) ? 'active' : ''; ?>
 				<?php $icon   = ! empty( $menu_icons[ $menu_item[2] ] ) ? $menu_icons[ $menu_item[2] ] : ''; ?>
