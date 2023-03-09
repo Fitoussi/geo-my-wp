@@ -902,7 +902,7 @@ function gmw_verify_template_file_requirement( $template = '' ) {
 
 	if ( strpos( $template, 'buddyboss' ) !== false && ( ! function_exists( 'buddyboss_theme' ) || empty( $buddyboss_platform_plugin_file ) ) ) {
 
-		gmw_trigger_error( 'GEO my WP\'s BuddyBoss template file requires both the BuddyBoss theme and BuddyBoss Platform plugin.' );
+		gmw_trigger_error( sprintf( 'GEO my WP\'s %s template file requires both the BuddyBoss theme and BuddyBoss Platform plugin.', $template ) );
 
 		return false;
 
