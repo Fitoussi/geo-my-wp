@@ -50,6 +50,7 @@
 			<?php gmw_search_form_bp_member_types_field( $gmw ); ?>
 			<?php gmw_search_form_bp_groups_field( $gmw ); ?>
 			<?php gmw_search_form_xprofile_fields( $gmw ); ?>
+			<?php gmw_search_form_user_role_field( $gmw ); ?>
 			<?php gmw_search_form_custom_fields( $gmw ); ?>
 		</div>
 

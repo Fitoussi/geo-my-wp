@@ -49,6 +49,7 @@
 		<div class="gmw-form-advanced-fields-wrapper gmw-flexed-wrapper">
 			<?php gmw_search_form_post_types( $gmw ); ?>
 			<?php gmw_search_form_taxonomies( $gmw ); ?>
+			<?php gmw_search_form_user_role_field( $gmw ); ?>
 			<?php gmw_search_form_custom_fields( $gmw ); ?>
 		</div>
 

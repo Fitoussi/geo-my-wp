@@ -52,6 +52,8 @@
 
 		<?php gmw_search_form_taxonomies( $gmw ); ?>
 
+		<?php gmw_search_form_user_role_field( $gmw ); ?>
+
 		<?php gmw_search_form_custom_fields( $gmw ); ?>
 
 		<?php do_action( 'gmw_search_form_filters_end', $gmw ); ?>
