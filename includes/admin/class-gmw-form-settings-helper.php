@@ -1317,9 +1317,23 @@ class GMW_Form_Settings_Helper {
 		if ( 'gmw_get_bp_xprofile_fields' === $action ) {
 
 			$xprofile_field = self::get_xprofile_fields();
-			$xprofile_field = ( ! empty( $args['gmw_ajax_load_options_xprofile'] ) && 'date_field' === $args['gmw_ajax_load_options_xprofile'] ) ? $xprofile_field['date_field'] : $xprofile_field['fields'];
+			$output         = $xprofile_field['all_fields'];
 
-			$output = $xprofile_field;
+			if ( ! empty( $args['gmw_ajax_load_options_xprofile'] ) ) {
+
+				if ( 'date_field' === $args['gmw_ajax_load_options_xprofile'] ) {
+
+					$output = $xprofile_field['date_field'];
+
+				} elseif ( 'no_date_field' === $args['gmw_ajax_load_options_xprofile'] ) {
+
+					$output = $xprofile_field['no_date_field'];
+
+				} else {
+
+					$output = $xprofile_field['all_fields'];
+				}
+			}
 		}
 
 		if ( 'gmw_get_bp_member_types' === $action ) {
