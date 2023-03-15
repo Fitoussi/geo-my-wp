@@ -1190,6 +1190,10 @@ class GMW_Form_Settings_Helper {
 
 					$new_templates[ $value ] = $name . ' ( requires the BuddyPress Nouveau template pack )';
 
+				} elseif ( strpos( $value, 'rehub' ) !== false && ! function_exists( 'rehub_framework_register_scripts' ) ) {
+					
+					$new_templates[ $value ] = $name . ' ( requires the ReHub theme )';
+
 				} elseif ( 'search-forms' === $args['folder_name'] && in_array( $value, array( 'default', 'compact', 'horizontal', 'horizontal-gray', 'gray', 'purple', 'yellow', 'blue', 'red', 'left-white', 'right-white' ), true ) ) {
 
 					$name .= ' ( deprecated )';
