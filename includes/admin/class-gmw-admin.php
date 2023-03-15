@@ -93,7 +93,6 @@ class GMW_Admin {
 		 * @return mixed
 		 */
 		add_filter( 'wp_privacy_personal_data_exporters', array( $this, 'register_user_data_exporters' ) );
-
 	}
 
 	/**
@@ -344,7 +343,7 @@ class GMW_Admin {
 			'capability'        => 'manage_options',
 			'menu_slug'         => 'gmw-import-export',
 			'callback_function' => array( $this->import_export_page, 'output' ),
-			'priority'          => 10,
+			'priority'          => 7,
 		);
 
 		$menu_items[] = array(
@@ -354,7 +353,7 @@ class GMW_Admin {
 			'capability'        => 'manage_options',
 			'menu_slug'         => 'gmw-tools',
 			'callback_function' => array( $this->tools_page, 'output' ),
-			'priority'          => 15,
+			'priority'          => 9,
 		);
 
 		/**
@@ -446,8 +445,30 @@ class GMW_Admin {
 	 */
 	public function enqueue_scripts() {
 
+		// Deregister the select-2 library that is included by different plugins on GEO My WP admin page to prevent conflics.
+		// GEO my WP will load its own select-2.
 		wp_deregister_style( 'gamipress-select2-css' );
 		wp_deregister_script( 'gamipress-select2-js' );
+		wp_dequeue_style( 'gamipress-select2-css' );
+		wp_dequeue_script( 'gamipress-select2-js' );
+
+		wp_deregister_style( 'wpfepp-select2' );
+		wp_deregister_script( 'wpfepp-select2' );
+		wp_dequeue_style( 'wpfepp-select2' );
+		wp_dequeue_script( 'wpfepp-select2' );
+
+		wp_dequeue_script( 'wcv-vendor-select' );
+		wp_dequeue_style( 'wcv-vendor-select' );
+
+		wp_deregister_script( 'selectWoo' );
+		wp_dequeue_script( 'selectWoo' );
+		wp_deregister_style( 'selectWoo' );
+		wp_dequeue_style( 'selectWoo' );
+		
+		wp_deregister_style( 'select2' );
+		wp_deregister_script( 'select2' );
+ 		wp_dequeue_script( 'select2' );
+		wp_dequeue_style( 'select2' );
 
 		$pages = array( 'gmw-extensions', 'gmw-settings', 'gmw-forms', 'gmw-import-export' );
 
