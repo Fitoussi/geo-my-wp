@@ -802,6 +802,9 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 
 			// Include files required for the different forms.
 			add_action( 'gmw_pre_form_init', array( $this, 'include_form_files' ), 10 );
+
+			// Include files required for the different info window.
+			add_action( 'gmw_pre_ajax_info_window_init', array( $this, 'include_info_window_files' ), 10 );
 		}
 
 		/**
@@ -1656,6 +1659,15 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		 * @return [type] [description]
 		 */
 		public function include_form_files() {}
+
+		/**
+		 * Include files required for the different GEO my WP's info windows.
+		 *
+		 * @since 4.0
+		 *
+		 * @return [type] [description]
+		 */
+		public function include_info_window_files() {}
 
 		/**
 		 * Initialization code in AJAX mode
