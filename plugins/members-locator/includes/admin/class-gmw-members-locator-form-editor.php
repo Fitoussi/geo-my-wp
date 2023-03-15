@@ -210,7 +210,7 @@ class GMW_Members_Locator_Form_Editor {
 						'type'        => 'text',
 						'default'     => '',
 						'label'       => __( 'Field Output', 'geo-my-wp' ),
-						'desc'        => __( 'Enter the text that you wish to display with the member type. Use the placeholder %member_types% anywhere in the text where you wish to display the member types.', 'geo-my-wp' ),
+						'desc'        => __( 'Enter the text that you wish to display with the member types. Use the placeholder %member_types% anywhere in the text where you wish to display the member types.', 'geo-my-wp' ),
 						'priority'    => 15,
 					)
 				),
