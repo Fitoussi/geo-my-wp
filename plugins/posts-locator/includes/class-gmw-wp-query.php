@@ -240,10 +240,16 @@ class GMW_WP_Query extends WP_Query {
 
 		global $wpdb;
 
+		$location_status = '';
+
+		if ( apply_filters( 'gmw_search_query_location_status_enabled', true, $gmw ) ) {
+			$location_status = ' AND gmw_locations.status = 1';
+		}
+
 		$blog_id      = gmw_get_blog_id( 'post' );
 		$fields       = ', ' . implode( ',', gmw_parse_form_db_fields( array(), $gmw ) );
 		$having       = '';
-		$join         = "INNER JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON ( $wpdb->posts.ID = gmw_locations.object_id AND gmw_locations.object_type = '{$args['gmw_object_type']}' AND gmw_locations.blog_id = {$blog_id} ) ";
+		$join         = "INNER JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON ( $wpdb->posts.ID = gmw_locations.object_id AND gmw_locations.object_type = '{$args['gmw_object_type']}' AND gmw_locations.blog_id = {$blog_id}{$location_status} ) ";
 		$where        = '';
 		$units        = '';
 		$distance_sql = "'' AS distance";
