@@ -41,11 +41,17 @@ trait GMW_Members_Locator_Form_Trait {
 			$column = in_array( $this->form['query_args']['type'], array( 'active', 'newest', 'popular', 'online' ), true ) ? 'user_id' : 'ID';
 		}
 
+		$location_status = '';
+
+		if ( apply_filters( 'gmw_search_query_location_status_enabled', true, $this->form ) ) {
+			$location_status = ' AND gmw_locations.status = 1';
+		}
+
 		$blog_id      = gmw_get_blog_id( 'user' );
 		$fields       = ', ' . $this->db_fields;
 		$having       = '';
 		$where        = '';
-		$join         = "INNER JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON ( u.{$column} = gmw_locations.object_id AND gmw_locations.object_type = 'user' AND gmw_locations.blog_id = {$blog_id} ) ";
+		$join         = "INNER JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON ( u.{$column} = gmw_locations.object_id AND gmw_locations.object_type = 'user' AND gmw_locations.blog_id = {$blog_id}{$location_status} ) ";
 		$units        = '';
 		$distance_sql = "'' AS distance";
 
