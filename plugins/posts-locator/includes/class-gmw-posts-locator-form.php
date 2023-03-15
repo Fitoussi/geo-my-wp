@@ -65,6 +65,8 @@ trait GMW_Posts_Locator_Form_Trait {
 			$tax_query = gmw_generate_tax_query( $this->form );
 		}
 
+		$orderby = ! empty( $this->form['form_values']['sortby'] ) ? $this->form['form_values']['sortby'] : $this->form['orderby'];
+
 		// query args.
 		return array(
 			'post_type'           => $post_types,
@@ -72,8 +74,8 @@ trait GMW_Posts_Locator_Form_Trait {
 			'tax_query'           => $tax_query, // WPCS: slow query ok.
 			'posts_per_page'      => ! empty( $this->form['per_page'] ) ? $this->form['per_page'] : -1,
 			'paged'               => $this->form['paged'],
-			'orderby'             => $this->form['orderby'],
-			'order'               => 'post_modified' === $this->form['orderby'] || 'post_date' === $this->form['orderby'] ? 'DESC' : 'ASC',
+			'orderby'             => $orderby,
+			'order'               => 'post_modified' === $orderby || 'post_date' === $orderby ? 'DESC' : 'ASC',
 			'ignore_sticky_posts' => 1,
 			// below we can save on performance when showing map only ( without the list of results ).
 			'no_found_rows'       => $this->form['results_enabled'] ? false : true,
