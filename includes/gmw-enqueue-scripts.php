@@ -39,6 +39,7 @@ function gmw_register_google_maps_api() {
 								'libraries' => 'google_maps' === GMW()->maps_provider ? 'places' : '',
 								'key'       => trim( gmw_get_option( 'api_providers', 'google_maps_client_side_api_key', '' ) ),
 								'language'  => gmw_get_option( 'general_settings', 'language_code', 'en' ),
+								'callback'  => 'Function.prototype',
 							)
 						)
 					),
