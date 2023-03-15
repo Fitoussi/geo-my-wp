@@ -209,7 +209,6 @@ class GMW_Search_Form_Helper {
 
 			// Otherwise look for default value.
 		} elseif ( ! empty( $args['value'] ) ) {
-
 			$value = $args['value'];
 		}
 
@@ -329,7 +328,7 @@ class GMW_Search_Form_Helper {
 				if ( ! empty( $value ) && is_array( $value ) ) {
 					$value = implode( ' ', $value );
 					$value = wp_unslash( $value );
-				} else {
+				} elseif ( empty( $value ) ) {
 					$value = '';
 				}
 
