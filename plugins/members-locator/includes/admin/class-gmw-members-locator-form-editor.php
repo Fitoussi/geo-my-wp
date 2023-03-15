@@ -60,6 +60,14 @@ class GMW_Members_Locator_Form_Editor {
 		$settings['info_window']['last_active']                   = 1;
 		$settings['info_window']['friendship_button']             = 1;
 
+		$settings['search_results']['member_types'] = array(
+			'enabled'      => 0,
+			'label'        => 'Member Types:',
+			'field_output' => '%member_types%',
+		);
+
+		$settings['info_window']['member_types'] = $settings['search_results']['member_types'];
+
 		return $settings;
 	}
 
@@ -127,7 +135,7 @@ class GMW_Members_Locator_Form_Editor {
 						'options'     => $selected_fields,
 						'attributes'  => array(
 							'data-gmw_ajax_load_options'          => 'gmw_get_bp_xprofile_fields',
-							'data-gmw_ajax_load_options_xprofile' => 'all_fields',
+							'data-gmw_ajax_load_options_xprofile' => 'no_date_field',
 						),
 						'priority'    => 5,
 					)
@@ -167,6 +175,57 @@ class GMW_Members_Locator_Form_Editor {
 				'priority' => 20,
 			)
 		);
+
+		$settings['search_results']['member_types'] = array(
+			'name'             => 'member_types',
+			'type'             => 'fields_group',
+			'label'            => esc_html__( 'Member Types', 'geo-my-wp' ),
+			'fields'           => array(
+				'enabled'      => gmw_get_admin_setting_args(
+					array(
+						'name'       => 'enabled',
+						'type'       => 'checkbox',
+						'default'    => '',
+						'label'      => __( 'Display Member Types', 'geo-my-wp' ),
+						'desc'       => __( 'Display the member types of each member.', 'geo-my-wp' ),
+						'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+						'class'      => 'gmw-options-toggle',
+						'attributes' => array(),
+						'priority'   => 5,
+					)
+				),
+				'label' => gmw_get_admin_setting_args(
+					array(
+						'name'        => 'label',
+						'type'        => 'text',
+						'default'     => '',
+						'label'       => __( 'Label', 'geo-my-wp' ),
+						'desc'        => __( 'Enter the label that you wish to display before the member types or leave blank to omit the label.', 'geo-my-wp' ),
+						'priority'    => 10,
+					)
+				),
+				'field_output' => gmw_get_admin_setting_args(
+					array(
+						'name'        => 'field_output',
+						'type'        => 'text',
+						'default'     => '',
+						'label'       => __( 'Field Output', 'geo-my-wp' ),
+						'desc'        => __( 'Enter the text that you wish to display with the member type. Use the placeholder %member_types% anywhere in the text where you wish to display the member types.', 'geo-my-wp' ),
+						'priority'    => 15,
+					)
+				),
+			),
+			'premium_message' => gmw_get_admin_setting_args(
+				array(
+					'option_type'      => 'premium_message',
+					'option_disabled'  => 1,
+				),
+			),
+			'priority'         => 28,
+		);
+
+		$settings['info_window']['member_types']             = $settings['search_results']['member_types'];
+		$settings['info_window']['member_types']['priority'] = 55;
 
 		$settings['search_results']['image']['fields']['show_default'] = gmw_get_admin_setting_args(
 			array(
