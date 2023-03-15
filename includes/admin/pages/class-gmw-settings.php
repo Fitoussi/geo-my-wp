@@ -971,6 +971,8 @@ class GMW_Settings {
 
 			<div class="gmw-admin-page-panels-wrapper<?php echo $sub_nav_class; // WPCS: XSS ok. ?>" id="tab_<?php echo esc_attr( $current_tab ); ?>">
 
+				<!-- <h1 style="margin-bottom:20px"><?php echo sprintf( __( '%s Settings', 'geo-my-wp' ), esc_attr( $this->settings_groups[ $current_tab ]['label'] ) ); ?></h1>-->
+
 				<?php if ( ! empty( $sub_tabs ) ) { // Generate the sub navigation. ?>
 
 					<?php
