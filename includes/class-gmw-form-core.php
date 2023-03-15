@@ -975,6 +975,20 @@ class GMW_Form_Core {
 			wp_add_inline_style( $template['stylesheet_handle'], $this->form[ 'search_' . $type ]['styles']['custom_css'] );
 		}
 
+		if ( 'results' === $type && ! empty( $this->form['search_results']['results_view']['grid_columns'] ) ) {
+
+			$template_name   = 'gmw-template-' . str_replace( 'custom_', '', $this->form['search_results']['results_template'] );
+			$grid_column_css = '.' . $template_name . ' {--gmw-results-grid-col: ' . absint( $this->form['search_results']['results_view']['grid_columns'] ) . ';}';
+
+			// Needed when registering an inline style.
+			if ( ! wp_style_is( $template['stylesheet_handle'], 'enqueued' ) ) {
+				wp_register_style( $template['stylesheet_handle'], false );
+				wp_enqueue_style( $template['stylesheet_handle'] );
+			}
+
+			wp_add_inline_style( $template['stylesheet_handle'], $grid_column_css );
+		}
+	
 		return $template;
 	}
 
