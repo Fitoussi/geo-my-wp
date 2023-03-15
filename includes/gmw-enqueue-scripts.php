@@ -223,12 +223,12 @@ function gmw_enqueue_scripts() {
 		}*/
 
 		// register select2 script and style.
-		if ( ! wp_style_is( 'select2', 'registered' ) ) {
-			wp_register_style( 'select2', GMW_URL . '/assets/lib/select2/css/select2.min.css', array(), '4.0.13' );
+		if ( ! wp_style_is( 'gmw-select2', 'registered' ) ) {
+			wp_register_style( 'gmw-select2', GMW_URL . '/assets/lib/select2/css/select2.min.css', array(), '4.0.13' );
 		}
 
-		if ( ! wp_script_is( 'select2', 'registered' ) ) {
-			wp_register_script( 'select2', GMW_URL . '/assets/lib/select2/js/select2.full.min.js', array( 'jquery' ), '4.0.13', true );
+		if ( ! wp_script_is( 'gmw-select2', 'registered' ) ) {
+			wp_register_script( 'gmw-select2', GMW_URL . '/assets/lib/select2/js/select2.full.min.js', array( 'jquery' ), '4.0.13', true );
 		}
 
 		if ( ! wp_script_is( 'jquery-confirm', 'registered' ) ) {

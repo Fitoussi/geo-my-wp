@@ -274,9 +274,9 @@ class GMW_Meta_Fields_Importer_Form {
 
 		do_action( 'gmw_after_' . $slug . '_import' );
 
-		if ( ! wp_script_is( 'select2', 'enqueued' ) ) {
-			wp_enqueue_script( 'select2' );
-			wp_enqueue_style( 'select2' );
+		if ( ! wp_script_is( 'gmw-select2', 'enqueued' ) ) {
+			wp_enqueue_script( 'gmw-select2' );
+			wp_enqueue_style( 'gmw-select2' );
 		}
 	}
 

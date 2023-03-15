@@ -477,9 +477,13 @@ class GMW_Admin {
 		}
 
 		// load select2.
-		if ( ! wp_script_is( 'select2', 'enqueued' ) ) {
-			wp_enqueue_script( 'select2' );
-			wp_enqueue_style( 'select2' );
+		if ( ! wp_script_is( 'gmw-select2', 'enqueued' ) ) {
+			wp_enqueue_script( 'gmw-select2' );
+		}
+
+		// load select2.
+		if ( ! wp_style_is( 'gmw-select2', 'enqueued' ) ) {
+			wp_enqueue_style( 'gmw-select2' );
 		}
 
 		if ( ! wp_style_is( 'wp-color-picker', 'enqueued' ) ) {

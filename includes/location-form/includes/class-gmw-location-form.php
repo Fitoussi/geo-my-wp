@@ -359,9 +359,9 @@ class GMW_Location_Form {
 		do_action( 'gmw_location_form_enqueue_script', $this );
 
 		// load select if not already loaded.
-		if ( ! wp_script_is( 'select2', 'enqueued' ) ) {
-			wp_enqueue_script( 'select2' );
-			wp_enqueue_style( 'select2' );
+		if ( ! wp_script_is( 'gmw-select2', 'enqueued' ) ) {
+			wp_enqueue_script( 'gmw-select2' );
+			wp_enqueue_style( 'gmw-select2' );
 		}
 
 		wp_localize_script(
