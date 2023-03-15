@@ -420,6 +420,11 @@ class GMW_Form_Core {
 		$this->query_cache_args['user_loggedin']                    = $this->form['user_loggedin'];
 		$this->query_cache_args['showing_objects_without_location'] = $this->form['enable_objects_without_location'];
 		$this->query_cache_args['db_fields']                        = $this->db_fields;
+
+		// For internal cache when using WPML plugin.
+		if ( class_exists( 'SitePress' ) ) {
+			$this->query_cache_args['wpml'] = apply_filters( 'wpml_current_language', null );
+		}
 	}
 
 	/**
