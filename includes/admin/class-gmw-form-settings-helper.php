@@ -996,8 +996,9 @@ class GMW_Form_Settings_Helper {
 			);
 
 			$fields = array(
-				'fields'     => array(),
-				'date_field' => array(),
+				'all_fields'    => array(),
+				'date_field'    => array(),
+				'no_date_field' => array(),
 			);
 
 			// display profile fields.
@@ -1014,10 +1015,15 @@ class GMW_Form_Settings_Helper {
 						$field_type = bp_get_the_profile_field_type();
 
 						if ( 'datebox' === $field_type || 'birthdate' === $field_type ) {
+
 							$fields['date_field'][ bp_get_the_profile_field_id() ] = bp_get_the_profile_field_name();
+
 						} else {
-							$fields['fields'][ bp_get_the_profile_field_id() ] = bp_get_the_profile_field_name();
+
+							$fields['no_date_field'][ bp_get_the_profile_field_id() ] = bp_get_the_profile_field_name();
 						}
+
+						$fields['all_fields'][ bp_get_the_profile_field_id() ] = bp_get_the_profile_field_name();
 					}
 				}
 			}
