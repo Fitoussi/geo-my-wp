@@ -1140,6 +1140,17 @@ class GMW_Form_Editor {
 									'priority' => 10,
 								)
 							),
+							'grid_columns'  => gmw_get_admin_setting_args(
+								array(
+									'name'       => 'grid_columns',
+									'type'       => 'number',
+									'default'    => '',
+									'label'      => __( 'Grid Columns', 'geo-my-wp' ),
+									'desc'       => __( 'Enter a specific number of grid columns or leave blank to auto-fill the rows.', 'geo-my-wp' ),
+									'priority'   => 15,
+								)
+							),
+
 						),
 						'priority' => 10,
 					),
@@ -1822,7 +1833,15 @@ class GMW_Form_Editor {
 			);
 		}
 
-		$map_styles = gmw_get_admin_setting_args(
+		$snazzy_function = 'none';
+		$snazzy_enabled  = false;
+
+		if ( is_plugin_active( 'snazzy-maps/snazzymaps.php' ) ) {
+			$snazzy_enabled  = true;
+			$snazzy_function = 'ps_snazzy_maps_styles';
+		}
+
+		$map_styles      = gmw_get_admin_setting_args(
 			array(
 				'name'     => 'styles',
 				'type'     => 'fields_group',
@@ -1848,7 +1867,7 @@ class GMW_Form_Editor {
 						array(
 							'name'       => 'snazzy_maps_styles',
 							'type'       => 'function',
-							'function'   => 'ps_snazzy_maps_styles',
+							'function'   => $snazzy_function,
 							'default'    => '',
 							'label'      => __( 'Snazzy Maps Styles', 'geo-my-wp' ),
 							'desc'       => sprintf(
@@ -1877,14 +1896,22 @@ class GMW_Form_Editor {
 
 			$groups['results_map']['fields']['styles'] = $map_styles;
 
+			if ( ! $snazzy_enabled ) {
+
+				$sm_message = '<div class="gmw-admin-notice-box gmw-admin-notice-error">' . sprintf( __( 'This feature is requires the <a href="%s" target="_blank">Snazzy Maps plugin</a>.', 'geo-my-wp' ), 'https://wordpress.org/plugins/snazzy-maps/' ) . '</div>';
+
+				$groups['results_map']['fields']['styles']['fields']['snazzy_maps_styles']['desc']       .= ' ' . $sm_message;
+				$groups['results_map']['fields']['styles']['fields']['snazzy_maps_styles']['attributes'] = array( 'disabled' => 'disabled' );
+			}
 		} else {
 
 			$groups['results_map']['fields']['styles']                                   = $map_styles;
-			$groups['results_map']['fields']['styles']['fields']['styles']['desc']       = $gm_only_message;
+			$groups['results_map']['fields']['styles']['fields']['styles']['desc']      .= ' ' . $gm_only_message;
 			$groups['results_map']['fields']['styles']['fields']['styles']['attributes'] = array( 'disabled' => 'disabled' );
 
-			$groups['results_map']['fields']['styles']['fields']['snazzy_maps_styles']['desc']       = $groups['results_map']['fields']['styles']['fields']['styles']['desc'];
-			$groups['results_map']['fields']['styles']['fields']['snazzy_maps_styles']['attributes'] = array( 'disabled' => 'disabled' );
+			$groups['results_map']['fields']['styles']['fields']['snazzy_maps_styles']['function']    = 'none';
+			$groups['results_map']['fields']['styles']['fields']['snazzy_maps_styles']['desc']       .= ' ' . $gm_only_message;
+			$groups['results_map']['fields']['styles']['fields']['snazzy_maps_styles']['attributes']  = array( 'disabled' => 'disabled' );
 		}
 
 		if ( ! $is_global_maps && ! $is_ajax_form ) {
