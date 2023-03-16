@@ -868,24 +868,27 @@ var GMW_Location_Form = {
     	
     	// locator button clicked 
 	    jQuery( '#gmw-lf-locator-button' ).on( 'click', function(){
-	    	
-	    	// spin loading icon
-    		jQuery( '#gmw-lf-locator-button' ).addClass( 'animate-spin' );
 
-    		// verify browser supports geolocation
-    		if ( navigator.geolocation ) {
+    		if ( ! GMW.apply_filters( 'gmw_lf_navigator_disabled', false, this_form ) ) {
 
-    			options = GMW.apply_filters( 'gmw_lf_navigator_options', { timeout : 15000 }, this_form );
+    			// spin loading icon
+    			jQuery( '#gmw-lf-locator-button' ).addClass( 'animate-spin' );
 
-	    		navigator.geolocation.getCurrentPosition( this_form.navigator_position, this_form.navigator_error, options );
+	    		// verify browser supports geolocation
+	    		if ( navigator.geolocation ) {
 
-	    	// otherwise, display error message
-			} else {
+	    			options = GMW.apply_filters( 'gmw_lf_navigator_options', { timeout : 15000 }, this_form );
 
-	   	 		alert( 'Geolocation is not supported by this browser.' );
+		    		navigator.geolocation.getCurrentPosition( this_form.navigator_position, this_form.navigator_error, options );
 
-	   	 		jQuery( '#gmw-lf-locator-button' ).removeClass( 'animate-spin' );
-	   		}
+		    	// otherwise, display error message
+				} else {
+
+		   	 		alert( 'Geolocation is not supported by this browser.' );
+
+		   	 		jQuery( '#gmw-lf-locator-button' ).removeClass( 'animate-spin' );
+		   		}
+		   	}
 	  	});
 	},
     
@@ -949,6 +952,8 @@ var GMW_Location_Form = {
 	geocode : function( address ) {
 		
 		jQuery( '#' + this_form.action_fields.loader.id ).fadeIn( 'fast' );
+
+		address = GMW.apply_filters( 'gmw_lf_address_pre_geocoding', address, this_form );
 
 		if ( jQuery.trim( address ).length == 0 ) {
 
@@ -1170,7 +1175,7 @@ var GMW_Location_Form = {
 
 	  		latVal = lngVal = '';
 
-	  		console.log( this_form.coords_fields )
+	  		//console.log( this_form.coords_fields )
 	  		// make sure coords exist in form
 	  		if ( typeof this_form.coords_fields != false && typeof this_form.coords_fields.latitude !== 'undefined' && jQuery( '#' + this_form.coords_fields.latitude.id ).length ) {
 		  		latVal = jQuery( '#' + this_form.coords_fields.latitude.id ).val();
