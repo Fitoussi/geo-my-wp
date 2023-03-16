@@ -32,6 +32,8 @@ function gmw_get_search_results_address( $object, $fields = array(), $linked = f
  * @param  object $object location object.
  *
  * @param  array  $gmw    gmw form.
+ *
+ * @param  string $where  search_results || info_window.
  */
 function gmw_search_results_address( $object, $gmw = array(), $where = 'search_results' ) {
 
@@ -73,7 +75,10 @@ function gmw_search_results_linked_address( $object, $gmw = array() ) {
  * Get the distance to location
  *
  * @param  object $object location object.
+ *
  * @param  array  $gmw    gmw form.
+ *
+ * @param  string $where  search_results || info_window.
  */
 function gmw_search_results_distance( $object = array(), $gmw = array(), $where = 'search_results' ) {
 
@@ -92,8 +97,12 @@ function gmw_search_results_distance( $object = array(), $gmw = array(), $where 
  * Display list of location meta in search results
  *
  * @param  object $object location object.
+ *
  * @param  array  $gmw    gmw form.
+ *
  * @param  string $label  label before meta value.
+ *
+ * @param  string $where  search_results || info_window.
  */
 function gmw_search_results_location_meta( $object, $gmw = array(), $label = true, $where = 'search_results' ) {
 
@@ -122,11 +131,15 @@ function gmw_search_results_location_meta( $object, $gmw = array(), $label = tru
 }
 
 /**
- * Display hours of operation in search results
+ * Display hours of operation in search results.
  *
  * @param  object $object location object.
+ *
  * @param  array  $gmw    gmw form.
+ *
  * @param  string $label  label before meta value.
+ *
+ * @param  string $where  search_results || info_window.
  */
 function gmw_search_results_hours_of_operation( $object, $gmw = array(), $label = true, $where = 'search_results' ) {
 
@@ -158,7 +171,10 @@ function gmw_search_results_hours_of_operation( $object, $gmw = array(), $label 
  * Display directions link in search results
  *
  * @param  object $object location object.
+ *
  * @param  array  $gmw    gmw form.
+ *
+ * @param  string $where  search_results || info_window.
  */
 function gmw_search_results_directions_link( $object, $gmw = array(), $where = 'search_results' ) {
 
@@ -436,6 +452,8 @@ function gmw_results_view_toggle( $gmw ) {
  *
  * @param  array  $gmw    gmw form object.
  *
+ * @param  string $where  search_results || info_window.
+ *
  * @return [type]         [description]
  */
 function gmw_search_results_bp_avatar( $object = array(), $gmw = array(), $where = 'search_results' ) {
@@ -460,9 +478,26 @@ function gmw_search_results_bp_avatar( $object = array(), $gmw = array(), $where
 	echo gmw_get_bp_avatar( $args, $object, $gmw ); // WPCS: XSS ok.
 }
 
+/**
+ * Get meta field value in search results.
+ *
+ * @since 4.0
+ *
+ * @param  string $type   type of meta field post_meta || user_meta || bp_user_meta || xprofile_field.
+ *
+ * @param  string $field  field name/slug.
+ *
+ * @param  object $object the location object in the loop.
+ *
+ * @return [type]         [description]
+ */
 function gmw_get_meta_field_value( $type, $field, $object ) {
 
 	$value = '';
+
+	if ( empty( $field ) ) {
+		return;
+	}
 
 	if ( 'post_meta' === $type ) {
 
@@ -477,15 +512,19 @@ function gmw_get_meta_field_value( $type, $field, $object ) {
 		$value = get_user_meta( $object->id, $field, true );
 
 	} elseif ( 'xprofile_field' === $type && function_exists( 'xprofile_get_field' ) ) {
-			
-		$field_id   = absint( $field ); 
-        $field_data = xprofile_get_field( $field_id, $object->id, true );
-        $value      = maybe_unserialize( $field_data->data->value );
+
+		$field_id   = absint( $field );
+		$field_data = xprofile_get_field( $field_id, $object->id, true );
+
+		if ( empty( $field_data ) ) {
+			return;
+		}
+
+		$value = maybe_unserialize( $field_data->data->value );
 
 		if ( ! empty( $value ) && 'datebox' === $field_data->type ) {
 			$value = intval( date( 'Y', time() - strtotime( $value ) ) ) - 1970;
 		}
-
 	} elseif ( 'bp_group_meta' === $type && function_exists( 'groups_get_groupmeta' ) ) {
 
 		$value = groups_get_groupmeta( $object->id, $field, true );
@@ -501,7 +540,15 @@ function gmw_get_meta_field_value( $type, $field, $object ) {
  *
  * @since 3.0
  *
- * @param  array $gmw gmw form.
+ * @param  string $type         type of meta fields post_meta || user_meta || bp_user_meta || xprofile_field.
+ *
+ * @param  string $meta_fields  array of meta fields name/slug.
+ *
+ * @param  object $object       the location object in the loop.
+ *
+ * @param  array  $gmw          gmw form.
+ *
+ * @return [type]         [description]
  */
 function gmw_get_search_results_meta_fields( $type = 'post_meta', $meta_fields = array(), $object = array(), $gmw = array() ) {
 
@@ -511,7 +558,7 @@ function gmw_get_search_results_meta_fields( $type = 'post_meta', $meta_fields =
 
 	$output = '';
 
-	foreach( $meta_fields as $field => $options ) {
+	foreach ( $meta_fields as $field => $options ) {
 
 		if ( empty( $options['field_output'] ) ) {
 			continue;
@@ -553,7 +600,13 @@ function gmw_get_search_results_meta_fields( $type = 'post_meta', $meta_fields =
  *
  * @since 4.0
  *
- * @param  array $gmw gmw form.
+ * @param  object $object the object in the loop.
+ *
+ * @param  array  $gmw    gmw form.
+ *
+ * @param  string $where  seasrch_results || info_window.
+ *
+ * @return [type]         [description]
  */
 function gmw_search_results_meta_fields( $object = array(), $gmw = array(), $where = 'search_results' ) {
 
