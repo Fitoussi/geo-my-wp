@@ -289,6 +289,7 @@ function gmw_get_search_form_radius( $gmw ) {
 	}
 
 	$settings     = $gmw['search_form']['radius'];
+	$pl_options   = $gmw['page_load_results'];
 	$type         = 'hidden';
 	$options      = array();
 	$defaut_value = '';
@@ -320,6 +321,16 @@ function gmw_get_search_form_radius( $gmw ) {
 	} else {
 
 		$defaut_value = ! empty( $settings['default_value'] ) ? $settings['default_value'] : '';
+	}
+
+	// When in page load, add the address to the address field by default.
+	if ( ! empty( $pl_options['enabled'] ) && ! empty( $pl_options['address_filter'] ) ) {
+
+		if ( empty( $_GET['action'] ) || ( ! empty( $_GET['action'] ) && 'fs' === $_GET['action'] && ! empty( $_GET['form'] ) && absint( $gmw['ID'] ) !== absint( $_GET['form'] ) ) ) {
+
+			// get the addres value.
+			$defaut_value = sanitize_text_field( $pl_options['radius'] );
+		}
 	}
 
 	$args = array(
