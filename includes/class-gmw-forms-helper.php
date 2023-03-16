@@ -663,6 +663,12 @@ class GMW_Forms_Helper {
 			'fields'  => array(),
 		);
 
+		$form['search_results']['styles'] = array(
+			'disable_core_styles'          => '',
+			'disable_single_item_template' => '',
+			'custom_css'                   => '',
+		);
+
 		if ( isset( $form['search_results']['address_fields'] ) ) {
 
 			$form['search_results']['address']['fields'] = $form['search_results']['address_fields'];
@@ -789,6 +795,72 @@ class GMW_Forms_Helper {
 					$form['search_form']['member_types_filter']['usage'] = 'checkboxes';
 				}
 			}
+
+			$new_xfields = array();
+
+			if ( ! empty( $form['search_results']['xprofile_fields']['fields'] ) ) {
+
+				foreach( $form['search_results']['xprofile_fields']['fields'] as $xfield ) {
+
+					$field_id    = absint( $xfield ); 
+        			$field_data  = xprofile_get_field( $field_id );
+        			$field_value = maybe_unserialize( $field_data->data->value );
+
+        			$new_xfields[ $field_id ] = array(
+        				'name'         => $field_data->name,
+        				'label'        => $field_data->name,
+        				'field_output' => '%field%',
+        			);
+				}
+			}
+
+			if ( ! empty( $form['search_results']['xprofile_fields']['date_field'] ) ) {
+
+				$field_id    = absint( $form['search_results']['xprofile_fields']['date_field'] ); 
+    			$field_data  = xprofile_get_field( $field_id );
+    			$field_value = maybe_unserialize( $field_data->data->value );
+
+    			$new_xfields[ $field_id ] = array(
+    				'name'         => $field_data->name,
+    				'label'        => $field_data->name,
+    				'field_output' => '%field%',
+    			);
+			}
+
+			$form['search_results']['xprofile_fields'] = $new_xfields;
+
+			$new_xfields = array();
+
+			if ( ! empty( $form['info_window']['xprofile_fields']['fields'] ) ) {
+
+				foreach( $form['info_window']['xprofile_fields']['fields'] as $xfield ) {
+
+					$field_id    = absint( $xfield ); 
+        			$field_data  = xprofile_get_field( $field_id );
+        			$field_value = maybe_unserialize( $field_data->data->value );
+
+        			$new_xfields[ $field_id ] = array(
+        				'name'         => $field_data->name,
+        				'label'        => $field_data->name,
+        				'field_output' => '%field%',
+        			);
+				}
+			}
+
+			if ( ! empty( $form['info_window']['xprofile_fields']['date_field'] ) ) {
+
+				$field_id    = absint( $form['info_window']['xprofile_fields']['date_field'] ); 
+    			$field_data  = xprofile_get_field( $field_id );
+    			$field_value = maybe_unserialize( $field_data->data->value );
+
+    			$new_xfields[ $field_id ] = array(
+    				'name'         => $field_data->name,
+    				'label'        => $field_data->name,
+    				'field_output' => '%field%',
+    			);
+			}
+
+			$form['info_window']['xprofile_fields'] = $new_xfields;
 
 			if ( ! empty( $form['search_form']['bp_groups'] ) ) {
 
