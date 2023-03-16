@@ -546,7 +546,7 @@ var GMW = {
             //see this page https://developers.google.com/maps/documentation/javascript/places-autocomplete
             //for all the available options.
             options = GMW.apply_filters( 'gmw_address_autocomplete_options', options, field_id, input_field, GMW );
-    
+
             var autocomplete = new google.maps.places.Autocomplete( input_field, options );
              
             google.maps.event.addListener( autocomplete, 'place_changed', function() {
@@ -888,7 +888,8 @@ var GMW = {
 	        		element.slideToggle( data.duration );
 	        	}
 
-	        	element.toggleClass( 'gmw-element-visible' );
+	        	element.toggleClass( 'gmw-modal-open' );
+	        	jQuery( 'body' ).addClass( 'gmw-modal-box-open' );
         	});
 
         	closeButton.add( data.element).click( function(e) {
@@ -908,6 +909,7 @@ var GMW = {
 	        	}
 
 	        	element.removeClass( 'gmw-element-visible' );
+	        	jQuery( 'body' ).removeClass( 'gmw-modal-box-open' );
         	});
         });
 
@@ -936,7 +938,12 @@ var GMW = {
         // Reset form.
         jQuery( 'form.gmw-form' ).on( 'click', '.gmw-reset-form-field', function() {
 
-        	var submit = jQuery( this ).closest( '.gmw-form-wrapper' ).hasClass( 'gmw-ajax-form-wrapper' ) ? true : false;
+        	var closestWrap = jQuery( this ).closest( '.gmw-form-wrapper' );
+        	var submit      = false;
+
+        	if ( closestWrap.hasClass( 'gmw-ajax-form-wrapper' ) || closestWrap.hasClass( 'gmw-global-map-element' ) ) {
+        		submit = true;
+        	}
 
         	GMW.reset_form( jQuery( this ).data( 'form_id' ), submit );
 
@@ -1097,9 +1104,9 @@ var GMW = {
         address = addressField.map( function() {
            return jQuery( this ).val();
         }).get().join( ' ' );           
-  			
+
   		// modify the address before geocoding takes place.
-   		address = GMW.apply_filters( 'gmw_search_form_address_value_pre_geocoding', address.toString(), GMW );
+   		address = GMW.apply_filters( 'gmw_search_form_address_value_pre_geocoding', address.toString(), form, GMW );
 
         // if address field is empty.
         if ( ! jQuery.trim( address ).length ) {
