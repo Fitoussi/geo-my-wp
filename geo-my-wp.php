@@ -118,7 +118,7 @@ class GEO_MY_WP {
 		'global_maps'                      => '2.9999',
 		'gmw_kleo_geolocation'             => '1.9',
 		'nearby_locations'                 => '1.9999',
-		'nearby_posts'                     => '1.9999',   // old slug.
+		'nearby_posts'                     => '1.9999', // old slug.
 		'premium_settings'                 => '2.9999',
 		'users_locator'                    => '1.9999',
 		'wp_users_geo-location'            => '1.9999', // old slug.
