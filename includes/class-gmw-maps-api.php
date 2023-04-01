@@ -396,12 +396,12 @@ class GMW_Maps_API {
 			self::$markers_spiderfier = true;
 		}
 
-		// enable infobox js file if needed.
+		// enable infobox js file if needed. This feature is DEPRECATED.
 		if ( 'infobox' === $map_element['settings']['info_window_type'] ) {
 			self::$infobox = true;
 		}
 
-		// enable infobox js file if needed.
+		// enable infobox js file if needed. This feature is DEPRECATED.
 		if ( 'infobubble' === $map_element['settings']['info_window_type'] ) {
 			self::$infobubble = true;
 		}
