@@ -331,8 +331,19 @@ function gmw_get_search_results_permalink( $url, $object, $gmw ) {
 		$url_args['distance'] = $object->distance . $object->units;
 	}
 
+	$new_url = apply_filters(
+		'gmw_get_serach_results_permalink_args',
+		array(
+			'url'       => $url,
+			'separator' => empty( $_GET ) ? '?' : '&',
+			'args'      => $url_args,
+		),
+	);
+
+	$new_url['args'] = http_build_query( $new_url['args'] );
+
 	// append the address to the permalink.
-	return esc_url( apply_filters( "gmw_{$gmw['prefix']}_get_location_permalink", $url . '?' . http_build_query( $url_args ), $url, $url_args, $object, $gmw ) );
+	return esc_url( apply_filters( "gmw_{$gmw['prefix']}_get_location_permalink", implode( $new_url ), $url, $url_args, $object, $gmw ) );
 }
 
 /**
