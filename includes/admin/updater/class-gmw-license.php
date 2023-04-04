@@ -437,7 +437,7 @@ if ( ! class_exists( 'GMW_License' ) ) :
 				$status  = 'valid';
 
 				// hidden input fields.
-				$key_field  = '<input class="gmw-license-key-disabled" disabled="disabled" type="text" size="31" value="' . $license_value . '" />';
+				$key_field  = '<input class="gmw-license-key-disabled" disabled="disabled" type="password" size="31" value="' . $license_value . '" />';
 				$key_field .= '<input type="hidden" class="gmw-license-key" name="gmw_licenses[' . $license_name . '][license_key]" value="' . $license_value . '" />';
 
 			} else {
@@ -467,7 +467,7 @@ if ( ! class_exists( 'GMW_License' ) ) :
 				}
 
 				// generate input fields.
-				$key_field = '<input  class="gmw-license-key" name="gmw_licenses[' . $license_name . '][license_key]" type="text" class="regular-text" size="31" placeholder="' . __( 'License key', 'geo-my-wp' ) . '" value="' . $license_value . '" />';
+				$key_field = '<input  class="gmw-license-key" name="gmw_licenses[' . $license_name . '][license_key]" type="password" class="regular-text" size="31" placeholder="' . __( 'License key', 'geo-my-wp' ) . '" value="' . $license_value . '" />';
 
 			}
 
