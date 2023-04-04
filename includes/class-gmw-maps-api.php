@@ -769,7 +769,11 @@ class GMW_Maps_API {
 	 * w - Switches to walking directions - still in beta.
 	 * b - Switches to biking directions - only works in some areas and still in beta.
 	 *
-	 * @param [type] $args [description].
+	 * @param array $args     arguments.
+	 *
+	 * @param array $location location object when available.
+	 *
+	 * @param array $gmw      gmw form when available.
 	 *
 	 * @return [type]            [description]
 	 */
