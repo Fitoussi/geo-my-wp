@@ -187,7 +187,7 @@ function gmw_search_results_directions_link( $object, $gmw = array(), $where = '
 		'lng' => $gmw['lng'],
 	);
 
-	echo '<div class="gmw-item gmw-item-directions gmw-directions-link">' . gmw_get_directions_link( $object, $from_coords ) . '</div>'; // WPCS: XSS ok.
+	echo '<div class="gmw-item gmw-item-directions gmw-directions-link">' . gmw_get_directions_link( $object, $from_coords, '', false, $gmw ) . '</div>'; // WPCS: XSS ok.
 }
 
 /**
