@@ -1718,9 +1718,10 @@ function gmw_get_directions_link( $location, $from_coords = array(), $label = ''
 	}
 
 	$args = array(
-		'to_lat'    => $location->lat,
-		'to_lng'    => $location->lng,
-		'link_only' => $link_only,
+		//'to_lat'    => $location->lat,
+		//'to_lng'    => $location->lng,
+		'to_address' => $location->formatted_address,
+		'link_only'  => $link_only,
 	);
 
 	if ( ! empty( $from_coords[0] ) && ! empty( $from_coords[1] ) ) {
@@ -1750,7 +1751,7 @@ function gmw_get_directions_link( $location, $from_coords = array(), $label = ''
 		$args['label'] = $label;
 	}
 
-	return GMW_Maps_API::get_directions_link( $args );
+	return GMW_Maps_API::get_directions_link( apply_filters( 'gmw_get_location_directions_link_args', $args, $location, $gmw ) );
 }
 
 /**
