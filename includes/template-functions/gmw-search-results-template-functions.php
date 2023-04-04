@@ -272,9 +272,14 @@ function gmw_search_results_orderby_filter( $gmw = array() ) {
 function gmw_get_search_results_title( $title, $object, $gmw ) {
 
 	$title = apply_filters( 'gmw_get_location_title', $title, $object, $gmw );
+	$title = apply_filters( "gmw_{$gmw['prefix']}_get_location_title", $title, $object, $gmw );
+
+	if ( ! empty( $title ) ) {
+		$title = esc_html( stripslashes( $title ) );
+	}
 
 	// append the address to the permalink.
-	return esc_html( stripslashes( apply_filters( "gmw_{$gmw['prefix']}_get_location_title", $title, $object, $gmw ) ) );
+	return $title;
 }
 
 /**
