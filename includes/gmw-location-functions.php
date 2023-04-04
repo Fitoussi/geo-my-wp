@@ -1755,18 +1755,31 @@ function gmw_get_directions_link( $location, $from_coords = array(), $label = ''
 }
 
 /**
- * Output directions link
+ * Output directions link.
  *
  * Usually will be used in the results.
  *
- * @param  object $location    location object or location ID.
- * @param  array  $from_coords array of coords array( lat,lng ).
- * @param  string $label       link label - default "get directions".
+ * @param  object  $location    location object or location ID.
+ *
+ * @param  array   $from_coords array of coords array( lat,lng ).
+ *
+ * @param  string  $label       link label - default "get directions".
+ *
+ * @param  boolean $link_only   return the URL only or HTML element ( true || false ).
  */
 function gmw_directions_link( $location, $from_coords = array(), $label = '', $link_only = false ) {
 	echo gmw_get_directions_link( $location, $from_coords, $label, $link_only = false ); // WPCS: XSS ok.
 }
 
+/**
+ * Generate class attribute for locations in the results.
+ *
+ * @param  object $object location object.
+ *
+ * @param  array  $gmw     gmw form.
+ *
+ * @since 4.0
+ */
 function gmw_get_location_class_attribute( $object, $gmw = array() ) {
 
 	$classes = array(
