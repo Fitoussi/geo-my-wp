@@ -80,7 +80,7 @@ function gmw_search_results_linked_address( $object, $gmw = array() ) {
  *
  * @param  string $where  search_results || info_window.
  */
-function gmw_search_results_distance( $object = array(), $gmw = array(), $where = 'search_results' ) {
+function gmw_search_results_distance( $object = array(), $gmw = array(), $where = 'search_results', $html_wrap = true ) {
 
 	if ( empty( $object->distance ) || empty( $gmw[ $where ]['distance'] ) ) {
 		return;
@@ -89,7 +89,12 @@ function gmw_search_results_distance( $object = array(), $gmw = array(), $where 
 	$distance = gmw_get_distance_to_location( $object );
 
 	if ( $distance ) {
-		echo '<span class="gmw-item distance">' . $distance . '</span>'; // WPCS: XSS ok.
+
+		if ( $html_wrap ) {
+			$distance = '<span class="gmw-item distance">' . $distance . '</span>'; // WPCS: XSS ok.
+		}
+
+		echo $distance; // WPCS: XSS ok.	
 	}
 }
 
@@ -176,7 +181,7 @@ function gmw_search_results_hours_of_operation( $object, $gmw = array(), $label 
  *
  * @param  string $where  search_results || info_window.
  */
-function gmw_search_results_directions_link( $object, $gmw = array(), $where = 'search_results' ) {
+function gmw_search_results_directions_link( $object, $gmw = array(), $where = 'search_results', $label = '', $html_wrap = true ) {
 
 	if ( empty( $gmw[ $where ]['directions_link'] ) ) {
 		return;
@@ -187,7 +192,13 @@ function gmw_search_results_directions_link( $object, $gmw = array(), $where = '
 		'lng' => $gmw['lng'],
 	);
 
-	echo '<div class="gmw-item gmw-item-directions gmw-directions-link">' . gmw_get_directions_link( $object, $from_coords, '', false, $gmw ) . '</div>'; // WPCS: XSS ok.
+	$output = gmw_get_directions_link( $object, $from_coords, $label, false, $gmw );
+
+	if ( $html_wrap ) {
+		$output = '<div class="gmw-item gmw-item-directions gmw-directions-link">' . $output . '</div>';
+	}
+
+	echo $output; // WPCS: XSS ok.
 }
 
 /**
