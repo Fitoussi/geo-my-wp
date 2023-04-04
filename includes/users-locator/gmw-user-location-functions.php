@@ -217,6 +217,7 @@ function gmw_get_user_location_data( $id = 0, $by_location_id = false ) {
 			'gmw_get_user_location_data_fields',
 			array(
 				'gmw.ID',
+				'gmw.object_id',
 				'gmw.latitude',
 				'gmw.longitude',
 				'gmw.latitude as lat',
