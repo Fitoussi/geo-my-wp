@@ -134,7 +134,8 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 	 * @return [type] [description]
 	 */
 	public function form_buttons() {
-		return array(
+
+		$buttons =  array(
 			array(
 				'slug'      => 'posts_locator',
 				'name'      => __( 'Posts Locator Form', 'geo-my-wp' ),
@@ -150,6 +151,34 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 				'priority'  => 7,
 			),
 		);
+
+		if ( ! gmw_is_addon_active( 'ajax_forms' ) ) {
+
+			$buttons[] = array(
+				'slug'        => 'posts_locator_ajax',
+				'name'        => __( 'Posts Locator AJAX Form', 'geo-my-wp' ),
+				'prefix'      => 'ajaxfmspt',
+				'component'   => 'posts_locator',
+				'object_type' => 'post',
+				'premium'     => 'ajax_forms',
+				'priority'    => 7,
+			);
+		}
+			
+		if ( ! gmw_is_addon_active( 'global_maps' ) ) {
+
+			$buttons[] = array(
+				'slug'        => 'posts_locator_global_map',
+				'name'        => __( 'Posts Global Map', 'gmw-global-maps' ),
+				'prefix'      => 'gmapspt',
+				'component'   => 'posts_locator',
+				'object_type' => 'post',
+				'premium'     => 'global_maps',
+				'priority'    => 7,
+			);
+		}
+
+		return $buttons;
 	}
 
 	/**
