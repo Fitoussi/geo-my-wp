@@ -986,6 +986,10 @@ class GMW_Settings {
 
 					<h3 class="gmw-admin-page-title"><?php echo esc_html( $this->settings_groups[ $parent_tab ]['label'] ); ?></h3>
 
+					<div class="gmw-update-settings-button update-button-wrapper top">
+						<input type="submit" class="gmw-settings-action-button button-primary" value="Save Changes" style="margin: 0;" onclick="jQuery( '.gmw-settings-form' ).submit();">
+					</div>
+
 					<?php if ( ! empty( $this->settings_groups[ $current_tab ]['desc'] ) ) { ?>
 						<span style="margin-top: 5px;display: block;"><?php echo wp_kses( $this->settings_groups[ $current_tab ]['desc'], $allowed_html ); ?></span>
 					<?php } ?>
