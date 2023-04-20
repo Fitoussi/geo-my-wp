@@ -257,7 +257,7 @@ class GMW_Forms_Page {
 		// order buttons by priority.
 		usort( $buttons, 'gmw_sort_by_priority' );
 
-		$output = '<select class="gmw-admin-select-enhanced" onchange="window.location.href = jQuery(this).val();">';
+		$output = '<select id="gmw-new-form-selector" style="margin-left: 10px;" class="">';
 
 		if ( empty( $buttons ) ) {
 
@@ -265,13 +265,13 @@ class GMW_Forms_Page {
 
 		} else {
 
-			$output .= '<option value="">' . __( 'Select form type', 'geo-my-wp' ) . '</option>';
+			$output .= '<option value="">' . __( 'Create new form', 'geo-my-wp' ) . '</option>';
 
 			// Generate buttons.
 			foreach ( $buttons as $button ) {
 
 				if ( in_array( $button['slug'], array( 'posts_locator', 'members_locator', 'bp_groups_locator', 'users_locator' ), true ) ) {
-					$output .= '<option disabled>----- ' . esc_html( $button['name'] ) . 's -----</option>';
+					$output .= '<option disabled>----- ' . esc_html( strtoupper( $button['name'] ) ) . 'S -----</option>';
 				}
 
 				// support older version of the extensions.
@@ -283,7 +283,24 @@ class GMW_Forms_Page {
 
 				$form_url = 'admin.php?page=gmw-forms&gmw_action=create_new_form&name=' . str_replace( ' ', '+', $button['name'] ) . '&addon=' . $button['addon'] . '&component=' . $button['component'] . '&object_type=' . $button['object_type'] . '&prefix=' . $button['prefix'] . '&slug=' . $button['slug'];
 
-				$output .= '<option value="' . esc_url( $form_url ) . '">' . esc_html( $button['name'] ) . '</option>';
+				$label        = esc_html( $button['name'] );
+				$premium_data = '';
+
+				if ( ! empty( $button['premium'] ) ) {
+
+					$label .= ' (Premium)';
+
+					if ( 'ajax_forms' === $button['premium'] ) {
+
+						$premium_data = ' disabled="disabled" class="gmw-premium-feature" data-feature="ajax_forms" data-name="AJAX Forms" data-url="https://geomywp.com/extensions/ajax-forms" data-content="Create AJAX powered proximity search forms using GEO my WP forms builder."';
+
+					} elseif ( 'global_maps' === $button['premium'] ) {
+
+						$premium_data = '  disabled="disabled" class="gmw-premium-feature" data-feature="global_maps" data-name="Global Maps" data-url="https://geomywp.com/extensions/global-maps" data-content="Create advanced AJAX powered mashup maps using GEO my WP forms builder."';
+					}
+				}
+
+				$output .= '<option value="' . esc_url( $form_url ) . '"' . $premium_data . '>' . $label . '</option>';
 			}
 		}
 
@@ -301,14 +318,18 @@ class GMW_Forms_Page {
 		?>		
 		<div id="gmw-forms-page" class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper gmw-admin-page-no-nav">
 
+			<?php gmw_admin_page_loader(); ?>
+
 			<nav class="gmw-admin-page-navigation"></nav>
 
 			<div class="gmw-admin-page-panels-wrapper">
 
+				<div id="gmw-admin-notices-holder"></div>
+
 				<h1 style="display:none"></h1>
 
 				<div class="gmw-new-form-wrapper">
-					<h3><?php esc_html_e( 'New Form: ', 'geo-my-wp' ); ?></h3> <?php echo self::new_form_buttons(); // WPCS: XSS ok. ?>
+					<h3 class="gmw-admin-page-title" style="margin-bottom: 0;margin-left: 0.25rem;"><?php esc_html_e( 'Forms', 'geo-my-wp' ); ?></h3> <?php echo self::new_form_buttons(); // WPCS: XSS ok. ?>
 				</div>
 
 				<form id="gmw_forms_admin" class="gmw-admin-page-conten" enctype="multipart/form-data" method="post">
@@ -335,20 +356,7 @@ class GMW_Forms_Page {
 		</div>
 		<script type="text/javascript">
 			jQuery( document ).ready( function() {
-
 				jQuery( 'select' ).addClass( 'gmw-smartbox-not' );
-
-				/*jQuery( '.gmw-shortcode-ctc' ).on( 'click', function() {
-
-				  // Get the text field
-				  var copyText = jQuery( this ).parent().find( 'code' ).html();
-
-				   // Copy the text inside the text field
-				  navigator.clipboard.writeText(copyText);
-
-				  // Alert the copied text
-				  alert("Copied the text: " + copyText);
-				})*/
 			});
 		</script>
 		<?php
