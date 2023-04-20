@@ -149,7 +149,8 @@ class GMW_Forms_Table extends WP_List_Table {
 			'prefix'     => $item['prefix'],
 		);
 
-		$edit_link = esc_url( wp_nonce_url( add_query_arg( $edit_query_args, 'admin.php' ), 'editform_' . $item['ID'] ) );
+		$edit_link  = esc_url( wp_nonce_url( add_query_arg( $edit_query_args, 'admin.php' ), 'editform_' . $item['ID'] ) );
+		$edit_link .= '&current_tab=general_settings';
 
 		$actions['edit'] = sprintf(
 			'<a href="%1$s">%2$s</a>',
