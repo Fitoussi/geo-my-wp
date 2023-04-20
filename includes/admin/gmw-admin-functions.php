@@ -281,6 +281,24 @@ function gmw_admin_helpful_buttons() {
 }
 
 /**
+ * Generate the admin page loader skin/icon.
+ *
+ * @author Eyal Fitoussi
+ *
+ * @since 4.0
+ */
+function gmw_admin_page_loader() {
+	?>
+	<div id="gmw-admin-page-loader">
+		<div id="gmw-admin-page-loader-inner">
+			<i class="gmw-icon gmw-icon-spin-3 animate-spin"></i>
+			<span></span>
+		</div>
+	</div>
+	<?php
+}
+
+/**
  * Output header for admin pages.
  *
  * @since 4.0

@@ -84,6 +84,10 @@ class GMW_Tools {
 
 			<div class="gmw-admin-page-panels-wrapper" id="tab_<?php echo esc_attr( $current_tab ); ?>">
 
+				<?php gmw_admin_page_loader(); ?>
+
+				<div id="gmw-admin-notices-holder"></div>
+
 				<h1 style="display:none"></h1>
 
 				<div id="gmw-<?php echo esc_attr( $current_tab ); ?>-tab-content" class="gmw-tools-tab-content gmw-admin-page-content-inner">
