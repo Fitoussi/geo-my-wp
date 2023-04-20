@@ -36,16 +36,18 @@ class GMW_Settings {
 	 * Setup settings default values.
 	 */
 	public static function setup_defaults() {
-
+		
 		$defaults = apply_filters(
 			'gmw_admin_settings_setup_defaults',
 			array(
 				'general_settings' => array(
-					'allow_tracking' => '',
-					'country_code'   => 'US',
-					'language_code'  => 'EN',
-					'auto_locate'    => 1,
-					'results_page'   => '',
+					'country_code'       => 'US',
+					'language_code'      => 'en',
+					'auto_locate'        => 1,
+					'results_page'       => '',
+					'allow_tracking'     => 0,
+					'visible_options'    => 1,
+					'hide_admin_notices' => 1,
 				),
 				'api_providers'    => array(
 					'maps_provider'                   => 'leaflet',
