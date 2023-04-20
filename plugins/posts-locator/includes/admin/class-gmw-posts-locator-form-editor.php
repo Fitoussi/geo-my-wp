@@ -80,7 +80,14 @@ class GMW_Posts_Locator_Form_Editor {
 		}
 
 		$settings['page_load_results']['post_types']    = array( 'post' );
+
+		// No need the settings below for the mashup map form.
+		/*if ( 'posts_locator_mashup_map' === $form['slug'] ) {
+			return $settings;
+		}*/
+
 		$settings['search_form']['post_types']          = array( 'post' );
+
 		$settings['search_form']['post_types_settings'] = array(
 			'usage'            => 'select',
 			'label'            => '',
@@ -141,9 +148,9 @@ class GMW_Posts_Locator_Form_Editor {
 		$settings['page_load_results']['post_types']['priority'] = 10;
 
 		// No need the settings below for the mashup map form.
-		if ( 'posts_locator_mashup_map' === $form['slug'] ) {
+		/*if ( 'posts_locator_mashup_map' === $form['slug'] ) {
 			return $settings;
-		}
+		}*/
 
 		$settings['search_form']['post_types_settings'] = array(
 			'name'            => 'post_types_settings',
