@@ -117,7 +117,7 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 	 */
 	public function form_buttons() {
 
-		$buttons =  array(
+		$buttons = array(
 			array(
 				'slug'      => 'members_locator',
 				'name'      => __( 'BP Members Locator Form', 'geo-my-wp' ),
@@ -146,7 +146,7 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 				'priority'    => 12,
 			);
 		}
-			
+
 		if ( ! gmw_is_addon_active( 'global_maps' ) ) {
 
 			$buttons[] = array(
@@ -161,42 +161,6 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 		}
 
 		return $buttons;
-
-
-		return array(
-			array(
-				'slug'      => 'members_locator',
-				'name'      => __( 'BP Members Locator Form', 'geo-my-wp' ),
-				'component' => 'members_locator',
-				'prefix'    => 'fl',
-				'priority'  => 10,
-			),
-			array(
-				'slug'      => 'members_locator_mashup_map',
-				'name'      => __( 'BP Members Mashup Map', 'geo-my-wp' ),
-				'component' => 'members_locator',
-				'prefix'    => 'flmmap',
-				'priority'  => 12,
-			),
-			array(
-				'slug'        => 'members_locator_ajax',
-				'name'        => __( 'BP Members Locator AJAX Form', 'geo-my-wp' ),
-				'prefix'      => 'ajaxfmsfl',
-				'component'   => 'members_locator',
-				'object_type' => 'user',
-				'premium'     => 'ajax_forms',
-				'priority'    => 12,
-			),
-			array(
-				'slug'        => 'members_locator_global_map',
-				'name'        => __( 'BP Members Global Map', 'geo-my-wp' ),
-				'prefix'      => 'gmapsfl',
-				'component'   => 'members_locator',
-				'object_type' => 'user',
-				'premium'     => 'global_maps',
-				'priority'    => 12,
-			),
-		);
 	}
 
 	/**
