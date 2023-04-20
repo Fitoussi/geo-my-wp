@@ -63,7 +63,7 @@ class GMW_Forms_Helper {
 		$form_data = array(
 			'general_settings'  => array(
 				'form_name'       => 'form_id_' . $form['ID'],
-				'visible_options' => '',
+				'visible_options' => 1,
 			),
 			'page_load_results' => array(
 				'enabled'         => 1,
