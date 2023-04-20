@@ -2558,10 +2558,12 @@ class GMW_Form_Editor {
 
 						<?php } else { ?>
 
+							<?php $tab_active = ( ! empty( $_GET['current_tab'] ) && $group['slug'] === $_GET['current_tab'] ) ? ' active' : ''; ?>
+
 							<a
 								href="#settings-<?php echo esc_attr( sanitize_title( $group['slug'] ) ); ?>"
 								id="<?php echo esc_attr( $group['slug'] ); ?>"
-								class="gmw-nav-tab gmw-nav-trigger<?php echo ! empty( $group['tab_class'] ) ? esc_attr( ' ' . $group['tab_class'] ) : ''; ?>"
+								class="gmw-nav-tab gmw-nav-trigger<?php echo ! empty( $group['tab_class'] ) ? esc_attr( ' ' . $group['tab_class'] ) : ''; ?><?php echo $tab_active; // WPCS XSS ok. ?>"
 								data-name="<?php echo esc_attr( sanitize_title( $group['slug'] ) ); ?>"
 								>
 								<span><?php echo esc_attr( $group['label'] ); ?></span>
@@ -2571,8 +2573,7 @@ class GMW_Form_Editor {
 
 					<?php } ?>
 				</nav>
-
-				
+	
 				<div class="gmw-admin-page-panels-wrapper">
 
 					<h1 style="display:none"></h1>
@@ -2625,6 +2626,7 @@ class GMW_Form_Editor {
 						$tab         = esc_attr( $tab );
 						$this_class  = esc_attr( $this->form['component'] . ' ' . $this->form['slug'] . ' ' . $this->form['addon'] );
 						$this_class .= ! empty( $this->form_settings_groups[ $tab ]['panel_class'] ) ? ' ' . esc_attr( $this->form_settings_groups[ $tab ]['panel_class'] ) : '';
+						$this_class .= ( ! empty( $_GET['current_tab'] ) && $tab === $_GET['current_tab'] ) ? ' active' : '';
 						?>
 						<div id="settings-<?php echo $tab; // WPCS: XSS ok. ?>" class="gmw-settings-form gmw-tab-panel <?php echo $tab; // WPCS: XSS ok. ?> <?php echo $this_class; // WPCS: XSS ok. ?>">
 
