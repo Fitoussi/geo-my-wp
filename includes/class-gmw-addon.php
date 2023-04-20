@@ -98,6 +98,13 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		/********** End required variables ********/
 
 		/**
+		 * Set addon to always active by default.
+		 *
+		 * @var boolean
+		 */
+		public $always_active = false;
+
+		/**
 		 * Add-on's author
 		 *
 		 * Optional only if using a license key
@@ -826,6 +833,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 				'slug'               => $this->slug,
 				'is_parent'          => $this->is_parent,
 				'parent'             => $this->parent,
+				'always_active'      => $this->always_active,
 				'hide_in_extensions' => $this->hide_in_extensions,
 				'status'             => $this->status,
 				'name'               => $this->name,
@@ -912,34 +920,46 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 
 			if ( ! $this->is_core ) {
 
-				$statuses = array( 'inactive', 'disabled', 'missing', 'invalid_item_id', 'expire', 'no_activations_left', 'invalid' );
+				$statuses = array( 'inactive', 'disabled', 'missing', 'invalid_item_id', 'expire', 'no_activations_left', 'invalid', 'site_inactive' );
 
 				if ( empty( $this->license_name ) || empty( $licenses_data[ $this->license_name ]['status'] ) || in_array( $licenses_data[ $this->license_name ]['status'], $statuses, true ) ) {
 
-					if ( empty( $this->license_name ) || empty( $licenses_data[ $this->license_name ]['status'] ) ) {
+					if ( empty( $this->license_name ) || empty( $licenses_data[ $this->license_name ]['status'] ) || 'site_inactive' === $licenses_data[ $this->license_name ]['status'] ) {
 
 						$error = 'license_key_inactive';
 						// $message = __( 'License key inactive', 'geo-my-wp' );
 						$message = sprintf(
 							__( 'GEO my WP %1$s extension is disabled. <a href="%2$s">Activate your license key</a> to start using the extension or <a href="%3$s">deactivate the extension</a> to remove this notice.', 'geo-my-wp' ),
 							$this->name,
-							admin_url( 'admin.php?page=gmw-extensions&extensions_tab=premium' ),
+							admin_url( 'admin.php?page=gmw-extensions&tab=premium' ),
 							admin_url( 'plugins.php?plugin_status=all&paged=1&s' )
 						);
+
+						$short_message = __( 'Extension is disabled. Activate your license key.', 'geo-my-wp' );
+						//$short_message = '';
 
 					} else {
 
 						$error    = $licenses_data[ $this->license_name ]['status'];
 						$messages = gmw_license_update_notices();
+
 						$message  = sprintf(
-							esc_attr__( 'GEO my WP %1$s extension is disabled.', 'geo-my-wp' ),
-							$this->name
+							esc_attr__( 'GEO my WP %1$s extension is disabled. %2$s ', 'geo-my-wp' ),
+							$this->name,
+							! empty( $messages[ $error ] ) ? $messages[ $error ] : '',
 						);
+
+						$short_message = __( 'Extension is disabled. Verify your license key.', 'geo-my-wp' );
 
 						if ( 'disabled' !== $error ) {
 							$message .= sprintf(
 								__( ' <a href="%1$s">Manage license keys</a>.', 'geo-my-wp' ),
-								admin_url( 'admin.php?page=gmw-extensions&extensions_tab=premium' )
+								admin_url( 'admin.php?page=gmw-extensions&tab=premium' )
+							);
+
+							$short_message .= sprintf(
+								__( ' <a href="%1$s">Manage license keys</a>.', 'geo-my-wp' ),
+								admin_url( 'admin.php?page=gmw-extensions&tab=premium' )
 							);
 						}
 					}
@@ -948,6 +968,8 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 						'error'            => $error,
 						'required_version' => '',
 						'notice'           => $message,
+						'short_notice'     => $short_message,
+						'short_notice'     => '',
 					);
 
 					// display admin notice.
@@ -989,6 +1011,11 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 						$this->version,
 						$this->gmw_min_version
 					),
+					'short_notice'     => $details['notice'] = sprintf(
+						/* translators: %1$s extension's name, %2$s extension version, %3$s GEO my WP version. */
+						esc_attr__( 'Requires GEO my WP plugin version %1$s or higher.', 'geo-my-wp' ),
+						$this->gmw_min_version
+					),
 				);
 
 				// display admin notice.
@@ -1009,6 +1036,11 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 						$this->name,
 						$this->min_version
 					),
+					'short_notice'     => sprintf(
+						/* translators: %1$s extension's name, %2$s extension required version. */
+						__( 'Requires an update to version %1$s.', 'geo-my-wp' ),
+						$this->min_version
+					),
 				);
 
 				// display admin notice.
@@ -1026,12 +1058,17 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 			// if ( ! $this->custom_verify_activation() ) {
 			// return false;
 			// }
+			// 
 			// disable the addon if requirments did not match.
 			if ( ! $verified['status'] ) {
 
 				$this->status_details = $verified['details'];
 
 				return 'disabled';
+			}
+
+			if ( $this->is_core && $this->always_active  ) {
+				return 'active';
 			}
 
 			/**
@@ -1135,7 +1172,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 			if ( ! $status ) {
 
 				// error notice.
-				if ( empty( $required['notice'] ) ) {
+				if ( empty( $required['notice'] ) && empty( $required['short_notice'] ) ) {
 
 					$required['notice'] = sprintf(
 						/* translators: %1$s extension's name, %2$s requirements. */
@@ -1148,7 +1185,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 				$verified['details'] = array(
 					'error'            => $type . '_missing',
 					'required_version' => $required['version'],
-					'notice'           => $required['notice'],
+					'notice'           => ! empty( $required['short_notice'] ) ? $required['short_notice'] : $required['notice'],
 				);
 
 				$verified['status'] = false;
@@ -1550,6 +1587,8 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 				'object_type' => $button['object_type'],
 				'name'        => ! empty( $button['name'] ) ? $button['name'] : $this->name,
 				'prefix'      => ! empty( $button['prefix'] ) ? $button['prefix'] : $this->prefix,
+				'disabled'    => ! empty( $button['disabled'] ) ? $button['disabled'] : 0,
+				'premium'     => ! empty( $button['premium'] ) ? $button['premium'] : '',
 				'priority'    => ! empty( $button['priority'] ) ? $button['priority'] : 99,
 			);
 		}
