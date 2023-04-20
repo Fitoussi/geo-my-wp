@@ -277,9 +277,9 @@ class GMW_Forms_Table extends WP_List_Table {
 			// update forms in cache.
 			GMW_Forms_Helper::update_forms_cache();
 
-			wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_deleted&gmw_notice_status=updated' ) );
+			//wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_deleted&gmw_notice_status=updated' ) );
 
-			exit;
+			//exit;
 		}
 	}
 
