@@ -82,8 +82,6 @@ class GMW_Form_Settings_Helper {
 	 * @param  [type] $name_attr [description].
 	 *
 	 * @param  [type] $form      [description].
-	 *
-	 * @return [type]            [description]
 	 */
 	public static function form_editor_taxonomies( $args, $value, $name_attr, $form ) {
 
@@ -176,7 +174,7 @@ class GMW_Form_Settings_Helper {
 						<?php } ?>
 
 						<i class="gmw-settings-group-options-toggle gmw-taxonomy-options-toggle gmw-icon-cog gmw-tooltip--" aria-label="Click to manage options."></i>
-						<span class="gmw-taxonomy-label"><strong><?php echo esc_html( $taxonomy->labels->singular_name ) ; ?></strong> ( Post Types - <?php echo implode( ', ', $post_types ); ?> )</span>
+						<span class="gmw-taxonomy-label"><strong><?php echo esc_html( $taxonomy->labels->singular_name ); ?></strong> ( <?php echo esc_attr( implode( ', ', $post_types ) ); ?> )</span>
 					</div>
 
 					<?php $style = ! empty( $tax_option['style'] ) ? $tax_option['style'] : 'disabled'; ?>
@@ -186,7 +184,7 @@ class GMW_Form_Settings_Helper {
 						<?php $tax_name_attr = esc_attr( $name_attr . '[' . $taxonomy_name . ']' ); ?>
 
 						<?php foreach ( $post_types as $pt ) { ?>
-							<input type="hidden" name="<?php echo $tax_name_attr; ?>[post_types][]" value="<?php echo esc_attr( $pt ); ?>" />
+							<input type="hidden" name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[post_types][]" value="<?php echo esc_attr( $pt ); ?>" />
 						<?php } ?>
 
 						<?php if ( ! empty( $taxonomies_options['usage_options'] ) ) { ?>
@@ -230,14 +228,15 @@ class GMW_Form_Settings_Helper {
 								</div>
 
 								<div class="gmw-settings-panel-input-container">
-									<label>
+									<label class="gmw-checkbox-toggle-field">
 										<input 
 											type="checkbox" 
 											name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[smartbox]"
 											value="1" 
 											<?php echo ! empty( $tax_option['smartbox'] ) ? 'checked="checked"' : ''; ?> 
 										/>
-										<?php esc_attr_e( 'Enable', 'geo-my-wp' ); ?>
+										<span class="gmw-checkbox-toggle"></span>
+										<span class="gmw-checkbox-label"><?php esc_attr_e( 'Enable', 'geo-my-wp' ); ?></span>
 									</label>
 								</div>
 
@@ -262,7 +261,7 @@ class GMW_Form_Settings_Helper {
 										type="text" 
 										placeholder="<?php esc_attr_e( 'Taxonomy label', 'geo-my-wp' ); ?>"
 										name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[label]"
-										value="<?php echo isset( $tax_option['label'] ) ? esc_attr( stripcslashes( $tax_option['label'] ) ) : $tax_label; ?>"
+										value="<?php echo isset( $tax_option['label'] ) ? esc_attr( stripcslashes( $tax_option['label'] ) ) : $tax_label; // WPCS: XSS ok. ?>"
 									/>
 								</div>
 
@@ -320,11 +319,10 @@ class GMW_Form_Settings_Helper {
 										<?php
 										if ( ! empty( $tax_option['include'] ) ) {
 											foreach ( $tax_option['include'] as $tax_value ) {
-												echo '<option selected="selected" value="' . $tax_value . '">' . __( 'Click to load options', 'geo-my-wp' ) . '</option>';
+												echo '<option selected="selected" value="' . esc_attr( $tax_value ) . '">' . esc_html__( 'Click to load options', 'geo-my-wp' ) . '</option>';
 											}
 										}
 										?>
-										<?php //echo GMW_Form_Settings_Helper::get_taxonomy_terms( $taxonomy_name, $include_value ); // WPCS: XSS ok. ?>
 									</select>
 
 								</div>
@@ -364,10 +362,10 @@ class GMW_Form_Settings_Helper {
 										<?php //echo GMW_Form_Settings_Helper::get_taxonomy_terms( $taxonomy_name, $exclude_value ); // WPCS: XSS ok. ?>
 									</select>
 
-									<div class="gmw-settings-panel-description">
-										<?php esc_attr_e( 'Select specific taxonomy terms to exclude.', 'geo-my-wp' ); ?>
-									</div>
+								</div>
 
+								<div class="gmw-settings-panel-description">
+									<?php esc_attr_e( 'Select specific taxonomy terms to exclude.', 'geo-my-wp' ); ?>
 								</div>
 							</div>
 						<?php } ?>
@@ -437,15 +435,15 @@ class GMW_Form_Settings_Helper {
 
 								<div class="tax-content gmw-settings-panel-input-container">
 
-									<label>
-
+									<label class="gmw-checkbox-toggle-field">
 										<input 
 											type="checkbox" 
 											name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[show_count]"
 											value="1" 
 											<?php echo ! empty( $tax_option['show_count'] ) ? 'checked="checked"' : ''; ?> 
 										/>
-										<?php esc_attr_e( 'Enable', 'geo-my-wp' ); ?>
+										<span class="gmw-checkbox-toggle"></span>
+										<span class="gmw-checkbox-label"><?php esc_attr_e( 'Enable', 'geo-my-wp' ); ?></span>
 									</label>
 								</div>
 
@@ -466,13 +464,14 @@ class GMW_Form_Settings_Helper {
 
 								<div class="tax-content gmw-settings-panel-input-container">
 
-									<label>
+									<label class="gmw-checkbox-toggle-field">
 										<input 
 											type="checkbox" 
 											name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[hide_empty]"
 											value="1" <?php echo ! empty( $tax_option['hide_empty'] ) ? 'checked="checked"' : ''; ?>
 										/>
-										<?php esc_attr_e( 'Enable', 'geo-my-wp' ); ?>
+										<span class="gmw-checkbox-toggle"></span>
+										<span class="gmw-checkbox-label"><?php esc_attr_e( 'Enable', 'geo-my-wp' ); ?></span>
 									</label>
 								</div>
 
@@ -508,14 +507,19 @@ class GMW_Form_Settings_Helper {
 									<label class="gmw-settings-label"><?php echo esc_attr_e( 'Required', 'geo-my-wps' ); ?></label>
 								</div>
 
-								<div class="taxonomy-required taxonomy-tab-content gmw-settings-panel-input-container">					
-									<input
-										type="checkbox"
-										class="gmw-form-field checkbox setting-taxonomy-required"
-										name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[required]"
-										value="1"
-										<?php echo ! empty( $tax_option['required'] ) ? 'checked="checked"' : ''; ?>
-									>
+								<div class="taxonomy-required taxonomy-tab-content gmw-settings-panel-input-container">
+
+									<label class="gmw-checkbox-toggle-field">			
+										<input
+											type="checkbox"
+											class="gmw-form-field checkbox setting-taxonomy-required"
+											name="<?php echo $tax_name_attr; // WPCS: XSS ok. ?>[required]"
+											value="1"
+											<?php echo ! empty( $tax_option['required'] ) ? 'checked="checked"' : ''; ?>
+										>
+										<span class="gmw-checkbox-toggle"></span>
+										<span class="gmw-checkbox-label"><?php esc_attr_e( 'Enable', 'geo-my-wp' ); ?></span>
+									</label>
 								</div>
 
 								<div class="gmw-settings-panel-description"><?php esc_attr_e( 'Make this a required field.', 'geo-my-wp' ); ?></div>
@@ -1740,12 +1744,17 @@ class GMW_Form_Settings_Helper {
 				break;
 
 			case 'checkbox':
-				$output .= '<label>';
+				$toggle_class = ( ! isset( $field['cb_toogle'] ) || ! empty( $field['cb_toogle'] ) ) ? ' class="gmw-checkbox-toggle-field" ' : '';
+
+				$output .= '<label' . $toggle_class . '>';
 				$output .= '<input type="checkbox" id="' . esc_attr( $id_attr ) . '" class="gmw-form-field checkbox ' . esc_attr( $class_attr ) . '"';
 				$output .= ' name="' . esc_attr( $name_attr ) . '" value="1"';
 				$output .= ' ' . implode( ' ', $attributes );
 				$output .= ' ' . checked( '1', $value, false ) . ' />';
+				$output .= '<span class="gmw-checkbox-toggle"></span>';
+				$output .= '<span class="gmw-checkbox-label">';
 				$output .= isset( $field['cb_label'] ) ? esc_attr( $field['cb_label'] ) : '';
+				$output .= '</span>';
 				$output .= '</label>';
 
 				break;
@@ -1848,9 +1857,18 @@ class GMW_Form_Settings_Helper {
 				$output .= ' ' . implode( ' ', $attributes );
 				$output .= '>';
 
+				if ( 'country_code' === $field['name'] && ! empty( $value ) ) {
+					$value = strtoupper( $value );
+				}
+
+				if ( 'language_code' === $field['name'] && ! empty( $key_val ) ) {
+					$value = strtolower( $value );
+				}
+				
 				foreach ( $field['options'] as $key_val => $name ) {
 					$output .= '<option value="' . esc_attr( $key_val ) . '" ' . selected( $value, $key_val, false ) . '>' . esc_html( $name ) . '</option>';
 				}
+
 				$output .= '</select>';
 
 				break;
