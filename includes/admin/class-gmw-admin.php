@@ -307,7 +307,7 @@ class GMW_Admin {
 		$menu_items[] = array(
 			'parent_slug'       => 'gmw-extensions',
 			'page_title'        => __( 'GEO my WP Extensions', 'geo-my-wp' ),
-			'menu_title'        => __( 'Extensions', 'geo-my-wp' ),
+			'menu_title'        => __( 'Extensions & Licenses', 'geo-my-wp' ),
 			'capability'        => 'manage_options',
 			'menu_slug'         => 'gmw-extensions',
 			'callback_function' => array( $this->addons_page, 'output' ),
@@ -445,7 +445,7 @@ class GMW_Admin {
 	 */
 	public function enqueue_scripts() {
 
-		// Deregister the select-2 library that is included by different plugins on GEO My WP admin page to prevent conflics.
+		// Deregister the select-2 library that is included by different plugins on GEO my WP admin page to prevent conflics.
 		// GEO my WP will load its own select-2.
 		wp_deregister_style( 'gamipress-select2-css' );
 		wp_deregister_script( 'gamipress-select2-js' );
@@ -464,7 +464,10 @@ class GMW_Admin {
 		wp_dequeue_script( 'selectWoo' );
 		wp_deregister_style( 'selectWoo' );
 		wp_dequeue_style( 'selectWoo' );
-		
+			
+		wp_dequeue_style( 'rtcl-admin' );
+		wp_dequeue_style( 'rtcl-public' );
+
 		wp_deregister_style( 'select2' );
 		wp_deregister_script( 'select2' );
  		wp_dequeue_script( 'select2' );
@@ -710,12 +713,12 @@ class GMW_Admin {
 				var prefix    = 'gmw';
 				var attribute = jQuery( ".gmw_form_type:checked" ).val();
 
-				if ( addon == 'ajax_forms' ) {
+				/*if ( addon == 'ajax_forms' ) {
 					prefix = 'gmw_ajax_form';
 				} else if ( addon == 'global_maps' ) {
 					prefix    = 'gmw_global_map';
 					attribute = 'form';
-				}
+				}*/
 
 				window.send_to_editor( '[' + prefix + ' ' + attribute + '="' + form_id + '" name="' + form_name + '"]' );
 			}
