@@ -240,33 +240,30 @@ class GMW_Form_Editor {
 
 		$form_name = ! empty( $form['title'] ) ? $form['title'] : 'form_id_' . $form['ID'];
 		?>
-		<div class="gmw-settings-panel-field gmw-form-feature-settings form-actions">
+		<div class="gmw-settings-panel-description"><?php esc_attr_e( 'Enter the form\'s name.', 'geo-my-wp' ); ?></div>
+
+		<div class="gmw-settings-panel-field gmw-form-feature-settings textbox">
+
 			<div class="gmw-settings-panel-input-container">
 
-				<div class="gmw-settings-multiple-fields-wrapper">
+				<input type="text" name="gmw_form[title]" value="<?php echo esc_attr( $form_name ); ?>" placeholder="Form name" />
 
-					<div class="gmw-settings-panel-input-container option-type-text">
-						<input type="text" name="gmw_form[title]" value="<?php echo esc_attr( $form_name ); ?>" placeholder="Form name" />
-					</div>
-					<div class="gmw-settings-panel-description"><?php esc_attr_e( 'Enter the form\'s name.', 'geo-my-wp' ); ?></div>
-					<a
-						class="duplicate-form gmw-action-button button-primary"
-						title="<?php esc_attr_e( 'Duplicate form', 'geo-my-wp' ); ?>"
-						href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=duplicate_form&slug=' . $form['slug'] . '&form_id=' . $form['ID'] ); ?>">
-						<?php esc_attr_e( 'Duplicate Form', 'geo-my-wp' ); ?>
-					</a>
+				<a
+					class="duplicate-form gmw-action-button button-primary"
+					title="<?php esc_attr_e( 'Duplicate form', 'geo-my-wp' ); ?>"
+					href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=duplicate_form&slug=' . $form['slug'] . '&form_id=' . $form['ID'] ); ?>">
+					<?php esc_attr_e( 'Duplicate Form', 'geo-my-wp' ); ?>
+				</a>
 
-					<a
-						class="delete-form gmw-action-button button-primary" 
-						title="<?php esc_attr_e( 'Delete form', 'geo-my-wp' ); ?>" 
-						href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=delete_form&form_id=' . $form['ID'] ); ?>" 
-						onclick="return confirm( '<?php esc_attr_e( 'This action cannot be undone. Would you like to proceed?', 'geo-my-wp' ); ?>' );">
-						<?php esc_html_e( 'Delete Form', 'geo-my-wp' ); ?>
-					</a>
-				</div>
+				<a
+					class="delete-form gmw-action-button button-primary" 
+					title="<?php esc_attr_e( 'Delete form', 'geo-my-wp' ); ?>" 
+					href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=delete_form&form_id=' . $form['ID'] ); ?>" 
+					onclick="return confirm( '<?php esc_attr_e( 'This action cannot be undone. Would you like to proceed?', 'geo-my-wp' ); ?>' );">
+					<?php esc_html_e( 'Delete Form', 'geo-my-wp' ); ?>
+				</a>
 			</div>
 		</div>
-
 		<?php
 	}
 
@@ -288,7 +285,7 @@ class GMW_Form_Editor {
 				<thead>
 					<tr>
 						<th scope="col" style="width: 33%;"><?php esc_html_e( 'Description', 'geo-my-wp' ); ?></th>
-						<th scope="col" style="width: 27%;"><?php esc_html_e( 'Post/Page Content', 'geo-my-wp' ); ?></th>
+						<th scope="col" style="width: 27%;"><?php esc_html_e( 'Page / Post Content', 'geo-my-wp' ); ?></th>
 						<th scope="col" style="width: 40%;"><?php esc_html_e( 'Template file', 'geo-my-wp' ); ?></th>
 					</tr>
 				</thead>
@@ -325,7 +322,7 @@ class GMW_Form_Editor {
 
 					<?php } else { ?>
 
-					<?php $scpx = ( 'ajax_forms' !== $form['addon'] ) ? 'gmw' : 'gmw_ajax_form'; ?>
+					<?php $scpx = 'gmw'; ?>
 
 						<div>
 							<td class="gmw-form-usage-desc">
@@ -459,8 +456,8 @@ class GMW_Form_Editor {
 							'name'       => 'visible_options',
 							'type'       => 'checkbox',
 							'default'    => '',
-							'label'      => __( 'Visible Form Options', 'geo-my-wp' ),
-							'desc'       => __( 'Keep form options visible by default.', 'geo-my-wp' ),
+							'label'      => __( 'Visible Form Settings', 'geo-my-wp' ),
+							'desc'       => __( 'Keep form settings visible by default.', 'geo-my-wp' ),
 							'cb_label'   => __( 'Enable', 'geo-my-wp' ),
 							'wrap_class' => 'always-visible',
 							'priority'   => 15,
@@ -694,7 +691,7 @@ class GMW_Form_Editor {
 									'name'       => 'enabled',
 									'type'       => 'checkbox',
 									'default'    => '',
-									'label'      => __( 'Enable Modal', 'geo-my-wp' ),
+									'label'      => __( 'Enable Modal Box', 'geo-my-wp' ),
 									//'desc'       => __( 'Display some of the form filters inside a popup modal box.', 'geo-my-wp' ),
 									'cb_label'   => __( 'Enable', 'geo-my-wp' ),
 									'class'      => 'gmw-options-toggle',
@@ -2487,9 +2484,7 @@ class GMW_Form_Editor {
 		?>
 		<form method="post" action="" id="gmw-form-editor" class="<?php echo $class; // WPCS: XSS ok. ?>" data-ajax_enabled="<?php echo esc_attr( $this->ajax_enabled ); ?>" data-nonce="<?php echo wp_create_nonce( 'gmw_edit_form_nonce' ); // WPCS: XSS ok. ?>">
 
-			<div id="gmw-admin-page-loader" style="position: fixed;width: 100%;height: 100%;top: 0;left: 0;background: white;z-index: 999999999;">
-				<i style="font-size: 60px;color: #4699E8;margin: 0;position: absolute;top: 40%;left: 50%;-ms-transform: translate(-50%, -50%);transform: translate(-50%, -50%);" class="gmw-icon gmw-icon-cog animate-spin"></i>
-			</div>
+			<?php gmw_admin_page_loader(); ?>
 
 			<?php gmw_admin_helpful_buttons(); ?>
 
@@ -2502,6 +2497,7 @@ class GMW_Form_Editor {
 				<span class="edit-form-title">
 					<span class="dashicons dashicons-edit-large"></span>
 					<?php echo esc_html__( 'Editing Form', 'geo-my-wp' ) . ' ' . absint( $this->form['ID'] ) . ' <em style="font-size: 14px;font-weight: 400;color: #888;">( ' . esc_attr( $this->form['name'] ) . ' form )</em> '; ?>
+					<code>[gmw form="<?php echo esc_html( $form_id ); ?>"]</code>
 				</span>
 
 					<div class="action-area">
@@ -2576,6 +2572,7 @@ class GMW_Form_Editor {
 					<?php } ?>
 				</nav>
 
+				
 				<div class="gmw-admin-page-panels-wrapper">
 
 					<h1 style="display:none"></h1>
@@ -2685,7 +2682,7 @@ class GMW_Form_Editor {
 												<?php echo esc_html( $option['label'] ); ?>
 
 												<?php if ( $pro_feature['is_disabled'] ) { ?>
-													<span class="gmw-form-pro-feature">Pro Feature</span>
+													<span class="gmw-form-pro-feature"><?php echo esc_html__( 'Premium', 'geo-my-wp' ); ?></span>
 												<?php } ?>
 											</label>
 
