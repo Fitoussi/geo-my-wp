@@ -62,11 +62,18 @@ class GMW_Single_Location_Addon extends GMW_Addon {
 	public $description = 'Display location of certain component ( post, member... ) via shortcode and widget.';
 
 	/**
-	 * Is core addon?
+	 * Is core addon.
 	 *
 	 * @var string
 	 */
 	public $is_core = true;
+
+	/**
+	 * Always active.
+	 *
+	 * @var string
+	 */
+	public $always_active = true;
 
 	/**
 	 * Docs page.
