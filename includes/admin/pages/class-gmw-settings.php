@@ -36,7 +36,7 @@ class GMW_Settings {
 	 * Setup settings default values.
 	 */
 	public static function setup_defaults() {
-		
+
 		$defaults = apply_filters(
 			'gmw_admin_settings_setup_defaults',
 			array(
@@ -176,58 +176,24 @@ class GMW_Settings {
 				'icon'     => 'cog',
 				'desc'     => __( 'GEO my WP general settings.', 'geo-my-wp' ),
 				'fields'   => array(
-					'allow_tracking' => array(
-						'name'       => 'allow_tracking',
-						'type'       => 'checkbox',
-						'default'    => '',
-						'label'      => __( 'Plugin Usage Tracking', 'geo-my-wp' ),
-						'cb_label'   => __( 'Enable', 'geo-my-wp' ),
-						'desc'       => __( 'Check this checkbox to allow GEO my WP track the plugin usage on your site.', 'geo-my-wp' ),
-						'attributes' => array(),
-						'priority'   => 10,
-					),
-					/**
-					'google_maps_api_usage' => array(
-						'name'       => 'google_maps_api_usage',
-						'type'       => 'select',
-						'default'    => 'enabled',
-						'label'      => __( 'Google Maps API', 'geo-my-wp' ),
-						'desc'       => __( 'Using this feature you prevent GEO my WP from registering the Google Map API ( which it does by default ). In most cases this feature should be set to "Enabled". It should disabled only if there are other mapping plugin installed on your site, which also register the Google Maps API and cause for conflicts. Note that disabling this feature might solve a conflict cause by multiple calles to Google Maps API, it might also results in GEO my WP to not work properly.', 'geo-my-wp' ),
-						'attributes' => array(),
-						'options'    => array(
-							'enabled'  => __( 'Enabled', 'geo-my-wp' ),
-							'frontend' => __( 'Disable in the front-end only', 'geo-my-wp' ),
-							'admin'    => __( 'Disable in the back-end only', 'geo-my-wp' ),
-							'disabled' => __( 'Disable completely', 'geo-my-wp' ),
-						),
-						'priority'   => 20,
-					),
-					*/
 					'country_code'   => array(
 						'name'        => 'country_code',
-						'type'        => 'text',
-						'default'     => '',
+						'type'        => 'select',
+						'default'     => 'US',
+						'options'     => self::get_region_codes(),
 						'placeholder' => 'ex. US',
 						'label'       => __( 'Default Region', 'geo-my-wp' ),
-						'desc'        => sprintf(
-							/* translators: %s: link */
-							__( 'Enter the country code of the country that will be used by default when geocoding an address and when using other API services. The list of country codes can be found <a href="%s" target="_blank">here</a>.', 'geo-my-wp' ),
-							'http://geomywp.com/country-code/'
-						),
+						'desc'        => __( 'Select the region that will be used by default when geocoding an address and when using other API services.', 'geo-my-wp' ),
 						'attributes'  => array(),
 						'priority'    => 20,
 					),
 					'language_code'  => array(
 						'name'        => 'language_code',
-						'type'        => 'text',
-						'default'     => '',
-						'placeholder' => 'ex. EN',
+						'type'        => 'select',
+						'default'     => 'en',
+						'options'     => self::get_language_codes(),
 						'label'       => __( 'Default Language', 'geo-my-wp' ),
-						'desc'        => sprintf(
-							/* translators: %s: link */
-							__( 'Enter the language code of the default language that will be used with the API providers. This will affect the language of the map and the address autocomplete suggested results. See <a href="%s" target="_blank">this page</a> for the list of language codes.', 'geo-my-wp' ),
-							'https://sites.google.com/site/tomihasa/google-language-codes'
-						),
+						'desc'        => __( 'Select the default language that will be used with the API provider. This will affect the language of the map and the address autocomplete feature.', 'geo-my-wp' ),
 						'attributes'  => array(),
 						'priority'    => 30,
 					),
@@ -247,12 +213,32 @@ class GMW_Settings {
 						'placeholder' => 'select page',
 						'default'     => '0',
 						'label'       => __( 'Results Page', 'geo-my-wp' ),
-						'desc'        => __( 'Select the page that will display the search result when using the "GMW Search Form" widget, then place the shortcode <code>[gmw form="results"]</code> in the content area of that page. The page that you select here will effect all of GEO my WP forms by default, but can be overriden when editing a specific form.', 'geo-my-wp' ),
+						'desc'        => __( 'Select the page that will display the search result when using the "GMW Search Form" widget, then place the shortcode <code>[gmw form="results"]</code> in the content area of that page. The page that you select here will effect all of GEO my WP forms by default, but can be overriden in the settings of each form.', 'geo-my-wp' ),
 						'options'     => $results_page,
 						'attributes'  => array(
 							'data-gmw_ajax_load_options' => 'gmw_get_pages',
 						),
 						'priority'    => 50,
+					),
+					'allow_tracking' => array(
+						'name'       => 'allow_tracking',
+						'type'       => 'checkbox',
+						'default'    => '',
+						'label'      => __( 'Enable Usage Tracking', 'geo-my-wp' ),
+						'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+						'desc'       => __( 'Allow GEO my WP track the plugin usage on your site.', 'geo-my-wp' ),
+						'attributes' => array(),
+						'priority'   => 100,
+					),
+					'visible_options'   => array(
+						'name'       => 'visible_options',
+						'type'       => 'checkbox',
+						'default'    => '',
+						'label'      => __( 'Visible Admin Settings', 'geo-my-wp' ),
+						'cb_label'   => __( 'Enable', 'geo-my-wp' ),
+						'desc'       => __( 'Keep admin settings visible by default.', 'geo-my-wp' ),
+						'attributes' => array(),
+						'priority'   => 105,
 					),
 					'hide_admin_notices'   => array(
 						'name'       => 'hide_admin_notices',
@@ -260,9 +246,9 @@ class GMW_Settings {
 						'default'    => '',
 						'label'      => __( 'Hide Admin Notices', 'geo-my-wp' ),
 						'cb_label'   => __( 'Enable', 'geo-my-wp' ),
-						'desc'       => __( 'Check this checkbox if you wish to hide the admin notices on GEO my WP\'s pages.', 'geo-my-wp' ),
+						'desc'       => __( 'Hide admin notices on GEO my WP\'s admin pages.', 'geo-my-wp' ),
 						'attributes' => array(),
-						'priority'   => 55,
+						'priority'   => 110,
 					),
 				),
 				'priority' => 3,
@@ -329,7 +315,7 @@ class GMW_Settings {
 						'label'           => __( 'Google Maps API Settings', 'geo-my-wp' ),
 						'desc'            => sprintf(
 							/* translators: %s: link. */
-							__( 'GEO my WP requires two API keys: A browser and a server API keys. See <a href="%s" target="_blank">this tutorial</a> to learn how to generate your API keys.', 'geo-my-wp' ),
+							__( 'GEO my WP requires two Google Maps API keys: A Browser and a Server API keys. See <a href="%s" target="_blank">this tutorial</a> to learn how to generate both API keys.', 'geo-my-wp' ),
 							'https://docs.geomywp.com/article/141-generate-and-setup-google-maps-api-keys'
 						),
 						'fields'          => array(
@@ -337,9 +323,9 @@ class GMW_Settings {
 								'name'        => 'google_maps_client_side_api_key',
 								'type'        => 'text',
 								'default'     => '',
-								'label'       => __( 'Google Maps Browser ( Client-side ) API key', 'geo-my-wp' ),
-								'placeholder' => __( 'Browser API key', 'geo-my-wp' ),
-								'desc'        => __( 'The browser API key is responsible for generating maps, directions, address autocomplete, and client-side geocoding when using the location form.', 'geo-my-wp' ),
+								'label'       => __( 'Google Maps Browser ( client-side ) API key', 'geo-my-wp' ),
+								'placeholder' => __( 'Google MapsBrowser API key', 'geo-my-wp' ),
+								'desc'        => __( 'The browser API key is responsible for generating the maps, directions, address autocomplete feature, and it performs client-side geocoding when using the location form.', 'geo-my-wp' ),
 								'priority'    => 5,
 							),
 							'google_maps_server_side_api_key' => array(
@@ -347,14 +333,13 @@ class GMW_Settings {
 								'type'        => 'text',
 								'default'     => '',
 								'label'       => __( 'Google Maps Server API key', 'geo-my-wp' ),
-								'placeholder' => __( 'Server API key', 'geo-my-wp' ),
+								'placeholder' => __( 'Google Maps Server API key', 'geo-my-wp' ),
 								'desc'        => sprintf(
 									/* translators: %1$s: oen <a> tag, %2$s: close </a> tag. */
-									__( 'The server API key is responsible for server side geocoding. Without this key some of GEO my WP functions will not work properly. After generating and entering your server API key, you can test it %1$shere%2$s.', 'geo-my-wp' ),
+									__( 'The server API key is responsible for server side geocoding. Without this API key some of GEO my WP functions will not work properly. After generating and entering your server API key, you can test it %1$shere%2$s.', 'geo-my-wp' ),
 									'<a href=" ' . admin_url( 'admin.php?page=gmw-tools&tab=api_testing' ) . ' ">',
 									'</a>'
 								),
-								'attributes'  => array( 'size' => '50' ),
 								'priority'    => 10,
 							),
 							'google_maps_api_china' => array(
@@ -363,7 +348,7 @@ class GMW_Settings {
 								'default'    => '',
 								'label'      => __( 'Google Maps API For China', 'geo-my-wp' ),
 								'cb_label'   => __( 'Enabled', 'geo-my-wp' ),
-								'desc'       => __( 'Check this checkbox if your server is located in China and Google Maps features are not working properly on your site.', 'geo-my-wp' ),
+								'desc'       => __( 'Enable this if your server is located in China and Google Maps features are not working properly on your site.', 'geo-my-wp' ),
 								'attributes' => array(),
 								'priority'   => 15,
 							),
@@ -879,14 +864,46 @@ class GMW_Settings {
 
 		$this->init_settings();
 
-		$settings    = get_option( 'gmw_options' );
-		$current_tab = $this->get_current_tab();
-		$parent_tab  = $this->get_parent_tab();
-		$section     = ! empty( $this->settings[ $current_tab ] ) ? $this->settings[ $current_tab ] : $this->settings['general_settings'];
+		$settings     = get_option( 'gmw_options' );
+		$current_tab  = $this->get_current_tab();
+		$parent_tab   = $this->get_parent_tab();
+		$section      = ! empty( $this->settings[ $current_tab ] ) ? $this->settings[ $current_tab ] : $this->settings['general_settings'];
+		$allowed_html = apply_filters(
+			'gmw_settings_page_feature_desc_allowed_html',
+			array(
+				'a'      => array(
+					'href'   => array(),
+					'title'  => array(),
+					'target' => array(),
+				),
+				'span'   => array(
+					'style' => array(),
+					'class' => array(),
+					'id'    => array(),
+				),
+				'div'    => array(
+					'style' => array(),
+					'class' => array(),
+					'id'    => array(),
+				),
+				'code'   => array(),
+				'br'     => array(),
+				'em'     => array(),
+				'p'      => array(),
+				'strong' => array(),
+				'b'      => array(),
+				'u'      => array(),
+			)
+		);
 		?>
 		<?php gmw_admin_pages_header(); ?>
 
-		<div id="gmw-settings-page" class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper">
+		<?php
+		$options_visibility = gmw_get_option( 'general_settings', 'visible_options', false );
+		$v_class = $options_visibility ? ' gmw-visible-options' : '';
+		?>
+
+		<div id="gmw-settings-page" class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper<?php echo $v_class; // WPCS: XSS ok. ?>">
 
 			<nav class="gmw-admin-page-navigation-bg"></nav>
 			<nav class="gmw-admin-page-navigation">
@@ -926,11 +943,6 @@ class GMW_Settings {
 							continue;
 						}
 
-						// Do not show tab if doesn't have any settings.
-						/*if ( empty( $this->settings[ $tab['slug'] ] ) && empty( $tab['force_display'] ) ) {
-							continue;
-						}*/
-
 						// for previous versions.
 						if ( ! empty( $tab['id'] ) ) {
 							$tab['slug'] = $tab['id'];
@@ -954,9 +966,6 @@ class GMW_Settings {
 							}
 						}
 
-						// Get tab icon.
-						//$icon = ! empty( $tab['icon'] ) ? esc_attr( $tab['icon'] ) : 'cog';
-
 						printf(
 							'<a href="%s"%s><span class="gmw-icon gmw-icon-%s"></span> <span class="label">%s</span></a>',
 							esc_url( $url ),
@@ -973,7 +982,14 @@ class GMW_Settings {
 
 			<div class="gmw-admin-page-panels-wrapper<?php echo $sub_nav_class; // WPCS: XSS ok. ?>" id="tab_<?php echo esc_attr( $current_tab ); ?>">
 
-				<!-- <h1 style="margin-bottom:20px"><?php echo sprintf( __( '%s Settings', 'geo-my-wp' ), esc_attr( $this->settings_groups[ $current_tab ]['label'] ) ); ?></h1>-->
+				<div id="gmw-admin-page-sub-header">
+
+					<h3 class="gmw-admin-page-title"><?php echo esc_html( $this->settings_groups[ $parent_tab ]['label'] ); ?></h3>
+
+					<?php if ( ! empty( $this->settings_groups[ $current_tab ]['desc'] ) ) { ?>
+						<span style="margin-top: 5px;display: block;"><?php echo wp_kses( $this->settings_groups[ $current_tab ]['desc'], $allowed_html ); ?></span>
+					<?php } ?>
+				</div>
 
 				<?php if ( ! empty( $sub_tabs ) ) { // Generate the sub navigation. ?>
 
@@ -1001,15 +1017,12 @@ class GMW_Settings {
 								admin_url( 'admin.php?page=gmw-settings' )
 							);
 
-							// Get tab icon.
-							//$icon = ! empty( $tab['icon'] ) ? esc_attr( $tab['icon'] ) : 'cog';
-
 							printf(
 								'<a href="%s"%s><span class="gmw-icon gmw-icon-%s"></span> <span class="label">%s</span></a>',
 								esc_url( $url ),
 								$current_tab === $tab['slug'] ? ' class="active"' : '',
 								'',
-								reset( $sub_tabs ) === $tab_slug ? __( 'General Settings', 'geo-my-wp' ) : esc_html( $tab['label'] )
+								$tab_slug === reset( $sub_tabs ) ? __( 'General Settings', 'geo-my-wp' ) : esc_html( $tab['label'] )
 							);
 							?>
 						<?php } ?>
@@ -1017,46 +1030,13 @@ class GMW_Settings {
 
 				<?php } ?>
 
-				<?php
-				$allowed_html = apply_filters(
-					'gmw_settings_page_feature_desc_allowed_html',
-					array(
-						'a'      => array(
-							'href'   => array(),
-							'title'  => array(),
-							'target' => array(),
-						),
-						'span'   => array(
-							'style' => array(),
-							'class' => array(),
-							'id'    => array(),
-						),
-						'div'    => array(
-							'style' => array(),
-							'class' => array(),
-							'id'    => array(),
-						),
-						'code'   => array(),
-						'br'     => array(),
-						'em'     => array(),
-						'p'      => array(),
-						'strong' => array(),
-						'b'      => array(),
-						'u'      => array(),
-					)
-				);
-				?>
 				<?php if ( ! empty( $this->settings_groups[ $current_tab ]['page_title'] ) ) { ?>
 					<h1 style=""><?php echo esc_attr( $this->settings_groups[ $current_tab ]['page_title'] ); ?></h1>
 				<?php } ?>
 
-				<?php if ( ! empty( $this->settings_groups[ $current_tab ]['desc'] ) ) { ?>
-					<div class="gmw-admin-notice-box" style="grid-column: span 2;">
-						<i class="gmw-icon-info-circled-1" style="margin-right: 3px"></i><span><?php echo wp_kses( $this->settings_groups[ $current_tab ]['desc'], $allowed_html ); ?></span>
-					</div>
-				<?php } ?>
-
 				<div id="gmw-settings-tab-<?php echo esc_attr( $current_tab ); ?>" class="gmw-settings-form gmw-tab-panel <?php echo esc_attr( $current_tab ); ?>">
+
+					<div id="gmw-admin-notices-holder"></div>
 
 					<form method="post" action="" class="gmw-settings-form">
 
@@ -1096,9 +1076,9 @@ class GMW_Settings {
 										<?php echo esc_html( $option['label'] ); ?>                 
 									<?php } ?>
 
-									<?php if ( ! empty( $option['desc'] ) ) { ?>
+									<?php /*if ( ! empty( $option['desc'] ) ) { ?>
 										<i class="gmw-settings-desc-tooltip dashicons dashicons-editor-help gmw-tooltip" aria-label="[placeholder]"></i>
-									<?php } ?>
+									<?php } */ ?>
 
 								</legend>
 
@@ -1153,9 +1133,7 @@ class GMW_Settings {
 
 						<?php wp_nonce_field( 'gmw_settings_save', 'gmw_settings_save_nonce' ); ?>
 
-						<div id="gmw-admin-page-loader" style="position: fixed;width: 100%;height: 100%;top: 0;left: 0;background: white;z-index: 999999999;">
-							<i style="font-size: 60px;color: #4699E8;margin: 0;position: absolute;top: 40%;left: 50%;-ms-transform: translate(-50%, -50%);transform: translate(-50%, -50%);" class="gmw-icon gmw-icon-cog animate-spin"></i>
-						</div>
+						<?php gmw_admin_page_loader(); ?>
 					</form>
 				</div>
 			</div>
@@ -1300,24 +1278,12 @@ class GMW_Settings {
 
 						$valid_input[ $current_tab ][ $option['name'] ] = array();
 
-						/*foreach ( $option['options'] as $key_val => $name ) {
-
-							if ( in_array( $key_val, $values[ $current_tab ][ $option['name'] ] ) ) {
-
-								$valid_input[ $current_tab ][ $option['name'] ][] = $key_val;
-							}
-
-							
-						}*/
-
 						foreach ( $values[ $current_tab ][ $option['name'] ] as $this_value ) {
 
 							if ( isset( $option['options'][ $this_value ] ) ) {
 
 								$valid_input[ $current_tab ][ $option['name'] ][] = $this_value;
 							}
-
-							
 						}
 					}
 					break;
@@ -1382,5 +1348,369 @@ class GMW_Settings {
 		}
 
 		return $valid_input;
+	}
+
+	/**
+	 * Get regions codes array.
+	 *
+	 * @since 4.0.
+	 *
+	 * @param  string $code pass regions code to retrive the country name of that code.
+	 *
+	 * @return [type]       [description]
+	 */
+	public static function get_region_codes( $code = '' ) {
+
+		$regions = array(
+			'AF' => 'Afghanistan',
+			'AX' => 'Åland Islands',
+			'AL' => 'Albania',
+			'DZ' => 'Algeria',
+			'AS' => 'American Samoa',
+			'AD' => 'Andorra',
+			'AO' => 'Angola',
+			'AI' => 'Anguilla',
+			'AQ' => 'Antarctica',
+			'AG' => 'Antigua and Barbuda',
+			'AR' => 'Argentina',
+			'AM' => 'Armenia',
+			'AW' => 'Aruba',
+			'AU' => 'Australia',
+			'AT' => 'Austria',
+			'AZ' => 'Azerbaijan',
+			'BS' => 'Bahamas',
+			'BH' => 'Bahrain',
+			'BD' => 'Bangladesh',
+			'BB' => 'Barbados',
+			'BY' => 'Belarus',
+			'BE' => 'Belgium',
+			'BZ' => 'Belize',
+			'BJ' => 'Benin',
+			'BM' => 'Bermuda',
+			'BT' => 'Bhutan',
+			'BO' => 'Plurinational State of Bolivia',
+			'BQ' => 'Sint Eustatius and Saba Bonaire',
+			'BA' => 'Bosnia and Herzegovina',
+			'BW' => 'Botswana',
+			'BV' => 'Bouvet Island',
+			'BR' => 'Brazil',
+			'IO' => 'British Indian Ocean Territory',
+			'BN' => 'Brunei Darussalam',
+			'BG' => 'Bulgaria',
+			'BF' => 'Burkina Faso',
+			'BI' => 'Burundi',
+			'KH' => 'Cambodia',
+			'CM' => 'Cameroon',
+			'CA' => 'Canada',
+			'CV' => 'Cape Verde',
+			'KY' => 'Cayman Islands',
+			'CF' => 'Central African Republic',
+			'TD' => 'Chad',
+			'CL' => 'Chile',
+			'CN' => 'China',
+			'CX' => 'Christmas Island',
+			'CC' => 'Cocos (Keeling) Islands',
+			'CO' => 'Colombia',
+			'KM' => 'Comoros',
+			'CG' => 'Congo',
+			'CD' => 'The Democratic Republic of the Congo',
+			'CK' => 'Cook Islands',
+			'CR' => 'Costa Rica',
+			'CI' => 'Côte d\'Ivoire',
+			'HR' => 'Croatia',
+			'CU' => 'Cuba',
+			'CW' => 'Curaçao',
+			'CY' => 'Cyprus',
+			'CZ' => 'Czech Republic',
+			'DK' => 'Denmark',
+			'DJ' => 'Djibouti',
+			'DM' => 'Dominica',
+			'DO' => 'Dominican Republic',
+			'EC' => 'Ecuador',
+			'EG' => 'Egypt',
+			'SV' => 'El Salvador',
+			'GQ' => 'Equatorial Guinea',
+			'ER' => 'Eritrea',
+			'EE' => 'Estonia',
+			'ET' => 'Ethiopia',
+			'FK' => 'Falkland Islands (Malvinas)',
+			'FO' => 'Faroe Islands',
+			'FJ' => 'Fiji',
+			'FI' => 'Finland',
+			'FR' => 'France',
+			'GF' => 'French Guiana',
+			'PF' => 'French Polynesia',
+			'TF' => 'French Southern Territories',
+			'GA' => 'Gabon',
+			'GM' => 'Gambia',
+			'GE' => 'Georgia',
+			'DE' => 'Germany',
+			'GH' => 'Ghana',
+			'GI' => 'Gibraltar',
+			'GR' => 'Greece',
+			'GL' => 'Greenland',
+			'GD' => 'Grenada',
+			'GP' => 'Guadeloupe',
+			'GU' => 'Guam',
+			'GT' => 'Guatemala',
+			'GG' => 'Guernsey',
+			'GN' => 'Guinea',
+			'GW' => 'Guinea-Bissau',
+			'GY' => 'Guyana',
+			'HT' => 'Haiti',
+			'HM' => 'Heard Island and McDonald Mcdonald Islands',
+			'VA' => 'Holy See (Vatican City State)',
+			'HN' => 'Honduras',
+			'HK' => 'Hong Kong',
+			'HU' => 'Hungary',
+			'IS' => 'Iceland',
+			'IN' => 'India',
+			'ID' => 'Indonesia',
+			'IR' => 'Iran, Islamic Republic of',
+			'IQ' => 'Iraq',
+			'IE' => 'Ireland',
+			'IM' => 'Isle of Man',
+			'IL' => 'Israel',
+			'IT' => 'Italy',
+			'JM' => 'Jamaica',
+			'JP' => 'Japan',
+			'JE' => 'Jersey',
+			'JO' => 'Jordan',
+			'KZ' => 'Kazakhstan',
+			'KE' => 'Kenya',
+			'KI' => 'Kiribati',
+			'KP' => 'Democratic People\'s Republic of Korea',
+			'KR' => 'Republic of Korea',
+			'KW' => 'Kuwait',
+			'KG' => 'Kyrgyzstan',
+			'LA' => 'Lao People\'s Democratic Republic',
+			'LV' => 'Latvia',
+			'LB' => 'Lebanon',
+			'LS' => 'Lesotho',
+			'LR' => 'Liberia',
+			'LY' => 'Libya',
+			'LI' => 'Liechtenstein',
+			'LT' => 'Lithuania',
+			'LU' => 'Luxembourg',
+			'MO' => 'Macao',
+			'MK' => 'The Former Yugoslav Republic of Macedonia',
+			'MG' => 'Madagascar',
+			'MW' => 'Malawi',
+			'MY' => 'Malaysia',
+			'MV' => 'Maldives',
+			'ML' => 'Mali',
+			'MT' => 'Malta',
+			'MH' => 'Marshall Islands',
+			'MQ' => 'Martinique',
+			'MR' => 'Mauritania',
+			'MU' => 'Mauritius',
+			'YT' => 'Mayotte',
+			'MX' => 'Mexico',
+			'FM' => 'Micronesia, Federated States of',
+			'MD' => 'Moldova, Republic of',
+			'MC' => 'Monaco',
+			'MN' => 'Mongolia',
+			'ME' => 'Montenegro',
+			'MS' => 'Montserrat',
+			'MA' => 'Morocco',
+			'MZ' => 'Mozambique',
+			'MM' => 'Myanmar',
+			'NA' => 'Namibia',
+			'NR' => 'Nauru',
+			'NP' => 'Nepal',
+			'NL' => 'Netherlands',
+			'NC' => 'New Caledonia',
+			'NZ' => 'New Zealand',
+			'NI' => 'Nicaragua',
+			'NE' => 'Niger',
+			'NG' => 'Nigeria',
+			'NU' => 'Niue',
+			'NF' => 'Norfolk Island',
+			'MP' => 'Northern Mariana Islands',
+			'NO' => 'Norway',
+			'OM' => 'Oman',
+			'PK' => 'Pakistan',
+			'PW' => 'Palau',
+			'PS' => 'Palestine, State of',
+			'PA' => 'Panama',
+			'PG' => 'Papua New Guinea',
+			'PY' => 'Paraguay',
+			'PE' => 'Peru',
+			'PH' => 'Philippines',
+			'PN' => 'Pitcairn',
+			'PL' => 'Poland',
+			'PT' => 'Portugal',
+			'PR' => 'Puerto Rico',
+			'QA' => 'Qatar',
+			'RE' => 'Réunion',
+			'RO' => 'Romania',
+			'RU' => 'Russian Federation',
+			'RW' => 'Rwanda',
+			'BL' => 'Saint Barthélemy',
+			'SH' => 'Saint Helena, Ascension and Tristan da Cunha',
+			'KN' => 'Saint Kitts and Nevis',
+			'LC' => 'Saint Lucia',
+			'MF' => 'Saint Martin (French part)',
+			'PM' => 'Saint Pierre and Miquelon',
+			'VC' => 'Saint Vincent and the Grenadines',
+			'WS' => 'Samoa',
+			'SM' => 'San Marino',
+			'ST' => 'Sao Tome and Principe',
+			'SA' => 'Saudi Arabia',
+			'SN' => 'Senegal',
+			'RS' => 'Serbia',
+			'SC' => 'Seychelles',
+			'SL' => 'Sierra Leone',
+			'SG' => 'Singapore',
+			'SX' => 'Sint Maarten (Dutch part)',
+			'SK' => 'Slovakia',
+			'SI' => 'Slovenia',
+			'SB' => 'Solomon Islands',
+			'SO' => 'Somalia',
+			'ZA' => 'South Africa',
+			'GS' => 'South Georgia and the South Sandwich Islands',
+			'SS' => 'South Sudan',
+			'ES' => 'Spain',
+			'LK' => 'Sri Lanka',
+			'SD' => 'Sudan',
+			'SR' => 'Suriname',
+			'SJ' => 'Svalbard and Jan Mayen',
+			'SZ' => 'Swaziland',
+			'SE' => 'Sweden',
+			'CH' => 'Switzerland',
+			'SY' => 'Syrian Arab Republic',
+			'TW' => 'Taiwan',
+			'TJ' => 'Tajikistan',
+			'TZ' => 'Tanzania, United Republic of',
+			'TH' => 'Thailand',
+			'TL' => 'Timor-Leste',
+			'TG' => 'Togo',
+			'TK' => 'Tokelau',
+			'TO' => 'Tonga',
+			'TT' => 'Trinidad and Tobago',
+			'TN' => 'Tunisia',
+			'TR' => 'Turkey',
+			'TM' => 'Turkmenistan',
+			'TC' => 'Turks and Caicos Islands',
+			'TV' => 'Tuvalu',
+			'UG' => 'Uganda',
+			'UA' => 'Ukraine',
+			'AE' => 'United Arab Emirates',
+			'GB' => 'United Kingdom',
+			'US' => 'United States',
+			'UM' => 'United States Minor Outlying Islands',
+			'UY' => 'Uruguay',
+			'UZ' => 'Uzbekistan',
+			'VU' => 'Vanuatu',
+			'VE' => 'Venezuela, Bolivarian Republic of',
+			'VN' => 'Vietnam',
+			'VG' => 'Virgin Islands, British',
+			'VI' => 'Virgin Islands, U.S.',
+			'WF' => 'Wallis and Futuna',
+			'EH' => 'Western Sahara',
+			'YE' => 'Yemen',
+			'ZM' => 'Zambia',
+			'ZW' => 'Zimbabwe',
+		);
+
+		return ( ! empty( $code ) && ! empty( $regions[ $code ] ) ) ? $regions[ $code ] : $regions;
+	}
+
+	/**
+	 * Get language codes array.
+	 *
+	 * @since 4.0.
+	 *
+	 * @param  string $code pass langaue code to retrive the language name of that code or leave blank to get an array of languages.
+	 *
+	 * @return [type]       [description]
+	 */
+	public static function get_language_codes( $code = '' ) {
+
+		$languages = array(
+			'af'     => 'Afrikaans',
+			'sq'     => 'Albanian',
+			'am'     => 'Amharic',
+			'ar'     => 'Arabic',
+			'hy'     => 'Armenian',
+			'az'     => 'Azerbaijani',
+			'eu'     => 'Basque',
+			'be'     => 'Belarusian',
+			'bn'     => 'Bengali',
+			'bs'     => 'Bosnian',
+			'bg'     => 'Bulgarian',
+			'my'     => 'Burmese',
+			'ca'     => 'Catalan',
+			'zh'     => 'Chinese',
+			'zh-CN'  => 'Chinese (Simplified)',
+			'zh-HK'  => 'Chinese (Hong KONG)',
+			'zh-TW'  => 'Chinese (Traditional)',
+			'hr'     => 'Croatian',
+			'cs'     => 'Czech',
+			'da'     => 'Danish',
+			'nl'     => 'Dutch',
+			'en'     => 'English',
+			'en-AU'  => 'English (Australian)',
+			'en-GB'  => 'English (Great BRITAIN)',
+			'et'     => 'Estonian',
+			'fa'     => 'Farsi',
+			'fi'     => 'Finnish',
+			'fil'    => 'Filipino',
+			'fr'     => 'French',
+			'fr-CA'  => 'French (Canada)',
+			'gl'     => 'Galician',
+			'ka'     => 'Georgian',
+			'de'     => 'German',
+			'el'     => 'Greek',
+			'gu'     => 'Gujarati',
+			'iw'     => 'Hebrew',
+			'hi'     => 'Hindi',
+			'hu'     => 'Hungarian',
+			'is'     => 'Icelandic',
+			'id'     => 'Indonesian',
+			'it'     => 'Italian',
+			'ja'     => 'Japanese',
+			'kn'     => 'Kannada',
+			'kk'     => 'Kazakh',
+			'km'     => 'Khmer',
+			'ko'     => 'Korean',
+			'ky'     => 'Kyrgyz',
+			'lo'     => 'Lao',
+			'lv'     => 'Latvian',
+			'lt'     => 'Lithuanian',
+			'mk'     => 'Macedonian',
+			'ms'     => 'Malay',
+			'ml'     => 'Malayalam',
+			'mr'     => 'Marathi',
+			'mn'     => 'Mongolian',
+			'ne'     => 'Nepali',
+			'no'     => 'Norwegian',
+			'pl'     => 'Polish',
+			'pt'     => 'Portuguese',
+			'pt-BR'  => 'Portuguese (Brazil)',
+			'pt-PT'  => 'Portuguese (Portugal)',
+			'pa'     => 'Punjabi',
+			'ro'     => 'Romanian',
+			'ru'     => 'Russian',
+			'sr'     => 'Serbian',
+			'si'     => 'Sinhalese',
+			'sk'     => 'Slovak',
+			'sl'     => 'Slovenian',
+			'es'     => 'Spanish',
+			'es-419' => 'Spanish (Latin AMERICA)',
+			'sw'     => 'Swahili',
+			'sv'     => 'Swedish',
+			'ta'     => 'Tamil',
+			'te'     => 'Telugu',
+			'th'     => 'Thai',
+			'tr'     => 'Turkish',
+			'uk'     => 'Ukrainian',
+			'ur'     => 'Urdu',
+			'uz'     => 'Uzbek',
+			'vi'     => 'Vietnamese',
+			'zu'     => 'Zulu',
+		);
+
+		return ( ! empty( $code ) && ! empty( $languages[ $code ] ) ) ? $languages[ $code ] : $languages;
 	}
 }
