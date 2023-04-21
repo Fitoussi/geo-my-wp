@@ -182,7 +182,7 @@ if ( ! class_exists( 'GMW_License' ) ) :
 							$color  = 'green';
 						}
 
-						$links[ $action ] = '<a style="color:' . $color . '" href="' . admin_url( 'admin.php?page=gmw-extensions&extensions_tab=premium' ) . '">' . $text . '</a>';
+						$links[ $action ] = '<a style="color:' . $color . '" href="' . admin_url( 'admin.php?page=gmw-extensions&tab=premium' ) . '">' . $text . '</a>';
 
 					} else {
 
@@ -218,7 +218,7 @@ if ( ! class_exists( 'GMW_License' ) ) :
 						$color  = 'green';
 					}
 
-					$links[ $action ] = '<a style="color:' . $color . '" href="' . admin_url( 'admin.php?page=gmw-extensions&extensions_tab=premium' ) . '">' . $text . '</a>';
+					$links[ $action ] = '<a style="color:' . $color . '" href="' . admin_url( 'admin.php?page=gmw-extensions&tab=premium' ) . '">' . $text . '</a>';
 
 					$links['docs'] = $docs_link;
 
@@ -413,28 +413,36 @@ if ( ! class_exists( 'GMW_License' ) ) :
 		public function get_license_key_element() {
 
 			// check if in plugins page.
-			$plugins_page = ( ! empty( get_current_screen()->base ) && 'plugins' === get_current_screen()->base ) ? true : false;
-
-			$output = '';
-
-			$license_name  = esc_attr( $this->license_name );
-			$item_name     = esc_attr( $this->item_name );
-			$item_id       = esc_attr( $this->item_id );
-			$basename      = esc_attr( $this->basename );
-			$nonce         = wp_create_nonce( 'gmw_' . $license_name . '_license_nonce' );
-			$license_value = ! empty( $this->license_key ) ? esc_attr( sanitize_text_field( $this->license_key ) ) : '';
+			$plugins_page   = ( ! empty( get_current_screen()->base ) && 'plugins' === get_current_screen()->base ) ? true : false;
+			$output         = '';
+			$license_name   = esc_attr( $this->license_name );
+			$item_name      = esc_attr( $this->item_name );
+			$item_id        = esc_attr( $this->item_id );
+			$basename       = esc_attr( $this->basename );
+			$nonce          = wp_create_nonce( 'gmw_' . $license_name . '_license_nonce' );
+			$license_value  = ! empty( $this->license_key ) ? esc_attr( sanitize_text_field( $this->license_key ) ) : '';
+			$expires        = gmw_get_license_data( $license_name, 'expires' );
+			$expires        = ! empty( $expires ) ? date( 'm/d/Y', strtotime( $expires ) ) : '';
+			$action         = '';
+			$data_attr      = '';
+			$class          = '';
+			$activations    = '';
+			$expired_output = '';
 
 			// if license valid.
 			if ( ! empty( $this->license_key ) && 'valid' === $this->license_status ) {
 
 				// generate data.
-				$action  = 'deactivate_license';
-				$button  = 'button-secondary';
-				//$label   = __( 'Deactivate License', 'geo-my-wp' );
-				$label   = '<span class="button-label">' . __( 'Deactivate License', 'geo-my-wp' ) . '</span><span class="gmw-icon-lock dashicon dashicons-unloc"></span>';
-				$message = esc_html( $this->messages['valid'] );
-				$icon    = '<i class="dashicons dashicons-yes-alt"></i>';
-				$status  = 'valid';
+				$action         = 'deactivate_license';
+				$label          = __( 'Deactivate license', 'geo-my-wp' );
+				$updating_label = __( 'Deactivating license', 'geo-my-wp' );
+				$updated_label  = __( 'License deactivated', 'geo-my-wp' );
+				$failed_label   = __( 'Deactivation failed', 'geo-my-wp' );
+				$message        = esc_html( $this->messages['valid'] );
+				$icon           = '<i class="dashicons dashicons-yes-alt"></i>';
+				$status         = 'valid';
+				$expired_output = ! empty( $expires ) ? '<span>' . __( 'Valid untill', 'geo-my-wp' ) . ' ' . $expires . '</span>' : '';
+				$class         .= 'deactivate';
 
 				// hidden input fields.
 				$key_field  = '<input class="gmw-license-key-disabled" disabled="disabled" type="password" size="31" value="' . $license_value . '" />';
@@ -443,57 +451,82 @@ if ( ! class_exists( 'GMW_License' ) ) :
 			} else {
 
 				// generate data.
-				$action  = 'activate_license';
-				$class   = '';
-				$message = $this->messages['activate'];
-				$button  = 'button-primary';
-				//$label   = __( 'Activate License', 'geo-my-wp' );
-				$label   = '<span class="button-label">' . __( 'Activate License', 'geo-my-wp' ) . '</span><span class="gmw-icon-lock-open-alt dashicon dashicons-loc"></span>';
-				$allow   = array(
+				$action         = 'activate_license';
+				$message        = $this->messages['activate'];
+				$label          = __( 'Activate license', 'geo-my-wp' );
+				$updating_label = __( 'Activating license', 'geo-my-wp' );
+				$updated_label  = __( 'License activated', 'geo-my-wp' );
+				$failed_label   = __( 'Activation failed', 'geo-my-wp' );
+				$allow          = array(
 					'a' => array(
 						'href'  => array(),
 						'title' => array(),
 					),
 				);
 				$message = wp_kses( $message, $allow );
-				$icon    = '<i class="dashicons dashicons-dismiss"></i>';
+				$icon    = '<i class="dashicons dashicons-info"></i>';
 				$status  = 'inactive';
+				$class  .= 'activate';
 
 				// generate error message.
 				if ( ! empty( $this->license_key ) && ! empty( $this->license_status ) && 'inactive' !== $this->license_status ) {
 
 					$status .= ' gmw-license-error';
-					$message = array_key_exists( $this->license_status, $this->messages ) ? $this->messages[ $this->license_status ] : $this->messages['missing'];
+
+					if ( 'expired' === $this->license_status ) {
+
+						if ( ! empty( $expires ) ) {
+
+							$message = sprintf( __( 'License expired on %s.', 'geo-my-wp' ), $expires );
+
+						} else {
+
+							$message = __( 'License expired.', 'geo-my-wp' );
+						}
+
+						$message .= sprintf( __( ' <a href="%s" target="_blank">Renew your license key now</a> to receive support and updates.', 'geo-my-wp' ), 'https://geomywp.com/your-account/' );
+
+					} else {
+						$message = array_key_exists( $this->license_status, $this->messages ) ? $this->messages[ $this->license_status ] : $this->messages['missing'];
+					}
+
+					$icon = '<i class="dashicons dashicons-info"></i>';
 				}
 
 				// generate input fields.
-				$key_field = '<input  class="gmw-license-key" name="gmw_licenses[' . $license_name . '][license_key]" type="password" class="regular-text" size="31" placeholder="' . __( 'License key', 'geo-my-wp' ) . '" value="' . $license_value . '" />';
-
+				$key_field = '<input  class="gmw-license-key" name="gmw_licenses[' . $license_name . '][license_key]" type="text" class="regular-text" size="31" placeholder="' . __( 'Enter your license key', 'geo-my-wp' ) . '" value="' . $license_value . '" />';
 			}
-
-			$field_data    = '';
-			$license_label = __( 'License: ', 'geo-my-wp' );
 
 			// if not in plugins page.
 			if ( ! $plugins_page ) {
-				$field_data = 'data-action="' . $action . '" data-license_name="' . $license_name . '" data-item_id="' . $item_id . '" data-item_name="' . $item_name . '" data-nonce="' . $nonce . '" data-basename="' . $basename . '"';
 
-				$license_label = '';
+				$data_attr  = ' data-action="' . $action . '"';
+				$data_attr .= ' data-license_name="' . $license_name . '"';
+				$data_attr .= ' data-item_id="' . $item_id . '"';
+				$data_attr .= ' data-item_name="' . $item_name . '"';
+				$data_attr .= ' data-nonce="' . $nonce . '"';
+				$data_attr .= ' data-basename="' . $basename . '"';
+				$data_attr .= ' data-updating_message="' . $updating_label . '"';
+				$data_attr .= ' data-updated_message="' . $updated_label . '"';
+				$data_attr .= ' data-failed_message="' . $failed_label . '"';
+				$data_attr .= ' data-label="' . $label . '"';
 			}
 
 			// generate the license element.
 			$output .= '<div class="gmw-license-wrapper ' . $status . '">';
 			$output .= '<div class="field-wrapper">';
-			//$output .= '<span class="gmw-icon-key">' . $license_label . '</span>';
 			$output .= $key_field;
-			
-			$output .= '<div class="actions-wrapper">';
-			$output .= '<button type="submit" name="gmw_license_submit" class="' . $button . ' ' . $action . ' gmw-license-action-button" value="' . $license_name . '" ' . $field_data . '>' . $label . '</button>';
-			$output .= '<span style="display: none" class="button actions-message gmw-license-action-button"></span>';
-			$output .= '</div>';
-			$output .= '</div>';
 
-			$output .= '<p class="description">' . $icon . $message . '</p>';
+			$output .= '<div class="actions-wrapper">';
+			$output .= '<button type="submit" name="gmw_license_submit"';
+			$output .= ' class="' . $class . ' ' . $action . ' gmw-license-action-button gmw-action-toggle-button gmw-atb-secondary"';
+			$output .= ' value="' . $license_name . '"';
+			$output .= ' ' . $data_attr . '>';
+			$output .= '<span class="gmw-atb-toggle"></span>';
+			$output .= '<span class="gmw-atb-label">' . $label . '</span></button>';
+			$output .= '</div>';
+			$output .= '</div>';
+			$output .= '<p class="description"><span>' . $icon . $message . '</span>' . $expired_output . '</p>';
 
 			$output .= '<input type="hidden" name="gmw_licenses[' . $license_name . '][action]" value="' . $action . '" />';
 			$output .= '<input type="hidden" name="gmw_licenses[' . $license_name . '][nonce]" value="' . $nonce . '" />';
@@ -571,7 +604,17 @@ if ( ! class_exists( 'GMW_License' ) ) :
 		$license_keys = get_option( 'gmw_license_data' );
 
 		if ( 'status' === $data ) {
+
 			$output = ! empty( $license_keys[ $license_name ]['status'] ) ? $license_keys[ $license_name ]['status'] : 'inactive';
+
+		} elseif ( 'expires' === $data ) {
+
+			$output = ! empty( $license_keys[ $license_name ]['expires'] ) ? $license_keys[ $license_name ]['expires'] : '';
+
+		} elseif ( 'activations_left' === $data ) {
+
+			$output = ! empty( $license_keys[ $license_name ]['activations_left'] ) ? $license_keys[ $license_name ]['activations_left'] : '';
+
 		} else {
 
 			$output = ! empty( $license_keys[ $license_name ]['key'] ) ? trim( $license_keys[ $license_name ]['key'] ) : '';
@@ -767,68 +810,11 @@ if ( ! class_exists( 'GMW_License' ) ) :
 			$license_data->notice_message    = 'connection_failed';
 			$license_data->notice_action     = 'error';
 
-			/**
-			If ( is_wp_error( $response ) ) {
-
-				$license_data = $response->get_error_message();
-
-			} else {
-
-				$license_data = __( 'An error occurred, please try again.' );
-			} */
-
 			// otherwise, if succeed.
 		} else {
 
 			// decode the license data.
 			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
-
-			/**
-			If ( false === $license_data->success ) {
-
-				Switch( $license_data->error ) {
-
-					case 'expired' :
-
-						$message = sprintf(
-							__( 'Your license key expired on %s.' ),
-							date_i18n( get_option( 'date_format' ), strtotime( $license_data->expires, current_time( 'timestamp' ) ) )
-						);
-						break;
-
-					case 'revoked' :
-
-						$message = __( 'Your license key has been disabled.' );
-						break;
-
-					case 'missing' :
-
-						$message = __( 'Invalid license.' );
-						break;
-
-					case 'invalid' :
-					case 'site_inactive' :
-
-						$message = __( 'Your license is not active for this URL.' );
-						break;
-
-					case 'item_name_mismatch' :
-
-						$message = sprintf( __( 'This appears to be an invalid license key for %s.' ), EDD_SAMPLE_ITEM_NAME );
-						break;
-
-					case 'no_activations_left':
-
-						$message = __( 'Your license key has reached its activation limit.' );
-						break;
-
-					default :
-
-						$message = __( 'An error occurred, please try again.' );
-						break;
-				}
-
-			} */
 
 			$license_data->remote_connection = true;
 			$license_data->license_name      = $form_args['license_name'];
@@ -838,8 +824,10 @@ if ( ! class_exists( 'GMW_License' ) ) :
 				$license_data->notice_message = 'activated';
 				$license_data->notice_action  = 'updated';
 
-				$license_keys[ $license_name ]['key']    = $license_key;
-				$license_keys[ $license_name ]['status'] = 'valid';
+				$license_keys[ $license_name ]['key']              = $license_key;
+				$license_keys[ $license_name ]['status']           = 'valid';
+				$license_keys[ $license_name ]['expires']          = ! empty( $license_data->expires ) ? $license_data->expires : '';
+				$license_keys[ $license_name ]['activations_left'] = ! empty( $license_data->activations_left ) ? $license_data->activations_left : '';
 
 				update_option( 'gmw_license_data', $license_keys );
 
@@ -848,8 +836,11 @@ if ( ! class_exists( 'GMW_License' ) ) :
 				$license_data->notice_message = $license_data->error;
 				$license_data->notice_action  = 'error';
 
-				$license_keys[ $license_name ]['key']    = $license_key;
-				$license_keys[ $license_name ]['status'] = $license_data->error;
+				$license_keys[ $license_name ]['key']              = $license_key;
+				$license_keys[ $license_name ]['status']           = $license_data->error;
+				$license_keys[ $license_name ]['expires']          = ! empty( $license_data->expires ) ? $license_data->expires : '';
+				$license_keys[ $license_name ]['activations_left'] = ! empty( $license_data->activations_left ) ? $license_data->activations_left : '';
+
 
 				update_option( 'gmw_license_data', $license_keys );
 
@@ -858,8 +849,10 @@ if ( ! class_exists( 'GMW_License' ) ) :
 				$license_data->notice_message = 'deactivated';
 				$license_data->notice_action  = 'updated';
 
-				$license_keys[ $license_name ]['key']    = $license_key;
-				$license_keys[ $license_name ]['status'] = 'inactive';
+				$license_keys[ $license_name ]['key']              = $license_key;
+				$license_keys[ $license_name ]['status']           = 'inactive';
+				$license_keys[ $license_name ]['expires']          = ! empty( $license_data->expires ) ? $license_data->expires : '';
+				$license_keys[ $license_name ]['activations_left'] = ! empty( $license_data->activations_left ) ? $license_data->activations_left : '';
 
 				update_option( 'gmw_license_data', $license_keys );
 			}
@@ -918,26 +911,27 @@ if ( ! class_exists( 'GMW_License' ) ) :
 			'gmw_license_update_notices',
 			array(
 				//'activate'            => __( 'Activate your license key to receive support and updates.', 'geo-my-wp' ),
-				'activate'            => __( 'Activate your license key to start using the extension.', 'geo-my-wp' ),
-				'activated'           => __( 'License activated. Thank you for your support!', 'geo-my-wp' ),
-				'deactivated'         => __( 'License deactivated.', 'geo-my-wp' ),
-				'valid'               => __( 'License activated. Thank you for your support!', 'geo-my-wp' ),
-				'no_key_entered'      => __( 'No license key entered.', 'geo-my-wp' ),
-				'expired'             => sprintf( __( 'Your license has expired. You can still use the extension, but you should <a href="%s" target="_blank">renew your license</a> to receive updates and support.', 'geo-my-wp' ), 'https://geomywp.com/your-account/' ),
-				'revoked'             => sprintf( __( 'Your license has been disabled. Contact <a href="%s" target="_blank">support</a> for more information.', 'geo-my-wp' ), 'https://geomywp.com/support/#extension-support' ),
-				'missing'             => sprintf( __( 'Something is wrong with the license key you entered. <a href="%s" target="_blank">Verify your key</a> and try again.', 'geo-my-wp' ), 'https://geomywp.com/your-account/' ),
-				'disabled'            => sprintf( __( 'You license key was disabled by the GEO my WP team. <a href="%s" target="_blank">Contact support</a> for assistance.', 'geo-my-wp' ), 'https://geomywp.com/support/' ),
-				'invalid'             => __( 'Your license is not active for this domain.', 'geo-my-wp' ),
-				'site_inactive'       => __( 'Your license is not active for this domain.', 'geo-my-wp' ),
-				'invalid_item_id'     => __( 'The license key you entered does not belong to this extension.', 'geo-my-wp' ),
-				'item_name_mismatch'  => __( 'An error occurred while trying to activate your license. ERROR item_name_mismatch', 'geo-my-wp' ),
-				'no_activations_left' => sprintf( __( 'Your license key has reached its activation limit. <a %s>Manage licenses</a>.', 'geo-my-wp' ), 'href="https://geomywp.com/your-account/" target="_blank"' ),
+				'activate'             => __( 'Activate your license key to start using the extension.', 'geo-my-wp' ),
+				'license_key_inactive' => __( 'Activate your license key to start using the extension.', 'geo-my-wp' ),
+				'inactive'             => __( 'Activate your license key to start using the extension.', 'geo-my-wp' ),
+				'activated'            => __( 'License activated. Thank you for your support!', 'geo-my-wp' ),
+				'deactivated'          => __( 'License deactivated.', 'geo-my-wp' ),
+				'valid'                => __( 'License activated. Thank you for your support!', 'geo-my-wp' ),
+				'no_key_entered'       => __( 'No license key entered.', 'geo-my-wp' ),
+				'expired'              => sprintf( __( 'License key expired. You can still use the extension, but you should <a href="%s" target="_blank">renew your license</a> to receive updates and support.', 'geo-my-wp' ), 'https://geomywp.com/your-account/' ),
+				'revoked'              => sprintf( __( 'license disabled. Contact <a href="%s" target="_blank">support</a> for more information.', 'geo-my-wp' ), 'https://geomywp.com/support/#extension-support' ),
+				'missing'              => sprintf( __( 'Something is wrong with the license key you entered. <a href="%s" target="_blank">Verify your license key</a>.', 'geo-my-wp' ), 'https://geomywp.com/your-account/' ),
+				'disabled'             => sprintf( __( 'License disabled by the provider. <a href="%s" target="_blank">Contact support</a> for assistance.', 'geo-my-wp' ), 'https://geomywp.com/support/' ),
+				'invalid'              => __( 'Your license is not active for this domain.', 'geo-my-wp' ),
+				'site_inactive'        => __( 'Your license is not active for this domain.', 'geo-my-wp' ),
+				'invalid_item_id'      => __( 'The license key you entered does not belong to this extension.', 'geo-my-wp' ),
+				'item_name_mismatch'   => __( 'An error occurred while trying to activate your license. ERROR item_name_mismatch', 'geo-my-wp' ),
+				'no_activations_left'  => sprintf( __( 'License key has reached its activation limit. <a %s>Manage licenses</a>.', 'geo-my-wp' ), 'href="https://geomywp.com/your-account/" target="_blank"' ),
 
-				'retrieve_key'        => sprintf( __( 'Lost or forgot your license key? <a %s >Retrieve it here.</a>', 'geo-my-wp' ), 'href="http://geomywp.com/purchase-history/" target="_blank"' ),
-				'activation_error'    => __( 'Your license for %s plugin could not be activated. See error message below.', 'geo-my-wp' ),
-				'default'             => sprintf( __( 'An error occurred. Try again or contact <a href="%s" target="_blank">support</a>.', 'geo-my-wp' ), 'https://geomywp.com/support/#extension-support' ),
-				'connection_failed'   => sprintf( __( 'Connection to remote server failed. Try again or contact <a href="%s" target="_blank">support</a>.', 'geo-my-wp' ), 'https://geomywp.com/support/#general-questions' ),
-
+				'retrieve_key'         => sprintf( __( 'Lost or forgot your license key? <a %s >Retrieve it here.</a>', 'geo-my-wp' ), 'href="http://geomywp.com/purchase-history/" target="_blank"' ),
+				'activation_error'     => __( 'Your license for %s plugin could not be activated. See error message below.', 'geo-my-wp' ),
+				'default'              => sprintf( __( 'An error occurred. Try again or contact <a href="%s" target="_blank">support</a>.', 'geo-my-wp' ), 'https://geomywp.com/support/#extension-support' ),
+				'connection_failed'    => sprintf( __( 'Connection to remote server failed. Try again or contact <a href="%s" target="_blank">support</a>.', 'geo-my-wp' ), 'https://geomywp.com/support/#general-questions' ),
 			)
 		);
 	}
