@@ -708,17 +708,10 @@ class GMW_Admin {
 					return;
 				}
 
-				var form_name = jQuery( "#gmw_form_id option[value='" + form_id + "']" ).text().replace(/[\[\]]/g, '');
+				var form_name = jQuery( "#gmw_form_id option[value='" + form_id + "']" ).text().replace( /[\[\]]/g, '' );
 				var addon     = jQuery( "#gmw_form_id option[value='" + form_id + "']" ).data( 'type' );
 				var prefix    = 'gmw';
 				var attribute = jQuery( ".gmw_form_type:checked" ).val();
-
-				/*if ( addon == 'ajax_forms' ) {
-					prefix = 'gmw_ajax_form';
-				} else if ( addon == 'global_maps' ) {
-					prefix    = 'gmw_global_map';
-					attribute = 'form';
-				}*/
 
 				window.send_to_editor( '[' + prefix + ' ' + attribute + '="' + form_id + '" name="' + form_name + '"]' );
 			}
