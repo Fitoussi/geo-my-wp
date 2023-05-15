@@ -67,7 +67,7 @@ function gmw_pt_get_tax_query_args( $tax_args = array(), $gmw = array() ) {
 
 		// Query include/exclude terms.
 		// Only if taxonomy was not selected in the search form or is set to pre-defined.
-		if ( ! $tax_exists || 'pre_defined' === $taxonomy_args['style'] ) {
+		if ( $gmw['submitted'] && ( ! $tax_exists || 'pre_defined' === $taxonomy_args['style'] ) ) {
 
 			// include terms.
 			if ( ! empty( $taxonomy_args['include'] ) ) {
