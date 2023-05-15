@@ -1479,6 +1479,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 				'page_title' => ! empty( $group['page_title'] ) ? $group['page_title'] : '',
 				'desc'       => ! empty( $group['desc'] ) ? $group['desc'] : '',
 				'icon'       => ! empty( $group['icon'] ) ? $group['icon'] : 'location-outline',
+				'img_slug'   => ! empty( $group['img_slug'] ) ? $group['img_slug'] : $this->slug,
 				'fields'     => ! empty( $group['fields'] ) ? $group['fields'] : array(),
 				'priority'   => ! empty( $group['priority'] ) ? $group['priority'] : 99,
 			);
