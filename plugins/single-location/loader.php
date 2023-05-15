@@ -118,10 +118,10 @@ class GMW_Single_Location_Addon extends GMW_Addon {
 		parent::pre_init();
 
 		// include classes files.
-		if ( ! IS_ADMIN || defined( 'DOING_AJAX' ) ) {
+		//if ( ! IS_ADMIN || defined( 'DOING_AJAX' ) ) {
 			require_once 'includes/class-gmw-single-location.php';
 			require_once 'includes/gmw-single-location-shortcode.php';
-		}
+		//}
 	}
 }
 GMW_Addon::register( 'GMW_Single_Location_Addon' );

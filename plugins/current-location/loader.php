@@ -110,10 +110,10 @@ class GMW_Current_Location_Addon extends GMW_Addon {
 
 		parent::pre_init();
 
-		if ( ! IS_ADMIN || defined( 'DOING_AJAX' ) ) {
+		//if ( ! IS_ADMIN || defined( 'DOING_AJAX' ) ) {
 			require_once 'includes/class-gmw-current-location.php';
 			require_once 'includes/gmw-current-location-shortcode.php';
-		}
+		//}
 	}
 }
 GMW_Addon::register( 'GMW_Current_Location_Addon' );
