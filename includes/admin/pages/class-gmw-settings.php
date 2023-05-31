@@ -46,7 +46,7 @@ class GMW_Settings {
 					'auto_locate'        => 1,
 					'results_page'       => '',
 					'allow_tracking'     => 0,
-					'visible_options'    => 1,
+					'minimize_options'   => 1,
 					'hide_admin_notices' => 1,
 				),
 				'api_providers'    => array(
@@ -174,6 +174,7 @@ class GMW_Settings {
 				'parent'   => '',
 				'label'    => __( 'General Settings', 'geo-my-wp' ),
 				'icon'     => 'cog',
+				'img_slug' => 'posts_locator',
 				'desc'     => __( 'GEO my WP general settings.', 'geo-my-wp' ),
 				'fields'   => array(
 					'country_code'   => array(
@@ -230,13 +231,13 @@ class GMW_Settings {
 						'attributes' => array(),
 						'priority'   => 100,
 					),
-					'visible_options'   => array(
-						'name'       => 'visible_options',
+					'minimize_options'   => array(
+						'name'       => 'minimize_options',
 						'type'       => 'checkbox',
 						'default'    => '',
-						'label'      => __( 'Visible Admin Settings', 'geo-my-wp' ),
+						'label'      => __( 'Minimize Admin Settings', 'geo-my-wp' ),
 						'cb_label'   => __( 'Enable', 'geo-my-wp' ),
-						'desc'       => __( 'Keep admin settings visible by default.', 'geo-my-wp' ),
+						'desc'       => __( 'Keep admin settings minimized by default for a cleaner look.', 'geo-my-wp' ),
 						'attributes' => array(),
 						'priority'   => 105,
 					),
@@ -258,6 +259,7 @@ class GMW_Settings {
 				'parent'   => '',
 				'label'    => __( 'Maps & Geocoders', 'geo-my-wp' ),
 				'icon'     => 'map-o',
+				'img_slug' => 'posts_locator',
 				'desc'     => __( 'Maps and geocoders settings.', 'geo-my-wp' ),
 				'fields'   => array(
 					'maps_provider'       => array(
@@ -368,6 +370,7 @@ class GMW_Settings {
 				'parent'   => '',
 				'label'    => __( 'Styling', 'geo-my-wp' ),
 				'icon'     => 'cog',
+				'img_slug' => 'posts_locator',
 				'desc'     => __( 'Colors and styling options.', 'geo-my-wp' ),
 				'fields'   => array(
 					'main_colors'   => array(
@@ -899,8 +902,8 @@ class GMW_Settings {
 		<?php gmw_admin_pages_header(); ?>
 
 		<?php
-		$options_visibility = gmw_get_option( 'general_settings', 'visible_options', false );
-		$v_class = $options_visibility ? ' gmw-visible-options' : '';
+		$options_visibility = gmw_get_option( 'general_settings', 'minimize_options', false );
+		$v_class            = $options_visibility ? ' gmw-visible-options' : '';
 		?>
 
 		<div id="gmw-settings-page" class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper<?php echo $v_class; // WPCS: XSS ok. ?>">
@@ -918,15 +921,19 @@ class GMW_Settings {
 
 					<?php
 
+					if ( empty( $tab['img_slug'] ) ) {
+						$tab['img_slug'] = $tab['slug'];
+					}
+
 					if ( ! empty( $tab['premium_feature'] ) ) {
 
 						printf(
-							'<a href="#" class="gmw-premium-feature" data-feature="%s" data-name="%s" data-url="%s" data-content="%s"><span class="gmw-icon gmw-icon-%s"></span> <span class="label">%s</span></a>',
+							'<a href="#" class="gmw-premium-feature" data-feature="%s" data-name="%s" data-url="%s" data-content="%s"><img src="%s"> <span class="label">%s</span></a>',
 							esc_attr( $tab['slug'] ),
 							esc_attr( $tab['extension_name'] ),
 							esc_attr( $tab['extension_url'] ),
 							esc_attr( $tab['extension_content'] ),
-							'',
+							'https://geomywp.com/wp-content/uploads/extensions-images/icons/' . esc_attr( $tab['img_slug'] ) . '_icon.svg',
 							esc_attr( $tab['label'] )
 						);
 
@@ -967,10 +974,10 @@ class GMW_Settings {
 						}
 
 						printf(
-							'<a href="%s"%s><span class="gmw-icon gmw-icon-%s"></span> <span class="label">%s</span></a>',
+							'<a href="%s"%s><img src="%s"><span class="label">%s</span></a>',
 							esc_url( $url ),
 							$parent_tab === $tab['slug'] ? ' class="active"' : '',
-							'',
+							'https://geomywp.com/wp-content/uploads/extensions-images/icons/' . esc_attr( $tab['img_slug'] ) . '_icon.svg',
 							esc_html( $tab['label'] )
 						);
 					}
@@ -984,7 +991,10 @@ class GMW_Settings {
 
 				<div id="gmw-admin-page-sub-header">
 
-					<h3 class="gmw-admin-page-title"><?php echo esc_html( $this->settings_groups[ $parent_tab ]['label'] ); ?></h3>
+					<div style="display: flex;align-items: center;">
+						<img src="https://geomywp.com/wp-content/uploads/extensions-images/icons/<?php echo $this->settings_groups[ $parent_tab ]['img_slug'] . '_icon.svg' ;?>" style="height: 32px;margin-right: 4px;">
+						<h3 class="gmw-admin-page-title"><?php echo esc_html( $this->settings_groups[ $parent_tab ]['label'] ); ?></h3>
+					</div>
 
 					<div class="gmw-update-settings-button update-button-wrapper top">
 						<input type="submit" class="gmw-settings-action-button button-primary" value="Save Changes" style="margin: 0;" onclick="jQuery( '.gmw-settings-form' ).submit();">
