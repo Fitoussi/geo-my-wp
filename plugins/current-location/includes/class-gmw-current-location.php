@@ -33,12 +33,14 @@ class GMW_Current_Location {
 		'element_id'                => 0,
 		'elements'                  => 'username,address,map,location_form',
 		'element-width'             => '100%',
-		'location_form_trigger'     => 'Update your location',
-		'clear_location_trigger'    => 'Clear location',
-		'address_field_placeholder' => 'Enter address',
-		'address_fields'            => 'city,country',
+		'location_form_trigger'     => 'Update your location', // Deprecated.
+		'update_location_label'     => 'Update your location',
+		'clear_location_trigger'    => 'Clear location', // Deprecated.
+		'clear_location_label'      => 'Clear location',
 		'address_label'             => '',
+		'address_field_placeholder' => 'Enter address',
 		'address_autocomplete'      => 1,
+		'address_fields'            => 'city,country',
 		'user_greeting'             => 'Hello',
 		'guest_greeting'            => 'Hello, guest!',
 		'map_height'                => '250px',
@@ -51,6 +53,7 @@ class GMW_Current_Location {
 		'expand_on_load'            => 0,
 		'ajax_update'               => 0,
 		'loading_message'           => 'Retrieving your location...',
+		'use_generic_location'      => 0,
 	);
 
 	/**
@@ -114,6 +117,30 @@ class GMW_Current_Location {
 			unset( $atts['map_marker'] );
 		}
 
+		/**
+		 * location_form_trigger deprecated and replaced with update_location_label.
+		 * 
+		 * @deprecated since 4.0.
+		 */
+		if ( ! isset( $atts['update_location_label'] ) && isset( $atts['location_form_trigger'] ) ) {
+
+			$atts['update_location_label'] = $atts['location_form_trigger'];
+
+			unset( $atts['location_form_trigger'] );
+		}
+
+		/**
+		 * clear_location_trigger deprecated and replaced with clear_location_label.
+		 * 
+		 * @deprecated since 4.0.
+		 */
+		if ( ! isset( $atts['clear_location_label'] ) && isset( $atts['clear_location_trigger'] ) ) {
+
+			$atts['clear_location_label'] = $atts['clear_location_trigger'];
+
+			unset( $atts['clear_location_trigger'] );
+		}
+
 		// extend the default args.
 		$this->args = array_merge( $this->args, $this->ext_args );
 
@@ -148,6 +175,11 @@ class GMW_Current_Location {
 		}
 
 		$this->current_location = gmw_get_user_current_location();
+
+		// Get generic data if needed.
+		if ( empty( $this->current_location ) && $this->args['use_generic_location'] ) {
+			$this->current_location = $this->get_generic_data();
+		}
 
 		// check for the user's current position in cookies.
 		if ( ! empty( $this->current_location ) ) {
@@ -193,6 +225,32 @@ class GMW_Current_Location {
 
 		// enqueue script to localize the maps scripts in the footer.
 		add_action( 'wp_footer', array( $this, 'enqueue_scripts' ) );
+	}
+
+	/**
+	 * Generate generic current location when needed if user's lcoation was not found.
+	 *
+	 * Mostly for the block editor.
+	 *
+	 * @since 4.0
+	 *
+	 * @return [type] [description]
+	 */
+	public function get_generic_data() {
+
+		return (object) array(
+			'street'            => '1000 Museum Mile',
+			'city'              => 'New York',
+			'region_code'       => 'NY',
+			'region_name'       => 'New York',
+			'postcode'          => '10028',
+			'country_code'      => 'US',
+			'country_name'      => 'United States',
+			'address'           => '1000 Museum Mile, New York, NY 10028, USA',
+			'formatted_address' => '1000 Museum Mile, New York, NY 10028, USA',
+			'lat'               => '40.77984321782061',
+			'lng'               => '-73.96318071528319',
+		);
 	}
 
 	/**
@@ -329,7 +387,7 @@ class GMW_Current_Location {
 		$output .= '<div class="gmw-cl-address-input-wrapper">';
 
 		$output .= '<i id="gmw-cl-locator-trigger-' . $this->args['element_id'] . '" class="gmw-cl-locator-trigger gmw-icon-location-- gmw-icon-target-light" title="Get your current location"></i>';
-		//$output .= '<a href="#" id="gmw-cl-form-submit-' . $this->args['element_id'] . '" class="gmw-cl-form-submit gmw-icon-search" title="Search submit"></a>';
+		// $output .= '<a href="#" id="gmw-cl-form-submit-' . $this->args['element_id'] . '" class="gmw-cl-form-submit gmw-icon-search" title="Search submit"></a>';
 		$output .= '<i id="gmw-cl-form-submit-' . $this->args['element_id'] . '" class="gmw-cl-form-submit gmw-icon-search" title="Search submit"></i>';
 		$output .= '<input type="text" name="gmw_cl_address" id="gmw-cl-address-input-' . $this->args['element_id'] . '" class="gmw-cl-address-input ' . $autocomplete . '" value="" autocomplete="off" placeholder="' . esc_attr( $this->args['address_field_placeholder'] ) . '" />';
 		$output .= '</div>';
@@ -342,16 +400,16 @@ class GMW_Current_Location {
 
 		if ( ! empty( $this->current_location ) ) {
 
-			if ( ! empty( $this->args['location_form_trigger'] ) ) {
+			if ( ! empty( $this->args['update_location_label'] ) ) {
 
-				$update_text = esc_attr( $this->args['location_form_trigger'] );
+				$update_text = esc_attr( $this->args['update_location_label'] );
 
 				$output .= '<a href="#" class="gmw-cl-form-trigger" title="' . $update_text . '">' . $update_text . '</a>';
 			}
 
-			if ( ! empty( $this->args['clear_location_trigger'] ) ) {
+			if ( ! empty( $this->args['clear_location_label'] ) ) {
 
-				$clear_text = esc_attr( $this->args['clear_location_trigger'] );
+				$clear_text = esc_attr( $this->args['clear_location_label'] );
 
 				$output .= '<a href="#" class="gmw-cl-clear-location-trigger" title="' . $clear_text . '"><i class="gmw-icon-cancel-circled"></i>' . $clear_text . '</a>';
 			}
@@ -503,6 +561,8 @@ class GMW_Current_Location {
 	 */
 	public static function update_cookies( $current_location, $ajax = false, $redirect = true ) {
 
+		$cache = (object) array();
+
 		// GEO my WP now saves the cookies via JS. This can be enable for backward compatibility in case that something goes wrong and cookies are not saved.
 		if ( apply_filters( 'gmw_cl_force_saving_cookies_via_page_load', false ) ) {
 
@@ -520,7 +580,6 @@ class GMW_Current_Location {
 				'lng',
 			);
 
-			$cache      = (object) array();
 			$ulc_prefix = gmw_get_ulc_prefix();
 
 			// save location fields.
