@@ -174,20 +174,13 @@ function gmw_enqueue_scripts() {
 		}
 	}
 
-	/*
-	$ltr = '';
-
-	if ( ! is_rtl() ) {
-		$ltr = '[class*=" gmw-icon-"]:before,[class^=gmw-icon-]:before {margin-left: 0;}';
-	}*/
-
 	wp_add_inline_style( 'gmw-frontend', ':root{' . $colors_css_output . '}' );
+
+	// Map script.
+	wp_register_script( 'gmw-map', GMW_URL . '/assets/js/gmw.map.min.js', $map_scripts, GMW_VERSION, true );
 
 	// register in front-end only.
 	if ( ! IS_ADMIN ) {
-
-		// Map script.
-		wp_register_script( 'gmw-map', GMW_URL . '/assets/js/gmw.map.min.js', $map_scripts, GMW_VERSION, true );
 
 		// load styles in head.
 		$form_styles = apply_filters( 'gmw_load_form_styles_in_head', array() );
