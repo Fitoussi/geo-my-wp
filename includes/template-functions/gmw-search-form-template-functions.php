@@ -588,7 +588,7 @@ function gmw_get_search_form_toggle_button( $gmw = array(), $args = array() ) {
 }
 
 /**
- * Toggle to open the additional fields wrapper.
+ * Get the toggle that opens the modal box.
  *
  * @since 4.0.
  *
@@ -596,7 +596,7 @@ function gmw_get_search_form_toggle_button( $gmw = array(), $args = array() ) {
  *
  * @return [type]      [description]
  */
-function gmw_search_form_modal_box_toggle( $gmw = array() ) {
+function gmw_get_search_form_modal_box_toggle( $gmw = array() ) {
 
 	if ( empty( $gmw['search_form']['filters_modal']['enabled'] ) ) {
 		return;
@@ -606,13 +606,27 @@ function gmw_search_form_modal_box_toggle( $gmw = array() ) {
 		'inner_label' => $gmw['search_form']['filters_modal']['toggle_label'],
 	);
 
-	echo gmw_get_search_form_toggle_button( $gmw, $args ); // WPCS: XSS ok.
+	return gmw_get_search_form_toggle_button( $gmw, $args ); // WPCS: XSS ok.
+}
+
+
+/**
+ * Output the toggle that opens the additional fields wrapper.
+ *
+ * @since 4.0.
+ *
+ * @param  array  $gmw [description].
+ *
+ * @return [type]      [description]
+ */
+function gmw_search_form_modal_box_toggle( $gmw = array() ) {
+	echo gmw_get_search_form_modal_box_toggle( $gmw ); // WPCS: XSS ok.
 }
 
 /**
- * Output the additional filters wrapping element in the search form.
+ * Get the modal box element.
  *
- * This function needs to be used twice in the form, once where the wrapper begins
+ * This function needs to be used twice in the form, once where the wrapper of the modal box begins
  *
  * and again where it ends.
  *
@@ -626,7 +640,7 @@ function gmw_search_form_modal_box_toggle( $gmw = array() ) {
  *
  * @return [type]       [description]
  */
-function gmw_search_form_modal_box( $tag = 'open', $gmw = array() ) {
+function gmw_get_search_form_modal_box( $tag = 'open', $gmw = array() ) {
 
 	if ( empty( $gmw['search_form']['filters_modal']['enabled'] ) ) {
 		return;
@@ -635,27 +649,43 @@ function gmw_search_form_modal_box( $tag = 'open', $gmw = array() ) {
 	$type = ! empty( $gmw['search_form']['filters_modal']['modal_type'] ) ? $gmw['search_form']['filters_modal']['modal_type'] : 'popup';
 
 	if ( 'close' === $tag ) {
-		?>
-		</div></div></div>
-		<?php
+
+		$output = '</div></div></div>';
+
 	} else {
 
 		$title = ! empty( $gmw['search_form']['filters_modal']['modal_title'] ) ? $gmw['search_form']['filters_modal']['modal_title'] : '';
-		?>
-		<div class="gmw-modal-box-wrapper" data-type="<?php echo esc_attr( $type ); ?>">
 
-			<div class="gmw-modal-box-inner">
+		$output  = '<div class="gmw-modal-box-wrapper" data-type="' . esc_attr( $type ) . '">';
+		$output .= '<div class="gmw-modal-box-inner">';
 
-				<div class="gmw-modal-box-header">
-					<span></span>
-					<span class="gmw-modal-box-title"><?php echo esc_html( $title ); ?></span>
-					<span class="gmw-close-filters-button gmw-icon-cancel-circled"></span>
-				</div>
+		$output .= '<div class="gmw-modal-box-header">';
+		$output .= '<span></span>';
+		$output .= '<span class="gmw-modal-box-title">' . esc_html( $title ) . '</span>';
+		$output .= '<span class="gmw-close-filters-button gmw-icon-cancel-circled"></span>';
+		$output .= '</div>';
 
-				<div class="gmw-modal-box-content gmw-flexed-wrapper">
-		<?php
+		$output .= '<div class="gmw-modal-box-content gmw-flexed-wrapper">';
 	}
 
+	return $output;
+}
+
+/**
+ * Output the modal box element.
+ *
+ * @author Eyal Fitoussi.
+ *
+ * @since 4.0
+ *
+ * @param  string $tag  open || close.
+ *
+ * @param  array  $gmw  GEO my WP form.
+ *
+ * @return [type]       [description]
+ */
+function gmw_search_form_modal_box( $tag = 'open', $gmw = array() ) {
+	echo gmw_get_search_form_modal_box( $tag, $gmw );
 }
 
 /**
