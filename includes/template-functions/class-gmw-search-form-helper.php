@@ -312,12 +312,20 @@ class GMW_Search_Form_Helper {
 
 			case 'hidden':
 			case 'pre_defined':
-				if ( is_array( $value ) ) {
-					foreach ( $value as $val ) {
-						$field .= '<input type="hidden" ' . $attributes . ' value="' . $val . '" />'; // WPCS: XSS ok. Value already escaped.
-					}
+				// When in block editor page return hidden field value empty.
+				if ( is_admin() || defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+
+					$field .= '';
+
 				} else {
-					$field .= '<input type="hidden" ' . $attributes . ' value="' . $value . '" />'; // WPCS: XSS ok. Value already escaped.
+
+					if ( is_array( $value ) ) {
+						foreach ( $value as $val ) {
+							$field .= '<input type="hidden" ' . $attributes . ' value="' . $val . '" />'; // WPCS: XSS ok. Value already escaped.
+						}
+					} else {
+						$field .= '<input type="hidden" ' . $attributes . ' value="' . $value . '" />'; // WPCS: XSS ok. Value already escaped.
+					}
 				}
 
 				break;
