@@ -44,7 +44,6 @@ class GMW_Single_Location {
 		'elements'               => 0,
 		'element_width'          => '100%',
 		'address_fields'         => 'address',
-		'additional_info'        => '', // deprecated - replaced with location_meta.
 		'location_meta'          => '',
 		'units'                  => 'imperial',
 		'directions_form_units'  => 'default',
@@ -64,6 +63,7 @@ class GMW_Single_Location {
 		'disable_linked_address' => 0,
 		'css_class'              => '',
 		'css_id'                 => '',
+		'use_generic_location'     => 0,
 		/** 'is_widget'            => 0,
 		// 'widget_title'         => 0, */
 	);
@@ -148,6 +148,56 @@ class GMW_Single_Location {
 	}
 
 	/**
+	 * Generate generic location when needed if object location was not found.
+	 *
+	 * Mainly to be used in the block editor.
+	 *
+	 * @since 4.0
+	 *
+	 * @return [type] [description]
+	 */
+	public function get_generic_location() {
+
+		return (Object) array(
+			'ID'                => 99999999,
+			'object_type'       => 'post',
+			'object_id'         => 99999999,
+			'blog_id'           => 1,
+			'user_id'           => 1,
+			'parent'            => 1,
+			'status'            => 1,
+			'featured'          => 0,
+			'location_type'     => 0,
+			'title'             => '',
+			'latitude'          => '40.77984321782061',
+			'longitude'         => '-73.96318071528319',
+			'street_number'     => '1000',
+			'street_name'       => 'Museum Mile',
+			'street'            => '1000 Museum Mile',
+			'premise'           => '',
+			'neighborhood'      => '',
+			'city'              => 'New York',
+			'county'            => 'New York County',
+			'region_name'       => 'New York',
+			'region_code'       => 'NY',
+			'postcode'          => '10028',
+			'country_name'      => 'United States',
+			'country_code'      => 'US',
+			'address'           => '1000 Museum Mile, New York, NY 10028, USA',
+			'formatted_address' => '1000 Museum Mile, New York, NY 10028, USA',
+			'place_id'          => '0',
+			'map_icon'          => '_default.png',
+			'radius'            => '0.0',
+			'created'           => '2023-04-22 04:59:57',
+			'updated'           => '2023-04-22 04:59:57',
+			'lat'               => '40.77984321782061',
+			'lng'               => '-73.96318071528319',
+			'location_name'     => 'Generic Location',
+			'featured_location' => 0,
+		);
+	}
+
+	/**
 	 * Get location data.
 	 *
 	 * @return [type] [description]
@@ -219,25 +269,6 @@ class GMW_Single_Location {
 			gmw_trigger_error( '[gmw_single_location] shortcode attribute item_id is deprecated since version 3.0. Use object_id instead.' );
 
 			unset( $atts['item_id'] );
-		}
-
-		// additional_info replaced by location_meta - remove in the future.
-		/*if ( empty( $atts['location_meta'] ) && ! empty( $atts['additional_info'] ) ) {
-
-			$atts['location_meta'] = $atts['additional_info'];
-
-			gmw_trigger_error( '[gmw_single_location] shortcode attribute additional_info is deprecated since version 3.0. Use location_meta instead.', E_USER_NOTICE );
-
-			unset( $atts['additional_info'] );
-		}*/
-
-		if ( ! empty( $atts['additional_info'] ) ) {
-
-			//$atts['location_meta'] = $atts['additional_info'];
-
-			//gmw_trigger_error( '[gmw_single_location] shortcode attribute additional_info is deprecated since version 3.0. Use location_meta instead.', E_USER_NOTICE );
-
-			unset( $atts['additional_info'] );
 		}
 
 		if ( isset( $atts['item_map_icon'] ) ) {
@@ -324,24 +355,6 @@ class GMW_Single_Location {
 		// get elements to display.
 		$this->elements_value = explode( ',', str_replace( ' ', '', $this->args['elements'] ) );
 
-		// for older version - to be removed.
-		foreach ( $this->elements_value as $key => $value ) {
-
-			if ( 'additional_info' === $value ) {
-
-				$this->elements_value[ $key ] = 'location_meta';
-
-				gmw_trigger_error( 'The additional_info value of the [gmw_single_location] shortcode attribute "elements" is deprecated since version 3.0. Use location_meta instead.' );
-			}
-
-			if ( 'live_directions' === $value ) {
-
-				$this->elements_value[ $key ] = 'directions_form';
-
-				gmw_trigger_error( 'The live_directions value of the [gmw_single_location] shortcode attribute "elements" is deprecated since version 3.0. Use directions_form instead.' );
-			}
-		}
-
 		$object_exists = $this->object_exists();
 
 		// check that object exists before anything else.
@@ -360,6 +373,10 @@ class GMW_Single_Location {
 
 		// get the location data.
 		$this->location_data = $this->location_data();
+
+		if ( empty( $this->location_data ) && $this->args['use_generic_location'] ) {
+			$this->location_data = $this->get_generic_location();
+		}
 
 		// abort if no location found and no need to show message.
 		if ( empty( $this->location_data ) && empty( $this->args['no_location_message'] ) ) {
@@ -447,7 +464,7 @@ class GMW_Single_Location {
 					$this->user_position['address'] = '';
 				}
 
-				//$this->user_position['address'] = ! empty( $_COOKIE[ $ulc_prefix . 'address' ] ) ? urldecode( wp_unslash( $_COOKIE[ $ulc_prefix . 'address' ] ) ) : ''; // WPCS: sanitization ok.
+				// $this->user_position['address'] = ! empty( $_COOKIE[ $ulc_prefix . 'address' ] ) ? urldecode( wp_unslash( $_COOKIE[ $ulc_prefix . 'address' ] ) ) : ''; // WPCS: sanitization ok.
 			}
 
 			// generate elements.
@@ -518,7 +535,8 @@ class GMW_Single_Location {
 		}
 
 		// get the full address.
-		/*if ( empty( $this->args['address_fields'] ) || 'address' === $this->args['address_fields'] ) {
+		/*
+		if ( empty( $this->args['address_fields'] ) || 'address' === $this->args['address_fields'] ) {
 
 			$address = ! empty( $this->location_data->formatted_address ) ? $this->location_data->formatted_address : $this->location_data->address;
 
@@ -732,9 +750,6 @@ class GMW_Single_Location {
 		$output .= '</div>';
 
 		$output .= gmw_get_directions_form( $args );
-
-		// for older versions.
-		$output = apply_filters( 'gmw_sl_live_directions', $output, $this->args, $location, $this->user_position, $this );
 
 		return apply_filters( 'gmw_sl_directions_form', $output, $this->args, $location, $this->user_position, $this );
 	}
