@@ -322,10 +322,7 @@ class GMW_Posts_Locator_Screens {
 	 */
 	public function display_meta_box( $post ) {
 
-		if ( apply_filters( 'gmw_edit_post_location_form_modal_disabled', false ) ) {
-
-			// expand button.
-			echo '<i type="button" id="gmw-location-section-resize" class="gmw-icon-resize-full" title="Expand full screen" style="display: block" onclick="jQuery( this ).closest( \'#gmw-location-meta-box\' ).find( \'.inside\' ).toggleClass( \'fullscreen\' );"></i>';
+		if ( apply_filters( 'gmw_edit_post_location_form_modal_disabled', true ) ) {
 
 			// form args.
 			$form_args = self::get_location_form_args( $post );
