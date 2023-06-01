@@ -451,9 +451,9 @@ class GMW_Form_Editor {
 							'priority'   => 10,
 						),
 					),
-					'visible_options' => gmw_get_admin_setting_args(
+					'minimize_options' => gmw_get_admin_setting_args(
 						array(
-							'name'       => 'visible_options',
+							'name'       => 'minimize_options',
 							'type'       => 'checkbox',
 							'default'    => '',
 							'label'      => __( 'Minimize Form Settings', 'geo-my-wp' ),
