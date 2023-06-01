@@ -231,7 +231,7 @@ class GMW_Settings {
 						'attributes' => array(),
 						'priority'   => 100,
 					),
-					'minimize_options'   => array(
+					'minimize_options'  => array(
 						'name'       => 'minimize_options',
 						'type'       => 'checkbox',
 						'default'    => '',
