@@ -2,6 +2,8 @@
 /**
  * GEO my WP posts Locator form editor.
  *
+ * @author Fitoussi <fitoussi_eyal2hotmail.com>
+ *
  * @package geo-my-wp.
  */
 
@@ -42,10 +44,11 @@ class GMW_Posts_Locator_Form_Editor {
 	/**
 	 * Generate the taxonomy settings.
 	 *
-	 * @param  [type] $value     [description].
-	 * @param  [type] $name_attr [description].
-	 * @param  [type] $form      [description].
-	 * @return [type]            [description]
+	 * @param  mixed  $value     field value.
+	 *
+	 * @param  string $name_attr [description].
+	 *
+	 * @param  array  $form      GMW form.
 	 */
 	public function taxonomies( $value, $name_attr, $form ) {
 		GMW_Form_Settings_Helper::form_editor_taxonomies( array(), $value, $name_attr, $form );
@@ -67,11 +70,11 @@ class GMW_Posts_Locator_Form_Editor {
 	/**
 	 * Default settings.
 	 *
-	 * @param  [type] $settings [description].
+	 * @param  array $settings [description].
 	 *
-	 * @param  [type] $args     [description].
+	 * @param  array $form     [description].
 	 *
-	 * @return [type]           [description]
+	 * @return array           [description]
 	 */
 	public static function default_settings( $settings, $form ) {
 
@@ -79,14 +82,16 @@ class GMW_Posts_Locator_Form_Editor {
 			return $settings;
 		}
 
-		$settings['page_load_results']['post_types']    = array( 'post' );
+		$settings['page_load_results']['post_types'] = array( 'post' );
 
+        // phpcs:disable.
 		// No need the settings below for the mashup map form.
 		/*if ( 'posts_locator_mashup_map' === $form['slug'] ) {
-			return $settings;
-		}*/
+            return $settings;
+        }*/
+        // phpcs:enable.
 
-		$settings['search_form']['post_types']          = array( 'post' );
+		$settings['search_form']['post_types'] = array( 'post' );
 
 		$settings['search_form']['post_types_settings'] = array(
 			'usage'            => 'select',
@@ -147,10 +152,12 @@ class GMW_Posts_Locator_Form_Editor {
 		$settings['page_load_results']['post_types']['options']  = ! empty( $form['page_load_results']['post_types'] ) ? array_combine( $form['page_load_results']['post_types'], $form['page_load_results']['post_types'] ) : array();
 		$settings['page_load_results']['post_types']['priority'] = 10;
 
+        // phpcs:disable.
 		// No need the settings below for the mashup map form.
 		/*if ( 'posts_locator_mashup_map' === $form['slug'] ) {
-			return $settings;
-		}*/
+            return $settings;
+        }*/
+        // phpcs:enable.
 
 		$settings['search_form']['post_types_settings'] = array(
 			'name'            => 'post_types_settings',
