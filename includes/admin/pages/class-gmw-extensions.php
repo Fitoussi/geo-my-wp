@@ -26,13 +26,14 @@ class GMW_Extensions {
 	public function __construct() {
 
 		// Abort if not add-ons page.
-		if ( empty( $_GET['page'] ) || 'gmw-extensions' != $_GET['page'] ) {
+		if ( empty( $_GET['page'] ) || 'gmw-extensions' !== $_GET['page'] ) { // phpcs:ignore
 			return;
 		}
 
 		add_action( 'gmw_activate_extension', array( $this, 'activate_extension' ) );
 		add_action( 'gmw_deactivate_extension', array( $this, 'deactivate_extension' ) );
-		//add_action( 'gmw_updater_action', array( $this, 'extensions_updater' ) );
+		// phpcs:ignore.
+		// add_action( 'gmw_updater_action', array( $this, 'extensions_updater' ) );
 		add_filter( 'gmw_admin_notices_messages', array( $this, 'notices_messages' ) );
 		add_action( 'gmw_clear_extensions_cache', array( $this, 'clear_extensions_cache' ) );
 	}
@@ -61,7 +62,7 @@ class GMW_Extensions {
 	 *
 	 * @access private
 	 *
-	 * @return HTML
+	 * @return array
 	 */
 	private static function get_extensions_feed() {
 
@@ -72,13 +73,13 @@ class GMW_Extensions {
 
 			$feed = wp_remote_get( 'https://geomywp.com/extensions/?feed=extensions', array( 'sslverify' => false ) );
 
-			if ( ! is_wp_error( $feed ) && '200' == $feed['response']['code'] ) {
+			if ( ! is_wp_error( $feed ) && '200' === $feed['response']['code'] ) {
 
 				if ( isset( $feed['body'] ) && strlen( $feed['body'] ) > 0 ) {
 
 					$output = wp_remote_retrieve_body( $feed );
 					$output = simplexml_load_string( $output );
-					$output = json_decode( json_encode( (array) $output ), true );
+					$output = json_decode( wp_json_encode( (array) $output ), true );
 
 					set_transient( 'gmw_extensions_feed', $output, DAY_IN_SECONDS );
 				}
@@ -99,7 +100,7 @@ class GMW_Extensions {
 
 				$output = false;
 			}
-		};
+		}
 
 		return $output;
 	}
@@ -111,64 +112,65 @@ class GMW_Extensions {
 	 *
 	 * @return void
 	 */
+	// phpcs:disable
 	/*public static function extensions_updater() {
 
-		// if doing ajax call.
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		   // if doing ajax call.
+		   if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 
-			// verify nonce.
-			if ( ! check_ajax_referer( 'gmw_extension_updater_nonce', 'security', false ) ) {
-				wp_die(
-					esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ),
-					esc_attr__( 'Error', 'geo-my-wp' ),
-					array( 'response' => 403 )
-				);
-			}
+			   // verify nonce.
+			   if ( ! check_ajax_referer( 'gmw_extension_updater_nonce', 'security', false ) ) {
+				   wp_die(
+					   esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ),
+					   esc_attr__( 'Error', 'geo-my-wp' ),
+					   array( 'response' => 403 )
+				   );
+			   }
 
-			$action = ! empty( $_POST['updater_action'] ) ? $_POST['updater_action'] : 'disable';
+			   $action = ! empty( $_POST['updater_action'] ) ? $_POST['updater_action'] : 'disable';
 
-			// Otherwise, page load call.
-		} else {
+			   // Otherwise, page load call.
+		   } else {
 
-			// verify nonce.
-			if ( ! check_admin_referer( 'gmw_extension_updater_nonce' ) ) {
-				wp_die( esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
-			}
+			   // verify nonce.
+			   if ( ! check_admin_referer( 'gmw_extension_updater_nonce' ) ) {
+				   wp_die( esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+			   }
 
-			if ( empty( $_GET['action'] ) ) {
-				return;
-			}
+			   if ( empty( $_GET['action'] ) ) {
+				   return;
+			   }
 
-			$action = $_GET['action'];
-		}
+			   $action = $_GET['action'];
+		   }
 
-		// enable updater.
-		if ( 'enable' === $action ) {
+		   // enable updater.
+		   if ( 'enable' === $action ) {
 
-			update_option( 'gmw_extensions_updater', true );
+			   update_option( 'gmw_extensions_updater', true );
 
-			$notice = 'updater_enabled';
+			   $notice = 'updater_enabled';
 
-			// disable updater.
-		} else {
+			   // disable updater.
+		   } else {
 
-			update_option( 'gmw_extensions_updater', false );
+			   update_option( 'gmw_extensions_updater', false );
 
-			$notice = 'updater_disabled';
-		}
+			   $notice = 'updater_disabled';
+		   }
 
-		// done.
-		if ( defined( 'DOING_AJAX' ) ) {
+		   // done.
+		   if ( defined( 'DOING_AJAX' ) ) {
 
-			wp_send_json( $notice );
+			   wp_send_json( $notice );
 
-		} else {
+		   } else {
 
-			wp_safe_redirect( admin_url( 'admin.php?page=gmw-extensions&gmw_notice=' . $notice . '&gmw_notice_status=updated' ) );
-			exit;
-		}
-	}*/
-
+			   wp_safe_redirect( admin_url( 'admin.php?page=gmw-extensions&gmw_notice=' . $notice . '&gmw_notice_status=updated' ) );
+			   exit;
+		   }
+	   }*/
+	   // phpcs:enable
 	/**
 	 * Clear Extensions cache.
 	 *
@@ -184,7 +186,7 @@ class GMW_Extensions {
 		}
 
 		// Varify nonce.
-		if ( empty( $_POST['gmw_clear_extensions_cache_nonce'] ) || ! wp_verify_nonce( $_POST['gmw_clear_extensions_cache_nonce'], 'gmw_clear_extensions_cache_nonce' ) ) { // WPCS: CSRF ok, sanitization ok.
+		if ( empty( $_POST['gmw_clear_extensions_cache_nonce'] ) || ! wp_verify_nonce( $_POST['gmw_clear_extensions_cache_nonce'], 'gmw_clear_extensions_cache_nonce' ) ) { // phpcs:ignore. CSRF ok, sanitization ok.
 			wp_die( esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 		}
 
@@ -206,7 +208,7 @@ class GMW_Extensions {
 	 *
 	 * @param  string $basename extension basename.
 	 *
-	 * @return HTML link
+	 * @return string ( link )
 	 */
 	public static function get_activate_extension_button( $slug = '', $basename = '' ) {
 
@@ -243,7 +245,7 @@ class GMW_Extensions {
 	 *
 	 * @param  string $basename extension basename.
 	 *
-	 * @return HTML link
+	 * @return string ( link )
 	 */
 	public static function get_deactivate_extension_button( $slug = '', $basename = '' ) {
 
@@ -332,10 +334,12 @@ class GMW_Extensions {
 			// we will enable them.
 			foreach ( $extensions_data as $ext_data ) {
 
-				// Activate child extensions.
-				/*if ( ! empty( $ext_data['parent'] ) && $slug === $ext_data['parent'] ) {					
+				// phpcs:disable.
+				//Activate child extensions.
+				/*if ( ! empty( $ext_data['parent'] ) && $slug === $ext_data['parent'] ) { 				
 					//gmw_update_addon_status( $ext_data['slug'], 'active' );
 				}*/
+				// phpcs:enable
 
 				// if disabled because of a theme skip checking for addons.
 				if ( 'disabled' === $ext_data['status'] && 'theme_missing' === $ext_data['status_details']['error'] ) {
@@ -346,7 +350,7 @@ class GMW_Extensions {
 
 					foreach ( $ext_data['required']['addons'] as $required_addon ) {
 
-						if ( isset( $extension['slug'] ) && $required_addon['slug'] == $extension['slug'] ) {
+						if ( isset( $extension['slug'] ) && $required_addon['slug'] === $extension['slug'] ) {
 
 							$dependends[ $ext_data['slug'] ] = '';
 
@@ -390,7 +394,7 @@ class GMW_Extensions {
 	public static function deactivate_extension() {
 
 		// Make sure we activated an add-on.
-		if ( empty( $_GET['gmw_action'] ) || 'deactivate_extension' !== $_GET['gmw_action'] || empty( $_GET['slug'] ) || empty( $_GET['basename'] ) ) { // WPCS: CSRF ok.
+		if ( empty( $_GET['gmw_action'] ) || 'deactivate_extension' !== $_GET['gmw_action'] || empty( $_GET['slug'] ) || empty( $_GET['basename'] ) ) { // phpcs:ignore: CSRF ok.
 			return;
 		}
 
@@ -445,10 +449,12 @@ class GMW_Extensions {
 			// we will disable them.
 			foreach ( $extensions_data as $ext_data ) {
 
+				// phpcs:disable.
 				// deactivate child extensions.
-				/*if ( ! empty( $ext_data['parent'] ) && $slug === $ext_data['parent'] ) {					
+				/*if ( ! empty( $ext_data['parent'] ) && $slug === $ext_data['parent'] ) {			
 					//gmw_update_addon_status( $ext_data['slug'], 'inactive' );
 				}*/
+				// phpcs:enable.
 
 				// Abort if already disabled because of a theme.
 				if ( 'disabled' === $ext_data['status'] && 'theme_missing' === $ext_data['status_details']['error'] ) {
@@ -459,7 +465,7 @@ class GMW_Extensions {
 
 					foreach ( $ext_data['required']['addons'] as $required_addon ) {
 
-						if ( isset( $extension['slug'] ) && $required_addon['slug'] == $extension['slug'] ) {
+						if ( isset( $extension['slug'] ) && $required_addon['slug'] === $extension['slug'] ) {
 
 							$dependends[ $ext_data['slug'] ] = $required_addon['notice'];
 
@@ -499,11 +505,11 @@ class GMW_Extensions {
 	 */
 	public static function license_key_actions() {
 
-		if ( empty( $_POST['data'] ) || ! is_array( $_POST['data'] ) ) { // WPCS: CSRF ok.
+		if ( empty( $_POST['data'] ) || ! is_array( $_POST['data'] ) ) { // phpcs:ignore: CSRF ok.
 			return wp_send_json( array() );
 		}
 
-		$form_data = array_map( 'sanitize_text_field', $_POST['data'] ); // WPCS: CSRF ok.
+		$form_data = array_map( 'sanitize_text_field', wp_unslash( $_POST['data'] ) ); // phpcs:ignore: CSRF ok.
 
 		// Check nonce.
 		if ( ! check_ajax_referer( 'gmw_' . $form_data['license_name'] . '_license_nonce', 'security', false ) ) {
@@ -613,14 +619,16 @@ class GMW_Extensions {
 		?>
 
 		<!-- extension wrapper -->
-		<div 
-			class="gmw-extension-wrapper <?php echo implode( ' ', $details_classes ); // WPCS: XSS ok. ?>"
-			data-slug="<?php echo esc_attr( $extension['slug'] ); ?>" 
-			data-name="<?php echo esc_attr( $extension['name'] ); ?>">	
+		<div class="gmw-extension-wrapper <?php echo implode( ' ', $details_classes ); // phpcs:ignore: XSS ok. ?>"
+			data-slug="<?php echo esc_attr( $extension['slug'] ); ?>" data-name="<?php echo esc_attr( $extension['name'] ); ?>">
 
 			<!-- New add-on -->
-			<?php if ( ! $extension['installed'] && ! empty( $extension['new_addon'] ) ) { ?>                        
-				<div class="gmw-extension-ribbon-wrapper"><div class="gmw-extension-ribbon blue"><?php esc_attr_e( 'New Add-on', 'geo-my-wp' ); ?></div></div>   
+			<?php if ( ! $extension['installed'] && ! empty( $extension['new_addon'] ) ) { ?>
+				<div class="gmw-extension-ribbon-wrapper">
+					<div class="gmw-extension-ribbon blue">
+						<?php esc_attr_e( 'New Add-on', 'geo-my-wp' ); ?>
+					</div>
+				</div>
 			<?php } ?>
 
 			<?php
@@ -647,7 +655,7 @@ class GMW_Extensions {
 			if ( $show_error ) {
 				?>
 
-				<div class="activation-disabled-message"> 
+				<div class="activation-disabled-message">
 					<?php
 					// in rare cases the notice can be an array.
 					// When 2 versions of the same extension are installed.
@@ -694,12 +702,14 @@ class GMW_Extensions {
 			<div class="gmw-extension-top">
 
 				<div class="gmw-extension-image">
-					<img src="https://geomywp.com/wp-content/uploads/extensions-images/icons/<?php echo esc_attr( $extension['slug'] ); ?>_icon.svg?v=<?php echo date( 'W' ); // WPCS: XSS ok. ?>" onerror="jQuery( this ).hide();">
+					<img src="https://geomywp.com/wp-content/uploads/extensions-images/icons/<?php echo esc_attr( $extension['slug'] ); ?>_icon.svg?v=<?php echo gmdate( 'm' ); // phpcs:ignore: XSS ok. ?>"
+						onerror="jQuery( this ).hide();">
 				</div>
 
 				<div class="gmw-extension-content">
 
-					<h3 class="gmw-extension-title"><?php echo esc_attr( $extension['name'] ); ?>    
+					<h3 class="gmw-extension-title">
+						<?php echo esc_attr( $extension['name'] ); ?>
 						<span class="dev-details">
 
 							<?php
@@ -724,7 +734,7 @@ class GMW_Extensions {
 							printf( esc_attr__( 'By %s', 'geo-my-wp' ), esc_attr( $author ) );
 							?>
 						</span>
-					</h3>  
+					</h3>
 
 					<div class="gmw-extension-activation-buttons-wrapper">
 
@@ -733,11 +743,9 @@ class GMW_Extensions {
 
 							// show Activate button.
 							if ( 'active' !== $extension['status'] ) {
-
-								echo self::get_activate_extension_button( $extension['slug'], $extension['basename'] ); // WPCS: XSS ok.
-
+								echo self::get_activate_extension_button( $extension['slug'], $extension['basename'] ); // phpcs:ignore: XSS ok.
 							} else {
-								echo self::get_deactivate_extension_button( $extension['slug'], $extension['basename'] ); // WPCS: XSS ok.
+								echo self::get_deactivate_extension_button( $extension['slug'], $extension['basename'] ); // phpcs:ignore: XSS ok.
 							}
 						}
 						?>
@@ -745,18 +753,18 @@ class GMW_Extensions {
 
 					<div class="gmw-extension-description">
 						<span>
-						<?php
-						// If plugin installed and description not provided in addon registration
-						// get the description from WP plugins();.
-						if ( $extension['installed'] && empty( $extension['description'] ) ) {
+							<?php
+							// If plugin installed and description not provided in addon registration
+							// get the description from WP plugins();.
+							if ( $extension['installed'] && empty( $extension['description'] ) ) {
 
-							echo esc_attr( $plugins[ $extension['basename'] ]['Description'] );
+								echo esc_attr( $plugins[ $extension['basename'] ]['Description'] );
 
-						} elseif ( ! empty( $extension['description'] ) ) {
+							} elseif ( ! empty( $extension['description'] ) ) {
 
-							echo esc_attr( $extension['description'] );
-						}
-						?>
+								echo esc_attr( $extension['description'] );
+							}
+							?>
 						</span>
 					</div>
 				</div>
@@ -784,62 +792,70 @@ class GMW_Extensions {
 
 					<div class="gmw-core-extension-activation-message">
 
-						<span class="description inactive-message"><?php esc_attr_e( 'This extension is free, activate it and start using it now.' ); ?></span>
+						<span class="description inactive-message">
+							<?php esc_attr_e( 'This extension is free, activate it and start using it now.' ); ?>
+						</span>
 
 						<span class="description active-message">
-						<?php
-						printf(
-							/* translators: %s feedback link */
-							esc_html__( 'Thank you for using GEO my WP. Your %s is greatly appriciated.', 'geo-my-wp' ),
-							/* translators: %1$s feedback link, %2$s feedback text */
-							sprintf(
-								'<a href="%1$s" target="_blank">%2$s</a>',
-								'https://wordpress.org/support/view/plugin-reviews/geo-my-wp?filter=5',
-								esc_html__( 'Feedback', 'geo-my-wp' )
-							)
-						);
-						?>
+							<?php
+							printf(
+								/* translators: %s feedback link */
+								esc_html__( 'Thank you for using GEO my WP. Your %s is greatly appriciated.', 'geo-my-wp' ),
+								/* translators: %1$s feedback link, %2$s feedback text */
+								sprintf(
+									'<a href="%1$s" target="_blank">%2$s</a>',
+									'https://wordpress.org/support/view/plugin-reviews/geo-my-wp?filter=5',
+									esc_html__( 'Feedback', 'geo-my-wp' )
+								)
+							);
+							?>
 						</span>
 					</div>
 
 				<?php } ?>
-				
+
 				<?php if ( empty( $extension['is_core'] ) && ! empty( $extension['license_name'] ) ) { ?>
 
 					<?php if ( ! $is_installed ) { ?>
 
-						<a href="<?php echo esc_url( $extension['addon_page'] ); ?>" class="get-extension gmw-extension-action-button" target="_blank">
+						<a href="<?php echo esc_url( $extension['addon_page'] ); ?>" class="get-extension gmw-extension-action-button"
+							target="_blank">
 							<i class="gmw-icon-download"></i>
-							<?php esc_attr_e( 'Get Extension', 'geo-my-wp' ); ?>    
+							<?php esc_attr_e( 'Get Extension', 'geo-my-wp' ); ?>
 						</a>
 
 					<?php } else { ?>
 
 						<?php if ( empty( $extension['parent'] ) ) { ?>
-						
-							<form method="post" action="" class="extension-license-form" data-slug="<?php echo esc_attr( $extension['slug'] ); ?>">
 
-							<?php
-							// Display license key form element.
-							if ( class_exists( 'GMW_License_Key' ) ) {
+							<form method="post" action="" class="extension-license-form"
+								data-slug="<?php echo esc_attr( $extension['slug'] ); ?>">
 
-								$gmw_license_key = new GMW_License_Key(
-									$extension['full_path'],
-									$extension['item_name'],
-									$extension['license_name'],
-									$extension['item_id']
-								);
+								<?php
+								// Display license key form element.
+								if ( class_exists( 'GMW_License_Key' ) ) {
 
-								echo $gmw_license_key->get_license_key_element(); // WPCS: XSS ok.
-							}
-							?>
+									$gmw_license_key = new GMW_License_Key(
+										$extension['full_path'],
+										$extension['item_name'],
+										$extension['license_name'],
+										$extension['item_id']
+									);
+
+									echo $gmw_license_key->get_license_key_element(); // phpcs:ignore: XSS ok.
+								}
+								?>
 							</form>
 
 						<?php } else { ?>
 
 							<?php $parent = gmw_get_addon_data( $extension['parent'] ); ?>
 
-							<div class="gmw-license-wrapper valid"><p class="description">License key is already activated via the <?php echo esc_attr( $parent['name'] ); ?> extension.</p></div>
+							<div class="gmw-license-wrapper valid">
+								<p class="description">License key is already activated via the
+									<?php echo esc_attr( $parent['name'] ); ?> extension.
+								</p>
+							</div>
 
 						<?php } ?>
 
@@ -847,7 +863,7 @@ class GMW_Extensions {
 
 				<?php } ?>
 
-			</div> 
+			</div>
 
 			<div class="disabler-block"></div>
 
@@ -971,7 +987,9 @@ class GMW_Extensions {
 
 				<h3 class="gmw-admin-page-title" style="margin-left: .25rem;margin-bottom:1.5rem">
 					<?php echo esc_html__( 'Extensions & Licenses', 'geo-my-wp' ); ?>
-					<span style="display: block;font-size: 14px;"><?php echo esc_html__( 'Manage extensions and activate your license keys', 'geo-my-wp' ); ?></span>
+					<span style="display: block;font-size: 14px;">
+						<?php echo esc_html__( 'Manage extensions and activate your license keys', 'geo-my-wp' ); ?>
+					</span>
 				</h3>
 
 				<div id="gmw-admin-notices-holder"></div>
@@ -985,13 +1003,13 @@ class GMW_Extensions {
 						$core_active    = '';
 						$premium_active = '';
 
-						if ( ! empty( $_GET['tab'] ) ) {
+						if ( ! empty( $_GET['tab'] ) ) { // phpcs:ignore : CSRF ok.
 
-							if ( 'core' === $_GET['tab'] ) {
+							if ( 'core' === $_GET['tab'] ) { // phpcs:ignore : CSRF ok.
 
 								$core_active = 'active';
 
-							} elseif ( 'premium' === $_GET['tab'] ) {
+							} elseif ( 'premium' === $_GET['tab'] ) { // phpcs:ignore : CSRF ok.
 
 								$premium_active = 'active';
 
@@ -1004,19 +1022,19 @@ class GMW_Extensions {
 						}
 
 						?>
-						<span class="<?php echo $all_active; // WPCS: XSS ok. ?>" data-type="all">
+						<span class="<?php echo $all_active; // phpcs:ignore: XSS ok. ?>" data-type="all">
 							<?php
 							/* translators: %s total extensions count */
 							printf( esc_html__( 'All ( %s )', 'geo-my-wp' ), count( $extensions['core'] + $extensions['premium'] ) );
 							?>
 						</span>
-						<span class="<?php echo $core_active; // WPCS: XSS ok. ?>" data-type="core">
+						<span class="<?php echo $core_active; // phpcs:ignore: XSS ok. ?>" data-type="core">
 							<?php
 							/* translators: %s total extensions count */
 							printf( esc_html__( 'Core ( %s )', 'geo-my-wp' ), count( $extensions['core'] ) );
 							?>
 						</span>
-						<span class="<?php echo $premium_active; // WPCS: XSS ok. ?>" data-type="premium">
+						<span class="<?php echo $premium_active; // phpcs:ignore: XSS ok. ?>" data-type="premium">
 							<?php
 							/* translators: %s core extensions count */
 							printf( esc_html__( 'Premium ( %s )', 'geo-my-wp' ), count( $extensions['premium'] ) );
@@ -1024,24 +1042,36 @@ class GMW_Extensions {
 						</span>
 
 						<select id="gmw-extensions-status-filter" class="gmw-smartbox-not">
-							<option value=""><?php esc_html_e( 'Status', 'geo-my-wp' ); ?></option>
-							<option value="active"><?php esc_html_e( 'Active', 'geo-my-wp' ); ?></option>
-							<option value="inactive"><?php esc_html_e( 'Inactive', 'geo-my-wp' ); ?></option>
+							<option value="">
+								<?php esc_html_e( 'Status', 'geo-my-wp' ); ?>
+							</option>
+							<option value="active">
+								<?php esc_html_e( 'Active', 'geo-my-wp' ); ?>
+							</option>
+							<option value="inactive">
+								<?php esc_html_e( 'Inactive', 'geo-my-wp' ); ?>
+							</option>
 						</select>
 
 						<form method="post" id="extensions-cache-form">
 
-							<button type="submit" name="gmw_clear_extensions_cache" id="clear-extensions-cache-button" class="gmw-action-button button-primary" aria-label="<?php esc_attr_e( 'Clear the extensions cache if extensions fails to load properly on this page.', 'geo-my-wp' ); ?>" value="" /><span class="gmw-icon gmw-icon-spin"></span><?php esc_attr_e( 'Refresh extensions', 'geo-my-wp' ); ?></button>
+							<button type="submit" name="gmw_clear_extensions_cache" id="clear-extensions-cache-button"
+								class="gmw-action-button button-primary"
+								aria-label="<?php esc_attr_e( 'Clear the extensions cache if extensions fails to load properly on this page.', 'geo-my-wp' ); ?>"
+								value="" /><span class="gmw-icon gmw-icon-spin"></span>
+							<?php esc_attr_e( 'Refresh extensions', 'geo-my-wp' ); ?></button>
 
 							<input type="hidden" name="gmw_action" value="clear_extensions_cache" />
 
-							<?php wp_nonce_field( 'gmw_clear_extensions_cache_nonce', 'gmw_clear_extensions_cache_nonce' ); ?>  
-						</form> 
+							<?php wp_nonce_field( 'gmw_clear_extensions_cache_nonce', 'gmw_clear_extensions_cache_nonce' ); ?>
+						</form>
 					</div>
 
-					<div class="gmw-extensions-wrapper core <?php echo $core_active . ' ' . $all_active; // WPCS: XSS ok. ?>">
+					<div class="gmw-extensions-wrapper core <?php echo $core_active . ' ' . $all_active; // phpcs:ignore: XSS ok. ?>">
 
-						<h3><?php echo esc_html__( 'Core Extensions', 'geo-my-wp' ); ?></h3>
+						<h3>
+							<?php echo esc_html__( 'Core Extensions', 'geo-my-wp' ); ?>
+						</h3>
 
 						<div class="gmw-admin-notice-box gmw-admin-notice-warning">
 							<?php esc_attr_e( 'The core extensions of GEO my WP are free to use. Activate any of the extensions and start using them now.', 'geo-my-wp' ); ?>
@@ -1054,9 +1084,12 @@ class GMW_Extensions {
 						</div>
 					</div>
 
-					<div class="gmw-extensions-wrapper premium <?php echo $premium_active . ' ' . $all_active; // WPCS: XSS ok. ?>">
+					<div
+						class="gmw-extensions-wrapper premium <?php echo $premium_active . ' ' . $all_active; // phpcs:ignore: XSS ok. ?>">
 
-						<h3><?php echo esc_html__( 'Premium Extensions', 'geo-my-wp' ); ?></h3>
+						<h3>
+							<?php echo esc_html__( 'Premium Extensions', 'geo-my-wp' ); ?>
+						</h3>
 
 						<div class="gmw-admin-notice-box gmw-admin-notice-warning">
 
@@ -1096,4 +1129,5 @@ class GMW_Extensions {
 add_action( 'wp_ajax_gmw_activate_extension', array( 'GMW_Extensions', 'activate_extension' ) );
 add_action( 'wp_ajax_gmw_deactivate_extension', array( 'GMW_Extensions', 'deactivate_extension' ) );
 add_action( 'wp_ajax_gmw_license_key_actions', array( 'GMW_Extensions', 'license_key_actions' ) );
-//add_action( 'wp_ajax_gmw_extensions_updater', array( 'GMW_Extensions', 'extensions_updater' ) );
+// phpcs:ignore.
+// add_action( 'wp_ajax_gmw_extensions_updater', array( 'GMW_Extensions', 'extensions_updater' ) ); 
