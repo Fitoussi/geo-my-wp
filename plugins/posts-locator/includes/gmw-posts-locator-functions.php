@@ -5,8 +5,9 @@
  * @package geo-my-wp.
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+	exit;
 }
 
 /**
@@ -97,10 +98,10 @@ function gmw_get_the_terms( $post_id = 0, $taxonomy = '' ) {
 
 	$terms = false;
 
+	// phpcs:disable.
 	// Cache is disabled for this function for now. It fills up the database pretty quickly.
 	// look for cache helper class.
-	/** if ( class_exists( 'GMW_Cache_Helper' ) && GMW()->internal_cache ) {
-
+	/* if ( class_exists( 'GMW_Cache_Helper' ) && GMW()->internal_cache ) {
 		// check for terms in transient.
 		$hash  = md5( wp_json_encode( array( $post_id, $taxonomy ) ) );
 		$hash  = 'gmw' . $hash . GMW_Cache_Helper::get_transient_version( 'gmw_get_the_' . $taxonomy . '_terms' );
@@ -119,6 +120,7 @@ function gmw_get_the_terms( $post_id = 0, $taxonomy = '' ) {
 
 		$terms = get_the_terms( $post_id, $taxonomy );
 	}*/
+	// phpcs:enable.
 
 	$terms = get_the_terms( $post_id, $taxonomy );
 
@@ -168,14 +170,17 @@ function gmw_get_post_taxonomies_terms_list( $post, $args = array() ) {
 
 		if ( $terms && ! is_wp_error( $terms ) ) {
 
+			// phpcs:disable.
 			/*$defaults = array(
 				'id'         => $args['id'],
 				'class'      => $args['class'],
 				'terms_link' => $args['terms_link'],
 				'separator'  => $args['terms_lin'],
 			);*/
+			// phpcs:enable.
 
-			//$args = wp_parse_args( $args, $defaults );
+			// phpcs:ignore.
+			// $args = wp_parse_args( $args, $defaults );
 			$args = apply_filters( 'gmw_' . $taxonomy->name . '_taxonomy_list_args', $parent_args, $post, $taxonomy );
 
 			$tax_output = array();
@@ -232,7 +237,7 @@ function gmw_post_location_form( $args = array() ) {
 
 		if ( IS_ADMIN && isset( $_GET['post'] ) && absint( $_GET['post'] ) ) { // WPCS: CSRF ok.
 
-			$args['object_id'] = wp_unslash( $_GET['post'] ); // WPCS: CSRF ok, sanitization ok.
+			$args['object_id'] = wp_unslash( $_GET['post'] ); // phpcs:ignore: CSRF ok, sanitization ok.
 
 		} else {
 
@@ -264,13 +269,17 @@ function gmw_post_location_form( $args = array() ) {
  *
  * @since 3.0
  *
- * @param  integer $id  post ID to retrieve the default location of a specific post. Or location ID
+ * @param  integer  $id  post ID to retrieve the default location of a specific post. Or location ID.
  *
  * to retrieve a specific location.
  *
- * @param  boolean $by_location_id  when set to true the first argument has to be a location ID.
+ * @param  boolean  $by_location_id  when set to true the first argument has to be a location ID.
  *
- * @return object  complete location object
+ * @param  constant $output type of output object | array.
+ *
+ * @param  boolean  $cache get from cache? true | false.
+ *
+ * @return mixed  complete location object
  */
 function gmw_get_post_location( $id = 0, $by_location_id = false, $output = OBJECT, $cache = true ) {
 
@@ -303,7 +312,7 @@ function gmw_get_post_location( $id = 0, $by_location_id = false, $output = OBJE
  *
  * @param  integer $post_id the post ID.
  *
- * @return object of locations.
+ * @return mixed of locations.
  */
 function gmw_get_post_locations( $post_id = 0 ) {
 
@@ -373,7 +382,7 @@ function gmw_get_post_location_meta( $post_id = false, $meta_keys = array() ) {
  *
  * @param boolean $by_location_id - sert to true when first argument is location ID.
  *
- * @return object post data + location data
+ * @return mixed post data + location data
  */
 function gmw_get_post_location_data( $id = 0, $by_location_id = false ) {
 
@@ -443,7 +452,7 @@ function gmw_get_post_location_data( $id = 0, $by_location_id = false ) {
             AND        gmw.object_id   = %d
         ",
 			$id
-		); // WPCS: unprepared SQL ok.
+		); // phpcs:ignore: unprepared SQL ok.
 
 	} else {
 
@@ -457,10 +466,11 @@ function gmw_get_post_location_data( $id = 0, $by_location_id = false ) {
             AND        gmw.ID = %d
         ",
 			$id
-		); // WPCS: unprepared SQL ok.
+		); // phpcs:ignore: unprepared SQL ok.
 	}
 
-	$location_data = $wpdb->get_row( $sql, OBJECT ); // WPCS: db call ok, cache ok, unprepared SQL ok.
+	// phpcs:ignore.
+	$location_data = $wpdb->get_row( $sql, OBJECT ); // db call ok, cache ok, unprepared SQL ok.
 
 	return ! empty( $location_data ) ? $location_data : false;
 }
@@ -474,7 +484,7 @@ function gmw_get_post_location_data( $id = 0, $by_location_id = false ) {
  *
  * @param integer $post_id the post ID.
  *
- * @return array(
+ * @return mixed array(
  *     'locations' => array of all the post's locations,
  *     'post'      => the post object
  * );
@@ -493,7 +503,7 @@ function gmw_get_post_locations_data( $post_id = 0 ) {
 		$post_id = $post->ID;
 	}
 
-	$post = get_post( $post_id ); // WPCS: override ok.
+	$post = get_post( $post_id ); // phpcs:ignore: override ok.
 
 	if ( empty( $post ) ) {
 		return false;
@@ -521,18 +531,19 @@ function gmw_get_post_locations_data( $post_id = 0 ) {
  *     'output'      => 'string'             // output type ( object, array or string ).
  * );.
  *
- * @return Mixed object || array || string
+ * @return mixed object || array || string
  */
 function gmw_get_post_address( $args = array() ) {
 
+	// phpcs:disable.
 	// to support older versions. should be removed in the future.
-	/**
-	If ( empty( $args['fields'] ) && ! empty( $args['info'] ) ) {
+	/* If ( empty( $args['fields'] ) && ! empty( $args['info'] ) ) {
 
 		Trigger_error( 'The "info" shortcode attribute of the shortcode [gmw_post_address] is deprecated since GEO my WP version 3.0. Please use the shortcode attribute "fields" instead.', E_USER_NOTICE );
 
 		$args['fields'] = $args['info'];
 	}*/
+	// phpcs:enable.
 
 	// if no specific post ID provided, look for current post ID.
 	if ( empty( $args['location_id'] ) ) {
@@ -565,7 +576,7 @@ function gmw_get_post_address( $args = array() ) {
  * @param  array $args arguments.
  */
 function gmw_post_address( $args = array() ) {
-	echo gmw_get_post_address( $args ); // WPCS: XSS ok.
+	echo gmw_get_post_address( $args ); // phpcs:ignore: XSS ok.
 }
 
 /**
@@ -581,7 +592,7 @@ function gmw_post_address( $args = array() ) {
  *     'location_meta' => 0                    // Set to 1 when the fields argument is location meta.
  * );.
  *
- * @return Mixed object || array || string
+ * @return mixed object || array || string
  */
 function gmw_get_post_location_fields( $args = array() ) {
 
@@ -642,7 +653,7 @@ function gmw_get_post_location_fields( $args = array() ) {
  *
  * @param  boolean         $force_refresh false to use geocoded address in cache || true to force address geocoding.
  *
- * @return int location ID
+ * @return mixed location ID
  */
 function gmw_update_post_location( $post_id = 0, $location = array(), $user_id = 0, $location_name = '', $force_refresh = false ) {
 
