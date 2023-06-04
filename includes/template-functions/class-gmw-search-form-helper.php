@@ -79,11 +79,13 @@ class GMW_Search_Form_Helper {
 			$field_args['wrapper_open']  = false;
 			$field_args['wrapper_close'] = false;
 			$field_args['inner_element'] = true;
-			//$field_args['label_inside']  = true;
-			$field_args['array_key']     = ! empty( $field_args['array_key'] ) ? $field_args['array_key'] : $count;
-			$field_args['id_attr']       = 'gmw-' . $field_args['slug'] . '-field-' . $field_args['id'] . '-' . $field_args['array_key'];
-			$field_args['inner_class']   = 'gmw-' . $field_args['slug'] . '-field-' . $field_args['array_key'];
+			// phpcs:ignore.
+			// $field_args['label_inside']  = true;
+			$field_args['array_key']   = ! empty( $field_args['array_key'] ) ? $field_args['array_key'] : $count;
+			$field_args['id_attr']     = 'gmw-' . $field_args['slug'] . '-field-' . $field_args['id'] . '-' . $field_args['array_key'];
+			$field_args['inner_class'] = 'gmw-' . $field_args['slug'] . '-field-' . $field_args['array_key'];
 
+			// phpcs:ignore.
 			//$output['fields'] .= '<div class="gmw-single-complex-field-wrapper">' . self::get_field( $field_args, $gmw ) . '</div>';
 			$output['fields'] .= '<div class="gmw-single-complex-field-wrapper">' . self::get_field( $field_args, $gmw ) . '</div>';
 			$count++;
@@ -94,19 +96,17 @@ class GMW_Search_Form_Helper {
 			$output['/wrapper'] = '</div>';
 		}
 
-		// Maybe security issue.
-		// $output = apply_filters( 'gmw_search_form_' . str_replace( '-', '_', $args['slug'] ) . '_complex_field_output', $output, $args, $fields, $gmw );
+		// phpcs:ignore.
+		// $output = apply_filters( 'gmw_search_form_' . str_replace( '-', '_', $args['slug'] ) . '_complex_field_output', $output, $args, $fields, $gmw ); // Maybe security issue.
 		return implode( '', $output );
-
-		return $output;
 	}
 
 	/**
 	 * Get a single form field.
 	 *
-	 * @param  array  $args   field args.
+	 * @param  array $args   field args.
 	 *
-	 * @param  string $gmw    gmw form object.
+	 * @param  array $gmw    gmw form object.
 	 *
 	 * @return [type]         [description]
 	 *
@@ -117,49 +117,48 @@ class GMW_Search_Form_Helper {
 	public static function get_field( $args = array(), $gmw = array() ) {
 
 		$defaults = array(
-			'id'               => 0,  // Form ID.
-			'slug'             => '', // Slug.
-			'type'             => 'text', // Field type.
-			'id_attr'          => '', // Id attribute. By deafult is generated dynamically using form ID + slug.
-			'name'             => '', // name attribute. By deafult is generated dynamically.
-			'sub_name'         => '', // sub_name attribute.
-			'is_array'         => false, // When value is an array ( for multiple select or checkboxes for example ).
-			'array_key'        => '', // When value is an array, you can provide a custom key for that array.
-			'label'            => '', // Label. Can be blank.
-			'inner_label'      => '',
-			'placeholder'      => '', // Placeholder.
-			'class'            => '', // Class attribute. for field.
-			'required'         => 0,  // Required field.
-			'value'            => '',
-			'min_value'        => '0',
-			'max_value'        => '100',
-			'step'             => '1',
-			'value_prefix'     => '',
-			'value_suffix'     => '',
-			'options'          => array(),
-			'date_format'      => 'd/m/Y',
-			'time_format'      => 'h:i K',
-			'datetime_format'  => 'd/m/Y h:i K',
-			//'step_time'        => '5',
-			'smartbox'         => false,
-			'show_options_all' => '',
-			'wrapper_open'     => true,
-			'wrapper_close'    => true,
-			'wrapper_id'       => '',
-			'wrapper_class'    => '',
-			'wrapper_atts'     => array(),
-			'attributes'       => array(),
-			'inner_element'    => false,
-			'label_inside'     => false,
-			'inner_class'      => '',
-			'show_reset_field' => '',
-			'additional_args'  => array(),
+			'id'                 => 0, // Form ID.
+			'slug'               => '', // Slug.
+			'type'               => 'text', // Field type.
+			'id_attr'            => '', // Id attribute. By deafult is generated dynamically using form ID + slug.
+			'name'               => '', // name attribute. By deafult is generated dynamically.
+			'sub_name'           => '', // sub_name attribute.
+			'is_array'           => false, // When value is an array ( for multiple select or checkboxes for example ).
+			'array_key'          => '', // When value is an array, you can provide a custom key for that array.
+			'label'              => '', // Label. Can be blank.
+			'inner_label'        => '',
+			'placeholder'        => '', // Placeholder.
+			'class'              => '', // Class attribute. for field.
+			'required'           => 0, // Required field.
+			'value'              => '',
+			'min_value'          => '0',
+			'max_value'          => '100',
+			'step'               => '1',
+			'value_prefix'       => '',
+			'value_suffix'       => '',
+			'options'            => array(),
+			'date_format'        => 'd/m/Y',
+			'time_format'        => 'h:i K',
+			'datetime_format'    => 'd/m/Y h:i K',
+			'smartbox'           => false,
+			'show_options_all'   => '',
+			'wrapper_open'       => true,
+			'wrapper_close'      => true,
+			'wrapper_id'         => '',
+			'wrapper_class'      => '',
+			'wrapper_atts'       => array(),
+			'attributes'         => array(),
+			'inner_element'      => false,
+			'label_inside'       => false,
+			'inner_class'        => '',
+			'show_reset_field'   => '',
+			'additional_args'    => array(),
 			'sb_search_text'     => __( 'Search', 'geo-my-wp' ),
 			'sb_no_results_text' => __( 'No results found', 'geo-my-wp' ),
 		);
 
 		if ( empty( $args['slug'] ) ) {
-			$args['slug'] = $args['type'] . '_' . $args['id'] . '_' . wp_rand( 0, 100 ); 
+			$args['slug'] = $args['type'] . '_' . $args['id'] . '_' . wp_rand( 0, 100 );
 		}
 
 		$args        = wp_parse_args( $args, $defaults );
@@ -189,22 +188,24 @@ class GMW_Search_Form_Helper {
 			$args['class_attr'] .= ' gmw-smartbox';
 		}
 
+		// phpcs:disable.
 		/*if ( ! empty( $args['array_key'] ) ) {
 			$args['is_array'] = true;
 		}*/
+		// phpcs:enable.
 
-		if ( $args['array_key'] !== '' && false !== $args['array_key'] ) {
+		if ( '' !== $args['array_key'] && false !== $args['array_key'] ) {
 			$args['is_array'] = true;
 		}
 
 		// Get submitted value. Value is sanitized later in the sctipt.
-		if ( isset( $_GET[ $args['name'] ] ) && ! empty( $_GET[ $url_px . 'form' ] ) && $id === $_GET[ $url_px . 'form' ] ) { // WPCS: CSRF ok, sanitization ok.
+		if ( isset( $_GET[ $args['name'] ] ) && ! empty( $_GET[ $url_px . 'form' ] ) && $id === $_GET[ $url_px . 'form' ] ) { // phpcs:ignore: CSRF ok, sanitization ok.
 
 			if ( '' !== $args['sub_name'] ) {
-				$value = ! empty( $_GET[ $args['name'] ][ $args['sub_name'] ] ) ? $_GET[ $args['name'] ][ $args['sub_name'] ] : $value; // WPCS: CSRF ok, sanitization ok.
+				$value = ! empty( $_GET[ $args['name'] ][ $args['sub_name'] ] ) ? $_GET[ $args['name'] ][ $args['sub_name'] ] : $value; // phpcs:ignore: CSRF ok, sanitization ok.
 
 			} else {
-				$value = $_GET[ $args['name'] ]; // WPCS: CSRF ok, sanitization ok.
+				$value = $_GET[ $args['name'] ]; // phpcs:ignore: CSRF ok, sanitization ok.
 			}
 
 			// Otherwise look for default value.
@@ -268,7 +269,6 @@ class GMW_Search_Form_Helper {
 			case '':
 			case 'input':
 			case 'text':
-
 				$field .= '<input type="text" ' . $attributes . ' value="' . $value . '" />'; // WPCS: XSS ok. Value already escaped.
 
 				break;
@@ -276,7 +276,6 @@ class GMW_Search_Form_Helper {
 			case 'date':
 			case 'time':
 			case 'datetime':
-
 				if ( 'datetime' === $args['type'] ) {
 
 					$format = $args['datetime_format'];
@@ -517,7 +516,7 @@ class GMW_Search_Form_Helper {
 				break;
 
 			case 'locator_button':
-				$field_args   = $args['additional_args'];
+				$field_args = $args['additional_args'];
 				$button_usage = esc_attr( $field_args['usage'] );
 
 				// when using an icon.
@@ -550,30 +549,32 @@ class GMW_Search_Form_Helper {
 				break;
 
 			case 'slider':
-
+				// phpcs:disable.
 				//$inner_label = ! empty( $args['inner_label'] ) ? '<span class="range-slider-label"> ' . esc_attr( $args['inner_label'] ) . '</span>' : '';
 
 				//$field .= '<input type="range" ' . $attributes . '" min="' . esc_attr( $args['min_value'] ) . '" max="' . esc_attr( $args['max_value'] ) . '" step="' . esc_attr( $args['steps'] ) . '" value="' . $value . '">';
-
+				// phpcs:enable.
 				$field .= '<div ' . $attributes . '" data-min="' . esc_attr( $args['min_value'] ) . '" data-max="' . esc_attr( $args['max_value'] ) . '" data-step="' . esc_attr( $args['step'] ) . '" data-value="' . $value . '" data-prefix="' . esc_attr( $args['value_prefix'] ) . '" data-suffix="' . esc_attr( $args['value_suffix'] ) . '"></div>';
 
 				$field .= '<input type="hidden" id="' . $args['attributes']['id'] . '-hidden" name="' . $args['attributes']['name'] . '" value="' . $value . '" />';
 
+				// phpcs:ignore.
 				//$field .= '<span class="gmw-range-slider-output"><span class="range-slider-value">' . $value . '</span>' . $inner_label . '</span>';
 
 				break;
 
 			case 'range_slider':
-
+				// phpcs:disable.
 				//$inner_label = ! empty( $args['inner_label'] ) ? '<span class="range-slider-label"> ' . esc_attr( $args['inner_label'] ) . '</span>' : '';
 
 				//$field .= '<input type="range" ' . $attributes . '" min="' . esc_attr( $args['min_value'] ) . '" max="' . esc_attr( $args['max_value'] ) . '" step="' . esc_attr( $args['steps'] ) . '" value="' . $value . '">';
-
+				// phpcs:enable.
 				$field .= '<div ' . $attributes . '" data-min="' . esc_attr( $args['min_value'] ) . '" data-max="' . esc_attr( $args['max_value'] ) . '" data-step="' . esc_attr( $args['step'] ) . '" data-value="' . $value[0] . '" data-value_second="' . $value[1] . '" data-prefix="' . esc_attr( $args['value_prefix'] ) . '" data-suffix="' . esc_attr( $args['value_suffix'] ) . '"></div>';
-				
-				$field .= '<input type="hidden" id="' . $args['attributes']['id'] . '-hidden" name="' . $args['attributes']['name'] . '[]" value="' . $value[0] . '" />';
-					$field .= '<input type="hidden" id="' . $args['attributes']['id'] . '-hidden-second" name="' . $args['attributes']['name'] . '[]" value="' . $value[1] . '" />';
 
+				$field .= '<input type="hidden" id="' . $args['attributes']['id'] . '-hidden" name="' . $args['attributes']['name'] . '[]" value="' . $value[0] . '" />';
+				$field .= '<input type="hidden" id="' . $args['attributes']['id'] . '-hidden-second" name="' . $args['attributes']['name'] . '[]" value="' . $value[1] . '" />';
+
+				// phpcs:ignore.
 				//$field .= '<span class="gmw-range-slider-output"><span class="range-slider-value">' . $value . '</span>' . $inner_label . '</span>';
 
 				break;
@@ -614,8 +615,8 @@ class GMW_Search_Form_Helper {
 
 				$field .= '<span class="gmw-reset-field-trigger gmw-reset-field-button gmw-icon-cancel"></span>';
 
-				$args['inner_element']  = true;
-				$args['inner_class']   .= ' gmw-reset-button-enabled ';
+				$args['inner_element'] = true;
+				$args['inner_class'] .= ' gmw-reset-button-enabled ';
 			}
 
 			if ( $args['wrapper_open'] ) {
@@ -668,6 +669,8 @@ class GMW_Search_Form_Helper {
 		}
 
 		$output['field'] = $field;
+
+		// phpcs:disable.
 		// Maybe security issue. Need to check before enabling.
 		// $output          = apply_filters( 'gmw_search_form_' . $filter_name . '_field_output', $output, $args, $gmw );
 		// enqueue date picker styles and scripts.
@@ -675,6 +678,7 @@ class GMW_Search_Form_Helper {
 			//wp_enqueue_script( 'datetime-picker' );
 			//wp_enqueue_style( 'datetime-picker' );
 		}*/
+		// phpcs:enable.
 
 		if ( ! wp_script_is( 'gmw-nouislider', 'enqueued' ) && ( 'slider' === $args['type'] || 'range_slider' === $args['type'] ) ) {
 			wp_enqueue_script( 'gmw-nouislider' );
@@ -755,7 +759,7 @@ class GMW_Search_Form_Helper {
 				'hierarchical'        => $hierarchical,
 				'child_of'            => 0,
 				'pad_counts'          => 1,
-				'selected'            => ! empty( $_GET['tax'][ $tax_name ] ) ? $_GET['tax'][ $tax_name ] : '', // WPCS: CSRF ok, sanitization ok. $_GET['tax'][ $tax_name ] is an array and should be sanitized in the walker class.
+				'selected'            => ! empty( $_GET['tax'][ $tax_name ] ) ? $_GET['tax'][ $tax_name ] : '', // phpcs:ignore: CSRF ok, sanitization ok. $_GET['tax'][ $tax_name ] is an array and should be sanitized in the walker class.
 				'depth'               => $hierarchical ? 0 : -1,
 				'category_icons'      => $args['category_icons'],
 				'gmw_form_id'         => $id,
@@ -793,16 +797,18 @@ class GMW_Search_Form_Helper {
 			require_once GMW_PT_PATH . '/includes/class-gmw-post-category-walker.php';
 		}
 
+		// phpcs:disable.
 		// $wrap_element = apply_filters( 'gmw_search_form_enable_field_wrapping_element', false, 'taxonomy' );
 		// $output['wrapper'] = '<div id="gmw-' . $args['taxonomy'] .'-taxonomy-wrapper" class="gmw-form-field-wrapper gmw-single-taxonomy-wrapper gmw-' . $args['usage'] . '-taxonomy-wrapper" data-post_types="' . implode( ',', $args['post_types'] ) . '">';
 		// if showing label.
 		// if ( ! empty( $args['label'] ) ) {
-			// $output['label'] = '<label class="gmw-field-label" for="' . $id_attr . '">' . esc_attr( $args['label'] ) . '</label>';
+		// $output['label'] = '<label class="gmw-field-label" for="' . $id_attr . '">' . esc_attr( $args['label'] ) . '</label>';
 		// }
 		// if ( $wrap_element ) {
-			// $output['inner'] = '<div class="gmw-form-field-input-wrapper">';
+		// $output['inner'] = '<div class="gmw-form-field-input-wrapper">';
 		// }
-		
+		// phpcs:enable.
+
 		$output = '';
 
 		if ( ! empty( $args['smartbox'] ) && ( 'select' === $args['usage'] || 'dropdown' === $args['usage'] || 'multiselect' === $args['usage'] ) ) {
@@ -841,10 +847,13 @@ class GMW_Search_Form_Helper {
 			$output .= apply_filters( 'gmw_generate_' . $args['usage'] . '_taxonomy', $output, $tax_args, $taxonomy );
 		}
 
+		// phpcs:disable.
 		// if ( $wrap_element ) {
-			// $output['/inner'] = '</div>';
+		// $output['/inner'] = '</div>';
 		// }
 		// $output['/wrapper'] = '</div>';
+		// phpcs:enable.
+
 		return $output;
 	}
 
@@ -855,7 +864,7 @@ class GMW_Search_Form_Helper {
 	 *
 	 * @param integer $per_page default per page value.
 	 *
-	 * @return HTML element.s
+	 * @return mixed
 	 */
 	public static function submission_fields( $id = 0, $per_page = 0 ) {
 
@@ -863,10 +872,10 @@ class GMW_Search_Form_Helper {
 		$per_page = esc_attr( $per_page );
 		$url_px   = gmw_get_url_prefix();
 		$url_px   = esc_attr( $url_px );
-		$lat      = ! empty( $_GET[ $url_px . 'lat' ] ) ? sanitize_text_field( wp_unslash( $_GET[ $url_px . 'lat' ] ) ) : ''; // WPCS: CSRF ok.
-		$lng      = ! empty( $_GET[ $url_px . 'lng' ] ) ? sanitize_text_field( wp_unslash( $_GET[ $url_px . 'lng' ] ) ) : ''; // WPCS: CSRF ok.
-		$state    = ! empty( $_GET['state'] ) ? sanitize_text_field( wp_unslash( $_GET['state'] ) ) : false; // WPCS: CSRF ok.
-		$country  = ! empty( $_GET['country'] ) ? sanitize_text_field( wp_unslash( $_GET['country'] ) ) : false; // WPCS: CSRF ok.
+		$lat      = ! empty( $_GET[ $url_px . 'lat' ] ) ? sanitize_text_field( wp_unslash( $_GET[ $url_px . 'lat' ] ) ) : ''; // phpcs:ignore: CSRF ok.
+		$lng      = ! empty( $_GET[ $url_px . 'lng' ] ) ? sanitize_text_field( wp_unslash( $_GET[ $url_px . 'lng' ] ) ) : ''; // phpcs:ignore: CSRF ok.
+		$state    = ! empty( $_GET['state'] ) ? sanitize_text_field( wp_unslash( $_GET['state'] ) ) : false; // phpcs:ignore: CSRF ok.
+		$country  = ! empty( $_GET['country'] ) ? sanitize_text_field( wp_unslash( $_GET['country'] ) ) : false; // phpcs:ignore: CSRF ok.
 
 		// generate fields.
 		$output = "<div id=\"gmw-submission-fields-{$id}\" class=\"gmw-submission-fields\" data-form_id=\"{$id}\" style=\"display:none\">";
@@ -887,11 +896,11 @@ class GMW_Search_Form_Helper {
 		$output .= "<input type=\"hidden\" id=\"gmw-nelatlng-{$id}\" class=\"gmw-nelatlng\" name=\"nelatlng\" />";
 
 		$disabled = ! $state ? 'disabled="disabled"' : '';
-		$output  .= "<input type=\"text\" id=\"gmw-state-{$id}\" class=\"gmw-state\" name=\"state\" value=\"{$state}\" {$disabled} style=\"display:none\" />";
+		$output .= "<input type=\"text\" id=\"gmw-state-{$id}\" class=\"gmw-state\" name=\"state\" value=\"{$state}\" {$disabled} style=\"display:none\" />";
 		$disabled = ! $country ? 'disabled="disabled"' : '';
-		$output  .= "<input type=\"text\" id=\"gmw-country-{$id}\" class=\"gmw-country\" name=\"country\" value=\"{$country}\" {$disabled} style=\"display:none\" />";
+		$output .= "<input type=\"text\" id=\"gmw-country-{$id}\" class=\"gmw-country\" name=\"country\" value=\"{$country}\" {$disabled} style=\"display:none\" />";
 
-		$output = apply_filters( 'gmw_submission_fields', $output, $id, $_GET ); // WPCS: CSRF ok.
+		$output = apply_filters( 'gmw_submission_fields', $output, $id, $_GET ); // phpcs:ignore: CSRF ok.
 
 		$output .= '</div>';
 
@@ -907,11 +916,12 @@ class GMW_Search_Form_Helper {
 	 *
 	 * @param  array $options options.
 	 *
-	 * @return HTML element.
+	 * @return array
 	 */
 	public static function options_selector_builder( $args = array(), $options = array() ) {
 		return array();
 
+		// phpcs:disable.
 		/*
 		$defaults = array(
 			'id'               => 0,
@@ -972,6 +982,7 @@ class GMW_Search_Form_Helper {
 		}
 
 		return $output;*/
+		// phpcs:enable.
 	}
 
 	/**
@@ -983,11 +994,12 @@ class GMW_Search_Form_Helper {
 	 *
 	 * @param  array $args array of arguments.
 	 *
-	 * @return HTML text field.
+	 * @return void
 	 */
 	public static function keywords_field( $args = array() ) {
 		return;
 
+		// phpcs:disable.
 		/*
 		$url_px = gmw_get_url_prefix();
 
@@ -1027,6 +1039,7 @@ class GMW_Search_Form_Helper {
 		$output = apply_filters( 'gmw_search_form_keywords_field_output', $output, $args );
 
 		return implode( '', $output );*/
+		// phpcs:enable.
 	}
 
 	/**
@@ -1038,11 +1051,12 @@ class GMW_Search_Form_Helper {
 	 *
 	 * @param  array $args array of arguments.
 	 *
-	 * @return HTLM input field.
+	 * @return void
 	 */
 	public static function address_field( $args = array() ) {
 		return;
 
+		// phpcs:disable.
 		/*
 		$url_px = gmw_get_url_prefix();
 
@@ -1112,6 +1126,7 @@ class GMW_Search_Form_Helper {
 		$output = apply_filters( 'gmw_search_form_address_field_output', $output, $args );
 
 		return implode( '', $output );*/
+		// phpcs:enable.
 	}
 
 	/**
@@ -1123,11 +1138,12 @@ class GMW_Search_Form_Helper {
 	 *
 	 * @param  array $args array of arguments.
 	 *
-	 * @return HTML element.
+	 * @return void
 	 */
 	public static function radius_field( $args = array() ) {
 		return;
 
+		// phpcs:disable.
 		/*
 		$url_px   = gmw_get_url_prefix();
 		$defaults = array(
@@ -1201,6 +1217,7 @@ class GMW_Search_Form_Helper {
 		$output = apply_filters( 'gmw_search_form_radius_field_output', $output, $args );
 
 		return implode( '', $output );*/
+		// phpcs:enable.
 	}
 
 	/**
@@ -1212,11 +1229,12 @@ class GMW_Search_Form_Helper {
 	 *
 	 * @param  array $args array of arguments.
 	 *
-	 * @return HTML element.
+	 * @return void
 	 */
 	public static function units_field( $args = array() ) {
 		return;
 
+		// phpcs:disable.
 		/*
 		$defaults = array(
 			'id'           => 0,
@@ -1259,6 +1277,7 @@ class GMW_Search_Form_Helper {
 		$output = apply_filters( 'gmw_search_form_units_field_output', $output, $args );
 
 		return implode( '', $output );*/
+		// phpcs:enable.
 	}
 
 	/**
@@ -1268,11 +1287,12 @@ class GMW_Search_Form_Helper {
 	 *
 	 * @param  array $args array of arguments.
 	 *
-	 * @return HTML element.
+	 * @return void
 	 */
 	public static function locator_button( $args = array() ) {
 		return;
 
+		// phpcs:disable.
 		/*
 		$defaults = array(
 			'id'          => 0,
@@ -1322,7 +1342,9 @@ class GMW_Search_Form_Helper {
 
 		$output = apply_filters( 'gmw_search_form_locator_button_output', $output, $args );
 
-		return implode( '', $output );*/
+		return implode( '', $output );
+		*/
+		// phpcs:enable.
 	}
 
 	/**
@@ -1332,11 +1354,12 @@ class GMW_Search_Form_Helper {
 	 *
 	 * @param  array $args array of arguments.
 	 *
-	 * @return HTML element
+	 * @return void
 	 */
 	public static function submit_button( $args = array() ) {
 		return;
 
+		// phpcs:disable.
 		/*
 		$defaults = array(
 			'id'    => 0,
@@ -1349,6 +1372,7 @@ class GMW_Search_Form_Helper {
 		$id   = ! empty( $args['id'] ) ? 'gmw-submit-' . absint( $args['id'] ) : 'gmw-submit';
 
 		return '<input type="submit" id="' . $id . '" class="gmw-submit gmw-submit-button gmw-form-button ' . esc_attr( $args['class'] ) . '" value="' . esc_attr( $args['label'] ) . '" data-button_type="submit" data-form_id="' . $id . '" />';*/
+		// phpcs:enable.
 	}
 
 	/**
@@ -1363,6 +1387,7 @@ class GMW_Search_Form_Helper {
 	public static function bp_member_types_filter( $args = array(), $member_types = array() ) {
 		return;
 
+		// phpcs:disable.
 		/*
 		$url_px   = gmw_get_url_prefix();
 		$defaults = array(
@@ -1386,7 +1411,7 @@ class GMW_Search_Form_Helper {
 		 *
 		 * We will get all types registered types.
 		 */
-		/*
+/*
 		if ( empty( $member_types ) ) {
 
 			$member_types = array();
@@ -1397,6 +1422,7 @@ class GMW_Search_Form_Helper {
 		}
 
 		return self::options_selector_builder( $args, $member_types );*/
+		// phpcs:enable.
 	}
 
 	/**
@@ -1415,6 +1441,7 @@ class GMW_Search_Form_Helper {
 	public static function bp_groups_filter( $args = array(), $groups = array() ) {
 		return;
 
+		// phpcs:disable.
 		/*
 		if ( ! function_exists( 'bp_is_active' ) || ! bp_is_active( 'groups' ) ) {
 			return;
@@ -1442,7 +1469,7 @@ class GMW_Search_Form_Helper {
 		 * Use BP built in class to have more options when pulling groups from database.
 		 * This might be a bit more memory consuming and so it is disabled by default.
 		 */
-		/*
+/*
 		if ( apply_filters( 'gmw_ps_advanced_get_bp_groups_list', false ) ) {
 
 			$groups = BP_Groups_Group::get(
@@ -1478,7 +1505,7 @@ class GMW_Search_Form_Helper {
 			/**
 			 * Simpler method to retrieve the list of groups
 			 */
-			/*
+/*
 		} else {
 
 			global $wpdb;
@@ -1515,5 +1542,6 @@ class GMW_Search_Form_Helper {
 
 		// get the list of groups.
 		return self::options_selector_builder( $args );*/
+		// phpcs:enable.
 	}
 }
