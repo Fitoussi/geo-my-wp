@@ -1219,6 +1219,7 @@ class GMW_Form_Editor {
 									'wrap_attrs' => array(
 										'id' => 'search-results-template-builder-container',
 									),*/
+									// phpcs:enable.
 									'priority'  => 10,
 								)
 							),
