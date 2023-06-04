@@ -30,6 +30,8 @@ class GMW_Tracking {
 	/**
 	 * The data to send to geomywp.com
 	 *
+	 * @var array
+	 *
 	 * @access private
 	 */
 	private $data;
@@ -53,8 +55,6 @@ class GMW_Tracking {
 
 		// send data.
 		add_action( 'admin_init', array( $this, 'send_data' ) );
-
-		// $this->send_data();
 	}
 
 	/**
@@ -84,19 +84,18 @@ class GMW_Tracking {
 		$optout_url = add_query_arg( 'gmw_action', 'opt_out_of_tracking' );
 
 		$output = '<div class="gmw-tracking-notice gmw-admin-notice-box gmw-admin-notice-warning notice is-dismissible">';
-		// $output .= '<p>';
+
 			$output .= '<h3>' . __( 'Enable Usage Tracking', 'geo-my-wp' ) . '</h3>';
 			$output .= __( 'Allow GEO my WP to track the plugin usage on your site. Tracking non-sensitive data can help us improve GEO my WP plugin.', 'geo-my-wp' );
 			$output .= '<em style="margin-top:10px">' . __( '*You can change this setting at any time from GEO my WP Settings page.', 'geo-my-wp' ) . '</em>';
 
-		// $output .= '</p>';
 		$output .= '<p>';
 		$output .= '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="gmw-settings-action-button button-primary">' . __( 'Allow tracking', 'geo-my-wp' ) . '</a>';
 		$output .= '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="gmw-settings-action-button button-secondary">' . __( 'Do not allow tracking', 'geo-my-wp' ) . '</a>';
 		$output .= '</p>';
 		$output .= '</div>';
 
-		echo $output; // WPCS: XSS ok.
+		echo $output; // phpcs:ignore: XSS ok.
 	}
 
 	/**
@@ -121,7 +120,7 @@ class GMW_Tracking {
 		update_option( 'gmw_tracking_notice', '1' );
 
 		// get back to GEO my WP add-ons page.
-		$page = ! empty( $_GET['page'] ) ? $_GET['page'] : 'gmw-extensions';
+		$page = ! empty( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : 'gmw-extensions'; // phpcs:ignore: CSRF ok.
 
 		// reload the page to prevent resubmission.
 		wp_safe_redirect( admin_url( 'admin.php?page=' . $page . '&gmw_notice=tracking_allowed&gmw_notice_status=updated' ) );
@@ -148,7 +147,7 @@ class GMW_Tracking {
 		update_option( 'gmw_tracking_notice', '1' );
 
 		// go to gmw add-ons page.
-		$page = ! empty( $_GET['page'] ) ? $_GET['page'] : 'gmw-extensions'; // WPCS: CSRF ok.
+		$page = ! empty( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : 'gmw-extensions'; // phpcs:ignore: CSRF ok.
 
 		// reload the page to prevent resubmission.
 		wp_safe_redirect( admin_url( 'admin.php?page=' . $page ) );
@@ -222,11 +221,11 @@ class GMW_Tracking {
 		$data['php_version'] = phpversion();
 		$data['wp_version']  = get_bloginfo( 'version' );
 		$data['gmw_version'] = GMW_VERSION;
-		$data['server']      = isset( $_SERVER['SERVER_SOFTWARE'] ) ? $_SERVER['SERVER_SOFTWARE'] : '';
+		$data['server']      = isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) : '';
 
 		// theme data.
 		$theme_data    = wp_get_theme();
-		$theme         = $theme_data->Name . ' v' . $theme_data->Version;
+		$theme         = $theme_data->Name . ' v' . $theme_data->Version; // phpcs:ignore.
 		$data['theme'] = $theme;
 
 		// plugins data.
@@ -243,7 +242,7 @@ class GMW_Tracking {
 
 			$plugin_slug = preg_replace( '/[^a-z0-9]/', '_', $this->get_plugin_name( $plugin_basename ) );
 
-			if ( in_array( $plugin_basename, $active_plugins ) ) {
+			if ( in_array( $plugin_basename, $active_plugins, true ) ) {
 
 				$data['active_plugins'][ $plugin_slug ] = $plugin['Version'];
 
@@ -258,6 +257,7 @@ class GMW_Tracking {
 
 		global $wpdb;
 
+		// phpcs:ignore.
 		$data['forms'] = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}gmw_forms", ARRAY_A );
 
 		foreach ( $data['forms'] as $key => $form ) {
