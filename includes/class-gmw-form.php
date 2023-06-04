@@ -59,7 +59,7 @@ class GMW_Form extends GMW_Form_Core {
 		$this->form['paged']      = get_query_var( $page_name ) ? get_query_var( $page_name ) : 1;
 
 		// check if form submitted.
-		if ( isset( $_GET[ $this->url_px . 'form' ] ) && isset( $_GET[ $this->url_px . 'action' ] ) && 'fs' === $_GET[ $this->url_px . 'action' ] ) { // WPCS: CSRF ok.
+		if ( isset( $_GET[ $this->url_px . 'form' ] ) && isset( $_GET[ $this->url_px . 'action' ] ) && 'fs' === $_GET[ $this->url_px . 'action' ] ) { // phpcs:ignore: CSRF ok.
 
 			$this->form['submitted']       = true;
 			$this->form['form_values']     = $this->get_form_values();
@@ -84,10 +84,12 @@ class GMW_Form extends GMW_Form_Core {
 		$this->form['search_results']['results_page'] = $this->form['form_submission']['results_page'];
 		$this->form['search_results']['display_map']  = $this->form['map_usage'];
 
+		// phpcs:disable.
 		/* temporary to support previous version of template files ( will be removed ) */
 		/*if ( function_exists( 'gmw_3_deprecated_form_settings' ) ) {
 			$this->form = gmw_3_deprecated_form_settings( $this->form );
 		}*/
+		// phpcs:enable.
 
 		$this->load_info_window_templates = apply_filters( 'gmw_load_info_window_templates', $this->load_info_window_templates, $this->form, $this );
 
@@ -106,7 +108,7 @@ class GMW_Form extends GMW_Form_Core {
 	 */
 	public function get_form_values() {
 
-		$qs = isset( $_SERVER['QUERY_STRING'] ) ? wp_unslash( $_SERVER['QUERY_STRING'] ) : ''; // WPCS: CSRF ok, sanitization ok.
+		$qs = isset( $_SERVER['QUERY_STRING'] ) ? wp_unslash( $_SERVER['QUERY_STRING'] ) : ''; // phpcs:ignore: CSRF ok, sanitization ok.
 
 		return gmw_get_form_values( $this->url_px, wp_unslash( $qs ) );
 	}
@@ -225,6 +227,7 @@ class GMW_Form extends GMW_Form_Core {
 		$this->form['get_per_page'] = $this->form['per_page']; // Deprecated.
 		$this->form['units_array']  = ! empty( $page_load_options['units'] ) ? gmw_get_units_array( $page_load_options['units'] ) : gmw_get_units_array( 'imperial' );
 
+		// phpcs:disable.
 		// Look for page page in submitted values.
 		/*if ( isset( $this->form['per_page'] ) ) {
 
@@ -235,6 +238,7 @@ class GMW_Form extends GMW_Form_Core {
 
 			$this->form['per_page'] = current( explode( ',', $this->form['search_results']['per_page'] ) );
 		}*/
+		// phpcs:enable.
 
 		$this->form['get_per_page'] = $this->form['per_page']; // get_per_page deprecated.
 
@@ -257,11 +261,11 @@ class GMW_Form extends GMW_Form_Core {
 		// get form values.
 		$form_values = $this->form['form_values'];
 
-		$this->form['radius']       = isset( $form_values['distance'] ) ? $form_values['distance'] : 500;
-		$this->form['address']      = ( isset( $form_values['address'] ) && array_filter( $form_values['address'] ) ) ? implode( ' ', $form_values['address'] ) : '';
-		$this->form['org_address']  = $this->form['address'];
-		$this->form['units']        = isset( $form_values['units'] ) ? $form_values['units'] : 'imperial';
-		$this->form['units_array']  = gmw_get_units_array( $this->form['units'] );
+		$this->form['radius']      = isset( $form_values['distance'] ) ? $form_values['distance'] : 500;
+		$this->form['address']     = ( isset( $form_values['address'] ) && array_filter( $form_values['address'] ) ) ? implode( ' ', $form_values['address'] ) : '';
+		$this->form['org_address'] = $this->form['address'];
+		$this->form['units']       = isset( $form_values['units'] ) ? $form_values['units'] : 'imperial';
+		$this->form['units_array'] = gmw_get_units_array( $this->form['units'] );
 
 		// Look for page page in submitted values.
 		if ( isset( $form_values['per_page'] ) ) {
