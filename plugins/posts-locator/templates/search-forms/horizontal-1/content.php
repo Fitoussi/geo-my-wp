@@ -1,6 +1,6 @@
 <?php
 /**
- * GEO my WP Search Form Template. 
+ * GEO my WP Search Form Template.
  *
  * To modify this template file, copy this folder with all its content and place it
  *
@@ -28,7 +28,9 @@
 
 	<?php do_action( 'gmw_before_search_form', $gmw ); ?>
 
-	<form class="gmw-form gmw-grid-filters-wrapper" name="gmw_form" action="<?php gmw_form_results_page( $gmw ); ?>" method="get" data-id="<?php echo absint( $gmw['ID'] ); ?>" data-prefix="<?php echo esc_attr( $gmw['prefix'] ); ?>">
+	<form class="gmw-form gmw-grid-filters-wrapper" name="gmw_form" action="<?php gmw_form_results_page( $gmw ); ?>"
+		method="get" data-id="<?php echo absint( $gmw['ID'] ); ?>"
+		data-prefix="<?php echo esc_attr( $gmw['prefix'] ); ?>">
 
 		<?php do_action( 'gmw_search_form_start', $gmw ); ?>
 
@@ -37,7 +39,7 @@
 		<?php gmw_search_form_address_field( $gmw ); ?>
 
 		<?php gmw_search_form_radius_field( $gmw ); ?>
-	
+
 		<?php gmw_search_form_units( $gmw ); ?>
 
 		<?php gmw_search_form_modal_box( 'open', $gmw ); ?>
@@ -67,11 +69,11 @@
 		<?php gmw_search_form_submit_button( $gmw ); ?>
 
 		<?php do_action( 'gmw_search_form_end', $gmw ); ?>
-		
+
 	</form>
-	
+
 	<?php do_action( 'gmw_after_search_form', $gmw ); ?>
 
-</div>	
+</div>
 
 <?php do_action( 'gmw_after_search_form_template', $gmw ); ?>
