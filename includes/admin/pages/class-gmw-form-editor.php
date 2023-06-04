@@ -1214,6 +1214,7 @@ class GMW_Form_Editor {
 									'label'     => __( 'Modal Box Title', 'geo-my-wp' ),
 									'btn_label' => __( 'Load Builder', 'geo-my-wp' ),
 									'desc'      => __( 'Enter the title of the modal box or leave empty to hide the title.', 'geo-my-wp' ),
+									// phpcs:disable.
 									/*
 									'wrap_attrs' => array(
 										'id' => 'search-results-template-builder-container',
