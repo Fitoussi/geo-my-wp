@@ -516,7 +516,7 @@ class GMW_Search_Form_Helper {
 				break;
 
 			case 'locator_button':
-				$field_args = $args['additional_args'];
+				$field_args   = $args['additional_args'];
 				$button_usage = esc_attr( $field_args['usage'] );
 
 				// when using an icon.
@@ -616,7 +616,7 @@ class GMW_Search_Form_Helper {
 				$field .= '<span class="gmw-reset-field-trigger gmw-reset-field-button gmw-icon-cancel"></span>';
 
 				$args['inner_element'] = true;
-				$args['inner_class'] .= ' gmw-reset-button-enabled ';
+				$args['inner_class']  .= ' gmw-reset-button-enabled ';
 			}
 
 			if ( $args['wrapper_open'] ) {
@@ -896,9 +896,9 @@ class GMW_Search_Form_Helper {
 		$output .= "<input type=\"hidden\" id=\"gmw-nelatlng-{$id}\" class=\"gmw-nelatlng\" name=\"nelatlng\" />";
 
 		$disabled = ! $state ? 'disabled="disabled"' : '';
-		$output .= "<input type=\"text\" id=\"gmw-state-{$id}\" class=\"gmw-state\" name=\"state\" value=\"{$state}\" {$disabled} style=\"display:none\" />";
+		$output  .= "<input type=\"text\" id=\"gmw-state-{$id}\" class=\"gmw-state\" name=\"state\" value=\"{$state}\" {$disabled} style=\"display:none\" />";
 		$disabled = ! $country ? 'disabled="disabled"' : '';
-		$output .= "<input type=\"text\" id=\"gmw-country-{$id}\" class=\"gmw-country\" name=\"country\" value=\"{$country}\" {$disabled} style=\"display:none\" />";
+		$output  .= "<input type=\"text\" id=\"gmw-country-{$id}\" class=\"gmw-country\" name=\"country\" value=\"{$country}\" {$disabled} style=\"display:none\" />";
 
 		$output = apply_filters( 'gmw_submission_fields', $output, $id, $_GET ); // phpcs:ignore: CSRF ok.
 
