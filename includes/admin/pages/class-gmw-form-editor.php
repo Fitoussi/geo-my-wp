@@ -3018,6 +3018,7 @@ class GMW_Form_Editor {
 											$panel_field_class   = array( $feature_disbaled );
 											$panel_field_class[] = ! empty( $option['type'] ) ? $option['type'] : '';
 											$panel_field_class[] = ! empty( $option['wrap_class'] ) ? $option['wrap_class'] : '';
+											$panel_field_class   = implode( ' ', $panel_field_class );
 											?>
 											<div class="gmw-settings-panel-field gmw-form-feature-settings <?php echo esc_attr( $panel_field_class ); ?>" <?php echo $wrap_attrs; // phpcs:ignore: XSS ok. ?>>
 												<div class="gmw-settings-panel-input-container">
