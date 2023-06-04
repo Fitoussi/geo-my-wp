@@ -85,9 +85,9 @@ class GMW_Tracking {
 
 		$output = '<div class="gmw-tracking-notice gmw-admin-notice-box gmw-admin-notice-warning notice is-dismissible">';
 
-			$output .= '<h3>' . __( 'Enable Usage Tracking', 'geo-my-wp' ) . '</h3>';
-			$output .= __( 'Allow GEO my WP to track the plugin usage on your site. Tracking non-sensitive data can help us improve GEO my WP plugin.', 'geo-my-wp' );
-			$output .= '<em style="margin-top:10px">' . __( '*You can change this setting at any time from GEO my WP Settings page.', 'geo-my-wp' ) . '</em>';
+		$output .= '<h3>' . __( 'Enable Usage Tracking', 'geo-my-wp' ) . '</h3>';
+		$output .= __( 'Allow GEO my WP to track the plugin usage on your site. Tracking non-sensitive data can help us improve GEO my WP plugin.', 'geo-my-wp' );
+		$output .= '<em style="margin-top:10px">' . __( '*You can change this setting at any time from GEO my WP Settings page.', 'geo-my-wp' ) . '</em>';
 
 		$output .= '<p>';
 		$output .= '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="gmw-settings-action-button button-primary">' . __( 'Allow tracking', 'geo-my-wp' ) . '</a>';
