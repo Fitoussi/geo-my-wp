@@ -685,7 +685,7 @@ class GMW_Form_Editor {
 				'label'    => __( 'Search Form', 'geo-my-wp' ),
 				'notice'   => __( 'Manage the search form appearance, filters, styling and more. You can also disable the search form completely.', 'geo-my-wp' ),
 				'fields'   => array(
-					'form_template'    => gmw_get_admin_setting_args(
+					'form_template'  => gmw_get_admin_setting_args(
 						array(
 							'name'       => 'form_template',
 							'type'       => 'select',
@@ -758,7 +758,7 @@ class GMW_Form_Editor {
 						'priority'   => 7,
 					),*/
 					// phpcs:enable.
-					'filters_modal'    => array(
+					'filters_modal'  => array(
 						'name'       => 'filters_modal',
 						'type'       => 'fields_group',
 						'label'      => __( 'Filters Modal Box', 'geo-my-wp' ),
@@ -769,8 +769,8 @@ class GMW_Form_Editor {
 									'name'       => 'enabled',
 									'type'       => 'checkbox',
 									'default'    => '',
-									'label'      => __( 'Enable Modal Box', 'geo-my-wp' ),
-									// 'desc'       => __( 'Display some of the form filters inside a popup modal box.', 'geo-my-wp' ),
+									'label'      => __( 'Enable The Modal Box', 'geo-my-wp' ),
+									'desc'       => '',
 									'cb_label'   => __( 'Enable', 'geo-my-wp' ),
 									'class'      => 'gmw-options-toggle',
 									'attributes' => array(),
@@ -801,7 +801,7 @@ class GMW_Form_Editor {
 						'attributes' => '',
 						'priority'   => 8,
 					),
-					'address_field'    => array(
+					'address_field'  => array(
 						'name'            => 'address_field',
 						'type'            => 'fields_group',
 						'label'           => __( 'Address Field', 'geo-my-wp' ),
@@ -880,7 +880,7 @@ class GMW_Form_Editor {
 						'attributes'      => '',
 						'priority'        => 12,
 					),
-					'locator_button'   => array(
+					'locator_button' => array(
 						'name'       => 'locator_button',
 						'type'       => 'fields_group',
 						'label'      => __( 'Locator Button', 'geo-my-wp' ),
@@ -947,7 +947,7 @@ class GMW_Form_Editor {
 						'attributes' => '',
 						'priority'   => 30,
 					),
-					'radius'           => array(
+					'radius'         => array(
 						'name'            => 'radius',
 						'type'            => 'fields_group',
 						'label'           => __( 'Radius Field', 'geo-my-wp' ),
@@ -1015,7 +1015,7 @@ class GMW_Form_Editor {
 						'attributes'      => '',
 						'priority'        => 40,
 					),
-					'units'            => array(
+					'units'          => array(
 						'name'       => 'units',
 						'type'       => 'fields_group',
 						'label'      => __( 'Distance Unit Field', 'geo-my-wp' ),
@@ -1041,7 +1041,7 @@ class GMW_Form_Editor {
 						'attributes' => '',
 						'priority'   => 50,
 					),
-					'submit_button'    => array(
+					'submit_button'  => array(
 						'name'       => 'submit_button',
 						'type'       => 'fields_group',
 						'label'      => __( 'Submit Button', 'geo-my-wp' ),
@@ -1059,7 +1059,7 @@ class GMW_Form_Editor {
 						'attributes' => '',
 						'priority'   => 60,
 					),
-					'styles'           => array(
+					'styles'         => array(
 						'name'     => 'styles',
 						'type'     => 'fields_group',
 						'label'    => __( 'Form Styling', 'geo-my-wp' ),
@@ -1439,8 +1439,10 @@ class GMW_Form_Editor {
 							'options'     => ! empty( $this->form['search_results']['location_meta'] ) ? array_combine( $this->form['search_results']['location_meta'], $this->form['search_results']['location_meta'] ) : array(),
 							'attributes'  => array(
 								'data-gmw_ajax_load_options' => 'gmw_get_location_meta',
+								// phpcs:disable.
 								// 'data-sortable'      => '1',
 								// 'data-options_order' => ( ! empty( $this->form['search_results']['location_meta'] ) && is_array( $this->form['search_results']['location_meta'] ) ) ? implode( ',', $this->form['search_results']['location_meta'] ) : '',
+								// phpcs:enable.
 							),
 							'priority'    => 45,
 							'iw_option'   => true,
@@ -1706,7 +1708,7 @@ class GMW_Form_Editor {
 						'default'    => 'disable',
 						'options'    => $keywords_options,
 						'label'      => __( 'Field Usage', 'geo-my-wp' ),
-						// 'desc'        => __( '', 'geo-my-wp' ),
+						'desc'       => '',
 						'attributes' => array(
 							'class' => 'gmw-options-toggle gmw-smartbox-not',
 						),
@@ -2749,8 +2751,10 @@ class GMW_Form_Editor {
 
 						<?php } else { ?>
 
-							<?php $tab_active = ( ! empty( $_GET['current_tab'] ) && $group['slug'] === $_GET['current_tab'] ) ? ' active' : ''; ?>
-
+							<?php
+							// phpcs:ignore.
+							$tab_active = ( ! empty( $_GET['current_tab'] ) && $group['slug'] === $_GET['current_tab'] ) ? ' active' : ''; // CSRF ok.
+							?>
 							<a
 								href="#settings-<?php echo esc_attr( sanitize_title( $group['slug'] ) ); ?>"
 								id="<?php echo esc_attr( $group['slug'] ); ?>"
@@ -2817,7 +2821,8 @@ class GMW_Form_Editor {
 						$tab         = esc_attr( $tab );
 						$this_class  = esc_attr( $this->form['component'] . ' ' . $this->form['slug'] . ' ' . $this->form['addon'] );
 						$this_class .= ! empty( $this->form_settings_groups[ $tab ]['panel_class'] ) ? ' ' . esc_attr( $this->form_settings_groups[ $tab ]['panel_class'] ) : '';
-						$this_class .= ( ! empty( $_GET['current_tab'] ) && $tab === $_GET['current_tab'] ) ? ' active' : '';
+						// phpcs:ignore.
+						$this_class .= ( ! empty( $_GET['current_tab'] ) && $tab === $_GET['current_tab'] ) ? ' active' : ''; // CSRF ok.
 						?>
 						<div id="settings-<?php echo $tab; // phpcs:ignore: XSS ok. ?>" class="gmw-settings-form gmw-tab-panel <?php echo $tab; // phpcs:ignore: XSS ok. ?> <?php echo $this_class; // phpcs:ignore: XSS ok. ?>">
 
@@ -3010,7 +3015,7 @@ class GMW_Form_Editor {
 												$wrap_attrs = implode( ' ', $attrs );
 											}
 
-											$panel_field_class = array( $feature_disbaled );
+											$panel_field_class   = array( $feature_disbaled );
 											$panel_field_class[] = ! empty( $option['type'] ) ? $option['type'] : '';
 											$panel_field_class[] = ! empty( $option['wrap_class'] ) ? $option['wrap_class'] : '';
 											?>
@@ -3156,6 +3161,7 @@ class GMW_Form_Editor {
 					$valid_value = is_array( $option['default'] ) ? $option['default'] : array();
 				} else {
 					foreach ( $option['options'] as $v => $l ) {
+						// phpcs:ignore.
 						if ( in_array( $v, $value ) ) {
 							$valid_value[] = $v;
 						}
@@ -3172,7 +3178,7 @@ class GMW_Form_Editor {
 					$valid_value = array();
 
 					foreach ( $option['options'] as $key_val => $name ) {
-
+						// phpcs:ignore.
 						if ( in_array( $key_val, $value ) ) {
 							$valid_value[] = $key_val;
 						}
@@ -3191,7 +3197,7 @@ class GMW_Form_Editor {
 					$valid_value = array();
 
 					foreach ( $option['options'] as $key_val => $name ) {
-
+						// phpcs:ignore.
 						if ( in_array( $key_val, $value ) ) {
 
 							if ( 'multiselect_name_value' === $option['type'] ) {
@@ -3207,6 +3213,7 @@ class GMW_Form_Editor {
 
 			case 'select':
 			case 'radio':
+				// phpcs:ignore.
 				if ( ! empty( $value ) && in_array( $value, array_keys( $option['options'] ) ) ) {
 					$valid_value = $value;
 				} else {
