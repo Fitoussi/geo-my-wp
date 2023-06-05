@@ -114,7 +114,7 @@ function gmw_get_results_message( $gmw ) {
  * @param  [type] $gmw gmw form.
  */
 function gmw_results_message( $gmw ) {
-	echo gmw_get_results_message( $gmw ); // WPCS: XSS ok.
+	echo gmw_get_results_message( $gmw ); // phpcs:ignore: XSS ok.
 }
 
 /**
@@ -122,7 +122,7 @@ function gmw_results_message( $gmw ) {
  *
  * @param  array $gmw gmw form.
  *
- * @return HTLM element.
+ * @return mixed HTLM no results element.
  */
 function gmw_get_no_results_message( $gmw = array() ) {
 
@@ -157,7 +157,7 @@ function gmw_get_no_results_message( $gmw = array() ) {
  * @param  array $gmw gmw form.
  */
 function gmw_no_results_message( $gmw = array() ) {
-	echo gmw_get_no_results_message( $gmw ); // WPCS: XSS ok.
+	echo gmw_get_no_results_message( $gmw ); // phpcs:ignore: XSS ok.
 }
 
 /**
@@ -207,7 +207,7 @@ function gmw_results_map( $gmw, $init_visible = true ) {
 	do_action( 'gmw_before_map', $gmw );
 	do_action( "gmw_{$gmw['prefix']}_before_map", $gmw );
 
-	echo gmw_get_results_map( $gmw, $init_visible ); // WPCS: XSS ok.
+	echo gmw_get_results_map( $gmw, $init_visible ); // phpcs:ignore: XSS ok.
 
 	do_action( 'gmw_after_map', $gmw );
 	do_action( "gmw_{$gmw['prefix']}_after_map", $gmw );
@@ -226,7 +226,7 @@ function gmw_shortcode_map( $gmw ) {
 
 	do_action( 'gmw_before_shortcode_map', $gmw );
 
-	echo gmw_get_results_map( $gmw ); // WPCS: XSS ok.
+	echo gmw_get_results_map( $gmw ); // phpcs:ignore: XSS ok.
 
 	do_action( 'gmw_after_shortcode_map', $gmw );
 }
@@ -256,7 +256,7 @@ function gmw_get_info_window_template_data( $gmw ) {
 	}
 
 	if ( ! wp_style_is( $template['stylesheet_handle'], 'enqueued' ) && file_exists( $template['stylesheet_path'] ) ) {
-		wp_enqueue_style( $template['stylesheet_handle'], $template['stylesheet_uri'] );
+		wp_enqueue_style( $template['stylesheet_handle'], $template['stylesheet_uri'] ); // phpcs:ignore.
 	}
 
 	// Add custom CSS as inline script.
@@ -264,7 +264,7 @@ function gmw_get_info_window_template_data( $gmw ) {
 
 		// Needed when registering an inline style.
 		if ( ! wp_style_is( $template['stylesheet_handle'], 'enqueued' ) ) {
-			wp_register_style( $template['stylesheet_handle'], false );
+			wp_register_style( $template['stylesheet_handle'], false ); // phpcs:ignore.
 			wp_enqueue_style( $template['stylesheet_handle'] );
 		}
 
@@ -311,7 +311,7 @@ function gmw_get_pagination( $gmw = array() ) {
  * @author Eyal Fitoussi
  */
 function gmw_pagination( $gmw = array() ) {
-	echo gmw_get_pagination( $gmw ); // WPCS: XSS ok.
+	echo gmw_get_pagination( $gmw ); // phpcs:ignore: XSS ok.
 }
 
 /**
@@ -349,7 +349,7 @@ function gmw_get_ajax_pagination( $gmw = array() ) {
  * @author Eyal Fitoussi
  */
 function gmw_ajax_pagination( $gmw = array() ) {
-	echo gmw_get_ajax_pagination( $gmw ); // WPCS: XSS ok.
+	echo gmw_get_ajax_pagination( $gmw ); // phpcs:ignore: XSS ok.
 }
 
 /**
@@ -389,7 +389,7 @@ function gmw_per_page( $gmw = array() ) {
 
 	do_action( 'gmw_before_per_page_filter', $gmw );
 
-	echo gmw_get_per_page( $gmw ); // WPCS: XSS ok.
+	echo gmw_get_per_page( $gmw ); // phpcs:ignore: XSS ok.
 
 	do_action( 'gmw_after_per_page_filter', $gmw );
 }
@@ -419,7 +419,7 @@ function gmw_get_distance_to_location( $object = array() ) {
  * @param  object $object the item object.
  */
 function gmw_distance_to_location( $object = array() ) {
-	echo gmw_get_distance_to_location( $object ); // WPCS: XSS ok.
+	echo gmw_get_distance_to_location( $object ); // phpcs:ignore: XSS ok.
 }
 
 /**
@@ -429,9 +429,10 @@ function gmw_distance_to_location( $object = array() ) {
  * a content.
  *
  * @param array $args array of args.
+ *
  * @param array $gmw  gmw form.
  *
- * @return excerpt.
+ * @return mixed excerpt.
  */
 function gmw_get_excerpt( $args = array(), $gmw = false ) {
 
@@ -440,7 +441,7 @@ function gmw_get_excerpt( $args = array(), $gmw = false ) {
 
 		gmw_trigger_error( 'Do not use gmw_get_excerpt nor gmw_excerpt functions directly to retrieve the post excerpt in the search results template file. Use gmw_search_results_post_excerpt functions instead. Since GEO my WP 3.0.' );
 
-		echo gmw_search_results_post_excerpt( $args, $gmw ); // WPCS: XSS ok.
+		echo gmw_search_results_post_excerpt( $args, $gmw ); // phpcs:ignore: XSS ok.
 
 		return;
 	}
@@ -462,7 +463,7 @@ function gmw_get_excerpt( $args = array(), $gmw = false ) {
  * @param array $gmw  gmw form.
  */
 function gmw_excerpt( $args = array(), $gmw = false ) {
-	echo gmw_get_excerpt( $args, $gmw ); // WPCS: XSS ok.
+	echo gmw_get_excerpt( $args, $gmw ); // phpcs:ignore: XSS ok.
 }
 
 /**
@@ -546,7 +547,7 @@ function gmw_get_hours_of_operation( $location = 0, $object_id = 0 ) {
  * @since 3.0
  */
 function gmw_hours_of_operation( $location = 0, $object_id = 0 ) {
-	echo gmw_get_hours_of_operation( $location, $object_id ); // WPCS: XSS ok.
+	echo gmw_get_hours_of_operation( $location, $object_id ); // phpcs:ignore: XSS ok.
 }
 
 /**
@@ -554,11 +555,11 @@ function gmw_hours_of_operation( $location = 0, $object_id = 0 ) {
  *
  * @since 4.0
  *
- * @param  array $args   arguments.
+ * @param  array  $args   arguments.
  *
- * @param  array $object object ( member, group... ).
+ * @param  object $object object ( member, group... ).
  *
- * @param  array $gmw    gmw form object.
+ * @param  array  $gmw    gmw form object.
  *
  * @return [type]         [description]
  */
@@ -651,7 +652,7 @@ function gmw_get_bp_groups_from_db( $groups = array() ) {
 					'group_type'         => '',
 					'group_type__in'     => '',
 					'group_type__not_in' => '',
-					'meta_query'         => false, // WPSC: slow query ok.
+					'meta_query'         => false, // phpcs:ignore: slow query ok.
 					'include'            => ! empty( $groups ) ? $groups : '',
 					'parent_id'          => null,
 					'update_meta_cache'  => true,
@@ -678,14 +679,15 @@ function gmw_get_bp_groups_from_db( $groups = array() ) {
 			$where      = "WHERE id IN ( {$groups_var} )";
 		}
 
-		$bp     = buddypress();
+		$bp = buddypress();
+		// phpcs:ignore.
 		$groups = $wpdb->get_results(
 			"
             SELECT id, name
             FROM {$bp->groups->table_name}
             {$where}
             "
-		); // WPCS: unprepared sql ok, db call ok, cache ok.
+		); // phpcs:ignore: unprepared sql ok, db call ok, cache ok.
 	}
 
 	$output = array();
