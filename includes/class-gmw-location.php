@@ -1297,7 +1297,7 @@ class GMW_Location {
 						// collect objects id into an array.
 						$locations_data['objects_id'][] = $location->object_id;
 
-						if ( isset( $value->featured_location ) && 1 == $location->featured_location ) {
+						if ( isset( $location->featured_location ) && 1 === $location->featured_location ) {
 							$locations_data['featured_ids'][] = $location->object_id;
 						}
 
