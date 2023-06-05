@@ -1971,6 +1971,18 @@ class GMW_Form_Settings_Helper {
 				$output .= ' />';
 
 				break;
+
+            case 'button':
+                $output .= '<input type="button" id="' . esc_attr( $id_attr ) . '"';
+                $output .= ' class="gmw-form-field button ' . esc_attr( $class_attr ) . '"';
+                $output .= ! empty( $field['btn_label'] ) ? ' value="' . esc_attr( $field['btn_label'] ) . '"' : '';
+                //$output .= ' name="' . esc_attr( $name_attr ) . '"';
+                //$output .= ' value="' . esc_attr( sanitize_text_field( $value ) ) . '"';
+                //$output .= ' value="' . esc_attr( sanitize_text_field( $value ) ) . '"';
+                $output .= ' ' . implode( ' ', $attributes );
+                $output .= ' />';
+
+                break;
 		}
 
 		return $output;
