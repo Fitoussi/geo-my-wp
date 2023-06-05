@@ -19,20 +19,22 @@ class GMW_Form_Settings_Helper {
 	/**
 	 * Check if string is json.
 	 *
-	 * @param  [type] $string [description].
+	 * @param  string $string [description].
 	 *
 	 * @return boolean         [description]
 	 */
 	public static function is_json( $string ) {
-		return is_string( $string ) && is_array( json_decode( $string, true ) ) && ( json_last_error() == JSON_ERROR_NONE ) ? true : false;
+		return is_string( $string ) && is_array( json_decode( $string, true ) ) && ( json_last_error() === JSON_ERROR_NONE ) ? true : false;
 	}
 
 	/**
 	 * Get list of pages.
 	 *
+	 * @param array $args argument.
+	 *
 	 * @return [type] [description]
 	 */
-	public static function get_pages() {
+	public static function get_pages( $args = array() ) {
 
 		$pages = array();
 
@@ -44,11 +46,13 @@ class GMW_Form_Settings_Helper {
 	}
 
 	/**
-	 * Generate array of post types
+	 * Generate array of post types.
+	 *
+	 * @param array $args argument.
 	 *
 	 * @return [type] [description]
 	 */
-	public static function get_post_types() {
+	public static function get_post_types( $args = array() ) {
 
 		$output = array();
 
@@ -364,10 +368,10 @@ class GMW_Form_Settings_Helper {
 											}
 										}
 										?>
-                                        <?php // phpcs:disable.
-                                        // echo GMW_Form_Settings_Helper::get_taxonomy_terms( $taxonomy_name, $exclude_value );
-                                        // phpcs:enable. ?>
-                                    </select>
+										<?php // phpcs:disable.
+										// echo GMW_Form_Settings_Helper::get_taxonomy_terms( $taxonomy_name, $exclude_value );
+										// phpcs:enable. ?>
+									</select>
 								</div>
 
 								<div class="gmw-settings-panel-description">
@@ -503,12 +507,12 @@ class GMW_Form_Settings_Helper {
 
                             <div class="gmw-settings-panel-field taxonomy-enabled-settings" style="display:none">
 
-                                <label class="gmw-settings-panel-header">						
-                                    <input 
-                                        type="checkbox" 
-                                        class="category-icon" 
+                                <label class="gmw-settings-panel-header">
+                                    <input
+                                        type="checkbox"
+                                        class="category-icon"
                                         name="<?php echo $tax_name_attr; // phpcs:ignore: XSS ok. ?>[cat_icons]"
-                                        value="1" 
+                                        value="1"
                                         <?php echo ! empty( $tax_option['cat_icons'] ) ? 'checked="checked"' : ''; ?> />
                                     <?php esc_attr_e( 'Category icons', 'geo-my-wp' ); ?>
                                 </label>
@@ -566,14 +570,14 @@ class GMW_Form_Settings_Helper {
                 <div class="gmw-settings-group-wrapper">
 
                     <div class="gmw-settings-group-conten gmw-settings-multiple-fields-wrapper">
-        
+
                         <div class="gmw-settings-panel-field">
 
                             <div class="gmw-settings-panel-header">
                                 <label class="gmw-settings-label"><?php echo esc_attr_e( 'Usage', 'geo-my-wp' ); ?></label>
                             </div>
 
-                            <div class="taxonomy-usage taxonomy-tab-content gmw-settings-panel-input-container">					
+                            <div class="taxonomy-usage taxonomy-tab-content gmw-settings-panel-input-container">
 
                                 <select name="<?php echo $tax_name_attr; // phpcs:ignore: XSS ok. ?>[usage]" class="gmw-smartbox-not">
                                     <option value="disable" <?php selected( 'disable', $tax_option['style'], true ); ?>><?php esc_attr_e( 'Disable', 'geo-my-wp' ); ?></option>
@@ -585,7 +589,7 @@ class GMW_Form_Settings_Helper {
                             <div class="gmw-settings-panel-description">
                                 <?php esc_attr_e( 'Select the field usage.', 'geo-my-wp' ); ?>
                             </div>
-                        </div>		
+                        </div>
 
                         <div class="gmw-settings-panel-field option-include-terms">
 
@@ -598,8 +602,8 @@ class GMW_Form_Settings_Helper {
                                 <?php $include_value = isset( $tax_option['include'] ) ? $tax_option['include'] : ''; ?>
 
                                 <select
-                                    multiple 
-                                    data-placeholder="Select terms" 
+                                    multiple
+                                    data-placeholder="Select terms"
                                     class="taxonomies-picker"
                                     data-gmw_ajax_load_options="gmw_get_taxonomy_terms"
                                     data-gmw_ajax_load_options_taxonomy="<?php echo esc_attr( $taxonomy_name ); ?>"
@@ -620,7 +624,7 @@ class GMW_Form_Settings_Helper {
                                 <?php esc_attr_e( 'Select specific taxonmoy terms to include.', 'geo-my-wp' ); ?>
                             </div>
                         </div>
-                    </div>		
+                    </div>
                 </div>
             </div>
 
@@ -668,12 +672,15 @@ class GMW_Form_Settings_Helper {
 	 *
 	 * @since 4.0
 	 *
-	 * @return [type] [description]
+	 * @param array $args argument.
+	 *
+	 * @return array of user roles.
 	 */
-	public static function get_user_roles() {
+	public static function get_user_roles( $args = array() ) {
 
 		global $wp_roles;
 
+		// phpcs:ignore.
 		return $wp_roles->get_names();
 	}
 
@@ -752,9 +759,11 @@ class GMW_Form_Settings_Helper {
 	 *
 	 * @since 4.0
 	 *
+	 * @param array $args argument.
+	 *
 	 * @return [type] [description]
 	 */
-	public static function get_custom_fields_array() {
+	public static function get_custom_fields_array( $args = array() ) {
 
 		global $wpdb;
 
@@ -791,9 +800,11 @@ class GMW_Form_Settings_Helper {
 	 *
 	 * @since 4.0
 	 *
+	 * @param array $args argument.
+	 *
 	 * @return [type] [description]
 	 */
-	public static function get_user_meta() {
+	public static function get_user_meta( $args = array() ) {
 
 		global $wpdb;
 
@@ -875,9 +886,11 @@ class GMW_Form_Settings_Helper {
 	 *
 	 * @since 4.0.
 	 *
+	 * @param array $args argument.
+	 *
 	 * @return [type] [description]
 	 */
-	public static function get_all_taxonomy_terms() {
+	public static function get_all_taxonomy_terms( $args = array() ) {
 
 		$taxonomies = get_object_taxonomies( array_values( get_post_types() ) );
 		$terms      = get_terms( $taxonomies, array( 'hide_empty' => false ) );
@@ -908,9 +921,11 @@ class GMW_Form_Settings_Helper {
 	 *
 	 * @since 4.0.
 	 *
+	 * @param array $args argument.
+	 *
 	 * @return [type] [description]
 	 */
-	public static function get_peepso_profile_fields() {
+	public static function get_peepso_profile_fields( $args = array() ) {
 
 		if ( ! class_exists( 'PeepSoUser' ) ) {
 			return array();
@@ -966,7 +981,7 @@ class GMW_Form_Settings_Helper {
 
 			foreach ( $terms as $term ) {
 
-				$selected = ( ! empty( $values ) && in_array( $term->$field, $values ) ) ? 'selected="selected"' : '';
+				$selected = ( ! empty( $values ) && in_array( $term->$field, $values ) ) ? 'selected="selected"' : ''; // phpcs:ignore.
 				$term_id  = esc_attr( $term->$field );
 				$label    = esc_attr( $term->name );
 
@@ -986,7 +1001,7 @@ class GMW_Form_Settings_Helper {
 
 			foreach ( $terms as $term ) {
 
-				$selected = in_array( $term->term_taxonomy_id, $values ) ? 'selected="selected"' : '';
+				$selected = in_array( $term->term_taxonomy_id, $values ) ? 'selected="selected"' : ''; // phpcs:ignore.
 
 				if ( $term->taxonomy !== $current_tax ) {
 
@@ -1098,11 +1113,11 @@ class GMW_Form_Settings_Helper {
 	/**
 	 * Get group types.
 	 *
-	 * @param  [type] $args [description].
+	 * @param array $args argument.
 	 *
 	 * @return [type]       [description]
 	 */
-	public static function get_bp_group_types( $args ) {
+	public static function get_bp_group_types( $args = array() ) {
 
 		$group_types = array();
 
@@ -1116,15 +1131,14 @@ class GMW_Form_Settings_Helper {
 		return $group_types;
 	}
 
-
 	/**
 	 * Get BP Groups.
 	 *
-	 * @param  [type] $args [description].
+	 * @param array $args argument.
 	 *
 	 * @return [type]       [description]
 	 */
-	public static function get_bp_groups( $args ) {
+	public static function get_bp_groups( $args = array() ) {
 
 		$output = array();
 
@@ -1155,9 +1169,11 @@ class GMW_Form_Settings_Helper {
 	 *
 	 * @since 4.0
 	 *
+	 * @param array $args argument.
+	 *
 	 * @return [type] [description]
 	 */
-	public static function get_bp_group_meta() {
+	public static function get_bp_group_meta( $args = array() ) {
 
 		global $wpdb;
 
@@ -1189,6 +1205,13 @@ class GMW_Form_Settings_Helper {
 		return $output;
 	}
 
+	/**
+	 * Get list of GMW template files.
+	 *
+	 * @param mixed $args argument to filter template files.
+	 *
+	 * @return array
+	 */
 	public static function get_templates( $args ) {
 
 		$args = array(
@@ -1424,13 +1447,13 @@ class GMW_Form_Settings_Helper {
 	/**
 	 * Generate form field options.
 	 *
-	 * @param  array || string $args can be string of pre-defined option name or array of field args.
-	 *
 	 * @since 4.0
 	 *
 	 * @author Eyal Fitoussi
 	 *
-	 * @return [type]       [description]
+	 * @param mixed $args array || string $args can be string of pre-defined option name or array of field args.
+	 *
+	 * @return array
 	 */
 	public static function get_setting_args( $args ) {
 
@@ -1458,6 +1481,7 @@ class GMW_Form_Settings_Helper {
 			'attributes'    => array(),
 			'force_default' => 0,
 			'priority'      => 0,
+			// phpcs:ignore.
 			'sub_option'    => ( ! empty( $_GET['page'] ) && 'gmw-settings' === $_GET['page'] ) ? false : true, // On settings page, set it to false by default.
 			'fields'        => array(),
 			'ps_required'   => 0,
@@ -1663,7 +1687,7 @@ class GMW_Form_Settings_Helper {
 				'resizeMapControl' => __( 'Resize map trigger', 'geo-my-wp' ),
 			);
 
-			if ( 'google_maps' == GMW()->maps_provider ) {
+			if ( 'google_maps' === GMW()->maps_provider ) {
 				$controls['rotateControl']      = __( 'Rotate Control', 'geo-my-wp' );
 				$controls['scaleControl']       = __( 'Scale', 'geo-my-wp' );
 				$controls['mapTypeControl']     = __( 'Map Type', 'geo-my-wp' );
@@ -1726,6 +1750,7 @@ class GMW_Form_Settings_Helper {
 		$field_name    = $field['name'];
 		$id_attr       = ! empty( $field['id'] ) ? $field['id'] : 'gmw-form-field-' . $field_name;
 		$field_type    = isset( $field['type'] ) ? $field['type'] : 'text';
+		// phpcs:ignore.
 		// $name_attr     = ! empty( $name_attr ) ? esc_attr( $name_attr . '[' . $field_name . ']' ) : $field_name;
 		$attributes = array();
 		$class_attr = ! empty( $field['class'] ) ? $field['class'] : '';
@@ -1735,7 +1760,7 @@ class GMW_Form_Settings_Helper {
 
 			$placeholder = 'placeholder="' . esc_attr( $field['placeholder'] ) . '"';
 
-		} elseif ( in_array( $field_type, array( 'select', 'multiselect', 'multiselect_name_value', 'smartbox', 'smartbox_multiple' ) ) ) {
+		} elseif ( in_array( $field_type, array( 'select', 'multiselect', 'multiselect_name_value', 'smartbox', 'smartbox_multiple' ), true ) ) {
 
 			$placeholder = 'placeholder="' . esc_attr__( 'Select options...', 'geo-my-wp' ) . '"';
 		} else {
@@ -1804,7 +1829,7 @@ class GMW_Form_Settings_Helper {
 
 			case 'multicheckbox':
 				$field['default'] = is_array( $field['default'] ) ? $field['default'] : array();
-				$value = ( ! empty( $value ) && is_array( $value ) ) ? $value : $field['default'];
+				$value            = ( ! empty( $value ) && is_array( $value ) ) ? $value : $field['default'];
 
 				foreach ( $field['options'] as $key_val => $name ) {
 
@@ -1829,11 +1854,13 @@ class GMW_Form_Settings_Helper {
 					$value = explode( ',', $value );
 				}
 
+				// phpcs:ignore.
 				// $value = ( ! empty( $value ) && is_array( $value ) ) ? $value : $option['default'];
 				foreach ( $field['options'] as $key_val => $name ) {
 
 					$key_val = esc_attr( $key_val );
-					$checked = in_array( $key_val, $value ) ? 'checked="checked"' : ''; // phpcs:ignore: loose comparison ok.
+					// phpcs:ignore.
+					$checked = in_array( $key_val, $value ) ? 'checked="checked"' : ''; // loose comparison ok.
 
 					$output .= '<label>';
 					$output .= '<input type="checkbox" id="' . esc_attr( $id_attr ) . '-' . $key_val . '"';
@@ -1933,8 +1960,9 @@ class GMW_Form_Settings_Helper {
 				}
 
 				foreach ( $field['options'] as $key_val => $name ) {
-					$selected = ( is_array( $value ) && in_array( $key_val, $value ) ) ? 'selected="selected"' : '';
-					$output .= '<option value="' . esc_attr( $key_val ) . '" ' . $selected . '>' . esc_html( $name ) . '</option>';
+					// phpcs:ignore.
+					$selected = ( is_array( $value ) && in_array( $key_val, $value ) ) ? 'selected="selected"' : ''; // loose compration OK.
+					$output  .= '<option value="' . esc_attr( $key_val ) . '" ' . $selected . '>' . esc_html( $name ) . '</option>';
 				}
 
 				$output .= '</select>';
@@ -1972,17 +2000,17 @@ class GMW_Form_Settings_Helper {
 
 				break;
 
-            case 'button':
-                $output .= '<input type="button" id="' . esc_attr( $id_attr ) . '"';
-                $output .= ' class="gmw-form-field button ' . esc_attr( $class_attr ) . '"';
-                $output .= ! empty( $field['btn_label'] ) ? ' value="' . esc_attr( $field['btn_label'] ) . '"' : '';
-                //$output .= ' name="' . esc_attr( $name_attr ) . '"';
-                //$output .= ' value="' . esc_attr( sanitize_text_field( $value ) ) . '"';
-                //$output .= ' value="' . esc_attr( sanitize_text_field( $value ) ) . '"';
-                $output .= ' ' . implode( ' ', $attributes );
-                $output .= ' />';
+			case 'button':
+				$output .= '<input type="button" id="' . esc_attr( $id_attr ) . '"';
+				$output .= ' class="gmw-form-field button ' . esc_attr( $class_attr ) . '"';
+				$output .= ! empty( $field['btn_label'] ) ? ' value="' . esc_attr( $field['btn_label'] ) . '"' : '';
+				// $output .= ' name="' . esc_attr( $name_attr ) . '"';
+				// $output .= ' value="' . esc_attr( sanitize_text_field( $value ) ) . '"';
+				// $output .= ' value="' . esc_attr( sanitize_text_field( $value ) ) . '"';
+				$output .= ' ' . implode( ' ', $attributes );
+				$output .= ' />';
 
-                break;
+				break;
 		}
 
 		return $output;
