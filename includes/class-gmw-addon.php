@@ -151,16 +151,16 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		/********** Optional variables ************/
 
 		/**
-		 * Object
+		 * Objects
 		 *
 		 * Set this if the add-ons will use its own objects for location. For example, post, BP member, WP user....
 		 *
 		 * Example:
 		 *
 		 * array(
-		 *  'slug' => 'post', // the slug of the object
-		 *  'name' => 'WordPress Post', // name/label for the pbject
-		 *  'type' => 'post' // the type of the object which will also be saved in the locations database ( post, user, group... )
+		 *  'slug' => 'post', // the slug of the object,
+		 *  'name' => 'WordPress Post', // name/label for the pbject,
+		 *  'type' => 'post' // the type of the object which will also be saved in the locations database ( post, user, group... ),
 		 * );
 		 *
 		 * @var boolean | array
@@ -168,13 +168,18 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		public $objects = false;
 
 		/**
-		 * This is not being used at the moment and is generated automatically.
+		 * Object ( post, bp_member, bp_group, etc... ).
 		 *
-		 * Use the objects array above to generate an object which also include its type.
-		 *
-		 * @var boolean
+		 * @var string
 		 */
-		public $object_type = false;
+		public $object = '';
+
+		/**
+		 * Object type ( post, user, etc... ).
+		 *
+		 * @var string
+		 */
+		public $object_type = '';
 
 		/**
 		 * Locations blog ID
@@ -198,6 +203,20 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		 * @var string
 		 */
 		public $description = '';
+
+		/**
+		 * Addon activation status.
+		 *
+		 * @var string
+		 */
+		public $status = 'inactive';
+
+		/**
+		 * Addon status details.
+		 *
+		 * @var string
+		 */
+		public $status_details = array();
 
 		/**
 		 * Add-on's description.
@@ -287,6 +306,13 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		public $gmw_min_version = GMW_VERSION;
 
 		/**
+		 * Minimum version of the extension that is required for the current version of GEO my WP.
+		 *
+		 * @var float
+		 */
+		public $min_version = 1.0;
+
+		/**
 		 * Set to true, or pass the folder name as a string, if the extension uses template files.
 		 *
 		 * When set to true the folder of the custom template files will be the extension's slug.
@@ -318,7 +344,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		}
 
 		/**
-		 *  Create GEO my WP submenu item
+		 *  Create GEO my WP submenu item.
 		 *
 		 *  To create a submenu you will need to pass an array with the following arg:
 		 *
@@ -347,7 +373,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		 *  You can also create multiple menu items by passing a multidimensional array or items.
 		 */
 		public function admin_menu_items() {
-			return false;
+			return array();
 		}
 
 		/**
@@ -372,11 +398,11 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		 *  You can also create multiple groups by passing a multidimensional array.
 		 */
 		public function admin_settings_groups() {
-			return false;
+			return array();
 		}
 
 		/**
-		 * Create GEO my WP admin settings groups
+		 * Create GEO my WP admin settings groups.
 		 *
 		 * Pass an array with the following arg:
 		 *
@@ -397,7 +423,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		 *  You can also create multiple groups by passing a multidimensional array.
 		 */
 		public function form_settings_groups() {
-			return false;
+			return array();
 		}
 
 		/**
@@ -422,7 +448,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		 *  You can also create multiple buttons by passing a multidimensional array or buttons.
 		 */
 		public function form_buttons() {
-			return false;
+			return array();
 		}
 
 		/**
@@ -447,7 +473,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		 */
 		public static function register( $class = false ) {
 
-			if ( $class && ! in_array( $class, self::$registered_addons ) ) {
+			if ( $class && ! in_array( $class, self::$registered_addons, true ) ) {
 				self::$registered_addons[] = $class;
 			}
 		}
@@ -489,7 +515,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 				self::$active_plugins = get_option( 'active_plugins' );
 			}
 
-			return in_array( $basename, self::$active_plugins ) ? true : false;
+			return in_array( $basename, self::$active_plugins, true ) ? true : false;
 		}
 
 		/**
@@ -720,7 +746,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 				 * In this case we will update the status in database.
 				 *
 				 */
-				if ( ! isset( GMW()->addons_status[ $this->slug ] ) || $this->status !== GMW()->addons_status[ $this->slug ] || ! $this->verify_saved_addon_data( $this->slug ) ) {
+				if ( ! isset( GMW()->addons_status[ $this->slug ] ) || GMW()->addons_status[ $this->slug ] !== $this->status || ! $this->verify_saved_addon_data( $this->slug ) ) {
 
 					/**
 					 * This function updates both the addon status and addon data objects
@@ -936,6 +962,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 						// phpcs:ignore.
 						// $message = __( 'License key inactive', 'geo-my-wp' );
 						$message = sprintf(
+							/* translators: %1$s extension's name */
 							__( 'GEO my WP %1$s extension is disabled. <a href="%2$s">Activate your license key</a> to start using the extension or <a href="%3$s">deactivate the extension</a> to remove this notice.', 'geo-my-wp' ),
 							$this->name,
 							admin_url( 'admin.php?page=gmw-extensions&tab=premium' ),
@@ -949,6 +976,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 						$messages = gmw_license_update_notices();
 
 						$message = sprintf(
+							/* translators: %1$s: extension's name, %2$s: error message. */
 							esc_attr__( 'GEO my WP %1$s extension is disabled. %2$s ', 'geo-my-wp' ),
 							$this->name,
 							! empty( $messages[ $error ] ) ? $messages[ $error ] : '',
@@ -958,11 +986,13 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 
 						if ( 'disabled' !== $error ) {
 							$message .= sprintf(
+								/* translators: %1$s: link to extensions' page. */
 								__( ' <a href="%1$s">Manage license keys</a>.', 'geo-my-wp' ),
 								admin_url( 'admin.php?page=gmw-extensions&tab=premium' )
 							);
 
 							$short_message .= sprintf(
+								/* translators: %1$s: link to extensions' page. */
 								__( ' <a href="%1$s">Manage license keys</a>.', 'geo-my-wp' ),
 								admin_url( 'admin.php?page=gmw-extensions&tab=premium' )
 							);
@@ -1345,14 +1375,13 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		public function constants() {
 
 			// deafult add-ons prefix to be used with constants.
-			$this->gmw_px = 'GMW_' . strtoupper( $this->prefix );
+			$prefix = 'GMW_' . strtoupper( $this->prefix );
 
-			define( $this->gmw_px . '_VERSION', $this->version );
-			define( $this->gmw_px . '_FILE', $this->full_path );
-			define( $this->gmw_px . '_PATH', $this->plugin_dir );
-			define( $this->gmw_px . '_URL', $this->plugin_url );
+			define( $prefix . '_VERSION', $this->version );
+			define( $prefix . '_FILE', $this->full_path );
+			define( $prefix . '_PATH', $this->plugin_dir );
+			define( $prefix . '_URL', $this->plugin_url );
 		}
-
 
 		/**
 		 * Generate admin menu items
@@ -1390,11 +1419,11 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		// phpcs:enable.
 
 		/**
-		 * Generate admin settings groups
+		 * Generate admin settings groups.
 		 *
 		 * @since 3.0
 		 *
-		 * @return array
+		 * @return mixed
 		 */
 		public function init_objects() {
 
