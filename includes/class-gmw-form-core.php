@@ -230,22 +230,40 @@ class GMW_Form_Core {
 
 		$this->form = $form;
 
-		// verify that the form element is lagit.
+		// Verify form element.
+		if ( ! $this->verify_form_element() ) {
+			return;
+		}
+
+		$this->setup_defaults();
+	}
+
+	/**
+	 * Verify the form element passes to the [gmw] shortcode.
+	 *
+	 * @since  4.0
+	 *
+	 * @return bool
+	 */
+	public function verify_form_element() {
+
+		// verify that the form element is legit.
 		if ( ! wp_doing_ajax() && ! empty( $this->form['current_element'] ) && ! in_array( $this->form['current_element'], $this->allowed_form_elements, true ) ) {
 
 			$this->element_allowed = false;
 
 			$message = sprintf(
 				/* translators: %s replaced with form type */
-				__( '%s is invalid form type.', 'geo-my-wp' ),
+				__( 'The [gmw] shortcode attribute "%s" is an invalid form type.', 'geo-my-wp' ),
 				$this->form['current_element']
 			);
 
-			return gmw_trigger_error( $message );
+			gmw_trigger_error( $message );
+
+			return false;
 		}
 
-		// get from default values.
-		$this->setup_defaults();
+		return true;
 	}
 
 	/**
