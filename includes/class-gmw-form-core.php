@@ -100,6 +100,13 @@ class GMW_Form_Core {
 	public $db_fields = array();
 
 	/**
+	 * Internal cache enabled/disabled.
+	 *
+	 * @var boolean
+	 */
+	public $cache_enabled = true;
+
+	/**
 	 * Array of arguments that we be passed into the search query.
 	 *
 	 * @var array
@@ -130,6 +137,13 @@ class GMW_Form_Core {
 	 * @var array
 	 */
 	public $results = array();
+
+	/**
+	 * Search results enabled/disabled.
+	 *
+	 * @var boolean
+	 */
+	public $show_results = false;
 
 	/**
 	 * Hold the HTML results for AJAX forms.
