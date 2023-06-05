@@ -39,7 +39,7 @@ function gmw_get_option( $group = '', $key = '', $default = false ) {
  *
  * @param  string $group   name of options group.
  *
- * @return array
+ * @return mixed array of group options || void.
  */
 function gmw_get_options_group( $group = 'gmw_options' ) {
 
@@ -57,11 +57,11 @@ function gmw_get_options_group( $group = 'gmw_options' ) {
 }
 
 /**
- * Get blog ID of an object.
+ * Get blog ID of an object ( for multisite installation ).
  *
  * @param  string $object object.
  *
- * @return blog ID.
+ * @return int blog ID of an object.
  */
 function gmw_get_object_blog_id( $object = '' ) {
 
@@ -69,21 +69,20 @@ function gmw_get_object_blog_id( $object = '' ) {
 		return GMW()->locations_blogs[ $object ];
 	}
 
-	return false;
+	return 0;
 }
 
 /**
- * Get blog ID
+ * Get blog ID when in multisite installation.
  *
  * @param  string $object object.
  *
  * @return [type] [description]
  */
 function gmw_get_blog_id( $object = '' ) {
-
 	$multisite_global_objects = array( 'user', 'bp_group' );
 
-	if ( is_multisite() && ! in_array( $object, $multisite_global_objects ) ) {
+	if ( is_multisite() && ! in_array( $object, $multisite_global_objects, true ) ) {
 
 		global $blog_id;
 
@@ -93,6 +92,7 @@ function gmw_get_blog_id( $object = '' ) {
 		return 1;
 	}
 
+	// phpcs:disable.
 	/*if ( is_multisite() ) {
 
 		if ( '' !== $object ) {
@@ -111,6 +111,7 @@ function gmw_get_blog_id( $object = '' ) {
 	} else {
 		return 1;
 	}*/
+	// phpcs:enable.
 }
 
 /**
@@ -147,7 +148,7 @@ function gmw_get_object_types() {
  *
  * @param  integer $id the id to verify.
  *
- * @return boolean.
+ * @return mixed ID if exists or false otherwise.
  *
  * @since 3.2
  */
@@ -163,7 +164,8 @@ function gmw_verify_id( $id = 0 ) {
  * @return boolean true/false
  */
 function gmw_is_addon_active( $addon = '' ) {
-	if ( ! empty( GMW()->addons_status[ $addon ] ) && 'active' === GMW()->addons_status[ $addon ] && ! isset( $_POST['gmw_premium_license'] ) ) { // WPCS: CSRF ok.
+
+	if ( ! empty( GMW()->addons_status[ $addon ] ) && 'active' === GMW()->addons_status[ $addon ] && ! isset( $_POST['gmw_premium_license'] ) ) { // phpcs:ignore: CSRF ok.
 		return true;
 	} else {
 		return false;
@@ -253,7 +255,7 @@ function gmw_get_addon_data( $addon = '', $var = '', $get_license_data = false )
  *
  * @param  string $var   specific data value.
  *
- * @return array  add-on's data
+ * @return mixed  add-on's license data.
  */
 function gmw_get_addon_license_data( $addon = '', $var = '' ) {
 
@@ -364,6 +366,7 @@ function gmw_update_addon_data( $addon = array() ) {
 function gmw_trigger_error( $message = '', $type = E_USER_NOTICE ) {
 
 	// get debugging data.
+	// phpcs:ignore.
 	$debug   = debug_backtrace();
 	$message = esc_html( $message );
 
@@ -386,26 +389,27 @@ function gmw_trigger_error( $message = '', $type = E_USER_NOTICE ) {
 		switch ( $type ) {
 
 			case E_USER_ERROR:
-				echo "<br><b>Fatal error:</b> {$full_message}<br />\n"; // WPCS: XSS ok.
+				echo "<br><b>Fatal error:</b> {$full_message}<br />\n"; // phpcs:ignore: XSS ok.
 				exit( 1 );
-			break;
 
 			case E_USER_WARNING:
-				echo "<br><b>Warning:</b> {$full_message}<br />\n"; // WPCS: XSS ok.
+				echo "<br><b>Warning:</b> {$full_message}<br />\n"; // phpcs:ignore: XSS ok.
 				break;
 
 			case E_USER_NOTICE:
-				echo "<br><b>Notice:</b> {$full_message}<br />\n"; // WPCS: XSS ok.
+				echo "<br><b>Notice:</b> {$full_message}<br />\n"; // phpcs:ignore: XSS ok.
 				break;
 
 			default:
-				echo "<br><b>Unknown error type:</b> {$full_message}<br />\n"; // WPCS: XSS ok.
+				echo "<br><b>Unknown error type:</b> {$full_message}<br />\n"; // phpcs:ignore: XSS ok.
 				break;
 		}
 
 		// otherwise, use built in function.
 	} else {
-		trigger_error( $message, $type ); // WPCS: XSS ok.
+
+		// phpcs:ignore.
+		trigger_error( $message, $type ); // phpcs:ignore: XSS ok.
 	}
 }
 
@@ -430,16 +434,16 @@ function gmw_get_ulc_prefix() {
 /**
  * Get the user current location
  *
- * @return OBJECT of the user location
+ * @return object of the user location
  */
 function gmw_get_user_current_location() {
 	return GMW_Helper::get_user_current_location();
 }
 
 /**
- * Get the user current coords
+ * Get the user current coords.
  *
- * @return ARRAY of the user current coordinates
+ * @return mixed array of the user current coordinates or false if not found.
  */
 function gmw_get_user_current_coords() {
 
@@ -458,7 +462,7 @@ function gmw_get_user_current_coords() {
 /**
  * Get the user current address
  *
- * @return ARRAY of the user current address
+ * @return mixed array of the user current address or false if not found.
  */
 function gmw_get_user_current_address() {
 
@@ -480,12 +484,12 @@ function gmw_get_user_current_address() {
  */
 function gmw_process_actions() {
 
-	if ( isset( $_POST['gmw_action'] ) ) { // WPCS: CSRF ok.
-		do_action( 'gmw_' . wp_unslash( $_POST['gmw_action'] ), $_POST ); // WPCS: CSRF ok, sanitization ok.
+	if ( isset( $_POST['gmw_action'] ) ) { // phpcs:ignore: CSRF ok.
+		do_action( 'gmw_' . wp_unslash( $_POST['gmw_action'] ), $_POST ); // phpcs:ignore: CSRF ok, sanitization ok.
 	}
 
-	if ( isset( $_GET['gmw_action'] ) ) { // WPCS: CSRF ok.
-		do_action( 'gmw_' . wp_unslash( $_GET['gmw_action'] ), $_GET ); // WPCS: CSRF ok, sanitization ok.
+	if ( isset( $_GET['gmw_action'] ) ) { // phpcs:ignore: CSRF ok.
+		do_action( 'gmw_' . wp_unslash( $_GET['gmw_action'] ), $_GET ); // phpcs:ignore: CSRF ok, sanitization ok.
 	}
 }
 
@@ -528,13 +532,13 @@ function gmw_get_form_values( $prefix = '', $query_string = '' ) {
 }
 
 /**
- * GMW Function - Covert object to array
+ * GMW Function - Covert object to array.
  *
  * @param  array $data the array to convert.
  *
  * @since  2.5
  *
- * @return Array/multidimensional array
+ * @return mixed
  */
 function gmw_object_to_array( $data ) {
 
@@ -573,13 +577,13 @@ function gmw_sort_by_priority( $a, $b ) {
 }
 
 /**
- * Convert object to array
+ * Convert an object to array.
  *
  * @param  object $object object to convert.
  *
  * @param  [type] $output ARRAY_A || ARRAY_N.
  *
- * @return array
+ * @return mixed array || obejct
  */
 function gmw_to_array( $object, $output = ARRAY_A ) {
 
@@ -640,9 +644,9 @@ function gmw_array_filter_callback( $value ) {
 /**
  * Generate the address filters SQL.
  *
- * @param  array  $address_filters array of address field => value pairs.
- * 
- * @param  array  $gmw             gmw form.
+ * @param  array $address_filters array of address field => value pairs.
+ *
+ * @param  array $gmw             gmw form.
  *
  * @return [type]                  [description]
  */
@@ -670,7 +674,7 @@ function gmw_get_locations_within_bounderies_sql( $southwest = '', $northeast = 
 	$sw = explode( ',', $southwest );
 	$ne = explode( ',', $northeast );
 
-	return " AND ( gmw_locations.latitude BETWEEN {$sw[0]} AND {$ne[0]} ) AND ( ( {$sw[1]} < {$ne[1]} AND gmw_locations.longitude BETWEEN {$sw[1]} AND {$ne[1]} ) 
+	return " AND ( gmw_locations.latitude BETWEEN {$sw[0]} AND {$ne[0]} ) AND ( ( {$sw[1]} < {$ne[1]} AND gmw_locations.longitude BETWEEN {$sw[1]} AND {$ne[1]} )
 			OR ( {$sw[1]} > {$ne[1]} AND (gmw_locations.longitude BETWEEN {$sw[1]} AND 180 OR gmw_locations.longitude BETWEEN -180 AND {$ne[1]} ) ) )";
 }
 
@@ -699,14 +703,14 @@ function gmw_get_form_field_options( $options = '', $eol = true ) {
 		return $output;
 	}
 
-	if ( $eol || strpos( $options, "\n" ) !== FALSE ) {
+	if ( $eol || strpos( $options, "\n" ) !== false ) {
 
 		$options = explode( PHP_EOL, $options );
 
 		foreach ( $options as $option ) {
-			$option         = explode( ' : ', $option );
-			$val            = trim( $option[0] );
-			$output[]       = array(
+			$option   = explode( ' : ', $option );
+			$val      = trim( $option[0] );
+			$output[] = array(
 				'value' => '&nbsp;' === $val ? '' : $val,
 				'label' => ! empty( $option[1] ) ? trim( $option[1] ) : $val,
 			);
@@ -742,12 +746,15 @@ function gmw_calculate_distance( $start_lat, $start_lng, $end_lat, $end_lng, $un
 }
 
 /**
- * Get users ID base on user roles
+ * Get users ID base on user roles.
  *
- * @param  array $roles [description]
- * @return [type]        [description]
+ * @param  array $roles array of use roles.
+ *
+ * @param  array $cache type of cache ( deprecated? ).
+ *
+ * @return mixed        void || array of user ID.
  */
-function gmw_get_user_ids_from_roles( $roles, $cache = 'posts' ) {
+function gmw_get_user_ids_from_roles( $roles = array(), $cache = 'posts' ) {
 
 	if ( empty( $roles ) ) {
 		return;
@@ -755,7 +762,7 @@ function gmw_get_user_ids_from_roles( $roles, $cache = 'posts' ) {
 
 	$transient_key = md5( wp_json_encode( $roles ) );
 
-	// look for saved data in transient
+	// look for saved data in transient.
 	$users_id = get_transient( 'gmw_user_ids_by_role_' . $transient_key );
 
 	// if no results in transient or if roles changed in the form settings
@@ -764,12 +771,12 @@ function gmw_get_user_ids_from_roles( $roles, $cache = 'posts' ) {
 
 		$args = array(
 			'role__in' => $roles,
-			'fields'  => 'id',
+			'fields'   => 'id',
 		);
 
 		$users_id = get_users( $args );
 
-		// save results in transient
+		// Save results in transient.
 		set_transient( 'gmw_user_ids_by_role_' . $transient_key, $users_id, 60 * MINUTE_IN_SECONDS );
 	}
 
@@ -777,15 +784,15 @@ function gmw_get_user_ids_from_roles( $roles, $cache = 'posts' ) {
 }
 
 /**
- * Get current results  view.
+ * Get current results view.
  *
  * @since 4.0.
  *
- * @param  array  $gmw gmw form.
+ * @param  array $gmw gmw form.
  *
- * @return [type]      [description]
+ * @return string     results view type.
  */
-function gmw_get_current_results_view( $gmw ) {
+function gmw_get_current_results_view( $gmw = array() ) {
 
 	$view = ! empty( $gmw['search_results']['results_view']['default'] ) ? $gmw['search_results']['results_view']['default'] : 'grid';
 
@@ -811,7 +818,7 @@ function gmw_get_current_results_view( $gmw ) {
  *
  * @since 2.5
  */
-
+// phpcs:disable.
 /*
 Function gmw_get_labels( $form = array() ) {
 
@@ -882,6 +889,7 @@ Function gmw_get_labels( $form = array() ) {
 	return $labels;
 }
 */
+// phpcs:enable.
 
 /**
  * Check if template file requires a theme or plugin to be installed.
@@ -966,7 +974,7 @@ function gmw_get_object_map_location( $object, $iw_args = array(), $gmw = array(
 
 	// Deprecated. Use one of the filters below instead ( @since 4.0 ).
 	$map_icon = apply_filters( 'gmw_' . $gmw['prefix'] . '_map_icon', $map_icon, $object, $gmw, $gmw );
-	
+
 	$args = (object) array(
 		'ID'                  => $object->object_id,
 		'location_id'         => $object->location_id,
@@ -996,9 +1004,9 @@ function gmw_get_object_map_location( $object, $iw_args = array(), $gmw = array(
 /**
  * Generate the DB fields that will be pulled from GMW locations DB table for the different search queries.
  *
- * @param  array  $db_fields can pass default value if needed. Otherwise, pass empty array to use the default.
+ * @param  array $db_fields can pass default value if needed. Otherwise, pass empty array to use the default.
  *
- * @param  array  $gmw       gmw form.
+ * @param  array $gmw       gmw form.
  *
  * @since 4.0
  *
@@ -1036,6 +1044,7 @@ function gmw_parse_form_db_fields( $db_fields = array(), $gmw = array() ) {
 	}
 
 	$db_fields = apply_filters( 'gmw_form_db_fields', $db_fields, $gmw );
+	// phpcs:ignore.
 	//$db_fields = apply_filters( 'gmw_' . $gmw['prefix'] . '_form_db_fields', $db_fields, $gmw );
 	$db_fields = preg_filter( '/^/', 'gmw_locations.', $db_fields );
 	$db_fields = apply_filters( 'gmw_form_db_fields_prefixed', $db_fields, $gmw );
@@ -1045,7 +1054,7 @@ function gmw_parse_form_db_fields( $db_fields = array(), $gmw = array() ) {
 
 		$db_fields = apply_filters( 'gmw_ajaxfms_ajax_form_db_fields', $db_fields, $gmw );
 
-	// Deprecated. To be removed in the future. Use one of the filters below instead.
+		// Deprecated. To be removed in the future. Use one of the filters below instead.
 	} elseif ( isset( $gmw['addon'] ) && 'global_maps' === $gmw['addon'] ) {
 
 		$db_fields = apply_filters( 'gmw_gmaps_global_map_db_fields', $db_fields, $gmw );
@@ -1060,7 +1069,8 @@ function gmw_parse_form_db_fields( $db_fields = array(), $gmw = array() ) {
 		$db_fields[] = "'' AS location_count";
 	}
 
-	return $db_fields; //implode( ',', $db_fields );
+	// phpcs:ignore.
+	return $db_fields; // implode( ',', $db_fields );
 }
 
 /**
@@ -1121,7 +1131,7 @@ function gmw_form_results_page( $gmw = array() ) {
 function gmw_get_form_class( $element = 'form_wrapper', $gmw = array() ) {
 
 	$element       = 'results_wrapper' === $element ? 'results' : 'form';
-	$template_name = str_replace( 'custom_', '', $gmw['search_' . $element ][ $element . '_template'] );
+	$template_name = str_replace( 'custom_', '', $gmw[ 'search_' . $element ][ $element . '_template' ] );
 	$class         = array(
 		'gmw-' . $element . '-wrapper',
 		'gmw-template-' . $template_name,
@@ -1142,7 +1152,7 @@ function gmw_get_form_class( $element = 'form_wrapper', $gmw = array() ) {
 		$class[] = 'gmw-global-map-element';
 	}
 
-	if ( empty( $gmw['search_' . $element ]['styles']['disable_core_styles'] ) ) {
+	if ( empty( $gmw[ 'search_' . $element ]['styles']['disable_core_styles'] ) ) {
 		$class[] = 'gmw-element-template';
 		$class[] = 'gmw-fields-enhanced';
 	}
@@ -1191,7 +1201,7 @@ function gmw_form_class( $element = 'form', $gmw = array() ) {
  *
  * @author Eyal Fitoussi
  *
- * @return class attributes.
+ * @return string class attributes of the object.
  */
 function gmw_get_object_class( $object, $gmw = array() ) {
 
@@ -1455,7 +1465,7 @@ function gmw_get_element_toggle_button( $args = array() ) {
  * @param  array $args [description].
  */
 function gmw_element_toggle_button( $args = array() ) {
-	echo gmw_get_element_toggle_button( $args ); // WPCS: XSS ok.
+	echo gmw_get_element_toggle_button( $args ); // phpcs:ignore: XSS ok.
 }
 
 /**
@@ -1463,7 +1473,7 @@ function gmw_element_toggle_button( $args = array() ) {
  *
  * @param  string $target [description].
  *
- * @param  array  $length [description].
+ * @param  string $length [description].
  */
 function gmw_left_element_toggle_button( $target = '', $length = '-300px' ) {
 
@@ -1476,7 +1486,7 @@ function gmw_left_element_toggle_button( $target = '', $length = '-300px' ) {
 			'hide_icon'    => 'gmw-icon-arrow-left',
 			'show_icon'    => 'gmw-icon-arrow-right',
 		)
-	); // WPCS: XSS ok.
+	); // phpcs:ignore: XSS ok.
 }
 
 /**
@@ -1484,7 +1494,7 @@ function gmw_left_element_toggle_button( $target = '', $length = '-300px' ) {
  *
  * @param  string $target [description].
  *
- * @param  array  $length [description].
+ * @param  string $length [description].
  */
 function gmw_right_element_toggle_button( $target = '', $length = '300px' ) {
 
@@ -1497,7 +1507,7 @@ function gmw_right_element_toggle_button( $target = '', $length = '300px' ) {
 			'hide_icon'    => 'gmw-icon-arrow-right',
 			'show_icon'    => 'gmw-icon-arrow-left',
 		)
-	); // WPCS: XSS ok.
+	); // phpcs:ignore: XSS ok.
 }
 
 /**
@@ -1513,7 +1523,7 @@ function gmw_left_window_toggle_button() {
 			'hide_icon'    => 'gmw-icon-arrow-left',
 			'show_icon'    => 'gmw-icon-arrow-right',
 		)
-	); // WPCS: XSS ok.
+	); // phpcs:ignore: XSS ok.
 }
 
 /**
@@ -1529,7 +1539,7 @@ function gmw_right_window_toggle_button() {
 			'hide_icon'    => 'gmw-icon-arrow-right',
 			'show_icon'    => 'gmw-icon-arrow-left',
 		)
-	); // WPCS: XSS ok.
+	); // phpcs:ignore: XSS ok.
 }
 
 /**
@@ -1547,7 +1557,7 @@ function gmw_get_element_close_button( $icon = 'gmw-icon-cancel-circled' ) {
  * @param string $icon the font icon.
  */
 function gmw_element_close_button( $icon = 'gmw-icon-cancel-circled' ) {
-	echo gmw_get_element_close_button( $icon ); // WPCS: XSS ok.
+	echo gmw_get_element_close_button( $icon ); // phpcs:ignore: XSS ok.
 }
 
 /**
@@ -1555,7 +1565,7 @@ function gmw_element_close_button( $icon = 'gmw-icon-cancel-circled' ) {
  *
  * @param array $args array of arguments.
  *
- * @return HTML element.
+ * @return mixed HTML element.
  */
 function gmw_get_element_dragging_handle( $args = array() ) {
 
@@ -1590,7 +1600,7 @@ function gmw_get_element_dragging_handle( $args = array() ) {
  * @param array $args array of arguments.
  */
 function gmw_element_dragging_handle( $args = array() ) {
-	echo gmw_get_element_dragging_handle( $args ); // WPCS: XSS ok.
+	echo gmw_get_element_dragging_handle( $args ); // phpcs:ignore: XSS ok.
 }
 
 /**
@@ -1644,7 +1654,7 @@ function gmw_get_map( $map_args = array(), $map_options = array(), $locations = 
  *
  * @param  array $gmw  GMW form.
  *
- * @return [type]       [description]
+ * @return mixed
  */
 function gmw_get_map_element( $args = array(), $gmw = array() ) {
 	return GMW_Maps_API::get_map_element( $args, $gmw );
@@ -1666,7 +1676,7 @@ function gmw_get_directions_form( $args = array() ) {
  *
  * @param integer $id panel ID.
  *
- * @return HTML element.
+ * @return mixed directions panel HTML element.
  */
 function gmw_get_directions_panel( $id = 0 ) {
 	return GMW_Maps_API::get_directions_panel( $id );
@@ -1786,18 +1796,18 @@ function gmw_ajax_info_window_init() {
 	 * $gmw = $_POST['form'];
 	 */
 	if ( isset( $_POST['location'] ) ) {
-		$location = is_object( $_POST['location'] ) ? $_POST['location'] : (object) $_POST['location']; // WPCS: CSRF ok, sanitization ok.
+		$location = is_object( $_POST['location'] ) ? $_POST['location'] : (object) $_POST['location']; // phpcs:ignore: CSRF ok, sanitization ok.
 	} else {
 		$location = new stdClass();
 	}
 
 	if ( ! empty( $_POST['form'] ) ) {
 
-		$gmw = $_POST['form']; // WPCS: CSRF ok, sanitization ok.
+		$gmw = $_POST['form']; // phpcs:ignore: CSRF ok, sanitization ok.
 
 	} elseif ( ! empty( $_POST['form_id'] ) ) {
 
-		$gmw = gmw_get_form( $_POST['form_id'] ); // WPCS: CSRF ok, sanitization ok.
+		$gmw = gmw_get_form( $_POST['form_id'] ); // phpcs:ignore: CSRF ok, sanitization ok.
 
 	} else {
 
@@ -1831,7 +1841,8 @@ function gmw_ajax_info_window_init() {
 
 	} elseif ( 'users_locator' === $gmw['component'] ) {
 
-		require_once GMW_UL_PATH . '/includes/gmw-users-locator-ajax-info-window-loader.php';
+		// phpcs:ignore.
+		require_once GMW_UL_PATH . '/includes/gmw-users-locator-ajax-info-window-loader.php'; // Defined in the Users Locator extension.
 	}
 
 	// execute custom info-window functions.
