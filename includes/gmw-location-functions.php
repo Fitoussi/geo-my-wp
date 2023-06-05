@@ -52,13 +52,13 @@ function gmw_is_location_exists( $location_id = 0 ) {
  *
  * @Since 3.0
  *
- * @param  mixed  integer || array $args ( int ) location ID || ( array ) array( 'object_type' => '', 'object_id' => 0 ).
+ * @param  mixed   $args integer || array $args ( int ) location ID || ( array ) array( 'object_type' => '', 'object_id' => 0 ).
  *
- * @param  constant                $output    OBJECT || ARRAY_A || ARRAY_N.
+ * @param  mixed   $output    OBJECT || ARRAY_A || ARRAY_N.
  *
- * @param  boolean                 $cache     look for location in cache?.
+ * @param  boolean $cache     look for location in cache?.
  *
- * @return object  the complete location object.
+ * @return mixed  the complete location object or void.
  */
 function gmw_get_location( $args = 0, $output = OBJECT, $cache = true ) {
 
@@ -78,9 +78,10 @@ function gmw_get_location( $args = 0, $output = OBJECT, $cache = true ) {
 		// deprecated way of passing arguments. Use one of the methods above first argument instead.
 	} elseif ( is_string( $args ) && gmw_verify_id( $output ) ) {
 
+		// phpcs:ignore.
 		/** gmw_trigger_error( 'You are using a deprecated way of passing arguments to the gmw_get_location() function. Do not pass object type and object ID as the first and second arguments. Instead, pass the location ID or an array of object_type and object_id key/values as the first argument.' ); */
 
-		return GMW_Location::get_by_object( $args, $output, $cache );
+		return GMW_Location::get_by_object( $args, $output, $output, $cache );
 
 	} else {
 		return;
@@ -92,11 +93,11 @@ function gmw_get_location( $args = 0, $output = OBJECT, $cache = true ) {
  *
  * @since 3.0
  *
- * @param  integer  $location_id the location ID.
+ * @param  integer $location_id the location ID.
  *
- * @param  constant $output      OBJECT | ARRAY_A | ARRAY_N.
+ * @param  mixed   $output      OBJECT | ARRAY_A | ARRAY_N.
  *
- * @param  boolean  $cache       look for location in cache first.
+ * @param  boolean $cache       look for location in cache first.
  *
  * @uses gmw_get_location();
  *
@@ -111,13 +112,13 @@ function gmw_get_location_by_id( $location_id = 0, $output = OBJECT, $cache = tr
  *
  * @Since 3.2
  *
- * @param  string   $object_type  the type of object we are looking for ( post, user...).
+ * @param  string  $object_type  the type of object we are looking for ( post, user...).
  *
- * @param  int      $object_id    object ID ( post ID, user ID... ).
+ * @param  int     $object_id    object ID ( post ID, user ID... ).
  *
- * @param  constant $output       OBJECT | ARRAY_A | ARRAY_N.
+ * @param  mixed   $output       OBJECT | ARRAY_A | ARRAY_N.
  *
- * @param  boolean  $cache        look for location in cache first.
+ * @param  boolean $cache        look for location in cache first.
  *
  * @return object              complete location data.
  */
@@ -132,17 +133,17 @@ function gmw_get_location_by_object( $object_type = '', $object_id = 0, $output 
  *
  * @author Eyal Fitoussi
  *
- * @param  array    $args   array of arguments:
+ * @param  array   $args   array of arguments:
  *
  * $args = array(
  *     'object_type'   => 'post',
  *     'object_id'     => 0,
  *     'location_type' => 0,
- * );
+ * );.
  *
- * @param  constant $output OBJECT | ARRAY_A | ARRAY_N.
+ * @param  mixed   $output OBJECT | ARRAY_A | ARRAY_N.
  *
- * @param  boolean  $cache  look for location in cache first.
+ * @param  boolean $cache  look for location in cache first.
  *
  * @return object              complete location data.
  */
@@ -177,13 +178,13 @@ function gmw_get_location_id( $object_type = 'post', $object_id = 0, $cache = tr
  *
  * @Since 3.2
  *
- * @param  string   $object_type  the type of object we are looking for ( post, user...).
+ * @param  string  $object_type  the type of object we are looking for ( post, user...).
  *
- * @param  int      $object_id    object ID ( post ID, user ID... ).
+ * @param  int     $object_id    object ID ( post ID, user ID... ).
  *
- * @param  constant $output       OBJECT | ARRAY_A | ARRAY_N the output of each location in the array.
+ * @param  mixed   $output       OBJECT | ARRAY_A | ARRAY_N the output of each location in the array.
  *
- * @param  boolean  $cache        look for location in cache first?.
+ * @param  boolean $cache        look for location in cache first?.
  *
  * @return array            array of locations.
  */
@@ -218,9 +219,11 @@ function gmw_delete_location( $args = 0, $delete_meta = true ) {
 		// when array of object type and object ID.
 	} elseif ( is_array( $args ) ) {
 
+		// phpcs:disable.
 		//$object_type   = ! empty( $args['object_type'] ) ? $args['object_type'] : '';
 		//$object_id     = ! empty( $args['object_id'] ) ? $args['object_id'] : 0;
 		//$location_type = ! empty( $args['location_type'] ) ? $args['location_type'] : 0;
+		// phpcs:enable.
 
 		return gmw_delete_location_by_object_data( $args, $delete_meta );
 
@@ -269,9 +272,11 @@ function gmw_delete_location_by_object_data( $args = array(), $delete_meta = tru
 /**
  * Get location meta by location ID.
  *
- * @param  integer         $location_id location ID.
- * @param  string || array $meta_keys   single meta key as a sting, mutiple keys as string comma separated, or array of keys.
- * @param  boolean         $cache       use cached version?.
+ * @param  integer $location_id location ID.
+ *
+ * @param  mixed   $meta_keys string || array $meta_keys   single meta key as a sting, mutiple keys as string comma separated, or array of keys.
+ *
+ * @param  boolean $cache       use cached version?.
  *
  * @return string || array
  */
@@ -283,8 +288,10 @@ function gmw_get_location_meta( $location_id = 0, $meta_keys = '', $cache = true
  * Get location metadata by object type and object ID
  *
  * @param  string  $object_type object_type object type ( post, user... ).
+ *
  * @param  integer $object_id   object ID ( post ID, user ID.... ).
- * @param  array   $meta_keys   string of a single or array of multiple meta keys to retrieve their values.
+ *
+ * @param  mixed   $meta_keys   string of a single or array of multiple meta keys to retrieve their values.
  *
  * @return [type]  string || array of values
  */
@@ -311,14 +318,16 @@ function gmw_update_location_meta( $location_id = 0, $meta_key = '', $meta_value
  * Create / Update single or multiple location metas.
  *
  * @param  integer $location_id location ID.
+ *
  * @param  array   $metadata    location metadata in meta_key => meta value pairs.
+ *
  * @param  mixed   $meta_value  can also update a single location meta by passing the meta_key as
  *
  * a string to the metadata argument and the meta_value as the third argument,.
  *
  * @since 3.0
  *
- * @return int meta ID
+ * @return mixed
  */
 function gmw_update_location_metas( $location_id = 0, $metadata = array(), $meta_value = '' ) {
 	return GMW_Location_Meta::update_metas( $location_id, $metadata, $meta_value );
@@ -328,6 +337,7 @@ function gmw_update_location_metas( $location_id = 0, $metadata = array(), $meta
  * Delete location meta
  *
  * @param  integer $location_id [description].
+ *
  * @param  string  $meta_key    [description].
  *
  * @return [type]               [description]
@@ -379,9 +389,10 @@ function gmw_update_location_data( $location_data = array() ) {
  * Set location status.
  *
  * @param  integer $location_id the location ID.
+ *
  * @param  integer $status      1 to activate location || 0 to deactivate location.
  *
- * @return location status      status 1 || 0.
+ * @return mixed location status status 1 || 0.
  */
 function gmw_set_location_status( $location_id = 0, $status = 1 ) {
 	return GMW_Location::set_status( $location_id, $status );
@@ -438,7 +449,7 @@ function gmw_set_location_status( $location_id = 0, $status = 1 ) {
  * @param  integer $dep_user_id       deprecated.
  * @param  boolean $dep_force_refresh deprecated.
  *
- * @return int location ID
+ * @return mixed location ID
  */
 function gmw_update_location( $args = array(), $location = array(), $force_refresh = array(), $dep_user_id = 0, $dep_force_refresh = false ) {
 
@@ -652,7 +663,7 @@ function gmw_update_location( $args = array(), $location = array(), $force_refre
  *
  * @param  array $args array of arguments.
  *
- * @return address field.
+ * @return mixed address field.
  */
 function gmw_get_location_address_fields( $args = array() ) {
 	return gmw_get_address_fields( $args );
@@ -820,11 +831,14 @@ function gmw_get_address_fields( $args = array(), $dep_object_id = 0, $dep_field
  * @since 3.0.2
  *
  * @param  mixed  $args       int as location ID || array of object_type and object ID.
- * @param  array  $meta_keys  array of meta_keys to retrieve.
+ *
+ * @param  mixed  $meta_keys  single meta key as a sting, mutiple keys as string comma separated, or array of keys.
+ *
  * @param  string $separator  characters to be used as separator between fields.
+ *
  * @param  string $dep_sep    deprecated separator argument.
  *
- * @return string
+ * @return mixed lcoation meta or void.
  */
 function gmw_get_location_meta_values( $args = 0, $meta_keys = '', $separator = ', ', $dep_sep = ', ' ) {
 
@@ -983,7 +997,7 @@ function gmw_get_location_fields_shortcode( $args ) {
  *
  * @param  array $gmw      the form being used if in the search results.
  *
- * @return string       address
+ * @return mixed       address
  */
 function gmw_get_location_address( $location, $fields = array( 'formatted_address' ), $gmw = array() ) {
 
@@ -1076,7 +1090,7 @@ function gmw_get_location_address( $location, $fields = array( 'formatted_addres
  * @param  array  $gmw      gmw form.
  */
 function gmw_location_address( $location, $fields = array(), $gmw = array() ) {
-	echo gmw_get_location_address( $location, $fields, $gmw ); // WPSC: XSS ok.
+	echo gmw_get_location_address( $location, $fields, $gmw ); // phpcs:ignore: XSS ok.
 }
 
 /**
@@ -1090,7 +1104,7 @@ function gmw_location_address( $location, $fields = array(), $gmw = array() ) {
  *
  * @param  array $gmw      the form being used if in the search results.
  *
- * @return string       address
+ * @return mixed       address
  */
 function gmw_get_linked_location_address( $location, $fields = array( 'formatted_address' ), $gmw = array() ) {
 
@@ -1111,11 +1125,11 @@ function gmw_get_linked_location_address( $location, $fields = array( 'formatted
  *
  * @autor Eyal Fitoussi
  *
- * @param  array $args   image arguments.
+ * @param  array  $args   image arguments.
  *
- * @param  array $object object.
+ * @param  object $object the object ( post, member, group, etc... ).
  *
- * @param  array $gmw    form object.
+ * @param  array  $gmw    form object.
  *
  * @return [type]         [description]
  */
@@ -1204,7 +1218,7 @@ function gmw_get_image_element( $args, $object, $gmw ) {
 /**
  * Check if is featured object.
  *
- * @param  stting  $object_type object type.
+ * @param  string  $object_type object type.
  *
  * @param  integer $object_id   object ID.
  *
@@ -1282,8 +1296,8 @@ function gmw_is_featured_location( $object_type, $object_id ) {
 
 	$featured = $wpdb->get_var(
 		$wpdb->prepare(
-			"SELECT `featured` 
-			FROM {$wpdb->prefix}gmw_locations 
+			"SELECT `featured`
+			FROM {$wpdb->prefix}gmw_locations
 			WHERE object_type = %s
 			AND object_id = %d",
 			$object_type,
@@ -1352,8 +1366,8 @@ function gmw_unset_object_parent_locations( $object_type = 'post', $object_id = 
 	$updated = $wpdb->query(
 		$wpdb->prepare(
 			"
-            UPDATE {$wpdb->base_prefix}gmw_locations 
-            SET   `parent`      = '0' 
+            UPDATE {$wpdb->base_prefix}gmw_locations
+            SET   `parent`      = '0'
             WHERE `object_type` = %s
             AND   `object_id`   = %d",
 			array( $object_type, $object_id )
@@ -1427,8 +1441,8 @@ function gmw_is_parent_location( $location_id ) {
 
 	$parent = $wpdb->get_var(
 		$wpdb->prepare(
-			"SELECT `parent` 
-			FROM {$wpdb->prefix}gmw_locations 
+			"SELECT `parent`
+			FROM {$wpdb->prefix}gmw_locations
 			WHERE ID = %s",
 			$location_id
 		)
@@ -1530,7 +1544,7 @@ function gmw_get_registered_location_type( $id = 0 ) {
  *
  * @param  array $labels   array of label for each field.
  *
- * @return HTML elements
+ * @return mixed HTML elements
  */
 function gmw_get_location_meta_list( $location = false, $fields = array(), $labels = array() ) {
 
@@ -1670,7 +1684,7 @@ function gmw_get_location_meta_list( $location = false, $fields = array(), $labe
  * @param  array $labels   array of label for each field.
  */
 function gmw_location_meta_list( $location, $fields = array(), $labels = array() ) {
-	echo gmw_get_location_meta_list( $location, $fields, $labels ); // WPCS: XSS ok.
+	echo gmw_get_location_meta_list( $location, $fields, $labels ); // phpcs:ignore: XSS ok.
 }
 
 /**
@@ -1688,7 +1702,7 @@ function gmw_location_meta_list( $location, $fields = array(), $labels = array()
  *
  * @param  array   $gmw         gmw form when available.
  *
- * @return HTML element        link to Google Maps.
+ * @return mixed   HTML element  link to Google Maps.
  */
 function gmw_get_directions_link( $location, $from_coords = array(), $label = '', $link_only = false, $gmw = array() ) {
 
@@ -1718,8 +1732,10 @@ function gmw_get_directions_link( $location, $from_coords = array(), $label = ''
 	}
 
 	$args = array(
-		//'to_lat'    => $location->lat,
-		//'to_lng'    => $location->lng,
+		// phpcs:disable.
+		// 'to_lat'    => $location->lat,
+		// 'to_lng'    => $location->lng,
+		// phpcs:enable.
 		'to_address' => $location->formatted_address,
 		'link_only'  => $link_only,
 	);
@@ -1768,7 +1784,7 @@ function gmw_get_directions_link( $location, $from_coords = array(), $label = ''
  * @param  boolean $link_only   return the URL only or HTML element ( true || false ).
  */
 function gmw_directions_link( $location, $from_coords = array(), $label = '', $link_only = false ) {
-	echo gmw_get_directions_link( $location, $from_coords, $label, $link_only = false ); // WPCS: XSS ok.
+	echo gmw_get_directions_link( $location, $from_coords, $label, $link_only = false ); // phpcs:ignore: XSS ok.
 }
 
 /**
