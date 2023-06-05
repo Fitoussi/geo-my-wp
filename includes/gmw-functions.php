@@ -208,32 +208,32 @@ function gmw_get_addons_data( $get_licenses = false ) {
  *
  * @param  string  $addon slug/name of the addon to pull its data.
  *
- * @param  string  $var   specific data value.
+ * @param  string  $var   specific addon/license data value.
  *
  * @param  boolean $get_license_data get also license data?.
  *
- * @return array  add-on's data
+ * @return mixed  add-on's data || void.
  */
 function gmw_get_addon_data( $addon = '', $var = '', $get_license_data = false ) {
 
 	if ( ! empty( GMW()->addons[ $addon ] ) ) {
 
-		$addon = GMW()->addons[ $addon ];
+		$addon_data = GMW()->addons[ $addon ];
 
 		if ( IS_ADMIN && $get_license_data ) {
 
-			$licenses = GMW()->licenses[ $addon ];
+			$license = GMW()->licenses[ $addon ];
 
-			if ( ! empty( $licenses ) ) {
-				$addon = array_merge( $addons, $licenses );
+			if ( ! empty( $license ) ) {
+				$addon_data = array_merge( $addon_data, $license );
 			}
 		}
 
 		if ( '' !== $var ) {
 
-			if ( isset( $addon[ $var ] ) ) {
+			if ( isset( $addon_data[ $var ] ) ) {
 
-				return $addon[ $var ];
+				return $addon_data[ $var ];
 
 			} else {
 
@@ -241,7 +241,7 @@ function gmw_get_addon_data( $addon = '', $var = '', $get_license_data = false )
 			}
 		} else {
 
-			return $addon;
+			return $addon_data;
 		}
 	} else {
 		return false;
