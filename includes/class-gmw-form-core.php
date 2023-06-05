@@ -969,8 +969,7 @@ class GMW_Form_Core {
 	 *
 	 * @since 4.0
 	 */
-	public function object_loop() {
-	}
+	public function object_loop() {}
 
 	/**
 	 * Get template files and enqueue stylesheets and custom CSS.
@@ -1053,8 +1052,7 @@ class GMW_Form_Core {
 	 *
 	 * @return void
 	 */
-	public function search_form() {
-	}
+	public function search_form() {}
 
 	/**
 	 * Outputs the search results element on the page.
