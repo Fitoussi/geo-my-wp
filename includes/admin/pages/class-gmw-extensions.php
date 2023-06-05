@@ -73,7 +73,7 @@ class GMW_Extensions {
 
 			$feed = wp_remote_get( 'https://geomywp.com/extensions/?feed=extensions', array( 'sslverify' => false ) );
 
-			if ( ! is_wp_error( $feed ) && '200' === $feed['response']['code'] ) {
+			if ( ! is_wp_error( $feed ) && ( 200 === $feed['response']['code'] || '200' === $feed['response']['code'] ) ) {
 
 				if ( isset( $feed['body'] ) && strlen( $feed['body'] ) > 0 ) {
 
@@ -115,62 +115,62 @@ class GMW_Extensions {
 	// phpcs:disable
 	/*public static function extensions_updater() {
 
-		   // if doing ajax call.
-		   if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		// if doing ajax call.
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 
-			   // verify nonce.
-			   if ( ! check_ajax_referer( 'gmw_extension_updater_nonce', 'security', false ) ) {
-				   wp_die(
-					   esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ),
-					   esc_attr__( 'Error', 'geo-my-wp' ),
-					   array( 'response' => 403 )
-				   );
-			   }
+			// verify nonce.
+			if ( ! check_ajax_referer( 'gmw_extension_updater_nonce', 'security', false ) ) {
+				wp_die(
+					esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ),
+					esc_attr__( 'Error', 'geo-my-wp' ),
+					array( 'response' => 403 )
+				);
+			}
 
-			   $action = ! empty( $_POST['updater_action'] ) ? $_POST['updater_action'] : 'disable';
+			$action = ! empty( $_POST['updater_action'] ) ? $_POST['updater_action'] : 'disable';
 
-			   // Otherwise, page load call.
-		   } else {
+			// Otherwise, page load call.
+		} else {
 
-			   // verify nonce.
-			   if ( ! check_admin_referer( 'gmw_extension_updater_nonce' ) ) {
-				   wp_die( esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
-			   }
+			// verify nonce.
+			if ( ! check_admin_referer( 'gmw_extension_updater_nonce' ) ) {
+				wp_die( esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+			}
 
-			   if ( empty( $_GET['action'] ) ) {
-				   return;
-			   }
+			if ( empty( $_GET['action'] ) ) {
+				return;
+			}
 
-			   $action = $_GET['action'];
-		   }
+			$action = $_GET['action'];
+		}
 
-		   // enable updater.
-		   if ( 'enable' === $action ) {
+		// enable updater.
+		if ( 'enable' === $action ) {
 
-			   update_option( 'gmw_extensions_updater', true );
+			update_option( 'gmw_extensions_updater', true );
 
-			   $notice = 'updater_enabled';
+			$notice = 'updater_enabled';
 
-			   // disable updater.
-		   } else {
+			// disable updater.
+		} else {
 
-			   update_option( 'gmw_extensions_updater', false );
+			update_option( 'gmw_extensions_updater', false );
 
-			   $notice = 'updater_disabled';
-		   }
+			$notice = 'updater_disabled';
+		}
 
-		   // done.
-		   if ( defined( 'DOING_AJAX' ) ) {
+		// done.
+		if ( defined( 'DOING_AJAX' ) ) {
 
-			   wp_send_json( $notice );
+			wp_send_json( $notice );
 
-		   } else {
+		} else {
 
-			   wp_safe_redirect( admin_url( 'admin.php?page=gmw-extensions&gmw_notice=' . $notice . '&gmw_notice_status=updated' ) );
-			   exit;
-		   }
-	   }*/
-	   // phpcs:enable
+			wp_safe_redirect( admin_url( 'admin.php?page=gmw-extensions&gmw_notice=' . $notice . '&gmw_notice_status=updated' ) );
+			exit;
+		}
+	}*/
+	// phpcs:enable
 	/**
 	 * Clear Extensions cache.
 	 *
@@ -336,7 +336,7 @@ class GMW_Extensions {
 
 				// phpcs:disable.
 				//Activate child extensions.
-				/*if ( ! empty( $ext_data['parent'] ) && $slug === $ext_data['parent'] ) { 				
+				/*if ( ! empty( $ext_data['parent'] ) && $slug === $ext_data['parent'] ) {
 					//gmw_update_addon_status( $ext_data['slug'], 'active' );
 				}*/
 				// phpcs:enable
@@ -451,9 +451,9 @@ class GMW_Extensions {
 
 				// phpcs:disable.
 				// deactivate child extensions.
-				/*if ( ! empty( $ext_data['parent'] ) && $slug === $ext_data['parent'] ) {			
-					//gmw_update_addon_status( $ext_data['slug'], 'inactive' );
-				}*/
+				/*if ( ! empty( $ext_data['parent'] ) && $slug === $ext_data['parent'] ) {
+								//gmw_update_addon_status( $ext_data['slug'], 'inactive' );
+							}*/
 				// phpcs:enable.
 
 				// Abort if already disabled because of a theme.
@@ -1067,7 +1067,8 @@ class GMW_Extensions {
 						</form>
 					</div>
 
-					<div class="gmw-extensions-wrapper core <?php echo $core_active . ' ' . $all_active; // phpcs:ignore: XSS ok. ?>">
+					<div
+						class="gmw-extensions-wrapper core <?php echo $core_active . ' ' . $all_active; // phpcs:ignore: XSS ok. ?>">
 
 						<h3>
 							<?php echo esc_html__( 'Core Extensions', 'geo-my-wp' ); ?>
@@ -1130,4 +1131,4 @@ add_action( 'wp_ajax_gmw_activate_extension', array( 'GMW_Extensions', 'activate
 add_action( 'wp_ajax_gmw_deactivate_extension', array( 'GMW_Extensions', 'deactivate_extension' ) );
 add_action( 'wp_ajax_gmw_license_key_actions', array( 'GMW_Extensions', 'license_key_actions' ) );
 // phpcs:ignore.
-// add_action( 'wp_ajax_gmw_extensions_updater', array( 'GMW_Extensions', 'extensions_updater' ) ); 
+// add_action( 'wp_ajax_gmw_extensions_updater', array( 'GMW_Extensions', 'extensions_updater' ) );
