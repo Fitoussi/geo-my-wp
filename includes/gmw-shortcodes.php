@@ -20,7 +20,21 @@ if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
  *
  * @return [type]   [description]
  */
-function gmw_shortcode( $attr ) {
+function gmw_shortcode( $attr = array() ) {
+
+	// verify that form element passed via shortcode attribute.
+	if ( empty( $attr ) || ! is_array( $attr ) ) {
+
+		ob_start();
+
+		gmw_trigger_error( 'You must provide shortcode attributes to [gmw] shortcode.' ); // WPCS : XSS ok.
+
+		$error_message = ob_get_contents();
+
+		ob_end_clean();
+
+		return $error_message;
+	}
 
 	$element       = key( $attr );
 	$element_value = $attr[ $element ];
@@ -28,19 +42,31 @@ function gmw_shortcode( $attr ) {
 	// abort if no shortcode attribute provided!
 	if ( ! in_array( $element, array( 'form', 'search_form', 'search_results', 'map' ), true ) ) {
 
-		gmw_trigger_error( 'GEO my WP form shortcode is missing one of the required shortcode attributes.' );
+		ob_start();
 
-		return;
+		gmw_trigger_error( '[gmw] shortcode is missing one of the required shortcode attributes.' );
+
+		$error_message = ob_get_contents();
+
+		ob_end_clean();
+
+		return $error_message;
 	}
 
-	$_GET = apply_filters( 'gmw_modify_get_args', $_GET ); // WPCS: CSRF ok.
+	$_GET = apply_filters( 'gmw_modify_get_args', $_GET ); // phpcs:ignore: CSRF ok.
 
-	// verify that the element is legit.
+	// verify that form element passed via shortcode attribute.
 	if ( empty( $element_value ) ) {
 
-		gmw_trigger_error( 'Invalid or missing GEO my WP form type.' ); // WPCS : XSS ok.
+		ob_start();
 
-		return;
+		gmw_trigger_error( 'Invalid or missing GEO my WP form type.' ); // phpcs:ignore: XSS ok.
+
+		$error_message = ob_get_contents();
+
+		ob_end_clean();
+
+		return $error_message;
 	}
 
 	$url_px = gmw_get_url_prefix();
@@ -49,15 +75,24 @@ function gmw_shortcode( $attr ) {
 	if ( 'results' === $element_value ) {
 
 		// abort if form was not submitted.
-		if ( ! isset( $_GET[ $url_px . 'form' ] ) ) { // WPCS: CSRF ok.
+		if ( ! isset( $_GET[ $url_px . 'form' ] ) ) { // phpcs:ignore: CSRF ok.
+
+			return;
+			// phpcs:disable.
+			/*ob_start();
 
 			gmw_trigger_error( 'GEO my WP results page was not submitted.' ); // WPCS : XSS ok.
 
-			return;
+			$error_message = ob_get_contents();
+
+			ob_end_clean();
+
+			return $error_message;*/
+			// phpcs:enable.
 		}
 
 		// get the form ID from URL.
-		$form_id = absint( $_GET[ $url_px . 'form' ] ); // WPCS: CSRF ok.
+		$form_id = absint( $_GET[ $url_px . 'form' ] ); // phpcs:ignore: CSRF ok.
 
 		// set the element as results page.
 		$element = 'search_results';
@@ -73,21 +108,30 @@ function gmw_shortcode( $attr ) {
 	$form = gmw_get_form( $form_id );
 
 	// abort if form was not found.
-	if ( empty( $form ) ) {
-
-		gmw_trigger_error( 'GEO my WP Form does not exist.' ); // WPCS : XSS ok.
-
+	if ( empty( $form['ID'] ) ) {
 		return;
 	}
 
 	// Abort if the add-on this form belongs to is deactivated.
 	if ( ! gmw_is_addon_active( $form['addon'] ) || ! gmw_is_addon_active( $form['component'] ) ) {
-		
+
 		$addon = ! gmw_is_addon_active( $form['addon'] ) ? $form['addon'] : $form['component'];
 
-		gmw_trigger_error( 'The add-on ' . str_replace( '_', ' ', $form['addon'] ) . ' which this GEO my WP form belongs to is deactivated.' ); // WPCS : XSS ok.
+		ob_start();
 
-		return;
+		gmw_trigger_error(
+			sprintf(
+				/* translators: %s: addon's name. */
+				__( 'The add-on %s which this GEO my WP form belongs to is deactivated.', 'geo-my-wp' ),
+				str_replace( '_', ' ', $form['addon'] )
+			)
+		); // WPCS : XSS ok.
+
+		$error_message = ob_get_contents();
+
+		ob_end_clean();
+
+		return $error_message;
 	}
 
 	// get current form element ( form, map, results... ).
@@ -168,6 +212,7 @@ function gmw_get_address_fields_shortcode( $args ) {
 	return $location;
 }
 add_shortcode( 'gmw_address_fields', 'gmw_get_address_fields_shortcode' );
+// phpcs:ignore.
 // add_shortcode( 'gmw_location_address_fields', 'gmw_get_address_fields_shortcode' );
 
 /**
