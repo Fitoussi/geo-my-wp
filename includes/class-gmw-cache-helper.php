@@ -164,21 +164,23 @@ class GMW_Cache_Helper {
 
 			global $wpdb;
 
+			// phpcs:ignore.
 			$wpdb->query(
 				$wpdb->prepare(
 					"
-					DELETE FROM {$wpdb->options} 
+					DELETE FROM {$wpdb->options}
 					WHERE option_name LIKE %s;",
 					'\_transient\_%' . $version
 				)
-			); // WPCS: db call ok, cache ok.
+			); // phpcs:ignore: db call ok, cache ok, unprepared SQL ok.
 		}
 	}
 
 	/**
-	 * Clear expired transients
+	 * Clear expired transients.
 	 */
 	public static function clear_expired_transients() {
+
 		global $wpdb;
 
 		if ( ! wp_using_ext_object_cache() && ! defined( 'WP_SETUP_CONFIG' ) && ! defined( 'WP_INSTALLING' ) ) {
@@ -190,6 +192,7 @@ class GMW_Cache_Helper {
 				AND b.option_name = CONCAT( '_transient_timeout_', SUBSTRING( a.option_name, 12 ) )
 				AND b.option_value < %d";
 
+			// phpcs:ignore.
 			$rows = $wpdb->query(
 				$wpdb->prepare(
 					$sql,
@@ -197,7 +200,7 @@ class GMW_Cache_Helper {
 					$wpdb->esc_like( '_transient_timeout_gmw' ) . '%',
 					time()
 				)
-			); // WPCS: db call ok, cache ok, unprepared sql ok.
+			); // phpcs:ignore: db call ok, cache ok, unprepared SQL ok.
 		}
 	}
 }
