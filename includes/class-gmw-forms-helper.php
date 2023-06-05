@@ -35,7 +35,7 @@ class GMW_Forms_Helper {
 
 		$css = '/* Below is an example of basic CSS that you could use to modify some of the basic colors and text of the search results template. */
 /*div.gmw-results-wrapper[data-id="' . absint( $form['ID'] ) . '"] {
-	
+
 	--gmw-form-color-primary: #1C90FF;
 	--gmw-form-color-hover-primary: #256fb8;
 	--gmw-form-font-color-primary: white;
@@ -248,10 +248,12 @@ class GMW_Forms_Helper {
 			foreach ( $forms as $form ) {
 
 				// if happened that form has no data we need to apply the defaults.
+				// phpcs:disable.
 				/*
 				if ( empty( $form['data'] ) ) {
 					$form['data'] = maybe_serialize( self::default_settings( $form ) );
 				}*/
+				// phpcs:enable.
 
 				$data = maybe_unserialize( $form['data'] );
 
@@ -278,13 +280,13 @@ class GMW_Forms_Helper {
 	 *
 	 * @since 4.0.
 	 *
-	 * @param  [type] $form [description].
+	 * @param  array $form gmw form.
 	 *
-	 * @return [type]       [description]
+	 * @return array
 	 */
 	public static function gmw_v4_form_data_importer( $form ) {
 
-		/********** ---- Search Form ---- **********/
+		/* ---- Search Form ---- */
 
 		if ( ! isset( $form['search_form']['filters_modal'] ) ) {
 
@@ -298,9 +300,9 @@ class GMW_Forms_Helper {
 		$form['search_form']['address_field']['required'] = 0;
 		$form['search_form']['address_field']['usage']    = 'single';
 
-		/***** Locator Button *****/
+		/* ---- Locator Button ---- */
 
-		$form['search_form']['locator_button']            = array(
+		$form['search_form']['locator_button'] = array(
 			'usage'          => ! empty( $form['search_form']['locator'] ) ? $form['search_form']['locator'] : 'disabled',
 			'text'           => ! empty( $form['search_form']['locator_text'] ) ? $form['search_form']['locator_text'] : 'Get my current location',
 			'image'          => ! empty( $form['search_form']['locator_image'] ) ? $form['search_form']['locator_image'] : 'blue-dot.png',
@@ -315,7 +317,7 @@ class GMW_Forms_Helper {
 			$form['search_form']['locator_submit']
 		);
 
-		/***** Radius *****/
+		/* ---- Radius ---- */
 
 		if ( ! empty( $form['search_form']['radius_slider']['enabled'] ) ) {
 
@@ -340,7 +342,7 @@ class GMW_Forms_Helper {
 
 				$usage   = 'select';
 				$default = '50';
-				$options = str_replace( ",", "\n", $form['search_form']['radius'] );
+				$options = str_replace( ',', "\n", $form['search_form']['radius'] );
 
 			} else {
 
@@ -386,7 +388,7 @@ class GMW_Forms_Helper {
 			'label'   => 'Reset',
 		);
 
-		/***** post types *****/
+		/* ---- post types ---- */
 
 		if ( ! empty( $form['search_form']['post_types_settings'] ) ) {
 
@@ -441,7 +443,7 @@ class GMW_Forms_Helper {
 				}
 
 				$form['search_form']['custom_fields'][ $cf_name ] = array(
-                    'name'                    => $cf_name,
+					'name'                    => $cf_name,
 					'usage'                   => $usage,
 					'options'                 => array(),
 					'second_options'          => array(),
@@ -463,7 +465,7 @@ class GMW_Forms_Helper {
 					'value_prefix'            => '',
 					'value_suffix'            => '',
 					'step'                    => 1,
-                );
+				);
 			}
 
 			if ( ! empty( $form['search_form']['taxonomies'] ) ) {
@@ -477,7 +479,7 @@ class GMW_Forms_Helper {
 
 						$terms_usage = $form['search_form']['taxonomies']['include_exclude_terms']['usage'];
 
-						foreach( $form['search_form']['taxonomies']['include_exclude_terms']['terms_id'] as $term_tax_id ) {
+						foreach ( $form['search_form']['taxonomies']['include_exclude_terms']['terms_id'] as $term_tax_id ) {
 
 							$term = get_term_by( 'term_taxonomy_id', $term_tax_id );
 
@@ -507,10 +509,10 @@ class GMW_Forms_Helper {
 
 						$terms_usage = $form['page_load_results']['include_exclude_terms']['usage'];
 
-						foreach( $form['page_load_results']['include_exclude_terms']['terms_id'] as $term_tax_id ) {
+						foreach ( $form['page_load_results']['include_exclude_terms']['terms_id'] as $term_tax_id ) {
 
 							$term = get_term_by( 'term_taxonomy_id', $term_tax_id );
-	
+
 							if ( empty( $term ) || is_wp_error( $term ) ) {
 								continue;
 							}
@@ -540,7 +542,8 @@ class GMW_Forms_Helper {
 
 					if ( 'include_exclude_terms' === $pt_slug ) {
 
-						//$inc_exc_terms = $form['search_form']['taxonomies']['include_exclude_terms'];
+						// phpcs:ignore.
+						// $inc_exc_terms = $form['search_form']['taxonomies']['include_exclude_terms'];
 
 						continue;
 					}
@@ -558,7 +561,7 @@ class GMW_Forms_Helper {
 
 						// Abort if taxonomies was not found.
 						if ( ! empty( $taxonomy ) && is_object( $taxonomy ) ) {
-							
+
 							$post_types = $taxonomy->object_type;
 
 							if ( 0 !== count( array_intersect( $post_types, $all_post_types ) ) ) {
@@ -591,11 +594,12 @@ class GMW_Forms_Helper {
 						}
 
 						// skip If post type of the taxonomy does not exists.
+						// phpcs:disable.
 						/*if ( 0 === count( array_intersect( $post_types, $all_post_types ) ) ) {
 							continue;
 						}
 						*/
-
+						// phpcs:enable.
 
 						if ( 'dropdown' === $tax_options['style'] ) {
 
@@ -621,6 +625,7 @@ class GMW_Forms_Helper {
 				$form['search_form']['taxonomies']            = $new_taxonomies;
 				$form['search_form']['include_exclude_terms'] = $inc_exc_terms;
 
+				// phpcs:disable.
 				/*if ( 'posts_locator_global_map' === $form['slug'] && isset( $form['search_form']['include_exclude_terms']['usage'] ) && ! empty( $form['search_form']['include_exclude_terms']['terms_id'] ) ) {
 
 					foreach( $form['search_form']['include_exclude_terms']['terms_id'] as $term_id ) {
@@ -630,13 +635,11 @@ class GMW_Forms_Helper {
 							df();
 					}
 				} */
-				/*echo '<pre>';
-				print_r($form['search_form']['include_exclude_terms']);
-				df();*/
+				// phpcs:enable.
 			}
 		}
 
-		/********** ----- Search Results ----- **********/
+		/* ----- Search Results ----- */
 
 		$form['search_results']['results_view'] = array(
 			'default' => 'grid',
@@ -645,7 +648,7 @@ class GMW_Forms_Helper {
 
 		if ( isset( $form['search_results']['image'] ) && is_array( $form['search_results']['image'] ) ) {
 
-			 $form['search_results']['image']['no_image_url'] = GMW_IMAGES . '/no-image.jpg';
+			$form['search_results']['image']['no_image_url'] = GMW_IMAGES . '/no-image.jpg';
 
 		} else {
 
@@ -683,7 +686,7 @@ class GMW_Forms_Helper {
 
 		$form['search_results']['distance'] = 1;
 
-		/********** No results **********/
+		/* ----- No results ---- */
 
 		if ( ! empty( $form['no_results']['message'] ) ) {
 
@@ -707,7 +710,7 @@ class GMW_Forms_Helper {
 			);
 		}
 
-		/***** Info - window *****/
+		/* ---- Info - window ---- */
 
 		if ( isset( $form['info_window'] ) ) {
 
@@ -733,7 +736,8 @@ class GMW_Forms_Helper {
 				'custom_css'          => '',
 			);
 
-			/***** Post types ****/
+			/* ---- Post types ---- */
+
 			if ( isset( $form['info_window']['excerpt']['enabled'] ) ) {
 
 				$form['info_window']['excerpt'] = array(
@@ -744,7 +748,7 @@ class GMW_Forms_Helper {
 			}
 		}
 
-		/********** Memebrs Locator forms **********/
+		/* ---- Memebrs Locator forms ---- */
 
 		if ( 'members_locator' === $form['component'] ) {
 
@@ -800,31 +804,31 @@ class GMW_Forms_Helper {
 
 			if ( ! empty( $form['search_results']['xprofile_fields']['fields'] ) ) {
 
-				foreach( $form['search_results']['xprofile_fields']['fields'] as $xfield ) {
+				foreach ( $form['search_results']['xprofile_fields']['fields'] as $xfield ) {
 
-					$field_id    = absint( $xfield ); 
-        			$field_data  = xprofile_get_field( $field_id );
-        			$field_value = maybe_unserialize( $field_data->data->value );
+					$field_id    = absint( $xfield );
+					$field_data  = xprofile_get_field( $field_id );
+					$field_value = maybe_unserialize( $field_data->data->value );
 
-        			$new_xfields[ $field_id ] = array(
-        				'name'         => $field_data->name,
-        				'label'        => $field_data->name,
-        				'field_output' => '%field%',
-        			);
+					$new_xfields[ $field_id ] = array(
+						'name'         => $field_data->name,
+						'label'        => $field_data->name,
+						'field_output' => '%field%',
+					);
 				}
 			}
 
 			if ( ! empty( $form['search_results']['xprofile_fields']['date_field'] ) ) {
 
-				$field_id    = absint( $form['search_results']['xprofile_fields']['date_field'] ); 
-    			$field_data  = xprofile_get_field( $field_id );
-    			$field_value = maybe_unserialize( $field_data->data->value );
+				$field_id    = absint( $form['search_results']['xprofile_fields']['date_field'] );
+				$field_data  = xprofile_get_field( $field_id );
+				$field_value = maybe_unserialize( $field_data->data->value );
 
-    			$new_xfields[ $field_id ] = array(
-    				'name'         => $field_data->name,
-    				'label'        => $field_data->name,
-    				'field_output' => '%field%',
-    			);
+				$new_xfields[ $field_id ] = array(
+					'name'         => $field_data->name,
+					'label'        => $field_data->name,
+					'field_output' => '%field%',
+				);
 			}
 
 			$form['search_results']['xprofile_fields'] = $new_xfields;
@@ -833,31 +837,31 @@ class GMW_Forms_Helper {
 
 			if ( ! empty( $form['info_window']['xprofile_fields']['fields'] ) ) {
 
-				foreach( $form['info_window']['xprofile_fields']['fields'] as $xfield ) {
+				foreach ( $form['info_window']['xprofile_fields']['fields'] as $xfield ) {
 
-					$field_id    = absint( $xfield ); 
-        			$field_data  = xprofile_get_field( $field_id );
-        			$field_value = maybe_unserialize( $field_data->data->value );
+					$field_id    = absint( $xfield );
+					$field_data  = xprofile_get_field( $field_id );
+					$field_value = maybe_unserialize( $field_data->data->value );
 
-        			$new_xfields[ $field_id ] = array(
-        				'name'         => $field_data->name,
-        				'label'        => $field_data->name,
-        				'field_output' => '%field%',
-        			);
+					$new_xfields[ $field_id ] = array(
+						'name'         => $field_data->name,
+						'label'        => $field_data->name,
+						'field_output' => '%field%',
+					);
 				}
 			}
 
 			if ( ! empty( $form['info_window']['xprofile_fields']['date_field'] ) ) {
 
-				$field_id    = absint( $form['info_window']['xprofile_fields']['date_field'] ); 
-    			$field_data  = xprofile_get_field( $field_id );
-    			$field_value = maybe_unserialize( $field_data->data->value );
+				$field_id    = absint( $form['info_window']['xprofile_fields']['date_field'] );
+				$field_data  = xprofile_get_field( $field_id );
+				$field_value = maybe_unserialize( $field_data->data->value );
 
-    			$new_xfields[ $field_id ] = array(
-    				'name'         => $field_data->name,
-    				'label'        => $field_data->name,
-    				'field_output' => '%field%',
-    			);
+				$new_xfields[ $field_id ] = array(
+					'name'         => $field_data->name,
+					'label'        => $field_data->name,
+					'field_output' => '%field%',
+				);
 			}
 
 			$form['info_window']['xprofile_fields'] = $new_xfields;
@@ -895,7 +899,7 @@ class GMW_Forms_Helper {
 			}
 		}
 
-		/********** Groups Locator forms **********/
+		/* ---- Groups Locator forms ---- */
 
 		if ( 'bp_groups_locator' === $form['component'] ) {
 
@@ -954,13 +958,13 @@ class GMW_Forms_Helper {
 			'form_usage'       => '',
 		);
 
-		/********** AJAX Forms **********/
+		/* ---- AJAX Forms ---- */
 
 		if ( 'ajax_forms' === $form['addon'] ) {
 			$form['general_settings']['legacy_style'] = 1;
 		}
 
-		/********** Update new form data in database **********/
+		/* ---- Update new form data in database ---- */
 
 		$form_data = $form;
 
@@ -978,10 +982,9 @@ class GMW_Forms_Helper {
 		global $wpdb;
 
 		$wpdb->update(
-
 			$wpdb->prefix . 'gmw_forms',
 			array(
-				'data'  => serialize( $form_data ),
+				'data' => serialize( $form_data ),
 			),
 			array( 'ID' => $form['ID'] ),
 			array(
@@ -998,7 +1001,7 @@ class GMW_Forms_Helper {
 	 *
 	 * @param integer $form_id form ID.
 	 *
-	 * @return array specific form if form ID pass otherwise all forms
+	 * @return mixed specific form if form ID pass otherwise all forms
 	 */
 	public static function get_form( $form_id = 0 ) {
 
@@ -1006,8 +1009,7 @@ class GMW_Forms_Helper {
 
 		// abort if no ID passes.
 		if ( empty( $form_id ) ) {
-
-			return false;
+			return;
 		}
 
 		$form = wp_cache_get( $form_id, 'gmw_forms' );
@@ -1045,6 +1047,22 @@ class GMW_Forms_Helper {
 			}
 		}
 
+		// Abort if form does not exist.
+		if ( empty( $form ) ) {
+
+			gmw_trigger_error(
+				sprintf(
+					/* translators: %s: GMW form ID. */
+					__( 'GEO my WP Form with ID %s does not exist.', 'geo-my-wp' ),
+					$form_id
+				)
+			);
+
+			return;
+		}
+
+		// Import form data from GEO my WP v3.0 to v4.0.
+		// We know that we need to import when the "general_settings" tab value is missing.
 		if ( ! isset( $form['general_settings'] ) ) {
 			$form = self::gmw_v4_form_data_importer( $form );
 		}
@@ -1055,7 +1073,7 @@ class GMW_Forms_Helper {
 	/**
 	 * Delte form
 	 *
-	 * @param  integer $form_id [description].
+	 * @param  integer $form_id form ID.
 	 *
 	 * @return [type]           [description]
 	 */
