@@ -147,7 +147,7 @@ class GMW_Location {
 	 *
 	 * @param numeric $id ID as numeric values.
 	 *
-	 * @return absint
+	 * @return mixed ID if exists || false otherwise.
 	 *
 	 * @since 3.0
 	 */
@@ -189,15 +189,16 @@ class GMW_Location {
 		$table = self::get_table();
 
 		// look for the location in database.
+		// phpcs:ignore.
 		$location_id = $wpdb->get_var(
 			$wpdb->prepare(
 				"
-				SELECT ID 
-                FROM   $table 
+				SELECT ID
+                FROM   $table
 				WHERE  ID = %d",
 				$location_id
 			)
-		); // WPCS: db call ok, cache ok, unprepared SQL ok.
+		); // phpcs:ignore: db call ok, cache ok, unprepared SQL ok.
 
 		return ! empty( $location_id ) ? true : false;
 	}
@@ -224,15 +225,16 @@ class GMW_Location {
 		$table = self::get_table();
 
 		// look for the location in database.
+		// phpcs:ignore.
 		$object_type = $wpdb->get_var(
 			$wpdb->prepare(
 				"
-				SELECT object_type 
-				FROM   $table 
+				SELECT object_type
+				FROM   $table
 				WHERE  ID = %d",
 				$location_id
 			)
-		); // WPCS: db call ok, cache ok, unprepared SQL ok.
+		); // phpcs:ignore: db call ok, cache ok, unprepared SQL ok.
 
 		return $object_type;
 
@@ -247,13 +249,13 @@ class GMW_Location {
 	 *
 	 * @since 3.0
 	 *
-	 * @param boolean  $parent true to get only prent location false to get all locations.
+	 * @param boolean $parent true to get only prent location false to get all locations.
 	 *
-	 * @param constant $output output type - OBJECT | ARRAY.
+	 * @param mixed   $output output type - OBJECT | ARRAY.
 	 *
-	 * @param boolean  $cache  get from cache - true | false.
+	 * @param boolean $cache  get from cache - true | false.
 	 *
-	 * @return location object or empty if no locaiton was found.
+	 * @return mixed object or empty if no locaiton was found.
 	 */
 	private static function try_get_locations( $parent = false, $output = OBJECT, $cache = true ) {
 
@@ -397,7 +399,7 @@ class GMW_Location {
 		}
 
 		// verify that we are passing country code and not a name.
-		if ( ! empty( $location_data['country_code'] ) && strlen( $location_data['country_code'] ) != 2 ) {
+		if ( ! empty( $location_data['country_code'] ) && strlen( $location_data['country_code'] ) !== 2 ) {
 
 			// get list of countries code. We will use it to make sure that the only the country code passes to the column.
 			$countries = gmw_get_countries_list_array();
@@ -546,13 +548,13 @@ class GMW_Location {
 	/**
 	 * Get location from database by location ID.
 	 *
-	 * @param  integer  $location_id location ID.
+	 * @param  integer $location_id location ID.
 	 *
-	 * @param  constant $output      OBJECT || ARRAY_A || ARRAY_N  the output type of the location data.
+	 * @param  mixed   $output      OBJECT || ARRAY_A || ARRAY_N  the output type of the location data.
 	 *
-	 * @param  boolean  $cache       Look for location in cache.
+	 * @param  boolean $cache       Look for location in cache.
 	 *
-	 * @return object || Array return the location data
+	 * @return mixed   object || Array return the location data
 	 *
 	 * @since 3.2
 	 */
@@ -571,7 +573,8 @@ class GMW_Location {
 		// get location from database if not found in cache.
 		if ( false === $location ) {
 
-			$table    = self::get_table();
+			$table = self::get_table();
+			// phpcs:ignore.
 			$location = $wpdb->get_row(
 				$wpdb->prepare(
 					"
@@ -581,7 +584,7 @@ class GMW_Location {
 					$location_id
 				),
 				OBJECT
-			); // WPCS: db call ok, cache ok, unprepared SQL ok.
+			); // phpcs:ignore: db call ok, cache ok, unprepared SQL ok.
 
 			// set location in cache if found.
 			if ( ! empty( $location ) ) {
@@ -599,7 +602,7 @@ class GMW_Location {
 		$location->ID = (int) $location->ID;
 
 		// conver to array if needed.
-		if ( ARRAY_A == $output || ARRAY_N == $output ) {
+		if ( ARRAY_A === $output || ARRAY_N === $output ) {
 			$location = gmw_to_array( $location, $output );
 		}
 
@@ -609,17 +612,21 @@ class GMW_Location {
 	/**
 	 * Get location data based on object_type and object_id pairs.
 	 *
-	 * The returned location will be the parent location in case that the object_type - object_id pair has multiple locations
+	 * The returned location will be the parent location in case that the object_type - object_id pair has multiple locations.
 	 *
-	 * @param  string   $object_type the object type post, user...
+	 * @param  string  $args     object data to get location by:
 	 *
-	 * @param  integer  $object_id   the object ID. post ID, User ID...
+	 * array(
+	 *    'object_type'   => 'post',
+	 *    'object_id'     => 0,
+	 *    'location_type' => 0,
+	 * );.
 	 *
-	 * @param  constant $output     OBJECT || ARRAY_A || ARRAY_N  the output type of the location data.
+	 * @param  mixed   $output    OBJECT || ARRAY_A || ARRAY_N  the output type of the location data.
 	 *
-	 * @param  boolean  $cache      Look for location in cache.
+	 * @param  boolean $cache     Look for location in cache.
 	 *
-	 * @return object || Array return the location data
+	 * @return mixed   object || Array return the location data
 	 *
 	 * @since 4.0
 	 */
@@ -673,15 +680,16 @@ class GMW_Location {
 
 			global $wpdb;
 
-			$blog_id  = gmw_get_blog_id( $object_type );
-			$table    = self::get_table();
+			$blog_id = gmw_get_blog_id( $object_type );
+			$table   = self::get_table();
+			// phpcs:ignore.
 			$location = $wpdb->get_row(
 				$wpdb->prepare(
 					"
 					SELECT *, latitude as lat, longitude as lng, title as location_name, featured as featured_location
 		            FROM     $table
-		            WHERE    blog_id     = %d 
-		            AND      object_type = %s 
+		            WHERE    blog_id     = %d
+		            AND      object_type = %s
 		            AND      object_id   = %d
 		            AND      location_type = %d
 		            /*ORDER BY location_type ASC, parent DESC, ID ASC // We first get locations without location type, then by Parent, then by ID.*/
@@ -692,7 +700,7 @@ class GMW_Location {
 					$location_type
 				),
 				OBJECT
-			); // WPCS: unprepared SQL ok, db call ok.
+			); // phpcs:ignore: unprepared SQL ok, db call ok.
 
 			// save to cache if location found.
 			if ( ! empty( $location ) ) {
@@ -710,7 +718,7 @@ class GMW_Location {
 		$location->ID = (int) $location->ID;
 
 		// convert to array if needed.
-		if ( ARRAY_A == $output || ARRAY_N == $output ) {
+		if ( ARRAY_A === $output || ARRAY_N === $output ) {
 			$location = gmw_to_array( $location, $output );
 		}
 
@@ -722,15 +730,15 @@ class GMW_Location {
 	 *
 	 * The returned location will be the parent location in case that the object_type - object_id pair has multiple locations
 	 *
-	 * @param  string   $object_type the object type post, user...
+	 * @param  string  $object_type the object type post, user...
 	 *
-	 * @param  integer  $object_id   the object ID. post ID, User ID...
+	 * @param  integer $object_id   the object ID. post ID, User ID...
 	 *
-	 * @param  constant $output     OBJECT || ARRAY_A || ARRAY_N  the output type of the location data.
+	 * @param  mixed   $output     OBJECT || ARRAY_A || ARRAY_N  the output type of the location data.
 	 *
-	 * @param  boolean  $cache      Look for location in cache.
+	 * @param  boolean $cache      Look for location in cache.
 	 *
-	 * @return object || Array return the location data
+	 * @return mixed object || Array return the location data
 	 *
 	 * @since 3.2
 	 */
@@ -743,8 +751,9 @@ class GMW_Location {
 
 		return self::get_by_object_data( $args );
 
+		// phpcs:disable.
 		// verify object type and object ID. If any of them empty use try_get_location function.
-		if ( empty( $object_type ) || empty( $object_id ) ) {
+		/*if ( empty( $object_type ) || empty( $object_id ) ) {
 
 			// try to get location usign global variables.
 			return self::try_get_locations( true, $output, $cache );
@@ -782,11 +791,11 @@ class GMW_Location {
 					"
 					SELECT *, latitude as lat, longitude as lng, title as location_name, featured as featured_location
 		            FROM     $table
-		            WHERE    blog_id     = %d 
-		            AND      object_type = %s 
+		            WHERE    blog_id     = %d
+		            AND      object_type = %s
 		            AND      object_id   = %d
 		            /*ORDER BY location_type ASC, parent DESC, ID ASC // We first get locations without location type, then by Parent, then by ID.*/
-		           ",
+		          /* ",
 					$blog_id,
 					$object_type,
 					$object_id
@@ -814,7 +823,8 @@ class GMW_Location {
 			$location = gmw_to_array( $location, $output );
 		}
 
-		return $location;
+		return $location;*/
+		// phpcs:enable.
 	}
 
 	/**
@@ -837,12 +847,15 @@ class GMW_Location {
 	/**
 	 * Get all locations based on object_type - object_ID pair.
 	 *
-	 * @param  string   $object_type the object type ( post, user... ).
-	 * @param  integer  $object_id   the object ID  ( post ID, User ID... ).
-	 * @param  constant $output      OBJECT || ARRAY_A || ARRAY_N  the output type of the location data.
-	 * @param  boolean  $cache       Look for location in cache.
+	 * @param  string  $object_type the object type ( post, user... ).
 	 *
-	 * @return array of locations data.
+	 * @param  integer $object_id   the object ID  ( post ID, User ID... ).
+	 *
+	 * @param  mixed   $output      OBJECT || ARRAY_A || ARRAY_N  the output type of the location data.
+	 *
+	 * @param  boolean $cache       Look for location in cache.
+	 *
+	 * @return mixed   array of locations data.
 	 *
 	 * since 3.2
 	 */
@@ -880,22 +893,24 @@ class GMW_Location {
 
 			global $wpdb;
 
-			$blog_id   = gmw_get_blog_id( $object_type );
-			$table     = self::get_table();
+			$blog_id = gmw_get_blog_id( $object_type );
+			$table   = self::get_table();
+
+			// phpcs:ignore.
 			$locations = $wpdb->get_results(
 				$wpdb->prepare(
 					"
 					SELECT *, latitude as lat, longitude as lng, title as location_name, featured as featured_location
 		            FROM   $table
-		            WHERE  blog_id     = %d 
-		            AND    object_type = %s 
+		            WHERE  blog_id     = %d
+		            AND    object_type = %s
 		            AND    object_id   = %d",
 					$blog_id,
 					$object_type,
 					$object_id
 				),
 				OBJECT
-			); // WPCS: db call ok, cache ok, unprepared SQL ok.
+			); // phpcs:ignore: db call ok, cache ok, unprepared SQL ok.
 
 			// save to cache if location found.
 			if ( ! empty( $locations ) ) {
@@ -911,7 +926,7 @@ class GMW_Location {
 		$locations = maybe_unserialize( $locations );
 
 		// convert to array of arrays.
-		if ( ARRAY_A == $output || ARRAY_N == $output ) {
+		if ( ARRAY_A === $output || ARRAY_N === $output ) {
 			foreach ( $locations as $key => $value ) {
 				$locations[ $key ] = gmw_to_array( $value, $output );
 			}
@@ -986,7 +1001,7 @@ class GMW_Location {
 	}
 
 	/**
-	 * Query locations from GEO my WP database table
+	 * Query locations from GEO my WP database table.
 	 *
 	 * This function will search for locations based on address and distance entered in the search forms.
 	 *
@@ -1006,11 +1021,39 @@ class GMW_Location {
 	 *
 	 * bp_has_locations( array( 'includes' => $locations['objects_id'] ) );
 	 *
+	 * @param array  $args argument to query locations by:
+	 *
+	 * array(
+	 *    'object_type'        => 'post',
+	 *    'lat'                => false,
+	 *    'lng'                => false,
+	 *    'radius'             => false,
+	 *    'units'              => 'imperial',
+	 *    'unique'             => '',
+	 *    'count'              => '',
+	 *    'offset'             => '',
+	 *    'paged'              => 1,
+	 *    'orderby'            => '',
+	 *    'object__in'         => '',
+	 *    'output_objects_id'  => true,
+	 *    'multiple_locations' => false,
+	 * );.
+	 *
+	 * @param array  $address_filters filter by address fields.
+	 *
+	 * @param array  $location_meta   location meta to retreive with the results.
+	 *
+	 * @param string $db_table        name of the database table to search location in.
+	 *
+	 * @param array  $db_fields       db field to output.
+	 *
+	 * @param array  $gmw             gmw form when available.
+	 *
 	 * @since 3.0
 	 *
 	 * @author Eyal Fitoussi
 	 *
-	 * @return multidimentional array of locations data.
+	 * @return array of locations data.
 	 */
 	public static function get_locations_data( $args = array(), $address_filters = array(), $location_meta = array(), $db_table = 'gmw_locations', $db_fields = array(), $gmw = array() ) {
 
@@ -1061,8 +1104,8 @@ class GMW_Location {
 		$db_fields = apply_filters( 'gmw_get_locations_db_fields', $db_fields, $gmw );
 		$db_fields = apply_filters( "gmw_get_{$args['object_type']}_locations_db_fields", $db_fields, $gmw );
 
-		// for cache key.
-		//$args['db_fields'] = $db_fields;
+		// phpcs:ignore.
+		//$args['db_fields'] = $db_fields; // for cache key.
 
 		$count  = 0;
 		$output = '';
@@ -1126,7 +1169,7 @@ class GMW_Location {
 			$clauses['fields']          = $args['db_fields'];
 			$clauses['distance']        = '';
 			$clauses['from']            = "FROM {$wpdb->base_prefix}{$db_table} gmw_locations";
-			$clauses['where']           = $wpdb->prepare( " WHERE gmw_locations.object_type = '%s'", $args['object_type'] );
+			$clauses['where']           = $wpdb->prepare( ' WHERE gmw_locations.object_type = %s', $args['object_type'] );
 			$clauses['address_filters'] = '';
 			$clauses['having']          = '';
 			$clauses['orderby']         = 'ORDER BY gmw_locations.ID';
@@ -1143,7 +1186,7 @@ class GMW_Location {
 
 			// if object type uses database table as global, means it doesn't save locations per blog,
 			// such as "user" we search within the entire database table. Otherwise, if data saved per blog, such as "post", we will filter locations based on blog ID
-			//if ( ! in_array( $args['object_type'], GMW()->global_db_objects ) ) {
+			// if ( ! in_array( $args['object_type'], GMW()->global_db_objects ) ) {.
 
 			$loc_blog_id = gmw_get_blog_id( $args['object_type'] );
 
@@ -1166,7 +1209,7 @@ class GMW_Location {
 			if ( empty( $clauses['address_filters'] ) && ! empty( $args['lat'] ) && ! empty( $args['lng'] ) ) {
 
 				// Get earth radius based on units.
-				if ( 'imperial' === $args['units'] || 3959 == $args['units'] || 'miles' === $args['units'] ) {
+				if ( 'imperial' === $args['units'] || 3959 === $args['units'] || '3959' === $args['units'] || 'miles' === $args['units'] ) {
 					$earth_radius = 3959;
 					$units        = 'mi';
 					$degree       = 69.0;
@@ -1200,8 +1243,10 @@ class GMW_Location {
 					$bet_lng1 = $lng - ( $radius / ( $degree * cos( deg2rad( $lat ) ) ) );
 					$bet_lng2 = $lng + ( $radius / ( $degree * cos( deg2rad( $lat ) ) ) );
 
-					//$clauses['where'] .= " AND gmw_locations.latitude BETWEEN {$bet_lat1} AND {$bet_lat2}";
-					//$clauses['where'] .= " AND gmw_locations.longitude BETWEEN {$bet_lng1} AND {$bet_lng2} ";
+					// phpcs:disable.
+					// $clauses['where'] .= " AND gmw_locations.latitude BETWEEN {$bet_lat1} AND {$bet_lat2}";
+					// $clauses['where'] .= " AND gmw_locations.longitude BETWEEN {$bet_lng1} AND {$bet_lng2} ";
+					// phpcs:enable.
 
 					$clauses['having'] = "HAVING distance <= {$radius} OR distance IS NULL";
 				}
@@ -1214,9 +1259,10 @@ class GMW_Location {
 			}
 
 			// query the locations.
+			// phpcs:ignore.
 			$locations = $wpdb->get_results(
 				implode( ' ', apply_filters( 'gmw_get_locations_query_clauses', $clauses, $args, $gmw ) )
-			); // WPCS: db call ok, cache ok, unprepared SQL ok.
+			); // phpcs:ignore: db call ok, cache ok, unprepared SQL ok.
 
 			/**
 			 * Collect locations into an array of objects and locations data.
@@ -1293,15 +1339,16 @@ class GMW_Location {
 
 		global $wpdb;
 
+		// phpcs:ignore.
 		return $wpdb->query(
 			$wpdb->prepare(
 				"
-	            UPDATE {$wpdb->base_prefix}gmw_locations 
-	            SET   `status`      = %s 
+	            UPDATE {$wpdb->base_prefix}gmw_locations
+	            SET   `status`      = %s
 	            WHERE `ID`          = %s",
 				array( $status, $location_id )
 			)
-		); // WPCS: db call ok, cache ok, unprepared SQL ok.
+		); // phpcs:ignore: db call ok, cache ok, unprepared SQL ok.
 	}
 
 	/**
@@ -1328,9 +1375,9 @@ class GMW_Location {
 	 *
 	 * The location data and all associated location meta will be deleted
 	 *
-	 * @param  integer||object $location the location ID || location object.
+	 * @param  mixed   $location integer || object $location the location ID || location object.
 	 *
-	 * @param  boolean         $delete_meta true or false if to delete the location meta belog to that location.
+	 * @param  boolean $delete_meta true or false if to delete the location meta belog to that location.
 	 *
 	 * @return boolean  true if deleted false if failed
 	 *
@@ -1406,7 +1453,7 @@ class GMW_Location {
 		do_action( 'gmw_' . $location->object_type . '_location_deleted', $location->ID, $location );
 
 		// delete the location metadata associated with this location if needed.
-		if ( true == $delete_meta ) {
+		if ( ! empty( $delete_meta ) ) {
 			GMW_Location_Meta::delete_all( $location->ID );
 		}
 
@@ -1418,9 +1465,13 @@ class GMW_Location {
 	 *
 	 * The parent location data and all associated location meta will be deleted.
 	 *
-	 * @param  string  $object_type object type ( post, user... ).
+	 * @param  array   $args        arguments of object to delete:
 	 *
-	 * @param  integer $object_id   object id ( post iD, user ID... ).
+	 * array(
+	 *    'object_type'   => 'post',
+	 *    'object_id'     => 0,
+	 *    'location_type' => 0,
+	 * );.
 	 *
 	 * @param  boolean $delete_meta true or false if to delete the location meta belog to that location.
 	 *
@@ -1501,8 +1552,9 @@ class GMW_Location {
 
 		return self::delete_by_object_data( $args );
 
+		// phpcs:disable.
 		// verify data.
-		if ( empty( $object_type ) || empty( $object_id ) ) {
+		/*if ( empty( $object_type ) || empty( $object_id ) ) {
 			return false;
 		}
 
@@ -1533,7 +1585,8 @@ class GMW_Location {
 			return false;
 		}
 
-		return self::delete( $location, $delete_meta );
+		return self::delete( $location, $delete_meta );*/
+		// phpcs:enable.
 	}
 
 	/**
@@ -1556,12 +1609,14 @@ class GMW_Location {
 	}
 
 	/**
-	 * Delete all locations based on object type - and object ID pair
+	 * Delete all locations based on object type - and object ID pair.
 	 *
 	 * All locations data and all associated location meta will be deleted.
 	 *
 	 * @param  string  $object_type object type ( post, user... ).
+	 *
 	 * @param  integer $object_id   object id ( post iD, user ID... ).
+	 *
 	 * @param  boolean $delete_meta to delete associate location meta.
 	 *
 	 * @return boolean true for deleted false for failed
