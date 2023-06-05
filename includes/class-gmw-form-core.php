@@ -251,15 +251,15 @@ class GMW_Form_Core {
 	/**
 	 * Initiator for AJAX powered forms.
 	 *
-	 * @param  array || int $form array or form ID.
+	 * @param  mixed $form array || int $form array or form ID.
 	 *
-	 * @return global map object
+	 * @return mixed
 	 */
 	public static function init( $form = array() ) {
 
 		// Get the form in case we pass form ID.
 		if ( is_numeric( $form ) ) {
-			$form = gmw_get_form( $form ); // WPCS: CSRF ok.
+			$form = gmw_get_form( $form ); // phpcs:ignore: CSRF ok.
 		}
 
 		if ( empty( $form ) || ! is_array( $form ) ) {
@@ -348,7 +348,8 @@ class GMW_Form_Core {
 	 *
 	 * And based on that it will append some additional default values to the form.
 	 */
-	public function set_default_values() {}
+	public function set_default_values() {
+	}
 
 	/**
 	 * Setup the default form values.
@@ -417,10 +418,13 @@ class GMW_Form_Core {
 			if ( -1 !== $page_load_location['lat'] && '' !== $page_load_location['lat'] ) {
 				$this->form['lat'] = $page_load_location['lat'];
 				$this->form['lng'] = $page_load_location['lng'];
-			} /*else {
+			}
+			// phpcs:disable.
+			/*else {
 				$this->form['lat'] = '';
 				$this->form['lng'] = '';
 			}*/
+			// phpcs:enable.
 		}
 
 		$this->ID            = $this->form['ID'];
@@ -587,7 +591,8 @@ class GMW_Form_Core {
 			'lng'        => isset( $this->form['lng'] ) ? $this->form['lng'] : false,
 			'address'    => isset( $this->form['address'] ) ? $this->form['address'] : false,
 			'map_icon'   => GMW()->default_icons['user_location_icon_url'],
-			//'icon_size'  => 'google_maps' === GMW()->maps_provider ? null : GMW()->default_icons['user_location_icon_size'],
+			// phpcs:ignore.
+			// 'icon_size'  => 'google_maps' === GMW()->maps_provider ? null : GMW()->default_icons['user_location_icon_size'],
 			'iw_content' => __( 'Your Location', 'geo-my-wp' ),
 			'iw_open'    => ! empty( $this->form['results_map']['yl_icon'] ) ? true : false,
 		);
@@ -748,8 +753,8 @@ class GMW_Form_Core {
 		// Also used for intenal cache purposes.
 		$this->form['query_args']['gmw_args'] = $this->form['page_load_action'] ? $this->form['page_load_results'] : $this->form['form_values'];
 
-		// Modify query args.
-		$this->form['query_args'] = apply_filters( 'gmw_' . $this->form['prefix'] . '_search_query_args', $this->form['query_args'], $this->form, $this );
+		// phpcs:ignore.
+		// $this->form['query_args'] = apply_filters( 'gmw_' . $this->form['prefix'] . '_search_query_args', $this->form['query_args'], $this->form, $this ); // Modify query args.
 	}
 
 	/**
@@ -943,7 +948,8 @@ class GMW_Form_Core {
 	 *
 	 * @since 4.0
 	 */
-	public function object_loop() {}
+	public function object_loop() {
+	}
 
 	/**
 	 * Get template files and enqueue stylesheets and custom CSS.
@@ -953,6 +959,8 @@ class GMW_Form_Core {
 	 * @param  string $template_type 'search-form' || 'search-results'.
 	 *
 	 * @param  string $template_name template name.
+	 *
+	 * @param  string $file_name     name of the file to include.
 	 *
 	 * @return [type]                [description]
 	 */
@@ -995,7 +1003,7 @@ class GMW_Form_Core {
 
 			// Needed when registering an inline style.
 			if ( ! wp_style_is( $template['stylesheet_handle'], 'enqueued' ) ) {
-				wp_register_style( $template['stylesheet_handle'], false );
+				wp_register_style( $template['stylesheet_handle'], false ); // phpcs:ignore.
 				wp_enqueue_style( $template['stylesheet_handle'] );
 			}
 
@@ -1009,13 +1017,13 @@ class GMW_Form_Core {
 
 			// Needed when registering an inline style.
 			if ( ! wp_style_is( $template['stylesheet_handle'], 'enqueued' ) ) {
-				wp_register_style( $template['stylesheet_handle'], false );
+				wp_register_style( $template['stylesheet_handle'], false ); // phpcs:ignore.
 				wp_enqueue_style( $template['stylesheet_handle'] );
 			}
 
 			wp_add_inline_style( $template['stylesheet_handle'], $grid_column_css );
 		}
-	
+
 		return $template;
 	}
 
@@ -1024,7 +1032,8 @@ class GMW_Form_Core {
 	 *
 	 * @return void
 	 */
-	public function search_form() {}
+	public function search_form() {
+	}
 
 	/**
 	 * Outputs the search results element on the page.
@@ -1069,8 +1078,6 @@ class GMW_Form_Core {
 
 	/**
 	 * Generate the map element on the page.
-	 *
-	 * @return void
 	 */
 	public function map() {
 
@@ -1085,7 +1092,7 @@ class GMW_Form_Core {
 			'expand_on_load'      => ! empty( $this->form['results_map']['expand_on_load'] ) ? true : false,
 		);
 
-		echo gmw_get_map_element( $args, $this->form ); // WPCS: XSS ok.
+		echo gmw_get_map_element( $args, $this->form ); // phpcs:ignore: XSS ok.
 	}
 
 	/**
@@ -1226,21 +1233,21 @@ class GMW_Form_Core {
 	public static function ajax_submission() {
 
 		// deprecated filters.
-		do_action( 'gmw_ajaxfms_form_submission', $_POST ); // WPCS: CSRF ok.
+		do_action( 'gmw_ajaxfms_form_submission', $_POST ); // phpcs:ignore: CSRF ok.
 		do_action( 'wp_ajax_gmw_ajax_forms_form_submission' );
 		do_action( 'wp_ajax_nopriv_gmw_ajax_forms_form_submission' );
 
-		if ( ! isset( $_POST['form_id'] ) ) { // WPCS: CSRF ok.
+		if ( ! isset( $_POST['form_id'] ) ) { // phpcs:ignore: CSRF ok.
 			die( 'GEO my WP form ID is missing' );
 		}
 
 		// New filter.
-		do_action( 'gmw_pre_ajax_form_sumission' ); // WPCS: CSRF ok.		
+		do_action( 'gmw_pre_ajax_form_sumission' ); // phpcs:ignore: CSRF ok.
 
-		$form_object = static::init( absint( $_POST['form_id'] ) ); // WPCS: CSRF ok.
+		$form_object = static::init( absint( $_POST['form_id'] ) ); // phpcs:ignore: CSRF ok.
 
 		if ( empty( $form_object ) || ! is_object( $form_object ) ) {
-			die( $form_object ); // WPCS: XSS ok.
+			die( $form_object ); // phpcs:ignore: XSS ok.
 		}
 
 		$json_data = $form_object->get_json_data();
