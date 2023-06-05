@@ -61,6 +61,17 @@ class GMW_Form_Core {
 	public $form = array();
 
 	/**
+	 * The prefix added to the URL parameters.
+	 *
+	 * The prefix is blank by default.
+	 *
+	 * @var string
+	 *
+	 * @access public
+	 */
+	public $url_px = '';
+
+	/**
 	 * Elements that GEO my WP form shortcodes accepts
 	 *
 	 * Can be filtered via apply_filters( 'gmw_shortcode_allowed_elements' );
