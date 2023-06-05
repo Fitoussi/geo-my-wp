@@ -48,7 +48,7 @@ class GMW_Location_Meta {
 	 *
 	 * @param integer $id any ID to verify.
 	 *
-	 * @return absint
+	 * @return mixed ID || void
 	 *
 	 * @since 3.0
 	 */
@@ -72,9 +72,9 @@ class GMW_Location_Meta {
 	 *
 	 * Verify if location meta exists based on its meta_id
 	 *
-	 * @param  absint $meta_id meta ID.
+	 * @param  int $meta_id meta ID.
 	 *
-	 * @return boolean true || false
+	 * @return mixed ID || false
 	 *
 	 * @since 3.0
 	 */
@@ -86,16 +86,17 @@ class GMW_Location_Meta {
 
 		global $wpdb;
 
-		$table   = self::get_table();
+		$table = self::get_table();
+		// phpcs:ignore.
 		$meta_id = $wpdb->get_var(
 			$wpdb->prepare(
 				"
-				SELECT meta_id 
-				FROM   $table 
+				SELECT meta_id
+				FROM   $table
 				WHERE  meta_id = %d",
 				$meta_id
 			)
-		); // WPCS: unprepared SQL ok, db call ok, cache ok.
+		); // phpcs:ignore: unprepared SQL ok, db call ok, cache ok.
 
 		return ! empty( $meta_id ) ? true : false;
 	}
@@ -105,10 +106,11 @@ class GMW_Location_Meta {
 	 *
 	 * Get a location meta ID by passing the location ID and meta_key
 	 *
-	 * @param  absint $location_id [description].
+	 * @param  int    $location_id [description].
+	 *
 	 * @param  string $meta_key    [description].
 	 *
-	 * @return meta ID if found or false otherwise.
+	 * @return mixed meta ID if found or false otherwise.
 	 *
 	 * @since 3.0
 	 */
@@ -132,6 +134,7 @@ class GMW_Location_Meta {
 		$table = self::get_table();
 
 		// get the meta ID from database if exists.
+		// phpcs:ignore.
 		$meta_id = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"
@@ -143,7 +146,7 @@ class GMW_Location_Meta {
 				$location_id,
 				$meta_key
 			)
-		); // WPCS: unprepared SQL ok, db call ok, cache ok.
+		); // phpcs:ignore: unprepared SQL ok, db call ok, cache ok.
 
 		return ! empty( $meta_id ) ? $meta_id : false;
 	}
@@ -154,7 +157,9 @@ class GMW_Location_Meta {
 	 * Update existing or create a new location meta
 	 *
 	 * @param  integer $location_id Location ID.
+	 *
 	 * @param  string  $meta_key    meta key.
+	 *
 	 * @param  string  $meta_value  meta value.
 	 *
 	 * @return [type]
@@ -184,6 +189,7 @@ class GMW_Location_Meta {
 		$table      = self::get_table();
 
 		// check if meta already exists and get its ID from database.
+		// phpcs:ignore.
 		$save_meta = $wpdb->get_row(
 			$wpdb->prepare(
 				"
@@ -195,7 +201,7 @@ class GMW_Location_Meta {
 				$location_id,
 				$meta_key
 			)
-		); // WPCS: unprepared SQL ok, db call ok, cache ok.
+		); // phpcs:ignore: unprepared SQL ok, db call ok, cache ok.
 
 		// abort if meta already exists and the value is the same.
 		if ( ! empty( $save_meta->meta_id ) && ! empty( $save_meta->meta_value ) && $save_meta->meta_value === $meta_value ) {
@@ -208,8 +214,8 @@ class GMW_Location_Meta {
 		$metadata = array(
 			'meta_id'     => $meta_id,
 			'location_id' => $location_id,
-			'meta_key'    => $meta_key, // WPCS: slow query ok.
-			'meta_value'  => $meta_value, // WPCS: slow query ok.
+			'meta_key'    => $meta_key, // phpcs:ignore slow query ok.
+			'meta_value'  => $meta_value, // phpcs:ignore slow query ok.
 		);
 
 		$object_type = GMW_Location::get_object_type( $location_id );
@@ -273,12 +279,14 @@ class GMW_Location_Meta {
 	 * @since   3.0
 	 *
 	 * @param   int   $location_id the ID of the corresponding location.
-	 * @param   array $metadata    location metadata in meta_key => meta value pairs.
+	 *
+	 * @param   mixed $metadata    string or array metadata in meta_key => meta value pairs.
+	 *
 	 * @param   mixed $meta_value  can also update single meta by passing a single meta key as a string
 	 *
 	 * to the metadata argument.
 	 *
-	 * @return  array   array of updated/created metadata IDs
+	 * @return  mixed array of updated/created metadata IDs
 	 *
 	 * @since 3.0
 	 */
@@ -323,13 +331,11 @@ class GMW_Location_Meta {
 	/**
 	 * Get location meta by location ID.
 	 *
-	 * @param  integer         $location_id location ID.
+	 * @param  integer $location_id location ID.
 	 *
-	 * @param  string || array $meta_keys   single meta key as a string or multiple keys
+	 * @param  mixed   $meta_keys single meta key as a string or multiple keys as array or comma separated string.
 	 *
-	 * as array or comma separated string.
-	 *
-	 * @param  boolean         $cache use cached value?.
+	 * @param  boolean $cache use cached value?.
 	 *
 	 * @return string || array
 	 *
@@ -394,7 +400,7 @@ class GMW_Location_Meta {
 	 * @param  integer $location_id  location ID.
 	 * @param  boolean $force_update true || false if to force update the meta in cache.
 	 *
-	 * @return array contains all location meta associate with the location ID
+	 * @return mixed array contains all location meta associate with the location ID.
 	 *
 	 * @since 3.0
 	 */
@@ -414,6 +420,7 @@ class GMW_Location_Meta {
 
 			$table = self::get_table();
 
+			// phpcs:ignore.
 			$results = $wpdb->get_results(
 				$wpdb->prepare(
 					"
@@ -423,12 +430,12 @@ class GMW_Location_Meta {
 				",
 					$location_id
 				)
-			); // WPCS: unprepared SQL ok, db call ok, cache ok.
+			); // phpcs:ignore: unprepared SQL ok, db call ok, cache ok.
 
 			$output = array();
 
 			foreach ( $results as $key => $value ) {
-				$output[ $value->meta_key ] = maybe_unserialize( $value->meta_value ); // WPCS: slow query ok.
+				$output[ $value->meta_key ] = maybe_unserialize( $value->meta_value ); // phpcs:ignore: slow query ok.
 			}
 
 			wp_cache_set( $location_id, $output, 'gmw_location_metas' );
@@ -446,7 +453,7 @@ class GMW_Location_Meta {
 	 * @param  integer $object_id object ID.
 	 * @param  string  $meta_key meta key.
 	 *
-	 * @return array || false
+	 * @return mixed array || false
 	 *
 	 * @since 3.0
 	 */
@@ -472,8 +479,9 @@ class GMW_Location_Meta {
 	 *
 	 * @author Eyal Fitoussi <fitoussi_eyal@hotmail.com>
 	 *
-	 * @param   int   $location_id the location ID.
-	 * @param   array $meta_key    array in key-value pairs.
+	 * @param   int    $location_id the location ID.
+	 *
+	 * @param   string $meta_key    meta key to delete.
 	 *
 	 * @return boolean deleted true || false
 	 */
@@ -503,6 +511,7 @@ class GMW_Location_Meta {
 		$table = self::get_table();
 
 		// check if meta key exists before deleting it.
+		// phpcs:ignore.
 		$saved_meta = $wpdb->get_row(
 			$wpdb->prepare(
 				"
@@ -513,7 +522,7 @@ class GMW_Location_Meta {
 				$location_id,
 				$meta_key
 			)
-		); // WPCS: unprepared SQL ok, db call ok, cache ok.
+		); // phpcs:ignore: unprepared SQL ok, db call ok, cache ok.
 
 		if ( empty( $saved_meta ) ) {
 			return false;
@@ -526,17 +535,18 @@ class GMW_Location_Meta {
 		do_action( "gmw_pre_delete_{$object_type}_location_meta", $location_id, $meta_key, $saved_meta->meta_value );
 
 		// delete from DB.
+		// phpcs:ignore.
 		$deleted = $wpdb->delete(
 			$table,
 			array(
 				'location_id' => $location_id,
-				'meta_key'    => $meta_key, // WPCS: slow query ok.
+				'meta_key'    => $meta_key,
 			),
 			array(
 				'%d',
 				'%s',
 			)
-		); // WPCS: unprepared SQL ok, db call ok, cache ok.
+		); // phpcs:ignore: slow query ok, unprepared SQL ok, db call ok, cache ok.
 
 		// do something after deleting the loation.
 		do_action( 'gmw_deleted_location_meta', $object_type, $location_id, $meta_key, $saved_meta->meta_value );
@@ -550,7 +560,7 @@ class GMW_Location_Meta {
 	}
 
 	/**
-	 * Delete location meta by object type and object ID
+	 * Delete location meta by object type and object ID.
 	 *
 	 * @since 3.0
 	 *
@@ -558,7 +568,7 @@ class GMW_Location_Meta {
 	 * @param  integer $object_id   object ID.
 	 * @param  string  $meta_key    meta key.
 	 *
-	 * @return TRUE || FALSE if meta deleted or not
+	 * @return mixed TRUE || FALSE if meta deleted or not
 	 */
 	public static function delete_by_object( $object_type = '', $object_id = 0, $meta_key = '' ) {
 
