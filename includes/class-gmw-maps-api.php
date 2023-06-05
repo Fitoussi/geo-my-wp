@@ -54,7 +54,7 @@ class GMW_Maps_API {
 	/**
 	 * Map providers.
 	 *
-	 * @var boolean
+	 * @var array
 	 */
 	private static $map_providers = array();
 
@@ -131,12 +131,16 @@ class GMW_Maps_API {
 	 * both get_map_args() and get_map_elements() at the same time.
 	 *
 	 * @param  array $map_args      map arguments.
+	 *
 	 * @param  array $map_options   map_options ( https://developers.google.com/maps/documentation/javascript/reference#MapOptions ).
+	 *
 	 * @param  array $locations     object locations ( posts, users... ).
+	 *
 	 * @param  array $user_position user position.
+	 *
 	 * @param  array $form          GEO my WP form if exists.
 	 *
-	 * @return Map element
+	 * @return mixed map element
 	 */
 	public static function get_map( $map_args = array(), $map_options = array(), $locations = array(), $user_position = array(), $form = array() ) {
 
@@ -154,7 +158,7 @@ class GMW_Maps_API {
 	 *
 	 * @author Eyal Fitoussi
 	 *
-	 * @param  array   $args map args to define the map features
+	 * @param  array $args map args to define the map features
 	 *
 	 *   array   $args array(
 	 *     'map_id'         => '',      // the ID of the map
@@ -169,7 +173,7 @@ class GMW_Maps_API {
 	 *
 	 * @param array $gmw gmw form.
 	 *
-	 * @return HTML element of map
+	 * @return mixed element of map
 	 */
 	public static function get_map_element( $args = array(), $gmw = array() ) {
 
@@ -220,17 +224,18 @@ class GMW_Maps_API {
 			$output['position_filter'] = "<div id=\"gmw-map-position-filter-wrapper-{$map_id}\" class=\"gmw-map-position-filter-wrapper gmw-field-checkboxes gmw-fields-enhanced\" style=\"display:none;\"><label for=\"gmw-map-position-filter-{$map_id}\" class=\"gmw-checkbox-label\"><input type=\"checkbox\" id=\"gmw-map-position-filter-{$map_id}\" class=\"gmw-field-checkbox gmw-map-position-filter\" data-id=\"{$map_id}\" />{$args['map_position_label']}</label></div>";
 		}
 
-		$output['cover']  = '<div id="gmw-map-loader-' . $map_id . '" class="gmw-map-loader"></div>';
-		$output['map']    = "<div id=\"gmw-map-{$map_id}\" class=\"gmw-map {$prefix} {$map_type}\" style=\"width:100%; height:100%\" data-map_id=\"{$map_id}\" data-prefix=\"{$prefix}\" data-map_type=\"{$map_type}\" data-icons_usage=\"{$icons_usage}\"></div>";
-		//$output['loader'] = "<i id=\"gmw-map-loader-{$map_id}\" class=\"gmw-map-loader gmw-icon-spin-light animate-spin\"></i>";
-		$output['/wrap']  = '</div>';
+		$output['cover'] = '<div id="gmw-map-loader-' . $map_id . '" class="gmw-map-loader"></div>';
+		$output['map']   = "<div id=\"gmw-map-{$map_id}\" class=\"gmw-map {$prefix} {$map_type}\" style=\"width:100%; height:100%\" data-map_id=\"{$map_id}\" data-prefix=\"{$prefix}\" data-map_type=\"{$map_type}\" data-icons_usage=\"{$icons_usage}\"></div>";
+		// phpcs:ignore.
+		// $output['loader'] = "<i id=\"gmw-map-loader-{$map_id}\" class=\"gmw-map-loader gmw-icon-spin-light animate-spin\"></i>";
+		$output['/wrap'] = '</div>';
 
 		// modify the map element.
 		$output = apply_filters( 'gmw_map_output', $output, $args );
 		$output = apply_filters( "gmw_map_output_{$args['map_id']}", $output, $args );
 
 		self::$map_enabled = true;
-		
+
 		return $args['implode'] ? implode( ' ', $output ) : $output;
 	}
 
@@ -257,7 +262,7 @@ class GMW_Maps_API {
 	 *
 	 * @param  array $form          GMW form when available.
 	 *
-	 * return array map arguments
+	 * @return array map arguments.
 	 */
 	public static function get_map_args( $map_args = array(), $map_options = array(), $locations = array(), $user_location = array(), $form = array() ) {
 
@@ -382,7 +387,7 @@ class GMW_Maps_API {
 		self::$map_enabled = true;
 
 		// Look for map providers.
-		if ( ! in_array( $map_element['settings']['map_provider'], self::$map_providers ) ) {
+		if ( ! in_array( $map_element['settings']['map_provider'], self::$map_providers, true ) ) {
 			self::$map_providers[] = $map_element['settings']['map_provider'];
 		}
 
@@ -595,7 +600,7 @@ class GMW_Maps_API {
 			// usually on single object page when navigated from the loop.
 			if ( ! empty( $_GET['address'] ) ) { // WPCS: CSRF ok.
 
-				$args['destination'] = urldecode( $_GET['address'] ); // WPCS: CSRF ok, sanitization ok.
+				$args['destination'] = urldecode( $_GET['address'] ); // phpcs:ignore: CSRF ok, sanitization ok.
 
 			} else {
 
@@ -771,10 +776,6 @@ class GMW_Maps_API {
 	 *
 	 * @param array $args     arguments.
 	 *
-	 * @param array $location location object when available.
-	 *
-	 * @param array $gmw      gmw form when available.
-	 *
 	 * @return [type]            [description]
 	 */
 	public static function get_directions_link( $args = array() ) {
@@ -814,9 +815,10 @@ class GMW_Maps_API {
 		}
 
 		$args['from_latlng'] = ( empty( $args['from_lat'] ) || empty( $args['from_lng'] ) ) ? '' : "{$args['from_lat']},{$args['from_lng']}";
-		//$args['to_latlng']   = ( empty( $args['to_lat'] ) || empty( $args['to_lng'] ) ) ? '' : "{$args['to_lat']},{$args['to_lng']}";
-		$args['units_type']  = 'imperial' === $args['units'] ? 'ptm' : 'ptk';
-		$args['link']        = esc_url( "http://maps.google.com/maps?f=d&hl={$args['language']}&region={$args['region']}&doflg={$args['units_type']}&saddr={$args['from_latlng']}&daddr={$to_loc}&ie=UTF8&z=12" . $mode );
+		// phpcs:ignore.
+		// $args['to_latlng']   = ( empty( $args['to_lat'] ) || empty( $args['to_lng'] ) ) ? '' : "{$args['to_lat']},{$args['to_lng']}";
+		$args['units_type'] = 'imperial' === $args['units'] ? 'ptm' : 'ptk';
+		$args['link']       = esc_url( "http://maps.google.com/maps?f=d&hl={$args['language']}&region={$args['region']}&doflg={$args['units_type']}&saddr={$args['from_latlng']}&daddr={$to_loc}&ie=UTF8&z=12" . $mode );
 
 		// retrun Google Maps link only.
 		if ( $args['link_only'] ) {
