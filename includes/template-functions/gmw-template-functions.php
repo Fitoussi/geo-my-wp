@@ -468,7 +468,7 @@ function gmw_excerpt( $args = array(), $gmw = false ) {
 /**
  * Get hours of operation.
  *
- * @param object  $location  location object..
+ * @param mixed   $location  location ID or location object.
  *
  * @param integer $object_id object ID.
  *
@@ -681,7 +681,7 @@ function gmw_get_bp_groups_from_db( $groups = array() ) {
 		$bp     = buddypress();
 		$groups = $wpdb->get_results(
 			"
-            SELECT id, name 
+            SELECT id, name
             FROM {$bp->groups->table_name}
             {$where}
             "
