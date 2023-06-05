@@ -350,13 +350,15 @@ function gmw_delete_location_meta( $location_id = 0, $meta_key = '' ) {
  * Delete location metadata by object type and object ID
  *
  * @param  string $object_type object_type object type ( post, user... ).
+ *
  * @param  int    $object_id   object ID ( post ID, user ID.... ).
+ *
  * @param  string $meta_key    meta key to delete.
  *
  * @return [type]  string || array of values
  */
 function gmw_delete_location_meta_by_object( $object_type = '', $object_id = 0, $meta_key = '' ) {
-	return GMW_Location::delete_by_object( $object_type, $object_id, $meta_key );
+	return GMW_Location_Meta::delete_by_object( $object_type, $object_id, $meta_key );
 }
 
 /**
@@ -878,7 +880,7 @@ function gmw_get_location_meta_values( $args = 0, $meta_keys = '', $separator = 
 	}
 
 	if ( is_array( $output ) && ! empty( $separator ) ) {
-		return implode( $output, $separator );
+		return implode( $separator, $output );
 	}
 
 	return $output;
