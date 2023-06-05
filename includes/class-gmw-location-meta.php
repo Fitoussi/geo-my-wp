@@ -565,7 +565,9 @@ class GMW_Location_Meta {
 	 * @since 3.0
 	 *
 	 * @param  string  $object_type object type.
+	 *
 	 * @param  integer $object_id   object ID.
+	 *
 	 * @param  string  $meta_key    meta key.
 	 *
 	 * @return mixed TRUE || FALSE if meta deleted or not
@@ -584,7 +586,7 @@ class GMW_Location_Meta {
 	}
 
 	/**
-	 * Delete all location metas associated with a location
+	 * Delete all location metas associated with a location.
 	 *
 	 * @param integer $location_id the location ID.
 	 *
@@ -620,7 +622,7 @@ class GMW_Location_Meta {
 			array( '%d' )
 		); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
-		// do something before deleting the location meta.
+		// do something after deleting the location meta.
 		do_action( 'gmw_all_location_meta_deleted', $object_type, $location_id );
 		do_action( "gmw_all_{$object_type}_location_meta_deleted", $location_id );
 
