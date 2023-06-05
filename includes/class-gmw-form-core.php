@@ -796,6 +796,9 @@ class GMW_Form_Core {
 		$this->form = apply_filters( 'gmw_form_before_search_query', $this->form, $this );
 		$this->form = apply_filters( 'gmw_' . $this->form['component'] . '_form_before_search_query', $this->form, $this );
 		$this->form = apply_filters( 'gmw_' . $this->form['prefix'] . '_form_before_search_query', $this->form, $this );
+
+		// Modify query args.
+		$this->form['query_args'] = apply_filters( 'gmw_' . $this->form['prefix'] . '_search_query_args', $this->form['query_args'], $this->form, $this );
 	}
 
 	/**
