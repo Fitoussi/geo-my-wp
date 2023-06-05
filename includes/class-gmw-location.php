@@ -1646,6 +1646,11 @@ class GMW_Location {
 			return false;
 		}
 
+		// Get location data if we need to delete the meta fields.
+		if ( ! empty( $delete_meta ) ) {
+			$locations = self::get_locations_by_object( $object_type, $object_id );
+		}
+
 		$object_id = absint( $object_id );
 
 		global $wpdb;
@@ -1653,20 +1658,22 @@ class GMW_Location {
 		$blog_id = gmw_get_blog_id( $object_type );
 
 		// delete location from database.
-		$table   = self::get_table();
+		$table = self::get_table();
+
+		// phpcs:ignore.
 		$deleted = $wpdb->query(
 			$wpdb->prepare(
 				"
 				DELETE
 	            FROM   $table
-	            WHERE  blog_id     = %d 
-	            AND    object_type = %s 
+	            WHERE  blog_id     = %d
+	            AND    object_type = %s
 	            AND    object_id   = %d",
 				$blog_id,
 				$object_type,
 				$object_id
 			)
-		); // WPCS: db call ok, cache ok, unprepared SQL ok.
+		); // phpcs:ignore: db call ok, cache ok, unprepared SQL ok.
 
 		// abort if failed to delete.
 		if ( empty( $deleted ) ) {
@@ -1678,8 +1685,10 @@ class GMW_Location {
 		wp_cache_delete( $object_type . '_' . $object_id, 'gmw_locations' );
 
 		// delete the location metadata associated with this location if needed.
-		if ( true == $delete_meta ) {
-			GMW_Location_Meta::delete_all( $location->ID );
+		if ( ! empty( $delete_meta ) ) {
+			foreach ( $locations as $location ) {
+				GMW_Location_Meta::delete_all( $location->ID );
+			}
 		}
 
 		return $deleted;
