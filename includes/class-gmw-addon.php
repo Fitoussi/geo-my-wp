@@ -533,6 +533,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 				return;
 			}
 
+			// phpcs:disable.
 			/*
 			if ( ! $this->is_core ) {
 
@@ -545,6 +546,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 					return;
 				}
 			}*/
+			// phpcs:enable.
 
 			// initialize the addon.
 			$this->initialize();
@@ -746,9 +748,11 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 					}
 				}
 
+				// phpcs:disable.
 				/*if ( ! empty( $this->sub_objects ) ) {
-					$this->register_objects(); 
+					$this->register_objects();
 				}*/
+				// phpcs:enable.
 
 				// if addon data exists in databases we only need to get the status.
 			} else {
@@ -782,17 +786,17 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 			if ( IS_ADMIN ) {
 
 				// if ( ! defined( 'DOING_AJAX' ) ) {
-					// generate admin menu items.
-					add_filter( 'gmw_admin_menu_items', array( $this, 'admin_menu_items_init' ) );
+				// generate admin menu items.
+				add_filter( 'gmw_admin_menu_items', array( $this, 'admin_menu_items_init' ) );
 
-					// generate admin settings groups.
-					add_filter( 'gmw_admin_settings_groups', array( $this, 'admin_settings_groups_init' ) );
+				// generate admin settings groups.
+				add_filter( 'gmw_admin_settings_groups', array( $this, 'admin_settings_groups_init' ) );
 
-					// generate form settings groups.
-					add_filter( 'gmw_form_settings_groups', array( $this, 'form_settings_groups_init' ), 5, 2 );
+				// generate form settings groups.
+				add_filter( 'gmw_form_settings_groups', array( $this, 'form_settings_groups_init' ), 5, 2 );
 
-					// generate form button.
-					add_filter( 'gmw_admin_new_form_button', array( $this, 'form_buttons_init' ) );
+				// generate form button.
+				add_filter( 'gmw_admin_new_form_button', array( $this, 'form_buttons_init' ) );
 				// }
 				// pre init admin.
 				$this->pre_init_admin();
@@ -848,7 +852,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 				'plugin_dir'         => $this->plugin_dir,
 				'plugin_url'         => $this->plugin_url,
 				'templates_folder'   => $this->templates_folder,
-				// 'custom_templates_folder'     => $this->custom_templates_folder
+				// 'custom_templates_folder'     => $this->custom_templates_folder. // phpcs:ignore.
 			);
 		}
 
@@ -876,11 +880,12 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 			);
 		}
 
+		// phpcs:disable.
 		/*public function register_objects() {
 
 			$data = GMW()->addons[ $this->slug ];
 
-			
+
 			foreach( $this->sub_objects as $addon ) {
 
 				GMW()->addons[ $addon['slug'] ] = array(
@@ -903,11 +908,12 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 				);
 			}
 		}*/
+		// phpcs:enable.
 
 		/**
-		 * Verify extension activation
+		 * Verify extension activation.
 		 *
-		 * @return boolean
+		 * @return mixed
 		 */
 		public function verify_activation() {
 
@@ -927,6 +933,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 					if ( empty( $this->license_name ) || empty( $licenses_data[ $this->license_name ]['status'] ) || 'site_inactive' === $licenses_data[ $this->license_name ]['status'] ) {
 
 						$error = 'license_key_inactive';
+						// phpcs:ignore.
 						// $message = __( 'License key inactive', 'geo-my-wp' );
 						$message = sprintf(
 							__( 'GEO my WP %1$s extension is disabled. <a href="%2$s">Activate your license key</a> to start using the extension or <a href="%3$s">deactivate the extension</a> to remove this notice.', 'geo-my-wp' ),
@@ -936,14 +943,12 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 						);
 
 						$short_message = __( 'Extension is disabled. Activate your license key.', 'geo-my-wp' );
-						//$short_message = '';
-
 					} else {
 
 						$error    = $licenses_data[ $this->license_name ]['status'];
 						$messages = gmw_license_update_notices();
 
-						$message  = sprintf(
+						$message = sprintf(
 							esc_attr__( 'GEO my WP %1$s extension is disabled. %2$s ', 'geo-my-wp' ),
 							$this->name,
 							! empty( $messages[ $error ] ) ? $messages[ $error ] : '',
@@ -969,7 +974,6 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 						'required_version' => '',
 						'notice'           => $message,
 						'short_notice'     => $short_message,
-						'short_notice'     => '',
 					);
 
 					// display admin notice.
@@ -979,6 +983,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 				}
 			}
 
+			// phpcs:disable.
 			// extensions disabled by the admin are not allowed.
 			/*
 			if ( ! empty( $this->license_name ) && ! empty( $licenses_data[ $this->license_name ] ) && isset( $licenses_data[ $this->license_name ]['status'] ) && 'disabled' === $licenses_data[ $this->license_name ]['status'] ) {
@@ -997,6 +1002,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 
 				$verified['status'] = false;
 			}*/
+			// phpcs:enable.
 
 			// verify GEO my WP min version.
 			if ( empty( $this->parent ) && ( ! $this->is_core && version_compare( GMW_VERSION, $this->gmw_min_version, '<' ) ) ) {
@@ -1058,7 +1064,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 			// if ( ! $this->custom_verify_activation() ) {
 			// return false;
 			// }
-			// 
+			//
 			// disable the addon if requirments did not match.
 			if ( ! $verified['status'] ) {
 
@@ -1067,7 +1073,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 				return 'disabled';
 			}
 
-			if ( $this->is_core && $this->always_active  ) {
+			if ( $this->is_core && $this->always_active ) {
 				return 'active';
 			}
 
@@ -1118,7 +1124,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 				$theme = wp_get_theme( get_template() );
 
 				// check template and version.
-				if ( $theme->template != $required['template'] || version_compare( $theme->version, $required['version'], '<' ) ) {
+				if ( $theme->template !== $required['template'] || version_compare( $theme->version, $required['version'], '<' ) ) {
 
 					$type   = 'theme';
 					$status = false;
@@ -1219,7 +1225,9 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 			);
 			?>
 			<div class="gmw-admin-notice-top notice notice-error">
-				<p><?php echo wp_kses( $this->status_details['notice'], $allowed ); ?></p>
+				<p>
+					<?php echo wp_kses( $this->status_details['notice'], $allowed ); ?>
+				</p>
 			</div>
 			<?php
 		}
@@ -1238,10 +1246,12 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		 *
 		 * @return [type] [description]
 		 */
+		// phpcs:disable.
 		/*
 		public function activate_addon() {
 			gmw_update_addon_status( $this->slug, 'active' );
 		}*/
+		// phpcs:enable.
 
 		/**
 		 * Deactivate addon / extension
@@ -1353,6 +1363,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		 *
 		 * @return array
 		 */
+		// phpcs:disable.
 		/*
 		public function admin_menu_items( $items ) {
 
@@ -1376,6 +1387,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 
 			return $items;
 		}*/
+		// phpcs:enable.
 
 		/**
 		 * Generate admin settings groups
@@ -1492,7 +1504,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		 *
 		 * @param  array $settings_groups settings groups array.
 		 *
-		 * @return array
+		 * @return mixed
 		 */
 		public function admin_settings_groups_init( $settings_groups ) {
 
@@ -1526,7 +1538,9 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		 *
 		 * @param  array $settings_groups settings groups array.
 		 *
-		 * @return array
+		 * @param  array $form GMW form.
+		 *
+		 * @return mixed
 		 */
 		public function form_settings_groups_init( $settings_groups, $form ) {
 
@@ -1601,7 +1615,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		 *
 		 * @param  array $form_buttons button array.
 		 *
-		 * @return array
+		 * @return mixed
 		 */
 		public function form_buttons_init( $form_buttons ) {
 
@@ -1635,28 +1649,32 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		 *
 		 * @since 3.0
 		 */
-		public function pre_init() {}
+		public function pre_init() {
+		}
 
 		/**
 		 * Include widgets files
 		 *
 		 * @since 3.0
 		 */
-		public function init_widgets() {}
+		public function init_widgets() {
+		}
 
 		/**
 		 * Admin only pre-init execution.
 		 *
 		 * @since 3.0
 		 */
-		public function pre_init_admin() {}
+		public function pre_init_admin() {
+		}
 
 		/**
 		 * Pre init front-end only.
 		 *
 		 * @since 3.0
 		 */
-		public function pre_init_frontend() {}
+		public function pre_init_frontend() {
+		}
 
 		/**
 		 * Plugin initialization.
@@ -1684,40 +1702,42 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		/**
 		 * Initialization code in admin...
 		 */
-		public function init_admin() {}
+		public function init_admin() {
+		}
 
 		/**
 		 * Initialization code in the front-end
 		 */
-		protected function init_frontend() {}
+		protected function init_frontend() {
+		}
 
 		/**
 		 * Include files required for the different GEO my WP's forms.
 		 *
 		 * @since 4.0
-		 *
-		 * @return [type] [description]
 		 */
-		public function include_form_files() {}
+		public function include_form_files() {
+		}
 
 		/**
 		 * Include files required for the different GEO my WP's info windows.
 		 *
 		 * @since 4.0
-		 *
-		 * @return [type] [description]
 		 */
-		public function include_info_window_files() {}
+		public function include_info_window_files() {
+		}
 
 		/**
 		 * Initialization code in AJAX mode
 		 */
-		protected function init_ajax() {}
+		protected function init_ajax() {
+		}
 
 		/**
 		 * Enqueue scripts
 		 */
-		public function enqueue_scripts() {}
+		public function enqueue_scripts() {
+		}
 	}
 
 endif;
