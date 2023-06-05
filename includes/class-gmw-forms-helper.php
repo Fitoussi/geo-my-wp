@@ -6,7 +6,7 @@
  *
  * @author Eyal Fitoussi.
  *
- * @package     geo-my-wp
+ * @package geo-my-wp
  */
 
 // Exit if accessed directly.
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * GMW_Helper class
+ * GMW_Helper class.
  */
 class GMW_Forms_Helper {
 
