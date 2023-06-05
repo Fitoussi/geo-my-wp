@@ -616,11 +616,12 @@ class GMW_Location_Meta {
 		do_action( "gmw_pre_delete_all_{$object_type}_location_meta", $location_id );
 
 		// delete all meta associate with the location.
+		// phpcs:ignore.
 		$wpdb->delete(
 			$table,
 			array( 'location_id' => $location_id ),
 			array( '%d' )
-		); // WPCS: unprepared SQL ok, db call ok, cache ok.
+		); // phpcs:ignore: db call ok, cache ok, unprepared SQL ok.
 
 		// do something after deleting the location meta.
 		do_action( 'gmw_all_location_meta_deleted', $object_type, $location_id );
