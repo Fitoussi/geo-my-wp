@@ -213,6 +213,8 @@ class GMW_Form_Core {
 	/**
 	 * Holds the results template path and uri.
 	 *
+	 * @var array
+	 *
 	 * @since 4.0
 	 */
 	public $results_template = array();
