@@ -752,7 +752,6 @@ class GMW_Form_Editor {
 									'priority'   => 15,
 								)
 							),
-
 						),
 						'attributes' => '',
 						'priority'   => 7,
@@ -1107,7 +1106,8 @@ class GMW_Form_Editor {
 				),
 				'priority' => 20,
 			),
-			'search_form_builder'    => array(
+			// phpcs:disable.
+			/*'search_form_builder'    => array(
 				'slug'     => 'search_form_builder',
 				'type'     => 'fields',
 				'label'    => __( 'Search Form Builder', 'geo-my-wp' ),
@@ -1124,7 +1124,8 @@ class GMW_Form_Editor {
 					),
 				),
 				'priority' => 21,
-			),
+			),*/
+			// phpcs:enable.
 			'form_submission'        => array(
 				'slug'     => 'form_submission',
 				'type'     => 'fields',
@@ -1523,7 +1524,8 @@ class GMW_Form_Editor {
 				),
 				'priority' => 40,
 			),
-			'search_results_builder' => array(
+			// phpcs:disable.
+			/*'search_results_builder' => array(
 				'slug'     => 'search_results_builder',
 				'type'     => 'fields',
 				'label'    => __( 'Search Results Builder', 'geo-my-wp' ),
@@ -1540,7 +1542,8 @@ class GMW_Form_Editor {
 					),
 				),
 				'priority' => 41,
-			),
+			),*/
+			// phpcs:enable.
 			'results_map'            => array(
 				'slug'     => 'results_map',
 				'type'     => 'fields',
