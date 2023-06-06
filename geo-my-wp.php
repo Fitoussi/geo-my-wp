@@ -199,7 +199,14 @@ class GEO_MY_WP {
 	public $current_form = array();
 
 	/**
-	 * Default icons URL and size.
+	 * Default map icons.
+	 *
+	 * @var array
+	 */
+	public $default_icons = array();
+
+	/**
+	 * Set the default icons and icon size.
 	 *
 	 * @var array
 	 */
