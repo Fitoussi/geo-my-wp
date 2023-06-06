@@ -17,6 +17,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 class GMW_Settings {
 
 	/**
+	 * Form settings groups.
+	 *
+	 * @var array
+	 */
+	public $settings_groups = array();
+
+	/**
+	 * Form settings.
+	 *
+	 * @var array
+	 */
+	public $settings = array();
+
+	/**
 	 * __construct function.
 	 *
 	 * @access public
@@ -25,7 +39,7 @@ class GMW_Settings {
 	 */
 	public function __construct() {
 
-		if ( ( empty( $_GET['page'] ) || 'gmw-settings' !== $_GET['page'] ) && ( empty( $_POST['option_page'] ) || 'gmw_options' !== $_POST['option_page'] ) ) { // WPCS: CSRF ok.
+		if ( ( empty( $_GET['page'] ) || 'gmw-settings' !== $_GET['page'] ) && ( empty( $_POST['option_page'] ) || 'gmw_options' !== $_POST['option_page'] ) ) { // phpcs:ignore: CSRF ok.
 			return;
 		}
 
@@ -121,7 +135,7 @@ class GMW_Settings {
 	 * @return [type] [description]
 	 */
 	public function get_parent_tab() {
-		return ! empty( $_GET['tab'] ) ? esc_attr( $_GET['tab'] ) : 'general_settings'; // WPCS: CSRF ok, sanitization ok.
+		return ! empty( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'general_settings'; // phpcs:ignore: CSRF ok.
 	}
 
 	/**
@@ -135,11 +149,11 @@ class GMW_Settings {
 
 		if ( ! empty( $_GET['sub_tab'] ) ) {
 
-			return $_GET['sub_tab']; // WPCS: CSRF ok, sanitization ok.
+			return $_GET['sub_tab']; // phpcs:ignore: CSRF ok, sanitization ok.
 
 		} elseif ( ! empty( $_GET['tab'] ) ) {
 
-			return esc_attr( $_GET['tab'] ); // WPCS: CSRF ok, sanitization ok.
+			return esc_attr( $_GET['tab'] ); // phpcs:ignore: CSRF ok, sanitization ok.
 
 		} else {
 			return 'general_settings';
@@ -902,11 +916,11 @@ class GMW_Settings {
 		<?php gmw_admin_pages_header(); ?>
 
 		<?php
-		$options_visibility = gmw_get_option( 'general_settings', 'minimize_options', false );
-		$v_class            = $options_visibility ? ' gmw-visible-options' : '';
+		$minimize_options = gmw_get_option( 'general_settings', 'minimize_options', false );
+		$vo_class         = $minimize_options ? '' : ' gmw-visible-options';
 		?>
 
-		<div id="gmw-settings-page" class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper<?php echo $v_class; // WPCS: XSS ok. ?>">
+		<div id="gmw-settings-page" class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper<?php echo $vo_class; // WPCS: XSS ok. ?>">
 
 			<nav class="gmw-admin-page-navigation-bg"></nav>
 			<nav class="gmw-admin-page-navigation">
@@ -992,7 +1006,7 @@ class GMW_Settings {
 				<div id="gmw-admin-page-sub-header">
 
 					<div style="display: flex;align-items: center;">
-						<img src="https://geomywp.com/wp-content/uploads/extensions-images/icons/<?php echo $this->settings_groups[ $parent_tab ]['img_slug'] . '_icon.svg' ;?>" style="height: 32px;margin-right: 4px;">
+						<img src="https://geomywp.com/wp-content/uploads/extensions-images/icons/<?php echo esc_attr( $this->settings_groups[ $parent_tab ]['img_slug'] ) . '_icon.svg'; ?>" style="height: 32px;margin-right: 4px;">
 						<h3 class="gmw-admin-page-title"><?php echo esc_html( $this->settings_groups[ $parent_tab ]['label'] ); ?></h3>
 					</div>
 
@@ -1031,12 +1045,14 @@ class GMW_Settings {
 								admin_url( 'admin.php?page=gmw-settings' )
 							);
 
+							$tab_title = reset( $sub_tabs ) === $tab_slug ? __( 'General Settings', 'geo-my-wp' ) : $tab['label'];
+
 							printf(
 								'<a href="%s"%s><span class="gmw-icon gmw-icon-%s"></span> <span class="label">%s</span></a>',
 								esc_url( $url ),
 								$current_tab === $tab['slug'] ? ' class="active"' : '',
 								'',
-								$tab_slug === reset( $sub_tabs ) ? __( 'General Settings', 'geo-my-wp' ) : esc_html( $tab['label'] )
+								esc_html( $tab_title )
 							);
 							?>
 						<?php } ?>
@@ -1078,7 +1094,7 @@ class GMW_Settings {
 								$setting_toggle = 'data-gmw_toggle_element="' . esc_attr( $option['settings_toggle']['element'] ) . '" data-gmw_toggle_value="' . esc_attr( $option['settings_toggle']['value'] ) . '"';
 							}
 							?>
-							<fieldset 
+							<fieldset
 								id="<?php echo esc_attr( $current_tab ); ?>-<?php echo esc_attr( $option['name'] ); ?>-tr"
 								class="gmw-settings-panel feature-<?php echo esc_attr( $feature_class ); ?> <?php echo $grid_column_css; // WPCS: XSS ok. ?> <?php echo ! empty( $option['wrap_class'] ) ? esc_attr( $option['wrap_class'] ) : ''; ?>"
 								<?php echo $setting_toggle; // WPCS: XSS ok. ?>>
@@ -1087,12 +1103,16 @@ class GMW_Settings {
 									<i class="gmw-icon-cog"></i>
 
 									<?php if ( isset( $option['label'] ) ) { ?>
-										<?php echo esc_html( $option['label'] ); ?>                 
+										<?php echo esc_html( $option['label'] ); ?>
 									<?php } ?>
 
-									<?php /*if ( ! empty( $option['desc'] ) ) { ?>
+									<?php
+									// phpcs:disable.
+									/*if ( ! empty( $option['desc'] ) ) { ?>
 										<i class="gmw-settings-desc-tooltip dashicons dashicons-editor-help gmw-tooltip" aria-label="[placeholder]"></i>
-									<?php } */ ?>
+									<?php }*/
+									// phpcs:enable.
+									?>
 
 								</legend>
 
@@ -1118,7 +1138,7 @@ class GMW_Settings {
 
 													<div class="gmw-settings-panel-input-container option-type-<?php echo esc_attr( $option['type'] ); ?>">
 														<?php $this->get_form_field( $settings, $option, $current_tab, $fields_group ); ?>
-													</div>				
+													</div>
 
 													<div class="gmw-settings-panel-description"><?php echo ( ! empty( $option['desc'] ) ) ? wp_kses( $option['desc'], $allowed_html ) : ''; ?></div>
 												</div>
@@ -1139,7 +1159,7 @@ class GMW_Settings {
 
 							</fieldset>
 
-						<?php } ?> 
+						<?php } ?>
 
 						<div class="gmw-update-settings-button update-button-wrapper bottom">
 							<input type="submit" class="gmw-settings-action-button button-primary" value="<?php esc_attr_e( 'Save Changes', 'geo-my-wp' ); ?>" />
