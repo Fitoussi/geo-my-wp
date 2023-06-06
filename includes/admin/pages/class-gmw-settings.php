@@ -301,6 +301,7 @@ class GMW_Settings {
 						'name'            => 'nominatim_options',
 						'type'            => 'fields_group',
 						'label'           => __( 'Nominatim ( OpenStreetMaps )', 'geo-my-wp' ),
+						// phpcs:ignore.
 						// 'desc'       => __( 'Setup Nominatim options.', 'geo-my-wp' ),
 						'fields'          => array(
 							'nominatim_email' => array(
@@ -801,7 +802,7 @@ class GMW_Settings {
 	 */
 	public function update_settings() {
 
-		if ( empty( $_POST['gmw_settings_save_nonce'] ) ) { // WPCS: CSRF ok.
+		if ( empty( $_POST['gmw_settings_save_nonce'] ) ) { // phpcs:ignore: CSRF ok.
 			return false;
 		}
 
@@ -811,7 +812,7 @@ class GMW_Settings {
 		// Current tab.
 		$current_tab     = $this->get_current_tab();
 		$current_options = gmw_get_options_group();
-		$options         = ! empty( $_POST['gmw_options'] ) ? $_POST['gmw_options'] : array(); // WPCS: CSRF ok, sanitization ok.
+		$options         = ! empty( $_POST['gmw_options'] ) ? $_POST['gmw_options'] : array(); // phpcs:ignore: CSRF ok, sanitization ok.
 
 		// Validate options.
 		$validated = $this->validate( $options );
@@ -820,7 +821,7 @@ class GMW_Settings {
 
 		update_option( 'gmw_options', $current_options );
 
-		$uri = ! empty( $_SERVER['QUERY_STRING'] ) ? $_SERVER['QUERY_STRING'] : ''; // WPCS: CSRF ok, sanitization ok.
+		$uri = ! empty( $_SERVER['QUERY_STRING'] ) ? $_SERVER['QUERY_STRING'] : ''; // phpcs:ignore: CSRF ok, sanitization ok.
 
 		wp_safe_redirect( admin_url( 'admin.php?' . $uri ) );
 
@@ -866,7 +867,7 @@ class GMW_Settings {
 
 			// Pre-defined fields.
 		} else {
-			echo gmw_get_admin_settings_field( $options, esc_attr( $name_attr ), $value ); // WPCS: XSS ok.
+			echo gmw_get_admin_settings_field( $options, esc_attr( $name_attr ), $value ); // phpcs:ignore: XSS ok.
 		}
 	}
 
@@ -920,7 +921,7 @@ class GMW_Settings {
 		$vo_class         = $minimize_options ? '' : ' gmw-visible-options';
 		?>
 
-		<div id="gmw-settings-page" class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper<?php echo $vo_class; // WPCS: XSS ok. ?>">
+		<div id="gmw-settings-page" class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper<?php echo $vo_class; // phpcs:ignore: XSS ok. ?>">
 
 			<nav class="gmw-admin-page-navigation-bg"></nav>
 			<nav class="gmw-admin-page-navigation">
@@ -977,9 +978,9 @@ class GMW_Settings {
 
 							// Check if it is a parent tab, and if so, add its first sub-tab as parameter to the URL.
 							// The first sub tab will be the settings page that shows up when clicking the parent tab.
-							if ( in_array( $tab['slug'], $parent_tabs ) ) {
+							if ( in_array( $tab['slug'], $parent_tabs, true ) ) {
 
-								$url = add_query_arg( array( 'sub_tab' => array_search( $tab['slug'], $parent_tabs ) ), $url );
+								$url = add_query_arg( array( 'sub_tab' => array_search( $tab['slug'], $parent_tabs, true ) ), $url );
 
 								// Otherwise, do not display the tab.
 							} else {
@@ -1001,7 +1002,7 @@ class GMW_Settings {
 
 			<?php $sub_nav_class = ! empty( $sub_tabs ) ? ' gmw-has-sub-nav' : ''; ?>
 
-			<div class="gmw-admin-page-panels-wrapper<?php echo $sub_nav_class; // WPCS: XSS ok. ?>" id="tab_<?php echo esc_attr( $current_tab ); ?>">
+			<div class="gmw-admin-page-panels-wrapper<?php echo $sub_nav_class; // phpcs:ignore: XSS ok. ?>" id="tab_<?php echo esc_attr( $current_tab ); ?>">
 
 				<div id="gmw-admin-page-sub-header">
 
@@ -1096,8 +1097,8 @@ class GMW_Settings {
 							?>
 							<fieldset
 								id="<?php echo esc_attr( $current_tab ); ?>-<?php echo esc_attr( $option['name'] ); ?>-tr"
-								class="gmw-settings-panel feature-<?php echo esc_attr( $feature_class ); ?> <?php echo $grid_column_css; // WPCS: XSS ok. ?> <?php echo ! empty( $option['wrap_class'] ) ? esc_attr( $option['wrap_class'] ) : ''; ?>"
-								<?php echo $setting_toggle; // WPCS: XSS ok. ?>>
+								class="gmw-settings-panel feature-<?php echo esc_attr( $feature_class ); ?> <?php echo $grid_column_css; // phpcs:ignore: XSS ok. ?> <?php echo ! empty( $option['wrap_class'] ) ? esc_attr( $option['wrap_class'] ) : ''; ?>"
+								<?php echo $setting_toggle; // phpcs:ignore: XSS ok. ?>>
 
 								<legend class="gmw-settings-panel-title">
 									<i class="gmw-icon-cog"></i>
@@ -1130,7 +1131,7 @@ class GMW_Settings {
 
 											<?php foreach ( $option['fields'] as $option ) { ?>
 
-												<div class="gmw-settings-panel-field gmw-form-feature-settings single-option option-<?php echo esc_attr( $option['name'] ); ?> <?php echo $feature_disbaled; // WPCS: XSS ok. ?> <?php echo ! empty( $option['type'] ) ? esc_attr( $option['type'] ) : ''; ?> <?php echo ! empty( $option['wrap_class'] ) ? esc_attr( $option['wrap_class'] ) : ''; ?>">
+												<div class="gmw-settings-panel-field gmw-form-feature-settings single-option option-<?php echo esc_attr( $option['name'] ); ?> <?php echo $feature_disbaled; // phpcs:ignore: XSS ok. ?> <?php echo ! empty( $option['type'] ) ? esc_attr( $option['type'] ) : ''; ?> <?php echo ! empty( $option['wrap_class'] ) ? esc_attr( $option['wrap_class'] ) : ''; ?>">
 
 													<div class="gmw-settings-panel-header">
 														<label class="gmw-settings-label"><?php echo ( ! empty( $option['label'] ) ) ? esc_attr( $option['label'] ) : ''; ?></label>
@@ -1148,7 +1149,7 @@ class GMW_Settings {
 
 									<?php } else { ?>
 
-										<div class="gmw-settings-panel-field gmw-form-feature-settings <?php echo $feature_disbaled; // WPCS: XSS ok. ?> <?php echo ! empty( $option['type'] ) ? esc_attr( $option['type'] ) : ''; ?>">
+										<div class="gmw-settings-panel-field gmw-form-feature-settings <?php echo $feature_disbaled; // phpcs:ignore: XSS ok. ?> <?php echo ! empty( $option['type'] ) ? esc_attr( $option['type'] ) : ''; ?>">
 											<div class="gmw-settings-panel-input-container">
 												<?php $this->get_form_field( $settings, $option, $current_tab ); ?>
 											</div>
@@ -1333,8 +1334,8 @@ class GMW_Settings {
 
 						foreach ( $option['options'] as $key_val => $name ) {
 
-							if ( in_array( $key_val, $values[ $current_tab ][ $option['name'] ] ) ) {
-
+							// phpcs:ignore.
+							if ( in_array( $key_val, $values[ $current_tab ][ $option['name'] ] ) ) { // Loose compration ok.
 								$valid_input[ $current_tab ][ $option['name'] ][] = $key_val;
 							}
 						}
@@ -1343,7 +1344,8 @@ class GMW_Settings {
 
 				case 'select':
 				case 'radio':
-					if ( ! empty( $values[ $current_tab ][ $option['name'] ] ) && in_array( $values[ $current_tab ][ $option['name'] ], array_keys( $option['options'] ) ) ) {
+					// phpcs:ignore.
+					if ( ! empty( $values[ $current_tab ][ $option['name'] ] ) && in_array( $values[ $current_tab ][ $option['name'] ], array_keys( $option['options'] ) ) ) { // Loose compration ok.
 						$valid_input[ $current_tab ][ $option['name'] ] = $values[ $current_tab ][ $option['name'] ];
 					} else {
 						$valid_input[ $current_tab ][ $option['name'] ] = ( ! empty( $option['default'] ) ) ? $option['default'] : '';
