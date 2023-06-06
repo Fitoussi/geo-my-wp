@@ -96,7 +96,11 @@ class GMW_Extensions {
 					$message = 'Error message: ' . $feed['errors']['http_request_failed'][0];
 				}
 
-				echo '<div class="error"><p>' . esc_attr__( 'There was an error retrieving the add-ons list from the server. Please try again later.', 'geo-my-wp' ) . esc_attr( $message ) . '</p></div>';
+				echo '<div class="gmw-admin-notice-top error"><p>' . sprintf(
+					/* translators: %s : error message. */
+					esc_attr__( 'There was an error retrieving GEO my WP\'s list of add-ons from the server. Please try again later. ( %s )', 'geo-my-wp' ),
+					esc_html( $message )
+				) . '</p></div>';
 
 				$output = false;
 			}
