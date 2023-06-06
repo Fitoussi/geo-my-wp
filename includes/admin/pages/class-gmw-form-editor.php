@@ -455,14 +455,14 @@ class GMW_Form_Editor {
 
 		// settings groups.
 		$groups = array(
-			'hidden'                 => array(
+			'hidden'            => array(
 				'slug'     => 'hidden',
 				'type'     => 'hidden',
 				'label'    => __( 'hidden', 'geo-my-wp' ),
 				'fields'   => array(),
 				'priority' => 1,
 			),
-			'general_settings'       => array(
+			'general_settings'  => array(
 				'slug'     => 'general_settings',
 				'type'     => 'function',
 				'label'    => __( 'Form Settings', 'geo-my-wp' ),
@@ -501,7 +501,7 @@ class GMW_Form_Editor {
 				),
 				'priority' => 5,
 			),
-			'page_load_results'      => array(
+			'page_load_results' => array(
 				'slug'     => 'page_load_results',
 				'type'     => 'fields',
 				'label'    => __( 'Page Load Results', 'geo-my-wp' ),
@@ -679,7 +679,7 @@ class GMW_Form_Editor {
 				),
 				'priority' => 10,
 			),
-			'search_form'            => array(
+			'search_form'       => array(
 				'slug'     => 'search_form',
 				'type'     => 'fields',
 				'label'    => __( 'Search Form', 'geo-my-wp' ),
@@ -1126,7 +1126,7 @@ class GMW_Form_Editor {
 				'priority' => 21,
 			),*/
 			// phpcs:enable.
-			'form_submission'        => array(
+			'form_submission'   => array(
 				'slug'     => 'form_submission',
 				'type'     => 'fields',
 				'label'    => __( 'Form Submission', 'geo-my-wp' ),
@@ -1177,7 +1177,7 @@ class GMW_Form_Editor {
 				),
 				'priority' => 30,
 			),
-			'search_results'         => array(
+			'search_results'    => array(
 				'slug'     => 'search_results',
 				'type'     => 'fields',
 				'label'    => __( 'Search Results', 'geo-my-wp' ),
@@ -1544,7 +1544,7 @@ class GMW_Form_Editor {
 				'priority' => 41,
 			),*/
 			// phpcs:enable.
-			'results_map'            => array(
+			'results_map'       => array(
 				'slug'     => 'results_map',
 				'type'     => 'fields',
 				'label'    => __( 'Map Settings', 'geo-my-wp' ),
@@ -1619,7 +1619,7 @@ class GMW_Form_Editor {
 				),
 				'priority' => 50,
 			),
-			'info_window'            => array(
+			'info_window'       => array(
 				'slug'     => 'info_window',
 				'type'     => 'fields',
 				'label'    => __( 'Info Window', 'geo-my-wp' ),
