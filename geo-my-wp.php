@@ -225,7 +225,7 @@ class GEO_MY_WP {
 	/**
 	 * GEO my WP instance.
 	 *
-	 * @var GEO my WP.
+	 * @var object GEO my WP.
 	 *
 	 * @since 2.4
 	 */
@@ -275,7 +275,7 @@ class GEO_MY_WP {
 	 * @return void
 	 */
 	public function __clone() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' eh?!', 'geo-my-wp' ), '3.0' ); // WPCS: XSS ok.
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' eh?!', 'geo-my-wp' ), '3.0' ); // phpcs:ignore: XSS ok.
 	}
 
 	/**
@@ -286,7 +286,7 @@ class GEO_MY_WP {
 	 * @return void
 	 */
 	public function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' eh?!', 'geo-my-wp' ), '3.0' ); // WPCS: XSS ok.
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' eh?!', 'geo-my-wp' ), '3.0' ); // phpcs:ignore: XSS ok.
 	}
 
 	/**
@@ -509,7 +509,6 @@ class GEO_MY_WP {
 		require_once GMW_PLUGINS_PATH . '/members-locator/loader.php';
 		require_once GMW_PLUGINS_PATH . '/bp-profile-search-geolocation/loader.php';
 		require_once GMW_PLUGINS_PATH . '/current-location/loader.php';
-		//include GMW_PLUGINS_PATH . '/sweetdate-geolocation/loader.php';
 	}
 
 	/**
@@ -530,7 +529,7 @@ class GEO_MY_WP {
  *
  * @since 1.1.1
  *
- * @return GEO my WP Instance
+ * @return object Instance of GEO_MY_WP.
  */
 function GMW() {
 	return GEO_MY_WP::instance();
