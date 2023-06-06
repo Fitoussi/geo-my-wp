@@ -421,8 +421,14 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		 *  );
 		 *
 		 *  You can also create multiple groups by passing a multidimensional array.
+		 *
+		 * @param array $settings_groups settings groups.
+		 *
+		 * @param array $form GEO my WP form.
+		 *
+		 * @return array settings groups.
 		 */
-		public function form_settings_groups() {
+		public function form_settings_groups( $settings_groups = array(), $form = array() ) {
 			return array();
 		}
 
@@ -497,9 +503,9 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		/**
 		 * WordPress active plugins.
 		 *
-		 * @var boolean
+		 * @var array of active plugins.
 		 */
-		public static $active_plugins = false;
+		public static $active_plugins = array();
 
 		/**
 		 * Check if a WordPress plugin is active.
@@ -1310,7 +1316,8 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 				update_option( 'gmw_addons_version', $installed_versions );
 
 				// update plugin if version changed.
-			} elseif ( $installed_versions[ $this->slug ] != $this->version ) {
+				// phpcs:ignore.
+			} elseif ( $installed_versions[ $this->slug ] != $this->version ) { // Loose compration ok.
 
 				// performe upgrade tasks.
 				$this->upgrade( $installed_versions[ $this->slug ], $this->version );
@@ -1425,7 +1432,8 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		 *
 		 * @return mixed
 		 */
-		public function init_objects() {
+		// phpcs:disable.
+		/*public function init_objects() {
 
 			$objects = $this->set_objects();
 
@@ -1448,7 +1456,8 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 			}
 
 			return $settings_groups;
-		}
+		}*/
+		// phpcs:enable.
 
 		/**
 		 * Generate menu item
@@ -1561,7 +1570,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		}
 
 		/**
-		 * Generate form settings groups
+		 * Generate form settings groups.
 		 *
 		 * @since 3.0
 		 *
@@ -1574,6 +1583,10 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		public function form_settings_groups_init( $settings_groups, $form ) {
 
 			$groups = $this->form_settings_groups( $settings_groups, $form );
+
+			if ( empty( $groups ) ) {
+				return $settings_groups;
+			}
 
 			// Loop through multi-array for multiple menu item.
 			if ( ! empty( $groups[0] ) && is_array( $groups[0] ) ) {
