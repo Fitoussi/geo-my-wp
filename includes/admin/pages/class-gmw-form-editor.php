@@ -76,9 +76,9 @@ class GMW_Form_Editor {
 
 		// Modify form editor for Mashup Map forms.
 		// This hooks must be on top otherwise they won't get triggered during the AJAX request when updating the form.
-		add_filter( 'gmw_mashup_map_form_default_settings', array( $this, 'mashup_map_default_settings' ), 5, 90 );
-		add_filter( 'gmw_mashup_map_form_settings_groups', array( $this, 'mashup_map_form_settings_groups' ), 5, 90 );
-		add_filter( 'gmw_mashup_map_form_settings', array( $this, 'mashup_map_form_settings' ), 5, 90 );
+		add_filter( 'gmw_mashup_map_form_default_settings', array( $this, 'mashup_map_default_settings' ), 5 );
+		add_filter( 'gmw_mashup_map_form_settings_groups', array( $this, 'mashup_map_form_settings_groups' ), 5 );
+		add_filter( 'gmw_mashup_map_form_settings', array( $this, 'mashup_map_form_settings' ), 5 );
 
 		// verify that this is the Form edit page.
 		if ( empty( $_GET['page'] ) || 'gmw-forms' !== $_GET['page'] || empty( $_GET['gmw_action'] ) || 'edit_form' !== $_GET['gmw_action'] ) { // phpcs:ignore: CSRF ok.
@@ -167,11 +167,9 @@ class GMW_Form_Editor {
 	 *
 	 * @param  array $settings settings.
 	 *
-	 * @param  array $form     form.
-	 *
-	 * @return [type]           [description]
+	 * @return array form settings.
 	 */
-	public function mashup_map_default_settings( $settings, $form ) {
+	public function mashup_map_default_settings( $settings ) {
 
 		$settings['page_load_results']['enabled']         = 1;
 		$settings['page_load_results']['display_results'] = 0;
@@ -189,11 +187,9 @@ class GMW_Form_Editor {
 	 *
 	 * @param  [type] $settings [description].
 	 *
-	 * @param  [type] $form     [description].
-	 *
-	 * @return [type]           [description]
+	 * @return array form settings.
 	 */
-	public function mashup_map_form_settings_groups( $settings, $form ) {
+	public function mashup_map_form_settings_groups( $settings ) {
 
 		unset( $settings['no_results'] );
 
@@ -214,13 +210,11 @@ class GMW_Form_Editor {
 	 *
 	 * Set some hidden default values.
 	 *
-	 * @param  [type] $settings [description].
+	 * @param  array $settings form settings.
 	 *
-	 * @param  [type] $form     [description].
-	 *
-	 * @return [type]           [description]
+	 * @return array form settings
 	 */
-	public function mashup_map_form_settings( $settings, $form ) {
+	public function mashup_map_form_settings( $settings ) {
 
 		$settings['page_load_results']['enabled']['wrap_class']    = 'gmw-hidden-form-editor-object';
 		$settings['page_load_results']['enabled']['default']       = 1;
