@@ -688,10 +688,10 @@ class GMW_Form_Editor {
 							/* translators: %s: deprecation message. */
 							'desc'       => sprintf( __( 'Select the search form template file that you would like to use. You can also disable the search form if you wish to display the map or list of results only.<br />%s', 'geo-my-wp' ), $depreacated_message ),
 							'attributes' => array(
-								'data-gmw_ajax_load_options' => 'gmw_get_templates',
+								'data-gmw_ajax_load_options'   => 'gmw_get_templates',
 								'data-gmw_ajax_load_component' => $this->form['component'],
-								'data-gmw_ajax_load_addon' => $this->form['addon'],
-								'data-gmw_ajax_load_type'  => 'search-forms',
+								'data-gmw_ajax_load_addon'     => $this->form['addon'],
+								'data-gmw_ajax_load_type'      => 'search-forms',
 							),
 							'options'    => $form_templates,
 							'class'      => 'gmw-options-toggle',
@@ -1186,10 +1186,10 @@ class GMW_Form_Editor {
 							/* translators: %s: deprecation message. */
 							'desc'       => sprintf( __( 'Select the search result template file.<br />%s', 'geo-my-wp' ), $depreacated_message ),
 							'attributes' => array(
-								'data-gmw_ajax_load_options' => 'gmw_get_templates',
+								'data-gmw_ajax_load_options'   => 'gmw_get_templates',
 								'data-gmw_ajax_load_component' => $this->form['component'],
-								'data-gmw_ajax_load_addon' => $this->form['addon'],
-								'data-gmw_ajax_load_type'  => 'search-results',
+								'data-gmw_ajax_load_addon'     => $this->form['addon'],
+								'data-gmw_ajax_load_type'      => 'search-results',
 							),
 							'options'    => $results_templates,
 							'sub_option' => false,
@@ -2864,7 +2864,7 @@ class GMW_Form_Editor {
 							do_action( 'gmw_form_editor_tab_start', $tab, $section, $this->form['ID'], $this->form );
 							do_action( 'gmw_form_editor_' . $tab . '_tab_start', $tab, $section, $this->form['ID'], $this->form );
 
-							foreach ( $section as $sec => $option ) {
+							foreach ( $section as $option ) {
 
 								$grid_column_css  = ! empty( $option['grid_column'] ) ? 'gmw-settings-panel-grid-column-' . esc_attr( $option['grid_column'] ) : '';
 								$feature_disbaled = '';
@@ -2892,9 +2892,9 @@ class GMW_Form_Editor {
 
 											<?php
 											$tab_options[] = array(
-												'tab'   => $tab,
-												'id'    => $id_attr,
-												'label' => $option['label'],
+												'tab'       => $tab,
+												'id'        => $id_attr,
+												'label'     => $option['label'],
 												'tab_label' => ! empty( $this->form_settings_groups[ $tab ]['label'] ) ? $this->form_settings_groups[ $tab ]['label'] : '',
 											);
 											?>
@@ -3315,7 +3315,7 @@ class GMW_Form_Editor {
 		// loop through and validate fields.
 		foreach ( $this->form_fields as $section_name => $section ) {
 
-			foreach ( $section as $sec => $option ) {
+			foreach ( $section as $option ) {
 
 				if ( is_array( $section ) && ! array_filter( $section ) ) {
 					continue;
