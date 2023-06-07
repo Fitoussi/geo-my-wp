@@ -314,7 +314,8 @@ class GMW_Forms_Page {
 
 		gmw_admin_pages_header();
 		?>
-		<div id="gmw-forms-page" class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper gmw-admin-page-no-nav">
+		<div id="gmw-forms-page"
+			class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper gmw-admin-page-no-nav">
 
 			<?php gmw_admin_page_loader(); ?>
 
@@ -327,7 +328,10 @@ class GMW_Forms_Page {
 				<h1 style="display:none"></h1>
 
 				<div class="gmw-new-form-wrapper">
-					<h3 class="gmw-admin-page-title" style="margin-bottom: 0;margin-left: 0.25rem;"><?php esc_html_e( 'Forms', 'geo-my-wp' ); ?></h3> <?php echo self::new_form_buttons(); // phpcs:ignore: XSS ok. ?>
+					<h3 class="gmw-admin-page-title" style="margin-bottom: 0;margin-left: 0.25rem;">
+						<?php esc_html_e( 'Forms', 'geo-my-wp' ); ?>
+					</h3>
+					<?php echo self::new_form_buttons(); // phpcs:ignore: XSS ok. ?>
 				</div>
 
 				<form id="gmw_forms_admin" class="gmw-admin-page-conten" enctype="multipart/form-data" method="post">
@@ -339,9 +343,9 @@ class GMW_Forms_Page {
 					<div class="clear"></div>
 
 					<?php
-						$forms_table = new GMW_Forms_Table();
-						$forms_table->prepare_items();
-						$forms_table->display();
+					$forms_table = new GMW_Forms_Table();
+					$forms_table->prepare_items();
+					$forms_table->display();
 					?>
 
 				</form>
@@ -353,8 +357,8 @@ class GMW_Forms_Page {
 			</div>
 		</div>
 		<script type="text/javascript">
-			jQuery( document ).ready( function() {
-				jQuery( 'select' ).addClass( 'gmw-smartbox-not' );
+			jQuery(document).ready(function () {
+				jQuery('select').addClass('gmw-smartbox-not');
 			});
 		</script>
 		<?php
