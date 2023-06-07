@@ -1749,6 +1749,27 @@ class GMW_Form_Editor {
 			)
 		);
 
+		if ( 'posts_locator' === $this->form['component'] || 'users_locator' === $this->form['component'] ) {
+
+			$groups['search_form']['fields']['user_roles'] = gmw_get_admin_setting_args(
+				array(
+					'name'            => 'user_roles',
+					'type'            => 'select',
+					'default'         => '',
+					'label'           => __( 'User Roles', 'geo-my-wp' ),
+					'desc'            => __( 'Setup the user roles filter.', 'geo-my-wp' ),
+					'attributes'      => array(),
+					'priority'        => 16,
+					'premium_message' => gmw_get_admin_setting_args(
+						array(
+							'option_type'     => 'premium_message',
+							'option_disabled' => 1,
+						),
+					),
+				)
+			);
+		}
+
 		$groups['search_form']['fields']['reset_button'] = gmw_get_admin_setting_args(
 			array(
 				'name'            => 'reset_button',
