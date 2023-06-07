@@ -26,7 +26,7 @@ class GMW_Forms_Page {
 	 */
 	public function __construct() {
 
-		if ( empty( $_GET['page'] ) || 'gmw-forms' !== $_GET['page'] ) { // WPCS: CSRF ok.
+		if ( empty( $_GET['page'] ) || 'gmw-forms' !== $_GET['page'] ) { // phpcs:ignore: CSRF ok.
 			return;
 		}
 
@@ -65,7 +65,7 @@ class GMW_Forms_Page {
 	public function create_new_form() {
 
 		// verfiy form data.
-		if ( empty( $_GET['addon'] ) || empty( $_GET['slug'] ) ) { // WPCS: CSRF ok.
+		if ( empty( $_GET['addon'] ) || empty( $_GET['slug'] ) ) { // phpcs:ignore: CSRF ok.
 
 			wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_not_created&gmw_notice_status=error' ) );
 
@@ -108,7 +108,7 @@ class GMW_Forms_Page {
 				'%s',
 				'%s',
 			)
-		); // WPCS: db call ok, cache ok.
+		); // phpcs:ignore: db call ok, cache ok.
 
 		// get the ID of the new form.
 		$new_form_id = $wpdb->insert_id;
@@ -134,7 +134,7 @@ class GMW_Forms_Page {
 				'%s',
 			),
 			array( '%d' )
-		); // WPCS: db call ok, cache ok.
+		); // phpcs:ignore: db call ok, cache ok.
 
 		// update forms in cache.
 		GMW_Forms_Helper::update_forms_cache();
@@ -155,7 +155,7 @@ class GMW_Forms_Page {
 	public function duplicate_form() {
 
 		// verify the form ID.
-		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) { // WPCS: CSRF ok.
+		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) { // phpcs:ignore: CSRF ok.
 
 			wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_not_duplicated&gmw_notice_status=error' ) );
 
@@ -172,14 +172,14 @@ class GMW_Forms_Page {
 		        WHERE ID = %d",
 				absint( $_GET['form_id'] )
 			)
-		); // WPCS: db call ok, cache ok, CSRF ok.
+		); // phpcs:ignore: db call ok, cache ok, CSRF ok.
 
 		if ( empty( $form ) ) {
 			wp_die( esc_html__( 'An error occurred while trying to retrieve the form.', 'geo-my-wp' ) );
 		}
 
 		// create new form in database.
-		$new_form = $wpdb->insert(
+		$wpdb->insert(
 			$wpdb->prefix . 'gmw_forms',
 			array(
 				'slug'        => $form->slug,
@@ -201,7 +201,7 @@ class GMW_Forms_Page {
 				'%s',
 				'%s',
 			)
-		); // WPCS: db call ok, cache ok.
+		); // phpcs:ignore: db call ok, cache ok.
 
 		// Update forms in cache.
 		GMW_Forms_Helper::update_forms_cache();
@@ -218,12 +218,12 @@ class GMW_Forms_Page {
 	public function delete_form() {
 
 		// Abort if form ID doesn't exists.
-		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) { // WPCS: CSRF ok.
+		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) { // phpcs:ignore: CSRF ok.
 			wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_not_deleted&gmw_notice_status=error' ) );
 			exit;
 		}
 
-		GMW_Forms_Helper::delete_form( absint( $_GET['form_id'] ) ); // WPCS: CSRF ok.
+		GMW_Forms_Helper::delete_form( absint( $_GET['form_id'] ) ); // phpcs:ignore: CSRF ok.
 
 		// Reload the page to prevent resubmission.
 		wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_deleted&gmw_notice_status=updated' ) );
@@ -315,7 +315,7 @@ class GMW_Forms_Page {
 	public function output() {
 
 		gmw_admin_pages_header();
-		?>		
+		?>
 		<div id="gmw-forms-page" class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper gmw-admin-page-no-nav">
 
 			<?php gmw_admin_page_loader(); ?>
@@ -329,7 +329,7 @@ class GMW_Forms_Page {
 				<h1 style="display:none"></h1>
 
 				<div class="gmw-new-form-wrapper">
-					<h3 class="gmw-admin-page-title" style="margin-bottom: 0;margin-left: 0.25rem;"><?php esc_html_e( 'Forms', 'geo-my-wp' ); ?></h3> <?php echo self::new_form_buttons(); // WPCS: XSS ok. ?>
+					<h3 class="gmw-admin-page-title" style="margin-bottom: 0;margin-left: 0.25rem;"><?php esc_html_e( 'Forms', 'geo-my-wp' ); ?></h3> <?php echo self::new_form_buttons(); // phpcs:ignore: XSS ok. ?>
 				</div>
 
 				<form id="gmw_forms_admin" class="gmw-admin-page-conten" enctype="multipart/form-data" method="post">
@@ -352,7 +352,7 @@ class GMW_Forms_Page {
 			<!-- Side bar -->
 			<div class="gmw-admin-page-sidebar">
 				<?php gmw_admin_sidebar_content(); ?>
-			</div>    
+			</div>
 		</div>
 		<script type="text/javascript">
 			jQuery( document ).ready( function() {
