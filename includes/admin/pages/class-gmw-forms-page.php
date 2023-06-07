@@ -72,15 +72,14 @@ class GMW_Forms_Page {
 			exit;
 		}
 
-		$new_data = array();
-
 		// get form values.
-		$new_form['slug']        = sanitize_text_field( wp_unslash( $_GET['slug'] ) ); // WPCS: CSRF ok.
-		$new_form['addon']       = sanitize_text_field( wp_unslash( $_GET['addon'] ) ); // WPCS: CSRF ok.
-		$new_form['component']   = ! empty( $_GET['component'] ) ? sanitize_text_field( wp_unslash( $_GET['component'] ) ) : ''; // WPCS: CSRF ok.
-		$new_form['object_type'] = ! empty( $_GET['object_type'] ) ? sanitize_text_field( wp_unslash( $_GET['object_type'] ) ) : ''; // WPCS: CSRF ok.
-		$new_form['name']        = ! empty( $_GET['name'] ) ? str_replace( '+', ' ', sanitize_text_field( wp_unslash( $_GET['name'] ) ) ) : ''; // WPCS: CSRF ok.
-		$new_form['prefix']      = ! empty( $_GET['prefix'] ) ? sanitize_text_field( wp_unslash( $_GET['prefix'] ) ) : ''; // WPCS: CSRF ok.
+		$new_form                = array();
+		$new_form['slug']        = sanitize_text_field( wp_unslash( $_GET['slug'] ) ); // phpcs:ignore: CSRF ok.
+		$new_form['addon']       = sanitize_text_field( wp_unslash( $_GET['addon'] ) ); // phpcs:ignore: CSRF ok.
+		$new_form['component']   = ! empty( $_GET['component'] ) ? sanitize_text_field( wp_unslash( $_GET['component'] ) ) : ''; // phpcs:ignore: CSRF ok.
+		$new_form['object_type'] = ! empty( $_GET['object_type'] ) ? sanitize_text_field( wp_unslash( $_GET['object_type'] ) ) : ''; // phpcs:ignore: CSRF ok.
+		$new_form['name']        = ! empty( $_GET['name'] ) ? str_replace( '+', ' ', sanitize_text_field( wp_unslash( $_GET['name'] ) ) ) : ''; // phpcs:ignore: CSRF ok.
+		$new_form['prefix']      = ! empty( $_GET['prefix'] ) ? sanitize_text_field( wp_unslash( $_GET['prefix'] ) ) : ''; // phpcs:ignore: CSRF ok.
 
 		global $wpdb;
 
