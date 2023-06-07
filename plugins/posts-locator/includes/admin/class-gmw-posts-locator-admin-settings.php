@@ -83,7 +83,7 @@ class GMW_Posts_Locator_Admin_Settings {
 				'default'     => '',
 				'label'       => __( 'Post Types', 'geo-my-wp' ),
 				'placeholder' => __( 'Select post types', 'geo-my-wp' ),
-				'desc'        => __( 'Select the post types that you would like to geotag. GEO my WP Location form will be added to the "Edit Post" page of the selected post types.', 'geo-my-wp' ),
+				'desc'        => __( 'Select the post types that you would like to geotag. GEO my WP location form will be added to the "Edit Post" page of the selected post types.', 'geo-my-wp' ),
 				'options'     => $post_types,
 				'attributes'  => array(
 					'data-gmw_ajax_load_options' => 'gmw_get_post_types',
@@ -96,7 +96,7 @@ class GMW_Posts_Locator_Admin_Settings {
 			'name'       => 'edit_post_page_options',
 			'type'       => 'fields_group',
 			'label'      => __( 'Map Settings ( "Edit Post" Page )', 'geo-my-wp' ),
-			'desc'       => __( 'Setup the Location form\'s map of the "Edit Post" page.', 'geo-my-wp' ),
+			'desc'       => __( 'Setup the map of the location form in the "Edit Post" page.', 'geo-my-wp' ),
 			'fields'     => array(
 				'edit_post_page_map_latitude'   => gmw_get_admin_setting_args(
 					array(
@@ -105,7 +105,7 @@ class GMW_Posts_Locator_Admin_Settings {
 						'default'     => '40.711544',
 						'placeholder' => __( 'Latitude', 'geo-my-wp' ),
 						'label'       => __( 'Default latitude', 'geo-my-wp' ),
-						'desc'        => __( 'Enter the latitude of the location that displays when the map first loads.', 'geo-my-wp' ),
+						'desc'        => __( 'Enter the latitude of the default location.', 'geo-my-wp' ),
 						'priority'    => 5,
 					),
 				),
@@ -116,7 +116,7 @@ class GMW_Posts_Locator_Admin_Settings {
 						'default'     => '-74.013486',
 						'placeholder' => __( 'Longitude', 'geo-my-wp' ),
 						'label'       => __( 'Default longitude', 'geo-my-wp' ),
-						'desc'        => __( 'Enter the longitude of the location that displays when the map first loads.', 'geo-my-wp' ),
+						'desc'        => __( 'Enter the longitude of the default location.', 'geo-my-wp' ),
 						'priority'    => 10,
 					),
 				),
@@ -154,7 +154,8 @@ class GMW_Posts_Locator_Admin_Settings {
 			'priority'   => 20,
 		);
 
-		$settings['post_types_settings']['location_mandatory'] = gmw_get_admin_setting_args(
+		// phpcs:disable.
+		/*$settings['post_types_settings']['location_mandatory'] = gmw_get_admin_setting_args(
 			array(
 				'name'     => 'location_mandatory',
 				'type'     => 'checkbox',
@@ -165,7 +166,8 @@ class GMW_Posts_Locator_Admin_Settings {
 				'priority' => 100,
 				'disabled' => true,
 			),
-		);
+		);*/
+		// phpcs:enable.
 
 		return $settings;
 	}
