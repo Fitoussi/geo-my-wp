@@ -31,7 +31,7 @@ class GMW_Members_Locator_Form_Editor {
 		add_filter( 'gmw_form_settings', array( $this, 'form_settings' ), 10, 2 );
 
 		// Mashup map form tasks.
-		add_filter( 'gmw_members_locator_mashup_map_form_settings', array( $this, 'form_settings' ), 5, 2 );		
+		add_filter( 'gmw_members_locator_mashup_map_form_settings', array( $this, 'form_settings' ), 5, 2 );
 	}
 
 	/**
@@ -245,7 +245,7 @@ class GMW_Members_Locator_Form_Editor {
 				'type'      => 'checkbox',
 				'default'   => '',
 				'label'     => __( 'Show Last Active', 'geo-my-wp' ),
-				'desc'      => __( 'Check to display the member last active.', 'geo-my-wp' ),
+				'desc'      => __( 'Display the member last active.', 'geo-my-wp' ),
 				'cb_label'  => __( 'Enable', 'geo-my-wp' ),
 				'priority'  => 35,
 				'iw_option' => 1,
@@ -258,7 +258,7 @@ class GMW_Members_Locator_Form_Editor {
 				'type'      => 'checkbox',
 				'default'   => '',
 				'label'     => __( 'Add Friend Button', 'geo-my-wp' ),
-				'desc'      => __( 'Check to display the Add Friend Button.', 'geo-my-wp' ),
+				'desc'      => __( 'Display the Add Friend Button.', 'geo-my-wp' ),
 				'cb_label'  => __( 'Enable', 'geo-my-wp' ),
 				'priority'  => 40,
 				'iw_option' => 1,
