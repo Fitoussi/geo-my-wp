@@ -968,8 +968,10 @@ class GMW_Form_Core {
 	 * In that case we need to run the loop in order to collect some data for the map.
 	 *
 	 * @since 4.0
+	 *
+	 * @param boolean $include true || false if to include the single-result.php template file. That is mainly to be used with deprecated file of the AJAX forms extension.
 	 */
-	public function object_loop() {}
+	public function object_loop( $include = false ) {}
 
 	/**
 	 * Get template files and enqueue stylesheets and custom CSS.
