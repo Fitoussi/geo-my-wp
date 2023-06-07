@@ -37,9 +37,9 @@ class GMW_Members_Locator_Form_Editor {
 	/**
 	 * Default settings
 	 *
-	 * @param  array $settings settings.
+	 * @param  array $settings form settings.
 	 *
-	 * @param  array $args     arguments.
+	 * @param  array $form     GEO my WP form.
 	 *
 	 * @return [type]           [description]
 	 */
@@ -94,11 +94,13 @@ class GMW_Members_Locator_Form_Editor {
 		$disabled        = ( ! class_exists( 'Buddypress' ) || ! bp_is_active( 'xprofile' ) ) ? true : false;
 		$selected_fields = array();
 
+		// phpcs:disable.
 		/*if ( ! empty( $form['search_form']['xprofile_fields']['fields'] ) ) {
 			$selected_fields = array_combine( $form['search_form']['xprofile_fields']['fields'], $form['search_form']['xprofile_fields']['fields'] );
 		}*/
+		// phpcs:enable.
 
-		foreach( $form['search_form']['xprofile_fields']['fields'] as $xpfield_id ) {
+		foreach ( $form['search_form']['xprofile_fields']['fields'] as $xpfield_id ) {
 			$selected_fields[ $xpfield_id ] = __( 'Click to load option', 'geo-my-wp' );
 		}
 
@@ -177,10 +179,10 @@ class GMW_Members_Locator_Form_Editor {
 		);
 
 		$settings['search_results']['member_types'] = array(
-			'name'             => 'member_types',
-			'type'             => 'fields_group',
-			'label'            => esc_html__( 'Member Types', 'geo-my-wp' ),
-			'fields'           => array(
+			'name'            => 'member_types',
+			'type'            => 'fields_group',
+			'label'           => esc_html__( 'Member Types', 'geo-my-wp' ),
+			'fields'          => array(
 				'enabled'      => gmw_get_admin_setting_args(
 					array(
 						'name'       => 'enabled',
@@ -194,34 +196,34 @@ class GMW_Members_Locator_Form_Editor {
 						'priority'   => 5,
 					)
 				),
-				'label' => gmw_get_admin_setting_args(
+				'label'        => gmw_get_admin_setting_args(
 					array(
-						'name'        => 'label',
-						'type'        => 'text',
-						'default'     => '',
-						'label'       => __( 'Label', 'geo-my-wp' ),
-						'desc'        => __( 'Enter the label that you wish to display before the member types or leave blank to omit the label.', 'geo-my-wp' ),
-						'priority'    => 10,
+						'name'     => 'label',
+						'type'     => 'text',
+						'default'  => '',
+						'label'    => __( 'Label', 'geo-my-wp' ),
+						'desc'     => __( 'Enter the label that you wish to display before the member types or leave blank to omit the label.', 'geo-my-wp' ),
+						'priority' => 10,
 					)
 				),
 				'field_output' => gmw_get_admin_setting_args(
 					array(
-						'name'        => 'field_output',
-						'type'        => 'text',
-						'default'     => '',
-						'label'       => __( 'Field Output', 'geo-my-wp' ),
-						'desc'        => __( 'Enter the text that you wish to display with the member types. Use the placeholder %member_types% anywhere in the text where you wish to display the member types.', 'geo-my-wp' ),
-						'priority'    => 15,
+						'name'     => 'field_output',
+						'type'     => 'text',
+						'default'  => '',
+						'label'    => __( 'Field Output', 'geo-my-wp' ),
+						'desc'     => __( 'Enter the text that you wish to display with the member types. Use the placeholder %member_types% anywhere in the text where you wish to display the member types.', 'geo-my-wp' ),
+						'priority' => 15,
 					)
 				),
 			),
 			'premium_message' => gmw_get_admin_setting_args(
 				array(
-					'option_type'      => 'premium_message',
-					'option_disabled'  => 1,
+					'option_type'     => 'premium_message',
+					'option_disabled' => 1,
 				),
 			),
-			'priority'         => 28,
+			'priority'        => 28,
 		);
 
 		$settings['info_window']['member_types']             = $settings['search_results']['member_types'];
