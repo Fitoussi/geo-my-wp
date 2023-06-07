@@ -92,7 +92,6 @@ class GMW_Forms_Page {
 				'addon'       => $new_form['addon'],
 				'component'   => $new_form['component'],
 				'object_type' => $new_form['object_type'],
-				'addon'       => $new_form['addon'],
 				'name'        => $new_form['name'],
 				'prefix'      => $new_form['prefix'],
 				'title'       => '',
