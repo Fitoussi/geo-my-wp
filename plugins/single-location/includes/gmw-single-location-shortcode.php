@@ -1,4 +1,13 @@
 <?php
+/**
+ * GEO my WP Single Location shortcode.
+ *
+ * @author Eyal Fitoussi
+ *
+ * @package geo-my-wp
+ */
+
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
