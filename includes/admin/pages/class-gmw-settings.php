@@ -301,8 +301,6 @@ class GMW_Settings {
 						'name'            => 'nominatim_options',
 						'type'            => 'fields_group',
 						'label'           => __( 'Nominatim ( OpenStreetMaps )', 'geo-my-wp' ),
-						// phpcs:ignore.
-						// 'desc'       => __( 'Setup Nominatim options.', 'geo-my-wp' ),
 						'fields'          => array(
 							'nominatim_email' => array(
 								'name'        => 'nominatim_email',
@@ -1129,9 +1127,11 @@ class GMW_Settings {
 								<div
 									class="gmw-settings-panel-content gmw-form-feature-settings <?php echo ! empty( $option['type'] ) ? esc_attr( $option['type'] ) : ''; ?>">
 
-									<div class="gmw-settings-panel-description">
-										<?php echo ( ! empty( $option['desc'] ) ) ? wp_kses( $option['desc'], $allowed_html ) : ''; ?>
-									</div>
+									<?php if ( ! empty( $option['desc'] ) ) { ?>
+										<div class="gmw-settings-panel-description">
+											<?php echo wp_kses( $option['desc'], $allowed_html ); ?>
+										</div>
+									<?php } ?>
 
 									<?php if ( 'fields_group' === $option['type'] && array_filter( $option['fields'] ) ) { ?>
 
