@@ -357,7 +357,7 @@ class GMW_Settings {
 								),
 								'priority'    => 10,
 							),
-							'google_maps_api_china' => array(
+							'google_maps_api_china'           => array(
 								'name'       => 'google_maps_api_china',
 								'type'       => 'checkbox',
 								'default'    => '',
