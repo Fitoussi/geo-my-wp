@@ -644,8 +644,8 @@ class GMW_Admin {
 			wp_deregister_script( 'select2' );
 			?>
 			<script type="text/javascript">
-				jQuery( document ).ready( function() {
-					jQuery( 'select' ).addClass( 'gmw-smartbox-not' );
+				jQuery(document).ready(function () {
+					jQuery('select').addClass('gmw-smartbox-not');
 				});
 			</script>
 			<?php
@@ -715,7 +715,7 @@ class GMW_Admin {
 			$new_addon['license_name']    = ! empty( $addon['name'] ) ? $addon['name'] : false;
 			$new_addon['trigger_license'] = ! empty( $addon['trigger_license'] ) ? $addon['trigger_license'] : false;
 
-				// check for min requirements of add-ons with current version of GEO my WP.
+			// check for min requirements of add-ons with current version of GEO my WP.
 			if ( ! empty( $new_addon['gmw_min_version'] ) && version_compare( GMW_VERSION, $new_addon['gmw_min_version'], '<' ) ) {
 
 				$new_addon['status']                             = 'disabled';
@@ -747,7 +747,7 @@ class GMW_Admin {
 				$new_addon['status'] = 'active';
 			}
 
-				// trigger license key.
+			// trigger license key.
 			if ( class_exists( 'GMW_License' ) && ! empty( $new_addon['full_path'] ) ) {
 
 				new GMW_License(
@@ -761,9 +761,9 @@ class GMW_Admin {
 				);
 			}
 
-				GMW()->addons[ $new_addon['slug'] ] = $new_addon;
+			GMW()->addons[ $new_addon['slug'] ] = $new_addon;
 
-				GMW()->registered_addons[] = $new_addon['slug'];
+			GMW()->registered_addons[] = $new_addon['slug'];
 
 			if ( ! empty( $new_addon['object_type'] ) ) {
 				GMW()->object_types[] = $new_addon['object_type'];
@@ -799,11 +799,13 @@ class GMW_Admin {
 				content: "\f230" !important;
 				color: rgb(103, 199, 134) !important;
 			}
+
 			.gmw_media_icon {
 				vertical-align: text-top;
 				width: 18px;
 			}
-			.wp-core-ui a.gmw_media_link{
+
+			.wp-core-ui a.gmw_media_link {
 				padding-left: 0.4em;
 			}
 
@@ -838,13 +840,9 @@ class GMW_Admin {
 			}
 		</style>
 
-		<a
-			href="#TB_inline?width=480&inlineId=select_gmw_form"
-			class="thickbox button gmw_media_link"
-			id="add_gmw_form"
-			title="<?php esc_html_e( 'Insert GEO my WP Form', 'geo-my-wp' ); ?>"
-		>
-		<span class="dashicons-location-alt dashicons"></span>
+		<a href="#TB_inline?width=480&inlineId=select_gmw_form" class="thickbox button gmw_media_link" id="add_gmw_form"
+			title="<?php esc_html_e( 'Insert GEO my WP Form', 'geo-my-wp' ); ?>">
+			<span class="dashicons-location-alt dashicons"></span>
 			<?php esc_html_e( 'GMW Form', 'geo-my-wp' ); ?>
 		</a>
 		<?php
@@ -862,21 +860,21 @@ class GMW_Admin {
 		<script>
 			function gmwInsertForm() {
 
-				var form_id = jQuery( '#gmw_form_id' ).val();
+				var form_id = jQuery('#gmw_form_id').val();
 
-				if ( "" === form_id ){
+				if ("" === form_id) {
 
-					alert( '<?php echo esc_html( $message ); ?>' );
+					alert('<?php echo esc_html( $message ); ?>');
 
 					return;
 				}
 
-				var form_name = jQuery( "#gmw_form_id option[value='" + form_id + "']" ).text().replace( /[\[\]]/g, '' );
-				var addon     = jQuery( "#gmw_form_id option[value='" + form_id + "']" ).data( 'type' );
-				var prefix    = 'gmw';
-				var attribute = jQuery( ".gmw_form_type:checked" ).val();
+				var form_name = jQuery("#gmw_form_id option[value='" + form_id + "']").text().replace(/[\[\]]/g, '').trim(),
+					addon = jQuery("#gmw_form_id option[value='" + form_id + "']").data('type'),
+					prefix = 'gmw',
+					attribute = jQuery(".gmw_form_type:checked").val();
 
-				window.send_to_editor( '[' + prefix + ' ' + attribute + '="' + form_id + '" name="' + form_name + '"]' );
+				window.send_to_editor('[' + prefix + ' ' + attribute + '="' + form_id + '" name="' + form_name + '"]');
 			}
 		</script>
 		<div id="select_gmw_form" style="display:none;">
@@ -885,35 +883,32 @@ class GMW_Admin {
 
 				<div id="gmw-form-shortcode-content">
 
-					<p><?php esc_html_e( 'Select the type of form you wish to add:', 'geo-my-wp' ); ?></p>
+					<p>
+						<?php esc_html_e( 'Select the type of form you wish to add:', 'geo-my-wp' ); ?>
+					</p>
 
 					<div class="checkboxes">
 						<label>
-							<input
-								type="radio" class="gmw_form_type" checked="checked" name="gmw_form_type" value="form"
-								onclick="if ( jQuery( '#gmw-forms-dropdown-wrapper' ).is( ':hidden' ) ) jQuery( '#gmw-forms-dropdown-wrapper' ).slideToggle();"
-							/>
+							<input type="radio" class="gmw_form_type" checked="checked" name="gmw_form_type" value="form"
+								onclick="if ( jQuery( '#gmw-forms-dropdown-wrapper' ).is( ':hidden' ) ) jQuery( '#gmw-forms-dropdown-wrapper' ).slideToggle();" />
 							<?php esc_html_e( 'Complete Form', 'geo-my-wp' ); ?>
 						</label>
 
 						<label>
-							<input type="radio" class="gmw_form_type" name="gmw_form_type"  value="search_form"
-								onclick="if ( jQuery( '#gmw-forms-dropdown-wrapper' ).is( ':hidden' ) ) jQuery('#gmw-forms-dropdown-wrapper' ).slideToggle();"
-							/>
+							<input type="radio" class="gmw_form_type" name="gmw_form_type" value="search_form"
+								onclick="if ( jQuery( '#gmw-forms-dropdown-wrapper' ).is( ':hidden' ) ) jQuery('#gmw-forms-dropdown-wrapper' ).slideToggle();" />
 							<?php esc_html_e( 'Search Form Only', 'geo-my-wp' ); ?>
 						</label>
 
 						<label>
-							<input type="radio" class="gmw_form_type" name="gmw_form_type"  value="map"
-								onclick="if ( jQuery( '#gmw-forms-dropdown-wrapper' ).is( ':hidden' ) ) jQuery('#gmw-forms-dropdown-wrapper').slideToggle();"
-							/>
+							<input type="radio" class="gmw_form_type" name="gmw_form_type" value="map"
+								onclick="if ( jQuery( '#gmw-forms-dropdown-wrapper' ).is( ':hidden' ) ) jQuery('#gmw-forms-dropdown-wrapper').slideToggle();" />
 							<?php esc_html_e( 'Map Only', 'geo-my-wp' ); ?>
 						</label>
 
 						<label>
 							<input type="radio" class="gmw_form_type" name="gmw_form_type" value="search_results"
-								onclick="if ( jQuery( '#gmw-forms-dropdown-wrappe' ).is( ':visible' ) ) jQuery('#gmw-forms-dropdown-wrapper').slideToggle();"
-							/>
+								onclick="if ( jQuery( '#gmw-forms-dropdown-wrappe' ).is( ':visible' ) ) jQuery('#gmw-forms-dropdown-wrapper').slideToggle();" />
 							<?php esc_html_e( 'Search Results Only', 'geo-my-wp' ); ?>
 						</label>
 
@@ -925,7 +920,7 @@ class GMW_Admin {
 								<?php esc_html_e( 'Select a Form', 'geo-my-wp' ); ?>
 							</option>
 							<?php
-								$forms = gmw_get_forms();
+							$forms = gmw_get_forms();
 
 							if ( empty( $forms ) || ! is_array( $forms ) ) {
 								$forms = array();
@@ -935,7 +930,9 @@ class GMW_Admin {
 
 								$form['title'] = ! empty( $form['title'] ) ? $form['title'] : 'form_id_' . $form['ID'];
 								?>
-								<option value="<?php echo absint( $form['ID'] ); ?>" data-type="<?php echo esc_attr( $form['addon'] ); ?>"><?php echo esc_html( $form['title'] ); ?></option>
+								<option value="<?php echo absint( $form['ID'] ); ?>"
+									data-type="<?php echo esc_attr( $form['addon'] ); ?>"><?php echo esc_html( $form['title'] ); ?>
+								</option>
 								<?php
 							}
 							?>
@@ -943,12 +940,8 @@ class GMW_Admin {
 					</div>
 
 					<div>
-						<input
-							type="button"
-							class="button-primary"
-							value="<?php esc_html_e( 'Insert form', 'geo-my-wp' ); ?>"
-							onclick="gmwInsertForm();"
-						/>
+						<input type="button" class="button-primary" value="<?php esc_html_e( 'Insert form', 'geo-my-wp' ); ?>"
+							onclick="gmwInsertForm();" />
 						<a class="button" href="#" onclick="tb_remove(); return false;">
 							<?php esc_html_e( 'Cancel', 'geo-my-wp' ); ?>
 						</a>
@@ -977,7 +970,7 @@ class GMW_Admin {
 			}
 
 			body.toplevel_page_gmw-extensions #footer-thankyou,
-			.geo-my-wp_page_gmw-forms:not( .geo-my-wp_page_gmw-form-editor ) #footer-thankyou {
+			.geo-my-wp_page_gmw-forms:not(.geo-my-wp_page_gmw-form-editor) #footer-thankyou {
 				margin-left: 0;
 			}
 		</style>
