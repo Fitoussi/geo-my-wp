@@ -337,7 +337,7 @@ class GMW_Location_Meta {
 	 *
 	 * @param  boolean $cache use cached value?.
 	 *
-	 * @return string || array
+	 * @return mixed string || array
 	 *
 	 * @since 3.0
 	 */
