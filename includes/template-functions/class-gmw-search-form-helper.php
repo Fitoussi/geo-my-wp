@@ -396,9 +396,11 @@ class GMW_Search_Form_Helper {
 						}
 
 						if ( is_array( $value ) ) {
-							$selected = in_array( $option_value, $value ) ? 'selected="selected"' : '';
+							// phpcs:ignore.
+							$selected = in_array( $option_value, $value ) ? 'selected="selected"' : ''; // Loose compration ok.
 						} else {
-							$selected = $value == $option_value ? 'selected="selected"' : '';
+							// phpcs:ignore.
+							$selected = $value == $option_value ? 'selected="selected"' : ''; // Loose compration ok.
 						}
 
 						$field .= '<option value="' . $option_value . '" ' . $selected . '>' . $label . '</option>';
@@ -435,9 +437,11 @@ class GMW_Search_Form_Helper {
 						}
 
 						if ( is_array( $value ) ) {
-							$checked = in_array( $option_value, $value, true ) ? 'checked="checked"' : ''; // WPCS: sanitization ok, CSRF ok.
+							// phpcs:ignore.
+							$checked = in_array( $option_value, $value, true ) ? 'checked="checked"' : ''; // Loose compration ok.
 						} else {
-							$checked = $value == $option_value ? 'checked="checked"' : ''; // WPCS: CSRF ok.
+							// phpcs:ignore.
+							$checked = $value == $option_value ? 'checked="checked"' : ''; // Loose compration ok.
 						}
 
 						$field .= '<li class="gmw-field-checkbox-wrapper" data-value="' . $option_value . '">';
@@ -486,9 +490,11 @@ class GMW_Search_Form_Helper {
 					}
 
 					if ( is_array( $value ) ) {
-						$checked = in_array( $option_value, $value, true ) ? 'checked="checked"' : ''; // WPCS: sanitization ok, CSRF ok.
+						// phpcs:ignore.
+						$checked = in_array( $option_value, $value, true ) ? 'checked="checked"' : ''; // Loose compration ok.
 					} else {
-						$checked = $value == $option_value ? 'checked="checked"' : ''; // WPCS: CSRF ok.
+						// phpcs:ignore.
+						$checked = $value == $option_value ? 'checked="checked"' : ''; // Loose compration ok.
 					}
 
 					$field .= '<li class="gmw-field-radio-wrapper" value="' . $option_value . '">';
@@ -719,7 +725,6 @@ class GMW_Search_Form_Helper {
 		);
 
 		$args         = wp_parse_args( $args, $defaults );
-		$url_px       = gmw_get_url_prefix();
 		$id           = absint( $args['id'] );
 		$tax_name     = esc_attr( $args['taxonomy'] );
 		$taxonomy     = get_taxonomy( $tax_name );
@@ -740,7 +745,9 @@ class GMW_Search_Form_Helper {
 
 		} else {
 
+			/* translators: %s: taxonomy name. */
 			$options_all = sprintf( __( 'All %s', 'geo-my-wp' ), esc_attr( $taxonomy->labels->name ) );
+			/* translators: %s: taxonomy name. */
 			$placeholder = sprintf( __( 'Select %s', 'geo-my-wp' ), esc_attr( $taxonomy->labels->name ) );
 		}
 
@@ -764,7 +771,8 @@ class GMW_Search_Form_Helper {
 				'category_icons'      => $args['category_icons'],
 				'gmw_form_id'         => $id,
 				'show_option_all'     => $options_all,
-				'show_count'          => 1 == $args['show_count'] ? 1 : 0,
+				// phpcs:ignore.
+				'show_count'          => 1 == $args['show_count'] ? 1 : 0, // Loose compration ok.
 				'usage'               => $args['usage'],
 				'multiple_selections' => $args['multiple_selections'],
 				'smartbox'            => $args['smartbox'],
