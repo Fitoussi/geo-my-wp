@@ -464,7 +464,7 @@ class GMW_Admin {
 		wp_dequeue_script( 'selectWoo' );
 		wp_deregister_style( 'selectWoo' );
 		wp_dequeue_style( 'selectWoo' );
-			
+
 		wp_dequeue_style( 'rtcl-admin' );
 		wp_dequeue_style( 'rtcl-public' );
 
@@ -675,10 +675,10 @@ class GMW_Admin {
 			}
 		</style>
 
-		<a 
-			href="#TB_inline?width=480&inlineId=select_gmw_form" 
-			class="thickbox button gmw_media_link" 
-			id="add_gmw_form" 
+		<a
+			href="#TB_inline?width=480&inlineId=select_gmw_form"
+			class="thickbox button gmw_media_link"
+			id="add_gmw_form"
 			title="<?php esc_html_e( 'Insert GEO my WP Form', 'geo-my-wp' ); ?>"
 		>
 		<span class="dashicons-location-alt dashicons"></span>
@@ -726,32 +726,32 @@ class GMW_Admin {
 
 					<div class="checkboxes">
 						<label>
-							<input 
-								type="radio" class="gmw_form_type" checked="checked" name="gmw_form_type" value="form" 
-								onclick="if ( jQuery( '#gmw-forms-dropdown-wrapper' ).is( ':hidden' ) ) jQuery( '#gmw-forms-dropdown-wrapper' ).slideToggle();" 
-							/> 
-							<?php esc_html_e( 'Complete Form', 'geo-my-wp' ); ?>	
+							<input
+								type="radio" class="gmw_form_type" checked="checked" name="gmw_form_type" value="form"
+								onclick="if ( jQuery( '#gmw-forms-dropdown-wrapper' ).is( ':hidden' ) ) jQuery( '#gmw-forms-dropdown-wrapper' ).slideToggle();"
+							/>
+							<?php esc_html_e( 'Complete Form', 'geo-my-wp' ); ?>
 						</label>
 
 						<label>
-							<input type="radio" class="gmw_form_type" name="gmw_form_type"  value="search_form" 
-								onclick="if ( jQuery( '#gmw-forms-dropdown-wrapper' ).is( ':hidden' ) ) jQuery('#gmw-forms-dropdown-wrapper' ).slideToggle();" 
-							/> 
-							<?php esc_html_e( 'Search Form Only', 'geo-my-wp' ); ?>	
+							<input type="radio" class="gmw_form_type" name="gmw_form_type"  value="search_form"
+								onclick="if ( jQuery( '#gmw-forms-dropdown-wrapper' ).is( ':hidden' ) ) jQuery('#gmw-forms-dropdown-wrapper' ).slideToggle();"
+							/>
+							<?php esc_html_e( 'Search Form Only', 'geo-my-wp' ); ?>
 						</label>
 
 						<label>
-							<input type="radio" class="gmw_form_type" name="gmw_form_type"  value="map" 
-								onclick="if ( jQuery( '#gmw-forms-dropdown-wrapper' ).is( ':hidden' ) ) jQuery('#gmw-forms-dropdown-wrapper').slideToggle();" 
-							/> 
-							<?php esc_html_e( 'Map Only', 'geo-my-wp' ); ?>	
+							<input type="radio" class="gmw_form_type" name="gmw_form_type"  value="map"
+								onclick="if ( jQuery( '#gmw-forms-dropdown-wrapper' ).is( ':hidden' ) ) jQuery('#gmw-forms-dropdown-wrapper').slideToggle();"
+							/>
+							<?php esc_html_e( 'Map Only', 'geo-my-wp' ); ?>
 						</label>
 
 						<label>
-							<input type="radio" class="gmw_form_type" name="gmw_form_type" value="search_results" 
-								onclick="if ( jQuery( '#gmw-forms-dropdown-wrappe' ).is( ':visible' ) ) jQuery('#gmw-forms-dropdown-wrapper').slideToggle();" 
-							/> 
-							<?php esc_html_e( 'Search Results Only', 'geo-my-wp' ); ?>	
+							<input type="radio" class="gmw_form_type" name="gmw_form_type" value="search_results"
+								onclick="if ( jQuery( '#gmw-forms-dropdown-wrappe' ).is( ':visible' ) ) jQuery('#gmw-forms-dropdown-wrapper').slideToggle();"
+							/>
+							<?php esc_html_e( 'Search Results Only', 'geo-my-wp' ); ?>
 						</label>
 
 					</div>
@@ -759,7 +759,7 @@ class GMW_Admin {
 					<div id="gmw-forms-dropdown-wrapper">
 						<select id="gmw_form_id">
 							<option value="">
-								<?php esc_html_e( 'Select a Form', 'geo-my-wp' ); ?>	
+								<?php esc_html_e( 'Select a Form', 'geo-my-wp' ); ?>
 							</option>
 							<?php
 								$forms = gmw_get_forms();
@@ -778,12 +778,12 @@ class GMW_Admin {
 							?>
 						</select>
 					</div>
-				   
+
 					<div>
-						<input 
-							type="button" 
-							class="button-primary" 
-							value="<?php esc_html_e( 'Insert form', 'geo-my-wp' ); ?>" 
+						<input
+							type="button"
+							class="button-primary"
+							value="<?php esc_html_e( 'Insert form', 'geo-my-wp' ); ?>"
 							onclick="gmwInsertForm();"
 						/>
 						<a class="button" href="#" onclick="tb_remove(); return false;">
@@ -813,7 +813,7 @@ class GMW_Admin {
 				margin-left: 245px;
 			}
 
-			body.toplevel_page_gmw-extensions #footer-thankyou, 
+			body.toplevel_page_gmw-extensions #footer-thankyou,
 			.geo-my-wp_page_gmw-forms:not( .geo-my-wp_page_gmw-form-editor ) #footer-thankyou {
 				margin-left: 0;
 			}
