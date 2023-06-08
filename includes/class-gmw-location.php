@@ -183,7 +183,7 @@ class GMW_Location {
 			return false;
 		}
 
-		global $wpdb, $blog_id;
+		global $wpdb;
 
 		// database table name.
 		$table = self::get_table();
@@ -614,7 +614,7 @@ class GMW_Location {
 	 *
 	 * The returned location will be the parent location in case that the object_type - object_id pair has multiple locations.
 	 *
-	 * @param  string  $args     object data to get location by:
+	 * @param  array  $args     object data to get location by:
 	 *
 	 * array(
 	 *    'object_type'   => 'post',
@@ -1154,6 +1154,7 @@ class GMW_Location {
 		$internal_cache = GMW()->internal_cache;
 
 		if ( $internal_cache ) {
+
 			// prepare for cache.
 			$hash            = md5( wp_json_encode( $args ) );
 			$query_args_hash = 'gmw' . $hash . GMW_Cache_Helper::get_transient_version( 'gmw_get_object_' . $args['object_type'] . '_locations' );
@@ -1165,6 +1166,7 @@ class GMW_Location {
 
 			global $wpdb;
 
+			$clauses                    = array();
 			$clauses['select']          = 'SELECT';
 			$clauses['fields']          = $args['db_fields'];
 			$clauses['distance']        = '';
