@@ -93,7 +93,7 @@ class GMW_Forms_Table extends WP_List_Table {
 			case 'type':
 				return $item[ $column_name ];
 			default:
-				return print_r( $item, true );
+				return print_r( $item, true ); // phpcs:ignore.
 		}
 	}
 
@@ -122,7 +122,8 @@ class GMW_Forms_Table extends WP_List_Table {
 	 */
 	protected function column_title( $item ) {
 
-		$page = sanitize_text_field( wp_unslash( $_REQUEST['page'] ) ); // WPCS: Input var ok, CSRF ok.
+		$page    = sanitize_text_field( wp_unslash( $_REQUEST['page'] ) ); // phpcs:ignore: Input var ok, CSRF ok.
+		$actions = array();
 
 		if ( ! gmw_is_addon_active( $item['extension'] ) ) {
 
@@ -226,7 +227,7 @@ class GMW_Forms_Table extends WP_List_Table {
 		$form_shortcode = apply_filters( 'gmw_forms_page_form_shortcode', $form_shortcode, $item );
 		$form_shortcode = apply_filters( 'gmw_forms_page_' . $item['extension'] . '_form_shortcode', $form_shortcode, $item );
 
-		//'<span class="gmw-form-shortcode"><code>' . esc_attr( $form_shortcode ) . '</code><i class="gmw-shortcode-ctc gmw-icon-lifebuoy"></i></span>';
+		// '<span class="gmw-form-shortcode"><code>' . esc_attr( $form_shortcode ) . '</code><i class="gmw-shortcode-ctc gmw-icon-lifebuoy"></i></span>';
 
 		return '<code>' . esc_attr( $form_shortcode ) . '</code>';
 	}
@@ -254,32 +255,30 @@ class GMW_Forms_Table extends WP_List_Table {
 
 		if ( 'delete' === $this->current_action() ) {
 
-			if ( empty( $_POST['gmw_page'] ) || 'gmw-forms' !== $_POST['gmw_page'] || empty( $_POST['form'] ) || 'delete' !== $_POST['action'] ) { // WPCS: CSRF ok.
+			if ( empty( $_POST['gmw_page'] ) || 'gmw-forms' !== $_POST['gmw_page'] || empty( $_POST['form'] ) || 'delete' !== $_POST['action'] ) { // phpcs:ignore: CSRF ok.
 				return;
 			}
 
 			// run a quick security check.
 			if ( ! check_admin_referer( 'gmw_forms_page', 'gmw_forms_page' ) ) {
-				wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) ); // WPCS: XSS ok.
+				wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) ); // phpcs:ignore: XSS ok.
 			}
 
 			global $wpdb;
 
+			$form_ids = array_map( 'absint', $_POST['form'] );
+			$form_ids = implode( ',', $form_ids );
+
 			// delete forms from database.
-			$wpdb->query(
-				$wpdb->prepare(
-					"
-	                DELETE FROM {$wpdb->prefix}gmw_forms
-	                WHERE ID IN (" . str_repeat( '%d,', count( $_POST['form'] ) - 1 ) . '%d )',
-					$_POST['form']
-				)
-			); // WPCS: db call ok, CSRF ok, cache ok, unprepared sql ok.
+			$wpdb->query( "DELETE FROM {$wpdb->prefix}gmw_forms WHERE ID IN ( {$form_ids} )" ); // phpcs:ignore: db call ok, CSRF ok, cache ok, unprepared sql ok.
 
 			// update forms in cache.
 			GMW_Forms_Helper::update_forms_cache();
 
-			//wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_deleted&gmw_notice_status=updated' ) );
+			// phpcs:ignore.
+			// wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_deleted&gmw_notice_status=updated' ) );
 
+			// phpcs:ignore.
 			//exit;
 		}
 	}
@@ -296,8 +295,14 @@ class GMW_Forms_Table extends WP_List_Table {
 		$columns  = $this->get_columns();
 		$hidden   = array();
 		$sortable = $this->get_sortable_columns();
-		$orderby  = ! empty( $_REQUEST['orderby'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) : 'ID'; // WPCS: Input var ok, CSRF ok.
-		$order    = ! empty( $_REQUEST['order'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) : 'ASC'; // WPCS: Input var ok, CSRF ok.
+		$orderby  = ! empty( $_REQUEST['orderby'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) : 'ID'; // phpcs:ignore: Input var ok, CSRF ok.
+		$order    = ! empty( $_REQUEST['order'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) : 'ASC'; // phpcs:ignore: Input var ok, CSRF ok.
+		$keywords = '';
+
+		if ( ! empty( $_REQUEST['s'] ) ) { // phpcs:ignore: CSRF ok.
+			$search   = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ); // phpcs:ignore: CSRF ok.
+			$keywords = "WHERE id Like '%{$search}%' OR name Like '%{$search}%' OR title Like '%{$search}%' OR slug Like '%{$search}%' OR component Like '%{$search}%' OR addon Like '%{$search}%'";
+		}
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
@@ -306,11 +311,12 @@ class GMW_Forms_Table extends WP_List_Table {
 		// Get forms from database.
 		$data = $wpdb->get_results(
 			"
-			SELECT ID, title, name as type, addon as extension, slug, prefix 
+			SELECT ID, title, name as type, addon as extension, slug, prefix
 			FROM {$wpdb->prefix}gmw_forms
+			{$keywords}
 			ORDER BY {$orderby} {$order}",
 			ARRAY_A
-		); // WPCS: db call ok, CSRF ok, cache ok, unprepared sql ok.
+		); // phpcs:ignore: db call ok, CSRF ok, cache ok, unprepared sql ok.
 
 		// Current page.
 		$current_page = $this->get_pagenum();
@@ -328,6 +334,48 @@ class GMW_Forms_Table extends WP_List_Table {
 				'total_pages' => ceil( $total_items / $per_page ), // WE have to calculate the total number of pages.
 			)
 		);
+	}
+
+	/**
+	 * Generate the search forms box.
+	 *
+	 * @param string $text search button label.
+	 *
+	 * @param string $input_id input box ID.
+	 */
+	public function search_box( $text, $input_id ) {
+
+		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) { // phpcs:ignore: CSRF ok.
+			return;
+		}
+
+		$input_id = $input_id . '-search-input';
+
+		if ( ! empty( $_REQUEST['orderby'] ) ) { // phpcs:ignore: CSRF ok.
+			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />'; // phpcs:ignore: CSRF ok.
+		}
+		if ( ! empty( $_REQUEST['order'] ) ) { // phpcs:ignore: CSRF ok.
+			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />'; // phpcs:ignore: CSRF ok.
+		}
+
+		if ( ! empty( $_REQUEST['detached'] ) ) { // phpcs:ignore: CSRF ok.
+			echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />'; // phpcs:ignore: CSRF ok.
+		}
+		?>
+		<p class="search-box gmw-form-search-box">
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_attr( $text ); ?>:</label>
+			<input type="text" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
+			<?php
+			submit_button(
+				$text,
+				'',
+				'',
+				false,
+				array( 'id' => 'search-submit' )
+			);
+			?>
+		</p>
+		<?php
 	}
 
 	/**
