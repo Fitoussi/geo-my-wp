@@ -61,7 +61,7 @@ class GMW_Search_Form_Helper {
 		$output = array();
 
 		if ( ! $args['wrap_disabled'] ) {
-			$output['wrapper'] = '<div ' . $id_attr . 'class="' . esc_attr( $class ) . '"' . $attributes . '>';
+			$output['wrapper'] = '<div ' . $id_attr . 'class="' . esc_attr( $class ) . '" ' . $attributes . '>';
 		}
 
 		if ( '' !== $args['label'] ) {
@@ -339,7 +339,7 @@ class GMW_Search_Form_Helper {
 					$value = '';
 				}
 
-				$field .= '<input type="text" value="' . $value . '" ' . $attributes . '" autocorrect="off" autocapitalize="off" spellcheck="false" />'; // WPCS: XSS ok. Value already escaped.
+				$field .= '<input type="text" value="' . $value . '" ' . $attributes . ' autocorrect="off" autocapitalize="off" spellcheck="false" />'; // WPCS: XSS ok. Value already escaped.
 
 				if ( ! empty( $field_args['locator_button'] ) ) {
 					$field .= '<i class="gmw-locator-button inside ' . esc_attr( $field_args['icon'] ) . '" data-locator_submit="' . esc_attr( $field_args['locator_submit'] ) . '" data-form_id="' . $id . '"></i>'; // WPCS: XSS ok. $id is already escaped.
@@ -554,7 +554,7 @@ class GMW_Search_Form_Helper {
 
 				//$field .= '<input type="range" ' . $attributes . '" min="' . esc_attr( $args['min_value'] ) . '" max="' . esc_attr( $args['max_value'] ) . '" step="' . esc_attr( $args['steps'] ) . '" value="' . $value . '">';
 				// phpcs:enable.
-				$field .= '<div ' . $attributes . '" data-min="' . esc_attr( $args['min_value'] ) . '" data-max="' . esc_attr( $args['max_value'] ) . '" data-step="' . esc_attr( $args['step'] ) . '" data-value="' . $value . '" data-prefix="' . esc_attr( $args['value_prefix'] ) . '" data-suffix="' . esc_attr( $args['value_suffix'] ) . '"></div>';
+				$field .= '<div ' . $attributes . ' data-min="' . esc_attr( $args['min_value'] ) . '" data-max="' . esc_attr( $args['max_value'] ) . '" data-step="' . esc_attr( $args['step'] ) . '" data-value="' . $value . '" data-prefix="' . esc_attr( $args['value_prefix'] ) . '" data-suffix="' . esc_attr( $args['value_suffix'] ) . '"></div>';
 
 				$field .= '<input type="hidden" id="' . $args['attributes']['id'] . '-hidden" name="' . $args['attributes']['name'] . '" value="' . $value . '" />';
 
@@ -569,7 +569,7 @@ class GMW_Search_Form_Helper {
 
 				//$field .= '<input type="range" ' . $attributes . '" min="' . esc_attr( $args['min_value'] ) . '" max="' . esc_attr( $args['max_value'] ) . '" step="' . esc_attr( $args['steps'] ) . '" value="' . $value . '">';
 				// phpcs:enable.
-				$field .= '<div ' . $attributes . '" data-min="' . esc_attr( $args['min_value'] ) . '" data-max="' . esc_attr( $args['max_value'] ) . '" data-step="' . esc_attr( $args['step'] ) . '" data-value="' . $value[0] . '" data-value_second="' . $value[1] . '" data-prefix="' . esc_attr( $args['value_prefix'] ) . '" data-suffix="' . esc_attr( $args['value_suffix'] ) . '"></div>';
+				$field .= '<div ' . $attributes . ' data-min="' . esc_attr( $args['min_value'] ) . '" data-max="' . esc_attr( $args['max_value'] ) . '" data-step="' . esc_attr( $args['step'] ) . '" data-value="' . $value[0] . '" data-value_second="' . $value[1] . '" data-prefix="' . esc_attr( $args['value_prefix'] ) . '" data-suffix="' . esc_attr( $args['value_suffix'] ) . '"></div>';
 
 				$field .= '<input type="hidden" id="' . $args['attributes']['id'] . '-hidden" name="' . $args['attributes']['name'] . '[]" value="' . $value[0] . '" />';
 				$field .= '<input type="hidden" id="' . $args['attributes']['id'] . '-hidden-second" name="' . $args['attributes']['name'] . '[]" value="' . $value[1] . '" />';
@@ -634,7 +634,7 @@ class GMW_Search_Form_Helper {
 					}
 				}
 
-				$output['wrapper'] = '<div ' . $wrapper_id . 'class="' . esc_attr( $wrapper_class ) . '"' . $attributes . '>';
+				$output['wrapper'] = '<div ' . $wrapper_id . 'class="' . esc_attr( $wrapper_class ) . '" ' . $attributes . '>';
 			}
 
 			if ( $args['inner_element'] ) {
