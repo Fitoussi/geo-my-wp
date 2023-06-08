@@ -13,35 +13,38 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Locations table tab output.
- *
- * @return [type] [description]
  */
 function gmw_import_export_location_tables_tab() {
-?>
+	?>
 	<?php do_action( 'gmw_import_export_location_tables_start' ); ?>
 
 	<?php do_action( 'gmw_import_export_before_location_table_export' ); ?>
 
-	<?php global $wpdb; ?>
-
 	<div class="gmw-settings-panel gmw-admin-notice-box gmw-admin-notice-warning">
 
-		<h3 class="gmw-admin-notice-title"><?php esc_html_e( 'Please Note', 'geo-my-wp' ); ?></h3>
+		<h3 class="gmw-admin-notice-title">
+			<?php esc_html_e( 'Please Note', 'geo-my-wp' ); ?>
+		</h3>
 
 		<div class="gmw-admin-notice-content">
 			<div class="gmw-admin-notice-description">
-				<span><?php esc_html_e( 'Transferring the data of the locations and locationmeta tables between different sites using a CSV file can only be done when the locations and their object ID are matching on both the original and the target site.', 'geo-my-wp' ); ?></span>
+				<span>
+					<?php esc_html_e( 'Transferring the data of the locations and locationmeta tables between different sites using a CSV file can only be done when the locations and their object ID are matching on both the original and the target site.', 'geo-my-wp' ); ?>
+				</span>
 			</div>
 		</div>
 	</div>
 
 	<div class="gmw-settings-panel gmw-export-location-data-panel">
 
-		<form method="post" action="<?php echo esc_url( admin_url( 'admin.php?page=gmw-import-export&tab=location_tables' ) ); ?>">
+		<form method="post"
+			action="<?php echo esc_url( admin_url( 'admin.php?page=gmw-import-export&tab=location_tables' ) ); ?>">
 
 			<fieldset>
 
-				<legend class="gmw-settings-panel-title"><?php esc_html_e( 'Export Locations database tables to CSV File', 'geo-my-wp' ); ?></legend>
+				<legend class="gmw-settings-panel-title">
+					<?php esc_html_e( 'Export Locations database tables to CSV File', 'geo-my-wp' ); ?>
+				</legend>
 
 				<div class="gmw-settings-panel-content">
 
@@ -52,7 +55,7 @@ function gmw_import_export_location_tables_tab() {
 
 					<div class="gmw-settings-panel-field">
 
-						<input type="hidden" name="gmw_action" value="export_location_tables_to_csv"/>
+						<input type="hidden" name="gmw_action" value="export_location_tables_to_csv" />
 
 						<?php wp_nonce_field( 'gmw_export_location_tables_nonce', 'gmw_export_location_tables_nonce' ); ?>
 
@@ -72,11 +75,14 @@ function gmw_import_export_location_tables_tab() {
 
 	<div class="gmw-settings-panel gmw-import-location-data-panel">
 
-		<form method="post" enctype="multipart/form-data" action="<?php echo esc_url( admin_url( 'admin.php?page=gmw-import-export&tab=location_tables' ) ); ?>">
+		<form method="post" enctype="multipart/form-data"
+			action="<?php echo esc_url( admin_url( 'admin.php?page=gmw-import-export&tab=location_tables' ) ); ?>">
 
 			<fieldset>
 
-				<legend class="gmw-settings-panel-title"><?php esc_html_e( 'Import Location Data From CSV File', 'geo-my-wp' ); ?></legend>
+				<legend class="gmw-settings-panel-title">
+					<?php esc_html_e( 'Import Location Data From CSV File', 'geo-my-wp' ); ?>
+				</legend>
 
 				<div class="gmw-settings-panel-content">
 
@@ -89,11 +95,13 @@ function gmw_import_export_location_tables_tab() {
 						<div class="gmw-settings-panel-radio-buttons">
 
 							<label>
-								<input type="radio" name="location_tables_import" value="gmw_locations" checked="checked"><?php esc_html_e( 'Locations table', 'geo-my-wp' ); ?>
+								<input type="radio" name="location_tables_import" value="gmw_locations" checked="checked">
+								<?php esc_html_e( 'Locations table', 'geo-my-wp' ); ?>
 							</label>
 
 							<label>
-								<input type="radio" name="location_tables_import" value="gmw_locationmeta"><?php esc_html_e( 'Location meta table', 'geo-my-wp' ); ?>
+								<input type="radio" name="location_tables_import" value="gmw_locationmeta">
+								<?php esc_html_e( 'Location meta table', 'geo-my-wp' ); ?>
 							</label>
 						</div>
 						<p>
@@ -113,7 +121,8 @@ function gmw_import_export_location_tables_tab() {
 								array(
 									'onclick' => "if ( jQuery( '#gmw-import-location-data' ).get(0).files.length === 0 ) { alert( 'Select a file to import.' ); return false; }",
 								)
-							); ?>
+							);
+							?>
 						</p>
 					</div>
 
@@ -125,7 +134,7 @@ function gmw_import_export_location_tables_tab() {
 
 	<?php do_action( 'gmw_import_export_data_end' ); ?>
 
-<?php
+	<?php
 }
 add_action( 'gmw_import_export_location_tables_tab', 'gmw_import_export_location_tables_tab' );
 
@@ -137,24 +146,24 @@ add_action( 'gmw_import_export_location_tables_tab', 'gmw_import_export_location
 function export_location_tables_to_csv() {
 
 	// make sure at lease one checkbox is checked.
-	if ( empty( $_POST ) || $_POST['gmw_action'] != 'export_location_tables_to_csv' ) {
+	if ( empty( $_POST ) || 'export_location_tables_to_csv' !== $_POST['gmw_action'] ) {
 		return;
 	}
 
 	// check for nonce.
 	if ( empty( $_POST['gmw_export_location_tables_nonce'] ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
 	// varify nonce.
 	if ( ! wp_verify_nonce( $_POST['gmw_export_location_tables_nonce'], 'gmw_export_location_tables_nonce' ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
-	include( dirname(__FILE__).'/../class-gmw-location-tables-export.php' );
+	require_once dirname( __FILE__ ) . '/../class-gmw-location-tables-export.php';
 
 	if ( ! class_exists( 'GMW_Locations_Table_Export' ) ) {
-		wp_die( __( 'GMW_Locations_Table_Export class cannot be found.', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'GMW_Locations_Table_Export class cannot be found.', 'geo-my-wp' ) );
 	}
 
 	if ( ! empty( $_POST['export_locations_table'] ) ) {
@@ -165,7 +174,7 @@ function export_location_tables_to_csv() {
 	}
 
 	if ( ! class_exists( 'GMW_Locationmeta_Table_Export' ) ) {
-		wp_die( __( 'GMW_Locationmeta_Table_Export class cannot be found.', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'GMW_Locationmeta_Table_Export class cannot be found.', 'geo-my-wp' ) );
 	}
 
 	if ( ! empty( $_POST['export_locationmeta_table'] ) ) {
@@ -178,30 +187,28 @@ function export_location_tables_to_csv() {
 add_action( 'gmw_export_location_tables_to_csv', 'export_location_tables_to_csv' );
 
 /**
- * Import CSV to location tables
- *
- * @return [type] [description]
+ * Import CSV to location tables.
  */
 function gmw_import_location_tables_from_csv() {
 
 	if ( empty( $_POST['gmw_import_location_tables_from_csv_nonce'] ) ) {
 
-		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
 	if ( ! wp_verify_nonce( $_POST['gmw_import_location_tables_from_csv_nonce'], 'gmw_import_location_tables_from_csv_nonce' ) ) {
 
-		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
-	if ( ! function_exists( 'gmw_csv_import' ) )  {
-		wp_die( __( 'gmw_csv_import function not exist.', 'geo-my-wp' ) );
+	if ( ! function_exists( 'gmw_csv_import' ) ) {
+		wp_die( esc_html__( 'gmw_csv_import function not exist.', 'geo-my-wp' ) );
 	}
 
 	$file = $_FILES['import_csv_file']['tmp_name'];
 
 	if ( empty( $file ) ) {
-		wp_die( __( 'Please upload a file to import', 'geo-my-wp' ) );
+		wp_die( esc_html__( 'Please upload a file to import', 'geo-my-wp' ) );
 	}
 
 	gmw_csv_import( $file, $_POST['location_tables_import'] );
