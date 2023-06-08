@@ -278,7 +278,7 @@ function gmw_delete_location_by_object_data( $args = array(), $delete_meta = tru
  *
  * @param  boolean $cache       use cached version?.
  *
- * @return string || array
+ * @return mixed string || array
  */
 function gmw_get_location_meta( $location_id = 0, $meta_keys = '', $cache = true ) {
 	return GMW_Location_Meta::get( $location_id, $meta_keys, $cache );
@@ -293,7 +293,7 @@ function gmw_get_location_meta( $location_id = 0, $meta_keys = '', $cache = true
  *
  * @param  mixed   $meta_keys   string of a single or array of multiple meta keys to retrieve their values.
  *
- * @return [type]  string || array of values
+ * @return mixed  string || array of values
  */
 function gmw_get_location_meta_by_object( $object_type = '', $object_id = 0, $meta_keys = array() ) {
 	return GMW_Location_Meta::get_by_object( $object_type, $object_id, $meta_keys );
@@ -1392,8 +1392,8 @@ function gmw_unset_object_parent_locations( $object_type = 'post', $object_id = 
  */
 function gmw_update_parent_location( $location_id = 0, $value = 1 ) {
 
-	$locations_id = absint( $location_id );
-	$value        = ! empty( absint( $value ) ) ? 1 : 0;
+	$location_id = absint( $location_id );
+	$value       = ! empty( absint( $value ) ) ? 1 : 0;
 
 	if ( empty( $location_id ) ) {
 
