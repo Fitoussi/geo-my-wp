@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return [type] [description]
  */
 function gmw_import_export_location_tables_tab() {
-?>	
+?>
 	<?php do_action( 'gmw_import_export_location_tables_start' ); ?>
 
 	<?php do_action( 'gmw_import_export_before_location_table_export' ); ?>
@@ -38,7 +38,7 @@ function gmw_import_export_location_tables_tab() {
 	<div class="gmw-settings-panel gmw-export-location-data-panel">
 
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin.php?page=gmw-import-export&tab=location_tables' ) ); ?>">
-			
+
 			<fieldset>
 
 				<legend class="gmw-settings-panel-title"><?php esc_html_e( 'Export Locations database tables to CSV File', 'geo-my-wp' ); ?></legend>
@@ -46,24 +46,24 @@ function gmw_import_export_location_tables_tab() {
 				<div class="gmw-settings-panel-content">
 
 					<div class="gmw-settings-panel-description">
-						
+
 						<?php esc_html_e( 'Click the buttons to generate CSV files with the location data.', 'geo-my-wp' ); ?>
 					</div>
 
 					<div class="gmw-settings-panel-field">
-						
+
 						<input type="hidden" name="gmw_action" value="export_location_tables_to_csv"/>
 
 						<?php wp_nonce_field( 'gmw_export_location_tables_nonce', 'gmw_export_location_tables_nonce' ); ?>
-						
+
 						<?php submit_button( __( 'Export Locations Table', 'geo-my-wp' ), 'gmw-settings-action-button button-primary', 'export_locations_table', false ); ?>
-						<br />
+
 						<?php submit_button( __( 'Export Location Meta Table', 'geo-my-wp' ), 'gmw-settings-action-button button-primary', 'export_locationmeta_table', false ); ?>
 					</div>
-				
+
 				</div>
 			</fieldset>
-								
+
 		</form>
 
 	</div>
@@ -73,7 +73,7 @@ function gmw_import_export_location_tables_tab() {
 	<div class="gmw-settings-panel gmw-import-location-data-panel">
 
 		<form method="post" enctype="multipart/form-data" action="<?php echo esc_url( admin_url( 'admin.php?page=gmw-import-export&tab=location_tables' ) ); ?>">
-			
+
 			<fieldset>
 
 				<legend class="gmw-settings-panel-title"><?php esc_html_e( 'Import Location Data From CSV File', 'geo-my-wp' ); ?></legend>
@@ -85,9 +85,9 @@ function gmw_import_export_location_tables_tab() {
 					</div>
 
 					<div class="gmw-settings-panel-field">
-						
-						<div class="gmw-settings-panel-radio-buttons">		
-							
+
+						<div class="gmw-settings-panel-radio-buttons">
+
 							<label>
 								<input type="radio" name="location_tables_import" value="gmw_locations" checked="checked"><?php esc_html_e( 'Locations table', 'geo-my-wp' ); ?>
 							</label>
@@ -98,17 +98,17 @@ function gmw_import_export_location_tables_tab() {
 						</div>
 						<p>
 							<input type="file" name="import_csv_file" id="gmw-import-location-data" />
-						</p>						
+						</p>
 						<p>
 							<input type="hidden" name="gmw_action" value="import_location_tables_from_csv" />
 
 							<?php wp_nonce_field( 'gmw_import_location_tables_from_csv_nonce', 'gmw_import_location_tables_from_csv_nonce' ); ?>
-							
-							<?php 
-							submit_button( 
-								__( 'Import', 'geo-my-wp' ), 
-								'gmw-settings-action-button button-primary', 
-								'submit', 
+
+							<?php
+							submit_button(
+								__( 'Import', 'geo-my-wp' ),
+								'gmw-settings-action-button button-primary',
+								'submit',
 								false,
 								array(
 									'onclick' => "if ( jQuery( '#gmw-import-location-data' ).get(0).files.length === 0 ) { alert( 'Select a file to import.' ); return false; }",
@@ -116,31 +116,31 @@ function gmw_import_export_location_tables_tab() {
 							); ?>
 						</p>
 					</div>
-				
+
 				</div>
-			</fieldset>							
+			</fieldset>
 		</form>
 
 	</div>
 
 	<?php do_action( 'gmw_import_export_data_end' ); ?>
-				
+
 <?php
 }
 add_action( 'gmw_import_export_location_tables_tab', 'gmw_import_export_location_tables_tab' );
 
 /**
  * Export location tables to CSV
- * 
+ *
  * @return [type] [description]
  */
 function export_location_tables_to_csv() {
-	
+
 	// make sure at lease one checkbox is checked.
 	if ( empty( $_POST ) || $_POST['gmw_action'] != 'export_location_tables_to_csv' ) {
 		return;
 	}
-	 
+
 	// check for nonce.
 	if ( empty( $_POST['gmw_export_location_tables_nonce'] ) ) {
 		wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) );
@@ -179,7 +179,7 @@ add_action( 'gmw_export_location_tables_to_csv', 'export_location_tables_to_csv'
 
 /**
  * Import CSV to location tables
- * 
+ *
  * @return [type] [description]
  */
 function gmw_import_location_tables_from_csv() {
