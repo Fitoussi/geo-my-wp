@@ -338,16 +338,16 @@ class GMW_Forms_Page {
 
 					<input type="hidden" name="gmw_page" id="gmw_page" value="gmw-forms">
 
-					<?php wp_nonce_field( 'gmw_forms_page', 'gmw_forms_page' ); ?>
-
 					<div class="clear"></div>
 
 					<?php
 					$forms_table = new GMW_Forms_Table();
 					$forms_table->prepare_items();
+					$forms_table->search_box( 'Search forms', 'form' );
 					$forms_table->display();
 					?>
 
+					<?php wp_nonce_field( 'gmw_forms_page', 'gmw_forms_page' ); ?>
 				</form>
 			</div>
 
