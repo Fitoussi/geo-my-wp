@@ -14,7 +14,19 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class GMW_Admin {
 
+	/**
+	 * If current page is a GEO my WP's admin page.
+	 *
+	 * @var boolean
+	 */
 	public $gmw_page = false;
+
+	/**
+	 * GEO my WP's Form Editor page.
+	 *
+	 * @var object
+	 */
+	public $edit_form_page = '';
 
 	/**
 	 * __construct function.
@@ -24,8 +36,9 @@ class GMW_Admin {
 	 */
 	public function __construct() {
 
+		// phpcs:disable.
 		// get options.
-		$this->settings = get_option( 'gmw_options' );
+		//$this->settings = get_option( 'gmw_options' );
 
 		// admin notice to import location to the new database table.
 		/*
@@ -39,6 +52,7 @@ class GMW_Admin {
 			add_action( 'admin_init', array( $this, 'folders_names_notice_dismiss' ) );
 			add_action( 'admin_notices', array( $this, 'deprecated_folder_names_notice' ) );
 		}*/
+		// phpcs:enable.
 
 		// do some actions.
 		add_action( 'admin_menu', array( $this, 'admin_menu' ), 12 );
@@ -69,7 +83,8 @@ class GMW_Admin {
 		require_once 'pages/import-export/class-gmw-import-export-page.php';
 
 		// set pages.
-		$this->addons_page   = new GMW_Extensions();
+		// phpcs:disable.
+		/*$this->addons_page   = new GMW_Extensions();
 		$this->settings_page = new GMW_Settings();
 		$this->forms_page    = new GMW_Forms_Page();
 
@@ -81,9 +96,15 @@ class GMW_Admin {
 
 		$this->edit_form_page     = new $class_name();
 		$this->tools_page         = new GMW_Tools();
-		$this->import_export_page = new GMW_Import_Export_Page();
+		$this->import_export_page = new GMW_Import_Export_Page();*/
+		// phpcs:enable.
 
-		add_filter( 'plugin_action_links_' . GMW_BASENAME, array( $this, 'gmw_action_links' ), 10, 2 );
+		// We need to load this file here becuase it uses AJAX to save the form. the 'admin_menu' action doesn't fire during ajax.
+		if ( defined( 'DOING_AJAX' ) ) {
+			new GMW_Form_Editor();
+		}
+
+		add_filter( 'plugin_action_links_' . GMW_BASENAME, array( $this, 'action_links' ), 10 );
 
 		/**
 		 * Registers all data exporters.
@@ -167,7 +188,7 @@ class GMW_Admin {
 				$user->ID
 			),
 			OBJECT
-		); // WPCS: db call ok, cache ok, unprepared SQL ok.
+		); // phpcs:ignore: db call ok, cache ok, unprepared SQL ok.
 
 		// Abort if no location were found.
 		if ( empty( $locations ) ) {
@@ -246,6 +267,7 @@ class GMW_Admin {
 	/**
 	 * Admin notice.
 	 */
+	// phpcs:disable.
 	/*
 	public function folders_names_notice_dismiss() {
 
@@ -256,12 +278,14 @@ class GMW_Admin {
 			wp_safe_redirect( wp_unslash( $_SERVER['REQUEST_URI'] ) ); // WPCS: CSRF ok, sanitization ok.
 		}
 	}*/
+	// phpcs:enable.
 
 	/**
 	 * Admin notice.
 	 *
 	 * DEPRECATED
 	 */
+	// phpcs:disable.
 	/*
 	public function deprecated_folder_names_notice() {
 
@@ -272,20 +296,20 @@ class GMW_Admin {
 		</div>
 		<?php
 	}*/
+	// phpcs:enable.
 
 	/**
 	 * Admin action links.
 	 *
-	 * @param  [type] $links [description].
+	 * @param  array $links action links.
 	 *
-	 * @param  [type] $file  [description].
-	 *
-	 * @return [type]        [description]
+	 * @return array
 	 */
-	public function gmw_action_links( $links, $file ) {
+	public function action_links( $links ) { // phpcs:ignore.
 
 		$links['settings']   = '<a href="' . admin_url( 'admin.php?page=gmw-settings' ) . '">' . __( 'Settings', 'geo-my-wp' ) . '</a>';
 		$links['extensions'] = '<a href="' . admin_url( 'admin.php?page=gmw-extensions' ) . '">' . __( 'Extensions', 'geo-my-wp' ) . '</a>';
+		$links['docs']       = '<a href="https://docs.geomywp.com/" target="_blank">' . __( 'Documentation', 'geo-my-wp' ) . '</a>';
 
 		return $links;
 	}
@@ -297,6 +321,144 @@ class GMW_Admin {
 	 * @return void
 	 */
 	public function admin_menu() {
+
+		$addons_page        = new GMW_Extensions();
+		$settings_page      = new GMW_Settings();
+		$forms_page         = new GMW_Forms_Page();
+		$tools_page         = new GMW_Tools();
+		$import_export_page = new GMW_Import_Export_Page();
+
+		if ( isset( $_GET['page'] ) && 'gmw-forms' === $_GET['page'] && isset( $_GET['gmw_action'] ) && 'edit_form' === $_GET['gmw_action'] && ! empty( $_GET['prefix'] ) && class_exists( 'GMW_' . $_GET['prefix'] . '_Form_Editor' ) ) { // WPCS: CSRF ok, sanitization OK.
+			$form_editor_class = 'GMW_' . sanitize_text_field( wp_unslash( $_GET['prefix'] ) ) . '_Form_Editor'; // phpcs:ignore: CSRF ok.
+		} else {
+			$form_editor_class = 'GMW_Form_Editor';
+		}
+
+		$edit_form_page = new $form_editor_class();
+
+		// GEO my WP menu items.
+		add_menu_page( 'GEO my WP', 'GEO my WP', 'manage_options', 'gmw-extensions', array( $addons_page, 'output' ), GMW_URL . '/menu-icon.png', 66 );
+
+		// sub menu pages.
+		$menu_items = array();
+
+		$menu_items[] = array(
+			'parent_slug'       => 'gmw-extensions',
+			'page_title'        => __( 'GEO my WP Extensions', 'geo-my-wp' ),
+			'menu_title'        => __( 'Extensions & Licenses', 'geo-my-wp' ),
+			'capability'        => 'manage_options',
+			'menu_slug'         => 'gmw-extensions',
+			'callback_function' => array( $addons_page, 'output' ),
+			'priority'          => 1,
+		);
+
+		$forms_output = ( ! empty( $_GET['gmw_action'] ) && 'edit_form' === $_GET['gmw_action'] ) ? $edit_form_page : $forms_page; // phpcs:ignore: CSRF ok.
+
+		$menu_items[] = array(
+			'parent_slug'       => 'gmw-extensions',
+			'page_title'        => __( 'GEO my WP Forms', 'geo-my-wp' ),
+			'menu_title'        => __( 'Forms', 'geo-my-wp' ),
+			'capability'        => 'manage_options',
+			'menu_slug'         => 'gmw-forms',
+			'callback_function' => array( $forms_output, 'output' ),
+			'priority'          => 3,
+		);
+
+		$menu_items[] = array(
+			'parent_slug'       => 'gmw-extensions',
+			'page_title'        => __( 'GEO my WP Settings', 'geo-my-wp' ),
+			'menu_title'        => __( 'Settings', 'geo-my-wp' ),
+			'capability'        => 'manage_options',
+			'menu_slug'         => 'gmw-settings',
+			'callback_function' => array( $settings_page, 'output' ),
+			'priority'          => 5,
+		);
+
+		$menu_items[] = array(
+			'parent_slug'       => 'gmw-extensions',
+			'page_title'        => __( 'GEO my WP Import / Export', 'geo-my-wp' ),
+			'menu_title'        => __( 'Import / Export', 'geo-my-wp' ),
+			'capability'        => 'manage_options',
+			'menu_slug'         => 'gmw-import-export',
+			'callback_function' => array( $import_export_page, 'output' ),
+			'priority'          => 7,
+		);
+
+		$menu_items[] = array(
+			'parent_slug'       => 'gmw-extensions',
+			'page_title'        => __( 'GEO my WP Tools', 'geo-my-wp' ),
+			'menu_title'        => __( 'Tools', 'geo-my-wp' ),
+			'capability'        => 'manage_options',
+			'menu_slug'         => 'gmw-tools',
+			'callback_function' => array( $tools_page, 'output' ),
+			'priority'          => 9,
+		);
+
+		/**
+		 *
+		 * Hook your add-on's menu item and page
+		 *
+		 * To do so you need to append an array of menu items as the example below:
+		 *
+		 * $menu_items[] = array(
+		 *    'parent_slug'       => 'gmw-extensions', // the main menu to add your sub-menu item to. Should always be gmw-extensions
+		 *    'page_title'        => __( 'GEO my WP Tools', 'geo-my-wp' ),
+		 *    'menu_title'        => __( 'Tools', 'geo-my-wp' ),
+		 *    'capability'        => 'manage_options',
+		 *    'menu_slug'         => 'gmw-tools',
+		 *    'callback_function' => array( 'tools_page', 'output' ), // this can be either a string when using a function or array of class and the function to execute.
+		 *    'priority'          => 25
+		 * );
+		 */
+		$menu_items = apply_filters( 'gmw_admin_menu_items', $menu_items );
+
+		// order menu items by priority.
+		usort( $menu_items, 'gmw_sort_by_priority' );
+
+		// gmw admin pages.
+		$gmw_pages = array();
+
+		// loop and create menu items and pages.
+		foreach ( $menu_items as $item ) {
+
+			add_submenu_page(
+				! empty( $item['parent_slug'] ) ? $item['parent_slug'] : 'gmw-extensions',
+				! empty( $item['page_title'] ) ? $item['page_title'] : '',
+				! empty( $item['menu_title'] ) ? $item['menu_title'] : '',
+				! empty( $item['capability'] ) ? $item['capability'] : 'manage_options',
+				! empty( $item['menu_slug'] ) ? $item['menu_slug'] : '',
+				$item['callback_function']
+			);
+
+			$gmw_pages[] = $item['menu_slug'];
+		}
+
+		// apply credit and enqueue scripts and styles in GEO my WP admin pages only.
+		if ( ( isset( $_GET['page'] ) && in_array( $_GET['page'], $gmw_pages, true ) ) || ( isset( $_GET['post_type'] ) && 'gmw_location_type' === $_GET['post_type'] ) ) { // phpcs:ignore: CSRF ok, sanitization ok.
+
+			$this->gmw_page = true;
+
+			add_filter( 'admin_footer_text', array( $this, 'gmw_credit_footer' ), 10 );
+			add_filter( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		}
+	}
+
+	// phpcs:disable.
+	/*public function admin_menu() {
+
+		$this->addons_page   = new GMW_Extensions();
+		$this->settings_page = new GMW_Settings();
+		$this->forms_page    = new GMW_Forms_Page();
+
+		if ( isset( $_GET['page'] ) && 'gmw-forms' === $_GET['page'] && isset( $_GET['gmw_action'] ) && 'edit_form' === $_GET['gmw_action'] && ! empty( $_GET['prefix'] ) && class_exists( 'GMW_' . $_GET['prefix'] . '_Form_Editor' ) ) { // WPCS: CSRF ok, sanitization OK.
+			$class_name = 'GMW_' . sanitize_text_field( wp_unslash( $_GET['prefix'] ) ) . '_Form_Editor'; // WPCS: CSRF ok.
+		} else {
+			$class_name = 'GMW_Form_Editor';
+		}
+
+		$this->edit_form_page     = new $class_name();
+		$this->tools_page         = new GMW_Tools();
+		$this->import_export_page = new GMW_Import_Export_Page();
 
 		// GEO my WP menu items.
 		add_menu_page( 'GEO my WP', 'GEO my WP', 'manage_options', 'gmw-extensions', array( $this->addons_page, 'output' ), GMW_URL . '/menu-icon.png', 66 );
@@ -372,7 +534,7 @@ class GMW_Admin {
 		 *    'priority'          => 25
 		 * );
 		 */
-		$menu_items = apply_filters( 'gmw_admin_menu_items', $menu_items );
+		/*$menu_items = apply_filters( 'gmw_admin_menu_items', $menu_items );
 
 		// order menu items by priority.
 		usort( $menu_items, 'gmw_sort_by_priority' );
@@ -403,7 +565,8 @@ class GMW_Admin {
 			add_filter( 'admin_footer_text', array( $this, 'gmw_credit_footer' ), 10 );
 			add_filter( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		}
-	}
+	}*/
+	// phpcs:enable.
 
 	/**
 	 * MOdify body tag's class attribute.
@@ -420,11 +583,11 @@ class GMW_Admin {
 
 			$page = '';
 
-			if ( ! empty( $_GET['page'] ) ) {
+			if ( ! empty( $_GET['page'] ) ) { // phpcs:ignore: CSRF ok.
 
-				$page = sanitize_text_field( wp_unslash( $_GET['page'] ) );
+				$page = sanitize_text_field( wp_unslash( $_GET['page'] ) ); // phpcs:ignore: CSRF ok.
 
-			} elseif ( ! empty( $_GET['post_type'] ) && 'gmw_location_type' === $_GET['post_type'] ) {
+			} elseif ( ! empty( $_GET['post_type'] ) && 'gmw_location_type' === $_GET['post_type'] ) { // phpcs:ignore: CSRF ok.
 
 				$page = 'location-types';
 			}
@@ -470,12 +633,12 @@ class GMW_Admin {
 
 		wp_deregister_style( 'select2' );
 		wp_deregister_script( 'select2' );
- 		wp_dequeue_script( 'select2' );
+		wp_dequeue_script( 'select2' );
 		wp_dequeue_style( 'select2' );
 
 		$pages = array( 'gmw-extensions', 'gmw-settings', 'gmw-forms', 'gmw-import-export' );
 
-		if ( ( ! empty( $_GET['page'] ) && ! in_array( $_GET['page'], $pages, true ) ) || ( isset( $_GET['post_type'] ) && 'gmw_location_type' === $_GET['post_type'] ) ) { // WPCS: CSRF ok.
+		if ( ( ! empty( $_GET['page'] ) && ! in_array( $_GET['page'], $pages, true ) ) || ( isset( $_GET['post_type'] ) && 'gmw_location_type' === $_GET['post_type'] ) ) { // phpcs:ignore: CSRF ok.
 
 			wp_deregister_style( 'select2' );
 			wp_deregister_script( 'select2' );
@@ -587,7 +750,7 @@ class GMW_Admin {
 				// trigger license key.
 			if ( class_exists( 'GMW_License' ) && ! empty( $new_addon['full_path'] ) ) {
 
-				$gmw_license = new GMW_License(
+				new GMW_License(
 					$new_addon['full_path'],
 					$new_addon['item_name'],
 					$new_addon['slug'],
