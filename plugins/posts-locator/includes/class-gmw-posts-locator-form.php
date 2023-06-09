@@ -152,9 +152,11 @@ trait GMW_Posts_Locator_Form_Trait {
 	public function object_loop( $include = false ) {
 
 		// The variables are for AJAX forms deprecated template files. To be removed.
+		// phpcs:disable.
 		$gmw       = $this->form;
 		$gmw_form  = $this;
 		$gmw_query = $this->query;
+		// phpcs:enable.
 
 		while ( $this->query->have_posts() ) :
 
