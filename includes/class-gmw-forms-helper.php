@@ -825,9 +825,8 @@ class GMW_Forms_Helper {
 
 				foreach ( $form['search_results']['xprofile_fields']['fields'] as $xfield ) {
 
-					$field_id    = absint( $xfield );
-					$field_data  = xprofile_get_field( $field_id );
-					$field_value = maybe_unserialize( $field_data->data->value );
+					$field_id   = absint( $xfield );
+					$field_data = xprofile_get_field( $field_id );
 
 					$new_xfields[ $field_id ] = array(
 						'name'         => $field_data->name,
@@ -839,9 +838,8 @@ class GMW_Forms_Helper {
 
 			if ( ! empty( $form['search_results']['xprofile_fields']['date_field'] ) ) {
 
-				$field_id    = absint( $form['search_results']['xprofile_fields']['date_field'] );
-				$field_data  = xprofile_get_field( $field_id );
-				$field_value = maybe_unserialize( $field_data->data->value );
+				$field_id   = absint( $form['search_results']['xprofile_fields']['date_field'] );
+				$field_data = xprofile_get_field( $field_id );
 
 				$new_xfields[ $field_id ] = array(
 					'name'         => $field_data->name,
@@ -858,9 +856,8 @@ class GMW_Forms_Helper {
 
 				foreach ( $form['info_window']['xprofile_fields']['fields'] as $xfield ) {
 
-					$field_id    = absint( $xfield );
-					$field_data  = xprofile_get_field( $field_id );
-					$field_value = maybe_unserialize( $field_data->data->value );
+					$field_id   = absint( $xfield );
+					$field_data = xprofile_get_field( $field_id );
 
 					$new_xfields[ $field_id ] = array(
 						'name'         => $field_data->name,
@@ -872,9 +869,8 @@ class GMW_Forms_Helper {
 
 			if ( ! empty( $form['info_window']['xprofile_fields']['date_field'] ) ) {
 
-				$field_id    = absint( $form['info_window']['xprofile_fields']['date_field'] );
-				$field_data  = xprofile_get_field( $field_id );
-				$field_value = maybe_unserialize( $field_data->data->value );
+				$field_id   = absint( $form['info_window']['xprofile_fields']['date_field'] );
+				$field_data = xprofile_get_field( $field_id );
 
 				$new_xfields[ $field_id ] = array(
 					'name'         => $field_data->name,
