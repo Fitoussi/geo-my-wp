@@ -297,8 +297,10 @@ class GMW_Forms_Helper {
 			);
 		}
 
-		$form['search_form']['address_field']['required'] = 0;
 		$form['search_form']['address_field']['usage']    = 'single';
+		$form['search_form']['address_field']['required'] = ! empty( $form['search_form']['address_field']['mandatory'] ) ? 1 : 0;
+
+		unset( $form['search_form']['address_field']['mandatory'] );
 
 		/* ---- Locator Button ---- */
 
@@ -327,11 +329,11 @@ class GMW_Forms_Helper {
 				'show_options_all' => 'Miles',
 				'options'          => "5\n10\n25\n50\n100",
 				'default_value'    => ! empty( $form['search_form']['radius_slider']['default_value'] ) ? $form['search_form']['radius_slider']['default_value'] : '50',
-				'required'         => 0,
 				'min_value'        => ! empty( $form['search_form']['radius_slider']['min_value'] ) ? $form['search_form']['radius_slider']['min_value'] : '0',
 				'max_value'        => ! empty( $form['search_form']['radius_slider']['max_value'] ) ? $form['search_form']['radius_slider']['max_value'] : '200',
 				'prefix'           => '',
 				'suffix'           => '',
+				'required'         => 0,
 			);
 
 			unset( $form['search_form']['radius_slider'] );
@@ -341,7 +343,7 @@ class GMW_Forms_Helper {
 			if ( strpos( $form['search_form']['radius'], ',' ) !== false ) {
 
 				$usage   = 'select';
-				$default = '50';
+				$default = explode( ',', $form['search_form']['radius'] )[0];
 				$options = str_replace( ',', "\n", $form['search_form']['radius'] );
 
 			} else {
@@ -379,7 +381,12 @@ class GMW_Forms_Helper {
 			'custom_css'          => '',
 		);
 
-		if ( isset( $form['search_form']['keywords'] ) ) {
+		if ( isset( $form['search_form']['keywords'] ) && is_array( $form['search_form']['keywords'] ) ) {
+
+			if ( empty( $form['search_form']['keywords']['usage'] ) ) {
+				$form['search_form']['keywords']['usage'] = 'disabled';
+			}
+
 			$form['search_form']['keywords']['required'] = '';
 		}
 
@@ -642,8 +649,9 @@ class GMW_Forms_Helper {
 		/* ----- Search Results ----- */
 
 		$form['search_results']['results_view'] = array(
-			'default' => 'grid',
-			'toggle'  => 1,
+			'default'      => 'grid',
+			'toggle'       => 1,
+			'grid_columns' => '',
 		);
 
 		if ( isset( $form['search_results']['image'] ) && is_array( $form['search_results']['image'] ) ) {
@@ -714,6 +722,11 @@ class GMW_Forms_Helper {
 
 		if ( isset( $form['info_window'] ) ) {
 
+			if ( isset( $form['info_window']['iw_type'] ) && ( 'infobubble' === $form['info_window']['iw_type'] || 'infobox' === $form['info_window']['iw_type'] ) ) {
+				$form['info_window']['iw_type']              = 'standard';
+				$form['info_window']['template']['standard'] = 'default';
+			}
+
 			$form['info_window']['address'] = array(
 				'enabled' => 1,
 				'linked'  => 1,
@@ -752,7 +765,7 @@ class GMW_Forms_Helper {
 
 		if ( 'members_locator' === $form['component'] ) {
 
-			if ( ! empty( $form['page_load_results']['include_exclude_member_types'] ) ) {
+			if ( ! empty( $form['page_load_results']['include_exclude_member_types'] ) && is_array( $form['page_load_results']['include_exclude_member_types'] ) ) {
 
 				$mtypes = $form['page_load_results']['include_exclude_member_types'];
 
@@ -768,7 +781,7 @@ class GMW_Forms_Helper {
 				unset( $form['page_load_results']['include_exclude_member_types'] );
 			}
 
-			if ( ! empty( $form['search_form']['member_types_filter'] ) ) {
+			if ( ! empty( $form['search_form']['member_types_filter'] ) && is_array( $form['search_form']['member_types_filter'] ) ) {
 
 				if ( isset( $form['search_form']['member_types_filter']['member_types'] ) ) {
 
@@ -780,29 +793,35 @@ class GMW_Forms_Helper {
 				$form['search_form']['member_types_filter']['required'] = 0;
 				$form['search_form']['member_types_filter']['smartbox'] = 0;
 
-				if ( 'dropdown' === $form['search_form']['member_types_filter']['usage'] ) {
+				if ( isset( $form['search_form']['member_types_filter']['usage'] ) ) {
 
-					$form['search_form']['member_types_filter']['usage'] = 'select';
+					if ( 'dropdown' === $form['search_form']['member_types_filter']['usage'] ) {
 
-				} elseif ( 'smartbox' === $form['search_form']['member_types_filter']['usage'] ) {
+						$form['search_form']['member_types_filter']['usage'] = 'select';
 
-					$form['search_form']['member_types_filter']['usage']    = 'select';
-					$form['search_form']['member_types_filter']['smartbox'] = 1;
+					} elseif ( 'smartbox' === $form['search_form']['member_types_filter']['usage'] ) {
 
-				} elseif ( 'smartbox_multiple' === $form['search_form']['member_types_filter']['usage'] ) {
+						$form['search_form']['member_types_filter']['usage']    = 'select';
+						$form['search_form']['member_types_filter']['smartbox'] = 1;
 
-					$form['search_form']['member_types_filter']['usage']    = 'multiselect';
-					$form['search_form']['member_types_filter']['smartbox'] = 1;
+					} elseif ( 'smartbox_multiple' === $form['search_form']['member_types_filter']['usage'] ) {
 
-				} elseif ( 'checkbox' === $form['search_form']['member_types_filter']['usage'] ) {
+						$form['search_form']['member_types_filter']['usage']    = 'multiselect';
+						$form['search_form']['member_types_filter']['smartbox'] = 1;
 
-					$form['search_form']['member_types_filter']['usage'] = 'checkboxes';
+					} elseif ( 'checkbox' === $form['search_form']['member_types_filter']['usage'] ) {
+
+						$form['search_form']['member_types_filter']['usage'] = 'checkboxes';
+					}
+				} else {
+					$form['search_form']['member_types_filter']['usage'] = 'disabled';
+
 				}
 			}
 
 			$new_xfields = array();
 
-			if ( ! empty( $form['search_results']['xprofile_fields']['fields'] ) ) {
+			if ( ! empty( $form['search_results']['xprofile_fields']['fields'] ) && is_array( $form['search_results']['xprofile_fields']['fields'] ) ) {
 
 				foreach ( $form['search_results']['xprofile_fields']['fields'] as $xfield ) {
 
@@ -868,33 +887,49 @@ class GMW_Forms_Helper {
 
 			if ( ! empty( $form['search_form']['bp_groups'] ) ) {
 
-				if ( isset( $form['search_form']['bp_groups']['groups'] ) ) {
+				if ( is_array( $form['search_form']['bp_groups'] ) ) {
 
-					$form['search_form']['bp_groups']['options'] = $form['search_form']['bp_groups']['groups'];
+					if ( isset( $form['search_form']['bp_groups']['groups'] ) ) {
 
-					unset( $form['search_form']['bp_groups']['groups'] );
-				}
+						$form['search_form']['bp_groups']['options'] = $form['search_form']['bp_groups']['groups'];
 
-				$form['search_form']['bp_groups']['required'] = 0;
-				$form['search_form']['bp_groups']['smartbox'] = 0;
+						unset( $form['search_form']['bp_groups']['groups'] );
 
-				if ( 'dropdown' === $form['search_form']['bp_groups']['usage'] ) {
+					} else {
+						$form['search_form']['bp_groups']['options'] = array();
+					}
 
-					$form['search_form']['bp_groups']['usage'] = 'select';
+					$form['search_form']['bp_groups']['required'] = 0;
+					$form['search_form']['bp_groups']['smartbox'] = 0;
 
-				} elseif ( 'smartbox' === $form['search_form']['bp_groups']['usage'] ) {
+					if ( 'dropdown' === $form['search_form']['bp_groups']['usage'] ) {
 
-					$form['search_form']['bp_groups']['usage']    = 'select';
-					$form['search_form']['bp_groups']['smartbox'] = 1;
+						$form['search_form']['bp_groups']['usage'] = 'select';
 
-				} elseif ( 'smartbox_multiple' === $form['search_form']['bp_groups']['usage'] ) {
+					} elseif ( 'smartbox' === $form['search_form']['bp_groups']['usage'] ) {
 
-					$form['search_form']['bp_groups']['usage']    = 'multiselect';
-					$form['search_form']['bp_groups']['smartbox'] = 1;
+						$form['search_form']['bp_groups']['usage']    = 'select';
+						$form['search_form']['bp_groups']['smartbox'] = 1;
 
-				} elseif ( 'checkbox' === $form['search_form']['bp_groups']['usage'] ) {
+					} elseif ( 'smartbox_multiple' === $form['search_form']['bp_groups']['usage'] ) {
 
-					$form['search_form']['bp_groups']['usage'] = 'checkboxes';
+						$form['search_form']['bp_groups']['usage']    = 'multiselect';
+						$form['search_form']['bp_groups']['smartbox'] = 1;
+
+					} elseif ( 'checkbox' === $form['search_form']['bp_groups']['usage'] ) {
+
+						$form['search_form']['bp_groups']['usage'] = 'checkboxes';
+					}
+				} else {
+
+					$form['search_form']['bp_groups'] = array(
+						'usage'            => 'disabled',
+						'options'          => array(),
+						'smartbox'         => 0,
+						'label'            => 'Groups',
+						'show_options_all' => '',
+						'required'         => 0,
+					);
 				}
 			}
 		}
