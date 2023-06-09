@@ -22,7 +22,8 @@
 global $members_template;
 ?>
 <!--  Main results wrapper -->
-<div class="<?php gmw_form_class( 'results_wrapper', $gmw ); ?>" data-id="<?php echo absint( $gmw['ID'] ); ?>" data-prefix="<?php echo esc_attr( $gmw['prefix'] ); ?>">
+<div class="<?php gmw_form_class( 'results_wrapper', $gmw ); ?>" data-id="<?php echo absint( $gmw['ID'] ); ?>"
+	data-prefix="<?php echo esc_attr( $gmw['prefix'] ); ?>">
 	<?php
 	do_action( 'gmw_search_results_wrapper_start', $gmw );
 
