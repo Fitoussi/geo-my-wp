@@ -24,7 +24,7 @@ trait GMW_Members_Locator_Form_Trait {
 	 *
 	 * @since 1.1
 	 *
-	 * @param  array $query array of query clauses.
+	 * @param  object $query object of query clauses.
 	 *
 	 * @return string        modified sql query
 	 */
@@ -162,7 +162,7 @@ trait GMW_Members_Locator_Form_Trait {
 		}
 
 		// get results of locations + users data.
-		$this->locations = $wpdb->get_results( implode( ' ', $clauses ) ); // WPCS: db call ok, cache ok, unprepared SQL ok.
+		$this->locations = $wpdb->get_results( implode( ' ', $clauses ) ); // phpcs:ignore: db call ok, cache ok, unprepared SQL ok.
 
 		if ( 'global_maps' === $this->form['addon'] ) {
 
@@ -330,13 +330,13 @@ trait GMW_Members_Locator_Form_Trait {
 		// filter the members query.
 		// Use high priority to allow other plugins to use this filter before GEO my WP does.
 		add_action( 'bp_pre_user_query_construct', array( $this, 'xprofile_query' ), 90 );
-		add_action( 'bp_pre_user_query', array( $this, 'query_clauses' ), 90, 2 );
+		add_action( 'bp_pre_user_query', array( $this, 'query_clauses' ), 90 );
 		add_filter( 'bp_core_get_users', array( $this, 'append_location_data_to_results' ), 90 );
 
 		bp_has_members( $this->form['query_args'] ) ? true : false;
 
 		remove_action( 'bp_pre_user_query_construct', array( $this, 'xprofile_query' ), 90 );
-		remove_action( 'bp_pre_user_query', array( $this, 'query_clauses' ), 90, 2 );
+		remove_action( 'bp_pre_user_query', array( $this, 'query_clauses' ), 90 );
 		remove_filter( 'bp_core_get_users', array( $this, 'append_location_data_to_results' ), 39 );
 
 		global $members_template;
@@ -381,9 +381,11 @@ trait GMW_Members_Locator_Form_Trait {
 		global $members_template;
 
 		// The variables are for AJAX forms deprecated template files. To be removed.
+		// phpcs:disable.
 		$gmw       = $this->form;
 		$gmw_form  = $this;
 		$gmw_query = $this->query;
+		// phpcs:enable.
 
 		while ( bp_members() ) :
 
