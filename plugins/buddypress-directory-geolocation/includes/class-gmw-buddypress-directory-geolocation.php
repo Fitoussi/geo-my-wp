@@ -136,6 +136,26 @@ class GMW_BuddyPress_Directory_Geolocation {
 	public $form_loaded = false;
 
 	/**
+	 * If this is a BP Profiel Search plugin form submission.
+	 *
+	 * @var boolean
+	 */
+	public $is_profile_search = false;
+	/**
+	 * Form labels.
+	 *
+	 * @var array
+	 */
+	public $labels = array();
+
+	/**
+	 * Array of search form radius values.
+	 *
+	 * @var array
+	 */
+	public $radius_values = array();
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -161,7 +181,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 		// labels.
 		$this->labels            = $this->labels();
 		$this->doing_ajax        = defined( 'DOING_AJAX' ) ? 1 : 0;
-		$this->is_profile_search = ! empty( $_REQUEST['bp_profile_search'] ) ? true : false;
+		$this->is_profile_search = ! empty( $_REQUEST['bp_profile_search'] ) ? true : false; // phpcs:ignore: CSRF ok.
 		$this->radius_values     = str_replace( ' ', '', explode( ',', $this->options['radius'] ) );
 		$bp_search_values        = array();
 
@@ -192,20 +212,20 @@ class GMW_BuddyPress_Directory_Geolocation {
 		} else {
 
 			// get the default addres value from URL if exists.
-			if ( $this->doing_ajax && isset( $_REQUEST['address'] ) ) { // WPCS: CSRF ok.
+			if ( $this->doing_ajax && isset( $_REQUEST['address'] ) ) { // phpcs:ignore: CSRF ok.
 
-				$this->form['address'] = sanitize_text_field( wp_unslash( $_REQUEST['address'] ) ); // WPCS: CSRF ok.
+				$this->form['address'] = sanitize_text_field( wp_unslash( $_REQUEST['address'] ) ); // phpcs:ignore: CSRF ok.
 
 				// otherwise, check in cookies.
 			} elseif ( isset( $_COOKIE[ 'gmw_' . $this->prefix . '_address' ] ) && 'undefined' !== $_COOKIE[ 'gmw_' . $this->prefix . '_address' ] ) {
 
-				$this->form['address'] = urldecode( wp_unslash( $_COOKIE[ 'gmw_' . $this->prefix . '_address' ] ) ); // WPCS: sanitization ok.
+				$this->form['address'] = urldecode( wp_unslash( $_COOKIE[ 'gmw_' . $this->prefix . '_address' ] ) );
 			}
 
 			// get the default latitude value from URL if exists.
-			if ( ! $this->doing_ajax && isset( $_REQUEST['lat'] ) ) { // WPCS: CSRF ok.
+			if ( ! $this->doing_ajax && isset( $_REQUEST['lat'] ) ) { // phpcs:ignore: CSRF ok.
 
-				$this->form['lat'] = sanitize_text_field( wp_unslash( $_REQUEST['lat'] ) ); // WPCS: CSRF ok.
+				$this->form['lat'] = sanitize_text_field( wp_unslash( $_REQUEST['lat'] ) ); // phpcs:ignore: CSRF ok.
 
 			} elseif ( isset( $_COOKIE[ 'gmw_' . $this->prefix . '_lat' ] ) && 'undefined' !== $_COOKIE[ 'gmw_' . $this->prefix . '_lat' ] ) {
 
@@ -215,11 +235,11 @@ class GMW_BuddyPress_Directory_Geolocation {
 			// get the default latitude value from URL if exists.
 			if ( ! $this->doing_ajax && isset( $_REQUEST['lng'] ) ) {
 
-				$this->form['lng'] = sanitize_text_field( wp_unslash( $_REQUEST['lng'] ) ); // WPCS: CSRF ok.
+				$this->form['lng'] = sanitize_text_field( wp_unslash( $_REQUEST['lng'] ) ); // phpcs:ignore: CSRF ok.
 
 			} elseif ( isset( $_COOKIE[ 'gmw_' . $this->prefix . '_lng' ] ) && 'undefined' !== $_COOKIE[ 'gmw_' . $this->prefix . '_lng' ] ) {
 
-				$this->form['lng'] = urldecode( wp_unslash( $_COOKIE[ 'gmw_' . $this->prefix . '_lng' ] ) ); // WPCS: sanitization ok.
+				$this->form['lng'] = urldecode( wp_unslash( $_COOKIE[ 'gmw_' . $this->prefix . '_lng' ] ) );
 			}
 
 			// if single, default value get it from the options.
@@ -228,9 +248,9 @@ class GMW_BuddyPress_Directory_Geolocation {
 				$this->form['distance'] = end( $this->radius_values );
 
 				// check in URL if exists.
-			} elseif ( ! $this->doing_ajax && ! empty( $_REQUEST['distance'] ) ) { // WPCS: CSRF ok.
+			} elseif ( ! $this->doing_ajax && ! empty( $_REQUEST['distance'] ) ) { // phpcs:ignore: CSRF ok.
 
-				$this->form['distance'] = sanitize_text_field( wp_unslash( $_REQUEST['distance'] ) ); // WPCS: CSRF ok.
+				$this->form['distance'] = sanitize_text_field( wp_unslash( $_REQUEST['distance'] ) ); // phpcs:ignore: CSRF ok.
 
 				// otherwise, maybe in cookies.
 			} elseif ( isset( $_COOKIE[ 'gmw_' . $this->prefix . '_radius' ] ) && 'undefined' !== $_COOKIE[ 'gmw_' . $this->prefix . '_radius' ] ) {
@@ -258,7 +278,8 @@ class GMW_BuddyPress_Directory_Geolocation {
 		// SweetDate theme.
 		if ( function_exists( 'sweetdate_setup' ) ) {
 
-			//add_action( 'kleo_bp_search_add_data', array( $this, 'sweetdate_directory_form' ) );
+			// phpcs:ignore.
+			// add_action( 'kleo_bp_search_add_data', array( $this, 'sweetdate_directory_form' ) );
 			add_action( 'bp_groups_directory_group_filter', array( $this, 'sweetdate_directory_form' ) );
 
 			// For Kleo Theme.
@@ -324,6 +345,48 @@ class GMW_BuddyPress_Directory_Geolocation {
 	}
 
 	/**
+	 * Info window arguments.
+	 *
+	 * This is where some data that will pass to the map info-window is generated
+	 *
+	 * as ach object might generate this data differently.
+	 *
+	 * This method will run in the_location() method and will have the $object availabe to use.
+	 *
+	 * For posts types, for example, we will use the function as below:
+	 *
+	 * return array(
+	 *      'type'            => 'standard',
+	 *      'url'             => get_permalink( $post_id ),
+	 *      'title'           => get_the_title( $post_id ),
+	 *      'image'           => get_the_post_thumbnail( $post_id ),
+	 *      'directions_link' => true,
+	 *      'address'         => true,
+	 *      'distance'        => true,
+	 *      'location_meta'   => array( 'phone', 'fax', 'email' )
+	 * );
+	 *
+	 * @param  array $object the object data.
+	 *
+	 * @return array of arguments.
+	 */
+	public function get_info_window_args( $object ) { // phpcs:ignore.
+
+		return array(
+			'prefix'          => $this->prefix,
+			'type'            => 'standard',
+			'url'             => '#',
+			'title'           => false,
+			'image_url'       => false,
+			'image'           => true,
+			'directions_link' => true,
+			'address'         => true,
+			'distance'        => true,
+			'location_meta'   => false,
+		);
+	}
+
+	/**
 	 * Modify results message when geocoding fails.
 	 *
 	 * @since 2.0
@@ -386,7 +449,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 	 *
 	 * @since 2.6.1
 	 *
-	 * @return unknown
+	 * @return array
 	 */
 	public function labels() {
 
@@ -576,6 +639,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 		$search_form = $this->get_form_elements();
 		$search_form = implode( ' ', $search_form );
 
+		// phpcs:disable.
 		?>
 		<style type="text/css">
 
@@ -636,6 +700,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 			}
 		</style>
 		<?php
+		// phpcs:enable.
 
 		return $search_form_html . $search_form;
 	}
@@ -703,7 +768,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 			});
 		</script>
 		<?php
-		echo implode( ' ', $search_form ); // WPCS: XSS ok.
+		echo implode( ' ', $search_form ); // phpcs:ignore: XSS ok.
 	}
 
 	/**
@@ -720,6 +785,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 	public function kleo_directory_form( $search_form_html ) {
 
 		$search_form = $this->get_form_elements();
+		// phpcs:disable.
 		?>
 		<style type="text/css">
 
@@ -781,6 +847,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 
 		</style>
 		<?php
+		// phpcs:enable.
 
 		unset( $search_form['holder'], $search_form['/holder'] );
 
@@ -803,7 +870,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 		);
 
 		// display the map element.
-		echo gmw_get_map_element( $args, $this->form ); // WPCS XSS ok.
+		echo gmw_get_map_element( $args, $this->form ); // phpcs:ignore: XSS ok.
 	}
 
 	/**
@@ -841,7 +908,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 		// triggers map on page load.
 		$map_args = gmw_get_map_object( $map_args, $map_options, $this->map_locations, $user_position, array() );
 		?>
-		<script>       
+		<script>
 		jQuery( window ).ready( function() {
 
 			var mapArgs = <?php echo wp_json_encode( $map_args ); ?>;
@@ -977,7 +1044,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 	 * Append location data to each item in the results.
 	 */
 	public function add_elements_to_results() {
-		echo $this->get_item_location_elements(); // WPCS: XSS ok.
+		echo $this->get_item_location_elements(); // phpcs:ignore: XSS ok.
 	}
 
 	/**
@@ -991,7 +1058,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 	 */
 	public function add_elements_to_results_buddyx( $meta ) {
 
-		echo $this->get_item_location_elements(); // WPCS: XSS ok.
+		echo $this->get_item_location_elements(); // phpcs:ignore: XSS ok.
 
 		return $meta;
 	}
