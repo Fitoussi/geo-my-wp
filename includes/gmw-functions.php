@@ -409,7 +409,7 @@ function gmw_trigger_error( $message = '', $type = E_USER_NOTICE ) {
 	} else {
 
 		// phpcs:ignore.
-		trigger_error( $message, $type ); // phpcs:ignore: XSS ok.
+		trigger_error( $message, $type );
 	}
 }
 
@@ -750,11 +750,9 @@ function gmw_calculate_distance( $start_lat, $start_lng, $end_lat, $end_lng, $un
  *
  * @param  array $roles array of use roles.
  *
- * @param  array $cache type of cache ( deprecated? ).
- *
  * @return mixed        void || array of user ID.
  */
-function gmw_get_user_ids_from_roles( $roles = array(), $cache = 'posts' ) {
+function gmw_get_user_ids_from_roles( $roles = array() ) {
 
 	if ( empty( $roles ) ) {
 		return;
@@ -1842,7 +1840,7 @@ function gmw_ajax_info_window_init() {
 	} elseif ( 'users_locator' === $gmw['component'] ) {
 
 		// phpcs:ignore.
-		require_once GMW_UL_PATH . '/includes/gmw-users-locator-ajax-info-window-loader.php'; // Defined in the Users Locator extension.
+		require_once GMW_UL_PATH . '/includes/gmw-users-locator-ajax-info-window-loader.php'; // phpcs:ignore: defined in the Users Locator extension.
 	}
 
 	// execute custom info-window functions.
