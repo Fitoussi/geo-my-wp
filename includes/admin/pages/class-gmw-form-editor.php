@@ -2615,28 +2615,40 @@ class GMW_Form_Editor {
 	 */
 	public function output() {
 
+		$allowed = array(
+			'a' => array(
+				'href' => array(),
+			),
+		);
+
 		// make sure form ID passed.
 		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) { // phpcs:ignore: CSRF ok.
-			wp_die( esc_attr__( 'Form ID is missing.', 'geo-my-wp' ) );
+
+			$link  = '<div class="gmw-admin-notice-box gmw-admin-notice-error" style="display: block;margin: 100px auto;width: 600px;">';
+			$link .= sprintf(
+				/* translators: %s link to GEO my WP's forms page. */
+				wp_kses( __( 'Form ID is missing. <a href="%s">Return to the Forms page.</a>', 'geo-my-wp' ), $allowed ),
+				esc_url( 'admin.php?page=gmw-forms' )
+			);
+
+			$link .= '</div>';
+
+			wp_die( $link ); // phpcs:ignore: XSS ok.
 		}
 
 		$form_id = (int) absint( $_GET['form_id'] ); // phpcs:ignore: CSRF ok.
 
 		// get form data.
 		$this->form = GMW_Forms_Helper::get_form( $form_id );
-		$allowed    = array(
-			'a' => array(
-				'href' => array(),
-			),
-		);
 
 		// varify if the form exists.
-		if ( empty( $this->form ) ) {
+		if ( empty( $this->form['ID'] ) ) {
 
 			$link  = '<div class="gmw-admin-notice-box gmw-admin-notice-error" style="display: block;margin: 100px auto;width: 600px;">';
 			$link .= sprintf(
-				/* translators: %s link to GEO my WP's forms page. */
-				wp_kses( __( 'The form that you are trying to edit doe\'s not exist. <a href="%s">Return to the Forms page.</a>', 'geo-my-wp' ), $allowed ),
+				/* translators: %1$s: form ID, %2$s: link to GEO my WP's forms page. */
+				wp_kses( __( 'The form with ID %1$s doe\'s not exist. <a href="%2$s">Return to the Forms page.</a>', 'geo-my-wp' ), $allowed ),
+				$form_id,
 				esc_url( 'admin.php?page=gmw-forms' )
 			);
 			$link .= '</div>';
