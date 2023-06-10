@@ -253,7 +253,7 @@ class GMW_Form_Editor {
 	 *
 	 * @param  array  $form      form object.
 	 */
-	public function form_name_setting( $value, $attr_name, $form ) {
+	public function form_name_setting( $value, $attr_name, $form ) { // phpcs:ignore.
 
 		$form_name = ! empty( $form['title'] ) ? $form['title'] : 'form_id_' . $form['ID'];
 		?>
@@ -293,7 +293,7 @@ class GMW_Form_Editor {
 	 *
 	 * @param  array  $form      form object.
 	 */
-	public function form_usage( $value, $attr_name, $form ) {
+	public function form_usage( $value, $attr_name, $form ) { // phpcs:ignore.
 
 		$form_id = absint( $form['ID'] );
 		?>
