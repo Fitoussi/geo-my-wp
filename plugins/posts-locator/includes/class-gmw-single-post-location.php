@@ -50,15 +50,17 @@ class GMW_Single_Post_Location extends GMW_Single_Location {
 	 */
 	public function get_object_id() {
 
-		$object_id = get_queried_object_id();
+		global $post;
 
-		if ( empty( $object_id ) ) {
+		$object_id = 0;
 
-			global $post;
+		if ( ! empty( $post->ID ) ) {
 
-			if ( ! empty( $post->ID ) ) {
-				$object_id = $post->ID;
-			}
+			$object_id = $post->ID;
+
+		} else {
+
+			$object_id = get_queried_object_id();
 		}
 
 		return ! empty( $object_id ) ? $object_id : false;
