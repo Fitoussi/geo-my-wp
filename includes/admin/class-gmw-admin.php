@@ -337,7 +337,7 @@ class GMW_Admin {
 		$edit_form_page = new $form_editor_class();
 
 		// GEO my WP menu items.
-		add_menu_page( 'GEO my WP', 'GEO my WP', 'manage_options', 'gmw-extensions', array( $addons_page, 'output' ), GMW_URL . '/menu-icon.png', 66 );
+		add_menu_page( 'GEO my WP', 'GEO my WP', 'manage_options', 'gmw-extensions', array( $addons_page, 'output' ), GMW_URL . '/menu-icon.png', 32 );
 
 		// sub menu pages.
 		$menu_items = array();
