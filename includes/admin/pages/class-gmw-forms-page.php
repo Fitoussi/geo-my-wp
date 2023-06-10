@@ -84,6 +84,7 @@ class GMW_Forms_Page {
 		global $wpdb;
 
 		// create new form in database.
+		// phpcs:ignore.
 		$wpdb->insert(
 			$wpdb->prefix . 'gmw_forms',
 			array(
@@ -120,6 +121,7 @@ class GMW_Forms_Page {
 		$new_form['ID'] = $new_form_id;
 
 		// Update new form with the default values and title.
+		// phpcs:ignore.
 		$wpdb->update(
 			$wpdb->prefix . 'gmw_forms',
 			array(
@@ -163,6 +165,7 @@ class GMW_Forms_Page {
 		global $wpdb;
 
 		// get form data.
+		// phpcs:ignore.
 		$form = $wpdb->get_row(
 			$wpdb->prepare(
 				"
@@ -177,6 +180,7 @@ class GMW_Forms_Page {
 		}
 
 		// create new form in database.
+		// phpcs:ignore.
 		$wpdb->insert(
 			$wpdb->prefix . 'gmw_forms',
 			array(
