@@ -203,7 +203,7 @@ class GMW_Forms_Page {
 				'%s',
 				'%s',
 			)
-		); // phpcs:ignore: db call ok, cache ok.
+		); // db call ok.
 
 		// Update forms in cache.
 		GMW_Forms_Helper::update_forms_cache();
