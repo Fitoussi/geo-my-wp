@@ -884,6 +884,17 @@ class GMW_Location_Form {
 			),
 		);
 
+		/*foreach ( $fields as $group_name => $fields_group ) {
+
+			if ( empty( $fields_group['fields'] ) ) {
+				continue;
+			}
+
+			foreach( $fields_group['fields'] as $field_name => $field ) {
+				$fields[ $group_name ]['fields'][ $field_name ]['name'] = 'gmw_lf_' . $field['name'];
+			}
+		}*/
+
 		// Deprecated filter.
 		$fields = apply_filters( 'gmw_' . $this->object_slug . '_location_tab_fields', $fields, $this->args );
 
@@ -959,7 +970,7 @@ class GMW_Location_Form {
 						<span>
 							<label for=""><?php esc_html_e( 'Days', 'geo-my-wp' ); ?></label>
 							<?php $value = ! empty( $days_hours[ $i ]['days'] ) ? esc_attr( $days_hours[ $i ]['days'] ) : ''; ?>
-							<input 
+							<input
 								type="text"
 								class="gmw-lf-field group_days_hours"
 								name="gmw_location_form[location_meta][days_hours][<?php echo $i; // WPCS: XSS ok. ?>][days]"
@@ -971,7 +982,7 @@ class GMW_Location_Form {
 						<span>
 							<label for=""><?php esc_html_e( 'Hours', 'geo-my-wp' ); ?></label>
 							<?php $value = ! empty( $days_hours[ $i ]['hours'] ) ? esc_attr( $days_hours[ $i ]['hours'] ) : ''; ?>
-							<input 
+							<input
 								type="text"
 								class="gmw-pt-field group_days_hours"
 								name="gmw_location_form[location_meta][days_hours][<?php echo $i; // WPCS: XSS ok. ?>][hours]"
@@ -1297,7 +1308,7 @@ class GMW_Location_Form {
 
 		$excluded_fields = false;
 
-		/**
+		/*
 		if ( ! empty( $this->args['exclude_fields'] ) ) {
 
 			$excluded_fields = array_intersect( array( 'street','city', 'postcode' ), $this->args['exclude_fields'] );
@@ -1446,6 +1457,10 @@ class GMW_Location_Form {
 
 		// if updating location via ajax.
 		if ( defined( 'DOING_AJAX' ) ) {
+
+			if ( empty( $_POST['formValues'] ) ) {
+				return;
+			}
 
 			// parse the form values.
 			parse_str( $_POST['formValues'], $form_values );
