@@ -146,8 +146,10 @@ class GMW_Forms_Table extends WP_List_Table {
 			'page'       => $page,
 			'gmw_action' => 'edit_form',
 			'form_id'    => $item['ID'],
-			'slug'       => $item['slug'],
-			'prefix'     => $item['prefix'],
+			// phpcs:disable.
+			//'slug'       => $item['slug'],
+			//'prefix'     => $item['prefix'],
+			// phpcs:enable.
 		);
 
 		$edit_link  = esc_url( wp_nonce_url( add_query_arg( $edit_query_args, 'admin.php' ), 'editform_' . $item['ID'] ) );
