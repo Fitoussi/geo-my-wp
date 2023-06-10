@@ -64,7 +64,7 @@ class GMW_Single_Location {
 		'css_class'              => '',
 		'css_id'                 => '',
 		'use_generic_location'     => 0,
-		/** 'is_widget'            => 0,
+		/* 'is_widget'            => 0,
 		// 'widget_title'         => 0, */
 	);
 
