@@ -502,7 +502,7 @@ class GMW_Form_Core {
 	 *
 	 * @return array of arguments.
 	 */
-	public function get_info_window_args( $object ) {
+	public function get_info_window_args( $object ) { // phpcs:ignore.
 
 		return array(
 			'prefix'          => $this->prefix,
@@ -971,7 +971,7 @@ class GMW_Form_Core {
 	 *
 	 * @param boolean $include true || false if to include the single-result.php template file. That is mainly to be used with deprecated file of the AJAX forms extension.
 	 */
-	public function object_loop( $include = false ) {}
+	public function object_loop( $include = false ) {} // phpcs:ignore.
 
 	/**
 	 * Get template files and enqueue stylesheets and custom CSS.
