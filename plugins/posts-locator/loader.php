@@ -136,7 +136,7 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 	 */
 	public function form_buttons() {
 
-		$buttons =  array(
+		$buttons = array(
 			array(
 				'slug'      => 'posts_locator',
 				'name'      => __( 'Posts Locator Form', 'geo-my-wp' ),
@@ -165,12 +165,12 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 				'priority'    => 7,
 			);
 		}
-			
+
 		if ( ! gmw_is_addon_active( 'global_maps' ) ) {
 
 			$buttons[] = array(
 				'slug'        => 'posts_locator_global_map',
-				'name'        => __( 'Posts Global Map', 'gmw-global-maps' ),
+				'name'        => __( 'Posts Global Map', 'geo-my-wp' ),
 				'prefix'      => 'gmapspt',
 				'component'   => 'posts_locator',
 				'object_type' => 'post',
