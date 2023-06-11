@@ -1078,9 +1078,12 @@ class GMW_Form_Core {
 			$this->form['results_message'] = $this->get_results_message();
 		}
 
+		// phpcs:disable.
+		// These are being used in the results template files.
 		$gmw       = $this->form;
 		$gmw_form  = $this;
 		$gmw_query = $this->query;
+		// phpcs:enables.
 
 		// Maybe already generated somewhere else.
 		if ( empty( $this->results_template ) ) {
@@ -1088,10 +1091,27 @@ class GMW_Form_Core {
 		}
 
 		// temporary to support older versions of the plugin.
-		// This global should now be at the begining of the results template file.
+		// This global should now live at the begining of the results template file.
 		global $members_template, $groups_template;
 
+		$bp_class_ok = false;
+
+		// Temporary solution to add the #buddypress wrapping element to custom results template files.
+		if ( apply_filters( 'gmw_search_results_buddypress_id_attr_enabled', true ) ) {
+
+			if ( 'members_locator' === $this->form['component'] && ! empty( $this->results_template['is_custom'] ) ) {
+
+				$bp_class_ok = true;
+
+				echo '<div id="buddypress">';
+			}
+		}
+
 		include $this->results_template['content_path'];
+
+		if ( $bp_class_ok ) {
+			echo '</div>';
+		}
 
 		do_action( 'gmw_have_locations_end', $this->form, $this );
 		do_action( 'gmw_have_' . $this->form['prefix'] . '_locations_end', $this->form, $this );
