@@ -272,7 +272,7 @@ class GMW_Forms_Page {
 			// Generate buttons.
 			foreach ( $buttons as $button ) {
 
-				if ( in_array( $button['slug'], array( 'posts_locator', 'members_locator', 'bp_groups_locator', 'users_locator' ), true ) ) {
+				if ( in_array( $button['slug'], array( 'posts_locator', 'members_locator', 'bp_groups_locator', 'users_locator', 'gforms_entries_locator' ), true ) ) {
 					$output .= '<option disabled>----- ' . esc_html( strtoupper( $button['name'] ) ) . 'S -----</option>';
 				}
 
