@@ -246,7 +246,7 @@ function gmw_enqueue_scripts() {
 			margin-left: 240px;
 		}
 
-		body.toplevel_page_gmw-extensions #footer-thankyou, 
+		body.toplevel_page_gmw-extensions #footer-thankyou,
 		.geo-my-wp_page_gmw-forms:not( .geo-my-wp_page_gmw-form-editor ) #footer-thankyou {
 			margin-left: 0;
 		}';
