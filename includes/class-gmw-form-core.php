@@ -782,7 +782,20 @@ class GMW_Form_Core {
 	 */
 	public function pre_search_query_hooks() {
 
-		$object_type = 'bp_group' === $this->form['object_type'] ? 'group' : $this->form['object_type'];
+		//$object_type = 'bp_group' === $this->form['object_type'] ? 'group' : $this->form['object_type'];
+
+		if ( 'members_locator' === $this->form['component'] ) {
+
+			$object_type = 'member';
+
+		} elseif ( 'bp_groups_locator' === $this->form['component'] ) {
+
+			$object_type = 'group';
+
+		} else {
+
+			$object_type = $this->form['object_type'];
+		}
 
 		// Deprecated filters. Use any of the below new filters instead.
 		$this->form = apply_filters( 'gmw_' . $this->form['prefix'] . '_form_before_' . $object_type . 's_query', $this->form, $this );
@@ -821,7 +834,20 @@ class GMW_Form_Core {
 	 */
 	public function post_search_query_hooks() {
 
-		$object_type = 'bp_group' === $this->form['object_type'] ? 'group' : $this->form['object_type'];
+		//$object_type = 'bp_group' === $this->form['object_type'] ? 'group' : $this->form['object_type'];
+
+		if ( 'members_locator' === $this->form['component'] ) {
+
+			$object_type = 'member';
+
+		} elseif ( 'bp_groups_locator' === $this->form['component'] ) {
+
+			$object_type = 'group';
+
+		} else {
+
+			$object_type = $this->form['object_type'];
+		}
 
 		// Deprecated filters for Global Maps. To be removed. Use any of the below instead.
 		if ( 'global_maps' === $this->form['addon'] ) {
