@@ -1062,6 +1062,7 @@ class GMW_Location {
 			$args,
 			array(
 				'object_type'        => 'post',
+				'address'            => '',
 				'lat'                => false,
 				'lng'                => false,
 				'radius'             => false,
@@ -1110,33 +1111,39 @@ class GMW_Location {
 		$count  = 0;
 		$output = '';
 
-		// generate the db fields.
-		foreach ( $db_fields as $field ) {
+		if ( ! is_array( $db_fields ) ) {
 
-			if ( $count > 0 ) {
-				$output .= ', ';
-			}
+			$output = $db_fields;
 
-			$count++;
+		} else {
+			// generate the db fields.
+			foreach ( $db_fields as $field ) {
 
-			if ( strpos( $field, 'as' ) !== false ) {
-
-				$field = explode( ' as ', $field );
-
-				$output .= "gmw_locations.{$field[0]} as {$field[1]}";
-
-				// Here we are including latitude and longitude fields
-				// using their original field name.
-				// for backward compatibility, we also need to have "lat" and "lng"
-				// in the location object and that is what we did in the line above.
-				// The lat and lng field are too involve and need to carfully change it.
-				// eventually we want to completely move to using latitude and longitude.
-				if ( 'latitude' === $field[0] || 'longitude' === $field[0] ) {
-					$output .= ",gmw_locations.{$field[0]}";
+				if ( $count > 0 ) {
+					$output .= ', ';
 				}
-			} else {
 
-				$output .= "gmw_locations.{$field}";
+				$count++;
+
+				if ( strpos( $field, 'as' ) !== false ) {
+
+					$field = explode( ' as ', $field );
+
+					$output .= "gmw_locations.{$field[0]} as {$field[1]}";
+
+					// Here we are including latitude and longitude fields
+					// using their original field name.
+					// for backward compatibility, we also need to have "lat" and "lng"
+					// in the location object and that is what we did in the line above.
+					// The lat and lng field are too involve and need to carfully change it.
+					// eventually we want to completely move to using latitude and longitude.
+					if ( 'latitude' === $field[0] || 'longitude' === $field[0] ) {
+						$output .= ",gmw_locations.{$field[0]}";
+					}
+				} else {
+
+					$output .= "gmw_locations.{$field}";
+				}
 			}
 		}
 
@@ -1158,9 +1165,8 @@ class GMW_Location {
 			// prepare for cache.
 			$hash            = md5( wp_json_encode( $args ) );
 			$query_args_hash = 'gmw' . $hash . GMW_Cache_Helper::get_transient_version( 'gmw_get_object_' . $args['object_type'] . '_locations' );
+			$locations       = get_transient( $query_args_hash );
 		}
-
-		$locations = get_transient( $query_args_hash );
 
 		if ( ! $internal_cache || false === $locations ) {
 
@@ -1208,7 +1214,26 @@ class GMW_Location {
 			}
 
 			// if address entered, do a proximity search and get locations within the radius entered.
-			if ( empty( $clauses['address_filters'] ) && ! empty( $args['lat'] ) && ! empty( $args['lng'] ) ) {
+			if ( empty( $clauses['address_filters'] ) && ( ! empty( $args['address'] ) || ( ! empty( $args['lat'] ) && ! empty( $args['lng'] ) ) ) ) {
+
+				if ( empty( $args['lat'] ) ) {
+
+					$geocoded = gmw_geocoder( $args['address'] );
+
+					if ( empty( $geocoded['lat'] ) ) {
+
+						//$query['where'] .= ' AND 1 = 0';
+
+						return $args['output_objects_id'] ? array(
+								'objects_id'     => array(),
+								'featured_ids'   => array(),
+								'locations_data' => array(),
+							) : array();
+					}
+
+					$args['lat'] = $geocoded['lat'];
+					$args['lng'] = $geocoded['lng'];
+				}
 
 				// Get earth radius based on units.
 				if ( 'imperial' === $args['units'] || 3959 === $args['units'] || '3959' === $args['units'] || 'miles' === $args['units'] ) {
