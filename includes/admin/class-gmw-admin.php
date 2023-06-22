@@ -439,7 +439,7 @@ class GMW_Admin {
 			$this->gmw_page = true;
 
 			add_filter( 'admin_footer_text', array( $this, 'gmw_credit_footer' ), 10 );
-			add_filter( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+			add_filter( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ), 200 );
 		}
 	}
 
@@ -623,18 +623,18 @@ class GMW_Admin {
 		wp_dequeue_script( 'wcv-vendor-select' );
 		wp_dequeue_style( 'wcv-vendor-select' );
 
-		wp_deregister_script( 'selectWoo' );
 		wp_dequeue_script( 'selectWoo' );
-		wp_deregister_style( 'selectWoo' );
+		wp_deregister_script( 'selectWoo' );
 		wp_dequeue_style( 'selectWoo' );
+		wp_deregister_style( 'selectWoo' );
 
 		wp_dequeue_style( 'rtcl-admin' );
 		wp_dequeue_style( 'rtcl-public' );
 
-		wp_deregister_style( 'select2' );
-		wp_deregister_script( 'select2' );
 		wp_dequeue_script( 'select2' );
 		wp_dequeue_style( 'select2' );
+		wp_deregister_style( 'select2' );
+		wp_deregister_script( 'select2' );
 
 		$pages = array( 'gmw-extensions', 'gmw-settings', 'gmw-forms', 'gmw-import-export' );
 
