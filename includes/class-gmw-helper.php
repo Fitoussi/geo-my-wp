@@ -49,7 +49,7 @@ class GMW_Helper {
 
 		$location = wp_cache_get( 'gmw_user_current_location' );
 
-		if ( empty( $location ) ) {
+		if ( empty( $location->lat ) || empty( $location->lng ) ) {
 
 			$location = (object) array();
 
@@ -286,7 +286,7 @@ class GMW_Helper {
 				if ( file_exists( $output['content_path'] . 'content-start.php' ) ) {
 
 					$output['content_path'] .= 'content-start.php';
-	
+
 				} elseif ( 'search-forms' === $folder_name ) {
 
 					$output['content_path'] .= 'search-form.php';
