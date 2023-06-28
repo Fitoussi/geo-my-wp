@@ -46,10 +46,10 @@ function gmw_output_api_testing_tab() {
 						<input type="submit" class="gmw-settings-action-button button-primary" value="<?php esc_attr_e( 'Test Google Maps Server API Key', 'geo-my-wp' ); ?>" />
 						<input type="hidden" name="gmw_action" value="google_server_key_test" />
 					</div>
-				
+
 				</div>
 			</fieldset>
-			
+
 			<?php wp_nonce_field( 'gmw_google_server_key_test_nonce', 'gmw_google_server_key_test_nonce' ); ?>
 		</form>
 	</div>
