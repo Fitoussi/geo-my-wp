@@ -656,8 +656,7 @@ class GMW_Extensions {
 				}
 			}
 
-			if ( $show_error ) {
-				?>
+			if ( $show_error ) { ?>
 
 				<div class="activation-disabled-message">
 					<?php
@@ -667,6 +666,23 @@ class GMW_Extensions {
 
 					echo '<span class="gmw-icon-cancel-circled">' . wp_kses( $notice, $allowed_html ) . '</span>';
 					?>
+				</div>
+
+			<?php } elseif ( empty( $extension['status_details'] ) && ! empty( $extension['current_version'] ) && version_compare( $extension['version'], $extension['current_version'], '<' ) ) { ?>
+
+				<div class="update-available-notice">
+
+				<?php
+					/* translators: %1$s: plugin's version available for update, %2$s: link to plugins page. */
+					$notice = sprintf(
+						__( 'Version %1$s is now availabe. <a href="%2$s">Update your plugin</a>.', 'geo-my-wp' ),
+						esc_attr( $extension['current_version'] ),
+						admin_url( 'plugins.php' )
+					);
+
+					echo '<span class="gmw-icon-spin">' . wp_kses( $notice, $allowed_html ) . '</span>';
+				?>
+
 				</div>
 
 			<?php } else { ?>
@@ -773,21 +789,6 @@ class GMW_Extensions {
 					</div>
 				</div>
 
-				<?php if ( empty( $extension['status_details'] ) && ! empty( $extension['current_version'] ) && version_compare( $extension['version'], $extension['current_version'], '<' ) ) { ?>
-
-					<div class="update-available-notice">
-						<p>
-							<i class="gmw-icon-spin"></i>
-							<span>
-								<?php
-								/* translators: %s current plugin's version */
-								printf( esc_attr__( 'Version %s is now availabe. Update your plugin.', 'geo-my-wp' ), esc_attr( $extension['current_version'] ) );
-								?>
-							</span>
-						</p>
-					</div>
-
-				<?php } ?>
 			</div>
 
 			<div class="gmw-extension-bottom">
