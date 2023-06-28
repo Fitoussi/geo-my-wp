@@ -130,6 +130,7 @@ class GMW_Search_Form_Helper {
 			'placeholder'        => '', // Placeholder.
 			'class'              => '', // Class attribute. for field.
 			'required'           => 0, // Required field.
+			'post_types_cond'    => array(),
 			'value'              => '',
 			'min_value'          => '0',
 			'max_value'          => '100',
@@ -179,6 +180,18 @@ class GMW_Search_Form_Helper {
 		$args['class_attr'] = ! empty( $args['class'] ) ? $class_attr . ' ' . $args['class'] : $class_attr;
 		$args['id_attr']    = ! empty( $args['id_attr'] ) ? $args['id_attr'] : 'gmw-' . $args['slug'] . '-field-' . $id;
 		$value              = $args['is_array'] ? array() : ''; // Default.
+		$conditions         = array();
+
+		if ( ! empty( $args['post_types_cond'] ) ) {
+
+			$conditions[] = array(
+				'post_types' => $args['post_types_cond']
+			);
+		}
+
+		if ( ! empty( $conditions ) ) {
+			$args['wrapper_atts']['data-conditions'] = json_encode( $conditions );
+		}
 
 		if ( empty( $args['step'] ) ) {
 			$args['step'] = '1';
@@ -868,16 +881,22 @@ class GMW_Search_Form_Helper {
 	/**
 	 * Hidden submission fields
 	 *
-	 * @param  integer $id       field ID.
-	 *
-	 * @param integer $per_page default per page value.
+	 * @param array $gmw gmw form.
 	 *
 	 * @return mixed
 	 */
-	public static function submission_fields( $id = 0, $per_page = 0 ) {
+	public static function submission_fields( $gmw = array() ) {
 
-		$id       = absint( $id );
-		$per_page = esc_attr( $per_page );
+		if ( empty( $gmw['ID'] ) ) {
+			return;
+		}
+
+		if ( ! isset( $gmw['search_results']['per_page'] ) ) {
+			$gmw['search_results']['per_page'] = 10;
+		}
+
+		$per_page = esc_attr( current( explode( ',', $gmw['search_results']['per_page'] ) ) );
+		$id       = absint( $gmw['ID'] );
 		$url_px   = gmw_get_url_prefix();
 		$url_px   = esc_attr( $url_px );
 		$lat      = ! empty( $_GET[ $url_px . 'lat' ] ) ? sanitize_text_field( wp_unslash( $_GET[ $url_px . 'lat' ] ) ) : ''; // phpcs:ignore: CSRF ok.

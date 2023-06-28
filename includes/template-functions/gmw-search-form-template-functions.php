@@ -42,25 +42,50 @@ function gmw_form_field( $args = array(), $gmw = array() ) {
 }
 
 /**
+ * Get the hidden fields for the search form of GEO my WP.
+ *
+ * @since 4.0
+ *
+ * @param array $gmw gmw form.
+ *
+ * @return mixed HTML element.
+ */
+function gmw_get_search_form_submissionn_fields( $gmw = array() ) {
+	return GMW_Search_Form_Helper::submission_fields( $gmw );
+}
+
+/**
+ * Output the hidden fields for the search form of GEO my WP.
+ *
+ * @since 4.0
+ *
+ * @param array $gmw gmw form.
+ */
+function gmw_search_form_submissionn_fields( $gmw ) {
+	echo gmw_get_search_form_submissionn_fields( $gmw );
+}
+
+/**
  * Form submission hidden fields
  *
- * @param  array  $gmw       the form being used.
+ * @param  array   $gmw       the form being used.
  *
- * @param  string $dep_label the default value of the submit button ( deprecated ).
+ * @param  boolean $submission true || false to output the submission fields.
  *
- * @return mix HTML elements of the submission fields
+ * @return mixed HTML elements of the submission fields
  */
-function gmw_get_search_form_submit_button( $gmw = array(), $dep_label = '' ) {
+function gmw_get_search_form_submit_button( $gmw = array(), $submission = true ) {
 
-	if ( ! isset( $gmw['search_results']['per_page'] ) ) {
+	/*if ( ! isset( $gmw['search_results']['per_page'] ) ) {
 		$gmw['search_results']['per_page'] = 10;
 	}
 
-	$per_page = current( explode( ',', $gmw['search_results']['per_page'] ) );
-	$output   = '';
+	$per_page = current( explode( ',', $gmw['search_results']['per_page'] ) );*/
+
+	$output = '';
 
 	if ( ! empty( $gmw['search_form']['submit_button']['label'] ) ) {
-		
+
 		//$label = ! empty( $gmw['search_form']['submit_button']['label'] ) ? $gmw['search_form']['submit_button']['label'] : __( 'Submit', 'geo-my-wp' );
 		$label = $gmw['search_form']['submit_button']['label'];
 		$args  = array(
@@ -85,7 +110,11 @@ function gmw_get_search_form_submit_button( $gmw = array(), $dep_label = '' ) {
 		$output  = apply_filters( 'gmw_form_submit_button', gmw_get_form_field( $args, $gmw ), $gmw, false );
 	}
 
-	$output .= GMW_Search_Form_Helper::submission_fields( $gmw['ID'], $per_page );
+	$submission = apply_filters( 'gmw_submit_button_submission_fields', $submission, $gmw );
+
+	if ( is_string( $submission ) || true === $submission ) {
+		$output .= gmw_get_search_form_submissionn_fields( $gmw );
+	}
 
 	return $output;
 }
@@ -97,11 +126,11 @@ function gmw_get_search_form_submit_button( $gmw = array(), $dep_label = '' ) {
  *
  * @param  string $label custom button label.
  */
-function gmw_search_form_submit_button( $gmw = array(), $label = '' ) {
+function gmw_search_form_submit_button( $gmw = array(), $submission = true ) {
 
 	do_action( 'gmw_before_search_form_submit_button', $gmw );
 
-	echo gmw_get_search_form_submit_button( $gmw, $label ); // WPCS: XSS ok.
+	echo gmw_get_search_form_submit_button( $gmw, $submission ); // WPCS: XSS ok.
 
 	do_action( 'gmw_after_search_form_submit_button', $gmw );
 }
@@ -111,7 +140,7 @@ function gmw_search_form_submit_button( $gmw = array(), $label = '' ) {
  *
  * @param  array $gmw the form being used.
  *
- * @return mix        HTML element
+ * @return mixed HTML element
  *
  * @since 1.0
  */
@@ -224,7 +253,7 @@ function gmw_search_form_address_fields( $gmw ) {
  *
  * @param  [type] $gmw form being processed.
  *
- * @return HTML element
+ * @return mixed HTML element
  */
 function gmw_get_search_form_locator_button( $gmw ) {
 
@@ -278,7 +307,7 @@ function gmw_search_form_locator_button( $gmw = array(), $class = false ) {
  *
  * @param array $gmw the form being processed.
  *
- * @return HTML select dropdown
+ * @return mixed HTML select dropdown
  *
  * Since 1.0
  */
@@ -414,7 +443,7 @@ function gmw_search_form_radius_slider( $gmw = array() ) {
  *
  * @param  array $gmw the form being used.
  *
- * @return HTML element
+ * @return mixed HTML element
  */
 function gmw_get_search_form_units( $gmw ) {
 
@@ -562,7 +591,7 @@ function gmw_search_form_reset_button( $gmw = array() ) {
  *
  * @since 4.0
  *
- * @return HTML element
+ * @return mixed HTML element
  */
 function gmw_get_search_form_toggle_button( $gmw = array(), $args = array() ) {
 
