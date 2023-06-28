@@ -1,6 +1,6 @@
 <?php
 /**
- * GEO my WP Search Form Template. 
+ * GEO my WP Search Form Template.
  *
  * To modify this template file, copy this folder with all its content and place it
  *
@@ -58,7 +58,7 @@
 		<?php gmw_search_form_modal_box( 'close', $gmw ); ?>
 
 		<div class="gmw-form-action-buttons-wrapper gmw-flexed-wrapper">
-			<?php gmw_search_form_modal_box_toggle( $gmw ); ?>	
+			<?php gmw_search_form_modal_box_toggle( $gmw ); ?>
 			<?php gmw_search_form_reset_button( $gmw ); ?>
 			<?php gmw_search_form_submit_button( $gmw ); ?>
 		</div>
