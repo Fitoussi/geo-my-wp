@@ -656,7 +656,7 @@ function gmw_query_xprofile_fields( $fields_values = array(), $gmw = array() ) {
 		$sql = $wpdb->prepare(
 			"
 			SELECT `user_id`
-			FROM {$bp->profile->table_name_data} 
+			FROM {$bp->profile->table_name_data}
 			WHERE `field_id` = %d ",
 			$field_id
 		); // WPCS: unprepared SQL ok.
@@ -665,13 +665,8 @@ function gmw_query_xprofile_fields( $fields_values = array(), $gmw = array() ) {
 
 			case 'textbox':
 			case 'textarea':
-				$value = str_replace( '&', '&amp;', $value );
-
-				if ( $wp_version < 4.0 ) {
-					$escaped = '%' . esc_sql( like_escape( trim( $value ) ) ) . '%';
-				} else {
-					$escaped = '%' . $wpdb->esc_like( trim( $value ) ) . '%';
-				}
+				$value   = str_replace( '&', '&amp;', $value );
+				$escaped = '%' . $wpdb->esc_like( trim( $value ) ) . '%';
 
 				$sql .= $wpdb->prepare( 'AND value LIKE %s', $escaped );
 
@@ -699,14 +694,9 @@ function gmw_query_xprofile_fields( $fields_values = array(), $gmw = array() ) {
 				$like   = array();
 
 				foreach ( $values as $value ) {
-					$value = str_replace( '&', '&amp;', $value );
-					if ( $wp_version < 4.0 ) {
-						$escaped = '%' . esc_sql( like_escape( $value ) ) . '%';
-					} else {
-						$escaped = '%' . $wpdb->esc_like( $value ) . '%';
-					}
-
-					$like[] = $wpdb->prepare( 'value = %s OR value LIKE %s', $value, $escaped );
+					$value   = str_replace( '&', '&amp;', $value );
+					$escaped = '%' . $wpdb->esc_like( $value ) . '%';
+					$like[]  = $wpdb->prepare( 'value = %s OR value LIKE %s', $value, $escaped );
 				}
 
 				$sql .= 'AND (' . implode( ' OR ', $like ) . ')';
@@ -819,7 +809,7 @@ function gmw_search_results_member_xprofile_fields( $member, $gmw = array(), $wh
         return;
     }
 
-    echo gmw_get_search_results_meta_fields( 'xprofile_field', $gmw[ $where ]['xprofile_fields'], $member, $gmw, true ); // WPCS: XSS OK.
+    echo gmw_get_search_results_meta_fields( 'xprofile_field', $gmw[ $where ]['xprofile_fields'], $member, $gmw ); // WPCS: XSS OK.
 
     /*return;
 	if ( empty( $gmw[ $where ]['xprofile_fields'] ) ) {
@@ -832,7 +822,7 @@ function gmw_search_results_member_xprofile_fields( $member, $gmw = array(), $wh
 			continue;
 		}
 
-		$field_id    = absint( $field_id ); 
+		$field_id    = absint( $field_id );
         $field_data  = xprofile_get_field( $field_id, $member->id, true );
         $field_value = maybe_unserialize( $field_data->data->value );
 
@@ -856,7 +846,7 @@ function gmw_search_results_member_xprofile_fields( $member, $gmw = array(), $wh
 		$output .= '<span class="field">';
 		$output .= str_replace( '%field%', $field_value, $xpfield['field_output'] );
 		$output .= '</span>';
-		$output .= '</li>';		
+		$output .= '</li>';
 	}
 
 	echo '' === $output ? false : '<ul class="gmw-xprofile-fields">' . $output . '</ul>';*/
