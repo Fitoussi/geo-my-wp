@@ -181,7 +181,7 @@ class GMW_WP_Query extends WP_Query {
 	 *
 	 * @since 4.0
 	 *
-	 * @return modified $clauses
+	 * @return array modified $clauses
 	 */
 	public static function gmw_locations_query( $clauses, $object ) {
 
