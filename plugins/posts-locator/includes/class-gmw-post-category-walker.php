@@ -55,7 +55,7 @@ if ( ! class_exists( 'GMW_Post_Category_Walker' ) ) :
 		 */
 		public function start_lvl( &$output, $depth = 0, $args = array() ) {
 
-			if ( 'checkbox' !== $args['usage'] ) {
+			if ( 'checkbox' !== $args['usage'] && 'checkboxes' !== $args['usage'] ) {
 				return;
 			}
 
@@ -76,7 +76,7 @@ if ( ! class_exists( 'GMW_Post_Category_Walker' ) ) :
 		 */
 		public function end_lvl( &$output, $depth = 0, $args = array() ) {
 
-			if ( 'checkbox' !== $args['usage'] ) {
+			if ( 'checkbox' !== $args['usage'] && 'checkboxes' !== $args['usage'] ) {
 				return;
 			}
 
@@ -106,6 +106,7 @@ if ( ! class_exists( 'GMW_Post_Category_Walker' ) ) :
 			$value     = ! empty( $args['selected'] ) ? $args['selected'] : array();
 			$term_name = $args['show_count'] ? $term->name . '&nbsp;(' . $term->count . ')' : $term->name;
 			$term_id   = absint( $term->term_id );
+			$name_attr =  esc_attr( $args['name_attr'] . '[' . $args['sub_name_attr'] . ']' );
 
 			if ( 'checkbox' === $args['usage'] || 'checkboxes' === $args['usage'] ) {
 
@@ -133,7 +134,7 @@ if ( ! class_exists( 'GMW_Post_Category_Walker' ) ) :
 
 				$checkbox  = '<li class="gmw-taxonomy-checkbox-wrapper gmw-field-checkbox-wrapper' . $category_icon_class . '" data-value="' . $term_id . '">';
 				$checkbox .= '<label for="gmw-tax-term-' . $term_id . '" class="gmw-checkbox-label">';
-				$checkbox .= '<input type="checkbox" name="tax[' . esc_attr( $args['taxonomy'] ) . '][]" id="gmw-tax-term-' . $term_id . '" class="gmw-taxonomy-checkbox gmw-field-checkbox" value="' . $term_id . '" ' . $checked . '/>';
+				$checkbox .= '<input type="checkbox" name="' . $name_attr . '[]" id="gmw-tax-term-' . $term_id . '" class="gmw-taxonomy-checkbox gmw-field-checkbox" value="' . $term_id . '" ' . $checked . '/>';
 
 				if ( $category_icon_ok ) {
 					$checkbox .= '<img class="category-icon gmw-checkbox-cat-icon' . $icon_checked . '" src="' . $icon . '" onclick="jQuery(this).toggleClass(\'checked\');" />';
@@ -166,7 +167,7 @@ if ( ! class_exists( 'GMW_Post_Category_Walker' ) ) :
 		 */
 		public function end_el( &$output, $term, $depth = 0, $args = array() ) {
 
-			if ( 'checkbox' === $args['usage'] ) {
+			if ( 'checkbox' === $args['usage'] || 'checkboxes' === $args['usage'] ) {
 				$output .= '</li>';
 			}
 		}
