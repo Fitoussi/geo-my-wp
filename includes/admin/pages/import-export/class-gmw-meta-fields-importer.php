@@ -207,16 +207,16 @@ class GMW_Meta_Fields_Importer_Form {
 
 									$fields_data = $this->get_location_fields();
 									?>
-									<div id="<?php echo $slug; // WPCS: XSS ok. ?>-wrapper" class="gmw-popup-element-fields-wrapper">				
+									<div id="<?php echo $slug; // WPCS: XSS ok. ?>-wrapper" class="gmw-popup-element-fields-wrapper">
 
-										<?php foreach ( $fields_data as $name => $title ) { ?>			
+										<?php foreach ( $fields_data as $name => $title ) { ?>
 
 											<?php $name = esc_attr( $name ); ?>
 											<p class="gmw-popup-element-single-field">
 												<label><?php echo esc_attr( $title ); ?>: </label>
-												<select 
-													id="gmw-import-meta-field-<?php echo $name; // WPCS: XSS ok. ?>"
-													class="gmw-import-meta-field"
+												<select
+													id="gmw-import-<?php echo esc_attr( $this->slug ); ?>-<?php echo $name; // WPCS: XSS ok. ?>"
+													class="gmw-import-meta-field gmw-import-<?php echo esc_attr( $this->slug ); ?>"
 													name="gmw_<?php echo $slug; // WPCS: XSS ok. ?>[<?php echo $name; // WPCS: XSS ok. ?>]"
 													data-gmw_ajax_load_options="<?php echo esc_attr( $this->meta_field_function ); ?>"
 													style="width:100%;"
@@ -228,11 +228,11 @@ class GMW_Meta_Fields_Importer_Form {
 													<?php } ?>
 
 												</select>
-											</p>	
+											</p>
 
 										<?php } ?>
 
-										<p>	
+										<p>
 											<input type="hidden" name="gmw_action" value="save_<?php echo $slug; // WPCS: XSS ok. ?>_fields" />
 
 											<?php wp_nonce_field( 'gmw_save_' . $slug . '_fields_nonce', 'gmw_save_' . $slug . '_fields_nonce' ); ?>
@@ -246,9 +246,9 @@ class GMW_Meta_Fields_Importer_Form {
 						</div>
 
 						<a href="#" class="gmw-popup-element-toggle gmw-settings-action-button button-secondary" data-element="#gmw-mata-fields-importer-element">
-							<?php esc_html_e( 'Select Fields', 'geo-my-wp' ); ?>	
+							<?php esc_html_e( 'Select Fields', 'geo-my-wp' ); ?>
 						</a>
-						<div class="gmw-meta-fields-importer-wrapper">																
+						<div class="gmw-meta-fields-importer-wrapper">
 							<?php if ( empty( $saved_fields['latitude'] ) || empty( $saved_fields['longitude'] ) ) { ?>
 
 								<input type="submit" class="gmw-meta-fields-importer-disabled-button gmw-settings-action-button button-primary" value="<?php esc_attr_e( 'Import', 'geo-my-wp' ); ?>" disabled="disabled" />
