@@ -161,9 +161,10 @@ class GMW_Form_Settings_Helper {
 					);
 				}
 
-				$tax_option = $value[ $taxonomy_name ];
+				$tax_option     = $value[ $taxonomy_name ];
+				$sortable_taxes = gmw_is_addon_active( 'premium_settings' ) ? ' gmw-sortable-item ' : '';
 				?>
-				<div id="<?php echo esc_attr( $taxonomy_name ); ?>_cat" class="taxonomy-wrapper gmw-settings-group-wrapper"
+				<div id="<?php echo esc_attr( $taxonomy_name ); ?>_cat" class="taxonomy-wrapper gmw-settings-group-wrapper<?php echo $sortable_taxes; // WPCS: XSS ok. ?>"
 					data-post_types="<?php echo esc_attr( implode( ',', $post_types ) ); ?>">
 
 					<div class="taxonomy-header gmw-settings-group-header">
@@ -650,7 +651,7 @@ class GMW_Form_Settings_Helper {
 					echo wp_kses(
 						sprintf(
 							/* translators: %s link to the premium settings extension page */
-							__( 'Taxonomies are not available when selecting multiple post types.', 'geo-my-wp' ),
+							__( 'Taxonomies are not available when selecting multiple post types. This feature is available with the <a href="%s" target="_blank">Premium Settings extension</a>.', 'geo-my-wp' ),
 							'https://geomywp.com/extensions/premium-settings'
 						),
 						$allwed
