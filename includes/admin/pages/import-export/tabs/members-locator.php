@@ -127,7 +127,7 @@ class GMW_BP_Xprofile_Fields_Importer extends GMW_Locations_Importer {
 	/**
 	 * Get location to import
 	 *
-	 * @return [type] [description]
+	 * @return array
 	 */
 	public function query_locations() {
 
@@ -151,16 +151,16 @@ class GMW_BP_Xprofile_Fields_Importer extends GMW_Locations_Importer {
 				xprofile1.value as longitude
 				FROM {$wpdb->prefix}users wpusers
 				INNER JOIN {$wpdb->prefix}bp_xprofile_data xprofile
-				ON ( wpusers.ID = xprofile.user_id )  
-				INNER JOIN {$wpdb->prefix}bp_xprofile_data AS xprofile1 
+				ON ( wpusers.ID = xprofile.user_id )
+				INNER JOIN {$wpdb->prefix}bp_xprofile_data AS xprofile1
 				ON ( wpusers.ID = xprofile1.user_id )
-				AND ( 
-	  			( xprofile.field_id = %s AND xprofile.value NOT IN ('') ) 
-	  			AND 
+				AND (
+	  			( xprofile.field_id = %s AND xprofile.value NOT IN ('') )
+	  			AND
 	  			( xprofile1.field_id = %s AND xprofile1.value NOT IN ('') )
-				) 
-				GROUP BY wpusers.ID 
-				ORDER BY wpusers.ID 
+				)
+				GROUP BY wpusers.ID
+				ORDER BY wpusers.ID
 				LIMIT %d, %d",
 				array(
 					$location_fields['latitude'],
