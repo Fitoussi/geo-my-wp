@@ -69,7 +69,7 @@
 					<?php gmw_search_results_orderby_filter( $gmw ); ?>
 
 					<?php gmw_results_view_toggle( $gmw ); ?>
-				</div> 
+				</div>
 
 				<div id="members-dir-list" class="members dir-list" data-bp-list="member">
 
@@ -112,7 +112,7 @@
 
 					<div class="gmw-pagination-message-wrapper">
 						<span class="gmw-results-message"><?php gmw_results_message( $gmw ); ?></span><?php gmw_pagination( $gmw ); ?>
-					</div> 
+					</div>
 
 					<?php bp_nouveau_after_loop(); ?>
 
@@ -148,7 +148,7 @@
 			 *
 			 * @since BuddyPress 1.1.0
 			 */
-			do_action( 'bp_after_directory_members' );
+			//do_action( 'bp_after_directory_members' );
 		?>
 
 	</div>
