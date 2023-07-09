@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param array $gmw gmw form.
  *
- * @return HTML field.
+ * @return mixed HTML field.
  */
 function gmw_get_search_form_post_types( $gmw ) {
 
@@ -118,7 +118,7 @@ function gmw_get_search_form_taxonomies( $gmw ) {
 	$pt_count = count( $gmw['search_form']['post_types'] );
 
 	// abort if multiple post types were selected.
-	if ( 1 !== $pt_count ) {
+	if ( 1 !== $pt_count && ( ! empty( $gmw['search_form']['post_types_settings']['usage'] && 'pre_defined' === $gmw['search_form']['post_types_settings']['usage'] ) ) ) {
 		return;
 	}
 
@@ -142,7 +142,15 @@ function gmw_get_search_form_taxonomies( $gmw ) {
 		}
 
 		$post_types = ! empty( $tax_args['post_types'] ) ? $tax_args['post_types'] : array();
-		$args       = array(
+		$conditions = array();
+
+		if ( ! empty( $post_types ) ) {
+			$conditions[] = array(
+				'post_types' => implode( ',', $post_types ),
+			);
+		}
+
+		$args = array(
 			'id'              => $gmw['ID'],
 			'slug'            => $taxonomy . '-taxonomy',
 			'type'            => 'taxonomy',
@@ -150,9 +158,10 @@ function gmw_get_search_form_taxonomies( $gmw ) {
 			'is_array'        => true,
 			'label'           => ! empty( $tax_args['label'] ) ? $tax_args['label'] : '',
 			'required'        => ! empty( $settings['required'] ) ? 1 : 0,
+			'conditions'      => $conditions,
 			'wrapper_class'   => 'gmw-field-type-' . $tax_args['style'] . '-wrapper gmw-single-taxonomy-wrapper',
 			'wrapper_atts'    => array(
-				'data-post_types' => implode( ',', $post_types ),
+				//'data-post_types' => implode( ',', $post_types ),
 				'style'           => $pt_count > 1 ? 'display:none' : '',
 			),
 			'additional_args' => array(
