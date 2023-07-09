@@ -929,6 +929,7 @@ class GMW_Extensions {
 		}
 
 		$names      = array();
+		//$statuses   = array();
 		$extensions = array(
 			'core'    => array(
 				'posts_locator'   => $extensions_data['posts_locator'],
@@ -955,12 +956,20 @@ class GMW_Extensions {
 			} else {
 
 				$names[ $key ]                 = $value['name'];
+				//$statuses[ $key ]              = ! empty( $value['status'] ) ? $value['status'] : 'inactive';
 				$extensions['premium'][ $key ] = $value;
+
+				/*if ( ! empty( $value['status'] ) ) {
+
+					if ( 'active')
+				}*/
+
 			}
 		}
 
 		// sort add-ons by name.
 		array_multisort( $names, SORT_ASC, $extensions['premium'] );
+		//array_multisort( $statuses, SORT_ASC, $names, SORT_ASC, $extensions['premium'] );
 
 		// extensions to exclude.
 		$excluded_extensions = array(
