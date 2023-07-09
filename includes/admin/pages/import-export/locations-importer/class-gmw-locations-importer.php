@@ -56,6 +56,55 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 		protected $records_per_batch = 30;
 
 		/**
+		 * Total number of locations scanned.
+		 *
+		 * @var integer
+		 */
+		public $total_locations = 0;
+
+		/**
+		 * Total number of locations scanned.
+		 *
+		 * @var integer
+		 */
+		public $records_completed = 0;
+
+		/**
+		 * Number of locations updated.
+		 *
+		 * @var integer
+		 */
+		public $locations_updated = 0;
+
+		/**
+		 * NUmber of locations imported.
+		 *
+		 * @var integer
+		 */
+		public $locations_imported = 0;
+
+		/**
+		 * number of locations exists.
+		 *
+		 * @var integer
+		 */
+		public $locations_exist= 0;
+
+		/**
+		 * Number of locations failed to import.
+		 *
+		 * @var integer
+		 */
+		public $locations_failed = 0;
+
+		/**
+		 * Batch being imported.
+		 *
+		 * @var int
+		 */
+		public $batch_number = 0;
+
+		/**
 		 * Import locationmeta based on array of field => meta_key.
 		 *
 		 * This function meant to work only when the meta values are included in the $locations array.
@@ -80,11 +129,15 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 		protected $location_meta_fields = array();
 
 		/**
-		 * Query the locations need to import
+		 * Query the locations need to import.
 		 *
 		 * Build a custom query in a child class that will pull all locations from database into an array of objects.
+		 *
+		 * @return array of locations
 		 */
-		protected function query_locations() {}
+		protected function query_locations() {
+			return array();
+		}
 
 		/**
 		 * Update exsiting locations
@@ -181,7 +234,7 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 					<input type="submit" class="gmw-locations-importer-submit gmw-settings-action-button button-primary" value="<?php echo esc_attr( $this->get_import_button_label() ); ?>" />
 					<input type="button" class="gmw-locations-importer-abort gmw-settings-action-button button-secondary" value="<?php echo esc_attr( $this->get_abort_button_label() ); ?>" style="display:none;" />
 				</div>
-				<input type="hidden" class="gmw_locations_importer_action" value="<?php echo esc_attr( get_class( $this ) ); ?>" />	
+				<input type="hidden" class="gmw_locations_importer_action" value="<?php echo esc_attr( get_class( $this ) ); ?>" />
 
 				<?php $nonce = wp_create_nonce( 'gmw_importer_nonce_' . get_class( $this ) ); ?>
 
@@ -400,9 +453,9 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 		 *
 		 * have a custom import_locationmeta() method that will save the location meta.
 		 *
-		 * @param  int   $location_id the ID of the location imported.
+		 * @param  int    $location_id the ID of the location imported.
 		 *
-		 * @param  array $location    imported location data.
+		 * @param  object $location    imported location data.
 		 *
 		 * @return void
 		 */
