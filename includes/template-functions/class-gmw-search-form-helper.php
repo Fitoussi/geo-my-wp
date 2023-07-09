@@ -130,7 +130,6 @@ class GMW_Search_Form_Helper {
 			'placeholder'        => '', // Placeholder.
 			'class'              => '', // Class attribute. for field.
 			'required'           => 0, // Required field.
-			'post_types_cond'    => array(),
 			'value'              => '',
 			'min_value'          => '0',
 			'max_value'          => '100',
@@ -143,6 +142,7 @@ class GMW_Search_Form_Helper {
 			'datetime_format'    => 'd/m/Y h:i K',
 			'smartbox'           => false,
 			'show_options_all'   => '',
+			'conditions'         => array(),
 			'wrapper_open'       => true,
 			'wrapper_close'      => true,
 			'wrapper_id'         => '',
@@ -180,17 +180,9 @@ class GMW_Search_Form_Helper {
 		$args['class_attr'] = ! empty( $args['class'] ) ? $class_attr . ' ' . $args['class'] : $class_attr;
 		$args['id_attr']    = ! empty( $args['id_attr'] ) ? $args['id_attr'] : 'gmw-' . $args['slug'] . '-field-' . $id;
 		$value              = $args['is_array'] ? array() : ''; // Default.
-		$conditions         = array();
 
-		if ( ! empty( $args['post_types_cond'] ) ) {
-
-			$conditions[] = array(
-				'post_types' => $args['post_types_cond']
-			);
-		}
-
-		if ( ! empty( $conditions ) ) {
-			$args['wrapper_atts']['data-conditions'] = json_encode( $conditions );
+		if ( ! empty( $args['conditions'] ) ) {
+			$args['wrapper_atts']['data-conditions'] = json_encode( $args['conditions'] );
 		}
 
 		if ( empty( $args['step'] ) ) {
@@ -735,16 +727,21 @@ class GMW_Search_Form_Helper {
 			'multiple_selections' => 0,
 			'smartbox'            => 0,
 			'required'            => 0,
+			'name_attr'           => 'tax',
+			'sub_name_attr'       => '',
 		);
 
-		$args         = wp_parse_args( $args, $defaults );
-		$id           = absint( $args['id'] );
-		$tax_name     = esc_attr( $args['taxonomy'] );
-		$taxonomy     = get_taxonomy( $tax_name );
-		$hierarchical = is_taxonomy_hierarchical( $tax_name ) ? true : false;
-		$options_all  = 0;
-		$placeholder  = 0;
-		$id_attr      = $tax_name . '-taxonomy-' . $id;
+		$args          = wp_parse_args( $args, $defaults );
+		$id            = absint( $args['id'] );
+		$tax_name      = esc_attr( $args['taxonomy'] );
+		$taxonomy      = get_taxonomy( $tax_name );
+		$hierarchical  = is_taxonomy_hierarchical( $tax_name ) ? true : false;
+		$options_all   = 0;
+		$placeholder   = 0;
+		$id_attr       = $tax_name . '-taxonomy-' . $id;
+		$name_attr     = ! empty( $args['name_attr'] ) ? $args['name_attr'] : 'tax';
+		$sub_name_attr = ! empty( $args['sub_name_attr'] ) ? $args['sub_name_attr'] : $tax_name;
+		$selected      = ! empty( $_GET[ $name_attr ][ $sub_name_attr ] ) ? $_GET[ $name_attr ][ $sub_name_attr ] : '';
 
 		if ( empty( $args['show_options_all'] ) || 'checkboxes' === $args['usage'] ) {
 
@@ -779,9 +776,12 @@ class GMW_Search_Form_Helper {
 				'hierarchical'        => $hierarchical,
 				'child_of'            => 0,
 				'pad_counts'          => 1,
-				'selected'            => ! empty( $_GET['tax'][ $tax_name ] ) ? $_GET['tax'][ $tax_name ] : '', // phpcs:ignore: CSRF ok, sanitization ok. $_GET['tax'][ $tax_name ] is an array and should be sanitized in the walker class.
+				//'selected'            => ! empty( $_GET['tax'][ $tax_name ] ) ? $_GET['tax'][ $tax_name ] : '', // phpcs:ignore: CSRF ok, sanitization ok. $_GET['tax'][ $tax_name ] is an array and should be sanitized in the walker class.
+				'selected'            => $selected,
 				'depth'               => $hierarchical ? 0 : -1,
 				'category_icons'      => $args['category_icons'],
+				'name_attr'           => ! empty( $args['name_attr'] ) ? $args['name_attr'] : 'tax',
+				'sub_name_attr'       => ! empty( $args['sub_name_attr'] ) ? $args['sub_name_attr'] : $tax_name,
 				'gmw_form_id'         => $id,
 				'show_option_all'     => $options_all,
 				// phpcs:ignore.
@@ -840,11 +840,12 @@ class GMW_Search_Form_Helper {
 		// if dropdown style taxonomies.
 		if ( 'select' === $args['usage'] || 'dropdown' === $args['usage'] || 'multiselect' === $args['usage'] ) {
 
-			$multiple = ( 'multiselect' === $args['usage'] && class_exists( 'GMW_Premium_Settings_Addon' ) ) ? ' multiple="multiple" ' : '';
-			$required = ! empty( $args['required'] ) ? 'required="required"' : '';
+			$multiple  = ( 'multiselect' === $args['usage'] && class_exists( 'GMW_Premium_Settings_Addon' ) ) ? ' multiple="multiple" ' : '';
+			$required  = ! empty( $args['required'] ) ? 'required="required"' : '';
+			$name_attr =  esc_attr( $tax_args['name_attr'] . '[' . $tax_args['sub_name_attr'] . ']' );
 
 			// select tag.
-			$output .= "<select name=\"tax[{$tax_name}][]\" id=\"{$id_attr}\" class=\"gmw-form-field gmw-taxonomy-field {$tax_name}\" data-gmw-dropdown-parent=\"#{$taxonomy->name}-taxonomy-wrapper\" {$required} {$multiple}>";
+			$output .= "<select name=\"{$name_attr}[]\" id=\"{$id_attr}\" class=\"gmw-form-field gmw-taxonomy-field {$tax_name}\" data-gmw-dropdown-parent=\"#{$taxonomy->name}-taxonomy-wrapper\" {$required} {$multiple}>";
 
 			if ( ! empty( $tax_args['show_option_all'] ) ) {
 				$output .= '<option value="" selected="selected">' . esc_attr( $tax_args['show_option_all'] ) . '</option>';
