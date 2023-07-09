@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "geo-my-wp",
   "css_prefix_text": "gmw-icon-",
   "css_use_suffix": false,
   "hinting": true,
@@ -709,6 +709,18 @@
       "css": "th-list",
       "code": 59489,
       "src": "elusive"
+    },
+    {
+      "uid": "2d3be3e856fc1e4ac067590d2ded1b07",
+      "css": "plus-squared-alt",
+      "code": 61846,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "18ef25350258541e8e54148ed79845c0",
+      "css": "minus-squared-alt",
+      "code": 61767,
+      "src": "fontawesome"
     },
     {
       "uid": "b445e87bb489f12f36b58165747a481b",
