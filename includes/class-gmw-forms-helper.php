@@ -340,31 +340,34 @@ class GMW_Forms_Helper {
 
 		} else {
 
-			if ( strpos( $form['search_form']['radius'], ',' ) !== false ) {
+			if ( ! is_array( $form['search_form']['radius'] ) ) {
 
-				$usage   = 'select';
-				$default = explode( ',', $form['search_form']['radius'] )[0];
-				$options = str_replace( ',', "\n", $form['search_form']['radius'] );
+				if ( strpos( $form['search_form']['radius'], ',' ) !== false ) {
 
-			} else {
+					$usage   = 'select';
+					$default = explode( ',', $form['search_form']['radius'] )[0];
+					$options = str_replace( ',', "\n", $form['search_form']['radius'] );
 
-				$usage   = 'default';
-				$default = $form['search_form']['radius'];
-				$options = "5\n10\n25\n50\n100";
+				} else {
+
+					$usage   = 'default';
+					$default = $form['search_form']['radius'];
+					$options = "5\n10\n25\n50\n100";
+				}
+
+				$form['search_form']['radius'] = array(
+					'usage'            => $usage,
+					'label'            => 'Radius',
+					'show_options_all' => 'Miles',
+					'options'          => $options,
+					'default_value'    => $default,
+					'required'         => 0,
+					'min_value'        => '0',
+					'max_value'        => '200',
+					'prefix'           => '',
+					'suffix'           => '',
+				);
 			}
-
-			$form['search_form']['radius'] = array(
-				'usage'            => $usage,
-				'label'            => 'Radius',
-				'show_options_all' => 'Miles',
-				'options'          => $options,
-				'default_value'    => $default,
-				'required'         => 0,
-				'min_value'        => '0',
-				'max_value'        => '200',
-				'prefix'           => '',
-				'suffix'           => '',
-			);
 		}
 
 		$form['search_form']['units'] = array(
@@ -654,9 +657,21 @@ class GMW_Forms_Helper {
 			'grid_columns' => '',
 		);
 
+		if ( isset( $form['search_results']['pagination'] ) && empty( $form['search_results']['pagination']['label'] ) ) {
+			$form['search_results']['pagination']['label'] = 'Load more';
+		}
+
 		if ( isset( $form['search_results']['image'] ) && is_array( $form['search_results']['image'] ) ) {
 
 			$form['search_results']['image']['no_image_url'] = GMW_IMAGES . '/no-image.jpg';
+
+			if ( isset( $form['search_results']['image']['width'] ) && is_numeric( $form['search_results']['image']['width'] ) ) {
+				$form['search_results']['image']['width'] .= 'px';
+			}
+
+			if ( isset( $form['search_results']['image']['height'] ) && is_numeric( $form['search_results']['image']['height'] ) ) {
+				$form['search_results']['image']['height'] .= 'px';
+			}
 
 		} else {
 
@@ -687,16 +702,19 @@ class GMW_Forms_Helper {
 			unset( $form['search_results']['address_fields'] );
 		}
 
-		$form['search_results']['orderby'] = array(
-			'enabled' => ! empty( $form['search_results']['orderby'] ) ? 1 : 0,
-			'options' => ! empty( $form['search_results']['orderby'] ) ? str_replace( array( ':', ',' ), array( ' : ', "\n" ), $form['search_results']['orderby'] ) : '',
-		);
+		if ( ! is_array( $form['search_results']['orderby'] ) ) {
+
+			$form['search_results']['orderby'] = array(
+				'enabled' => ! empty( $form['search_results']['orderby'] ) ? 1 : 0,
+				'options' => ! empty( $form['search_results']['orderby'] ) ? str_replace( array( ':', ',' ), array( ' : ', "\n" ), $form['search_results']['orderby'] ) : '',
+			);
+		}
 
 		$form['search_results']['distance'] = 1;
 
 		/* ----- No results ---- */
 
-		if ( ! empty( $form['no_results']['message'] ) ) {
+		if ( ! empty( $form['no_results']['message'] ) && ! is_array(  $form['no_results']['message'] ) ) {
 
 			$form['no_results']['message'] = array(
 				'wider_search_radius'    => ! empty( $form['no_results']['wider_search']['radius'] ) ? $form['no_results']['wider_search']['radius'] : 200,
@@ -742,6 +760,14 @@ class GMW_Forms_Helper {
 
 			if ( isset( $form['info_window']['image'] ) ) {
 				$form['info_window']['image']['no_image_url'] = GMW_IMAGES . '/no-image.jpg';
+
+				if ( isset( $form['info_window']['image']['width'] ) && is_numeric( $form['info_window']['image']['width'] ) ) {
+					$form['info_window']['image']['width'] .= 'px';
+				}
+
+				if ( isset( $form['info_window']['image']['height'] ) && is_numeric( $form['info_window']['image']['height'] ) ) {
+					$form['info_window']['image']['height'] .= 'px';
+				}
 			}
 
 			$form['info_window']['styles'] = array(
