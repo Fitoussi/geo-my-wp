@@ -22,6 +22,11 @@ if ( empty( $_GET['page'] ) || 'gmw-tools' !== $_GET['page'] ) { // WPCS: CSRF o
 require_once 'tabs/reset-gmw.php';
 require_once 'tabs/system-info.php';
 require_once 'tabs/api-testing.php';
+
+// Map icons tabs when the Premium Settings extension is activated.
+if ( gmw_is_addon_active( 'premium_settings' ) ) {
+	require_once 'tabs/map-icons.php';
+}
 //require_once 'tabs/cache.php';
 
 /**
@@ -44,9 +49,9 @@ class GMW_Tools {
 		$current_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'system_info'; // WPCS: CSRF ok.
 		?>
 		<?php gmw_admin_pages_header(); ?>
-		
+
 		<div id="gmw-tools-page" class="wrap gmw-admin-page gmw-admin-page-wrapper">
-			
+
 			<nav class="gmw-admin-page-navigation-bg"></nav>
 			<nav class="gmw-admin-page-navigation">
 
@@ -62,6 +67,7 @@ class GMW_Tools {
 							'slug'  => $slug,
 							'label' => $tab,
 						);
+
 						$tabs[ $slug ] = $tab;
 					}
 
@@ -90,10 +96,9 @@ class GMW_Tools {
 
 				<h1 style="display:none"></h1>
 
-				<div id="gmw-<?php echo esc_attr( $current_tab ); ?>-tab-content" class="gmw-tools-tab-content gmw-admin-page-content-inner">
-					
+				<div id="gmw-<?php echo esc_attr( $current_tab ); ?>-tab-content"
+					class="gmw-tools-tab-content gmw-admin-page-content-inner">
 					<?php do_action( 'gmw_tools_' . $current_tab . '_tab' ); ?>
-					
 				</div>
 			</div>
 
@@ -125,6 +130,13 @@ class GMW_Tools {
 			'slug'  => 'reset_gmw',
 			'label' => __( 'Uninstall GEO my WP', 'geo-my-wp' ),
 		);
+
+		if ( gmw_is_addon_active( 'premium_settings' ) ) {
+			$tabs['map_icons'] = array(
+				'slug'  => 'map_icons',
+				'label' => __( 'Map Icons', 'geo-my-wp' ),
+			);
+		}
 
 		return apply_filters( 'gmw_tools_tabs', $tabs );
 	}
