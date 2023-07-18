@@ -122,10 +122,12 @@ class GMW_Tools {
 			'slug'  => 'system_info',
 			'label' => __( 'System Info', 'geo-my-wp' ),
 		);
+
 		$tabs['api_testing'] = array(
 			'slug'  => 'api_testing',
 			'label' => __( 'API Testing', 'geo-my-wp' ),
 		);
+
 		$tabs['reset_gmw']   = array(
 			'slug'  => 'reset_gmw',
 			'label' => __( 'Uninstall GEO my WP', 'geo-my-wp' ),
