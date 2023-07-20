@@ -176,16 +176,16 @@ function gmw_no_results_message( $gmw = array() ) {
 function gmw_get_results_map( $gmw, $init_visible = true, $implode = true ) {
 
 	$args = array(
-		'map_id'              => $gmw['ID'],
-		'prefix'              => $gmw['prefix'],
-		'map_type'            => $gmw['addon'],
-		'map_width'           => ! empty( $gmw['results_map']['map_width'] ) ? $gmw['results_map']['map_width'] : '100%',
-		'map_height'          => ! empty( $gmw['results_map']['map_height'] ) ? $gmw['results_map']['map_height'] : '300px',
-		'expand_on_load'      => ! empty( $gmw['results_map']['expand_on_load'] ) ? true : false,
-		'map_position_filter' => ! empty( $gmw['results_map']['position_filter']['enabled'] ) ? true : false,
-		'map_position_label'  => ! empty( $gmw['results_map']['position_filter']['label'] ) ? $gmw['results_map']['position_filter']['label'] : '',
-		'init_visible'        => $init_visible,
-		'implode'             => $implode,
+		'map_id'                  => $gmw['ID'],
+		'prefix'                  => $gmw['prefix'],
+		'map_type'                => $gmw['addon'],
+		'map_width'               => ! empty( $gmw['results_map']['map_width'] ) ? $gmw['results_map']['map_width'] : '100%',
+		'map_height'              => ! empty( $gmw['results_map']['map_height'] ) ? $gmw['results_map']['map_height'] : '300px',
+		'expand_on_load'          => ! empty( $gmw['results_map']['expand_on_load'] ) ? true : false,
+		'boundaries_filter'       => ! empty( $gmw['results_map']['boundaries_filter']['enabled'] ) ? true : false,
+		'boundaries_filter_label' => ! empty( $gmw['results_map']['boundaries_filter']['label'] ) ? $gmw['results_map']['boundaries_filter']['label'] : '',
+		'init_visible'            => $init_visible,
+		'implode'                 => $implode,
 	);
 
 	return gmw_get_map_element( $args, $gmw );

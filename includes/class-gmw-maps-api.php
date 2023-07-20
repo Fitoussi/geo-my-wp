@@ -179,16 +179,16 @@ class GMW_Maps_API {
 
 		// default map args.
 		$default_args = array(
-			'map_id'              => '',
-			'map_type'            => 'na',
-			'prefix'              => '',
-			'map_width'           => '100%',
-			'map_height'          => '350px',
-			'expand_on_load'      => false,
-			'init_visible'        => true,
-			'map_position_filter' => false,
-			'map_position_label'  => '',
-			'implode'             => true,
+			'map_id'                  => '',
+			'map_type'                => 'na',
+			'prefix'                  => '',
+			'map_width'               => '100%',
+			'map_height'              => '350px',
+			'expand_on_load'          => false,
+			'init_visible'            => true,
+			'boundaries_filter'       => 'disabled',
+			'boundaries_filter_label' => '',
+			'implode'                 => true,
 		);
 
 		// merge defaults with incoming args.
@@ -220,8 +220,21 @@ class GMW_Maps_API {
 		$output['wrap']   = "<div id=\"gmw-map-wrapper-{$map_id}\" class=\"gmw-map-wrapper {$prefix} {$map_type} {$expanded}\" style=\"{$display}width:{$map_width};height:{$map_height};\">";
 		$output['toggle'] = "<span id=\"gmw-resize-map-toggle-{$map_id}\" class=\"gmw-resize-map-toggle {$trigger}\" style=\"display:none;\" title=\"{$map_title}\"></span>";
 
-		if ( $args['map_position_filter'] ) {
-			$output['position_filter'] = "<div id=\"gmw-map-position-filter-wrapper-{$map_id}\" class=\"gmw-map-position-filter-wrapper gmw-field-checkboxes gmw-fields-enhanced\" style=\"display:none;\"><label for=\"gmw-map-position-filter-{$map_id}\" class=\"gmw-checkbox-label\"><input type=\"checkbox\" id=\"gmw-map-position-filter-{$map_id}\" class=\"gmw-field-checkbox gmw-map-position-filter\" data-id=\"{$map_id}\" />{$args['map_position_label']}</label></div>";
+		if ( 'disabled' !== $args['boundaries_filter'] ) {
+
+			if ( 'automatic' === $args['boundaries_filter'] ) {
+				$checked = 'checked="checked"';
+				$class   = ' automatic-enabled';
+			} else {
+				$checked = '';
+				$class   = '';
+			}
+
+			$output['boundaries_filter']  = '<div id="gmw-map-position-filter-wrapper-' . $map_id .'" class="gmw-map-position-filter-wrapper gmw-field-checkboxes gmw-fields-enhanced' . $class . '" style="display:none;">';
+			$output['boundaries_filter'] .= '<label for="gmw-map-position-filter-' . $map_id . '" class="gmw-checkbox-label">';
+			$output['boundaries_filter'] .= '<input type="checkbox" id="gmw-map-position-filter-' . $map_id . '" class="gmw-field-checkbox gmw-map-position-filter" data-id="' . $map_id . '" ' . $checked . ' />';
+			$output['boundaries_filter'] .= esc_attr( $args['boundaries_filter_label'] );
+			$output['boundaries_filter'] .= '</label></div>';
 		}
 
 		$output['cover'] = '<div id="gmw-map-loader-' . $map_id . '" class="gmw-map-loader"></div>';

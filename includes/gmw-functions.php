@@ -655,7 +655,7 @@ function gmw_get_address_fields_filters_sql( $address_filters = array(), $gmw = 
 }
 
 /**
- * SQL to get locations within bounderies.
+ * SQL to get locations within boundaries.
  *
  * @param  string $southwest southwest coords comma separated.
  *
@@ -665,7 +665,7 @@ function gmw_get_address_fields_filters_sql( $address_filters = array(), $gmw = 
  *
  * @return [type]     [description]
  */
-function gmw_get_locations_within_bounderies_sql( $southwest = '', $northeast = '' ) {
+function gmw_get_locations_within_boundaries_sql( $southwest = '', $northeast = '' ) {
 
 	if ( empty( $southwest ) || empty( $northeast ) ) {
 		return;

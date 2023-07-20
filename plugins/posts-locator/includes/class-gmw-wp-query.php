@@ -257,10 +257,10 @@ class GMW_WP_Query extends WP_Query {
 		// get address filters query.
 		$address_filters = gmw_get_address_fields_filters_sql( $args['gmw_address_filters'], $gmw );
 
-		// search within map bounderies.
+		// search within map boundaries.
 		if ( ! empty( $args['gmw_swlatlng'] ) && ! empty( $args['gmw_nelatlng'] ) ) {
 
-			$where .= gmw_get_locations_within_bounderies_sql( $args['gmw_swlatlng'], $args['gmw_nelatlng'] );
+			$where .= gmw_get_locations_within_boundaries_sql( $args['gmw_swlatlng'], $args['gmw_nelatlng'] );
 
 			// When address provided, and not filtering based on address fields, we will do proximity search.
 		} elseif ( empty( $address_filters ) && ( ! empty( $args['gmw_address'] ) || ( ! empty( $args['gmw_lat'] ) && ! empty( $args['gmw_lng'] ) ) ) ) {

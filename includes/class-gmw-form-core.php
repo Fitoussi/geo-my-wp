@@ -1149,14 +1149,14 @@ class GMW_Form_Core {
 	public function map() {
 
 		$args = array(
-			'map_id'              => $this->form['ID'],
-			'prefix'              => $this->form['prefix'],
-			'map_type'            => $this->form['addon'],
-			'map_width'           => $this->form['results_map']['map_width'],
-			'map_height'          => $this->form['results_map']['map_height'],
-			'map_position_filter' => ! empty( $this->form['results_map']['position_filter']['enabled'] ) ? true : false,
-			'map_position_label'  => ! empty( $this->form['results_map']['position_filter']['label'] ) ? $this->form['results_map']['position_filter']['label'] : '',
-			'expand_on_load'      => ! empty( $this->form['results_map']['expand_on_load'] ) ? true : false,
+			'map_id'                  => $this->form['ID'],
+			'prefix'                  => $this->form['prefix'],
+			'map_type'                => $this->form['addon'],
+			'map_width'               => $this->form['results_map']['map_width'],
+			'map_height'              => $this->form['results_map']['map_height'],
+			'boundaries_filter'       => ! empty( $this->form['results_map']['boundaries_filter']['usage'] ) ? $this->form['results_map']['boundaries_filter']['usage'] : 'disabled',
+			'boundaries_filter_label' => ! empty( $this->form['results_map']['boundaries_filter']['label'] ) ? $this->form['results_map']['boundaries_filter']['label'] : '',
+			'expand_on_load'          => ! empty( $this->form['results_map']['expand_on_load'] ) ? true : false,
 		);
 
 		echo gmw_get_map_element( $args, $this->form ); // phpcs:ignore: XSS ok.

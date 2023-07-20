@@ -61,7 +61,7 @@ trait GMW_Members_Locator_Form_Trait {
 		// search within map bounderies.
 		if ( ! empty( $this->form['form_values']['nelatlng'] ) && ! empty( $this->form['form_values']['swlatlng'] ) ) {
 
-			$where .= gmw_get_locations_within_bounderies_sql( $this->form['form_values']['swlatlng'], $this->form['form_values']['nelatlng'] );
+			$where .= gmw_get_locations_within_boundaries_sql( $this->form['form_values']['swlatlng'], $this->form['form_values']['nelatlng'] );
 
 			// when address provided, and not filtering based on address fields, we will do proximity search.
 		} elseif ( '' === $address_filters && ! empty( $this->form['lat'] ) && ! empty( $this->form['lng'] ) ) {
