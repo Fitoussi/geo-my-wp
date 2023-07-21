@@ -182,7 +182,7 @@ function gmw_get_results_map( $gmw, $init_visible = true, $implode = true ) {
 		'map_width'               => ! empty( $gmw['results_map']['map_width'] ) ? $gmw['results_map']['map_width'] : '100%',
 		'map_height'              => ! empty( $gmw['results_map']['map_height'] ) ? $gmw['results_map']['map_height'] : '300px',
 		'expand_on_load'          => ! empty( $gmw['results_map']['expand_on_load'] ) ? true : false,
-		'boundaries_filter'       => ! empty( $gmw['results_map']['boundaries_filter']['enabled'] ) ? true : false,
+		'boundaries_filter'       => ! empty( $gmw['results_map']['boundaries_filter']['usage'] ) ? $gmw['results_map']['boundaries_filter']['usage'] : 'disabled',
 		'boundaries_filter_label' => ! empty( $gmw['results_map']['boundaries_filter']['label'] ) ? $gmw['results_map']['boundaries_filter']['label'] : '',
 		'init_visible'            => $init_visible,
 		'implode'                 => $implode,
