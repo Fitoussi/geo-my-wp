@@ -236,7 +236,7 @@ function gmw_map_icons_upload() {
 		wp_mkdir_p( $custom_dirname );
 	}
 
-	$allowed_types = array( 'image/jpeg', 'image/gif', 'image/png' );
+	$allowed_types = array( 'image/jpeg', 'image/gif', 'image/png', 'image/svg+xml' );
 
 	// Upload files.
 	foreach ( $files['name'] as $key => $file_name ) {
