@@ -29,8 +29,8 @@ function gmw_is_post_exists( $post_id = 0 ) {
 	$post_id = $wpdb->get_var(
 		$wpdb->prepare(
 			"
-            SELECT ID 
-            FROM $wpdb->posts 
+            SELECT ID
+            FROM $wpdb->posts
             WHERE ID = %d",
 			$post_id
 		)
@@ -81,6 +81,57 @@ function gmw_get_terms( $taxonomy = 'category', $args = array() ) {
 
 	return $terms;
 }
+
+/**
+ * Get an array of taxonomy terms
+ *
+ * Array of term_id => term_name ordered alphabetically as well as parent - children.
+ *
+ * @since 4.0
+ */
+/*function gmw_get_taxonomy_terms_list( $taxonomy ) {
+
+	// vars
+	$output          = array();
+	$is_hierarchical = is_taxonomy_hierarchical( $taxonomy );
+	$terms           = get_terms(
+		array(
+			'taxonomy'   => $taxonomy,
+			'hide_empty' => false,
+		)
+	);
+
+	// bail early i no terms
+	if ( empty( $terms ) ) {
+		return array();
+	}
+
+	// sort into hierachial order!
+	if ( $is_hierarchical ) {
+		$terms = _get_term_children( 0, $terms, $taxonomy );
+	}
+
+	foreach ( $terms as $term ) {
+
+		$label = $term->name;
+
+		// Allow for empty name.
+		if ( '' === $label ) {
+			$label = __( '(no title)', 'geo-my-wp' );
+		}
+
+		// Prepend ancestors indentation.
+		if ( $is_hierarchical ) {
+			$ancestors = get_ancestors( $term->term_id, $taxonomy );
+			$label     = str_repeat( '&nbsp;&nbsp; ', count( $ancestors ) ) . $label;
+		}
+
+		$output[ $term->term_id ] = $label;
+	}
+
+	// return
+	return $output;
+}*/
 
 /**
  * GMW get_the_terms function using internal cache.
@@ -745,9 +796,9 @@ function gmw_post_location_status( $post_id = 0, $status = 1 ) {
 	$wpdb->query(
 		$wpdb->prepare(
 			"
-            UPDATE {$wpdb->base_prefix}gmw_locations 
-            SET   `status`      = $status 
-            WHERE `object_type` = 'post' 
+            UPDATE {$wpdb->base_prefix}gmw_locations
+            SET   `status`      = $status
+            WHERE `object_type` = 'post'
             AND   `blog_id`     = %d
             AND   `object_id`   = %d",
 			array( gmw_get_blog_id(), $post_id )
