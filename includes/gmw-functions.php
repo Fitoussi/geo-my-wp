@@ -1030,6 +1030,7 @@ function gmw_parse_form_db_fields( $db_fields = array(), $gmw = array() ) {
 			'street',
 			'premise',
 			'neighborhood',
+			'county',
 			'city',
 			'region_name',
 			'region_code',
