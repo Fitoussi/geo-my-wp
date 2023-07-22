@@ -1655,10 +1655,14 @@ class GMW_Form_Settings_Helper {
 				'address'      => __( 'Formatted address ( full address )', 'geo-my-wp' ),
 				'street'       => __( 'Street', 'geo-my-wp' ),
 				'premise'      => __( 'Apt/Suit ', 'geo-my-wp' ),
+				'neighborhood' => __( 'Neighborhood', 'geo-my-wp' ),
+				'county'       => __( 'County', 'geo-my-wp' ),
 				'city'         => __( 'City', 'geo-my-wp' ),
-				'region_name'  => __( 'State', 'geo-my-wp' ),
+				'region_name'  => __( 'State / Region name', 'geo-my-wp' ),
+				'region_code'  => __( 'State / Region code', 'geo-my-wp' ),
 				'postcode'     => __( 'Postcode', 'geo-my-wp' ),
-				'country_code' => __( 'Country', 'geo-my-wp' ),
+				'country_name' => __( 'Country name', 'geo-my-wp' ),
+				'country_code' => __( 'Country code', 'geo-my-wp' ),
 			);
 
 		} elseif ( 'map_width' === $option ) {
