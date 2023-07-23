@@ -21,4 +21,6 @@
  * @package geo-my-wp
  */
 
-include( rh_locate_template( 'inc/parts/woogridrev.php' ) );
+ if ( function_exists( 'rh_locate_template' ) ) {
+	include( rh_locate_template( 'inc/parts/woogridrev.php' ) );
+ }
