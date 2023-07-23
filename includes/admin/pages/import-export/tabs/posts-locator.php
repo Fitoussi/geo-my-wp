@@ -432,9 +432,9 @@ class GMW_Map_Press_Importer extends GMW_Locations_Importer {
 add_action( 'gmw_mappress_import', 'gmw_mappress_import' );
 
 /**
- * Locations importer class
+ * WP GeoDirectory Locations importer class.
  *
- * @since 3.0
+ * @since 4.0
  *
  * @author Eyal Fitoussi
  */
