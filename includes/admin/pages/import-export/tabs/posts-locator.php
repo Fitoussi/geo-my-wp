@@ -101,7 +101,7 @@ function gmw_output_posts_locator_import_export_tab() {
 
 						<?php esc_html_e( 'Use this form to import locations from MapPress plugin.' ); ?>
 
-						<p><?php esc_html_e( '*Note, since the current version of GEO my WP supports only single location per post, this importer imports only the first location created by MapPress from each post.', 'geo-my-wp' ); ?></p>	
+						<p><?php esc_html_e( '*Note, since the current version of GEO my WP supports only single location per post, this importer imports only the first location created by MapPress from each post.', 'geo-my-wp' ); ?></p>
 
 					</div>
 
@@ -109,6 +109,34 @@ function gmw_output_posts_locator_import_export_tab() {
 						<?php
 							$cf_importer = new GMW_Map_Press_Importer();
 							$cf_importer->output();
+						?>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+	</div>
+
+	<?php
+	do_action( 'gmw_import_export_before_geodirectory_import' ); ?>
+
+	<div class="gmw-settings-panel gmw-export-data-panel">
+
+		<fieldset>
+
+			<legend class="gmw-settings-panel-title"><?php esc_html_e( 'WP GeoDirectory Plugin Importer', 'geo-my-wp' ); ?></legend>
+
+			<div class="gmw-settings-panel-content">
+
+				<div class="gmw-settings-panel-description">
+
+					<div class="gmw-settings-panel-description">
+						<?php esc_html_e( 'Use this form to import locations from the WP GeoDirectory plugin.' ); ?>
+					</div>
+
+					<div class="gmw-settings-panel-field">
+						<?php
+							$geodir_importer = new GMW_GeoDirectory_Importer();
+							$geodir_importer->output();
 						?>
 					</div>
 				</div>
@@ -244,22 +272,22 @@ class GMW_Post_Custom_Fields_Importer extends GMW_Locations_Importer {
 				wpposts.ID as object_id,
 				wpposts.post_author as user_id,
 				wpposts.post_title as title,
-				wpposts.post_date as created, 
+				wpposts.post_date as created,
 				wpposts.post_modified as updated,
 				wppmeta.meta_value as latitude,
 				wppmeta1.meta_value as longitude
 				FROM {$wpdb->prefix}posts wpposts
 				INNER JOIN {$wpdb->prefix}postmeta wppmeta
-				ON ( wpposts.ID = wppmeta.post_id )  
-				INNER JOIN {$wpdb->prefix}postmeta AS wppmeta1 
+				ON ( wpposts.ID = wppmeta.post_id )
+				INNER JOIN {$wpdb->prefix}postmeta AS wppmeta1
 				ON ( wpposts.ID = wppmeta1.post_id )
-				AND ( 
-	  			( wppmeta.meta_key = %s AND wppmeta.meta_value NOT IN ('') ) 
-	  			AND 
+				AND (
+	  			( wppmeta.meta_key = %s AND wppmeta.meta_value NOT IN ('') )
+	  			AND
 	  			( wppmeta1.meta_key = %s AND wppmeta1.meta_value NOT IN ('') )
-				) 
-				GROUP BY wpposts.ID 
-				ORDER BY wpposts.ID 
+				)
+				GROUP BY wpposts.ID
+				ORDER BY wpposts.ID
 				LIMIT %d, %d",
 				array(
 					$location_fields['latitude'],
@@ -355,7 +383,7 @@ class GMW_Map_Press_Importer extends GMW_Locations_Importer {
 			$wpdb->prepare(
 				"
 				SELECT DISTINCT {$count_rows}
-				mpposts.*, 
+				mpposts.*,
 				mpmaps.obj
 				FROM {$wpdb->prefix}mappress_posts mpposts
 				INNER JOIN {$wpdb->prefix}mappress_maps mpmaps
@@ -402,3 +430,156 @@ class GMW_Map_Press_Importer extends GMW_Locations_Importer {
 	}
 }
 add_action( 'gmw_mappress_import', 'gmw_mappress_import' );
+
+/**
+ * Locations importer class
+ *
+ * @since 3.0
+ *
+ * @author Eyal Fitoussi
+ */
+class GMW_GeoDirectory_Importer extends GMW_Locations_Importer {
+
+	/**
+	 * The object type we importing.
+	 *
+	 * @var string
+	 */
+	protected $object_type = 'post';
+
+	/**
+	 * Records to import per batch.
+	 *
+	 * @var integer
+	 */
+	protected $records_per_batch = 15;
+
+	/**
+	 * Form message.
+	 *
+	 * @var string
+	 */
+	public $form_message = '';
+
+	/**
+	 * Get location to import
+	 *
+	 * @return [type] [description]
+	 */
+	public function query_locations() {
+
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . 'geodir_gd_place_detail';
+
+		// look for GeoDirectory DB table.
+		$table = $wpdb->get_results( "SHOW TABLES LIKE '{$table_name}'", ARRAY_A ); // WPCS: db call ok, cache ok, unprepared SQL ok.
+
+		// abort if no table exist.
+		if ( count( $table ) === 0 ) {
+			/* translators: %s database table name. */
+			wp_die( sprintf( esc_attr__( '%s database table cannot be found.', 'geo-my-wp' ), esc_attr( $table_name ) ) );
+		}
+
+		// count rows only when init the importer.
+		$count_rows = absint( $this->total_locations ) === 0 ? 'SQL_CALC_FOUND_ROWS' : '';
+
+		// get posts.
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"
+				SELECT DISTINCT {$count_rows}
+				geodir.*
+				FROM {$table_name} geodir
+				LIMIT %d, %d",
+				array(
+					$this->records_completed,
+					$this->records_per_batch,
+				)
+			)
+		); // WPCS: db call ok, cache ok, unprepared SQL ok.
+
+		// count all rows only when init the importer.
+		$this->total_locations = absint( $this->total_locations ) === 0 ? $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : $this->total_locations; // WPCS: db call ok, cache ok, unprepared SQL ok.
+
+		// abort if nothing was found.
+		if ( empty( $results ) ) {
+			return array();
+		}
+
+		$output = array();
+
+		foreach ( $results as $location ) {
+
+			if ( empty( $location->post_id ) ) {
+				continue;
+			}
+
+			$address_fields = array( 'street', 'street_2', 'city', 'region', 'zip', 'country' );
+			$address        = '';
+			$location_args  = array(
+				'object_id' => $location->post_id,
+				'title'     => $location->post_title,
+			);
+
+			foreach ( $address_fields as $address_field ) {
+
+				if ( empty( $location->$address_field ) ) {
+					continue;
+				}
+
+				if ( 'street' === $address_field ) {
+
+					$address                .= $location->$address_field . ', ';
+					$location_args['street'] = $location->$address_field;
+
+				} elseif ( 'city' === $address_field ) {
+
+					$address              .= $location->$address_field . ', ';
+					$location_args['city'] = $location->$address_field;
+
+				} elseif ( 'region' === $address_field ) {
+
+					$address                     .= $location->$address_field . ' ';
+					$location_args['region_name'] = $location->$address_field;
+
+				} elseif ( 'zip' === $address_field ) {
+
+					$address                  .= $location->$address_field . ', ';
+					$location_args['postcode'] = $location->$address_field;
+
+				} elseif ( 'country' === $address_field ) {
+
+					$location_args['country_name'] = $location->$address_field;
+
+					// get list of countries code. We will use it to make sure that the only the country code passes to the column.
+					$countries = gmw_get_countries_list_array();
+
+					// look for the country code based on the country name.
+					$country_code = array_search( ucwords(  $location->$address_field ), $countries, true );
+
+					$location_args['country_code'] = '';
+
+					// get the country code from the list.
+					if ( ! empty( $country_code ) ) {
+						$address                      .= $country_code;
+						$location_args['country_code'] = $country_code;
+					} else {
+						$address                      .= $location->$address_field;
+						$location_args['country_code'] = '';
+					}
+				}
+			}
+
+			$location_args['latitude']          = $location->latitude;
+			$location_args['longitude']         = $location->longitude;
+			$location_args['address']           = $address;
+			$location_args['formatted_address'] = $address;
+
+			$output[] = $location_args;
+		}
+
+		return (object) $output;
+	}
+}
+add_action( 'gmw_geodirectory_import', 'gmw_geodirectory_import' );
