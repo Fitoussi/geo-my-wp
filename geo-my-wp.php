@@ -5,9 +5,9 @@
  * Description:       GEO my WP is an adavanced geolocation, mapping, and proximity search plugin. Geotag post types and BuddyPress members, and create advanced, proximity search forms to search and find locations based on address, radius,categories and more.
  * Author:            Eyal Fitoussi
  * Author URI:        http://www.geomywp.com
- * Version:           4.0-beta5
+ * Version:           4.0
  * Requires at least: 5.6
- * Tested up to:      6.2
+ * Tested up to:      6.3
  * Requires PHP:      7.0
  * Text Domain:       geo-my-wp
  * Domain Path:       /languages
@@ -32,7 +32,7 @@ class GEO_MY_WP {
 	 *
 	 * @var string
 	 */
-	public $version = '4.0.0.1';
+	public $version = '4.0';
 
 	/**
 	 * GEO my WP & Extensions options.
@@ -106,26 +106,26 @@ class GEO_MY_WP {
 	 * @var array
 	 */
 	public $required_versions = array(
-		'ajax_forms'                       => '1.99999',
-		'bp_groups_locator'                => '1.99999',
-		'groups_locator'                   => '1.99999', // old slug.
-		'bp_members_directory_geolocation' => '1.99999',
-		'geo_members_directory'            => '1.99999', // old slug.
-		'bp_xprofile_geolocation'          => '1.99999',
-		'xprofile_fields'                  => '1.99999', // old slug.
-		'exclude_locations'                => '1.99999',
-		'exclude_members'                  => '1.99999', // old slug.
-		'global_maps'                      => '2.99999',
-		'ip_address_locator'               => '1.0.99999',
-		'gmw_meta_fields_geo'              => '0.99999',
-		'gmw_multiple_locations'           => '1.99999',
-		'nearby_locations'                 => '1.99999',
-		'nearby_posts'                     => '1.99999', // old slug.
-		'gmw_peepso_geolocation'           => '0.99999',
-		'premium_settings'                 => '2.99999',
-		'radius_per_location'              => '1.99999',
-		'users_locator'                    => '1.99999',
-		'wp_users_geo-location'            => '1.99999', // old slug.
+		'ajax_forms'                       => '2.0',
+		'bp_groups_locator'                => '2.0',
+		'groups_locator'                   => '2.0', // old slug.
+		'bp_members_directory_geolocation' => '2.0',
+		'geo_members_directory'            => '2.0', // old slug.
+		'bp_xprofile_geolocation'          => '2.0',
+		'xprofile_fields'                  => '2.0', // old slug.
+		'exclude_locations'                => '2.0',
+		'exclude_members'                  => '2.0', // old slug.
+		'global_maps'                      => '3.0',
+		'ip_address_locator'               => '1.1',
+		'gmw_meta_fields_geo'              => '1.0',
+		'gmw_multiple_locations'           => '2.0',
+		'nearby_locations'                 => '2.0',
+		'nearby_posts'                     => '2.0', // old slug.
+		'gmw_peepso_geolocation'           => '1.0',
+		'premium_settings'                 => '3.0',
+		'radius_per_location'              => '2.0',
+		'users_locator'                    => '2.0',
+		'wp_users_geo-location'            => '2.0', // old slug.
 		'gmw_kleo_geolocation'             => '1.9',
 	);
 
