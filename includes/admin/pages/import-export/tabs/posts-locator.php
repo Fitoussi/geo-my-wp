@@ -117,6 +117,7 @@ function gmw_output_posts_locator_import_export_tab() {
 	</div>
 
 	<?php
+
 	do_action( 'gmw_import_export_before_geodirectory_import' ); ?>
 
 	<div class="gmw-settings-panel gmw-export-data-panel">
@@ -135,8 +136,17 @@ function gmw_output_posts_locator_import_export_tab() {
 
 					<div class="gmw-settings-panel-field">
 						<?php
+
+						if ( class_exists( 'GeoDirectory' ) ) {
+
 							$geodir_importer = new GMW_GeoDirectory_Importer();
 							$geodir_importer->output();
+
+						} else {
+							?>
+							<div class="gmw-admin-notice-box gmw-admin-notice-error"><?php esc_attr_e( 'The WP GeoDirectoty plugin is not actavited.', 'geo-my-wp' ); ?></div>
+							<?php
+						}
 						?>
 					</div>
 				</div>
