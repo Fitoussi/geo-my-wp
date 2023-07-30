@@ -522,7 +522,7 @@ class GMW_Search_Form_Helper {
 				break;
 
 			case 'submit':
-				$field .= '<input type="submit" id="gmw-submit-' . $id . '" class="' . esc_attr( $args['class_attr'] ) . ' gmw-form-button gmw-submit-button" value="' . $value . '" data-button_type="' . esc_attr( $args['slug'] ) . '" data-form_id="' . $id . '" />'; // WPCS: XSS ok. Value and $id already escaped.
+				$field .= '<input type="submit" id="gmw-submit-' . $id . '" class="' . esc_attr( $args['class_attr'] ) . ' gmw-form-button gmw-submit-button gmw-submit" value="' . $value . '" data-button_type="' . esc_attr( $args['slug'] ) . '" data-form_id="' . $id . '" />'; // WPCS: XSS ok. Value and $id already escaped.
 
 				break;
 
