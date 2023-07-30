@@ -1126,7 +1126,61 @@ class GMW_Forms_Helper {
 			$form = self::gmw_v4_form_data_importer( $form );
 		}
 
-		return ! empty( $form ) ? $form : false;
+		if ( ! empty( $form ) ) {
+
+			if ( empty( $form['component'] ) ) {
+
+				if ( strpos( $form['slug'], 'posts' ) !== false ) {
+
+					$form['component'] = 'posts_locator';
+
+				} elseif ( strpos( $form['slug'], 'members' ) !== false ){
+
+					$form['component'] = 'members_locator';
+
+				} elseif ( strpos( $form['slug'], 'groups' ) !== false ){
+
+					$form['component'] = 'bp_groups_locator';
+
+				} elseif( strpos( $form['slug'], 'users' ) !== false ){
+
+					$form['component'] = 'users_locator';
+
+				} else {
+					$form['component'] = $form['addon'];
+				}
+			}
+
+			if ( empty( $form['object_type'] ) ) {
+
+				if ( strpos( $form['slug'], 'posts' ) !== false ) {
+
+					$form['object_type'] = 'post';
+
+				} elseif ( strpos( $form['slug'], 'members' ) !== false ){
+
+					$form['object_type'] = 'user';
+
+				} elseif ( strpos( $form['slug'], 'groups' ) !== false ){
+
+					$form['object_type'] = 'bp_group';
+
+				} elseif( strpos( $form['slug'], 'users' ) !== false ){
+
+					$form['object_type'] = 'user';
+
+				} else {
+					$form['object_type'] = 'post';
+				}
+			}
+
+			return $form;
+
+		} else {
+			return false;
+		}
+
+		//return ! empty( $form ) ? $form : false;
 	}
 
 	/**
