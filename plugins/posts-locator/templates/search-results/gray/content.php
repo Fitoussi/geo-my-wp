@@ -37,10 +37,10 @@
 
 			<?php do_action( 'gmw_search_results_before_top_pagination', $gmw ); ?>
 
-			<div class="pagination-per-page-wrapper top">		
+			<div class="pagination-per-page-wrapper top">
 				<?php gmw_per_page( $gmw ); ?>
 				<?php gmw_pagination( $gmw ); ?>
-			</div> 
+			</div>
 
 			<?php gmw_results_map( $gmw ); ?>
 
@@ -61,11 +61,11 @@
 
 						<?php do_action( 'gmw_search_results_loop_item_start', $gmw, $post ); ?>
 
-						<div class="top-wrapper">	
+						<div class="top-wrapper">
 
 							<h2 class="post-title">
 								<a href="<?php gmw_search_results_permalink( get_permalink(), $post, $gmw ); ?>">
-									<?php gmw_search_results_title( get_the_title(), $post, $gmw ); ?> 
+									<?php gmw_search_results_title( get_the_title(), $post, $gmw ); ?>
 								</a>
 							</h2>
 
@@ -122,7 +122,7 @@
 			<div class="pagination-per-page-wrapper bottom">
 				<?php gmw_per_page( $gmw ); ?>
 				<?php gmw_pagination( $gmw ); ?>
-			</div> 
+			</div>
 
 			<?php do_action( 'gmw_search_results_end', $gmw ); ?>
 
@@ -136,7 +136,7 @@
 
 			<?php gmw_no_results_message( $gmw ); ?>
 
-			<?php do_action( 'gmw_no_results_end', $gmw ); ?> 
+			<?php do_action( 'gmw_no_results_end', $gmw ); ?>
 		</div>
 
 	<?php endif; ?>
