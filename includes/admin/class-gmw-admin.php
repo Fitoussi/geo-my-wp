@@ -615,6 +615,11 @@ class GMW_Admin {
 		wp_dequeue_style( 'gamipress-select2-css' );
 		wp_dequeue_script( 'gamipress-select2-js' );
 
+		wp_deregister_style( 'select2-goft' );
+		wp_deregister_script( 'select2-goft' );
+		wp_dequeue_style( 'select2-goft' );
+		wp_dequeue_script( 'select2-goft' );
+
 		wp_deregister_style( 'wpfepp-select2' );
 		wp_deregister_script( 'wpfepp-select2' );
 		wp_dequeue_style( 'wpfepp-select2' );
