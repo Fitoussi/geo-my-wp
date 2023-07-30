@@ -327,16 +327,16 @@ class GMW_Forms_Page {
 
 			<div class="gmw-admin-page-panels-wrapper">
 
-				<div id="gmw-admin-notices-holder"></div>
-
-				<h1 style="display:none"></h1>
-
 				<div class="gmw-new-form-wrapper">
 					<h3 class="gmw-admin-page-title" style="margin-bottom: 0;margin-left: 0.25rem;">
 						<?php esc_html_e( 'Forms', 'geo-my-wp' ); ?>
 					</h3>
 					<?php echo self::new_form_buttons(); // phpcs:ignore: XSS ok. ?>
 				</div>
+
+				<h1 style="display:none"></h1>
+
+				<div id="gmw-admin-notices-holder"></div>
 
 				<form id="gmw_forms_admin" class="gmw-admin-page-conten" enctype="multipart/form-data" method="post">
 

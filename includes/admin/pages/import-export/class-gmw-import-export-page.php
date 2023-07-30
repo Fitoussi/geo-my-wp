@@ -109,13 +109,12 @@ class GMW_Import_Export_Page {
 
 				<?php gmw_admin_page_loader(); ?>
 
+				<h1 style="display:none;"></h1>
+
 				<div id="gmw-admin-notices-holder"></div>
 
-				<h1 style="display:none;"></h1>
 				<div id="gmw-<?php echo esc_attr( $current_tab ); ?>-tab-content" class="gmw-import-export-tab-content gmw-admin-page-content-inner">
-
 					<?php do_action( 'gmw_import_export_' . $current_tab . '_tab' ); ?>
-
 				</div>
 			</div>
 

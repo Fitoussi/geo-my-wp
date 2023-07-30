@@ -1006,6 +1006,8 @@ class GMW_Extensions {
 					</span>
 				</h3>
 
+				<h1 style="display:none;"></h1>
+
 				<div id="gmw-admin-notices-holder"></div>
 
 				<div class="gmw-admin-page-content-inner">

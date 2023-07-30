@@ -1076,6 +1076,8 @@ class GMW_Settings {
 				<div id="gmw-settings-tab-<?php echo esc_attr( $current_tab ); ?>"
 					class="gmw-settings-form gmw-tab-panel <?php echo esc_attr( $current_tab ); ?>">
 
+					<h1 style="display:none;"></h1>
+
 					<div id="gmw-admin-notices-holder"></div>
 
 					<form method="post" action="" class="gmw-settings-form">
