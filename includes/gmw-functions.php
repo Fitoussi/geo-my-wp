@@ -983,6 +983,9 @@ function gmw_get_object_map_location( $object, $iw_args = array(), $gmw = array(
 		'distance'            => isset( $object->distance ) ? $object->distance : null,
 		'units'               => isset( $object->units ) ? $object->units : null,
 		'map_icon'            => $map_icon,
+		'bounce_event'        => ( ! empty( $gmw['map_markers']['bounce_event'] ) && 'disabled' !== $gmw['map_markers']['bounce_event'] ) ? $gmw['map_markers']['bounce_event'] : null,
+		'open_iw_event'       => ( ! empty( $gmw['map_markers']['open_iw_event'] ) && 'disabled' !== $gmw['map_markers']['open_iw_event'] ) ? $gmw['map_markers']['open_iw_event'] : null,
+		'scroll_to_item'      => ( ! empty( $gmw['map_markers']['scroll_to_item'] ) && 'disabled' !== $gmw['map_markers']['scroll_to_item'] ) ? $gmw['map_markers']['scroll_to_item'] : null,
 		'info_window_content' => $info_window,
 	);
 
@@ -1203,6 +1206,11 @@ function gmw_form_class( $element = 'form', $gmw = array() ) {
  * @return string class attributes of the object.
  */
 function gmw_get_object_class( $object, $gmw = array() ) {
+
+	// Convert array to object.
+	if ( is_array( $object ) ) {
+		$object = (object) $object;
+	}
 
 	// Fill missing data. Usually when object does not have a location.
 	if ( empty( $object->object_id ) ) {
