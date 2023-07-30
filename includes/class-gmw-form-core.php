@@ -1221,9 +1221,9 @@ class GMW_Form_Core {
 		/**
 		 * To support older template files.
 		 *
-		 * New tempalte files should have the action hook 'gmw_the_object_location'.
+		 * New template files should have the action hook 'gmw_the_object_location'.
 		 *
-		 * To be removed.
+		 * @TODO To be removed.
 		 */
 		if ( 'gmw_search_results_loop_item_start' === current_action() ) {
 
