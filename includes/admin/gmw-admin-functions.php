@@ -143,19 +143,26 @@ function gmw_admin_pages_menu() {
 	);
 	?>
 	<div class="gmw-admin-pages-menu-wrapper">
-		
-		<a href="https://geomywp.com/" target=_blank">
+
+		<?php /*<a href="https://geomywp.com/" target=_blank">
 			<img id="site-logo-header" style="width: 170px;height: 50px;" alt="" src="<?php echo GMW_URL . '/gmw-logo.png'; ?>" class="ct-image">
-		</a>
+		</a> */
+		?>
 
 		<div class="gmw-admin-pages-menu-inner">
 
+			<a href="https://geomywp.com/" target=_blank">
+				<img id="site-logo-header" style="width: 170px;height: 50px;" alt="" src="<?php echo GMW_URL . '/gmw-logo.png'; ?>" class="ct-image">
+			</a>
+
 			<?php $count = 0; ?>
+
+			<div style="display: flex;flex-direction: row;max-width: 860px;width: 100%;justify-content: space-between;">
 
 			<?php foreach ( $menu_items as $menu_item ) { ?>
 
 				<?php
-				
+
 				// We want only the first main menu items. No need all.
 				if ( 5 === $count ) {
 					break;
@@ -167,13 +174,14 @@ function gmw_admin_pages_menu() {
 				<?php $active = ( ! empty( $_GET['page'] ) && $_GET['page'] === $menu_item[2] ) ? 'active' : ''; ?>
 				<?php $icon   = ! empty( $menu_icons[ $menu_item[2] ] ) ? $menu_icons[ $menu_item[2] ] : ''; ?>
 				<?php $url    = strpos( $menu_item[2], 'edit.php' ) !== false ? $menu_item[2] : 'admin.php?page=' . $menu_item[2]; ?>
-				<a 
-					class="gmw-admin-pages-menu-item <?php echo $icon; // WPCS: XSS ok. ?> <?php echo $active; // WPCS: XSS ok. ?>" 
+				<a
+					class="gmw-admin-pages-menu-item <?php echo $icon; // WPCS: XSS ok. ?> <?php echo $active; // WPCS: XSS ok. ?>"
 					title="<?php esc_attr( $menu_item[3] ); ?>"
 					href="<?php echo esc_url( admin_url( $url ) ); ?>">
 					<?php echo esc_attr( $menu_item[0] ); ?>
 				</a>
 			<?php } ?>
+			</div>
 		</div>
 	</div>
 	<?php do_action( 'gmw_admin_pages_menu' ); ?>
@@ -187,88 +195,88 @@ function gmw_admin_helpful_buttons() {
 	?>
 	<div class="gmw-helpful-links-wrapper">
 		<div class="gmw-helpful-links-inner">
-			<a 
-				class="gmw-helpful-links" 
-				title="Official Website" 
-				href="https://geomywp.com" 
+			<a
+				class="gmw-helpful-links"
+				title="Official Website"
+				href="https://geomywp.com"
 				target="_blank">
 				<i class="dashicons dashicons-admin-site-alt3"></i>GEOmyWP.com
 			</a>
 
-			<a 
-				class="gmw-helpful-links" 
-				title="Extensions" 
-				href="https://geomywp.com/extensions" 
+			<a
+				class="gmw-helpful-links"
+				title="Extensions"
+				href="https://geomywp.com/extensions"
 				target="_blank">
 				<i class="gmw-icon-puzzle"></i>Extensions
 			</a>
 
-			<a 
-				class="gmw-helpful-links" 
-				title="documentation" 
-				href="https://docs.geomywp.com" 
+			<a
+				class="gmw-helpful-links"
+				title="documentation"
+				href="https://docs.geomywp.com"
 				target="_blank">
 				<i class="gmw-icon-doc-text"></i>
 				<?php esc_html_e( 'Docs', 'geo-my-wp' ); ?>
 			</a>
 
-			<a 
-				class="gmw-helpful-links" 
-				title="support" 
-				href="https://geomywp.com/support" 
+			<a
+				class="gmw-helpful-links"
+				title="support"
+				href="https://geomywp.com/support"
 				target="_blank">
 				<i class="gmw-icon-lifebuoy"></i>
 				<?php esc_html_e( 'Support', 'geo-my-wp' ); ?>
 			</a>
 
-			<a 
-				class="gmw-helpful-links" 
-				title="Demo" 
-				href="http://demo.geomywp.com" 
+			<a
+				class="gmw-helpful-links"
+				title="Demo"
+				href="http://demo.geomywp.com"
 				target="_blank">
 				<i class="gmw-icon-monitor"></i>
 				<?php esc_html_e( 'Demo', 'geo-my-wp' ); ?>
 			</a>
 
-			<a 
-				class="gmw-helpful-links" 
-				title="Donate" 
-				href="https://www.paypal.me/fitoussi" 
+			<a
+				class="gmw-helpful-links"
+				title="Donate"
+				href="https://www.paypal.me/fitoussi"
 				target="_blank">
 				<i style="font-size: 18px;margin-right: -2px;" class="dashicons dashicons-money-alt"></i>
 				<?php esc_html_e( 'Donate', 'geo-my-wp' ); ?>
 			</a>
 
-			<a 
-				class="gmw-helpful-links" 
-				title="GEO my WP on GitHub" 
-				href="https://github.com/Fitoussi/GEO-my-WP" 
+			<a
+				class="gmw-helpful-links"
+				title="GEO my WP on GitHub"
+				href="https://github.com/Fitoussi/GEO-my-WP"
 				target="_blank">
 				<i class="gmw-icon-github"></i>Contribute
 			</a>
 
-			<a 
-				class="gmw-helpful-links" 
-				title="Show your support" 
-				href="https://wordpress.org/support/view/plugin-reviews/geo-my-wp?filter=5" 
+			<a
+				class="gmw-helpful-links"
+				title="Show your support"
+				href="https://wordpress.org/support/view/plugin-reviews/geo-my-wp?filter=5"
 				target="_blank">
 				<i class="gmw-icon-star"></i>
 				<?php esc_html_e( 'Love', 'geo-my-wp' ); ?>
 			</a>
 
-			<a 
-				class="gmw-helpful-links" 
-				title="GEO my WP on Facebook" 
-				href="https://www.facebook.com/geomywp" 
+			<a
+				class="gmw-helpful-links"
+				title="GEO my WP on Facebook"
+				href="https://www.facebook.com/geomywp"
 				target="_blank">
 				<i class="gmw-icon-facebook-squared"></i>
 				<?php esc_html_e( 'Like', 'geo-my-wp' ); ?>
 			</a>
 
-			<a 
-				class="gmw-helpful-links" 
-				title="GEO my WP on Twitter" 
-				href="https://twitter.com/GEOmyWP" 
+			<a
+				class="gmw-helpful-links"
+				title="GEO my WP on Twitter"
+				href="https://twitter.com/GEOmyWP"
 				target="_blank">
 				<i class="gmw-icon-twitter"></i>
 				<?php esc_html_e( 'Follow', 'geo-my-wp' ); ?>
