@@ -236,9 +236,11 @@ class GMW_Forms_Helper {
 	 */
 	public static function get_forms() {
 
-		$forms = wp_cache_get( 'all_forms', 'gmw_forms' );
+		// disable cache for now. Causes some issues.
+		//$forms = wp_cache_get( 'all_forms', 'gmw_forms' );
+		$forms = array();
 
-		if ( false === $forms ) {
+		if ( empty( $forms ) ) {
 
 			global $wpdb;
 
@@ -269,7 +271,7 @@ class GMW_Forms_Helper {
 
 			$forms = $output;
 
-			wp_cache_set( 'all_forms', $forms, 'gmw_forms' );
+			//wp_cache_set( 'all_forms', $forms, 'gmw_forms' );
 		}
 
 		return ! empty( $forms ) ? $forms : array();
@@ -1071,7 +1073,7 @@ class GMW_Forms_Helper {
 
 		$form = wp_cache_get( $form_id, 'gmw_forms' );
 
-		if ( false === $form ) {
+		if ( empty( $form ) ) {
 
 			global $wpdb;
 
