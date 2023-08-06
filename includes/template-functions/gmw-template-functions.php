@@ -45,15 +45,15 @@ function gmw_form_get_address_filters( $gmw ) {
 	}
 
 	// if searching within state or country only is enabled.
-	if ( ! empty( $gmw['submitted'] ) && apply_filters( 'gmw_search_within_boundaries', true, $gmw ) ) {
+	if ( ! empty( $gmw['submitted'] ) ) {
 
 		// if searching state boundaries.
-		if ( isset( $gmw['form_values']['state'] ) && '' !== $gmw['form_values']['state'] ) {
+		if ( ! empty($gmw['boundaries_search']['state'] ) && ! empty( $gmw['form_values']['state'] ) ) {
 			$address_filters['region_name'] = $gmw['form_values']['state'];
 		}
 
 		// When searchin boundaries of a country.
-		if ( isset( $gmw['form_values']['country'] ) && '' !== $gmw['form_values']['country'] ) {
+		if ( ! empty( $gmw['boundaries_search']['country'] ) && ! empty( $gmw['form_values']['country'] ) ) {
 			$address_filters['country_code'] = $gmw['form_values']['country'];
 		}
 	}

@@ -414,6 +414,19 @@ class GMW_Form_Core {
 		$this->form['enable_page_load_ajax']           = $this->page_load_results_ajax;
 		$this->form['enable_objects_without_location'] = apply_filters( 'gmw_form_enable_objects_without_location', $this->enable_objects_without_location, $this->form, $this ); // Deprecated filter. Use 'gmw_default_form_values' instead.
 
+		$bounds_search = apply_filters( 'gmw_search_within_boundaries', array(
+			'state'   => false,
+			'country' => true,
+		), $this->form );
+
+		if ( ! is_array( $bounds_search ) ) {
+			$bounds_search = array(
+				'state'   => $bounds_search,
+				'country' => $bounds_search,
+			);
+		}
+
+		$this->form['boundaries_search'] = $bounds_search;
 		/**
 		 * This is where the child class apply its default form values.
 		 *

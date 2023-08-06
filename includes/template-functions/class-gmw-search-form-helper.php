@@ -918,6 +918,15 @@ class GMW_Search_Form_Helper {
 		$output .= "<input type=\"hidden\" id=\"gmw-per-page-{$id}\" class=\"gmw-per-page\" name=\"{$url_px}per_page\" value=\"{$per_page}\" />";
 		$output .= "<input type=\"text\" id=\"gmw-lat-{$id}\" class=\"gmw-lat\" name=\"{$url_px}lat\" value=\"{$lat}\" style=\"display:none\" />";
 		$output .= "<input type=\"text\" id=\"gmw-lng-{$id}\" class=\"gmw-lng\" name=\"{$url_px}lng\" value=\"{$lng}\" style=\"display:none\" />";
+		if ( ! empty( $gmw['boundaries_search']['state'] ) ) {
+			$disabled = ! $state ? 'disabled="disabled"' : '';
+			$output .= '<input type="text" id="gmw-state-' . $id . '" class="gmw-state" name="state" value="' . $state . '" ' . $disabled . ' style="display:none" />';
+		}
+
+		if ( ! empty( $gmw['boundaries_search']['country'] ) ) {
+			$disabled = ! $country ? 'disabled="disabled"' : '';
+			$output .= '<input type="text" id="gmw-country-' . $id . '" class="gmw-country" name="country" value="' . $country .'" ' . $disabled . ' style="display:none" />';
+		}
 		$output .= "<input type=\"hidden\" id=\"gmw-form-id-{$id}\" class=\"gmw-form-id\" name=\"{$url_px}form\" value=\"{$id}\" />";
 		$output .= "<input type=\"hidden\" id=\"gmw-action-{$id}\" class=\"gmw-action\" name=\"{$url_px}action\" value=\"fs\"/>";
 		$output .= "<input type=\"hidden\" id=\"gmw-swlatlng-{$id}\" class=\"gmw-swlatlng\" name=\"swlatlng\" />";
