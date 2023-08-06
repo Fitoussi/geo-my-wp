@@ -25,7 +25,9 @@
 	<?php do_action( 'gmw_search_results_start', $gmw ); ?>
 
 	<div class="gmw-results-message">
-		<span><?php gmw_results_message( $gmw ); ?></span>
+		<span>
+			<?php gmw_results_message( $gmw ); ?>
+		</span>
 	</div>
 
 	<?php gmw_results_map( $gmw ); ?>
@@ -39,7 +41,7 @@
 		<?php gmw_search_results_orderby_filter( $gmw ); ?>
 
 		<?php gmw_results_view_toggle( $gmw ); ?>
-	</div> 
+	</div>
 
 	<?php do_action( 'gmw_search_results_before_loop', $gmw ); ?>
 
@@ -67,7 +69,7 @@
 
 	<div class="gmw-pagination-wrapper">
 		<?php gmw_pagination( $gmw ); ?>
-	</div> 
+	</div>
 
 	<?php do_action( 'gmw_search_results_end', $gmw ); ?>
 
