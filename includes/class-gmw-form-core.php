@@ -427,6 +427,7 @@ class GMW_Form_Core {
 		}
 
 		$this->form['boundaries_search'] = $bounds_search;
+
 		/**
 		 * This is where the child class apply its default form values.
 		 *
@@ -1150,6 +1151,11 @@ class GMW_Form_Core {
 
 		if ( $bp_class_ok ) {
 			echo '</div>';
+		}
+
+		// Reset query for posts locator queries.
+		if ( 'posts_locator' === $this->form['component'] ) {
+			wp_reset_query();
 		}
 
 		do_action( 'gmw_have_locations_end', $this->form, $this );
