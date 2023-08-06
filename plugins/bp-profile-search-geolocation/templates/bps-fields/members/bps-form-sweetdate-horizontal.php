@@ -16,63 +16,57 @@
 
 ?>
 <style type="text/css">
-.gmw-bpsgeo-address-field-wrap {
-	display: flex;
-	justify-content: flex-start;
-	align-items: flex-start;
-	position: relative;
-}
+	.gmw-bpsgeo-address-field-wrap {
+		display: flex;
+		justify-content: flex-start;
+		align-items: flex-start;
+		position: relative;
+	}
 
-.gmw-bpsgeo-address-field-wrap input.gmw-bpsgeo-address-field {
-	width: 100%;
-	box-sizing: border-box;
-	padding-right: 35px;
-}
+	.gmw-bpsgeo-address-field-wrap input.gmw-bpsgeo-address-field {
+		width: 100%;
+		box-sizing: border-box;
+		padding-right: 35px;
+	}
 
-.gmw-bpsgeo-address-field-wrap i.gmw-bpsgeo-locator-button {
-	position: absolute;
-	right: 0;
-	padding: 5px 10px;
-	cursor: pointer;
-}
+	.gmw-bpsgeo-address-field-wrap i.gmw-bpsgeo-locator-button {
+		position: absolute;
+		right: 0;
+		padding: 5px 10px;
+		cursor: pointer;
+	}
 
-.gmw-bpsgeo-units-field-wrap select,
-.gmw-bpsgeo-distance-field-wrap select {
-	width: 100%;
-}
+	.gmw-bpsgeo-units-field-wrap select,
+	.gmw-bpsgeo-distance-field-wrap select {
+		width: 100%;
+	}
 
-/** Sweetdate theme  **/
-.kleo-page .gmw-bpsgeo-location-field-wrap.bps-selectbox div.dropdown {
-	width: 100% ! important;
-}
+	/** Sweetdate theme  **/
+	.kleo-page .gmw-bpsgeo-location-field-wrap.bps-selectbox div.dropdown {
+		width: 100% ! important;
+	}
 </style>
 
 <div class="gmw-bpsgeo-address-field-wrap gmw-bpsgeo-location-field-wrap bps-textbox two columns hz-textbox">
 
-	<input 
-		type="text"
-		id="<?php echo $id; // WPCS: XSS ok. ?>_address"
+	<input type="text" id="<?php echo $id; // WPCS: XSS ok. ?>_address"
 		class="gmw-bpsgeo-address-field<?php echo $address_ac; // WPCS: XSS ok. ?> form-control"
-		name="<?php echo $name; // WPCS: XSS ok. ?>[address]" 
-		placeholder="<?php echo $address_ph; // WPCS: XSS ok. ?>"
-		value="<?php echo $address_value; // WPCS: XSS ok. ?>"
-	>
+		name="<?php echo $name; // WPCS: XSS ok. ?>[address]" placeholder="<?php echo $address_ph; // WPCS: XSS ok. ?>"
+		value="<?php echo $address_value; // WPCS: XSS ok. ?>">
 	<?php if ( ! empty( $geo_options['gmw_bpsgeo_locator_button'] ) ) { ?>
 		<i class="gmw-bpsgeo-locator-button gmw-locator-button inside gmw-icon-target-light"></i>
-	<?php } ?>			
+	<?php } ?>
 </div>
 
 <?php if ( count( $radius_options ) > 1 ) { ?>
 
 	<div class="gmw-bpsgeo-distance-field-wrap gmw-bpsgeo-location-field-wrap bps-selectbox two columns hz-textbox">
 
-		<select 
-			id="<?php echo $id; // WPCS: XSS ok. ?>_distance"
-			class="gmw-bpsgeo-distance-field form-control" 
+		<select id="<?php echo $id; // WPCS: XSS ok. ?>_distance" class="gmw-bpsgeo-distance-field form-control"
 			name="<?php echo $name; // WPCS: XSS ok. ?>[distance]">
 
 			<option value="" selected="selected">
-				<?php esc_html_e( 'Within', 'geo-my-wp' ); ?>	
+				<?php esc_html_e( 'Within', 'geo-my-wp' ); ?>
 			</option>
 
 			<?php
@@ -89,26 +83,20 @@
 
 <?php } else { ?>
 
-	<input 
-		type="hidden"
-		id="<?php echo $id; // WPCS: XSS ok. ?>_distance"
-		name="<?php echo $name; // WPCS: XSS ok. ?>[distance]" 
-		value="<?php echo $default_radius; // WPCS: XSS ok. ?>"
-		class="gmw-bpsgeo-distance-field"
-	>
+	<input type="hidden" id="<?php echo $id; // WPCS: XSS ok. ?>_distance"
+		name="<?php echo $name; // WPCS: XSS ok. ?>[distance]" value="<?php echo $default_radius; // WPCS: XSS ok. ?>"
+		class="gmw-bpsgeo-distance-field">
 <?php } ?>
 
 <?php if ( 'both' === $geo_options['gmw_bpsgeo_units'] ) { ?>
 
 	<div class="gmw-bpsgeo-units-field-wrap bps-selectbox gmw-bpsgeo-location-field-wrap two columns hz-textbox">
 
-		<select 
-			id="<?php echo $id; // WPCS: XSS ok. ?>_units"
-			class="gmw-bpsgeo-units-field form-control" 
+		<select id="<?php echo $id; // WPCS: XSS ok. ?>_units" class="gmw-bpsgeo-units-field form-control"
 			name="<?php echo $name; // WPCS: XSS ok. ?>[units]">
 
 			<option value="imperial" selected="selected">
-				<?php esc_html_e( 'Mi', 'geo-my-wp' ); ?>		
+				<?php esc_html_e( 'Mi', 'geo-my-wp' ); ?>
 			</option>
 
 			<option value="metric" <?php selected( $bpsgeo_values['units'], 'metric' ); ?>>
@@ -120,29 +108,17 @@
 	</div>
 
 <?php } else { ?>
-	<input 
-		type="hidden"
-		id="<?php echo $id; // WPCS: XSS ok. ?>_units"
-		class="gmw-bpsgeo-units-field"
+	<input type="hidden" id="<?php echo $id; // WPCS: XSS ok. ?>_units" class="gmw-bpsgeo-units-field"
 		name="<?php echo $name; // WPCS: XSS ok. ?>[units]"
-		value="<?php echo esc_attr( $geo_options['gmw_bpsgeo_units'] ); ?>"
-	>
+		value="<?php echo esc_attr( $geo_options['gmw_bpsgeo_units'] ); ?>">
 <?php } ?>
 
-<input 
-	type="hidden"
-	id="<?php echo $id; // WPCS: XSS ok. ?>_lat"
-	class="gmw-bpsgeo-lat gmw-lat"
+<input type="hidden" id="<?php echo $id; // WPCS: XSS ok. ?>_lat" class="gmw-bpsgeo-lat gmw-lat"
 	name="<?php echo $name; // WPCS: XSS ok. ?>[lat]"
-	value="<?php echo ! empty( $bpsgeo_values['lat'] ) ? esc_attr( $bpsgeo_values['lat'] ) : ''; ?>"
->
-<input 
-	type="hidden"
-	id="<?php echo $id; // WPCS: XSS ok. ?>_lng"
-	class="gmw-bpsgeo-lng gmw-lng"
+	value="<?php echo ! empty( $bpsgeo_values['lat'] ) ? esc_attr( $bpsgeo_values['lat'] ) : ''; ?>">
+<input type="hidden" id="<?php echo $id; // WPCS: XSS ok. ?>_lng" class="gmw-bpsgeo-lng gmw-lng"
 	name="<?php echo $name; // WPCS: XSS ok. ?>[lng]"
-	value="<?php echo ! empty( $bpsgeo_values['lng'] ) ? esc_attr( $bpsgeo_values['lng'] ) : ''; ?>"
->
+	value="<?php echo ! empty( $bpsgeo_values['lng'] ) ? esc_attr( $bpsgeo_values['lng'] ) : ''; ?>">
 
 <?php
 // enqueue location field JS file.
