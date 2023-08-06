@@ -896,46 +896,73 @@ class GMW_Search_Form_Helper {
 			$gmw['search_results']['per_page'] = 10;
 		}
 
-		$per_page = esc_attr( current( explode( ',', $gmw['search_results']['per_page'] ) ) );
-		$id       = absint( $gmw['ID'] );
-		$url_px   = gmw_get_url_prefix();
-		$url_px   = esc_attr( $url_px );
-		$lat      = ! empty( $_GET[ $url_px . 'lat' ] ) ? sanitize_text_field( wp_unslash( $_GET[ $url_px . 'lat' ] ) ) : ''; // phpcs:ignore: CSRF ok.
-		$lng      = ! empty( $_GET[ $url_px . 'lng' ] ) ? sanitize_text_field( wp_unslash( $_GET[ $url_px . 'lng' ] ) ) : ''; // phpcs:ignore: CSRF ok.
-		$state    = ! empty( $_GET['state'] ) ? sanitize_text_field( wp_unslash( $_GET['state'] ) ) : false; // phpcs:ignore: CSRF ok.
-		$country  = ! empty( $_GET['country'] ) ? sanitize_text_field( wp_unslash( $_GET['country'] ) ) : false; // phpcs:ignore: CSRF ok.
+		$prefix   = esc_attr( gmw_get_url_prefix() );
+		$id       = esc_attr( absint( $gmw['ID'] ) );
+
+		if ( ! empty( $_GET[ $prefix . 'lat' ] ) ) {
+			$lat = sanitize_text_field( wp_unslash( $_GET[ $prefix . 'lat' ] ) );
+			$lat = esc_attr( filter_var( $lat, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION ) );
+		} else {
+			$lat = '';
+		}
+
+		if ( ! empty( $_GET[ $prefix . 'lng' ] ) ) {
+			$lng = sanitize_text_field( wp_unslash( $_GET[ $prefix . 'lng' ] ) );
+			$lng = esc_attr( filter_var( $lng, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION ) );
+		} else {
+			$lng = '';
+		}
 
 		// generate fields.
-		$output = "<div id=\"gmw-submission-fields-{$id}\" class=\"gmw-submission-fields\" data-form_id=\"{$id}\" style=\"display:none\">";
+		$output = '<div id="gmw-submission-fields-' . $id . '" class="gmw-submission-field" data-form_id="' . $id . '" style="display:none">';
+
 		// set the page number to 1. We do this to reset the page number when form submitted again.
-		$output .= "<input type=\"hidden\" id=\"gmw-page-{$id}\" class=\"gmw-page\" name=\"page\" value=\"1\" />";
+		$output .= '<input type="hidden" id="gmw-page-' . $id . '" class="gmw-page" name="page" value="1" />';
 
 		// Fix for home page pagination when going to the first page.
 		if ( is_front_page() || is_single() ) {
-			$output .= "<input type=\"hidden\" id=\"gmw-paged-{$id}\" class=\"gmw-paged\" name=\"paged\" value=\"1\" />";
+			$output .= '<input type="hidden" id="gmw-paged-' . $id . '" class="gmw-paged" name="paged" value="1" />';
 		}
 
-		$output .= "<input type=\"hidden\" id=\"gmw-per-page-{$id}\" class=\"gmw-per-page\" name=\"{$url_px}per_page\" value=\"{$per_page}\" />";
-		$output .= "<input type=\"text\" id=\"gmw-lat-{$id}\" class=\"gmw-lat\" name=\"{$url_px}lat\" value=\"{$lat}\" style=\"display:none\" />";
-		$output .= "<input type=\"text\" id=\"gmw-lng-{$id}\" class=\"gmw-lng\" name=\"{$url_px}lng\" value=\"{$lng}\" style=\"display:none\" />";
+		$per_page = absint( current( explode( ',', $gmw['search_results']['per_page'] ) ) );
+
+		$output .= '<input type="hidden" id="gmw-per-page-' . $id . '" class="gmw-per-page" name="' . $prefix .'per_page" value="' . esc_attr( $per_page ) . '" />';
+		$output .= '<input type="hidden" id="gmw-lat-' . $id . '" class="gmw-lat" name="' . $prefix . 'lat" value="' . $lat . '" />';
+		$output .= '<input type="hidden" id="gmw-lng-' . $id . '" class="gmw-lng" name="' . $prefix . 'lng" value="' . $lng . '" />';
+
+		if ( 'global_maps' === $gmw['addon'] || 'ajax_forms' === $gmw['addon'] ) {
+			$output .= '<input type="hidden" id="gmw-swlatlng-' . $id . '" class="gmw-swlatlng" name="swlatlng" />';
+			$output .= '<input type="hidden" id="gmw-nelatlng-' . $id . '" class="gmw-nelatlng" name="nelatlng" />';
+		}
+
+		// State boundaries.
 		if ( ! empty( $gmw['boundaries_search']['state'] ) ) {
-			$disabled = ! $state ? 'disabled="disabled"' : '';
-			$output .= '<input type="text" id="gmw-state-' . $id . '" class="gmw-state" name="state" value="' . $state . '" ' . $disabled . ' style="display:none" />';
+
+			if ( ! empty( $_GET['state'] ) ) {
+				$state = str_replace( '=', '', sanitize_text_field( wp_unslash( $_GET['state'] ) ) );
+				$state = esc_attr( filter_var( $state ) );
+			} else {
+				$state = '';
+			}
+			echo $state;
+			$output .= '<input type="hidden" id="gmw-state-' . $id . '" class="gmw-state" name="state" value="' . $state . '" />';
 		}
 
+		// Country boundaries.
 		if ( ! empty( $gmw['boundaries_search']['country'] ) ) {
-			$disabled = ! $country ? 'disabled="disabled"' : '';
-			$output .= '<input type="text" id="gmw-country-' . $id . '" class="gmw-country" name="country" value="' . $country .'" ' . $disabled . ' style="display:none" />';
-		}
-		$output .= "<input type=\"hidden\" id=\"gmw-form-id-{$id}\" class=\"gmw-form-id\" name=\"{$url_px}form\" value=\"{$id}\" />";
-		$output .= "<input type=\"hidden\" id=\"gmw-action-{$id}\" class=\"gmw-action\" name=\"{$url_px}action\" value=\"fs\"/>";
-		$output .= "<input type=\"hidden\" id=\"gmw-swlatlng-{$id}\" class=\"gmw-swlatlng\" name=\"swlatlng\" />";
-		$output .= "<input type=\"hidden\" id=\"gmw-nelatlng-{$id}\" class=\"gmw-nelatlng\" name=\"nelatlng\" />";
 
-		$disabled = ! $state ? 'disabled="disabled"' : '';
-		$output  .= "<input type=\"text\" id=\"gmw-state-{$id}\" class=\"gmw-state\" name=\"state\" value=\"{$state}\" {$disabled} style=\"display:none\" />";
-		$disabled = ! $country ? 'disabled="disabled"' : '';
-		$output  .= "<input type=\"text\" id=\"gmw-country-{$id}\" class=\"gmw-country\" name=\"country\" value=\"{$country}\" {$disabled} style=\"display:none\" />";
+			if ( ! empty( $_GET['country'] ) ) {
+				$country = sanitize_key( wp_unslash( $_GET['country'] ) );
+				$country = esc_attr( filter_var( $country ) );
+			} else {
+				$country = '';
+			}
+
+			$output .= '<input type="hidden" id="gmw-country-' . $id . '" class="gmw-country" name="country" value="' . $country . '" />';
+		}
+
+		$output .= '<input type="hidden" id="gmw-form-id-' . $id . '" class="gmw-form-id" name="' . $prefix . 'form" value="' . $id . '" />';
+		$output .= '<input type="hidden" id="gmw-action-' . $id . '" class="gmw-action" name="' . $prefix . 'action" value="fs"/>';
 
 		$output = apply_filters( 'gmw_submission_fields', $output, $id, $_GET ); // phpcs:ignore: CSRF ok.
 
