@@ -160,3 +160,5 @@ $address_value = ! empty( $bpsgeo_values['address'] ) ? esc_attr( $bpsgeo_values
 if ( ! wp_script_is( 'gmw-bpsgeo', 'enqueued' ) ) {
 	wp_enqueue_script( 'gmw-bpsgeo' );
 }
+
+do_action( 'gmw_element_loaded', 'bp_profile_search_geolocation', $geo_options );

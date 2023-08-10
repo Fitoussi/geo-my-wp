@@ -50,3 +50,5 @@ if ( function_exists( 'sweetdate_setup' ) ) {
 } else {
 	include 'bps-form-base.php';
 }
+
+do_action( 'gmw_element_loaded', 'bp_profile_search_geolocation', $geo_options );
