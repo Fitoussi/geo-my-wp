@@ -20,7 +20,7 @@
  */
 
 ?>
-<div class="gmw-results">
+<div class="gmw-results woocommerce">
 
 	<?php do_action( 'gmw_search_results_start', $gmw ); ?>
 
@@ -39,12 +39,19 @@
 		<?php gmw_search_results_orderby_filter( $gmw ); ?>
 
 		<?php gmw_results_view_toggle( $gmw ); ?>
-	</div> 
+	</div>
 
 	<?php do_action( 'gmw_search_results_before_loop', $gmw ); ?>
 
-	<div class="gmw-results-list posts-list-wrapper">
+	<div class="gmw-results-list posts-list-wrapper woogridrev products">
 		<?php
+
+		// Load single item file path from ReHub theme.
+		$file_path = function_exists( 'rh_locate_template' ) ? rh_locate_template( 'inc/parts/woogridrev.php' ) : '';
+
+		// Change file path if needed.
+		$file_path = apply_filters( 'gmw_rehub_single_template_file_path', $file_path, $gmw );
+
 		while ( $gmw_query->have_posts() ) {
 
 			$gmw_query->the_post();
@@ -67,7 +74,7 @@
 
 	<div class="gmw-pagination-wrapper">
 		<?php gmw_pagination( $gmw ); ?>
-	</div> 
+	</div>
 
 	<?php do_action( 'gmw_search_results_end', $gmw ); ?>
 

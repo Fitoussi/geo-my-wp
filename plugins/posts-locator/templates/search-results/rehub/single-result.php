@@ -21,6 +21,7 @@
  * @package geo-my-wp
  */
 
- if ( function_exists( 'rh_locate_template' ) ) {
-	include( rh_locate_template( 'inc/parts/woogridrev.php' ) );
- }
+// $file_path is generated in the results.php file.
+if ( ! empty( $file_path ) ) {
+	include( $file_path );
+}
