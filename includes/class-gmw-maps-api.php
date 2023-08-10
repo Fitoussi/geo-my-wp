@@ -237,8 +237,10 @@ class GMW_Maps_API {
 			$output['boundaries_filter'] .= '</label></div>';
 		}
 
-		$output['cover'] = '<div id="gmw-map-loader-' . $map_id . '" class="gmw-map-loader"></div>';
-		$output['map']   = "<div id=\"gmw-map-{$map_id}\" class=\"gmw-map {$prefix} {$map_type}\" style=\"width:100%; height:100%\" data-map_id=\"{$map_id}\" data-prefix=\"{$prefix}\" data-map_type=\"{$map_type}\" data-icons_usage=\"{$icons_usage}\"></div>";
+		$loader_class = class_exists( 'COMPLIANZ' ) ? ' gmw-map-cover' : '';
+
+		$output['loader'] = '<div id="gmw-map-loader-' . $map_id . '" class="gmw-map-loader' . $loader_class . '"></div>';
+		$output['map']    = "<div id=\"gmw-map-{$map_id}\" class=\"gmw-map {$prefix} {$map_type}\" style=\"width:100%; height:100%\" data-map_id=\"{$map_id}\" data-prefix=\"{$prefix}\" data-map_type=\"{$map_type}\" data-icons_usage=\"{$icons_usage}\"></div>";
 		// phpcs:ignore.
 		// $output['loader'] = "<i id=\"gmw-map-loader-{$map_id}\" class=\"gmw-map-loader gmw-icon-spin-light animate-spin\"></i>";
 		$output['/wrap'] = '</div>';
