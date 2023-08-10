@@ -479,163 +479,160 @@ class GMW_Forms_Helper {
 					'step'                    => 1,
 				);
 			}
+		}
 
-			if ( ! empty( $form['search_form']['taxonomies'] ) ) {
+		// For Global Maps only.
+		if ( 'posts_locator_global_map' === $form['slug'] ) {
 
-				$new_taxonomies = array();
-				$all_post_types = get_post_types();
+			// Page Load taxonomies.
+			if ( isset( $form['page_load_results']['include_exclude_terms']['usage'] ) && ! empty( $form['page_load_results']['include_exclude_terms']['terms_id'] ) ) {
 
-				if ( 'posts_locator_global_map' === $form['slug'] ) {
+				$terms_usage = $form['page_load_results']['include_exclude_terms']['usage'];
 
-					if ( isset( $form['search_form']['taxonomies']['include_exclude_terms']['usage'] ) && ! empty( $form['search_form']['taxonomies']['include_exclude_terms']['terms_id'] ) ) {
+				foreach ( $form['page_load_results']['include_exclude_terms']['terms_id'] as $term_tax_id ) {
 
-						$terms_usage = $form['search_form']['taxonomies']['include_exclude_terms']['usage'];
+					$term = get_term_by( 'term_taxonomy_id', $term_tax_id );
 
-						foreach ( $form['search_form']['taxonomies']['include_exclude_terms']['terms_id'] as $term_tax_id ) {
-
-							$term = get_term_by( 'term_taxonomy_id', $term_tax_id );
-
-							if ( empty( $term ) || is_wp_error( $term ) ) {
-								continue;
-							}
-
-							if ( ! isset( $form['search_form']['taxonomies']['include_exclude_terms'][ $term->taxonomy ] ) ) {
-
-								$form['search_form']['taxonomies']['include_exclude_terms'][ $term->taxonomy ] = array(
-									'post_types' => array(),
-									'include'    => array(),
-									'exclude'    => array(),
-								);
-							}
-
-							$form['search_form']['taxonomies']['include_exclude_terms'][ $term->taxonomy ][ $terms_usage ][] = $term->term_id;
-						}
-
-						unset(
-							$form['search_form']['taxonomies']['include_exclude_terms']['usage'],
-							$form['search_form']['taxonomies']['include_exclude_terms']['terms_id']
-						);
-					}
-
-					if ( isset( $form['page_load_results']['include_exclude_terms']['usage'] ) && ! empty( $form['page_load_results']['include_exclude_terms']['terms_id'] ) ) {
-
-						$terms_usage = $form['page_load_results']['include_exclude_terms']['usage'];
-
-						foreach ( $form['page_load_results']['include_exclude_terms']['terms_id'] as $term_tax_id ) {
-
-							$term = get_term_by( 'term_taxonomy_id', $term_tax_id );
-
-							if ( empty( $term ) || is_wp_error( $term ) ) {
-								continue;
-							}
-
-							if ( ! isset( $form['page_load_results']['include_exclude_terms'][ $term->taxonomy ] ) ) {
-
-								$form['page_load_results']['include_exclude_terms'][ $term->taxonomy ] = array(
-									'post_types' => array(),
-									'include'    => array(),
-									'exclude'    => array(),
-								);
-							}
-
-							$form['page_load_results']['include_exclude_terms'][ $term->taxonomy ][ $terms_usage ][] = $term->term_id;
-						}
-
-						unset(
-							$form['page_load_results']['include_exclude_terms']['usage'],
-							$form['page_load_results']['include_exclude_terms']['terms_id']
-						);
-					}
-				}
-
-				$inc_exc_terms = isset( $form['search_form']['taxonomies']['include_exclude_terms'] ) ? $form['search_form']['taxonomies']['include_exclude_terms'] : array();
-
-				foreach ( $form['search_form']['taxonomies'] as $pt_slug => $pt_options ) {
-
-					if ( 'include_exclude_terms' === $pt_slug ) {
-
-						// phpcs:ignore.
-						// $inc_exc_terms = $form['search_form']['taxonomies']['include_exclude_terms'];
-
+					if ( empty( $term ) || is_wp_error( $term ) ) {
 						continue;
 					}
 
-					foreach ( $pt_options as $tax_name => $tax_options ) {
+					if ( ! isset( $form['page_load_results']['include_exclude_terms'][ $term->taxonomy ] ) ) {
 
-						if ( empty( $tax_options['style'] ) ) {
-							continue;
-						}
-
-						$taxonomy = get_taxonomy( $tax_name );
-
-						$new_taxonomies[ $tax_name ] = $tax_options;
-						$pt_added                    = false;
-
-						// Abort if taxonomies was not found.
-						if ( ! empty( $taxonomy ) && is_object( $taxonomy ) ) {
-
-							$post_types = $taxonomy->object_type;
-
-							if ( 0 !== count( array_intersect( $post_types, $all_post_types ) ) ) {
-
-								$new_taxonomies[ $tax_name ]['post_types'] = $post_types;
-
-								if ( ! empty( $inc_exc_terms[ $tax_name ] ) ) {
-									$inc_exc_terms[ $tax_name ]['post_types'] = $post_types;
-								}
-
-								if ( ! empty( $form['page_load_results']['include_exclude_terms'][ $tax_name ] ) ) {
-									$form['page_load_results']['include_exclude_terms'][ $tax_name ]['post_types'] = $post_types;
-								}
-
-								$pt_added = true;
-							}
-						}
-
-						if ( ! $pt_added ) {
-
-							$new_taxonomies[ $tax_name ]['post_types'] = array( $pt_slug );
-
-							if ( ! empty( $inc_exc_terms[ $tax_name ] ) ) {
-								$inc_exc_terms[ $tax_name ]['post_types'] = array( $pt_slug );
-							}
-
-							if ( ! empty( $form['page_load_results']['include_exclude_terms'][ $tax_name ] ) ) {
-								$form['page_load_results']['include_exclude_terms'][ $tax_name ]['post_types'] = array( $pt_slug );
-							}
-						}
-
-						// skip If post type of the taxonomy does not exists.
-						// phpcs:disable.
-						/*if ( 0 === count( array_intersect( $post_types, $all_post_types ) ) ) {
-							continue;
-						}
-						*/
-						// phpcs:enable.
-
-						if ( 'dropdown' === $tax_options['style'] ) {
-
-							$new_taxonomies[ $tax_name ]['style'] = 'select';
-
-						} elseif ( 'smartbox' === $tax_options['style'] ) {
-
-							$new_taxonomies[ $tax_name ]['style']    = 'select';
-							$new_taxonomies[ $tax_name ]['smartbox'] = 1;
-
-						} elseif ( 'smartbox_multiple' === $tax_options['style'] ) {
-
-							$new_taxonomies[ $tax_name ]['style']    = 'multiselect';
-							$new_taxonomies[ $tax_name ]['smartbox'] = 1;
-
-						} elseif ( 'checkbox' === $tax_options['style'] ) {
-
-							$new_taxonomies[ $tax_name ]['style'] = 'checkboxes';
-						}
+						$form['page_load_results']['include_exclude_terms'][ $term->taxonomy ] = array(
+							'post_types' => array(),
+							'include'    => array(),
+							'exclude'    => array(),
+						);
 					}
+
+					$form['page_load_results']['include_exclude_terms'][ $term->taxonomy ][ $terms_usage ][] = $term->term_id;
 				}
 
-				$form['search_form']['taxonomies']            = $new_taxonomies;
-				$form['search_form']['include_exclude_terms'] = $inc_exc_terms;
+				unset(
+					$form['page_load_results']['include_exclude_terms']['usage'],
+					$form['page_load_results']['include_exclude_terms']['terms_id']
+				);
+			}
+
+			// Search Form taxonomies.
+			if ( isset( $form['search_form']['taxonomies']['include_exclude_terms']['usage'] ) && ! empty( $form['search_form']['taxonomies']['include_exclude_terms']['terms_id'] ) ) {
+
+				$terms_usage = $form['search_form']['taxonomies']['include_exclude_terms']['usage'];
+
+				foreach ( $form['search_form']['taxonomies']['include_exclude_terms']['terms_id'] as $term_tax_id ) {
+
+					$term = get_term_by( 'term_taxonomy_id', $term_tax_id );
+
+					if ( empty( $term ) || is_wp_error( $term ) ) {
+						continue;
+					}
+
+					if ( ! isset( $form['search_form']['taxonomies']['include_exclude_terms'][ $term->taxonomy ] ) ) {
+
+						$form['search_form']['taxonomies']['include_exclude_terms'][ $term->taxonomy ] = array(
+							'post_types' => array(),
+							'include'    => array(),
+							'exclude'    => array(),
+						);
+					}
+
+					$form['search_form']['taxonomies']['include_exclude_terms'][ $term->taxonomy ][ $terms_usage ][] = $term->term_id;
+				}
+
+				unset(
+					$form['search_form']['taxonomies']['include_exclude_terms']['usage'],
+					$form['search_form']['taxonomies']['include_exclude_terms']['terms_id']
+				);
+			}
+		}
+
+		if ( ! empty( $form['search_form']['taxonomies'] ) ) {
+
+			$new_taxonomies = array();
+			$all_post_types = get_post_types();
+			$inc_exc_terms  = isset( $form['search_form']['taxonomies']['include_exclude_terms'] ) ? $form['search_form']['taxonomies']['include_exclude_terms'] : array();
+
+			foreach ( $form['search_form']['taxonomies'] as $pt_slug => $pt_options ) {
+
+				if ( 'include_exclude_terms' === $pt_slug ) {
+					continue;
+				}
+
+				foreach ( $pt_options as $tax_name => $tax_options ) {
+
+					if ( empty( $tax_options['style'] ) ) {
+						continue;
+					}
+
+					$taxonomy                    = get_taxonomy( $tax_name );
+					$new_taxonomies[ $tax_name ] = $tax_options;
+					$pt_added                    = false;
+
+					if ( ! empty( $taxonomy ) && is_object( $taxonomy ) ) {
+
+						$post_types = $taxonomy->object_type;
+
+						if ( 0 !== count( array_intersect( $post_types, $all_post_types ) ) ) {
+
+							$new_taxonomies[ $tax_name ]['post_types'] = $post_types;
+
+							if ( ! empty( $inc_exc_terms[ $tax_name ] ) ) {
+								$inc_exc_terms[ $tax_name ]['post_types'] = $post_types;
+							}
+
+							/*if ( ! empty( $form['page_load_results']['include_exclude_terms'][ $tax_name ] ) ) {
+								$form['page_load_results']['include_exclude_terms'][ $tax_name ]['post_types'] = $post_types;
+							}*/
+
+							$pt_added = true;
+						}
+					}
+
+					if ( ! $pt_added ) {
+
+						$new_taxonomies[ $tax_name ]['post_types'] = array( $pt_slug );
+
+						if ( ! empty( $inc_exc_terms[ $tax_name ] ) ) {
+							$inc_exc_terms[ $tax_name ]['post_types'] = array( $pt_slug );
+						}
+
+						/*if ( ! empty( $form['page_load_results']['include_exclude_terms'][ $tax_name ] ) ) {
+							$form['page_load_results']['include_exclude_terms'][ $tax_name ]['post_types'] = array( $pt_slug );
+						}*/
+					}
+
+					// skip If post type of the taxonomy does not exists.
+					// phpcs:disable.
+					/*if ( 0 === count( array_intersect( $post_types, $all_post_types ) ) ) {
+						continue;
+					}
+					*/
+					// phpcs:enable.
+
+					if ( 'dropdown' === $tax_options['style'] ) {
+
+						$new_taxonomies[ $tax_name ]['style'] = 'select';
+
+					} elseif ( 'smartbox' === $tax_options['style'] ) {
+
+						$new_taxonomies[ $tax_name ]['style']    = 'select';
+						$new_taxonomies[ $tax_name ]['smartbox'] = 1;
+
+					} elseif ( 'smartbox_multiple' === $tax_options['style'] ) {
+
+						$new_taxonomies[ $tax_name ]['style']    = 'multiselect';
+						$new_taxonomies[ $tax_name ]['smartbox'] = 1;
+
+					} elseif ( 'checkbox' === $tax_options['style'] ) {
+
+						$new_taxonomies[ $tax_name ]['style'] = 'checkboxes';
+					}
+				}
+			}
+
+			$form['search_form']['taxonomies']            = $new_taxonomies;
+			$form['search_form']['include_exclude_terms'] = $inc_exc_terms;
 
 				// phpcs:disable.
 				/*if ( 'posts_locator_global_map' === $form['slug'] && isset( $form['search_form']['include_exclude_terms']['usage'] ) && ! empty( $form['search_form']['include_exclude_terms']['terms_id'] ) ) {
@@ -648,7 +645,6 @@ class GMW_Forms_Helper {
 					}
 				} */
 				// phpcs:enable.
-			}
 		}
 
 		/* ----- Search Results ----- */
