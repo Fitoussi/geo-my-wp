@@ -494,7 +494,7 @@ if ( ! class_exists( 'GMW_License' ) ) :
 				}
 
 				// generate input fields.
-				$key_field = '<input  class="gmw-license-key" name="gmw_licenses[' . $license_name . '][license_key]" type="text" class="regular-text" size="31" placeholder="' . __( 'Enter your license key', 'geo-my-wp' ) . '" value="' . $license_value . '" />';
+				$key_field = '<input  class="gmw-license-key" name="gmw_licenses[' . $license_name . '][license_key]" type="text" class="regular-text" size="31" placeholder="' . __( 'Enter your license key then activated it', 'geo-my-wp' ) . '" value="' . $license_value . '" />';
 			}
 
 			// if not in plugins page.
@@ -560,8 +560,8 @@ if ( ! class_exists( 'GMW_License' ) ) :
 
 							if ( $( 'tr#<?php echo $file; // WPCS: XSS ok. ?>-license-key-row' ).prev().hasClass( 'update' ) ) {
 
-								$( 'tr#<?php echo $file; // WPCS: XSS ok. ?>-license-key-row' ).addClass( 'update' ); 
-							}	
+								$( 'tr#<?php echo $file; // WPCS: XSS ok. ?>-license-key-row' ).addClass( 'update' );
+							}
 
 							$( 'tr#<?php echo $file; // WPCS: XSS ok. ?>-license-key-row' ).find( '.gmw-license-action-button' ).click( function() {
 
