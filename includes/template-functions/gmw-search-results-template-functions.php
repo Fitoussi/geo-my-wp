@@ -94,7 +94,7 @@ function gmw_search_results_distance( $object = array(), $gmw = array(), $where 
 			$distance = '<span class="gmw-item distance">' . $distance . '</span>'; // WPCS: XSS ok.
 		}
 
-		echo $distance; // WPCS: XSS ok.	
+		echo $distance; // WPCS: XSS ok.
 	}
 }
 
@@ -342,11 +342,12 @@ function gmw_get_search_results_permalink( $url, $object, $gmw ) {
 		$url_args['distance'] = $object->distance . $object->units;
 	}
 
-	$new_url = apply_filters(
+	$parsed_url = parse_url( $url );
+	$new_url    = apply_filters(
 		'gmw_get_serach_results_permalink_args',
 		array(
 			'url'       => $url,
-			'separator' => empty( $_GET ) ? '?' : '&',
+			'separator' => empty( $parsed_url['query'] ) ? '?' : '&',
 			'args'      => $url_args,
 		),
 	);
