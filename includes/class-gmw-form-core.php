@@ -408,7 +408,7 @@ class GMW_Form_Core {
 		$this->form['max_pages']                       = 0;
 		$this->form['results_message']                 = __( 'Showing locations', 'geo-my-wp' );
 		$this->form['no_results_message']              = __( 'No results found.', 'geo-my-wp' );
-		$this->form['modify_permalink']                = 1;
+		$this->form['modify_permalink']                = 0;
 		$this->form['html_results']                    = '';
 		$this->form['no_results_map_enabled']          = true;
 		$this->form['enable_page_load_ajax']           = $this->page_load_results_ajax;
