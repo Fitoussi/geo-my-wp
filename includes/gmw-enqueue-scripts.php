@@ -105,6 +105,9 @@ function gmw_enqueue_scripts() {
 		wp_register_script( 'leaflet', GMW_URL . '/assets/lib/leaflet/leaflet.min.js', array(), '1.7.1', true );
 		wp_register_style( 'leaflet', GMW_URL . '/assets/lib/leaflet/leaflet.min.css', array(), '1.7.1' );
 
+		//wp_enqueue_script( 'locationiq-autocomplete', 'https://tiles.locationiq.com/v3/libs/leaflet-geocoder/1.9.6/leaflet-geocoder-locationiq.min.js', $map_scripts, '0.1.7', true );
+		//wp_enqueue_style( 'locationiq-autocomplete','https://tiles.locationiq.com/v3/libs/leaflet-geocoder/1.9.6/leaflet-geocoder-locationiq.min.css', array(), '1.7.1' );
+
 	} else {
 		do_action( 'gmw_register_maps_provider_' . $maps_provider );
 	}
