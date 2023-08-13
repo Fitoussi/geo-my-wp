@@ -450,3 +450,227 @@ class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 		return $location;
 	}
 }
+
+/**
+ * LocationIQ Geocoder.
+ *
+ * @since 4.0
+ *
+ * @author Eyal Fitoussi.
+ */
+class GMW_LocationIQ_Geocoder extends GMW_Geocoder {
+
+	/**
+	 * Provider.
+	 *
+	 * @var string
+	 */
+	public $provider = 'locationiq';
+
+	/**
+	 * Geoocde URL.
+	 *
+	 * @var string
+	 */
+	public $geocode_url = 'https://locationiq.com/v1/search';
+
+	/**
+	 * Reverse geocode URL.
+	 *
+	 * @var string
+	 */
+	public $reverse_geocode_url = 'https://locationiq.com/v1/reverse';
+
+	/**
+	 * Get endpoint parameters.
+	 *
+	 * @param array $options geocoder options.
+	 *
+	 * @return [type] [description]
+	 */
+	public function get_endpoint_params( $options ) {
+
+		$params = array(
+			'format'          => 'json',
+			'key'             => gmw_get_option( 'api_providers', 'locationiq_key', '' ),
+			'region'          => $options['region'],
+			'accept-language' => $options['language'],
+			'addressdetails'  => 1,
+			'zoom'            => 18,
+			'limit'           => 10,
+			'normalizecity'   => 1,
+			'statecode'       => 1,
+		);
+
+		if ( 'reverse_geocode' === $this->type ) {
+
+			$coords        = explode( ',', $this->location );
+			$params['lat'] = $coords[0];
+			$params['lon'] = $coords[1];
+
+		} else {
+			$params['q'] = urldecode( $this->location );
+		}
+
+		return $params;
+	}
+
+	/**
+	 * Return geocoding data.
+	 *
+	 * @param  object $geocoded_data geocoder data.
+	 *
+	 * @return [type]                [description]
+	 */
+	public function get_data( $geocoded_data ) {
+
+		if ( ! empty( $geocoded_data->error ) ) {
+			return array(
+				'geocoded' => false,
+				'result'   => $geocoded_data->error,
+			);
+		} else {
+			return array(
+				'geocoded' => true,
+				'result'   => $this->get_location_fields( $geocoded_data, $this->location_fields ),
+			);
+		}
+	}
+
+	/**
+	 * Look for location based on country code.
+	 *
+	 * @param  array $geocoded_data geocoder data.
+	 *
+	 * @return [type]                [description]
+	 */
+	public function get_location_by_region( $geocoded_data ) {
+
+		$location = false;
+
+		// loop through locations and get the one in the default region code.
+		foreach ( $geocoded_data as $location_details ) {
+
+			// Look for results based on country code, and abort once found.
+			if ( ! empty( $location_details->address->country_code ) && strtolower( $this->params['region'] ) === strtolower( $location_details->address->country_code ) ) {
+
+				$location = $location_details;
+
+				break;
+			}
+		}
+
+		// If location with region was not found, get the first location
+		// in the result.
+		if ( ! $location ) {
+			$location = $geocoded_data[0];
+		}
+
+		return $location;
+	}
+
+	/**
+	 * Collect Location Fields.
+	 *
+	 * @param  object $geocoded_data geocoder data.
+	 *
+	 * @param  array  $location      location data.
+	 *
+	 * @return [type]                [description]
+	 */
+	public function get_location_fields( $geocoded_data = array(), $location = array() ) {
+
+		$location_data = array();
+
+		// If multiple location returned, we will look for the
+		// result with the default country code.
+		if ( is_array( $geocoded_data ) ) {
+
+			if ( 1 === count( $geocoded_data ) ) {
+				$geocoded_data = $geocoded_data[0];
+			} else {
+				$geocoded_data = $this->get_location_by_region( $geocoded_data );
+			}
+		}
+
+		foreach ( $geocoded_data as $field_name => $field_value ) {
+
+			if ( 'display_name' === $field_name ) {
+				$location['formatted_address'] = sanitize_text_field( $field_value );
+			}
+
+			if ( 'lat' === $field_name ) {
+				$location['lat']      = sanitize_text_field( $field_value );
+				$location['latitude'] = $location['lat'];
+			}
+
+			if ( 'lon' === $field_name ) {
+				$location['lng']       = sanitize_text_field( $field_value );
+				$location['longitude'] = $location['lng'];
+			}
+
+			if ( 'place_id' === $field_name ) {
+				$location['place_id'] = sanitize_text_field( $field_value );
+			}
+		}
+
+		$address_componenets = $geocoded_data->address;
+
+		// loop through address fields and collect data.
+		foreach ( $address_componenets as $field_name => $field_value ) {
+
+			if ( 'house_number' === $field_name ) {
+				$location['street_number'] = sanitize_text_field( $field_value );
+			}
+
+			if ( 'road' === $field_name ) {
+				$location['street_name'] = sanitize_text_field( $field_value );
+				$location['street']      = $location['street_number'] . ' ' . $location['street_name'];
+			}
+
+			if ( 'city' === $field_name ) {
+				$location['city'] = sanitize_text_field( $field_value );
+			}
+
+			if ( 'county' === $field_name ) {
+				$location['county'] = sanitize_text_field( $field_value );
+			}
+
+			if ( 'state' === $field_name ) {
+				$location['region_name'] = sanitize_text_field( $field_value );
+			}
+
+			if ( 'state_code' === $field_name ) {
+				$location['region_code'] = sanitize_text_field( $field_value );
+			}
+
+			if ( 'postcode' === $field_name ) {
+				$location['postcode'] = sanitize_text_field( $field_value );
+			}
+
+			if ( 'country' === $field_name ) {
+				$location['country_name'] = sanitize_text_field( $field_value );
+			}
+
+			if ( 'country_code' === $field_name ) {
+				$location['country_code'] = sanitize_text_field( $field_value );
+			}
+		}
+
+		// Look for City in different address field.
+		if ( isset( $address_componenets->city ) ) {
+
+			$location['city'] = $address_componenets->city;
+
+		} elseif ( isset( $address_componenets->town ) ) {
+
+			$location['town'] = $address_componenets->town;
+
+		} elseif ( isset( $address_componenets->suburb ) ) {
+
+			$location['city'] = $address_componenets->suburb;
+		}
+
+		return $location;
+	}
+}

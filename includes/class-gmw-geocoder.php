@@ -374,7 +374,7 @@ class GMW_Geocoder {
 	 *
 	 * @param  string $status error message.
 	 *
-	 * @param  array  $data   geocoder data.
+	 * @param  object $data   geocoder data.
 	 *
 	 * @return [type]         [description]
 	 */
@@ -419,14 +419,8 @@ function gmw_geocoder( $raw_data = '', $force_refresh = false ) {
 	$provider = GMW()->geocoding_provider;
 
 	// Generate class name.
-	$class_name = 'GMW_' . $provider . '_Geocoder';
-
-	// verify that provider geocoding exists. Otherwise, use Nominatim as default.
-	if ( ! class_exists( 'GMW_' . $provider . '_Geocoder' ) ) {
-		$class_name = 'GMW_Nominatim_Geoocoder';
-	}
-
-	$geocoder = new $class_name( $provider );
+	$class_name = class_exists( 'GMW_' . $provider . '_Geocoder' ) ? 'GMW_' . $provider . '_Geocoder' : 'GMW_Nominatim_Geocoder';
+	$geocoder   = new $class_name( $provider );
 
 	return $geocoder->geocode( $raw_data, array(), $force_refresh );
 }

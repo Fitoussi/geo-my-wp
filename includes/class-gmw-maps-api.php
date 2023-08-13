@@ -322,11 +322,19 @@ class GMW_Maps_API {
 			$map_args['icon_size'] = explode( ',', $map_args['icon_size'] );
 		}
 
+		If ( 'locationiq' === GMW()->geocoding_provider ) {
+			$layers_url         = 'https://{s}-tiles.locationiq.com/v3/streets/r/{z}/{x}/{y}.png?key=' . gmw_get_option( 'api_providers', 'locationiq_key', '' );
+			$layers_attribution = '&copy; <a href="https://www.locationiq.com" target="_blank">LocationIQ</a> contributors';
+		} else {
+			$layers_url         = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+			$layers_attribution = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors';
+		}
+
 		// default map options.
 		$default_map_options = array(
 			'defaultCenter'          => '40.758895,-73.985131', // belongs to GMW.
-			'layersUrl'              => 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', // for leaflet.
-			'layersAttribution'      => '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors', // for leaflet.
+			'layersUrl'              => $layers_url, // for leaflet.
+			'layersAttribution'      => $layers_attribution, // for leaflet.
 			'backgroundColor'        => '#f7f5e8',
 			'disableDefaultUI'       => false,
 			'disableDoubleClickZoom' => false,

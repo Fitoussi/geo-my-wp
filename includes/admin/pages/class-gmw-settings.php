@@ -172,8 +172,9 @@ class GMW_Settings {
 			'gmw_admin_settings_api_providers_options',
 			array(
 				'maps'      => array(
-					'leaflet'     => 'LeafLet',
-					'google_maps' => 'Google Maps',
+					'leaflet'            => 'LeafLet With Nominatim ( OSM )',
+					'leaflet_locationiq' => 'LeafLet With LocationIQ',
+					'google_maps'        => 'Google Maps',
 				),
 				'geocoding' => array(),
 			)
@@ -300,7 +301,7 @@ class GMW_Settings {
 					'nominatim_options'   => array(
 						'name'            => 'nominatim_options',
 						'type'            => 'fields_group',
-						'label'           => __( 'Nominatim ( OpenStreetMaps )', 'geo-my-wp' ),
+						'label'           => __( 'Nominatim ( OpenStreetMap )', 'geo-my-wp' ),
 						'fields'          => array(
 							'nominatim_email' => array(
 								'name'        => 'nominatim_email',
@@ -310,8 +311,8 @@ class GMW_Settings {
 								'label'       => __( 'Valid Email Address', 'geo-my-wp' ),
 								'desc'        => sprintf(
 									/* translators: %1$s: link, %2$s: link. */
-									__( 'Nominatim is a geocoding provider for OpenStreetMaps. The provider requires a valid email address in order to use its services. <br />See this <a href="%1$s" target="_blank">this page</a> to learn more about this service. Also see the Nominatim <a href="%2$s" target="_blank">usage policy</a>.', 'geo-my-wp' ),
-									'https://wiki.openstreetmap.org/wiki/Nominatim',
+									__( 'Nominatim uses OpenStreetMap data for its geocoding services. It is free to use but requires a valid email address. <br />Visit <a href="%1$s" target="_blank">this page</a> to learn more about Nominatim and <a href="%2$s" target="_blank">this page</a> to learn about its usage policy.', 'geo-my-wp' ),
+									'https://nominatim.org',
 									'https://operations.osmfoundation.org/policies/nominatim/'
 								),
 								'attributes'  => array( 'size' => '50' ),
@@ -322,6 +323,32 @@ class GMW_Settings {
 						'settings_toggle' => array(
 							'element' => 'maps_provider',
 							'value'   => 'leaflet',
+						),
+					),
+					'nominatim_locationiq_options'   => array(
+						'name'            => 'locationiq_options',
+						'type'            => 'fields_group',
+						'label'           => __( 'LocationIQ', 'geo-my-wp' ),
+						'fields'          => array(
+							'locationiq_key' => array(
+								'name'        => 'locationiq_key',
+								'type'        => 'text',
+								'default'     => '',
+								'placeholder' => __( 'Enter your locationIQ access token', 'geo-my-wp' ),
+								'label'       => __( 'LocationIQ Access Token', 'geo-my-wp' ),
+								'desc'        => sprintf(
+									/* translators: %s: link to LocationIQ website. */
+									__( 'LocationIQ requires an Access Token. It offers a free Access Token that you can set up and use with GEO my WP within minutes. <br />Visit the <a href="%s" target="_blank">LocationIQ website</a> to learn more about the services it offers, the different Access Token plans, and to register and set up your Access Token.', 'geo-my-wp' ),
+									'https://locationiq.com/'
+								),
+								'attributes'  => array( 'size' => '50' ),
+								'priority'    => 5,
+							),
+						),
+						'priority'        => 30,
+						'settings_toggle' => array(
+							'element' => 'maps_provider',
+							'value'   => 'leaflet_locationiq',
 						),
 					),
 					'google_maps_options' => array(
