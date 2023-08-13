@@ -28,15 +28,15 @@
 
 	<div class="gmw-item-inner" style="<?php rh_cover_image_url( 'members', 120, true ); ?>">
 
-	    <?php do_action( 'gmw_search_results_loop_item_start', $member, $gmw ); ?>      
+	    <?php do_action( 'gmw_search_results_loop_item_start', $member, $gmw ); ?>
 
-        <?php               
+        <?php
             $membertype        = bp_get_member_type( $member->id );
             $membertype_object = bp_get_member_type_object( $membertype );
             $membertype_label  = ( !empty( $membertype_object ) && is_object( $membertype_object ) ) ? $membertype_object->labels['singular_name'] : '';
-        ?>      
+        ?>
         <?php if( $membertype_label ) { ?>
-            <span class="rh-user-m-type rh-user-m-type-<?php echo ''.$membertype;?>"><?php echo ''.$membertype_label;?></span>         
+            <span class="rh-user-m-type rh-user-m-type-<?php echo ''.$membertype;?>"><?php echo ''.$membertype_label;?></span>
         <?php } ?>
 
         <div class="gmw-item-header">
@@ -49,7 +49,7 @@
 
             <h3 class="item-title gmw-item gmw-item-title">
                 <a href="<?php bp_member_permalink(); ?>">
-                    <?php the_author_meta( 'display_name', $member->id ); ?>                         
+                    <?php the_author_meta( 'display_name', $member->id ); ?>
                 </a>
                 <?php gmw_search_results_bp_last_active( $member, $gmw ); ?>
             </h3>
