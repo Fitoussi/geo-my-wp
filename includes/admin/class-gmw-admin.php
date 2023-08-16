@@ -636,6 +636,12 @@ class GMW_Admin {
 		wp_dequeue_style( 'rtcl-admin' );
 		wp_dequeue_style( 'rtcl-public' );
 
+		// JhonnyGo theme.
+		wp_dequeue_script( 'ui-select-select2' );
+		wp_dequeue_style( 'ui-select-select2' );
+		wp_deregister_style( 'ui-select-select2' );
+		wp_deregister_script( 'ui-select-select2' );
+
 		wp_dequeue_script( 'select2' );
 		wp_dequeue_style( 'select2' );
 		wp_deregister_style( 'select2' );
@@ -682,6 +688,13 @@ class GMW_Admin {
 			wp_enqueue_style( 'wp-color-picker' );
 			wp_enqueue_script( 'wp-color-picker' );
 		}
+		?>
+		<style>
+			html {
+				font-size: 16px ! important;
+			}
+		</style>
+		<?php
 	}
 
 	/**
