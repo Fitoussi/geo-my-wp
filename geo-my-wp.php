@@ -411,17 +411,24 @@ class GEO_MY_WP {
 		$this->addons_status = $addons_status;
 		$this->ajax_url      = admin_url( 'admin-ajax.php', is_ssl() ? 'admin' : 'http' );
 		$this->is_mobile     = ( function_exists( 'wp_is_mobile' ) && wp_is_mobile() ) ? true : false;
-		$this->maps_provider = ! empty( $this->options['api_providers']['maps_provider'] ) ? $this->options['api_providers']['maps_provider'] : 'google_maps';
+
+		if ( empty( $this->options['api_providers']['maps_provider'] ) || strpos( $this->options['api_providers']['maps_provider'], 'leaflet' ) !== false ) {
+			$this->maps_provider = 'leaflet';
+			$this->geocoding_provider = $this->options['api_providers']['maps_provider'] === 'leaflet' ? 'nominatim' : str_replace( 'leaflet_', '', $this->options['api_providers']['maps_provider'] );
+		} else {
+			$this->maps_provider = 'google_maps';
+			$this->geocoding_provider = 'google_maps';
+		}
 
 		// set default icons.
 		$this->set_default_icons();
 
 		// verify geocoding provider.
-		if ( ! empty( $this->options['api_providers']['geocoding_provider'] ) ) {
+		/*if ( ! empty( $this->options['api_providers']['geocoding_provider'] ) ) {
 			$this->geocoding_provider = $this->options['api_providers']['geocoding_provider'];
 		} elseif ( 'google_maps' !== $this->maps_provider ) {
 			$this->geocoding_provider = 'nominatim';
-		}
+		}*/
 	}
 
 	/**
