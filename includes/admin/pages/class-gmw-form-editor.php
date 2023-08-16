@@ -2857,6 +2857,7 @@ class GMW_Form_Editor {
 						<div id="settings-<?php echo $tab; // phpcs:ignore: XSS ok. ?>" class="gmw-settings-form gmw-tab-panel <?php echo $tab; // phpcs:ignore: XSS ok. ?> <?php echo $this_class; // phpcs:ignore: XSS ok. ?>">
 
 							<?php
+
 							// Tab notice.
 							if ( ! empty( $this->form_settings_groups[ $tab ]['notice'] ) ) {
 
@@ -3071,6 +3072,7 @@ class GMW_Form_Editor {
 
 							<?php } ?>
 							<?php
+
 							// Deprecated actions. Incorreect names.
 							do_action( 'form_editor_tab_end', $tab, $section, $this->form['ID'], $this->form );
 							do_action( 'form_editor_' . $tab . '_tab_end', $tab, $section, $this->form['ID'], $this->form );
@@ -3081,36 +3083,35 @@ class GMW_Form_Editor {
 							?>
 						</div>
 					<?php } ?>
-					<?php
-					/*
-					<div id="gmw-jump-to-option-wrapper">
 
-						<select id="jump-top-option" class="gmw-smartbox-no">
+					<div id="gmw-go-to-option-wrapper">
 
-							<option value=""><?php echo _e( 'Jump to option', 'geo-my-wp' ); ?></option>
+						<select id="go-top-option" class="gmw-smartbox-not" style="padding: 6px 12px;font-size:13px;">
 
-							<optgroup label="Page Load Results">
+							<option value=""><?php echo esc_attr__( 'Go to option', 'geo-my-wp' ); ?></option>
+
 							<?php
-
-							$current_tab = 'Page Load Results';
+							$current_tab = '';
 
 							foreach( $tab_options as $tab_option => $tab_args ) { ?>
 
-								<?php if ( $current_tab !== $tab_args['tab_label'] ) { ?>
+								<?php if ( $current_tab !== $tab_args['tab'] ) { ?>
 
-									</optgroup><optgroup label="<?php echo $tab_args['tab_label']; ?>">
+									<?php if ( '' !== $current_tab ) { ?>
+										</optgroup>
+									<?php } ?>
 
-									<?php $current_tab = $tab_args['tab_label']; ?>
-
+									<optgroup label="<?php echo $tab_args['tab_label']; ?>">
 								<?php } ?>
 
 								<option value="<?php echo $tab_args['tab']; ?>|<?php echo $tab_args['id']; ?>"><?php echo $tab_args['label']; ?></option>
 
+								<?php $current_tab = $tab_args['tab']; ?>
 							<?php } ?>
 						</select>
 					</div>
-					*/
-					?>
+
+
 				</div>
 			</div>
 		</form>
