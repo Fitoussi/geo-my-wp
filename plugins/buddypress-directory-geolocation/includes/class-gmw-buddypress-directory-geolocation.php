@@ -156,6 +156,13 @@ class GMW_BuddyPress_Directory_Geolocation {
 	public $radius_values = array();
 
 	/**
+	 * Remove some filters related to the search query after proximity query was already performed.
+	 *
+	 * This can be used if the extension conflict with other queries on the page ( such as widgets ).
+	 */
+	public $remove_query_hooks = true;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -171,12 +178,13 @@ class GMW_BuddyPress_Directory_Geolocation {
 			return;
 		}
 
-		$this->is_bp_nouveau     = function_exists( 'bp_nouveau' ) ? true : false;
-		$this->form['component'] = 'bp_directiory_geolocation';
-		$this->form['addon']     = 'bp_' . $this->component . 's_directiory_geolocation';
-		$this->form['prefix']    = $this->prefix;
-		$this->form['units']     = 'metric' === $this->options['units'] ? 'metric' : 'imperial';
-		$this->form['options']   = $this->options;
+		$this->is_bp_nouveau      = function_exists( 'bp_nouveau' ) ? true : false;
+		$this->form['component']  = 'bp_directiory_geolocation';
+		$this->form['addon']      = 'bp_' . $this->component . 's_directiory_geolocation';
+		$this->form['prefix']     = $this->prefix;
+		$this->form['units']      = 'metric' === $this->options['units'] ? 'metric' : 'imperial';
+		$this->form['options']    = $this->options;
+		$this->remove_query_hooks = apply_filters( 'gmw_bp_directory_remove_query_hooks', $this->remove_query_hooks, $this );
 
 		// labels.
 		$this->labels            = $this->labels();
@@ -318,7 +326,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 
 			} elseif ( function_exists( 'buddyx_template_pack_check' ) ) {
 
-				add_filter( 'bp_nouveau_get_member_meta', array( $this, 'add_elements_to_results_buddyx' ) );
+				add_filter( 'bp_nouveau_get_member_meta', array( $this, 'add_elements_to_results_buddyx' ), 50 );
 				add_action( 'bp_directory_groups_item', array( $this, 'add_elements_to_results' ) );
 
 				// For other themes.
@@ -436,9 +444,10 @@ class GMW_BuddyPress_Directory_Geolocation {
 		wp_enqueue_script( 'gmw-bpdg' );
 
 		$args = array(
-			'prefix'       => $this->prefix,
-			'component'    => $this->component,
-			'is_buddyboss' => $this->is_buddyboss,
+			'prefix'             => $this->prefix,
+			'component'          => $this->component,
+			'is_buddyboss'       => $this->is_buddyboss,
+			'is_buddyboss_theme' => function_exists( 'buddyboss_theme' ) ? true : false,
 		);
 
 		wp_localize_script( 'gmw-bpdg', 'gmwBpdg', $args );
