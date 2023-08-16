@@ -51,7 +51,7 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 	 *
 	 * @var string
 	 */
-	public $description = 'Geotag Buddypress members and create proximity form to search and find BuddyPress members location based.';
+	public $description = 'Geotag BuddyPress members and create proximity form to search and find BuddyPress members location based.';
 
 	/**
 	 * Object type.
@@ -101,10 +101,15 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 	 * @return [type] [description]
 	 */
 	public function admin_settings_groups() {
+
+		global $buddyboss_platform_plugin_file;
+
+		$title = ! empty( $buddyboss_platform_plugin_file ) ? 'BuddyBoss' : 'BuddyPress';
+
 		return array(
 			'slug'     => 'members_locator',
-			'label'    => __( 'BuddyPress Members Locator', 'geo-my-wp' ),
-			'desc'     => __( 'BuddyPress Members Locator general settings.', 'geo-my-wp' ),
+			'label'    => sprintf( __( '%s Members Locator', 'geo-my-wp' ), $title ),
+			'desc'     => sprintf( __( '%s Members Locator general settings.', 'geo-my-wp' ), $title ),
 			'icon'     => 'buddypress',
 			'priority' => 10,
 		);
