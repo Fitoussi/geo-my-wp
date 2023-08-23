@@ -726,17 +726,26 @@ function gmw_get_form_field_options( $options = '', $eol = true ) {
 /**
  * Calculate the distance between two points
  *
- * @param  [type] $start_lat latitude of start point.
- * @param  [type] $start_lng longitude of start point.
- * @param  [type] $end_lat   latitude of end point.
- * @param  [type] $end_lng   longitude of end point.
+ * @param  float  $start_lat latitude of start point.
+ * @param  float  $start_lng longitude of start point.
+ * @param  float  $end_lat   latitude of end point.
+ * @param  float  $end_lng   longitude of end point.
  * @param  string $units     m for miles k for kilometers.
  *
  * @since 3.0
  *
  * @return [type]            [description]
  */
-function gmw_calculate_distance( $start_lat, $start_lng, $end_lat, $end_lng, $units = 'm' ) {
+function gmw_calculate_distance( $start_lat = '', $start_lng = '', $end_lat = '', $end_lng = '', $units = 'm' ) {
+
+	$start_lat = esc_attr( filter_var( $start_lat, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION ) );
+	$start_lng = esc_attr( filter_var( $start_lng, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION ) );
+	$end_lat   = esc_attr( filter_var( $end_lat, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION ) );
+	$end_lng   = esc_attr( filter_var( $end_lng, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION ) );
+
+	if ( ! is_numeric( $start_lat ) || ! is_numeric( $start_lng ) || ! is_numeric( $end_lat ) || ! is_numeric( $end_lng ) ) {
+		return '';
+	}
 
 	$rad      = M_PI / 180;
 	$radius   = in_array( $units, array( 'k', 'metric', 'kilometers', 'K', 'kilometer' ), true ) ? 6371 : 3959;
