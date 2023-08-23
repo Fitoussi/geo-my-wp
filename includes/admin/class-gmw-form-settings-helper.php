@@ -1294,6 +1294,39 @@ class GMW_Form_Settings_Helper {
 	}
 
 	/**
+	 * Get an array of all BP group meta fields.
+	 *
+	 * @since 4.0
+	 *
+	 * @param array $args argument.
+	 *
+	 * @return [type] [description]
+	 */
+	public static function get_gforms_fields( $args = array() ) {
+
+		$output = array();
+
+		if ( ! class_exists( 'GFAPI' ) ) {
+			return $output;
+		}
+
+		//$disallowed_fields = array( 'section', 'page', 'fileupload', 'captcha', 'html' );
+		$form   = GFAPI::get_form( 91 );
+		//$fields = GFAPI::get_fields_by_type( $form );
+
+		if ( empty( $form['fields'] ) ) {
+			return $output;
+		}
+
+		// Collect terms into an array.
+		foreach ( $form['fields'] as $field ) {
+			$output[ $field->id ] = $field->label . ' ( field ID ' . $field->id . ' )';
+		}
+
+		return $output;
+	}
+
+	/**
 	 * Get list of GMW template files.
 	 *
 	 * @param mixed $args argument to filter template files.
@@ -1528,6 +1561,11 @@ class GMW_Form_Settings_Helper {
 			$output = self::get_peepso_profile_fields( $args );
 		}
 
+		// Get custom fields.
+		if ( 'gmw_get_gforms_fields' === $action ) {
+			$output = self::get_gforms_fields( $args );
+		}
+
 		if ( ! empty( $args['gmw_ajax_load_options_disabled'] ) ) {
 			$output = array( 'disabled' => __( 'Disabled', 'geo-my-wp' ) ) + $output;
 		}
@@ -1662,7 +1700,7 @@ class GMW_Form_Settings_Helper {
 			$defaults['priority']   = 10;
 			$defaults['attributes'] = array( 'data' => 'multiselect_address_fields' );
 			$defaults['options']    = array(
-				'address'      => __( 'Formatted address ( full address )', 'geo-my-wp' ),
+				'address'      => __( 'Full address', 'geo-my-wp' ),
 				'street'       => __( 'Street', 'geo-my-wp' ),
 				'premise'      => __( 'Apt/Suit ', 'geo-my-wp' ),
 				'neighborhood' => __( 'Neighborhood', 'geo-my-wp' ),
