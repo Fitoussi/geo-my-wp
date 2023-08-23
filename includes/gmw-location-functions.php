@@ -1006,7 +1006,7 @@ function gmw_get_location_address( $location, $fields = array( 'formatted_addres
 	if ( ! empty( $fields['addon'] ) ) {
 
 		$gmw    = $fields;
-		$fields = array( 'formatted_address' );
+		$fields = array( 'address' );
 
 		gmw_trigger_error( 'Since GEO my WP 3.0 gmw_get_location_address function excepts an additional $fields argument. You need to modify the arguments pass to the function. gmw_get_location_address( $location, $fields, $gmw ).' );
 	}
@@ -1696,7 +1696,7 @@ function gmw_location_meta_list( $location, $fields = array(), $labels = array()
  *
  * @param  object  $location    location object or location ID.
  *
- * @param  array   $from_coords array of coords array( lat,lng ).
+ * @param  mixed   $from_location string for an address or array of coords array( lat,lng ).
  *
  * @param  string  $label       link label - default "get directions".
  *
@@ -1706,7 +1706,7 @@ function gmw_location_meta_list( $location, $fields = array(), $labels = array()
  *
  * @return mixed   HTML element  link to Google Maps.
  */
-function gmw_get_directions_link( $location, $from_coords = array(), $label = '', $link_only = false, $gmw = array() ) {
+function gmw_get_directions_link( $location, $from_location = '', $label = '', $link_only = false, $gmw = array() ) {
 
 	// if location ID pass get the location data.
 	if ( is_int( $location ) ) {
@@ -1738,19 +1738,23 @@ function gmw_get_directions_link( $location, $from_coords = array(), $label = ''
 		// 'to_lat'    => $location->lat,
 		// 'to_lng'    => $location->lng,
 		// phpcs:enable.
-		'to_address' => $location->formatted_address,
+		'to_address' => $location->address,
 		'link_only'  => $link_only,
 	);
 
-	if ( ! empty( $from_coords[0] ) && ! empty( $from_coords[1] ) ) {
+	if ( is_string( $from_location ) && ! empty( $from_location ) ) {
 
-		$args['from_lat'] = $from_coords[0];
-		$args['from_lng'] = $from_coords[1];
+		$args['from_address'] = $from_location;
 
-	} elseif ( ! empty( $from_coords['lat'] ) && ! empty( $from_coords['lng'] ) ) {
+	} elseif ( ! empty( $from_location[0] ) && ! empty( $from_location[1] ) ) {
 
-		$args['from_lat'] = $from_coords['lat'];
-		$args['from_lng'] = $from_coords['lng'];
+		$args['from_lat'] = $from_location[0];
+		$args['from_lng'] = $from_location[1];
+
+	} elseif ( ! empty( $from_location['lat'] ) && ! empty( $from_location['lng'] ) ) {
+
+		$args['from_lat'] = $from_location['lat'];
+		$args['from_lng'] = $from_location['lng'];
 
 	} else {
 
@@ -1779,14 +1783,14 @@ function gmw_get_directions_link( $location, $from_coords = array(), $label = ''
  *
  * @param  object  $location    location object or location ID.
  *
- * @param  array   $from_coords array of coords array( lat,lng ).
+ * @param  mixed   $from_location string for address or array of coords array( lat,lng ).
  *
  * @param  string  $label       link label - default "get directions".
  *
  * @param  boolean $link_only   return the URL only or HTML element ( true || false ).
  */
-function gmw_directions_link( $location, $from_coords = array(), $label = '', $link_only = false ) {
-	echo gmw_get_directions_link( $location, $from_coords, $label, $link_only = false ); // phpcs:ignore: XSS ok.
+function gmw_directions_link( $location, $from_location = '', $label = '', $link_only = false ) {
+	echo gmw_get_directions_link( $location, $from_location, $label, $link_only = false ); // phpcs:ignore: XSS ok.
 }
 
 /**
