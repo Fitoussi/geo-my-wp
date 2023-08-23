@@ -42,7 +42,7 @@ function gmw_search_results_address( $object, $gmw = array(), $where = 'search_r
 	}
 
 	if ( empty( $gmw[ $where ]['address']['fields'][0] ) || 'address' === $gmw[ $where ]['address']['fields'][0] ) {
-		$fields = array( 'formatted_address' );
+		$fields = array( 'address' );
 	} else {
 		$fields = $gmw[ $where ]['address']['fields'];
 	}
@@ -187,12 +187,9 @@ function gmw_search_results_directions_link( $object, $gmw = array(), $where = '
 		return;
 	}
 
-	$from_coords = array(
-		'lat' => $gmw['lat'],
-		'lng' => $gmw['lng'],
-	);
+	$from_location = $gmw['address'];
 
-	$output = gmw_get_directions_link( $object, $from_coords, $label, false, $gmw );
+	$output = gmw_get_directions_link( $object, $from_location, $label, false, $gmw );
 
 	if ( $html_wrap ) {
 		$output = '<div class="gmw-item gmw-item-directions gmw-directions-link">' . $output . '</div>';
