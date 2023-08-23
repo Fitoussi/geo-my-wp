@@ -805,6 +805,7 @@ class GMW_Maps_API {
 
 		$defaults = array(
 			'id'         => 0,
+			'from_address' => '',
 			'from_lat'   => '',
 			'from_lng'   => '',
 			'to_address' => '',
@@ -818,14 +819,24 @@ class GMW_Maps_API {
 			'mode'       => '',
 		);
 
-		$args   = wp_parse_args( $args, $defaults );
-		$args   = apply_filters( 'gmw_get_directions_link_args', $args );
-		$mode   = '';
-		$to_loc = '';
+		$args     = wp_parse_args( $args, $defaults );
+		$args     = apply_filters( 'gmw_get_directions_link_args', $args );
+		$mode     = '';
+		$from_loc = '';
+		$to_loc   = '';
 
 		// Set mode.
 		if ( ! empty( $args['mode'] ) && in_array( $args['mode'], array( 'h', 't', 'r', 'w', 'b' ), true ) ) {
 			$mode = '&dirflg=' . $args['mode'];
+		}
+
+		if ( ! empty( $args['from_address'] ) ) {
+
+			$from_loc = "{$args['from_address']}";
+
+		} elseif ( ! empty( $args['from_lat'] ) && ! empty( $args['from_lng'] ) ) {
+
+			$from_loc = "{$args['from_lat']},{$args['from_lng']}";
 		}
 
 		if ( ! empty( $args['to_address'] ) ) {
@@ -837,11 +848,11 @@ class GMW_Maps_API {
 			$to_loc = "{$args['to_lat']},{$args['to_lng']}";
 		}
 
-		$args['from_latlng'] = ( empty( $args['from_lat'] ) || empty( $args['from_lng'] ) ) ? '' : "{$args['from_lat']},{$args['from_lng']}";
+		//$args['from_latlng'] = ( empty( $args['from_lat'] ) || empty( $args['from_lng'] ) ) ? '' : "{$args['from_lat']},{$args['from_lng']}";
 		// phpcs:ignore.
 		// $args['to_latlng']   = ( empty( $args['to_lat'] ) || empty( $args['to_lng'] ) ) ? '' : "{$args['to_lat']},{$args['to_lng']}";
 		$args['units_type'] = 'imperial' === $args['units'] ? 'ptm' : 'ptk';
-		$args['link']       = esc_url( "http://maps.google.com/maps?f=d&hl={$args['language']}&region={$args['region']}&doflg={$args['units_type']}&saddr={$args['from_latlng']}&daddr={$to_loc}&ie=UTF8&z=12" . $mode );
+		$args['link']       = esc_url( "http://maps.google.com/maps?f=d&hl={$args['language']}&region={$args['region']}&doflg={$args['units_type']}&saddr={$from_loc}&daddr={$to_loc}&ie=UTF8&z=12" . $mode );
 
 		// retrun Google Maps link only.
 		if ( $args['link_only'] ) {
