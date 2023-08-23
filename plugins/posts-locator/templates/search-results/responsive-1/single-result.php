@@ -33,7 +33,7 @@
 		</div>
 
 		<div class="gmw-item-content">
-			
+
 			<?php gmw_search_results_distance( $post, $gmw ); ?>
 
 			<h3 class="gmw-item gmw-item-title">
