@@ -127,11 +127,22 @@ class GMW_Form_Settings_Helper {
 			$taxonomies = array_merge( array_flip( array_keys( $value ) ), $taxonomies );
 		}
 
-		$multiple_pt  = ! empty( $taxonomies_options['multiple_post_types'] ) ? ' multiple-post-types ' : '';
-		$incexc_class = ! empty( $taxonomies_options['include_exclude_terms'] ) ? ' incexc-terms-enabled' : '';
+		$multiple_pt       = ! empty( $taxonomies_options['multiple_post_types'] ) ? ' multiple-post-types ' : '';
+		$incexc_class      = ! empty( $taxonomies_options['include_exclude_terms'] ) ? ' incexc-terms-enabled' : '';
+		$sortable_taxonomy = '';
+		$id_attr           = '';
+
+		if ( 'incexc_terms' === $taxonomies_options['where'] ) {
+
+			$id_attr = 'inc-exc-';
+
+		} elseif ( gmw_is_addon_active( 'premium_settings' ) || 'global_maps' === $form['addon'] ) {
+			$sortable_taxonomy = ' gmw-sortable-item ';
+		}
+
 		?>
-		<div id="taxonomies-wrapper"
-			class="gmw-setting-groups-container gmw-settings-group-draggable-area <?php echo $multiple_pt; // phpcs:ignore: XSS ok. ?><?php echo $incexc_class; // phpcs:ignore: XSS ok. ?>">
+		<div id="<?php echo $id_attr; ?>taxonomies-wrapper"
+			class="gmw-setting-groups-container gmw-<?php echo $id_attr; ?>taxonomies-wrapper gmw-settings-group-draggable-area <?php echo $multiple_pt; // phpcs:ignore: XSS ok. ?><?php echo $incexc_class; // phpcs:ignore: XSS ok. ?>">
 
 			<?php
 			$all_post_types = get_post_types();
@@ -161,10 +172,9 @@ class GMW_Form_Settings_Helper {
 					);
 				}
 
-				$tax_option     = $value[ $taxonomy_name ];
-				$sortable_taxes = gmw_is_addon_active( 'premium_settings' ) ? ' gmw-sortable-item ' : '';
+				$tax_option = $value[ $taxonomy_name ];
 				?>
-				<div id="<?php echo esc_attr( $taxonomy_name ); ?>_cat" class="taxonomy-wrapper gmw-settings-group-wrapper<?php echo $sortable_taxes; // WPCS: XSS ok. ?>"
+				<div id="<?php echo esc_attr( $taxonomy_name ); ?>_cat" class="taxonomy-wrapper gmw-settings-group-wrapper<?php echo $sortable_taxonomy; // WPCS: XSS ok. ?>"
 					data-post_types="<?php echo esc_attr( implode( ',', $post_types ) ); ?>">
 
 					<div class="taxonomy-header gmw-settings-group-header">
@@ -330,7 +340,7 @@ class GMW_Form_Settings_Helper {
 										<?php
 										if ( ! empty( $tax_option['include'] ) ) {
 											foreach ( $tax_option['include'] as $tax_value ) {
-												echo '<option selected="selected" value="' . esc_attr( $tax_value ) . '">' . esc_html__( 'Click to load options', 'geo-my-wp' ) . '</option>';
+												echo '<option selected="selected" value="' . esc_attr( $tax_value ) . '">' . esc_html__( 'Click to load option', 'geo-my-wp' ) . '</option>';
 											}
 										}
 										?>
@@ -365,7 +375,7 @@ class GMW_Form_Settings_Helper {
 										<?php
 										if ( ! empty( $tax_option['exclude'] ) ) {
 											foreach ( $tax_option['exclude'] as $tax_value ) {
-												echo '<option selected="selected" value="' . esc_attr( $tax_value ) . '">' . esc_html_e( 'Click to load options', 'geo-my-wp' ) . '</option>';
+												echo '<option selected="selected" value="' . esc_attr( $tax_value ) . '">' . esc_html__( 'Click to load option', 'geo-my-wp' ) . '</option>';
 											}
 										}
 										?>
