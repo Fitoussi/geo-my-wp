@@ -434,15 +434,19 @@ class GMW_Nominatim_Geocoder extends GMW_Geocoder {
 		}
 
 		// Look for City in different address field.
-		if ( isset( $address_componenets->city ) ) {
+		if ( ! empty( $address_componenets->city ) ) {
 
 			$location['city'] = $address_componenets->city;
 
-		} elseif ( isset( $address_componenets->town ) ) {
+		} elseif ( ! empty( $address_componenets->town ) ) {
 
-			$location['town'] = $address_componenets->town;
+			$location['city'] = $address_componenets->town;
 
-		} elseif ( isset( $address_componenets->suburb ) ) {
+		} elseif ( ! empty( $address_componenets->village ) ) {
+
+			$location['city'] = $address_componenets->village;
+
+		} elseif ( ! empty( $address_componenets->suburb ) ) {
 
 			$location['city'] = $address_componenets->suburb;
 		}
@@ -658,15 +662,19 @@ class GMW_LocationIQ_Geocoder extends GMW_Geocoder {
 		}
 
 		// Look for City in different address field.
-		if ( isset( $address_componenets->city ) ) {
+		if ( ! empty( $address_componenets->city ) ) {
 
 			$location['city'] = $address_componenets->city;
 
-		} elseif ( isset( $address_componenets->town ) ) {
+		} elseif ( ! empty( $address_componenets->town ) ) {
 
-			$location['town'] = $address_componenets->town;
+			$location['city'] = $address_componenets->town;
 
-		} elseif ( isset( $address_componenets->suburb ) ) {
+		} elseif ( ! empty( $address_componenets->village ) ) {
+
+			$location['city'] = $address_componenets->village;
+
+		} elseif ( ! empty( $address_componenets->suburb ) ) {
 
 			$location['city'] = $address_componenets->suburb;
 		}
