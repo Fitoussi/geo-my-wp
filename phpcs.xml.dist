@@ -1,36 +1,71 @@
 <?xml version="1.0"?>
-<ruleset name="WordPress Coding Standards for Plugins">
-	<description>Generally-applicable sniffs for WordPress plugins</description>
-	<autoload>./vendor/wp-coding-standards/wpcs/WordPress/PHPCSAliases.php</autoload>
-	<rule ref="WordPress-Core" />
-	<rule ref="WordPress-Docs" />
+<ruleset name="GEO my WP">
+	<description>A custom set of code standard rules to check for WordPress themes and plugins.</description>
 
-	<!-- Check all PHP files in directory tree by default. -->
+	<arg value="s"/>
+	<arg value="p"/>
+	<arg name="colors"/>
+
 	<arg name="extensions" value="php"/>
 	<file>.</file>
 
-	<!-- Show progress and sniff codes in all reports -->
-	<arg value="ps"/>
-	<arg name="tab-width" value="4"/>
+	<exclude-pattern>/vendor/*</exclude-pattern>
+	<exclude-pattern>/node_modules/*</exclude-pattern>
+	<exclude-pattern>*.js</exclude-pattern>
+	<exclude-pattern>style.css</exclude-pattern>
 
-	<exclude-pattern>*/node_modules/*</exclude-pattern>
-	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<!-- Temporarily exclude templates and lib for now -->
+	<exclude-pattern>lib/</exclude-pattern>
 
-	<rule ref="Squiz.PHP.CommentedOutCode"/>
+	<!-- PHP Config -->
+	<ini name="error_reporting" value="E_ALL &#38; ~E_DEPRECATED" />
+
+	<!-- Configs -->
+	<config name="minimum_supported_wp_version" value="5.8" />
+	<config name="testVersion" value="7.4-"/>
+
+	<!-- Rules -->
+
+  <rule ref="WordPress" />
+	<rule ref="WordPress-Docs" />
+	<rule ref="WordPress-Extra" />
+  <rule ref="VariableAnalysis" />
+  <rule ref="WordPress-Core" />
+
+	<!-- Temporary Rule Exclusions -->
+	<rule ref="VariableAnalysis">
+		<exclude-pattern>includes/admin/views/</exclude-pattern>
+		<severity>4</severity>
+	</rule>
+	<!-- End of Temporary Rule Exclusions -->
+
+	<!-- <rule ref="WordPress.Files.FileName.InvalidClassFileName">
+		<exclude-pattern>includes/**/abstract-*.php</exclude-pattern>
+	</rule> -->
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array" value="geo-my-wp" />
+		</properties>
+	</rule>
+
+	<rule ref="Squiz.Commenting">
+		<exclude-pattern>tests/</exclude-pattern>
+		<exclude name="Squiz.Commenting.LongConditionClosingComment" />
+		<exclude name="Squiz.Commenting.PostStatementComment" />
+		<exclude name="Squiz.Commenting.FunctionComment.MissingParamComment" />
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+
+  <rule ref="Squiz.PHP.CommentedOutCode"/>
 	<rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
 	<rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
 	<rule ref="Generic.Commenting.Todo"/>
 	<rule ref="Generic.ControlStructures.InlineControlStructure"/>
 
-	<rule ref="WordPress-Extra">
-	 	<exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
-	 	<exclude name="Generic.WhiteSpace.ScopeIndent"/>
-	 	<exclude name="PEAR.Functions.FunctionCallSignature.SpaceAfterOpenBracket" />
-	 	<exclude name="PEAR.Functions.FunctionCallSignature.SpaceBeforeCloseBracket" />
-	 	<exclude name="PEAR.Functions.FunctionCallSignature.Indent" />
-	 	<exclude name="WordPress.WhiteSpace.PrecisionAlignment.Found" />
-	 	<exclude name="WordPress.Arrays.ArrayDeclaration.IndexNoNewline" />
-	 	<exclude name="WordPress.Arrays.ArrayKeySpacingRestrictions.NoSpacesAroundArrayKeys" />
-	 	<exclude name="WordPress.PHP.YodaConditions" />
+  <rule ref="WordPress.Arrays.MultipleStatementAlignment">
+		<properties>
+			<property name="maxColumn" value="200"/>
+		</properties>
 	</rule>
 </ruleset>
