@@ -27,7 +27,7 @@ var GMW_Location_Form_Map_Providers = {
 		},
 
 		addressAutocomplete : function() {
-			
+
 			//loop and trigger address autocomplete for all field with the class 'gmw-lf-address-autocomplete'
 			jQuery( '.gmw-lf-address-autocomplete' ).each( function() {
 
@@ -39,20 +39,20 @@ var GMW_Location_Form_Map_Providers = {
 
 				//modify autocomplete options
 				options = GMW.apply_filters( 'gmw_lf_address_autocomplete_options', {}, autocompleteId, this_form );
-			    
+
 			    options.fields = [ 'address_component', 'formatted_address', 'geometry' ];
 
 			    //init autocomplete
 			    var autocomplete = new google.maps.places.Autocomplete( input, options );
-			    
+
 			    google.maps.event.addListener( autocomplete, 'place_changed', function() {
-			    	
+
 			    	place = autocomplete.getPlace();
 
 					if ( ! place.geometry ) {
 						return;
 					}
-						
+
 					// get the address value entered in the address field.
 					var address = jQuery( '#' + this_form.location_fields.address.id ).val();
 
@@ -74,14 +74,14 @@ var GMW_Location_Form_Map_Providers = {
 					fields.address = address;
 
 					//get the rest of the address fields
-					this_form.get_address_fields( fields, place, false );		
+					this_form.get_address_fields( fields, place, false );
 			    });
 			});
 		},
 
 		renderMap : function() {
 
-			// set initial coords based on saved location or user's current location 
+			// set initial coords based on saved location or user's current location
 			if ( this_form.is_location_confirmed ) {
 
 				//lat = jQuery( '#gmw_lf_' + this_form.coords_fields.latitude.name ).val();
@@ -96,9 +96,9 @@ var GMW_Location_Form_Map_Providers = {
 				lat = this_form.vars.map_lat;
 				lng = this_form.vars.map_lng;
 			}
-			
+
 			latLng = new google.maps.LatLng( lat, lng );
-				
+
 			// default map options
 			map_options = {
 				zoom 	  : parseInt( this_form.vars.map_zoom_level ),
@@ -110,8 +110,8 @@ var GMW_Location_Form_Map_Providers = {
 			map_options = GMW.apply_filters( 'gmw_lf_render_map_options', map_options, this_form );
 
 			// initiate map
-			this_form.map = new google.maps.Map( document.getElementById( this_form.location_fields.map.id ), map_options );	
-			
+			this_form.map = new google.maps.Map( document.getElementById( this_form.location_fields.map.id ), map_options );
+
 			marker_options = {
 			    position  : latLng,
 			    map 	  : this_form.map,
@@ -122,7 +122,7 @@ var GMW_Location_Form_Map_Providers = {
 
 			// set marker
 			this_form.map_marker = new google.maps.Marker( marker_options );
-			
+
 			GMW.do_action( 'gmw_lf_render_map', this_form );
 
 			//when dragging the map marker
@@ -137,7 +137,7 @@ var GMW_Location_Form_Map_Providers = {
 				this_form.location_changed();
 
 				//reverse geocode to get the address fields based on coords
-				this_form.reverse_geocode( this_form.map_coords.lat, this_form.map_coords.lng, false );  
+				this_form.reverse_geocode( this_form.map_coords.lat, this_form.map_coords.lng, false );
 			});
 		}
 	},
@@ -168,12 +168,12 @@ var GMW_Location_Form_Map_Providers = {
 
 			var lat, lng;
 
-			// set initial coords based on saved location or user's current location 
+			// set initial coords based on saved location or user's current location
 			if ( this_form.is_location_confirmed ) {
 
 				//lat = jQuery( '#gmw_lf_' + this_form.coords_fields.latitude.name ).val();
 				//lng = jQuery( '#gmw_lf_' + this_form.coords_fields.longitude.name ).val();
-				
+
 				lat = jQuery( '#gmw_lf_latitude' ).val();
 				lng = jQuery( '#gmw_lf_longitude' ).val();
 
@@ -182,9 +182,9 @@ var GMW_Location_Form_Map_Providers = {
 				lat = this_form.vars.map_lat;
 				lng = this_form.vars.map_lng;
 			}
-			
+
 			var latLng = L.latLng( lat, lng );
-				
+
 			// default map options
 			var map_options = {
 				zoom 	  : parseInt( this_form.vars.map_zoom_level ),
@@ -198,13 +198,21 @@ var GMW_Location_Form_Map_Providers = {
 			map_options = GMW.apply_filters( 'gmw_lf_render_map_options', map_options, this_form );
 
 			// initiate map
-			this_form.map = L.map( this_form.location_fields.map.id, map_options );	
-				
+			this_form.map = L.map( this_form.location_fields.map.id, map_options );
+
 			this_form.map.setView( latLng ).zoomControl.setPosition( 'bottomright' );
-			
+
+			if ( 'locationiq' === gmwVars.geocodingProvider ) {
+				var layersUrl  = 'https://{s}-tiles.locationiq.com/v3/streets/r/{z}/{x}/{y}.png?key=' + gmwVars.settings.api.locationiq_key || '';
+				var layersAttr = '&copy; <a href="https://www.locationiq.com" target="_blank">LocationIQ</a> contributors';
+			} else {
+				var layersUrl  = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+				var layersAttr = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors';
+			}
+
 			// Load layers.
-			L.tileLayer( 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-			    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+			L.tileLayer( layersUrl, {
+			    attribution: layersAttr
 			}).addTo( this_form.map );
 
 			var marker_options = {
@@ -217,7 +225,7 @@ var GMW_Location_Form_Map_Providers = {
 
 			// set marker
 			this_form.map_marker = new L.marker( latLng, marker_options );
-			
+
 			GMW.do_action( 'gmw_lf_render_map', this_form );
 
 			this_form.map_marker.addTo( this_form.map ).on( 'dragend', function (e) {
@@ -231,7 +239,7 @@ var GMW_Location_Form_Map_Providers = {
 				this_form.location_changed();
 
 				//reverse geocode to get the address fields based on coords
-				this_form.reverse_geocode( this_form.map_coords.lat, this_form.map_coords.lng, false ); 
+				this_form.reverse_geocode( this_form.map_coords.lat, this_form.map_coords.lng, false );
 			});
 		}
 	}
@@ -249,7 +257,7 @@ var GMW_Location_Form = {
 	// check if location is confirmed.
 	is_location_confirmed : ( jQuery.trim( jQuery( '#gmw_lf_latitude' ).val() ).length != 0 && jQuery.trim( jQuery( '#gmw_lf_longitude' ).val() ).length != 0 ) ? true : false,
 
-	// nonce 
+	// nonce
 	security : '',
 
 	// form fields
@@ -269,7 +277,7 @@ var GMW_Location_Form = {
 
 	// coordinates fields
 	coords_fields : false,
-	
+
 	// action fields
 	action_fields : false,
 
@@ -308,10 +316,10 @@ var GMW_Location_Form = {
 	 * return lat - lng object.
 	 *
 	 * To be extended with geocoding prvoider.
-	 * 
+	 *
 	 * @param  {[type]} lat [description]
 	 * @param  {[type]} lng [description]
-	 * 
+	 *
 	 * @return {[type]}     [description]
 	 */
 	latLng : function( lat, lng ) {},
@@ -320,9 +328,9 @@ var GMW_Location_Form = {
 	 * Get the position of an element.
 	 *
 	 * To be extended with geocoding prvoider.
-	 * 
+	 *
 	 * @param  {[type]} element [description]
-	 * 
+	 *
 	 * @return {[type]}         [description]
 	 */
 	getPosition : function( element ) {},
@@ -331,7 +339,7 @@ var GMW_Location_Form = {
 	 * Set the marker position.
 	 *
 	 * To be extended with geocoding prvoider.
-	 * 
+	 *
 	 * @param {[type]} marker [description]
 	 * @param {[type]} latLng [description]
 	 */
@@ -341,9 +349,9 @@ var GMW_Location_Form = {
 	 * Resize map.
 	 *
 	 * To be extended with geocoding prvoider.
-	 * 
+	 *
 	 * @param  {[type]} map [description]
-	 * 
+	 *
 	 * @return {[type]}     [description]
 	 */
 	resizeMap : function( map ) {},
@@ -352,7 +360,7 @@ var GMW_Location_Form = {
 	 * Set center.
 	 *
 	 * To be extended with geocoding prvoider.
-	 * 
+	 *
 	 * @param {[type]} center [description]
 	 * @param {[type]} map    [description]
 	 */
@@ -362,7 +370,7 @@ var GMW_Location_Form = {
 	 * Render map.
 	 *
 	 * To be extended with geocoding prvoider.
-	 * 
+	 *
 	 * @return {[type]} [description]
 	 */
 	renderMap : function() {},
@@ -377,7 +385,7 @@ var GMW_Location_Form = {
 		// form arguments
 		this_form.vars = gmw_lf_args.args || {};
 
-		// nonce 
+		// nonce
 		this_form.security = gmw_lf_args.nonce || '';
 
 		// form fields
@@ -396,7 +404,7 @@ var GMW_Location_Form = {
 
 			// coordinates fields
 			this_form.coords_fields = gmw_lf_args.fields.coordinates.fields || false;
-			
+
 			// action fields
 			this_form.action_fields = gmw_lf_args.fields.actions.fields || false;
 		}
@@ -422,7 +430,7 @@ var GMW_Location_Form = {
 
 		// if no location exist
 		if ( ! this_form.is_location_confirmed ) {
-			
+
 			this_form.location_exists = false;
 
 			jQuery( '#' + this_form.action_fields.delete_location.id ).fadeOut( 'fast' );
@@ -472,7 +480,7 @@ var GMW_Location_Form = {
 
 			jQuery( '#gmw-location-meta-box .hndle' ).on( 'click', function() {
 
-				setTimeout( function(){  
+				setTimeout( function(){
 		    		// resize map
 		    		this_form.resizeMap( this_form.map );
 
@@ -492,19 +500,19 @@ var GMW_Location_Form = {
 
 			// on submit click
 			jQuery( '#' + this_form.action_fields.submit_location.id ).on( 'click', function() {
-				
+
 				if ( this_form.vars.auto_confirm ) {
 
 					this_form.auto_confirm_submission( false );
-				
+
 				} else {
 
 					this_form.confirm_submission( false );
 				}
 			} );
-		} 
+		}
 		*/
-	
+
 		// on form submission.
 		/*jQuery( this_form.vars.form_element ).on( 'submit', function( event ) {
 
@@ -523,7 +531,7 @@ var GMW_Location_Form = {
 
 					//this_form.auto_confirm_submission( event );
 					this_form.auto_confirm_submission( true );
-				
+
 				} else {
 
 					this_form.confirm_submission( true );
@@ -537,7 +545,7 @@ var GMW_Location_Form = {
 
 			this_form.load_location_form( jQuery( this ) );
 		}); */
-				
+
 		/*
 		// if submit button exists we use it only for form submission
 		if ( jQuery( '#' + this_form.action_fields.submit_location.id ).length ) {
@@ -545,7 +553,7 @@ var GMW_Location_Form = {
 			// on form submission make sure that location is confirmed
 			jQuery( '#' + this_form.action_fields.submit_location.id ).on( 'click', function( event ) {
 
-				//this_form.confirm_submission( event );				
+				//this_form.confirm_submission( event );
 			});
 
 		// otherwise, we use the form submission of the form wrapping the location form
@@ -554,11 +562,11 @@ var GMW_Location_Form = {
 			// on form submission make sure that location is confirmed
 			jQuery( this_form.vars.form_element ).on( 'submit', function( event ) {
 
-				this_form.confirm_submission( event );				
+				this_form.confirm_submission( event );
 			});
 
 		}
-		*/	
+		*/
 	},
 
 	init_actions : function() {
@@ -583,7 +591,7 @@ var GMW_Location_Form = {
 
 					//this_form.auto_confirm_submission( event );
 					this_form.auto_confirm_submission( true );
-				
+
 				} else {
 
 					this_form.confirm_submission( true );
@@ -595,21 +603,21 @@ var GMW_Location_Form = {
 
 	/**
 	 * Tabs switcher.
-	 * 
+	 *
 	 * @return {[type]} [description]
 	 */
 	init_tabs : function() {
-		
+
 		// show activate tab content and hide the rest
 		firstTab = jQuery( '.gmw-lf-tabs-wrapper li' ).first().attr( 'id' );
 		jQuery( '#' + firstTab + '-panel' ).show().siblings( '[id*="-tab-panel"]').hide();
-		
-		// dynamically remove any excluded tab containers that might be still exists 
+
+		// dynamically remove any excluded tab containers that might be still exists
 		// on the page
 		if ( typeof this_form.vars.exclude_fields_groups !== undefined && this_form.vars.exclude_fields_groups.length ) {
 			jQuery.each( this_form.vars.exclude_fields_groups, function( index, value ) {
 				jQuery( '#' + value + '-tab-panel' ).remove();
-			});	
+			});
 		}
 
 		//tabs on click
@@ -625,11 +633,11 @@ var GMW_Location_Form = {
 
 	    	// activate / deactivates tabs
 	    	jQuery( this ).parent( 'li' ).addClass( 'active' ).siblings().removeClass( 'active' );
-	    
+
 	    	// If the tab contains the map then resize it to make sure the map is showing properly
 	    	if ( this_form.map_enabled && jQuery( '#' + activeTab + '-tab-panel' ).find( jQuery( '#' + this_form.location_fields.map.id ) ).length ) {
 
-	    		setTimeout( function(){  
+	    		setTimeout( function(){
 		    		// resize map
 		    		this_form.resizeMap( this_form.map );
 
@@ -642,11 +650,11 @@ var GMW_Location_Form = {
 
 	/**
 	 * display action message
-	 * 
+	 *
 	 * @param  {string}  type    type of message: changed, ok or error
 	 * @param  {string}  message the message to display
 	 * @param  {boolean} toggle  toggle the message true | false
-	 * @return {void}         
+	 * @return {void}
 	 */
 	action_message : function( type, message, toggle ) {
 
@@ -693,17 +701,17 @@ var GMW_Location_Form = {
 
 	/**
 	 * Action button functions.
-	 * 
+	 *
 	 * @return {[type]} [description]
 	 */
 	action_buttons : function() {
 
 		// prevent form submission when pressing enter in any of the location input fields
 		jQuery( this_form.wrapper_element + ' input[type="text"]' ).keypress( function(e){
-		    
+
 		    if ( e.which == 13 ) {
 		    	return false;
-		    }  
+		    }
 		});
 
 		// update address if user click enter in the address field and autocomplete
@@ -718,7 +726,7 @@ var GMW_Location_Form = {
 				}
 
 		    	if ( ! jQuery( this ).hasClass( 'gmw-lf-address-autocomplete' ) || ( jQuery( this ).hasClass( 'gmw-lf-address-autocomplete' ) && jQuery( '.pac-container' ).css( 'display' ) == 'none' ) ) {
-		    	
+
 		    		this_form.fields_changed_status = 1;
 
 		    		this_form.confirm_location();
@@ -731,37 +739,37 @@ var GMW_Location_Form = {
 
 			// on submit click
 			jQuery( '#' + this_form.action_fields.submit_location.id ).on( 'click', function() {
-				
+
 				if ( this_form.vars.auto_confirm ) {
 
 					this_form.auto_confirm_submission( false );
-				
+
 				} else {
 
 					this_form.confirm_submission( false );
 				}
 			} );
-		} 
+		}
 
 		// confirm location click event
 		if ( jQuery( '#' + this_form.action_fields.confirm_location.id ).length ) {
-			
+
 			jQuery( '#' + this_form.action_fields.confirm_location.id ).on( 'click', function() {
-			
+
 				this_form.confirm_location();
 			});
 		}
 
 		// delete location click event
 	 	if ( jQuery( '#' + this_form.action_fields.delete_location.id ).length ) {
-			
+
 			jQuery( '#' + this_form.action_fields.delete_location.id ).on( 'click', function() {
 
 				//show confirm message to be sure the user wants to delete the location
 				if ( confirm( this_form.messages.delete_confirmation ) ) {
-				    
+
 				    this_form.delete_location();
-				
+
 				} else {
 
 				    return false;
@@ -771,14 +779,14 @@ var GMW_Location_Form = {
 	},
 
 	/**
-	 * Set fields_changed value when location changes. 
+	 * Set fields_changed value when location changes.
 	 *
 	 * When location value changes and we want to confirm it, we need to know what part of the location was changed.
 	 *
 	 * it could be full address field, any of the multiple address fields or coordinates.
 	 *
 	 * This way the function knows what part was changed and to geocode it.
-	 * 
+	 *
 	 * @return void
 	 */
 	fields_changed : function() {
@@ -812,7 +820,7 @@ var GMW_Location_Form = {
 	 * When location changed.
 	 *
 	 * Display changed message, show update button and set location confirmed to false.
-	 * 
+	 *
 	 * @return {[type]} [description]
 	 */
 	location_changed : function() {
@@ -821,7 +829,7 @@ var GMW_Location_Form = {
 
 			//setTimeout( function() {
 
-			//	if ( ! this_form.is_location_confirmed ) { 
+			//	if ( ! this_form.is_location_confirmed ) {
 					// show update button
 					jQuery( '#' + this_form.action_fields.confirm_location.id ).fadeIn( 'fast' );
 			//	}
@@ -832,18 +840,18 @@ var GMW_Location_Form = {
 
 		// display changed message
 		this_form.action_message( 'changed', this_form.messages.location_changed );
-		
+
 		// location status
 		this_form.is_location_confirmed = false;
 	},
 
 	/**
 	 * Update map when location changes
-	 * 
+	 *
 	 * @param  string lat new latitude
 	 * @param  string lng new longitude
 	 *
-	 * @return void  
+	 * @return void
 	 */
 	update_map : function( lat, lng ) {
 
@@ -861,12 +869,12 @@ var GMW_Location_Form = {
 	 * When user clicks the current location icon the browser will
 	 *
 	 * try to retrieve his current position.
-	 * 
+	 *
 	 * @return void
 	 */
     current_location : function() {
-    	
-    	// locator button clicked 
+
+    	// locator button clicked
 	    jQuery( '#gmw-lf-locator-button' ).on( 'click', function(){
 
     		if ( ! GMW.apply_filters( 'gmw_lf_navigator_disabled', false, this_form ) ) {
@@ -891,31 +899,31 @@ var GMW_Location_Form = {
 		   	}
 	  	});
 	},
-    
+
     /**
      * Show current location results.
-     * 
+     *
      * @param  {[type]} position [description]
      * @return {[type]}          [description]
      */
-	navigator_position : function( position ) {	
-				
+	navigator_position : function( position ) {
+
   		jQuery( '#gmw-lf-locator-button' ).removeClass( 'animate-spin' );
 
   		this_form.location_changed();
-  		
+
     	// geocode coordinates
-  		this_form.reverse_geocode( position.coords.latitude, position.coords.longitude, false );  		
+  		this_form.reverse_geocode( position.coords.latitude, position.coords.longitude, false );
 	},
 
 	/**
 	 * Display geolocator error message
-	 * 
+	 *
 	 * @param  {[type]} error [description]
 	 * @return {[type]}       [description]
 	 */
 	navigator_error : function( error ) {
-  		
+
 		switch( error.code ) {
 
    	 		case error.PERMISSION_DENIED:
@@ -925,16 +933,16 @@ var GMW_Location_Form = {
    		 	case error.POSITION_UNAVAILABLE:
    		   		alert( "Location information is unavailable." );
     	  	break;
-    		
+
     		case error.TIMEOUT:
       			alert( "The request to get user location timed out." );
      		break;
-    		
+
     		case error.UNKNOWN_ERROR:
       			alert( "An unknown error occurred." );
       		break;
 		}
-		
+
 		this_form.is_location_confirmed = false;
 
 		jQuery( '#gmw-lf-locator-button' ).removeClass( 'animate-spin' );
@@ -944,13 +952,13 @@ var GMW_Location_Form = {
 	 * Geocode an address
 	 *
 	 * Get the coordinates of an address
-	 * 
+	 *
 	 * @param  {string} address the full address to geocode
-	 * 
-	 * @return void        
+	 *
+	 * @return void
 	 */
 	geocode : function( address ) {
-		
+
 		jQuery( '#' + this_form.action_fields.loader.id ).fadeIn( 'fast' );
 
 		address = GMW.apply_filters( 'gmw_lf_address_pre_geocoding', address, this_form );
@@ -958,22 +966,22 @@ var GMW_Location_Form = {
 		if ( jQuery.trim( address ).length == 0 ) {
 
 			this_form.location_missing_message();
-		
+
 		} else {
 
 			var geocoder = new GMW_Geocoder( gmwVars.geocodingProvider );
-			
+
 			geocoder.geocode( { 'q' : address } ,function( response, status ) {
-				
+
 				if ( status == 'OK' ) {
-	    			
+
 	    			if ( this_form.fields_changed_status == 1  ) {
 
 	    				jQuery( '.group_coordinates, .group_address' ).val( '' );
-	    			
+
 	    			} else if ( this_form.fields_changed_status == 2 ) {
-	    			
-	    				jQuery( '.group_coordinates, .gmw-lf-submission-field.group_address, #' + this_form.location_fields.address.id ).val( '' );		
+
+	    				jQuery( '.group_coordinates, .gmw-lf-submission-field.group_address, #' + this_form.location_fields.address.id ).val( '' );
 	    			}
 
 	    			// add address to the result
@@ -1000,32 +1008,32 @@ var GMW_Location_Form = {
 
 	/**
 	 * Reverse geocoder. Conver coords to address
-	 * 		
+	 *
 	 * @param  {float} lat latitude
 	 * @param  {float} lng longitude
 	 * @param  {[type]} save_data [description]
-	 * @return {void}    
+	 * @return {void}
 	 */
 	reverse_geocode : function( lat, lng, save_data ) {
-		
+
 		jQuery( '#' + this_form.action_fields.loader.id ).fadeIn( 'fast' );
 
 		// populate coords fields with the original coords values
 		jQuery( '.group_coordinates.latitude' ).val( lat );
 		jQuery( '.group_coordinates.longitude' ).val( lng );
-		
-		data = { 
-            'q' 	 : [ lat, lng ], 
+
+		data = {
+            'q' 	 : [ lat, lng ],
             'region' : this_form.region
         };
 
 		var geocoder = new GMW_Geocoder( gmwVars.geocodingProvider );
-			
+
 		geocoder.reverseGeocode( data ,function( response, status ) {
-			
+
 			// if geocode successful
 			if ( status == 'OK' ) {
-					
+
 				// add the formatted address as the address field
 				response.result.address = response.result.formatted_address;
 
@@ -1047,18 +1055,18 @@ var GMW_Location_Form = {
 		/*
 		// init google geocoder
 		geocoder = new google.maps.Geocoder();
-		
-		data = { 
-            'q' 	 : [ lat, lng ], 
+
+		data = {
+            'q' 	 : [ lat, lng ],
             'region' : this_form.region
         };
 
 		// reverse geocode coordinates
-		geocoder.geocode( data, function( results, status ) {		
-			
+		geocoder.geocode( data, function( results, status ) {
+
 			// if geocode successful
 			if ( status == google.maps.GeocoderStatus.OK ) {
-				
+
 				//clear address fields before updating with new info
 				jQuery( '.group_address,' + this_form.location_fields.address.id ).val('');
 
@@ -1073,14 +1081,14 @@ var GMW_Location_Form = {
       			this_form.geocoder_failed( status );
       		}
    		});*/
-	}, 
-	
+	},
+
 	/**
 	 * Geocoder failed functions.
-	 * 
+	 *
 	 * @param  {string} status status message
-	 * 
-	 * @return {void}  
+	 *
+	 * @return {void}
 	 */
 	geocoder_failed : function( status, result ) {
 
@@ -1091,15 +1099,15 @@ var GMW_Location_Form = {
 		console.log( result );
 
 		//hide loader
-	  	jQuery( '#' + this_form.action_fields.loader.id ).fadeOut( 'fast' );	
+	  	jQuery( '#' + this_form.action_fields.loader.id ).fadeOut( 'fast' );
 	},
 
 	/**
 	 * Nn location message.
 	 *
 	 * @param  {string} status status message
-	 * 
-	 * @return {void}  
+	 *
+	 * @return {void}
 	 */
 	location_missing_message : function() {
 
@@ -1109,12 +1117,12 @@ var GMW_Location_Form = {
 		alert( this_form.messages.location_missing );
 
 		//hide loader
-	  	jQuery( '#' + this_form.action_fields.loader.id ).fadeOut( 'fast' );	
+	  	jQuery( '#' + this_form.action_fields.loader.id ).fadeOut( 'fast' );
 	},
 
 	/**
 	 * Retrieve the address fields from address component
-	 * 
+	 *
 	 * @param  {[type]} location  [description]
 	 * @param  {[type]} save_data [description]
 	 * @return {[type]}           [description]
@@ -1122,7 +1130,7 @@ var GMW_Location_Form = {
 	get_address_fields : function( result, response, save_data ) {
 
     	// modify the address component before populating the location fields.
-    	// can also performe custom tasks perform 
+    	// can also performe custom tasks perform
     	result = GMW.apply_filters( 'gmw_lf_address_component', result, this_form, response );
 
     	// if address is missing at this point, use the formatted address value.
@@ -1171,7 +1179,7 @@ var GMW_Location_Form = {
 		if ( ! this_form.is_location_confirmed ) {
 
 			// show loader
-	  		jQuery( '#' + this_form.action_fields.loader.id ).fadeIn( 'fast' );	
+	  		jQuery( '#' + this_form.action_fields.loader.id ).fadeIn( 'fast' );
 
 	  		latVal = lngVal = '';
 
@@ -1187,28 +1195,28 @@ var GMW_Location_Form = {
 
 				// check for full address first
 				if ( this_form.fields_changed_status == 1 && jQuery.trim( jQuery( '#' + this_form.location_fields.address.id ).val() ).length > 0 ) {
-	
+
 					address = jQuery( '#' + this_form.location_fields.address.id ).val();
 
 				// otherwise, check for multiple address fields
 				} else {
-			
+
 					address = '';
-					
+
 					jQuery.each( this_form.address_fields, function( index, value ) {
-						
+
 						// if address field and value exist
 						if ( jQuery( '#' + value.id ).length && jQuery.trim( jQuery( '#' + value.id ).val() ).length > 0 ) {
 							address += jQuery( '#' + value.id ).val() + ' ';
 						}
-					});			    	
+					});
 				}
 
 				// if address blank but have coordinates do reverse geocoding
 				if ( jQuery.trim( address ).length == 0 && ( jQuery.trim( latVal ).length != 0 && jQuery.trim( lngVal ).length != 0 ) ) {
-					
-					this_form.reverse_geocode( latVal, lngVal, true );  
-				
+
+					this_form.reverse_geocode( latVal, lngVal, true );
+
 				} else {
 
 					//geocode address
@@ -1219,7 +1227,7 @@ var GMW_Location_Form = {
 			} else {
 
 	   	 		//reverse geocode coords
-	    		this_form.reverse_geocode( latVal, lngVal, true );  
+	    		this_form.reverse_geocode( latVal, lngVal, true );
 			}
 
 		} else {
@@ -1231,19 +1239,19 @@ var GMW_Location_Form = {
 
 	/**
 	 * Verfy location on form submission
-	 * 
+	 *
 	 * @return {[type]} [description]
 	 */
 	auto_confirm_submission : function( form_submission ) {
-		
+
 		var setTime;
-		
-		// if location does not exist 
+
+		// if location does not exist
 		if ( ! this_form.location_exists ) {
 
 			// if required abort with a message
 			if ( this_form.vars.location_required ) {
-				
+
 				this_form.location_missing_message();
 
 				return false;
@@ -1268,7 +1276,7 @@ var GMW_Location_Form = {
 			jQuery( '#' + this_form.action_fields.message.id ).fadeOut( 'fast' );
 
 			this_form.confirm_location();
-		
+
 		// otherwise, if confirmed
 		} else {
 
@@ -1279,22 +1287,22 @@ var GMW_Location_Form = {
 
 			//if location confirmed
 			if ( this_form.is_location_confirmed ) {
-		
+
 				if ( form_submission || ( this_form.vars.stand_alone && ! this_form.vars.ajax_enabled ) ) {
-			
+
 					this_form.proceed_submission = true;
 
 					this_form.auto_confirming = false;
 
 					jQuery( this_form.vars.form_element ).submit();
-				
+
 				} else {
 
 					this_form.auto_confirming = false;
 
 					this_form.save_location();
 				}
-				
+
 			} else {
 
 				this_form.auto_confirming = false;
@@ -1309,22 +1317,22 @@ var GMW_Location_Form = {
 
 	/**
 	 * Verify location on form submission
-	 * 
+	 *
 	 * @return {[type]} [description]
 	 */
 	confirm_submission : function( form_submission ) {
-	
+
 		var confirmed = false;
 
 		//if location confirmed
 		if ( this_form.is_location_confirmed ) {
 
 			confirmed = true;
-		
+
 		} else if ( ! this_form.location_exists ) {
 
 			if ( this_form.vars.location_required ) {
-				
+
 				alert( 'no location' );
 
 				confirmed = false;
@@ -1336,12 +1344,12 @@ var GMW_Location_Form = {
 
 		// If location confirmation required abort the form submission and alert the user
 		} else if ( this_form.vars.confirm_required ) {
-			
+
 			alert( this_form.messages.confirm_required );
-			
+
 			confirmed = false;
 
-		//Otherwise present the user with an option to either proceed with the form submission 
+		//Otherwise present the user with an option to either proceed with the form submission
 		//or abort it in order to confirm the location
 		} else {
 
@@ -1350,7 +1358,7 @@ var GMW_Location_Form = {
 
 			// verify coords
 			if ( jQuery.trim( lat ).length == 0 || jQuery.trim( lng ).length == 0 || ! jQuery.isNumeric( lat ) || ! jQuery.isNumeric( lng ) ) {
-				
+
 				alert( this_form.messages.coords_invalid );
 
 				confirmed = false;
@@ -1371,23 +1379,23 @@ var GMW_Location_Form = {
 		}
 
 		if ( form_submission || ( this_form.vars.stand_alone && ! this_form.vars.ajax_enabled ) ) {
-			
+
 			this_form.proceed_submission = true;
 
 			jQuery( this_form.vars.form_element ).submit();
-		
+
 		} else {
 
 			this_form.save_location();
 		}
 		/*
 		if ( ! this_form.vars.stand_alone || ( this_form.vars.stand_alone && this_form.vars.ajax_enabled ) ) {
-			
+
 			this_form.save_location();
-		
+
 		} else {
-			
-			
+
+
 		}
 		*/
 		return;
@@ -1397,22 +1405,22 @@ var GMW_Location_Form = {
 	 * When location changed.
 	 *
 	 * Display changed message, show update button and set location confirmed to false.
-	 * 
+	 *
 	 * @return {[type]} [description]
 	 */
 	location_confirmed : function() {
 
 		if ( ! this_form.auto_confirming ) {
-		  	
+
 		  	//hide confirm button
 			jQuery( '#' + this_form.action_fields.confirm_location.id ).fadeOut( 'fast' );
-			
+
 			jQuery( '#' + this_form.action_fields.delete_location.id ).fadeIn( 'fast' );
 
 			//if ( this_form.vars.auto_confirm ) {
 
 			//	this_form.action_message( 'updating', this_form.messages.confirming_location, false );
-			
+
 		//	} else {
 
 				// hide loader and show address confirm message
@@ -1422,18 +1430,18 @@ var GMW_Location_Form = {
 
 		// clear change event when location confirmed.
 		jQuery( '.gmw-lf-field.address-field, .gmw-lf-field.group_address, .gmw-lf-field.group_coordinates' ).off( 'change' );
-			
+
 		//location status
 		this_form.is_location_confirmed = true;
 	},
 
 	/**
 	 * save location using Ajax
-	 * 
+	 *
 	 * @return {[type]} [description]
 	 */
     save_location : function() {
-  
+
   	 	// hide status messages
   	 	jQuery( '#' + this_form.action_fields.message.id ).fadeOut( 'fast', function() {
   	 		//show loader
@@ -1445,20 +1453,20 @@ var GMW_Location_Form = {
   	 	// save location via ajax
 		this_form.ajaxResponse = jQuery.ajax({
 			type 	 : "POST",
-			dataType : 'json',	
+			dataType : 'json',
 			url      : gmwVars.ajaxUrl,
-			data 	 : { 
+			data 	 : {
 				action       : this_form.vars.update_callback,
-				'formValues' : formValues, 
+				'formValues' : formValues,
 				'formArgs'   : this_form.vars,
 				'security'	 : this_form.security
 			},
 
 			// saving success
-			success : function( response ){				
+			success : function( response ){
 
 				if ( response ) {
-					
+
 					// pass the location ID to hidden field
 					jQuery( '#gmw_lf_location_id' ).val( response );
 
@@ -1471,8 +1479,8 @@ var GMW_Location_Form = {
 						this_form.action_message( 'ok', this_form.messages.location_saved, true );
 
 						//wait abit and hide message
-						setTimeout( function() {			
-								
+						setTimeout( function() {
+
 							///hide action message
 							jQuery( '#' + this_form.action_fields.message.id + ' span' ).html( this_form.messages.location_exists );
 						},3500);
@@ -1481,10 +1489,10 @@ var GMW_Location_Form = {
 
 				//if failed
 				} else {
-						
+
 					// Hide loader and show action message
-					this_form.action_message( 'error', this_form.messages.location_not_saved, true );		
-				}		
+					this_form.action_message( 'error', this_form.messages.location_not_saved, true );
+				}
 			}
 
 		//if failed
@@ -1498,15 +1506,15 @@ var GMW_Location_Form = {
 					console.log( jqXHR.responseText );
 				}
 			}
-			
+
 			// hide loader and show action message
 			this_form.action_message( 'error', this_form.messages.location_not_saved, true );
-				
+
 		}).done( function ( response ) {
 			console.log( 'done saving location' );
 			console.log( response );
 		});
-			
+
 		return false;
  	},
 
@@ -1515,22 +1523,22 @@ var GMW_Location_Form = {
  	 * @return {[type]} [description]
  	 */
     delete_location : function() {
-   	
+
     	// hide status message
     	jQuery( '#' + this_form.action_fields.message.id ).fadeOut( 'fast', function() {
 
     		// show loader
-	  		jQuery( '#' + this_form.action_fields.loader.id ).fadeIn( 'fast' );	
+	  		jQuery( '#' + this_form.action_fields.loader.id ).fadeIn( 'fast' );
 
 	  		// hide confirm button
-	  		jQuery( '#' + this_form.action_fields.confirm_location.id ).fadeOut( 'fast' );	
+	  		jQuery( '#' + this_form.action_fields.confirm_location.id ).fadeOut( 'fast' );
     	});
 
 	  	// delete location from database via ajax only if location ID exists
 	  	if ( jQuery( '#gmw_lf_location_id' ).val() != '' && jQuery( '#gmw_lf_location_id' ).val() != '0' ) {
 
 			this_form.ajax_delete();
-				
+
 		} else {
 
 			//clear all location fields
@@ -1540,7 +1548,7 @@ var GMW_Location_Form = {
   			this_form.is_location_confirmed = false;
 
 			setTimeout(function() {
-				
+
 				this_form.location_exists = false;
 
    				jQuery( '#' + this_form.action_fields.delete_location.id ).fadeOut( 'fast' );
@@ -1555,13 +1563,13 @@ var GMW_Location_Form = {
 
 				}, 3500 );
 
-			}, 1500 );	
+			}, 1500 );
 		}
 	},
 
 	/**
 	 * Delete location from database
-	 * 
+	 *
 	 * @return {[type]} [description]
 	 */
 	ajax_delete : function() {
@@ -1573,15 +1581,15 @@ var GMW_Location_Form = {
 			dataType : 'json',
 			url      : gmwVars.ajaxUrl,
 			data 	 : {
-				action       : this_form.vars.delete_callback, 
-			 	'formValues' : formValues, 
+				action       : this_form.vars.delete_callback,
+			 	'formValues' : formValues,
 				'formArgs'   : this_form.vars,
 				'security'	 : this_form.security
-			},		
-			
+			},
+
 			// if location deleted
 			success  : function( response ) {
-		
+
 				if ( response ) {
 
 					GMW.do_action( 'gmw_lf_location_deleted', response, formValues, this_form.vars );
@@ -1608,7 +1616,7 @@ var GMW_Location_Form = {
 					}, 3500 );
 
 				} else {
-					
+
 					//hide loader and show action message
 					this_form.action_message( 'error', this_form.messages.location_not_deleted, true );
 				}
@@ -1625,7 +1633,7 @@ var GMW_Location_Form = {
 					console.log(jqXHR.responseText);
 				}
 			}
-				
+
 			// hide loader and show action message
 			this_form.action_message( 'error', this_form.messages.location_not_deleted, true );
 
@@ -1635,7 +1643,7 @@ var GMW_Location_Form = {
 		});
 
 		return false;
-    }			
+    }
 };
 
 jQuery( document ).ready( function() {
