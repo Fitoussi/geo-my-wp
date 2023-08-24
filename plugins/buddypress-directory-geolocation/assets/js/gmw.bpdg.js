@@ -1,25 +1,25 @@
 jQuery( document ).ready( function( $ ) {
-	
+
 	// This is a workaround to move the geolcoation items ( address, distance, directions link ) in each member in the results to a better position inside the div element.
 	// There is only one hook that we could use for adding those geolocation items into the results, but that hook is not a great location
 	// to showcase those items. This is a "hacky" way of doing so, and hpefully temporary.
-	if ( gmwBpdg.is_buddyboss ) {
+	if ( gmwBpdg.is_buddyboss_theme ) {
 
 		$( document ).ajaxComplete(function( event, request, settings ) {
 
 			if ( typeof settings.data !== 'undefined' && settings.data.indexOf( 'action=members_filter' ) > -1 ) {
-				
+
 				setTimeout( function() {
 
 					jQuery( '.bp-members-list-hook-inner' ).each( function() {
-						
+
 						var item    = jQuery( this );
 						var wrapper = jQuery( this ).closest( '.item-entry' );
 
 						item.find( '.gmw-bpmdg-location-meta-wrapper' ).detach().insertAfter( wrapper.find( '.list-wrap-inner .item-block' ) );
 					});
 				}, 300 );
-			}		
+			}
 		});
 	}
 
@@ -28,14 +28,14 @@ jQuery( document ).ready( function( $ ) {
 		if ( save ) {
 
 			GMW.set_cookie( 'gmw_' + gmwBpdg.prefix + '_address', jQuery( '#gmw-address-field-' + gmwBpdg.prefix ).val(), 1 );
-			GMW.set_cookie( 'gmw_' + gmwBpdg.prefix + '_lat', jQuery( '#gmw-lat-' + gmwBpdg.prefix ).val(), 1 );	
+			GMW.set_cookie( 'gmw_' + gmwBpdg.prefix + '_lat', jQuery( '#gmw-lat-' + gmwBpdg.prefix ).val(), 1 );
 			GMW.set_cookie( 'gmw_' + gmwBpdg.prefix + '_lng', jQuery( '#gmw-lng-' + gmwBpdg.prefix ).val(), 1 );
 			GMW.set_cookie( 'gmw_' + gmwBpdg.prefix + '_radius', jQuery( '#gmw-distance-field-' + gmwBpdg.prefix ).val(), 1 );
 
 		} else {
 
 			GMW.set_cookie( 'gmw_' + gmwBpdg.prefix + '_address', '', 1 );
-			GMW.set_cookie( 'gmw_' + gmwBpdg.prefix + '_lat', jQuery( '' ).val(), 1 );	
+			GMW.set_cookie( 'gmw_' + gmwBpdg.prefix + '_lat', jQuery( '' ).val(), 1 );
 			GMW.set_cookie( 'gmw_' + gmwBpdg.prefix + '_lng', jQuery( '' ).val(), 1 );
 			GMW.set_cookie( 'gmw_' + gmwBpdg.prefix + '_radius', jQuery( '' ).val(), 1 );
 		}
@@ -68,7 +68,7 @@ jQuery( document ).ready( function( $ ) {
 	 */
 	/*function gmw_bpdg_geocoder_failed( status ) {
 
-		GMW.set_cookie( 'gmw_' + gmwBpdg.prefix + '_lat', '', 1 );	
+		GMW.set_cookie( 'gmw_' + gmwBpdg.prefix + '_lat', '', 1 );
 		GMW.set_cookie( 'gmw_' + gmwBpdg.prefix + '_lng', '', 1 );
 
 		jQuery( '#gmw-lat-' + gmwBpdg.prefix ).val( '' );
@@ -115,7 +115,7 @@ jQuery( document ).ready( function( $ ) {
 
 	// Clear coordinates when using the search button of the address field.
 	$( '#gmw-address-field-' + gmwBpdg.prefix ).on( 'search', function () {
-	    
+
 	    if ( ! jQuery.trim( jQuery( this ).val() ).length ) {
 
 	    	jQuery( '#gmw-lat-' + gmwBpdg.prefix ).val( '' );
@@ -130,7 +130,7 @@ jQuery( document ).ready( function( $ ) {
 	// Populdate coordiantes and submit form when selecting from address autocomplete.
 	GMW.add_action( 'gmw_address_autocomplete_place_changed', function( place, autocomplete, field_id, input_field, options ) {
 
-		if ( ! place.geometry || 'gmw-address-field-' + gmwBpdg.prefix != field_id ) { 
+		if ( ! place.geometry || 'gmw-address-field-' + gmwBpdg.prefix != field_id ) {
 			return false;
 		}
 
@@ -140,7 +140,7 @@ jQuery( document ).ready( function( $ ) {
 		gmw_bpdg_submit_form();
 
 		//jQuery( '#gmw-address-field-' + gmwBpdg.prefix ).addClass( 'autocomplete-triggered' );
-			
+
 		//jQuery( 'body.directory.groups.buddypress.bp-legacy' ).find( '#groups_search_submit' ).click();
 		//$( '#dir-groups-search-form, #search-groups-form' ).submit();
 	});
@@ -149,13 +149,13 @@ jQuery( document ).ready( function( $ ) {
     jQuery( '.gmw-locator-button' ).click( function() {
 
     	GMW.locator_button_success = function( result ) {
-    	
+
     		// add coords value to hidden fields
         	$( '#gmw-lat-' + gmwBpdg.prefix ).val( result.latitude );
         	$( '#gmw-lng-' + gmwBpdg.prefix ).val( result.longitude );
     		$( '#gmw-address-field-' + gmwBpdg.prefix ).val( result.formatted_address );
     		$( '.gmw-locator-button' ).removeClass( 'animate-spin' );
-    			
+
     		gmw_bpdg_submit_form();
 
 			//jQuery( 'body.directory.groups.buddypress.bp-legacy' ).find( '#groups_search_submit' ).click();
@@ -163,7 +163,7 @@ jQuery( document ).ready( function( $ ) {
     	};
 
     	GMW.locator_button_failed = function( status ) {
-    			
+
     		// alert failed message
         	alert( 'We were unable to detect your location. Please try again.' );
 
@@ -193,7 +193,7 @@ jQuery( document ).ready( function( $ ) {
 
 	/**
 	 * Geocode addess on enter key in address field
-	 * 
+	 *
 	 * @return {[type]} [description]
 	 */
 	jQuery( '#gmw-address-field-' + gmwBpdg.prefix ).keyup( function( event ){
@@ -204,7 +204,7 @@ jQuery( document ).ready( function( $ ) {
 
 		    jQuery( '#gmw-lat-' + gmwBpdg.prefix ).val( '' );
 			jQuery( '#gmw-lng-' + gmwBpdg.prefix ).val( '' );
-		   	
+
 		   	// if enter key pressed submit the directory form.
 		} else {
 
@@ -228,7 +228,7 @@ jQuery( document ).ready( function( $ ) {
 
 		    	jQuery( '#gmw-lat-' + gmwBpdg.prefix ).val( '' );
 				jQuery( '#gmw-lng-' + gmwBpdg.prefix ).val( '' );
-		   	
+
 		   	// if enter key pressed, try geocoding the address
 		   	} else {
 
@@ -243,7 +243,7 @@ jQuery( document ).ready( function( $ ) {
 					//jQuery( 'body.directory.groups.buddypress.bp-legacy' ).find( '#groups_search_submit' ).click();
 					//$( '#dir-groups-search-form, #search-groups-form' ).submit();
 		   		} else {
-		   			addressField.removeClass( 'autocomplete-triggered' );	
+		   			addressField.removeClass( 'autocomplete-triggered' );
 		   		}
 
 		    	return;
@@ -314,7 +314,7 @@ jQuery( document ).ready( function( $ ) {
 });
 
 // Add Google Marker Cluster
-if ( gmwVars.mapsProvider === 'google_maps' ) { 
+if ( gmwVars.mapsProvider === 'google_maps' ) {
 
 	GMW.add_filter( 'gmw_map_init', function( map ) {
 
@@ -336,7 +336,7 @@ if ( gmwVars.mapsProvider === 'google_maps' ) {
 					    markers : mapObject.markersl,
 					    //renderer : renderer,
 					});
-				} 
+				}
 			},
 
 			'clear' : function( mapObject ) {
@@ -345,21 +345,21 @@ if ( gmwVars.mapsProvider === 'google_maps' ) {
 			    if ( typeof markerClusterer.MarkerClusterer === 'function' ) {
 
 			    	// remove existing clusters
-			    	if ( mapObject.clusters != false ) {		
+			    	if ( mapObject.clusters != false ) {
 			    		mapObject.clusters.clearMarkers();
 			    	}
-				} 
+				}
 			},
 
 			'addMarker' : function( marker, mapObject ) {
-				mapObject.clusters.addMarker( marker );	
+				mapObject.clusters.addMarker( marker );
 			},
 
 			'markerClick' : function( marker, mapObject ) {
 				google.maps.event.addListener( marker, 'click', function() {
 
 					mapObject.markerClick( this );
-				});	
+				});
 			}
 		};
 
@@ -368,7 +368,7 @@ if ( gmwVars.mapsProvider === 'google_maps' ) {
 }
 
 // Add Google Marker Cluster
-if ( gmwVars.mapsProvider === 'leaflet' ) { 
+if ( gmwVars.mapsProvider === 'leaflet' ) {
 
 	GMW.add_filter( 'gmw_map_init', function( map ) {
 
@@ -383,11 +383,11 @@ if ( gmwVars.mapsProvider === 'leaflet' ) {
 
 				// initialize markers clusterer if needed and if exists
 			    if ( typeof L.markerClusterGroup === 'function' ) {
-			    		
+
 			    	mapObject.clusters = L.markerClusterGroup( mapObject.options.markerClustersOptions );
 
 			    	mapObject.map.addLayer( mapObject.clusters );
-				} 
+				}
 			},
 
 			// Clear clusters.
@@ -396,20 +396,20 @@ if ( gmwVars.mapsProvider === 'leaflet' ) {
 			    if ( typeof L.markerClusterGroup === 'function' ) {
 
 			    	// remove existing clusters
-			    	if ( mapObject.clusters != false ) {		
+			    	if ( mapObject.clusters != false ) {
 			    		mapObject.clusters.clearLayers();
 			    	}
-				} 
+				}
 			},
 
 			// Add marker to the cluster.
 			'addMarker' : function( marker, mapObject ) {
-				mapObject.clusters.addLayer( marker );	
+				mapObject.clusters.addLayer( marker );
 			},
 
 			// marker click action to open info-window.
 			'markerClick' : function( marker, mapObject ) {
-				
+
 				marker.on( 'click', function() {
 
 					mapObject.markerClick( this );
