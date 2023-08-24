@@ -525,7 +525,7 @@ var GMW = {
 
 		GMW_Geocoders[GMW.geocode_provider].address_autocomplete(field_id, fieldData);
 
-		return;
+		/*return;
 
         var input_field = document.getElementById( field_id );
 
@@ -581,7 +581,7 @@ var GMW = {
                     formElement.find( '.gmw-lng' ).val( place.geometry.location.lng().toFixed(6) );
                 }
             });
-        }
+        }*/
     },
 
     /**
