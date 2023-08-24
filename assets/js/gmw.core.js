@@ -815,7 +815,7 @@ var GMW = {
 	        	if ( checked.length == 0 || checked.length > 1 || checked.val() == '' || checked.val() == '0' ) {
 
 	        		thisForm.find( '.gmw-field-type-taxonomy-wrapper' ).slideUp( 'fast' ).find( 'input, select' ).prop( 'disabled', true );
-	        		
+
 	        		// Otherwise, show only taxonomies of checked post types.
 	        	} else {
 
@@ -834,11 +834,11 @@ var GMW = {
 	        	var postTypes = jQuery( this ).val();
 
 	        	if ( postTypes.length == 0 || postTypes.length > 1 || postTypes == '' || postTypes == '0' ) {
-	        		
+
 	        		thisForm.find( '.gmw-field-type-taxonomy-wrapper' ).slideUp( 'fast' ).find( 'input, select' ).prop( 'disabled', true );
-	        	
+
 	        	} else {
-	        		
+
 	        		if ( jQuery.isArray( postTypes ) ) {
 
 	        			thisForm.find( '.gmw-field-type-taxonomy-wrapper' ).hide().find( 'input, select' ).prop( 'disabled', true );
@@ -1017,7 +1017,7 @@ var GMW = {
 			var toggle  = jQuery( this );
 			var data    = jQuery( this ).data();
 			var element = jQuery( this ).closest( '.gmw-element-wrapper, .gmw-element-template' );
-			
+
 			element.css( 'transition', 'margin ' + data.duration + 'ms' );
 			toggle.toggleClass( data.toggle_close + ' ' + data.toggle_open );
 
@@ -1054,10 +1054,10 @@ var GMW = {
 		var $form = jQuery( '#gmw-submission-fields-' + formId ).closest( 'form' );
 
 		$form.trigger( 'reset' );
-		
+
 		$form.find( ':input[type="text"]' ).not( ':input[type="hidden"]' ).val( '' ).trigger( 'change.select2' );
 		$form.find( 'select' ).not( ':input[type="hidden"]' ).not( '[multiple]' ).find( 'option:eq(0)' ).prop( 'selected', true ).trigger( 'change.select2' );
-		
+
 		$form.find( 'select[multiple]' ).not( ':input[type="hidden"]' ).val( '' ).trigger( 'change.select2' );
 		$form.find( 'textarea' ).val( '' );
 
@@ -1112,7 +1112,7 @@ var GMW = {
             	if ( typeof jQuery( this ).data( 'gmw-dropdown-parent' ) !== 'undefined' && jQuery( jQuery( this ).data( 'gmw-dropdown-parent' ) ).length ) {
 
             		thisParent = jQuery( jQuery( this ).data( 'gmw-dropdown-parent' ) );
- 	          	
+
  	          	} else {
 
  	          		thisParent = jQuery( this ).parent();
