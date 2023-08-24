@@ -518,20 +518,24 @@ var GMW = {
 
     /**
      * Google places address autocomplete
-     * 
+     *
      * @return void
      */
     address_autocomplete : function( field_id , fieldData ) {
-          
+
+		GMW_Geocoders[GMW.geocode_provider].address_autocomplete(field_id, fieldData);
+
+		return;
+
         var input_field = document.getElementById( field_id );
 
         // verify the field
         if ( input_field != null ) {
-            
+
             var options = {};
 
             if ( typeof fieldData.autocomplete_countries !== 'undefined' ) {
-                options.componentRestrictions = { 
+                options.componentRestrictions = {
                     country : fieldData.autocomplete_countries.split( ',' )
                 };
             }
@@ -1986,12 +1990,71 @@ var GMW_Geocoders = {
 	        }
 
 			return fields;
-		}
+		},
+
+		address_autocomplete : function( field_id , fieldData ) {
+
+			var input_field = document.getElementById( field_id );
+
+			// verify the field
+			if ( input_field != null ) {
+
+				var options = {};
+
+				if ( typeof fieldData.autocomplete_countries !== 'undefined' ) {
+					options.componentRestrictions = {
+						country : fieldData.autocomplete_countries.split( ',' )
+					};
+				}
+
+				if ( typeof fieldData.autocomplete_types !== 'undefined' ) {
+					options.types = [fieldData.autocomplete_types];
+				}
+
+				options.fields = [ 'address_component', 'formatted_address', 'geometry' ];
+
+				//The plugins uses basic options of Google places API.
+				//You can use this filter to modify the autocomplete options
+				//see this page https://developers.google.com/maps/documentation/javascript/places-autocomplete
+				//for all the available options.
+				options = GMW.apply_filters( 'gmw_address_autocomplete_options', options, field_id, input_field, GMW );
+
+				var autocomplete = new google.maps.places.Autocomplete( input_field, options );
+
+				google.maps.event.addListener( autocomplete, 'place_changed', function() {
+
+					var place = autocomplete.getPlace();
+
+					GMW.do_action( 'gmw_address_autocomplete_place_changed', place, autocomplete, field_id, input_field, options );
+
+					if ( place.geometry ) {
+
+						var formElement = jQuery( input_field.closest( 'form' ) );
+
+						// if only country entered set its value in hidden fields
+						if ( place.address_components.length == 1 && place.address_components[0].types[0] == 'country' ) {
+
+							formElement.find( '.gmw-country' ).val( place.address_components[0].short_name ).prop( 'disabled', false );
+
+						// otherwise if only state entered.
+						} else if ( place.address_components.length == 2 && place.address_components[0].types[0] == 'administrative_area_level_1' ) {
+
+							formElement.find( '.gmw-state' ).val( place.address_components[0].long_name ).prop( 'disabled', false );
+							formElement.find( '.gmw-country' ).val( place.address_components[1].short_name ).prop( 'disabled', false );
+						}
+
+						// make sure coords fields exist.
+						formElement.find( '.gmw-lat' ).val( place.geometry.location.lat().toFixed(6) );
+						formElement.find( '.gmw-lng' ).val( place.geometry.location.lng().toFixed(6) );
+					}
+				});
+			}
+		},
 	},
 
 	/**
 	 * Nominatim geocoder ( Open Street Maps ).
-	 * 
+	 *
 	 * @return {[type]} [description]
 	 */
 	'nominatim' : {
@@ -2118,6 +2181,11 @@ var GMW_Geocoders = {
 			}).fail( function( jqXHR, textStatus, errorThrown ) {
 				self.geocodeFailed( textStatus + ' ' + errorThrown, failure_callback );
 			});
+
+		// Address autocomplete.
+		address_autocomplete: function (field_id, fieldData) {
+			return;
+		}
 		}
 	},
 
