@@ -30,7 +30,7 @@
 
 #gmw-location-form-wrapper .gmw-lf-tabs-wrapper .gmw-lf-tab a.tab-anchor {
 	text-decoration: none;
-	font-size: 14px;
+	font-size: 13px;
 	outline: 0;
 	display: flex;
 	flex-direction: row;
@@ -83,7 +83,7 @@
 
 /***** Top Tabs *****/
 
-#gmw-location-form-wrapper.location-form-tabs-top .gmw-location-form-inner  { 
+#gmw-location-form-wrapper.location-form-tabs-top .gmw-location-form-inner  {
 	-ms-grid-rows: auto auto;
 	grid-template-rows: auto auto;
 }
@@ -113,7 +113,7 @@ div#gmw-location-form-wrapper.location-form-tabs-top ul.gmw-lf-tabs-wrapper .gmw
 
 /***** content *****/
 
-#gmw-location-form-wrapper div.gmw-lf-content-wrapper { 
+#gmw-location-form-wrapper div.gmw-lf-content-wrapper {
 	padding: 25px;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
@@ -342,14 +342,20 @@ div#gmw-location-form-wrapper .gmw-lf-day-hours-content > .gmw-lf-day-hours-row 
 }
 
 div#gmw-location-form-wrapper .gmw-lf-content-wrapper .gmw-map-icons-wrapper {
-	display: grid;
+	/*display: grid;
 	grid-template-columns: repeat(auto-fit,minmax(60px,1fr));
-	grid-gap: 12px;
+	grid-gap: 12px;*/
+
+	max-height: 250px;
+	overflow: scroll;
+	border: 1px solid #ededed;
+	border-radius: 5px;
+	overflow-x: hidden;
 }
 
 div#gmw-location-form-wrapper .gmw-lf-content-wrapper .gmw-map-icons-wrapper label,
 .groups.group-admin #buddypress #item-body #group-settings-form .gmw-lf-content-wrapper .gmw-map-icons-wrapper label {
-	display: flex;
+	/*display: flex;
 	box-sizing: border-box;
 	background: #f7f7f7;
 	padding: 10px 15px;
@@ -357,10 +363,17 @@ div#gmw-location-form-wrapper .gmw-lf-content-wrapper .gmw-map-icons-wrapper lab
 	border-radius: 6px;
 	margin: 0;
 	cursor: pointer;
-	flex-direction: column-reverse;
+	flex-direction: column-reverse;*/
+
+	border-bottom: 1px solid #ededed;
+	padding: 10px 20px;
+	margin: 0;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
 }
 
 div#gmw-location-form-wrapper .gmw-lf-content-wrapper .gmw-map-icons-wrapper label img {
-	max-height: 35px;
-	max-width: 35px;
+	height: 30px;
+	width: 30px;
 }
