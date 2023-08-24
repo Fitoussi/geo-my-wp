@@ -2181,11 +2181,213 @@ var GMW_Geocoders = {
 			}).fail( function( jqXHR, textStatus, errorThrown ) {
 				self.geocodeFailed( textStatus + ' ' + errorThrown, failure_callback );
 			});
+		},
 
 		// Address autocomplete.
 		address_autocomplete: function (field_id, fieldData) {
 			return;
 		}
+	},
+
+	/**
+	 * LocationIQ geocoder.
+	 *
+	 * @return {[type]} [description]
+	 */
+	'locationiq' : {
+
+		// Rest URL.
+		'geocodeUrl' : 'https://locationiq.com/v1/search',
+
+		// Reverse geocoding URL.
+		'reverseGeocodeUrl' : 'https://locationiq.com/v1/reverse',
+
+		// default params.
+		'options' : {
+			'format' 		       : 'json', // [html|xml|json|jsonv2] Output format.
+			'addressdetails'       : '1', 	// Include a breakdown of the address into elements
+			'accept-language'      : 'en', // Preferred language order for showing search results.
+			'zoom'			       : '18',
+			'key'			  	   : gmwVars.settings.api.locationiq_key || '',
+			'region'		  	   : 'us',
+			'limit'                : 10,    // Limit the number of returned results. Default is 10.
+			'normalizecity'        : 1,
+			'statecode'            : 1,
+			//'email'			   : <valid email address> // If you are making large numbers of request please include a valid email address
+			//'countrycodes' 	   : GMW_Geocoder.region,
+			//'suggestResults' : true,
+			//'json_callback'	   : <string> // Wrap json output in a callback function (JSONP).
+			//'q'				   : <query> // query string to search for.
+			//'viewbox'			   : <x1>,<y1>,<x2>,<y2> // The preferred area to find search results.
+			//'bounded'			   : [0|1] // Restrict the results to only items contained with the viewbox.
+			//'exclude_place_ids'  : <place_id,[place_id],[place_id]> // If you do not want certain openstreetmap objects to appear in the search result.
+
+			//'dedupe'			   : [0|1]
+			//'polygon_geojson'    : 1 // Output geometry of results in geojson format.
+			//'polygon_kml'		   : 1 // Output geometry of results in kml format.
+			//'polygon_svg'		   : 1 // Output geometry of results in svg format.
+			//'polygon_text'	   : 1 // Output geometry of results as a WKT.
+			//'extratags'		   : 1 // Include additional information in the result if available, e.g. wikipedia link, opening hours.
+			//'namedetails'		   : 1 // Include a list of alternative names in the results.
+		},
+
+		// default location fields to return.
+		'locationFields' : {
+			'place_id'          : 'place_id',
+			'formatted_address' : 'display_name',
+			'lat' 				: 'lat',
+			'lng' 				: 'lon',
+			'street_number' 	: 'address.house_number',
+			'street_name' 		: 'address.road',
+			'city'           	: [ 'address.city', 'address.town', 'address.suburb', 'address.village' ],
+			'county'         	: 'address.county',
+			'region_name'    	: 'address.state',
+			'postcode'       	: 'address.postcode',
+			'country_name'   	: 'address.country',
+			'country_code'   	: 'address.country_code',
+		},
+
+		// Initialize.
+		initialize : function() {
+			this.options['accept-language'] = this.options.language;
+		},
+
+		// Get results
+		get : function( type, options, success_callback, failure_callback ) {
+
+			var self = this,
+				search = options.q,
+				params,
+				query;
+
+			// remove q from options
+			delete options.q;
+
+			options = GMW.apply_filters( 'gmw_locationiq_geocoder_params', options, type, options, self );
+			params  = jQuery.param( options );
+
+			if ( type == 'reverseGeocode' ) {
+
+				query = this.reverseGeocodeUrl + '?lat=' + search[0] + '&lon=' + search[1] + '&' + params;
+
+			} else {
+
+				self.defaultFields.address = search;
+				query = this.geocodeUrl + '?q=' + search + '&' + params;
+			}
+
+			// get result from LocationIQ.
+			self.jqXHR = jQuery.getJSON( query, function( data, e ) {
+
+				self.response.data = data;
+
+				if ( typeof( data.error ) !== 'undefined' ) {
+
+					return self.geocodeFailed( data.error, failure_callback );
+
+				} else if ( type == 'reverseGeocode' ) {
+
+					return self.geocodeSuccess( data, success_callback );
+
+				// if no results.
+				} else if ( data.length == 0 ) {
+
+					return self.geocodeFailed( 'No results found.', failure_callback );
+
+				// Create suggested results dropdown when there are multiple results and feature is enabled.
+				} else if ( options.suggestResults && data.length > 1 ) {
+
+					return self.suggestResults( data, 'display_name', success_callback );
+
+				} else {
+
+					// if there are multiple locations we try to get the default location based on the region.
+					if ( data.length > 1 ) {
+
+						for ( var t in data ) {
+
+							if ( typeof( data[t].address.country_code ) !== 'undefined' && data[t].address.country_code.toLowerCase() == options.region.toLowerCase() ) {
+
+								// if location found use it and break the loop.
+								self.geocodeSuccess( data[t], success_callback );
+
+								return;
+							}
+						}
+					}
+
+					return self.geocodeSuccess( data[0], success_callback );
+				}
+
+			}).fail( function( jqXHR, textStatus, errorThrown ) {
+				self.geocodeFailed( textStatus + ' ' + errorThrown, failure_callback );
+			});
+		},
+
+		// Address autocomplete.
+		address_autocomplete : function( fieldId, fieldData ) {
+			return;
+			// Initialize an empty map without layers (invisible map)
+			var map = L.map('map', {
+				center: [40.7259, -73.9805], // Map loads with this location as center
+				zoom: 12,
+				scrollWheelZoom: true,
+				zoomControl: false,
+				attributionControl: false,
+			});
+
+			//Geocoder options
+			var geocoderControlOptions = {
+				bounds: false,          //To not send viewbox
+				markers: false,         //To not add markers when we geocoder
+				attribution: null,      //No need of attribution since we are not using maps
+				expanded: true,         //The geocoder search box will be initialized in expanded mode
+				panToPoint: false,       //Since no maps, no need to pan the map to the geocoded-selected location
+				params: {               //Set dedupe parameter to remove duplicate results from Autocomplete
+						dedupe: 1,
+					}
+			}
+
+			//Initialize the geocoder
+			var geocoderControl = new L.control.geocoder(gmwVars.settings.api.locationiq_key || '', geocoderControlOptions).addTo(map).on('select', function (e) {
+				displayLatLon( e.latlng.lat, e.latlng.lng);
+			});
+
+			//Get the "search-box" div
+			var input_field = jQuery( '#' + fieldId ).closest( '.gmw-field-inner' )[0];
+
+			//Get the geocoder container from the leaflet map
+			var geocoderContainer = geocoderControl.getContainer();
+
+			//Append the geocoder container to the "search-box" div
+			input_field.appendChild(geocoderContainer);
+
+			//Displays the geocoding response in the "result" div
+			function displayLatLon(lat, lng) {
+
+				//GMW.do_action( 'gmw_address_autocomplete_place_changed', place, autocomplete, field_id, input_field, options );
+
+				var formElement = jQuery( input_field.closest( 'form' ) );
+
+				// if only country entered set its value in hidden fields
+				/*if ( place.address_components.length == 1 && place.address_components[0].types[0] == 'country' ) {
+
+					formElement.find( '.gmw-country' ).val( place.address_components[0].short_name ).prop( 'disabled', false );
+
+				// otherwise if only state entered.
+				} else if ( place.address_components.length == 2 && place.address_components[0].types[0] == 'administrative_area_level_1' ) {
+
+					formElement.find( '.gmw-state' ).val( place.address_components[0].long_name ).prop( 'disabled', false );
+					formElement.find( '.gmw-country' ).val( place.address_components[1].short_name ).prop( 'disabled', false );
+				}*/
+
+				// make sure coords fields exist.
+				formElement.find( '.gmw-lat' ).val( lat.toFixed(6) );
+				formElement.find( '.gmw-lng' ).val( lng.toFixed(6) );
+
+				//var resultString = "You have selected " + display_name + "<br/>Lat: " + lat + "<br/>Lon: " + lng;
+				//document.getElementById("result").innerHTML = resultString;
+			}
 		}
 	},
 
