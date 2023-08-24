@@ -1280,14 +1280,14 @@ var GMW = {
 
         // if only country entered set its value in hidden fields
         if ( result.level == 'country' ) {
-            
+
             form.find( '.gmw-country' ).val( result.country_code ).prop( 'disabled', false );
 
         // otherwise, if only state entered.
-        } else if ( result.level == 'region' ) {
+        } else if ( result.level == 'region' && form.find( '.gmw-state' ).length ) {
             form.find( '.gmw-state' ).val( result.region_name ).prop( 'disabled', false );
             form.find( '.gmw-country' ).val( result.country_code ).prop( 'disabled', false );
-        } 
+        }
 
         // add coordinates to hidden fields
         form.find( '.gmw-lat' ).val( parseFloat( result.lat ).toFixed(6) );
@@ -1914,31 +1914,33 @@ var GMW_Geocoders = {
 	        	};
 
 			if ( type == 'reverseGeocode' ) {
-			
+
 				params.latLng = new google.maps.LatLng( options.q[0], options.q[1] );
 
 			} else {
 
 				self.defaultFields.address = options.q;
-				params.address = options.q;
+				params.address             = options.q;
 			}
 
-			// get result from Nominatim.
+    		params = GMW.apply_filters( 'gmw_google_maps_geocoder_params', params, type, options, self );
+
+			// get result from Google Maps.
 			geocoder.geocode( params, function( data, status ) {
 
 				self.response.data = data;
 
 				// abort if geocoder failed.
 				if ( status !== google.maps.GeocoderStatus.OK ) {
-					
-					self.geocodeFailed( status, failure_callback );	
+
+					self.geocodeFailed( status, failure_callback );
 
 					return;
 				}
 
 				if ( type == 'reverseGeocode' ) {
 
-					// We don't want "PROXIMATE" results. 
+					// We don't want "PROXIMATE" results.
 					// It's either what the user enters or nothing at all.
 					if ( data[0].geometry.location_type == 'APPROXIMATE' ) {
 
@@ -1946,17 +1948,17 @@ var GMW_Geocoders = {
 
 						console.log( 'No results - Approximate.');
 
-						return self.geocodeFailed( 'ZERO_RESULTS', failure_callback );	
+						return self.geocodeFailed( 'ZERO_RESULTS', failure_callback );
 					}
 
 					return self.geocodeSuccess( data[0], success_callback );
-		
-				} else { 
-				
+
+				} else {
+
 					return self.geocodeSuccess( data[0], success_callback );
 				}
 			});
-		}, 
+		},
 
 		/**
 		 * Collect location data into an object.
@@ -1965,11 +1967,11 @@ var GMW_Geocoders = {
 		 * @return {[type]}        [description]
 		 */
 		getLocationFields : function( result ) {
-						
+
 			var fields = {};
 			var ac     = result.address_components;
 			var pid    = typeof result.place_id !== 'undefined' ? result.place_id : '';
-	    	
+
 	    	fields.place_id          = pid;
 	    	fields.formatted_address = result.formatted_address;
 	    	fields.lat               = fields.latitude  = result.geometry.location.lat();
@@ -2131,7 +2133,7 @@ var GMW_Geocoders = {
 			'lng' 				: 'lon',
 			'street_number' 	: 'address.house_number',
 			'street_name' 		: 'address.road',
-			'city'           	: [ 'address.city', 'address.town', 'address.suburb' ],
+			'city'           	: [ 'address.city', 'address.town', 'address.suburb', 'address.village' ],
 			'county'         	: 'address.county',
 			'region_name'    	: 'address.state',
 			'postcode'       	: 'address.postcode',
@@ -2155,27 +2157,28 @@ var GMW_Geocoders = {
 			// remove q from options
 			delete options.q;
 
-			params = jQuery.param( options );
-				
+			options = GMW.apply_filters( 'gmw_nominatim_geocoder_params', options, type, options, self );
+			params  = jQuery.param( options );
+
 			if ( type == 'reverseGeocode' ) {
-				
+
 				query = this.reverseGeocodeUrl + '?lat=' + search[0] + '&lon=' + search[1] + '&' + params;
-			
+
 			} else {
 
 				self.defaultFields.address = search;
 				query = this.geocodeUrl + '?q=' + search + '&' + params;
 			}
-				
+
 			// get result from Nominatim.
 			self.jqXHR = jQuery.getJSON( query, function( data, e ) {
 
 				self.response.data = data;
 
 				if ( typeof( data.error ) !== 'undefined' ) {
-				
-					return self.geocodeFailed( data.error, failure_callback );	
-				
+
+					return self.geocodeFailed( data.error, failure_callback );
+
 				} else if ( type == 'reverseGeocode' ) {
 
 					return self.geocodeSuccess( data, success_callback );
@@ -2184,7 +2187,7 @@ var GMW_Geocoders = {
 				} else if ( data.length == 0 ) {
 
 					return self.geocodeFailed( 'No results found.', failure_callback );
-		
+
 				// Create suggested results dropdown when there are multiple results and feature is enabled.
 				} else if ( options.suggestResults && data.length > 1 ) {
 
