@@ -857,7 +857,68 @@ var GMW = {
 	        }
         });*/
 
-        //jQuery( 'form.gmw-form' ).find( 'select.gmw-post-types-field, .gmw-post-types-field-checkbox, .gmw-post-types-field-radio' ).trigger( 'change' );
+		jQuery( 'form.gmw-form' ).find( 'select.gmw-post-types-field, .gmw-post-types-field-checkbox, .gmw-post-types-field-radio' ).on( 'change', function() {
+
+			var thisForm  = jQuery(this).closest('form');
+			var cFields = thisForm.find('div[class*="gmw-cf-"][data-conditions], div.gmw-field-type-taxonomy-wrapper[data-conditions]');
+			//var ptCount = thisForm.find('select[name="post[]"] option, input[name="post[]"]').length;
+			var postTypes = thisForm.find( 'select[name="post[]"], input[name="post[]"]:checked' ).map(function(){
+				return jQuery(this).val();
+			}).get();
+
+			cFields.each(function () {
+
+				var thisField = jQuery(this);
+				var conditions = thisField.data('conditions')[0];
+				var ptFound = false;
+				var fieldPT;
+
+				if (typeof conditions.post_types === 'undefined') {
+					return;
+				}
+
+				fieldPT = conditions.post_types;
+
+				// When nothing selected, show all.
+				if ( postTypes.length == 0 || ( postTypes.length == 1 && postTypes[0] == '') ) {
+
+					if (thisField.hasClass('gmw-field-type-taxonomy-wrapper')) {
+						thisField.slideUp('fast').find('input, select').prop('disabled', true);
+					} else {
+						thisField.slideDown('fast').find('input, select').prop('disabled', false);
+					}
+				} else {
+
+					for (var i = 0; i < postTypes.length; ++i) {
+
+						if (ptFound) {
+							return;
+						}
+
+						if (postTypes.length > 1 && thisField.hasClass('gmw-field-type-taxonomy-wrapper')) {
+
+							thisField.slideUp('fast').find('input, select').prop('disabled', true);
+
+						} else {
+
+							if (fieldPT.indexOf(postTypes[i]) > -1) {
+
+
+								thisField.slideDown('fast').find('input, select').prop('disabled', false);
+
+								ptFound = true;
+
+
+							} else {
+								thisField.slideUp('fast').find('input, select').prop('disabled', true);
+							}
+						}
+					}
+				}
+			});
+        });
+
+        jQuery( 'form.gmw-form' ).find( 'select.gmw-post-types-field, .gmw-post-types-field-checkbox, .gmw-post-types-field-radio' ).trigger( 'change' );
 
         /**
          * GMW modal box toggle.
