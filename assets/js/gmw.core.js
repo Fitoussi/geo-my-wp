@@ -755,11 +755,33 @@ var GMW = {
         GMW.vars.auto_locator.failed  = false;
     },
 
+	/**
+	 * Toggle required fields true || false when toggling the filters modal box.
+	 *
+	 * Having required field inside hidden element causes errors.
+	 *
+	 * @param {*} element
+	 */
+	toggle_required_fields: function(element) {
+
+		element.find('input[required], select[required]').each(function () {
+			if ( ! jQuery(this).is( ':visible' ) ) {
+				jQuery(this).removeAttr( 'required' ).attr( 'required-disabled', '' );
+			}
+		});
+
+		element.find('input[required-disabled], select[required-disabled]').each(function () {
+			if (jQuery(this).is(':visible')) {
+				jQuery(this).removeAttr( 'required-disabled' ).prop( 'required', true );
+			}
+		});
+	},
+
     /**
      * GEO my WP Form functions.
      *
      * triggers only when at least one form presents on the page
-     * 
+     *
      * @return {[type]} [description]
      */
     form_functions : function() {
@@ -767,9 +789,9 @@ var GMW = {
     	if ( jQuery( 'form.gmw-form' ).find( 'select.gmw-smartbox, select[gmw-smartbox]' ).length ) {
         	GMW.enable_smartbox();
     	}
-     	
+
      	// Remove the "required" attribute from fields inside a hidden element.
-     	jQuery( 'form.gmw-form' ).find( 'input[required], select[required]' ).each( function() {
+     	jQuery( '.gmw-modal-box-wrapper' ).find( 'input[required], select[required]' ).each( function() {
 
      		if ( ! jQuery( this ).is( ':visible' ) ) {
      			jQuery( this ).removeAttr( 'required' ).attr( 'required-disabled', '' );
@@ -940,12 +962,12 @@ var GMW = {
         	var closeButton = element.find( '.gmw-close-filters-button, .gmw-modal-box-wrapper, .gmw-submit, .gmw-submit-field' );
 
         	button.click( function(e) {
-        		
+
         		e.preventDefault();
 
         		if ( type == 'popup' ) {
 
-        			// Hack for global Maps. Prevent the modal box from popup within the map bounderies.
+        			// Hack for global Maps. Prevent the modal box from popup within the map boundaries.
         			jQuery( this ).closest( '.gmw-global-map-wrapper' ).css( 'overflow', 'initial' );
 
 	        		element.fadeToggle( data.duration );
@@ -954,8 +976,13 @@ var GMW = {
 	        		element.slideToggle( data.duration );
 	        	}
 
-	        	element.toggleClass( 'gmw-modal-open' );
-	        	jQuery( 'body' ).addClass( 'gmw-modal-box-open' );
+				element.toggleClass('gmw-modal-open');
+
+				jQuery('body').addClass('gmw-modal-box-open');
+
+				setTimeout(function () {
+					GMW.toggle_required_fields(element);
+				}, 100);
         	});
 
         	closeButton.add( data.element).click( function(e) {
@@ -974,13 +1001,18 @@ var GMW = {
 	        		element.slideUp( data.duration );
 	        	}
 
-	        	element.removeClass( 'gmw-element-visible' );
-	        	jQuery( 'body' ).removeClass( 'gmw-modal-box-open' );
-        	});
+				element.removeClass('gmw-element-visible');
+
+				jQuery('body').removeClass('gmw-modal-box-open');
+
+				setTimeout(function () {
+					GMW.toggle_required_fields(element);
+				}, 100);
+			});
         });
 
         jQuery( 'form.gmw-form' ).find( '.gmw-xprofile-fields-form-trigger' ).on( 'click', function(e) {
-        	
+
         	e.preventDefault();
 
         	jQuery( this ).closest( 'form' ).find( '.gmw-search-form-xprofile-fields' ).slideToggle().toggleClass( 'xprofile-visible' );
