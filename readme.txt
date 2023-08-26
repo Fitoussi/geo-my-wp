@@ -123,10 +123,10 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 
 = 4.0 =
 
+* Please read [this post](https://geomywp.com/geo-my-wp-v4-0/) before updating GEO my WP on your site.
 * This is a major release. It is highly recomenede that you either test it on a staging and/or make a complete backup of your site before installing it on a live site.
+* Make sure to first deactivate GEO my WP core plugin and then update GEO my WP and the premium extensions on your site. Once GEO my WP and the extensions were updated, only then activate GEO my WP core plugin again. Not following these steps might cause a fatal error on your site.
 * The current version of the premium extensions are not compatible with GEO my WP. So you will need to update your premium extensions after updating to GEO my WP v4.0.
-* Make sure to first deactivate GEO my WP and its premium extensions on your site and only then update to the new version. Otherwise you might experience a fatal error.
-* To learn about the main changes of GEO my WP v4.0 see [Beta 1](https://geomywp.com/geo-my-wp-4-0-beta1-is-now-ready-for-testing/),[Beta 2](https://geomywp.com/geo-my-wp-v4-0-beta-2-and-the-premium-extensions/),[Beta 3](https://geomywp.com/geo-my-wp-v4-0-beta-3/),[Beta 4](https://geomywp.com/geo-my-wp-v4-0-beta-4/),[Beta 5](https://geomywp.com/geo-my-wp-v4-0-beta-5/).
 
 = 3.7.1 =
 
