@@ -402,6 +402,12 @@ class GMW_Maps_API {
 			'form'          => $form,
 		);
 
+		// Remove db_fields arg from form before passing it to JavaScript.
+		// There is some SQL functions in it that causes security issues when loading the AJAX info-window with some servers.
+		if ( ! empty( $map_element['form']['query_args']['gmw_cache_args']['db_fields'] ) ) {
+			unset( $map_element['form']['query_args']['gmw_cache_args']['db_fields'] );
+		}
+
 		// allow plugins modify the map args.
 		$map_element = apply_filters( 'gmw_map_element', $map_element, $form );
 		$map_element = apply_filters( "gmw_map_element_{$map_id}", $map_element, $form );
