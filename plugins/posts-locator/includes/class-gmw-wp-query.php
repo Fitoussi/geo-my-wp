@@ -87,6 +87,9 @@ class GMW_WP_Query extends WP_Query {
 		// Append GEO my WP default args to WP_Query args.
 		$query = wp_parse_args( $query, self::$gmw_vars );
 
+		// Causes conflict with object cache.
+		add_filter( 'split_the_query', '__return_false' );
+
 		// Filter the search query.
 		add_filter( 'posts_clauses', array( 'GMW_WP_Query', 'gmw_locations_query' ), 10, 2 );
 
