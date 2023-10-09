@@ -3,9 +3,9 @@ Contributors: ninjew, Eyal Fitoussi
 Donate link: https://www.paypal.me/fitoussi
 Tags: Geolocation, Directory, Store Locator, Google Maps, OpenStreetMaps, LocationIQ, LeafLet, Geotagging, mashup maps, Geocode, Mapping, Proximity search, Zipcode, Geotag posts, Address search, Distance, Directions, Locations, Geo, Members locator, Geotag members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
 Requires at least: 5.6
-Tested up to: 6.3
+Tested up to: 6.4
 BuddyPress: 11.3.1
-Stable tag: 4.0
+Stable tag: 4.0.1
 Requires PHP: 7.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -121,11 +121,22 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 
 == Changelog ==
 
+= 4.0.1 =
+
+* Please follow the steps below if you are updating from GEO my WP version 3.x:
+  - please read [this post](https://geomywp.com/geo-my-wp-v4-0/) before updating to GEO my WP version 4.x on your site.
+  - GEO my WP v4.0 is a major release. It is highly recommended that you either test it on a staging and/or make a complete backup of your site before installing it on a live site.
+  - VERY IMPORTANT: When updating to GEO my WP v4.x, you need to first update the premium extensions of GEO my WP and only then update GEO my WP core plugin. Not following these steps might cause a fatal error on your site.
+* Fix: JavaScript error in the form editor page prevents toggling of the form settings.
+* Fix: 403 error on some servers when trying to load the marker's info-window via AJAX.
+* Fix: a conflict with WP_Query when object cache is enabled causes to show no results when searching for posts.
+* Security: fix security issue found in the Single Location shortcode.
+
 = 4.0 =
 
 * Please read [this post](https://geomywp.com/geo-my-wp-v4-0/) before updating GEO my WP on your site.
-* This is a major release. It is highly recomenede that you either test it on a staging and/or make a complete backup of your site before installing it on a live site.
-* Make sure to first deactivate GEO my WP core plugin and then update GEO my WP and the premium extensions on your site. Once GEO my WP and the extensions were updated, only then activate GEO my WP core plugin again. Not following these steps might cause a fatal error on your site.
+* This is a major release. It is highly recommended that you either test it on a staging and/or make a complete backup of your site before installing it on a live site.
+* VERY IMPORTANT: When updating to the new version, you need to first update the premium extensions of GEO my WP and only then update GEO my WP core plugin. Not following these steps might cause a fatal error on your site.
 * The current version of the premium extensions are not compatible with GEO my WP. So you will need to update your premium extensions after updating to GEO my WP v4.0.
 
 = 3.7.1 =
