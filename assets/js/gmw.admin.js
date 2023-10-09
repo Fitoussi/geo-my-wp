@@ -288,6 +288,10 @@ jQuery( document ).ready( function( $ ) {
 	     */
 	    select2_sortable : function( element ) {
 
+			if (!jQuery().sortable) {
+				return false;
+			}
+
 			var ulElem     = element.parent().find( "ul.select2-selection__rendered" );
 			var savedOrder = element.data( 'options_order' );
 
