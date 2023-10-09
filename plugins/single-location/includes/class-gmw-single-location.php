@@ -59,11 +59,11 @@ class GMW_Single_Location {
 		'user_map_icon_url'      => '',
 		'user_map_icon_size'     => '',
 		'user_info_window'       => 'Your Location',
-		'no_location_message'    => 0,
+		'no_location_message'    => '',
 		'disable_linked_address' => 0,
 		'css_class'              => '',
 		'css_id'                 => '',
-		'use_generic_location'     => 0,
+		'use_generic_location'   => 0,
 		/* 'is_widget'            => 0,
 		// 'widget_title'         => 0, */
 	);
@@ -315,6 +315,19 @@ class GMW_Single_Location {
 		// set random element id if not exists.
 		$this->args['element_id'] = ! empty( $this->args['element_id'] ) ? $this->args['element_id'] : wp_rand( 100, 549 );
 
+		// extra protection from XSS attacks.
+		foreach ( $this->args as $attr_key => $attr_value ) {
+
+			if ( ! empty( $attr_value ) ) {
+
+				if ( ! in_array( $attr_key, array( 'no_location_message', 'css_class' ), true ) ) {
+					$this->args[ $attr_key ] = str_replace( array( ' ', '"', "'" ), '', $attr_value );
+				} else {
+					$this->args[ $attr_key ] = str_replace( array( '"', "'" ), '', $attr_value );
+				}
+			}
+		}
+
 		// in case object_type is missing.
 		if ( empty( $this->args['object_type'] ) ) {
 			$this->args['object_type'] = $this->args['object'];
@@ -392,13 +405,12 @@ class GMW_Single_Location {
 			$display = 'style="display:inline-block"';
 		}
 
-		$display = '';
-
-		$css_class = esc_attr( 'gmw-element-wrapper gmw-single-location-wrapper gmw-sl-wrapper gmw-sl-single-' . $this->args['object'] . '-wrapper ' . $this->args['object'] . ' ' . $this->args['css_class'] );
+		$display   = '';
+		$css_class = 'gmw-element-wrapper gmw-single-location-wrapper gmw-sl-wrapper gmw-sl-single-' . $this->args['object'] . '-wrapper ' . $this->args['object'] . ' ' . $this->args['css_class'];
 		$css_id    = ! empty( $this->args['css_id'] ) ? $this->args['css_id'] : 'gmw-single-location-wrapper-' . $this->args['element_id'];
 
 		// generate the elements array.
-		$this->elements['element_wrap_start'] = '<div id="' . esc_attr( $css_id ) . '" class="' . $css_class . '" object_type="' . esc_attr( $this->args['object'] ) . '" object_id="' . esc_attr( $this->args['object_id'] ) . '" ' . $display . ' style="width:' . $this->args['element_width'] . '">';
+		$this->elements['element_wrap_start'] = '<div id="' . esc_attr( $css_id ) . '" class="' . esc_attr( $css_class ) . '" object_type="' . esc_attr( $this->args['object'] ) . '" object_id="' . esc_attr( $this->args['object_id'] ) . '" ' . $display . ' style="width:' . esc_attr( $this->args['element_width'] ) . '">';
 
 		/** Check if this is widget and we use widget title */
 		/** If ( $this->args['is_widget'] && ! empty( $this->args['widget_title'] ) ) {
