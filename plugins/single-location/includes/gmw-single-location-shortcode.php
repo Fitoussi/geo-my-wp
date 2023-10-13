@@ -63,6 +63,8 @@ function gmw_single_location_shortcode( $atts = array() ) {
 		}
 	}
 
+	do_action( 'gmw_element_loaded', 'gmw_single_location', $atts );
+
 	$single_location = new $class_name( $atts );
 
 	return $single_location->output();
