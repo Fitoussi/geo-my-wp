@@ -3,9 +3,9 @@ Contributors: ninjew, Eyal Fitoussi
 Donate link: https://www.paypal.me/fitoussi
 Tags: Geolocation, Directory, Store Locator, Google Maps, OpenStreetMaps, LocationIQ, LeafLet, Geotagging, mashup maps, Geocode, Mapping, Proximity search, Zipcode, Geotag posts, Address search, Distance, Directions, Locations, Geo, Members locator, Geotag members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
 Requires at least: 5.6
-Tested up to: 6.4
+Tested up to: 6.5
 BuddyPress: 11.3.1
-Stable tag: 4.0.1
+Stable tag: 4.0.2
 Requires PHP: 7.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,17 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 4.0.2 =
+
+* Please follow the steps below if you are updating from GEO my WP version 3.x:
+  - please read [this post](https://geomywp.com/geo-my-wp-v4-0/) before updating to GEO my WP version 4.x on your site.
+  - GEO my WP v4.0 is a major release. It is highly recommended that you either test it on a staging and/or make a complete backup of your site before installing it on a live site.
+  - VERY IMPORTANT: When updating to GEO my WP v4.x, you need to first update the premium extensions of GEO my WP and only then update GEO my WP core plugin. Not following these steps might cause a fatal error on your site.
+* Fix: assets not loading when only the Single Location shortcode is on the page. The action 'gmw_element_loaded' was missing.
+* Tweak: Update settings page styling.
+* Tweak: The checkbox type option in the settings pages of GEO my WP can now be set as a standard checkbox rather than a toggle.
+* Tweak: Enhance code for BP Profile Search Geolocation extension.
 
 = 4.0.1 =
 
