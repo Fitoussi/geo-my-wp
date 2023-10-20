@@ -22,17 +22,24 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class GMW_BP_Profile_Search_Geolocation {
 
+	public $is_buddyboss = false;
+
 	/**
 	 * __construct function.
 	 */
 	public function __construct() {
 
+		$this->is_buddyboss = function_exists( 'bp_ps_meta' ) ? true : false;
+
 		// Generate location field.
-		add_filter( 'bps_add_fields', array( $this, 'add_location_field' ), 10 );
+		add_filter( 'bps_add_fields', array( $this, 'add_location_field' ), 10 ); // Profile Search stand alone plugin.
+		add_filter( 'bp_ps_add_fields', array( $this, 'add_location_field' ), 10 ); // For Profile Search in BuddyBoss.
+
 		add_filter( 'bp_get_template_stack', array( $this, 'template_stack' ), 30 );
 
 		// Add location filter on form submission.
 		add_filter( 'bps_filters_template_field', array( $this, 'generate_location_field_filter' ), 50, 2 );
+		add_filter( 'bp_ps_filters_template_field', array( $this, 'generate_location_field_filter' ), 50, 2 );
 
 		// Proceed with query filter only if BP Members Directory Geolocation is not installed.
 		// When installed, we will use its built-in query filter.
@@ -168,7 +175,7 @@ class GMW_BP_Profile_Search_Geolocation {
 
 		$sql['select'] = $wpdb->prepare(
 			"
-			SELECT object_id, ROUND( %s * acos( cos( radians( %s ) ) * cos( radians( gmw_locations.latitude ) ) * cos( radians( gmw_locations.longitude ) - radians( %s ) ) + sin( radians( %s ) ) * sin( radians( gmw_locations.latitude ) ) ),1 ) AS distance 
+			SELECT object_id, ROUND( %s * acos( cos( radians( %s ) ) * cos( radians( gmw_locations.latitude ) ) * cos( radians( gmw_locations.longitude ) - radians( %s ) ) + sin( radians( %s ) ) * sin( radians( gmw_locations.latitude ) ) ),1 ) AS distance
 			FROM {$wpdb->base_prefix}gmw_locations gmw_locations",
 			array( $earth_radius, $lat, $lng, $lat )
 		);

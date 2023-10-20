@@ -22,6 +22,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class GMW_BP_Profile_Search_Geolocation_Admin {
 
+	public $is_buddyboss = false;
+
 	/**
 	 * Get the admin setting fields
 	 *
@@ -115,7 +117,53 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 	 * [__construct description]
 	 */
 	public function __construct() {
+
+		$this->is_buddyboss = function_exists( 'bp_ps_meta' ) ? true : false;
+
+		if ( $this->is_buddyboss ) {
+			add_action( 'save_post', array( $this, 'bp_ps_update_meta' ), 12, 2 );
+		}
+
 		add_action( 'add_meta_boxes', array( $this, 'add_options_meta_box' ) );
+	}
+
+	/**
+	 * Update BuddyBoss Profile Search post meta
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	function bp_ps_update_meta( $form, $post ) {
+
+		if ( $post->post_type != 'bp_ps_form' || $post->post_status != 'publish' ) {
+			return false;
+		}
+		if ( empty( $_POST['options'] ) && empty( $_POST['bp_ps_options'] ) ) {
+			return false;
+		}
+
+		$posted = isset( $_POST['bp_ps_options'] ) ? $_POST['bp_ps_options'] : array();
+
+		if ( isset( $posted['field_name'] ) ) {
+
+			$meta = get_post_meta( $form, 'bp_ps_options', 1 );
+
+			if ( empty( $meta ) ) {
+				$meta = array();
+			}
+
+			foreach ( $posted as $key => $value ) {
+
+				if ( strpos( $key, 'gmw' ) === false) {
+					continue;
+				}
+
+				$meta[ $key ] = $value;
+			}
+		}
+
+		update_post_meta( $form, 'bp_ps_options', $meta );
+
+		return true;
 	}
 
 	/**
@@ -124,11 +172,14 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 	 * @since 3.3
 	 */
 	public function add_options_meta_box() {
+
+		$screen = $this->is_buddyboss ? 'bp_ps_form' : 'bps_form';
+
 		add_meta_box(
 			'gmw_bpsgeo_location_options',
 			__( 'Location Field Options', 'geo-my-wp' ),
 			array( $this, 'options_meta_box_content' ),
-			'bps_form',
+			$screen,
 			'advanced',
 			'high'
 		);
@@ -143,8 +194,19 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 	 */
 	public function options_meta_box_content( $post ) {
 
-		$bps_options = bps_meta( $post->ID );
-		$options     = $bps_options['template_options'][ $bps_options['template'] ];
+		if ( $this->is_buddyboss ) {
+
+			$bps_options = bp_ps_meta( $post->ID );
+			$options     = $bps_options;
+			$name_attr   = 'bp_ps_options';
+
+		} else {
+
+			$bps_options = bps_meta( $post->ID );
+			$options     = $bps_options['template_options'][ $bps_options['template'] ];
+			$name_attr   = 'options';
+		}
+
 		?>
 		<style type="text/css">
 
@@ -209,7 +271,7 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 			$field['name'] = 'gmw_bpsgeo_' . $field['name'];
 			$value         = ! empty( $options[ $field['name'] ] ) ? $options[ $field['name'] ] : '';
 
-			echo gmw_get_admin_settings_field( $field, 'options', $value ); // WPCS: XSS ok.
+			echo gmw_get_admin_settings_field( $field, $name_attr, $value ); // WPCS: XSS ok.
 
 			if ( ! empty( $field['desc'] ) ) {
 				echo '<em class="desc">' . esc_html( $field['desc'] ) . '</em>';
@@ -259,7 +321,7 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 				function gmw_check_for_location_field() {
 
 					jQuery( '#field_box select' ).each( function() {
-						
+
 						jQuery( '#gmw_bpsgeo_location_options' ).hide();
 
 						if ( jQuery( this ).val() == 'gmw_bpsgeo_location' ) {
@@ -289,7 +351,7 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 
 							jQuery( this ).find( 'optgroup:not([label="GEO my WP"] ) option:first' ).prop( 'selected', true );
 
-							alert( '<?php echo $warning; // WPCS: XSS ok. ?>' );							
+							alert( '<?php echo $warning; // WPCS: XSS ok. ?>' );
 						}
 					}
 				});
