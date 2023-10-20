@@ -1947,7 +1947,17 @@ class GMW_Form_Settings_Helper {
 				break;
 
 			case 'checkbox':
-				$toggle_class = ( ! isset( $field['cb_toogle'] ) || ! empty( $field['cb_toogle'] ) ) ? ' class="gmw-checkbox-toggle-field" ' : '';
+				$toggle_class = '';
+
+				if ( ! isset( $field['cb_toogle'] ) || ! empty( $field['cb_toogle'] ) ) {
+					$toggle_class = ' class="gmw-checkbox-toggle-field" ';
+
+					if ( ! empty( $field['toggle_label'] ) ) {
+						$output .= '<span class="gmw-toggle-label gmw-settings-label">';
+						$output .= isset( $field['cb_label'] ) ? esc_attr( $field['cb_label'] ) : '';
+						$output .= '</span>';
+					}
+				}
 
 				$output .= '<label' . $toggle_class . '>';
 				$output .= '<input type="checkbox" id="' . esc_attr( $id_attr ) . '" class="gmw-form-field checkbox ' . esc_attr( $class_attr ) . '"';
