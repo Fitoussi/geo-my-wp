@@ -1847,6 +1847,16 @@ body .select2.select2-container {
 	display: none;
 }
 
+.option-type-checkbox .gmw-toggle-label {
+	display: block;
+	margin-bottom: 5px;
+	color: #23282d;
+	font-size: 14px;
+	font-weight: 500;
+	text-transform: capitalize;
+	white-space: nowrap;
+}
+
 .gmw-checkbox-toggle-field .gmw-checkbox-toggle {
 	position: absolute;
 	cursor: pointer;
