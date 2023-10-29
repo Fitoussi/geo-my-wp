@@ -78,7 +78,7 @@ class GMW_Posts_Locator_Form_Editor {
 	 */
 	public static function default_settings( $settings, $form ) {
 
-		if ( 'posts_locator' !== $form['component'] ) {
+		if ( empty( $form['component'] ) || 'posts_locator' !== $form['component'] ) {
 			return $settings;
 		}
 
