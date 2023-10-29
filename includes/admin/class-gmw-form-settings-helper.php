@@ -685,7 +685,7 @@ class GMW_Form_Settings_Helper {
 	 *
 	 * @param array $args argument.
 	 *
-	 * @return array of user roles.
+	 * @return object of user roles.
 	 */
 	public static function get_user_roles( $args = array() ) {
 
