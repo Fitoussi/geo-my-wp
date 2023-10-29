@@ -127,8 +127,8 @@ for detailed installation and setup guide see the [documentation](https://docs.g
   - please read [this post](https://geomywp.com/geo-my-wp-v4-0/) before updating to GEO my WP version 4.x on your site.
   - GEO my WP v4.0 is a major release. It is highly recommended that you either test it on a staging and/or make a complete backup of your site before installing it on a live site.
   - VERY IMPORTANT: When updating to GEO my WP v4.x, you need to first update the premium extensions of GEO my WP and only then update GEO my WP core plugin. Not following these steps might cause a fatal error on your site.
-* Fix: License key box isn't showing in the Plugin's page for third party plugins that are unrelated to GEO my WP.
-* Tweak: Update styling of the license key box in the Plugins' page.
+* Fix: The license key box isn't showing on the Plugin's page for third-party plugins that are unrelated to GEO my WP.
+* Tweak: Update the styling of the license key box on the Plugins page.
 
 = 4.0.3 =
 
