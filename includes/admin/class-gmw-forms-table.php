@@ -297,12 +297,12 @@ class GMW_Forms_Table extends WP_List_Table {
 		$columns  = $this->get_columns();
 		$hidden   = array();
 		$sortable = $this->get_sortable_columns();
-		$orderby  = ! empty( $_REQUEST['orderby'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) : 'ID'; // phpcs:ignore: Input var ok, CSRF ok.
-		$order    = ! empty( $_REQUEST['order'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) : 'ASC'; // phpcs:ignore: Input var ok, CSRF ok.
 		$keywords = '';
+		$orderby  = ( ! empty( $_REQUEST['orderby'] ) && in_array( $_REQUEST['orderby'], array_keys( $this->get_sortable_columns() ), true ) ) ? $_REQUEST['orderby'] : 'ID';
+		$order    = ( ! empty( $_REQUEST['order'] ) && $_REQUEST['order'] === 'desc' ) ? 'desc' : 'asc';
 
 		if ( ! empty( $_REQUEST['s'] ) ) { // phpcs:ignore: CSRF ok.
-			$search   = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ); // phpcs:ignore: CSRF ok.
+			$search   = esc_sql( sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) ); // phpcs:ignore: CSRF ok.
 			$keywords = "WHERE id Like '%{$search}%' OR name Like '%{$search}%' OR title Like '%{$search}%' OR slug Like '%{$search}%' OR component Like '%{$search}%' OR addon Like '%{$search}%'";
 		}
 
