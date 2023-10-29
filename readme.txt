@@ -129,6 +129,7 @@ for detailed installation and setup guide see the [documentation](https://docs.g
   - VERY IMPORTANT: When updating to GEO my WP v4.x, you need to first update the premium extensions of GEO my WP and only then update GEO my WP core plugin. Not following these steps might cause a fatal error on your site.
 * Fix: SQL Injection vulnerability in the Forms page of GEO my WP ( in the admin's dashboard ).
 * Fix: some forms with a custom search form template files redirect to a 404 page on submission.
+* Fix: PHP notice.
 
 = 4.0.2 =
 
