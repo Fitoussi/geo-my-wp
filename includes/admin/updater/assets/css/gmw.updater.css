@@ -1,7 +1,7 @@
 /**
  * License box styling
  */
-.gmw-license-key-row {
+ .gmw-license-key-row {
 	border-top: 0px;
 }
 
@@ -27,7 +27,7 @@
 }
 
 .gmw-license-key-row div.gmw-license-wrapper.inactive.gmw-license-error {
-	background: rgb(255, 237, 237);	
+	background: rgb(255, 237, 237);
 }
 
 .gmw-license-key-row div.gmw-license-wrapper.valid {
@@ -35,20 +35,38 @@
 }
 
 .gmw-license-key-row div.gmw-license-wrapper .field-wrapper {
-	float: left;
-	margin-right: 10px;
+    margin-right: 10px;
+    display: flex;
+
 }
 
 .gmw-license-key-row div.gmw-license-wrapper .field-wrapper input.gmw-license-key {
 	padding: 4px 6px;
 }
 
+.gmw-license-key-row div.gmw-license-wrapper .field-wrapper .action-wrapper {
+    width: 160px;
+    font-size: 12px;
+    padding: 0;
+}
+
+.gmw-license-key-row div.gmw-license-wrapper .field-wrapper .action-wrapper button {
+    padding: 10px;
+}
+
+.gmw-license-key-row div.gmw-license-wrapper .field-wrapper .action-wrapper button .gmw-atb-label {
+    font-size: 12px;
+}
+
 .gmw-license-key-row div.gmw-license-wrapper p.description {
-	margin: 0px;
-	max-width: 500px;
-	padding: 5px 0px;
-	font-size: 13px;
-	margin-top: 8px;
+    margin: 0px;
+    max-width: 500px;
+    padding: 5px 0px;
+    font-size: 13px;
+    margin-top: 8px;
+    /* display: block; */
+    /* width: 100%; */
+
 }
 
 .gmw-license-key-row div.gmw-license-wrapper p.description i {
