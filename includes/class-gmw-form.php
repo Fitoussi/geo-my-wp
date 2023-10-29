@@ -80,6 +80,11 @@ class GMW_Form extends GMW_Form_Core {
 		// Deprecated. Use results enabled instead.
 		$this->form['display_list'] = $this->form['results_enabled']; // Deprecated.
 
+		// Temporary fix for custom search form folders that use the argument $gmw['search_results']['results_page'] directly.
+		if ( ! empty( $this->form['search_results']['results_page'] ) && 'disabled' === $this->form['search_results']['results_page'] ) {
+			$this->form['search_results']['results_page'] = '';
+		}
+
 		// for older version. to prevent PHP warnings.
 		$this->form['search_results']['results_page'] = $this->form['form_submission']['results_page'];
 		$this->form['search_results']['display_map']  = $this->form['map_usage'];
@@ -336,6 +341,11 @@ class GMW_Form extends GMW_Form_Core {
 		$template = $this->get_template_file( 'search_form' );
 		$gmw      = $this->form;
 		$gmw_form = $this;
+
+		// Temporary fix for custom search form folders that use the argument $gmw['search_results']['results_page'] directly.
+		if ( ! empty( $gmw['search_results']['results_page'] ) && 'disabled' === $gmw['search_results']['results_page'] ) {
+			$gmw['search_results']['results_page'] = '';
+		}
 
 		include $template['content_path'];
 
