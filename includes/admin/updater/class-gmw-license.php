@@ -134,14 +134,20 @@ if ( ! class_exists( 'GMW_License' ) ) :
 		 */
 		public function plugins_page_actions() {
 
-			$this->plugins_page_license_enabled = apply_filters( 'gmw_plugins_page_license_key_enabled', false );
+			$basename                           = plugin_basename( $this->file );
+			$this->plugins_page_license_enabled = apply_filters( 'gmw_plugins_page_license_key_enabled', false, $basename );
+
+			// Enable it for the Formidable Geolocation plugin.
+			if ( 'formidable-geolocation/formidable-geolocation.php' === $basename ) {
+				$this->plugins_page_license_enabled = true;
+			}
 
 			// action links.
-			add_filter( 'plugin_action_links_' . plugin_basename( $this->file ), array( $this, 'extension_action_links' ), 10 );
+			add_filter( 'plugin_action_links_' . $basename, array( $this, 'extension_action_links' ), 10 );
 
 			// license key input in plugins page is disabled by default.
 			if ( $this->plugins_page_license_enabled ) {
-				add_action( 'after_plugin_row_' . plugin_basename( $this->file ), array( $this, 'license_key_element' ), 10 );
+				add_action( 'after_plugin_row_' . $basename, array( $this, 'license_key_element' ), 10 );
 			}
 		}
 
