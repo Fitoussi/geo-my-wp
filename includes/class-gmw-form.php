@@ -232,6 +232,10 @@ class GMW_Form extends GMW_Form_Core {
 		$this->form['get_per_page'] = $this->form['per_page']; // Deprecated.
 		$this->form['units_array']  = ! empty( $page_load_options['units'] ) ? gmw_get_units_array( $page_load_options['units'] ) : gmw_get_units_array( 'imperial' );
 
+		if ( ! empty( $page_load_options['orderby'] ) ) {
+			$this->form['orderby'] = $page_load_options['orderby'];
+		}
+
 		// phpcs:disable.
 		// Look for page page in submitted values.
 		/*if ( isset( $this->form['per_page'] ) ) {
@@ -262,6 +266,10 @@ class GMW_Form extends GMW_Form_Core {
 	 * @version 3.0
 	 */
 	public function get_form_submission_values() {
+
+		if ( ! empty(  $this->form['form_submission']['orderby'] ) ) {
+			$this->form['orderby'] = $this->form['form_submission']['orderby'];
+		}
 
 		// get form values.
 		$form_values = $this->form['form_values'];
