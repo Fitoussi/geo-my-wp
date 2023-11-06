@@ -27,7 +27,7 @@ require_once 'tabs/api-testing.php';
 if ( gmw_is_addon_active( 'premium_settings' ) ) {
 	require_once 'tabs/map-icons.php';
 }
-//require_once 'tabs/cache.php';
+require_once 'tabs/cache.php';
 
 /**
  * GMW Tools page
@@ -139,6 +139,11 @@ class GMW_Tools {
 				'label' => __( 'Map Icons', 'geo-my-wp' ),
 			);
 		}
+
+		$tabs['internal_cache']   = array(
+			'slug'  => 'internal_cache',
+			'label' => __( 'Cache', 'geo-my-wp' ),
+		);
 
 		return apply_filters( 'gmw_tools_tabs', $tabs );
 	}
