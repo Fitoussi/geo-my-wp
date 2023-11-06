@@ -5,7 +5,7 @@ Tags: Geolocation, Directory, Store Locator, Google Maps, OpenStreetMaps, Locati
 Requires at least: 5.6
 Tested up to: 6.4
 BuddyPress: 11.3.1
-Stable tag: 4.0.4
+Stable tag: 4.1
 Requires PHP: 7.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,18 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 4.1 =
+
+* Please follow the steps below if you are updating from GEO my WP version 3.x:
+  - please read [this post](https://geomywp.com/geo-my-wp-v4-0/) before updating to GEO my WP version 4.x on your site.
+  - GEO my WP v4.0 is a major release. It is highly recommended that you either test it on a staging and/or make a complete backup of your site before installing it on a live site.
+  - VERY IMPORTANT: When updating to GEO my WP v4.x, you need to first update the premium extensions of GEO my WP and only then update GEO my WP core plugin. Not following these steps might cause a fatal error on your site.
+* Fix: conflict between GEO my WO location form and the Pods plugin in the Edit Post page of the admin's dashboard.
+* Fix: issue with the "Orderby" form settings.
+* New: Cache tab in the Tools page of GEO my WP to manage the internal cache of GEO my WP.
+* Filter: JavaScript filter 'gmw_location_form_force_proceed_form_submission' to prevent GEO my WP from preventing the submission of the form that contains the Location form which can cause conflicts in some scenarios.
+* Tweak: use the filter 'gmw_location_form_prevent_form_submission' to stop GEO my WP from preventing the form submission on the Edit Post page of the admin's dashboard.
 
 = 4.0.4 =
 
