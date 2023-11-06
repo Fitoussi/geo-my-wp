@@ -520,8 +520,8 @@ class GMW_Posts_Locator_Screens {
 		<script type="text/javascript">
 
 			jQuery( 'document' ).ready( function( $ ) {
-				GMW.add_filter( 'gmw_location_form_prevent_form_submission', function() {
-					return false;
+				GMW.add_filter( 'gmw_location_form_force_proceed_form_submission', function() {
+					return true;
 				});
 			});
 		</script>
