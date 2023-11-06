@@ -574,6 +574,13 @@ var GMW_Location_Form = {
 		// on form submission.
 		jQuery( this_form.vars.form_element ).on( 'submit', function( event ) {
 
+			// Allow to force form submission without preventing the initial submission action.
+			// Preventing the submission can cause for conflicts with some forms and other plugins.
+			// Some conflicts are known in the Edit Post page of the admin.
+			if ( true === GMW.apply_filters( 'gmw_location_form_force_proceed_form_submission', false, this_form ) ) {
+				return true;
+			}
+
 			if ( ! this_form.location_exists && this_form.vars.location_required ) {
 
 				alert( this_form.messages.location_required );
@@ -1482,9 +1489,11 @@ var GMW_Location_Form = {
 						setTimeout( function() {
 
 							///hide action message
-							jQuery( '#' + this_form.action_fields.message.id + ' span' ).html( this_form.messages.location_exists );
-						},3500);
+							jQuery('#' + this_form.action_fields.message.id + ' span').html(this_form.messages.location_exists);
 
+							jQuery('#' + this_form.action_fields.loader.id).fadeOut('fast');
+
+						},3500);
 					});
 
 				//if failed
@@ -1510,8 +1519,8 @@ var GMW_Location_Form = {
 			// hide loader and show action message
 			this_form.action_message( 'error', this_form.messages.location_not_saved, true );
 
-		}).done( function ( response ) {
-			console.log( 'done saving location' );
+		}).done(function (response) {
+			console.log('done saving location');
 			console.log( response );
 		});
 
