@@ -642,6 +642,12 @@ class GMW_Admin {
 		wp_deregister_style( 'ui-select-select2' );
 		wp_deregister_script( 'ui-select-select2' );
 
+		//event tickets plugin
+		wp_dequeue_script( 'tribe-select2' );
+		wp_deregister_script( 'tribe-select2' );
+		wp_dequeue_style( 'tribe-select2-css' );
+		wp_deregister_style( 'tribe-select2-css' );
+
 		wp_dequeue_script( 'select2' );
 		wp_dequeue_style( 'select2' );
 		wp_deregister_style( 'select2' );
