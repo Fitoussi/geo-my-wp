@@ -418,7 +418,7 @@ class GMW_Template_Functions_Helper {
 			'units'                => 'imperial',
 			'count_message'        => __( 'Showing {from_count} - {to_count} of {total_results} locations', 'geo-my-wp' ),
 			'single_count_message' => __( '1 location found', 'geo-my-wp' ),
-			'location_message'     => __( ' within {radius}{units} from {address}', 'geo-my-wp' ),
+			'location_message'     => __( ' within {radius} {units} from {address}', 'geo-my-wp' ),
 			'all_results_message'  => __( 'Showing all {total_results} locations', 'geo-my-wp' ),
 		);
 
@@ -427,7 +427,7 @@ class GMW_Template_Functions_Helper {
 
 		$from_count = intval( ( $args['page'] - 1 ) * $args['per_page'] ) + 1;
 		$to_count   = ( $from_count + ( $args['per_page'] - 1 ) > $args['total_count'] ) ? $args['total_count'] : $from_count + ( $args['per_page'] - 1 );
-		$units      = 'imperial' === $args['units'] ? 'mi' : 'km';
+		$units      = 'imperial' === $args['units'] ? esc_attr__( 'miles', 'geo-my-wp' ) : esc_attr__( 'kilometers', 'geo-my-wp' );
 		$output     = '';
 
 		$args['total_count']   = absint( $args['total_count'] );

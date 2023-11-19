@@ -555,7 +555,7 @@ class GMW_Form_Core {
 	public function results_message_placeholders() {
 		return array(
 			'count_message'           => __( 'Showing {from_count} - {to_count} of {total_results} locations', 'geo-my-wp' ),
-			'location_message'        => __( ' within {radius}{units} from {address}', 'geo-my-wp' ),
+			'location_message'        => __( ' within {radius} {units} from {address}', 'geo-my-wp' ),
 			'load_more_count_message' => __( 'Showing {results_count} of {total_results} locations', 'geo-my-wp' ),
 			'single_count_message'    => __( '1 location found', 'geo-my-wp' ),
 		);
