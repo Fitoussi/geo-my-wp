@@ -246,22 +246,18 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 		// load single member location.
 		if ( gmw_is_addon_active( 'single_location' ) ) {
 
-			if ( IS_ADMIN ) {
+			/**
+			 * Add post object to objects dropdown in single location widget.
+			 *
+			 * @param  array $args arguments.
+			 */
+			function gmw_fl_single_location_widget_object( $args ) {
 
-				/**
-				 * Add post object to objects dropdown in single location widget.
-				 *
-				 * @param  array $args arguments.
-				 */
-				function gmw_fl_single_location_widget_object( $args ) {
+				$args['bp_member'] = __( 'Buddypress Member', 'geo-my-wp' );
 
-					$args['bp_member'] = __( 'Buddypress Member', 'geo-my-wp' );
-
-					return $args;
-				}
-				add_filter( 'gmw_single_location_widget_objects', 'gmw_fl_single_location_widget_object', 10 );
-
+				return $args;
 			}
+			add_filter( 'gmw_single_location_widget_objects', 'gmw_fl_single_location_widget_object', 10 );
 
 			if ( ! IS_ADMIN || defined( 'DOING_AJAX' ) ) {
 				require_once 'includes/class-gmw-single-bp-member-location.php';

@@ -234,24 +234,20 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 		// load single location post.
 		if ( gmw_is_addon_active( 'single_location' ) ) {
 
-			if ( IS_ADMIN ) {
+			/**
+			 * Add post object to objects dropdown in single location widget
+			 *
+			 * @param  array $args array of args.
+			 *
+			 * @return array       array of new args.
+			 */
+			function gmw_pt_single_location_widget_object( $args ) {
 
-				/**
-				 * Add post object to objects dropdown in single location widget
-				 *
-				 * @param  array $args array of args.
-				 *
-				 * @return array       array of new args.
-				 */
-				function gmw_pt_single_location_widget_object( $args ) {
+				$args['post'] = __( 'Post', 'geo-my-wp' );
 
-					$args['post'] = __( 'Post', 'geo-my-wp' );
-
-					return $args;
-				}
-				add_filter( 'gmw_single_location_widget_objects', 'gmw_pt_single_location_widget_object', 5 );
-
+				return $args;
 			}
+			add_filter( 'gmw_single_location_widget_objects', 'gmw_pt_single_location_widget_object', 5 );
 
 			if ( ! IS_ADMIN || defined( 'DOING_AJAX' ) ) {
 				require_once 'includes/class-gmw-single-post-location.php';
