@@ -981,12 +981,36 @@ function gmw_get_object_map_location( $object, $iw_args = array(), $gmw = array(
 
 	// Deprecated. Use one of the filters below instead ( @since 4.0 ).
 	$map_icon = apply_filters( 'gmw_' . $gmw['prefix'] . '_map_icon', $map_icon, $object, $gmw, $gmw );
+	$title    = '';
+
+	if ( ! empty( $object->object_type ) ) {
+
+		if ( 'post' === $object->object_type ) {
+
+			if ( ! empty( $object->post_title ) ) {
+				$title = $object->post_title;
+			}
+
+		} elseif ( 'user' === $object->object_type ) {
+
+			if ( ! empty( $object->display_name ) ) {
+				$title = $object->display_name;
+			}
+
+		} elseif ( 'bp_group' === $object->object_type ) {
+
+			if ( ! empty( $object->name ) ) {
+				$title = $object->name;
+			}
+		}
+	}
 
 	$args = (object) array(
 		'ID'                  => $object->object_id,
 		'location_id'         => $object->location_id,
 		'object_id'           => $object->object_id,
 		'object_type'         => $object->object_type,
+		'title'               => $title,
 		'lat'                 => $object->lat,
 		'lng'                 => $object->lng,
 		'distance'            => isset( $object->distance ) ? $object->distance : null,
