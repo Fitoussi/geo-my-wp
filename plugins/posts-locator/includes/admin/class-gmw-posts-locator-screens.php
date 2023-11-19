@@ -276,43 +276,7 @@ class GMW_Posts_Locator_Screens {
 	 * @return [type]       [description]
 	 */
 	public static function get_location_form_args( $post ) {
-
-		/**
-		 * This is a temporary solution for an issue with the $post object.
-		 *
-		 * In some occations the $post object might belong to a different post
-		 *
-		 * of a different post type than the post that is currently being edited.
-		 *
-		 * I am not certain if this issue cause by the theme that generates the different post types
-		 *
-		 * or by GEO my WP.
-		 */
-		if ( ! empty( $_GET['post'] ) && absint( $_GET['post'] ) && $_GET['post'] !== $post->ID ) {
-			$post = get_post( $_GET['post'] ); // WPCS: CSRF ok, sanitization ok.
-		}
-
-		// form args.
-		return apply_filters(
-			'gmw_edit_post_location_form_args',
-			array(
-				'object_id'          => $post->ID,
-				'form_template'      => 'location-form-tabs-left',
-				//'submit_enabled'     => 1,
-				//'auto_confirm'       => 1,
-				'stand_alone'        => 0,
-				//'ajax_enabled'       => ,
-				'confirm_required'   => 0,
-				'form_element'       => '.wrap form',
-				'map_zoom_level'     => gmw_get_option( 'post_types_settings', 'edit_post_page_map_zoom_level', 7 ),
-				'map_type'           => gmw_get_option( 'post_types_settings', 'edit_post_page_map_type', 'ROADMAP' ),
-				'map_lat'            => gmw_get_option( 'post_types_settings', 'edit_post_page_map_latitude', '40.711544' ),
-				'map_lng'            => gmw_get_option( 'post_types_settings', 'edit_post_page_map_longitude', '-74.013486' ),
-				'location_mandatory' => gmw_get_option( 'post_types_settings', 'location_mandatory', 0 ),
-				'location_required'  => gmw_get_option( 'post_types_settings', 'location_mandatory', 0 ),
-			),
-			$post
-		);
+		return gmw_get_post_location_form_args( $post );
 	}
 
 	/**
