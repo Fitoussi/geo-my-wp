@@ -42,7 +42,7 @@ class GMW_Tracking {
 	public function __construct() {
 
 		// schedue data send.
-		$this->schedule_send();
+		//$this->schedule_send();
 
 		// optin user when click on "Allow tracking" buttton.
 		add_action( 'gmw_opt_into_tracking', array( $this, 'optin_tracking' ) );
@@ -286,14 +286,16 @@ class GMW_Tracking {
 		// get the last time data was sent.
 		$last_send = $this->get_last_send();
 
-		// Send data once per week.
-		if ( $last_send && $last_send > strtotime( '-1 week' ) ) {
+		// Send data every 30 days.
+		if ( $last_send && $last_send > strtotime( '-30 days' ) ) {
 			return;
 		}
 
+		$query_string = ( $override ) ? 'added' : 'updated';
+
 		// send data using post request.
 		$request = wp_remote_post(
-			'https://geomywp.com/?gmw_action=data_tracking_send',
+			'https://geomywp.com/?gmw_action=tracking_data&status=' . $query_string,
 			array(
 				'method'      => 'POST',
 				'timeout'     => 20,
