@@ -598,6 +598,7 @@ function gmw_get_search_results_meta_fields( $type = 'post_meta', $meta_fields =
 
 		$field_value = maybe_unserialize( $field_value );
 		$field_value = is_array( $field_value ) ? implode( ', ', $field_value ) : $field_value;
+		$field_value = esc_html( $field_value );
 
 		$output .= '<li class="gmw-meta-field field-name-' . esc_attr( $field_name ) . '">';
 
@@ -605,10 +606,17 @@ function gmw_get_search_results_meta_fields( $type = 'post_meta', $meta_fields =
 			$output .= '<span class="label">' . esc_html( $options['label'] ) . '</span>';
 		}
 
+		if ( wp_http_validate_url( $field_value ) ) {
+			$field_value = '<a href="' . $field_value . '">' . $field_value . '</a>';
+		}
+
+		$options['field_output'] = esc_html( $options['field_output'] );
+
 		$field_output = str_replace( '%field%', $field_value, $options['field_output'] );
+		$field_output = apply_filters( 'gmw_meta_field_results_output', $field_output, $field_value, $field, $options );
 
 		$output .= '<span class="field">';
-		$output .= esc_attr( $field_output );
+		$output .= $field_output;
 		$output .= '</span>';
 		$output .= '</li>';
 	}
