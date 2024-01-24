@@ -63,6 +63,13 @@ if ( ! class_exists( 'GMW_Premium_Plugin_Updater' ) ) :
 		private $wp_override = false;
 
 		/**
+		 * Beta version?.
+		 *
+		 * @var boolean
+		 */
+		private $beta = false;
+
+		/**
 		 * Cache key.
 		 *
 		 * @var string

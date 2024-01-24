@@ -64,6 +64,13 @@ if ( ! class_exists( 'GMW_License' ) ) :
 		private $license_key;
 
 		/**
+		 * License status.
+		 *
+		 * @var [type]
+		 */
+		private $license_status;
+
+		/**
 		 * Plugin's version.
 		 *
 		 * @var string
@@ -83,6 +90,13 @@ if ( ! class_exists( 'GMW_License' ) ) :
 		 * @var string
 		 */
 		private $api_url = 'https://geomywp.com';
+
+		/**
+		 * Action links.
+		 *
+		 * @var
+		 */
+		private $action_links;
 
 		/**
 		 * Enable/disable license key box in plugin's page.

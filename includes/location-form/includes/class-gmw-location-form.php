@@ -118,6 +118,20 @@ class GMW_Location_Form {
 	public $disable_additional_fields = true;
 
 	/**
+	 * Action messages.
+	 *
+	 * @var array
+	 */
+	public $messages = array();
+
+	/**
+	 * Form arguments.
+	 *
+	 * @var array
+	 */
+	public $args = array();
+
+	/**
 	 * Default arguments
 	 *
 	 * @since 3.0

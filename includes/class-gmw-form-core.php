@@ -150,6 +150,15 @@ class GMW_Form_Core {
 	public $results = array();
 
 	/**
+	 * Can be used to collect locations.
+	 *
+	 * @since 4.1.1
+	 *
+	 * @var array
+	 */
+	public $locations = array();
+
+	/**
 	 * Search results enabled/disabled.
 	 *
 	 * @var boolean
