@@ -345,7 +345,12 @@ class GMW_Form_Core {
 
 		// If class doens't exist.
 		if ( ! class_exists( $class_name ) ) {
-			return $class_name . ' class is missing.';
+
+			$class_name = ucwords( $class_name, '_' );
+
+			if ( ! class_exists( $class_name ) ) {
+				return $class_name . ' class is missing.';
+			}
 		}
 
 		// initiate the class.
