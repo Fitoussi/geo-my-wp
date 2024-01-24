@@ -679,7 +679,7 @@ if ( ! class_exists( 'GMW_License' ) ) :
 		}
 
 		// set new transient.
-		set_transient( 'gmw_verify_license_keys', true, DAY_IN_SECONDS * 3 );
+		set_transient( 'gmw_verify_license_keys', true, DAY_IN_SECONDS * 7 );
 
 		// get license keys.
 		$license_keys = get_option( 'gmw_license_data' );
@@ -694,9 +694,25 @@ if ( ! class_exists( 'GMW_License' ) ) :
 			// If GEO my WP exists, use its function.
 			if ( function_exists( 'gmw_get_addon_data' ) ) {
 
-				$addon_data = gmw_get_addon_data( $license_name );
-				$item_id    = ! empty( $addon_data['item_id'] ) ? absint( $addon_data['item_id'] ) : '';
-				$item_name  = ! empty( $addon_data['item_name'] ) ? urlencode( $addon_data['item_name'] ) : '';
+				$addon_data         = gmw_get_addon_data( $license_name );
+				$addon_license_data = gmw_get_addon_license_data( $license_name );
+				$item_id            = '';
+				$item_name          = '';
+
+				if ( ! empty( $addon_data['item_id'] ) ) {
+					$item_id = absint( $addon_data['item_id'] );
+				} elseif ( ! empty( $addon_license_data['item_id'] ) ) {
+					$item_id = absint( $addon_license_data['item_id'] );
+				}
+
+				if ( ! empty( $addon_data['item_name'] ) ) {
+					$item_name = urlencode( $addon_data['item_name'] );
+				} elseif ( ! empty( $addon_license_data['item_name'] ) ) {
+					$item_name = urlencode( $addon_license_data['item_name'] );
+				}
+
+				//$item_id    = ! empty( $addon_data['item_id'] ) ? absint( $addon_data['item_id'] ) : '';
+				//$item_name  = ! empty( $addon_data['item_name'] ) ? urlencode( $addon_data['item_name'] ) : '';
 
 				// Otherwise, for stand alone plugins.
 			} else {
@@ -714,8 +730,12 @@ if ( ! class_exists( 'GMW_License' ) ) :
 					'license'    => $license_key,
 					'item_id'    => $item_id,
 					'url'        => home_url(),
-					'item_name'  => $item_name,
+					'item_name'  => '',
 				);
+
+				if ( empty( $api_params['item_id'] ) && ! empty( $item_name ) ) {
+					$api_params['item_name'] = $item_name;
+				}
 
 				// Call the custom API.
 				$response = wp_remote_post(
