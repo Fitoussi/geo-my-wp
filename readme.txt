@@ -3,9 +3,9 @@ Contributors: ninjew, Eyal Fitoussi
 Donate link: https://www.paypal.me/fitoussi
 Tags: Geolocation, Directory, Store Locator, Google Maps, OpenStreetMaps, LocationIQ, LeafLet, Geotagging, mashup maps, Geocode, Mapping, Proximity search, Zipcode, Geotag posts, Address search, Distance, Directions, Locations, Geo, Members locator, Geotag members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
 Requires at least: 5.6
-Tested up to: 6.4
+Tested up to: 6.4.2
 BuddyPress: 11.3.1
-Stable tag: 4.1
+Stable tag: 4.2
 Requires PHP: 7.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,28 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 4.2 =
+
+* Please follow the steps below if you are updating from GEO my WP version 3.x:
+  - please read [this post](https://geomywp.com/geo-my-wp-v4-0/) before updating to GEO my WP version 4.x on your site.
+  - GEO my WP v4.0 is a major release. It is highly recommended that you either test it on a staging and/or make a complete backup of your site before installing it on a live site.
+  - VERY IMPORTANT: When updating to GEO my WP v4.x, you need to first update the premium extensions of GEO my WP and only then update GEO my WP core plugin. Not following these steps might cause a fatal error on your site.
+* Fix: font secondary color not saving properly in GEO my WP Settings page.
+* Security: add a nonce check when deleting and duplicating a form.
+* Tweak: PHP notices.
+* Tweak: Modify the remote URL of the usage tracking.
+* Tweak: Log tracking update once a month instead of once a week.
+* Tweak: when generating the class name of a GMW Locator Form, make sure the name is capitalized to prevent issues on some servers/websites.
+* Tweak: Generate hyperlink when outputting a URL via meta field value in the search results.
+* Tweak: enhance how the license key data is generated before verifying a license key.
+* Tweak: dequeue Select-2 from the Event Tickets plugin on GEO my WP pages.
+* Tweak: add space before the distance unit in the results message.
+* Tweak: replace "mi" and "km" with "miles" and "kilometers" in the results message.
+* Tweak: New function gmw_get_post_location_form_args( $post ) to generate the arguments of the post's location form.
+* Tweak: use the function gmw_get_post_location_form_args() to generate the location form args.
+* Tweak: pass the location name to the location args.
+* Tweak: objects are not loading in the "Object" select box option of the Single Location widget.
 
 = 4.1 =
 
