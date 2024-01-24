@@ -485,7 +485,7 @@ class GMW_Settings {
 								'priority'    => 25,
 							),
 							'font_color_secondary'  => array(
-								'name'        => 'font_color_primary',
+								'name'        => 'font_color_secondary',
 								'type'        => 'text',
 								'default'     => '',
 								'placeholder' => '',
