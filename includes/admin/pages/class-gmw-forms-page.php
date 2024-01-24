@@ -162,6 +162,11 @@ class GMW_Forms_Page {
 			exit;
 		}
 
+		// verify nonce.
+		if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'gmw_duplicate_form' ) ) { // phpcs:ignore. CSRF ok, sanitization ok.
+			wp_die( esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+		}
+
 		global $wpdb;
 
 		// get form data.
@@ -223,6 +228,11 @@ class GMW_Forms_Page {
 		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) { // phpcs:ignore: CSRF ok.
 			wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_not_deleted&gmw_notice_status=error' ) );
 			exit;
+		}
+
+		// verify nonce.
+		if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'gmw_delete_form' ) ) { // phpcs:ignore. CSRF ok, sanitization ok.
+			wp_die( esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 		}
 
 		GMW_Forms_Helper::delete_form( absint( $_GET['form_id'] ) ); // phpcs:ignore: CSRF ok.

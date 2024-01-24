@@ -167,6 +167,7 @@ class GMW_Forms_Table extends WP_List_Table {
 			'gmw_action' => 'duplicate_form',
 			'form_id'    => $item['ID'],
 			'slug'       => $item['slug'],
+			'nonce'      => wp_create_nonce( 'gmw_duplicate_form' ),
 		);
 
 		$actions['duplicate'] = sprintf(
@@ -180,6 +181,7 @@ class GMW_Forms_Table extends WP_List_Table {
 			'page'       => $page,
 			'gmw_action' => 'delete_form',
 			'form_id'    => $item['ID'],
+			'nonce'      => wp_create_nonce( 'gmw_delete_form' ),
 		);
 
 		$delete_message = esc_attr__( 'This action cannot be undone. Would you like to proceed?', 'geo-my-wp' );

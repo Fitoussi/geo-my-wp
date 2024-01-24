@@ -265,17 +265,21 @@ class GMW_Form_Editor {
 
 				<input type="text" name="gmw_form[title]" value="<?php echo esc_attr( $form_name ); ?>" placeholder="Form name" />
 
+				<?php $duplicate_nonce = wp_create_nonce( 'gmw_duplicate_form' ); ?>
+
 				<a
 					class="duplicate-form gmw-action-button button-primary"
 					title="<?php esc_attr_e( 'Duplicate form', 'geo-my-wp' ); ?>"
-					href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=duplicate_form&slug=' . $form['slug'] . '&form_id=' . $form['ID'] ); ?>">
+					href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=duplicate_form&slug=' . $form['slug'] . '&form_id=' . $form['ID'] . '&nonce=' . $duplicate_nonce ); ?>">
 					<?php esc_attr_e( 'Duplicate Form', 'geo-my-wp' ); ?>
 				</a>
+
+				<?php $delete_nonce = wp_create_nonce( 'gmw_delete_form' ); ?>
 
 				<a
 					class="delete-form gmw-action-button button-primary"
 					title="<?php esc_attr_e( 'Delete form', 'geo-my-wp' ); ?>"
-					href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=delete_form&form_id=' . $form['ID'] ); ?>"
+					href="<?php echo esc_url( 'admin.php?page=gmw-forms&gmw_action=delete_form&form_id=' . $form['ID'] . '&nonce=' . $delete_nonce ); ?>"
 					onclick="return confirm( '<?php esc_attr_e( 'This action cannot be undone. Would you like to proceed?', 'geo-my-wp' ); ?>' );">
 					<?php esc_html_e( 'Delete Form', 'geo-my-wp' ); ?>
 				</a>
