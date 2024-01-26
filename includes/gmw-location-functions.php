@@ -651,6 +651,11 @@ function gmw_update_location( $args = array(), $location = array(), $force_refre
 		'formatted_address' => $geocoded_data['formatted_address'],
 		'place_id'          => $geocoded_data['place_id'],
 	);
+	foreach ($location_data as $k => $v) {
+		if ($k !== 'title' && $location_data[$k] === null) {
+			$location_data[$k] = '';
+		}
+	}
 
 	// modify the data if needed.
 	$location_data = apply_filters( 'gmw_pre_update_location_data', $location_data, $object_type, $geocoded_data );
