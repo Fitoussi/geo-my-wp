@@ -1811,7 +1811,7 @@ class GMW_Form_Settings_Helper {
 			$defaults['options']  = array(
 				'standard'           => __( 'No Grouping', 'geo-my-wp' ),
 				'markers_clusterer'  => __( 'Markers clusterer', 'geo-my-wp' ),
-				'markers_spiderfier' => __( 'Markers Spiderfier', 'geo-my-wp' ),
+				'markers_spiderfier' => __( 'Markers Spiderfier ( Deprecated )', 'geo-my-wp' ),
 			);
 
 		} elseif ( 'map_controls' === $option ) {
