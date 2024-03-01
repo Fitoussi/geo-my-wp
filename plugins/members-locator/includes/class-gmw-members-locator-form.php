@@ -442,7 +442,7 @@ trait GMW_Members_Locator_Form_Trait {
 			'prefix' => $this->prefix,
 			'type'   => ! empty( $this->form['info_window']['iw_type'] ) ? $this->form['info_window']['iw_type'] : 'standard',
 			'image'  => $avatar,
-			'url'    => bp_core_get_user_domain( $member->ID ),
+			'url'    => function_exists( 'bp_members_get_user_url' ) ? bp_members_get_user_url( $member->ID ) : bp_core_get_user_domain( $member->ID ),
 			'title'  => $member->display_name,
 		);
 	}
