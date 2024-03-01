@@ -648,6 +648,12 @@ class GMW_Admin {
 		wp_dequeue_style( 'tribe-select2-css' );
 		wp_deregister_style( 'tribe-select2-css' );
 
+		// My Listings Theme
+		wp_dequeue_script( 'mylisting-select2' );
+		wp_deregister_script( 'mylisting-select2' );
+		wp_dequeue_style( 'mylisting-select2' );
+		wp_deregister_style( 'mylisting-select2' );
+
 		wp_dequeue_script( 'select2' );
 		wp_dequeue_style( 'select2' );
 		wp_deregister_style( 'select2' );
