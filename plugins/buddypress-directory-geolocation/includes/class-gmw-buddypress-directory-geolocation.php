@@ -283,8 +283,13 @@ class GMW_BuddyPress_Directory_Geolocation {
 		// Add "Distance" to the order by filter.
 		add_action( 'bp_' . $this->component . 's_directory_order_options', array( $this, 'orderby_distance' ), 5 );
 
-		// SweetDate theme.
-		if ( function_exists( 'sweetdate_setup' ) ) {
+		// When Youzify plugin installed.
+		if ( class_exists( 'Youzify' ) ) {
+
+			add_filter( 'bp_directory_' . $this->component . 's_search_form', array( $this, 'directory_form' ) );
+
+			// SweetDate theme.
+		} elseif ( function_exists( 'sweetdate_setup' ) ) {
 
 			// phpcs:ignore.
 			// add_action( 'kleo_bp_search_add_data', array( $this, 'sweetdate_directory_form' ) );
