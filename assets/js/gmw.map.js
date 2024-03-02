@@ -147,7 +147,8 @@ if ( gmwVars.mapsProvider == 'google_maps' ) {
 		},
 
 		// Render map.
-		Map : function( element, options, mapObject ) {
+		Map: function (element, options, mapObject) {
+
 			return new google.maps.Map(
 				document.getElementById( mapObject.mapElement ),
 				options
@@ -230,63 +231,147 @@ if ( gmwVars.mapsProvider == 'google_maps' ) {
 		 */
 		renderMarker : function( options, location, mapObject ) {
 
-			var self = mapObject,
-				icon = {
-					url : options.icon || self.iconUrl
-				};
+			// This script was used with the google.maps.Marker class before it was announced deprecated and GEO my WP moved to using google.maps.marker.AdvancedMarkerElement instead.
+			var self = mapObject;
 
-			// Scale icon size when provided per icon.
-			if ( location.icon_size ) {
+			if (self.settings.advanced_markers === true) {
 
-				icon.scaledSize = new google.maps.Size( parseInt( location.icon_size[0] ), parseInt( location.icon_size[1] ) );
+				var iconElem = document.createElement('img'),
+					iconUrl = options.icon || self.iconUrl,
+					iconSize = [],
+					marker_options = {
+						position: options.position,
+						map: self.map,
+						title: location.title || '',
+					}
 
-			// When need to scale all icons based on same size.
-			// That is if icon size provided or when using the default red icon.
-			} else if ( self.iconSize || icon.url == gmwVars.defaultIcons.location_icon_url ) {
+				// Collect icon size when provided per icon.
+				if (location.icon_size) {
 
-				// first we check if scaled size already provided in global.
-				// We do this to prevent scalling each icon to the same size.
-				// Just to save even a bit on perfoarmance, spacially when having many icons.
-				if ( ! self.iconScaledSize ) {
+					iconSize = [parseInt(location.icon_size[0]), parseInt(location.icon_size[1])];
 
-					// set icon size in global
-					if ( self.iconSize ) {
-						self.iconScaledSize = new google.maps.Size( parseInt( self.iconSize[0] ), parseInt( self.iconSize[1] ) );
-					} else {
-						self.iconScaledSize = new google.maps.Size( parseInt( gmwVars.defaultIcons.location_icon_size[0] ), parseInt( gmwVars.defaultIcons.location_icon_size[1] ) );
+					// When need to collect global icon size ( all icons based on same size ).
+					// That is if icon size provided or when using the default red icon.
+				} else if (self.iconSize || iconUrl == gmwVars.defaultIcons.location_icon_url) {
+
+					// first we check if scaled size already provided in global.
+					// We do this to prevent scalling each icon to the same size.
+					// Just to save even a bit on perfoarmance, spacially when having many icons.
+					if (!self.iconScaledSize) {
+
+						// set icon size in global
+						if (self.iconSize) {
+							self.iconScaledSize = [parseInt(self.iconSize[0]), parseInt(self.iconSize[1])];
+						} else {
+							self.iconScaledSize = [parseInt(gmwVars.defaultIcons.location_icon_size[0]), parseInt(gmwVars.defaultIcons.location_icon_size[1])];
+						}
+					}
+
+					// get icon size from global.
+					iconSize = self.iconScaledSize;
+				}
+
+				// Icon URL.
+				iconElem.src = iconUrl;
+
+				// Icon size when provided.
+				if (iconSize.length != 0) {
+					iconElem.width = iconSize[0];
+					iconElem.height = iconSize[1];
+				}
+
+				// Generate icon ID and Class attributes.
+				if (typeof location.object_id !== 'undefined') {
+
+					iconElem.id = 'gmw-map-icon-' + location.object_id;
+					iconElem.className = 'gmw-map-icon-object-' + location.object_id;
+
+					if (typeof location.location_id !== 'undefined') {
+						iconElem.id += '-' + location.location_id;
+						iconElem.className += ' ' + 'gmw-map-icon-location-' + location.location_id;
 					}
 				}
 
-				// get icon size from global.
-				icon.scaledSize = self.iconScaledSize;
+				// Icon element.
+				marker_options.content = iconElem;
+
+				var gmwData = {
+					markerCount: options.id,
+					locationID: location.location_id || 0,
+					iwContent: options.content,
+					objectType: location.object_type || '',
+					objectId: location.object_id || 0,
+					iconUrl: iconUrl,
+					bounceEvent: location.bounce_event || 'disabled',
+					openIwEvent: location.open_iw_event || 'disabled',
+					scrollToItem: location.scroll_to_item || 'disabled',
+				};
+
+				// modify marker options.
+				marker_options = GMW.apply_filters('gmw_generate_marker_options', marker_options, options.id, self, location);
+
+				var marker = new google.maps.marker.AdvancedMarkerElement(marker_options);
+
+			} else {
+
+				var icon = {
+					url: options.icon || self.iconUrl
+				};
+
+				// Scale icon size when provided per icon.
+				if (location.icon_size) {
+
+					icon.scaledSize = new google.maps.Size(parseInt(location.icon_size[0]), parseInt(location.icon_size[1]));
+
+					// When need to scale all icons based on same size.
+					// That is if icon size provided or when using the default red icon.
+				} else if (self.iconSize || icon.url == gmwVars.defaultIcons.location_icon_url) {
+
+					// first we check if scaled size already provided in global.
+					// We do this to prevent scalling each icon to the same size.
+					// Just to save even a bit on perfoarmance, spacially when having many icons.
+					if (!self.iconScaledSize) {
+
+						// set icon size in global
+						if (self.iconSize) {
+							self.iconScaledSize = new google.maps.Size(parseInt(self.iconSize[0]), parseInt(self.iconSize[1]));
+						} else {
+							self.iconScaledSize = new google.maps.Size(parseInt(gmwVars.defaultIcons.location_icon_size[0]), parseInt(gmwVars.defaultIcons.location_icon_size[1]));
+						}
+					}
+
+					// get icon size from global.
+					icon.scaledSize = self.iconScaledSize;
+				}
+
+				var marker_options = {
+					position: options.position,
+					icon: icon,
+					map: self.map,
+					animation: null,
+					title: 'gmw-map-icon',
+
+					//location_id  : options.id, //deprecated. use gmwData.markerCount instead.
+					//iw_content   : options.content // //deprecated. use gmwData.iwContent instead.
+				};
+
+				var gmwData = {
+					markerCount: options.id,
+					locationID: location.location_id || 0,
+					iwContent: options.content,
+					objectType: location.object_type || '',
+					objectId: location.object_id || 0,
+					iconUrl: icon.url,
+					bounceEvent: location.bounce_event || 'disabled',
+					openIwEvent: location.open_iw_event || 'disabled',
+					scrollToItem: location.scroll_to_item || 'disabled',
+				};
+
+				// modify marker options.
+				marker_options = GMW.apply_filters('gmw_generate_marker_options', marker_options, options.id, self, location);
+
+				var marker = new google.maps.Marker(marker_options);
 			}
-
-			var marker_options = {
-				position 	 : options.position,
-				icon     	 : icon,
-				map      	 : self.map,
-				animation    : null,
-				title        : 'gmw-map-icon',
-				//location_id  : options.id, //deprecated. use gmwData.markerCount instead.
-				//iw_content   : options.content // //deprecated. use gmwData.iwContent instead.
-			};
-
-			var gmwData = {
-				markerCount : options.id,
-				locationID  : location.location_id || 0,
-				iwContent   : options.content,
-				objectType  : location.object_type || '',
-				objectId    : location.object_id || 0,
-				iconUrl: icon.url,
-				bounceEvent: location.bounce_event || 'disabled',
-				openIwEvent: location.open_iw_event || 'disabled',
-				scrollToItem: location.scroll_to_item || 'disabled',
-			};
-
-			// modify marker options.
-			marker_options = GMW.apply_filters( 'gmw_generate_marker_options', marker_options, options.id, self, location );
-
-			var marker = new google.maps.Marker( marker_options );
 
 			/*setTimeout( function() {
 
@@ -312,25 +397,52 @@ if ( gmwVars.mapsProvider == 'google_maps' ) {
 				self.markerEvents( 'click', marker );
 			});
 
-			// Bounce animation.
-			if (gmwData.bounceEvent == 'hover' || GMW.apply_filters('gmw_bounce_marker_on_result_hover', false, marker, self) ) {
 
-				jQuery( '.gmw-object-' + marker.gmwData.objectId ).hover( function () {
-					marker.setAnimation( google.maps.Animation.BOUNCE );
-				},
-				function() {
-					marker.setAnimation(null);
-				});
+			if (self.settings.advanced_markers === true) {
 
-			} else if (gmwData.bounceEvent == 'click') {
+				// Bounce animation.
+				if (gmwData.bounceEvent == 'hover' || GMW.apply_filters('gmw_bounce_marker_on_result_hover', false, marker, self) ) {
 
-				jQuery('.gmw-object-' + marker.gmwData.objectId).click(function () {
-					marker.setAnimation(google.maps.Animation.BOUNCE);
-				});
+					jQuery('.gmw-object-' + marker.gmwData.objectId).hover(function () {
+						marker.content.classList.add("gmw-marker-bounce");
+					},
+					function() {
+						marker.content.classList.remove("gmw-marker-bounce");
+					});
 
-				jQuery('.gmw-object-' + marker.gmwData.objectId).mouseout(function () {
-					marker.setAnimation(null);
-				});
+				} else if (gmwData.bounceEvent == 'click') {
+
+					jQuery('.gmw-object-' + marker.gmwData.objectId).click(function () {
+						marker.content.classList.add("gmw-marker-bounce");
+					});
+
+					jQuery('.gmw-object-' + marker.gmwData.objectId).mouseout(function () {
+						marker.content.classList.remove("gmw-marker-bounce");
+					});
+				}
+
+			} else {
+
+				// Bounce animation.
+				if (gmwData.bounceEvent == 'hover' || GMW.apply_filters('gmw_bounce_marker_on_result_hover', false, marker, self) ) {
+
+					jQuery( '.gmw-object-' + marker.gmwData.objectId ).hover( function () {
+						marker.setAnimation( google.maps.Animation.BOUNCE );
+					},
+					function() {
+						marker.setAnimation(null);
+					});
+
+				} else if (gmwData.bounceEvent == 'click') {
+
+					jQuery('.gmw-object-' + marker.gmwData.objectId).click(function () {
+						marker.setAnimation(google.maps.Animation.BOUNCE);
+					});
+
+					jQuery('.gmw-object-' + marker.gmwData.objectId).mouseout(function () {
+						marker.setAnimation(null);
+					});
+				}
 			}
 
 			// result item mouse events.
