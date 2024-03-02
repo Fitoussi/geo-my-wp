@@ -121,6 +121,25 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 
 == Changelog ==
 
+= 4.3 =
+
+* Please follow the steps below if you are updating from GEO my WP version 3.x:
+  - please read [this post](https://geomywp.com/geo-my-wp-v4-0/) before updating to GEO my WP version 4.x on your site.
+  - GEO my WP v4.0 is a major release. It is highly recommended that you either test it on a staging and/or make a complete backup of your site before installing it on a live site.
+  - VERY IMPORTANT: When updating to GEO my WP v4.x, you need to first update the premium extensions of GEO my WP and only then update GEO my WP core plugin. Not following these steps might cause a fatal error on your site.
+* Fix: days & hours showing incorrectly in the results when the Multiple Locations feature is enabled.
+* Fix: Select2 conflict with My Listing theme.
+* Fix: conflicts with BuddyPress 12.0.
+* Enhancement: switch to using Google Maps Advanced Markers instead of the legacy Marker class which is now deprecated.
+* Enhancement: load Google Maps API via async to improve performance.
+* Tweak: CSS to add bounce animation to Google Map Advanced markers.
+* Tweak: update the Marker Clusterer library for Google Maps ( v2.5.3 ).
+* Tweak: enable Google Maps Advanced Markers by default. Use the filter 'gmw_map_element' to instead enable the legacy Marker class which is now deprecated.
+* Tweak: Pass the map_id to the map options.
+* Tweak: replace BuddPress's deprecated function3.
+* Tweak: add a check for the Youzify plugin when loading the geolocation features in the Directory pages of BuddyPress.
+* Deprecated: The Markers Spiderfier option is now deprecated. This is a 3rd party library that is no longer supported by its developer and is incompatible with Google Maps Advanced Markers.
+
 = 4.2 =
 
 * Please follow the steps below if you are updating from GEO my WP version 3.x:
