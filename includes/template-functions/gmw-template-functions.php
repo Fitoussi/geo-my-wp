@@ -482,6 +482,10 @@ function gmw_get_hours_of_operation( $location = 0, $object_id = 0 ) {
 
 		$days_hours = gmw_get_location_meta( $location, 'days_hours' );
 
+	} elseif ( is_object( $location ) && ! empty( $location->location_id ) ) {
+
+		$days_hours = gmw_get_location_meta( $location->location_id, 'days_hours' );
+
 		// if location object provided.
 	} elseif ( is_object( $location ) && ! empty( $location->object_type ) && ! empty( $location->object_id ) ) {
 
@@ -608,7 +612,7 @@ function gmw_get_bp_avatar( $args = array(), $object = array(), $gmw = array() )
 			$args['permalink'] = bp_get_group_permalink( $object );
 
 		} else {
-			$args['permalink'] = bp_core_get_user_domain( $args['object_id'] );
+			$args['permalink'] = function_exists( 'bp_members_get_user_url' ) ? bp_members_get_user_url( $args['object_id'] ) : bp_core_get_user_domain( $args['object_id'] );
 		}
 	}
 
