@@ -5,7 +5,7 @@ Tags: Geolocation, Directory, Store Locator, Google Maps, OpenStreetMaps, Locati
 Requires at least: 5.6
 Tested up to: 6.4.2
 BuddyPress: 11.3.1
-Stable tag: 4.2
+Stable tag: 4.3
 Requires PHP: 7.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
