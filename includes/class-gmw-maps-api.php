@@ -301,6 +301,7 @@ class GMW_Maps_API {
 			'clusters_path'        => GMW_IMAGES . '/markerclusters/m',
 			'map_provider'         => GMW()->maps_provider,
 			'map_bounderies'       => array(),
+			'advanced_markers'     => true,
 		);
 
 		// if Google maps is the provider, we don't need icon size by default.
@@ -332,6 +333,7 @@ class GMW_Maps_API {
 
 		// default map options.
 		$default_map_options = array(
+			'mapId'                  => $map_id,
 			'defaultCenter'          => '40.758895,-73.985131', // belongs to GMW.
 			'layersUrl'              => $layers_url, // for leaflet.
 			'layersAttribution'      => $layers_attribution, // for leaflet.
@@ -411,6 +413,11 @@ class GMW_Maps_API {
 		// allow plugins modify the map args.
 		$map_element = apply_filters( 'gmw_map_element', $map_element, $form );
 		$map_element = apply_filters( "gmw_map_element_{$map_id}", $map_element, $form );
+
+		// Deprecated markers Spiderfier. Switch to clusterer unless using legacy Marker class.
+		if ( $map_element['settings']['advanced_markers'] && isset( $map_element['settings']['group_markers'] ) && 'markers_spiderfier' === $map_element['settings']['group_markers'] ) {
+			$map_element['settings']['group_markers'] = 'markers_clusterer';
+		}
 
 		// enable maps.
 		self::$map_enabled = true;
