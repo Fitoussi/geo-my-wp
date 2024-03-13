@@ -1,11 +1,11 @@
 === GEO my Wordpress ===
-Contributors: ninjew, Eyal Fitoussi
+Contributors: ninjew
 Donate link: https://www.paypal.me/fitoussi
-Tags: Geolocation, Directory, Store Locator, Google Maps, OpenStreetMaps, LocationIQ, LeafLet, Geotagging, mashup maps, Geocode, Mapping, Proximity search, Zipcode, Geotag posts, Address search, Distance, Directions, Locations, Geo, Members locator, Geotag members, Latitude, Longitude, Coordinates, Locations finder, Map creator.
+Tags: Locations Directory, Store Locator, Proximity Search forms, Posts location, Members location.
 Requires at least: 5.6
-Tested up to: 6.4.2
+Tested up to: 6.4.3
 BuddyPress: 11.3.1
-Stable tag: 4.3
+Stable tag: 4.3.1
 Requires PHP: 7.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,22 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 4.3.1 =
+
+* Please follow the steps below if you are updating from GEO my WP version 3.x:
+  - please read [this post](https://geomywp.com/geo-my-wp-v4-0/) before updating to GEO my WP version 4.x on your site.
+  - GEO my WP v4.0 is a major release. It is highly recommended that you either test it on a staging and/or make a complete backup of your site before installing it on a live site.
+  - VERY IMPORTANT: When updating to GEO my WP v4.x, you need to first update the premium extensions of GEO my WP and only then update GEO my WP core plugin. Not following these steps might cause a fatal error on your site.
+* Fix: The map marker doesn't load on the map when there is only one marker ( when a single location is found in search results ) to show.
+* Fix: retrieving incorrect blog ID in a subside of multi-site resulting in no members found.
+* Fix: incorrect taxonomy usage variable passes to the taxonomy output in the search form when using a filter to modify the taxonomy arguments.
+* Enhancement: enhance the output of the search results permalink function.
+* Enhancement: enhance the way the advanced markers library loads to prevent conflicts with other plugins that use Google Maps.
+* Filter: new filter 'gmw_get_search_results_permalink' to modify the permalink in the search results.
+* Tweak: new settings options to enable the legacy Marker class of Google Maps instead of using the advanced markers.
+* Tweak: we no longer load the advanced marker library when loading the Google Maps API key. We now load it via the JavaScript file of the maps script to better control how and when it is loaded and to prevent conflicts with other plugins that use Google Maps.
+* Tweak: instead of passing the advanced marker variable via the map options, we now have it set in the main options of GEO my WP.
 
 = 4.3 =
 
