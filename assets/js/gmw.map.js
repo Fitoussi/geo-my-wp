@@ -398,7 +398,7 @@ if ( gmwVars.mapsProvider == 'google_maps' ) {
 			});
 
 
-			if (gmwVars.googleAdvancedMarkers === true) {
+			if (gmwVars.googleAdvancedMarkers) {
 
 				// Bounce animation.
 				if (gmwData.bounceEvent == 'hover' || GMW.apply_filters('gmw_bounce_marker_on_result_hover', false, marker, self) ) {
