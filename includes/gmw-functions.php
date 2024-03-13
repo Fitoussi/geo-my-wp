@@ -82,7 +82,7 @@ function gmw_get_object_blog_id( $object = '' ) {
 function gmw_get_blog_id( $object = '' ) {
 	$multisite_global_objects = array( 'user', 'bp_group' );
 
-	if ( is_multisite() && ! in_array( $object, $multisite_global_objects, true ) ) {
+	if ( is_multisite() && in_array( $object, $multisite_global_objects, true ) ) {
 
 		global $blog_id;
 
