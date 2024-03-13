@@ -366,7 +366,7 @@ class GMW_Location_Form {
 			wp_enqueue_script( 'gmw-location-form' );
 		}
 
-		if ( ! wp_style_is(  'gmw-frontend', 'enqueued' ) ) {
+		if ( ! wp_style_is( 'gmw-frontend', 'enqueued' ) ) {
 			wp_enqueue_style( 'gmw-frontend' );
 		}
 
