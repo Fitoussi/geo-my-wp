@@ -2117,7 +2117,7 @@ jQuery( document ).ready( function($){
 
 	if ( gmwVars.mapsProvider === 'google_maps' && gmwVars.googleAdvancedMarkers ) {
 
-		async function initMaps() {
+		async function gmwInitMaps() {
 
 			await google.maps.importLibrary("marker");
 
@@ -2134,7 +2134,7 @@ jQuery( document ).ready( function($){
 			});
 		}
 
-		initMaps();
+		gmwInitMaps();
 
 	} else {
 
