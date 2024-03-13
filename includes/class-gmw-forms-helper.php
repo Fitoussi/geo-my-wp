@@ -1069,6 +1069,9 @@ class GMW_Forms_Helper {
 
 		$form = wp_cache_get( $form_id, 'gmw_forms' );
 
+		// Disable the cache for now as it causes some issues on sites with object cache enabled.
+		$form = false;
+
 		if ( empty( $form ) ) {
 
 			global $wpdb;
@@ -1083,12 +1086,21 @@ class GMW_Forms_Helper {
 
 			if ( ! empty( $form ) ) {
 
-				// if happens that form has no data, we need to apply the defaults.
-				if ( empty( $form['data'] ) ) {
+				// if happens that form has no data, we need to use the form's default values.
+				if ( empty( $form['data'] ) || ! is_array( maybe_unserialize( $form['data'] ) ) ) {
 					$form['data'] = self::default_settings( $form );
 				}
 
-				$form = array_merge( $form, maybe_unserialize( $form['data'] ) );
+				$form_data = maybe_unserialize( $form['data'] );
+
+				if ( empty( $form_data ) || ! is_array( $form_data ) ) {
+
+					wp_cache_delete( $form_id, 'gmw_forms' );
+
+					return;
+				}
+
+				$form = array_merge( $form, $form_data );
 
 				unset( $form['data'] );
 
