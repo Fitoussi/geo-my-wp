@@ -69,6 +69,7 @@ class GMW_Settings {
 					'nominatim_email'                 => get_bloginfo( 'admin_email' ),
 					'google_maps_client_side_api_key' => '',
 					'google_maps_server_side_api_key' => '',
+					'google_maps_legacy_marker'       => '',
 					'google_maps_api_china'           => '',
 				),
 				'styles'           => array(
@@ -384,6 +385,16 @@ class GMW_Settings {
 								),
 								'priority'    => 10,
 							),
+							'google_maps_legacy_marker'       => array(
+								'name'       => 'google_maps_legacy_marker',
+								'type'       => 'checkbox',
+								'default'    => '',
+								'label'      => __( 'Disable Google Maps Advanced Markers', 'geo-my-wp' ),
+								'cb_label'   => __( 'Enabled', 'geo-my-wp' ),
+								'desc'       => __( 'Check this checkbox to disable Google Maps Advanced Markers library and use the legacy marker instead. Please note that the legacy marker is now deprecated and some features might be missing when using it.', 'geo-my-wp' ),
+								'attributes' => array(),
+								'priority'   => 15,
+							),
 							'google_maps_api_china'           => array(
 								'name'       => 'google_maps_api_china',
 								'type'       => 'checkbox',
@@ -392,7 +403,7 @@ class GMW_Settings {
 								'cb_label'   => __( 'Enabled', 'geo-my-wp' ),
 								'desc'       => __( 'Enable this if your server is located in China and Google Maps features are not working properly on your site.', 'geo-my-wp' ),
 								'attributes' => array(),
-								'priority'   => 15,
+								'priority'   => 20,
 							),
 						),
 						'optionsbox'      => 1,

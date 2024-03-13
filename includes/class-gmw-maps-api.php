@@ -301,7 +301,6 @@ class GMW_Maps_API {
 			'clusters_path'        => GMW_IMAGES . '/markerclusters/m',
 			'map_provider'         => GMW()->maps_provider,
 			'map_bounderies'       => array(),
-			'advanced_markers'     => true,
 		);
 
 		// if Google maps is the provider, we don't need icon size by default.
@@ -415,7 +414,7 @@ class GMW_Maps_API {
 		$map_element = apply_filters( "gmw_map_element_{$map_id}", $map_element, $form );
 
 		// Deprecated markers Spiderfier. Switch to clusterer unless using legacy Marker class.
-		if ( $map_element['settings']['advanced_markers'] && isset( $map_element['settings']['group_markers'] ) && 'markers_spiderfier' === $map_element['settings']['group_markers'] ) {
+		if ( 'google_maps' === GMW()->options['api_providers']['maps_provider'] && empty( GMW()->options['api_providers']['google_maps_legacy_marker'] ) && isset( $map_element['settings']['group_markers'] ) && 'markers_spiderfier' === $map_element['settings']['group_markers'] ) {
 			$map_element['settings']['group_markers'] = 'markers_clusterer';
 		}
 
