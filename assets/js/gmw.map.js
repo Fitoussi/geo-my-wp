@@ -104,8 +104,8 @@ if ( gmwVars.mapsProvider == 'google_maps' ) {
 		},
 
 		// Get element position.
-		getPosition : function( element, mapObject ) {
-			return element.getPosition();
+		getPosition: function (element, mapObject) {
+			return gmwVars.googleAdvancedMarkers ? element.position : element.getPosition();
 		},
 
 		// Map options
@@ -234,7 +234,7 @@ if ( gmwVars.mapsProvider == 'google_maps' ) {
 			// This script was used with the google.maps.Marker class before it was announced deprecated and GEO my WP moved to using google.maps.marker.AdvancedMarkerElement instead.
 			var self = mapObject;
 
-			if (self.settings.advanced_markers === true) {
+			if (gmwVars.googleAdvancedMarkers) {
 
 				var iconElem = document.createElement('img'),
 					iconUrl = options.icon || self.iconUrl,
@@ -398,7 +398,7 @@ if ( gmwVars.mapsProvider == 'google_maps' ) {
 			});
 
 
-			if (self.settings.advanced_markers === true) {
+			if (gmwVars.googleAdvancedMarkers === true) {
 
 				// Bounce animation.
 				if (gmwData.bounceEvent == 'hover' || GMW.apply_filters('gmw_bounce_marker_on_result_hover', false, marker, self) ) {
@@ -2115,15 +2115,39 @@ jQuery( document ).ready( function($){
 		return;
 	}
 
-	// loop through and generate all maps
-	jQuery.each( gmwMapObjects, function( map_id, vars ) {
+	if ( gmwVars.mapsProvider === 'google_maps' && gmwVars.googleAdvancedMarkers ) {
 
-		if ( vars.settings.render_on_page_load ) {
+		async function initMaps() {
 
-			// generate new map
-			GMW_Maps[map_id] = new GMW_Map( vars.settings, vars.map_options, vars.form );
-			// initiate it
-			GMW_Maps[map_id].render( vars.locations, vars.user_location );
+			await google.maps.importLibrary("marker");
+
+			// loop through and generate all maps
+			jQuery.each(gmwMapObjects, function (map_id, vars) {
+
+				if (vars.settings.render_on_page_load) {
+
+					// generate new map
+					GMW_Maps[map_id] = new GMW_Map(vars.settings, vars.map_options, vars.form);
+					// initiate it
+					GMW_Maps[map_id].render(vars.locations, vars.user_location);
+				}
+			});
 		}
-	});
+
+		initMaps();
+
+	} else {
+
+		// loop through and generate all maps
+		jQuery.each(gmwMapObjects, function (map_id, vars) {
+
+			if (vars.settings.render_on_page_load) {
+
+				// generate new map
+				GMW_Maps[map_id] = new GMW_Map(vars.settings, vars.map_options, vars.form);
+				// initiate it
+				GMW_Maps[map_id].render(vars.locations, vars.user_location);
+			}
+		});
+	}
 });
