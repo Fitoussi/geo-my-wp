@@ -322,37 +322,42 @@ function gmw_search_results_title( $title, $object, $gmw ) {
  */
 function gmw_get_search_results_permalink( $url, $object, $gmw ) {
 
-	// abort if no address.
-	if ( empty( $gmw['address'] ) || empty( $gmw['modify_permalink'] ) ) {
-		return $url;
+	$url_args = array();
+	$new_url  = $url;
+
+	// Modify URL parameters only when needed.
+	if ( ! empty( $gmw['address'] ) && ! empty( $gmw['modify_permalink'] ) ) {
+
+		// get the permalink args.
+		$url_args = array(
+			'lid'     => $object->location_id,
+			'address' => str_replace( ' ', '+', $gmw['address'] ),
+			'lat'     => $gmw['lat'],
+			'lng'     => $gmw['lng'],
+		);
+
+		if ( ! empty( $object->distance ) ) {
+			$url_args['distance'] = $object->distance . $object->units;
+		}
+
+		$parsed_url = wp_parse_url( $url );
+		$new_url    = apply_filters(
+			'gmw_get_serach_results_permalink_args',
+			array(
+				'url'       => $url,
+				'separator' => empty( $parsed_url['query'] ) ? '?' : '&',
+				'args'      => $url_args,
+			),
+		);
+
+		$new_url['args'] = http_build_query( $new_url['args'] );
+		$new_url         = implode( $new_url );
 	}
 
-	// get the permalink args.
-	$url_args = array(
-		'lid'     => $object->location_id,
-		'address' => str_replace( ' ', '+', $gmw['address'] ),
-		'lat'     => $gmw['lat'],
-		'lng'     => $gmw['lng'],
-	);
-
-	if ( ! empty( $object->distance ) ) {
-		$url_args['distance'] = $object->distance . $object->units;
-	}
-
-	$parsed_url = parse_url( $url );
-	$new_url    = apply_filters(
-		'gmw_get_serach_results_permalink_args',
-		array(
-			'url'       => $url,
-			'separator' => empty( $parsed_url['query'] ) ? '?' : '&',
-			'args'      => $url_args,
-		),
-	);
-
-	$new_url['args'] = http_build_query( $new_url['args'] );
+	$new_url = apply_filters( 'gmw_get_search_results_permalink', $new_url, $object, $gmw );
 
 	// append the address to the permalink.
-	return esc_url( apply_filters( "gmw_{$gmw['prefix']}_get_location_permalink", implode( $new_url ), $url, $url_args, $object, $gmw ) );
+	return esc_url( apply_filters( "gmw_{$gmw['prefix']}_get_location_permalink", $new_url, $url, $url_args, $object, $gmw ) );
 }
 
 /**
@@ -396,18 +401,22 @@ function gmw_get_search_results_linked_title( $url, $title, $object, $gmw ) {
 	$title  = gmw_get_search_results_title( $title, $object, $gmw ); // Already escaped.
 	$atts   = '';
 
+	if ( empty( $url ) ) {
+		return $title;
+	}
+
 	$attributes = apply_filters( 'gmw_get_search_results_linked_title_attr', array(), $object, $gmw );
 
 	if ( is_array( $attributes ) && ! empty( $attributes ) ) {
 
 		foreach ( $attributes as $key => $value ) {
 
-			$attributes[] = esc_attr( $attribute_name ) . '="' . esc_attr( $attribute_value ) . '"';
+			$attributes[] = esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
 
 			unset( $attributes[ $key ] );
 		}
 
-		$attr = implode( ' ', $attributes );
+		$atts = implode( ' ', $attributes );
 	}
 
 	return '<a href="' . $url . '" ' . $atts . '>' . $title . '</a>'; // WPCS: XSS ok. Already escaped in original functions.
