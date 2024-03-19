@@ -1095,7 +1095,8 @@ var GMW = {
 		$form.find( 'select' ).not( ':input[type="hidden"]' ).not( '[multiple]' ).find( 'option:eq(0)' ).prop( 'selected', true ).trigger( 'change.select2' );
 
 		$form.find( 'select[multiple]' ).not( ':input[type="hidden"]' ).val( '' ).trigger( 'change.select2' );
-		$form.find( 'textarea' ).val( '' );
+		$form.find('textarea').val('');
+		$form.find( '.gmw-submission-field' ).find( '.gmw-lat, .gmw-lng, .gmw-swlatlng, .gmw-nelatlng, .gmw-country' ).val( '' );
 
 		jQuery( ':input[type="checkbox"], :input[type="radio"]', $form ).not( ':input[type="hidden"]' ).prop( 'checked', false );
 
