@@ -11,11 +11,11 @@ var GMW_Location_Form_Map_Providers = {
 		},
 
 		getPosition : function( element ) {
-			return element.getPosition();
+			return gmwVars.googleAdvancedMarkers ? element.position : element.getPosition();
 		},
 
 		setMarkerPosition : function( marker, latLng ) {
-			marker.setPosition( latLng );
+			gmwVars.googleAdvancedMarkers ? marker.position = latLng : marker.setPosition( latLng );
 		},
 
 		resizeMap : function( map ) {
@@ -101,6 +101,7 @@ var GMW_Location_Form_Map_Providers = {
 
 			// default map options
 			map_options = {
+				mapId     : 'gmw-lf-map',
 				zoom 	  : parseInt( this_form.vars.map_zoom_level ),
 				center 	  : latLng,
 				mapTypeId : google.maps.MapTypeId[ this_form.vars.map_type ]
@@ -113,15 +114,20 @@ var GMW_Location_Form_Map_Providers = {
 			this_form.map = new google.maps.Map( document.getElementById( this_form.location_fields.map.id ), map_options );
 
 			marker_options = {
-			    position  : latLng,
-			    map 	  : this_form.map,
-				draggable : true
+				position     : latLng,
+				map 	     : this_form.map,
+				gmpDraggable : true,
+				draggable    : true,
 			};
 
-			marker_options = GMW.apply_filters( 'gmw_lf_render_map_marker_options', marker_options, this_form );
+			marker_options = GMW.apply_filters( 'gmw_lf_render_map_marker_options', marker_options, this_form );*/
 
 			// set marker
-			this_form.map_marker = new google.maps.Marker( marker_options );
+			if (gmwVars.googleAdvancedMarkers) {
+				this_form.map_marker = new google.maps.marker.AdvancedMarkerElement(marker_options);
+			} else {
+				this_form.map_marker = new google.maps.Marker( marker_options );
+			}
 
 			GMW.do_action( 'gmw_lf_render_map', this_form );
 
@@ -463,8 +469,24 @@ var GMW_Location_Form = {
 		if ( this_form.map_enabled && jQuery( '#gmw-lf-map' ).length ) {
 
 			// Render the map with a short delay to prevent issues if it is inside a hidden element.
-			setTimeout( function(){
-				this_form.renderMap();
+			setTimeout(function () {
+
+				if ( gmwVars.mapsProvider === 'google_maps' && gmwVars.googleAdvancedMarkers ) {
+
+					async function gmwInitLfMap() {
+
+						await google.maps.importLibrary("marker");
+
+						this_form.renderMap();
+					}
+
+					gmwInitLfMap();
+
+				} else {
+
+					this_form.renderMap();
+				}
+
 			}, 300 );
 		}
 
@@ -1655,9 +1677,9 @@ var GMW_Location_Form = {
     }
 };
 
-jQuery( document ).ready( function() {
+jQuery( document ).ready( function($) {
 
-	if ( jQuery( '.gmw-location-form-wrapper' ).length ) {
+	if (jQuery('.gmw-location-form-wrapper').length) {
 		GMW_Location_Form.init();
 		GMW_Location_Form.init_actions();
 	}
