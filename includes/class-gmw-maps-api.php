@@ -332,7 +332,6 @@ class GMW_Maps_API {
 
 		// default map options.
 		$default_map_options = array(
-			'mapId'                  => $map_id,
 			'defaultCenter'          => '40.758895,-73.985131', // belongs to GMW.
 			'layersUrl'              => $layers_url, // for leaflet.
 			'layersAttribution'      => $layers_attribution, // for leaflet.
@@ -362,6 +361,11 @@ class GMW_Maps_API {
 			'resizeMapControl'       => true,
 			'panControl'             => true,
 		);
+
+		// Use mapId only when advanced markers are enabled.
+		if ( 'google_maps' === GMW()->options['api_providers']['maps_provider'] && empty( GMW()->options['api_providers']['google_maps_legacy_marker'] ) ) {
+			$default_map_options['mapId'] = $map_id;
+		}
 
 		$map_options = array_merge( $default_map_options, $map_options );
 
