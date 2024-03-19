@@ -1674,24 +1674,53 @@ class GMW_Form_Editor {
 		$is_global_maps = ( 'global_maps' === $this->form['addon'] ) ? true : false;
 		$is_ajax_form   = ( 'ajax_forms' === $this->form['addon'] ) ? true : false;
 
-		$keywords_options = array( 'disabled' => 'Disable' );
+		$keywords_options  = array( 'disabled' => 'Disable' );
+		$meta_field_label  = __( 'Post Custom Fields', 'geo-my-wp' );
+		$keywords_type     = 'select';
+		$keywords_smartbox = ' gmw-smartbox-not';
 
 		if ( 'posts_locator' === $this->form['component'] ) {
 
-			$keywords_options['title']   = __( 'Search post title', 'geo-my-wp' );
-			$keywords_options['content'] = __( 'Search post title and content', 'geo-my-wp' );
+			$keywords_type     = 'multiselect';
+			$keywords_smartbox = '';
+
+			unset( $keywords_options['disabled'] );
+
+			$keywords_options['post_title']   = __( 'Post title', 'geo-my-wp' );
+			$keywords_options['post_content'] = __( 'Post content', 'geo-my-wp' );
+			$keywords_options['post_excerpt'] = __( 'Post excerpt', 'geo-my-wp' );
+			$keywords_options['meta_fields']  = __( 'Custom fields', 'geo-my-wp' );
+
+			if ( ! is_array( $this->form['search_form']['keywords']['usage'] ) ) {
+
+				if ( 'title' === $this->form['search_form']['keywords']['usage'] ) {
+
+					$this->form['search_form']['keywords']['usage'] = array( 'post_title' );
+
+				} elseif ( 'content' === $this->form['search_form']['keywords']['usage'] ) {
+
+					$this->form['search_form']['keywords']['usage'] = array( 'post_title', 'post_content' );
+
+				} else {
+
+					$this->form['search_form']['keywords']['usage'] = array();
+				}
+			}
 
 		} elseif ( 'members_locator' === $this->form['component'] ) {
 
 			$keywords_options['name'] = __( 'Search member name', 'geo-my-wp' );
+			$meta_field_label         = __( 'User Meta Fields', 'geo-my-wp' );
 
 		} elseif ( 'bp_groups_locator' === $this->form['component'] ) {
 
 			$keywords_options['name'] = __( 'Search group name and description', 'geo-my-wp' );
+			$meta_field_label         = __( 'Group Meta Fields', 'geo-my-wp' );
 
 		} elseif ( 'users_locator' === $this->form['component'] ) {
 
 			$keywords_options['name'] = __( 'Search user name', 'geo-my-wp' );
+			$meta_field_label         = __( 'User Meta Fields', 'geo-my-wp' );
 		}
 
 		$keywords_options = apply_filters( 'gmw_ps_form_settings_keywords_field_options', $keywords_options, $this->form );
@@ -1705,16 +1734,32 @@ class GMW_Form_Editor {
 				'usage'       => gmw_get_admin_setting_args(
 					array(
 						'name'       => 'usage',
-						'type'       => 'select',
+						'type'       => $keywords_type,
 						'default'    => 'disable',
 						'options'    => $keywords_options,
 						'label'      => __( 'Field Usage', 'geo-my-wp' ),
-						'desc'       => '',
+						'desc'       => __( 'Select the fields that you wish to include in the keywords search query.', 'geo-my-wp' ),
 						'attributes' => array(
-							'class' => 'gmw-options-toggle gmw-smartbox-not',
+							'class' => 'gmw-options-toggle' . $keywords_smartbox,
 						),
 						'priority'   => 5,
 					)
+				),
+				'meta_fields' => gmw_get_admin_setting_args(
+					array(
+						'name'        => 'meta_fields',
+						'type'        => 'multiselect',
+						'default'     => '',
+						'label'       => $meta_field_label,
+						'placeholder' => __( 'Select fields', 'geo-my-wp' ),
+						'desc'        => __( 'Select the meta fields that you wish to include in the keywords search query.', 'geo-my-wp' ),
+						'options'     => ! empty( $this->form['search_form']['keywords']['meta_fields'] ) ? array_combine( $this->form['search_form']['keywords']['meta_fields'], $this->form['search_form']['keywords']['meta_fields'] ) : array(),
+						'attributes'  => array(
+							'data-gmw_ajax_load_options' => 'gmw_get_custom_fields',
+						),
+						'priority'    => 8,
+						'wrap_class'  => 'gmw-option-toggle-not',
+					),
 				),
 				'label'       => gmw_get_admin_setting_args( 'label' ),
 				'placeholder' => gmw_get_admin_setting_args( 'placeholder' ),
@@ -2687,6 +2732,18 @@ class GMW_Form_Editor {
 			}
 		</style>
 		<?php
+
+			// temporary hide map styles when advanced markers are enabled.
+		if ( empty( GMW()->options['api_providers']['google_maps_legacy_marker'] ) ) {
+			?>
+			<style>
+				#results_map-styles-tr {
+					display: none ! important;
+				}
+			</style>
+			<?php
+
+		}
 		if ( ! empty( $_GET['gmw_action'] ) && 'edit_form' === $_GET['gmw_action'] ) { // phpcs:ignore: CSRF ok.
 			?>
 			<style>

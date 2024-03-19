@@ -104,7 +104,6 @@ jQuery( document ).ready( function( $ ) {
 
 	        	// Init select2.
 				jQuery('.gmw-admin-page select:not( .gmw-smartbox-not )').each(function () {
-					console.log(jQuery( this ))
 	                jQuery( this ).select2({
 	                	tags: true,
 	                    dropdownParent    : jQuery( this ).parent(),
@@ -613,6 +612,20 @@ jQuery( document ).ready( function( $ ) {
 	            if ( value != 'disabled' ) {
 	                parentPanel.find( '.option-locator_submit, .option-' + value ).slideDown( 'fast' );
 	            }
+			});
+
+			jQuery( '#setting-search_form-keywords-usage' ).change(function () {
+
+				var value = jQuery(this).val();
+				var parentPanel = jQuery(this).closest('.gmw-settings-multiple-fields-wrapper');
+
+				setTimeout(function () {
+					if (jQuery.inArray("meta_fields", value) !== -1) {
+						parentPanel.find('.gmw-settings-panel-field.option-meta_fields').slideDown('fast');
+					} else {
+						parentPanel.find('.gmw-settings-panel-field.option-meta_fields').slideUp('fast');
+					}
+				}, 200);
 	        });
 
 	        // Toggle radius options.
@@ -1464,11 +1477,11 @@ jQuery( document ).ready( function( $ ) {
 
         		if ( ( jQuery( this ).is( 'select' ) && jQuery( this ).val() != '' && jQuery( this ).val() != 'disable' && jQuery( this ).val() != 'disabled' ) || jQuery( this ).is( ':checked' ) ) {
 
-        			parentPanel.find( panelClass ).slideDown( 'false' ).removeClass( 'disabled' );
+        			parentPanel.find( panelClass ).not('.option-meta_fields').slideDown( 'false' ).removeClass( 'disabled' );
 
 	        	} else {
 
-	        		parentPanel.find( panelClass ).not( thisPanel ).slideUp( 'fast', function() {
+	        		parentPanel.find( panelClass ).not( thisPanel ).not('.option-meta_fields').slideUp( 'fast', function() {
 	        			thisPanel.addClass( 'disabled' );
 	        		});
 	        	}
