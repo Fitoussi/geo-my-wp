@@ -798,7 +798,7 @@ var GMW = {
      		}
      	});
 
-        // remove hidden coordinates when address field value changes
+        // remove hidden coordinates when address field value changes.
         jQuery( 'form' ).find( 'input.gmw-address, .gmw-address-field' ).keyup( function ( event ) {
 
             // abort if enter key.
