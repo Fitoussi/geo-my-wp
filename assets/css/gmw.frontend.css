@@ -321,6 +321,11 @@ html.gmw-scroll-disabled {
 body.gmw-modal-box-open {
 	overflow: hidden;
 }
+
+body .gmw-is-hidden {
+	display: none ! important;
+}
+
 /***** Google address autocomplete ******/
 
 div.pac-container {
