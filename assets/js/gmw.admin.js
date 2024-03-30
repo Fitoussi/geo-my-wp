@@ -76,8 +76,8 @@ jQuery( document ).ready( function( $ ) {
 
 
 			setTimeout(function () {
-				adminNotices.detach().prependTo('#gmw-admin-notices-holder').show();
-				adminNotices2.detach().prependTo('#gmw-admin-notices-holder').show();
+				adminNotices.not( '.notice-success' ).detach().prependTo('#gmw-admin-notices-holder').show();
+				adminNotices2.not( '.notice-success' ).detach().prependTo('#gmw-admin-notices-holder').show();
 			}, 500);
 
 	        jQuery( '.notice-success' ).detach().insertBefore( '#gmw-admin-notices-holder' ).show();
