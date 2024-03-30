@@ -94,7 +94,7 @@ if ( ! class_exists( 'GMW_License' ) ) :
 		/**
 		 * Action links.
 		 *
-		 * @var
+		 * @var array
 		 */
 		private $action_links;
 
@@ -664,16 +664,21 @@ if ( ! class_exists( 'GMW_License' ) ) :
 	/**
 	 * GMW Cheack Licenses
 	 *
-	 * Do check of licenses every 24 hours to varify that thier status is correct
+	 * Do check of licenses every 7 days to varify that thier status is up tp date.
 	 *
 	 * @since  2.5
+	 *
 	 * @author Eyal Fitoussi
 	 */
 	function gmw_check_license() {
 
+		if ( apply_filters( 'gmw_disable_auto_license_key_verification', false ) ) {
+			return;
+		}
+
 		$license_trans = get_transient( 'gmw_verify_license_keys' );
 
-		// run licenses check every 24 hours just to make sure that their status is correct.
+		// run licenses check every 7 days just to make sure that their status is up to date.
 		if ( ! empty( $license_trans ) ) {
 			return;
 		}
@@ -776,7 +781,7 @@ if ( ! class_exists( 'GMW_License' ) ) :
 	 *
 	 * @author Eyal Fitoussi
 	 */
-	function gmw_license_key_actions( $form_args = array() ) {
+	function gmw_license_key_actions( $form_args = array(), $response = false ) {
 
 		// default args.
 		$defaults = array(
@@ -831,15 +836,18 @@ if ( ! class_exists( 'GMW_License' ) ) :
 			'item_id'    => $item_id,
 		);
 
-		// Call the custom API.
-		$response = wp_remote_post(
-			GMW_REMOTE_SITE_URL,
-			array(
-				'timeout'   => 15,
-				'sslverify' => false,
-				'body'      => $api_params,
-			)
-		);
+		if ( empty( $response ) ) {
+
+			// Call the custom API.
+			$response = wp_remote_post(
+				GMW_REMOTE_SITE_URL,
+				array(
+					'timeout'   => 15,
+					'sslverify' => false,
+					'body'      => $api_params,
+				)
+			);
+		}
 
 		// If connection failed.
 		if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
@@ -947,7 +955,7 @@ if ( ! class_exists( 'GMW_License' ) ) :
 	 */
 	function gmw_license_update_notices() {
 
-		return $messages = apply_filters(
+		return apply_filters(
 			'gmw_license_update_notices',
 			array(
 				//'activate'            => __( 'Activate your license key to receive support and updates.', 'geo-my-wp' ),
