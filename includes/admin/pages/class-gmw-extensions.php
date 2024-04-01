@@ -18,6 +18,40 @@ if ( ! defined( 'ABSPATH' ) ) {
 class GMW_Extensions {
 
 	/**
+	 * All Access - 359643
+	 *
+	 * Ultimate - 304605
+	 *
+	 * Extended Pass - 359672
+	 *
+	 * Social Pass - 304606
+	 *
+	 * Professional - 304604
+	 *
+	 * Personal Pass - 303650
+	 *
+	 * @since 4.3.2
+	 *
+	 * @var array
+	 */
+	public $passes_extensions = array(
+		'ajax_forms'                       => array( 304604 ),
+		'bp_groups_locator'                => array( 359672, 304606 ),
+		'bp_members_directory_geolocation' => array( 359672, 304606 ),
+		'bp_xprofile_geolocation'          => array( 359672, 304606 ),
+		'exclude_locations'                => array( 303650, 359672, 304606, 304604 ),
+		'global_maps'                      => array( 304604 ),
+		'ip_address_locator'               => array( 303650, 359672, 304606, 304604 ),
+		'gmw_meta_fields_geo'              => array( 359672, 304606, 304604 ),
+		'gmw_multiple_locations'           => array( 304604 ),
+		'nearby_locations'                 => array( 303650, 359672, 304606, 304604 ),
+		'gmw_peepso_geolocation'           => array( 359672, 304606 ),
+		'premium_settings'                 => array( 303650, 359672, 304606, 304604 ),
+		'radius_per_location'              => array( 303650, 359672, 304606, 304604 ),
+		'users_locator'                    => array( 304606, 304604 ),
+	);
+
+	/**
 	 * __construct function.
 	 *
 	 * @access public
@@ -35,6 +69,7 @@ class GMW_Extensions {
 		// phpcs:ignore.
 		// add_action( 'gmw_updater_action', array( $this, 'extensions_updater' ) );
 		add_filter( 'gmw_admin_notices_messages', array( $this, 'notices_messages' ) );
+		add_action( 'gmw_activate_access_pass_license', array( $this, 'activate_access_pass_license' ) );
 		add_action( 'gmw_clear_extensions_cache', array( $this, 'clear_extensions_cache' ) );
 	}
 
@@ -53,6 +88,7 @@ class GMW_Extensions {
 		$messages['extension_activated']         = __( 'Extension activated.', 'geo-my-wp' );
 		$messages['extension_activation_failed'] = __( 'Extension activation failed.', 'geo-my-wp' );
 		$messages['extensions_cache_cleared']    = __( 'Extensions cache cleared.', 'geo-my-wp' );
+		$messages['access_pass_activated']       = __( 'Access pass extensions activated.', 'geo-my-wp' );
 
 		return $messages;
 	}
@@ -231,6 +267,138 @@ class GMW_Extensions {
 			exit;
 		}
 	}*/
+
+	/**
+	 * Bulk activate access pass extensions.
+	 *
+	 * @since 4.3.2
+	 *
+	 * @access public
+	 *
+	 * @return void
+	 */
+	public function activate_access_pass_license() {
+
+		// Abort if form was not submitted.
+		if ( empty( $_POST['gmw_action'] ) || 'activate_access_pass_license' !== $_POST['gmw_action'] ) {
+			return;
+		}
+
+		// Varify nonce.
+		if ( empty( $_POST['gmw_activate_access_pass_license_nonce'] ) || ! wp_verify_nonce( $_POST['gmw_activate_access_pass_license_nonce'], 'gmw_activate_access_pass_license_nonce' ) ) { // phpcs:ignore. CSRF ok, sanitization ok.
+			wp_die( esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
+		}
+
+		// Abort if license key was not entered.
+		if ( empty ( $_POST['license_key'] ) ) {
+			wp_die( esc_attr__( 'You did not provide a license key.', 'geo-my-wp' ) );
+		}
+
+		$access_pass_license = sanitize_text_field( wp_unslash( $_POST['license_key'] ) );
+		$api_params          = array(
+			'edd_action' => 'activate_license',
+			'license'    => $access_pass_license,
+			'url'        => home_url(),
+			'item_id'    => 668,
+		);
+
+		// Get license data via remote API call.
+		// Here we call and activate a random extension
+		$response = wp_remote_post(
+			GMW_REMOTE_SITE_URL,
+			array(
+				'timeout'   => 15,
+				'sslverify' => false,
+				'body'      => $api_params,
+			)
+		);
+
+		// Abort if remote connection failed.
+		if ( is_wp_error( $response ) ) {
+			wp_die( sprintf( esc_attr__( 'Connection to remote server failed. Error: %s.', 'geo-my-wp' ), $response->get_error_message() ) );
+		}
+
+		// Get license data.
+		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+		// Fail if license key doesn't exists.
+		if ( empty( $license_data->license ) || empty( $license_data->access_pass_id ) || ( 'invalid' === $license_data->license && empty( $license_data->error ) || 'missing' === $license_data->error ) ) {
+
+			wp_safe_redirect(
+				admin_url( 'admin.php?page=gmw-extensions&access_pass_activation_notice=missing&license_key=' . $access_pass_license )
+			);
+
+			exit;
+		}
+
+		// Fail if license key invalid except if it is expired.
+		if ( 'invalid' === $license_data->license && 'expired' !== $license_data->error ) {
+
+			wp_safe_redirect(
+				admin_url( 'admin.php?page=gmw-extensions&access_pass_activation_notice=' . $license_data->error . '&license_key=' . $access_pass_license )
+			);
+
+			exit;
+		}
+
+		$access_pass_id = absint( $license_data->access_pass_id );
+
+		// Fail if license key is not an access pass.
+		if ( ! in_array( $access_pass_id, array( 359643, 304605, 359672, 304606, 304604, 303650 ) ) ) {
+
+			wp_safe_redirect(
+				admin_url( 'admin.php?page=gmw-extensions&access_pass_activation_notice=not_access_pass&license_key=' . $access_pass_license )
+			);
+
+			exit;
+		}
+
+		// Get GMW extensions data. We merge both licenses data and addons data.
+		$extensions_data = $this->get_extensions_data();
+		$plugins         = get_plugins();
+
+		foreach ( $this->passes_extensions as $license_name => $passes ) {
+
+			if ( in_array( $access_pass_id, array( 359643, 304605 ), true ) || in_array( $access_pass_id, $passes, true ) ) {
+
+				$this_license = $extensions_data[ $license_name ];
+				$slug         = sanitize_text_field( wp_unslash( $this_license['slug'] ) );
+				$basename     = sanitize_text_field( wp_unslash( $this_license['basename'] ) );
+
+				// Proceed only if the extension already installed.
+				if ( ! array_key_exists( $basename, $plugins ) ) {
+					continue;
+				}
+
+				$args         = array(
+					'action'       => 'activate_license',
+					'license_name' => $this_license['license_name'],
+					'item_id'      => $this_license['item_id'],
+					'license_key'  => $access_pass_license,
+					'item_name'    => $this_license['item_name'],
+				);
+
+				// Activate license.
+				gmw_license_key_actions( $args, $response );
+
+				// Activate the WordPress plugin reagrdless it later it is set as disabled or inactive in GEO my WP.
+				// We do so to allow the license key to load so updates will be available.
+				if ( array_key_exists( $basename, $plugins ) && is_plugin_inactive( $basename ) ) {
+					 activate_plugins( $basename );
+				}
+
+				// Activate extension.
+				    gmw_update_addon_status( $slug, 'active' );
+			}
+		}
+
+		wp_safe_redirect(
+			admin_url( 'admin.php?page=gmw-extensions&gmw_notice=access_pass_activated&gmw_notice_status=updated&license_key=' . $access_pass_license )
+		);
+
+		exit;
+	}
+
 	// phpcs:enable
 	/**
 	 * Clear Extensions cache.
@@ -241,8 +409,8 @@ class GMW_Extensions {
 	 */
 	public function clear_extensions_cache() {
 
-		// Make sure we activated an add-on.
-		if ( empty( $_POST['gmw_clear_extensions_cache'] ) ) {
+		// Abort if form was not submitted.
+		if ( empty( $_POST['gmw_action'] ) || 'clear_extensions_cache' !== $_POST['gmw_action'] ) {
 			return;
 		}
 
@@ -253,8 +421,9 @@ class GMW_Extensions {
 
 		// delete extensions and license key transient to retrive new data.
 		delete_transient( 'gmw_extensions_feed' );
-		// delete_transient( 'gmw_verify_license_keys' );
-		// Reload the page to prevent resubmission.
+		// delete_transient( 'gmw_verify_license_keys' );.
+
+		// Reload the page.
 		wp_safe_redirect(
 			admin_url( 'admin.php?page=gmw-extensions&gmw_notice=extensions_cache_cleared&gmw_notice_status=updated' )
 		);
@@ -272,8 +441,6 @@ class GMW_Extensions {
 	 * @return string ( link )
 	 */
 	public static function get_activate_extension_button( $slug = '', $basename = '' ) {
-
-		$extension_data = gmw_get_addon_data( $slug );
 
 		$nonce = wp_create_nonce( 'gmw_' . $slug . '_extension_nonce' );
 		$url   = admin_url( 'admin.php?page=gmw-extensions&gmw_action=activate_extension&basename=' . $basename . '&slug=' . $slug . '&_wpnonce=' . $nonce );
@@ -309,8 +476,6 @@ class GMW_Extensions {
 	 * @return string ( link )
 	 */
 	public static function get_deactivate_extension_button( $slug = '', $basename = '' ) {
-
-		$extension_data = gmw_get_addon_data( $slug );
 
 		$nonce = wp_create_nonce( 'gmw_' . $slug . '_extension_nonce' );
 		$url   = admin_url( 'admin.php?page=gmw-extensions&gmw_action=deactivate_extension&basename=' . $basename . '&slug=' . $slug . '&_wpnonce=' . $nonce );
@@ -713,7 +878,8 @@ class GMW_Extensions {
 				}
 			}
 
-			if ( $show_error ) { ?>
+			if ( $show_error ) {
+				?>
 
 				<div class="activation-disabled-message">
 					<?php
@@ -730,8 +896,8 @@ class GMW_Extensions {
 				<div class="update-available-notice">
 
 				<?php
-					/* translators: %1$s: plugin's version available for update, %2$s: link to plugins page. */
 					$notice = sprintf(
+						/* translators: %1$s: plugin's version available for update, %2$s: link to plugins page. */
 						__( 'Version %1$s is now availabe. <a href="%2$s">Update your plugin</a>.', 'geo-my-wp' ),
 						esc_attr( $extension['current_version'] ),
 						admin_url( 'plugins.php' )
@@ -855,7 +1021,7 @@ class GMW_Extensions {
 					<div class="gmw-core-extension-activation-message">
 
 						<span class="description inactive-message">
-							<?php esc_attr_e( 'This extension is free, activate it and start using it now.' ); ?>
+							<?php esc_attr_e( 'This extension is free, activate it and start using it now.', 'geo-my-wp' ); ?>
 						</span>
 
 						<span class="description active-message">
@@ -941,53 +1107,11 @@ class GMW_Extensions {
 	 */
 	public function output() {
 
-		// Get installed WordPress plugins.
-		$plugins = get_plugins();
-
-		// Get GMW extensions data. We merge both licenses data and addons data.
-		$extensions_data = array_merge_recursive( GMW()->addons, GMW()->licenses );
-
-		// Get remote extensions data via geomywp.com feed.
-		$remote_extensions = self::get_extensions_feed();
-
-		// Verify feed. if feed ok merge some data with local extensions.
-		if ( ! empty( $remote_extensions ) ) {
-
-			$replace_data = array(
-				'release_date',
-				'current_version',
-				'addon_page',
-				'docs_page',
-				'support_page',
-				'description',
-				'item_id',
-				'item_name',
-			);
-
-			foreach ( $remote_extensions as $slug => $values ) {
-
-				// if remote extension do not exists in GEO my WP extension.
-				// get the data from remote.
-				if ( empty( $extensions_data[ $slug ] ) ) {
-					$extensions_data[ $slug ] = $values;
-				} else {
-
-					foreach ( $replace_data as $rd ) {
-
-						if ( empty( $extensions_data[ $slug ][ $rd ] ) ) {
-
-							if ( ! empty( $values[ $rd ] ) ) {
-								$extensions_data[ $slug ][ $rd ] = ! empty( $values[ $rd ] ) ? $values[ $rd ] : '';
-							}
-						}
-					}
-				}
-			}
-		}
-
-		$names      = array();
-		//$statuses   = array();
-		$extensions = array(
+		$extensions_data = $this->get_extensions_data();
+		$plugins         = get_plugins();
+		$names           = array();
+		$statuses        = array();
+		$extensions      = array(
 			'core'    => array(
 				'posts_locator'   => $extensions_data['posts_locator'],
 				'members_locator' => $extensions_data['members_locator'],
@@ -1013,20 +1137,21 @@ class GMW_Extensions {
 			} else {
 
 				$names[ $key ]                 = $value['name'];
-				//$statuses[ $key ]              = ! empty( $value['status'] ) ? $value['status'] : 'inactive';
+				$statuses[ $key ]              = ! empty( $value['status'] ) ? $value['status'] : 'inactive';
 				$extensions['premium'][ $key ] = $value;
 
+				// phpcs:disable.
 				/*if ( ! empty( $value['status'] ) ) {
 
 					if ( 'active')
 				}*/
+			// phpcs:enable.
 
 			}
 		}
 
-		// sort add-ons by name.
-		array_multisort( $names, SORT_ASC, $extensions['premium'] );
-		//array_multisort( $statuses, SORT_ASC, $names, SORT_ASC, $extensions['premium'] );
+		// sort add-ons by status then by name.
+		array_multisort( $statuses, SORT_ASC, $names, SORT_ASC, $extensions['premium'] );
 
 		// extensions to exclude.
 		$excluded_extensions = array(
@@ -1128,10 +1253,10 @@ class GMW_Extensions {
 
 						<form method="post" id="extensions-cache-form">
 
-							<button type="submit" name="gmw_clear_extensions_cache" id="clear-extensions-cache-button"
+							<button type="submit" id="clear-extensions-cache-button"
 								class="gmw-action-button button-primary"
-								aria-label="<?php esc_attr_e( 'Clear the extensions cache if extensions fails to load properly on this page.', 'geo-my-wp' ); ?>"
-								value="" /><span class="gmw-icon gmw-icon-spin"></span>
+								aria-label="<?php esc_attr_e( 'Clear the extensions cache if extensions fails to load properly on this page.', 'geo-my-wp' ); ?>" /><span
+								class="gmw-icon gmw-icon-spin"></span>
 							<?php esc_attr_e( 'Refresh extensions', 'geo-my-wp' ); ?></button>
 
 							<input type="hidden" name="gmw_action" value="clear_extensions_cache" />
@@ -1180,6 +1305,66 @@ class GMW_Extensions {
 
 							echo '<span>' . wp_kses( $notice, $allowed ) . '</span>';
 							?>
+						</div>
+
+						<div id="gmw-access-pass-license-key-wrapper">
+
+							<div id="gmw-access-pass-license-key-inner">
+
+								<div id="gmw-access-pass-license-key-header">
+									<h3><?php esc_attr_e( 'Access Pass License', 'geo-my-wp' ); ?></h3>
+									<span><?php esc_attr_e( 'Use this form to bulk activate the license key and extensions that belong to your access pass.', 'geo-my-wp' ); ?></span>
+								</div>
+
+								<form method="post">
+
+									<?php $license_key = ! empty( $_GET['license_key'] ) ? sanitize_text_field( wp_unslash( $_GET['license_key'] ) ) : ''; // phpcs:ignore:CSRF ok. ?>
+
+									<input
+										type="text"
+										placeholder="<?php esc_attr_e( 'Access pass license key', 'geo-my-wp' ); ?>"
+										id="access-pass-license-key" required="required" name="license_key" value="<?php echo esc_attr( $license_key ); ?>">
+
+									<?php
+									// phpcs:disable.
+									/*<label class="gmw-checkbox-toggle-field">
+										<input type="checkbox" id="setting-general_settings-auto_locate" class="gmw-form-field checkbox" name="activate_extensions" value="1">
+										<span class="gmw-checkbox-toggle"></span>
+									</label>
+									<span class="gmw-checkbox-label">Activate Extensions</span> */
+									// phpcs:enable.
+									?>
+
+									<button type="submit"
+										id="gmw-access-pass-license-activation-button"
+										class="gmw-action-button button-primary" />
+									<?php esc_attr_e( 'Activate', 'geo-my-wp' ); ?></button>
+
+									<input type="hidden" name="gmw_action" value="activate_access_pass_license" />
+
+									<?php wp_nonce_field( 'gmw_activate_access_pass_license_nonce', 'gmw_activate_access_pass_license_nonce' ); ?>
+
+									<?php
+									if ( ! empty( $_GET['access_pass_activation_notice'] ) ) { // phpcs:ignore:CSRF ok.
+
+										$messages = gmw_license_update_notices();
+
+										if ( 'not_access_pass' === $_GET['access_pass_activation_notice'] ) { // phpcs:ignore:CSRF ok.
+											$message = esc_attr__( 'The license key you entered is not an access pass.', 'geo-my-wp' );
+										} else {
+											$message = $messages[ sanitize_text_field( wp_unslash( $_GET['access_pass_activation_notice'] ) ) ]; // phpcs:ignore:CSRF ok.
+										}
+										?>
+										<p class="error-message">
+											<span><i class="dashicons dashicons-info"></i>
+												<?php echo $message; // phpcs:ignore:XSS ok. ?>
+											</span>
+										</p>
+										<?php
+									}
+									?>
+								</form>
+							</div>
 						</div>
 
 						<div class="gmw-extensions-inner">
