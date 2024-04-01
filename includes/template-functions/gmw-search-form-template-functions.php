@@ -84,32 +84,33 @@ function gmw_get_search_form_submit_button( $gmw = array(), $submission = true )
 
 	$output = '';
 
-	if ( ! empty( $gmw['search_form']['submit_button']['label'] ) ) {
+	//$label = ! empty( $gmw['search_form']['submit_button']['label'] ) ? $gmw['search_form']['submit_button']['label'] : __( 'Submit', 'geo-my-wp' );
 
-		//$label = ! empty( $gmw['search_form']['submit_button']['label'] ) ? $gmw['search_form']['submit_button']['label'] : __( 'Submit', 'geo-my-wp' );
-		$label = $gmw['search_form']['submit_button']['label'];
-		$args  = array(
-			'id'    => $gmw['ID'],
-			'slug'  => 'submit',
-			'name'  => 'submit',
-			'type'  => 'submit',
-			'value' => $label,
-		);
+	$label = $gmw['search_form']['submit_button']['label'];
+	$args  = array(
+		'id'    => $gmw['ID'],
+		'slug'  => 'submit',
+		'name'  => 'submit',
+		'type'  => 'submit',
+		'value' => $label,
+	);
 
-		$args = apply_filters( 'gmw_search_form_submit_button_args', $args ); // Deprecated. To be removed.
-
-		// Support previous versions of the filter above.
-		if ( ! empty( $args['label'] ) ) {
-
-			$args['value'] = $args['label'];
-
-			unset( $args['label'] );
-		}
-
-		// false argument is deprected. Temporary there to support old versions of search forms templates.
-		$output  = apply_filters( 'gmw_form_submit_button', gmw_get_form_field( $args, $gmw ), $gmw, false );
+	if ( empty( $gmw['search_form']['submit_button']['label'] ) ) {
+		$args['wrapper_class'] = ' gmw-is-hidden ';
 	}
 
+	$args = apply_filters( 'gmw_search_form_submit_button_args', $args ); // Deprecated. To be removed.
+
+	// Support previous versions of the filter above.
+	if ( ! empty( $args['label'] ) ) {
+
+		$args['value'] = $args['label'];
+
+		unset( $args['label'] );
+	}
+
+	// false argument is deprected. Temporary there to support old versions of search forms templates.
+	$output     = apply_filters( 'gmw_form_submit_button', gmw_get_form_field( $args, $gmw ), $gmw, false );
 	$submission = apply_filters( 'gmw_submit_button_submission_fields', $submission, $gmw );
 
 	if ( is_string( $submission ) || true === $submission ) {
@@ -529,6 +530,232 @@ function gmw_search_form_keywords_field( $gmw = array() ) {
 	echo gmw_get_search_form_keywords_field( $gmw ); // WPCS: XSS ok.
 
 	do_action( 'gmw_after_search_form_keywords_field', $gmw );
+}
+
+/**
+ * Get single search form custom field element.
+ *
+ * @param  array $custom_field field arguments.
+ *
+ * @param  array $gmw  gmw form.
+ *
+ * @since 4.3.2 ( moved from the Premium Settings extension ).
+ *
+ * @return [type]       [description]
+ */
+function gmw_get_search_form_custom_field( $custom_field = array(), $gmw = array() ) {
+
+	if ( ! empty( $custom_field['disable_field'] ) || 'pre_defined' === $custom_field['usage'] ) {
+		return;
+	}
+
+	$fields          = array();
+	$options         = array();
+	$multiple_fields = false;
+	$is_array        = false;
+
+	// Get field options.
+	if ( in_array( $custom_field['usage'], array( 'select', 'multiselect', 'radio', 'checkbox', 'checkboxes' ), true ) && ! empty( $custom_field['options'] ) ) {
+
+		// Explode options from textarea value only if not already an array.
+		if ( is_array( $custom_field['options'] ) ) {
+
+			$options = $custom_field['options'];
+
+		} else {
+
+			$custom_field['options'] = explode( PHP_EOL, $custom_field['options'] );
+
+			foreach ( $custom_field['options'] as $option ) {
+
+				if ( empty( trim( $option ) ) ) {
+					continue;
+				}
+
+				$option          = explode( ' : ', $option );
+				$val             = trim( $option[0] );
+				$options[ $val ] = ! empty( $option[1] ) ? trim( $option[1] ) : $val;
+			}
+		}
+	}
+
+	$acf_tax_field = array();
+
+	// Load field options from ACF settings when available.
+	if ( isset( $options['{acf_field_options}'] ) ) {
+
+		if ( function_exists( 'acf_get_field' ) ) {
+
+			$acf_field = acf_get_field( $custom_field['name'] );
+
+			if ( $acf_field['type'] == 'taxonomy' ) {
+
+				$acf_tax_field = array(
+					'taxonomy' => $acf_field['taxonomy'],
+				);
+
+			} elseif ( ! empty( $acf_field['choices'] ) ) {
+
+				if ( 1 === count( $options ) ) {
+
+					$options = $acf_field['choices'];
+
+				} else {
+
+					$new_options = array();
+
+					foreach ( $options as $value => $label ) {
+
+						if ( '{acf_field_options}' === $value ) {
+
+							$new_options = array_merge( $new_options, $acf_field['choices'] );
+
+						} else {
+							$new_options[ $value ] = $label;
+						}
+					}
+
+					$options = $new_options;
+				}
+			}
+		}
+
+		unset( $options['{acf_field_options}'] );
+	}
+
+	// Get value of multiple fields.
+	if ( in_array( $custom_field['usage'], array( 'multiselect', 'checkbox', 'checkboxes' ), true ) ) {
+
+		$is_array = true;
+
+		if ( ! empty( $custom_field['value'] ) ) {
+			$custom_field['value'] = explode( ',', $custom_field['value'] );
+		}
+	}
+
+	$conditions = array();
+
+	if ( ! empty( $custom_field['post_types_cond'] ) ) {
+		$conditions[] = array(
+			'post_types' => is_array( $custom_field['post_types_cond'] ) ? implode( ',', $custom_field['post_types_cond'] ) : $custom_field['post_types_cond'],
+		);
+	}
+
+	// Field args.
+	$args = array(
+		'id'               => $gmw['ID'],
+		'slug'             => 'cf-' . $custom_field['name'],
+		'name'             => 'cf',
+		'class'            => 'gmw-custom-field',
+		'sub_name'         => $custom_field['name'],
+		'type'             => $custom_field['usage'],
+		'label'            => isset( $custom_field['label'] ) ? $custom_field['label'] : '',
+		'show_options_all' => isset( $custom_field['show_options_all'] ) ? $custom_field['show_options_all'] : '',
+		'placeholder'      => $custom_field['placeholder'],
+		'required'         => ! empty( $custom_field['required'] ) ? 1 : 0,
+		'value'            => $custom_field['value'],
+		'options'          => $options,
+		'smartbox'         => ! empty( $custom_field['smartbox'] ) ? true : false,
+		'is_array'         => $is_array,
+		'conditions'       => $conditions,
+	);
+
+	if ( ! empty( $acf_tax_field['taxonomy'] ) ) {
+
+		$args['type']            = 'taxonomy';
+		$args['additional_args'] = array(
+			'id'                  => $gmw['ID'],
+			'taxonomy'            => $acf_tax_field['taxonomy'],
+			'name_attr'           => 'cf',
+			'sub_name_attr'       => $custom_field['name'],
+			//'post_types'          => $post_types,
+			'usage'               => $custom_field['usage'],
+			'show_options_all'    => isset( $custom_field['show_options_all'] ) ? $custom_field['show_options_all'] : '',
+			'orderby'             => 'name',
+			'order'               => 'ASC',
+			'include'             => '',
+			'exclude'             => '',
+			'show_count'          => 0,
+			'hide_empty'          => 0,
+			'multiple_selections' => 0,
+			'smartbox'            => ! empty( $custom_field['smartbox'] ) ? 1 : 0,
+			'required'            => ! empty( $custom_field['requried'] ) ? 1 : 0,
+		);
+	}
+
+	if ( 'slider' === $custom_field['usage'] || 'range_slider' === $custom_field['usage'] ) {
+
+		if ( 'range_slider' === $custom_field['usage'] ) {
+			$args['value'] = array( $custom_field['min_value'], $custom_field['max_value'] );
+		}
+
+		$args['value_prefix'] = isset( $custom_field['value_prefix'] ) ? $custom_field['value_prefix'] : '';
+		$args['value_suffix'] = isset( $custom_field['value_suffix'] ) ? $custom_field['value_suffix'] : '';
+		$args['min_value']    = isset( $custom_field['min_value'] ) ? $custom_field['min_value'] : '0';
+		$args['max_value']    = isset( $custom_field['max_value'] ) ? $custom_field['max_value'] : '100';
+		$args['step']         = isset( $custom_field['step'] ) ? $custom_field['step'] : '1';
+	}
+
+	// For data/time fields.
+	if ( in_array( $custom_field['usage'], array( 'date', 'time', 'datetime' ), true ) ) {
+
+		$args['date_format']     = isset( $custom_field['date_format'] ) ? $custom_field['date_format'] : 'm/d/Y';
+		$args['time_format']     = isset( $custom_field['time_format'] ) ? $custom_field['time_format'] : 'h:i';
+		$args['datetime_format'] = isset( $custom_field['datetime_format'] ) ? $custom_field['datetime_format'] : 'm/d/Y h:i';
+		$compare                 = $custom_field['date_compare'];
+
+		// phpcs:disable.
+		/*if ( isset( $custom_field['date_format'] ) ) {
+			$args['date_format'] = $custom_field['date_format'];
+		}
+
+		if ( isset( $custom_field['time_format'] ) ) {
+			$args['time_format'] = $custom_field['time_format'];
+		}*/
+		// phpcs:enable.
+	} else {
+
+		$compare = $custom_field['compare'];
+	}
+
+	$fields[] = $args;
+
+	// If compare is between/not between, and field is not multiple fields, we generate 2 input fields.
+	if ( ( 'BETWEEN' === $compare || 'NOT_BETWEEN' === $compare ) && 'multiselect' !== $custom_field['usage'] && 'checkboxes' !== $custom_field['usage'] ) {
+
+		// Generate second field options.
+		if ( in_array( $custom_field['usage'], array( 'select', 'radio' ), true ) && ! empty( $custom_field['second_options'] ) ) {
+
+			$custom_field['second_options'] = explode( PHP_EOL, $custom_field['second_options'] );
+
+			foreach ( $custom_field['second_options'] as $option ) {
+				$option          = explode( ' : ', $option );
+				$val             = trim( $option[0] );
+				$options[ $val ] = ! empty( $option[1] ) ? trim( $option[1] ) : $val;
+			}
+		}
+
+		// Second field args.
+		$multiple_fields          = true;
+		$args['label']            = $custom_field['second_label'];
+		$args['show_options_all'] = $custom_field['second_show_options_all'];
+		$args['placeholder']      = $custom_field['second_placeholder'];
+		$args['value']            = $custom_field['second_value'];
+		$args['options']          = $custom_field['second_options'];
+
+		$fields[] = $args;
+
+		// Complex field args.
+		$wrapper_args = array(
+			'id'            => $gmw['ID'],
+			'slug'          => 'cf-' . $custom_field['name'],
+			'wrap_disabled' => 'hidden' === $args['type'] ? true : false,
+			// phpcs:ignore.
+			// 'class' => $field_args['class'],
+		);
+	}
+
+	return ! $multiple_fields ? gmw_get_form_field( $fields[0], $gmw ) : GMW_Search_Form_Helper::get_complex_field( $wrapper_args, $fields, $gmw );
 }
 
 /**
