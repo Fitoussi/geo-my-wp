@@ -38,7 +38,7 @@ function gmw_get_form_field( $args = array(), $gmw = array() ) {
  * @author Eyal Fitoussi
  */
 function gmw_form_field( $args = array(), $gmw = array() ) {
-	echo gmw_get_form_field( $args, $gmw ); // WPCS: XSS ok.
+	echo gmw_get_form_field( $args, $gmw ); // phpcs:ignore: XSS ok.
 }
 
 /**
@@ -62,7 +62,7 @@ function gmw_get_search_form_submissionn_fields( $gmw = array() ) {
  * @param array $gmw gmw form.
  */
 function gmw_search_form_submissionn_fields( $gmw ) {
-	echo gmw_get_search_form_submissionn_fields( $gmw );
+	echo gmw_get_search_form_submissionn_fields( $gmw ); // phpcs:ignore: XSS ok.
 }
 
 /**
@@ -70,17 +70,19 @@ function gmw_search_form_submissionn_fields( $gmw ) {
  *
  * @param  array   $gmw       the form being used.
  *
- * @param  boolean $submission true || false to output the submission fields.
+ * @param  boolean $submission true || false to output the hidden submission fields.
  *
  * @return mixed HTML elements of the submission fields
  */
 function gmw_get_search_form_submit_button( $gmw = array(), $submission = true ) {
 
+	// phpcs:disable.
 	/*if ( ! isset( $gmw['search_results']['per_page'] ) ) {
 		$gmw['search_results']['per_page'] = 10;
 	}
 
 	$per_page = current( explode( ',', $gmw['search_results']['per_page'] ) );*/
+	// phpcs:enable.
 
 	$output = '';
 
@@ -123,15 +125,15 @@ function gmw_get_search_form_submit_button( $gmw = array(), $submission = true )
 /**
  * Output submit button.
  *
- * @param  array  $gmw   gmw form.
+ * @param  array   $gmw gmw form.
  *
- * @param  string $label custom button label.
+ * @param  boolean $submission true || false to output the hidden submission fields.
  */
 function gmw_search_form_submit_button( $gmw = array(), $submission = true ) {
 
 	do_action( 'gmw_before_search_form_submit_button', $gmw );
 
-	echo gmw_get_search_form_submit_button( $gmw, $submission ); // WPCS: XSS ok.
+	echo gmw_get_search_form_submit_button( $gmw, $submission ); // phpcs:ignore: XSS ok.
 
 	do_action( 'gmw_after_search_form_submit_button', $gmw );
 }
@@ -154,7 +156,7 @@ function gmw_get_search_form_address_field( $gmw ) {
 	// When in page load, add the address to the address field by default.
 	if ( ! empty( $pl_options['enabled'] ) ) {
 
-		if ( empty( $_GET['action'] ) || ( ! empty( $_GET['action'] ) && 'fs' === $_GET['action'] && ! empty( $_GET['form'] ) && absint( $gmw['ID'] ) !== absint( $_GET['form'] ) ) ) {
+		if ( empty( $_GET['action'] ) || ( ! empty( $_GET['action'] ) && 'fs' === $_GET['action'] && ! empty( $_GET['form'] ) && absint( $gmw['ID'] ) !== absint( $_GET['form'] ) ) ) { // phpcs:ignore: CSRF ok.
 
 			// When using the user's current location.
 			if ( ! empty( $pl_options['user_location'] ) ) {
@@ -216,11 +218,11 @@ function gmw_search_form_address_field( $gmw = array(), $id = 0, $class = false 
 
 	if ( empty( $gmw['search_form']['address_field']['usage'] ) || 'single' === $gmw['search_form']['address_field']['usage'] ) {
 
-		echo gmw_get_search_form_address_field( $gmw ); // WPCS: XSS ok.
+		echo gmw_get_search_form_address_field( $gmw ); // phpcs:ignore: XSS ok.
 
 	} elseif ( function_exists( 'gmw_get_search_form_address_fields' ) ) {
 
-		echo gmw_get_search_form_address_fields( $gmw ); // WPCS: XSS ok.
+		echo gmw_get_search_form_address_fields( $gmw ); // phpcs:ignore: XSS ok.
 	}
 
 	do_action( 'gmw_after_search_form_address_field', $gmw );
@@ -244,7 +246,7 @@ function gmw_search_form_address_fields( $gmw ) {
 
 	do_action( 'gmw_before_search_form_address_fields', $gmw );
 
-	echo gmw_get_search_form_address_fields( $gmw ); // WPCS: XSS ok.
+	echo gmw_get_search_form_address_fields( $gmw ); // phpcs:ignore: XSS ok.
 
 	do_action( 'gmw_after_search_form_address_fields', $gmw );
 }
@@ -298,7 +300,7 @@ function gmw_search_form_locator_button( $gmw = array(), $class = false ) {
 
 	do_action( 'gmw_before_search_form_locator_button', $gmw );
 
-	echo gmw_get_search_form_locator_button( $gmw ); // WPCS: XSS ok.
+	echo gmw_get_search_form_locator_button( $gmw ); // phpcs:ignore: XSS ok.
 
 	do_action( 'gmw_after_search_form_locator_button', $gmw );
 }
@@ -356,7 +358,7 @@ function gmw_get_search_form_radius( $gmw ) {
 	// When in page load, add the address to the address field by default.
 	if ( ! empty( $pl_options['enabled'] ) && ! empty( $pl_options['address_filter'] ) ) {
 
-		if ( empty( $_GET['action'] ) || ( ! empty( $_GET['action'] ) && 'fs' === $_GET['action'] && ! empty( $_GET['form'] ) && absint( $gmw['ID'] ) !== absint( $_GET['form'] ) ) ) {
+		if ( empty( $_GET['action'] ) || ( ! empty( $_GET['action'] ) && 'fs' === $_GET['action'] && ! empty( $_GET['form'] ) && absint( $gmw['ID'] ) !== absint( $_GET['form'] ) ) ) { // phpcs:ignore: CSRF ok.
 
 			// get the addres value.
 			$defaut_value = sanitize_text_field( $pl_options['radius'] );
@@ -390,9 +392,9 @@ function gmw_search_form_radius( $gmw = array() ) {
 	do_action( 'gmw_before_search_form_radius', $gmw );
 
 	if ( ! empty( $gmw['search_form']['radius']['usage'] ) && 'slider' === $gmw['search_form']['radius']['usage'] && function_exists( 'gmw_get_search_form_radius_slider' ) ) {
-		echo gmw_get_search_form_radius_slider( $gmw ); // WPCS: XSS ok.
+		echo gmw_get_search_form_radius_slider( $gmw ); // phpcs:ignore: XSS ok.
 	} else {
-		echo gmw_get_search_form_radius( $gmw ); // WPCS: XSS ok.
+		echo gmw_get_search_form_radius( $gmw ); // phpcs:ignore: XSS ok.
 	}
 
 	do_action( 'gmw_after_search_form_radius', $gmw );
@@ -411,7 +413,7 @@ function gmw_search_form_radius_field( $gmw = array() ) {
 
 	do_action( 'gmw_before_search_form_radius_field', $gmw );
 
-	echo gmw_get_search_form_radius( $gmw ); // WPCS: XSS ok.
+	echo gmw_get_search_form_radius( $gmw ); // phpcs:ignore: XSS ok.
 
 	do_action( 'gmw_after_search_form_radius_field', $gmw );
 }
@@ -434,7 +436,7 @@ function gmw_search_form_radius_slider( $gmw = array() ) {
 
 	do_action( 'gmw_before_search_form_radius_slider', $gmw );
 
-	echo gmw_get_search_form_radius_slider( $gmw ); // WPCS: XSS ok.
+	echo gmw_get_search_form_radius_slider( $gmw ); // phpcs:ignore: XSS ok.
 
 	do_action( 'gmw_after_search_form_radius_slider', $gmw );
 }
@@ -499,7 +501,7 @@ function gmw_search_form_units( $gmw = array(), $class = false ) {
 
 	do_action( 'gmw_before_search_form_units', $gmw );
 
-	echo gmw_get_search_form_units( $gmw ); // WPCS: XSS ok.
+	echo gmw_get_search_form_units( $gmw ); // phpcs:ignore: XSS ok.
 
 	do_action( 'gmw_after_search_form_units', $gmw );
 }
@@ -527,7 +529,7 @@ function gmw_search_form_keywords_field( $gmw = array() ) {
 	do_action( 'gmw_before_search_form_keywords_field', $gmw );
 
 	// Function exists in the Premium Settings extension.
-	echo gmw_get_search_form_keywords_field( $gmw ); // WPCS: XSS ok.
+	echo gmw_get_search_form_keywords_field( $gmw ); // phpcs:ignore: XSS ok.
 
 	do_action( 'gmw_after_search_form_keywords_field', $gmw );
 }
@@ -588,7 +590,7 @@ function gmw_get_search_form_custom_field( $custom_field = array(), $gmw = array
 
 			$acf_field = acf_get_field( $custom_field['name'] );
 
-			if ( $acf_field['type'] == 'taxonomy' ) {
+			if ( 'taxonomy' === $acf_field['type'] ) {
 
 				$acf_tax_field = array(
 					'taxonomy' => $acf_field['taxonomy'],
@@ -668,7 +670,7 @@ function gmw_get_search_form_custom_field( $custom_field = array(), $gmw = array
 			'taxonomy'            => $acf_tax_field['taxonomy'],
 			'name_attr'           => 'cf',
 			'sub_name_attr'       => $custom_field['name'],
-			//'post_types'          => $post_types,
+			// 'post_types'          => $post_types,
 			'usage'               => $custom_field['usage'],
 			'show_options_all'    => isset( $custom_field['show_options_all'] ) ? $custom_field['show_options_all'] : '',
 			'orderby'             => 'name',
@@ -763,8 +765,6 @@ function gmw_get_search_form_custom_field( $custom_field = array(), $gmw = array
  *
  * This function requires the Premium Settings extension.
  *
- * @since 4.0 ( function moved from the Premium Settings function );
- *
  * @param  array $gmw gmw form.
  */
 function gmw_search_form_custom_fields( $gmw ) {
@@ -779,7 +779,7 @@ function gmw_search_form_custom_fields( $gmw ) {
 
 	do_action( 'gmw_before_search_form_custom_fields', $gmw );
 
-	echo gmw_get_search_form_custom_fields( $gmw ); // WPCS: XSS ok.
+	echo gmw_get_search_form_custom_fields( $gmw ); // phpcs:ignore: XSS ok.
 
 	do_action( 'gmw_after_search_form_custom_fields', $gmw );
 }
@@ -804,7 +804,7 @@ function gmw_search_form_reset_button( $gmw = array() ) {
 
 	do_action( 'gmw_before_search_form_reset_button', $gmw );
 
-	echo gmw_get_search_form_reset_button( $gmw ); // WPCS: XSS ok.
+	echo gmw_get_search_form_reset_button( $gmw ); // phpcs:ignore: XSS ok.
 
 	do_action( 'gmw_after_search_form_reset_button', $gmw );
 }
@@ -848,7 +848,7 @@ function gmw_get_search_form_toggle_button( $gmw = array(), $args = array() ) {
  *
  * @since 4.0.
  *
- * @param  array  $gmw [description].
+ * @param  array $gmw [description].
  *
  * @return [type]      [description]
  */
@@ -862,7 +862,7 @@ function gmw_get_search_form_modal_box_toggle( $gmw = array() ) {
 		'inner_label' => $gmw['search_form']['filters_modal']['toggle_label'],
 	);
 
-	return gmw_get_search_form_toggle_button( $gmw, $args ); // WPCS: XSS ok.
+	return gmw_get_search_form_toggle_button( $gmw, $args ); // phpcs:ignore: XSS ok.
 }
 
 
@@ -871,12 +871,10 @@ function gmw_get_search_form_modal_box_toggle( $gmw = array() ) {
  *
  * @since 4.0.
  *
- * @param  array  $gmw [description].
- *
- * @return [type]      [description]
+ * @param  array $gmw [description].
  */
 function gmw_search_form_modal_box_toggle( $gmw = array() ) {
-	echo gmw_get_search_form_modal_box_toggle( $gmw ); // WPCS: XSS ok.
+	echo gmw_get_search_form_modal_box_toggle( $gmw ); // phpcs:ignore: XSS ok.
 }
 
 /**
@@ -937,11 +935,9 @@ function gmw_get_search_form_modal_box( $tag = 'open', $gmw = array() ) {
  * @param  string $tag  open || close.
  *
  * @param  array  $gmw  GEO my WP form.
- *
- * @return [type]       [description]
  */
 function gmw_search_form_modal_box( $tag = 'open', $gmw = array() ) {
-	echo gmw_get_search_form_modal_box( $tag, $gmw );
+	echo gmw_get_search_form_modal_box( $tag, $gmw ); // phpcs:ignore: XSS ok.
 }
 
 /**
@@ -957,7 +953,7 @@ function gmw_search_form_toggle_button( $gmw = array() ) {
 
 	do_action( 'gmw_before_search_form_toggle_button', $gmw );
 
-	echo gmw_get_search_form_toggle_button( $gmw ); // WPCS: XSS ok.
+	echo gmw_get_search_form_toggle_button( $gmw ); // phpcs:ignore: XSS ok.
 
 	do_action( 'gmw_after_search_form_toggle_button', $gmw );
 }
@@ -982,7 +978,7 @@ function gmw_search_form_bp_group_types_field( $gmw = array() ) {
 
 	do_action( 'gmw_before_search_form_bp_group_types_field', $gmw );
 
-	echo gmw_get_search_form_bp_group_types_field( $gmw ); // WPCS: XSS ok.
+	echo gmw_get_search_form_bp_group_types_field( $gmw ); // phpcs:ignore: XSS ok.
 
 	do_action( 'gmw_after_search_form_bp_group_types_field', $gmw );
 }
@@ -1005,7 +1001,7 @@ function gmw_search_form_user_role_field( $gmw = array() ) {
 
 	do_action( 'gmw_before_search_form_user_role_field', $gmw );
 
-	echo gmw_get_search_form_user_role_field( $gmw ); // WPCS: XSS ok.
+	echo gmw_get_search_form_user_role_field( $gmw ); // phpcs:ignore: XSS ok.
 
 	do_action( 'gmw_after_search_form_user_role_field', $gmw );
 }
