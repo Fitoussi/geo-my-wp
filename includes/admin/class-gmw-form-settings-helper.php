@@ -41,7 +41,7 @@ class GMW_Form_Settings_Helper {
 	 *
 	 * @return [type] [description]
 	 */
-	public static function get_pages( $args = array() ) {
+	public static function get_pages( $args = array() ) { //phpcs:ignore.
 
 		$pages = array();
 
@@ -59,7 +59,7 @@ class GMW_Form_Settings_Helper {
 	 *
 	 * @return [type] [description]
 	 */
-	public static function get_post_types( $args = array() ) {
+	public static function get_post_types( $args = array() ) { //phpcs:ignore.
 
 		$output = array();
 
@@ -740,7 +740,7 @@ class GMW_Form_Settings_Helper {
 			'time_format'              => 'h:iK',
 			'disable_field'            => 0,
 			'post_types_cond'          => array(),
-			// 'datetime_format'          => 'm/d/Y h:iK',
+			// 'datetime_format'          => 'm/d/Y h:iK', //phpcs:ignore.
 		);
 
 		$field_values = wp_parse_args( $values, $default_values );
@@ -760,7 +760,7 @@ class GMW_Form_Settings_Helper {
 				'range_slider' => 'Range Slider',
 				'date'         => 'Date',
 				'time'         => 'Time',
-				// 'datetime'    => 'Date and Time',
+				// 'datetime'    => 'Date and Time', //phpcs:ignore.
 			),
 			'compare'         => array( '=', '!=', '>', '>=', '<', '<=', 'LIKE', 'NOT LIKE', 'BETWEEN', 'NOT BETWEEN' ),
 			'date_compare'    => array( '=', '!=', '>', '>=', '<', '<=', 'BETWEEN', 'NOT BETWEEN' ),
@@ -783,7 +783,7 @@ class GMW_Form_Settings_Helper {
 			'date_format'     => 1,
 			'time_format'     => 1,
 			'post_types_cond' => 0,
-			// 'datetime_format' => 1,
+			// 'datetime_format' => 1, //phpcs:ignore.
 		);
 
 		$options = wp_parse_args( $options, $default_options );
@@ -1989,7 +1989,8 @@ class GMW_Form_Settings_Helper {
 		return $output;
 	}
 
-	/*// phpcs:enable.
+	// phpcs:disable.
+	/*
 	public static function get_advanced_custom_field_ajax() {
 
 		if ( empty( $_POST['field_name'] ) || empty( $_POST['action'] ) || 'gmw_new_advanced_custom_field' !== $_POST['action'] ) {
@@ -2004,8 +2005,10 @@ class GMW_Form_Settings_Helper {
 
 		return wp_send_json( $field );
 	}
-	*/// phpcs:disable.
+	*/
+	// phpcs:enable.
 
+	// phpcs:disable.
 	/**
 	 * Get an array of all post custom fields.
 	 *
@@ -2046,6 +2049,7 @@ class GMW_Form_Settings_Helper {
 		return $output;
 	}
 	*/
+	// phpcs:enable.
 
 	/**
 	 * Get an array of all user meta fields.
@@ -3327,7 +3331,7 @@ class GMW_Form_Settings_Helper {
 		return $output;
 	}
 }
-// phpcs:enable.
+// phpcs:disable.
 // add_action( 'wp_ajax_gmw_new_advanced_custom_field', array( 'GMW_Form_Settings_Helper', 'get_advanced_custom_field_ajax' ), 10 );
 // add_action( 'wp_ajax_nopriv_gmw_new_advanced_custom_field', array( 'GMW_Form_Settings_Helper', 'get_advanced_custom_field_ajax' ), 10 );
-// phpcs:disable.
+// phpcs:enable.
