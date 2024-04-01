@@ -110,6 +110,63 @@ class GMW_Extensions {
 	}
 
 	/**
+	 * Get extensions data.
+	 *
+	 * This function merge extension data exists on the site with data retrieved remotly
+	 *
+	 * from GEO my WP's website.
+	 *
+	 * @since 4.3.2
+	 *
+	 * @return array
+	 */
+	public function get_extensions_data() {
+
+		// Get GMW extensions data. We merge both licenses data and addons data.
+		$extensions_data = array_merge_recursive( GMW()->addons, GMW()->licenses );
+
+		// Get remote extensions data via geomywp.com feed.
+		$remote_extensions = self::get_extensions_feed();
+
+		// Verify feed. if feed ok merge some data with local extensions.
+		if ( ! empty( $remote_extensions ) ) {
+
+			$replace_data = array(
+				'release_date',
+				'current_version',
+				'addon_page',
+				'docs_page',
+				'support_page',
+				'description',
+				'item_id',
+				'item_name',
+			);
+
+			foreach ( $remote_extensions as $slug => $values ) {
+
+				// if remote extension do not exists in GEO my WP extension.
+				// get the data from remote.
+				if ( empty( $extensions_data[ $slug ] ) ) {
+					$extensions_data[ $slug ] = $values;
+				} else {
+
+					foreach ( $replace_data as $rd ) {
+
+						if ( empty( $extensions_data[ $slug ][ $rd ] ) ) {
+
+							if ( ! empty( $values[ $rd ] ) ) {
+								$extensions_data[ $slug ][ $rd ] = ! empty( $values[ $rd ] ) ? $values[ $rd ] : '';
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return $extensions_data;
+	}
+
+	/**
 	 * Enable / Disable extension updater.
 	 *
 	 * @access public
