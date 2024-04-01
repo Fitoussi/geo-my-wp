@@ -2025,6 +2025,64 @@ body #gmw-extensions-page .gmw-extension-wrapper.gmw-processing-action .gmw-exte
 }*/
 
 
+#gmw-access-pass-license-key-wrapper {
+	background-color: white;
+	border: 1px solid #e4e7eb;
+	border-radius: 6px;
+	box-shadow: 0 0 #0000,0 0 #0000,0 0 #0000,0 0 #0000,0 1px 2px 0 rgba(0,0,0,.05);
+	margin-top: 25px;
+}
+
+#gmw-access-pass-license-key-header {
+	padding: .25rem 2rem .75rem;
+}
+
+#gmw-access-pass-license-key-header h3 {
+	margin: 1.5rem 0 1.15rem;
+}
+
+#gmw-access-pass-license-key-wrapper form {
+	padding: .75rem 2rem;
+	background: #f9fafb;
+	border-top: 1px solid #e4e7eb;
+}
+
+#gmw-access-pass-license-key-wrapper form .error-message {
+	margin: 5px 0 0;
+	color: red;
+	left: 0;
+	padding: 0 .25rem;
+	bottom: 0;
+	width: 100%;
+	font-size: 13px;
+	text-align: left;
+	box-sizing: border-box;
+	display: flex;
+	justify-content: space-between;
+	border-radius: 6px;
+	font-weight: normal;
+}
+
+#gmw-access-pass-license-key-wrapper form .error-message i {
+	width: 14px;
+	font-size: 14px;
+	height: auto;
+	margin-right: 2px;
+	margin-top: 2px;
+}
+
+#gmw-access-pass-license-key-wrapper form .button-primary {
+	margin:0
+}
+
+#gmw-access-pass-license-key-wrapper form #access-pass-license-key {
+	padding: 5px 15px 5px 15px;
+	border: 1px solid #dde2e6;
+	border-radius: 6px;
+	background: #fff;
+	min-width: 300px;
+}
+
 #gmw-extensions-filter-wrapper {
 	display: flex;
 	display: flex;
@@ -2348,6 +2406,9 @@ body #gmw-extensions-page.gmw-admin-page-wrapper #extensions-cache-form {
 	//min-height: 69px;
 }
 
+.gmw-extensions-wrapper.premium .gmw-extension-wrapper.active + .gmw-extension-wrapper.inactive  {
+	grid-column-start: 1;
+}
 
 /*.gmw-extension-wrapper.has-license.inactive .gmw-extension-bottom:after {
 	content: '';
