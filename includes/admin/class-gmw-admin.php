@@ -130,7 +130,7 @@ class GMW_Admin {
 	public function register_user_data_exporters( $exporters ) {
 
 		$exporters['geo_my_wp'] = array(
-			'exporter_friendly_name' => __( 'GEO my WP Location Data', 'text-domain' ),
+			'exporter_friendly_name' => __( 'GEO my WP Location Data', 'geo-my-wp' ),
 			'callback'               => array( $this, 'export_user_data' ),
 		);
 		return $exporters;
@@ -255,7 +255,7 @@ class GMW_Admin {
 				<?php
 				printf(
 					/* translators: %s link to importer page. */
-					wp_kses( __( 'GEO my WP needs to import existing locations into its new database table. <a href="%s" class="button-primary">Import locations</a>' ), $allowed ),
+					wp_kses( __( 'GEO my WP needs to import existing locations into its new database table. <a href="%s" class="button-primary">Import locations</a>', 'geo-my-wp' ), $allowed ),
 					esc_url( admin_url( 'admin.php?page=gmw-import-export&tab=gmw_v_3' ) )
 				);
 				?>
@@ -642,13 +642,13 @@ class GMW_Admin {
 		wp_deregister_style( 'ui-select-select2' );
 		wp_deregister_script( 'ui-select-select2' );
 
-		//event tickets plugin
+		// Event tickets plugin.
 		wp_dequeue_script( 'tribe-select2' );
 		wp_deregister_script( 'tribe-select2' );
 		wp_dequeue_style( 'tribe-select2-css' );
 		wp_deregister_style( 'tribe-select2-css' );
 
-		// My Listings Theme
+		// My Listings Theme.
 		wp_dequeue_script( 'mylisting-select2' );
 		wp_deregister_script( 'mylisting-select2' );
 		wp_dequeue_style( 'mylisting-select2' );
