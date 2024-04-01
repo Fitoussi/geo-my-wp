@@ -875,7 +875,7 @@ class GMW_Form_Settings_Helper {
 				<?php } ?>
 
 				<?php
-				/*
+				/*// phpcs:enable.
 				if ( ! empty( $options['type'] ) ) { ?>
 
 					<div class="gmw-settings-panel-field custom-field-type-option-wrap" data-usage="text">
@@ -910,7 +910,7 @@ class GMW_Form_Settings_Helper {
 					</div>
 
 				<?php }
-				*/
+				*/// phpcs:disable.
 				?>
 
 				<?php if ( $options['options'] ) { ?>
@@ -1004,7 +1004,7 @@ class GMW_Form_Settings_Helper {
 				<?php } ?>
 
 				<?php
-				/*
+				/* // phpcs:enable.
 				if ( ! empty( $options['date_type'] ) ) { ?>
 
 					<div class="gmw-settings-panel-field custom-field-date-format-option-wrap" data-usage="date,datetime" data-usage_not="time">
@@ -1039,6 +1039,7 @@ class GMW_Form_Settings_Helper {
 
 				<?php }
 				*/
+				// phpcs:disable.
 				?>
 
 				<?php if ( $options['date_format'] ) { ?>
@@ -1988,7 +1989,7 @@ class GMW_Form_Settings_Helper {
 		return $output;
 	}
 
-	/*
+	/*// phpcs:enable.
 	public static function get_advanced_custom_field_ajax() {
 
 		if ( empty( $_POST['field_name'] ) || empty( $_POST['action'] ) || 'gmw_new_advanced_custom_field' !== $_POST['action'] ) {
@@ -2003,7 +2004,7 @@ class GMW_Form_Settings_Helper {
 
 		return wp_send_json( $field );
 	}
-	*/
+	*/// phpcs:disable.
 
 	/**
 	 * Get an array of all post custom fields.
@@ -3326,6 +3327,7 @@ class GMW_Form_Settings_Helper {
 		return $output;
 	}
 }
-
+// phpcs:enable.
 // add_action( 'wp_ajax_gmw_new_advanced_custom_field', array( 'GMW_Form_Settings_Helper', 'get_advanced_custom_field_ajax' ), 10 );
 // add_action( 'wp_ajax_nopriv_gmw_new_advanced_custom_field', array( 'GMW_Form_Settings_Helper', 'get_advanced_custom_field_ajax' ), 10 );
+// phpcs:disable.
