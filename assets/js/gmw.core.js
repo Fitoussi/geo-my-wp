@@ -3466,11 +3466,14 @@ jQuery( document ).ready( function( $ ) {
     // load this part in front-end only
     if ( gmwVars.isAdmin == false ) {
 
-        GMW.init();
+		setTimeout(function () {
 
-        // initiate current location only when needed.
-        if ( $( '.gmw-current-location-wrapper' ).length ) {
-   			GMW_Current_Location.init();
-   		}
+			GMW.init();
+
+			// initiate current location only when needed.
+			if ($('.gmw-current-location-wrapper').length) {
+				GMW_Current_Location.init();
+			}
+		}, 200);
     }
 });

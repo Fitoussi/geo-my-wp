@@ -2111,15 +2111,34 @@ GMW_Map.prototype.resultItemEvents = function( event, item, marker ) {
  */
 jQuery( document ).ready( function($){
 
-	if ( typeof gmwMapObjects == 'undefined' ) {
-		return;
-	}
+	setTimeout(function () {
 
-	if ( gmwVars.mapsProvider === 'google_maps' && gmwVars.googleAdvancedMarkers ) {
+		if (typeof gmwMapObjects == 'undefined') {
+			return;
+		}
 
-		async function gmwInitMaps() {
+		if (gmwVars.mapsProvider === 'google_maps' && gmwVars.googleAdvancedMarkers) {
 
-			await google.maps.importLibrary("marker");
+			async function gmwInitMaps() {
+
+				await google.maps.importLibrary("marker");
+
+				// loop through and generate all maps
+				jQuery.each(gmwMapObjects, function (map_id, vars) {
+
+					if (vars.settings.render_on_page_load) {
+
+						// generate new map
+						GMW_Maps[map_id] = new GMW_Map(vars.settings, vars.map_options, vars.form);
+						// initiate it
+						GMW_Maps[map_id].render(vars.locations, vars.user_location);
+					}
+				});
+			}
+
+			gmwInitMaps();
+
+		} else {
 
 			// loop through and generate all maps
 			jQuery.each(gmwMapObjects, function (map_id, vars) {
@@ -2133,21 +2152,5 @@ jQuery( document ).ready( function($){
 				}
 			});
 		}
-
-		gmwInitMaps();
-
-	} else {
-
-		// loop through and generate all maps
-		jQuery.each(gmwMapObjects, function (map_id, vars) {
-
-			if (vars.settings.render_on_page_load) {
-
-				// generate new map
-				GMW_Maps[map_id] = new GMW_Map(vars.settings, vars.map_options, vars.form);
-				// initiate it
-				GMW_Maps[map_id].render(vars.locations, vars.user_location);
-			}
-		});
-	}
+	}, 200);
 });
