@@ -28,7 +28,7 @@ function gmw_search_form_bp_member_types_field( $gmw = array() ) {
 
 	do_action( 'gmw_before_search_form_bp_member_types_field', $gmw );
 
-	echo gmw_get_search_form_bp_member_types_field( $gmw ); // WPCS: XSS ok.
+	echo gmw_get_search_form_bp_member_types_field( $gmw ); // phpcs:ignore. already escaped.
 
 	do_action( 'gmw_after_search_form_bp_member_types_field', $gmw );
 }
@@ -52,7 +52,7 @@ function gmw_search_form_bp_groups_field( $gmw = array() ) {
 
 	do_action( 'gmw_before_search_form_bp_groups_field', $gmw );
 
-	echo gmw_get_search_form_bp_groups_field( $gmw ); // WPCS: XSS ok.
+	echo gmw_get_search_form_bp_groups_field( $gmw ); // phpcs:ignore. already escaped.
 
 	do_action( 'gmw_after_search_form_bp_groups_field', $gmw );
 }
@@ -420,7 +420,7 @@ function gmw_search_form_xprofile_fields( $gmw ) {
 
 	do_action( 'gmw_before_search_form_xprofile_fields', $gmw );
 
-	echo gmw_get_search_form_xprofile_fields( $gmw ); // WPCS: XSS ok.
+	echo gmw_get_search_form_xprofile_fields( $gmw ); /// phpcs:ignore. already escaped.
 
 	do_action( 'gmw_after_search_form_xprofile_fields', $gmw );
 }
@@ -432,6 +432,8 @@ function gmw_search_form_xprofile_fields( $gmw ) {
  *
  * @param  array  $gmw     gmw form.
  *
+ * @param  string $where   where the output is ( info_window, search_results ).
+ *
  * @return [type]         [description]
  */
 function gmw_search_results_bp_friendship_button( $member, $gmw, $where = 'search_results' ) {
@@ -440,7 +442,7 @@ function gmw_search_results_bp_friendship_button( $member, $gmw, $where = 'searc
 		return;
 	}
 
-	bp_add_friend_button( $member->id ); // WPCS: XSS ok.
+	bp_add_friend_button( $member->id );
 }
 
 /**
@@ -450,18 +452,20 @@ function gmw_search_results_bp_friendship_button( $member, $gmw, $where = 'searc
  *
  * @param  array  $gmw     gmw form.
  *
+ * @param  string $where   where the output is ( info_window, search_results ).
+ *
  * @since 4.0
  *
  * @return [type]         [description]
  */
 function gmw_search_results_member_types( $member, $gmw, $where = 'search_results' ) {
 
-    // Require the Premium Settings extension.
-    if ( ! function_exists( 'gmw_get_search_results_member_types' ) || empty( $gmw[ $where ]['member_types']['enabled'] ) ) {
-        return;
-    }
+	// Require the Premium Settings extension.
+	if ( ! function_exists( 'gmw_get_search_results_member_types' ) || empty( $gmw[ $where ]['member_types']['enabled'] ) ) {
+		return;
+	}
 
-    echo  gmw_get_search_results_member_types( $member, $gmw, $where ); // WPCS: XSS ok.
+	echo gmw_get_search_results_member_types( $member, $gmw, $where ); // phpcs:ignore.
 }
 
 /**
@@ -471,6 +475,8 @@ function gmw_search_results_member_types( $member, $gmw, $where = 'search_result
  *
  * @param  array  $gmw     gmw form.
  *
+ * @param  string $where   where the output is ( info_window, search_results ).
+ *
  * @return [type]         [description]
  */
 function gmw_search_results_bp_last_active( $member, $gmw, $where = 'search_results' ) {
@@ -479,7 +485,7 @@ function gmw_search_results_bp_last_active( $member, $gmw, $where = 'search_resu
 		return;
 	}
 
-	echo '<span class="activity">' . bp_get_member_last_active() . '</span>'; // WPCS: XSS ok.
+	echo '<span class="activity">' . bp_get_member_last_active() . '</span>'; // phpcs:ignore.
 }
 
 /**
@@ -487,9 +493,9 @@ function gmw_search_results_bp_last_active( $member, $gmw, $where = 'search_resu
  *
  * @since 4.0.
  *
- * @param  array  $gmw           [description].
+ * @param  array $gmw           [description].
  *
- * @param  array  $fields_values [description]
+ * @param  array $fields_values [description].
  *
  * @return [type]                [description]
  */
@@ -564,16 +570,18 @@ function gmw_get_xprofile_query_args( $gmw = array(), $fields_values = array() )
 			case 'multiselect_custom_taxonomy':
 				$this_query = array( 'relation' => 'OR' );
 
-				foreach( $value as $item ) {
-				    $this_query[] = array(
-				        'field'   => $field_id,
-				        'value'   => sprintf( ':"%s";', $item ),
-				        'compare' => 'LIKE',
-				    );
+				foreach ( $value as $item ) {
+
+					$this_query[] = array(
+						'field'   => $field_id,
+						'value'   => sprintf( ':"%s";', $item ),
+						'compare' => 'LIKE',
+					);
 				}
 
 				break;
 
+			// phpcs:disable.
 			/*case 'datebox':
 			case 'birthdate':
 				if ( ! is_array( $value ) || ! array_filter( $value ) ) {
@@ -602,6 +610,7 @@ function gmw_get_xprofile_query_args( $gmw = array(), $fields_values = array() )
 				}
 
 				break;*/
+				// phpcs:enable.
 		}
 
 		// create the meta query args.
@@ -640,7 +649,7 @@ function gmw_get_xprofile_query_args( $gmw = array(), $fields_values = array() )
  */
 function gmw_query_xprofile_fields( $fields_values = array(), $gmw = array() ) {
 
-	global $bp, $wpdb, $wp_version;
+	global $bp, $wpdb;
 
 	$users_id = array();
 
@@ -659,7 +668,7 @@ function gmw_query_xprofile_fields( $fields_values = array(), $gmw = array() ) {
 			FROM {$bp->profile->table_name_data}
 			WHERE `field_id` = %d ",
 			$field_id
-		); // WPCS: unprepared SQL ok.
+		); // phpcs:ignore. WPCS: unprepared SQL ok.
 
 		switch ( $field_data->type ) {
 
@@ -717,9 +726,9 @@ function gmw_query_xprofile_fields( $fields_values = array(), $gmw = array() ) {
 				}
 
 				$time  = time();
-				$day   = date( 'j', $time );
-				$month = date( 'n', $time );
-				$year  = date( 'Y', $time );
+				$day   = gmdate( 'j', $time );
+				$month = gmdate( 'n', $time );
+				$year  = gmdate( 'Y', $time );
 				$ymin  = $year - $max - 1;
 				$ymax  = $year - $min;
 
@@ -733,7 +742,7 @@ function gmw_query_xprofile_fields( $fields_values = array(), $gmw = array() ) {
 				break;
 		}
 
-		$results  = $wpdb->get_col( $sql, 0 ); // WPCS: db call ok, cache ok, unprepared SQL ok.
+		$results  = $wpdb->get_col( $sql, 0 ); // phpcs:ignore. WPCS: db call ok, cache ok, unprepared SQL ok.
 		$users_id = empty( $users_id ) ? $results : array_intersect( $users_id, $results );
 
 		// abort if no users found for this fields.
@@ -777,7 +786,7 @@ function gmw_get_member_xprofile_fields( $member_id = 0, $fields = array() ) {
 
 		if ( 'datebox' === $field_data->type ) {
 
-			$age = intval( date( 'Y', time() - strtotime( $field_value ) ) ) - 1970;
+			$age = intval( gmdate( 'Y', time() - strtotime( $field_value ) ) ) - 1970;
 			// translators: %s for age.
 			$field_value      = sprintf( __( ' %s Years old', 'geo-my-wp' ), $age );
 			$field_data->name = __( 'Age', 'geo-my-wp' );
@@ -801,57 +810,20 @@ function gmw_get_member_xprofile_fields( $member_id = 0, $fields = array() ) {
  *
  * @param  array  $gmw    gmw form.
  *
+ * @param  string $where  where the output is ( info_window, search_results ).
+ *
  * @since 4.0 ( moved from Premium Settings ).
  */
 function gmw_search_results_member_xprofile_fields( $member, $gmw = array(), $where = 'search_results' ) {
 
-    if ( empty( $gmw[ $where ]['xprofile_fields'] ) ) {
-        return;
-    }
-
-    echo gmw_get_search_results_meta_fields( 'xprofile_field', $gmw[ $where ]['xprofile_fields'], $member, $gmw ); // WPCS: XSS OK.
-
-    /*return;
 	if ( empty( $gmw[ $where ]['xprofile_fields'] ) ) {
 		return;
 	}
 
-	foreach ( $gmw[ $where ]['xprofile_fields'] as $field_id => $xpfield ) {
-
-		if ( ! is_int( $field_id ) || empty( $xpfield['field_output'] ) ) {
-			continue;
-		}
-
-		$field_id    = absint( $field_id );
-        $field_data  = xprofile_get_field( $field_id, $member->id, true );
-        $field_value = maybe_unserialize( $field_data->data->value );
-
-		// verify field.
-		if ( empty( $field_data->id ) || empty( $field_value ) ) {
-			continue;
-		}
-
-		if ( 'datebox' === $field_data->type ) {
-			$field_value = intval( date( 'Y', time() - strtotime( $field_value ) ) ) - 1970;
-		}
-
-		$field_value = is_array( $field_value ) ? implode( ', ', $field_value ) : $field_value;
-
-		$output .= '<li class="gmw-xprofile-field type-' . esc_attr( $field_data->type ) . ' id-' . esc_attr( $field_id ) . '">';
-
-		if ( ! empty( $xpfield['label'] ) ) {
-			$output .= '<span class="label">' . esc_html( $xpfield['label'] ) . '</span>';
-		}
-
-		$output .= '<span class="field">';
-		$output .= str_replace( '%field%', $field_value, $xpfield['field_output'] );
-		$output .= '</span>';
-		$output .= '</li>';
-	}
-
-	echo '' === $output ? false : '<ul class="gmw-xprofile-fields">' . $output . '</ul>';*/
+	echo gmw_get_search_results_meta_fields( 'xprofile_field', $gmw[ $where ]['xprofile_fields'], $member, $gmw ); // phpcs:ignore. WPCS: XSS OK.
 }
 
+// phpcs:disable.
 /*function gmw_search_results_member_xprofile_fields( $member, $gmw = array(), $where = 'search_results' ) {
 
 	if ( empty( $gmw[ $where ]['xprofile_fields'] ) ) {
@@ -873,3 +845,4 @@ function gmw_search_results_member_xprofile_fields( $member, $gmw = array(), $wh
 
 	echo gmw_get_member_xprofile_fields( $member->id, $total_fields ); // WPCS: XSS ok.
 }*/
+// phpcs:enable.
