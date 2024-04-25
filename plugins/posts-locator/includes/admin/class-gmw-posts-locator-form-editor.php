@@ -102,7 +102,7 @@ class GMW_Posts_Locator_Form_Editor {
 		$settings['search_form']['taxonomies']          = '';
 		$settings['search_results']['excerpt']          = array(
 			'usage' => 'disabled',
-			'count' => 10,
+			'count' => 20,
 			'link'  => 'read more...',
 		);
 		$settings['search_results']['opening_hours']    = '';
@@ -229,7 +229,7 @@ class GMW_Posts_Locator_Form_Editor {
 					array(
 						'name'        => 'count',
 						'type'        => 'number',
-						'default'     => '20',
+						'default'     => '',
 						'placeholder' => __( 'Enter numeric value', 'geo-my-wp' ),
 						'label'       => __( 'Word Count', 'geo-my-wp' ),
 						'desc'        => __( 'Enter the max number of words to display or leave blank to display the entire excerpt.', 'geo-my-wp' ),
