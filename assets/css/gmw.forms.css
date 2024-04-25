@@ -2098,6 +2098,13 @@ div.gmw-results-wrapper .gmw-per-page {
 	grid-template-columns: repeat( var( --gmw-results-grid-col ), auto );
 }
 
+@media ( max-width: 769px ) {
+
+	.gmw-element-template .gmw-results-list {
+		grid-template-columns: repeat( auto-fit, minmax( 250px, 1fr ) ) ! important;
+	}
+}
+
 .gmw-element-template .gmw-single-item {
 	/*box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px;
 	border-radius: 3px;
