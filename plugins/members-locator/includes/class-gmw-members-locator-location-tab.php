@@ -183,10 +183,10 @@ class GMW_Members_Locator_Location_Tab {
 		<script type="text/javascript">
 			jQuery( document ).ready( function($) {
 
-				var slug = "<?php echo $this->args['slug']; ?>";
+				var slug = "<?php echo esc_attr( $this->args['slug'] ); ?>";
 
-				$( '#wp-admin-bar-my-account-gmw-' + slug ).each( function() { 
-					$( this ).insertAfter( $( this ).next() ); 
+				$( '#wp-admin-bar-my-account-gmw-' + slug ).each( function() {
+					$( this ).insertAfter( $( this ).next() );
 				});
 			});
 		</script>
