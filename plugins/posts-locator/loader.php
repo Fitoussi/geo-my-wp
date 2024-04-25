@@ -249,9 +249,7 @@ class GMW_Posts_Locator_Addon extends GMW_Addon {
 			}
 			add_filter( 'gmw_single_location_widget_objects', 'gmw_pt_single_location_widget_object', 5 );
 
-			if ( ! IS_ADMIN || defined( 'DOING_AJAX' ) ) {
-				require_once 'includes/class-gmw-single-post-location.php';
-			}
+			require_once 'includes/class-gmw-single-post-location.php';
 		}
 	}
 }
