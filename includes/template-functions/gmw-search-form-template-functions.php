@@ -625,6 +625,80 @@ function gmw_get_search_form_custom_field( $custom_field = array(), $gmw = array
 		unset( $options['{acf_field_options}'] );
 	}
 
+	// Load field options from Gravity Forms field option when available.
+	if ( isset( $options['{gforms_field_options}'] ) && class_exists( 'GFAPI' ) ) {
+
+		$gform_id    = ! empty( $gmw['general_settings']['gforms_form_ids'] ) ? absint( $gmw['general_settings']['gforms_form_ids'] ) : 0;
+		$gform_field = GFAPI::get_field( $gform_id, $custom_field['name'] );
+
+		if ( ! empty( $gform_field->choices ) ) {
+
+			$gf_choices = array();
+
+			foreach ( $gform_field->choices as $gf_choice ) {
+				$gf_choices[ $gf_choice['value'] ] = $gf_choice['text'];
+			}
+
+			if ( 1 === count( $options ) ) {
+
+				$options = $gf_choices;
+
+			} else {
+
+				$new_options = array();
+
+				foreach ( $options as $value => $label ) {
+
+					if ( '{gforms_field_options}' === $value ) {
+
+						$new_options = array_merge( $new_options, $gf_choices );
+
+					} else {
+						$new_options[ $value ] = $label;
+					}
+				}
+
+				$options = $new_options;
+			}
+		} elseif ( 'post_category' === $gform_field['type'] || 'post_tags' === $gform_field['type'] ) {
+
+			$tax_terms = 'post_category' === $gform_field['type'] ? get_terms( 'category' ) : get_terms( 'post_tag' );
+
+			if ( ! empty( $tax_terms ) ) {
+
+				$gf_choices = array();
+
+				foreach ( $tax_terms as $tax_term ) {
+					$gf_choices[ $tax_term->term_id ] = $tax_term->name;
+				}
+
+				if ( 1 === count( $options ) ) {
+
+					$options = $gf_choices;
+
+				} else {
+
+					$new_options = array();
+
+					foreach ( $options as $value => $label ) {
+
+						if ( '{gforms_field_options}' === $value ) {
+
+							$new_options = array_merge( $new_options, $gf_choices );
+
+						} else {
+							$new_options[ $value ] = $label;
+						}
+					}
+
+					$options = $new_options;
+				}
+			}
+		}
+
+		unset( $options['{gforms_field_options}'] );
+	}
+
 	// Get value of multiple fields.
 	if ( in_array( $custom_field['usage'], array( 'multiselect', 'checkbox', 'checkboxes' ), true ) ) {
 
