@@ -440,6 +440,7 @@ class GMW_Admin {
 
 			add_filter( 'admin_footer_text', array( $this, 'gmw_credit_footer' ), 10 );
 			add_filter( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ), 200 );
+			add_filter( 'admin_enqueue_scripts', array( $this, 'dequeue_scripts' ), 99999999999999 );
 		}
 	}
 
@@ -600,13 +601,13 @@ class GMW_Admin {
 	}
 
 	/**
-	 * Enqueue scripts.
+	 * Dequeue/deregister scripts that conflict with GEO my WP on GEO my WP's admin pages.
 	 *
-	 * @since 4.0.
+	 * @since 4.3.3
 	 *
-	 * @return [type] [description]
+	 * @return void
 	 */
-	public function enqueue_scripts() {
+	public function dequeue_scripts() {
 
 		// Deregister the select-2 library that is included by different plugins on GEO my WP admin page to prevent conflics.
 		// GEO my WP will load its own select-2.
@@ -636,6 +637,17 @@ class GMW_Admin {
 		wp_dequeue_style( 'rtcl-admin' );
 		wp_dequeue_style( 'rtcl-public' );
 
+		// ProfileGrid plugin.
+		wp_dequeue_script( 'profilegrid_select2_js' );
+		wp_dequeue_style( 'profilegrid_select2_css' );
+		wp_deregister_script( 'profilegrid_select2_js' );
+		wp_deregister_style( 'profilegrid_select2_css' );
+
+		wp_dequeue_script( 'select2full' );
+		wp_dequeue_style( 'select2full' );
+		wp_deregister_script( 'select2full' );
+		wp_deregister_style( 'select2full' );
+
 		// JhonnyGo theme.
 		wp_dequeue_script( 'ui-select-select2' );
 		wp_dequeue_style( 'ui-select-select2' );
@@ -658,6 +670,16 @@ class GMW_Admin {
 		wp_dequeue_style( 'select2' );
 		wp_deregister_style( 'select2' );
 		wp_deregister_script( 'select2' );
+	}
+
+	/**
+	 * Enqueue scripts.
+	 *
+	 * @since 4.0.
+	 *
+	 * @return [type] [description]
+	 */
+	public function enqueue_scripts() {
 
 		$pages = array( 'gmw-extensions', 'gmw-settings', 'gmw-forms', 'gmw-import-export' );
 
