@@ -365,13 +365,18 @@ class GMW_Search_Form_Helper {
 				}
 
 				$options_all = ! empty( $args['show_options_all'] ) ? $args['show_options_all'] : '';
+
 				// Requires Premium Settings extension.
-				if ( ( 'smartbox' === $args['type'] || 'smartbox_multiple' === $args['type'] || $args['smartbox'] ) && class_exists( 'GMW_Premium_Settings_Addon' ) ) {
+				if ( ( 'smartbox' === $args['type'] || 'smartbox_multiple' === $args['type'] || $args['smartbox'] ) ) {
 
 					$attributes .= ' data-placeholder="' . $options_all . '" data-search_text="' . esc_attr( $args['sb_search_text'] ) . '" data-no_results_text="' . esc_attr( $args['sb_no_results_text'] ) . '"';
 
-					// This function lives in the Premium Settings extension.
-					gmw_ps_enqueue_smartbox();
+					$library = gmw_get_option( 'general_settings', 'smartbox_library', 'fselect' );
+
+					if ( wp_script_is( 'gmw-' . $library, 'registered' ) && ! wp_script_is( 'gmw-' . $library, 'enqueued' ) ) {
+						wp_enqueue_script( 'gmw-' . $library );
+						wp_enqueue_style( 'gmw-' . $library );
+					}
 				}
 
 				$field .= '<select ' . $attributes . '>';
