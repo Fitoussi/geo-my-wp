@@ -609,7 +609,7 @@ function gmw_get_bp_avatar( $args = array(), $object = array(), $gmw = array() )
 
 		if ( 'group' === $args['object_type'] ) {
 
-			$args['permalink'] = bp_get_group_permalink( $object );
+			$args['permalink'] = function_exists( 'bp_get_group_url' ) ? bp_get_group_url( $object ) : bp_get_group_permalink( $object );
 
 		} else {
 			$args['permalink'] = function_exists( 'bp_members_get_user_url' ) ? bp_members_get_user_url( $args['object_id'] ) : bp_core_get_user_domain( $args['object_id'] );
