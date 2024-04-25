@@ -112,6 +112,7 @@ function gmw_pt_get_tax_query_args( $tax_args = array(), $gmw = array() ) {
 	return ! empty( $tax_query[0] ) ? $tax_query : array();
 }
 
+// phpcs:disable.
 /**
  * Below is an attepms to create a WP_Query with multiple post types and multiple taxonomies.
  *
@@ -255,7 +256,7 @@ function gmw_pt_get_tax_query_args( $tax_args = array(), $gmw = array() ) {
 
 	return $tax_query;
 }*/
-
+// phpcs:enable.
 /**
  * Query pre-defined taxonomies.
  *
@@ -384,7 +385,7 @@ function gmw_generate_tax_query( $gmw = array() ) {
  *
  * @param  array  $gmw  gmw form.
  *
- * @return HTML element.
+ * @return mixed element.
  */
 function gmw_get_post_featured_image( $args = array(), $post = array(), $gmw = array(), $deprecated = array() ) {
 
@@ -436,9 +437,11 @@ function gmw_get_post_featured_image( $args = array(), $post = array(), $gmw = a
 /**
  * Display featured image in search results.
  *
- * @param  object $post post object.
+ * @param  object $post  post object.
  *
- * @param  array  $gmw  GMW form.
+ * @param  array  $gmw   GMW form.
+ *
+ * @param  string $where where to output the image.
  *
  * @return [type]       [description]
  */
@@ -458,7 +461,7 @@ function gmw_search_results_featured_image( $post, $gmw = array(), $where = 'sea
 		'where'        => $where,
 	);
 
-	echo gmw_get_post_featured_image( $args, $post, $gmw ); // WPCS: XSS ok.
+	echo gmw_get_post_featured_image( $args, $post, $gmw ); // phpcs:ignore. WPCS: XSS ok.
 }
 
 /**
@@ -467,6 +470,8 @@ function gmw_search_results_featured_image( $post, $gmw = array(), $where = 'sea
  * @param  object $post Post object.
  *
  * @param  array  $gmw  gmw form.
+ *
+ * @param  string $where where to output the taxonomies.
  *
  * @return [type]       [description]
  */
@@ -480,7 +485,7 @@ function gmw_search_results_taxonomies( $post, $gmw = array(), $where = 'search_
 		'id' => $gmw['ID'],
 	);
 
-	echo '<div class="gmw-item taxonomies-list-wrapper">' . gmw_get_post_taxonomies_terms_list( $post, $args ) . '</div>'; // WPCS: XSS ok.
+	echo '<div class="gmw-item taxonomies-list-wrapper">' . gmw_get_post_taxonomies_terms_list( $post, $args ) . '</div>'; // phpcs:ignore. WPCS: XSS ok.
 }
 
 /**
@@ -489,6 +494,8 @@ function gmw_search_results_taxonomies( $post, $gmw = array(), $where = 'search_
  * @param  object $post post object.
  *
  * @param  array  $gmw  gmw form.
+ *
+ * @param  string $where where to output the excerpt.
  *
  * @return [type]       [description]
  */
@@ -519,5 +526,5 @@ function gmw_search_results_post_excerpt( $post, $gmw = array(), $where = 'searc
 
 	$excerpt = GMW_Template_Functions_Helper::get_excerpt( $args );
 
-	echo apply_filters( 'gmw_search_results_post_excerpt_output', '<div class="gmw-item gmw-excerpt excerpt">' . $excerpt . '</div>', $excerpt, $args, $post, $gmw, $where ); // WPCS: XSS ok.
+	echo apply_filters( 'gmw_search_results_post_excerpt_output', '<div class="gmw-item gmw-excerpt excerpt">' . $excerpt . '</div>', $excerpt, $args, $post, $gmw, $where ); // phpcs:ignore. WPCS: XSS ok.
 }
