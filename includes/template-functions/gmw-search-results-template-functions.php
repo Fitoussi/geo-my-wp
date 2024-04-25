@@ -541,6 +541,37 @@ function gmw_get_meta_field_value( $type, $field, $object ) {
 
 		$value = get_user_meta( $object->ID, $field, true );
 
+		if ( ! empty( $field ) ) {
+
+			// Get value for PeepSo select field.
+			// PHP 8.0+.
+			if ( function_exists( 'str_contains' ) ) {
+
+				if ( str_contains( $field, 'peepso_user_field_' ) && ( is_array( $value ) || str_contains( $value, 'option_' ) ) ) {
+
+					$ps_field_id = str_replace( 'peepso_user_field_', '', $field );
+					$options     = maybe_unserialize( get_post_meta( $ps_field_id, 'select_options', true ) );
+
+					if ( ! is_array( $value ) ) {
+						$value = ! empty( $options[ $value ] ) ? $options[ $value ] : $value;
+					} else {
+						$value = array_intersect_key( $options, array_flip( $value ) );
+					}
+				}
+
+				// PHP -8.0.
+			} elseif ( strpos( $field, 'peepso_user_field_' ) !== false && ( is_array( $value ) || strpos( $value, 'option_' ) !== false ) ) {
+
+				$ps_field_id = str_replace( 'peepso_user_field_', '', $field );
+				$options     = maybe_unserialize( get_post_meta( $ps_field_id, 'select_options', true ) );
+
+				if ( ! is_array( $value ) ) {
+					$value = ! empty( $options[ $value ] ) ? $options[ $value ] : $value;
+				} else {
+					$value = array_intersect_key( $options, array_flip( $value ) );
+				}
+			}
+		}
 	} elseif ( 'bp_user_meta' === $type ) {
 
 		$value = get_user_meta( $object->id, $field, true );
@@ -562,6 +593,10 @@ function gmw_get_meta_field_value( $type, $field, $object ) {
 	} elseif ( 'bp_group_meta' === $type && function_exists( 'groups_get_groupmeta' ) ) {
 
 		$value = groups_get_groupmeta( $object->id, $field, true );
+
+	} elseif ( 'gforms_entry_meta' === $type && function_exists( 'gform_get_meta' ) ) {
+
+		$value = isset( $object->{$field} ) ? $object->{$field} : gform_get_meta( $object->id, $field );
 	}
 
 	return $value;
@@ -576,7 +611,7 @@ function gmw_get_meta_field_value( $type, $field, $object ) {
  *
  * @param  string $type         type of meta fields post_meta || user_meta || bp_user_meta || xprofile_field.
  *
- * @param  string $meta_fields  array of meta fields name/slug.
+ * @param  array  $meta_fields  array of meta fields name/slug.
  *
  * @param  object $object       the location object in the loop.
  *
@@ -622,7 +657,7 @@ function gmw_get_search_results_meta_fields( $type = 'post_meta', $meta_fields =
 		$options['field_output'] = esc_html( $options['field_output'] );
 
 		$field_output = str_replace( '%field%', $field_value, $options['field_output'] );
-		$field_output = apply_filters( 'gmw_meta_field_results_output', $field_output, $field_value, $field, $options );
+		$field_output = apply_filters( 'gmw_meta_field_results_output', $field_output, $field_value, $field, $options, $gmw );
 
 		$output .= '<span class="field">';
 		$output .= $field_output;
@@ -670,6 +705,10 @@ function gmw_search_results_meta_fields( $object = array(), $gmw = array(), $whe
 	} elseif ( 'bp_groups_locator' === $component ) {
 
 		$type = 'bp_user_meta';
+
+	} elseif ( 'gforms_entries_locator' === $component ) {
+
+		$type = 'gforms_entry_meta';
 	}
 
 	echo gmw_get_search_results_meta_fields( $type, $gmw[ $where ]['meta_fields'], $object, $gmw ); // WPCS: XSS OK.
