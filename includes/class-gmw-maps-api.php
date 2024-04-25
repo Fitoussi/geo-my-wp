@@ -230,7 +230,7 @@ class GMW_Maps_API {
 				$class   = '';
 			}
 
-			$output['boundaries_filter']  = '<div id="gmw-map-position-filter-wrapper-' . $map_id .'" class="gmw-map-position-filter-wrapper gmw-field-checkboxes gmw-fields-enhanced' . $class . '" style="display:none;">';
+			$output['boundaries_filter']  = '<div id="gmw-map-position-filter-wrapper-' . $map_id . '" class="gmw-map-position-filter-wrapper gmw-field-checkboxes gmw-fields-enhanced' . $class . '" style="display:none;">';
 			$output['boundaries_filter'] .= '<label for="gmw-map-position-filter-' . $map_id . '" class="gmw-checkbox-label">';
 			$output['boundaries_filter'] .= '<input type="checkbox" id="gmw-map-position-filter-' . $map_id . '" class="gmw-field-checkbox gmw-map-position-filter" data-id="' . $map_id . '" ' . $checked . ' />';
 			$output['boundaries_filter'] .= esc_attr( $args['boundaries_filter_label'] );
@@ -322,7 +322,7 @@ class GMW_Maps_API {
 			$map_args['icon_size'] = explode( ',', $map_args['icon_size'] );
 		}
 
-		If ( 'locationiq' === GMW()->geocoding_provider ) {
+		if ( 'locationiq' === GMW()->geocoding_provider ) {
 			$layers_url         = 'https://{s}-tiles.locationiq.com/v3/streets/r/{z}/{x}/{y}.png?key=' . gmw_get_option( 'api_providers', 'locationiq_key', '' );
 			$layers_attribution = '&copy; <a href="https://www.locationiq.com" target="_blank">LocationIQ</a> contributors';
 		} else {
@@ -820,19 +820,19 @@ class GMW_Maps_API {
 	public static function get_directions_link( $args = array() ) {
 
 		$defaults = array(
-			'id'         => 0,
+			'id'           => 0,
 			'from_address' => '',
-			'from_lat'   => '',
-			'from_lng'   => '',
-			'to_address' => '',
-			'to_lat'     => '',
-			'to_lng'     => '',
-			'units'      => 'imperial',
-			'label'      => __( 'Get directions', 'geo-my-wp' ),
-			'language'   => gmw_get_option( 'general_settings', 'language_code', 'EN' ),
-			'region'     => gmw_get_option( 'general_settings', 'country_code', 'US' ),
-			'link_only'  => false,
-			'mode'       => '',
+			'from_lat'     => '',
+			'from_lng'     => '',
+			'to_address'   => '',
+			'to_lat'       => '',
+			'to_lng'       => '',
+			'units'        => 'imperial',
+			'label'        => __( 'Get directions', 'geo-my-wp' ),
+			'language'     => gmw_get_option( 'general_settings', 'language_code', 'EN' ),
+			'region'       => gmw_get_option( 'general_settings', 'country_code', 'US' ),
+			'link_only'    => false,
+			'mode'         => '',
 		);
 
 		$args     = wp_parse_args( $args, $defaults );
@@ -864,9 +864,10 @@ class GMW_Maps_API {
 			$to_loc = "{$args['to_lat']},{$args['to_lng']}";
 		}
 
+		// phpcs:disable.
 		//$args['from_latlng'] = ( empty( $args['from_lat'] ) || empty( $args['from_lng'] ) ) ? '' : "{$args['from_lat']},{$args['from_lng']}";
-		// phpcs:ignore.
-		// $args['to_latlng']   = ( empty( $args['to_lat'] ) || empty( $args['to_lng'] ) ) ? '' : "{$args['to_lat']},{$args['to_lng']}";
+		//$args['to_latlng']   = ( empty( $args['to_lat'] ) || empty( $args['to_lng'] ) ) ? '' : "{$args['to_lat']},{$args['to_lng']}";
+		// phpcs:enable.
 		$args['units_type'] = 'imperial' === $args['units'] ? 'ptm' : 'ptk';
 		$args['link']       = esc_url( "http://maps.google.com/maps?f=d&hl={$args['language']}&region={$args['region']}&doflg={$args['units_type']}&saddr={$from_loc}&daddr={$to_loc}&ie=UTF8&z=12" . $mode );
 
