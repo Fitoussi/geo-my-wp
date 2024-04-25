@@ -77,8 +77,8 @@ function gmw_is_user_exists( $user_id = 0 ) {
 	$user_id = $wpdb->get_var(
 		$wpdb->prepare(
 			"
-			SELECT ID 
-            FROM $wpdb->users 
+			SELECT ID
+            FROM $wpdb->users
             WHERE ID = %d",
 			$user_id
 		)
@@ -355,7 +355,7 @@ function gmw_get_user_locations_data( $user_id = 0 ) {
  *     'output'      => 'string'             // output type ( object, array or string ).
  * );.
  *
- * @return Mixed object || array || string
+ * @return mixed object || array || string
  */
 function gmw_get_user_address( $args = array() ) {
 
@@ -543,9 +543,9 @@ function gmw_user_location_status( $user_id = 0, $status = 1 ) {
 	return $wpdb->query(
 		$wpdb->prepare(
 			"
-            UPDATE {$wpdb->prefix}gmw_locations 
+            UPDATE {$wpdb->prefix}gmw_locations
 			SET   `status`      = %s
-            WHERE `object_type` = 'user' 
+            WHERE `object_type` = 'user'
             AND   `object_id`   = %d",
 			$status,
 			$user_id
