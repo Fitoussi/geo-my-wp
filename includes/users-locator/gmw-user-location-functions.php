@@ -197,13 +197,13 @@ function gmw_get_user_location_meta( $user_id = 0, $meta_keys = array() ) {
  *
  * @since 3.0
  *
- * @param init    $id             user or location ID.
+ * @param integer $id             user or location ID.
  *
  * @param boolean $by_location_id true for passing location ID as first argument.
  *
- * @return object  user data + location
+ * @return object user data + location
  *
- * TODO : Cache for locations data.
+ * @todo Cache for locations data.
  *
  * When doing cache we need to make sure we delete cache data when user data
  *
@@ -393,7 +393,7 @@ function gmw_user_address( $args = array() ) {
  *     'output'        => 'string'             // object || array || string
  * );.
  *
- * @return Mixed object || array || string
+ * @return mixed object || array || string
  */
 function gmw_get_user_location_fields( $args = array() ) {
 
@@ -415,8 +415,9 @@ add_shortcode( 'gmw_user_location_fields', 'gmw_get_user_location_fields' );
  *
  * @author Eyal Fitoussi
  *
- * @param  integer         $user_id  user id.
- * @param  string || array $location location to pass an address it can be either a string or an array of address field for example:.
+ * @param  integer $user_id  user id.
+ *
+ * @param  mixed   $location string|| array $location location to pass an address it can be either a string or an array of address field for example:.
  *
  * $location = array(
  *     'street'    => 285 Fulton St,
@@ -432,11 +433,11 @@ add_shortcode( 'gmw_user_location_fields', 'gmw_get_user_location_fields' );
  * $location = array(
  *    'lat' => 26.1345,
  *    'lng' => -80.4362
- * );
+ * );.
  *
- * @param  string          $location_name name of the location ( optional ).
+ * @param  string  $location_name name of the location ( optional ).
  *
- * @param  boolean         $force_refresh false to use geocoded address in cache || true to force address geocoding.
+ * @param  boolean $force_refresh false to use geocoded address in cache || true to force address geocoding.
  *
  * @return int location ID
  */
