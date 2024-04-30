@@ -364,7 +364,7 @@ class GMW_Maps_API {
 
 		// Use mapId only when advanced markers are enabled.
 		if ( 'google_maps' === GMW()->options['api_providers']['maps_provider'] && empty( GMW()->options['api_providers']['google_maps_legacy_marker'] ) ) {
-			$default_map_options['mapId'] = $map_id;
+			$default_map_options['mapId'] = (string) $map_id;
 		}
 
 		$map_options = array_merge( $default_map_options, $map_options );
