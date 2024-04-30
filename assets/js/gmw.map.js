@@ -2153,4 +2153,22 @@ jQuery( document ).ready( function($){
 			});
 		}
 	}, 200);
+
+	// Render maps generated during an AJAX call.
+	/*jQuery(document).ajaxComplete( function ( event, request, settings ) {
+
+		jQuery.each( gmwMapObjects, function( map_id, vars ) {
+
+			var map_id = vars.settings.map_id;
+
+			if ( typeof GMW_Maps[map_id] === 'undefined' || ! jQuery( '#gmw-map-' + map_id ) ) {
+
+				// generate new map
+				GMW_Maps[map_id] = new GMW_Map(vars.settings, vars.map_options, vars.form);
+
+				// initiate it
+				GMW_Maps[map_id].render(vars.locations, vars.user_location);
+			}
+		});
+	});*/
 });
