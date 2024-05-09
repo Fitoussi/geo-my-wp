@@ -656,6 +656,7 @@ function gmw_get_search_results_meta_fields( $type = 'post_meta', $meta_fields =
 
 		$options['field_output'] = esc_html( $options['field_output'] );
 
+		$field_value  = apply_filters( 'gmw_results_meta_field_value',$field_value, $field, $options, $gmw );
 		$field_output = str_replace( '%field%', $field_value, $options['field_output'] );
 		$field_output = apply_filters( 'gmw_meta_field_results_output', $field_output, $field_value, $field, $options, $gmw );
 
