@@ -581,8 +581,7 @@ function gmw_get_xprofile_query_args( $gmw = array(), $fields_values = array() )
 
 				break;
 
-			// phpcs:disable.
-			/*case 'datebox':
+			case 'datebox':
 			case 'birthdate':
 				if ( ! is_array( $value ) || ! array_filter( $value ) ) {
 					break;
@@ -596,21 +595,27 @@ function gmw_get_xprofile_query_args( $gmw = array(), $fields_values = array() )
 				}
 
 				$time  = time();
-				$day   = date( 'j', $time );
-				$month = date( 'n', $time );
-				$year  = date( 'Y', $time );
+				$day   = gmdate( 'j', $time );
+				$month = gmdate( 'n', $time );
+				$year  = gmdate( 'Y', $time );
 				$ymin  = $year - $max - 1;
 				$ymax  = $year - $min;
 
-				if ( '' !== $max ) {
-					$sql .= $wpdb->prepare( ' AND DATE(value) > %s', "$ymin-$month-$day" );
-				}
-				if ( '' !== $min ) {
-					$sql .= $wpdb->prepare( ' AND DATE(value) <= %s', "$ymax-$month-$day" );
-				}
+				$this_query = array( 'relation' => 'AND' );
 
-				break;*/
-				// phpcs:enable.
+				$this_query[] = array(
+					'field'   => $field_id,
+					'value'   => "$ymin-$month-$day",
+					'compare' => '>=',
+				);
+
+				$this_query[] = array(
+					'field'   => $field_id,
+					'value'   => "$ymax-$month-$day",
+					'compare' => '<=',
+				);
+
+				break;
 		}
 
 		// create the meta query args.
@@ -714,6 +719,8 @@ function gmw_query_xprofile_fields( $fields_values = array(), $gmw = array() ) {
 
 			case 'datebox':
 			case 'birthdate':
+
+				df();
 				if ( ! is_array( $value ) || ! array_filter( $value ) ) {
 					break;
 				}
