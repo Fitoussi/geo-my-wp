@@ -299,7 +299,10 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 	 * Init the location tab.
 	 */
 	public static function init_location_tab() {
-		$location_tab = new GMW_Members_Locator_Location_Tab();
+
+		if ( apply_filters( 'gmw_fl_member_location_tab_enabled', true ) ) {
+			new GMW_Members_Locator_Location_Tab();
+		}
 	}
 }
 GMW_Addon::register( 'GMW_Members_Locator_Addon' );
