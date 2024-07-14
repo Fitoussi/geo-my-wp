@@ -694,7 +694,7 @@ class GMW_Form_Settings_Helper {
 	 *
 	 * @param  array $options enable/disable field options.
 	 *
-	 * @since 4.3.2 ( moved from Premium Settings ).
+	 * @since 4.4 ( moved from Premium Settings ).
 	 */
 	public static function get_custom_field( $args = array(), $values = array(), $options = array() ) {
 
@@ -1777,7 +1777,7 @@ class GMW_Form_Settings_Helper {
 	 *
 	 * @param  array  $options  [description].
 	 *
-	 * @since 4.3.2 ( moved from Premium Settings ).
+	 * @since 4.4 ( moved from Premium Settings ).
 	 */
 	public static function get_custom_fields( $args, $value, $form, $options = array() ) {
 
