@@ -466,7 +466,64 @@ class GMW_Maps_API {
 			self::$map_elements[ $map_id ] = $map_element;
 		}
 
+		// Pass to JavaScript maps generated during an AJAX call.
+		if ( defined( 'DOING_AJAX' ) ) {
+			self::get_map_args_during_ajax( $map_element );
+		}
+
 		return $map_element;
+	}
+
+	/**
+	 * Render maps generated during an AJAX call.
+	 *
+	 * @since 4.4
+	 *
+	 * @param array $map_element the map arguments.
+	 *
+	 * @return void
+	 */
+	public static function get_map_args_during_ajax( $map_element ) {
+
+		$supported_actions = apply_filters( 'gmw_ajax_loading_map_actions', array( 'gmw_info_window_init' ), $map_element );
+
+		// Proceed only during supported action for now to prevent scenarios of JavaScript errors.
+		if ( empty( $_REQUEST['action'] ) || ! in_array( $_REQUEST['action'], $supported_actions, true ) ) { // phpcs:ignore.
+			return;
+		}
+
+		?>
+		<script>
+			var mapId   = <?php echo esc_attr( $map_element['settings']['map_id'] ); ?>;
+			var mapArgs = <?php echo wp_json_encode( $map_element ); ?>;
+
+			/*if ( typeof gmwMapObjects === 'undefined' ) {
+				gmwMapObjects = {};
+			}
+
+			gmwMapObjects.mapId = mapArgs;*/
+
+			jQuery( window ).ready( function() {
+
+				if ( typeof GMW_Maps === 'undefined' ) {
+					GMW_Maps = {};
+				}
+
+				// create map if not exists
+				if ( typeof GMW_Maps[ mapId ] === 'undefined' ) {
+
+					// generate map when ajax is triggered
+					GMW_Maps[ mapId ] = new GMW_Map( mapArgs.settings, mapArgs.map_options, {} );
+					// initiate it
+					GMW_Maps[ mapId ].render( mapArgs.locations, mapArgs.user_location );
+
+				// update existing map
+				} else {
+					GMW_Maps[ mapId ].update( mapArgs.locations, mapArgs.user_location );
+				}
+			});
+			</script>
+		<?php
 	}
 
 	/**
