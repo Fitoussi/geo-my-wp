@@ -30,7 +30,7 @@ class GMW_Extensions {
 	 *
 	 * Personal Pass - 303650
 	 *
-	 * @since 4.3.2
+	 * @since 4.4
 	 *
 	 * @var array
 	 */
@@ -152,7 +152,7 @@ class GMW_Extensions {
 	 *
 	 * from GEO my WP's website.
 	 *
-	 * @since 4.3.2
+	 * @since 4.4
 	 *
 	 * @return array
 	 */
@@ -271,7 +271,7 @@ class GMW_Extensions {
 	/**
 	 * Bulk activate access pass extensions.
 	 *
-	 * @since 4.3.2
+	 * @since 4.4
 	 *
 	 * @access public
 	 *
