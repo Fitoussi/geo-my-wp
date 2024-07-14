@@ -835,6 +835,71 @@ function gmw_get_search_form_custom_field( $custom_field = array(), $gmw = array
 }
 
 /**
+ * Get all custom fields to display in search form
+ *
+ * @param  array $gmw gmw form.
+ *
+ * @param  array $fields array of fields to output or empty to output all.
+ *
+ * @version 4.4 ( moved from the Premium Settings extension ).
+ *
+ * @author Eyal Fitoussi
+ */
+function gmw_get_search_form_custom_fields( $gmw = array(), $fields = array() ) {
+
+	if ( empty( $gmw['search_form']['custom_fields'] ) ) {
+		return;
+	}
+
+	// These are the only 2 extensions that currently supposed to be using this function.
+	if ( ! gmw_is_addon_active( 'premium_settings' ) && ( ! gmw_is_addon_active( 'gforms_entries_locator' ) || 'gfel' !== $gmw['prefix'] ) ) {
+		return;
+	}
+
+	$multiple_field_wrap = apply_filters( 'gmw_custom_fields_multiple_fields_wrapper', false, $gmw );
+	$output              = array();
+
+	if ( $multiple_field_wrap ) {
+		$output['wrapper'] = '<div class="gmw-search-form-custom-fields gmw-search-form-multiple-fields-wrapper">';
+	}
+
+	$output['element'] = '';
+
+	// phpcs:disable.
+	//$output['acf_element'] = '';
+	//$field_output          = array();
+	// phpcs:enable.
+
+	foreach ( $gmw['search_form']['custom_fields'] as $custom_field ) {
+
+		if ( ! empty( $fields ) && ! in_array( $custom_field['name'], $fields, true ) ) {
+			continue;
+		}
+
+		$output['element'] .= gmw_get_search_form_custom_field( $custom_field, $gmw );
+	}
+
+	// phpcs:disable.
+	/*foreach ( $gmw['search_form']['advanced_custom_fields'] as $field_id => $custom_field ) {
+
+		if ( ! empty( $fields ) && ! in_array( $custom_field['name'], $fields, true ) ) {
+			continue;
+		}
+
+		$output['acf_element'] .= gmw_get_search_form_advanced_custom_field( $field_id, $custom_field, $gmw );
+	}*/
+	// phpcs:enable.
+
+	if ( $multiple_field_wrap ) {
+		$output['/wrapper'] = '</div>';
+	}
+
+	$output = apply_filters( 'gmw_ps_get_search_form_custom_fields_output', $output, $gmw );
+
+	return implode( '', $output );
+}
+
+/**
  * Output custom fields filters in the search form.
  *
  * This function requires the Premium Settings extension.
