@@ -915,7 +915,7 @@ function gmw_search_form_custom_fields( $gmw ) {
 	}
 
 	// Remove filter that adds the custom fields filter dynamically into the form.
-	remove_action( 'gmw_search_form_before_distance', 'gmw_append_custom_fields_to_search_form', 10, 1 );
+	remove_action( 'gmw_search_form_before_distance', 'gmw_append_custom_fields_to_search_form', 10 );
 
 	do_action( 'gmw_before_search_form_custom_fields', $gmw );
 
