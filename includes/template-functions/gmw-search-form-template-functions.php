@@ -86,6 +86,7 @@ function gmw_get_search_form_submit_button( $gmw = array(), $submission = true )
 
 	$output = '';
 
+	// phpcs:ignore.
 	//$label = ! empty( $gmw['search_form']['submit_button']['label'] ) ? $gmw['search_form']['submit_button']['label'] : __( 'Submit', 'geo-my-wp' );
 
 	$label = $gmw['search_form']['submit_button']['label'];
@@ -541,7 +542,7 @@ function gmw_search_form_keywords_field( $gmw = array() ) {
  *
  * @param  array $gmw  gmw form.
  *
- * @since 4.3.2 ( moved from the Premium Settings extension ).
+ * @since 4.4 ( moved from the Premium Settings extension ).
  *
  * @return [type]       [description]
  */
