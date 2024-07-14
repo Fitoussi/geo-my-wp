@@ -416,11 +416,12 @@ function gmw_get_post_featured_image( $args = array(), $post = array(), $gmw = a
 			'where'        => 'search_results',
 			'class'        => '',
 			'no_image_url' => '',
+			'image_size'   => 'full',
 		)
 	);
 
 	if ( has_post_thumbnail( $args['object_id'] ) ) {
-		$args['image_url'] = wp_get_attachment_image_src( get_post_thumbnail_id( $args['object_id'] ), 'full' )[0];
+		$args['image_url'] = wp_get_attachment_image_src( get_post_thumbnail_id( $args['object_id'] ), $args['image_size'] )[0];
 	}
 
 	// If no image was found.
