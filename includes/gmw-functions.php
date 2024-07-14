@@ -899,6 +899,38 @@ Function gmw_get_labels( $form = array() ) {
 // phpcs:enable.
 
 /**
+ * Merge two arrays or objects that can be recursive and return an array.
+ *
+ * Similar to wp_parse_args but arrays can be recursive.
+ *
+ * @author Eyal Fitoussi
+ *
+ * @since 4.2
+ *
+ * @param array $args     provided arguments.
+ *
+ * @param array $defaults default arguments.
+ *
+ * @return array
+ */
+function gmw_wp_parse_args_recursive( &$args, $defaults ) {
+
+	$args     = (array) $args;
+	$defaults = (array) $defaults;
+	$output   = $defaults;
+
+	foreach ( $args as $k => &$v ) {
+
+		if ( is_array( $v ) && isset( $output[ $k ] ) ) {
+			$output[ $k ] = gmw_wp_parse_args_recursive( $v, $output[ $k ] );
+		} else {
+			$output[ $k ] = $v;
+		}
+	}
+	return $output;
+}
+
+/**
  * Check if template file requires a theme or plugin to be installed.
  *
  * @since 4.0
