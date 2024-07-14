@@ -1789,13 +1789,23 @@ class GMW_Form_Settings_Helper {
 		);
 
 		$args = wp_parse_args( $args, $defaults );
+
+		$field_options = '';
+
+		foreach ( $args as $cf_key => $cf_value ) {
+
+			if ( ! in_array( $cf_key, array_keys( $defaults ) ) ) {
+				$field_options .= ' data-gmw_ajax_load_' . $cf_key . '="' . $cf_value . '"';
+			}
+		}
+
 		?>
 		<div class="gmw-custom-fields-wrapper">
 
 			<div id="gmw-custom-fields-new-field-picker">
 
 				<span>
-					<select class="gmw-custom-fields-picker gmw-smartbox" data-gmw_ajax_load_options="<?php echo esc_attr( $args['get_fields_function'] ); ?>" data-gmw_ajax_load_is_custom_fields="1">
+					<select class="gmw-custom-fields-picker gmw-smartbox" data-gmw_ajax_load_options="<?php echo esc_attr( $args['get_fields_function'] ); ?>" data-gmw_ajax_load_is_custom_fields="1" <?php echo $field_options; ?>>
 						<option value=""><?php echo esc_attr( $args['select_field_label'] ); ?></option>
 					</select>
 				</span>
@@ -2462,9 +2472,40 @@ class GMW_Form_Settings_Helper {
 	}
 
 	/**
-	 * Get an array of all BP group meta fields.
+	 * Get an array of Gravity Forms's forms.
 	 *
-	 * @since 4.0
+	 * @since 4.4
+	 *
+	 * @param array $args argument.
+	 *
+	 * @return [type] [description]
+	 */
+	public static function get_gforms_forms( $args = array() ) {
+
+		$output = array();
+
+		if ( ! class_exists( 'GFAPI' ) ) {
+			return $output;
+		}
+
+		$forms = GFAPI::get_forms();
+
+		if ( empty( $forms ) ) {
+			return $output;
+		}
+
+		// Collect terms into an array.
+		foreach ( $forms as $form ) {
+			$output[ $form['id'] ] = $form['title'] . ' ( form ID ' . $form['id'] . ' )';
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Get an array of Gravity Forms's form field.
+	 *
+	 * @since 4.4
 	 *
 	 * @param array $args argument.
 	 *
@@ -2474,20 +2515,55 @@ class GMW_Form_Settings_Helper {
 
 		$output = array();
 
-		if ( ! class_exists( 'GFAPI' ) ) {
+		if ( ! class_exists( 'GFAPI' ) || empty( $args['gmw_ajax_load_gform_id'] ) ) {
 			return $output;
 		}
 
-		// $disallowed_fields = array( 'section', 'page', 'fileupload', 'captcha', 'html' );
-		$form = GFAPI::get_form( 91 );
-		// $fields = GFAPI::get_fields_by_type( $form );
+		$form = GFAPI::get_form( $args['gmw_ajax_load_gform_id'] );
 
 		if ( empty( $form['fields'] ) ) {
 			return $output;
 		}
 
+		$fields = array(
+			'usage'  => 'include',
+			'fields' => array(),
+		);
+
+		$exclude_fields = '';
+
+		if ( ! empty( $args['gmw_ajax_load_include_fields'] ) ) {
+
+			$fields['fields'] = explode( ',', $args['gmw_ajax_load_include_fields'] );
+
+		} elseif ( ! empty( $args['gmw_ajax_load_exclude_fields'] ) ) {
+
+			$fields['usage']  = 'exclude';
+			$fields['fields'] = explode( ',', $args['gmw_ajax_load_exclude_fields'] );
+		}
+
 		// Collect terms into an array.
 		foreach ( $form['fields'] as $field ) {
+
+			if ( ! empty( $fields['fields'] ) ) {
+
+				if ( in_array( $field->type, $fields['fields'], true ) ) {
+
+					if ( 'include' === $fields['usage'] ) {
+
+						$output[ $field->id ] = $field->label . ' ( field ID ' . $field->id . ' )';
+
+						continue;
+
+					} else {
+
+						continue;
+					}
+				} elseif ( 'include' === $fields['usage'] ) {
+					continue;
+				}
+			}
+
 			$output[ $field->id ] = $field->label . ' ( field ID ' . $field->id . ' )';
 		}
 
@@ -2731,7 +2807,10 @@ class GMW_Form_Settings_Helper {
 			$output = self::get_peepso_profile_fields( $args );
 		}
 
-		// Get custom fields.
+		if ( 'gmw_get_gforms_forms' === $action ) {
+			$output = self::get_gforms_forms( $args );
+		}
+
 		if ( 'gmw_get_gforms_fields' === $action ) {
 			$output = self::get_gforms_fields( $args );
 		}
