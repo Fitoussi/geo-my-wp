@@ -158,6 +158,7 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 * Tweak: new filter 'gmw_fl_member_location_tab_enabled' to disable the Location tab in BuddyPress Member Profile page.
 * Tweak: new 'image_size' argument for the gmw_get_post_featured_image() to determine the image size that will be pulled from the database. default value is 'full' and can be modified using the filter 'gmw_get_post_featured_image_args'.
 * Tweak: remove the 4th argument from a remove_action function ( does not exists in remove_action ).
+* Tweak: set the current_tab of the form editor to 'general_settings' by default if is not set.
 
 = 4.3.1.1 =
 
