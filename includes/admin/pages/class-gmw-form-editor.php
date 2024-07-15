@@ -2812,7 +2812,12 @@ class GMW_Form_Editor {
 				</div>
 			</div>
 
-			<div id="gmw-edit-form-page" class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper gmw-admin-page-no-sidebar">
+			<?php
+			if ( empty( $_GET['current_tab'] ) ) {
+				$_GET['current_tab'] = 'general_settings';
+			}
+			?>
+			<div id="gmw-edit-form-page" class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper gmw-admin-page-no-sidebar" data-current_tab="<?php echo esc_attr( $_GET['current_tab'] ); ?>">
 
 				<nav class="gmw-admin-page-navigation gmw-tabs-wrapper gmw-edit-form-page-nav-tabs">
 					<?php
@@ -3315,6 +3320,7 @@ class GMW_Form_Editor {
 				break;
 
 			case 'textarea':
+				//$valid_value = $value;
 				if ( ! empty( $value ) ) {
 					$valid_value = sanitize_textarea_field( $value );
 				} else {
