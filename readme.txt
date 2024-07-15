@@ -3,9 +3,9 @@ Contributors: ninjew
 Donate link: https://www.paypal.me/fitoussi
 Tags: Locations Directory, Store Locator, Proximity Search forms, Posts location, Members location.
 Requires at least: 5.6
-Tested up to: 6.4.3
+Tested up to: 6.5.5
 BuddyPress: 11.3.1
-Stable tag: 4.3.1.1
+Stable tag: 4.4
 Requires PHP: 7.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,44 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 4.4 =
+
+* Please follow the steps below if you are updating from GEO my WP version 3.x:
+  - please read [this post](https://geomywp.com/geo-my-wp-v4-0/) before updating to GEO my WP version 4.x on your site.
+  - GEO my WP v4.0 is a major release. It is highly recommended that you either test it on a staging and/or make a complete backup of your site before installing it on a live site.
+  - VERY IMPORTANT: When updating to GEO my WP v4.x, you need to first update the premium extensions of GEO my WP and only then update GEO my WP core plugin. Not following these steps might cause a fatal error on your site.
+* Fix: issue with Reset Form button doesn't clear the coordinates and other hidden fields in the form.
+* Fix: incorrect output of PeepSo profile field ( user_meta ) in the search results ( for select-box field ).
+* Tweak: temporary disable caching of the form object as it causes issues on some sites that have object cache enabled.
+* Tweak: verify that form's data exists and valid when retrieving it from the database to prevent PHP errors/notices.
+* Tweak: rename the function initMaps() to gmwInitMaps() to better identify with GEO my WP.
+* Function: function 'gmw_wp_parse_args_recursive' to merge two arrays or objects that can be recursive and return an array.
+* Enhancement: Keywords search box can now also search post custom fields ( in addition to post content and excerpt ) ( requires the Premium Settings extension ).
+* Enhancement: the map in the Location form of GEO my WP now uses the Advanced Markers library of Google Maps API ( unless disabled in the Settings page ).
+* Enhancement: the methods ::get_custom_field() and ::get_custom_fields() moved from the Premium Settings extension to the core plugin so they can be used without the Premium Settings extension and with other extensions.
+* Enhancement: new method GMW_Admin::dequeue_scripts() with high priority to dequeue/deregister select2 enqueued by other plugin/themes in GEO my WP admin pages.
+* Enhancement: generate maps that are generated during an AJAX call. For example, map of the Single Location shortcode that is placed inside an info-window that is loaded via AJAX.
+* Enhancement: move the function gmw_get_search_form_custom_fields() from the Premium Settings ( v3.1 ) to GEO my WP core plugin to allow other extensions to make use of the functions.
+* Tweak: use the "mapId" map option only when using the Advanced Markers library to allow some features like map styling still work when using the legacy markers.
+* Tweak: do not hide admin "updated" notices when hiding notices in GEO my WP's admin pages.
+* Tweak: new filter to disable license verification.
+* Tweak: new CSS class ".gmw-is-hidden" to hide GEO my WP's elements when needed.
+* Tweak: new function that gets the extensions data from remote server and local extensions merged.
+* Tweak: move the function gmw_get_search_form_custom_field() from the Premium Settings extension to GEO my WP core plugin.
+* Tweak: when Submit button label is omitted in teh form editor, hide the Submit button via CSS rather than completely removing it from the form which prevents form submission.
+* Tweak: add short delay to gmw.map and gmw.core JavaScript files to allow Google Maps library to be fully loaded and to prevent JS errors.
+* Tweak: load the Single Location classes during AJAX calls as well.
+* Tweak: make search results responsive on mobile even when settings specific number of columns in the form editor.
+* Tweak: load the smartbox library for select-box fields in the core plugin ( rather than the Premium Settings extension ) to allow other extensions to use it as well.
+* Tweak: replace deprecated function bp_get_group_permalink() with bp_get_group_url().
+* Tweak: remove the default value for the word count option of the Post Excerpt settings of the form editor to allow users to leave it blank in order to display the full content.
+* Tweak: verify that $map_id is a string to prevent JavaScritp errors with Google Maps API.
+* Tweak: add back the missing date/birthdate xprofile field query for BP Members Locator form.
+* Tweak: new filter 'gmw_results_meta_field_value' to modify the output of a meta field in the search results.
+* Tweak: new filter 'gmw_fl_member_location_tab_enabled' to disable the Location tab in BuddyPress Member Profile page.
+* Tweak: new 'image_size' argument for the gmw_get_post_featured_image() to determine the image size that will be pulled from the database. default value is 'full' and can be modified using the filter 'gmw_get_post_featured_image_args'.
+* Tweak: remove the 4th argument from a remove_action function ( does not exists in remove_action ).
 
 = 4.3.1.1 =
 
