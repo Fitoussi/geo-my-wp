@@ -1635,6 +1635,11 @@ div.gmw-results-message,
 	border: 1px solid #eee;
 }
 
+.gmw-no-results.bp-feedback {
+    padding:0;
+    box-shadow: none;
+}
+
 div.gmw-results-message span,
 .gmw-no-results p,
 .gmw-no-results-wrapper p {
