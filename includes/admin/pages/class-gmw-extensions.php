@@ -1307,6 +1307,7 @@ class GMW_Extensions {
 							?>
 						</div>
 
+						<?php /*
 						<div id="gmw-access-pass-license-key-wrapper">
 
 							<div id="gmw-access-pass-license-key-inner">
@@ -1333,6 +1334,10 @@ class GMW_Extensions {
 									</label>
 									<span class="gmw-checkbox-label">Activate Extensions</span> */
 									// phpcs:enable.
+
+
+
+									/*
 									?>
 
 									<button type="submit"
@@ -1366,6 +1371,8 @@ class GMW_Extensions {
 								</form>
 							</div>
 						</div>
+						*/
+						?>
 
 						<div class="gmw-extensions-inner">
 							<?php foreach ( $extensions['premium'] as $extension ) { ?>
