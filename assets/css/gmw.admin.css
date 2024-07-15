@@ -3667,7 +3667,7 @@ body.geo-my-wp_page_gmw-form-editor #wpbody {
 body.geo-my-wp_page_gmw-form-editor #adminmenuback,
 body.geo-my-wp_page_gmw-form-editor #adminmenuwrap,
 body.geo-my-wp_page_gmw-form-editor #wpadminbar {
-	display: none ! important;
+	//display: none ! important;
 }
 
 body .gmw-admin-page .gmw-edit-form-page-top-inner .action-area a {
@@ -3720,6 +3720,13 @@ body #gmw-edit-form-page.gmw-admin-page-wrapper {
 	//grid-template-columns: 13.875rem auto;
 	-ms-grid-columns: 14.5rem auto;
 	grid-template-columns: 14.5rem auto;
+}
+
+body #gmw-edit-form-page.gmw-admin-page-wrapper[data-current_tab="search_form_builder"] {
+	//-ms-grid-columns: 13.875rem auto;
+	//grid-template-columns: 13.875rem auto;
+	-ms-grid-columns: 0rem auto;
+	grid-template-columns: 0rem auto;
 }
 
 body #gmw-edit-form-page .gmw-admin-page-navigation,
