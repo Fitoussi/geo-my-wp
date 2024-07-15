@@ -66,6 +66,8 @@ class GMW_Form_Editor {
 		add_action( 'gmw_form_settings_info_window_template', array( 'GMW_Form_Editor', 'info_window_template' ), 10, 4 );
 		add_filter( 'gmw_validate_form_settings_info_window_template', array( 'GMW_Form_Editor', 'validate_info_window_template' ), 10, 4 );
 
+		//add_action( 'gmw_form_settings_search_form_builder', array( 'GMW_Form_Editor', 'search_form_builder' ), 10, 4 );
+
 		// trigger ajax form update.
 		if ( apply_filters( 'gmw_form_editor_ajax_enabled', true ) ) {
 
@@ -1112,11 +1114,31 @@ class GMW_Form_Editor {
 				'fields'   => array(
 					'builder_area' => gmw_get_admin_setting_args(
 						array(
-							'name'       => 'builder',
+							'name'       => 'builder_area',
 							'type'       => 'hidden',
+							'type'       => 'function',
+							'function'   => 'search_form_builder',
 							'default'    => '',
 							'label'      => __( 'Search Form builder', 'geo-my-wp' ),
 							'wrap_class' => '',
+							'priority'   => 5,
+						)
+					),
+					'search_form_value'  => gmw_get_admin_setting_args(
+						array(
+							'name'       => 'search_form_value',
+							'type'       => 'textarea',
+							'default'    => '',
+							'label'      => __( 'Search Form builder', 'geo-my-wp' ),
+							'priority'   => 5,
+						)
+					),
+					'modal_box_value'  => gmw_get_admin_setting_args(
+						array(
+							'name'       => 'modal_box_value',
+							'type'       => 'textarea',
+							'default'    => '',
+							'label'      => __( 'Search Form builder', 'geo-my-wp' ),
 							'priority'   => 5,
 						)
 					),
@@ -2332,6 +2354,20 @@ class GMW_Form_Editor {
 
 		return $groups;
 	}
+
+	/*public static function search_form_builder( $value, $name_attr, $form, $settings ) {
+
+		wp_enqueue_style( 'gmw-frontend' );
+		wp_enqueue_style( 'gmw-forms' );
+
+		$grid = new GMW_Search_Form_Builder( array(), $form );
+
+		$grid->output();
+
+		$grid = new GMW_Search_Form_Modal_Box_Builder( array(), $form );
+
+		$grid->output();
+	}*/
 
 	/**
 	 * Get nfo_window_template files
