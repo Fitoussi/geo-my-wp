@@ -82,6 +82,8 @@ class GMW_Admin {
 		require_once 'pages/tools/class-gmw-tools.php';
 		require_once 'pages/import-export/class-gmw-import-export-page.php';
 
+		require_once GMW_PATH . '/includes/grid-stack/class-gmw-grid-stack.php';
+
 		// set pages.
 		// phpcs:disable.
 		/*$this->addons_page   = new GMW_Extensions();
@@ -205,8 +207,8 @@ class GMW_Admin {
 
 			foreach ( $location as $field => $value ) {
 				$data[] = array(
-					'name'  => $field,
-					'value' => $value,
+					'name'  => ! is_array( $field ) ? $field : '',
+					'value' => ! is_array( $value ) ? $value : '',
 				);
 			}
 
@@ -218,13 +220,13 @@ class GMW_Admin {
 				foreach ( $location_meta as $meta_field => $meta_value ) {
 
 					$data[] = array(
-						'name'  => $meta_field,
-						'value' => $meta_value,
+						'name'  => ! is_array( $meta_field ) ? $meta_field : '',
+						'value' => ! is_array( $meta_value ) ? $meta_value : '',
 					);
 				}
 			}
 
-			$export_items[] = array(
+			$export_items['data'][] = array(
 				'group_id'    => $group_id,
 				'group_label' => $group_label,
 				'item_id'     => $item_id,
@@ -232,12 +234,9 @@ class GMW_Admin {
 			);
 		}
 
-		$done = count( $locations ) < $number;
+		$export_items['done'] = count( $locations ) < $number;
 
-		return array(
-			'data' => $export_items,
-			'done' => $done,
-		);
+		return $export_items;
 	}
 
 	/**
