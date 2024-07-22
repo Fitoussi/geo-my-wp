@@ -59,5 +59,5 @@
 			<?php $gmw_location_form->display_form_fields_group( 'actions' ); ?>
 		</li>
 
-	</ul>   
-</div>   
+	</ul>
+</div>
