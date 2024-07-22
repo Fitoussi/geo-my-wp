@@ -82,7 +82,7 @@ class GMW_Admin {
 		require_once 'pages/tools/class-gmw-tools.php';
 		require_once 'pages/import-export/class-gmw-import-export-page.php';
 
-		require_once GMW_PATH . '/includes/grid-stack/class-gmw-grid-stack.php';
+		//require_once GMW_PATH . '/includes/grid-stack/class-gmw-grid-stack.php';
 
 		// set pages.
 		// phpcs:disable.
