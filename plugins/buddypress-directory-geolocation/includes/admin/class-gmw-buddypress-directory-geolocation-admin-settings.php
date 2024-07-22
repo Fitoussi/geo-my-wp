@@ -46,6 +46,8 @@ class GMW_BuddyPress_Directory_Geolocation_Admin_Settings {
 	/**
 	 * Admin settings.
 	 *
+	 * @param string $component the component being displayed.
+	 *
 	 * @return [type]           [description]
 	 */
 	public static function get_settings( $component = 'group' ) {
