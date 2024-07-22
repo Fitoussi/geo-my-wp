@@ -484,7 +484,6 @@ class GEO_MY_WP {
 		// include admin files.
 		if ( IS_ADMIN ) {
 			require_once GMW_PATH . '/includes/admin/class-gmw-admin.php';
-			//require_once GMW_PATH . '/includes/grid-stack/class-gmw-grid-stack.php';
 		}
 	}
 
