@@ -128,7 +128,23 @@ class GMW_Single_Location {
 	public $map_locations = array();
 
 	/**
-	 * Array contains the elements to be output
+	 * Shortcode labels.
+	 *
+	 * @var array
+	 */
+	public $labels = array();
+
+	/**
+	 * Array contains the shortcode elements to be output.
+	 *
+	 * @var array
+	 *
+	 * Public $this->elements_value
+	 */
+	public $elements_value = array();
+
+	/**
+	 * Array contains the HTML elements to be output.
 	 *
 	 * @var array
 	 *
