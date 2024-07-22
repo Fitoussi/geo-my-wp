@@ -15,6 +15,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 class GMW_V_3_Import_Page {
 
 	/**
+	 * Posts DB table.
+	 *
+	 * @var array
+	 */
+	public $posts_table = array();
+
+	/**
+	 * Users DB table.
+	 *
+	 * @var array
+	 */
+	public $users_table = array();
+
+
+	/**
 	 * [__construct description]
 	 */
 	public function __construct() {
@@ -22,7 +37,7 @@ class GMW_V_3_Import_Page {
 		global $wpdb;
 
 		// look for post types table.
-		$this->posts_table = $wpdb->get_results( "SHOW TABLES LIKE '{$wpdb->prefix}places_locator'", ARRAY_A ); // WPCS: db call ok, cache ok.
+		$this->posts_table = $wpdb->get_results( "SHOW TABLES LIKE '{$wpdb->prefix}places_locator, wppl_friends_locator'", ARRAY_A ); // WPCS: db call ok, cache ok.
 
 		// look for users table.
 		$this->users_table = $wpdb->get_results( "SHOW TABLES LIKE 'wppl_friends_locator'", ARRAY_A ); // WPCS: db call ok, cache ok.
@@ -34,7 +49,6 @@ class GMW_V_3_Import_Page {
 
 		// add importer tab.
 		add_filter( 'gmw_import_export_tabs', array( $this, 'create_tab' ), 50 );
-
 		add_action( 'gmw_import_export_gmw_v_3_tab', array( $this, 'tab_content' ) );
 	}
 
@@ -62,17 +76,17 @@ class GMW_V_3_Import_Page {
 		<?php if ( 0 !== count( $this->posts_table ) ) : ?>
 
 			<div class="gmw-settings-panel gmw-v3-import-posts-location-panel">
-						
+
 				<legend class="gmw-settings-panel-title"><?php esc_html_e( 'Import Post Types Locations', 'geo-my-wp' ); ?></legend>
 
 				<div class="gmw-settings-panel-content">
 
 					<div class="gmw-settings-panel-description">
-						<?php esc_html_e( 'Import existing posts locations into GEO my WP v3.0 database table.', 'geo-my-wp' ); ?>		
+						<?php esc_html_e( 'Import existing posts locations into GEO my WP v3.0 database table.', 'geo-my-wp' ); ?>
 					</div>
 
 					<div class="gmw-settings-panel-field">
-						
+
 						<?php
 							$pt_importer = new GMW_Posts_Locations_Importer_V3();
 							$pt_importer->output();
@@ -86,17 +100,17 @@ class GMW_V_3_Import_Page {
 		<?php if ( 0 !== count( $this->users_table ) ) : ?>
 
 			<div class="gmw-settings-panel gmw-v3-import-users-location-panel">
-					
+
 				<legend class="gmw-settings-panel-title"><?php esc_html_e( 'Import Users/Members Locations', 'geo-my-wp' ); ?></legend>
 
 				<div class="gmw-settings-panel-content">
 
 					<div class="gmw-settings-panel-description">
-						<?php esc_html_e( 'Import existing users/members locations into GEO my WP v3.0 database table.', 'geo-my-wp' ); ?>		
+						<?php esc_html_e( 'Import existing users/members locations into GEO my WP v3.0 database table.', 'geo-my-wp' ); ?>
 					</div>
 
 					<div class="gmw-settings-panel-field">
-						
+
 						<?php
 							$pt_importer = new GMW_Posts_Locations_Importer_V3();
 							$pt_importer->output();
@@ -190,12 +204,12 @@ class GMW_Posts_Locations_Importer_V3 extends GMW_Locations_Importer {
 		// get records from database.
 		$data = $wpdb->get_results(
 			"
-			SELECT {$count_rows} 
+			SELECT {$count_rows}
 			gmwLocations.post_id as object_id,
 			wpposts.post_author as user_id,
 			'1' as status,
-			gmwLocations.feature as featured, 
-			wpposts.post_title as title, 
+			gmwLocations.feature as featured,
+			wpposts.post_title as title,
 			gmwLocations.lat as latitude,
 			gmwLocations.long as longitude,
 			gmwLocations.street_number,
@@ -215,10 +229,10 @@ class GMW_Posts_Locations_Importer_V3 extends GMW_Locations_Importer {
 			gmwLocations.email,
 			gmwLocations.website,
 			gmwLocations.map_icon,
-			wpposts.post_date as created, 
+			wpposts.post_date as created,
 			wpposts.post_modified as updated
-			FROM {$gmw_pt_table} gmwLocations 
-			INNER JOIN {$wpdb->prefix}posts wpposts 
+			FROM {$gmw_pt_table} gmwLocations
+			INNER JOIN {$wpdb->prefix}posts wpposts
 			ON gmwLocations.post_id = wpposts.ID
 			LIMIT {$this->records_completed}, {$this->records_per_batch}
 		"
@@ -304,10 +318,10 @@ class GMW_Users_Locations_Importer_V3 extends GMW_Locations_Importer {
 		// get records from database.
 		$data = $wpdb->get_results(
 			"
-			SELECT {$count_rows} 
-			gmwLocations.member_id as object_id, 
-			gmwLocations.member_id as user_id, 
-			wpusers.user_status as status,		
+			SELECT {$count_rows}
+			gmwLocations.member_id as object_id,
+			gmwLocations.member_id as user_id,
+			wpusers.user_status as status,
 			'0' as featured,
 			wpusers.display_name as title,
 			gmwLocations.lat as latitude,
@@ -325,8 +339,8 @@ class GMW_Users_Locations_Importer_V3 extends GMW_Locations_Importer {
 			gmwLocations.formatted_address,
 			gmwLocations.map_icon,
 			wpusers.user_registered as created
-			FROM {$gmw_users_table} gmwLocations 
-			INNER JOIN {$wpdb->users} wpusers 
+			FROM {$gmw_users_table} gmwLocations
+			INNER JOIN {$wpdb->users} wpusers
 			ON gmwLocations.member_id = wpusers.ID
 			LIMIT {$this->records_completed}, {$this->records_per_batch}
 		"
