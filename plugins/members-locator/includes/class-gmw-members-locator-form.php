@@ -18,6 +18,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 trait GMW_Members_Locator_Form_Trait {
 
 	/**
+	 * Total number of users.
+	 *
+	 * @var int
+	 */
+	public $total_users = 0;
+
+	/**
 	 * Modifies the BP members query.
 	 *
 	 * Join GMW locations table and do proximity search when needed.
