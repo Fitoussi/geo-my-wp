@@ -49,7 +49,7 @@ function gmw_fl_get_member_name( $args ) {
 
 	// we do this only if title is empty.
 	if ( empty( $args['title'] ) ) {
-		$name          = bp_core_get_username( $args['object_id'] );
+		$name          = function_exists( 'bp_members_get_user_slug' ) ? bp_members_get_user_slug( $args['object_id'] ) : bp_core_get_username( $args['object_id'] );
 		$args['title'] = sanitize_text_field( stripslashes( $name ) );
 	}
 
