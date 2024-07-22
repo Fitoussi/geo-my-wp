@@ -344,7 +344,7 @@ class GMW_Grid_Stack {
 		$output .= '<div class="grid-inserter-icon"><i class="' . esc_attr( $widget['icon'] ) . '"></i></div>';
 		$output .= '<div class="grid-inserter-label">' . esc_attr( $widget['label'] ) . '</div>';
 		$output .= '</div>';
-		$output .= '<div class="grid-item-grid-content" style="display: none;">' . $widget['content'] . '</div>';
+		$output .= '<div class="grid-item-content-holder" style="display: none;">' . $widget['content'] . '</div>';
 		$output .= '</div>';
 		$output .= '</div>';
 

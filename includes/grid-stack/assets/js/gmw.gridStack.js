@@ -394,7 +394,7 @@ GMW_Grid_Stack.prototype.addNewGridItem = function( widget ) {
 	jQuery(widget).removeClass( 'grid-item-inserter' ).find('.grid-item-inserter-content').remove();
 
 	// Unwrap the widget content.
-	jQuery(widget).find('.grid-item-grid-content').children().unwrap();
+	jQuery(widget).find('.grid-item-content-holder').children().unwrap();
 
 	if ( typeof self.defaultWidgets[ widgetType ] !== 'undefined' ) {
 		widgetOpts = self.defaultWidgets[ widgetType ];
@@ -495,7 +495,7 @@ GMW_Grid_Stack.prototype.appendActionButtons = function (widget) {
 		}
 	});
 
-	//actionButtons.prependTo(jQuery(widget));
+	actionButtons.prependTo(jQuery(widget));
 
 	// Abort if no action buttons found.
 	if (!widgetElem.find('> .grid-stack-item-content > .grid-item-action-buttons').length) {
