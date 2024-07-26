@@ -58,6 +58,11 @@ class GMW_Sweetdate_Geolcation_Addon extends GMW_Addon {
 	 */
 	public $is_core = true;
 
+	/**
+	 * Summary of instance.
+	 *
+	 * @var null
+	 */
 	private static $instance = null;
 
 	/**
@@ -75,7 +80,7 @@ class GMW_Sweetdate_Geolcation_Addon extends GMW_Addon {
 	}
 
 	/**
-	 * required extensions
+	 * Required extensions
 	 *
 	 * @var array
 	 */
@@ -84,6 +89,7 @@ class GMW_Sweetdate_Geolcation_Addon extends GMW_Addon {
 		return array(
 			'theme'  => array(
 				'template' => 'sweetdate',
+				/* translators: %s: link to SweetDate theme. */
 				'notice'   => sprintf( __( 'Sweet Date Geolocation extension requires the Sweet Date theme version 2.9 order higher. The theme can be purchased separately from <a href="%s" target="_blank">here</a>.', 'geo-my-wp' ), 'https://themeforest.net/item/sweet-date-more-than-a-wordpress-dating-theme/4994573?ref=GEOmyWP' ),
 				'version'  => '2.9',
 			),

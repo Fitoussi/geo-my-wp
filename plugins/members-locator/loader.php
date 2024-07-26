@@ -108,7 +108,9 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 
 		return array(
 			'slug'     => 'members_locator',
+			/* translators: %s: plugin's name ( BuddyBoss or BuddyPress ). */
 			'label'    => sprintf( __( '%s Members Locator', 'geo-my-wp' ), $title ),
+			/* translators: %s: plugin's name ( BuddyBoss or BuddyPress ). */
 			'desc'     => sprintf( __( '%s Members Locator general settings.', 'geo-my-wp' ), $title ),
 			'icon'     => 'buddypress',
 			'priority' => 10,
