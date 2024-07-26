@@ -193,6 +193,26 @@ function gmw_output_map_icons_tab() {
 add_action( 'gmw_tools_map_icons_tab', 'gmw_output_map_icons_tab' );
 
 /**
+ * Modify the upload directory for map icons.
+ *
+ * @since 4.4.0.3
+ *
+ * @param mixed $dir
+ *
+ * @return array
+ */
+function gmw_modify_map_icons_upload_dir( $dir ) {
+
+	global $gmw_custom_dirname;
+
+	return array(
+		'path'   => $dir['basedir'] . $gmw_custom_dirname,
+		'url'    => $dir['baseurl'] . $gmw_custom_dirname,
+		'subdir' => $gmw_custom_dirname,
+	) + $dir;
+}
+
+/**
  * Upload map icons action.
  *
  * @since 4.0
@@ -224,22 +244,59 @@ function gmw_map_icons_upload() {
 		wp_die( esc_html__( 'Something went wrong. Try again or contact support.', 'geo-my-wp' ) );
 	}
 
-	$addon          = $_POST['map_icons_addon'];
-	$addon_data     = gmw_get_addon_data( $addon );
-	$upload_dir     = wp_upload_dir();
-	$addon_folder   = ! empty( $addon_data['templates_folder'] ) ? $addon_data['templates_folder'] : $addon;
-	$custom_dirname = $upload_dir['basedir'] . "/geo-my-wp/{$addon_folder}/map-icons";
-	$files          = $_FILES['map_icons'];
+	global $gmw_custom_dirname;
+
+	$addon              = sanitize_text_field( wp_unslash( $_POST['map_icons_addon'] ) );
+	$addon_data         = gmw_get_addon_data( $addon );
+	$upload_dir         = wp_upload_dir();
+	$addon_folder       = ! empty( $addon_data['templates_folder'] ) ? $addon_data['templates_folder'] : $addon;
+	$gmw_custom_dirname = "/geo-my-wp/{$addon_folder}/map-icons";
+	$custom_dirname     = $upload_dir['basedir'] . $gmw_custom_dirname;
+	$allowed_types      = array( 'image/jpeg', 'image/gif', 'image/png', 'image/svg+xml' );
 
 	// Create custom map icons folder if not already exists.
 	if ( ! file_exists( $custom_dirname ) ) {
 		wp_mkdir_p( $custom_dirname );
 	}
 
-	$allowed_types = array( 'image/jpeg', 'image/gif', 'image/png', 'image/svg+xml' );
+	$files = array();
+
+	// Arrange files.
+	foreach ( $_FILES['map_icons'] as $key1 => $value1 ) { // phpcs:ignore sanitization ok.
+
+		foreach ( $value1 as $key2 => $value2 ) {
+			$files[ $key2 ][ $key1 ] = sanitize_text_field( wp_unslash( $value2 ) );
+		}
+	}
+
+	add_filter( 'upload_dir', 'gmw_modify_map_icons_upload_dir' );
+
+	foreach ( $files as $file ) {
+
+		// Verify the extension of the file.
+		if ( ! in_array( $file['type'], $allowed_types ) ) {
+			continue;
+		}
+
+		// Verify the actual file type.
+		$type = mime_content_type( $file['tmp_name'] );
+
+		if ( ! in_array( $type, $allowed_types, true ) ) {
+			continue;
+		}
+
+		// Rename file if name already exists.
+		$file['name'] = wp_unique_filename( $custom_dirname, $file['name'] );
+
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+
+		wp_handle_upload( $file, array( 'test_form' => false ) );
+	}
+
+	remove_filter( 'upload_dir', 'gmw_modify_map_icons_upload_dir' );
 
 	// Upload files.
-	foreach ( $files['name'] as $key => $file_name ) {
+	/*foreach ( $files['name'] as $key => $file_name ) {
 
 		// Verify the extension of the file.
 		if ( ! in_array( $files['type'][ $key ], $allowed_types ) ) {
@@ -256,9 +313,15 @@ function gmw_map_icons_upload() {
 		// Rename file if name already exists.
 		$unique_filename = wp_unique_filename( $custom_dirname, $file_name );
 
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+
+		$uploadedfile = $file;
+
+		$movefile = wp_handle_upload($uploadedfile, array('test_form' => false));
+
 		// Uplaod file.
 		move_uploaded_file( $files['tmp_name'][ $key ], $custom_dirname . '/' . $unique_filename );
-	}
+	}*/
 
 	// Refresh icons in internal cache.
 	if ( function_exists( 'gmw_ps_collect_icons' ) ) {
