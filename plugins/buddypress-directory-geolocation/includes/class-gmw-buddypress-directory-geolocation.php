@@ -48,7 +48,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 	 *
 	 * The fields can be modified using the filter 'gmw_database_fields'
 	 *
-	 * @var array
+	 * @var mixed
 	 */
 	public $db_fields = array(
 		'ID as location_id',
@@ -159,8 +159,24 @@ class GMW_BuddyPress_Directory_Geolocation {
 	 * Remove some filters related to the search query after proximity query was already performed.
 	 *
 	 * This can be used if the extension conflict with other queries on the page ( such as widgets ).
+	 *
+	 * @var boolean
 	 */
 	public $remove_query_hooks = true;
+
+	/**
+	 * Slug for GEO my WP options.
+	 *
+	 * @var string
+	 */
+	public $options_group_slug = 'bp_members_directory_geolocation';
+
+	/**
+	 * Slug for no results in messages array.
+	 *
+	 * @var string
+	 */
+	public $message_none_slug = '';
 
 	/**
 	 * Constructor
@@ -321,17 +337,22 @@ class GMW_BuddyPress_Directory_Geolocation {
 
 				add_action( $results_elements_filter, array( $this, 'add_elements_to_results' ) );
 
+			} elseif ( function_exists( 'buddyx_template_pack_check' ) ) {
+
+				add_filter( 'bp_nouveau_get_member_meta', array( $this, 'add_elements_to_results_buddyx' ), 50 );
+				add_action( 'bp_directory_groups_item', array( $this, 'add_elements_to_results' ) );
+
 				// For BuddyBoss theme.
 			} elseif ( function_exists( 'buddyboss_theme' ) || ! empty( $buddyboss_platform_plugin_file ) ) {
 
 				$this->is_buddyboss = true;
 
-				add_action( 'bp_member_members_list_item', array( $this, 'add_elements_to_results' ) );
-				add_action( 'bp_directory_groups_item', array( $this, 'add_elements_to_results' ) );
+				if ( ! function_exists( 'buddyboss_theme' ) && 'bp_directory_members_item' === $results_elements_filter ) {
+					add_action( 'bp_directory_members_item', array( $this, 'add_elements_to_results' ) );
+				} else {
+					add_action( 'bp_member_members_list_item', array( $this, 'add_elements_to_results' ) );
+				}
 
-			} elseif ( function_exists( 'buddyx_template_pack_check' ) ) {
-
-				add_filter( 'bp_nouveau_get_member_meta', array( $this, 'add_elements_to_results_buddyx' ), 50 );
 				add_action( 'bp_directory_groups_item', array( $this, 'add_elements_to_results' ) );
 
 				// For other themes.
@@ -358,6 +379,33 @@ class GMW_BuddyPress_Directory_Geolocation {
 	}
 
 	/**
+	 * Geocode the address entered in the search form.
+	 *
+	 * @since 4.4.0.3
+	 *
+	 * @return bool
+	 */
+	public function geocode_address() {
+
+		if ( ! empty( $this->form['address'] ) && ( empty( $this->form['lat'] ) || empty( $this->form['lng'] ) ) ) {
+
+			$geocoded_address = gmw_geocoder( $this->form['address'] );
+
+			if ( empty( $geocoded_address ) || isset( $geocoded_address['error'] ) ) {
+
+				$this->form['geocoding_failed'] = true;
+
+				return false;
+			}
+
+			$this->form['lat'] = $geocoded_address['lat'];
+			$this->form['lng'] = $geocoded_address['lng'];
+		}
+
+		return true;
+	}
+
+	/**
 	 * Info window arguments.
 	 *
 	 * This is where some data that will pass to the map info-window is generated
@@ -379,7 +427,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 	 *      'location_meta'   => array( 'phone', 'fax', 'email' )
 	 * );
 	 *
-	 * @param  array $object the object data.
+	 * @param object $object the object data.
 	 *
 	 * @return array of arguments.
 	 */
@@ -411,8 +459,13 @@ class GMW_BuddyPress_Directory_Geolocation {
 	public function modify_results_message( $messages ) {
 
 		if ( ! empty( $this->form['geocoding_failed'] ) ) {
-			$messages['members-loop-none']['message'] = $this->labels['address_error_message'];
-			$messages['groups-loop-none']['message']  = $this->labels['address_error_message'];
+
+			$slug = ! empty( $this->message_none_slug ) ? $this->message_none_slug : $this->component . 's-loop-none';
+
+			if ( ! empty( $messages[ $slug ] ) ) {
+				$messages[ $slug ]['type']    = 'error';
+				$messages[ $slug ]['message'] = $this->labels['address_error_message'];
+			}
 		}
 
 		return $messages;
@@ -424,7 +477,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 	 * @return [type] [description]
 	 */
 	public function get_options() {
-		return array();
+		return gmw_get_options_group( $this->options_group_slug );
 	}
 
 	/**
@@ -530,7 +583,11 @@ class GMW_BuddyPress_Directory_Geolocation {
 		$field = '';
 
 		if ( $this->is_bp_nouveau && ! $profile_search ) {
-			$field .= '<div id="gmw-' . $prefix . '-search-wrapper" class="dir-search ' . esc_attr( $this->component ) . 's-search bp-search">';
+
+			if ( 'business' !== $this->component ) {
+				$field .= '<div id="gmw-' . $prefix . '-search-wrapper" class="dir-search ' . esc_attr( $this->component ) . 's-search bp-search">';
+			}
+
 			$field .= '<form id="gmw-' . $prefix . '-form" class="bp-dir-search-form">';
 		}
 
@@ -541,7 +598,10 @@ class GMW_BuddyPress_Directory_Geolocation {
 
 		if ( $this->is_bp_nouveau && ! $profile_search ) {
 			$field .= '</form>';
-			$field .= '</div>';
+
+			if ( 'business' !== $this->component ) {
+				$field .= '</div>';
+			}
 		}
 
 		return $field;
@@ -587,14 +647,14 @@ class GMW_BuddyPress_Directory_Geolocation {
 
 		if ( $dropdown_enabled ) {
 
-			if ( ! $profile_search ) {
+			if ( ! $profile_search && 'business' !== $this->component ) {
 				$nouveau_class = $this->is_bp_nouveau ? 'dir-search ' . esc_attr( $this->component ) . 's-search bp-search select-wrap' : '';
 				$field        .= '<div id="gmw-' . esc_attr( $this->prefix ) . '-radius-wrapper" class="gmw-bpdg-radius-field-wrapper ' . $nouveau_class . '">';
 			}
 
 			$field .= gmw_get_form_field( $args );
 
-			if ( ! $profile_search ) {
+			if ( ! $profile_search && 'business' !== $this->component ) {
 				$field .= '<span class="select-arrow" aria-hidden="true"></span>';
 				$field .= '</div>';
 			}
@@ -881,6 +941,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 			'map_width'  => $this->options['map_width'],
 			'map_height' => $this->options['map_height'],
 			'form_data'  => $this->form,
+			'css_class'  => 'gmw-map-wrapper-bpdg',
 		);
 
 		// display the map element.
@@ -925,20 +986,23 @@ class GMW_BuddyPress_Directory_Geolocation {
 		<script>
 		jQuery( window ).ready( function() {
 
-			var mapArgs = <?php echo wp_json_encode( $map_args ); ?>;
+			setTimeout( function() {
 
-			// create map if not exists
-			if ( typeof GMW_Maps.bpdg == 'undefined' ) {
+				var mapArgs = <?php echo wp_json_encode( $map_args ); ?>;
 
-				// generate map when ajax is triggered
-				GMW_Maps.bpdg = new GMW_Map( mapArgs.settings, mapArgs.map_options, {} );
-				// initiate it
-				GMW_Maps.bpdg.render( mapArgs.locations, mapArgs.user_location );
+				// create map if not exists
+				if ( typeof GMW_Maps.bpdg == 'undefined' ) {
 
-			// update existing map
-			} else {
-				GMW_Maps.bpdg.update( mapArgs.locations, mapArgs.user_location );
-			}
+					// generate map when ajax is triggered
+					GMW_Maps.bpdg = new GMW_Map( mapArgs.settings, mapArgs.map_options, {} );
+					// initiate it
+					GMW_Maps.bpdg.render( mapArgs.locations, mapArgs.user_location );
+
+				// update existing map
+				} else {
+					GMW_Maps.bpdg.update( mapArgs.locations, mapArgs.user_location );
+				}
+			}, 400 );
 		});
 		</script>
 		<?php
@@ -1030,7 +1094,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 		// Collect location.
 		$this->the_location( $object );
 
-		$output = '<div class="gmw-' . $this->prefix . '-location-meta-wrapper">';
+		$output = '<div class="gmw-' . $this->prefix . '-location-meta-wrapper gmw-bpdg-location-meta-wrapper">';
 
 		// show address in results.
 		if ( ! empty( $this->options['address_fields'] ) ) {
