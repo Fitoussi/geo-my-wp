@@ -49,10 +49,10 @@
 
 <div class="gmw-bpsgeo-address-field-wrap gmw-bpsgeo-location-field-wrap bps-textbox two columns hz-textbox">
 
-	<input type="text" id="<?php echo $id; // WPCS: XSS ok. ?>_address"
-		class="gmw-bpsgeo-address-field<?php echo $address_ac; // WPCS: XSS ok. ?> form-control"
-		name="<?php echo $name; // WPCS: XSS ok. ?>[address]" placeholder="<?php echo $address_ph; // WPCS: XSS ok. ?>"
-		value="<?php echo $address_value; // WPCS: XSS ok. ?>">
+	<input type="text" id="<?php echo esc_attr( $id ); ?>_address"
+		class="gmw-bpsgeo-address-field<?php echo esc_attr( $address_ac ); ?> form-control"
+		name="<?php echo esc_attr( $name ); ?>[address]" placeholder="<?php echo esc_attr( $address_ph ); ?>"
+		value="<?php echo esc_attr( $address_value ); ?>">
 	<?php if ( ! empty( $geo_options['gmw_bpsgeo_locator_button'] ) ) { ?>
 		<i class="gmw-bpsgeo-locator-button gmw-locator-button inside gmw-icon-target-light"></i>
 	<?php } ?>
@@ -62,8 +62,8 @@
 
 	<div class="gmw-bpsgeo-distance-field-wrap gmw-bpsgeo-location-field-wrap bps-selectbox two columns hz-textbox">
 
-		<select id="<?php echo $id; // WPCS: XSS ok. ?>_distance" class="gmw-bpsgeo-distance-field form-control"
-			name="<?php echo $name; // WPCS: XSS ok. ?>[distance]">
+		<select id="<?php echo esc_attr( $id ); ?>_distance" class="gmw-bpsgeo-distance-field form-control"
+			name="<?php echo esc_attr( $name ); ?>[distance]">
 
 			<option value="" selected="selected">
 				<?php esc_html_e( 'Within', 'geo-my-wp' ); ?>
@@ -72,10 +72,9 @@
 			<?php
 			foreach ( $radius_options as $option ) {
 
-				$option   = esc_attr( $option );
 				$selected = ( ! empty( $bpsgeo_values['distance'] ) && $option === $bpsgeo_values['distance'] ) ? 'selected="selected"' : '';
 
-				echo '<option value="' . $option . '" ' . $selected . '>' . $option . '</option>'; // WPCS: XSS ok.
+				echo '<option value="' . esc_attr( $option ) . '" ' . esc_attr( $selected ) . '>' . esc_attr( $option ) . '</option>';
 			}
 			?>
 		</select>
@@ -83,8 +82,8 @@
 
 <?php } else { ?>
 
-	<input type="hidden" id="<?php echo $id; // WPCS: XSS ok. ?>_distance"
-		name="<?php echo $name; // WPCS: XSS ok. ?>[distance]" value="<?php echo $default_radius; // WPCS: XSS ok. ?>"
+	<input type="hidden" id="<?php echo esc_attr( $id ); ?>_distance"
+		name="<?php echo esc_attr( $name ); ?>[distance]" value="<?php echo esc_attr( $default_radius ); ?>"
 		class="gmw-bpsgeo-distance-field">
 <?php } ?>
 
@@ -92,8 +91,8 @@
 
 	<div class="gmw-bpsgeo-units-field-wrap bps-selectbox gmw-bpsgeo-location-field-wrap two columns hz-textbox">
 
-		<select id="<?php echo $id; // WPCS: XSS ok. ?>_units" class="gmw-bpsgeo-units-field form-control"
-			name="<?php echo $name; // WPCS: XSS ok. ?>[units]">
+		<select id="<?php echo esc_attr( $id ); ?>_units" class="gmw-bpsgeo-units-field form-control"
+			name="<?php echo esc_attr( $name ); ?>[units]">
 
 			<option value="imperial" selected="selected">
 				<?php esc_html_e( 'Mi', 'geo-my-wp' ); ?>
@@ -108,16 +107,16 @@
 	</div>
 
 <?php } else { ?>
-	<input type="hidden" id="<?php echo $id; // WPCS: XSS ok. ?>_units" class="gmw-bpsgeo-units-field"
-		name="<?php echo $name; // WPCS: XSS ok. ?>[units]"
+	<input type="hidden" id="<?php echo esc_attr( $id ); ?>_units" class="gmw-bpsgeo-units-field"
+		name="<?php echo esc_attr( $name ); ?>[units]"
 		value="<?php echo esc_attr( $geo_options['gmw_bpsgeo_units'] ); ?>">
 <?php } ?>
 
-<input type="hidden" id="<?php echo $id; // WPCS: XSS ok. ?>_lat" class="gmw-bpsgeo-lat gmw-lat"
-	name="<?php echo $name; // WPCS: XSS ok. ?>[lat]"
+<input type="hidden" id="<?php echo esc_attr( $id ); ?>_lat" class="gmw-bpsgeo-lat gmw-lat"
+	name="<?php echo esc_attr( $name ); ?>[lat]"
 	value="<?php echo ! empty( $bpsgeo_values['lat'] ) ? esc_attr( $bpsgeo_values['lat'] ) : ''; ?>">
-<input type="hidden" id="<?php echo $id; // WPCS: XSS ok. ?>_lng" class="gmw-bpsgeo-lng gmw-lng"
-	name="<?php echo $name; // WPCS: XSS ok. ?>[lng]"
+<input type="hidden" id="<?php echo esc_attr( $id ); ?>_lng" class="gmw-bpsgeo-lng gmw-lng"
+	name="<?php echo esc_attr( $name ); ?>[lng]"
 	value="<?php echo ! empty( $bpsgeo_values['lng'] ) ? esc_attr( $bpsgeo_values['lng'] ) : ''; ?>">
 
 <?php
