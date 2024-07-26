@@ -89,7 +89,7 @@
 					$gmw_view              = gmw_get_current_results_view( $gmw );
 					?>
 
-					<ul id="members-list" class="gmw-results-list members-list-wrapper item-list members-list bp-list <?php echo $gmw_view; // WPCS: XSS ok. ?>">
+					<ul id="members-list" class="gmw-results-list members-list-wrapper item-list members-list bp-list <?php echo esc_attr( $gmw_view ); ?>">
 
 						<?php
 						while ( bp_members() ) {

@@ -26,27 +26,27 @@
 
 <div class="gmw-form-wrapper horizontal-gray gmw-fl-horizontal-gray-form-wrapper <?php echo esc_attr( $gmw['prefix'] ); ?>">
 	<?php do_action( 'gmw_before_search_form', $gmw ); ?>
-	
+
 	<form class="standard-form gmw-form" name="gmw_form" action="<?php gmw_form_results_page( $gmw ); ?>" method="get" data-id="<?php echo absint( $gmw['ID'] ); ?>" data-prefix="<?php echo esc_attr( $gmw['prefix'] ); ?>">
-			
+
 		<?php do_action( 'gmw_search_form_start', $gmw ); ?>
-		
+
 		<?php gmw_search_form_keywords_field( $gmw ); ?>
 
 		<?php gmw_search_form_address_field( $gmw ); ?>
-			
+
 		<?php gmw_search_form_locator_button( $gmw ); ?>
-						
+
 		<span class="xfield-trigger" onclick="jQuery(this).closest( 'form' ).find( '.gmw-search-form-xprofile-fields' ).slideToggle();">
-			<?php _e( 'Advanced options', 'geo-my-wp' ); ?>
+			<?php esc_attr_e( 'Advanced options', 'geo-my-wp' ); ?>
 		</span>
-									
+
 		<?php do_action( 'gmw_search_form_before_distance', $gmw ); ?>
 
 		<?php gmw_search_form_radius( $gmw ); ?>
 
-		<?php gmw_search_form_units( $gmw ); ?>	
-					
+		<?php gmw_search_form_units( $gmw ); ?>
+
 		<?php do_action( 'gmw_search_form_before_submit', $gmw ); ?>
 
 		<?php gmw_search_form_reset_button( $gmw ); ?>
@@ -62,13 +62,13 @@
 		<?php gmw_search_form_xprofile_fields( $gmw ); ?>
 
 		<?php gmw_search_form_custom_fields( $gmw ); ?>
-		
+
 		<?php do_action( 'gmw_search_form_end', $gmw ); ?>
-		
+
 	</form>
-	
+
 	<?php do_action( 'gmw_after_search_form', $gmw ); ?>
-	
+
 </div>
 
-<?php do_action( 'gmw_after_search_form_template', $gmw ); ?>	
+<?php do_action( 'gmw_after_search_form_template', $gmw ); ?>
