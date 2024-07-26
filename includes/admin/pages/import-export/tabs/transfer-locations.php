@@ -112,11 +112,11 @@ class GMW_Location_To_Meta_Fields_Importer extends GMW_Locations_Importer {
 
 		global $wpdb;
 
-		if ( empty( $_POST['formData'] ) ) { // WPCS: CSRF ok.
+		if ( empty( $_POST['formData'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, CSRF ok.
 			return array();
 		}
 
-		parse_str( $_POST['formData'], $form_data ); // WPCS: CSRF ok, sanitization ok.
+		parse_str( $_POST['formData'], $form_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 		if ( empty( $form_data['gmw_meta_export_object_type'] ) ) {
 			return array();
@@ -135,7 +135,7 @@ class GMW_Location_To_Meta_Fields_Importer extends GMW_Locations_Importer {
 					"
 					SELECT {$count_rows} gmwloc.*
 					FROM {$wpdb->prefix}gmw_locations gmwloc
-					INNER JOIN {$wpdb->prefix}posts wpposts 
+					INNER JOIN {$wpdb->prefix}posts wpposts
 					ON gmwloc.object_id = wpposts.ID
 					WHERE gmwloc.object_type = %s
 					ORDER BY gmwloc.object_id
@@ -147,7 +147,7 @@ class GMW_Location_To_Meta_Fields_Importer extends GMW_Locations_Importer {
 					)
 				),
 				ARRAY_A
-			); // WPCS: db call ok, cache ok, unprepared SQL ok.
+			); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching.
 
 		} elseif ( 'user' === $this->object_type ) {
 
@@ -168,7 +168,7 @@ class GMW_Location_To_Meta_Fields_Importer extends GMW_Locations_Importer {
 					)
 				),
 				ARRAY_A
-			); // WPCS: db call ok, cache ok, unprepared SQL ok.
+			); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching.
 		}
 
 		// abort if nothing was found.
@@ -234,7 +234,7 @@ class GMW_Location_To_Meta_Fields_Importer extends GMW_Locations_Importer {
 					)
 				),
 				ARRAY_A
-			); // WPCS: db call ok, cache ok, unprepared SQL ok.
+			); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching.
 
 			// Combine location and location meta into a single array.
 			$new_location = array(

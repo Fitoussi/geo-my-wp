@@ -145,11 +145,11 @@ class GMW_Meta_Fields_Importer_Form {
 	public function output() {
 
 		$slug        = esc_attr( $this->slug );
-		$current_tab = ! empty( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : ''; // WPCS: CSRF ok.
+		$current_tab = ! empty( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 		do_action( 'gmw_before_' . $slug . '_import' );
 		?>
-		<div class="gmw-settings-panel gmw-<?php echo $slug; // WPCS: XSS ok. ?>-import-panel">
+		<div class="gmw-settings-panel gmw-<?php echo esc_attr( $slug ); ?>-import-panel">
 
 			<fieldset>
 

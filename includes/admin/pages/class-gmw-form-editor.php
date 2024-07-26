@@ -83,11 +83,11 @@ class GMW_Form_Editor {
 		add_filter( 'gmw_mashup_map_form_settings', array( $this, 'mashup_map_form_settings' ), 5 );
 
 		// verify that this is the Form edit page.
-		if ( empty( $_GET['page'] ) || 'gmw-forms' !== $_GET['page'] || empty( $_GET['gmw_action'] ) || 'edit_form' !== $_GET['gmw_action'] ) { // phpcs:ignore: CSRF ok.
+		if ( empty( $_GET['page'] ) || 'gmw-forms' !== $_GET['page'] || empty( $_GET['gmw_action'] ) || 'edit_form' !== $_GET['gmw_action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, CSRF ok.
 			return;
 		}
 
-		do_action( 'gmw_admin_form_editor_init', $_GET ); // phpcs:ignore: CSRF ok.
+		do_action( 'gmw_admin_form_editor_init', $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 		// Enable only when AJAX submission is disabled.
 		if ( ! $this->ajax_enabled ) {
@@ -2707,7 +2707,7 @@ class GMW_Form_Editor {
 		);
 
 		// make sure form ID passed.
-		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) { // phpcs:ignore: CSRF ok.
+		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 			$link  = '<div class="gmw-admin-notice-box gmw-admin-notice-error" style="display: block;margin: 100px auto;width: 600px;">';
 			$link .= sprintf(
@@ -2721,7 +2721,7 @@ class GMW_Form_Editor {
 			wp_die( $link ); // phpcs:ignore: XSS ok.
 		}
 
-		$form_id = (int) absint( $_GET['form_id'] ); // phpcs:ignore: CSRF ok.
+		$form_id = (int) absint( $_GET['form_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 		// get form data.
 		$this->form = GMW_Forms_Helper::get_form( $form_id );
@@ -2780,7 +2780,7 @@ class GMW_Form_Editor {
 			<?php
 
 		}
-		if ( ! empty( $_GET['gmw_action'] ) && 'edit_form' === $_GET['gmw_action'] ) { // phpcs:ignore: CSRF ok.
+		if ( ! empty( $_GET['gmw_action'] ) && 'edit_form' === $_GET['gmw_action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, CSRF ok.
 			?>
 			<style>
 				#adminmenumain,
@@ -2848,12 +2848,9 @@ class GMW_Form_Editor {
 				</div>
 			</div>
 
-			<?php
-			if ( empty( $_GET['current_tab'] ) ) {
-				$_GET['current_tab'] = 'general_settings';
-			}
-			?>
-			<div id="gmw-edit-form-page" class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper gmw-admin-page-no-sidebar" data-current_tab="<?php echo esc_attr( $_GET['current_tab'] ); ?>">
+			<?php $current_tab = ! empty( $_GET['current_tab'] ) ? sanitize_text_field( wp_unslash( $_GET['current_tab'] ) ) : 'general_settings'; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, CSRF ok. ?>
+
+			<div id="gmw-edit-form-page" class="wrap gmw-admin-page-content gmw-admin-page gmw-admin-page-wrapper gmw-admin-page-no-sidebar" data-current_tab="<?php echo esc_attr( $current_tab ); ?>">
 
 				<nav class="gmw-admin-page-navigation gmw-tabs-wrapper gmw-edit-form-page-nav-tabs">
 					<?php
@@ -2883,10 +2880,7 @@ class GMW_Form_Editor {
 
 						<?php } else { ?>
 
-							<?php
-							// phpcs:ignore.
-							$tab_active = ( ! empty( $_GET['current_tab'] ) && $group['slug'] === $_GET['current_tab'] ) ? ' active' : ''; // CSRF ok.
-							?>
+							<?php $tab_active = ( ! empty( $current_tab ) && $group['slug'] === $current_tab ) ? ' active' : ''; ?>
 							<a
 								href="#settings-<?php echo esc_attr( sanitize_title( $group['slug'] ) ); ?>"
 								id="<?php echo esc_attr( $group['slug'] ); ?>"
@@ -2953,8 +2947,7 @@ class GMW_Form_Editor {
 						$tab         = esc_attr( $tab );
 						$this_class  = esc_attr( $this->form['component'] . ' ' . $this->form['slug'] . ' ' . $this->form['addon'] );
 						$this_class .= ! empty( $this->form_settings_groups[ $tab ]['panel_class'] ) ? ' ' . esc_attr( $this->form_settings_groups[ $tab ]['panel_class'] ) : '';
-						// phpcs:ignore.
-						$this_class .= ( ! empty( $_GET['current_tab'] ) && $tab === $_GET['current_tab'] ) ? ' active' : ''; // CSRF ok.
+						$this_class .= ( ! empty( $current_tab ) && $tab === $current_tab ) ? ' active' : '';
 						?>
 						<div id="settings-<?php echo $tab; // phpcs:ignore: XSS ok. ?>" class="gmw-settings-form gmw-tab-panel <?php echo $tab; // phpcs:ignore: XSS ok. ?> <?php echo $this_class; // phpcs:ignore: XSS ok. ?>">
 
@@ -3192,28 +3185,25 @@ class GMW_Form_Editor {
 
 							<option value=""><?php echo esc_attr__( 'Go to option', 'geo-my-wp' ); ?></option>
 
-							<?php
-							$current_tab = '';
+							<?php $this_tab = ''; ?>
 
-							foreach( $tab_options as $tab_option => $tab_args ) { ?>
+							<?php foreach ( $tab_options as $tab_option => $tab_args ) { ?>
 
-								<?php if ( $current_tab !== $tab_args['tab'] ) { ?>
+								<?php if ( $this_tab !== $tab_args['tab'] ) { ?>
 
-									<?php if ( '' !== $current_tab ) { ?>
+									<?php if ( '' !== $this_tab ) { ?>
 										</optgroup>
 									<?php } ?>
 
 									<optgroup label="<?php echo $tab_args['tab_label']; ?>">
 								<?php } ?>
 
-								<option value="<?php echo $tab_args['tab']; ?>|<?php echo $tab_args['id']; ?>"><?php echo $tab_args['label']; ?></option>
+								<option value="<?php echo esc_attr( $tab_args['tab'] ); ?>|<?php echo esc_attr( $tab_args['id'] ); ?>"><?php echo esc_attr( $tab_args['label'] ); ?></option>
 
-								<?php $current_tab = $tab_args['tab']; ?>
+								<?php $this_tab = $tab_args['tab']; ?>
 							<?php } ?>
 						</select>
 					</div>
-
-
 				</div>
 			</div>
 		</form>

@@ -417,9 +417,9 @@ class GMW_Posts_Locator_Screens {
 		// This fix takes care of an issue with the Gutenberg editor which does not reload the page when the post is first created.
 		// Because of that, the location ID does not exist in the hidden fields of the location form
 		// and the plugin create a new location each time the post is updated after it was initialy creation and before the page was refreshed at least once.
-		if ( empty( $location['ID'] ) && ! empty( $_POST['post_ID'] ) ) { // WPCS CSRF ok.
+		if ( empty( $location['ID'] ) && ! empty( $_POST['post_ID'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 
-			$location_id = gmw_get_location_id( 'post', absint( $_POST['post_ID'] ) ); // WPCS: CSRF ok.
+			$location_id = gmw_get_location_id( 'post', absint( $_POST['post_ID'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 
 			if ( ! empty( $location_id ) ) {
 				$location['ID'] = $location_id;

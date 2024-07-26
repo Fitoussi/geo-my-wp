@@ -120,7 +120,7 @@ class GMW_Tracking {
 		update_option( 'gmw_tracking_notice', '1' );
 
 		// get back to GEO my WP add-ons page.
-		$page = ! empty( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : 'gmw-extensions'; // phpcs:ignore: CSRF ok.
+		$page = ! empty( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : 'gmw-extensions'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 		// reload the page to prevent resubmission.
 		wp_safe_redirect( admin_url( 'admin.php?page=' . $page . '&gmw_notice=tracking_allowed&gmw_notice_status=updated' ) );
@@ -147,7 +147,7 @@ class GMW_Tracking {
 		update_option( 'gmw_tracking_notice', '1' );
 
 		// go to gmw add-ons page.
-		$page = ! empty( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : 'gmw-extensions'; // phpcs:ignore: CSRF ok.
+		$page = ! empty( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : 'gmw-extensions'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 		// reload the page to prevent resubmission.
 		wp_safe_redirect( admin_url( 'admin.php?page=' . $page ) );

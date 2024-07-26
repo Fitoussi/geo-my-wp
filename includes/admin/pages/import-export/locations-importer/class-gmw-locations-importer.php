@@ -84,7 +84,7 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 		public $locations_imported = 0;
 
 		/**
-		 * number of locations exists.
+		 * Number of locations exists.
 		 *
 		 * @var integer
 		 */
@@ -323,13 +323,13 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 		 */
 		public function get_data() {
 
-			$this->total_locations    = ! empty( $_POST['totalLocations'] ) ? absint( $_POST['totalLocations'] ) : 0; // WPCS: CSRF ok.
-			$this->records_completed  = ! empty( $_POST['recordsCompleted'] ) ? absint( $_POST['recordsCompleted'] ) : 0; // WPCS: CSRF ok.
-			$this->locations_updated  = ! empty( $_POST['locationsUpdated'] ) ? absint( $_POST['locationsUpdated'] ) : 0; // WPCS: CSRF ok.
-			$this->locations_imported = ! empty( $_POST['locationsImported'] ) ? absint( $_POST['locationsImported'] ) : 0; // WPCS: CSRF ok.
-			$this->locations_exist    = ! empty( $_POST['locationsExist'] ) ? absint( $_POST['locationsExist'] ) : 0; // WPCS: CSRF ok.
-			$this->locations_failed   = ! empty( $_POST['locationsFailed'] ) ? absint( $_POST['locationsFailed'] ) : 0; // WPCS: CSRF ok.
-			$this->batch_number       = ! empty( $_POST['batchNumber'] ) ? absint( $_POST['batchNumber'] ) : 0; // WPCS: CSRF ok.
+			$this->total_locations    = ! empty( $_POST['totalLocations'] ) ? absint( $_POST['totalLocations'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+			$this->records_completed  = ! empty( $_POST['recordsCompleted'] ) ? absint( $_POST['recordsCompleted'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+			$this->locations_updated  = ! empty( $_POST['locationsUpdated'] ) ? absint( $_POST['locationsUpdated'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+			$this->locations_imported = ! empty( $_POST['locationsImported'] ) ? absint( $_POST['locationsImported'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+			$this->locations_exist    = ! empty( $_POST['locationsExist'] ) ? absint( $_POST['locationsExist'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+			$this->locations_failed   = ! empty( $_POST['locationsFailed'] ) ? absint( $_POST['locationsFailed'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+			$this->batch_number       = ! empty( $_POST['batchNumber'] ) ? absint( $_POST['batchNumber'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 		}
 
 		/**
@@ -686,7 +686,7 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 			exit;
 		}
 
-		$class_name = sanitize_text_field( wp_unslash( $_POST['importAction'] ) ); // WPCS: CSRF ok.
+		$class_name = sanitize_text_field( wp_unslash( $_POST['importAction'] ) );
 
 		// verify ajax nonce.
 		if ( ! check_ajax_referer( 'gmw_importer_nonce_' . $class_name, 'security', false ) ) {
@@ -699,7 +699,7 @@ if ( ! class_exists( 'GMW_Locations_Importer' ) ) :
 		if ( ! class_exists( $class_name ) ) {
 
 			/* translators: %s: class name. */
-			wp_die( sprintf( esc_html__( 'Calling to undefined class %s', 'geo-my-wp' ), $class_name ) ); // WPCS: XSS ok.
+			wp_die( sprintf( esc_html__( 'Calling to undefined class %s', 'geo-my-wp' ), esc_attr( $class_name ) ) );
 
 			exit;
 		}

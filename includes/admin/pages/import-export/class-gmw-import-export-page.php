@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // we check if we are in impor/export page to prevent it from loading on all admin pages.
 // We also check if this is an ajax call because the importer class uses ajax.
-if ( ( empty( $_GET['page'] ) || 'gmw-import-export' !== $_GET['page'] ) && ! defined( 'DOING_AJAX' ) ) { // WPCS: CSRF ok.
+if ( ( empty( $_GET['page'] ) || 'gmw-import-export' !== $_GET['page'] ) && ! defined( 'DOING_AJAX' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 	return;
 }
 
@@ -64,7 +64,7 @@ class GMW_Import_Export_Page {
 	 */
 	public function output() {
 
-		$current_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'data'; // WPCS: CSRF ok.
+		$current_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'data'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 		?>
 		<?php gmw_admin_pages_header(); ?>
 

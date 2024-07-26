@@ -169,7 +169,7 @@ trait GMW_Members_Locator_Form_Trait {
 		}
 
 		// get results of locations + users data.
-		$this->locations = $wpdb->get_results( implode( ' ', $clauses ) ); // phpcs:ignore: db call ok, cache ok, unprepared SQL ok.
+		$this->locations = $wpdb->get_results( implode( ' ', $clauses ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		if ( 'global_maps' === $this->form['addon'] ) {
 

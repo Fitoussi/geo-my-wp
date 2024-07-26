@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // include files in tools page only.
-if ( empty( $_GET['page'] ) || 'gmw-tools' !== $_GET['page'] ) { // WPCS: CSRF ok.
+if ( empty( $_GET['page'] ) || 'gmw-tools' !== $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 	return;
 }
 
@@ -46,7 +46,7 @@ class GMW_Tools {
 	 */
 	public function output() {
 
-		$current_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'system_info'; // WPCS: CSRF ok.
+		$current_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'system_info'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 		?>
 		<?php gmw_admin_pages_header(); ?>
 

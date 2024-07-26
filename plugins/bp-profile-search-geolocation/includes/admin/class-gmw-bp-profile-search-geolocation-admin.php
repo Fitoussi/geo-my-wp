@@ -135,7 +135,7 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 	/**
 	 * Update BuddyBoss Profile Search post meta.
 	 *
-	 * @param array  $form form array.
+	 * @param int    $form form ID.
 	 *
 	 * @param object $post $post.
 	 *
@@ -146,11 +146,11 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 		if ( 'bp_ps_form' !== $post->post_type || 'publish' !== $post->post_status ) {
 			return false;
 		}
-		if ( empty( $_POST['options'] ) && empty( $_POST['bp_ps_options'] ) ) {
+		if ( empty( $_POST['options'] ) && empty( $_POST['bp_ps_options'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 			return false;
 		}
 
-		$posted = isset( $_POST['bp_ps_options'] ) ? $_POST['bp_ps_options'] : array();
+		$posted = isset( $_POST['bp_ps_options'] ) ? wp_unslash( $_POST['bp_ps_options'] ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing, sanitization ok, CSRF ok.
 
 		if ( isset( $posted['field_name'] ) ) {
 

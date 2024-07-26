@@ -205,7 +205,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 		// labels.
 		$this->labels            = $this->labels();
 		$this->doing_ajax        = defined( 'DOING_AJAX' ) ? 1 : 0;
-		$this->is_profile_search = ! empty( $_REQUEST['bp_profile_search'] ) ? true : false; // phpcs:ignore: CSRF ok.
+		$this->is_profile_search = ! empty( $_REQUEST['bp_profile_search'] ) ? true : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 		$this->radius_values     = str_replace( ' ', '', explode( ',', $this->options['radius'] ) );
 		$bp_search_values        = array();
 
@@ -236,9 +236,9 @@ class GMW_BuddyPress_Directory_Geolocation {
 		} else {
 
 			// get the default addres value from URL if exists.
-			if ( $this->doing_ajax && isset( $_REQUEST['address'] ) ) { // phpcs:ignore: CSRF ok.
+			if ( $this->doing_ajax && isset( $_REQUEST['address'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
-				$this->form['address'] = sanitize_text_field( wp_unslash( $_REQUEST['address'] ) ); // phpcs:ignore: CSRF ok.
+				$this->form['address'] = sanitize_text_field( wp_unslash( $_REQUEST['address'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 				// otherwise, check in cookies.
 			} elseif ( isset( $_COOKIE[ 'gmw_' . $this->prefix . '_address' ] ) && 'undefined' !== $_COOKIE[ 'gmw_' . $this->prefix . '_address' ] ) {
@@ -247,9 +247,9 @@ class GMW_BuddyPress_Directory_Geolocation {
 			}
 
 			// get the default latitude value from URL if exists.
-			if ( ! $this->doing_ajax && isset( $_REQUEST['lat'] ) ) { // phpcs:ignore: CSRF ok.
+			if ( ! $this->doing_ajax && isset( $_REQUEST['lat'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
-				$this->form['lat'] = sanitize_text_field( wp_unslash( $_REQUEST['lat'] ) ); // phpcs:ignore: CSRF ok.
+				$this->form['lat'] = sanitize_text_field( wp_unslash( $_REQUEST['lat'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 			} elseif ( isset( $_COOKIE[ 'gmw_' . $this->prefix . '_lat' ] ) && 'undefined' !== $_COOKIE[ 'gmw_' . $this->prefix . '_lat' ] ) {
 
@@ -257,9 +257,9 @@ class GMW_BuddyPress_Directory_Geolocation {
 			}
 
 			// get the default latitude value from URL if exists.
-			if ( ! $this->doing_ajax && isset( $_REQUEST['lng'] ) ) {
+			if ( ! $this->doing_ajax && isset( $_REQUEST['lng'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
-				$this->form['lng'] = sanitize_text_field( wp_unslash( $_REQUEST['lng'] ) ); // phpcs:ignore: CSRF ok.
+				$this->form['lng'] = sanitize_text_field( wp_unslash( $_REQUEST['lng'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 			} elseif ( isset( $_COOKIE[ 'gmw_' . $this->prefix . '_lng' ] ) && 'undefined' !== $_COOKIE[ 'gmw_' . $this->prefix . '_lng' ] ) {
 
@@ -272,9 +272,9 @@ class GMW_BuddyPress_Directory_Geolocation {
 				$this->form['distance'] = end( $this->radius_values );
 
 				// check in URL if exists.
-			} elseif ( ! $this->doing_ajax && ! empty( $_REQUEST['distance'] ) ) { // phpcs:ignore: CSRF ok.
+			} elseif ( ! $this->doing_ajax && ! empty( $_REQUEST['distance'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
-				$this->form['distance'] = sanitize_text_field( wp_unslash( $_REQUEST['distance'] ) ); // phpcs:ignore: CSRF ok.
+				$this->form['distance'] = sanitize_text_field( wp_unslash( $_REQUEST['distance'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 				// otherwise, maybe in cookies.
 			} elseif ( isset( $_COOKIE[ 'gmw_' . $this->prefix . '_radius' ] ) && 'undefined' !== $_COOKIE[ 'gmw_' . $this->prefix . '_radius' ] ) {

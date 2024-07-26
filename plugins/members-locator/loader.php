@@ -285,7 +285,7 @@ class GMW_Members_Locator_Addon extends GMW_Addon {
 			add_action( 'xprofile_data_after_delete', array( $this, 'flush_user_cache' ) );
 
 			// clear internal cache when changing privacy ( BuddyPress Profile Visibility Manager plugin ).
-			if ( bp_is_settings_component() && is_user_logged_in() && ! empty( $_POST['bppv_save_submit'] ) ) { // WPCS: CSRF ok.
+			if ( bp_is_settings_component() && is_user_logged_in() && ! empty( $_POST['bppv_save_submit'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 				$this->flush_user_cache();
 			}
 		}

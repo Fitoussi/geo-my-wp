@@ -43,9 +43,9 @@ class GMW_BP_Profile_Search_Geolocation {
 
 		// Proceed with query filter only if BP Members Directory Geolocation is not installed.
 		// When installed, we will use its built-in query filter.
-		if ( ! class_exists( 'GMW_BP_Members_Directory_Geolocation_Addon' ) || ! gmw_get_option( 'bp_members_directory_geolocation', 'enabled', false ) ) {
+		//if ( ! class_exists( 'GMW_BP_Members_Directory_Geolocation_Addon' ) || ! gmw_get_option( 'bp_members_directory_geolocation', 'enabled', false ) ) {
 			add_action( 'bp_user_query_uid_clauses', array( $this, 'modify_search_query' ), 500, 2 );
-		}
+		//}
 	}
 
 	/**
@@ -191,7 +191,7 @@ class GMW_BP_Profile_Search_Geolocation {
 		$sql = apply_filters( 'gmw_bpsgeo_location_query_clauses', $sql, $query, $this );
 
 		// Get users id based on location.
-		$results = $wpdb->get_col( implode( ' ', $sql ), 0 ); // WPCS: db call ok, unprepared sql ok, cache ok.
+		$results = $wpdb->get_col( implode( ' ', $sql ), 0 ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		// Abort if no users were found.
 		if ( empty( $results ) ) {
@@ -216,7 +216,7 @@ class GMW_BP_Profile_Search_Geolocation {
 	 *
 	 * @param  object $field  field object.
 	 *
-	 * @return modified output.
+	 * @return mixed
 	 */
 	public function generate_location_field_filter( $output, $field ) {
 
@@ -224,7 +224,7 @@ class GMW_BP_Profile_Search_Geolocation {
 
 		// Abort if not searching by location.
 		if ( empty( $values['address'] ) ) {
-			return __( 'is everywhere', 'geo-my-wp' );
+			return esc_html__( 'is everywhere', 'geo-my-wp' );
 		}
 
 		$label = 'metric' === $values['units'] ? __( 'km', 'geo-my-wp' ) : __( 'Miles', 'geo-my-wp' );

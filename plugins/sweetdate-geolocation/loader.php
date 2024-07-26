@@ -90,13 +90,13 @@ class GMW_Sweetdate_Geolcation_Addon extends GMW_Addon {
 			'theme'  => array(
 				'template' => 'sweetdate',
 				/* translators: %s: link to SweetDate theme. */
-				'notice'   => sprintf( __( 'Sweet Date Geolocation extension requires the Sweet Date theme version 2.9 order higher. The theme can be purchased separately from <a href="%s" target="_blank">here</a>.', 'geo-my-wp' ), 'https://themeforest.net/item/sweet-date-more-than-a-wordpress-dating-theme/4994573?ref=GEOmyWP' ),
+				'notice'   => sprintf( esc_html__( 'Sweet Date Geolocation extension requires the Sweet Date theme version 2.9 order higher. The theme can be purchased separately from <a href="%s" target="_blank">here</a>.', 'geo-my-wp' ), 'https://themeforest.net/item/sweet-date-more-than-a-wordpress-dating-theme/4994573?ref=GEOmyWP' ),
 				'version'  => '2.9',
 			),
 			'addons' => array(
 				array(
 					'slug'   => 'members_locator',
-					'notice' => __( 'Sweet Date Geolocation extension requires the Members Locator core extension.', 'geo-my-wp' ),
+					'notice' => esc_html__( 'Sweet Date Geolocation extension requires the Members Locator core extension.', 'geo-my-wp' ),
 				),
 			),
 		);

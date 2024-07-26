@@ -182,7 +182,7 @@ class GMW_Search_Form_Helper {
 		$value              = $args['is_array'] ? array() : ''; // Default.
 
 		if ( ! empty( $args['conditions'] ) ) {
-			$args['wrapper_atts']['data-conditions'] = json_encode( $args['conditions'] );
+			$args['wrapper_atts']['data-conditions'] = wp_json_encode( $args['conditions'] );
 		}
 
 		if ( empty( $args['step'] ) ) {
@@ -204,13 +204,13 @@ class GMW_Search_Form_Helper {
 		}
 
 		// Get submitted value. Value is sanitized later in the sctipt.
-		if ( isset( $_GET[ $args['name'] ] ) && ! empty( $_GET[ $url_px . 'form' ] ) && $id === $_GET[ $url_px . 'form' ] ) { // phpcs:ignore: CSRF ok, sanitization ok.
+		if ( isset( $_GET[ $args['name'] ] ) && ! empty( $_GET[ $url_px . 'form' ] ) && $id === $_GET[ $url_px . 'form' ] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 			if ( '' !== $args['sub_name'] ) {
-				$value = ! empty( $_GET[ $args['name'] ][ $args['sub_name'] ] ) ? $_GET[ $args['name'] ][ $args['sub_name'] ] : $value; // phpcs:ignore: CSRF ok, sanitization ok.
+				$value = ! empty( $_GET[ $args['name'] ][ $args['sub_name'] ] ) ? $_GET[ $args['name'] ][ $args['sub_name'] ] : $value; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, sanitization ok, CSRF ok.
 
 			} else {
-				$value = $_GET[ $args['name'] ]; // phpcs:ignore: CSRF ok, sanitization ok.
+				$value = $_GET[ $args['name'] ]; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, sanitization ok, CSRF ok.
 			}
 
 			// Otherwise look for default value.
@@ -746,7 +746,7 @@ class GMW_Search_Form_Helper {
 		$id_attr       = $tax_name . '-taxonomy-' . $id;
 		$name_attr     = ! empty( $args['name_attr'] ) ? $args['name_attr'] : 'tax';
 		$sub_name_attr = ! empty( $args['sub_name_attr'] ) ? $args['sub_name_attr'] : $tax_name;
-		$selected      = ! empty( $_GET[ $name_attr ][ $sub_name_attr ] ) ? $_GET[ $name_attr ][ $sub_name_attr ] : '';
+		$selected      = ! empty( $_GET[ $name_attr ][ $sub_name_attr ] ) ? wp_unslash( array_map( 'absint', $_GET[ $name_attr ][ $sub_name_attr ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 		if ( empty( $args['show_options_all'] ) || 'checkboxes' === $args['usage'] ) {
 
@@ -903,18 +903,18 @@ class GMW_Search_Form_Helper {
 			$gmw['search_results']['per_page'] = 10;
 		}
 
-		$prefix   = esc_attr( gmw_get_url_prefix() );
-		$id       = esc_attr( absint( $gmw['ID'] ) );
+		$prefix = esc_attr( gmw_get_url_prefix() );
+		$id     = esc_attr( absint( $gmw['ID'] ) );
 
-		if ( ! empty( $_GET[ $prefix . 'lat' ] ) ) {
-			$lat = sanitize_text_field( wp_unslash( $_GET[ $prefix . 'lat' ] ) );
+		if ( ! empty( $_GET[ $prefix . 'lat' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
+			$lat = sanitize_text_field( wp_unslash( $_GET[ $prefix . 'lat' ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 			$lat = esc_attr( filter_var( $lat, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION ) );
 		} else {
 			$lat = '';
 		}
 
-		if ( ! empty( $_GET[ $prefix . 'lng' ] ) ) {
-			$lng = sanitize_text_field( wp_unslash( $_GET[ $prefix . 'lng' ] ) );
+		if ( ! empty( $_GET[ $prefix . 'lng' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
+			$lng = sanitize_text_field( wp_unslash( $_GET[ $prefix . 'lng' ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 			$lng = esc_attr( filter_var( $lng, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION ) );
 		} else {
 			$lng = '';
@@ -945,8 +945,8 @@ class GMW_Search_Form_Helper {
 		// State boundaries.
 		if ( ! empty( $gmw['boundaries_search']['state'] ) ) {
 
-			if ( ! empty( $_GET['state'] ) ) {
-				$state = str_replace( '=', '', sanitize_text_field( wp_unslash( $_GET['state'] ) ) );
+			if ( ! empty( $_GET['state'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
+				$state = str_replace( '=', '', sanitize_text_field( wp_unslash( $_GET['state'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 				$state = esc_attr( filter_var( $state ) );
 			} else {
 				$state = '';
@@ -958,8 +958,8 @@ class GMW_Search_Form_Helper {
 		// Country boundaries.
 		if ( ! empty( $gmw['boundaries_search']['country'] ) ) {
 
-			if ( ! empty( $_GET['country'] ) ) {
-				$country = sanitize_key( wp_unslash( $_GET['country'] ) );
+			if ( ! empty( $_GET['country'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
+				$country = sanitize_key( wp_unslash( $_GET['country'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 				$country = esc_attr( filter_var( $country ) );
 			} else {
 				$country = '';
@@ -971,7 +971,7 @@ class GMW_Search_Form_Helper {
 		$output .= '<input type="hidden" id="gmw-form-id-' . $id . '" class="gmw-form-id" name="' . $prefix . 'form" value="' . $id . '" />';
 		$output .= '<input type="hidden" id="gmw-action-' . $id . '" class="gmw-action" name="' . $prefix . 'action" value="fs"/>';
 
-		$output = apply_filters( 'gmw_submission_fields', $output, $id, $_GET ); // phpcs:ignore: CSRF ok.
+		$output = apply_filters( 'gmw_submission_fields', $output, $id, $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 		$output .= '</div>';
 

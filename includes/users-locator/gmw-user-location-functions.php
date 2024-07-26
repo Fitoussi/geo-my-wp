@@ -279,7 +279,7 @@ function gmw_get_user_location_data( $id = 0, $by_location_id = false ) {
             AND        gmw.object_id   = %d
         ",
 			$id
-		); // WPCS: Unprepared SQL ok.
+		);
 
 	} else {
 
@@ -293,10 +293,10 @@ function gmw_get_user_location_data( $id = 0, $by_location_id = false ) {
             AND        gmw.ID = %d
         ",
 			$id
-		); // WPCS: Unprepared SQL ok.
+		);
 	}
 
-	$location_data = $wpdb->get_row( $sql, OBJECT ); // WPCS: DB call ok, cache ok, unprepared SQL ok.
+	$location_data = $wpdb->get_row( $sql, OBJECT ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 	return ! empty( $location_data ) ? $location_data : false;
 }

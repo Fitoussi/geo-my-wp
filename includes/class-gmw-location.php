@@ -187,6 +187,7 @@ class GMW_Location {
 
 		// database table name.
 		$table = self::get_table();
+		$table = esc_sql( $table );
 
 		// look for the location in database.
 		// phpcs:ignore.
@@ -198,7 +199,7 @@ class GMW_Location {
 				WHERE  ID = %d",
 				$location_id
 			)
-		); // phpcs:ignore: db call ok, cache ok, unprepared SQL ok.
+		); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		return ! empty( $location_id ) ? true : false;
 	}
@@ -234,7 +235,7 @@ class GMW_Location {
 				WHERE  ID = %d",
 				$location_id
 			)
-		); // phpcs:ignore: db call ok, cache ok, unprepared SQL ok.
+		); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		return $object_type;
 
@@ -1288,8 +1289,8 @@ class GMW_Location {
 			// query the locations.
 			// phpcs:ignore.
 			$locations = $wpdb->get_results(
-				implode( ' ', apply_filters( 'gmw_get_locations_query_clauses', $clauses, $args, $gmw ) )
-			); // phpcs:ignore: db call ok, cache ok, unprepared SQL ok.
+				implode( ' ', apply_filters( 'gmw_get_locations_query_clauses', $clauses, $args, $gmw ) ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			);
 
 			/**
 			 * Collect locations into an array of objects and locations data.

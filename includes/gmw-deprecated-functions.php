@@ -267,7 +267,7 @@ function gmw_search_form_smartbox_options_selector( $output, $args, $options ) {
 
 	foreach ( $options as $value => $name ) {
 
-		$selected = ( isset( $_GET[ $args['name_tag'] ] ) && in_array( $value, $_GET[ $args['name_tag'] ], true ) ) ? 'selected="selected"' : ''; // WPCS: CSRF ok, sanitization ok.
+		$selected = ( isset( $_GET[ $args['name_tag'] ] ) && in_array( $value, $_GET[ $args['name_tag'] ], true ) ) ? 'selected="selected"' : ''; // phpcs:ignore WordPress.Security.NonceVerification
 
 		$output .= '<option value="' . esc_attr( $value ) . '" ' . $selected . '>' . esc_html( $name ) . '</option>';
 	}
@@ -323,7 +323,7 @@ function gmw_get_search_form_address_fields( $gmw ) {
 
 		} elseif ( 'include' === $usage ) {
 
-			$value   = ! empty( $_GET[ $url_px . 'address' ][ $field_name ] ) ? esc_attr( stripslashes( $_GET[ $url_px . 'address' ][ $field_name ] ) ) : ''; // WPCS: CSRF ok, sanitization ok.
+			$value   = ! empty( $_GET[ $url_px . 'address' ][ $field_name ] ) ? esc_attr( stripslashes( $_GET[ $url_px . 'address' ][ $field_name ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
 			$output .= "<div class=\"gmw-form-field-wrapper gmw-{$field_name}-field-wrapper\">";
 
 			// create label.
@@ -409,7 +409,7 @@ function gmw_date_converter( $date, $type ) {
 
 	if ( empty( $date ) ) {
 
-		$date = date( 'ymd' );
+		$date = gmdate( 'ymd' );
 
 	} else {
 
@@ -445,8 +445,8 @@ function gmw_ps_pt_date_converter( $date, $type ) {
 }
 
 function gmw_get_draggable_handle( $gmw = array(), $info = array() , $draggable = '', $handle = true, $icon = 'gmw-icon-target', $containment = 'window' ) {
-					
-	$args = array( 
+
+	$args = array(
 		'icon'   	  => 'gmw-icon-menu',
 		'target' 	  => 'gmw-popup-info-window',
 		'containment' => 'window'
@@ -517,7 +517,7 @@ function gmw_form_submit_fields( $gmw = array(), $label = 'submit' ) {
 }
 
 function gmw_fix_deprecated_plugin_version() {
-	
+
 	$rprx = 'location';
 
 	// Make sure there is no conflict with the old version of the plugin.
@@ -567,7 +567,7 @@ function gmw_fl_get_bp_groups( $gmw, $usage, $groups, $name ) {
 		'id' 	=> $gmw['ID'],
 		'usage' => $usage
 	);
-	
+
 	return gmw_get_search_form_bp_groups_filter( $args, $groups );
 }
 
@@ -576,7 +576,7 @@ function search_form_radius_field( $gmw ) {
     _deprecated_function( 'search_form_radius_field', '3.0', 'gmw_get_search_form_radius_slider' );
 	echo gmw_get_search_form_radius_slider( $gmw );
 }
-	
+
 function gmaps_search_form_taxonomies( $gmw = array(), $tag='div', $class='' ) {
 
 	_deprecated_function( 'gmaps_search_form_taxonomies', '2.2', 'gmw_search_form_taxonomies' );
@@ -689,8 +689,8 @@ function gmw_exl_get_roles_users_id( $roles, $cache = 'posts' ) {
 }
 
 /**
- * Support previous form settings 
- * 
+ * Support previous form settings
+ *
  * @param  [type] $gmw [description]
  * @return [type]      [description]
  */
@@ -759,7 +759,7 @@ function gmw_3_deprecated_form_settings( $gmw ) {
 
 function gmw_window_toggle( $gmw = array(), $info = array(), $id = 0, $toggled = false, $show_icon = 'gmw-icon-arrow-down', $hide_icon = 'gmw-icon-arrow-up', $animation = 'height', $open_length = '100%', $close_length = '35px' ) {
 
-	$args = array( 
+	$args = array(
 		'id' 		   => $gmw['ID'],
 		'show_icon'    => $show_icon == 'dashicons-arrow-right-alt2' ? 'gmw-icon-arrow-right' : 'gmw-icon-arrow-down',
 		'hide_icon'    => $hide_icon == 'dashicons-arrow-left-alt2'  ? 'gmw-icon-arrow-left' : 'gmw-icon-arrow-up',
@@ -819,7 +819,7 @@ function gmw_get_user_info_from_db( $user_id = 0 ) {
  * @param $post_id
  */
 function gmw_get_post_info( $args = array(), $from_shortcode = false ) {
-	
+
 	if ( ! $from_shortcode ) {
 		_deprecated_function( 'gmw_get_post_info', '3.0', 'gmw_get_post_location_fields' );
 	}
@@ -833,7 +833,7 @@ function gmw_get_post_info( $args = array(), $from_shortcode = false ) {
     	'separator'   => ! empty( $args['divider'] ) ? $args['divider'] : ', ',
     	'output'      => 'string',
     );
-  	
+
 	// try to get address fields
 	$output = gmw_get_address_fields( $args );
 
@@ -936,7 +936,7 @@ function gmw_fl_member_info( $args = array() ) {
 }
 
 function gmw_pt_update_location( $args = array(), $force_refresh = false ) {
-	
+
 	_deprecated_function( 'gmw_pt_update_location', '3.0', 'gmw_update_post_location' );
 
 	if ( function_exists( 'gmw_update_post_location' ) ) {
@@ -955,7 +955,7 @@ function gmw_pt_update_location( $args = array(), $force_refresh = false ) {
 		if ( ! empty( $args['additional_info'] ) ) {
 			gmw_update_post_location_meta( $post_id, $args['additional_info'] );
 		}
-		
+
 	}
 }
 
@@ -990,19 +990,19 @@ function gmw_pt_taxonomies( $gmw, $post ) {
 
 function gmw_pt_get_days_hours( $post, $gmw ) {
 	_deprecated_function( 'gmw_pt_get_days_hours', '3.0', 'gmw_get_hours_of_operation' );
-	
+
 	$post->object_type = 'post';
 	$post->object_id   = $post->ID;
-	
+
 	return gmw_get_hours_of_operation( $post );
 }
 
 function gmw_pt_days_hours( $post, $gmw ) {
 	_deprecated_function( 'gmw_pt_days_hours', '3.0', 'gmw_hours_of_operation' );
-	
+
 	$post->object_type = 'post';
 	$post->object_id   = $post->ID;
-	
+
 	return gmw_get_hours_of_operation( $post, $gmw );
 }
 
@@ -1060,7 +1060,7 @@ function gmw_pt_driving_distance( $gmw, $post, $class, $title ) {
 	if ( !isset( $gmw['search_results']['by_driving'] ) || $gmw['units_array'] == false )
 		return;
 	_deprecated_function( 'gmw_pt_driving_distance', '2.5', 'gmw_driving_distance' );
-	gmw_driving_distance( $post, $gmw, $title );	
+	gmw_driving_distance( $post, $gmw, $title );
 }
 
 /**
@@ -1093,7 +1093,7 @@ function gmw_fl_per_page_dropdown( $gmw, $class ) {
 	global $members_template;
 	gmw_per_page( $gmw, $members_template->total_member_count, 'upage' );
 }
-	
+
 /**
  * GMW deprecated function - Display user's full address
  * @version 1.0
@@ -1173,9 +1173,9 @@ function gmw_no_results_found( $gmw, $message = '' ) {
 }
 
 /*
- *GMW Users Geolocation deprecated functions 
+ *GMW Users Geolocation deprecated functions
  */
-	
+
 /**
  * GMW deprecated function - pagination
  * @version 1.0
@@ -1230,10 +1230,10 @@ function gmw_ug_driving_distance( $gmw, $user ) {
  * @version 1.0
  * @author Eyal Fitoussi
  *
- * Deprectaed 
+ * Deprectaed
  */
 function gmw_driving_distance( $info, $gmw, $title ) {
-	
+
 	trigger_error( 'gmw_driving_distance function is deprecated since GEO my WP 3.0. It does not have a replacment at this time.' , E_USER_NOTICE );
 
 	return false;
@@ -1292,7 +1292,7 @@ function gmw_ug_avatar( $gmw, $user ) {
 }
 
 /*
- *groups locator 
+ *groups locator
  */
 
 /**
@@ -1647,7 +1647,7 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 		public function current_location( $org_args ) {
 
 			$args = shortcode_atts( array(
-					'scid'		 			=> rand( 1,100 ),
+					'scid'		 			=> wp_rand( 1,100 ),
 					'title'      			=> 'Your location',
 					'display_by' 			=> 'city,country',
 					'text_only'	 			=> 0,
@@ -1662,9 +1662,9 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 					'scrollwheel'			=> 1,
 					'map_marker'			=> 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
 					'get_location_message' 	=> 'Get your current location'
-					 
+
 			), $org_args );
-			 
+
 			extract($args);
 
 			if ( empty( $map_marker ) ) $map_marker = 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png';
@@ -1675,43 +1675,43 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 			$location 	 .= '<div id="gmw-cl-wrapper-'.$scid.'" class="gmw-cl-wrapper">';
 
 			if ( $show_name == 1 ) {
-				 
+
 				if ( is_user_logged_in() ) {
 					global $current_user;
-					get_currentuserinfo();
+					wp_get_current_user();
 					$hMessage = $user_message.' '.$current_user->user_login.'!';
 				} else {
 					$hMessage = $guest_message;
 				}
-				 
+
 				$location .= '<div class="gmw-cl-welcome-message">'.$hMessage.'</div>';
 			}
-			
+
 			$prefix = gmw_get_ulc_prefix();
 
 			if ( !empty( $_COOKIE[ $prefix . 'lat' ] ) && !empty( $_COOKIE[ $prefix . 'lng' ] ) ) {
-				 
+
 				$userAddress   = array();
-				 
+
 				foreach ( explode( ',', $display_by ) as $field ) {
 					if ( isset( $_COOKIE[ $prefix . $field ] ) ) {
 						$userAddress[] = urldecode($_COOKIE[ $prefix . $field ]);
 					}
 				}
-				 
+
 				$location .= '<div class="gmw-cl-location-title-wrapper">';
 				if ( isset( $title ) && !empty( $title ) ) {
 					$location .= '<span class="gmw-cl-title">'.$title.'</span>';
 				}
-				 
+
 				$location .= '<span class="gmw-cl-location"><a href="#" class="gmw-cl-form-trigger" title="' . __( 'Your Current Location', 'geo-my-wp' ) . '">'.implode(' ', $userAddress) . '</a></span>';
 				$location .= '</div>';
 
 				if ( $map == 1 ) {
-					 
+
 					$latitude  = urldecode( $_COOKIE[ $prefix . 'lat' ] );
 					$longitude = urldecode( $_COOKIE[ $prefix . 'lng' ] );
-					 
+
 					$location .= '';
 					$location .= '<div class="gmw-cl-map-wrapper" style="width:'.$map_width.'; height:'.$map_height.'">';
 					$location .= 	'<div id="gmw-cl-map-'.$scid.'" class="gmw-cl-map-wrapper gmw-map" style="width:100%; height:100%;"></div>';
@@ -1739,25 +1739,25 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 	                            style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
 	                        }
 	                    });
-	     					
+
 	                    gmwClMarker = new google.maps.Marker({
 	                        position: userLoc,
 	                        map: gmwClMap,
 	                        icon:'<?php echo $map_marker; ?>'
-	                    });            
+	                    });
 	                };
 	            });
 	        </script>
-	        <?php 
+	        <?php
 	    	//if only text we need
-	    	if ( $text_only == 1 ) {		
+	    	if ( $text_only == 1 ) {
 	    		if ( !empty( $userAddress ) ) {
 	    			return apply_filters( 'gmw_cl_display_text_only', '<span class="gmw-cl-location">'.implode(' ', $userAddress).'</span>', $userAddress, $current_user );
 	    		} else {
 	    			return false;
 	    		}
 	    	}
-	    	
+
 	    	if ( !wp_script_is( 'gmw-cl-js', 'enqueue' ) ) {
 	    		wp_enqueue_script( 'gmw-cl-js' );
 	    	}
@@ -1817,7 +1817,7 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 	    	$template .=		'</div>';
 	    	$template .= 	'</form>';
 	    	$template .= '</div>';
-	    	 
+
 	    	$template = apply_filters( 'gmw_current_location_form', $template );
 
 	    	$template .= $this->hidden_form();
@@ -1831,12 +1831,12 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 	     */
 	    public function submitted_location( $location ) {
 
-	        if ( empty( $_POST['gmw_cl_action'] ) )
+	        if ( empty( $_POST['gmw_cl_action'] ) ) // phpcs:ignore WordPress.Security.NonceVerification
 	        	return;
 
 	        //do something with the information
-	        do_action( 'gmw_user_current_location_submitted', $_POST['gmw_cl_location'], get_current_user_id() );	
-	        
+	        do_action( 'gmw_user_current_location_submitted', $_POST['gmw_cl_location'], get_current_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
+
 	        //reload page to prevent form resubmission
 	        wp_redirect( $_SERVER['REQUEST_URI'] );
 	        exit;
@@ -1844,7 +1844,7 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 	}
 
 	//new GMW_Current_Location;
-	
+
 	/**
 	 * GMW Widget - User's current location
 	 * @version 1.0
@@ -1928,9 +1928,9 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 		 * @return array Updated safe values to be saved.
 		 */
 		function update( $new_instance, $old_instance ) {
-			 
-			$instance['widget_title']         = strip_tags($new_instance['widget_title']);
-			$instance['title_location']       = strip_tags($new_instance['title_location']);
+
+			$instance['widget_title']         = wp_strip_all_tags($new_instance['widget_title']);
+			$instance['title_location']       = wp_strip_all_tags($new_instance['title_location']);
 			$instance['short_code_location']  = $new_instance['short_code_location'];
 			$instance['display_by']           = $new_instance['display_by'];
 			$instance['name_guest']           = $new_instance['name_guest'];
@@ -1945,7 +1945,7 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 			$instance['user_message']         = $new_instance['user_message'];
 			$instance['guest_message']        = $new_instance['guest_message'];
 			$instance['get_location_message'] = $new_instance['get_location_message'];
-			 
+
 			return $instance;
 		}
 
@@ -1987,7 +1987,7 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 			?>
 
 	        <p>
-	            <label><?php echo esc_attr( __( "Widget's Title", 'geo-my-wp' ) ); ?>:</label>     
+	            <label><?php echo esc_attr( __( "Widget's Title", 'geo-my-wp' ) ); ?>:</label>
 	            <input type="text" name="<?php echo $this->get_field_name('widget_title'); ?>" value="<?php if ( isset( $instance['widget_title'] ) ) echo $instance['widget_title']; ?>" class="widefat" />
 	        </p>
 	        <p>
@@ -2014,28 +2014,28 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 	            <em style="font-size:12px;color:#777;display:block;margin:5px 0px;">
 	            	<?php _e( "Display greeting with \"guest\" or user name before the location.", 'geo-my-wp' ); ?>
 	            </em>
-	        </p>      
+	        </p>
 	         <p>
 	            <label><?php echo esc_attr( __( 'Greeting message ( logged in users )', 'geo-my-wp' ) ); ?>:</label>
 	            <input type="text" name="<?php echo $this->get_field_name('user_message'); ?>" value="<?php if ( isset($instance['user_message'] ) ) echo $instance['user_message']; ?>" class="widefat" />
 	            <em style="font-size:12px;color:#777;display:block;margin:5px 0px;">
 	            	<?php _e( "Text that will be displayed before the user name. For example \"Hello username\" ( requires the Display guest/User Name chekbox to be checked ).", 'geo-my-wp' ); ?>
-	            </em>           
-	        </p>    
+	            </em>
+	        </p>
 	        <p>
 	            <label><?php echo esc_attr( __( 'Greeting message ( guests )', 'geo-my-wp' ) ); ?>:</label>
 	            <input type="text" name="<?php echo $this->get_field_name('guest_message'); ?>" value="<?php if ( isset( $instance['guest_message'])) echo $instance['guest_message']; ?>" class="widefat" />
 	            <em style="font-size:12px;color:#777;display:block;margin:5px 0px;">
 	            	<?php _e( "Text that will be displayed when user is not looged in. for example \"Hello Guest\" ( requires the Display guest/User Name chekbox to be checked ).", 'geo-my-wp' ); ?>
 	            </em>
-	        </p>          
+	        </p>
 	        <p>
 	        	<input type="checkbox" value="1" name="<?php echo $this->get_field_name('map'); ?>" <?php if ( isset( $instance["map"] ) ) echo 'checked="checked"'; ?> class="checkbox" />
 	            <label><?php echo esc_attr( __( 'Display Google Map', 'geo-my-wp' ) ); ?></label>
 	            <em style="font-size:12px;color:#777;display:block;margin:5px 0px;">
 	            	<?php _e( "Display Google map showing the user's location.", 'geo-my-wp' ); ?>
 	            </em>
-	        </p>       
+	        </p>
 	        <p>
 	            <label><?php echo esc_attr( __( 'Map Height', 'geo-my-wp') ); ?>:</label>
 	            <input type="text" name="<?php echo $this->get_field_name( 'map_height' ); ?>" value="<?php if ( isset( $instance['map_height'] ) ) echo $instance['map_height']; ?>" class="widefat" />
@@ -2049,14 +2049,14 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 	            <em style="font-size:12px;color:#777;display:block;margin:5px 0px;">
 	            	<?php _e( "Set the map width in pixels or percentage ( ex. 100% ).", 'geo-my-wp' ); ?>
 	            </em>
-	        </p> 
+	        </p>
 	        <p>
 	            <label><?php echo esc_attr( __( 'Map Marker', 'geo-my-wp') ); ?>:</label>
 	            <input type="text" name="<?php echo $this->get_field_name( 'map_marker' ); ?>" value="<?php echo ( !empty( $instance['map_marker'] ) ) ? $instance['map_marker'] : 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'; ?>" class="widefat" />
 	        	<em style="font-size:12px;color:#777;display:block;margin:5px 0px;">
 	            	<?php _e( "Link to the image that will be used as the map marker.", 'geo-my-wp' ); ?>
-	            </em>  
-	        </p>       
+	            </em>
+	        </p>
 	        <p>
 	            <label><?php echo _e( 'Map Type', 'geo-my-wp'); ?>:</label>
 	            <select name="<?php echo $this->get_field_name( 'map_type' ); ?>">
@@ -2065,25 +2065,25 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 	        		<option value="HYBRID"    <?php if ( isset( $instance['map_type'] ) && $instance['map_type'] == "HYBRID" ) echo 'selected="selected"'; ?>>HYBRID</options>
 	        		<option value="TERRAIN"   <?php if ( isset( $instance['map_type'] ) && $instance['map_type'] == "TERRAIN" ) echo 'selected="selected"'; ?>>TERRAIN</options>
 	            </select>
-	        </p>       
+	        </p>
 	         <p>
 	            <label><?php echo _e( 'Zoom Level', 'geo-my-wp' ); ?>:</label>
 	            <select name="<?php echo $this->get_field_name('zoom_level'); ?>">
 	        	<?php for ($i = 1; $i < 18; $i++): ?>
 	            	<option value="<?php echo $i; ?> " <?php if (isset($instance['zoom_level']) && $instance['zoom_level'] == $i) echo "selected"; ?>><?php echo $i; ?></option>
-	        	<?php endfor; ?> 
+	        	<?php endfor; ?>
 	            </select>
 	        </p>
 	        <p>
 	        	<input type="checkbox" value="1" name="<?php echo $this->get_field_name('scrollwheel'); ?>" <?php if ( isset( $instance["scrollwheel"] ) ) echo 'checked="checked"'; ?> class="checkbox" />
-	            <label><?php echo esc_attr( __( 'ScrollWheel Enabled', 'geo-my-wp' ) ); ?></label>       
+	            <label><?php echo esc_attr( __( 'ScrollWheel Enabled', 'geo-my-wp' ) ); ?></label>
 	        	<em style="font-size:12px;color:#777;display:block;margin:5px 0px;">
 	            	<?php _e( "When enabled the map will zoom in/out using the mouse scrollwheel.", 'geo-my-wp' ); ?>
-	            </em> 
+	            </em>
 	        </p>
 	        <?php
 	    }
-	}   
+	}
 	//add_action( 'widgets_init', create_function( '', 'return register_widget( "GMW_Current_Location_Widget" );' ) );
 }
 
@@ -2131,7 +2131,7 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 	    					), $args )
 	    	);
 
-	    	$element_id = ( $element_id != 0 ) ? $element_id : rand( 5, 100 );
+	    	$element_id = ( $element_id != 0 ) ? $element_id : wp_rand( 5, 100 );
 
 	    	/*
 	    	 * check if user entered post id
@@ -2156,11 +2156,11 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 	        }
 
 	        $location_wrap_start = '<div id="gmw-single-post-sc-' . $element_id . '-wrapper" class="gmw-single-post-sc-wrapper gmw-single-post-sc-wrapper-'.$post_id.'">';
-	       
+
 	        $location_title = '';
 	        if ( $post_title == 1 ) {
 	        	$location_title = '<h3>'. get_the_title($post_id) .'</h3>';
-	        } 
+	        }
 
 	        $prefix = gmw_get_ulc_prefix();
 
@@ -2169,9 +2169,9 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 	        $yLat			   = 0;
 	        $yLng			   = 0;
 	        $location_distance = '';
-	        
+
 	        if ( $distance == 1 && $userLocationOk ) {
-		        
+
 	        	$distanceOK 	= 1;
 	        	$yLat			= urldecode( $_COOKIE[ $prefix . 'lat' ] );
 	        	$yLng			= urldecode( $_COOKIE[ $prefix . 'lng' ] );
@@ -2181,36 +2181,36 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 		        $distance_value = acos($distance_value);
 		        $distance_value = rad2deg($distance_value);
 		        $miles 			= $distance_value * 60 * 1.1515;
-		        
+
 		        if ( $unit == "k" ) {
 		        	$distance_value = ( $miles * 1.609344 );
 		        	$units_name		= 'km';
 		        } else {
 		        	$distance_value = ($miles * 0.8684);
 		        	$units_name		= 'mi';
-		        } 
+		        }
 
 		        $location_distance = '<div class="distance-wrapper"><p>'.__( 'Distance:','geo-my-wp' ). ' '. round( $distance_value, 2 ) .' '.$units_name.'</p></div>';
 	        }
-	        
+
 	        $location_map = '';
-	        if ( $map == 1 ) {			
+	        if ( $map == 1 ) {
 	        	$location_map  = '';
 	            $location_map .= '<div class="map-wrapper" style="width:' . $map_width . '; height:' . $map_height . '">';
 	            $location_map .= 	'<div id="gmw-single-post-map-' . $element_id . '" class="gmw-map" style="width:100%; height:100%;"></div>';
 	            $location_map .= '</div>';
 	        }
-			
+
 	        $location_directions = '';
 	        if ( $directions == 1 ) {
-				
+
 	        	$your_address = '';
-	        	if ( !empty( $_GET['address'] ) ) {
-	        		$your_address = sanitize_text_field( $_GET['address'] );
+	        	if ( !empty( $_GET['address'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+	        		$your_address = sanitize_text_field( $_GET['address'] ); // phpcs:ignore WordPress.Security.NonceVerification
 	        	} elseif ( !empty( $_COOKIE[ $prefix . 'address' ] ) ) {
 	        		$your_address = urldecode( $_COOKIE[ $prefix . 'address' ] );
 	        	}
-	        		
+
 	        	$location_directions  = '';
 	            $location_directions .= '<div class="directions-wrapper">';
 	            $location_directions .= 	'<div id="gmw-single-post-sc-form-' . $element_id . '" class="gmw-single-post-sc-form" style="display:none;">';
@@ -2223,20 +2223,20 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 	            $location_directions .= 	'<a href="#" id="single-post-trigger-' . $element_id . '"  class="single-post-trigger">' . __( 'Get Directions', 'geo-my-wp' ) . '</a>';
 	            $location_directions .= '</div>';
 	    	}
-			
+
 	    	$additional_info_ok = false;
 	    	$location_info = '';
 	        //if we are showing additional information
 	        if ( isset( $additional_info ) || $additional_info != 0 ) {
-	        	
+
 	        	$additional_info_ok = true;
 	            $additional_info    = explode( ',', $additional_info );
-				
+
 	            $location_info  = '';
 	            $location_info .= '<div class="gmw-single-post-sc-additional-info">';
 
 	            $post_address = ( !empty( $post_info->formatted_address ) ) ? esc_attr( $post_info->formatted_address ) : esc_attr( $post->address );
-	            
+
 	            if ( in_array( 'address', $additional_info ) && !empty( $post_address ) ) {
 	                $location_info .= '<div class="gmw-address"><span>' . __( 'Address: ', 'geo-my-wp' );
 	                $location_info .= '</span>';
@@ -2269,7 +2269,7 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 	            }
 	            $location_info .= '</div>';
 	        }
-	        $location_wrap_end = '</div>';     	
+	        $location_wrap_end = '</div>';
 	        ?>
 	        <script>
 
@@ -2294,17 +2294,17 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 	                    var latlngbounds = new google.maps.LatLngBounds();
 	                    var desLoc = new google.maps.LatLng(<?php echo $post_info->lat; ?>, <?php echo $post_info->lng; ?>);
 	                    latlngbounds.extend(desLoc);
-	                    
+
 	                    gmwSinglePostMarker = new google.maps.Marker({
 	                        position: desLoc,
 	                        map: gmwSinglePostMap,
 	                        icon:'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
 	                    });
-				           
+
 	                    if ( '<?php echo $info_window; ?>' == 1 ) {
-	                        
+
 		                    var infowindow = new google.maps.InfoWindow();
-		
+
 							var infoWindoContent = '';
 							infoWindoContent += '<div class="gmw-info-window wppl-info-window" style="font-size: 13px;color: #555;line-height: 18px;font-family: arial;">';
 							if ( '<?php echo $post_title ;?>' ==  1 ) {
@@ -2317,18 +2317,18 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 								infoWindoContent += '<?php echo $location_info; ?>';
 							}
 							infoWindoContent += '</div>';
-		
+
 							google.maps.event.addListener(gmwSinglePostMarker, 'click', function() {
 		                        infowindow.setContent(infoWindoContent);
 		                        infowindow.open(gmwSinglePostMap, gmwSinglePostMarker);
 		                    });
 						}
-	                    
+
 	                    if ( '<?php echo $userLocationOk; ?>' == true && '<?php echo $ul_marker; ?>' == 1  ) {
 
 	                        var yourLoc = new google.maps.LatLng(<?php echo $yLat; ?>, <?php echo $yLng; ?>);
 	                    	latlngbounds.extend(yourLoc);
-	                    	
+
 		                    ylMarker = new google.maps.Marker({
 		                        position: yourLoc,
 		                        map: gmwSinglePostMap,
@@ -2341,13 +2341,13 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 		                   		var yourInfoWindow = new google.maps.InfoWindow();
 		                    	yourInfoWindow.setContent('<?php echo $ul_message; ?>');
 		                    	yourInfoWindow.open(gmwSinglePostMap, ylMarker);
-		                    }  
-	                    }                 
+		                    }
+	                    }
 	                };
 	            });
 	        </script>
 	        <?php
-	        
+
 	        trigger_error( 'GMW_Single_Post_Location class which responsibles for the [gmw_single_location] shortcode is now deprecated. Please activate the Single Location add-on to use the new [gmw_single_location] shortcode properly.' , E_USER_NOTICE );
 
 	        if ( $show_info == 1 ) {
@@ -2355,7 +2355,7 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 	        }else {
 	        	$output = $location_wrap_start.$location_map.$location_wrap_end;
 	        }
-	        
+
 	        return apply_filters( 'gmw_pt_single_location_output', $output, $args, $location_wrap_start, $location_title, $location_map, $location_distance, $location_info, $location_directions, $location_wrap_end );
 	    }
 	}
@@ -2389,7 +2389,7 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 		if ( $user_id == false && !bp_is_user() && ( !is_single() || $show_on_single_post != 1 ) )
 			return;
 
-		$scID = rand(1, 9999);
+		$scID = wp_rand(1, 9999);
 
 		if ( $user_id != false ) {
 			$member_id = $user_id;

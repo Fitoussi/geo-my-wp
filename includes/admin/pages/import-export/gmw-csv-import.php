@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 3.0
  *
- * @param  file   $file     file to import.
+ * @param  string $file     file to import.
  *
  * @param  string $db_table name of database table to import data to.
  */
@@ -50,8 +50,8 @@ function gmw_csv_import( $file = false, $db_table = '' ) {
 	$csv->auto( $file );
 
 	$results = $csv->data;
-	$page    = ! empty( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : ''; // WPSC: CSRF ok.
-	$tab     = ! empty( $_GET['tab'] ) ? '&tab=' . sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : ''; // WPSC: CSRF ok.
+	$page    = ! empty( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
+	$tab     = ! empty( $_GET['tab'] ) ? '&tab=' . sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 	// abort if not data to import.
 	if ( empty( $results ) ) {
@@ -63,8 +63,9 @@ function gmw_csv_import( $file = false, $db_table = '' ) {
 
 	global $wpdb;
 
-	$table_name = $wpdb->prefix . $db_table;
+	$table_name = esc_sql( $wpdb->prefix . $db_table );
 
+	// phpcs:disable
 	// check if table exists already.
 	$table_exists = $wpdb->get_results( "SHOW TABLES LIKE '{$table_name}'", ARRAY_A ); // WPCS: db call ok, cache ok, unprepared SQL ok.
 
@@ -75,6 +76,7 @@ function gmw_csv_import( $file = false, $db_table = '' ) {
 	}
 
 	$columns_count = $wpdb->query( "describe {$table_name}" ); // WPCS: db call ok, cache ok, unprepared SQL ok.
+	// phpcs:enable
 
 	if ( absint( $columns_count ) !== count( $results[0] ) ) {
 		wp_die( esc_html__( 'Columns in file do not match the database table.', 'geo-my-wp' ) );

@@ -11,6 +11,18 @@ class GMW_Sweet_Date_Geolocation {
 
 	public $prefix = 'sdate_geo';
 
+	public $form_data = array();
+
+	public $label = array();
+
+	public $units_label = array();
+
+	public $options = array();
+
+	public $radius_values = array();
+
+
+
 	/**
 	 * gmw_location database fields that will be pulled in the search query
 	 *
@@ -63,10 +75,10 @@ class GMW_Sweet_Date_Geolocation {
 	 */
 	public function __construct() {
 
-		// Sweet-date options
+		// Sweet-date options.
 		$this->options = gmw_get_options_group( 'sweet_date' );
 
-		// abort if the add-on is not yet setup
+		// abort if the add-on is not yet setup.
 		if ( empty( $this->options ) ) {
 			return;
 		}
@@ -83,68 +95,68 @@ class GMW_Sweet_Date_Geolocation {
 			'orderby'       => '',
 		);
 
-		// labels
+		// labels.
 		$this->labels      = $this->labels();
 		$this->units_label = ( '6371' == $this->options['units'] ) ? $this->labels['km'] : $this->labels['mi'];
 
 		$doing_ajax = defined( 'DOING_AJAX' ) ? true : false;
 
-		// get the default addres value from URL if exists
-		if ( ! $doing_ajax && ! empty( $_GET['address'] ) ) {
+		// get the default addres value from URL if exists.
+		if ( ! $doing_ajax && ! empty( $_GET['address'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
-			$this->form_data['address'] = sanitize_text_field( stripslashes( $_GET['address'] ) );
+			$this->form_data['address'] = wp_unslash( sanitize_text_field( $_GET['address'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
-			// otherwise, check in cookies
+			// otherwise, check in cookies.
 		} elseif ( ! empty( $_COOKIE[ 'gmw_' . $this->prefix . '_address' ] ) && 'undefined' != $_COOKIE[ 'gmw_' . $this->prefix . '_address' ] ) {
 
 			$this->form_data['address'] = urldecode( stripslashes( $_COOKIE[ 'gmw_' . $this->prefix . '_address' ] ) );
 		}
 
-		// orderby value from URL if exists
-		if ( ! $doing_ajax && ! empty( $_GET['orderby'] ) ) {
+		// orderby value from URL if exists.
+		if ( ! $doing_ajax && ! empty( $_GET['orderby'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
-			$this->form_data['orderby'] = sanitize_text_field( $_GET['orderby'] );
+			$this->form_data['orderby'] = wp_unslash( sanitize_text_field( $_GET['orderby'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, sanitization ok, CSRF ok.
 
-			// otherwise, check in cookies
+			// otherwise, check in cookies.
 		} elseif ( ! empty( $_COOKIE[ 'gmw_' . $this->prefix . '_orderby' ] ) && $_COOKIE[ 'gmw_' . $this->prefix . '_orderby' ] != 'undefined' ) {
 
 			$this->form_data['orderby'] = urldecode( $_COOKIE[ 'gmw_' . $this->prefix . '_orderby' ] );
 		}
 
-		// get the default latitude
-		if ( ! $doing_ajax && isset( $_REQUEST['lat'] ) ) {
+		// get the default latitude.
+		if ( ! $doing_ajax && isset( $_REQUEST['lat'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
-			$this->form_data['lat'] = sanitize_text_field( $_REQUEST['lat'] );
+			$this->form_data['lat'] = wp_unslash( sanitize_text_field( $_REQUEST['lat'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 		} elseif ( isset( $_COOKIE[ 'gmw_' . $this->prefix . '_lat' ] ) && 'undefined' != $_COOKIE[ 'gmw_' . $this->prefix . '_lat' ] ) {
 
 			$this->form_data['lat'] = urldecode( $_COOKIE[ 'gmw_' . $this->prefix . '_lat' ] );
 		}
 
-		// get the default longitude
-		if ( ! $doing_ajax && isset( $_REQUEST['lng'] ) ) {
+		// get the default longitude.
+		if ( ! $doing_ajax && isset( $_REQUEST['lng'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recomended.
 
-			$this->form_data['lng'] = sanitize_text_field( $_REQUEST['lng'] );
+			$this->form_data['lng'] = wp_unslash( sanitize_text_field( $_REQUEST['lng'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recomended.
 
 		} elseif ( isset( $_COOKIE[ 'gmw_' . $this->prefix . '_lng' ] ) && 'undefined' != $_COOKIE[ 'gmw_' . $this->prefix . '_lng' ] ) {
 
 			$this->form_data['lng'] = urldecode( $_COOKIE[ 'gmw_' . $this->prefix . '_lng' ] );
 		}
 
-		// radius values
+		// radius values.
 		$this->radius_values = str_replace( ' ', '', explode( ',', $this->options['radius'] ) );
 
-		// if single, default value get it from the options
+		// if single, default value get it from the options.
 		if ( 1 == count( $this->radius_values ) ) {
 
 			$this->form_data['radius'] = end( $this->radius_values );
 
-			// check in URL if exists
-		} elseif ( ! $doing_ajax && ! empty( $_GET['field_radius'] ) ) {
+			// check in URL if exists.
+		} elseif ( ! $doing_ajax && ! empty( $_GET['field_radius'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recomended.
 
-			$this->form_data['radius'] = $_GET['field_radius'];
+			$this->form_data['radius'] = $_GET['field_radius']; // phpcs:ignore WordPress.Security.NonceVerification.Recomended.
 
-			// otherwise, maybe in cookies
+			// otherwise, maybe in cookies.
 		} elseif ( ! empty( $_COOKIE[ 'gmw_' . $this->prefix . '_radius' ] ) && 'undefined' != $_COOKIE[ 'gmw_' . $this->prefix . '_radius' ] ) {
 
 			$this->form_data['radius'] = urldecode( $_COOKIE[ 'gmw_' . $this->prefix . '_radius' ] );
@@ -159,7 +171,7 @@ class GMW_Sweet_Date_Geolocation {
 		add_action( 'bp_members_inside_avatar', array( $this, 'get_distance' ) );
 		add_action( 'bp_directory_members_item', array( $this, 'add_elements_to_results' ) );
 		// add_filter( 'bp_user_query_uid_clauses',   array( $this, 'order_results_by_distance' ), 50, 2 );
-		// enable map
+		// enable map.
 		if ( ! empty( $this->options['map'] ) ) {
 			add_action( 'bp_members_directory_member_sub_types', array( $this, 'map_element' ) );
 			add_action( 'bp_after_members_loop', array( $this, 'trigger_js_and_map' ) );
