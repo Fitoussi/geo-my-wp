@@ -119,7 +119,7 @@ class GMW_Current_Location {
 
 		/**
 		 * location_form_trigger deprecated and replaced with update_location_label.
-		 * 
+		 *
 		 * @deprecated since 4.0.
 		 */
 		if ( ! isset( $atts['update_location_label'] ) && isset( $atts['location_form_trigger'] ) ) {
@@ -131,7 +131,7 @@ class GMW_Current_Location {
 
 		/**
 		 * clear_location_trigger deprecated and replaced with clear_location_label.
-		 * 
+		 *
 		 * @deprecated since 4.0.
 		 */
 		if ( ! isset( $atts['clear_location_label'] ) && isset( $atts['clear_location_trigger'] ) ) {
@@ -267,9 +267,7 @@ class GMW_Current_Location {
 
 			global $current_user, $wp_version;
 
-			if ( version_compare( $wp_version, '4.5', '<' ) ) {
-				get_currentuserinfo();
-			} else {
+			if ( function_exists( 'wp_get_current_user' ) ) {
 				wp_get_current_user();
 			}
 
