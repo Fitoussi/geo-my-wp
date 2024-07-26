@@ -26,7 +26,7 @@ class GMW_Forms_Page {
 	 */
 	public function __construct() {
 
-		if ( empty( $_GET['page'] ) || 'gmw-forms' !== $_GET['page'] ) { // phpcs:ignore: CSRF ok.
+		if ( empty( $_GET['page'] ) || 'gmw-forms' !== $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 			return;
 		}
 
@@ -65,7 +65,7 @@ class GMW_Forms_Page {
 	public function create_new_form() {
 
 		// verfiy form data.
-		if ( empty( $_GET['addon'] ) || empty( $_GET['slug'] ) ) { // phpcs:ignore: CSRF ok.
+		if ( empty( $_GET['addon'] ) || empty( $_GET['slug'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 			wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_not_created&gmw_notice_status=error' ) );
 
@@ -74,12 +74,12 @@ class GMW_Forms_Page {
 
 		// get form values.
 		$new_form                = array();
-		$new_form['slug']        = sanitize_text_field( wp_unslash( $_GET['slug'] ) ); // phpcs:ignore: CSRF ok.
-		$new_form['addon']       = sanitize_text_field( wp_unslash( $_GET['addon'] ) ); // phpcs:ignore: CSRF ok.
-		$new_form['component']   = ! empty( $_GET['component'] ) ? sanitize_text_field( wp_unslash( $_GET['component'] ) ) : ''; // phpcs:ignore: CSRF ok.
-		$new_form['object_type'] = ! empty( $_GET['object_type'] ) ? sanitize_text_field( wp_unslash( $_GET['object_type'] ) ) : ''; // phpcs:ignore: CSRF ok.
-		$new_form['name']        = ! empty( $_GET['name'] ) ? str_replace( '+', ' ', sanitize_text_field( wp_unslash( $_GET['name'] ) ) ) : ''; // phpcs:ignore: CSRF ok.
-		$new_form['prefix']      = ! empty( $_GET['prefix'] ) ? sanitize_text_field( wp_unslash( $_GET['prefix'] ) ) : ''; // phpcs:ignore: CSRF ok.
+		$new_form['slug']        = sanitize_text_field( wp_unslash( $_GET['slug'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
+		$new_form['addon']       = sanitize_text_field( wp_unslash( $_GET['addon'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
+		$new_form['component']   = ! empty( $_GET['component'] ) ? sanitize_text_field( wp_unslash( $_GET['component'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
+		$new_form['object_type'] = ! empty( $_GET['object_type'] ) ? sanitize_text_field( wp_unslash( $_GET['object_type'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
+		$new_form['name']        = ! empty( $_GET['name'] ) ? str_replace( '+', ' ', sanitize_text_field( wp_unslash( $_GET['name'] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
+		$new_form['prefix']      = ! empty( $_GET['prefix'] ) ? sanitize_text_field( wp_unslash( $_GET['prefix'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 		global $wpdb;
 
@@ -155,7 +155,7 @@ class GMW_Forms_Page {
 	public function duplicate_form() {
 
 		// verify the form ID.
-		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) { // phpcs:ignore: CSRF ok.
+		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 			wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_not_duplicated&gmw_notice_status=error' ) );
 
@@ -225,7 +225,7 @@ class GMW_Forms_Page {
 	public function delete_form() {
 
 		// Abort if form ID doesn't exists.
-		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) { // phpcs:ignore: CSRF ok.
+		if ( empty( $_GET['form_id'] ) || ! absint( $_GET['form_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 			wp_safe_redirect( admin_url( 'admin.php?page=gmw-forms&gmw_notice=form_not_deleted&gmw_notice_status=error' ) );
 			exit;
 		}
