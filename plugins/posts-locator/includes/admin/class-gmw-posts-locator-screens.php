@@ -302,7 +302,6 @@ class GMW_Posts_Locator_Screens {
 		$address    = gmw_get_post_location( $post->ID );
 		$no_address = __( 'No location found.', 'geo-my-wp' );
 		$address    = ! empty( $address->address ) ? $address->address : $no_address;
-		$link       = '<a id="gmw-modal-location-form-toggle" href="#" class="gmw-popup-element-toggle button" data-element="#gmw-location-form-modal-element">' . esc_html__( 'Edit Location', 'geo-my-wp' ) . '</a>';
 
 		wp_enqueue_script( 'gmw-admin' );
 		?>
@@ -371,7 +370,7 @@ class GMW_Posts_Locator_Screens {
 				<input style="background: none;width:100%" type="text" readonly="readonly" id="gmw-location" value="<?php echo esc_attr( $address ); ?>" class="regular-text" />
 			</span>
 			<div style="margin-top:10px">
-				<?php echo $link; // WPCS: XSS ok. ?>
+				<?php echo '<a id="gmw-modal-location-form-toggle" href="#" class="gmw-popup-element-toggle button" data-element="#gmw-location-form-modal-element">' . esc_html__( 'Edit Location', 'geo-my-wp' ) . '</a>'; ?>
 			</div>
 		</div>
 
