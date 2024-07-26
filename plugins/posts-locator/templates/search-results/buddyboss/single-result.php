@@ -28,7 +28,7 @@
 
 		<?php gmw_search_results_distance( $post, $gmw ); ?>
 
-		<?php 
+		<?php
 		if ( ! empty( $gmw['search_results']['image']['enabled'] ) ) {
 			buddyboss_theme_entry_header( $post );
 		}
@@ -37,15 +37,17 @@
 		<div class="entry-content-wrap">
 
 			<header class="entry-header">
-		
+
 				<h2 class="gmw-item gmw-item-title entry-title">
 					<?php gmw_search_results_linked_title( get_permalink(), get_the_title(), $post, $gmw ); ?>
 					<?php gmw_search_results_address( $post, $gmw ); ?>
 				</h2>
 
-				<?php if ( has_post_format( 'link' ) && function_exists( 'buddyboss_theme_get_first_url_content' ) && ( $first_url = buddyboss_theme_get_first_url_content( $post->post_content ) ) != "" ):?>
-					<p class="post-main-link"><?php echo $first_url;?></p>
-				<?php endif; ?>
+				<?php $first_url = buddyboss_theme_get_first_url_content( $post->post_content ); ?>
+
+				<?php if ( has_post_format( 'link' ) && function_exists( 'buddyboss_theme_get_first_url_content' ) && '' !== $first_url ) { ?>
+					<p class="post-main-link"><?php echo $first_url; ?></p>
+				<?php } ?>
 
 			</header>
 
