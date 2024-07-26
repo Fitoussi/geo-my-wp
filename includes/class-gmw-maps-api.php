@@ -189,6 +189,7 @@ class GMW_Maps_API {
 			'boundaries_filter'       => 'disabled',
 			'boundaries_filter_label' => '',
 			'implode'                 => true,
+			'css_class'               => '',
 		);
 
 		// merge defaults with incoming args.
@@ -209,6 +210,7 @@ class GMW_Maps_API {
 
 		$map_id      = esc_attr( $args['map_id'] );
 		$prefix      = esc_attr( $args['prefix'] );
+		$css_class   = esc_attr( 'gmw-map-wrapper ' . $args['css_class'] );
 		$map_type    = esc_attr( $args['map_type'] );
 		$map_width   = esc_attr( $args['map_width'] );
 		$map_height  = esc_attr( $args['map_height'] );
@@ -217,7 +219,7 @@ class GMW_Maps_API {
 		$icons_usage = ! empty( $gmw['map_markers']['usage'] ) ? esc_attr( $gmw['map_markers']['usage'] ) : 'global';
 
 		// generate the map element.
-		$output['wrap']   = "<div id=\"gmw-map-wrapper-{$map_id}\" class=\"gmw-map-wrapper {$prefix} {$map_type} {$expanded}\" style=\"{$display}width:{$map_width};height:{$map_height};\">";
+		$output['wrap']   = "<div id=\"gmw-map-wrapper-{$map_id}\" class=\"{$css_class} {$prefix} {$map_type} {$expanded}\" style=\"{$display}width:{$map_width};height:{$map_height};\">";
 		$output['toggle'] = "<span id=\"gmw-resize-map-toggle-{$map_id}\" class=\"gmw-resize-map-toggle {$trigger}\" style=\"display:none;\" title=\"{$map_title}\"></span>";
 
 		if ( 'disabled' !== $args['boundaries_filter'] ) {
