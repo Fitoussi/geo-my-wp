@@ -5,9 +5,9 @@
  * Description:       GEO my WP is an adavanced geolocation, mapping, and proximity search plugin. Geotag post types and BuddyPress members, and create advanced, proximity search forms to search and find locations based on address, radius,categories and more.
  * Author:            Eyal Fitoussi
  * Author URI:        http://www.geomywp.com
- * Version:           4.4.0.2
+ * Version:           4.4.0.3
  * Requires at least: 5.6
- * Tested up to:      6.5.5
+ * Tested up to:      6.6.1
  * Requires PHP:      7.0
  * Text Domain:       geo-my-wp
  * Domain Path:       /languages
@@ -32,7 +32,7 @@ class GEO_MY_WP {
 	 *
 	 * @var string
 	 */
-	public $version = '4.4.0.2';
+	public $version = '4.4.0.3';
 
 	/**
 	 * GEO my WP & Extensions options.
@@ -289,7 +289,7 @@ class GEO_MY_WP {
 	 * @return void
 	 */
 	public function __clone() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' eh?!', 'geo-my-wp' ), '3.0' ); // phpcs:ignore: XSS ok.
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ), '3.0' ); // phpcs:ignore: XSS ok.
 	}
 
 	/**
@@ -300,7 +300,7 @@ class GEO_MY_WP {
 	 * @return void
 	 */
 	public function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' eh?!', 'geo-my-wp' ), '3.0' ); // phpcs:ignore: XSS ok.
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ), '3.0' ); // phpcs:ignore: XSS ok.
 	}
 
 	/**
