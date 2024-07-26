@@ -184,11 +184,9 @@ class GMW_Posts_Locator_Screens {
 			$address = __( 'Location found but the address is missing', 'GMW' );
 		}
 
-		$address = esc_attr( $address );
-
 		// create link to address.
-		$address = ( true === $address_ok ) ? '<a href="https://maps.google.com/?q=' . $address . '" target="_blank" title="location">' . $address . '</a>' : '<span style="color:red">' . $address . '</span>';
-		echo '<i class="gmw-icon-ok-circled" style="color: green;margin-right: 1px;font-size: 12px;" style="color:green"></i>' . $address; // WPSC: XSS ok.
+		$address = ( true === $address_ok ) ? '<a href="https://maps.google.com/?q=' . esc_attr( $address ) . '" target="_blank" title="location">' . esc_attr( $address ) . '</a>' : '<span style="color:red">' . esc_attr( $address ) . '</span>';
+		echo '<i class="gmw-icon-ok-circled" style="color: green;margin-right: 1px;font-size: 12px;" style="color:green"></i>' . esc_attr( $address );
 
 	}
 
