@@ -1,5 +1,9 @@
 jQuery( document ).ready( function( $ ) {
 
+	if (gmwBpdg.component == 'business') {
+		gmwBpdg.component = 'busines';
+	}
+
 	// This is a workaround to move the geolcoation items ( address, distance, directions link ) in each member in the results to a better position inside the div element.
 	// There is only one hook that we could use for adding those geolocation items into the results, but that hook is not a great location
 	// to showcase those items. This is a "hacky" way of doing so, and hpefully temporary.
@@ -90,15 +94,20 @@ jQuery( document ).ready( function( $ ) {
 	});
 
 	// Move geolocation form field dynamically into the directory form.
-	if ( jQuery( '.youzify-search-input-form' ).length ) {
+	if ($('.youzify-search-input-form').length) {
 
-		$( '#gmw-' + gmwBpdg.prefix + '-form-temp-holder' ).children().detach().insertAfter( '.youzify-left-side-wrapper' ).find( 'input[type="text"]' ).addClass( 'youzify-search-input' );
+		$('#gmw-' + gmwBpdg.prefix + '-form-temp-holder').children().detach().insertAfter('.youzify-left-side-wrapper').find('input[type="text"]').addClass('youzify-search-input');
 
-		jQuery( '.youzify-search-input-container' ).addClass( 'gmw-bpdg-enabled' );
+		jQuery('.youzify-search-input-container').addClass('gmw-bpdg-enabled');
 
-		if ( jQuery( '.youzify-search-input-container' ).find( '.youzify-show-filters' ).length && jQuery( '.youzify-search-input-container' ).find( '.gmw-bpdg-radius-field-wrapper' ).length ) {
-			 jQuery( '.youzify-search-input-container' ).addClass( 'filters-enabled' );
+		if (jQuery('.youzify-search-input-container').find('.youzify-show-filters').length && jQuery('.youzify-search-input-container').find('.gmw-bpdg-radius-field-wrapper').length) {
+			jQuery('.youzify-search-input-container').addClass('filters-enabled');
 		}
+
+	} else if( $('#dir-business-search-form').length) {
+
+		$( '#gmw-form-elements-holder' ).detach().insertAfter( '#dir-business-search-form' ).children().unwrap();
+		$('#gmw-distance-element-holder').detach().appendTo('#business-order-by').children().unwrap();
 
 	} else {
 		$( '#gmw-' + gmwBpdg.prefix + '-form-temp-holder' ).children().detach().insertBefore( '#' + gmwBpdg.component + 's_search_submit' );
@@ -286,7 +295,7 @@ jQuery( document ).ready( function( $ ) {
 		return true;*/
 	});
 
-	$( '#' + gmwBpdg.component + 's_search_submit' ).click( function( e ) {
+	$( '#' + gmwBpdg.component + 's_search_submit, #dir-' + gmwBpdg.component + 's-search-submit' ).click( function( e ) {
 
 		gmw_bpdg_update_cookies( true );
 
