@@ -166,7 +166,7 @@ function gmw_verify_id( $id = 0 ) {
  */
 function gmw_is_addon_active( $addon = '' ) {
 
-	if ( ! empty( GMW()->addons_status[ $addon ] ) && 'active' === GMW()->addons_status[ $addon ] && ! isset( $_POST['gmw_premium_license'] ) ) { // phpcs:ignore: CSRF ok.
+	if ( ! empty( GMW()->addons_status[ $addon ] ) && 'active' === GMW()->addons_status[ $addon ] && ! isset( $_POST['gmw_premium_license'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 		return true;
 	} else {
 		return false;
@@ -485,12 +485,12 @@ function gmw_get_user_current_address() {
  */
 function gmw_process_actions() {
 
-	if ( isset( $_POST['gmw_action'] ) ) { // phpcs:ignore: CSRF ok.
-		do_action( 'gmw_' . wp_unslash( $_POST['gmw_action'] ), $_POST ); // phpcs:ignore: CSRF ok, sanitization ok.
+	if ( isset( $_POST['gmw_action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+		do_action( 'gmw_' . wp_unslash( $_POST['gmw_action'] ), $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 	}
 
-	if ( isset( $_GET['gmw_action'] ) ) { // phpcs:ignore: CSRF ok.
-		do_action( 'gmw_' . wp_unslash( $_GET['gmw_action'] ), $_GET ); // phpcs:ignore: CSRF ok, sanitization ok.
+	if ( isset( $_GET['gmw_action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
+		do_action( 'gmw_' . wp_unslash( $_GET['gmw_action'] ), $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 	}
 }
 
@@ -1868,19 +1868,19 @@ function gmw_ajax_info_window_init() {
 	 * additional data generated to the form during the search query process.
 	 * $gmw = $_POST['form'];
 	 */
-	if ( isset( $_POST['location'] ) ) {
-		$location = is_object( $_POST['location'] ) ? $_POST['location'] : (object) $_POST['location']; // phpcs:ignore: CSRF ok, sanitization ok.
+	if ( isset( $_POST['location'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+		$location = is_object( $_POST['location'] ) ? $_POST['location'] : (object) $_POST['location']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 	} else {
 		$location = new stdClass();
 	}
 
-	if ( ! empty( $_POST['form'] ) ) {
+	if ( ! empty( $_POST['form'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 
-		$gmw = $_POST['form']; // phpcs:ignore: CSRF ok, sanitization ok.
+		$gmw = $_POST['form']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 
-	} elseif ( ! empty( $_POST['form_id'] ) ) {
+	} elseif ( ! empty( $_POST['form_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 
-		$gmw = gmw_get_form( $_POST['form_id'] ); // phpcs:ignore: CSRF ok, sanitization ok.
+		$gmw = gmw_get_form( $_POST['form_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 
 	} else {
 

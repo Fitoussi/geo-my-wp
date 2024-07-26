@@ -190,7 +190,7 @@ class GMW_Location {
 		$table = esc_sql( $table );
 
 		// look for the location in database.
-		// phpcs:ignore.
+		// phpcs:disable
 		$location_id = $wpdb->get_var(
 			$wpdb->prepare(
 				"
@@ -200,6 +200,7 @@ class GMW_Location {
 				$location_id
 			)
 		); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		// phpcs:enable
 
 		return ! empty( $location_id ) ? true : false;
 	}
@@ -226,7 +227,7 @@ class GMW_Location {
 		$table = self::get_table();
 
 		// look for the location in database.
-		// phpcs:ignore.
+		// phpcs:disable
 		$object_type = $wpdb->get_var(
 			$wpdb->prepare(
 				"
@@ -236,6 +237,7 @@ class GMW_Location {
 				$location_id
 			)
 		); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		// phpcs:enable
 
 		return $object_type;
 
@@ -575,7 +577,8 @@ class GMW_Location {
 		if ( false === $location ) {
 
 			$table = self::get_table();
-			// phpcs:ignore.
+
+			// phpcs:disable
 			$location = $wpdb->get_row(
 				$wpdb->prepare(
 					"
@@ -586,6 +589,7 @@ class GMW_Location {
 				),
 				OBJECT
 			); // phpcs:ignore: db call ok, cache ok, unprepared SQL ok.
+			// phpcs:enable
 
 			// set location in cache if found.
 			if ( ! empty( $location ) ) {
@@ -683,7 +687,8 @@ class GMW_Location {
 
 			$blog_id = gmw_get_blog_id( $object_type );
 			$table   = self::get_table();
-			// phpcs:ignore.
+
+			// phpcs:disable
 			$location = $wpdb->get_row(
 				$wpdb->prepare(
 					"
@@ -702,6 +707,7 @@ class GMW_Location {
 				),
 				OBJECT
 			); // phpcs:ignore: unprepared SQL ok, db call ok.
+			// phpcs:enable
 
 			// save to cache if location found.
 			if ( ! empty( $location ) ) {
@@ -897,7 +903,7 @@ class GMW_Location {
 			$blog_id = gmw_get_blog_id( $object_type );
 			$table   = self::get_table();
 
-			// phpcs:ignore.
+			// phpcs:disable
 			$locations = $wpdb->get_results(
 				$wpdb->prepare(
 					"
@@ -912,6 +918,7 @@ class GMW_Location {
 				),
 				OBJECT
 			); // phpcs:ignore: db call ok, cache ok, unprepared SQL ok.
+			// phpcs:enable
 
 			// save to cache if location found.
 			if ( ! empty( $locations ) ) {
@@ -977,6 +984,7 @@ class GMW_Location {
 			$key = str_replace( '_filter', '', $key );
 
 			// filter region.
+			// phpcs:disable
 			if ( in_array( $key, array( 'region_name', 'region_code', 'state' ), true ) ) {
 
 				$output .= $wpdb->prepare( ' AND ( gmw_locations.region_name = %s OR gmw_locations.region_code = %s )', $value, $value );
@@ -996,6 +1004,7 @@ class GMW_Location {
 
 				$output .= $wpdb->prepare( " AND gmw_locations.{$key} = %s", $value );
 			}
+			// phpcs:enable
 		}
 
 		return $output;
@@ -1688,7 +1697,7 @@ class GMW_Location {
 		// delete location from database.
 		$table = self::get_table();
 
-		// phpcs:ignore.
+		// phpcs:disable
 		$deleted = $wpdb->query(
 			$wpdb->prepare(
 				"
@@ -1702,6 +1711,7 @@ class GMW_Location {
 				$object_id
 			)
 		); // phpcs:ignore: db call ok, cache ok, unprepared SQL ok.
+		// phpcs:enable
 
 		// abort if failed to delete.
 		if ( empty( $deleted ) ) {

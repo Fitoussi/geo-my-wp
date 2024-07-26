@@ -462,7 +462,7 @@ class Csv {
             header('Cache-Control: no-cache, must-revalidate');
             header('Pragma: no-cache');
             header('Expires: 0');
-            header('Content-Disposition: attachment; filename="' . $filename . '"; modification-date="' . date('r') . '";');
+            header('Content-Disposition: attachment; filename="' . $filename . '"; modification-date="' . gmdate('r') . '";');
 
             echo $flat_string;
         }
@@ -1221,7 +1221,11 @@ class Csv {
      */
     protected function _rfile($file) {
         if (is_readable($file)) {
+
+            // phpcs:disable
             $data = file_get_contents($file);
+            // phpcs:enable
+
             if ($data === false) {
                 return false;
             }
@@ -1244,16 +1248,20 @@ class Csv {
      *
      */
     protected function _wfile($file, $content = '', $mode = 'wb', $lock = LOCK_EX) {
+        // phpcs:disable
         if ($fp = fopen($file, $mode)) {
             flock($fp, $lock);
+
+            // phpcs:disable
             $re = fwrite($fp, $content);
             $re2 = fclose($fp);
+            // phpcs:enable
 
             if ($re !== false && $re2 !== false) {
                 return true;
             }
         }
-
+        // phpcs:enable
         return false;
     }
 

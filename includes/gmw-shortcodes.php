@@ -53,7 +53,7 @@ function gmw_shortcode( $attr = array() ) {
 		return $error_message;
 	}
 
-	$_GET = apply_filters( 'gmw_modify_get_args', $_GET ); // phpcs:ignore: CSRF ok.
+	$_GET = apply_filters( 'gmw_modify_get_args', $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 	// verify that form element passed via shortcode attribute.
 	if ( empty( $element_value ) ) {
@@ -75,7 +75,7 @@ function gmw_shortcode( $attr = array() ) {
 	if ( 'results' === $element_value ) {
 
 		// abort if form was not submitted.
-		if ( ! isset( $_GET[ $url_px . 'form' ] ) ) { // phpcs:ignore: CSRF ok.
+		if ( ! isset( $_GET[ $url_px . 'form' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 			return;
 			// phpcs:disable.
@@ -92,7 +92,7 @@ function gmw_shortcode( $attr = array() ) {
 		}
 
 		// get the form ID from URL.
-		$form_id = absint( $_GET[ $url_px . 'form' ] ); // phpcs:ignore: CSRF ok.
+		$form_id = absint( $_GET[ $url_px . 'form' ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 		// set the element as results page.
 		$element = 'search_results';

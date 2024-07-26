@@ -442,7 +442,7 @@ if ( ! class_exists( 'GMW_License' ) ) :
 			$nonce          = wp_create_nonce( 'gmw_' . $license_name . '_license_nonce' );
 			$license_value  = ! empty( $this->license_key ) ? esc_attr( sanitize_text_field( $this->license_key ) ) : '';
 			$expires        = gmw_get_license_data( $license_name, 'expires' );
-			$expires        = ! empty( $expires ) ? date( 'm/d/Y', strtotime( $expires ) ) : '';
+			$expires        = ! empty( $expires ) ? gmdate( 'm/d/Y', strtotime( $expires ) ) : '';
 			$action         = '';
 			$data_attr      = '';
 			$class          = '';
@@ -925,11 +925,11 @@ if ( ! class_exists( 'GMW_License' ) ) :
 		$page = ( isset( $_GET['page'] ) && 'gmw-extensions' === $_GET['page'] ) ? 'admin.php?page=gmw-extensions&' : 'plugins.php?';
 
 		// get license data.
-		$license_data = $_POST['gmw_licenses'][ $_POST['gmw_license_submit'] ];
+		$license_data = $_POST['gmw_licenses'][ $_POST['gmw_license_submit'] ]; // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 
 		// varify nonce.
 		if ( empty( $license_data['nonce'] ) || ! wp_verify_nonce( $license_data['nonce'], 'gmw_' . $license_data['license_name'] . '_license_nonce' ) ) {
-			wp_die( __( 'Cheatin\' eh?!', 'geo-my-wp' ) ); // WPCS: XSS ok.
+			wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) ); // phpcs:ignore CSRF ok.
 		}
 
 		// run license action.
@@ -992,19 +992,19 @@ if ( ! class_exists( 'GMW_License' ) ) :
 	function gmw_display_license_update_notice() {
 
 		// check if updating license key.
-		if ( empty( $_GET['gmw_license_status_notice'] ) ) { // WPCS: CSRF ok.
+		if ( empty( $_GET['gmw_license_status_notice'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 			return;
 		}
 
 		$messages      = gmw_license_update_notices();
-		$message       = sanitize_text_field( wp_unslash( $messages[ $_GET['gmw_license_status_notice'] ] ) ); // WPCS: CSRF ok.
+		$message       = sanitize_text_field( wp_unslash( $messages[ $_GET['gmw_license_status_notice'] ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 		$allow         = array( 'a' => array( 'href' => array() ) );
 		$message       = wp_kses( $message, $allow );
-		$notice_status = ! empty( $_GET['gmw_notice_status'] ) ? sanitize_text_field( wp_unslash( $_GET['gmw_notice_status'] ) ) : ''; // WPCS: CSRF ok.
+		$notice_status = ! empty( $_GET['gmw_notice_status'] ) ? sanitize_text_field( wp_unslash( $_GET['gmw_notice_status'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 		?>
-		<div class="<?php echo $notice_status; // WPCS: XSS ok. ?>">
+		<div class="<?php echo $notice_status; // phpcs:ignore XSS ok. ?>">
 			<p>
-				<?php echo $message; // WPCS: XSS ok. ?>
+				<?php echo $message; // phpcs:ignore XSS ok. ?>
 			</p>
 		</div>
 		<?php

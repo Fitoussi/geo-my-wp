@@ -588,7 +588,7 @@ function gmw_get_meta_field_value( $type, $field, $object ) {
 		$value = maybe_unserialize( $field_data->data->value );
 
 		if ( ! empty( $value ) && 'datebox' === $field_data->type ) {
-			$value = intval( date( 'Y', time() - strtotime( $value ) ) ) - 1970;
+			$value = intval( gmdate( 'Y', time() - strtotime( $value ) ) ) - 1970;
 		}
 	} elseif ( 'bp_group_meta' === $type && function_exists( 'groups_get_groupmeta' ) ) {
 

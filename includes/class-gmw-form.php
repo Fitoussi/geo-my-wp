@@ -59,7 +59,7 @@ class GMW_Form extends GMW_Form_Core {
 		$this->form['paged']      = get_query_var( $page_name ) ? get_query_var( $page_name ) : 1;
 
 		// check if form submitted.
-		if ( isset( $_GET[ $this->url_px . 'form' ] ) && isset( $_GET[ $this->url_px . 'action' ] ) && 'fs' === $_GET[ $this->url_px . 'action' ] ) { // phpcs:ignore: CSRF ok.
+		if ( isset( $_GET[ $this->url_px . 'form' ] ) && isset( $_GET[ $this->url_px . 'action' ] ) && 'fs' === $_GET[ $this->url_px . 'action' ] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 			$this->form['submitted']       = true;
 			$this->form['form_values']     = $this->get_form_values();

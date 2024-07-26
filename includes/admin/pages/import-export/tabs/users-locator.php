@@ -126,6 +126,7 @@ class GMW_User_Meta_Fields_Importer extends GMW_Locations_Importer {
 		$count_rows = absint( $this->total_locations ) === 0 ? 'SQL_CALC_FOUND_ROWS' : '';
 
 		// get users.
+		// phpcs:disable
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
 				"
@@ -137,16 +138,16 @@ class GMW_User_Meta_Fields_Importer extends GMW_Locations_Importer {
 				wpumeta1.meta_value as longitude
 				FROM {$wpdb->prefix}users wpusers
 				INNER JOIN {$wpdb->prefix}usermeta wpumeta
-				ON ( wpusers.ID = wpumeta.user_id )  
-				INNER JOIN {$wpdb->prefix}usermeta AS wpumeta1 
+				ON ( wpusers.ID = wpumeta.user_id )
+				INNER JOIN {$wpdb->prefix}usermeta AS wpumeta1
 				ON ( wpusers.ID = wpumeta1.user_id )
-				AND ( 
-	  			( wpumeta.meta_key = %s AND wpumeta.meta_value NOT IN ('') ) 
-	  			AND 
+				AND (
+	  			( wpumeta.meta_key = %s AND wpumeta.meta_value NOT IN ('') )
+	  			AND
 	  			( wpumeta1.meta_key = %s AND wpumeta1.meta_value NOT IN ('') )
-				) 
-				GROUP BY wpusers.ID 
-				ORDER BY wpusers.ID 
+				)
+				GROUP BY wpusers.ID
+				ORDER BY wpusers.ID
 				LIMIT %d, %d",
 				array(
 					$location_fields['latitude'],
@@ -156,6 +157,7 @@ class GMW_User_Meta_Fields_Importer extends GMW_Locations_Importer {
 				)
 			)
 		); // WPCS: db call ok, cache ok, unprepared SQL ok.
+		// phpcs:enable
 
 		// count all rows only when init the importer.
 		$this->total_locations = absint( $this->total_locations ) === 0 ? $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : $this->total_locations; // WPCS: db call ok, cache ok, unprepared SQL ok.

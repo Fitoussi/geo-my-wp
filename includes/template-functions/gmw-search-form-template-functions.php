@@ -157,7 +157,7 @@ function gmw_get_search_form_address_field( $gmw ) {
 	// When in page load, add the address to the address field by default.
 	if ( ! empty( $pl_options['enabled'] ) ) {
 
-		if ( empty( $_GET['action'] ) || ( ! empty( $_GET['action'] ) && 'fs' === $_GET['action'] && ! empty( $_GET['form'] ) && absint( $gmw['ID'] ) !== absint( $_GET['form'] ) ) ) { // phpcs:ignore: CSRF ok.
+		if ( empty( $_GET['action'] ) || ( ! empty( $_GET['action'] ) && 'fs' === $_GET['action'] && ! empty( $_GET['form'] ) && absint( $gmw['ID'] ) !== absint( $_GET['form'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 			// When using the user's current location.
 			if ( ! empty( $pl_options['user_location'] ) ) {

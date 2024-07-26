@@ -1,7 +1,7 @@
 <?php
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
-    exit; 
+    exit;
 }
 
 /**
@@ -15,7 +15,7 @@ class GMW_Update_Forms_Table {
 
 	/**
 	 * Run complete table update
-	 * 
+	 *
 	 * @return [type] [description]
 	 */
 	public function init() {
@@ -26,61 +26,61 @@ class GMW_Update_Forms_Table {
 	}
 
 	/**
-	 * 
+	 *
 	 * Add missing table columns
-	 * 
+	 *
 	 */
 	public function add_table_columns() {
 
 		global $wpdb;
 
-		$forms_table = $wpdb->prefix . 'gmw_forms';
+		$forms_table = esc_sql( $wpdb->prefix . 'gmw_forms' );
 
-		$component = $wpdb->get_results( "SHOW COLUMNS FROM {$forms_table} LIKE 'component'" );
+		$component = $wpdb->get_results( "SHOW COLUMNS FROM {$forms_table} LIKE 'component'" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		if ( empty( $component ) ) {
-			$wpdb->get_results( "ALTER TABLE {$forms_table} ADD COLUMN component VARCHAR(50) NOT NULL AFTER addon" );
+			$wpdb->get_results( "ALTER TABLE {$forms_table} ADD COLUMN component VARCHAR(50) NOT NULL AFTER addon" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		}
-		
-		$object_type = $wpdb->get_results( "SHOW COLUMNS FROM {$forms_table} LIKE 'object_type'" );
+
+		$object_type = $wpdb->get_results( "SHOW COLUMNS FROM {$forms_table} LIKE 'object_type'" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		if ( empty( $object_type ) ) {
-			$wpdb->get_results( "ALTER TABLE {$forms_table} ADD COLUMN object_type VARCHAR(50) NOT NULL AFTER component" );
+			$wpdb->get_results( "ALTER TABLE {$forms_table} ADD COLUMN object_type VARCHAR(50) NOT NULL AFTER component" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		}
 	}
 
 	/**
 	 * Import existing forms to new database table created in version 3.0
-	 * 
+	 *
 	 * @return [type] [description]
 	 *
 	 * @since 3.0
 	 */
 	public function import_forms() {
-	    
+
 	    global $wpdb;
 
 	    // get existing forms
 	    $gmw_forms = get_option( 'gmw_forms' );
-		
+
 		// abort if not forms to import
 		if ( empty( $gmw_forms ) ) {
 			return;
 		}
 
-	    // look for forms table
+	    // look for forms table.
 		$forms_table  = $wpdb->prefix . 'gmw_forms';
-		$table_exists = $wpdb->get_results( "SHOW TABLES LIKE '{$forms_table}'", ARRAY_A );
+		$table_exists = $wpdb->get_results( "SHOW TABLES LIKE '{$forms_table}'", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
-		// abort if forms table not exists
+		// abort if forms table not exists.
 		if ( count( $table_exists ) == 0 ) {
 
 			trigger_error( 'GEO my WP Forms table not exists.', E_USER_NOTICE );
 
 			return;
 		}
-		
-		// loop through forms and insert into new table
+
+		// loop through forms and insert into new table.
 		foreach ( $gmw_forms as $key => $form ) {
 
 			if ( empty( $form['ID'] ) || empty( $form['addon'] ) ) {
@@ -89,7 +89,7 @@ class GMW_Update_Forms_Table {
 
 			$form_id = ( int ) $form['ID'];
 			unset( $form['ID'] );
-			
+
 			$addon = $form['addon'];
 			unset( $form['addon'] );
 
@@ -112,16 +112,16 @@ class GMW_Update_Forms_Table {
 
 				$form_name = '';
 			}
-			
+
 			if ( ! empty( $form['name'] ) ) {
-				
+
 				$form_title = $form['name'];
 				unset( $form['name'] );
-			
+
 			} else {
 				$form_title = 'form_id_'.$form_id;
 			}
-			
+
 			if ( ! empty( $form['prefix'] ) ) {
 
 				$prefix = $form['prefix'];
@@ -140,9 +140,9 @@ class GMW_Update_Forms_Table {
 
 					$form['search_form']['address_field']['placeholder'] = $form['search_form']['address_field']['title'];
 				} else {
-					
+
 					$form['search_form']['address_field']['label'] = $form['search_form']['address_field']['title'];
-				}	
+				}
 			}
 
 			// update page load tab settings
@@ -181,7 +181,7 @@ class GMW_Update_Forms_Table {
 				if ( ! empty( $form['search_results']['featured_image']['use'] ) ) {
 					$form['search_results']['image']['enabled'] = 1;
 					$form['search_results']['image']['height']  = $form['search_results']['featured_image']['height'];
-					$form['search_results']['image']['width']   = $form['search_results']['featured_image']['width']; 
+					$form['search_results']['image']['width']   = $form['search_results']['featured_image']['width'];
 				}
 
 				if ( ! empty( $form['search_results']['additional_info'] ) ) {
@@ -220,7 +220,7 @@ class GMW_Update_Forms_Table {
 				if ( ! empty( $form['search_results']['avatar']['use'] ) ) {
 					$form['search_results']['image']['enabled'] = 1;
 					$form['search_results']['image']['height']  = $form['search_results']['avatar']['height'];
-					$form['search_results']['image']['width']   = $form['search_results']['avatar']['width']; 
+					$form['search_results']['image']['width']   = $form['search_results']['avatar']['width'];
 				}
 			}
 
@@ -232,39 +232,39 @@ class GMW_Update_Forms_Table {
 				$object_type = 'bp_group';
 				$component   = 'bp_groups_locator';
 				*/
-			
+
 				$form['form_submission']['display_results'] = ! empty( $form['search_results']['display_groups'] ) ? 1 : '';
 
 				if ( ! empty( $form['search_results']['avatar']['use'] ) ) {
 					$form['search_results']['image']['enabled'] = 1;
 					$form['search_results']['image']['height']  = $form['search_results']['avatar']['height'];
-					$form['search_results']['image']['width']   = $form['search_results']['avatar']['width']; 
+					$form['search_results']['image']['width']   = $form['search_results']['avatar']['width'];
 				}
 			}
 
 			if ( $slug == 'wp_users' ) {
-				
+
 				/*
 				$addon 		 = 'users_locator';
 				$slug 		 = 'users_locator';
 				$object_type = 'user';
 				$component   = 'users_locator';
 				*/
-			
+
 				$form['form_submission']['display_results'] = ! empty( $form['search_results']['display_users'] ) ? 1 : '';
 
 				if ( ! empty( $form['search_results']['avatar']['use'] ) ) {
 					$form['search_results']['image']['enabled'] = 1;
 					$form['search_results']['image']['height']  = $form['search_results']['avatar']['width'];
-					$form['search_results']['image']['width']   = $form['search_results']['avatar']['width']; 
+					$form['search_results']['image']['width']   = $form['search_results']['avatar']['width'];
 				}
 			}
 
 			// global maps
 			if ( $addon == 'global_maps' || in_array( $slug, array( 'gmaps_groups', 'gmaps_posts', 'gmaps_friends', 'gmaps_users' ) ) ) {
-				
+
 				//$addon = 'global_maps';
-		
+
 				if ( ! empty( $form['general_settings']['output_limit'] ) ) {
 					$form['page_load_results']['pre_page'] = $form['general_settings']['output_limit'];
 					$form['form_submission']['pre_page']   = $form['general_settings']['output_limit'];
@@ -305,22 +305,22 @@ class GMW_Update_Forms_Table {
 					}
 
 					$form['results_map']['map_controls'] = $new_controls;
-				
+
 				} else {
-				
+
 					$form['results_map']['map_controls'] = array();
 
 				}
 
 				// psots global maps
 				if ( $slug == 'gmaps_posts' ) {
-					
+
 					/*
 					$slug 		 = 'posts_locator_global_map';
 					$object_type = 'post';
 					$component   = 'posts_locator';
 					*/
-				
+
 					$form['search_form']['include_exclude_terms'] = $form['page_load_results']['include_exclude_terms'] = array(
 						'usage'    => '',
 						'terms_id' => ''
@@ -330,7 +330,7 @@ class GMW_Update_Forms_Table {
 						$form['page_load_results']['include_exclude_terms']['usage']    = $form['page_load_results']['taxonomies']['usage'];
 						$form['page_load_results']['include_exclude_terms']['terms_id'] = $form['page_load_results']['taxonomies']['tt_id'];
 					}
-					
+
 					if ( ! empty( $form['search_form']['taxonomies']['tt_id'] ) ) {
 						$form['search_form']['include_exclude_terms']['usage']    = $form['search_form']['taxonomies']['usage'];
 						$form['search_form']['include_exclude_terms']['terms_id'] = $form['search_form']['taxonomies']['tt_id'];
@@ -340,20 +340,20 @@ class GMW_Update_Forms_Table {
 
 				// members locator global maps
 				if ( $slug == 'gmaps_friends' ) {
-					
+
 					/*
 					$slug 		 = 'members_locator_global_map';
 					$object_type = 'user';
 					$component   = 'members_locator';
 					*/
-				
+
 					$form['search_form']['xprofile_fields']['fields']     = ! empty( $form['search_form']['profile_fields'] ) ? $form['search_form']['profile_fields'] : array();
 					$form['search_form']['xprofile_fields']['date_field'] = ! empty( $form['search_form']['profile_fields_date'] ) ? $form['search_form']['profile_fields_date'] : '';
 
 					if ( empty( $form['search_form']['bp_groups'] ) ) {
 						$form['search_form']['bp_groups'] = array();
 					}
-					
+
 					$form['search_form']['bp_groups']['usage'] = ! empty( $form['search_form']['bp_groups']['usage'] ) ? $form['search_form']['bp_groups']['usage'] : 'dropdown';
 					$form['search_form']['bp_groups']['groups'] = ! empty( $form['search_form']['bp_groups']['ids'] ) ? $form['search_form']['bp_groups']['ids'] : array();
     				$form['search_form']['bp_groups']['label'] = 'Groups';
@@ -367,13 +367,13 @@ class GMW_Update_Forms_Table {
 
 				// users global maps
 				if ( $slug == 'gmaps_users' ) {
-					
+
 					/*
 					$slug 		 = 'users_locator_global_map';
 					$object_type = 'user';
 					$component   = 'users_locator';
 					*/
-				
+
 					if ( ! empty( $form['info_window']['avatar']['use'] ) ) {
 						$form['info_window']['image']['enabled'] = 1;
 						$form['info_window']['image']['width'] = $form['info_window']['image']['height'] = $form['info_window']['avatar']['width'];
@@ -382,13 +382,13 @@ class GMW_Update_Forms_Table {
 
 				// users global maps
 				if ( $slug == 'gmaps_groups' ) {
-					
+
 					/*
 					$slug 		 = 'bp_groups_locator_global_map';
 					$object_type = 'bp_group';
 					$component   = 'groups_locator';
 					*/
-				
+
 					if ( ! empty( $form['info_window']['avatar']['use'] ) ) {
 						$form['info_window']['image']['enabled'] = 1;
 						$form['info_window']['image']['width'] = $form['info_window']['image']['height'] = $form['info_window']['avatar']['width'];
@@ -399,7 +399,7 @@ class GMW_Update_Forms_Table {
 			$data = array(
 				'ID'	 	  => $form_id,
 				'slug'	 	  => $slug,
-				'addon'  	  => $addon, 
+				'addon'  	  => $addon,
 				'component'   => '',
 				'object_type' => '',
 				'name'   	  => $form_name,
@@ -409,10 +409,10 @@ class GMW_Update_Forms_Table {
 			);
 
 			// Insert form to database
-			$wpdb->replace( 
-				$forms_table, 
-				$data, 
-				array( '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) 
+			$wpdb->replace(
+				$forms_table,
+				$data,
+				array( '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )
 			);
 		}
 
@@ -426,7 +426,7 @@ class GMW_Update_Forms_Table {
 	 * Update data in forms table
 	 *
 	 * @since 3.0
-	 * 
+	 *
 	 * @return [type] [description]
 	 */
 	public function fix_forms_table() {
@@ -435,10 +435,10 @@ class GMW_Update_Forms_Table {
 
 		// forms table name
 		$forms_table = $wpdb->prefix . 'gmw_forms';
-		
-		// check if table exists already 
-		$table_exists = $wpdb->get_results( "SHOW TABLES LIKE '{$forms_table}'", ARRAY_A );
-		
+
+		// check if table exists already
+		$table_exists = $wpdb->get_results( "SHOW TABLES LIKE '{$forms_table}'", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
 		// if form table not exists create it
 		if ( count( $table_exists ) == 0 ) {
 
@@ -449,21 +449,21 @@ class GMW_Update_Forms_Table {
 
 		/*** Posts locator ***/
 
-		$wpdb->update( 
+		$wpdb->update(
 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
+            $wpdb->prefix . 'gmw_forms',
+            array(
             	'slug'   	  => 'posts_locator',
                 'addon'  	  => 'posts_locator',
                 'component'   => 'posts_locator',
                 'object_type' => 'post',
                 'name'   	  => 'Posts Locator',
                 'prefix' 	  => 'pt'
-            ), 
-            array( 
+            ),
+            array(
             	'slug' => 'posts_locator'
-            ), 
-            array( 
+            ),
+            array(
                 '%s',
                 '%s',
                 '%s',
@@ -472,21 +472,21 @@ class GMW_Update_Forms_Table {
             )
         );
 
-		$wpdb->update( 
+		$wpdb->update(
 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
+            $wpdb->prefix . 'gmw_forms',
+            array(
             	'slug'   	  => 'posts_locator',
                 'addon'  	  => 'posts_locator',
                 'component'   => 'posts_locator',
                 'object_type' => 'post',
                 'name'   	  => 'Posts Locator',
                 'prefix' 	  => 'pt'
-            ), 
-            array( 
+            ),
+            array(
             	'slug' => 'posts'
-            ), 
-            array( 
+            ),
+            array(
                 '%s',
                 '%s',
                 '%s',
@@ -498,21 +498,21 @@ class GMW_Update_Forms_Table {
 
 		/***** Members locator *****/
 
-        $wpdb->update( 
+        $wpdb->update(
 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
+            $wpdb->prefix . 'gmw_forms',
+            array(
             	'slug'   	  => 'members_locator',
                 'addon'  	  => 'members_locator',
                 'component'   => 'members_locator',
                 'object_type' => 'user',
                 'name'   	  => 'BP Members Locator',
                 'prefix' 	  => 'fl'
-            ), 
-            array( 
+            ),
+            array(
             	'slug' => 'members_locator'
-            ), 
-            array( 
+            ),
+            array(
                 '%s',
                 '%s',
                 '%s',
@@ -522,21 +522,21 @@ class GMW_Update_Forms_Table {
             )
         );
 
-        $wpdb->update( 
+        $wpdb->update(
 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
+            $wpdb->prefix . 'gmw_forms',
+            array(
             	'slug'   	  => 'members_locator',
                 'addon'  	  => 'members_locator',
                 'component'   => 'members_locator',
                 'object_type' => 'user',
                 'name'   	  => 'BP Members Locator',
                 'prefix' 	  => 'fl'
-            ), 
-            array( 
+            ),
+            array(
             	'slug' => 'friends'
-            ), 
-            array( 
+            ),
+            array(
                 '%s',
                 '%s',
                 '%s',
@@ -548,21 +548,21 @@ class GMW_Update_Forms_Table {
 
         /***** Groups Locator *****/
 
-        $wpdb->update( 
+        $wpdb->update(
 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
+            $wpdb->prefix . 'gmw_forms',
+            array(
             	'slug'   	  => 'bp_groups_locator',
                 'addon'  	  => 'bp_groups_locator',
                 'component'	  => 'bp_groups_locator',
                 'object_type' => 'bp_group',
                 'name'   	  => 'BP Groups Locator',
                 'prefix' 	  => 'gl'
-            ), 
-            array( 
+            ),
+            array(
             	'slug' => 'bp_groups_locator'
-            ), 
-            array( 
+            ),
+            array(
                 '%s',
                 '%s',
                 '%s',
@@ -572,21 +572,21 @@ class GMW_Update_Forms_Table {
             )
         );
 
-        $wpdb->update( 
+        $wpdb->update(
 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
+            $wpdb->prefix . 'gmw_forms',
+            array(
             	'slug'   	  => 'bp_groups_locator',
                 'addon'  	  => 'bp_groups_locator',
                 'component'	  => 'bp_groups_locator',
                 'object_type' => 'bp_group',
                 'name'   	  => 'BP Groups Locator',
                 'prefix' 	  => 'gl'
-            ), 
-            array( 
+            ),
+            array(
             	'slug' => 'groups'
-            ), 
-            array( 
+            ),
+            array(
                 '%s',
                 '%s',
                 '%s',
@@ -598,21 +598,21 @@ class GMW_Update_Forms_Table {
 
         /***** Users Locator *****/
 
-        $wpdb->update( 
+        $wpdb->update(
 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
+            $wpdb->prefix . 'gmw_forms',
+            array(
             	'slug'   	  => 'users_locator',
                 'addon'  	  => 'users_locator',
                 'component'   => 'users_locator',
                 'object_type' => 'user',
                 'name'   	  => 'WP Users Locator',
                 'prefix' 	  => 'ul'
-            ), 
-            array( 
+            ),
+            array(
             	'slug' => 'users_locator'
-            ), 
-            array( 
+            ),
+            array(
                 '%s',
                 '%s',
                 '%s',
@@ -622,21 +622,21 @@ class GMW_Update_Forms_Table {
             )
         );
 
-        $wpdb->update( 
+        $wpdb->update(
 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
+            $wpdb->prefix . 'gmw_forms',
+            array(
             	'slug'   	  => 'users_locator',
                 'addon'  	  => 'users_locator',
                 'component'   => 'users_locator',
                 'object_type' => 'user',
                 'name'   	  => 'WP Users Locator',
                 'prefix' 	  => 'ul'
-            ), 
-            array( 
+            ),
+            array(
             	'slug' => 'wp_users'
-            ), 
-            array( 
+            ),
+            array(
                 '%s',
                 '%s',
                 '%s',
@@ -645,24 +645,24 @@ class GMW_Update_Forms_Table {
                 '%s'
             )
         );
-        
+
         /*** Posts Map *****/
 
-        $wpdb->update( 
+        $wpdb->update(
 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
+            $wpdb->prefix . 'gmw_forms',
+            array(
             	'slug'   	  => 'posts_locator_global_map',
                 'addon'  	  => 'global_maps',
                 'component'   => 'posts_locator',
                 'object_type' => 'post',
                 'name'   	  => 'Posts Global Map',
                 'prefix' 	  => 'gmapspt'
-            ), 
-            array( 
+            ),
+            array(
             	'slug' => 'posts_locator_global_map'
-            ), 
-            array( 
+            ),
+            array(
                 '%s',
                 '%s',
                 '%s',
@@ -672,21 +672,21 @@ class GMW_Update_Forms_Table {
             )
         );
 
-        $wpdb->update( 
+        $wpdb->update(
 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
+            $wpdb->prefix . 'gmw_forms',
+            array(
             	'slug'   	  => 'posts_locator_global_map',
                 'addon'  	  => 'global_maps',
                 'component'   => 'posts_locator',
                 'object_type' => 'post',
                 'name'   	  => 'Posts Global Map',
                 'prefix' 	  => 'gmapspt'
-            ), 
-            array( 
+            ),
+            array(
             	'slug' => 'gmaps_posts'
-            ), 
-            array( 
+            ),
+            array(
                 '%s',
                 '%s',
                 '%s',
@@ -698,21 +698,21 @@ class GMW_Update_Forms_Table {
 
         /***** Members Map *****/
 
-        $wpdb->update( 
+        $wpdb->update(
 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
+            $wpdb->prefix . 'gmw_forms',
+            array(
             	'slug'   	  => 'members_locator_global_map',
                 'addon'  	  => 'global_maps',
                 'component'   => 'members_locator',
                 'object_type' => 'user',
                 'name'   	  => 'BP Members Global Map',
                 'prefix' 	  => 'gmapsfl'
-            ), 
-            array( 
+            ),
+            array(
             	'slug' => 'members_locator_global_map'
-            ), 
-            array( 
+            ),
+            array(
                 '%s',
                 '%s',
                 '%s',
@@ -722,21 +722,21 @@ class GMW_Update_Forms_Table {
             )
         );
 
-        $wpdb->update( 
+        $wpdb->update(
 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
+            $wpdb->prefix . 'gmw_forms',
+            array(
             	'slug'   	  => 'members_locator_global_map',
                 'addon'  	  => 'global_maps',
                 'component'   => 'members_locator',
                 'object_type' => 'user',
                 'name'   	  => 'BP Members Global Map',
                 'prefix' 	  => 'gmapsfl'
-            ), 
-            array( 
+            ),
+            array(
             	'slug' => 'gmaps_friends'
-            ), 
-            array( 
+            ),
+            array(
                 '%s',
                 '%s',
                 '%s',
@@ -748,21 +748,21 @@ class GMW_Update_Forms_Table {
 
         /***** Groups Map *****/
 
-        $wpdb->update( 
+        $wpdb->update(
 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
+            $wpdb->prefix . 'gmw_forms',
+            array(
             	'slug'   	  => 'bp_groups_locator_global_map',
                 'addon'  	  => 'global_maps',
                 'component'   => 'bp_groups_locator',
                 'object_type' => 'bp_group',
                 'name'   	  => 'BP Groups Global Map',
                 'prefix' 	  => 'gmapsgl'
-            ), 
-            array( 
+            ),
+            array(
             	'slug' => 'bp_groups_locator_global_map'
-            ), 
-            array( 
+            ),
+            array(
                 '%s',
                 '%s',
                 '%s',
@@ -772,21 +772,21 @@ class GMW_Update_Forms_Table {
             )
         );
 
-        $wpdb->update( 
+        $wpdb->update(
 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
+            $wpdb->prefix . 'gmw_forms',
+            array(
             	'slug'   	  => 'bp_groups_locator_global_map',
                 'addon'  	  => 'global_maps',
                 'component'   => 'bp_groups_locator',
                 'object_type' => 'bp_group',
                 'name'   	  => 'BP Groups Global Map',
                 'prefix' 	  => 'gmapsgl'
-            ), 
-            array( 
+            ),
+            array(
             	'slug' => 'gmaps_groups'
-            ), 
-            array( 
+            ),
+            array(
                 '%s',
                 '%s',
                 '%s',
@@ -798,21 +798,21 @@ class GMW_Update_Forms_Table {
 
         /***** Users Map *****/
 
-        $wpdb->update( 
+        $wpdb->update(
 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
+            $wpdb->prefix . 'gmw_forms',
+            array(
             	'slug'   	  => 'users_locator_global_map',
                 'addon'  	  => 'global_maps',
                 'component'   => 'users_locator',
                 'object_type' => 'user',
                 'name'   	  => 'Users Global Map',
                 'prefix' 	  => 'gmapsul'
-            ), 
-            array( 
+            ),
+            array(
             	'slug' => 'users_locator_global_map'
-            ), 
-            array( 
+            ),
+            array(
                 '%s',
                 '%s',
                 '%s',
@@ -822,21 +822,21 @@ class GMW_Update_Forms_Table {
             )
         );
 
-        $wpdb->update( 
+        $wpdb->update(
 
-            $wpdb->prefix . 'gmw_forms', 
-            array( 
+            $wpdb->prefix . 'gmw_forms',
+            array(
             	'slug'   	  => 'users_locator_global_map',
                 'addon'  	  => 'global_maps',
                 'component'   => 'users_locator',
                 'object_type' => 'user',
                 'name'   	  => 'Users Global Map',
                 'prefix' 	  => 'gmapsul'
-            ), 
-            array( 
+            ),
+            array(
             	'slug' => 'gmaps_users'
-            ), 
-            array( 
+            ),
+            array(
                 '%s',
                 '%s',
                 '%s',

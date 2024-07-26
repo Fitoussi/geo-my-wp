@@ -301,9 +301,9 @@ class GMW_Location_Form {
 			$this->args['exclude_fields'] = array_merge( $this->exclude_fields, $this->args['exclude_fields'] );
 		}
 
-		if ( $this->args['preserve_submitted_values'] && ! $this->args['ajax_enabled'] && ! empty( $_POST['gmw_action'] ) && 'update_lf_location' === $_POST['gmw_action'] && ! empty( $_POST['gmw_lf_slug'] ) && $_POST['gmw_lf_slug'] === $this->slug ) {
+		if ( $this->args['preserve_submitted_values'] && ! $this->args['ajax_enabled'] && ! empty( $_POST['gmw_action'] ) && 'update_lf_location' === $_POST['gmw_action'] && ! empty( $_POST['gmw_lf_slug'] ) && $_POST['gmw_lf_slug'] === $this->slug ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 
-			$this->saved_location = (object) $_POST['gmw_location_form']; // WPCS: XSS ok, CSRF ok.
+			$this->saved_location = (object) $_POST['gmw_location_form']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 
 		} elseif ( empty( $this->args['new_location'] ) ) {
 
@@ -1472,18 +1472,18 @@ class GMW_Location_Form {
 		// if updating location via ajax.
 		if ( defined( 'DOING_AJAX' ) ) {
 
-			if ( empty( $_POST['formValues'] ) ) {
+			if ( empty( $_POST['formValues'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 				return;
 			}
 
 			// parse the form values.
-			parse_str( $_POST['formValues'], $form_values );
+			parse_str( $_POST['formValues'], $form_values ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 
 			// when updating location via page load.
 		} else {
 
 			// form values.
-			$form_values = $_POST;
+			$form_values = $_POST; // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 		}
 
 		if ( ! empty( $form_values['gmw_location_form']['auto_update'] ) ) {
@@ -1616,7 +1616,7 @@ class GMW_Location_Form {
 
 			// exist only if stand alone form. Otherwise, we need.
 			// to allow the original form to process.
-			if ( $_POST['gmw_lf_stand_alone'] ) {
+			if ( $_POST['gmw_lf_stand_alone'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 				exit;
 			}
 		}

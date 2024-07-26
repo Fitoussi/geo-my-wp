@@ -1201,13 +1201,13 @@ class GMW_Extensions {
 						$core_active    = '';
 						$premium_active = '';
 
-						if ( ! empty( $_GET['tab'] ) ) { // phpcs:ignore : CSRF ok.
+						if ( ! empty( $_GET['tab'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
-							if ( 'core' === $_GET['tab'] ) { // phpcs:ignore : CSRF ok.
+							if ( 'core' === $_GET['tab'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 								$core_active = 'active';
 
-							} elseif ( 'premium' === $_GET['tab'] ) { // phpcs:ignore : CSRF ok.
+							} elseif ( 'premium' === $_GET['tab'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 								$premium_active = 'active';
 

@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function gmw_output_admin_notices() {
 
 	// check if notice exist.
-	if ( empty( $_GET['gmw_notice'] ) && empty( $_POST['gmw_notice'] ) ) { // WPCS: CSRF ok.
+	if ( empty( $_REQUEST['gmw_notice'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, CSRF ok.
 		return;
 	}
 
@@ -34,11 +34,8 @@ function gmw_output_admin_notices() {
 		)
 	);
 
-	$notice_type   = isset( $_GET['gmw_notice'] ) ? $_GET['gmw_notice'] : $_POST['gmw_notice']; // WPCS: CSRF ok, sanitization ok.
-	$notice_status = isset( $_GET['gmw_notice_status'] ) ? $_GET['gmw_notice_status'] : $_POST['gmw_notice_status']; // WPCS: CSRF ok, sanitization ok.
-
-	$notice_type   = sanitize_text_field( wp_unslash( $notice_type ) );
-	$notice_status = sanitize_text_field( wp_unslash( $notice_status ) );
+	$notice_type   = isset( $_REQUEST['gmw_notice'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['gmw_notice'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
+	$notice_status = isset( $_REQUEST['gmw_notice_status'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['gmw_notice_status'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 	if ( 'updated' === $notice_status ) {
 		$notice_status = 'success';
@@ -66,7 +63,7 @@ add_action( 'admin_notices', 'gmw_output_admin_notices' );
  *
  * @param  [type] $basename add-on based name.
  *
- * @return HTML link.
+ * @return mixed link.
  */
 function gmw_get_update_addon_link( $basename ) {
 	return '<a href="' . admin_url( 'plugins.php' ) . '#' . esc_attr( strtolower( preg_replace( '/[-]+/i', '-', str_replace( ' ', '-', $basename ) ) ) ) . '" title="Plugins Page" style="color:white;text-decoration: underline"><i class="fa fa-refresh"></i>  Update now</a>';
@@ -171,11 +168,11 @@ function gmw_admin_pages_menu() {
 				$count++;
 				?>
 
-				<?php $active = ( ! empty( $_GET['page'] ) && $_GET['page'] === $menu_item[2] ) ? 'active' : ''; ?>
-				<?php $icon   = ! empty( $menu_icons[ $menu_item[2] ] ) ? $menu_icons[ $menu_item[2] ] : ''; ?>
-				<?php $url    = strpos( $menu_item[2], 'edit.php' ) !== false ? $menu_item[2] : 'admin.php?page=' . $menu_item[2]; ?>
+				<?php $active = ( ! empty( $_GET['page'] ) && $_GET['page'] === $menu_item[2] ) ? 'active' : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok. ?>
+				<?php $icon = ! empty( $menu_icons[ $menu_item[2] ] ) ? $menu_icons[ $menu_item[2] ] : ''; ?>
+				<?php $url = strpos( $menu_item[2], 'edit.php' ) !== false ? $menu_item[2] : 'admin.php?page=' . $menu_item[2]; ?>
 				<a
-					class="gmw-admin-pages-menu-item <?php echo $icon; // WPCS: XSS ok. ?> <?php echo $active; // WPCS: XSS ok. ?>"
+					class="gmw-admin-pages-menu-item <?php echo esc_attr( $icon ); ?> <?php echo esc_attr( $active ); ?>"
 					title="<?php esc_attr( $menu_item[3] ); ?>"
 					href="<?php echo esc_url( admin_url( $url ) ); ?>">
 					<?php echo esc_attr( $menu_item[0] ); ?>
@@ -328,9 +325,10 @@ function gmw_admin_pages_header() {
  * @return [type] [description]
  */
 function gmw_admin_sidebar_content() {
-	?>
+	return;
+	/* ?>
 	<!-- <iframe class="mj-w-res-iframe" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://app.mailjet.com/widget/iframe/5XJU/KMe" width="100%"></iframe>
 	<script type="text/javascript" src="https://app.mailjet.com/statics/js/iframeResizer.min.js"></script> -->
 	<!-- <img src="https://graphic-mama.s3.amazonaws.com/previews/0v47rp9m1g8yk5ldownyjzq2/61603fd530949-Marker-mascot-pose3_original.jpg" style="max-width:100%" /> -->
-	<?php
+	<?php */
 }

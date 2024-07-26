@@ -473,15 +473,15 @@ if ( ! class_exists( 'GMW_Premium_Plugin_Updater' ) ) :
 
 			global $gmw_plugin_data;
 
-			if ( empty( $_REQUEST['edd_sl_action'] ) || 'view_plugin_changelog' !== $_REQUEST['edd_sl_action'] ) { // WPCS: CSRF ok.
+			if ( empty( $_REQUEST['edd_sl_action'] ) || 'view_plugin_changelog' !== $_REQUEST['edd_sl_action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 				return;
 			}
 
-			if ( empty( $_REQUEST['plugin'] ) ) { // WPCS: CSRF ok.
+			if ( empty( $_REQUEST['plugin'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 				return;
 			}
 
-			if ( empty( $_REQUEST['slug'] ) ) { // WPCS: CSRF ok.
+			if ( empty( $_REQUEST['slug'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 				return;
 			}
 
@@ -489,9 +489,10 @@ if ( ! class_exists( 'GMW_Premium_Plugin_Updater' ) ) :
 				wp_die( __( 'You do not have permission to install plugin updates', 'geo-my-wp' ), __( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) ); // WPCS: XSS ok.
 			}
 
-			$data         = $gmw_plugin_data[ $_REQUEST['slug'] ]; // WPCS: CSRF ok, sanitization ok.
+			$slug         = sanitize_text_field( wp_unslash( $_REQUEST['slug'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
+			$data         = $gmw_plugin_data[ $slug ];
 			$beta         = ! empty( $data['beta'] ) ? true : false;
-			$cache_key    = md5( 'gmw_plugin_' . sanitize_key( $_REQUEST['plugin'] ) . '_' . $beta . '_version_info' ); // WPCS: CSRF ok.
+			$cache_key    = md5( 'gmw_plugin_' . sanitize_key( $_REQUEST['plugin'] ) . '_' . $beta . '_version_info' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 			$version_info = $this->get_cached_version_info( $cache_key );
 
 			if ( false === $version_info ) {
@@ -500,7 +501,7 @@ if ( ! class_exists( 'GMW_Premium_Plugin_Updater' ) ) :
 					'edd_action' => 'get_version',
 					'item_name'  => isset( $data['item_name'] ) ? $data['item_name'] : false,
 					'item_id'    => isset( $data['item_id'] ) ? $data['item_id'] : false,
-					'slug'       => $_REQUEST['slug'], // WPCS: CSRF ok, sanitization ok.
+					'slug'       => $slug,
 					'author'     => $data['author'],
 					'url'        => home_url(),
 					'beta'       => ! empty( $data['beta'] ),

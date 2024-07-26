@@ -150,12 +150,12 @@ class GMW_Location_Types {
 				if ( $( '#gmw-xprofile-fields-usage-setting' ).val() == 'single' ) {
 					$( '.gmw-xprofile-fields-setting-wrapper:not( .usage-setting )' ).slideUp();
 					$( '.gmw-xprofile-fields-setting-wrapper.address-autocomplete-setting' ).slideDown();
-					$( '.gmw-xprofile-fields-setting-wrapper.single-address-field-setting' ).slideDown(); 
+					$( '.gmw-xprofile-fields-setting-wrapper.single-address-field-setting' ).slideDown();
 				}
 
 				if ( $( '#gmw-xprofile-fields-usage-setting' ).val() == 'multiple' ) {
 					$( '.gmw-xprofile-fields-setting-wrapper:not( .usage-setting )' ).slideUp();
-					$( '.gmw-xprofile-fields-setting-wrapper.multiple-address-field-setting' ).slideDown(); 
+					$( '.gmw-xprofile-fields-setting-wrapper.multiple-address-field-setting' ).slideDown();
 				}
 
 				$( '#gmw-xprofile-fields-usage-setting' ).change(function() {
@@ -164,12 +164,12 @@ class GMW_Location_Types {
 
 					if ( $( this ).val() == 'single' ) {
 
-						$( '.gmw-xprofile-fields-setting-wrapper.single-address-field-setting' ).slideDown(); 
+						$( '.gmw-xprofile-fields-setting-wrapper.single-address-field-setting' ).slideDown();
 						$( '.gmw-xprofile-fields-setting-wrapper.address-autocomplete-setting' ).slideDown();
 
 					} else if ( $( this ).val() == 'multiple' ) {
 
-						$( '.gmw-xprofile-fields-setting-wrapper.multiple-address-field-setting' ).slideDown(); 
+						$( '.gmw-xprofile-fields-setting-wrapper.multiple-address-field-setting' ).slideDown();
 					}
 				});*/
 
@@ -475,10 +475,10 @@ class GMW_Location_Types {
 			<label class="screen-reader-text" for="gmw-location-type-description">
 			<?php esc_attr__( 'Description', 'geo-my-wp' ); ?>
 			</label>
-			<textarea 
+			<textarea
 				rows="1"
 				cols="40"
-				name="excerpt" 
+				name="excerpt"
 				id="gmw-location-type-description"
 				style="display: block;margin: 12px 0 0;height: 4em;width: 100%;"><?php echo esc_html( $post->post_excerpt ); // WPCS: XSS ok. textarea_escaped. ?></textarea>
 			<?php
@@ -556,9 +556,9 @@ class GMW_Location_Types {
 				</label>
 
 				<select id="gmw-xprofile-fields-usage-setting" name="content[xprofile_fields][usage]" class="gmw-smartbox-not">
-					<option value="disabled"><?php esc_attr_e( 'Disabled', 'geo-my-wp' ); ?></option>											
+					<option value="disabled"><?php esc_attr_e( 'Disabled', 'geo-my-wp' ); ?></option>
 					<option value="single" <?php selected( $saved_data['usage'], 'single', true ); ?>><?php esc_attr_e( 'Single Address Field', 'geo-my-wp' ); ?></option>
-					<option value="multiple" <?php selected( $saved_data['usage'], 'multiple', true ); ?>><?php esc_attr_e( 'Multiple Address Fields', 'geo-my-wp' ); ?></option>									
+					<option value="multiple" <?php selected( $saved_data['usage'], 'multiple', true ); ?>><?php esc_attr_e( 'Multiple Address Fields', 'geo-my-wp' ); ?></option>
 				</select>
 				<em style="margin-top: 5px;display: block;"><?php esc_attr_e( 'Select to either use a single address field or multiple address fields.', 'geo-my-wp' ); ?></em>
 			</div> */
@@ -566,7 +566,7 @@ class GMW_Location_Types {
 
 			<div class="gmw-xprofile-fields-setting-wrapper enabled">
 				<label style="display:block;margin-bottom: 5px">
-					<input 
+					<input
 						type="checkbox"
 						id="setting-bp_xprofile_geolocation-enabled"
 						class="setting-xprofile-integration-enabled checkbox"
@@ -610,7 +610,7 @@ class GMW_Location_Types {
 						<?php $selected = ( isset( $saved_address_fields['address'] ) && $saved_address_fields['address'] == $field_id ) ? 'selected="selected"' : ''; ?>
 
 						<option <?php echo $selected; // WPCS: XSS ok. ?> value="<?php echo esc_attr( $field_id ); ?>">
-							<?php echo esc_attr( $field_name ); ?>		
+							<?php echo esc_attr( $field_name ); ?>
 						</option>
 
 					<?php } ?>
@@ -650,7 +650,7 @@ class GMW_Location_Types {
 
 			<div class="gmw-xprofile-fields-setting-wrapper address-autocomplete-setting" style="display:none">
 				<label style="display:block;margin-bottom: 5px">
-					<input 
+					<input
 						type="checkbox"
 						id="setting-bp_xprofile_geolocation-address_autocomplete"
 						class="setting-address_autocomplete checkbox"
@@ -690,7 +690,7 @@ class GMW_Location_Types {
 		}
 		?>
 		<div style="margin-top:15px;">
-			<button 
+			<button
 				id="gmw-update-location-types-button"
 				class="button button-secondary button-large"
 				data-location_type="<?php echo absint( $post->ID ); ?>"
@@ -733,7 +733,7 @@ class GMW_Location_Types {
 			$wpdb->prepare(
 				"
 	            SELECT `object_id`
-	            FROM {$wpdb->base_prefix}gmw_locations 
+	            FROM {$wpdb->base_prefix}gmw_locations
 	            WHERE `location_type` = %s",
 				array(
 					absint( $_POST['location_type'] ),
@@ -745,6 +745,7 @@ class GMW_Location_Types {
 		$object_id_not_in = ! empty( $object_ids ) ? 'AND `object_id` NOT IN ( ' . implode( ',', $object_ids ) . ' )' : '';
 
 		// Get the locations ID that we need to update.
+		// phpcs:disable
 		$locations_id = $wpdb->get_col(
 			"
 	            SELECT `ID`
@@ -754,6 +755,7 @@ class GMW_Location_Types {
 				{$object_type_in}
 				GROUP BY `object_id`"
 		); // WPCS: db call ok, cache ok, unprepared SQL ok.
+		// phpcs:enable
 
 		// Abort if nothing was found.
 		if ( empty( $locations_id ) ) {
@@ -761,15 +763,17 @@ class GMW_Location_Types {
 		}
 
 		// Update locations.
+		// phpcs:disable
 		$updated = $wpdb->query(
 			$wpdb->prepare(
 				"
-	            UPDATE {$wpdb->base_prefix}gmw_locations 
-	            SET   `location_type` = %s 
+	            UPDATE {$wpdb->base_prefix}gmw_locations
+	            SET   `location_type` = %s
 	            WHERE `ID` IN ( " . implode( ',', $locations_id ) . ' )',
 				array( absint( $_POST['location_type'] ) )
 			)
 		); // WPCS: db call ok, cache ok, unprepared SQL ok.
+		// phpcs:enable
 
 		$updated = ! empty( $updated ) ? absint( $updated ) : 0;
 

@@ -196,11 +196,14 @@ class GMW_Posts_Locations_Importer_V3 extends GMW_Locations_Importer {
 		global $wpdb;
 
 		// check for post types table.
-		$gmw_pt_table = $wpdb->prefix . 'places_locator';
+		$gmw_pt_table      = esc_sql( $wpdb->prefix . 'places_locator' );
+		$records_completed = esc_sql( $this->records_completed );
+		$records_per_batch = esc_sql( $this->records_per_batch );
 
 		// count rows only when init the importer.
 		$count_rows = 0 === $this->total_locations ? 'SQL_CALC_FOUND_ROWS' : '';
 
+		// phpcs:disable
 		// get records from database.
 		$data = $wpdb->get_results(
 			"
@@ -234,9 +237,10 @@ class GMW_Posts_Locations_Importer_V3 extends GMW_Locations_Importer {
 			FROM {$gmw_pt_table} gmwLocations
 			INNER JOIN {$wpdb->prefix}posts wpposts
 			ON gmwLocations.post_id = wpposts.ID
-			LIMIT {$this->records_completed}, {$this->records_per_batch}
+			LIMIT {$records_completed}, {$records_per_batch}
 		"
 		); // WPCS: unprepared SQL ok, db call ok, cache ok.
+		// phpcs:enable
 
 		// count rows only when init the importer.
 		$this->total_locations = 0 === $this->total_locations ? $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : $this->total_locations; // WPCS: db call ok, cache ok.
@@ -308,13 +312,19 @@ class GMW_Users_Locations_Importer_V3 extends GMW_Locations_Importer {
 		 *
 		 * We do this to prevent error with the importer.
 		 */
+		// phpcs:disable
 		$street_colums = '';
 		$sc            = $wpdb->get_results( "SHOW COLUMNS FROM {$gmw_users_table} LIKE 'street_name'" ); // WPCS: unprepared SQL ok, db call ok, cache ok.
+		// phpcs:enable
 
 		if ( ! empty( $sc ) ) {
 			$street_colums = 'gmwLocations.street_number, gmwLocations.street_name,';
 		}
 
+		$records_completed = esc_sql( $this->records_completed );
+		$records_per_batch = esc_sql( $this->records_per_batch );
+
+		// phpcs:disable
 		// get records from database.
 		$data = $wpdb->get_results(
 			"
@@ -342,9 +352,10 @@ class GMW_Users_Locations_Importer_V3 extends GMW_Locations_Importer {
 			FROM {$gmw_users_table} gmwLocations
 			INNER JOIN {$wpdb->users} wpusers
 			ON gmwLocations.member_id = wpusers.ID
-			LIMIT {$this->records_completed}, {$this->records_per_batch}
+			LIMIT {$records_completed}, {$records_per_batch}
 		"
 		); // WPCS: unprepared SQL ok, db call ok, cache ok.
+		// phpcs:enable
 
 		// count rows only when init the importer.
 		$this->total_locations = 0 === $this->total_locations ? $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : $this->total_locations; // WPCS: db call ok, cache ok.

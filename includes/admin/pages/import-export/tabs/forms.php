@@ -23,13 +23,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @author Eyal Fitoussi
  */
 function gmw_import_export_forms_tab() {
-?>	
+?>
 	<?php do_action( 'gmw_import_export_forms_before_export' ); ?>
 
 	<div class="gmw-settings-panel gmw-export-form-panel">
 
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin.php?page=gmw-import-export&tab=forms' ) ); ?>">
-			
+
 			<fieldset>
 
 				<legend class="gmw-settings-panel-title"><?php esc_html_e( 'Export Forms', 'geo-my-wp' ); ?></legend>
@@ -37,21 +37,21 @@ function gmw_import_export_forms_tab() {
 				<div class="gmw-settings-panel-content">
 
 					<div class="gmw-settings-panel-description">
-						<?php esc_html_e( 'Select the forms you would like to export then click the "Export" button to generate a .json file.', 'geo-my-wp' ); ?>		
+						<?php esc_html_e( 'Select the forms you would like to export then click the "Export" button to generate a .json file.', 'geo-my-wp' ); ?>
 					</div>
 
 					<div class="gmw-settings-panel-field">
-						
+
 						<?php $forms = gmw_get_forms(); ?>
 
 						<?php if ( ! empty( $forms ) ) { ?>
-						
+
 							<div class="gmw-settings-panel-checkboxes" style="max-height: 300px;overflow-y: scroll;">
 								<label>
-									<input 
-										type="checkbox" 
-										class="cb-export-item" 
-										checked="checked" 
+									<input
+										type="checkbox"
+										class="cb-export-item"
+										checked="checked"
 										onchange="if ( jQuery( this ).is( ':checked' ) ) { jQuery( this ).closest( 'form' ).find( '.cb-export-item' ).prop( 'checked', true ); } else { jQuery( this ).closest( 'form' ).find( '.cb-export-item' ).prop( 'checked', false ); }"
 									/>
 									<?php esc_html_e( 'All forms', 'geo-my-wp' ); ?>
@@ -68,12 +68,12 @@ function gmw_import_export_forms_tab() {
 									<?php $title = $values['title'] . ' - ID ' . $values['ID'] . ' ( ' . $values['addon'] . ' ) '; ?>
 
 									<label>
-										<input 
-											type="checkbox" 
-											class="cb-export-item" 
-											name="gmw_forms[]" 
-											value="<?php echo esc_attr( $values['ID'] ); ?>" 
-											checked="checked" 
+										<input
+											type="checkbox"
+											class="cb-export-item"
+											name="gmw_forms[]"
+											value="<?php echo esc_attr( $values['ID'] ); ?>"
+											checked="checked"
 										/>
 
 										<?php echo esc_attr( $title ); ?>
@@ -106,18 +106,18 @@ function gmw_import_export_forms_tab() {
 
 						<?php } ?>
 
-					</div>					
+					</div>
 				</div>
-			</fieldset>		
+			</fieldset>
 		</form>
 	</div>
-			
+
 	<?php do_action( 'gmw_import_export_before_forms_import' ); ?>
 
 	<div class="gmw-settings-panel gmw-import-forms-panel">
 
 		<form method="post" enctype="multipart/form-data" action="<?php echo esc_url( admin_url( 'admin.php?page=gmw-import-export&tab=forms' ) ); ?>">
-			
+
 			<fieldset>
 
 				<legend class="gmw-settings-panel-title"><?php esc_html_e( 'Import Forms', 'geo-my-wp' ); ?></legend>
@@ -129,7 +129,7 @@ function gmw_import_export_forms_tab() {
 					</div>
 
 					<div class="gmw-settings-panel-field">
-									
+
 						<p>
 							<input type="file" name="import_file" id="gmw-import-forms-file" />
 						</p>
@@ -147,12 +147,12 @@ function gmw_import_export_forms_tab() {
 									array(
 										'onclick' => "if ( jQuery( '#gmw-import-forms-file' ).get(0).files.length === 0 ) { alert( 'Select a file to import.' ); return false; }",
 									)
-								); 
+								);
 							?>
 						</p>
 					</div>
 				</div>
-			</fieldset>							
+			</fieldset>
 		</form>
 
 	</div>
@@ -205,15 +205,14 @@ function gmw_export_forms() {
 
 	global $wpdb;
 
-	// get all data from forms table.
-	$export = $wpdb->get_results(
-		$wpdb->prepare(
-			"
-			SELECT * 
-			FROM {$wpdb->prefix}gmw_forms
-			WHERE ID IN ( " . str_repeat( '%d,', count( $_POST['gmw_forms'] ) - 1 ) . '%d )', $_POST['gmw_forms']
-		)
-	);
+	$forms = wp_unslash( array_map( 'absint', $_POST['gmw_forms'] ) );
+	$forms = esc_sql( implode( ',', $forms ) );
+	$db    = esc_sql( $wpdb->prefix . 'gmw_forms' );
+	//$ph    = str_repeat( '%d,', count( $forms ) - 1 ) . '%d';
+
+	// phpcs:disable
+	$export = $wpdb->get_results( "SELECT * FROM $db WHERE ID IN ( $forms )" ); // phpcs: ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, db call ok, cache ok.
+	// phpcs:enable
 
 	ignore_user_abort( true );
 
@@ -222,10 +221,10 @@ function gmw_export_forms() {
 	nocache_headers();
 
 	header( 'Content-Type: application/json; charset=utf-8' );
-	header( 'Content-Disposition: attachment; filename=gmw-forms-export-' . date( 'm-d-Y' ) . '.json' );
+	header( 'Content-Disposition: attachment; filename=gmw-forms-export-' . gmdate( 'm-d-Y' ) . '.json' );
 	header( 'Expires: 0' );
 
-	echo json_encode( $export );
+	echo wp_json_encode( $export );
 
 	exit;
 }
@@ -250,13 +249,17 @@ function gmw_import_forms() {
 		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
-	//make sure at least one checkbox is checked.
+	// Make sure at least one checkbox is checked.
 	if ( empty( $_FILES['import_file']['tmp_name'] ) ) {
 		wp_die( esc_html__( 'Please upload a file to import', 'geo-my-wp' ) );
 	}
 
+	$file_name = sanitize_text_field( wp_unslash( $_FILES['import_file']['tmp_name'] ) );
+
 	// Retrieve the data from the file and convert the json object to an array.
-	$forms = gmw_object_to_array( json_decode( file_get_contents( $_FILES['import_file']['tmp_name'] ) ) );
+	// phpcs:disable
+	$forms = gmw_object_to_array( json_decode( file_get_contents( $file_name ) ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents.
+	// phpcs:enable
 
 	if ( empty( $forms ) ) {
 

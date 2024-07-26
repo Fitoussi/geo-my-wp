@@ -87,7 +87,7 @@ class GMW_Location_Meta {
 		global $wpdb;
 
 		$table = self::get_table();
-		// phpcs:ignore.
+		// phpcs:disable
 		$meta_id = $wpdb->get_var(
 			$wpdb->prepare(
 				"
@@ -97,6 +97,7 @@ class GMW_Location_Meta {
 				$meta_id
 			)
 		); // phpcs:ignore: unprepared SQL ok, db call ok, cache ok.
+		// phpcs:enable
 
 		return ! empty( $meta_id ) ? true : false;
 	}
@@ -134,7 +135,7 @@ class GMW_Location_Meta {
 		$table = self::get_table();
 
 		// get the meta ID from database if exists.
-		// phpcs:ignore.
+		// phpcs:disable
 		$meta_id = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"
@@ -147,6 +148,7 @@ class GMW_Location_Meta {
 				$meta_key
 			)
 		); // phpcs:ignore: unprepared SQL ok, db call ok, cache ok.
+		// phpcs:enable
 
 		return ! empty( $meta_id ) ? $meta_id : false;
 	}
@@ -189,7 +191,7 @@ class GMW_Location_Meta {
 		$table      = self::get_table();
 
 		// check if meta already exists and get its ID from database.
-		// phpcs:ignore.
+		// phpcs:disable
 		$save_meta = $wpdb->get_row(
 			$wpdb->prepare(
 				"
@@ -202,6 +204,7 @@ class GMW_Location_Meta {
 				$meta_key
 			)
 		); // phpcs:ignore: unprepared SQL ok, db call ok, cache ok.
+		// phpcs:enable
 
 		// abort if meta already exists and the value is the same.
 		if ( ! empty( $save_meta->meta_id ) && ! empty( $save_meta->meta_value ) && $save_meta->meta_value === $meta_value ) {
@@ -420,7 +423,7 @@ class GMW_Location_Meta {
 
 			$table = self::get_table();
 
-			// phpcs:ignore.
+			// phpcs:disable
 			$results = $wpdb->get_results(
 				$wpdb->prepare(
 					"
@@ -431,6 +434,7 @@ class GMW_Location_Meta {
 					$location_id
 				)
 			); // phpcs:ignore: unprepared SQL ok, db call ok, cache ok.
+			// phpcs:enable
 
 			$output = array();
 
@@ -511,7 +515,7 @@ class GMW_Location_Meta {
 		$table = self::get_table();
 
 		// check if meta key exists before deleting it.
-		// phpcs:ignore.
+		// phpcs:disable
 		$saved_meta = $wpdb->get_row(
 			$wpdb->prepare(
 				"
@@ -523,6 +527,7 @@ class GMW_Location_Meta {
 				$meta_key
 			)
 		); // phpcs:ignore: unprepared SQL ok, db call ok, cache ok.
+		// phpcs:enable
 
 		if ( empty( $saved_meta ) ) {
 			return false;

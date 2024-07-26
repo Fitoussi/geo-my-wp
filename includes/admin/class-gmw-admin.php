@@ -166,7 +166,7 @@ class GMW_Admin {
 
 		global $wpdb, $blog_id;
 
-		$table        = $wpdb->base_prefix . 'gmw_locations';
+		$table        = esc_sql( $wpdb->base_prefix . 'gmw_locations' );
 		$number       = 200;
 		$page         = (int) $page;
 		$offset       = ( $page - 1 ) * $number;
@@ -176,6 +176,7 @@ class GMW_Admin {
 			'bp_group' => __( 'BuddyPress Groups Locations', 'geo-my-wp' ),
 		);
 
+		// phpcs:disable
 		// get user's locations.
 		$locations = $wpdb->get_results(
 			$wpdb->prepare(
@@ -191,6 +192,7 @@ class GMW_Admin {
 			),
 			OBJECT
 		); // phpcs:ignore: db call ok, cache ok, unprepared SQL ok.
+		// phpcs:enable
 
 		// Abort if no location were found.
 		if ( empty( $locations ) ) {
@@ -327,8 +329,8 @@ class GMW_Admin {
 		$tools_page         = new GMW_Tools();
 		$import_export_page = new GMW_Import_Export_Page();
 
-		if ( isset( $_GET['page'] ) && 'gmw-forms' === $_GET['page'] && isset( $_GET['gmw_action'] ) && 'edit_form' === $_GET['gmw_action'] && ! empty( $_GET['prefix'] ) && class_exists( 'GMW_' . $_GET['prefix'] . '_Form_Editor' ) ) { // WPCS: CSRF ok, sanitization OK.
-			$form_editor_class = 'GMW_' . sanitize_text_field( wp_unslash( $_GET['prefix'] ) ) . '_Form_Editor'; // phpcs:ignore: CSRF ok.
+		if ( isset( $_GET['page'] ) && 'gmw-forms' === $_GET['page'] && isset( $_GET['gmw_action'] ) && 'edit_form' === $_GET['gmw_action'] && ! empty( $_GET['prefix'] ) && class_exists( 'GMW_' . $_GET['prefix'] . '_Form_Editor' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
+			$form_editor_class = 'GMW_' . sanitize_text_field( wp_unslash( $_GET['prefix'] ) ) . '_Form_Editor'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 		} else {
 			$form_editor_class = 'GMW_Form_Editor';
 		}
@@ -351,7 +353,7 @@ class GMW_Admin {
 			'priority'          => 1,
 		);
 
-		$forms_output = ( ! empty( $_GET['gmw_action'] ) && 'edit_form' === $_GET['gmw_action'] ) ? $edit_form_page : $forms_page; // phpcs:ignore: CSRF ok.
+		$forms_output = ( ! empty( $_GET['gmw_action'] ) && 'edit_form' === $_GET['gmw_action'] ) ? $edit_form_page : $forms_page; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 		$menu_items[] = array(
 			'parent_slug'       => 'gmw-extensions',
@@ -433,7 +435,7 @@ class GMW_Admin {
 		}
 
 		// apply credit and enqueue scripts and styles in GEO my WP admin pages only.
-		if ( ( isset( $_GET['page'] ) && in_array( $_GET['page'], $gmw_pages, true ) ) || ( isset( $_GET['post_type'] ) && 'gmw_location_type' === $_GET['post_type'] ) ) { // phpcs:ignore: CSRF ok, sanitization ok.
+		if ( ( isset( $_GET['page'] ) && in_array( $_GET['page'], $gmw_pages, true ) ) || ( isset( $_GET['post_type'] ) && 'gmw_location_type' === $_GET['post_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 			$this->gmw_page = true;
 
@@ -583,11 +585,11 @@ class GMW_Admin {
 
 			$page = '';
 
-			if ( ! empty( $_GET['page'] ) ) { // phpcs:ignore: CSRF ok.
+			if ( ! empty( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
-				$page = sanitize_text_field( wp_unslash( $_GET['page'] ) ); // phpcs:ignore: CSRF ok.
+				$page = sanitize_text_field( wp_unslash( $_GET['page'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
-			} elseif ( ! empty( $_GET['post_type'] ) && 'gmw_location_type' === $_GET['post_type'] ) { // phpcs:ignore: CSRF ok.
+			} elseif ( ! empty( $_GET['post_type'] ) && 'gmw_location_type' === $_GET['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 				$page = 'location-types';
 			}
@@ -682,7 +684,7 @@ class GMW_Admin {
 
 		$pages = array( 'gmw-extensions', 'gmw-settings', 'gmw-forms', 'gmw-import-export' );
 
-		if ( ( ! empty( $_GET['page'] ) && ! in_array( $_GET['page'], $pages, true ) ) || ( isset( $_GET['post_type'] ) && 'gmw_location_type' === $_GET['post_type'] ) ) { // phpcs:ignore: CSRF ok.
+		if ( ( ! empty( $_GET['page'] ) && ! in_array( $_GET['page'], $pages, true ) ) || ( isset( $_GET['post_type'] ) && 'gmw_location_type' === $_GET['post_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 			wp_deregister_style( 'select2' );
 			wp_deregister_script( 'select2' );

@@ -311,7 +311,6 @@ function gmw_get_search_form_xprofile_fields( $gmw ) {
 
 					$terms = get_terms(
 						$taxonomy_selected,
-						array( 'hide_empty' => false )
 					);
 
 					if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
@@ -636,7 +635,6 @@ function gmw_get_xprofile_query_args( $gmw = array(), $fields_values = array() )
 	return $meta_args;
 }
 
-
 /**
  * Query xprofile fields
  *
@@ -668,12 +666,13 @@ function gmw_query_xprofile_fields( $fields_values = array(), $gmw = array() ) {
 		$field_data = new BP_XProfile_Field( $field_id );
 
 		$sql = $wpdb->prepare(
-			"
+			'
 			SELECT `user_id`
-			FROM {$bp->profile->table_name_data}
-			WHERE `field_id` = %d ",
-			$field_id
-		); // phpcs:ignore. WPCS: unprepared SQL ok.
+			FROM %s
+			WHERE `field_id` = %d ',
+			$bp->profile->table_name_data,
+			$field_id,
+		); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		switch ( $field_data->type ) {
 
@@ -749,7 +748,7 @@ function gmw_query_xprofile_fields( $fields_values = array(), $gmw = array() ) {
 				break;
 		}
 
-		$results  = $wpdb->get_col( $sql, 0 ); // phpcs:ignore. WPCS: db call ok, cache ok, unprepared SQL ok.
+		$results  = $wpdb->get_col( $sql, 0 ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$users_id = empty( $users_id ) ? $results : array_intersect( $users_id, $results );
 
 		// abort if no users found for this fields.

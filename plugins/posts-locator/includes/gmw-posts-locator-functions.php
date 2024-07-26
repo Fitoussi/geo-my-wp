@@ -62,8 +62,8 @@ function gmw_get_post_location_form_args( $post ) {
 	 *
 	 * or by GEO my WP.
 	 */
-	if ( ! empty( $_GET['post'] ) && absint( $_GET['post'] ) && $_GET['post'] !== $post->ID ) {
-		$post = get_post( $_GET['post'] ); // WPCS: CSRF ok, sanitization ok.
+	if ( ! empty( $_GET['post'] ) && absint( $_GET['post'] ) && $_GET['post'] !== $post->ID ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
+		$post = get_post( absint( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 	}
 
 	// form args.
@@ -335,9 +335,9 @@ function gmw_post_location_form( $args = array() ) {
 
 	if ( ! absint( $args['object_id'] ) ) {
 
-		if ( IS_ADMIN && isset( $_GET['post'] ) && absint( $_GET['post'] ) ) { // WPCS: CSRF ok.
+		if ( IS_ADMIN && isset( $_GET['post'] ) && absint( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
-			$args['object_id'] = wp_unslash( $_GET['post'] ); // phpcs:ignore: CSRF ok, sanitization ok.
+			$args['object_id'] = wp_unslash( absint( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 		} else {
 
@@ -537,9 +537,11 @@ function gmw_get_post_location_data( $id = 0, $by_location_id = false ) {
 
 	global $wpdb;
 
-	$gmw_table   = $wpdb->base_prefix . 'gmw_locations';
-	$posts_table = $wpdb->prefix . 'posts';
+	$fields      = esc_sql( $fields );
+	$gmw_table   = esc_sql( $wpdb->base_prefix . 'gmw_locations' );
+	$posts_table = esc_sql( $wpdb->prefix . 'posts' );
 
+	// phpcs:disable
 	if ( ! $by_location_id ) {
 
 		$sql = $wpdb->prepare(
@@ -552,7 +554,7 @@ function gmw_get_post_location_data( $id = 0, $by_location_id = false ) {
             AND        gmw.object_id   = %d
         ",
 			$id
-		); // phpcs:ignore: unprepared SQL ok.
+		); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, unprepared SQL ok.
 
 	} else {
 
@@ -566,8 +568,9 @@ function gmw_get_post_location_data( $id = 0, $by_location_id = false ) {
             AND        gmw.ID = %d
         ",
 			$id
-		); // phpcs:ignore: unprepared SQL ok.
+		); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, unprepared SQL ok.
 	}
+	// phpcs:enable
 
 	// phpcs:ignore.
 	$location_data = $wpdb->get_row( $sql, OBJECT ); // db call ok, cache ok, unprepared SQL ok.
@@ -838,21 +841,23 @@ function gmw_delete_post_location( $post_id = false, $delete_meta = true ) {
  */
 function gmw_post_location_status( $post_id = 0, $status = 1 ) {
 
-	$status = ( 1 === absint( $status ) ) ? 1 : 0;
+	$status = 1 === absint( $status ) ? 1 : 0;
 
 	global $wpdb;
 
+	// phpcs:disable
 	$wpdb->query(
 		$wpdb->prepare(
 			"
             UPDATE {$wpdb->base_prefix}gmw_locations
-            SET   `status`      = $status
+            SET   `status`      = %d
             WHERE `object_type` = 'post'
             AND   `blog_id`     = %d
             AND   `object_id`   = %d",
-			array( gmw_get_blog_id(), $post_id )
+			array( $status, gmw_get_blog_id(), $post_id )
 		)
 	); // WPCS: unprepared SQL ok, db call ok, cache ok.
+	// phpcs:enable
 }
 
 /**

@@ -275,6 +275,7 @@ class GMW_Post_Custom_Fields_Importer extends GMW_Locations_Importer {
 		$count_rows = absint( $this->total_locations ) === 0 ? 'SQL_CALC_FOUND_ROWS' : '';
 
 		// get posts.
+		// phpcs:disable
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
 				"
@@ -307,6 +308,7 @@ class GMW_Post_Custom_Fields_Importer extends GMW_Locations_Importer {
 				)
 			)
 		); // WPCS: db call ok, cache ok, unprepared SQL ok.
+		// phpcs:enable
 
 		// count all rows only when init the importer.
 		$this->total_locations = absint( $this->total_locations ) === 0 ? $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : $this->total_locations; // WPCS: db call ok, cache ok, unprepared SQL ok.
@@ -377,7 +379,7 @@ class GMW_Map_Press_Importer extends GMW_Locations_Importer {
 		$table_name = $wpdb->prefix . 'mappress_maps';
 
 		// look for Mappress DB table.
-		$table = $wpdb->get_results( "SHOW TABLES LIKE '{$table_name}'", ARRAY_A ); // WPCS: db call ok, cache ok, unprepared SQL ok.
+		$table = $wpdb->get_results( "SHOW TABLES LIKE '{$table_name}'", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, db call ok, cache ok, unprepared SQL ok.
 
 		// abort if no table exist.
 		if ( count( $table ) === 0 ) {
@@ -389,6 +391,7 @@ class GMW_Map_Press_Importer extends GMW_Locations_Importer {
 		$count_rows = absint( $this->total_locations ) === 0 ? 'SQL_CALC_FOUND_ROWS' : '';
 
 		// get posts.
+		// phpcs:disable
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
 				"
@@ -406,6 +409,7 @@ class GMW_Map_Press_Importer extends GMW_Locations_Importer {
 				)
 			)
 		); // WPCS: db call ok, cache ok, unprepared SQL ok.
+		// phpcs:enable
 
 		// count all rows only when init the importer.
 		$this->total_locations = absint( $this->total_locations ) === 0 ? $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : $this->total_locations; // WPCS: db call ok, cache ok, unprepared SQL ok.
@@ -483,7 +487,7 @@ class GMW_GeoDirectory_Importer extends GMW_Locations_Importer {
 		$table_name = $wpdb->prefix . 'geodir_gd_place_detail';
 
 		// look for GeoDirectory DB table.
-		$table = $wpdb->get_results( "SHOW TABLES LIKE '{$table_name}'", ARRAY_A ); // WPCS: db call ok, cache ok, unprepared SQL ok.
+		$table = $wpdb->get_results( "SHOW TABLES LIKE '{$table_name}'", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, db call ok, cache ok, unprepared SQL ok.
 
 		// abort if no table exist.
 		if ( count( $table ) === 0 ) {
@@ -495,6 +499,7 @@ class GMW_GeoDirectory_Importer extends GMW_Locations_Importer {
 		$count_rows = absint( $this->total_locations ) === 0 ? 'SQL_CALC_FOUND_ROWS' : '';
 
 		// get posts.
+		// phpcs:disable
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
 				"
@@ -508,6 +513,7 @@ class GMW_GeoDirectory_Importer extends GMW_Locations_Importer {
 				)
 			)
 		); // WPCS: db call ok, cache ok, unprepared SQL ok.
+		// phpcs:enable
 
 		// count all rows only when init the importer.
 		$this->total_locations = absint( $this->total_locations ) === 0 ? $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : $this->total_locations; // WPCS: db call ok, cache ok, unprepared SQL ok.

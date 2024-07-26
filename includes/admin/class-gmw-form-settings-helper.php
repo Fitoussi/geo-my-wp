@@ -1918,7 +1918,12 @@ class GMW_Form_Settings_Helper {
 			return array();
 		}
 
-		$terms = get_terms( $taxonomy, array( 'hide_empty' => false ) );
+		$args = array(
+			'taxonomy'   => $taxonomy,
+			'hide_empty' => false,
+		);
+
+		$terms = get_terms( $args );
 
 		// Abort if error or nothing was found.
 		if ( empty( $terms ) || is_wp_error( $terms ) ) {
@@ -2159,7 +2164,12 @@ class GMW_Form_Settings_Helper {
 	public static function get_all_taxonomy_terms( $args = array() ) {
 
 		$taxonomies = get_object_taxonomies( array_values( get_post_types() ) );
-		$terms      = get_terms( $taxonomies, array( 'hide_empty' => false ) );
+		$args       = array(
+			'taxonomy'   => $taxonomies,
+			'hide_empty' => false,
+		);
+
+		$terms = get_terms( $args );
 
 		if ( empty( $terms ) || is_wp_error( $terms ) ) {
 			return;
@@ -2231,7 +2241,12 @@ class GMW_Form_Settings_Helper {
 			$values = explode( ',', $values );
 		}
 
-		$terms = get_terms( $taxonomy, array( 'hide_empty' => false ) );
+		$args = array(
+			'taxonomy'   => $taxonomy,
+			'hide_empty' => false,
+		);
+
+		$terms = get_terms( $args );
 
 		if ( empty( $terms ) || is_wp_error( $terms ) ) {
 			return;
@@ -2672,12 +2687,10 @@ class GMW_Form_Settings_Helper {
 	public static function get_field_options_ajax() {
 
 		// ajax_load_options holds the function name. If missing, abort.
-		if ( empty( $_POST['args']['gmw_ajax_load_options'] ) ) { // phpcs:ignore: CSRF ok, sanitization ok.
-
+		if ( empty( $_POST['args']['gmw_ajax_load_options'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok, sanitization ok.
 			echo wp_json_encode( array() );
 		} else {
-
-			echo wp_json_encode( self::get_field_options( $_POST['args'] ) ); // phpcs:ignore: CSRF ok, sanitization ok.
+			echo wp_json_encode( self::get_field_options( $_POST['args'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok, sanitization ok.
 		}
 
 		die;

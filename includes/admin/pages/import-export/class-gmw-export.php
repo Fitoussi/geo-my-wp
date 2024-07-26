@@ -67,7 +67,7 @@ if ( ! class_exists( 'GMW_Export' ) ) :
 			nocache_headers();
 
 			header( 'Content-Type: text/csv; charset=utf-8' );
-			header( 'Content-Disposition: attachment; filename=gmw-export-' . $this->export_type . '-' . date( 'm-d-Y' ) . '.csv' );
+			header( 'Content-Disposition: attachment; filename=gmw-export-' . $this->export_type . '-' . gmdate( 'm-d-Y' ) . '.csv' );
 			header( 'Expires: 0' );
 		}
 

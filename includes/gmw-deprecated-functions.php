@@ -535,9 +535,11 @@ function gmw_fix_deprecated_plugin_version() {
 
 		global $wpdb;
 
-		$locations_table = $wpdb->base_prefix . 'gmw_locations';
+		$locations_table = esc_sql( $wpdb->base_prefix . 'gmw_locations' );
 
+		// phpcs:disable
 		$column = $wpdb->get_results( "SHOW COLUMNS FROM {$locations_table} LIKE 'radius'" );
+		// phpcs:enable
 
 		if ( ! empty( $column ) ) {
 			$rprx = 'plr';
@@ -662,19 +664,23 @@ function gmw_exl_get_roles_users_id( $roles, $cache = 'posts' ) {
 			$sql[] = " m.meta_value LIKE '{$like}'";
 		}
 
-		$like = implode( ' OR ', $sql );
+		$like        = implode( ' OR ', $sql );
+		$users_table = esc_sql( $wpdb->users );
+		$usermeta    = esc_sql( $wpdb->usermeta );
 
 		// get excluded users from database.
+		// phpcs:disable
 		$users_id = $wpdb->get_col(
 			"
 			SELECT u.ID
-			FROM {$wpdb->users} u
-			INNER JOIN {$wpdb->usermeta} m ON m.user_id = u.ID
+			FROM $users_table u
+			INNER JOIN $usermeta m ON m.user_id = u.ID
 			WHERE m.meta_key = '{$wpdb->prefix}capabilities'
 			AND ( {$like} )
 			GROUP BY ID",
 			0
 		); // WPCS: DB call ok, unpreapared sql ok.
+		// phpcs:enable
 
 		$trans = array(
 			'roles' => $roles,

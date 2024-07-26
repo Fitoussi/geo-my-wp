@@ -140,6 +140,7 @@ class GMW_BP_Xprofile_Fields_Importer extends GMW_Locations_Importer {
 		$count_rows = absint( $this->total_locations ) === 0 ? 'SQL_CALC_FOUND_ROWS' : '';
 
 		// get users.
+		// phpcs:disable
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
 				"
@@ -170,6 +171,7 @@ class GMW_BP_Xprofile_Fields_Importer extends GMW_Locations_Importer {
 				)
 			)
 		); // WPCS: db call ok, cache ok, unprepared SQL ok.
+		// phpcs:enable
 
 		// count all rows only when init the importer.
 		$this->total_locations = absint( $this->total_locations ) === 0 ? $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : $this->total_locations; // WPCS: db call ok, cache ok, unprepared SQL ok.

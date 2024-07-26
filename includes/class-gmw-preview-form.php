@@ -17,11 +17,11 @@ class GMW_Preview_Form {
 
     public function __construct() {
 
-        if ( ! isset( $_GET['gmw_preview_form'] ) ) {
+        if ( ! isset( $_GET['gmw_preview_form'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
         	return;
         }
 
-        $this->form_id = sanitize_text_field( wp_unslash( $_GET['gmw_preview_form'] ) );
+        $this->form_id = sanitize_text_field( wp_unslash( $_GET['gmw_preview_form'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
         add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
 
@@ -42,7 +42,7 @@ class GMW_Preview_Form {
 
 		$query->set( 'posts_per_page', 1 );
     }
-  	
+
     public function the_title( $title ) {
 
     	remove_filter('the_title', array( $this, 'the_title' ) );

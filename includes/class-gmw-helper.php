@@ -141,7 +141,7 @@ class GMW_Helper {
 		}
 
 		// can modify the PATH of the custom template files.
-		$custom_path = apply_filters( 'gmw_get_templates_path', STYLESHEETPATH . '/geo-my-wp', $component, $folder_name, $iw_type, $addon );
+		$custom_path = apply_filters( 'gmw_get_templates_path', get_stylesheet_directory() . '/geo-my-wp', $component, $folder_name, $iw_type, $addon );
 
 		if ( $addon_data != false && ! empty( $addon_data['templates_folder'] ) ) {
 			$templates_folder .= '/' . $addon_data['templates_folder'];
@@ -150,11 +150,11 @@ class GMW_Helper {
 		if ( 'info-window' === $folder_name ) {
 
 			$custom_path          = $custom_path . '/' . $templates_folder . '/' . $folder . $iw_type . '/*';
-			$template_custom_path = TEMPLATEPATH . '/geo-my-wp/' . $templates_folder . '/' . $folder . $iw_type . '/*';
+			$template_custom_path = get_template_directory() . '/geo-my-wp/' . $templates_folder . '/' . $folder . $iw_type . '/*';
 
 		} else {
 			$custom_path          = $custom_path . '/' . $templates_folder . '/' . $folder . '*';
-			$template_custom_path = TEMPLATEPATH . '/geo-my-wp/' . $templates_folder . '/' . $folder . '*';
+			$template_custom_path = get_template_directory() . '/geo-my-wp/' . $templates_folder . '/' . $folder . '*';
 		}
 
 		// look for custom templates in child theme or custom path. If not found check in parent theme.
@@ -242,7 +242,7 @@ class GMW_Helper {
 
 			// modify the PATH and URI of the custom template files.
 			$custom_path_uri = array(
-				'path' => STYLESHEETPATH . '/geo-my-wp',
+				'path' => get_stylesheet_directory() . '/geo-my-wp',
 				'uri'  => get_stylesheet_directory_uri() . '/geo-my-wp',
 			);
 
@@ -267,9 +267,9 @@ class GMW_Helper {
 
 			} else {
 
-				$output['path']            = TEMPLATEPATH . "/geo-my-wp/{$templates_folder}/{$folder}{$template_name}/";
-				$output['content_path']    = TEMPLATEPATH . "/geo-my-wp/{$templates_folder}/{$folder}{$template_name}/";
-				$output['stylesheet_path'] = TEMPLATEPATH . "/geo-my-wp/{$templates_folder}/{$folder}{$template_name}/css/style.css";
+				$output['path']            = get_template_directory() . "/geo-my-wp/{$templates_folder}/{$folder}{$template_name}/";
+				$output['content_path']    = get_template_directory() . "/geo-my-wp/{$templates_folder}/{$folder}{$template_name}/";
+				$output['stylesheet_path'] = get_template_directory() . "/geo-my-wp/{$templates_folder}/{$folder}{$template_name}/css/style.css";
 				$output['stylesheet_uri']  = get_template_directory_uri() . "/geo-my-wp/{$templates_folder}/{$folder}{$template_name}/css/style.css";
 			}
 

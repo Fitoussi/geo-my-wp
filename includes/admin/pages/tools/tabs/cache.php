@@ -153,8 +153,8 @@ function gmw_output_internal_cache_tab() {
 
 						<!-- <input type="submit" class="button-secondary" value="<?php esc_attr_e( 'Clear cache', 'geo-my-wp' ); ?>" /> -->
 
-						<?php if ( ! empty( $_GET['gmw_notice'] ) && 'transients_deleted' === $_GET['gmw_notice'] ) { ?>
-							<p style="color: green;"><?php echo esc_html( $_GET['count'] ); ?> <?php echo esc_html__( 'transients deleted', 'geo-my-wp' ); ?></p>
+						<?php if ( ! empty( $_GET['gmw_notice'] ) && ! empty( $_GET['count'] ) && 'transients_deleted' === $_GET['gmw_notice'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok. ?>
+							<p style="color: green;"><?php echo esc_html( $_GET['count'] ); ?> <?php echo esc_html__( 'transients deleted', 'geo-my-wp' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok. ?></p>
 						<?php } ?>
 
 					</div>
@@ -316,6 +316,7 @@ function gmw_delete_transients( $items ) {
 		OR option_name LIKE '_transient_timeout_gmw_geocoded%' )";
 	}
 
+	// phpcs:disable
 	$count = $wpdb->query(
 		"DELETE FROM $wpdb->options
 		$sql
@@ -325,6 +326,7 @@ function gmw_delete_transients( $items ) {
 		AND option_name NOT LIKE '_transient_gmw_extensions_feed%'
 		AND option_name NOT LIKE '_transient_timeout_gmw_extensions_feed%'"
 	); // WPCS: db call ok, cache ok.
+	// phpcs:enable
 
 	return $count;
 

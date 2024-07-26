@@ -675,23 +675,17 @@ function gmw_get_bp_groups_from_db( $groups = array() ) {
 
 		global $wpdb;
 
+		$bp    = buddypress();
+		$table = esc_sql( $bp->groups->table_name );
 		$where = '';
 
 		if ( ! empty( $groups ) ) {
 			$groups     = array_map( 'absint', $groups );
-			$groups_var = implode( ',', $groups );
+			$groups_var = esc_sql( implode( ',', $groups ) );
 			$where      = "WHERE id IN ( {$groups_var} )";
 		}
 
-		$bp = buddypress();
-		// phpcs:ignore.
-		$groups = $wpdb->get_results(
-			"
-            SELECT id, name
-            FROM {$bp->groups->table_name}
-            {$where}
-            "
-		); // phpcs:ignore: unprepared sql ok, db call ok, cache ok.
+		$groups = $wpdb->get_results( " SELECT id, name FROM {$table} {$where} " ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, db call ok.
 	}
 
 	$output = array();

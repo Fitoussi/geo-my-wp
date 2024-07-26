@@ -11,7 +11,7 @@
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
-    exit; 
+    exit;
 }
 
 /**
@@ -20,9 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * This class was originally developed for the System Snapshot Report plugin by Reaktiv Studios, thank you.
  *
  * Modified by Eyal Fitoussi to work with GEO my WP.
- * 
+ *
  * @Since 3.0
- * 
+ *
  */
 class GMW_System_Info {
 
@@ -35,7 +35,7 @@ class GMW_System_Info {
     public function __construct() {
         add_action( 'gmw_download_system_info', array( $this, 'generate_system_info_file' ) );
     }
-    
+
     /**
      * helper function for number conversions
      *
@@ -77,14 +77,9 @@ class GMW_System_Info {
         }
 
         // do WP version check and get data accordingly
-        $browser = new Browser();
-        if ( get_bloginfo( 'version' ) < '3.4' ) :
-            $theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
-            $theme      = $theme_data['Name'] . ' ' . $theme_data['Version'];
-        else:
-            $theme_data = wp_get_theme();
-            $theme      = $theme_data->Name . ' ' . $theme_data->Version;
-        endif;
+        $browser    = new Browser();
+        $theme_data = wp_get_theme();
+        $theme      = $theme_data->Name . ' ' . $theme_data->Version;
 
         // host name
         $host = false;
@@ -111,12 +106,7 @@ class GMW_System_Info {
         $ms_sites = null;
 
         if ( is_multisite() ) {
-
-            if ( function_exists( 'get_sites' ) ) {
-                $ms_sites = get_sites();
-            } elseif ( function_exists( 'wp_get_sites' ) ) {
-                $ms_sites = wp_get_sites();
-            }
+            $ms_sites = get_sites();
         }
 
         // yes / no specifics
@@ -142,9 +132,9 @@ class GMW_System_Info {
         // start generating report
         $report  = '';
         $report .= '<textarea readonly="readonly" id="gmw-system-info-content" name="gmw_system_info_content" style="width:100%;min-height:500px;">';
-        
+
         $report .= '### Begin System Info ###'."\n";
-        
+
         // add filter for adding to report opening
         //$report .= apply_filters( 'gmw_system_info_start', $report );
 
@@ -163,7 +153,7 @@ class GMW_System_Info {
         $report .= 'Active Theme:'."\t\t\t".$theme."\n";
         $report .= 'Post Types:'."\t\t\t\t".implode( ', ', get_post_types( '', 'names' ) )."\n";
         $report .= 'Post Stati:'."\t\t\t\t".implode( ', ', get_post_stati() )."\n";
-        
+
         $user_count = count_users();
 
 		$report .= 'User Count:'."\t\t\t\t".$user_count['total_users']."\n";
@@ -191,31 +181,31 @@ class GMW_System_Info {
             } elseif ( is_object( $ms_sites[0] ) ) {
                 $report .= 'Base Site:'."\t\t\t\t".$ms_sites[0]->domain."\n";
             }
-            
+
             $report .= 'All Sites:'."\n";
-            
+
             foreach ( $ms_sites as $site ) {
-                
+
                 if ( is_array( $site ) ) {
-                    
+
                     if ( $site['path'] != '/' ) {
-                        
+
                         $report .= "\t\t".'- '. $site['domain'].$site['path']."\n";
-                    } 
+                    }
 
                 } elseif ( is_object( $site ) ) {
 
                    if ( $site->path != '/' ) {
-                        
+
                         $report .= "\t\t".'- '. $site->domain.$site->path."\n";
-                    }  
+                    }
                 }
             }
 
             $report .= "\n";
         endif;
 
-        
+
         $report .= "\n".'---------------------------------------------';
         $report .= "\n\t\t".'** BROWSER DATA **'."\n";
         $report .= '---------------------------------------------'."\n";
@@ -223,8 +213,8 @@ class GMW_System_Info {
         $report .= 'Browser Name'."\t\t\t". $browser->getBrowser() ."\n";
         $report .= 'Browser Version:'."\t\t\t".$browser->getVersion()."\n";
         $report .= 'Browser User Agent:'."\t\t".$browser->getUserAgent()."\n";
-        
-       
+
+
         $report .= "\n".'---------------------------------------------';
         $report .= "\n\t\t".'** SERVER DATA **'."\n";
         $report .= '---------------------------------------------'."\n";
@@ -254,7 +244,7 @@ class GMW_System_Info {
         $report .= 'SOAP Client:'."\t\t\t\t".$hassoap."\n";
         $report .= 'SUHOSIN:'."\t\t\t\t".$hassuho."\n";
         $report .= 'OpenSSL:'."\t\t\t\t".$openssl."\n";
-    
+
        // $report .= "\n".'---------------------------------------------';
        //$report .= "\n\t\t".'** PLUGIN INFORMATION **'."\n";
        // $report .= '---------------------------------------------'."\n";
@@ -344,13 +334,13 @@ class GMW_System_Info {
     }
 
     /**
-     * generate text file for download
+     * Generate text file for download.
      *
-     * @return system report file
+     * @return mixed
      */
     public function generate_system_info_file() {
 
-        if ( ! isset( $_POST['gmw_action'] ) || isset( $_POST['gmw_action'] ) && $_POST['gmw_action'] !== 'download_system_info' ) {
+        if ( ! isset( $_POST['gmw_action'] ) || isset( $_POST['gmw_action'] ) && $_POST['gmw_action'] !== 'download_system_info' ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
             return;
         }
 
@@ -359,11 +349,11 @@ class GMW_System_Info {
         $file   = $name.'-gmw-system-info.txt';
 
         $now    = time();
-        $stamp  = __( 'Report Generated: ', 'geo-my-wp' ).date( 'm-d-Y @ g:i:sa', $now ).' system time';
+        $stamp  = __( 'Report Generated: ', 'geo-my-wp' ).gmdate( 'm-d-Y @ g:i:sa', $now ).' system time';
 
         $data   = '';
         $data   .= $stamp."\n\n";
-        $data   .= wp_strip_all_tags( $_POST['gmw_system_info_content'] );
+        $data   .= wp_strip_all_tags( $_POST['gmw_system_info_content'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
         $data   .= "\n\n".$stamp;
 
         nocache_headers();
@@ -377,7 +367,7 @@ class GMW_System_Info {
     }
 
     /**
-     * display settings 
+     * display settings
      *
      * @access public
      * @return void
@@ -386,14 +376,9 @@ class GMW_System_Info {
         global $wpdb, $gmw_options;
 
         // get theme information
-        if ( get_bloginfo( 'version' ) < '3.4' ) {
-            $theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
-            $theme      = $theme_data['Name'] . ' ' . $theme_data['Version'];
-        } else {
-            $theme_data = wp_get_theme();
-            $theme      = $theme_data->Name . ' ' . $theme_data->Version;
-        }
-        ?>     
+        $theme_data = wp_get_theme();
+        $theme      = $theme_data->Name . ' ' . $theme_data->Version;
+        ?>
         <form action="" method="post">
             <p>
                 <input type="hidden" name="gmw_action" value="download_system_info">
@@ -410,9 +395,9 @@ class GMW_System_Info {
         	jQuery( document ).ready( function($) {
 
         		$( '.gmw-copy-system-info-button' ).click(function(){
-				    
+
 				    $( '#gmw-system-info-content' ).focus().select();
-				    
+
 				    document.execCommand( 'copy' );
 
 				    alert( 'Copied!' );

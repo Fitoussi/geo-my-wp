@@ -185,8 +185,10 @@ class GMW_Cache_Helper {
 
 		if ( ! wp_using_ext_object_cache() && ! defined( 'WP_SETUP_CONFIG' ) && ! defined( 'WP_INSTALLING' ) ) {
 
+			$options_table = esc_sql( $wpdb->options );
+
 			$sql = "
-				DELETE a, b FROM $wpdb->options a, $wpdb->options b
+				DELETE a, b FROM $options_table a, $options_table b
 				WHERE a.option_name LIKE %s
 				AND a.option_name NOT LIKE %s
 				AND b.option_name = CONCAT( '_transient_timeout_', SUBSTRING( a.option_name, 12 ) )
@@ -195,12 +197,12 @@ class GMW_Cache_Helper {
 			// phpcs:ignore.
 			$rows = $wpdb->query(
 				$wpdb->prepare(
-					$sql,
+					$sql, // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 					$wpdb->esc_like( '_transient_gmw' ) . '%',
 					$wpdb->esc_like( '_transient_timeout_gmw' ) . '%',
 					time()
 				)
-			); // phpcs:ignore: db call ok, cache ok, unprepared SQL ok.
+			);
 		}
 	}
 }

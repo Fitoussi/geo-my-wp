@@ -278,7 +278,7 @@ class GMW_Template_Functions_Helper {
 		$id_attr = '' !== $args['id_attr'] ? 'id="' . esc_attr( $args['id_attr'] ) . '"' : '';
 
 		$paged_name     = ( is_front_page() || is_single() ) ? 'page' : esc_attr( $args['page_name'] );
-		$selected_value = isset( $_GET[ $args['name'] ] ) ? sanitize_text_field( wp_unslash( $_GET[ $args['name'] ] ) ) : reset( $args['per_page'] ); // WPCS: CSRF ok.
+		$selected_value = isset( $_GET[ $args['name'] ] ) ? sanitize_text_field( wp_unslash( $_GET[ $args['name'] ] ) ) : reset( $args['per_page'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 		$output = '';
 
@@ -357,7 +357,7 @@ class GMW_Template_Functions_Helper {
 		$id      = absint( $args['id'] );
 		$id_attr = '' !== $args['id_attr'] ? 'id="' . esc_attr( $args['id_attr'] ) . '"' : '';
 
-		$selected_value = isset( $_GET[ $args['name'] ] ) ? sanitize_text_field( wp_unslash( $_GET[ $args['name'] ] ) ) : reset( $options ); // WPCS: CSRF ok.
+		$selected_value = isset( $_GET[ $args['name'] ] ) ? sanitize_text_field( wp_unslash( $_GET[ $args['name'] ] ) ) : reset( $options ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 		$on_change = ! $args['ajax_enabled'] ? 'onchange="window.location.href=this.value"' : '';
 

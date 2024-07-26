@@ -269,6 +269,7 @@ function gmw_get_user_location_data( $id = 0, $by_location_id = false ) {
 
 	if ( ! $by_location_id ) {
 
+		// phpcs:disable
 		$sql = $wpdb->prepare(
 			"
             SELECT     $fields
@@ -279,10 +280,11 @@ function gmw_get_user_location_data( $id = 0, $by_location_id = false ) {
             AND        gmw.object_id   = %d
         ",
 			$id
-		);
-
+		); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:enable
 	} else {
 
+		// phpcs:disable
 		$sql = $wpdb->prepare(
 			"
             SELECT     $fields
@@ -293,7 +295,8 @@ function gmw_get_user_location_data( $id = 0, $by_location_id = false ) {
             AND        gmw.ID = %d
         ",
 			$id
-		);
+		); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:enable
 	}
 
 	$location_data = $wpdb->get_row( $sql, OBJECT ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching

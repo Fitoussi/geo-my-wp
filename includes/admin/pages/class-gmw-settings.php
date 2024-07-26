@@ -39,7 +39,7 @@ class GMW_Settings {
 	 */
 	public function __construct() {
 
-		if ( ( empty( $_GET['page'] ) || 'gmw-settings' !== $_GET['page'] ) && ( empty( $_POST['option_page'] ) || 'gmw_options' !== $_POST['option_page'] ) ) { // phpcs:ignore: CSRF ok.
+		if ( ( empty( $_GET['page'] ) || 'gmw-settings' !== $_GET['page'] ) && ( empty( $_POST['option_page'] ) || 'gmw_options' !== $_POST['option_page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing, CSRF ok.
 			return;
 		}
 
@@ -136,7 +136,7 @@ class GMW_Settings {
 	 * @return [type] [description]
 	 */
 	public function get_parent_tab() {
-		return ! empty( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'general_settings'; // phpcs:ignore: CSRF ok.
+		return ! empty( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'general_settings'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 	}
 
 	/**
@@ -148,13 +148,13 @@ class GMW_Settings {
 	 */
 	public function get_current_tab() {
 
-		if ( ! empty( $_GET['sub_tab'] ) ) {
+		if ( ! empty( $_GET['sub_tab'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
-			return $_GET['sub_tab']; // phpcs:ignore: CSRF ok, sanitization ok.
+			return sanitize_text_field( wp_unslash( $_GET['sub_tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
-		} elseif ( ! empty( $_GET['tab'] ) ) {
+		} elseif ( ! empty( $_GET['tab'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
-			return esc_attr( $_GET['tab'] ); // phpcs:ignore: CSRF ok, sanitization ok.
+			return sanitize_text_field( wp_unslash( $_GET['tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 		} else {
 			return 'general_settings';

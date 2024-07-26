@@ -183,10 +183,10 @@ if ( ! class_exists( 'GMW_Installer' ) ) :
 			$charset_collate .= ! empty( $wpdb->collate ) ? " COLLATE {$wpdb->collate}" : ' COLLATE utf8_general_ci';
 
 			// forms table name.
-			$forms_table = $wpdb->prefix . 'gmw_forms';
+			$forms_table = esc_sql( $wpdb->prefix . 'gmw_forms' );
 
 			// check if table exists already.
-			$table_exists = $wpdb->get_results( "SHOW TABLES LIKE '{$forms_table}'", ARRAY_A ); // WPCS: db call ok, cache ok, unprepared SQL ok.
+			$table_exists = $wpdb->get_results( "SHOW TABLES LIKE '{$forms_table}'", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, db call ok, cache ok, unprepared SQL ok.
 
 			// if form table not exists create it.
 			if ( 0 === count( $table_exists ) ) {
@@ -212,10 +212,10 @@ if ( ! class_exists( 'GMW_Installer' ) ) :
 			}
 
 			// locations table name.
-			$locations_table = $wpdb->base_prefix . 'gmw_locations';
+			$locations_table = esc_sql( $wpdb->base_prefix . 'gmw_locations' );
 
 			// check if table already exists.
-			$table_exists = $wpdb->get_results( "SHOW TABLES LIKE '{$locations_table}'", ARRAY_A ); // WPCS: db call ok, cache ok, unprepared SQL ok.
+			$table_exists = $wpdb->get_results( "SHOW TABLES LIKE '{$locations_table}'", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, db call ok, cache ok, unprepared SQL ok.
 
 			// create table if not already exists.
 			if ( 0 === count( $table_exists ) ) {
@@ -240,7 +240,7 @@ if ( ! class_exists( 'GMW_Installer' ) ) :
 				premise VARCHAR( 50 ) NOT NULL default '',
 				neighborhood VARCHAR( 96 ) NOT NULL default '',
 				city VARCHAR( 128 ) NOT NULL default '',
-				county VARCHAR( 128 ) NOT NULL default '',	
+				county VARCHAR( 128 ) NOT NULL default '',
 				region_name VARCHAR( 50 ) NOT NULL default '',
 				region_code CHAR( 50 ) NOT NULL,
 				postcode VARCHAR( 24 ) NOT NULL default '',
@@ -275,10 +275,10 @@ if ( ! class_exists( 'GMW_Installer' ) ) :
 			}
 
 			// location meta table.
-			$location_meta_table = $wpdb->base_prefix . 'gmw_locationmeta';
+			$location_meta_table = esc_sql( $wpdb->base_prefix . 'gmw_locationmeta' );
 
 			// check if table already exists.
-			$table_exists = $wpdb->get_results( "SHOW TABLES LIKE '$location_meta_table'", ARRAY_A ); // WPCS: db call ok, cache ok, unprepared SQL ok.
+			$table_exists = $wpdb->get_results( "SHOW TABLES LIKE '$location_meta_table'", ARRAY_A );// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, db call ok, cache ok, unprepared SQL ok.
 
 			// create table if not exists already.
 			if ( 0 === count( $table_exists ) ) {
@@ -356,45 +356,49 @@ if ( ! class_exists( 'GMW_Installer' ) ) :
 			}
 
 			// locations table name.
-			$locations_table = $wpdb->base_prefix . 'gmw_locations';
+			$locations_table = esc_sql( $wpdb->base_prefix . 'gmw_locations' );
 
 			// check if table already exists.
-			$table_exists = $wpdb->get_results( "SHOW TABLES LIKE '{$locations_table}'", ARRAY_A ); // WPCS: db call ok, cache ok, unprepared SQL ok.
+			$table_exists = $wpdb->get_results( "SHOW TABLES LIKE '{$locations_table}'", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, db call ok, cache ok, unprepared SQL ok.
 
 			// Do tasks if table exists.
 			if ( 0 !== count( $table_exists ) ) {
 
 				// Modify the default value of date columns if needed.
-				$column = $wpdb->get_results( "DESCRIBE {$locations_table} created" ); // WPCS: db call ok, cache ok, unprepared SQL ok.
+				$column = $wpdb->get_results( "DESCRIBE {$locations_table} created" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, db call ok, cache ok, unprepared SQL ok.
 
 				if ( 'CURRENT_TIMESTAMP' === $column[0]->Default ) {
+
+					// phpcs:disable
 					$wpdb->query(
 						"ALTER TABLE {$locations_table}
 						MODIFY created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 						MODIFY updated DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'"
 					); // WPCS: db call ok, cache ok, unprepared SQL ok.
+					// phpcs:enable
 				}
 
 				// look for the radius colummn.
-				$column = $wpdb->get_results( "SHOW COLUMNS FROM {$locations_table} LIKE 'radius'" ); // WPCS: db call ok, cache ok, unprepared SQL ok.
+				$column = $wpdb->get_results( "SHOW COLUMNS FROM {$locations_table} LIKE 'radius'" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, db call ok, cache ok, unprepared SQL ok.
 
 				// create new radius column if not exists.
 				if ( empty( $column ) ) {
-					$wpdb->query( "ALTER TABLE {$locations_table} ADD COLUMN radius NUMERIC( 6,1 ) NOT NULL AFTER map_icon" ); // WPCS: db call ok, cache ok, unprepared SQL ok.
+					$wpdb->query( "ALTER TABLE {$locations_table} ADD COLUMN radius NUMERIC( 6,1 ) NOT NULL AFTER map_icon" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, db call ok, cache ok, unprepared SQL ok.
 				}
 
 				// look for the location type colummn.
-				$column = $wpdb->get_results( "SHOW COLUMNS FROM {$locations_table} LIKE 'location_type'" ); // WPCS: db call ok, cache ok, unprepared SQL ok.
+				$column = $wpdb->get_results( "SHOW COLUMNS FROM {$locations_table} LIKE 'location_type'" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, db call ok, cache ok, unprepared SQL ok.
 
 				// create new location type column if not exists.
 				if ( empty( $column ) ) {
-					$wpdb->query( "ALTER TABLE {$locations_table} ADD COLUMN location_type bigint(20) unsigned NOT NULL DEFAULT '0' AFTER featured" ); // WPCS: db call ok, cache ok, unprepared SQL ok.
+					$wpdb->query( "ALTER TABLE {$locations_table} ADD COLUMN location_type bigint(20) unsigned NOT NULL DEFAULT '0' AFTER featured" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, db call ok, cache ok, unprepared SQL ok.
 				}
 
 				// Add indexes if not exist.
-				$index = $wpdb->get_results( "SHOW INDEX FROM {$locations_table} WHERE Key_name = 'object_type'" ); // WPCS: db call ok, cache ok, unprepared SQL ok.
+				$index = $wpdb->get_results( "SHOW INDEX FROM {$locations_table} WHERE Key_name = 'object_type'" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, db call ok, cache ok, unprepared SQL ok.
 
 				if ( empty( $index ) ) {
+					// phpcs:disable
 					$wpdb->query(
 						"ALTER TABLE {$locations_table}
 						ADD INDEX object_type ( object_type ),
@@ -402,6 +406,7 @@ if ( ! class_exists( 'GMW_Installer' ) ) :
 						ADD INDEX blog_id ( blog_id ),
 						ADD INDEX user_id ( user_id )"
 					); // WPCS: db call ok, cache ok, unprepared SQL ok.
+					// phpcs:enable
 				}
 			}
 		}

@@ -23,8 +23,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @author Eyal Fitoussi
  */
 function gmw_import_export_data_tab() {
-	?>	
-	
+	?>
+
 	<?php do_action( 'gmw_import_export_data_start' ); ?>
 
 	<?php do_action( 'gmw_import_export_before_data_export' ); ?>
@@ -32,7 +32,7 @@ function gmw_import_export_data_tab() {
 	<div class="gmw-settings-panel gmw-export-data-panel">
 
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin.php?page=gmw-import-export&tab=data' ) ); ?>">
-			
+
 			<fieldset>
 
 				<legend class="gmw-settings-panel-title"><?php esc_html_e( 'Export Data', 'geo-my-wp' ); ?></legend>
@@ -40,18 +40,18 @@ function gmw_import_export_data_tab() {
 				<div class="gmw-settings-panel-content">
 
 					<div class="gmw-settings-panel-description">
-						<?php esc_html_e( 'Check the checkboxes of the items that you would like to export, then click the "Export" button to generate a .json file.', 'geo-my-wp' ); ?>		
+						<?php esc_html_e( 'Check the checkboxes of the items that you would like to export, then click the "Export" button to generate a .json file.', 'geo-my-wp' ); ?>
 					</div>
 
 					<div class="gmw-settings-panel-field">
-						
+
 						<div class="gmw-settings-panel-checkboxes">
-									
+
 							<label>
 								<input type="checkbox" class="cb-export-item" name="export_item[]" value="settings" checked="checked" />
-								
+
 								<?php esc_html_e( 'Settings', 'geo-my-wp' ); ?>
-								
+
 								<em class="description">
 									<?php esc_html_e( '( GEO my WP and its extensions )', 'geo-my-wp' ); ?>
 								</em>
@@ -59,9 +59,9 @@ function gmw_import_export_data_tab() {
 
 							<label>
 								<input type="checkbox" class="cb-export-item" name="export_item[]" value="licenses" checked="checked" />
-								
+
 								<?php esc_html_e( 'License Keys', 'geo-my-wp' ); ?>
-								
+
 								<em class="description">
 									<?php esc_html_e( '( exported license keys should be imported back to this site only )', 'geo-my-wp' ); ?>
 								</em>
@@ -69,9 +69,9 @@ function gmw_import_export_data_tab() {
 						</div>
 						<p>
 							<input type="hidden" name="gmw_action" value="export_data" />
-							
+
 							<?php wp_nonce_field( 'gmw_export_data_nonce', 'gmw_export_data_nonce' ); ?>
-							
+
 							<?php
 							submit_button(
 								esc_html__( 'Export', 'geo-my-wp' ),
@@ -86,7 +86,7 @@ function gmw_import_export_data_tab() {
 						</p>
 					</div>
 				</div>
-			</fieldset>				
+			</fieldset>
 		</form>
 	</div>
 
@@ -95,7 +95,7 @@ function gmw_import_export_data_tab() {
 	<div class="gmw-settings-panel gmw-import-data-panel">
 
 		<form method="post" enctype="multipart/form-data" action="<?php echo esc_url( admin_url( 'admin.php?page=gmw-import-export&tab=data' ) ); ?>">
-			
+
 			<fieldset>
 
 				<legend class="gmw-settings-panel-title"><?php esc_html_e( 'Import Data', 'geo-my-wp' ); ?></legend>
@@ -107,7 +107,7 @@ function gmw_import_export_data_tab() {
 					</div>
 
 					<div class="gmw-settings-panel-field">
-	
+
 						<p><input type="file" name="import_file" /></p>
 
 						<strong><?php esc_html_e( 'Items to import', 'geo-my-wp' ); ?></strong>
@@ -117,17 +117,17 @@ function gmw_import_export_data_tab() {
 								<input type="checkbox" class="cb-import-item" name="import_item[]" value="settings" checked="checked" />
 								<?php esc_html_e( 'Settings', 'geo-my-wp' ); ?>
 							</label>
-															
+
 							<label>
-								<input type="checkbox" class="cb-import-item" name="import_item[]" value="licenses" checked="checked" /> 
+								<input type="checkbox" class="cb-import-item" name="import_item[]" value="licenses" checked="checked" />
 								<?php esc_html_e( 'License Keys', 'geo-my-wp' ); ?>
 							</label>
 						</div>
 						<p>
 							<input type="hidden" name="gmw_action" value="import_data" />
-							
+
 							<?php wp_nonce_field( 'gmw_import_data_nonce', 'gmw_import_data_nonce' ); ?>
-							
+
 							<?php
 							submit_button(
 								esc_html__( 'Import', 'geo-my-wp' ),
@@ -141,15 +141,15 @@ function gmw_import_export_data_tab() {
 							?>
 						</p>
 					</div>
-				
+
 				</div>
-			</fieldset>							
+			</fieldset>
 		</form>
 
 	</div>
 
 	<?php do_action( 'gmw_import_export_data_end' ); ?>
-				
+
 	<?php
 }
 add_action( 'gmw_import_export_data_tab', 'gmw_import_export_data_tab' );
@@ -198,10 +198,10 @@ function gmw_export_data() {
 	nocache_headers();
 
 	header( 'Content-Type: application/json; charset=utf-8' );
-	header( 'Content-Disposition: attachment; filename=gmw-data-export-' . date( 'm-d-Y' ) . '.json' );
+	header( 'Content-Disposition: attachment; filename=gmw-data-export-' . gmdate( 'm-d-Y' ) . '.json' );
 	header( 'Expires: 0' );
 
-	echo json_encode( $export );
+	echo wp_json_encode( $export );
 
 	exit;
 }
@@ -240,7 +240,9 @@ function gmw_import_data() {
 	}
 
 	// Retrieve the data from the file and convert the json object to an array.
+	// phpcs:disable
 	$import_data = gmw_object_to_array( json_decode( file_get_contents( $import_file ) ) );
+	// phpcs:enable
 
 	// import settings.
 	if ( in_array( 'settings', $_POST['import_item'], true ) && isset( $import_data['options'] ) ) { // WPCS: CSRF ok, sanitization ok.

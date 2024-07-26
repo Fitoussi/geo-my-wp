@@ -696,9 +696,9 @@ class GMW_Maps_API {
 
 			// check for address in URL to be used as destination.
 			// usually on single object page when navigated from the loop.
-			if ( ! empty( $_GET['address'] ) ) { // WPCS: CSRF ok.
+			if ( ! empty( $_GET['address'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
-				$args['destination'] = urldecode( $_GET['address'] ); // phpcs:ignore: CSRF ok, sanitization ok.
+				$args['destination'] = urldecode( $_GET['address'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok, sanitization ok.
 
 			} else {
 
