@@ -1068,7 +1068,7 @@ form.gmw-horizontal-filters-form .gmw-search-form-multiple-fields-wrapper:empty 
 	}
 
 	.gmw-standard-info-window .gmw-info-window-inner > *:first-child:not( .image ):not( .gmw-image-wrapper ) {
-		padding-top: 25px;
+		//padding-top: 25px;
 	}
 
 	.gmw-standard-info-window .gmw-info-window-inner > a.image,
@@ -1188,6 +1188,10 @@ form.gmw-horizontal-filters-form .gmw-search-form-multiple-fields-wrapper:empty 
 		padding: 0;
 		max-width: 250px ! important;
 		box-sizing: border-box;
+	}
+
+	.gm-style .gm-style-iw .gm-style-iw-d {
+		overflow-x: hidden ! important;
 	}
 
 	body .gmw-map .gm-style .gm-style-iw[aria-label="gmw-user-iw"] button.gm-ui-hover-effect {
@@ -2548,8 +2552,7 @@ body .dir-search.groups-search:not( #gmw-bpgdg-radius-wrapper ) {
 	padding-right: 20px;
 }
 
-body #gmw-map-wrapper-bpgdg,
-body #gmw-map-wrapper-bpmdg {
+body .gmw-map-wrapper-bpdg {
 	margin: 15px 0;
 	border: 0;
 	color: #202020;
@@ -2590,7 +2593,8 @@ body.directory.buddypress .gmw-bpgdg-location-meta-wrapper {
 body.directory.buddypress #groups-list .gmw-item,
 body.directory.buddypress #members-list .gmw-item,
 body.directory.buddypress #youzify-members-list .gmw-item,
-body.directory.buddypress #youzify-groups-list .gmw-item {
+body.directory.buddypress #youzify-groups-list .gmw-item,
+#bp-businesses-content #business-list .gmw-item  {
 	margin: 6px 0 0;
 	font-size: 13px;
 	text-align: center;
@@ -2602,7 +2606,8 @@ body.directory.buddypress #youzify-groups-list .gmw-item {
 body.directory.buddypress #groups-list .gmw-item-distance,
 body.directory.buddypress #members-list .gmw-item-distance,
 body.directory.buddypress #youzify-members-list .gmw-item-distance,
-body.directory.buddypress #youzify-groups-list .gmw-item-distance {
+body.directory.buddypress #youzify-groups-list .gmw-item-distance,
+#bp-businesses-content #business-list .gmw-item-distance {
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -2618,7 +2623,8 @@ body.directory.buddypress #youzify-groups-list .gmw-item-distance {
 body.directory.buddypress #groups-list .gmw-item-distance,
 body.directory.buddypress #members-list .gmw-item-distance,
 body.directory.buddypress #youzify-members-list .gmw-item-distance,
-body.directory.buddypress #youzify-groups-list .gmw-item-distance {
+body.directory.buddypress #youzify-groups-list .gmw-item-distance,
+#bp-businesses-content #business-list .gmw-item-distance {
 	margin: 0;
 }
 
