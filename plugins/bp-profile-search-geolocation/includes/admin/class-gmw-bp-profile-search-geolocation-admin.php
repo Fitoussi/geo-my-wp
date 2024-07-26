@@ -22,6 +22,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class GMW_BP_Profile_Search_Geolocation_Admin {
 
+	/**
+	 * Is BuddyBoss plugin installed.
+	 *
+	 * @var boolean
+	 */
 	public $is_buddyboss = false;
 
 	/**
@@ -128,13 +133,17 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 	}
 
 	/**
-	 * Update BuddyBoss Profile Search post meta
+	 * Update BuddyBoss Profile Search post meta.
+	 *
+	 * @param array  $form form array.
+	 *
+	 * @param object $post $post.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	function bp_ps_update_meta( $form, $post ) {
+	public function bp_ps_update_meta( $form, $post ) {
 
-		if ( $post->post_type != 'bp_ps_form' || $post->post_status != 'publish' ) {
+		if ( 'bp_ps_form' !== $post->post_type || 'publish' !== $post->post_status ) {
 			return false;
 		}
 		if ( empty( $_POST['options'] ) && empty( $_POST['bp_ps_options'] ) ) {
@@ -271,7 +280,7 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 			$field['name'] = 'gmw_bpsgeo_' . $field['name'];
 			$value         = ! empty( $options[ $field['name'] ] ) ? $options[ $field['name'] ] : '';
 
-			echo gmw_get_admin_settings_field( $field, $name_attr, $value ); // WPCS: XSS ok.
+			echo gmw_get_admin_settings_field( $field, $name_attr, $value ); // phpcs:ignore. XSS ok.
 
 			if ( ! empty( $field['desc'] ) ) {
 				echo '<em class="desc">' . esc_html( $field['desc'] ) . '</em>';
@@ -309,8 +318,6 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 		?>
 		</p></div>
 
-		<?php
-		?>
 		<?php $warning = __( 'You can only have one location field per form.', 'geo-my-wp' ); ?>
 
 		<script type="text/javascript">
@@ -351,7 +358,7 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 
 							jQuery( this ).find( 'optgroup:not([label="GEO my WP"] ) option:first' ).prop( 'selected', true );
 
-							alert( '<?php echo $warning; // WPCS: XSS ok. ?>' );
+							alert( '<?php echo esc_html( $warning ); // WPCS: XSS ok. ?>' );
 						}
 					}
 				});

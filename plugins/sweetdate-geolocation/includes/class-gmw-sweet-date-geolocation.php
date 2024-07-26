@@ -277,10 +277,10 @@ class GMW_Sweet_Date_Geolocation {
 				$this->form_data['lat'] = false;
 				$this->form_data['lng'] = false;
 				?>
-				<script> 
-					// display geocoding error message      
-					jQuery( window ).ready( function( $ ) {                 
-						jQuery( '#members-dir-list #message' ).html( '<?php echo $this->labels['address_error_message']; ?>' );
+				<script>
+					// display geocoding error message
+					jQuery( window ).ready( function( $ ) {
+						jQuery( '#members-dir-list #message' ).html( '<?php echo esc_attr( $this->labels['address_error_message'] ); ?>' );
 					});
 				</script>
 				<?php
@@ -543,7 +543,7 @@ class GMW_Sweet_Date_Geolocation {
 		$map_args = gmw_get_map_object( $map_args, $map_options, $this->map_locations, $user_position );
 		$map_args = wp_json_encode( $map_args );
 		?>
-		<script>       
+		<script>
 		jQuery( window ).ready( function() {
 
 			var mapArgs = <?php echo $map_args; ?>;
