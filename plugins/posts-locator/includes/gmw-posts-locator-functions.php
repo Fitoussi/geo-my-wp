@@ -118,14 +118,14 @@ function gmw_get_terms( $taxonomy = 'category', $args = array() ) {
 		if ( empty( $terms ) ) {
 
 			// get terms.
-			$terms = get_terms( $taxonomy, $args );
+			$terms = get_terms( $args );
 
 			// save terms in transient.
 			set_transient( $hash, $terms, DAY_IN_SECONDS * 7 );
 		}
 	} else {
 
-		$terms = get_terms( $taxonomy, $args );
+		$terms = get_terms( $args );
 	}
 
 	return $terms;
