@@ -121,6 +121,37 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 
 == Changelog ==
 
+= 4.5 =
+
+* Please follow the steps below if you are updating from GEO my WP version 3.x:
+  - please read [this post](https://geomywp.com/geo-my-wp-v4-0/) before updating to GEO my WP version 4.x on your site.
+  - GEO my WP v4.0 is a major release. It is highly recommended that you either test it on a staging and/or make a complete backup of your site before installing it on a live site.
+  - VERY IMPORTANT: When updating to GEO my WP v4.x, you need to first update the premium extensions of GEO my WP and only then update GEO my WP core plugin. Not following these steps might cause a fatal error on your site.
+* Security: fix security vulnerability detected by the WordPress team.
+* Security: various security/escaping enhancements.
+* Fix: improve how the plugin collect the map and geocoding providers to prevent PHP warning on initial activation of the plugin.
+* Fix: geolocation details are not always appended to the list of results in the BuddyPress Directory pages.
+* Fix: various PHP warnings.
+* Fix: add a short delay to the mapInit() function in the BuddyPress Directory pages to allow the main script of GEO my WP to load first and prevent JS errors.
+* Enhancement: enhance the  map icons uploader. User wp_handle_upload() instead of move_uploaded_file().
+* Enhancement: move the content of the file gmw-posts-locator-ajax-info-window-laoder.php to a function gmw_pt_ajax_info_window_loader();
+* Enhancement: move the content of the file gmw-members-locator-ajax-info-window-laoder.php to a function gmw_fl_ajax_info_window_loader();.
+* Enhancement: enhance the DB query of the forms table.
+* Tweak: Remove the updater file from GEO my WP core plugin.
+* Tweak: extend the JS file of the BuddyPress Directory pages so it can work with other objects.
+* Tweak: new css_class argument added to the get_map_element() function to allow adding additional classes to the map wrapper element.
+* Tweak: remove the use of deprecated second argument in get_terms().
+* Tweak: temporary delete files not being used. Will be uploaded when ready.
+* Tweak: enhance GMW_Forms_Table class.
+* Tweak: check if some classes exists before calling them to prevent PHP errors.
+* Tweak: check if the file class-gmw-plugins-updater.php exists before including it.
+* Tweak: check that the class GMW_License_Key exists before executing it.
+* Tweak: default value for minimizing settings in settings pages and form editor is now set to 0.
+* Tweak: add geocode_address method to the GMW_BuddyPress_Directory_Geolocation class.
+* Tweak: enhance how the "No results" message in the BuddyPress Directory pages is being generated.
+* PHPCS.
+* WPCS.
+
 = 4.4.0.2 =
 * Please follow the steps below if you are updating from GEO my WP version 3.x:
   - please read [this post](https://geomywp.com/geo-my-wp-v4-0/) before updating to GEO my WP version 4.x on your site.
