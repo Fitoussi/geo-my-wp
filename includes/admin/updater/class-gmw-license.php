@@ -287,7 +287,7 @@ if ( ! class_exists( 'GMW_License' ) ) :
 		 * @return  void
 		 */
 		private function includes() {
-			if ( ! class_exists( 'GMW_Premium_Plugin_Updater' ) ) {
+			if ( ! class_exists( 'GMW_Premium_Plugin_Updater' ) && file_exists( 'class-gmw-plugins-updater.php' ) ) {
 				require_once 'class-gmw-plugins-updater.php';
 			}
 		}
