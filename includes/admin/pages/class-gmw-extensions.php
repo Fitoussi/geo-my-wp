@@ -756,13 +756,16 @@ class GMW_Extensions {
 			wp_die( esc_attr__( 'connection to remote server failed.', 'geo-my-wp' ) );
 		}
 
-		// Generate new license element to replace with current one.
-		$license_input = new GMW_License_Key(
-			$form_data['basename'],
-			$form_data['item_name'],
-			$form_data['license_name'],
-			$form_data['item_id']
-		);
+		if ( class_exists( 'GMW_License_Key' ) ) {
+
+			// Generate new license element to replace with current one.
+			$license_input = new GMW_License_Key(
+				$form_data['basename'],
+				$form_data['item_name'],
+				$form_data['license_name'],
+				$form_data['item_id']
+			);
+		}
 
 		$form = $license_input->get_license_key_element();
 
