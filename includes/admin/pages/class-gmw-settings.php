@@ -60,7 +60,7 @@ class GMW_Settings {
 					'auto_locate'        => 1,
 					'results_page'       => '',
 					'allow_tracking'     => 0,
-					'minimize_options'   => 1,
+					'minimize_options'   => 0,
 					'hide_admin_notices' => 1,
 				),
 				'api_providers'    => array(
