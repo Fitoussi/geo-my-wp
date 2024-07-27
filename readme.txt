@@ -3,7 +3,7 @@ Contributors: ninjew
 Donate link: https://www.paypal.me/fitoussi
 Tags: Locations Directory, Store Locator, Proximity Search forms, Posts location, Members location.
 Requires at least: 5.6
-Tested up to: 6.6
+Tested up to: 6.6.1
 BuddyPress: 11.3.1
 Stable tag: 4.4.0.3
 Requires PHP: 7.0
