@@ -1713,7 +1713,7 @@ class GMW_Form_Editor {
 			$keywords_options['post_excerpt'] = __( 'Post excerpt', 'geo-my-wp' );
 			$keywords_options['meta_fields']  = __( 'Custom fields', 'geo-my-wp' );
 
-			if ( ! is_array( $this->form['search_form']['keywords']['usage'] ) ) {
+			if ( ! empty( $this->form['search_form']['keywords'] ) && ! is_array( $this->form['search_form']['keywords']['usage'] ) ) {
 
 				if ( 'title' === $this->form['search_form']['keywords']['usage'] ) {
 
@@ -2784,7 +2784,8 @@ class GMW_Form_Editor {
 			?>
 			<style>
 				#adminmenumain,
-				#adminmenuback {
+				#adminmenuback,
+				#wpadminbar {
 					display:none ! important;
 				}
 
