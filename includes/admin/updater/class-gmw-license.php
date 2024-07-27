@@ -267,12 +267,15 @@ if ( ! class_exists( 'GMW_License' ) ) :
 		 */
 		public function license_key_element() {
 
-			$license_key = new GMW_License_Key(
-				$this->file,
-				$this->item_name,
-				$this->license_name,
-				$this->item_id
-			);
+			if ( class_exists( 'GMW_License_Key' ) ) {
+
+				$license_key = new GMW_License_Key(
+					$this->file,
+					$this->item_name,
+					$this->license_name,
+					$this->item_id
+				);
+			}
 
 			$license_key->license_key_output();
 		}
@@ -305,18 +308,21 @@ if ( ! class_exists( 'GMW_License' ) ) :
 				return;
 			}
 
-			// Setup the updater.
-			$gmw_updater = new GMW_Premium_Plugin_Updater(
-				$this->api_url,
-				$this->file,
-				array(
-					'version'   => $this->version,
-					'license'   => $this->license_key,
-					'item_name' => $this->item_name,
-					'item_id'   => $this->item_id,
-					'author'    => $this->author,
-				)
-			);
+			if ( class_exists( 'GMW_Premium_Plugin_Updater' ) ) {
+
+				// Setup the updater.
+				$gmw_updater = new GMW_Premium_Plugin_Updater(
+					$this->api_url,
+					$this->file,
+					array(
+						'version'   => $this->version,
+						'license'   => $this->license_key,
+						'item_name' => $this->item_name,
+						'item_id'   => $this->item_id,
+						'author'    => $this->author,
+					)
+				);
+			}
 		}
 	}
 
