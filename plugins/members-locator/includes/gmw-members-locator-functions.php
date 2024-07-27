@@ -88,3 +88,80 @@ function gmw_fl_member_location_form_shortcode( $atts = array() ) {
 	return $content;
 }
 add_shortcode( 'gmw_member_location_form', 'gmw_fl_member_location_form_shortcode' );
+
+/**
+ * Load member info-window contant via AJAX.
+ *
+ * @param object $location location object.
+ *
+ * @param array  $gmw gmw form.
+ *
+ * @since 4.4.0.3
+ *
+ * @return void
+ */
+function gmw_fl_ajax_info_window_loader( $location, $gmw ) {
+
+	if ( empty( $location ) || ! isset( $location->object_id ) || ! isset( $location->location_id ) ) {
+		return;
+	}
+
+	if ( bp_has_members(
+		array(
+			'include' => array( $location->object_id ),
+			'type'    => 'alphabetical',
+		)
+	) ) {
+
+		while ( bp_members() ) {
+			bp_the_member();
+
+			global $members_template;
+
+			// get additional user location data.
+			$location_data = gmw_get_user_location( $location->location_id, true );
+			$fields        = array(
+				'lat',
+				'lng',
+				'latitude',
+				'longitude',
+				'street',
+				'premise',
+				'city',
+				'region_code',
+				'region_name',
+				'postcode',
+				'country_code',
+				'country_name',
+				'address',
+				'formatted_address',
+				'location_name',
+				'featured_location',
+			);
+
+			// append location to the member object.
+			foreach ( $location_data as $field => $value ) {
+				$members_template->member->$field = $value;
+			}
+
+			// get location meta if needed and append it to the member.
+			if ( ! empty( $gmw['info_window']['location_meta'] ) ) {
+				$members_template->member->location_meta = gmw_get_location_meta( $location->location_id, $gmw['info_window']['location_meta'] );
+			}
+
+			// append distance + units to member.
+			$members_template->member->distance = ! empty( $location->distance ) ? $location->distance : '';
+			$members_template->member->units    = ! empty( $location->units ) ? $location->units : '';
+
+			// modify member object.
+			$members_template->member = apply_filters( 'gmw_ajaxfmsfl_member_before_info_window', $members_template->member, $gmw );
+			$member                   = $members_template->member;
+
+			if ( file_exists( $gmw['info_window_template']['content_path'] ) ) {
+				require $gmw['info_window_template']['content_path'];
+			}
+
+			do_action( 'gmw_ajaxfmsfl_after_member_info_window', $member, $gmw );
+		}
+	}
+}

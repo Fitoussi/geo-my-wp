@@ -896,3 +896,75 @@ function gmw_after_delete_post( $post_id ) {
 	gmw_delete_post_location( $post_id, true );
 }
 add_action( 'after_delete_post', 'gmw_after_delete_post' );
+
+/**
+ * Load post info-window contant via AJAX.
+ *
+ * @param object $location location object.
+ *
+ * @param array  $gmw gmw form.
+ *
+ * @since 4.4.0.3
+ *
+ * @return void
+ */
+function gmw_pt_ajax_info_window_loader( $location, $gmw ) {
+
+	if ( empty( $location ) || ! isset( $location->object_id ) || ! isset( $location->location_id ) ) {
+		return;
+	}
+
+	global $post;
+
+	// get the post object.
+	$post = get_post( $location->object_id ); // phpcs:ignore override ok.
+
+	// get additional post location data.
+	$location_data = gmw_get_post_location( $location->location_id, true );
+	$fields        = array(
+		'object_type',
+		'object_id',
+		'lat',
+		'lng',
+		'latitude',
+		'longitude',
+		'street',
+		'premise',
+		'city',
+		'region_code',
+		'region_name',
+		'postcode',
+		'country_code',
+		'country_name',
+		'address',
+		'formatted_address',
+		'location_name',
+		'featured_location',
+	);
+
+	// append location to the post object.
+	foreach ( $fields as $field ) {
+
+		if ( isset( $location_data->$field ) ) {
+			$post->$field = $location_data->$field;
+		}
+	}
+
+	// get location meta if needed and append it to the post.
+	if ( ! empty( $gmw['info_window']['location_meta'] ) ) {
+		$post->location_meta = gmw_get_location_meta( $location->location_id, $gmw['info_window']['location_meta'] );
+	}
+
+	// append distance + units to the post.
+	$post->distance = isset( $location->distance ) ? $location->distance : '';
+	$post->units    = isset( $location->units ) ? $location->units : '';
+
+	// filter post object.
+	$post = apply_filters( 'gmw_' . $gmw['prefix'] . '_post_before_info_window', $post, $gmw ); // phpcs:ignore override ok.
+
+	if ( file_exists( $gmw['info_window_template']['content_path'] ) ) {
+		require $gmw['info_window_template']['content_path'];
+	}
+
+	do_action( 'gmw_' . $gmw['prefix'] . '_after_post_info_window', $gmw, $post );
+}

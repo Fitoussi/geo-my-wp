@@ -1869,18 +1869,19 @@ function gmw_ajax_info_window_init() {
 	 * $gmw = $_POST['form'];
 	 */
 	if ( isset( $_POST['location'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
-		$location = is_object( $_POST['location'] ) ? $_POST['location'] : (object) $_POST['location']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+		$location = is_object( $_POST['location'] ) ? $_POST['location'] : (object) $_POST['location']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, sanitization ok, CSRF ok.
+		$location = wp_unslash( $location );
 	} else {
 		$location = new stdClass();
 	}
 
 	if ( ! empty( $_POST['form'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 
-		$gmw = $_POST['form']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+		$gmw = wp_unslash( $_POST['form'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, sanitization ok, CSRF ok.
 
 	} elseif ( ! empty( $_POST['form_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 
-		$gmw = gmw_get_form( $_POST['form_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+		$gmw = gmw_get_form( absint( $_POST['form_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 
 	} else {
 
@@ -1900,14 +1901,26 @@ function gmw_ajax_info_window_init() {
 	// include info-window template functions.
 	require_once GMW_PATH . '/includes/template-functions/gmw-info-window-template-functions.php';
 
-	if ( 'posts_locator' === $gmw['component'] ) {
+	// Execute the loader function.
+	if ( isset( $gmw['prefix'] ) ) {
 
-		require_once GMW_PT_PATH . '/includes/gmw-posts-locator-ajax-info-window-loader.php';
+		$function_name = 'gmw_' . $gmw['prefix'] . '_ajax_info_window_loader';
 
+		if ( function_exists( $function_name ) ) {
+			$function_name( $location, $gmw );
+		}
+	}
+
+	/*if ( 'posts_locator' === $gmw['component'] ) {
+
+		if ( function_exists( 'gmw_pt_ajax_info_window_loader' ) ) {
+			gmw_pt_ajax_info_window_loader( $location, $gmw );
+		}
 	} elseif ( 'members_locator' === $gmw['component'] ) {
 
-		require_once GMW_FL_PATH . '/includes/gmw-members-locator-ajax-info-window-loader.php';
-
+		if ( function_exists( 'gmw_fl_ajax_info_window_loader' ) ) {
+			gmw_fl_ajax_info_window_loader( $location, $gmw );
+		}
 	} elseif ( 'bp_groups_locator' === $gmw['component'] ) {
 
 		require_once GMW_GL_PATH . '/includes/gmw-groups-locator-ajax-info-window-loader.php';
@@ -1916,7 +1929,7 @@ function gmw_ajax_info_window_init() {
 
 		// phpcs:ignore.
 		require_once GMW_UL_PATH . '/includes/gmw-users-locator-ajax-info-window-loader.php'; // phpcs:ignore: defined in the Users Locator extension.
-	}
+	}*/
 
 	// execute custom info-window functions.
 	do_action( 'gmw_' . $gmw['component'] . '_ajax_info_window_init', $location, $gmw );
