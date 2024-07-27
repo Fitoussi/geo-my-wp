@@ -307,23 +307,38 @@ class GMW_Forms_Table extends WP_List_Table {
 		$order    = ( ! empty( $_REQUEST['order'] ) && 'desc' === $_REQUEST['order'] ) ? 'desc' : 'asc'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 		if ( ! empty( $_REQUEST['s'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
-			$search   = esc_sql( sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
-			$keywords = "WHERE id Like '%{$search}%' OR name Like '%{$search}%' OR title Like '%{$search}%' OR slug Like '%{$search}%' OR component Like '%{$search}%' OR addon Like '%{$search}%'";
+			$search   = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
+			$escaped  = '%' . $wpdb->esc_like( $search ) . '%';
+			$keywords = $wpdb->prepare(
+				'WHERE id LIKE %s
+				OR name LIKE %s
+				OR title LIKE %s
+				OR slug LIKE %s
+				OR component LIKE %s
+				OR addon LIKE %s',
+				$escaped,
+				$escaped,
+				$escaped,
+				$escaped,
+				$escaped,
+				$escaped,
+			);
 		}
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
 		$this->process_bulk_action();
 
+		$orderby = esc_sql( $orderby );
+		$order   = esc_sql( $order );
+
 		// phpcs:disable
 		// Get forms from database.
 		$data = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT ID, title, name as type, addon as extension, slug, prefix
-				FROM {$wpdb->prefix}gmw_forms
-				$keywords
-				ORDER BY $orderby $order",
-			),
+			"SELECT ID, title, name as type, addon as extension, slug, prefix
+			FROM {$wpdb->prefix}gmw_forms
+			$keywords
+			ORDER BY $orderby $order",
 			ARRAY_A
 		); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, cache ok, unprepared sql ok.
 		// phpcs:enable
