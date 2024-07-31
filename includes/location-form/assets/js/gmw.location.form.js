@@ -120,7 +120,7 @@ var GMW_Location_Form_Map_Providers = {
 				draggable    : true,
 			};
 
-			marker_options = GMW.apply_filters( 'gmw_lf_render_map_marker_options', marker_options, this_form );*/
+			marker_options = GMW.apply_filters( 'gmw_lf_render_map_marker_options', marker_options, this_form );
 
 			// set marker
 			if (gmwVars.googleAdvancedMarkers) {
@@ -1680,7 +1680,11 @@ var GMW_Location_Form = {
 jQuery( document ).ready( function($) {
 
 	if (jQuery('.gmw-location-form-wrapper').length) {
-		GMW_Location_Form.init();
-		GMW_Location_Form.init_actions();
+
+		// Allow some time for the main JS to load.
+		setTimeout( function() {
+			GMW_Location_Form.init();
+			GMW_Location_Form.init_actions();
+		}, 300 );
 	}
 });
