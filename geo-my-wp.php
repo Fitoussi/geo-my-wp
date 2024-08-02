@@ -5,7 +5,7 @@
  * Description:       GEO my WP is an adavanced geolocation, mapping, and proximity search plugin. Geotag post types and BuddyPress members, and create advanced, proximity search forms to search and find locations based on address, radius,categories and more.
  * Author:            Eyal Fitoussi
  * Author URI:        http://www.geomywp.com
- * Version:           4.5
+ * Version:           4.5.0.1
  * Requires at least: 5.6
  * Tested up to:      6.6.1
  * Requires PHP:      7.0
@@ -32,7 +32,7 @@ class GEO_MY_WP {
 	 *
 	 * @var string
 	 */
-	public $version = '4.5';
+	public $version = '4.5.0.1';
 
 	/**
 	 * GEO my WP & Extensions options.
@@ -107,10 +107,10 @@ class GEO_MY_WP {
 	 */
 	public $required_versions = array(
 		'ajax_forms'                       => '2.0',
-		'bp_groups_locator'                => '2.0',
-		'groups_locator'                   => '2.0', // old slug.
-		'bp_members_directory_geolocation' => '2.0',
-		'geo_members_directory'            => '2.0', // old slug.
+		'bp_groups_locator'                => '2.1',
+		'groups_locator'                   => '2.1', // old slug.
+		'bp_members_directory_geolocation' => '2.1',
+		'geo_members_directory'            => '2.1', // old slug.
 		'bp_xprofile_geolocation'          => '2.0',
 		'xprofile_fields'                  => '2.0', // old slug.
 		'exclude_locations'                => '2.0',
@@ -124,8 +124,8 @@ class GEO_MY_WP {
 		'gmw_peepso_geolocation'           => '1.0',
 		'premium_settings'                 => '3.1',
 		'radius_per_location'              => '2.0',
-		'users_locator'                    => '2.0',
-		'wp_users_geo-location'            => '2.0', // old slug.
+		'users_locator'                    => '2.0.2',
+		'wp_users_geo-location'            => '2.0.2', // old slug.
 		'gmw_kleo_geolocation'             => '1.9',
 	);
 
