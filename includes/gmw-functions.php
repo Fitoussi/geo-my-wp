@@ -1904,32 +1904,12 @@ function gmw_ajax_info_window_init() {
 	// Execute the loader function.
 	if ( isset( $gmw['prefix'] ) ) {
 
-		$function_name = 'gmw_' . $gmw['prefix'] . '_ajax_info_window_loader';
+		$function_name = 'gmw_' . $gmw['component'] . '_ajax_info_window_loader';
 
 		if ( function_exists( $function_name ) ) {
 			$function_name( $location, $gmw );
 		}
 	}
-
-	/*if ( 'posts_locator' === $gmw['component'] ) {
-
-		if ( function_exists( 'gmw_pt_ajax_info_window_loader' ) ) {
-			gmw_pt_ajax_info_window_loader( $location, $gmw );
-		}
-	} elseif ( 'members_locator' === $gmw['component'] ) {
-
-		if ( function_exists( 'gmw_fl_ajax_info_window_loader' ) ) {
-			gmw_fl_ajax_info_window_loader( $location, $gmw );
-		}
-	} elseif ( 'bp_groups_locator' === $gmw['component'] ) {
-
-		require_once GMW_GL_PATH . '/includes/gmw-groups-locator-ajax-info-window-loader.php';
-
-	} elseif ( 'users_locator' === $gmw['component'] ) {
-
-		// phpcs:ignore.
-		require_once GMW_UL_PATH . '/includes/gmw-users-locator-ajax-info-window-loader.php'; // phpcs:ignore: defined in the Users Locator extension.
-	}*/
 
 	// execute custom info-window functions.
 	do_action( 'gmw_' . $gmw['component'] . '_ajax_info_window_init', $location, $gmw );

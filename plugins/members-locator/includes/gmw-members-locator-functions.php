@@ -100,7 +100,7 @@ add_shortcode( 'gmw_member_location_form', 'gmw_fl_member_location_form_shortcod
  *
  * @return void
  */
-function gmw_fl_ajax_info_window_loader( $location, $gmw ) {
+function gmw_members_locator_ajax_info_window_loader( $location, $gmw ) {
 
 	if ( empty( $location ) || ! isset( $location->object_id ) || ! isset( $location->location_id ) ) {
 		return;
@@ -114,6 +114,7 @@ function gmw_fl_ajax_info_window_loader( $location, $gmw ) {
 	) ) {
 
 		while ( bp_members() ) {
+
 			bp_the_member();
 
 			global $members_template;

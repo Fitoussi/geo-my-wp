@@ -908,7 +908,7 @@ add_action( 'after_delete_post', 'gmw_after_delete_post' );
  *
  * @return void
  */
-function gmw_pt_ajax_info_window_loader( $location, $gmw ) {
+function gmw_posts_locator_ajax_info_window_loader( $location, $gmw ) {
 
 	if ( empty( $location ) || ! isset( $location->object_id ) || ! isset( $location->location_id ) ) {
 		return;
