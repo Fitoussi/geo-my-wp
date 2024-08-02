@@ -107,10 +107,10 @@ class GEO_MY_WP {
 	 */
 	public $required_versions = array(
 		'ajax_forms'                       => '2.0',
-		'bp_groups_locator'                => '2.1',
-		'groups_locator'                   => '2.1', // old slug.
-		'bp_members_directory_geolocation' => '2.1',
-		'geo_members_directory'            => '2.1', // old slug.
+		'bp_groups_locator'                => '2.0.3',
+		'groups_locator'                   => '2.0.3', // old slug.
+		'bp_members_directory_geolocation' => '2.0.2',
+		'geo_members_directory'            => '2.0.2', // old slug.
 		'bp_xprofile_geolocation'          => '2.0',
 		'xprofile_fields'                  => '2.0', // old slug.
 		'exclude_locations'                => '2.0',
