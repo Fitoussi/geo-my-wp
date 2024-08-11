@@ -962,9 +962,14 @@ function gmw_posts_locator_ajax_info_window_loader( $location, $gmw ) {
 	// filter post object.
 	$post = apply_filters( 'gmw_' . $gmw['prefix'] . '_post_before_info_window', $post, $gmw ); // phpcs:ignore override ok.
 
-	if ( file_exists( $gmw['info_window_template']['content_path'] ) ) {
-		require $gmw['info_window_template']['content_path'];
+	$file_path = realpath( $gmw['info_window_template']['content_path'] );
+	$base_path = realpath( GMW_PT_PATH . '/templates' ) . DIRECTORY_SEPARATOR;
+
+	if ( false === $file_path || strpos( $file_path, $base_path ) !== 0 ) {
+		return;
 	}
+
+	require $gmw['info_window_template']['content_path'];
 
 	do_action( 'gmw_' . $gmw['prefix'] . '_after_post_info_window', $gmw, $post );
 }
