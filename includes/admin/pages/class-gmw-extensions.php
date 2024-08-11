@@ -1031,12 +1031,12 @@ class GMW_Extensions {
 							<?php
 							printf(
 								/* translators: %s feedback link */
-								esc_html__( 'Thank you for using GEO my WP. Your %s is greatly appriciated.', 'geo-my-wp' ),
+								esc_html__( 'Thank you for using GEO my WP. Your %s is greatly appreciated.', 'geo-my-wp' ),
 								/* translators: %1$s feedback link, %2$s feedback text */
 								sprintf(
 									'<a href="%1$s" target="_blank">%2$s</a>',
 									'https://wordpress.org/support/view/plugin-reviews/geo-my-wp?filter=5',
-									esc_html__( 'Feedback', 'geo-my-wp' )
+									esc_html__( 'feedback', 'geo-my-wp' )
 								)
 							);
 							?>
