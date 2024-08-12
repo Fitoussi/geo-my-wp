@@ -5,7 +5,7 @@ Tags: Locations Directory, Store Locator, Proximity Search forms, Posts location
 Requires at least: 5.6
 Tested up to: 6.6.1
 BuddyPress: 11.3.1
-Stable tag: 4.5.0.2
+Stable tag: 4.5.0.3
 Requires PHP: 7.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -121,7 +121,12 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 
 == Changelog ==
 
+= 4.5.0.3 =
+
+* Fix: AJAX info-window doesn't load its content when a custom template file is selected.
+
 = 4.5.0.2 =
+
 * Fix: Security issue.
 * Typos.
 
@@ -165,6 +170,7 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 * WPCS.
 
 = 4.4.0.2 =
+
 * Please follow the steps below if you are updating from GEO my WP version 3.x:
   - please read [this post](https://geomywp.com/geo-my-wp-v4-0/) before updating to GEO my WP version 4.x on your site.
   - GEO my WP v4.0 is a major release. It is highly recommended that you either test it on a staging and/or make a complete backup of your site before installing it on a live site.
