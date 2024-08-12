@@ -158,10 +158,14 @@ function gmw_members_locator_ajax_info_window_loader( $location, $gmw ) {
 			$members_template->member = apply_filters( 'gmw_ajaxfmsfl_member_before_info_window', $members_template->member, $gmw );
 			$member                   = $members_template->member;
 
-			$file_path = realpath( $gmw['info_window_template']['content_path'] );
-			$base_path = realpath( GMW_FL_PATH . '/templates' ) . DIRECTORY_SEPARATOR;
+			$file_path   = realpath( $gmw['info_window_template']['content_path'] );
+			$base_path   = realpath( GMW_FL_PATH . '/templates' ) . DIRECTORY_SEPARATOR;
+			$base_custom = realpath( get_stylesheet_directory() . '/geo-my-wp' ) . DIRECTORY_SEPARATOR;
 
-			if ( false === $file_path || strpos( $file_path, $base_path ) !== 0 ) {
+			if ( false === $file_path || strpos( $file_path, $base_path ) !== 0 && strpos( $file_path, $base_custom ) !== 0 ) {
+
+				gmw_trigger_error( 'Info-window template file is missing.' );
+
 				return;
 			}
 

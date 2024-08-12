@@ -962,10 +962,14 @@ function gmw_posts_locator_ajax_info_window_loader( $location, $gmw ) {
 	// filter post object.
 	$post = apply_filters( 'gmw_' . $gmw['prefix'] . '_post_before_info_window', $post, $gmw ); // phpcs:ignore override ok.
 
-	$file_path = realpath( $gmw['info_window_template']['content_path'] );
-	$base_path = realpath( GMW_PT_PATH . '/templates' ) . DIRECTORY_SEPARATOR;
+	$file_path   = realpath( $gmw['info_window_template']['content_path'] );
+	$base_path   = realpath( GMW_PT_PATH . '/templates' ) . DIRECTORY_SEPARATOR;
+	$base_custom = realpath( get_stylesheet_directory() . '/geo-my-wp' ) . DIRECTORY_SEPARATOR;
 
-	if ( false === $file_path || strpos( $file_path, $base_path ) !== 0 ) {
+	if ( false === $file_path || strpos( $file_path, $base_path ) !== 0 && strpos( $file_path, $base_custom ) !== 0 ) {
+
+		gmw_trigger_error( 'Info-window template file is missing.' );
+
 		return;
 	}
 
