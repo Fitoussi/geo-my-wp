@@ -69,7 +69,7 @@ class GMW_Admin {
 
 		// admin functions.
 		require_once 'gmw-admin-functions.php';
-		//require_once 'class-gmw-tracking.php';
+		require_once 'class-gmw-tracking.php';
 		require_once 'updater/class-gmw-license.php';
 		require_once 'class-gmw-form-settings-helper.php';
 		require_once 'class-gmw-forms-table.php';
