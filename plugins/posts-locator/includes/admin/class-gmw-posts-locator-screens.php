@@ -113,24 +113,28 @@ class GMW_Posts_Locator_Screens {
 	 *
 	 * @param array $columns columns.
 	 *
-	 * @return columns
+	 * @return array columns
 	 */
 	public function add_address_column( $columns ) {
 
 		if ( array_key_exists( 'comments', $columns ) ) {
 
-			$offset = array_search( 'comments', array_keys( $columns ) );
+			$offset = array_search( 'comments', array_keys( $columns ), true );
 
 		} elseif ( array_key_exists( 'date', $columns ) ) {
 
-			$offset = array_search( 'date', array_keys( $columns ) );
+			$offset = array_search( 'date', array_keys( $columns ), true );
 
 		} else {
 
-			$offset = array_search( array_key_last( $columns ), array_keys( $columns ) );
+			$offset = array_search( array_key_last( $columns ), array_keys( $columns ), true );
 		}
 
-		return array_merge( array_slice( $columns, 0, $offset ), array( 'gmw_location' => '<i class="gmw-icon-location"></i>' . __( 'Location', 'geo-my-wp' ) ), array_slice( $columns, $offset, null ) );
+		return array_merge(
+			array_slice( $columns, 0, $offset ),
+			array( 'gmw_location' => '<i class="gmw-icon-location"></i>' . esc_html__( 'Location', 'geo-my-wp' ) ),
+			array_slice( $columns, $offset, null )
+		);
 	}
 
 	/**
@@ -163,7 +167,9 @@ class GMW_Posts_Locator_Screens {
 		$location = gmw_get_post_location( $post_id );
 
 		if ( empty( $location ) ) {
+
 			echo '<i class="gmw-icon-cancel-circled" style="color:red;margin-right:1px;font-size: 12px"></i>' . esc_html__( 'No location found', 'geo-my-wp' );
+
 			return;
 		}
 
@@ -185,9 +191,9 @@ class GMW_Posts_Locator_Screens {
 		}
 
 		// create link to address.
-		$address = ( true === $address_ok ) ? '<a href="https://maps.google.com/?q=' . esc_attr( $address ) . '" target="_blank" title="location">' . esc_attr( $address ) . '</a>' : '<span style="color:red">' . esc_attr( $address ) . '</span>';
-		echo '<i class="gmw-icon-ok-circled" style="color: green;margin-right: 1px;font-size: 12px;" style="color:green"></i>' . esc_attr( $address );
+		$address = $address_ok ? '<a href="https://maps.google.com/?q=' . esc_attr( $address ) . '" target="_blank" title="location">' . esc_attr( $address ) . '</a>' : '<span style="color:red">' . esc_attr( $address ) . '</span>';
 
+		echo '<i class="gmw-icon-ok-circled" style="color: green;margin-right: 1px;font-size: 12px;" style="color:green"></i>' . $address; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, XSS ok.
 	}
 
 	/**
