@@ -1004,13 +1004,12 @@ if ( ! class_exists( 'GMW_License' ) ) :
 
 		$messages      = gmw_license_update_notices();
 		$message       = sanitize_text_field( wp_unslash( $messages[ $_GET['gmw_license_status_notice'] ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
-		$allow         = array( 'a' => array( 'href' => array() ) );
-		$message       = wp_kses( $message, $allow );
+		$allowed_html  = array( 'a' => array( 'href' => array() ) );
 		$notice_status = ! empty( $_GET['gmw_notice_status'] ) ? sanitize_text_field( wp_unslash( $_GET['gmw_notice_status'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 		?>
-		<div class="<?php echo $notice_status; // phpcs:ignore XSS ok. ?>">
+		<div class="<?php echo esc_attr( $notice_status ); ?>">
 			<p>
-				<?php echo $message; // phpcs:ignore XSS ok. ?>
+				<?php echo wp_kses( $message, $allowed_html ); ?>
 			</p>
 		</div>
 		<?php
