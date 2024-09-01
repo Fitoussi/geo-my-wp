@@ -928,7 +928,7 @@ class GMW_Maps_API {
 		//$args['to_latlng']   = ( empty( $args['to_lat'] ) || empty( $args['to_lng'] ) ) ? '' : "{$args['to_lat']},{$args['to_lng']}";
 		// phpcs:enable.
 		$args['units_type'] = 'imperial' === $args['units'] ? 'ptm' : 'ptk';
-		$args['link']       = esc_url( "http://maps.google.com/maps?f=d&hl={$args['language']}&region={$args['region']}&doflg={$args['units_type']}&saddr={$from_loc}&daddr={$to_loc}&ie=UTF8&z=12" . $mode );
+		$args['link']       = esc_url( "https://maps.google.com/maps?f=d&hl={$args['language']}&region={$args['region']}&doflg={$args['units_type']}&saddr={$from_loc}&daddr={$to_loc}&ie=UTF8&z=12" . $mode );
 
 		// retrun Google Maps link only.
 		if ( $args['link_only'] ) {
