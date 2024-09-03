@@ -19,6 +19,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 class GMW_Current_Location {
 
 	/**
+	 * Hold the elements that we need to output.
+	 *
+	 * @var array
+	 */
+	public $elements_value = array();
+
+	/**
+	 * Hold the users current location.
+	 *
+	 * @var object
+	 */
+	public $current_location = '';
+
+	/**
 	 * Shortcode arguments/attributes.
 	 *
 	 * @param array $args shortcode attributes.
@@ -101,7 +115,7 @@ class GMW_Current_Location {
 	 *
 	 * @var boolean
 	 */
-	static public $current_location_enabled = false;
+	public static $current_location_enabled = false;
 
 	/**
 	 * __constructor
@@ -150,7 +164,7 @@ class GMW_Current_Location {
 		// set random element id if not provided.
 		$this->args['element_id'] = ! empty( $this->args['element_id'] ) ? $this->args['element_id'] : wp_rand( 550, 1000 );
 
-		// elements to generate.
+		// Elements to generate.
 		$this->elements_value = explode( ',', $this->args['elements'] );
 
 		// check that we have at least one element to display.
