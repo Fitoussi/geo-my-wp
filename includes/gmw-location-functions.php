@@ -1169,13 +1169,23 @@ function gmw_get_image_element( $args, $object, $gmw ) {
 		$args['attributes']['id'] = $args['css_id'];
 	}
 
-	$image_size = 'width:' . $args['width'] . ';height:' . $args['height'];
+	$image_size = '';
 
-	if ( ! empty( $args['attributes']['style'] ) ) {
-		$args['attributes']['style'] .= ';' . $image_size;
-	} else {
-		$args['attributes']['style'] = $image_size;
+	if ( ! empty( $args['width'] ) ) {
+		$image_size .= 'width:' . $args['width'] .';';
+	}
 
+	if ( ! empty( $args['height'] ) ) {
+		$image_size .= 'height:' . $args['height'] .';';
+	}
+
+	if ( '' !== $image_size ) {
+
+		if ( ! empty( $args['attributes']['style'] ) ) {
+			$args['attributes']['style'] .= ';' . $image_size;
+		} else {
+			$args['attributes']['style'] = $image_size;
+		}
 	}
 
 	$attributes = '';
