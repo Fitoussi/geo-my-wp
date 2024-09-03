@@ -793,7 +793,7 @@ body .gmw-fields-enhanced .gmw-field-radio.filled:not(:disabled):after {
 	.gmw-form-wrapper .gmw-modal-box-wrapper .gmw-modal-box-content {
 		background: white;
 		padding: 25px 25px;
-		height: calc( 100% - 60px );
+		//height: calc( 100% - 60px );
 		align-content: flex-start;
 		box-sizing: border-box;
 	}
