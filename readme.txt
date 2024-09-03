@@ -126,6 +126,9 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 * Security: Security patch.
 * Fix: change the Get Directions link from HTTP to HTTPS.
 * Fix: the output of the posts' address in the list of posts page of the admin's dashboard.
+* Fix: Search form filters no showing properly within the Modal Box on mobile view.
+* Tweak: code enhancement.
+* Fix: PHP warnings.
 
 = 4.5.0.3 =
 
