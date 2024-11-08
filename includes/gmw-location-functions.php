@@ -1137,7 +1137,6 @@ function gmw_get_linked_location_address( $location, $fields = array( 'formatted
  */
 function gmw_get_image_element( $args, $object, $gmw ) {
 
-	$args = apply_filters( 'gmw_get_image_element_args', $args, $object, $gmw );
 	$args = wp_parse_args(
 		$args,
 		array(
@@ -1155,14 +1154,18 @@ function gmw_get_image_element( $args, $object, $gmw ) {
 		)
 	);
 
+	$base_class    = 'skip-lazy gmw-image gmw-' . $args['object_type'] . '-image gmw-' . $args['where'] . '-image';
+	$args['class'] = '' !== $args['class'] ? $base_class . ' ' . $args['class'] : $base_class;
+
+	// Modify the image args.
+	$args = apply_filters( 'gmw_get_image_element_args', $args, $object, $gmw );
+
 	if ( empty( $args['image_url'] ) ) {
 		return;
 	}
 
-	$args['attributes']['class'] = 'skip-lazy gmw-image gmw-' . esc_attr( $args['object_type'] ) . '-image gmw-' . esc_attr( $args['where'] ) . '-image';
-
 	if ( '' !== $args['class'] ) {
-		$args['attributes']['class'] .= ' ' . $args['class'];
+		$args['attributes']['class'] = $args['class'];
 	}
 
 	if ( '' !== $args['css_id'] ) {
@@ -1172,11 +1175,11 @@ function gmw_get_image_element( $args, $object, $gmw ) {
 	$image_size = '';
 
 	if ( ! empty( $args['width'] ) ) {
-		$image_size .= 'width:' . $args['width'] .';';
+		$image_size .= 'width:' . $args['width'] . ';';
 	}
 
 	if ( ! empty( $args['height'] ) ) {
-		$image_size .= 'height:' . $args['height'] .';';
+		$image_size .= 'height:' . $args['height'] . ';';
 	}
 
 	if ( '' !== $image_size ) {
@@ -1194,8 +1197,7 @@ function gmw_get_image_element( $args, $object, $gmw ) {
 		$attributes .= ' ' . esc_attr( $attribute_name ) . '="' . esc_attr( $attribute_value ) . '"';
 	}
 
-	$output = '';
-
+	$output  = '';
 	$is_wrap = false;
 
 	if ( ! empty( $args['wrapper'] ) ) {
