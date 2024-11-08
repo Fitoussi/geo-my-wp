@@ -778,50 +778,55 @@ jQuery( document ).ready( function( $ ) {
 		            dataType : 'json',
 		            data     : {
 		            	'args' : args,
-		                action : 'gmw_get_field_options',
+						action: 'gmw_get_field_options',
+						nonce : gmwVars.get_field_options_ajax_nonce,
 		            },
-		            success : function( data ) {
+		            success : function( response ) {
 
 		                // Remove the "loading" message...
 		                select2Elem.removeClass( 'gmw-loading-select-options' );
 
-		                // if updated
-		                if ( data ) {
+						if (response.success) {
 
-		                	// Collect the options for the select element.
-		                	var options = $.map( data, function( item, id ) {
+							// Collect the options for the select element.
+							var options = $.map(response.data, function (item, id) {
 
-		                		// If array of value => label.
-			                    if ( typeof item === 'object' ) {
-			                    	id    = item.value;
-			                    	label = item.label;
-			                    } else {
-			                    	label = item;
-			                    }
+								// If array of value => label.
+								if (typeof item === 'object') {
+									id = item.value;
+									label = item.label;
+								} else {
+									label = item;
+								}
 
-		                    	var option = jQuery( '<option value="' + id + '">' + label + '</option>' );
+								var option = jQuery('<option value="' + id + '">' + label + '</option>');
 
-		                    	// If option is already selected.
-		                    	if ( selectElem.find( 'option[value="' + id  + '"]' ).is( ':selected' ) ) {
+								// If option is already selected.
+								if (selectElem.find('option[value="' + id + '"]').is(':selected')) {
 
-		                    		// Remove the original element which serves as a placeholder only. ( saying "click to view" );
-		                    		selectElem.find( 'option[value="' + id  + '"]' ).remove();
+									// Remove the original element which serves as a placeholder only. ( saying "click to view" );
+									selectElem.find('option[value="' + id + '"]').remove();
 
-		                    		// Set the new element to selected.
-		                    		option.prop( 'selected', true );
-			                    }
+									// Set the new element to selected.
+									option.prop('selected', true);
+								}
 
-			                    return option;
-		                    });
+								return option;
+							});
 
-		                	// Append options to the select element.
-		                    selectElem.append( options ).trigger( 'change' );
+							// Append options to the select element.
+							selectElem.append(options).trigger('change');
 
-		                    jQuery( document ).trigger( 'gmw_ajax_options_loaded', [ args, data, selectElem, select2Elem, wrapElem ] );
-		                }
+							jQuery(document).trigger('gmw_ajax_options_loaded', [args, response.data, selectElem, select2Elem, wrapElem]);
+
+						} else {
+
+							alert('Failed loading data.');
+							console.log(response.data);
+						}
 		            }
 
-		        //if inporter failed or aborted by user
+		        // if failed.
 		        }).fail( function ( jqXHR, textStatus, error ) {
 
 		        	// Remove the "loading" message...

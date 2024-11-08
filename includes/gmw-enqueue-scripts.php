@@ -154,6 +154,10 @@ function gmw_enqueue_scripts() {
 		$gmw_options
 	);
 
+	if ( is_admin() ) {
+		$options['get_field_options_ajax_nonce'] = wp_create_nonce('gmw_get_field_options_ajax_nonce' );
+	}
+
 	wp_localize_script( 'gmw', 'gmwVars', $options );
 
 	// register location form.
