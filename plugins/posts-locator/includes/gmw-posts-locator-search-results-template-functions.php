@@ -421,7 +421,12 @@ function gmw_get_post_featured_image( $args = array(), $post = array(), $gmw = a
 	);
 
 	if ( has_post_thumbnail( $args['object_id'] ) ) {
-		$args['image_url'] = wp_get_attachment_image_src( get_post_thumbnail_id( $args['object_id'] ), $args['image_size'] )[0];
+
+		$img_src = wp_get_attachment_image_src( get_post_thumbnail_id( $args['object_id'] ), $args['image_size'] );
+
+		if ( ! empty( $img_src ) && is_array( $img_src ) ) {
+			$args['image_url'] = $img_src[0];
+		}
 	}
 
 	// If no image was found.
