@@ -171,7 +171,7 @@ trait GMW_Posts_Locator_Form_Trait {
 			if ( $include ) {
 
 				if ( empty( $this->form['search_results']['styles']['disable_single_item_template'] ) ) {
-					include $this->form['results_template']['content_path'] . 'single-result.php';
+					include $this->form['results_template']['path'] . 'single-result.php';
 				} else {
 					do_action( 'gmw_search_results_single_item_template', $post, $this->form );
 				}
