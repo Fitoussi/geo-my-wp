@@ -3,9 +3,9 @@ Contributors: ninjew
 Donate link: https://www.paypal.me/fitoussi
 Tags: Locations Directory, Store Locator, Proximity Search forms, Posts location, Members location.
 Requires at least: 5.6
-Tested up to: 6.6.1
+Tested up to: 6.6.2
 BuddyPress: 11.3.1
-Stable tag: 4.5.0.4
+Stable tag: 4.5.1
 Requires PHP: 7.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,17 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 4.5.1 =
+
+* Security: verify nonce and user authorization during the gmw_get_field_options() ajax call.
+* Security: sanitize, verify, and escape various functions.
+* Enhancement: improve the map script loader. Make sure that Google Maps library was loaded first to prevent JavaScript errors.
+* Fix: incorrect path when loading deprecated custom search results template files.
+* Tweak: enhance code that checked if image exists using the function wp_get_attachment_image_src().
+* Tweak: changed the location of the filter 'gmw_get_image_element_args' to allow better filtering of the image attributes.
+* Tweak: enhance the 'gmw_get_field_options' ajax JS function.
+* PHPCS.
 
 = 4.5.0.4 =
 
