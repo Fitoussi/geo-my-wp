@@ -114,7 +114,7 @@ class GMW_Form extends GMW_Form_Core {
 	public function get_form_values() {
 
 		// Sanitized and escaped later when outputting values.
-		$qs = isset( $_SERVER['QUERY_STRING'] ) ? wp_unslash( $_SERVER['QUERY_STRING'] ) : ''; // phpcs:ignore: CSRF ok, sanitization ok, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized.
+		$qs = isset( $_SERVER['QUERY_STRING'] ) ? wp_unslash( $_SERVER['QUERY_STRING'] ) : ''; // phpcs:ignore: CSRF ok, sanitization ok, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing.
 
 		return gmw_get_form_values( $this->url_px, $qs );
 	}

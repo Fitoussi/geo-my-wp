@@ -354,7 +354,7 @@ class GMW_System_Info {
         $data   = '';
         $data   .= $stamp."\n\n";
 
-		if ( ! empty( $_POST['gmw_system_info_content'] ) ) {
+		if ( ! empty( $_POST['gmw_system_info_content'] ) ) {  // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 			$data .= wp_strip_all_tags( sanitize_textarea_field( wp_unslash( $_POST['gmw_system_info_content'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 		}
         $data .= "\n\n".$stamp;
