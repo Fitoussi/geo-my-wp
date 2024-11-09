@@ -329,7 +329,7 @@ class GMW_Admin {
 		$tools_page         = new GMW_Tools();
 		$import_export_page = new GMW_Import_Export_Page();
 
-		if ( isset( $_GET['page'] ) && 'gmw-forms' === $_GET['page'] && isset( $_GET['gmw_action'] ) && 'edit_form' === $_GET['gmw_action'] && ! empty( $_GET['prefix'] ) && class_exists( 'GMW_' . $_GET['prefix'] . '_Form_Editor' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
+		if ( isset( $_GET['page'] ) && 'gmw-forms' === $_GET['page'] && isset( $_GET['gmw_action'] ) && 'edit_form' === $_GET['gmw_action'] && ! empty( $_GET['prefix'] ) && class_exists( 'GMW_' . sanitize_text_field( wp_unslash( $_GET['prefix'] ) ) . '_Form_Editor' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 			$form_editor_class = 'GMW_' . sanitize_text_field( wp_unslash( $_GET['prefix'] ) ) . '_Form_Editor'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 		} else {
 			$form_editor_class = 'GMW_Form_Editor';
