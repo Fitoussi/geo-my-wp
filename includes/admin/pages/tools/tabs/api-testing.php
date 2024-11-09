@@ -78,7 +78,7 @@ function gmw_google_server_key_test() {
 	}
 
 	// varify nonce.
-	if ( ! wp_verify_nonce( $_POST['gmw_google_server_key_test_nonce'], 'gmw_google_server_key_test_nonce' ) ) { // WPCS: CSRF ok, XSS ok, sanitization ok.
+	if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['gmw_google_server_key_test_nonce'] ) ), 'gmw_google_server_key_test_nonce' ) ) {
 		return;
 	}
 
@@ -142,7 +142,7 @@ function gmw_verify_google_server_key_test_nonce() {
 	}
 
 	// varify nonce.
-	if ( ! wp_verify_nonce( $_POST['gmw_google_server_key_test_nonce'], 'gmw_google_server_key_test_nonce' ) ) { // WPCS: CSRF ok, XSS ok, sanitization ok.
+	if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['gmw_google_server_key_test_nonce'] ) ), 'gmw_google_server_key_test_nonce' ) ) {
 		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 }

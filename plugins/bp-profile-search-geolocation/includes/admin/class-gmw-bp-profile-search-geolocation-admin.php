@@ -150,7 +150,7 @@ class GMW_BP_Profile_Search_Geolocation_Admin {
 			return false;
 		}
 
-		$posted = isset( $_POST['bp_ps_options'] ) ? wp_unslash( $_POST['bp_ps_options'] ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing, sanitization ok, CSRF ok.
+		$posted = isset( $_POST['bp_ps_options'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['bp_ps_options'] ) ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing, sanitization ok, CSRF ok.
 
 		if ( isset( $posted['field_name'] ) ) {
 

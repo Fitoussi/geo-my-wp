@@ -259,7 +259,7 @@ class GMW_Forms_Table extends WP_List_Table {
 
 		if ( 'delete' === $this->current_action() ) {
 
-			if ( empty( $_POST['gmw_page'] ) || 'gmw-forms' !== $_POST['gmw_page'] || empty( $_POST['form'] ) || 'delete' !== $_POST['action'] ) { // phpcs:ignore: CSRF ok.
+			if ( empty( $_POST['gmw_page'] ) || 'gmw-forms' !== $_POST['gmw_page'] || empty( $_POST['form'] ) || empty( $_POST['action'] ) || 'delete' !== $_POST['action'] ) { // phpcs:ignore CSRF ok.
 				return;
 			}
 

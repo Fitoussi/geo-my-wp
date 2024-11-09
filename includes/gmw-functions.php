@@ -486,11 +486,11 @@ function gmw_get_user_current_address() {
 function gmw_process_actions() {
 
 	if ( isset( $_POST['gmw_action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
-		do_action( 'gmw_' . wp_unslash( $_POST['gmw_action'] ), $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+		do_action( 'gmw_' . sanitize_text_field( wp_unslash( $_POST['gmw_action'] ) ), $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 	}
 
 	if ( isset( $_GET['gmw_action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
-		do_action( 'gmw_' . wp_unslash( $_GET['gmw_action'] ), $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
+		do_action( 'gmw_' . sanitize_text_field( wp_unslash( $_GET['gmw_action'] ) ), $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 	}
 }
 
@@ -1869,17 +1869,20 @@ function gmw_ajax_info_window_init() {
 	 * $gmw = $_POST['form'];
 	 */
 	if ( isset( $_POST['location'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
-		$location = is_object( $_POST['location'] ) ? $_POST['location'] : (object) $_POST['location']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, sanitization ok, CSRF ok.
-		$location = wp_unslash( $location );
+
+		$location = (object) array_map( 'sanitize_text_field', wp_unslash( (array) $_POST['location'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+
 	} else {
 		$location = new stdClass();
 	}
 
 	if ( ! empty( $_POST['form'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 
-		$gmw = wp_unslash( $_POST['form'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, sanitization ok, CSRF ok.
+		// Data of the form is being sanitize and escaped when needed to be output.
+		$gmw = wp_unslash( $_POST['form'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, sanitization ok, CSRF ok.
 
 	} elseif ( ! empty( $_POST['form_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+
 
 		$gmw = gmw_get_form( absint( $_POST['form_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 

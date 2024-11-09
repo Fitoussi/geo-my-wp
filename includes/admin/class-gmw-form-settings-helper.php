@@ -2690,15 +2690,17 @@ class GMW_Form_Settings_Helper {
 		$verify_nonce = check_ajax_referer( 'gmw_get_field_options_ajax_nonce', 'nonce', false );
 
 		// Verify authorization and nonce.
-		if ( ! current_user_can( 'manage_options' ) || ! $verify_nonce ) {
+		if ( ! current_user_can( 'manage_options' ) || ! $verify_nonce || empty( $_POST['args'] ) ) {
 			wp_send_json_error( 'Verification failed' );
 		}
 
+		$args = array_map( 'sanitize_text_field', wp_unslash( $_POST['args'] ) );
+
 		// ajax_load_options holds the function name. If missing, abort.
-		if ( empty( $_POST['args']['gmw_ajax_load_options'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok, sanitization ok.
+		if ( empty( $args['gmw_ajax_load_options'] ) ) {
 			wp_send_json_success( array() );
 		} else {
-			wp_send_json_success( self::get_field_options( $_POST['args'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok, sanitization ok.
+			wp_send_json_success( self::get_field_options( $args ) );
 		}
 	}
 

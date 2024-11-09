@@ -636,7 +636,7 @@ class GMW_Current_Location {
 				$page = '/';
 
 				if ( ! empty( $_SERVER['REQUEST_URI'] ) ) {
-					$page = wp_unslash( $_SERVER['REQUEST_URI'] ); // WPCS: CSRF ok, sanitization ok.
+					$page = sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ); // WPCS: CSRF ok.
 				}
 
 				// reload page to prevent form resubmission.
@@ -653,23 +653,26 @@ class GMW_Current_Location {
 	public static function page_load_update_location() {
 
 		// Abort if location not found or nonce not verified.
-		if ( empty( $_POST['gmw_cl_location'] ) || empty( $_POST['gmw_cl_nonce'] ) || ! wp_verify_nonce( $_POST['gmw_cl_nonce'], 'gmw_cl_nonce' ) ) { // WPCS: CSRF ok, sanitization ok.
+		if ( empty( $_POST['gmw_cl_location'] ) || empty( $_POST['gmw_cl_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['gmw_cl_nonce'] ) ), 'gmw_cl_nonce' ) ) { // phpcs:ignore CSRF ok, sanitization ok.
 
 			$page = '/';
 
 			if ( ! empty( $_SERVER['REQUEST_URI'] ) ) {
-				$page = wp_unslash( $_SERVER['REQUEST_URI'] ); // WPCS: CSRF ok, sanitization ok.
+				$page = sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ); // phpcs:ignore CSRF ok.
 			}
 
 			// reload page to prevent form resubmission.
-			wp_redirect( $page );
+			wp_safe_redirect( $page );
 
 			exit;
 		}
 
 		// Update cookies.
 		if ( ! empty( $_POST['gmw_cl_location'] ) ) {
-			self::update_cookies( $_POST['gmw_cl_location'], false ); // WPCS: CSRF ok, sanitization ok.
+
+			$cl_location = array_map( 'sanitize_text_field', wp_unslash( $_POST['gmw_cl_location'] ) );
+
+			self::update_cookies( $cl_location, false ); // phpcs:ignore CSRF ok, sanitization ok.
 		}
 	}
 
@@ -689,11 +692,15 @@ class GMW_Current_Location {
 
 		// parse the form values.
 		if ( ! empty( $_POST['form_values'] ) ) {
-			parse_str( $_POST['form_values'], $form_values ); // WPCS: CSRF ok, sanitization ok.
+			parse_str( $_POST['form_values'], $form_values ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, CSRF ok, sanitization ok.
 		}
 
-		// update cookies.
-		self::update_cookies( $form_values['gmw_cl_location'], true );
+		if ( ! empty( $form_values['gmw_cl_location'] ) ) {
+
+			$cl_location = array_map( 'sanitize_text_field', wp_unslash( $form_values['gmw_cl_location'] ) );
+
+			self::update_cookies( $cl_location, true ); // phpcs:ignore CSRF ok, sanitization ok.
+		}
 	}
 }
 add_action( 'gmw_current_location_submit', array( 'GMW_Current_location', 'page_load_update_location' ) );

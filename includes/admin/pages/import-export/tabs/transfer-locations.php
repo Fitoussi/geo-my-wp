@@ -116,13 +116,14 @@ class GMW_Location_To_Meta_Fields_Importer extends GMW_Locations_Importer {
 			return array();
 		}
 
-		parse_str( $_POST['formData'], $form_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, CSRF ok.
+		// Sanitized below.
+		parse_str( wp_unslash( $_POST['formData'] ), $form_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 		if ( empty( $form_data['gmw_meta_export_object_type'] ) ) {
 			return array();
 		}
 
-		$this->object_type = wp_unslash( $form_data['gmw_meta_export_object_type'] );
+		$this->object_type = sanitize_text_field( $form_data['gmw_meta_export_object_type'] );
 
 		// Count rows only when init the importer.
 		$count_rows = absint( $this->total_locations ) === 0 ? 'SQL_CALC_FOUND_ROWS' : '';

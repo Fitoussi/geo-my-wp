@@ -146,7 +146,7 @@ add_action( 'gmw_import_export_location_tables_tab', 'gmw_import_export_location
 function export_location_tables_to_csv() {
 
 	// make sure at lease one checkbox is checked.
-	if ( empty( $_POST ) || 'export_location_tables_to_csv' !== $_POST['gmw_action'] ) {
+	if ( empty( $_POST['gmw_action'] ) || 'export_location_tables_to_csv' !== $_POST['gmw_action'] ) {
 		return;
 	}
 
@@ -156,7 +156,7 @@ function export_location_tables_to_csv() {
 	}
 
 	// varify nonce.
-	if ( ! wp_verify_nonce( $_POST['gmw_export_location_tables_nonce'], 'gmw_export_location_tables_nonce' ) ) {
+	if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['gmw_export_location_tables_nonce'] ) ), 'gmw_export_location_tables_nonce' ) ) {
 		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
@@ -191,13 +191,11 @@ add_action( 'gmw_export_location_tables_to_csv', 'export_location_tables_to_csv'
  */
 function gmw_import_location_tables_from_csv() {
 
-	if ( empty( $_POST['gmw_import_location_tables_from_csv_nonce'] ) ) {
-
+	if ( empty( $_POST['gmw_import_location_tables_from_csv_nonce'] ) || empty( $_FILES['import_csv_file']['tmp_name'] ) || empty( $_POST['location_tables_import'] ) ) {
 		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
-	if ( ! wp_verify_nonce( $_POST['gmw_import_location_tables_from_csv_nonce'], 'gmw_import_location_tables_from_csv_nonce' ) ) {
-
+	if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['gmw_import_location_tables_from_csv_nonce'] ) ), 'gmw_import_location_tables_from_csv_nonce' ) ) {
 		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
@@ -205,12 +203,12 @@ function gmw_import_location_tables_from_csv() {
 		wp_die( esc_html__( 'gmw_csv_import function not exist.', 'geo-my-wp' ) );
 	}
 
-	$file = $_FILES['import_csv_file']['tmp_name'];
+	$file = sanitize_text_field( wp_unslash( $_FILES['import_csv_file']['tmp_name'] ) );
 
 	if ( empty( $file ) ) {
 		wp_die( esc_html__( 'Please upload a file to import', 'geo-my-wp' ) );
 	}
 
-	gmw_csv_import( $file, $_POST['location_tables_import'] );
+	gmw_csv_import( $file, sanitize_text_field( wp_unslash( $_POST['location_tables_import'] ) ) );
 }
 add_action( 'gmw_import_location_tables_from_csv', 'gmw_import_location_tables_from_csv' );

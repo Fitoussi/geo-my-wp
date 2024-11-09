@@ -154,7 +154,7 @@ function gmw_output_internal_cache_tab() {
 						<!-- <input type="submit" class="button-secondary" value="<?php esc_attr_e( 'Clear cache', 'geo-my-wp' ); ?>" /> -->
 
 						<?php if ( ! empty( $_GET['gmw_notice'] ) && ! empty( $_GET['count'] ) && 'transients_deleted' === $_GET['gmw_notice'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok. ?>
-							<p style="color: green;"><?php echo esc_html( $_GET['count'] ); ?> <?php echo esc_html__( 'transients deleted', 'geo-my-wp' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok. ?></p>
+							<p style="color: green;"><?php echo esc_html( sanitize_text_field( wp_unslash( $_GET['count'] ) ) ); ?> <?php echo esc_html__( 'transients deleted', 'geo-my-wp' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok. ?></p>
 						<?php } ?>
 
 					</div>
@@ -186,7 +186,7 @@ function gmw_update_cache_status() {
 	}
 
 	// varify nonce.
-	if ( ! wp_verify_nonce( $_POST['gmw_update_cache_status_nonce'], 'gmw_update_cache_status_nonce' ) ) { // WPCS: CSRF ok, XSS ok, sanitization ok.
+	if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['gmw_update_cache_status_nonce'] ) ), 'gmw_update_cache_status_nonce' ) ) {
 		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
@@ -230,11 +230,11 @@ function gmw_clear_cache() {
 	}
 
 	// varify nonce.
-	if ( ! wp_verify_nonce( $_POST['gmw_clear_cache_nonce'], 'gmw_clear_cache_nonce' ) ) { // WPCS: CSRF ok, XSS ok, sanitization ok.
+	if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['gmw_clear_cache_nonce'] ) ), 'gmw_clear_cache_nonce' ) ) {
 		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
-	$items = $_POST['cache_items'];
+	$items = array_map( 'sanitize_text_field', wp_unslash( $_POST['cache_items'] ) );
 
 	// delete transients.
 	$count = gmw_delete_transients( $items );

@@ -113,9 +113,10 @@ class GMW_Form extends GMW_Form_Core {
 	 */
 	public function get_form_values() {
 
-		$qs = isset( $_SERVER['QUERY_STRING'] ) ? wp_unslash( $_SERVER['QUERY_STRING'] ) : ''; // phpcs:ignore: CSRF ok, sanitization ok.
+		// Sanitized and escaped later when outputting values.
+		$qs = isset( $_SERVER['QUERY_STRING'] ) ? wp_unslash( $_SERVER['QUERY_STRING'] ) : ''; // phpcs:ignore: CSRF ok, sanitization ok, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized.
 
-		return gmw_get_form_values( $this->url_px, wp_unslash( $qs ) );
+		return gmw_get_form_values( $this->url_px, $qs );
 	}
 
 	/**

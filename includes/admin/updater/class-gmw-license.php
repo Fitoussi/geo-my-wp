@@ -931,7 +931,7 @@ if ( ! class_exists( 'GMW_License' ) ) :
 		$page = ( isset( $_GET['page'] ) && 'gmw-extensions' === $_GET['page'] ) ? 'admin.php?page=gmw-extensions&' : 'plugins.php?';
 
 		// get license data.
-		$license_data = $_POST['gmw_licenses'][ $_POST['gmw_license_submit'] ]; // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+		$license_data = map_deep( wp_unslash( $_POST['gmw_licenses'][ $_POST['gmw_license_submit'] ] ), 'sanitize_text_field' );
 
 		// varify nonce.
 		if ( empty( $license_data['nonce'] ) || ! wp_verify_nonce( $license_data['nonce'], 'gmw_' . $license_data['license_name'] . '_license_nonce' ) ) {

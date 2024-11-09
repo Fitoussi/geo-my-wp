@@ -3555,11 +3555,13 @@ class GMW_Form_Editor {
 	/**
 	 * Update form via page load
 	 *
-	 * Run the form values through validations and update the form in database
+	 * Run the form values through validations and update the form in database.
+	 *
+	 * Not being used at the moment.
 	 *
 	 * @return void
 	 */
-	public function update_form() {
+	/*public function update_form() {
 
 		// run a quick security check.
 		if ( empty( $_POST['gmw_form'] ) || empty( $_POST['gmw_edit_form_nonce'] ) || ! check_admin_referer( 'gmw_edit_form_nonce', 'gmw_edit_form_nonce' ) ) {
@@ -3616,5 +3618,5 @@ class GMW_Form_Editor {
 		};
 
 		exit;
-	}
+	}*/
 }

@@ -207,7 +207,7 @@ function gmw_reset_data() {
 	}
 
 	// varify nonce.
-	if ( ! wp_verify_nonce( $_POST['gmw_reset_data_nonce'], 'gmw_reset_data_nonce' ) ) {
+	if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['gmw_reset_data_nonce'] ) ), 'gmw_reset_data_nonce' ) ) {
 		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 

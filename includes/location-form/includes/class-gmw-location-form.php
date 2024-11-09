@@ -303,8 +303,11 @@ class GMW_Location_Form {
 
 		if ( $this->args['preserve_submitted_values'] && ! $this->args['ajax_enabled'] && ! empty( $_POST['gmw_action'] ) && 'update_lf_location' === $_POST['gmw_action'] && ! empty( $_POST['gmw_lf_slug'] ) && $_POST['gmw_lf_slug'] === $this->slug ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 
-			$this->saved_location = (object) $_POST['gmw_location_form']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
-
+			if ( ! empty( $_POST['gmw_location_form'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+				$this->saved_location = array_map( 'sanitize_text_field', wp_unslash( (array) $_POST['gmw_location_form'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+			} else {
+				$this->saved_location = array();
+			}
 		} elseif ( empty( $this->args['new_location'] ) ) {
 
 			// get location from database if exist.
@@ -1425,11 +1428,16 @@ class GMW_Location_Form {
 		if ( ! check_ajax_referer( 'gmw_lf_update_location', 'security', false ) ) {
 
 			// abort if bad nonce.
-			wp_die( __( 'Trying to cheat or something?', 'geo-my-wp' ), __( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
+			wp_die( esc_html__( 'Trying to cheat or something?', 'geo-my-wp' ), esc_html__( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
 		}
 
-		// parse the form values.
-		parse_str( $_POST['formValues'], $form_values ); // WPCS: CSRF ok.
+		$form_values = array();
+
+		if ( ! empty( $_POST['formValues'] ) ) {
+
+			// parse the form values. Form is sanitized later in the function $this->update_location();.
+			parse_str( wp_unslash( $_POST['formValues'] ), $form_values ); // phpcs:ignore: WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, sanitization ok.
+		}
 
 		return $form_values;
 	}
@@ -1451,10 +1459,10 @@ class GMW_Location_Form {
 		} else {
 
 			// verify nonce.
-			if ( empty( $_POST ) || ! isset( $_POST['gmw_lf_update_location'] ) || ! wp_verify_nonce( $_POST['gmw_lf_update_location'], 'gmw_lf_update_location' ) ) {
+			if ( empty( $_POST ) || ! isset( $_POST['gmw_lf_update_location'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['gmw_lf_update_location'] ) ), 'gmw_lf_update_location' ) ) {
 
 				// abort if bad nonce.
-				wp_die( __( 'Trying to cheat or something?', 'geo-my-wp' ), __( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
+				wp_die( esc_html__( 'Trying to cheat or something?', 'geo-my-wp' ), esc_html__( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
 			}
 		}
 
@@ -1476,8 +1484,8 @@ class GMW_Location_Form {
 				return;
 			}
 
-			// parse the form values.
-			parse_str( $_POST['formValues'], $form_values ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+			// parse the form values. Form is sanitized later in the function $this->update_location();.
+			parse_str( wp_unslash( $_POST['formValues'] ), $form_values ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, sanitization ok, CSRF ok.
 
 			// when updating location via page load.
 		} else {
@@ -1514,6 +1522,8 @@ class GMW_Location_Form {
 		if ( empty( $form_values ) ) {
 			return;
 		}
+
+		$form_values = map_deep( wp_unslash( $form_values ), 'sanitize_text_field' );
 
 		// Submitted location values.
 		$location = $form_values['gmw_location_form'];
@@ -1612,11 +1622,12 @@ class GMW_Location_Form {
 		} elseif ( ! IS_ADMIN ) {
 
 			// reload page to prevent re-submission.
-			wp_redirect( $_SERVER['REQUEST_URI'] );
+			if ( ! empty( $_SERVER['REQUEST_URI'] ) ) {
+				wp_safe_redirect( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
+			}
 
-			// exist only if stand alone form. Otherwise, we need.
-			// to allow the original form to process.
-			if ( $_POST['gmw_lf_stand_alone'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+			// Exist only if stand alone form. Otherwise, we need to allow the original form to process.
+			if ( ! empty( $_POST['gmw_lf_stand_alone'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 				exit;
 			}
 		}
@@ -1631,14 +1642,18 @@ class GMW_Location_Form {
 		if ( ! check_ajax_referer( 'gmw_lf_update_location', 'security', false ) ) {
 
 			// abort if bad nonce.
-			wp_die( __( 'Trying to cheat or something?', 'geo-my-wp' ), __( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
+			wp_die( esc_html__( 'Trying to cheat or something?', 'geo-my-wp' ), esc_html__( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
 		}
 
-		// parse the form values.
-		parse_str( $_POST['formValues'], $form_values );
+		$form_values = array();
+
+		if ( ! empty( $_POST['formValues'] ) ) {
+			// parse the form values. values are sanitized below.
+			parse_str( wp_unslash( $_POST['formValues'] ), $form_values ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, CSRF ok.
+		}
 
 		// get the location values.
-		$location = ! empty( $form_values['gmw_location_form'] ) ? $form_values['gmw_location_form'] : array();
+		$location = ! empty( $form_values['gmw_location_form'] ) ? array_map( 'sanitize_text_field', $form_values['gmw_location_form'] ) : array();
 
 		// abort if there is no location ID to delete.
 		if ( empty( $location['ID'] ) ) {

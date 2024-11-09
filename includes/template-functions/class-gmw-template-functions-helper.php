@@ -45,7 +45,7 @@ class GMW_Template_Functions_Helper {
 		}
 
 		// Disable some filters related to the excerpt/content when in Elementor's editor/preview page to prevent conflicts.
-		if ( strpos( $_SERVER['REQUEST_URI'], 'elementor' ) !== false ) {
+		if ( ! empty( $_SERVER['REQUEST_URI'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), 'elementor' ) !== false ) {
 			$args['enable_shortcodes'] = 0;
 		}
 

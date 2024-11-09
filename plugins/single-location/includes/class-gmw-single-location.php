@@ -458,35 +458,32 @@ class GMW_Single_Location {
 				$this->user_position['lat']    = sanitize_text_field( wp_unslash( $_GET['lat'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 				$this->user_position['lng']    = sanitize_text_field( wp_unslash( $_GET['lng'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
-				$address = '';
-
 				if ( ! empty( $_GET['address'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 					if ( is_array( $_GET['address'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
-						$address = implode( ' ', $_GET['address'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok, sanitization ok, CSRF ok.
+						$address                        = array_map( 'sanitize_text_field', wp_unslash( $_GET['address'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
+						$this->user_position['address'] = implode( ' ', $address );
 
 					} else {
-						$address = $_GET['address']; // // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok, sanitization ok, CSRF ok.
+						$this->user_position['address'] = sanitize_text_field( wp_unslash( $_GET['address'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 					}
 				}
 
-				$this->user_position['address'] = sanitize_text_field( wp_unslash( $address ) );
-
 				// Otherwise check for user location in cookies.
-			} elseif ( ! empty( $_COOKIE[ $ulc_prefix . 'lat' ] ) && ! empty( $_COOKIE[ $ulc_prefix . 'lng' ] ) ) {
+			} elseif ( ! empty( $_COOKIE[ $ulc_prefix . 'lat' ] ) && ! empty( $_COOKIE[ $ulc_prefix . 'lng' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, sanitization ok, CSRF ok.
 
 				$this->user_position['exists'] = true;
-				$this->user_position['lat']    = urldecode( wp_unslash( $_COOKIE[ $ulc_prefix . 'lat' ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, sanitization ok, CSRF ok.
-				$this->user_position['lng']    = urldecode( wp_unslash( $_COOKIE[ $ulc_prefix . 'lng' ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, sanitization ok, CSRF ok.
+				$this->user_position['lat']    = urldecode( sanitize_text_field( wp_unslash( $_COOKIE[ $ulc_prefix . 'lat' ] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
+				$this->user_position['lng']    = urldecode( sanitize_text_field( wp_unslash( $_COOKIE[ $ulc_prefix . 'lng' ] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 				if ( ! empty( $_COOKIE[ $ulc_prefix . 'address' ] ) ) {
 
-					$this->user_position['address'] = urldecode( wp_unslash( $_COOKIE[ $ulc_prefix . 'address' ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, sanitization ok, CSRF ok.
+					$this->user_position['address'] = urldecode( sanitize_text_field( wp_unslash( $_COOKIE[ $ulc_prefix . 'address' ] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 				} elseif ( ! empty( $_COOKIE[ $ulc_prefix . 'formatted_address' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, sanitization ok, CSRF ok.
 
-					$this->user_position['address'] = urldecode( wp_unslash( $_COOKIE[ $ulc_prefix . 'formatted_address' ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, sanitization ok, CSRF ok.
+					$this->user_position['address'] = urldecode( sanitize_text_field( wp_unslash( $_COOKIE[ $ulc_prefix . 'formatted_address' ] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 				} else {
 

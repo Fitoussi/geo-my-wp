@@ -300,13 +300,14 @@ class GMW_Meta_Fields_Importer_Form {
 		}
 
 		// varify nonce.
-		if ( ! wp_verify_nonce( $_POST[ 'gmw_save_' . $slug . '_fields_nonce' ], 'gmw_save_' . $slug . '_fields_nonce' ) ) { // WPCS: CSRF ok, sanitization ok.
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ 'gmw_save_' . $slug . '_fields_nonce' ] ) ), 'gmw_save_' . $slug . '_fields_nonce' ) ) {
 			wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 		}
 
-		$output = array();
+		$output     = array();
+		$meta_field = array_map( 'sanitize_text_field', wp_unslash( $_POST[ 'gmw_' . $slug ] ) );
 
-		foreach ( $_POST[ 'gmw_' . $slug ] as $key => $value ) { // WPCS: CSRF ok, sanitization ok.
+		foreach ( $meta_field as $key => $value ) { // phpcs:ignore CSRF ok, sanitization ok.
 			$output[ sanitize_text_field( wp_unslash( $key ) ) ] = sanitize_text_field( wp_unslash( $value ) );
 		}
 

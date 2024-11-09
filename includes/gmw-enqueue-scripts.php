@@ -211,7 +211,7 @@ function gmw_enqueue_scripts() {
 		wp_enqueue_style( 'gmw-admin', GMW_URL . '/assets/css/gmw.admin.min.css', array(), GMW_VERSION );
 
 		// enqueue on GMW admin pages only.
-		if ( ( ! empty( $_GET['page'] ) && strpos( $_GET['page'], 'gmw' ) !== false ) || ( isset( $_GET['post_type'] ) && 'gmw_location_type' === $_GET['post_type'] )  ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
+		if ( ( ! empty( $_GET['page'] ) && strpos( sanitize_text_field( wp_unslash( $_GET['page'] ) ), 'gmw' ) !== false ) || ( isset( $_GET['post_type'] ) && 'gmw_location_type' === $_GET['post_type'] )  ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 			wp_enqueue_script( 'gmw-admin' );
 		}
 

@@ -415,7 +415,7 @@ class GMW_Extensions {
 		}
 
 		// Varify nonce.
-		if ( empty( $_POST['gmw_clear_extensions_cache_nonce'] ) || ! wp_verify_nonce( $_POST['gmw_clear_extensions_cache_nonce'], 'gmw_clear_extensions_cache_nonce' ) ) { // phpcs:ignore. CSRF ok, sanitization ok.
+		if ( empty( $_POST['gmw_clear_extensions_cache_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['gmw_clear_extensions_cache_nonce'] ) ), 'gmw_clear_extensions_cache_nonce' ) ) {
 			wp_die( esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 		}
 

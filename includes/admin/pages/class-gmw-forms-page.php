@@ -163,7 +163,7 @@ class GMW_Forms_Page {
 		}
 
 		// verify nonce.
-		if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'gmw_duplicate_form' ) ) { // phpcs:ignore. CSRF ok, sanitization ok.
+		if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'gmw_duplicate_form' ) ) {
 			wp_die( esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 		}
 
@@ -231,7 +231,7 @@ class GMW_Forms_Page {
 		}
 
 		// verify nonce.
-		if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'gmw_delete_form' ) ) { // phpcs:ignore. CSRF ok, sanitization ok.
+		if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'gmw_delete_form' ) ) {
 			wp_die( esc_attr__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 		}
 

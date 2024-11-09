@@ -243,7 +243,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 				// otherwise, check in cookies.
 			} elseif ( isset( $_COOKIE[ 'gmw_' . $this->prefix . '_address' ] ) && 'undefined' !== $_COOKIE[ 'gmw_' . $this->prefix . '_address' ] ) {
 
-				$this->form['address'] = urldecode( wp_unslash( $_COOKIE[ 'gmw_' . $this->prefix . '_address' ] ) );
+				$this->form['address'] = urldecode( sanitize_text_field( wp_unslash( $_COOKIE[ 'gmw_' . $this->prefix . '_address' ] ) ) );
 			}
 
 			// get the default latitude value from URL if exists.
@@ -253,7 +253,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 
 			} elseif ( isset( $_COOKIE[ 'gmw_' . $this->prefix . '_lat' ] ) && 'undefined' !== $_COOKIE[ 'gmw_' . $this->prefix . '_lat' ] ) {
 
-				$this->form['lat'] = urldecode( wp_unslash( $_COOKIE[ 'gmw_' . $this->prefix . '_lat' ] ) ); // WPCS: sanitization ok.
+				$this->form['lat'] = urldecode( sanitize_text_field( wp_unslash( $_COOKIE[ 'gmw_' . $this->prefix . '_lat' ] ) ) );
 			}
 
 			// get the default latitude value from URL if exists.
@@ -263,7 +263,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 
 			} elseif ( isset( $_COOKIE[ 'gmw_' . $this->prefix . '_lng' ] ) && 'undefined' !== $_COOKIE[ 'gmw_' . $this->prefix . '_lng' ] ) {
 
-				$this->form['lng'] = urldecode( wp_unslash( $_COOKIE[ 'gmw_' . $this->prefix . '_lng' ] ) );
+				$this->form['lng'] = urldecode( sanitize_text_field( wp_unslash( $_COOKIE[ 'gmw_' . $this->prefix . '_lng' ] ) ) );
 			}
 
 			// if single, default value get it from the options.
@@ -278,7 +278,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 
 				// otherwise, maybe in cookies.
 			} elseif ( isset( $_COOKIE[ 'gmw_' . $this->prefix . '_radius' ] ) && 'undefined' !== $_COOKIE[ 'gmw_' . $this->prefix . '_radius' ] ) {
-				$this->form['distance'] = urldecode( wp_unslash( $_COOKIE[ 'gmw_' . $this->prefix . '_radius' ] ) ); // WPCS: sanitization ok.
+				$this->form['distance'] = urldecode( sanitize_text_field( wp_unslash( $_COOKIE[ 'gmw_' . $this->prefix . '_radius' ] ) ) );
 			}
 		}
 

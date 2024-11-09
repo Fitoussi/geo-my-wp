@@ -183,7 +183,7 @@ function gmw_export_forms() {
 	}
 
 	// varify nonce.
-	if ( ! wp_verify_nonce( $_POST['gmw_export_forms_nonce'], 'gmw_export_forms_nonce' ) ) {
+	if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['gmw_export_forms_nonce'] ) ), 'gmw_export_forms_nonce' ) ) {
 		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
@@ -245,7 +245,7 @@ function gmw_import_forms() {
 	}
 
 	// varify nonce.
-	if ( ! wp_verify_nonce( $_POST['gmw_import_forms_nonce'], 'gmw_import_forms_nonce' ) ) {
+	if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['gmw_import_forms_nonce'] ) ), 'gmw_import_forms_nonce' ) ) {
 		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 

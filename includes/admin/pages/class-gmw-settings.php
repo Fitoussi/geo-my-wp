@@ -838,7 +838,7 @@ class GMW_Settings {
 	 */
 	public function update_settings() {
 
-		if ( empty( $_POST['gmw_settings_save_nonce'] ) ) { // phpcs:ignore: CSRF ok.
+		if ( empty( $_POST['gmw_settings_save_nonce'] ) ) {
 			return false;
 		}
 
@@ -848,7 +848,9 @@ class GMW_Settings {
 		// Current tab.
 		$current_tab     = $this->get_current_tab();
 		$current_options = gmw_get_options_group();
-		$options         = ! empty( $_POST['gmw_options'] ) ? $_POST['gmw_options'] : array(); // phpcs:ignore: CSRF ok, sanitization ok.
+
+		// $_POST['gmw_options'] goes through custom validation/sanitization function ( $this->validate( $options ) );
+		$options = ! empty( $_POST['gmw_options'] ) ? wp_unslash( $_POST['gmw_options'] ): array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, sanitization ok.
 
 		// Validate options.
 		$validated = $this->validate( $options );
@@ -857,7 +859,7 @@ class GMW_Settings {
 
 		update_option( 'gmw_options', $current_options );
 
-		$uri = ! empty( $_SERVER['QUERY_STRING'] ) ? $_SERVER['QUERY_STRING'] : ''; // phpcs:ignore: CSRF ok, sanitization ok.
+		$uri = ! empty( $_SERVER['QUERY_STRING'] ) ? sanitize_text_field( wp_unslash( $_SERVER['QUERY_STRING'] ) ) : '';
 
 		wp_safe_redirect( admin_url( 'admin.php?' . $uri ) );
 

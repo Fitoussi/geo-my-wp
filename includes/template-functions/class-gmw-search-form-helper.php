@@ -207,10 +207,11 @@ class GMW_Search_Form_Helper {
 		if ( isset( $_GET[ $args['name'] ] ) && ! empty( $_GET[ $url_px . 'form' ] ) && $id === $_GET[ $url_px . 'form' ] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, CSRF ok.
 
 			if ( '' !== $args['sub_name'] ) {
-				$value = ! empty( $_GET[ $args['name'] ][ $args['sub_name'] ] ) ? $_GET[ $args['name'] ][ $args['sub_name'] ] : $value; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, sanitization ok, CSRF ok.
+
+				$value = ! empty( $_GET[ $args['name'] ][ $args['sub_name'] ] ) ? wp_unslash( $_GET[ $args['name'] ][ $args['sub_name'] ] ) : $value; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, sanitization ok, CSRF ok.
 
 			} else {
-				$value = $_GET[ $args['name'] ]; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, sanitization ok, CSRF ok.
+				$value = wp_unslash( $_GET[ $args['name'] ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, sanitization ok, CSRF ok.
 			}
 
 			// Otherwise look for default value.

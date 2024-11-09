@@ -323,7 +323,7 @@ function gmw_get_search_form_address_fields( $gmw ) {
 
 		} elseif ( 'include' === $usage ) {
 
-			$value   = ! empty( $_GET[ $url_px . 'address' ][ $field_name ] ) ? esc_attr( stripslashes( $_GET[ $url_px . 'address' ][ $field_name ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+			$value   = ! empty( $_GET[ $url_px . 'address' ][ $field_name ] ) ? esc_attr( stripslashes( sanitize_text_field( wp_unslash( $_GET[ $url_px . 'address' ][ $field_name ] ) ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
 			$output .= "<div class=\"gmw-form-field-wrapper gmw-{$field_name}-field-wrapper\">";
 
 			// create label.
@@ -1701,7 +1701,7 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 
 				foreach ( explode( ',', $display_by ) as $field ) {
 					if ( isset( $_COOKIE[ $prefix . $field ] ) ) {
-						$userAddress[] = urldecode($_COOKIE[ $prefix . $field ]);
+						$userAddress[] = urldecode(sanitize_text_field( wp_unslash( $_COOKIE[ $prefix . $field ] ) ) );
 					}
 				}
 
@@ -1715,8 +1715,8 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 
 				if ( $map == 1 ) {
 
-					$latitude  = urldecode( $_COOKIE[ $prefix . 'lat' ] );
-					$longitude = urldecode( $_COOKIE[ $prefix . 'lng' ] );
+					$latitude  = urldecode( sanitize_text_field( wp_unslash( $_COOKIE[ $prefix . 'lat' ] ) ) );
+					$longitude = urldecode( sanitize_text_field( wp_unslash( $_COOKIE[ $prefix . 'lng' ] ) ) );
 
 					$location .= '';
 					$location .= '<div class="gmw-cl-map-wrapper" style="width:'.$map_width.'; height:'.$map_height.'">';
@@ -1837,15 +1837,21 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 	     */
 	    public function submitted_location( $location ) {
 
-	        if ( empty( $_POST['gmw_cl_action'] ) ) // phpcs:ignore WordPress.Security.NonceVerification
-	        	return;
+			if ( empty( $_POST['gmw_cl_action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+				return;
+			}
+
+			$current_location = ! empty( $_POST['gmw_cl_location'] ) ? sanitize_text_field( wp_unslash( $_POST['gmw_cl_location'] ) ) : array(); // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.NonceVerification.Missing.
 
 	        //do something with the information
-	        do_action( 'gmw_user_current_location_submitted', $_POST['gmw_cl_location'], get_current_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
+	        do_action( 'gmw_user_current_location_submitted', $current_location, get_current_user_id() );
 
-	        //reload page to prevent form resubmission
-	        wp_redirect( $_SERVER['REQUEST_URI'] );
-	        exit;
+	        //reload page to prevent form resubmission.
+			if ( ! empty( $_SERVER['REQUEST_URI'] ) ) {
+				wp_safe_redirect( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
+			}
+
+			exit;
 	    }
 	}
 
@@ -2179,8 +2185,8 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 	        if ( $distance == 1 && $userLocationOk ) {
 
 	        	$distanceOK 	= 1;
-	        	$yLat			= urldecode( $_COOKIE[ $prefix . 'lat' ] );
-	        	$yLng			= urldecode( $_COOKIE[ $prefix . 'lng' ] );
+	        	$yLat			= urldecode( sanitize_text_field( wp_unslash( $_COOKIE[ $prefix . 'lat' ] ) ) );
+	        	$yLng			= urldecode( sanitize_text_field( wp_unslash( $_COOKIE[ $prefix . 'lng' ] ) ) );
 	        	$unit  			= $distance_unit;
 		        $theta 			= $yLng - $post_info->lng;
 		        $distance_value = sin( deg2rad( $yLat  ) ) * sin( deg2rad($post_info->lat ) ) +  cos( deg2rad( $yLat ) ) * cos( deg2rad($post_info->lat) ) * cos( deg2rad( $theta ) );
@@ -2212,9 +2218,9 @@ if ( ! gmw_is_addon_active( 'single_location' ) ) {
 
 	        	$your_address = '';
 	        	if ( !empty( $_GET['address'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-	        		$your_address = sanitize_text_field( $_GET['address'] ); // phpcs:ignore WordPress.Security.NonceVerification
+	        		$your_address = sanitize_text_field( wp_unslash( $_GET['address'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 	        	} elseif ( !empty( $_COOKIE[ $prefix . 'address' ] ) ) {
-	        		$your_address = urldecode( $_COOKIE[ $prefix . 'address' ] );
+	        		$your_address = urldecode( sanitize_text_field( wp_unslash( $_COOKIE[ $prefix . 'address' ] ) ) );
 	        	}
 
 	        	$location_directions  = '';

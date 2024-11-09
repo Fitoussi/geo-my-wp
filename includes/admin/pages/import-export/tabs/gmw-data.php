@@ -174,7 +174,7 @@ function gmw_export_data() {
 	}
 
 	// varify nonce.
-	if ( ! wp_verify_nonce( $_POST['gmw_export_data_nonce'], 'gmw_export_data_nonce' ) ) { // WPCS: CSRF ok, sanitization ok.
+	if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['gmw_export_data_nonce'] ) ), 'gmw_export_data_nonce' ) ) { // WPCS: CSRF ok, sanitization ok.
 		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
@@ -216,8 +216,8 @@ add_action( 'gmw_export_data', 'gmw_export_data' );
  */
 function gmw_import_data() {
 
-	// make sure at least one checkbox is checked.
-	if ( empty( $_POST['import_item'] ) ) {
+	// make sure at least one checkbox is checked and that file name exists.
+	if ( empty( $_POST['import_item'] ) || empty( $_FILES['import_file']['tmp_name'] ) ) {
 		wp_die( esc_html__( 'You must check at least on checkbox of an item that you would like to import', 'geo-my-wp' ) );
 	}
 
@@ -227,12 +227,12 @@ function gmw_import_data() {
 	}
 
 	// varify nonce.
-	if ( ! wp_verify_nonce( $_POST['gmw_import_data_nonce'], 'gmw_import_data_nonce' ) ) { // WPCS: CSRF ok, sanitization ok.
+	if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['gmw_import_data_nonce'] ) ), 'gmw_import_data_nonce' ) ) {
 		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
 	// get file.
-	$import_file = $_FILES['import_file']['tmp_name']; // WPCS: CSRF ok, sanitization ok.
+	$import_file = sanitize_text_field( wp_unslash( $_FILES['import_file']['tmp_name'] ) );
 
 	// abort if not file uploaded.
 	if ( empty( $import_file ) ) {

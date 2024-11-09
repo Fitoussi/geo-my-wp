@@ -230,7 +230,7 @@ function gmw_map_icons_upload() {
 	}
 
 	// varify nonce.
-	if ( ! wp_verify_nonce( $_POST['gmw_map_icons_upload_nonce'], 'gmw_map_icons_upload_nonce' ) ) { // WPCS: CSRF ok, XSS ok, sanitization ok.
+	if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['gmw_map_icons_upload_nonce'] ) ), 'gmw_map_icons_upload_nonce' ) ) {
 		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
@@ -259,13 +259,14 @@ function gmw_map_icons_upload() {
 		wp_mkdir_p( $custom_dirname );
 	}
 
-	$files = array();
+	$files          = array();
+	$uploaded_icons = map_deep( wp_unslash( $_FILES['map_icons'] ), 'sanitize_text_field' );
 
 	// Arrange files.
-	foreach ( $_FILES['map_icons'] as $key1 => $value1 ) { // phpcs:ignore sanitization ok.
+	foreach ( $uploaded_icons as $key1 => $value1 ) { // phpcs:ignore sanitization ok.
 
 		foreach ( $value1 as $key2 => $value2 ) {
-			$files[ $key2 ][ $key1 ] = sanitize_text_field( wp_unslash( $value2 ) );
+			$files[ $key2 ][ $key1 ] = $value2;
 		}
 	}
 
@@ -274,7 +275,7 @@ function gmw_map_icons_upload() {
 	foreach ( $files as $file ) {
 
 		// Verify the extension of the file.
-		if ( ! in_array( $file['type'], $allowed_types ) ) {
+		if ( ! in_array( $file['type'], $allowed_types, true ) ) {
 			continue;
 		}
 
@@ -354,7 +355,7 @@ function gmw_map_icons_delete() {
 	}
 
 	// varify nonce.
-	if ( ! wp_verify_nonce( $_POST['gmw_map_icons_delete_nonce'], 'gmw_map_icons_delete_nonce' ) ) { // WPCS: CSRF ok, XSS ok, sanitization ok.
+	if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['gmw_map_icons_delete_nonce'] ) ), 'gmw_map_icons_delete_nonce' ) ) {
 		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
 	}
 
@@ -363,14 +364,15 @@ function gmw_map_icons_delete() {
 		wp_die( esc_html__( 'You must check at least one map icon that you would like to delete.', 'geo-my-wp' ) );
 	}
 
-	$addon          = $_POST['map_icons_addon'];
+	$addon          = sanitize_text_field( wp_unslash( $_POST['map_icons_addon'] ) );
 	$addon_data     = gmw_get_addon_data( $addon );
 	$upload_dir     = wp_upload_dir();
 	$addon_folder   = ! empty( $addon_data['templates_folder'] ) ? $addon_data['templates_folder'] : $addon;
 	$custom_dirname = $upload_dir['basedir'] . "/geo-my-wp/{$addon_folder}/map-icons";
+	$map_icons      = array_map( 'sanitize_text_field', wp_unslash( $_POST['map_icons'] ) );
 
 	// Delete files.
-	foreach ( $_POST['map_icons'] as $map_icon ) {
+	foreach ( $map_icons as $map_icon ) {
 		wp_delete_file( $custom_dirname . '/' . $map_icon );
 	}
 
