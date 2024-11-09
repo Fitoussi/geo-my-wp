@@ -707,7 +707,7 @@ if ( gmwVars.mapsProvider == 'leaflet' ) {
 				legWeight 			   : 1.5
 			};
 
-			options.maxZoom 	    = 18;
+			//options.maxZoom 	    = 18;
 			options.scrollWheelZoom = mapObject.options.scrollwheel;
 
 			if ( mapObject.settings.map_bounderies.length != 0 ) {
@@ -1337,13 +1337,15 @@ GMW_Map.prototype.centerMap = function() {
 	// zoom out map when a single marker exists on the map.
 	} else if ( self.locations.length == 1 && self.userPosition == false ) {
 
-		if ( self.autoZoomLevel ) {
-			self.map.setZoom( 13 );
-		} else {
-			self.map.setZoom( parseInt( self.options.zoom ) );
-		}
+		self.map.panTo(self.getPosition(self.markers[0], self));
 
-		self.map.panTo( self.getPosition( self.markers[0], self ) );
+		setTimeout(function () {
+			if (self.autoZoomLevel) {
+				self.map.setZoom( 13 );
+			} else {
+				self.map.setZoom( parseInt( self.options.zoom ) );
+			}
+		}, 300);
 
 	} else if ( ! self.autoZoomLevel && self.userPosition != false ) {
 
@@ -2103,19 +2105,95 @@ GMW_Map.prototype.resultItemEvents = function( event, item, marker ) {
  */
 //GMW_Map.prototype.moveMarker = function( markerPosition ) {};
 
+function gmwInitMaps() {
+
+	jQuery.each(gmwMapObjects, function (map_id, vars) {
+
+		if (vars.settings.render_on_page_load) {
+
+			// generate new map
+			GMW_Maps[map_id] = new GMW_Map(vars.settings, vars.map_options, vars.form);
+			// initiate it
+			GMW_Maps[map_id].render(vars.locations, vars.user_location);
+		}
+	});
+}
+
 /**
  * On document ready generate all maps exists in the global maps holder
  *
  * @param  {GMW_Map}
  * @return {[type]}       [description]
  */
-jQuery( document ).ready( function($){
+jQuery(document).ready(function ($) {
 
-	setTimeout(function () {
+	//setTimeout(function () {
 
-		if (typeof gmwMapObjects == 'undefined') {
-			return;
+	if (typeof gmwMapObjects == 'undefined') {
+		return;
+	}
+
+	/**
+	 * Verify that Google Maps loaded before running the main script.
+	 *
+	 * @param {int} retries
+	 * @param {int} delay
+	 *
+	 * @returns
+	 */
+	function gmwMapsLoader(retries = 10, delay = 100) {
+
+		if (gmwVars.mapsProvider === 'google_maps') {
+
+			// Retry only a limited number of times.
+			if (retries === 0) {
+
+				console.error("Google Maps API failed to load.");
+
+				return;
+			}
+
+			// Google Maps loaded, proceed with scripts.
+			if (window.google && window.google.maps && google.maps.importLibrary) {
+
+				if (gmwVars.googleAdvancedMarkers) {
+
+					async function gmwInitMapsAsync() {
+
+						await google.maps.importLibrary("marker");
+
+						gmwInitMaps();
+					}
+
+					gmwInitMapsAsync();
+
+				} else {
+					gmwInitMaps();
+				}
+
+				// Google Maps is not loaded yet, try again.
+			} else {
+
+				console.log(`Google Maps not loaded, retrying in ${delay}ms...)`);
+
+				setTimeout(() => gmwMapsLoader(retries - 1, delay), delay);
+			}
+		} else {
+
+			setTimeout(function () {
+				gmwInitMaps();
+			}, 200 );
 		}
+	}
+
+	gmwMapsLoader();
+
+	/*} else {
+
+
+	}
+
+
 
 		if (gmwVars.mapsProvider === 'google_maps' && gmwVars.googleAdvancedMarkers) {
 
@@ -2124,16 +2202,16 @@ jQuery( document ).ready( function($){
 				await google.maps.importLibrary("marker");
 
 				// loop through and generate all maps
-				jQuery.each(gmwMapObjects, function (map_id, vars) {
+			jQuery.each(gmwMapObjects, function (map_id, vars) {
 
-					if (vars.settings.render_on_page_load) {
+				if (vars.settings.render_on_page_load) {
 
-						// generate new map
-						GMW_Maps[map_id] = new GMW_Map(vars.settings, vars.map_options, vars.form);
-						// initiate it
-						GMW_Maps[map_id].render(vars.locations, vars.user_location);
-					}
-				});
+					// generate new map
+					GMW_Maps[map_id] = new GMW_Map(vars.settings, vars.map_options, vars.form);
+					// initiate it
+					GMW_Maps[map_id].render(vars.locations, vars.user_location);
+				}
+			});
 			}
 
 			gmwInitMaps();
@@ -2152,7 +2230,7 @@ jQuery( document ).ready( function($){
 				}
 			});
 		}
-	}, 200);
+	//}, 200);*/
 
 	// Render maps generated during an AJAX call.
 	/*jQuery(document).ajaxComplete( function ( event, request, settings ) {
