@@ -259,7 +259,6 @@ if ( ! class_exists( 'GMW_License' ) ) :
 			}
 
 			return $link;
-
 		}
 
 		/**
