@@ -3124,6 +3124,9 @@ GMW_Geocoder.prototype.geocodeSuccess = function( result, success_callback ) {
 
 	this.response.status = 'OK';
 
+	// We need to clear the default fields when geocoding a new location.
+	this.clearDefaultFields();
+
 	// extend found fields with default fields to make sure the returned
 	// object has all fields regardless if they have value or not.
 	result = jQuery.extend( this.defaultFields, this.getLocationFields( result ) );
@@ -3159,7 +3162,25 @@ GMW_Geocoder.prototype.geocodeSuccess = function( result, success_callback ) {
 	console.log( this.response );
 
 	success_callback( this.response, 'OK' );
-};
+}
+
+/**
+ * Clear default address fields before processing new location.
+ *
+ * @param  {[type]} result           [description]
+ * @param  {[type]} success_callback [description]
+ * @return {[type]}                  [description]
+ */
+GMW_Geocoder.prototype.clearDefaultFields = function() {
+
+	var self = this;
+
+	for ( let key in self.defaultFields ) {
+		if ( self.defaultFields.hasOwnProperty( key ) ) {
+			self.defaultFields[key] = '';
+		}
+	}
+}
 
 /************************************************/
 
