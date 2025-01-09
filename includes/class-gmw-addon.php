@@ -632,14 +632,14 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 			}
 
 			// load textdomain if needed.
-			if ( ! empty( $this->textdomain ) ) {
+			/*if ( ! empty( $this->textdomain ) ) {
 
 				if ( did_action( 'plugins_loaded' ) === 1 ) {
 					self::load_textdomain();
 				} else {
 					add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 				}
-			}
+			}*/
 		}
 
 		/**
@@ -1722,6 +1722,8 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		 * Plugin initialization.
 		 */
 		public function init() {
+
+			self::load_textdomain();
 
 			// runs during ajax.
 			if ( defined( 'DOING_AJAX' ) ) {
