@@ -1969,30 +1969,58 @@ GMW_Map.prototype.markerEvents = function (event, marker) {
 
 	if (element.length ) {
 
-		if (event == 'mouseover' ) {
+		function isScrollable(el) {
+			return el.scrollHeight > el.clientHeight;
+		}
 
+		function scrollToElement(targetElement, scrollParent) {
+			if (isScrollable(scrollParent[0])) {
+				// Scroll the parent element
+				scrollParent
+					.animate(
+						{ scrollTop: scrollParent.scrollTop() + targetElement.position().top },
+						{
+							duration: 'medium',
+							easing: 'swing',
+						}
+					)
+					.promise()
+					.done(function () {
+						targetElement.removeClass('item-scrolling');
+					});
+			} else {
+				// Scroll the screen (html, body)
+				jQuery('html, body')
+					.animate(
+						{ scrollTop: targetElement.offset().top - jQuery(window).height() / 2 },
+						{
+							duration: 'medium',
+							easing: 'swing',
+						}
+					)
+					.promise()
+					.done(function () {
+						targetElement.removeClass('item-scrolling');
+					});
+			}
+		}
+
+		if (event === 'mouseover') {
 			element.addClass('marker-hover');
 
-			if (scrollEvent == 'hover') {
-
+			if (scrollEvent === 'hover') {
 				element.addClass('item-scrolling');
-				parent.animate({ scrollTop: parent.scrollTop() + element.position().top }, { duration: 'medium', easing: 'swing' }).promise().done(function () {
-					element.removeClass('item-scrolling');
-				});
+				scrollToElement(element, parent);
 			}
 
-		} else if (event == 'click' ) {
+		} else if (event === 'click') {
 
-			if (scrollEvent == 'click') {
-
+			if (scrollEvent === 'click') {
 				element.addClass('item-scrolling');
-				parent.animate({ scrollTop: parent.scrollTop() + element.position().top }, { duration: 'medium', easing: 'swing' }).promise().done(function () {
-					element.removeClass('item-scrolling');
-				});
+				scrollToElement(element, parent);
 			}
 
-		} else if (event == 'mouseout') {
-
+		} else if (event === 'mouseout') {
 			element.removeClass('marker-hover');
 		}
 	}
@@ -2043,7 +2071,28 @@ GMW_Map.prototype.resultItemEvents = function( event, item, marker ) {
 	} else if (event == 'click') {
 
 		if (marker.gmwData.openIwEvent == 'click') {
-			self.openInfoWindow(marker);
+
+			if (self.clusters && typeof self.clusters.zoomToShowLayer === 'function') {
+
+				self.clusters.zoomToShowLayer(marker, function () {
+
+					// Once the cluster is expanded, center the map on the marker
+					self.setCenter(self.getPosition( marker, self ), self );
+					// Optionally, open the marker's info window or perform other actions
+					self.openInfoWindow(marker);
+				});
+			} else {
+
+				self.openInfoWindow(marker);
+			}
+
+			// Assuming you have a 'markerClusterer' variable holding your MarkerClusterer instance
+
+			// When a user clicks on a button or performs an action to view a specific marker:
+
+			//viewSpecificMarker("marker-id-to-view");
+
+			//self.openInfoWindow(marker);
 		}
 	}
 
@@ -2107,16 +2156,19 @@ GMW_Map.prototype.resultItemEvents = function( event, item, marker ) {
 
 function gmwInitMaps() {
 
-	jQuery.each(gmwMapObjects, function (map_id, vars) {
+	setTimeout(function () {
 
-		if (vars.settings.render_on_page_load) {
+		jQuery.each(gmwMapObjects, function (map_id, vars) {
 
-			// generate new map
-			GMW_Maps[map_id] = new GMW_Map(vars.settings, vars.map_options, vars.form);
-			// initiate it
-			GMW_Maps[map_id].render(vars.locations, vars.user_location);
-		}
-	});
+			if (vars.settings.render_on_page_load) {
+
+				// generate new map
+				GMW_Maps[map_id] = new GMW_Map(vars.settings, vars.map_options, vars.form);
+				// initiate it
+				GMW_Maps[map_id].render(vars.locations, vars.user_location);
+			}
+		});
+	}, 500);
 }
 
 /**
@@ -2180,9 +2232,7 @@ jQuery(document).ready(function ($) {
 			}
 		} else {
 
-			setTimeout(function () {
-				gmwInitMaps();
-			}, 200 );
+			gmwInitMaps();
 		}
 	}
 
