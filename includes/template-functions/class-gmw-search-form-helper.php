@@ -780,6 +780,7 @@ class GMW_Search_Form_Helper {
 				'exclude_tree'        => '',
 				'number'              => 0,
 				'hierarchical'        => $hierarchical,
+				'parent'              => '',
 				'child_of'            => 0,
 				'pad_counts'          => 1,
 				//'selected'            => ! empty( $_GET['tax'][ $tax_name ] ) ? $_GET['tax'][ $tax_name ] : '', // phpcs:ignore: CSRF ok, sanitization ok. $_GET['tax'][ $tax_name ] is an array and should be sanitized in the walker class.
@@ -819,6 +820,7 @@ class GMW_Search_Form_Helper {
 			'include'      => $tax_args['include'],
 			'hierarchical' => $tax_args['hierarchical'],
 			'child_of'     => $tax_args['child_of'],
+			'parent'       => $tax_args['parent'],
 		);
 
 		// include GMW_Post_Category_Walker file.
@@ -850,7 +852,7 @@ class GMW_Search_Form_Helper {
 
 			$multiple  = ( 'multiselect' === $args['usage'] && class_exists( 'GMW_Premium_Settings_Addon' ) ) ? ' multiple="multiple" ' : '';
 			$required  = ! empty( $args['required'] ) ? 'required="required"' : '';
-			$name_attr =  esc_attr( $tax_args['name_attr'] . '[' . $tax_args['sub_name_attr'] . ']' );
+			$name_attr = esc_attr( $tax_args['name_attr'] . '[' . $tax_args['sub_name_attr'] . ']' );
 
 			// select tag.
 			$output .= "<select name=\"{$name_attr}[]\" id=\"{$id_attr}\" class=\"gmw-form-field gmw-taxonomy-field {$tax_name}\" data-gmw-dropdown-parent=\"#{$taxonomy->name}-taxonomy-wrapper\" {$required} {$multiple}>";
@@ -858,6 +860,8 @@ class GMW_Search_Form_Helper {
 			if ( ! empty( $tax_args['show_option_all'] ) ) {
 				$output .= '<option value="" selected="selected">' . esc_attr( $tax_args['show_option_all'] ) . '</option>';
 			}
+
+			$terms_args = apply_filters( 'gmw_pt_taxonomy_terms_args', $terms_args, $tax_args, $gmw );
 
 			// get the taxonomies terms.
 			$terms = gmw_get_terms( $tax_name, $terms_args );
