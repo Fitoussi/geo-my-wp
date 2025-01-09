@@ -102,8 +102,7 @@ function gmw_get_post_location_form_args( $post ) {
  */
 function gmw_get_terms( $taxonomy = 'category', $args = array() ) {
 
-	$terms = false;
-
+	$terms            = false;
 	$args['taxonomy'] = $taxonomy;
 
 	// look for cache helper class.
