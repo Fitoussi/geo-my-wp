@@ -3,9 +3,9 @@ Contributors: ninjew
 Donate link: https://www.paypal.me/fitoussi
 Tags: Locations Directory, Store Locator, Proximity Search forms, Posts location, Members location.
 Requires at least: 5.6
-Tested up to: 6.6.2
+Tested up to: 6.7.1
 BuddyPress: 11.3.1
-Stable tag: 4.5.1
+Stable tag: 4.5.2
 Requires PHP: 7.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,22 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 4.5.2 =
+
+**Fixes**
+* Fix: Load textdomain during `init` to prevent PHP warnings.
+
+**Enhancements**
+* Tweak: Enhance the scroll-to-element feature of the map marker for improved user experience.
+* Tweak: Add a short delay to map initialization to ensure Google Maps fully loads, preventing potential errors.
+
+**Tweaks**
+* Tweak: Add 'parent' argument to taxonomy settings for modifying taxonomy hierarchies.
+* Tweak: Clear default address fields before geocoding a new location to prevent previous address data from persisting.
+
+**Filters**
+* Filter: Introduce `gmw_pt_taxonomy_terms_args` filter to customize taxonomy term arguments before output in search forms.
 
 = 4.5.1 =
 
