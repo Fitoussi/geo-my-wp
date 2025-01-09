@@ -48,7 +48,7 @@ function gmw_form_get_address_filters( $gmw ) {
 	if ( ! empty( $gmw['submitted'] ) ) {
 
 		// if searching state boundaries.
-		if ( ! empty($gmw['boundaries_search']['state'] ) && ! empty( $gmw['form_values']['state'] ) ) {
+		if ( ! empty( $gmw['boundaries_search']['state'] ) && ! empty( $gmw['form_values']['state'] ) ) {
 			$address_filters['region_name'] = $gmw['form_values']['state'];
 		}
 
