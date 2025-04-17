@@ -1684,12 +1684,84 @@ GMW_Map.prototype.clearUserMarker = function() {
 	}
 };
 
+GMW_Map.prototype.renderMarkers = function(locations, append_previous) {
+    var self = this;
+
+    if (!Array.isArray(locations)) {
+        locations = Object.keys(locations).map(key => locations[key]);
+    }
+
+    GMW.do_action('gmw_map_pre_render_markers', locations, this);
+    self.initMarkersGrouping();
+
+    self.locations = locations;
+    self.previousLocations = append_previous ? [...self.locations, ...self.previousLocations] : self.locations;
+
+    var locations_count = self.locations.length;
+    if (locations_count === 0 && self.hideMapWithoutLocations) {
+        this.wrapElement.slideUp();
+    }
+
+    var markersArray = [];
+
+    for (var i = 0; i < locations_count; i++) {
+        if (!self.locations[i].lat || !self.locations[i].lng || self.locations[i].lat === '0.000000' || self.locations[i].lng === '0.000000') {
+            continue;
+        }
+
+        var markerPosition = self.latLng(self.locations[i].lat, self.locations[i].lng, self);
+
+        if (self.moveMarkersEnabled) {
+            var markerCoords = self.locations[i].lat + self.locations[i].lng;
+            if (self.coordsCollector.includes(markerCoords)) {
+                markerPosition = self.moveMarker(markerPosition, i);
+            } else {
+                self.coordsCollector.push(markerCoords);
+            }
+        }
+
+        self.bounds.extend(markerPosition);
+
+        var markerOptions = {
+            position: markerPosition,
+            icon: self.locations[i].map_icon || gmwVars.defaultIcons.location_icon_url,
+            id: i,
+            content: self.locations[i].info_window_content,
+        };
+
+        var marker = self.renderMarker(markerOptions, self.locations[i], self);
+        self.addMarker(marker, self);
+
+        markersArray.push(marker); // Store for clustering later
+
+		self.markerGroupingTypes[self.markerGrouping].markerClick( marker, self );
+
+        GMW.do_action('gmw_map_markers_loop_single_marker', marker, self.locations[i], self);
+    }
+
+    // Apply clustering only after adding markers individually
+    if (self.markerGrouping === 'markers_clusterer' && markersArray.length > 0) {
+		if (self.provider === 'leaflet') {
+			self.clusters.addLayers(markersArray); // Leaflet batching
+		} else {
+			self.clusters.addMarkers(markersArray, self); // Google Maps batching
+		}
+	}
+
+    GMW.do_action('gmw_map_after_render_markers', locations, this);
+    if (!self.disableMapCente && (locations_count > 0 || self.userMarker)) {
+        if (!GMW.apply_filters('gmw_map_disable_map_center', false, self)) {
+            self.centerMap();
+        }
+	}
+};
+
 /**
  * Generate markers.
  *
  * @return {[type]} [description]
  */
-GMW_Map.prototype.renderMarkers = function( locations, append_previous ) {
+GMW_Map.prototype.renderMarkers_legacy = function( locations, append_previous ) {
 
 	var self = this;
 
