@@ -66,6 +66,7 @@ trait GMW_Posts_Locator_Form_Trait {
 		}
 
 		$orderby = ! empty( $this->form['form_values']['sortby'] ) ? $this->form['form_values']['sortby'] : $this->form['orderby'];
+		$fields  = version_compare( get_bloginfo( 'version' ), '6.8', '>=' ) ? 'all' : '*';
 
 		// query args.
 		return array(
@@ -79,7 +80,7 @@ trait GMW_Posts_Locator_Form_Trait {
 			'ignore_sticky_posts' => 1,
 			// below we can save on performance when showing map only ( without the list of results ).
 			'no_found_rows'       => $this->form['results_enabled'] ? false : true,
-			'fields'              => '*',
+			'fields'              => $fields,
 		);
 	}
 
