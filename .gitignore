@@ -14,10 +14,6 @@ bin/
 ehthumbs.db
 Thumbs.db
 
-# Sublime
-*.sublime-project
-*.sublime-workspace
-
 # Grunt
 node_modules
 
@@ -32,3 +28,6 @@ vendor
 
 # Temporary files
 *~
+
+# Ignore personal VS Code settings
+

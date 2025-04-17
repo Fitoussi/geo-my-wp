@@ -1,0 +1,11 @@
+{
+	"name": "geo-my-wp",
+	"version": "1.0.0",
+	"description": "GEO my WP - Geolocation plugin for WordPress",
+	"scripts": {
+		"build": "node build.js"
+	},
+	"devDependencies": {
+		"chokidar-cli": "^3.0.0"
+	}
+}

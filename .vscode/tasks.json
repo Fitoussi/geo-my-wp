@@ -1,0 +1,34 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Minify JS & CSS",
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "-c",
+                "file=\"$1\"; if [[ \"$file\" == *.css ]]; then min_file=\"${file%.css}.min.css\"; npx cleancss -o \"$min_file\" \"$file\"; elif [[ \"$file\" == *.js ]]; then min_file=\"${file%.js}.min.js\"; npx terser \"$file\" -o \"$min_file\" -c -m; fi",
+                "--",
+                "${file}"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "Build GEO my WP Bundle",
+            "type": "shell",
+            "command": "node build.js",
+            "options": {
+              "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
