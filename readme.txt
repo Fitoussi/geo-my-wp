@@ -3,9 +3,9 @@ Contributors: ninjew
 Donate link: https://www.paypal.me/fitoussi
 Tags: Locations Directory, Store Locator, Proximity Search forms, Posts location, Members location.
 Requires at least: 5.6
-Tested up to: 6.7.1
+Tested up to: 6.8
 BuddyPress: 11.3.1
-Stable tag: 4.5.2
+Stable tag: 4.5.3
 Requires PHP: 7.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,17 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 4.5.3 =
+
+**Fixes**
+* Fix: relocate load_plugin_textdomain() from plugins_loaded to init to resolve incorrect usage warning introduced in WP 6.7.
+* Fix: set 'fields' to 'all' for WP 6.8+ compatibility in Posts Locator query.
+* Fix: improve map performance by batching marker clustering; use addMarkers() for Google Maps and addLayers() for Leaflet. This is a temporary solution while a full map rendering update is in progress.
+* Fix: simplify ID validation, improve object and location ID handling, and ensure user ID fallback to 1 in GMW_Location class.
+
+**Enhancements**
+* Update language files.
 
 = 4.5.2 =
 
