@@ -338,8 +338,7 @@ class GEO_MY_WP {
 	 */
 	public static function loaded() {
 
-		// load textdomain.
-		load_plugin_textdomain( 'geo-my-wp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+
 
 		// fires when GEO my WP has loaded.
 		do_action( 'gmw_loaded' );
@@ -542,6 +541,9 @@ class GEO_MY_WP {
 	 * When WordPress loaded.
 	 */
 	public function wp_init() {
+
+		// load textdomain.
+		load_plugin_textdomain( 'geo-my-wp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
 		// run some filters.
 		$this->url_prefix                = esc_attr( apply_filters( 'gmw_form_url_prefix', $this->url_prefix ) );
