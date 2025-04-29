@@ -30,4 +30,4 @@ vendor
 *~
 
 # Ignore personal VS Code settings
-
+/scripts/
