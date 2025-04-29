@@ -799,9 +799,22 @@ class GMW_Form_Core {
 		// Get the query arguments from child class and merge them with gmw query args.
 		$this->form['query_args'] = wp_parse_args( $this->get_query_args(), $gmw_location_args );
 
+
 		// Pass form values to the query. Can be used with different filters inside the main query.
 		// Also used for intenal cache purposes.
 		$this->form['query_args']['gmw_args'] = $this->form['page_load_action'] ? $this->form['page_load_results'] : $this->form['form_values'];
+
+		if (
+			'posts_locator' === $this->form['component'] &&
+			version_compare( get_bloginfo( 'version' ), '6.8', '>=' ) &&
+			isset( $this->form['query_args']['fields'] )
+		) {
+			$fields = $this->form['query_args']['fields'];
+
+			if ( '*' === $fields || ( 'ajax_forms' === $this->form['addon'] && 'id=>parent' === $fields ) ) {
+				$this->form['query_args']['fields'] = 'all';
+			}
+		}
 
 		// phpcs:ignore.
 		// $this->form['query_args'] = apply_filters( 'gmw_' . $this->form['prefix'] . '_search_query_args', $this->form['query_args'], $this->form, $this ); // Modify query args.
