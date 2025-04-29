@@ -5,7 +5,7 @@ Tags: Locations Directory, Store Locator, Proximity Search forms, Posts location
 Requires at least: 5.6
 Tested up to: 6.8
 BuddyPress: 11.3.1
-Stable tag: 4.5.3
+Stable tag: 4.5.4
 Requires PHP: 7.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,13 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 4.5.4 =
+
+**Fixes**
+* Fix: Adjust 'fields' parameter for 'posts_locator' based on WordPress version to prevent conflict with WordPress 6.8.
+* Fix: Deregister BuddyPress Select2 assets on GEO my WP admin pages to prevent conflicts.
+* Fix: Markers not showing on map when using clusterer.
 
 = 4.5.3 =
 
