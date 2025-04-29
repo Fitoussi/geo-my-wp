@@ -671,6 +671,11 @@ class GMW_Admin {
 		wp_dequeue_style( 'select2' );
 		wp_deregister_style( 'select2' );
 		wp_deregister_script( 'select2' );
+
+		wp_deregister_style( 'bp-select2' );
+		wp_deregister_script( 'bp-select2' );
+		wp_dequeue_style( 'bp-select2' );
+		wp_dequeue_script( 'bp-select2' );
 	}
 
 	/**
