@@ -1730,7 +1730,12 @@ GMW_Map.prototype.renderMarkers = function(locations, append_previous) {
         };
 
         var marker = self.renderMarker(markerOptions, self.locations[i], self);
-        self.addMarker(marker, self);
+
+		if (self.markerGrouping !== 'markers_clusterer') {
+			self.addMarker(marker, self);
+		}
+
+		self.markers[i] = marker;
 
         markersArray.push(marker); // Store for clustering later
 
