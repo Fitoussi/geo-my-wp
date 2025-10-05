@@ -675,7 +675,7 @@ class GMW_Location_Types {
 
 		echo '<em style="font-size:12px;line-height:10px;">' . esc_html__( 'Use this tool to update locations which do not have a location type set and assign them this location type.', 'geo-my-wp' ) . '</em>';
 		echo '<hr />';
-		echo '<p>' . esc_html_e( 'Select the Object Types that you would like to update', 'geo-my-wp' ) . '</p>';
+		echo '<p>' . esc_html__( 'Select the Object Types that you would like to update', 'geo-my-wp' ) . '</p>';
 
 		if ( gmw_is_addon_active( 'posts_locator' ) ) {
 			echo '<label style="margin-top:5px;display:block;"><input type="checkbox" class="gmw-update-location-types-object-types" value="post" checked="checked" />Posts </label>';
