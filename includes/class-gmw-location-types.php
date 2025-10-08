@@ -61,7 +61,7 @@ class GMW_Location_Types {
 		$menu_items[] = array(
 			'parent_slug'       => 'gmw-extensions',
 			'page_title'        => __( 'GEO my WP Location Types', 'geo-my-wp' ),
-			'menu_title'        => __( 'Location Types', 'gmw-bp-xprofile-geolocation' ),
+			'menu_title'        => __( 'Location Types', 'geo-my-wp' ),
 			'capability'        => 'manage_options',
 			'menu_slug'         => 'edit.php?post_type=gmw_location_type',
 			'callback_function' => '',
