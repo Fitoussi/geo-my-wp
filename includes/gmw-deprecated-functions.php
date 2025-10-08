@@ -2010,7 +2010,7 @@ if ( ! gmw_is_addon_active( 'current_location' ) ) {
 	            </em>
 	        </p>
 	         <p>
-	            <label><?php echo esc_attr(__( 'Display Location:' ) ); ?></label><br />
+	            <label><?php echo esc_attr(__( 'Display Location:', 'geo-my-wp' ) ); ?></label><br />
 	            <em style="font-size:12px;color:#777;display:block;margin:5px 0px;">
 	            	<?php _e( "The address fields to be displayed.", 'geo-my-wp' ); ?>
 	            </em>
