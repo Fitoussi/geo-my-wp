@@ -99,7 +99,7 @@ function gmw_output_posts_locator_import_export_tab() {
 
 					<div class="gmw-settings-panel-description">
 
-						<?php esc_html_e( 'Use this form to import locations from MapPress plugin.' ); ?>
+						<?php esc_html_e( 'Use this form to import locations from MapPress plugin.', 'geo-my-wp' ); ?>
 
 						<p><?php esc_html_e( '*Note, since the current version of GEO my WP supports only single location per post, this importer imports only the first location created by MapPress from each post.', 'geo-my-wp' ); ?></p>
 
@@ -131,7 +131,7 @@ function gmw_output_posts_locator_import_export_tab() {
 				<div class="gmw-settings-panel-description">
 
 					<div class="gmw-settings-panel-description">
-						<?php esc_html_e( 'Use this form to import locations from the WP GeoDirectory plugin.' ); ?>
+						<?php esc_html_e( 'Use this form to import locations from the WP GeoDirectory plugin.', 'geo-my-wp' ); ?>
 					</div>
 
 					<div class="gmw-settings-panel-field">
