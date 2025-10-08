@@ -187,7 +187,7 @@ class GMW_Posts_Locator_Screens {
 
 			// if no address was found show an error message.
 		} else {
-			$address = __( 'Location found but the address is missing', 'GMW' );
+			$address = __( 'Location found but the address is missing', 'geo-my-wp' );
 		}
 
 		// create link to address.
