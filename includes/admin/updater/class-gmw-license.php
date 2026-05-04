@@ -267,7 +267,6 @@ if ( ! class_exists( 'GMW_License' ) ) :
 		public function license_key_element() {
 
 			if ( class_exists( 'GMW_License_Key' ) ) {
-
 				$license_key = new GMW_License_Key(
 					$this->file,
 					$this->item_name,
@@ -286,8 +285,10 @@ if ( ! class_exists( 'GMW_License' ) ) :
 		 * @return  void
 		 */
 		private function includes() {
-			if ( ! class_exists( 'GMW_Premium_Plugin_Updater' ) && file_exists( 'class-gmw-plugins-updater.php' ) ) {
-				require_once 'class-gmw-plugins-updater.php';
+			$updater_file = __DIR__ . '/class-gmw-plugins-updater.php';
+
+			if ( ! class_exists( 'GMW_Premium_Plugin_Updater' ) && file_exists( $updater_file ) ) {
+				require_once $updater_file;
 			}
 		}
 
