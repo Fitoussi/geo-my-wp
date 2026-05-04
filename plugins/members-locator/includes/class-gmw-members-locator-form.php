@@ -71,7 +71,7 @@ trait GMW_Members_Locator_Form_Trait {
 			$where .= gmw_get_locations_within_boundaries_sql( $this->form['form_values']['swlatlng'], $this->form['form_values']['nelatlng'] );
 
 			// when address provided, and not filtering based on address fields, we will do proximity search.
-		} elseif ( '' === $address_filters && ! empty( $this->form['lat'] ) && ! empty( $this->form['lng'] ) ) {
+		} elseif ( '' === $address_filters && ! empty( $this->form['lat'] ) && ! empty( $this->form['lng'] ) && is_numeric( $this->form['lat'] ) && is_numeric( $this->form['lng'] ) ) {
 
 			// generate some radius/units data.
 			if ( 'imperial' === $this->form['units'] ) {
@@ -86,9 +86,9 @@ trait GMW_Members_Locator_Form_Trait {
 
 			// since these values are repeatable, we escape them previous
 			// the query instead of running multiple prepares.
-			$lat          = esc_sql( $this->form['lat'] );
-			$lng          = esc_sql( $this->form['lng'] );
-			$distance     = ! empty( $this->form['radius'] ) ? esc_sql( $this->form['radius'] ) : '';
+			$lat          = (float) $this->form['lat'];
+			$lng          = (float) $this->form['lng'];
+			$distance     = ! empty( $this->form['radius'] ) && is_numeric( $this->form['radius'] ) ? (float) $this->form['radius'] : '';
 			$distance_sql = "ROUND( {$earth_radius} * acos( cos( radians( {$lat} ) ) * cos( radians( gmw_locations.latitude ) ) * cos( radians( gmw_locations.longitude ) - radians( {$lng} ) ) + sin( radians( {$lat} ) ) * sin( radians( gmw_locations.latitude ) ) ),1 ) AS distance";
 
 			if ( ! empty( $distance ) ) {

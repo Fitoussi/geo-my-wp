@@ -160,6 +160,15 @@ class GMW_BP_Profile_Search_Geolocation {
 				return;
 			}
 
+			if ( ! is_numeric( $lat ) || ! is_numeric( $lng ) ) {
+				$clauses['where'][] = '1 = 0';
+
+				return $clauses;
+			}
+
+			$lat = (float) $lat;
+			$lng = (float) $lng;
+
 			$lat = $location_data['lat'];
 			$lng = $location_data['lng'];
 		}
@@ -182,9 +191,9 @@ class GMW_BP_Profile_Search_Geolocation {
 
 		$sql['where'] = "WHERE object_type = 'user'";
 
-		if ( ! empty( $values['distance'] ) ) {
-			$sql['having'] = $wpdb->prepare( 'Having distance <= %s OR distance IS NULL', $values['distance'] );
-		}
+			if ( ! empty( $values['distance'] ) && is_numeric( $values['distance'] ) ) {
+				$sql['having'] = $wpdb->prepare( 'Having distance <= %s OR distance IS NULL', (float) $values['distance'] );
+			}
 
 		$sql['orderby'] = 'ORDER BY distance';
 

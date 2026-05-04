@@ -283,6 +283,12 @@ class GMW_WP_Query extends WP_Query {
 				$args['gmw_lng'] = $geocoded['lng'];
 			}
 
+			if ( ! is_numeric( $args['gmw_lat'] ) || ! is_numeric( $args['gmw_lng'] ) ) {
+				$clauses['where'] .= ' AND 1 = 0';
+
+				return $clauses;
+			}
+
 			// generate some radius/units data.
 			if ( 'imperial' === $args['gmw_units'] ) {
 				$earth_radius = 3959;
@@ -296,9 +302,9 @@ class GMW_WP_Query extends WP_Query {
 
 			// since these values are repeatable, we escape them previous
 			// the query instead of running multiple prepares.
-			$lat          = esc_sql( $args['gmw_lat'] );
-			$lng          = esc_sql( $args['gmw_lng'] );
-			$distance     = ! empty( $args['gmw_radius'] ) ? esc_sql( $args['gmw_radius'] ) : '';
+			$lat          = (float) $args['gmw_lat'];
+			$lng          = (float) $args['gmw_lng'];
+			$distance     = ! empty( $args['gmw_radius'] ) && is_numeric( $args['gmw_radius'] ) ? (float) $args['gmw_radius'] : '';
 			$distance_sql = "ROUND( {$earth_radius} * acos( cos( radians( {$lat} ) ) * cos( radians( gmw_locations.latitude ) ) * cos( radians( gmw_locations.longitude ) - radians( {$lng} ) ) + sin( radians( {$lat} ) ) * sin( radians( gmw_locations.latitude ) ) ),1 ) AS distance";
 
 			if ( ! empty( $distance ) ) {

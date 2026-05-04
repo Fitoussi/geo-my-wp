@@ -1234,10 +1234,10 @@ class GMW_Location {
 						//$query['where'] .= ' AND 1 = 0';
 
 						return $args['output_objects_id'] ? array(
-								'objects_id'     => array(),
-								'featured_ids'   => array(),
-								'locations_data' => array(),
-							) : array();
+							'objects_id'     => array(),
+							'featured_ids'   => array(),
+							'locations_data' => array(),
+						) : array();
 					}
 
 					$args['lat'] = $geocoded['lat'];
@@ -1258,13 +1258,17 @@ class GMW_Location {
 				// add units to locations data.
 				$clauses['fields'] .= ", '{$units}' AS units";
 
-				/**
-				 * Since these values are repeatable, we escape them previous.
-				 *
-				 * The query instead of running multiple prepares.
-				 */
-				$lat = esc_sql( $args['lat'] );
-				$lng = esc_sql( $args['lng'] );
+				// Bail if malformed coordinates were provided.
+				if ( ! is_numeric( $args['lat'] ) || ! is_numeric( $args['lng'] ) ) {
+					return $args['output_objects_id'] ? array(
+						'objects_id'     => array(),
+						'featured_ids'   => array(),
+						'locations_data' => array(),
+					) : array();
+				}
+
+				$lat = (float) $args['lat'];
+				$lng = (float) $args['lng'];
 
 				$clauses['distance'] = ", ROUND( {$earth_radius} * acos( cos( radians( {$lat} ) ) * cos( radians( gmw_locations.latitude ) ) * cos( radians( gmw_locations.longitude ) - radians( {$lng} ) ) + sin( radians( {$lat} ) ) * sin( radians( gmw_locations.latitude ) ) ),1 ) AS distance";
 
