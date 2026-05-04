@@ -344,6 +344,40 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 		}
 
 		/**
+		 * Temporary bootstrap-safe required data overrides for external add-ons.
+		 *
+		 * Remove once external add-ons stop translating required notices before init.
+		 *
+		 * @var array<string, array<string, mixed>>
+		 */
+		protected const ADDONS_REQUIRED_OVERRIDES = array(
+			'bp_groups_locator' => array(
+				'plugins' => array(
+					array(
+						'function' => 'BuddyPress',
+						'notice'   => 'Groups Locator add-on requires BuddyPress plugin version 5.0 or higher.',
+					),
+				),
+			),
+			'bp_members_directory_geolocation' => array(
+				'addons' => array(
+					array(
+						'slug'   => 'members_locator',
+						'notice' => 'BP Members Directory Geolocation extension requires the Members Locator core extension.',
+					),
+				),
+			),
+			'bp_xprofile_geolocation' => array(
+				'addons' => array(
+					array(
+						'slug'   => 'members_locator',
+						'notice' => 'Buddypress Xprofile Geolocation extension requires the Members Locator core extension.',
+					),
+				),
+			),
+		);
+
+		/**
 		 *  Create GEO my WP submenu item.
 		 *
 		 *  To create a submenu you will need to pass an array with the following arg:
@@ -728,7 +762,11 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 				// required theme, addons and plugins
 				// check if passed via array. Otherwise, maybe via function.
 				if ( empty( $this->required ) ) {
-					$this->required = $this->required();
+					if ( isset( self::ADDONS_REQUIRED_OVERRIDES[ $this->slug ] ) ) {
+						$this->required = self::ADDONS_REQUIRED_OVERRIDES[ $this->slug ];
+					} else {
+						$this->required = $this->required();
+					}
 				}
 
 				// verify activation and get status.
@@ -900,7 +938,7 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 			// If this is a sub-addon, get some data from its parent add-on.
 			return array(
 				'author'         => $this->author,
-				'description'    => ! empty( $this->description ) ? $this->description : $this->get_description(),
+				'description'    => ! empty( $this->description ) ? $this->description : '',
 				'addon_page'     => $this->addon_page,
 				'docs_page'      => $this->docs_page,
 				'support_page'   => $this->support_page,
@@ -1216,9 +1254,14 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 				// error notice.
 				if ( empty( $required['notice'] ) && empty( $required['short_notice'] ) ) {
 
+					// $required['notice'] = sprintf(
+					// 	/* translators: %1$s extension's name, %2$s requirements. */
+					// 	__( '%1$s extension requires additional %2$s. Contact support form more information.', 'geo-my-wp' ),
+					// 	$this->name,
+					// 	$type
+					// );
 					$required['notice'] = sprintf(
-						/* translators: %1$s extension's name, %2$s requirements. */
-						__( '%1$s extension requires additional %2$s. Contact support form more information.', 'geo-my-wp' ),
+						'%1$s extension requires additional %2$s. Contact support for more information.',
 						$this->name,
 						$type
 					);
@@ -1735,6 +1778,11 @@ if ( ! class_exists( 'GMW_Addon' ) ) :
 			if ( IS_ADMIN ) {
 
 				$this->init_admin();
+
+				// Temporary: hydrate description on init to avoid triggering translations before init during addon bootstrap.
+				if ( isset( GMW()->licenses[ $this->slug ] ) && empty( GMW()->licenses[ $this->slug ]['description'] ) ) {
+					GMW()->licenses[ $this->slug ]['description'] = $this->get_description();
+				}
 
 				// fron-end.
 			} else {

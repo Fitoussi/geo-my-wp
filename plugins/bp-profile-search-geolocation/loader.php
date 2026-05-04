@@ -105,15 +105,17 @@ class GMW_BP_Profile_Search_Geolocation_Addon extends GMW_Addon {
 			'addons'  => array(
 				array(
 					'slug'   => 'members_locator',
-					/* translators: %s: admin notice. */
-					'notice' => __( 'BP Profile Search Geolocation extension requires the Members Locator core extension.', 'geo-my-wp' ),
+					// /* translators: %s: admin notice. */
+					// 'notice' => __( 'BP Profile Search Geolocation extension requires the Members Locator core extension.', 'geo-my-wp' ),
+					'notice' => 'BP Profile Search Geolocation extension requires the Members Locator core extension.',
 				),
 			),
 			'plugins' => array(
 				array(
 					'function' => 'bps_buddypress',
-					/* translators: %s: admin notice. */
-					'notice'   => sprintf( __( 'BP Profile Search Geolocation extension requires the BP Profile Search plguin. <a href="%s" target="_blank">Visit plugin page</a>', 'geo-my-wp' ), 'https://wordpress.org/plugins/bp-profile-search/' ),
+					// /* translators: %s: admin notice. */
+					// 'notice'   => sprintf( __( 'BP Profile Search Geolocation extension requires the BP Profile Search plguin. <a href="%s" target="_blank">Visit plugin page</a>', 'geo-my-wp' ), 'https://wordpress.org/plugins/bp-profile-search/' ),
+					'notice'   => 'BP Profile Search Geolocation extension requires the BP Profile Search plugin. <a href="https://wordpress.org/plugins/bp-profile-search/" target="_blank">Visit plugin page</a>',
 				),
 			),
 		);
