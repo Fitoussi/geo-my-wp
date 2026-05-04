@@ -1812,11 +1812,11 @@ form.gmw-horizontal-filters-form .gmw-search-form-multiple-fields-wrapper:empty 
 		cursor: pointer;
 	}
 
-	body div.gmw-current-location-wrapper div.gmw-cl-form-wrapper .gmw-cl-address-input-wrapper > i.gmw-cl-locator-trigger {
+	body div.gmw-current-location-wrapper div.gmw-cl-form-wrapper .gmw-cl-address-input-wrapper > .gmw-cl-locator-trigger {
 		left: 0;
 	}
 
-	body div.gmw-current-location-wrapper div.gmw-cl-form-wrapper .gmw-cl-address-input-wrapper > i.gmw-cl-form-submit {
+	body div.gmw-current-location-wrapper div.gmw-cl-form-wrapper .gmw-cl-address-input-wrapper > .gmw-cl-form-submit {
 		right: 0;
 	}
 
@@ -1824,7 +1824,8 @@ form.gmw-horizontal-filters-form .gmw-search-form-multiple-fields-wrapper:empty 
 		color: var( --gmw-color-primary );
 	}
 
-	body div.gmw-current-location-wrapper div.gmw-cl-form-wrapper .gmw-cl-address-input-wrapper > i {
+	body div.gmw-current-location-wrapper div.gmw-cl-form-wrapper .gmw-cl-address-input-wrapper > i,
+	body div.gmw-current-location-wrapper div.gmw-cl-form-wrapper .gmw-cl-address-input-wrapper > span {
 		right: 0;
 		color: var( --gmw-color-secondary );
 	}
@@ -2382,8 +2383,8 @@ form.gmw-horizontal-filters-form .gmw-search-form-multiple-fields-wrapper:empty 
 		padding: 2px 0px;
 	}
 
-	div.gmw-sdate-geo-address-wrapper i.gmw-icon-location,
-	div.gmw-sdate-geo-directions-wrapper i.gmw-icon-compass {
+	div.gmw-sdate-geo-address-wrapper .gmw-icon-location,
+	div.gmw-sdate-geo-directions-wrapper .gmw-icon-compass {
 		margin-right:3px;
 		font-size:13px;
 		color:lightcoral;
@@ -2393,7 +2394,7 @@ form.gmw-horizontal-filters-form .gmw-search-form-multiple-fields-wrapper:empty 
 		position: relative;
 	}
 
-	label.gmw-sdate-geo-address-label i.gmw-locator-button {
+	label.gmw-sdate-geo-address-label .gmw-locator-button {
 		top: 0;
 		line-height: 35px;
 		position: absolute;
@@ -2527,7 +2528,9 @@ body.directory.buddypress.bp-nouveau #gmw-address-field-bpmdg-wrapper #gmw-addre
 }
 
 #gmw-address-field-bpgdg-wrapper i,
-#gmw-address-field-bpmdg-wrapper i {
+#gmw-address-field-bpmdg-wrapper i,
+#gmw-address-field-bpgdg-wrapper span,
+#gmw-address-field-bpmdg-wrapper span {
 	position: absolute;
 	//padding: 0 10px;
 	cursor: pointer;
@@ -2538,7 +2541,9 @@ body.directory.buddypress.bp-nouveau #gmw-address-field-bpmdg-wrapper #gmw-addre
 }
 
 #gmw-address-field-bpgdg-wrapper i:before,
-#gmw-address-field-bpmdg-wrapper i:before {
+#gmw-address-field-bpmdg-wrapper i:before,
+#gmw-address-field-bpgdg-wrapper span:before,
+#gmw-address-field-bpmdg-wrapper span:before {
 	margin: 0;
 }
 
