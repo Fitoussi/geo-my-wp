@@ -577,7 +577,7 @@ class GMW_BuddyPress_Directory_Geolocation {
 
 		if ( ! empty( $this->options['locator_button'] ) ) {
 			$wrap_class .= ' gmw-locator-button-enabled';
-			$locator     = '<i class="gmw-locator-button inside gmw-icon-target-light" data-locator_submit="1" data-form_id="' . $prefix . '"></i>';
+			$locator     = '<span class="gmw-locator-button inside gmw-icon-target-light" data-locator_submit="1" data-form_id="' . $prefix . '"></span>';
 		}
 
 		$field = '';
