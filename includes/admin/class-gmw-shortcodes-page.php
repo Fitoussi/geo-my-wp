@@ -1,7 +1,7 @@
 <?php
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
-    exit; 
+    exit;
 }
 
 /**
@@ -31,7 +31,7 @@ class GMW_Shortcodes_page {
     					'name'		  	=> __( 'GMW Form', 'geo-my-wp' ),
     					'basic_usage' 	=> '[GMW]',
     					'template_usage'=> '&#60;&#63;php echo do_shortcode(\'[gmw]\'); &#63;&#62;',
-    					'desc'        	=> __( "Use this shortcode to display any of the forms you created in the \"Forms\" Page of GEO my WP.", "GMW" ),
+    					'desc'        	=> __( "Use this shortcode to display any of the forms you created in the \"Forms\" Page of GEO my WP.", "geo-my-wp"),
     					'attributes'  	=> array(
     							array(
     									'attr'	 => 'form',
@@ -41,7 +41,7 @@ class GMW_Shortcodes_page {
     									),
     									'desc'	 => __( "1) Use the attribute \"form\" with one of your forms ID to display the search form and results on that same page.", 'geo-my-wp' ).
     												__( "2) Use the value \"results\" when you want to display only the search results. This is usefull when you want to display the search form in on page.", 'geo-my-wp' ).
-    												__( "and the search results in a different page or when need to display the results when using the serch form in a widget.", "GMW" )
+    												__( "and the search results in a different page or when need to display the results when using the serch form in a widget.", "geo-my-wp")
 
     							),
     							array(
@@ -49,22 +49,22 @@ class GMW_Shortcodes_page {
     									'values' => array(
     											__( 'Form ID','geo-my-wp' ),
     									),
-    									'desc'	 => __( "Use anywhere on a page where you want to display the results map.", "GMW" )
+    									'desc'	 => __( "Use anywhere on a page where you want to display the results map.", "geo-my-wp")
     							),
     					),
     					'examples'  => array(
     							array(
     									'example' => '[gmw form="1"]',
-    									'desc'	  => __( "Display the search form and search results of the form with ID 1.", "GMW" )
+    									'desc'	  => __( "Display the search form and search results of the form with ID 1.", "geo-my-wp")
 
     							),
     							array(
     									'example' => '[gmw form="results"]',
-    									'desc'	  => __( "Display only the seasrch results.", "GMW" )
+    									'desc'	  => __( "Display only the seasrch results.", "geo-my-wp")
     							),
     							array(
     									'example' => '[gmw map="1"]',
-    									'desc'	  => __( "Place this shortcode anywhere on the page where you want to display the map of form 1", "GMW" )
+    									'desc'	  => __( "Place this shortcode anywhere on the page where you want to display the map of form 1", "geo-my-wp")
     							),
     					),
     			),
@@ -74,7 +74,7 @@ class GMW_Shortcodes_page {
     					'template_usage'=> '&#60;&#63;php echo do_shortcode(\'[gmw_current_location]\'); &#63;&#62;',
     					'desc'        	=> __( "The shortcode will display a link which once clicked will open a popup window that will allow the user to get his current location.", 'geo-my-wp' ).
     									   __( " The location, if found, will then be saved via cookies. The location in the cookies later will be", 'geo-my-wp' ).
-    									   __( "used with GEO my WP and other add-ons for different functionlities. ", "GMW" ),
+    									   __( "used with GEO my WP and other add-ons for different functionlities. ", "geo-my-wp"),
     					'attributes'  => array(
     							array(
     									'attr'	 	=> 'element_id',
@@ -82,7 +82,7 @@ class GMW_Shortcodes_page {
     											'numeric value'
     									),
     									'default'	=> 'random numeric value',
-    									'desc'	 	=> __( "You can assign a unique element ID to the shortcode. The unique ID can be useful for styling purposes as well when using the hooks provided by the shortcoded when custom modifications required.", "GMW" )
+    									'desc'	 	=> __( "You can assign a unique element ID to the shortcode. The unique ID can be useful for styling purposes as well when using the hooks provided by the shortcoded when custom modifications required.", "geo-my-wp")
     							),
     							array(
     									'attr'	 	=> 'elements',
@@ -92,7 +92,7 @@ class GMW_Shortcodes_page {
     											'map',
     									),
     									'default'	=> 'username,address,map',
-    									'desc'	 	=> __( "Enter the elements that you want to display, in the order that you want them to be displayed comma saperated. The avaliable elements are:<ol><li>username - display the username or guest ( for logged out users ) with a greeting</li><li>address - the address of the user's current position</li><li>map - google map showing the user's osition</li></ol>", "GMW" )
+    									'desc'	 	=> __( "Enter the elements that you want to display, in the order that you want them to be displayed comma saperated. The avaliable elements are:<ol><li>username - display the username or guest ( for logged out users ) with a greeting</li><li>address - the address of the user's current position</li><li>map - google map showing the user's osition</li></ol>", 'geo-my-wp')
     							),
     							array(
     									'attr'	 	=> 'address_fields ( previously used as display_by )',
@@ -100,7 +100,7 @@ class GMW_Shortcodes_page {
     											'street, city, state, zipcode, country, address',
     									),
     									'default'	=> 'city,country',
-    									'desc'	 	=> __( "Use any of the address components, comma separated ( ex. street,city,state,zipcode,county ) or use address for the full address, to display the address on the screen once the user's location was found.", "GMW" )
+    									'desc'	 	=> __( "Use any of the address components, comma separated ( ex. street,city,state,zipcode,county ) or use address for the full address, to display the address on the screen once the user's location was found.", 'geo-my-wp')
     							),
     							array(
     									'attr'	 	=> 'title',
@@ -108,7 +108,7 @@ class GMW_Shortcodes_page {
     											__( 'any text','geo-my-wp' ),
     									),
     									'default'	=> 'Your location',
-    									'desc'	 	=> __( "The title that will be display before the address. For example if you use the title \"Your location\" it will be displayes as Your Location Hollywood Florida ( assuming that the user's location is Hollywood Florida ).", "GMW" )
+    									'desc'	 	=> __( "The title that will be display before the address. For example if you use the title \"Your location\" it will be displayes as Your Location Hollywood Florida ( assuming that the user's location is Hollywood Florida ).", 'geo-my-wp')
     							),
     							array(
     									'attr'	 	=> 'address_as_text ( previously used as text_only )',
@@ -117,7 +117,7 @@ class GMW_Shortcodes_page {
     											'0',
     									),
     									'default'	=> '0',
-    									'desc'	 	=> __( "Use the value 1 to display the current location of the user as text only instead of an hyperlink which once clicked it popups the current location form.", "GMW" )
+    									'desc'	 	=> __( "Use the value 1 to display the current location of the user as text only instead of an hyperlink which once clicked it popups the current location form.", "geo-my-wp")
     							),
     							array(
     									'attr'	 	=> 'user_message',
@@ -125,7 +125,7 @@ class GMW_Shortcodes_page {
     											__( 'any text','geo-my-wp' ),
     									),
     									'default'	=> 'Hello',
-    									'desc'		=> __( "Greeting message that will be displayed before the user name when logged in ( ex Hello admin ).", "GMW" )
+    									'desc'		=> __( "Greeting message that will be displayed before the user name when logged in ( ex Hello admin ).", 'geo-my-wp')
     							),
     							array(
     									'attr'	 	=> 'guest_message',
@@ -133,7 +133,7 @@ class GMW_Shortcodes_page {
     											__( 'any text','geo-my-wp' ),
     									),
     									'default'	=> 'Hello guest!',
-    									'desc'		=> __( "Greeting message that will be displayed when the users is logged out.", "GMW" )
+    									'desc'		=> __( "Greeting message that will be displayed when the users is logged out.", "geo-my-wp")
     							),
     							array(
     									'attr'	 	=> 'map_height',
@@ -141,7 +141,7 @@ class GMW_Shortcodes_page {
     											'value in px or %',
     									),
     									'default'	=> '200px',
-    									'desc'	 	=> __( "Map height in pixels or percentage ( ex 200px or 100% ).", "GMW" )
+    									'desc'	 	=> __( "Map height in pixels or percentage ( ex 200px or 100% ).", 'geo-my-wp')
     							),
     							array(
     									'attr'	 	=> 'map_width',
@@ -149,7 +149,7 @@ class GMW_Shortcodes_page {
     											'value in px or %',
     									),
     									'default'	=> '200px',
-    									'desc'	 	=> __( "Map width in pixels or percentage ( ex 200px or 100% ).", "GMW" )
+    									'desc'	 	=> __( "Map width in pixels or percentage ( ex 200px or 100% ).", 'geo-my-wp')
     							),
     							array(
     									'attr'	 	=> 'map_type',
@@ -160,7 +160,7 @@ class GMW_Shortcodes_page {
     											'TERRAIN'
     									),
     									'default'	=> 'ROADMAP',
-    									'desc'	 	=> __( "Set the map type", "GMW" )
+    									'desc'	 	=> __( "Set the map type", "geo-my-wp")
     							),
     							array(
     									'attr'	 	=> 'zoom_level',
@@ -168,7 +168,7 @@ class GMW_Shortcodes_page {
     											__( 'Numeric value between 1 to 18', 'geo-my-wp' ),
     									),
     									'default'	=> '12',
-    									'desc'	 	=> __( "Set the map zoom level", "GMW" )
+    									'desc'	 	=> __( "Set the map zoom level", "geo-my-wp")
     							),
     							array(
     									'attr'	 	=> 'scrollwheel',
@@ -177,7 +177,7 @@ class GMW_Shortcodes_page {
     											'0',
     									),
     									'default'	=> '1',
-    									'desc'	 	=> __( "Use the value 1 to enable the map zoom in/out using the mouse scrollwheel.", "GMW" )
+    									'desc'	 	=> __( "Use the value 1 to enable the map zoom in/out using the mouse scrollwheel.", "geo-my-wp")
     							),
     							array(
     									'attr'	 	=> 'map_marker',
@@ -185,30 +185,30 @@ class GMW_Shortcodes_page {
     											'Link to an image.',
     									),
     									'default'	=> 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-    									'desc'	 	=> __( "Use a link to an image that will be used as the map marker.", "GMW" )
+    									'desc'	 	=> __( "Use a link to an image that will be used as the map marker.", "geo-my-wp")
     							),
-    							
-    							
+
+
     					),
     					'examples'  => array(
     							array(
     									'example' => "[gmw_current_location elements=\"username,address,map\" title=\"Your Location\" address_fields=\"city,state,country\"]",
-    									'desc'	  => __( "This example will display:", 'gmw' ).
+    									'desc'	  => __( "This example will display:", 'geo-my-wp').
     												 "<br />Hello ( username )<br />
     												  Your Location Hollywood Florida US.<br />
     									              [ Map will be displayed here ]"
 
     							),
     					),
-    						
+
     			),
     	));
-    	 
+
     	return $shortcodes;
     }
 
     /**
-     * display settings 
+     * display settings
      *
      * @access public
      * @return void
@@ -224,7 +224,7 @@ class GMW_Shortcodes_page {
             </h2>
 
             <div class="clear"></div>
-            
+
             <form method="post" action="options.php">
 
                 <div class="gmw-tabs-wrapper gmw-shortcodes-page-nav-tabs">
@@ -238,7 +238,7 @@ class GMW_Shortcodes_page {
                 <?php foreach ( $this->shortcodes as $key => $options ) { ?>
 
                     <div id="settings-<?php echo sanitize_title( $key ); ?>" class="gmw-settings-panel gmw-tab-panel">
-                                        
+
                     <table class="widefat fixed" style="margin-bottom:5px;margin-top: -2px;">
                         <thead>
                             <tr>
@@ -267,7 +267,7 @@ class GMW_Shortcodes_page {
                         	</tr>
                         </tbody>
                     </table>
-                    
+
                     <table class="widefat fixed" style="margin-top:10px;">
                         <thead>
                             <tr>
@@ -275,27 +275,27 @@ class GMW_Shortcodes_page {
                             </tr>
                         </thead>
                     </table>
-                    
+
                     <table class="widefat fixed" style="margin-top:-2px">
                         <thead  style="background-color:#f9f9f9;">
                             <tr valign="top" >
                                 <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Attribute', 'geo-my-wp' ); ?></th>
                                 <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Values Accepted', 'geo-my-wp' ); ?></th>
                                 <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Default Value', 'geo-my-wp' ); ?></th>
-                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Additional Information', 'geo-my-wp' ); ?></th> 
+                                <th scope="col" id="cb" class="manage-column column-cb check-column" style="width:50px;padding:11px 10px"><?php _e( 'Additional Information', 'geo-my-wp' ); ?></th>
                             </tr>
                         </thead>
                         <tbody>
-                        	<?php 
+                        	<?php
                         	$rowNumber = 1;
-                        	foreach ( $options['attributes'] as $attr ) { 
+                        	foreach ( $options['attributes'] as $attr ) {
 	                        	$alternate = ( $rowNumber % 2 == 0 ) ? 'alternate' : ''; ?>
 	                        	<tr valign="top">
 	                        		<th scope="row" style="color: #555;border-bottom:1px solid #eee;"><label for="setting-google_api"><?php echo $attr['attr']; ?></label></th>
 	                        		<td style="color: #555;border-bottom:1px solid #eee;min-width:400px;vertical-align: top">
-	                        		
+
 	                        		<?php $rowCount = 1; ?>
-	                        		<?php foreach ( $attr['values'] as $value ) { ?>                        		
+	                        		<?php foreach ( $attr['values'] as $value ) { ?>
 	                        			<p class="description"><?php echo $rowCount++.')'.' '.$value; ?></p>
 	                        		<?php } ?>
 	                        		</td>
@@ -303,13 +303,13 @@ class GMW_Shortcodes_page {
 	                        		<td style="color: #555;border-bottom:1px solid #eee;min-width:400px;vertical-align: top"><p class="description"><?php echo $default; ?></p></td>
 	                        		<td style="color: #555;border-bottom:1px solid #eee;min-width:400px;vertical-align: top"><p class="description"><?php echo $attr['desc']; ?></p></td>
 	                        	</tr>
-                        		<?php  
-                        		$rowNumber++; 
-                        	} 
+                        		<?php
+                        		$rowNumber++;
+                        	}
                         	?>
                         </tbody>
                     </table>
-                    
+
                     <table class="widefat fixed" style="margin-top:10px;">
                         <thead>
                             <tr>
@@ -317,7 +317,7 @@ class GMW_Shortcodes_page {
                             </tr>
                         </thead>
                     </table>
-                    
+
                     <?php if ( isset( $options['examples'] ) && !empty( $options['examples'] ) ) { ?>
 	                    <table class="widefat fixed" style="margin-top:-2px">
 	                        <thead  style="background-color:#f9f9f9;">
@@ -327,21 +327,21 @@ class GMW_Shortcodes_page {
 	                            </tr>
 	                        </thead>
 	                        <tbody>
-	                        	<?php 
+	                        	<?php
 	                        	$rowNumber = 1;
-	                        	foreach ( $options['examples'] as $example ) { 
+	                        	foreach ( $options['examples'] as $example ) {
 		                        	$alternate = ( $rowNumber % 2 == 0 ) ? 'alternate' : ''; ?>
 		                        	<tr valign="top">
 		                        		<th scope="row" style="color: #555;border-bottom:1px solid #eee;"><label for="setting-google_api"><code><?php echo $example['example']; ?></code></label></th>
 		                        		<td style="color: #555;border-bottom:1px solid #eee;min-width:400px;vertical-align: top"><p class="description"><?php echo $example['desc']; ?></p></td>
 		                        	</tr>
-	                        		<?php  
-	                        		$rowNumber++; 
-	                        	} 
+	                        		<?php
+	                        		$rowNumber++;
+	                        	}
 	                        	?>
 	                        </tbody>
 	                    </table>
-	               	<?php } ?>           
+	               	<?php } ?>
             </div>
             <?php
         }

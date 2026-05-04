@@ -48,7 +48,7 @@ class GMW_Single_User_Location extends GMW_Single_Location {
 	 */
 	public function __construct( $atts = array() ) {
 
-		$this->args['no_location_message'] = __( 'The user has not added a location yet.', 'gmw-wp-users-locator' );
+		$this->args['no_location_message'] = __( 'The user has not added a location yet.', 'geo-my-wp' );
 
 		if ( is_single() && empty( $atts['show_in_single_post'] ) ) {
 			$atts['no_location_message'] = false;
