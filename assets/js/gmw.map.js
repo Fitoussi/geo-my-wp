@@ -681,7 +681,7 @@ if ( gmwVars.mapsProvider == 'leaflet' ) {
 		},
 
 		// Get element position.
-		getPosition : function( element, mapObject ) {
+		getPosition: function (element, mapObject) {
 			return element.getLatLng();
 		},
 
@@ -1695,7 +1695,13 @@ GMW_Map.prototype.renderMarkers = function(locations, append_previous) {
     self.initMarkersGrouping();
 
     self.locations = locations;
-    self.previousLocations = append_previous ? [...self.locations, ...self.previousLocations] : self.locations;
+
+	if (!append_previous || self.previousLocations.length === 0) {
+		self.previousLocations = self.locations;
+	} else {
+		self.locations = [...self.locations, ...self.previousLocations];
+		self.previousLocations = self.locations;
+	}
 
     var locations_count = self.locations.length;
     if (locations_count === 0 && self.hideMapWithoutLocations) {
