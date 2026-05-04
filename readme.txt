@@ -3,9 +3,9 @@ Contributors: ninjew
 Donate link: https://www.paypal.me/fitoussi
 Tags: Locations Directory, Store Locator, Proximity Search forms, Posts location, Members location.
 Requires at least: 5.6
-Tested up to: 6.8
+Tested up to: 6.9.4
 BuddyPress: 11.3.1
-Stable tag: 4.5.4
+Stable tag: 4.5.5
 Requires PHP: 7.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,25 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 4.5.5 =
+
+**Security**
+* Harden lat/lng distance queries against malformed input to prevent PHP type errors and query math failures. ( Fixes #81 )
+
+**Fixes**
+* Normalize null location fields before update.
+* Marker append logic when previous locations are empty.
+* Frontend CSS selectors for locator icon i/span elements.
+* Use span locator markup in BP directory address field.
+
+**Compatibility**
+* Standardize translation text domain to geo-my-wp across plugin files.
+* Update location types text domain and escaping function usage.
+
+**Tweaks**
+* Refactor addon bootstrap required notices flow to avoid early translation loading warnings.
+* Refactor updater include loading to guarded absolute-path require_once.
 
 = 4.5.4 =
 
