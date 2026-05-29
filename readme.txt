@@ -3,9 +3,9 @@ Contributors: ninjew
 Donate link: https://www.paypal.me/fitoussi
 Tags: Locations Directory, Store Locator, Proximity Search forms, Posts location, Members location.
 Requires at least: 5.6
-Tested up to: 6.9.4
+Tested up to: 7.0
 BuddyPress: 11.3.1
-Stable tag: 4.5.5
+Stable tag: 4.5.5.1
 Requires PHP: 7.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,15 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 4.5.5.1 =
+
+**Security**
+* Harden map boundary query handling for `swlatlng` and `nelatlng`:
+  validate finite numeric lat/lng ranges and build boundary SQL using prepared statements.
+
+**Compatibility**
+* Verified compatibility with WordPress 7.0.
 
 = 4.5.5 =
 

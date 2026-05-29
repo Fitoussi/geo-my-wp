@@ -523,6 +523,14 @@ function gmw_get_form_values( $prefix = '', $query_string = '' ) {
 		if ( isset( $output['address'] ) && ! is_array( $output['address'] ) ) {
 			$output['address'] = urldecode( $output['address'] );
 		}
+
+		if ( isset( $output['swlatlng'] ) && false === gmw_parse_latlng_boundary( $output['swlatlng'] ) ) {
+			unset( $output['swlatlng'] );
+		}
+
+		if ( isset( $output['nelatlng'] ) && false === gmw_parse_latlng_boundary( $output['nelatlng'] ) ) {
+			unset( $output['nelatlng'] );
+		}
 	}
 
 	if ( ! empty( $output['sortby'] ) ) {
@@ -530,6 +538,43 @@ function gmw_get_form_values( $prefix = '', $query_string = '' ) {
 	}
 
 	return $output;
+}
+
+/**
+ * Parse and validate a comma separated lat,lng pair.
+ *
+ * @param string $boundary comma separated lat,lng value.
+ *
+ * @return array|false
+ */
+function gmw_parse_latlng_boundary( $boundary = '' ) {
+
+	if ( ! is_string( $boundary ) || '' === $boundary ) {
+		return false;
+	}
+
+	$coords = array_map( 'trim', explode( ',', $boundary ) );
+
+	if ( 2 !== count( $coords ) ) {
+		return false;
+	}
+
+	if ( ! is_numeric( $coords[0] ) || ! is_numeric( $coords[1] ) ) {
+		return false;
+	}
+
+	$lat = (float) $coords[0];
+	$lng = (float) $coords[1];
+
+	if ( ! is_finite( $lat ) || ! is_finite( $lng ) ) {
+		return false;
+	}
+
+	if ( abs( $lat ) > 90 || abs( $lng ) > 180 ) {
+		return false;
+	}
+
+	return array( $lat, $lng );
 }
 
 /**
@@ -672,11 +717,29 @@ function gmw_get_locations_within_boundaries_sql( $southwest = '', $northeast = 
 		return;
 	}
 
-	$sw = explode( ',', $southwest );
-	$ne = explode( ',', $northeast );
+	$sw = gmw_parse_latlng_boundary( $southwest );
+	$ne = gmw_parse_latlng_boundary( $northeast );
 
-	return " AND ( gmw_locations.latitude BETWEEN {$sw[0]} AND {$ne[0]} ) AND ( ( {$sw[1]} < {$ne[1]} AND gmw_locations.longitude BETWEEN {$sw[1]} AND {$ne[1]} )
-			OR ( {$sw[1]} > {$ne[1]} AND (gmw_locations.longitude BETWEEN {$sw[1]} AND 180 OR gmw_locations.longitude BETWEEN -180 AND {$ne[1]} ) ) )";
+	if ( false === $sw || false === $ne ) {
+		return '';
+	}
+
+	global $wpdb;
+
+	return $wpdb->prepare(
+		' AND ( gmw_locations.latitude BETWEEN %f AND %f ) AND ( ( %f < %f AND gmw_locations.longitude BETWEEN %f AND %f )
+				OR ( %f > %f AND (gmw_locations.longitude BETWEEN %f AND 180 OR gmw_locations.longitude BETWEEN -180 AND %f ) ) )',
+		$sw[0],
+		$ne[0],
+		$sw[1],
+		$ne[1],
+		$sw[1],
+		$ne[1],
+		$sw[1],
+		$ne[1],
+		$sw[1],
+		$ne[1]
+	);
 }
 
 /**
