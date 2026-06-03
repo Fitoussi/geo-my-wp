@@ -276,7 +276,7 @@ class GMW_Form extends GMW_Form_Core {
 		$form_values = $this->form['form_values'];
 
 		$this->form['radius']      = isset( $form_values['distance'] ) ? $form_values['distance'] : 500;
-		$this->form['address']     = ( isset( $form_values['address'] ) && array_filter( $form_values['address'] ) ) ? implode( ' ', $form_values['address'] ) : '';
+		$this->form['address']     = ( isset( $form_values['address'] ) && is_array( $form_values['address'] ) && array_filter( $form_values['address'] ) ) ? implode( ' ', $form_values['address'] ) : '';
 		$this->form['org_address'] = $this->form['address'];
 		$this->form['units']       = isset( $form_values['units'] ) ? $form_values['units'] : 'imperial';
 		$this->form['units_array'] = gmw_get_units_array( $this->form['units'] );

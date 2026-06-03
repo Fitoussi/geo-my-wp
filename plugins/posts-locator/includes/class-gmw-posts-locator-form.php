@@ -45,7 +45,7 @@ trait GMW_Posts_Locator_Form_Trait {
 		} else {
 
 			// Check in submitted values.
-			if ( ! empty( $this->form['form_values']['post'] ) && array_filter( $this->form['form_values']['post'] ) ) {
+			if ( ! empty( $this->form['form_values']['post'] ) && is_array( $this->form['form_values']['post'] ) && array_filter( $this->form['form_values']['post'] ) ) {
 
 				$post_types = $this->form['form_values']['post'];
 
