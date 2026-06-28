@@ -572,7 +572,7 @@ class GMW_Location_Types {
 						class="setting-xprofile-integration-enabled checkbox"
 						name="content[xprofile_fields][enabled]"
 						<?php checked( $saved_data['enabled'], 'on', true ); ?>
-					><?php echo esc_attr_e( 'Enable Xprofile Fields Integration', 'geo-my-wp' ); ?>
+					><?php esc_attr_e( 'Enable Xprofile Fields Integration', 'geo-my-wp' ); ?>
 				</label>
 				<em style="margin-top: 5px;display: inline-block;"><?php esc_attr_e( 'Check this checkbox to sync this location type with BuddyPress xprofile field.', 'geo-my-wp' ); ?></em>
 			</div>
@@ -599,7 +599,7 @@ class GMW_Location_Types {
 			?>
 			<div class="gmw-xprofile-fields-setting-wrapper single-address-field-setting">
 
-				<label style="display:block;margin-bottom: 5px"><?php echo esc_attr_e( 'Address ', 'geo-my-wp' ); ?></label>
+				<label style="display:block;margin-bottom: 5px"><?php esc_attr_e( 'Address ', 'geo-my-wp' ); ?></label>
 
 				<select name="content[xprofile_fields][address_fields][address]" class="gmw-smartbox">
 
@@ -656,7 +656,7 @@ class GMW_Location_Types {
 						class="setting-address_autocomplete checkbox"
 						name="content[xprofile_fields][address_autocomplete]"
 						<?php checked( $saved_data['address_autocomplete'], 'on', true ); ?>
-					><?php echo esc_attr_e( 'Enable Google Address Autocomplete', 'geo-my-wp' ); ?>
+					><?php esc_attr_e( 'Enable Google Address Autocomplete', 'geo-my-wp' ); ?>
 				</label>
 				<?php /* <em style="margin-top: 5px;display: inline-block;"><?php esc_attr_e( 'Check this checkbox to enable the Google Address Autocompelte feature.', 'geo-my-wp' ); ?></em> */ ?>
 			</div>
