@@ -1534,21 +1534,41 @@ class GMW_Location_Form {
 		}
 
 		// Verify some location data.
-		$location['ID']          = ! empty( $location['ID'] ) ? $location['ID'] : 0;
+		$location['ID']          = ! empty( $location['ID'] ) ? absint( $location['ID'] ) : 0;
 		$location['object_type'] = ! empty( $object_type ) ? $object_type : $location['object_type'];
 		$location['object_id']   = ! empty( $object_id ) ? $object_id : $location['object_id'];
 
-		// Check user capability to modify this location record.
-		if ( ! self::can_manage_location_record( $location['object_type'], (int) $location['object_id'], 'update' ) ) {
+		$saved_location = array();
+
+		// Existing records must be authorized against the stored owner, not submitted values.
+		if ( ! empty( $location['ID'] ) ) {
+
+			$saved_location = gmw_get_location( $location['ID'], ARRAY_A, false );
+
+			if ( empty( $saved_location['object_type'] ) || empty( $saved_location['object_id'] ) ) {
+				wp_die( esc_html__( 'Invalid location record.', 'geo-my-wp' ), esc_html__( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
+			}
+
+			if ( sanitize_key( $location['object_type'] ) !== sanitize_key( $saved_location['object_type'] ) || (int) $location['object_id'] !== (int) $saved_location['object_id'] ) {
+				wp_die( esc_html__( 'You do not have permission to edit this location.', 'geo-my-wp' ), esc_html__( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
+			}
+
+			if ( ! self::can_manage_location_record( $saved_location['object_type'], (int) $saved_location['object_id'], 'update' ) ) {
+				wp_die( esc_html__( 'You do not have permission to edit this location.', 'geo-my-wp' ), esc_html__( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
+			}
+
+			$location['object_type'] = $saved_location['object_type'];
+			$location['object_id']   = (int) $saved_location['object_id'];
+
+		} elseif ( ! self::can_manage_location_record( $location['object_type'], (int) $location['object_id'], 'update' ) ) {
 			wp_die( esc_html__( 'You do not have permission to edit this location.', 'geo-my-wp' ), esc_html__( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
 		}
 
-		$location['title']       = ! empty( $form_values['title'] ) ? $form_values['title'] : '';
-		$location['map_icon']    = ! empty( $location['map_icon'] ) ? $location['map_icon'] : '_default.png';
+		$location['title']    = ! empty( $form_values['title'] ) ? $form_values['title'] : '';
+		$location['map_icon'] = ! empty( $location['map_icon'] ) ? $location['map_icon'] : '_default.png';
 
 		// location meta.
 		$location_meta = ! empty( $location['location_meta'] ) ? $location['location_meta'] : array();
-
 		$location_args = array(
 			'ID'                => (int) $location['ID'],
 			'object_type'       => $location['object_type'],

@@ -5,7 +5,7 @@ Tags: Locations Directory, Store Locator, Proximity Search forms, Posts location
 Requires at least: 5.6
 Tested up to: 7.0
 BuddyPress: 11.3.1
-Stable tag: 4.5.5.2
+Stable tag: 4.5.5.3
 Requires PHP: 7.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,11 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 4.5.5.3 =
+
+**Security**
+* Tightened location form update authorization to validate existing records against the stored location owner before applying updates.
 
 = 4.5.5.2 =
 
