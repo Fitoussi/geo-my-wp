@@ -221,7 +221,7 @@ class GMW_Form_Settings_Helper {
 
 								<div class="gmw-settings-panel-header">
 									<label class="gmw-settings-label">
-										<?php echo esc_attr_e( 'Usage', 'geo-my-wp' ); ?>
+										<?php esc_attr_e( 'Usage', 'geo-my-wp' ); ?>
 									</label>
 								</div>
 
@@ -546,7 +546,7 @@ class GMW_Form_Settings_Helper {
 
 								<div class="gmw-settings-panel-header">
 									<label class="gmw-settings-label">
-										<?php echo esc_attr_e( 'Required', 'geo-my-wp' ); ?>
+										<?php esc_attr_e( 'Required', 'geo-my-wp' ); ?>
 									</label>
 								</div>
 
@@ -592,7 +592,7 @@ class GMW_Form_Settings_Helper {
                         <div class="gmw-settings-panel-field">
 
                             <div class="gmw-settings-panel-header">
-                                <label class="gmw-settings-label"><?php echo esc_attr_e( 'Usage', 'geo-my-wp' ); ?></label>
+                                <label class="gmw-settings-label"><?php esc_attr_e( 'Usage', 'geo-my-wp' ); ?></label>
                             </div>
 
                             <div class="taxonomy-usage taxonomy-tab-content gmw-settings-panel-input-container">
