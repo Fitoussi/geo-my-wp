@@ -1537,6 +1537,12 @@ class GMW_Location_Form {
 		$location['ID']          = ! empty( $location['ID'] ) ? $location['ID'] : 0;
 		$location['object_type'] = ! empty( $object_type ) ? $object_type : $location['object_type'];
 		$location['object_id']   = ! empty( $object_id ) ? $object_id : $location['object_id'];
+
+		// Check user capability to modify this location record.
+		if ( ! self::can_manage_location_record( $location['object_type'], (int) $location['object_id'], 'update' ) ) {
+			wp_die( esc_html__( 'You do not have permission to edit this location.', 'geo-my-wp' ), esc_html__( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
+		}
+
 		$location['title']       = ! empty( $form_values['title'] ) ? $form_values['title'] : '';
 		$location['map_icon']    = ! empty( $location['map_icon'] ) ? $location['map_icon'] : '_default.png';
 
@@ -1664,6 +1670,11 @@ class GMW_Location_Form {
 		// The array of the location above might be missing some data if not all the fields exists in the location form.
 		$location = gmw_get_location( $location['ID'], ARRAY_A, false );
 
+		// Verify user capability to delete this location record.
+		if ( empty( $location['object_type'] ) || empty( $location['object_id'] ) || ! self::can_manage_location_record( $location['object_type'], (int) $location['object_id'], 'delete' ) ) {
+			wp_die( esc_html__( 'You do not have permission to delete this location.', 'geo-my-wp' ), esc_html__( 'Error', 'geo-my-wp' ), array( 'response' => 403 ) );
+		}
+
 		// do something before location deleted.
 		do_action( 'gmw_lf_before_location_deleted', $location, $form_values );
 		do_action( 'gmw_lf_before_' . $location['object_type'] . '_location_deleted', $location, $form_values );
@@ -1676,6 +1687,67 @@ class GMW_Location_Form {
 
 		// send the location ID back to AJAX call.
 		wp_send_json( ! empty( $location_id ) ? $location_id : false );
+	}
+
+	/**
+	 * Check whether current user can manage a location record.
+	 *
+	 * @param string $object_type Object type.
+	 * @param int    $object_id   Object ID.
+	 * @param string $action      Action being checked.
+	 *
+	 * @return bool
+	 */
+	private static function can_manage_location_record( $object_type = '', $object_id = 0, $action = 'update' ) {
+
+		$object_type = sanitize_key( $object_type );
+		$object_id   = absint( $object_id );
+
+		if ( ! is_user_logged_in() || empty( $object_type ) || empty( $object_id ) ) {
+			return false;
+		}
+
+		/**
+		 * Filter permission for handling location records.
+		 * Return bool to explicitly allow/disallow access.
+		 *
+		 * @since 4.5.6
+		 */
+		$filtered = apply_filters( 'gmw_lf_user_can_manage_location', null, $object_type, $object_id, $action );
+		if ( null !== $filtered ) {
+			return (bool) $filtered;
+		}
+
+		switch ( $object_type ) {
+			case 'post':
+				$post = get_post( $object_id );
+
+				if ( empty( $post ) ) {
+					return false;
+				}
+
+				$post_type_object = get_post_type_object( $post->post_type );
+				$edit_cap         = ! empty( $post_type_object->cap->edit_post ) ? $post_type_object->cap->edit_post : 'edit_post';
+
+				return current_user_can( $edit_cap, $object_id );
+
+			case 'user':
+				$current_user_id = get_current_user_id();
+
+				if ( $current_user_id === $object_id ) {
+					return true;
+				}
+
+				return current_user_can( 'edit_user', $object_id ) || current_user_can( 'edit_users' );
+
+			default:
+				$filtered_object = apply_filters( 'gmw_lf_user_can_manage_' . $object_type . '_location', null, $object_id, $action );
+				if ( null !== $filtered_object ) {
+					return (bool) $filtered_object;
+				}
+
+				return false;
+		}
 	}
 }
 
