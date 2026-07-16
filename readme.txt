@@ -5,7 +5,7 @@ Tags: Locations Directory, Store Locator, Proximity Search forms, Posts location
 Requires at least: 5.6
 Tested up to: 7.0
 BuddyPress: 11.3.1
-Stable tag: 4.5.5.1
+Stable tag: 4.5.5.2
 Requires PHP: 7.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -120,6 +120,17 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 4.5.5.2 =
+
+**Security**
+* Added authorization checks before updating or deleting location form records. Props Yaswanth Reddy Sunkara for reporting the issue via WPScan.
+
+**Fixes**
+* Prevent PHP TypeError when submitted address or post form values are not arrays. Props SAY-5.
+
+**Tweaks**
+* Removed redundant echo usage before translation output helpers. Props DAnn2012.
 
 = 4.5.5.1 =
 
