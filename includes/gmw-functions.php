@@ -1911,6 +1911,67 @@ function gmw_enqueue_form_styles( $args = array(
 }
 
 /**
+ * Validate an AJAX info-window template path.
+ *
+ * @since 4.5.5.4
+ *
+ * @param string $template_path Info-window template path.
+ * @param array  $gmw           GEO my WP form.
+ *
+ * @return string|false Canonical template path on success, false otherwise.
+ */
+function gmw_validate_ajax_info_window_template_path( $template_path, $gmw ) {
+
+	if ( ! is_string( $template_path ) || empty( $gmw['component'] ) ) {
+		return false;
+	}
+
+	$file_path = realpath( $template_path );
+
+	if ( false === $file_path || ! is_file( $file_path ) || ! is_readable( $file_path ) || 'php' !== strtolower( pathinfo( $file_path, PATHINFO_EXTENSION ) ) ) {
+		return false;
+	}
+
+	$component_data = gmw_get_addon_data( $gmw['component'] );
+
+	if ( empty( $component_data['plugin_dir'] ) ) {
+		return false;
+	}
+
+	$allowed_paths = array(
+		$component_data['plugin_dir'] . '/templates',
+		get_stylesheet_directory() . '/geo-my-wp',
+		get_template_directory() . '/geo-my-wp',
+	);
+
+	/**
+	 * Filter the directories allowed to contain AJAX info-window templates.
+	 *
+	 * @param array $allowed_paths Allowed template directories.
+	 * @param array $gmw           GEO my WP form.
+	 */
+	$allowed_paths        = apply_filters( 'gmw_ajax_info_window_allowed_template_paths', $allowed_paths, $gmw );
+	$normalized_file_path = wp_normalize_path( $file_path );
+
+	foreach ( $allowed_paths as $allowed_path ) {
+
+		$allowed_path = realpath( $allowed_path );
+
+		if ( false === $allowed_path ) {
+			continue;
+		}
+
+		$allowed_path = trailingslashit( wp_normalize_path( $allowed_path ) );
+
+		if ( 0 === strpos( $normalized_file_path, $allowed_path ) ) {
+			return $file_path;
+		}
+	}
+
+	return false;
+}
+
+/**
  * Ajax info window loader
  *
  * This is a global function that can be used to generate
@@ -1939,22 +2000,48 @@ function gmw_ajax_info_window_init() {
 		$location = new stdClass();
 	}
 
-	if ( ! empty( $_POST['form'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+	$form_id     = ! empty( $_POST['form_id'] ) ? absint( wp_unslash( $_POST['form_id'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+	$stored_form = $form_id ? gmw_get_form( $form_id ) : false;
+
+	if ( empty( $stored_form ) || ! is_array( $stored_form ) ) {
+
+		gmw_trigger_error( 'Info-window form ID missing or invalid.' );
+
+		wp_die( 'There was a problem loading this content.', '', array( 'response' => 400 ) );
+	}
+
+	if ( ! empty( $_POST['form'] ) && is_array( $_POST['form'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 
 		// Data of the form is being sanitize and escaped when needed to be output.
 		$gmw = wp_unslash( $_POST['form'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, sanitization ok, CSRF ok.
 
-	} elseif ( ! empty( $_POST['form_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
-
-
-		$gmw = gmw_get_form( absint( $_POST['form_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
-
 	} else {
-
-		gmw_trigger_error( 'Info-window form ID missing' );
-
-		die( 'There was a problem loading this content.' );
+		$gmw                         = $stored_form;
+		$gmw['info_window_template'] = gmw_get_info_window_template_data( $gmw );
 	}
+
+	// Keep runtime search data, but trust only the stored form identity.
+	foreach ( array( 'ID', 'slug', 'addon', 'component', 'prefix', 'object_type' ) as $key ) {
+
+		if ( isset( $stored_form[ $key ] ) ) {
+			$gmw[ $key ] = $stored_form[ $key ];
+		} else {
+			unset( $gmw[ $key ] );
+		}
+	}
+
+	$template_path = ! empty( $gmw['info_window_template']['content_path'] )
+		? gmw_validate_ajax_info_window_template_path( $gmw['info_window_template']['content_path'], $gmw )
+		: false;
+
+	if ( false === $template_path ) {
+
+		gmw_trigger_error( 'Info-window template file is missing or invalid.' );
+
+		wp_die( 'There was a problem loading this content.', '', array( 'response' => 400 ) );
+	}
+
+	$gmw['info_window_template']['content_path'] = $template_path;
 
 	// modify the location object.
 	$location = apply_filters( 'gmw_location_pre_ajax_info_window_init', $location, $gmw );
