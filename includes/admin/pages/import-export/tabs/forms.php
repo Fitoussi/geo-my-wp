@@ -23,6 +23,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @author Eyal Fitoussi
  */
 function gmw_import_export_forms_tab() {
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
 ?>
 	<?php do_action( 'gmw_import_export_forms_before_export' ); ?>
 
@@ -172,6 +177,10 @@ add_action( 'gmw_import_export_forms_tab', 'gmw_import_export_forms_tab' );
  */
 function gmw_export_forms() {
 
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( esc_html__( 'You do not have permission to export forms.', 'geo-my-wp' ), '', [ 'response' => 403 ] );
+	}
+
 	// make sure at lease one checkbox is checked.
 	if ( empty( $_POST['gmw_forms'] ) ) {
 		wp_die( esc_html__( 'You must check at least one checkbox of a form that you would like to export.', 'geo-my-wp' ) );
@@ -239,6 +248,10 @@ add_action( 'gmw_export_forms', 'gmw_export_forms' );
  */
 function gmw_import_forms() {
 
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( esc_html__( 'You do not have permission to import forms.', 'geo-my-wp' ), '', [ 'response' => 403 ] );
+	}
+
 	// look for nonce.
 	if ( empty( $_POST['gmw_import_forms_nonce'] ) ) {
 		wp_die( esc_html__( 'Cheatin\' eh?!', 'geo-my-wp' ) );
@@ -256,10 +269,43 @@ function gmw_import_forms() {
 
 	$file_name = sanitize_text_field( wp_unslash( $_FILES['import_file']['tmp_name'] ) );
 
+	if ( ! is_uploaded_file( $file_name ) ) {
+		wp_die( esc_html__( 'Please upload a valid forms export file.', 'geo-my-wp' ), '', [ 'response' => 400 ] );
+	}
+
 	// Retrieve the data from the file and convert the json object to an array.
 	// phpcs:disable
-	$forms = gmw_object_to_array( json_decode( file_get_contents( $file_name ) ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents.
+	$forms = json_decode( file_get_contents( $file_name ), true ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents.
 	// phpcs:enable
+
+	if ( JSON_ERROR_NONE !== json_last_error() || ! is_array( $forms ) ) {
+		wp_die( esc_html__( 'Please upload a valid forms export file.', 'geo-my-wp' ), '', [ 'response' => 400 ] );
+	}
+
+	// Validate the entire batch before inserting anything. Exported settings are
+	// serialized arrays; object payloads must never reach storage or the cache.
+	$required_fields = [ 'slug', 'addon', 'component', 'object_type', 'name', 'title', 'prefix', 'data' ];
+
+	foreach ( $forms as $index => $form ) {
+
+		if ( ! is_array( $form ) ) {
+			wp_die( esc_html__( 'The forms export contains invalid form data.', 'geo-my-wp' ), '', [ 'response' => 400 ] );
+		}
+
+		foreach ( $required_fields as $field ) {
+			if ( ! array_key_exists( $field, $form ) || ( 'data' !== $field && ! is_string( $form[ $field ] ) ) ) {
+				wp_die( esc_html__( 'The forms export contains invalid form data.', 'geo-my-wp' ), '', [ 'response' => 400 ] );
+			}
+		}
+
+		$data = GMW_Forms_Helper::decode_form_data( $form['data'] );
+
+		if ( false === $data ) {
+			wp_die( esc_html__( 'The forms export contains invalid form settings.', 'geo-my-wp' ), '', [ 'response' => 400 ] );
+		}
+
+		$forms[ $index ]['data'] = serialize( $data ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
+	}
 
 	if ( empty( $forms ) ) {
 

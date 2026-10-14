@@ -16,19 +16,30 @@ if ( ( empty( $_GET['page'] ) || 'gmw-import-export' !== $_GET['page'] ) && ! de
 	return;
 }
 
-// include files.
-require_once 'locations-importer/class-gmw-locations-importer.php';
-require_once 'class-gmw-meta-fields-importer.php';
-require_once 'tabs/gmw-data.php';
-require_once 'tabs/forms.php';
-require_once 'tabs/location-tables.php';
-require_once 'tabs/gmw-v-3-import.php';
-require_once 'tabs/posts-locator.php';
-require_once 'tabs/users-locator.php';
-require_once 'tabs/members-locator.php';
-//require_once 'tabs/transfer-locations.php';
-require_once 'class-gmw-export.php';
-require_once 'gmw-csv-import.php';
+// Wait until WordPress has loaded authentication before checking permissions.
+// These handlers must not be registered for direct unauthorized gmw_action calls.
+add_action(
+	'plugins_loaded',
+	static function () {
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		require_once __DIR__ . '/locations-importer/class-gmw-locations-importer.php';
+		require_once __DIR__ . '/class-gmw-meta-fields-importer.php';
+		require_once __DIR__ . '/tabs/gmw-data.php';
+		require_once __DIR__ . '/tabs/forms.php';
+		require_once __DIR__ . '/tabs/location-tables.php';
+		require_once __DIR__ . '/tabs/gmw-v-3-import.php';
+		require_once __DIR__ . '/tabs/posts-locator.php';
+		require_once __DIR__ . '/tabs/users-locator.php';
+		require_once __DIR__ . '/tabs/members-locator.php';
+		require_once __DIR__ . '/class-gmw-export.php';
+		require_once __DIR__ . '/gmw-csv-import.php';
+	},
+	20
+);
 
 /**
  * GMW Import / Export page

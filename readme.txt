@@ -5,7 +5,7 @@ Tags: Locations Directory, Store Locator, Proximity Search forms, Posts location
 Requires at least: 5.6
 Tested up to: 7.1
 BuddyPress: 11.3.1
-Stable tag: 4.5.5.4
+Stable tag: 4.5.5.5
 Requires PHP: 7.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -95,6 +95,10 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 
 * For questions, bugs report and suggestions please visit [GEO my WP Forum](https://geomywp.com/support/forums/)
 
+= Where do I report security bugs found in this plugin? =
+
+Please report security bugs found in the source code of the GEO my WordPress plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/9e5fbd79-8b88-47fb-bfb0-42f2ad100695). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
+
 == Screenshots ==
 
 1. GEO my WP Core Extensions
@@ -120,6 +124,11 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 4.5.5.5 =
+
+**Security**
+* Fixed a PHP object injection vulnerability by restricting import/export actions to administrators and safely validating imported and stored form settings. Reported by Ayukiab through Patchstack (CVE-2026-61992).
 
 = 4.5.5.4 =
 
@@ -464,6 +473,9 @@ for detailed installation and setup guide see the [documentation](https://docs.g
 * The current version of the premium extensions are not compatible with GEO my WP. So you will need to update your premium extensions after updating to GEO my WP v4.0.
 
 == Upgrade Notice ==
+
+= 4.5.5.5 =
+Security update addressing a PHP object injection vulnerability. Update as soon as possible.
 
 = 3.0 =
 This is a major release. You should not update before reading this post http://geomywp.com/geo-my-wp-3-0-beta-7/ before updating.

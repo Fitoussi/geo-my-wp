@@ -25,6 +25,57 @@ class GMW_Forms_Helper {
 	public function __construct() {}
 
 	/**
+	 * Decode form settings without instantiating serialized PHP objects.
+	 *
+	 * Imported and stored settings must contain arrays, scalar values, or null.
+	 * Returning false lets callers reject invalid imports or use form defaults.
+	 *
+	 * @param mixed $data Serialized settings or an already decoded array.
+	 * @return array|false Valid settings, or false for unsupported data.
+	 */
+	public static function decode_form_data( $data ) {
+
+		if ( is_string( $data ) && is_serialized( $data ) ) {
+			// Suppress malformed serialization warnings, but never allow classes.
+			$data = @unserialize( trim( $data ), [ 'allowed_classes' => false ] ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
+		}
+
+		if ( ! is_array( $data ) || ! self::is_valid_form_data( $data ) ) {
+			return false;
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Reject objects at every nesting level, including incomplete PHP objects.
+	 *
+	 * The depth limit also rejects cyclic serialized array references.
+	 *
+	 * @param mixed $value Settings value to inspect.
+	 * @param int   $depth Current array nesting depth.
+	 * @return bool Whether the value can safely be used as form settings.
+	 */
+	private static function is_valid_form_data( $value, $depth = 0 ) {
+
+		if ( $depth > 64 ) {
+			return false;
+		}
+
+		if ( ! is_array( $value ) ) {
+			return is_scalar( $value ) || null === $value;
+		}
+
+		foreach ( $value as $item ) {
+			if ( ! self::is_valid_form_data( $item, $depth + 1 ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Default form values.
 	 *
 	 * @param  array $form form settings.
@@ -257,7 +308,7 @@ class GMW_Forms_Helper {
 				}*/
 				// phpcs:enable.
 
-				$data = maybe_unserialize( $form['data'] );
+				$data = self::decode_form_data( $form['data'] );
 
 				// most likely bad data.
 				if ( ! is_array( $data ) ) {
@@ -1086,12 +1137,12 @@ class GMW_Forms_Helper {
 
 			if ( ! empty( $form ) ) {
 
-				// if happens that form has no data, we need to use the form's default values.
-				if ( empty( $form['data'] ) || ! is_array( maybe_unserialize( $form['data'] ) ) ) {
-					$form['data'] = self::default_settings( $form );
-				}
+				$form_data = self::decode_form_data( $form['data'] );
 
-				$form_data = maybe_unserialize( $form['data'] );
+				// Missing or invalid stored settings must not create PHP objects.
+				if ( empty( $form['data'] ) || false === $form_data ) {
+					$form_data = self::default_settings( $form );
+				}
 
 				if ( empty( $form_data ) || ! is_array( $form_data ) ) {
 
@@ -1235,7 +1286,8 @@ class GMW_Forms_Helper {
 		$output = array();
 
 		foreach ( $forms as $form ) {
-			$output[ $form['ID'] ] = maybe_unserialize( $form['data'] );
+			$data                  = self::decode_form_data( $form['data'] );
+			$output[ $form['ID'] ] = false === $data ? [] : $data;
 		}
 
 		$forms = $output;
