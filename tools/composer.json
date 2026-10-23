@@ -1,0 +1,23 @@
+{
+    "name": "geomywp/geo-my-wp-tools",
+    "type": "project",
+    "description": "Local code-quality tools for GEO my WP development.",
+    "license": "GPL-3.0-or-later",
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "sort-packages": true
+    },
+    "require-dev": {
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.2.1",
+        "phpcompatibility/phpcompatibility-wp": "^2.1.8",
+        "squizlabs/php_codesniffer": "^3.13.5",
+        "wp-coding-standards/wpcs": "^3.4.1"
+    },
+    "scripts": {
+        "phpcs": "phpcs --standard=phpcs.xml.dist",
+        "phpcbf": "phpcbf --standard=phpcs.xml.dist",
+        "phpcompat": "phpcs --standard=phpcompat.xml.dist"
+    }
+}

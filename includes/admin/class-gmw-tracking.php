@@ -262,7 +262,8 @@ class GMW_Tracking {
 
 		foreach ( $data['forms'] as $key => $form ) {
 
-			$form['data'] = maybe_unserialize( $form['data'] );
+			$form_data    = GMW_Forms_Helper::decode_form_data( $form['data'] );
+			$form['data'] = false === $form_data ? [] : $form_data;
 
 			$data['forms'][ $key ] = $form;
 		}

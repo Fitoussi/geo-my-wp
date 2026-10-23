@@ -5,8 +5,8 @@ Tags: Locations Directory, Store Locator, Proximity Search forms, Posts location
 Requires at least: 5.6
 Tested up to: 7.1
 BuddyPress: 11.3.1
-Stable tag: 4.5.5.5
-Requires PHP: 7.0
+Stable tag: 4.5.5.7
+Requires PHP: 7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -124,6 +124,16 @@ Please report security bugs found in the source code of the GEO my WordPress plu
 21. Single Location Shortcode
 
 == Changelog ==
+
+= 4.5.5.7 =
+
+**Security**
+* Hardened info-window access checks and protected saved display settings. Thanks to 0xdr3n for reporting through Patchstack.
+* Improved member visibility checks in info windows and location searches.
+* Hardened usage tracking to safely decode stored form settings without creating PHP objects.
+
+**Requirements**
+* Minimum PHP version is now 7.4.
 
 = 4.5.5.5 =
 
@@ -473,6 +483,9 @@ Please report security bugs found in the source code of the GEO my WordPress plu
 * The current version of the premium extensions are not compatible with GEO my WP. So you will need to update your premium extensions after updating to GEO my WP v4.0.
 
 == Upgrade Notice ==
+
+= 4.5.5.7 =
+Security update for info-window access, display settings and usage tracking. Requires PHP 7.4 or newer. Update as soon as possible.
 
 = 4.5.5.5 =
 Security update addressing a PHP object injection vulnerability. Update as soon as possible.

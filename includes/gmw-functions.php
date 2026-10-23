@@ -1972,6 +1972,82 @@ function gmw_validate_ajax_info_window_template_path( $template_path, $gmw ) {
 }
 
 /**
+ * Restore trusted AJAX info-window settings while retaining runtime context.
+ *
+ * Protected branches are replaced in full, or removed when absent from storage.
+ * Other posted values remain request input, not authorization decisions.
+ *
+ * @param array $stored_form Saved form identity and configuration.
+ * @param array $posted_form Unslashed form data returned by the browser.
+ *
+ * @return array Form with trusted settings and the supplied runtime context.
+ */
+function gmw_get_ajax_info_window_form( $stored_form, $posted_form = [] ) {
+
+	$gmw = ! empty( $posted_form ) ? $posted_form : $stored_form;
+
+	$protected_paths = [
+		[ 'ID' ],
+		[ 'slug' ],
+		[ 'addon' ],
+		[ 'component' ],
+		[ 'prefix' ],
+		[ 'object_type' ],
+		[ 'info_window', 'iw_type' ],
+		[ 'info_window', 'template' ],
+		[ 'search_form', 'post_types' ],
+		[ 'page_load_results', 'post_types' ],
+	];
+
+	// Custom popup templates can also use the search-results display helpers.
+	foreach ( [ 'info_window', 'search_results' ] as $group ) {
+		foreach ( [ 'excerpt', 'location_meta', 'meta_fields', 'xprofile_fields', 'address', 'address_fields', 'additional_info', 'opening_hours' ] as $key ) {
+			$protected_paths[] = [ $group, $key ];
+		}
+		$protected_paths[] = [ $group, 'image', 'image_field' ];
+	}
+
+	foreach ( $protected_paths as $path ) {
+		$key    = array_pop( $path );
+		$source = $stored_form;
+
+		foreach ( $path as $segment ) {
+			$source = isset( $source[ $segment ] ) && is_array( $source[ $segment ] ) ? $source[ $segment ] : [];
+		}
+
+		$has_saved_value = array_key_exists( $key, $source );
+		$target          = &$gmw;
+
+		foreach ( $path as $segment ) {
+			if ( ! isset( $target[ $segment ] ) || ! is_array( $target[ $segment ] ) ) {
+				// Do not add empty branches when there is nothing to restore or remove.
+				if ( ! $has_saved_value ) {
+					unset( $target );
+					continue 2;
+				}
+
+				$target[ $segment ] = [];
+			}
+
+			$target = &$target[ $segment ];
+		}
+
+		if ( $has_saved_value ) {
+			$target[ $key ] = $source[ $key ];
+		} else {
+			unset( $target[ $key ] );
+		}
+
+		unset( $target );
+	}
+
+	// Template paths are generated again by the caller, never accepted as input.
+	unset( $gmw['info_window_template'] );
+
+	return $gmw;
+}
+
+/**
  * Ajax info window loader
  *
  * This is a global function that can be used to generate
@@ -1984,14 +2060,6 @@ function gmw_validate_ajax_info_window_template_path( $template_path, $gmw ) {
  */
 function gmw_ajax_info_window_init() {
 
-	/**
-	 * We used to pass the form object via the map_args and return it
-	 * via info_window ajax. This seems unessacery so we now pass the form ID
-	 * only and get the form using a function.
-	 * We leave this here for now in case for some reason we need the
-	 * additional data generated to the form during the search query process.
-	 * $gmw = $_POST['form'];
-	 */
 	if ( isset( $_POST['location'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
 
 		$location = (object) array_map( 'sanitize_text_field', wp_unslash( (array) $_POST['location'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
@@ -2010,25 +2078,12 @@ function gmw_ajax_info_window_init() {
 		wp_die( 'There was a problem loading this content.', '', array( 'response' => 400 ) );
 	}
 
-	if ( ! empty( $_POST['form'] ) && is_array( $_POST['form'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, CSRF ok.
+	$posted_form = isset( $_POST['form'] ) && is_array( $_POST['form'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Public read-only endpoint; protected settings come from storage.
+		? wp_unslash( $_POST['form'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Protected settings are restored below; remaining values are runtime input.
+		: [];
 
-		// Data of the form is being sanitize and escaped when needed to be output.
-		$gmw = wp_unslash( $_POST['form'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, sanitization ok, CSRF ok.
-
-	} else {
-		$gmw                         = $stored_form;
-		$gmw['info_window_template'] = gmw_get_info_window_template_data( $gmw );
-	}
-
-	// Keep runtime search data, but trust only the stored form identity.
-	foreach ( array( 'ID', 'slug', 'addon', 'component', 'prefix', 'object_type' ) as $key ) {
-
-		if ( isset( $stored_form[ $key ] ) ) {
-			$gmw[ $key ] = $stored_form[ $key ];
-		} else {
-			unset( $gmw[ $key ] );
-		}
-	}
+	$gmw                         = gmw_get_ajax_info_window_form( $stored_form, $posted_form );
+	$gmw['info_window_template'] = gmw_get_info_window_template_data( $gmw );
 
 	$template_path = ! empty( $gmw['info_window_template']['content_path'] )
 		? gmw_validate_ajax_info_window_template_path( $gmw['info_window_template']['content_path'], $gmw )

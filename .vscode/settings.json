@@ -1,2 +1,34 @@
 {
+	"phpsab.executablePathCS": "tools/vendor/bin/phpcs",
+	"phpsab.executablePathCBF": "tools/vendor/bin/phpcbf",
+	"phpsab.standard": "tools/phpcs.xml.dist",
+	"phpsab.autoRulesetSearch": false,
+	"phpsab.snifferEnable": true,
+	"phpsab.fixerEnable": false,
+	"phpsab.snifferMode": "onSave",
+	"phpsab.snifferShowSources": true,
+	"phpsab.excludeGlobs": [
+		"**/vendor/**",
+		"**/node_modules/**",
+		"**/includes/libraries/**"
+	],
+	"phpcs.enable": false,
+	"intelephense.environment.phpVersion": "7.4.0",
+	"intelephense.environment.includePaths": [
+		"../../../wp-includes"
+	],
+	"intelephense.files.exclude": [
+		"**/.git/**",
+		"**/node_modules/**",
+		"**/tools/vendor/**"
+	],
+	"files.exclude": {
+		"**/tools/vendor": true
+	},
+	"search.exclude": {
+		"**/tools/vendor": true
+	},
+	"files.watcherExclude": {
+		"**/tools/vendor/**": true
+	}
 }

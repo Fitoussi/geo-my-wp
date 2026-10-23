@@ -106,9 +106,40 @@ function gmw_members_locator_ajax_info_window_loader( $location, $gmw ) {
 		return;
 	}
 
+	$member_id   = filter_var( $location->object_id, FILTER_VALIDATE_INT, [ 'options' => [ 'min_range' => 1 ] ] );
+	$location_id = filter_var( $location->location_id, FILTER_VALIDATE_INT, [ 'options' => [ 'min_range' => 1 ] ] );
+
+	if ( false === $member_id || false === $location_id || ! get_userdata( $member_id ) || ! bp_is_user_active( $member_id ) ) {
+		return;
+	}
+
+	// Match BuddyPress's members-component access policy, including private communities.
+	if ( function_exists( 'bp_get_community_visibility' ) && ! bp_current_user_can( 'bp_view', [ 'bp_component' => 'members' ] ) ) {
+		return;
+	}
+
+	// BuddyBoss's legacy API returns false when Private Website is enabled.
+	if ( function_exists( 'bp_enable_private_network' ) && ! is_user_logged_in() && ! bp_enable_private_network() ) {
+		return;
+	}
+
+	$location_data = gmw_get_user_location( $location_id, true );
+
+	// Never attach another object's location or metadata to the requested member.
+	if (
+		empty( $location_data )
+		|| (int) ( $location_data->ID ?? 0 ) !== $location_id
+		|| 'user' !== ( $location_data->object_type ?? '' )
+		|| (int) ( $location_data->object_id ?? 0 ) !== $member_id
+		|| (int) gmw_get_blog_id( 'user' ) !== (int) ( $location_data->blog_id ?? 0 )
+		|| ( apply_filters( 'gmw_search_query_location_status_enabled', true, $gmw ) && 1 !== (int) ( $location_data->status ?? 0 ) )
+	) {
+		return;
+	}
+
 	if ( bp_has_members(
 		array(
-			'include' => array( $location->object_id ),
+			'include' => array( $member_id ),
 			'type'    => 'alphabetical',
 		)
 	) ) {
@@ -119,8 +150,11 @@ function gmw_members_locator_ajax_info_window_loader( $location, $gmw ) {
 
 			global $members_template;
 
-			// get additional user location data.
-			$location_data = gmw_get_user_location( $location->location_id, true );
+			// Retain BuddyPress query/privacy filters, but only render the requested member.
+			if ( $member_id !== (int) bp_get_member_user_id() ) {
+				continue;
+			}
+
 			$fields        = array(
 				'lat',
 				'lng',
@@ -147,7 +181,7 @@ function gmw_members_locator_ajax_info_window_loader( $location, $gmw ) {
 
 			// get location meta if needed and append it to the member.
 			if ( ! empty( $gmw['info_window']['location_meta'] ) ) {
-				$members_template->member->location_meta = gmw_get_location_meta( $location->location_id, $gmw['info_window']['location_meta'] );
+				$members_template->member->location_meta = gmw_get_location_meta( $location_data->ID, $gmw['info_window']['location_meta'] );
 			}
 
 			// append distance + units to member.

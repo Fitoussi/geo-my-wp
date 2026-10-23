@@ -913,14 +913,67 @@ function gmw_posts_locator_ajax_info_window_loader( $location, $gmw ) {
 		return;
 	}
 
+	$post_id = absint( $location->object_id );
+
+	if ( ! $post_id ) {
+		return;
+	}
+
+	$info_window_post = get_post( $post_id );
+	$post_status      = $info_window_post ? get_post_status_object( $info_window_post->post_status ) : false;
+
+	if ( ! $info_window_post || ! $post_status || $post_status->internal || ! get_post_type_object( $info_window_post->post_type ) ) {
+		return;
+	}
+
+	// Both saved contexts may produce markers; posted runtime flags do not grant access.
+	$post_types = array_merge(
+		! empty( $gmw['search_form']['post_types'] ) ? (array) $gmw['search_form']['post_types'] : [ 'post' ],
+		! empty( $gmw['page_load_results']['post_types'] ) ? (array) $gmw['page_load_results']['post_types'] : []
+	);
+
+	if ( ! in_array( $info_window_post->post_type, $post_types, true ) ) {
+		return;
+	}
+
+	$is_viewable_type = is_post_type_viewable( $info_window_post->post_type );
+
+	// Direct post retrieval must not bypass the normal frontend access checks.
+	if ( 'publish' !== $info_window_post->post_status || ! $is_viewable_type ) {
+		if ( ! is_user_logged_in() || ! current_user_can( 'read_post', $post_id ) || ( ! $is_viewable_type && ! current_user_can( 'edit_post', $post_id ) ) ) {
+			return;
+		}
+	}
+
+	if ( post_password_required( $info_window_post ) ) {
+		return;
+	}
+
+	$location_id = filter_var( $location->location_id, FILTER_VALIDATE_INT, [ 'options' => [ 'min_range' => 1 ] ] );
+
+	if ( false === $location_id ) {
+		return;
+	}
+
+	// Bind the requested location to the authorized post and its site.
+	$location_data = gmw_get_post_location( $location_id, true );
+
+	if (
+		empty( $location_data )
+		|| (int) ( $location_data->ID ?? 0 ) !== $location_id
+		|| 'post' !== ( $location_data->object_type ?? '' )
+		|| (int) ( $location_data->object_id ?? 0 ) !== $post_id
+		|| (int) gmw_get_blog_id( 'post' ) !== (int) ( $location_data->blog_id ?? 0 )
+		|| ( apply_filters( 'gmw_search_query_location_status_enabled', true, $gmw ) && 1 !== (int) ( $location_data->status ?? 0 ) )
+	) {
+		return;
+	}
+
 	global $post;
 
-	// get the post object.
-	$post = get_post( $location->object_id ); // phpcs:ignore override ok.
+	$post = $info_window_post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Existing templates require the validated post object.
 
-	// get additional post location data.
-	$location_data = gmw_get_post_location( $location->location_id, true );
-	$fields        = array(
+	$fields = array(
 		'object_type',
 		'object_id',
 		'lat',
@@ -951,7 +1004,7 @@ function gmw_posts_locator_ajax_info_window_loader( $location, $gmw ) {
 
 	// get location meta if needed and append it to the post.
 	if ( ! empty( $gmw['info_window']['location_meta'] ) ) {
-		$post->location_meta = gmw_get_location_meta( $location->location_id, $gmw['info_window']['location_meta'] );
+		$post->location_meta = gmw_get_location_meta( $location_data->ID, $gmw['info_window']['location_meta'] );
 	}
 
 	// append distance + units to the post.

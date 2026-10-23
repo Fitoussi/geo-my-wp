@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<ruleset name="GEO my WP PHP compatibility">
+	<description>PHP 7.4+ compatibility for maintained GEO my WP PHP sources.</description>
+	<arg value="sp"/>
+	<arg name="extensions" value="php"/>
+	<file>../geo-my-wp.php</file>
+	<file>../includes</file>
+	<file>../plugins</file>
+	<exclude-pattern>*/includes/libraries/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/tools/*</exclude-pattern>
+	<config name="testVersion" value="7.4-"/>
+	<rule ref="PHPCompatibilityWP"/>
+</ruleset>

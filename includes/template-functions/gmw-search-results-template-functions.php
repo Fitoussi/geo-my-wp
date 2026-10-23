@@ -578,7 +578,13 @@ function gmw_get_meta_field_value( $type, $field, $object ) {
 
 	} elseif ( 'xprofile_field' === $type && function_exists( 'xprofile_get_field' ) ) {
 
-		$field_id   = absint( $field );
+		$field_id      = absint( $field );
+		$hidden_fields = wp_parse_id_list( bp_xprofile_get_hidden_fields_for_user( $object->id, get_current_user_id() ) );
+
+		if ( in_array( $field_id, $hidden_fields, true ) ) {
+			return;
+		}
+
 		$field_data = xprofile_get_field( $field_id, $object->id, true );
 
 		if ( empty( $field_data ) ) {

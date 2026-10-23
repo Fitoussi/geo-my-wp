@@ -39,8 +39,10 @@ trait GMW_Members_Locator_Form_Trait {
 
 		global $wpdb;
 
-		// Try getting the column using the SELECT clause.
-		if ( strpos( $query->uid_clauses['select'], 'ON u.ID' ) !== false ) {
+		// Prefer the native query's ID column; retain the SELECT fallback for custom queries.
+		if ( isset( $query->uid_name ) && in_array( $query->uid_name, [ 'ID', 'user_id' ], true ) ) {
+			$column = $query->uid_name;
+		} elseif ( strpos( $query->uid_clauses['select'], 'ON u.ID' ) !== false ) {
 			$column = 'ID';
 		} elseif ( strpos( $query->uid_clauses['select'], 'ON u.user_id' ) !== false ) {
 			$column = 'user_id';
@@ -54,10 +56,13 @@ trait GMW_Members_Locator_Form_Trait {
 			$location_status = ' AND gmw_locations.status = 1';
 		}
 
+		// Custom query types such as distance must not bypass native account-status rules.
+		$member_status = bp_core_get_status_sql( '' );
+
 		$blog_id      = gmw_get_blog_id( 'user' );
 		$fields       = ', ' . $this->db_fields;
 		$having       = '';
-		$where        = '';
+		$where        = " AND u.{$column} IN ( SELECT ID FROM {$wpdb->users} WHERE {$member_status} )";
 		$join         = "INNER JOIN {$wpdb->base_prefix}gmw_locations gmw_locations ON ( u.{$column} = gmw_locations.object_id AND gmw_locations.object_type = 'user' AND gmw_locations.blog_id = {$blog_id}{$location_status} ) ";
 		$units        = '';
 		$distance_sql = "'' AS distance";

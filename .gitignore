@@ -15,10 +15,11 @@ ehthumbs.db
 Thumbs.db
 
 # Grunt
-node_modules
+/node_modules/
 
 # ignore composer vendor directory
-vendor
+/vendor/
+/tools/vendor/
 
 # ignore log files and databases
 *.log
@@ -31,3 +32,13 @@ vendor
 
 # Ignore personal VS Code settings
 /scripts/
+
+# Portable editor configuration; personal workspace state stays local.
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/tasks.json
+*.code-workspace
+!phpcs.xml.dist
+!tools/phpcs.xml.dist
+!tools/phpcompat.xml.dist

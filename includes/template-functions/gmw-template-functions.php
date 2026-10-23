@@ -244,8 +244,8 @@ function gmw_shortcode_map( $gmw ) {
  */
 function gmw_get_info_window_template_data( $gmw ) {
 
-	$iw_type       = $gmw['info_window']['iw_type'];
-	$template_name = $gmw['info_window']['template'][ $iw_type ];
+	$iw_type       = ! empty( $gmw['info_window']['iw_type'] ) ? $gmw['info_window']['iw_type'] : 'standard';
+	$template_name = ! empty( $gmw['info_window']['template'][ $iw_type ] ) ? $gmw['info_window']['template'][ $iw_type ] : 'default';
 
 	// get info-window stylesheet.
 	$template = gmw_get_info_window_template( $gmw['component'], $iw_type, $template_name );

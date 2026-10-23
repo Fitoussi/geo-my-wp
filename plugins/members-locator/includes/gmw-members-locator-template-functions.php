@@ -777,11 +777,19 @@ function gmw_get_member_xprofile_fields( $member_id = 0, $fields = array() ) {
 		return;
 	}
 
+	// Direct field reads must respect the same visibility as the BuddyPress profile loop.
+	$hidden_fields = wp_parse_id_list( bp_xprofile_get_hidden_fields_for_user( $member_id, get_current_user_id() ) );
+
 	$output = '';
 
 	foreach ( $fields as $field_id ) {
 
-		$field_id    = absint( $field_id );
+		$field_id = absint( $field_id );
+
+		if ( in_array( $field_id, $hidden_fields, true ) ) {
+			continue;
+		}
+
 		$field_data  = new BP_XProfile_Field( $field_id );
 		$field_value = xprofile_get_field_data( $field_id, $member_id );
 

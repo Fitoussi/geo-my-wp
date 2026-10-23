@@ -1,0 +1,41 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Check GEO my WP coding standards",
+			"type": "shell",
+			"command": "composer",
+			"args": [
+				"--working-dir=tools",
+				"phpcs"
+			],
+			"options": {
+				"cwd": "${workspaceFolder:geo-my-wp}"
+			},
+			"problemMatcher": [],
+			"group": "test",
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			}
+		},
+		{
+			"label": "Check GEO my WP PHP compatibility",
+			"type": "shell",
+			"command": "composer",
+			"args": [
+				"--working-dir=tools",
+				"phpcompat"
+			],
+			"options": {
+				"cwd": "${workspaceFolder:geo-my-wp}"
+			},
+			"problemMatcher": [],
+			"group": "test",
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			}
+		}
+	]
+}
