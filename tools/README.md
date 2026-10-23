@@ -19,13 +19,16 @@ disabled to preserve reviewed release source. The local ignored
 `geo-my-wp.code-workspace` includes this checkout and WordPress core definitions.
 The committed `.vscode/` files also work when the plugin is opened directly.
 
-The existing root Composer manifest and lock are legacy configuration and remain
-unchanged. Use the isolated tools manifest for development dependencies. Do not
-install or update the legacy root dependencies as part of this tooling setup.
+The root Composer manifest and lock contain only the existing runtime dependency
+metadata. Obsolete root development requirements were removed; use the isolated
+`tools/` manifest and lock for all PHP code-quality dependencies. The root runtime
+dependency pin was preserved during that cleanup.
 
 The root npm build command currently refers to a missing `build.js`. No build
 or run-on-save command is wired to it. Restoring the legacy asset build pipeline
-requires a separate scoped change and asset-output verification.
+requires a separate scoped change and asset-output verification. The unused
+legacy Node dependencies were removed during development advisory cleanup;
+there is currently no active Node build/watch dependency set.
 
 These development files and `tools/vendor/` are excluded from the existing
 allowlisted production packaging process. The verified 4.5.5.7 ZIP is unchanged.
